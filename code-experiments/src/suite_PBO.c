@@ -83,7 +83,7 @@ static IOHprofiler_problem_t *PBO_get_problem(const size_t function,
     } else if (function == 5) {
         problem = f_labs_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
                                                         problem_id_template, problem_name_template);
-    } else if (function == 5) {
+    } else if (function == 6) {
         problem = f_binary_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
                                                         problem_id_template, problem_name_template);
     } else {
