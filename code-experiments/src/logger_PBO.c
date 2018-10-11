@@ -262,7 +262,7 @@ static void logger_PBO_openIndexFile(logger_PBO_data_t *logger,
       }
 
       fprintf(*target_file,
-          "suite = '%s', funcId = %d, DIM = %lu, algName = '%s', algInfo = '%s'\n",
+          "suite = '%s', funcId = %d, DIM = %lu, algId = '%s', algInfo = '%s'\n",
           suite_name, (int) strtol(function_id, NULL, 10), (unsigned long) logger->number_of_variables,
           logger->observer->algorithm_name, logger->observer->algorithm_info);
 
