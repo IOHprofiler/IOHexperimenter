@@ -101,7 +101,7 @@ static void timing_data_finalize(timing_data_t *timing_data);
  */
 int main(void) {
 
-  IOHprofiler_random_state_t *random_generator = IOHprofiler_random_new((unsigned)time(NULL));
+  IOHprofiler_random_state_t *random_generator = IOHprofiler_random_new(RANDOM_SEED);
 
   /* Change the log level to "warning" to get less output */
   IOHprofiler_set_log_level("info");
