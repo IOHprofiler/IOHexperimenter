@@ -164,12 +164,12 @@ Available commands for users:
   build-python            - Build Python modules
 
   run-c                   - Build and run example experiment in C
-  run-java                - Build and run example experiment in Java
+  run-python              - Build and run example experiment in Python
 
 Available commands for developers:
 
-  build                   - Build C, Java and Python modules
-  run                     - Run example experiments in C, Java and Python
+  build                   - Build C and Python modules
+  run                     - Run example experiments in C and Python
 
 """ % git_version(pep440=True))
 
