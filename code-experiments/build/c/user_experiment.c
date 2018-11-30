@@ -37,6 +37,13 @@ static void evaluate_function(const int *x, double *y) {
 }
 
 /**
+ * The function returns 1 if the optimal is found. 
+ */
+static int  if_hit_optimal(){
+  return IOHprofiler_problem_final_target_hit(PROBLEM);
+}
+
+/**
  * The function that set the parameters of the problem with the vector.
  */
 static void set_parameters(const size_t number_of_parameters, const double * parameters) {
