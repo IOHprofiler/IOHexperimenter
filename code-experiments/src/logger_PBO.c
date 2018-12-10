@@ -127,7 +127,7 @@ static void logger_PBO_write_data(FILE *target_file,
       raw_value, best_raw_value, fvalue , best_fvalue);
     
   for (i = 0; i < number_of_parameters; i++) {
-    fprintf(target_file, " %.3f", parameter[i]);
+    fprintf(target_file, " %.6f", parameter[i]);
   }
 
   fprintf(target_file, "\n");
