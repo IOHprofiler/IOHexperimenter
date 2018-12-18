@@ -38,9 +38,9 @@ static void transform_vars_sigma_evaluate(IOHprofiler_problem_t *problem, const 
   for (i = 0; i < problem->number_of_variables; ++i) {
     data->sigma_x[i] = sigma_compute(x,data->offset[i]);
   }
+
   IOHprofiler_evaluate_function(inner_problem, data->sigma_x, y);
   IOHprofiler_evaluate_function(inner_problem, data->sigma_x, problem->raw_fitness);
-
   assert(y[0]  <= problem->best_value[0]);
 }
 

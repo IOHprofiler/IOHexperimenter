@@ -39,6 +39,7 @@ static void transform_vars_xor_evaluate(IOHprofiler_problem_t *problem, const in
   for (i = 0; i < problem->number_of_variables; ++i) {
     data->xor_x[i] = xor_compute(x[i],data->offset[i]);
   }
+  inner_problem->number_of_variables = problem->number_of_variables;
   IOHprofiler_evaluate_function(inner_problem, data->xor_x, y);
   IOHprofiler_evaluate_function(inner_problem, data->xor_x, problem->raw_fitness);
 
