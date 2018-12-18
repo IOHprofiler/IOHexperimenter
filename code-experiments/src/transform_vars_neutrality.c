@@ -49,7 +49,6 @@ static void transform_vars_neutrality_evaluate(IOHprofiler_problem_t *problem, c
   for (i = 0; i < problem->number_of_variables; ++i) {
     data->neutrality_x[i] = neutrality_compute(x, i*data->offset[0], data->offset[0]);
   }
-
   IOHprofiler_evaluate_function(inner_problem, data->neutrality_x, y);
   IOHprofiler_evaluate_function(inner_problem, data->neutrality_x, problem->raw_fitness);
 
@@ -79,7 +78,7 @@ static IOHprofiler_problem_t *transform_vars_neutrality(IOHprofiler_problem_t *i
   if (neutrality_bounds)
     IOHprofiler_error("neutrality_bounds not implemented.");
 
-  if(inner_problem >= offset[0])
+  if(inner_problem->number_of_variables >= offset[0])
   {
     new_dimension = inner_problem->number_of_variables / offset[0];
   }
@@ -97,6 +96,10 @@ static IOHprofiler_problem_t *transform_vars_neutrality(IOHprofiler_problem_t *i
   problem->number_of_variables = new_dimension;
   inner_problem->number_of_variables = problem->number_of_variables;
   problem->evaluate_function = transform_vars_neutrality_evaluate;
+  while(inner_problem->data != NULL){
+    inner_problem = IOHprofiler_problem_transformed_get_inner_problem(inner_problem);
+    inner_problem->number_of_variables = problem->number_of_variables;
+  }
   /* Compute best parameter */
   for (i = 0; i < problem->number_of_variables; i++) {
       problem->best_parameter[i] = neutrality_compute(inner_problem->best_parameter, i*data->offset[0], data->offset[0]);

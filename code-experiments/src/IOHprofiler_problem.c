@@ -67,6 +67,7 @@ static IOHprofiler_problem_t *IOHprofiler_problem_allocate(const size_t number_o
     problem->evaluate_function = NULL;
     problem->recommend_solution = NULL;
     problem->problem_free_function = NULL;
+    problem->dimension = number_of_variables;
     problem->number_of_variables = number_of_variables;
     problem->number_of_objectives = number_of_objectives;
     problem->number_of_parameters = 0;
@@ -103,6 +104,7 @@ static IOHprofiler_problem_t *IOHprofiler_problem_duplicate(const IOHprofiler_pr
     IOHprofiler_problem_t *problem;
     problem = IOHprofiler_problem_allocate(other->number_of_variables, other->number_of_objectives);
 
+    problem->dimension = other->dimension;
     problem->initial_solution = other->initial_solution;
     problem->evaluate_function = other->evaluate_function;
     problem->recommend_solution = other->recommend_solution;
@@ -171,7 +173,8 @@ static IOHprofiler_problem_t *IOHprofiler_problem_allocate_from_scalars(const ch
     IOHprofiler_problem_t *problem = IOHprofiler_problem_allocate(number_of_variables, 1);
 
     problem->problem_name = IOHprofiler_strdup(problem_name);
-    problem->number_of_variables = number_of_variables;
+    /*problem->dimension = number_of_variables;
+    */problem->number_of_variables = number_of_variables;
     problem->number_of_objectives = 1;
     problem->evaluate_function = evaluate_function;
     problem->problem_free_function = problem_free_function;
@@ -410,8 +413,8 @@ const char *IOHprofiler_problem_get_type(const IOHprofiler_problem_t *problem) {
 
 size_t IOHprofiler_problem_get_dimension(const IOHprofiler_problem_t *problem) {
     assert(problem != NULL);
-    assert(problem->number_of_variables > 0);
-    return problem->number_of_variables;
+    assert(problem->dimension > 0);
+    return problem->dimension;
 }
 
 size_t IOHprofiler_problem_get_number_of_objectives(const IOHprofiler_problem_t *problem) {

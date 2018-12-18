@@ -69,6 +69,11 @@ static IOHprofiler_problem_t *transform_vars_reduction(IOHprofiler_problem_t *in
   problem = IOHprofiler_problem_transformed_allocate(inner_problem, data, transform_vars_reduction_free, "transform_vars_reduction");
   problem->number_of_variables = new_dimension;
   inner_problem->number_of_variables = problem->number_of_variables;
+  
+  while(inner_problem->data != NULL){
+    inner_problem = IOHprofiler_problem_transformed_get_inner_problem(inner_problem);
+    inner_problem->number_of_variables = problem->number_of_variables;
+  }
   problem->evaluate_function = transform_vars_reduction_evaluate;
   /* Compute best parameter */
   for (i = 0; i < problem->number_of_variables; i++) {

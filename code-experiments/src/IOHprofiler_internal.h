@@ -123,6 +123,7 @@ struct IOHprofiler_problem_s {
     IOHprofiler_recommend_function_t recommend_solution;       /**< @brief  The function for recommending a solution. */
     IOHprofiler_problem_free_function_t problem_free_function; /**< @brief  The function for freeing this problem. */
 
+    size_t dimension; /**< @brief Number of variables expected before any transformation, used for logging files. */
     size_t number_of_variables;  /**< @brief Number of variables expected by the function, i.e.
                                        problem dimension */
     size_t number_of_objectives; /**< @brief Number of objectives. */

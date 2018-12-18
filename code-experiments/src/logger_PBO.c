@@ -88,6 +88,7 @@ typedef struct {
   size_t function_id; /*TODO: consider changing name*/
   size_t instance_id;
   size_t number_of_variables;
+  size_t inner_dimension;
   double optimal_fvalue;
 
   size_t number_of_parameters;
@@ -263,7 +264,7 @@ static void logger_PBO_openIndexFile(logger_PBO_data_t *logger,
 
       fprintf(*target_file,
           "suite = '%s', funcId = %d, DIM = %lu, algId = '%s', algInfo = '%s'\n",
-          suite_name, (int) strtol(function_id, NULL, 10), (unsigned long) logger->number_of_variables,
+          suite_name, (int) strtol(function_id, NULL, 10), (unsigned long) logger->inner_dimension,
           logger->observer->algorithm_name, logger->observer->algorithm_info);
 
       fprintf(*target_file, "%%\n");
@@ -293,7 +294,7 @@ static void logger_PBO_initialize(logger_PBO_data_t *logger, IOHprofiler_problem
   size_t str_length_funId, str_length_dim;
   
   str_length_funId = IOHprofiler_double_to_size_t(PBO_fmax(1, ceil(log10((double) IOHprofiler_problem_get_suite_dep_function(inner_problem)))));
-  str_length_dim = IOHprofiler_double_to_size_t(PBO_fmax(1, ceil(log10((double) inner_problem->number_of_variables))));
+  str_length_dim = IOHprofiler_double_to_size_t(PBO_fmax(1, ceil(log10((double) inner_problem->dimension))));
   tmpc_funId = IOHprofiler_allocate_string(str_length_funId);
   tmpc_dim = IOHprofiler_allocate_string(str_length_dim);
 
@@ -302,7 +303,7 @@ static void logger_PBO_initialize(logger_PBO_data_t *logger, IOHprofiler_problem
   assert(inner_problem->problem_id != NULL);
 
   sprintf(tmpc_funId, "%lu", (unsigned long) IOHprofiler_problem_get_suite_dep_function(inner_problem));
-  sprintf(tmpc_dim, "%lu", (unsigned long) inner_problem->number_of_variables);
+  sprintf(tmpc_dim, "%lu", (unsigned long) inner_problem->dimension);
 
   /* prepare paths and names */
   strncpy(dataFile_path, "data_f", IOHprofiler_PATH_MAX);
@@ -605,7 +606,7 @@ static IOHprofiler_problem_t *logger_PBO(IOHprofiler_observer_t *observer, IOHpr
   if(strcmp(observer->complete_triggers,"true") == 0)
     logger_PBO->c_flag = 1;
   logger_PBO->number_of_variables = inner_problem->number_of_variables;
-
+  logger_PBO->inner_dimension = inner_problem->dimension;
   logger_PBO->number_of_parameters = inner_problem->number_of_parameters;
   logger_PBO->parameters = NULL;
   if (inner_problem->best_value == NULL) {
