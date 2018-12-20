@@ -1,10 +1,11 @@
 /**
- * @file f_ising_one_dim.c
- * @brief Implementation of the ising_one_dim function and problem.
+ * @file f_ising_2D.c
+ * @brief Implementation of the ising_2D function and problem.
  */
 
 #include <assert.h>
 #include <stdio.h>
+#include <math.h>
 
 #include "IOHprofiler.h"
 #include "IOHprofiler_problem.c"
@@ -15,43 +16,41 @@
 #include "transform_obj_scale.c"
 
 /**
- * @brief Implements the Ising one dimension function without connections to any IOHprofiler structures.
+ * @brief Implements the ising_2D function without connections to any IOHprofiler structures.
  */
 
-
-void change_ising_one_dim_representation(int* from, int* to, int number_of_variables){
-    for(int i=0; i<number_of_variables; i++){
-        if(from[i] == 0){
-            to[i] = -1;
-        }
-        else{
-            to[i] = from[i];
-        }
-    }
-}
-
-int modulo_ising_one_dim(int x,int N){
+int modulo_ising_2D(int x,int N){
     return (x % N + N) %N;
 }
 
 /**
  * @brief Uses the raw function to evaluate the IOHprofiler problem.
  */
-static int f_ising_one_dim_raw(const int *x, const size_t number_of_variables) {
-    size_t i = 0;
-    int result, sum_neig;
-    int x_tmp[number_of_variables];
-    change_ising_one_dim_representation(x, x_tmp, number_of_variables);
+static int f_ising_2D_raw(const int *x, const size_t number_of_variables) {
+    if(floor(sqrt(number_of_variables))!=sqrt(number_of_variables)){
+      fprintf(stderr, "Number of parameters in the Ising square problem must be a square number\n");
+      exit(-1);
+    }
 
     if (IOHprofiler_vector_contains_nan(x, number_of_variables))
         return NAN;
 
-    result = 0;
-    sum_neig = 0;
+    int result= 0;
+    int neighbors[4];
+    int lattice_size = (int)sqrt(number_of_variables);
+    int (*spin_array)[lattice_size] = (int (*)[lattice_size])x;
 
-    for (i = 0; i < number_of_variables; ++i) {
-        sum_neig=x_tmp[modulo_ising_one_dim((i+1), number_of_variables)] + x_tmp[modulo_ising_one_dim((i -1) , number_of_variables)];
-        result += 2 * x_tmp[i] * sum_neig;
+    for (size_t i = 0; i < lattice_size; ++i) {
+           for (size_t j = 0; j < lattice_size; ++j) {
+                neighbors[0]  = spin_array[modulo_ising_2D(i - 1, lattice_size)][j];
+                neighbors[1]  = spin_array[modulo_ising_2D(i + 1, lattice_size)][j];
+                neighbors[2]  = spin_array[i][modulo_ising_2D((j - 1) , lattice_size)];
+                neighbors[3]  = spin_array[i][modulo_ising_2D((j + 1) , lattice_size)];
+
+                for (int neig=0; neig<4; neig++) {
+                    result+= (spin_array[i][j] * neighbors[neig]) + ((1- spin_array[i][j])*(1- neighbors[neig]));
+                }
+           }
     }
 
     return result;
@@ -60,30 +59,30 @@ static int f_ising_one_dim_raw(const int *x, const size_t number_of_variables) {
 /**
  * @brief Uses the raw function to evaluate the IOHprofiler problem.
  */
-static void f_ising_one_dim_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
+static void f_ising_2D_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
     assert(problem->number_of_objectives == 1);
-    y[0] = f_ising_one_dim_raw(x, problem->number_of_variables);
+    y[0] = f_ising_2D_raw(x, problem->number_of_variables);
     assert(y[0] <= problem->best_value[0]);
 }
 
 /**
- * @brief Allocates the basic ising_one_dim problem.
+ * @brief Allocates the basic ising_2D problem.
  */
-static IOHprofiler_problem_t *f_ising_one_dim_allocate(const size_t number_of_variables) {
-    IOHprofiler_problem_t *problem = IOHprofiler_problem_allocate_from_scalars("ising_one_dim function",
-                                                                               f_ising_one_dim_evaluate, NULL, number_of_variables, 0, 1, 1);
+static IOHprofiler_problem_t *f_ising_2D_allocate(const size_t number_of_variables) {
+    IOHprofiler_problem_t *problem = IOHprofiler_problem_allocate_from_scalars("ising_2D function",
+                                                                               f_ising_2D_evaluate, NULL, number_of_variables, 0, 1, 1);
 
-    IOHprofiler_problem_set_id(problem, "%s_d%02lu", "ising_one_dim", number_of_variables);
+    IOHprofiler_problem_set_id(problem, "%s_d%02lu", "ising_2D", number_of_variables);
 
     /* Compute best solution */
-    f_ising_one_dim_evaluate(problem, problem->best_parameter, problem->best_value);
+    f_ising_2D_evaluate(problem, problem->best_parameter, problem->best_value);
     return problem;
 }
 
 /**
- * @brief Creates the IOHprofiler ising_one_dim problem.
+ * @brief Creates the IOHprofiler ising_2D problem.
  */
-static IOHprofiler_problem_t *f_ising_one_dim_IOHprofiler_problem_allocate(const size_t function,
+static IOHprofiler_problem_t *f_ising_2D_IOHprofiler_problem_allocate(const size_t function,
                                                                      const size_t dimension,
                                                                      const size_t instance,
                                                                      const long rseed,
@@ -101,7 +100,7 @@ static IOHprofiler_problem_t *f_ising_one_dim_IOHprofiler_problem_allocate(const
     z = IOHprofiler_allocate_int_vector(dimension);
     sigma = IOHprofiler_allocate_int_vector(dimension);
     xins = IOHprofiler_allocate_vector(dimension);
-    problem = f_ising_one_dim_allocate(dimension);
+    problem = f_ising_2D_allocate(dimension);
 
     if(instance == 1){
         for(i = 0; i < dimension; i++)

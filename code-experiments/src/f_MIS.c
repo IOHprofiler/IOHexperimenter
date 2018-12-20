@@ -18,10 +18,10 @@
  * @brief Implements the Maximum Independent Set function without connections to any IOHprofiler structures.
  */
 
- static int isNeighbour(int i, int j,const size_t number_of_variables) {
-    if (i==number_of_variables/2 && j==i+1){return 0;}
-    else if (j==i+1){return 1;}
-    else if (j==i+(number_of_variables/2)+1 || j==i+(number_of_variables/2)-1){return 1;}
+ static int isEdge(int i, int j, size_t problem_size) {
+    if (i!=problem_size/2 && j==i+1){return 1;}
+    else if (i<=(problem_size/2)-1 && j==i+(problem_size/2)+1 ){return 1;}
+    else if (i<=(problem_size/2) && i>=2 && j==i+(problem_size/2)-1){return 1;}
     else {return 0;}
 }
 
@@ -30,15 +30,21 @@
  */
 static int f_MIS_raw(const int *x, const size_t number_of_variables) {
 
-    int result= 0;
-    int num_of_ones=0;
-    int ones_array[number_of_variables+1];
-    int sum_edges_in_the_set=0;
-
     if (IOHprofiler_vector_contains_nan(x, number_of_variables))
         return NAN;
 
-    for (int index=0; index<number_of_variables; index++){
+    int result= 0;
+    int num_of_ones=0;
+    int sum_edges_in_the_set=0;
+    int number_of_variables_even=number_of_variables;
+
+    if (number_of_variables%2!=0){
+        number_of_variables_even=number_of_variables-1;
+    }
+
+    int ones_array[number_of_variables_even+1];
+
+    for (int index=0; index<number_of_variables_even; index++){
         if (x[index]==1){
             ones_array[num_of_ones] = index;
             num_of_ones+=1;
@@ -47,13 +53,12 @@ static int f_MIS_raw(const int *x, const size_t number_of_variables) {
 
     for (int i=0; i<num_of_ones; i++){
         for (int j=i+1; j<num_of_ones; j++){
-            if(isNeighbour(ones_array[i],ones_array[j],number_of_variables)==1){
+            if(isEdge(ones_array[i]+1,ones_array[j]+1,number_of_variables_even)==1){
                 sum_edges_in_the_set+=1;
             }
         }
     }
-    result=num_of_ones - (number_of_variables*sum_edges_in_the_set);
-
+    result=num_of_ones - (number_of_variables_even*sum_edges_in_the_set);
     return result;
 }
 

@@ -21,54 +21,38 @@
 /**
  * @brief Implements the Ising_triangle function without connections to any IOHprofiler structures.
  */
-
-void change_ising_triangle_representation(int* from, int* to, int number_of_variables){
-    for(int i=0; i<number_of_variables; i++){
-        if(from[i] == 0){
-            to[i] = -1;
-        }
-        else{
-            to[i] = from[i];
-        }
-    }
-}
-
 int modulo_ising_triangle(int x,int N){
     return (x % N + N) %N;
 }
+
 
 /**
  * @brief Uses the raw function to evaluate the IOHprofiler problem.
  */
 
 static int f_ising_triangle_raw(const int *x, const size_t number_of_variables) {
-    size_t i = 0;
-    size_t j = 0;
-
-    int result;
-    int lattice_size;
-    int x_tmp[number_of_variables];
 
     if (IOHprofiler_vector_contains_nan(x, number_of_variables))
         return NAN;
 
-    change_ising_triangle_representation(x, x_tmp, number_of_variables);
+    int result = 0;
+    int neighbors[6];
+    int lattice_size = (int)sqrt(number_of_variables);
+    int (*spin_array)[lattice_size] = (int (*)[lattice_size])x;
 
-    result = 0;
-    lattice_size = (int)sqrt(number_of_variables);
-    int (*spin_array)[lattice_size] = (int (*)[lattice_size])x_tmp;
-    for (i = 0; i < lattice_size; ++i) {
-           for (j = 0; j < lattice_size; ++j) {
-                int sum_neighbors =
-                spin_array[modulo_ising_triangle((i - 1), lattice_size)][j] +
-                spin_array[modulo_ising_triangle((i + 1) , lattice_size)][j] +
-                spin_array[i][modulo_ising_triangle((j - 1) , lattice_size)] +
-                spin_array[i][modulo_ising_triangle((i + 1) , lattice_size)] +
-                spin_array[modulo_ising_triangle((i - 1) , lattice_size)][modulo_ising_triangle((j - 1) , lattice_size)] +
-                spin_array[modulo_ising_triangle((i + 1) , lattice_size)][modulo_ising_triangle((j + 1) , lattice_size)];
+    for (size_t i = 0; i < lattice_size; ++i) {
+           for (size_t j = 0; j < lattice_size; ++j) {
+                neighbors[0] = spin_array[modulo_ising_triangle((i - 1), lattice_size)][j] ;
+                neighbors[1] = spin_array[modulo_ising_triangle((i + 1) , lattice_size)][j] ;
+                neighbors[2] = spin_array[i][modulo_ising_triangle((j - 1) , lattice_size)] ;
+                neighbors[3] = spin_array[i][modulo_ising_triangle((i + 1) , lattice_size)] ;
+                neighbors[4] = spin_array[modulo_ising_triangle((i - 1) , lattice_size)][modulo_ising_triangle((j - 1) , lattice_size)] ;
+                neighbors[5] = spin_array[modulo_ising_triangle((i + 1) , lattice_size)][modulo_ising_triangle((j + 1) , lattice_size)];
 
-                result+= 2 * spin_array[i][j] * sum_neighbors;
-        }
+                for (int neig=0; neig<6; neig++) {
+                    result+= (spin_array[i][j] * neighbors[neig]) + ((1- spin_array[i][j])*(1- neighbors[neig]));
+                }
+           }
     }
 
     return result;
