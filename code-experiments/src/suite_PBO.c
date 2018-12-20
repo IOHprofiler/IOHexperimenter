@@ -12,6 +12,21 @@
 #include "f_linear.c"
 #include "f_one_max.c"
 #include "f_labs.c"
+#include "f_one_max_dummy1.c"
+#include "f_one_max_dummy2.c"
+#include "f_one_max_epistasis.c"
+#include "f_one_max_neutrality.c"
+#include "f_one_max_ruggedness1.c"
+#include "f_one_max_ruggedness2.c"
+#include "f_one_max_ruggedness3.c"
+#include "f_leading_ones_dummy1.c"
+#include "f_leading_ones_dummy2.c"
+#include "f_leading_ones_epistasis.c"
+#include "f_leading_ones_neutrality.c"
+#include "f_leading_ones_ruggedness1.c"
+#include "f_leading_ones_ruggedness2.c"
+#include "f_leading_ones_ruggedness3.c"
+
 
 static IOHprofiler_suite_t *IOHprofiler_suite_allocate(const char *suite_name,
                                                        const size_t number_of_functions,
@@ -26,10 +41,9 @@ static IOHprofiler_suite_t *suite_PBO_initialize(void) {
     IOHprofiler_suite_t *suite;
     size_t i;
     const char *suite_name = "PBO";
-    const size_t number_of_functions = 5000;
-    /*const size_t dimensions[] = {47, 500, 1000, 1500, 2000, 2500, 3000}; 
-    */
-    size_t dimensions[5000];
+    const size_t number_of_functions = 18;
+
+    size_t dimensions[20000];
 
     const size_t number_of_dimensions = sizeof(dimensions) / sizeof(dimensions[0]);
     for (i = 0; i < number_of_dimensions; ++i){
@@ -75,18 +89,57 @@ static IOHprofiler_problem_t *PBO_get_problem(const size_t function,
         problem = f_leading_ones_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
                                                               problem_id_template, problem_name_template);
     } else if (function == 3) {
-        problem = f_jump_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+        problem = f_linear_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
                                                       problem_id_template, problem_name_template);
     } else if (function == 4) {
-        problem = f_linear_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+        problem = f_one_max_dummy1_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
                                                         problem_id_template, problem_name_template);
     } else if (function == 5) {
-        problem = f_labs_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+        problem = f_one_max_dummy2_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
                                                         problem_id_template, problem_name_template);
     } else if (function == 6) {
-        problem = f_binary_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+        problem = f_one_max_neutrality_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
                                                         problem_id_template, problem_name_template);
-    } else {
+    } else if (function == 7) {
+        problem = f_one_max_epistasis_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    } else if (function == 8) {
+        problem = f_one_max_ruggedness1_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    } else if (function == 9) {
+        problem = f_one_max_ruggedness2_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    } else if (function == 10) {
+        problem = f_one_max_ruggedness3_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    } else if (function == 11) {
+        problem = f_leading_ones_dummy1_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    } else if (function == 12) {
+        problem = f_leading_ones_dummy2_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    } else if (function == 13) {
+        problem = f_leading_ones_neutrality_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    } else if (function == 14) {
+        problem = f_leading_ones_epistasis_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    } else if (function == 15) {
+        problem = f_leading_ones_ruggedness1_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    } else if (function == 16) {
+        problem = f_leading_ones_ruggedness2_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    } else if (function == 17) {
+        problem = f_leading_ones_ruggedness3_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    } else if (function == 18) {
+        problem = f_labs_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    } else if (function == 19) {
+        problem = f_jump_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    }else {
         IOHprofiler_error("get_IOHprofiler_problem(): cannot retrieve problem f%lu instance %lu in %luD",
                           (unsigned long)function, (unsigned long)instance, (unsigned long)dimension);
         return NULL; /* Never reached */

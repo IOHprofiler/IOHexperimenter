@@ -60,13 +60,12 @@ static void transform_obj_ruggedness1_evaluate(IOHprofiler_problem_t *problem, c
 /**
  * @brief Creates the transformation.
  */
-static IOHprofiler_problem_t *transform_obj_ruggedness1(IOHprofiler_problem_t *inner_problem, double offset) {
+static IOHprofiler_problem_t *transform_obj_ruggedness1(IOHprofiler_problem_t *inner_problem) {
   IOHprofiler_problem_t *problem;
   transform_obj_ruggedness1_data_t *data;
   size_t i;
   data = (transform_obj_ruggedness1_data_t *) IOHprofiler_allocate_memory(sizeof(*data));
-  data->offset = offset;
-  
+
   problem = IOHprofiler_problem_transformed_allocate(inner_problem, data, NULL, "transform_obj_ruggedness1");
   problem->evaluate_function = transform_obj_ruggedness1_evaluate;
   for (i = 0; i < problem->number_of_objectives; i++) {

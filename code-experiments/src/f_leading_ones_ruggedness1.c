@@ -3,8 +3,8 @@
  */
 
 /**
- * @file f_one_max.c
- * @brief Implementation of the one_max function and problem.
+ * @file f_leading_ones_ruggedness1.c
+ * @brief Implementation of the leading_ones_ruggedness1 function and problem.
  */
 
 #include <assert.h>
@@ -14,13 +14,12 @@
 #include "IOHprofiler_problem.c"
 #include "suite_PBO_legacy_code.c"
 #include "transform_obj_shift.c"
-#include "transform_vars_sigma.c"
-#include "transform_vars_xor.c"
 #include "transform_obj_scale.c"
+#include "transform_obj_ruggedness1.c"
 /**
- * @brief Implements the one_max function without connections to any IOHprofiler structures.
+ * @brief Implements the leading_ones_ruggedness1 function without connections to any IOHprofiler structures.
  */
-static double f_one_max_raw(const int *x, const size_t number_of_variables) {
+static double f_leading_ones_ruggedness1_raw(const int *x, const size_t number_of_variables) {
     size_t i = 0;
     double result;
 
@@ -37,56 +36,47 @@ static double f_one_max_raw(const int *x, const size_t number_of_variables) {
 /**
  * @brief Uses the raw function to evaluate the IOHprofiler problem.
  */
-static void f_one_max_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
+static void f_leading_ones_ruggedness1_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
     assert(problem->number_of_objectives == 1);
-    y[0] = f_one_max_raw(x, problem->number_of_variables);
+    y[0] = f_leading_ones_ruggedness1_raw(x, problem->number_of_variables);
     assert(y[0] <= problem->best_value[0]);
 }
 
 /**
- * @brief Allocates the basic one_max problem.
+ * @brief Allocates the basic leading_ones_ruggedness1 problem.
  */
-static IOHprofiler_problem_t *f_one_max_allocate(const size_t number_of_variables) {
-    IOHprofiler_problem_t *problem = IOHprofiler_problem_allocate_from_scalars("one_max function",
-                                                                               f_one_max_evaluate, NULL, number_of_variables, 0, 1, 1);
+static IOHprofiler_problem_t *f_leading_ones_ruggedness1_allocate(const size_t number_of_variables) {
+    IOHprofiler_problem_t *problem = IOHprofiler_problem_allocate_from_scalars("leading_ones_ruggedness1 function",
+                                                                               f_leading_ones_ruggedness1_evaluate, NULL, number_of_variables, 0, 1, 1);
 
-    IOHprofiler_problem_set_id(problem, "%s_d%02lu", "one_max", number_of_variables);
+    IOHprofiler_problem_set_id(problem, "%s_d%02lu", "leading_ones_ruggedness1", number_of_variables);
 
     /* Compute best solution */
-    f_one_max_evaluate(problem, problem->best_parameter, problem->best_value);
+    f_leading_ones_ruggedness1_evaluate(problem, problem->best_parameter, problem->best_value);
     return problem;
 }
 
 /**
- * @brief Creates the IOHprofiler one_max problem.
+ * @brief Creates the IOHprofiler leading_ones_ruggedness1 problem.
  */
-static IOHprofiler_problem_t *f_one_max_IOHprofiler_problem_allocate(const size_t function,
+static IOHprofiler_problem_t *f_leading_ones_ruggedness1_IOHprofiler_problem_allocate(const size_t function,
                                                                      const size_t dimension,
                                                                      const size_t instance,
                                                                      const long rseed,
                                                                      const char *problem_id_template,
                                                                      const char *problem_name_template) {
-
-
-    int *z;
-    int * dummy;
     int temp,t;
-    size_t i;
     double a;
     double b;
     IOHprofiler_problem_t *problem;
 
-    z = IOHprofiler_allocate_int_vector(dimension);
-    dummy = IOHprofiler_allocate_int_vector(1);
-    problem = f_one_max_allocate(dimension);
+    problem = f_leading_ones_ruggedness1_allocate(dimension);
     if(instance == 1){
-        for(i = 0; i < dimension; i++)
-            z[i] = 0;
-        a = 0.0;
-        problem = transform_vars_xor(problem,z,0);
-        problem = transform_obj_shift(problem,a);
+       problem = transform_obj_ruggedness1(problem);
     }
     else if(instance > 1 && instance <= 100){
+        problem = transform_obj_ruggedness1(problem);
+
         a = IOHprofiler_compute_fopt(function,instance + 100);
         a = fabs(a) / 1000 * 4.8 + 0.2;
         b = IOHprofiler_compute_fopt(function, instance);
@@ -95,17 +85,11 @@ static IOHprofiler_problem_t *f_one_max_IOHprofiler_problem_allocate(const size_
         problem = transform_obj_shift(problem,b);
     }
     else {
-        for (i = 0; i < dimension; i++)
-            z[i] = 0;
-        a = 0.0;
-        problem = transform_vars_xor(problem, z, 0);
-        problem = transform_obj_shift(problem, a);
+        problem = transform_obj_ruggedness1(problem);
     }
     IOHprofiler_problem_set_id(problem, problem_id_template, function, instance, dimension);
     IOHprofiler_problem_set_name(problem, problem_name_template, function, instance, dimension);
     IOHprofiler_problem_set_type(problem, "pseudo-Boolean");
-
-    IOHprofiler_free_memory(z);
 
     return problem;
 }

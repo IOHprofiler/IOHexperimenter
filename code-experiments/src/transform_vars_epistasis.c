@@ -77,7 +77,7 @@ static void transform_vars_epistasis_evaluate(IOHprofiler_problem_t *problem, co
   epistasis_compute(x, data->epistasis_x, data->offset[0], problem->number_of_variables);
 
   IOHprofiler_evaluate_function(inner_problem, data->epistasis_x, y);
-  IOHprofiler_evaluate_function(inner_problem, data->epistasis_x, problem->raw_fitness);
+  problem->raw_fitness[0] = y[0];
 
   assert(y[0]  <= problem->best_value[0]);
 }

@@ -38,7 +38,7 @@ static void transform_vars_shift_evaluate(IOHprofiler_problem_t *problem, const 
   }
   inner_problem->number_of_variables = problem->number_of_variables;
   IOHprofiler_evaluate_function(inner_problem, data->shifted_x, y);
-  IOHprofiler_evaluate_function(inner_problem, data->shifted_x, problem->raw_fitness);
+  problem->raw_fitness[0] = y[0];
 
   assert(y[0] <= problem->best_value[0]);
 }

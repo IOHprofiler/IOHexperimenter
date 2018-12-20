@@ -21,11 +21,17 @@ double compute_ruggedness2(double y, size_t dimension){
   if(tempy == dimension){
     ruggedness_y = y;
   }
-  else if(tempy < dimension && tempy % 2 == 0){
+  else if(tempy < dimension && tempy % 2 == 0 && dimension % 2 == 0){
     ruggedness_y = y + 1.0;
   }
-  else if(tempy < dimension && tempy % 2 != 0){
+  else if(tempy < dimension && tempy % 2 == 0 && dimension % 2 != 0){
     ruggedness_y = (y - 1.0) > 0 ? (y - 1.0) : 0;
+  }
+  else if(tempy < dimension && tempy % 2 != 0 && dimension % 2 == 0){
+    ruggedness_y = (y - 1.0) > 0 ? (y - 1.0) : 0;
+  }
+  else if(tempy < dimension && tempy % 2 != 0 && dimension % 2 != 0){
+    ruggedness_y = y + 1.0;
   }
   else{
     ruggedness_y = y;
@@ -60,12 +66,11 @@ static void transform_obj_ruggedness2_evaluate(IOHprofiler_problem_t *problem, c
 /**
  * @brief Creates the transformation.
  */
-static IOHprofiler_problem_t *transform_obj_ruggedness2(IOHprofiler_problem_t *inner_problem, double offset) {
+static IOHprofiler_problem_t *transform_obj_ruggedness2(IOHprofiler_problem_t *inner_problem) {
   IOHprofiler_problem_t *problem;
   transform_obj_ruggedness2_data_t *data;
   size_t i;
   data = (transform_obj_ruggedness2_data_t *) IOHprofiler_allocate_memory(sizeof(*data));
-  data->offset = offset;
   
   problem = IOHprofiler_problem_transformed_allocate(inner_problem, data, NULL, "transform_obj_ruggedness2");
   problem->evaluate_function = transform_obj_ruggedness2_evaluate;

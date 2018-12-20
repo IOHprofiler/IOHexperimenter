@@ -40,7 +40,7 @@ static void transform_vars_sigma_evaluate(IOHprofiler_problem_t *problem, const 
   }
 
   IOHprofiler_evaluate_function(inner_problem, data->sigma_x, y);
-  IOHprofiler_evaluate_function(inner_problem, data->sigma_x, problem->raw_fitness);
+  problem->raw_fitness[0] = y[0];
   assert(y[0]  <= problem->best_value[0]);
 }
 

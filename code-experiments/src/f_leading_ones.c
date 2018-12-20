@@ -77,10 +77,8 @@ static IOHprofiler_problem_t *f_leading_ones_IOHprofiler_problem_allocate(const 
     size_t i;
     double fopt;
     double fopt1;
-    double *xins;
     IOHprofiler_problem_t *problem;
     xopt = IOHprofiler_allocate_int_vector(dimension);
-    xins = IOHprofiler_allocate_vector(dimension);
     problem = f_leading_ones_allocate(dimension);
   
 
@@ -93,28 +91,8 @@ static IOHprofiler_problem_t *f_leading_ones_IOHprofiler_problem_allocate(const 
     problem = transform_vars_xor(problem,xopt,0);
     problem = transform_obj_shift(problem,fopt);
   }
-  else if(instance > 1 && instance <= 50){
-    IOHprofiler_compute_xopt(xopt,rseed,dimension);
-    fopt = IOHprofiler_compute_fopt(function,instance);
-    fopt1 = IOHprofiler_compute_fopt(function,instance + 100);
-    fopt1 = fabs(fopt1) / 1000 * 4.8 + 0.2;
-    problem = transform_vars_xor(problem,xopt,0);
-    assert(fopt1 <= 5.0 && fopt1 >= 0.2);
-    problem = transform_obj_scale(problem,fopt1);
-    problem = transform_obj_shift(problem,fopt);
-  }
-  else if(instance <= 100 && instance > 50)
-  {
-    IOHprofiler_compute_xopt_double(xins,rseed,dimension);
-    for(i = 0; i < dimension; i++)
-      xopt[i] = (int)i;
-    for(i = 0; i < dimension; i++){
-      t = (int)(xins[i] * (double)dimension);
-      assert(t >= 0 && t < dimension);
-      temp = xopt[0];
-      xopt[0] = xopt[t];
-      xopt[t] = temp; 
-    }
+  else if(instance > 1 && instance <= 100){
+    
     fopt = IOHprofiler_compute_fopt(function,instance);
     fopt1 = IOHprofiler_compute_fopt(function,instance + 100);
     fopt1 = fabs(fopt1) / 1000 * 4.8 + 0.2;
@@ -136,6 +114,5 @@ static IOHprofiler_problem_t *f_leading_ones_IOHprofiler_problem_allocate(const 
   IOHprofiler_problem_set_type(problem, "pseudo-Boolean");
   
   IOHprofiler_free_memory(xopt);
-  IOHprofiler_free_memory(xins);
   return problem;
 }

@@ -50,7 +50,7 @@ static void transform_vars_neutrality_evaluate(IOHprofiler_problem_t *problem, c
     data->neutrality_x[i] = neutrality_compute(x, i*data->offset[0], data->offset[0]);
   }
   IOHprofiler_evaluate_function(inner_problem, data->neutrality_x, y);
-  IOHprofiler_evaluate_function(inner_problem, data->neutrality_x, problem->raw_fitness);
+  problem->raw_fitness[0] = y[0];
 
   assert(y[0]  <= problem->best_value[0]);
 }
