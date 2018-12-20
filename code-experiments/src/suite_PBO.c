@@ -11,7 +11,12 @@
 #include "f_leading_ones.c"
 #include "f_linear.c"
 #include "f_one_max.c"
-#include "f_labs.c"
+#include "f_ising_1D.c"
+#include "f_ising_2D.c"
+#include "f_ising_triangle.c"
+#include "f_N_queens.c"
+#include "f_MIS.c"
+
 
 static IOHprofiler_suite_t *IOHprofiler_suite_allocate(const char *suite_name,
                                                        const size_t number_of_functions,
@@ -27,7 +32,7 @@ static IOHprofiler_suite_t *suite_PBO_initialize(void) {
     size_t i;
     const char *suite_name = "PBO";
     const size_t number_of_functions = 5000;
-    /*const size_t dimensions[] = {47, 500, 1000, 1500, 2000, 2500, 3000}; 
+    /*const size_t dimensions[] = {47, 500, 1000, 1500, 2000, 2500, 3000};
     */
     size_t dimensions[5000];
 
@@ -86,7 +91,22 @@ static IOHprofiler_problem_t *PBO_get_problem(const size_t function,
     } else if (function == 6) {
         problem = f_binary_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
                                                         problem_id_template, problem_name_template);
-    } else {
+    } else if (function == 7) {
+        problem = f_ising_1D_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    }else if (function == 8) {
+        problem = f_ising_2D_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    }else if (function == 9) {
+        problem = f_ising_triangle_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    }else if (function == 10) {
+        problem = f_N_queens_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    }else if (function == 11) {
+        problem = f_MIS_IOHprofiler_problem_allocate(function, dimension, instance, rseed,
+                                                        problem_id_template, problem_name_template);
+    }else {
         IOHprofiler_error("get_IOHprofiler_problem(): cannot retrieve problem f%lu instance %lu in %luD",
                           (unsigned long)function, (unsigned long)instance, (unsigned long)dimension);
         return NULL; /* Never reached */
