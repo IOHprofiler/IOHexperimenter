@@ -14,8 +14,36 @@
 typedef struct {
   int *offset;
   int *reduncted_x;
+  int *postion_match;
   IOHprofiler_problem_free_function_t old_free_problem;
 } transform_vars_dummy_data_t;
+
+static void compute_dummy_match(int * postion_match, const int old_dimension, const int new_dimension){
+  size_t i,j;
+  int temp;
+  double *randN = IOHprofiler_allocate_vector(1);
+  int flag;
+  int dummyins = 10000;
+  for(i = 0; i < new_dimension;){
+    IOHprofiler_unif(randN, 1, dummyins++);
+    temp = (int)(randN[0] * old_dimension);
+    flag = 1;
+    for(j = 0; j < i; ++j){
+      if(postion_match[j] == temp){
+        flag = 0;
+        break;
+      }
+    }
+    if(flag == 1){
+      postion_match[i] = temp;
+      ++i;
+    }
+    else{
+      continue;
+    }
+  }
+  IOHprofiler_free_memory(randN);
+}
 
 static void transform_vars_dummy_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
   size_t i;
@@ -29,7 +57,7 @@ static void transform_vars_dummy_evaluate(IOHprofiler_problem_t *problem, const 
   data = (transform_vars_dummy_data_t *) IOHprofiler_problem_transformed_get_data(problem);
   inner_problem = IOHprofiler_problem_transformed_get_inner_problem(problem);
   for (i = 0; i < problem->number_of_variables; ++i) {
-    data->reduncted_x[i] = x[i];
+    data->reduncted_x[i] = x[data->postion_match[i]];
   }
   IOHprofiler_evaluate_function(inner_problem, data->reduncted_x, y);
   problem->raw_fitness[0] = y[0];
@@ -43,6 +71,7 @@ static void transform_vars_dummy_evaluate(IOHprofiler_problem_t *problem, const 
 static void transform_vars_dummy_free(void *thing) {
   transform_vars_dummy_data_t *data = (transform_vars_dummy_data_t *) thing;
   IOHprofiler_free_memory(data->reduncted_x);
+  IOHprofiler_free_memory(data->postion_match);
   IOHprofiler_free_memory(data->offset);
 }
 
@@ -64,7 +93,8 @@ static IOHprofiler_problem_t *transform_vars_dummy(IOHprofiler_problem_t *inner_
   data = (transform_vars_dummy_data_t *) IOHprofiler_allocate_memory(sizeof(*data));
   data->offset = IOHprofiler_duplicate_int_vector(offset, inner_problem->number_of_variables);
   data->reduncted_x = IOHprofiler_allocate_int_vector(new_dimension);
-
+  data->postion_match = IOHprofiler_allocate_int_vector(new_dimension);
+  compute_dummy_match(data->postion_match,inner_problem->number_of_variables,new_dimension);
   
   problem = IOHprofiler_problem_transformed_allocate(inner_problem, data, transform_vars_dummy_free, "transform_vars_dummy");
   problem->number_of_variables = new_dimension;
@@ -74,10 +104,11 @@ static IOHprofiler_problem_t *transform_vars_dummy(IOHprofiler_problem_t *inner_
     inner_problem = IOHprofiler_problem_transformed_get_inner_problem(inner_problem);
     inner_problem->number_of_variables = problem->number_of_variables;
   }
+
   problem->evaluate_function = transform_vars_dummy_evaluate;
   /* Compute best parameter */
   for (i = 0; i < problem->number_of_variables; i++) {
-      problem->best_parameter[i] = problem->best_parameter[i];
+      problem->best_parameter[i] = problem->best_parameter[data->postion_match[i]];
   }
   problem->evaluate_function(problem, problem->best_parameter, problem->best_value);
   return problem;

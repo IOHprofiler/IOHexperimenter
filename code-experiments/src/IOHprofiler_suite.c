@@ -732,12 +732,11 @@ IOHprofiler_problem_t *IOHprofiler_suite_get_next_problem(IOHprofiler_suite_t *s
     instance_idx = (size_t)suite->current_instance_idx;
 
     problem = IOHprofiler_suite_get_problem_from_indices(suite, function_idx, dimension_idx, instance_idx);
-
     if (observer != NULL)
         problem = IOHprofiler_problem_add_observer(problem, observer);
 
     suite->current_problem = problem;
-
+     
     /* Output information regarding the current place in the iteration */
     if (IOHprofiler_log_level >= IOHprofiler_INFO) {
         if (((long)dimension_idx != previous_dimension_idx) || (previous_instance_idx < 0)) {
@@ -757,7 +756,6 @@ IOHprofiler_problem_t *IOHprofiler_suite_get_next_problem(IOHprofiler_suite_t *s
         /* One dot for each instance */
         IOHprofiler_info_partial(".", suite->instances[instance_idx]);
     }
-
     return problem;
 }
 

@@ -69,7 +69,6 @@ static IOHprofiler_problem_t *f_one_max_IOHprofiler_problem_allocate(const size_
 
 
     int *z;
-    int * dummy;
     int temp,t;
     size_t i;
     double a;
@@ -77,7 +76,6 @@ static IOHprofiler_problem_t *f_one_max_IOHprofiler_problem_allocate(const size_
     IOHprofiler_problem_t *problem;
 
     z = IOHprofiler_allocate_int_vector(dimension);
-    dummy = IOHprofiler_allocate_int_vector(1);
     problem = f_one_max_allocate(dimension);
     if(instance == 1){
         for(i = 0; i < dimension; i++)
