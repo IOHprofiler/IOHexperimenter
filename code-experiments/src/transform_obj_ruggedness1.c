@@ -50,8 +50,8 @@ static void transform_obj_ruggedness1_evaluate(IOHprofiler_problem_t *problem, c
   data = (transform_obj_ruggedness1_data_t *) IOHprofiler_problem_transformed_get_data(problem);
   IOHprofiler_evaluate_function(IOHprofiler_problem_transformed_get_inner_problem(problem), x, y);
   for (i = 0; i < problem->number_of_objectives; i++) {
-      problem->raw_fitness[i] = y[i];
       y[i] = compute_ruggedness(y[i],problem->number_of_variables);
+      problem->raw_fitness[i] = y[i];
       
   }
   assert(y[0] <= problem->best_value[0]);
