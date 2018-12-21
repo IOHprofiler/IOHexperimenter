@@ -204,7 +204,7 @@ static void logger_PBO_openIndexFile(logger_PBO_data_t *logger,
   IOHprofiler_join_path(file_path, sizeof(file_path), folder_path, file_name, NULL);
   if (*target_file == NULL) {
     tmp_file = fopen(file_path, "r"); /* to check for existence */
-    if ((tmp_file) && (PBO_current_dim == logger->number_of_variables)
+    if ((tmp_file) && (PBO_current_dim == logger->inner_dimension)
         && (PBO_current_funId == logger->function_id)) {
         /* new instance of current funId and current dim */
       newLine = 0;
@@ -216,16 +216,16 @@ static void logger_PBO_openIndexFile(logger_PBO_data_t *logger,
       fclose(tmp_file);
     } else { /* either file doesn't exist (new funId) or new Dim */
       /* check that the dim was not already present earlier in the file, if so, create a new info file */
-      if (PBO_current_dim != logger->number_of_variables) {
+      if (PBO_current_dim != logger->inner_dimension) {
         int i, j;
         for (i = 0;
             i < PBO_number_of_dimensions && PBO_dimensions_in_current_infoFile[i] != 0
-                && PBO_dimensions_in_current_infoFile[i] != logger->number_of_variables; i++) {
+                && PBO_dimensions_in_current_infoFile[i] != logger->inner_dimension; i++) {
           ; /* checks whether dimension already present in the current infoFile */
         }
         if (i < PBO_number_of_dimensions && PBO_dimensions_in_current_infoFile[i] == 0) {
           /* new dimension seen for the first time */
-          PBO_dimensions_in_current_infoFile[i] = logger->number_of_variables;
+          PBO_dimensions_in_current_infoFile[i] = logger->inner_dimension;
           newLine = 1;
         } else {
           if (i < PBO_number_of_dimensions) { /* dimension already present, need to create a new file */
@@ -242,7 +242,7 @@ static void logger_PBO_openIndexFile(logger_PBO_data_t *logger,
           for (j = 0; j < PBO_number_of_dimensions; j++) { /* new info file, reinitialize list of dims */
             PBO_dimensions_in_current_infoFile[j] = 0;
           }
-          PBO_dimensions_in_current_infoFile[i] = logger->number_of_variables;
+          PBO_dimensions_in_current_infoFile[i] = logger->inner_dimension;
         }
       } else {
         if ( PBO_current_funId != logger->function_id ) {
@@ -272,7 +272,7 @@ static void logger_PBO_openIndexFile(logger_PBO_data_t *logger,
       strncat(used_dataFile_path, PBO_infoFile_firstInstance_char,
       IOHprofiler_PATH_MAX - strlen(used_dataFile_path) - 1);
       fprintf(*target_file, "%s.dat", used_dataFile_path); /* dataFile_path does not have the extension */
-      PBO_current_dim = logger->number_of_variables;
+      PBO_current_dim = logger->inner_dimension;
       PBO_current_funId = logger->function_id;
     }
   }
