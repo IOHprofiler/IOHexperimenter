@@ -93,7 +93,7 @@ static double f_N_queens_raw(const int *x, const size_t number_of_variables) {
         }
         l_penalty+=max(0.0, (-1.0+sum_l));
     }
-
+    result = number_of_queens_on_board - columns_penalty - raws_penalty - k_penalty - l_penalty;
     return result;
 }
 
@@ -117,7 +117,7 @@ static IOHprofiler_problem_t *f_N_queens_allocate(const size_t number_of_variabl
 
     /* Compute best solution */
     /*f_N_queens_evaluate(problem, problem->best_parameter, problem->best_value);*/
-    problem->best_value[0] = number_of_variables;
+    problem->best_value[0] = sqrt(number_of_variables);
     return problem;
 }
 
