@@ -85,6 +85,7 @@ static IOHprofiler_problem_t *f_leading_ones_dummy1_IOHprofiler_problem_allocate
         problem = transform_vars_dummy(problem, dummy, 0);   
     }
     else if(instance > 1 && instance <= 100){
+
         dummy[0] = dimension * 2.0/3.0;
         problem = transform_vars_dummy(problem, dummy, 0);   
 

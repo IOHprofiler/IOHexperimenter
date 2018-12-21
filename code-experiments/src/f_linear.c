@@ -96,6 +96,10 @@ static IOHprofiler_problem_t *f_linear_IOHprofiler_problem_allocate(const size_t
     problem = transform_obj_shift(problem,fopt);
   }
   else if(instance > 1 && instance <= 100){
+    for(i = 0; i < dimension; i++)
+            xopt[i] = 0;
+    problem = transform_vars_xor(problem,xopt,0);
+
     fopt = IOHprofiler_compute_fopt(function,instance);
     fopt1 = IOHprofiler_compute_fopt(function,instance + 100);
     fopt1 = fabs(fopt1) / 1000 * 4.8 + 0.2;

@@ -79,6 +79,7 @@ static IOHprofiler_problem_t *f_leading_ones_epistasis_IOHprofiler_problem_alloc
         problem = transform_vars_epistasis(problem, epistasis,0);
     }
     else if(instance > 1 && instance <= 100){
+
         epistasis[0] = 4;
         problem = transform_vars_epistasis(problem, epistasis,0);
 

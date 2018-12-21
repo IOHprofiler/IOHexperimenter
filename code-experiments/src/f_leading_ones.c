@@ -72,47 +72,46 @@ static IOHprofiler_problem_t *f_leading_ones_IOHprofiler_problem_allocate(const 
                                                                           const long rseed,
                                                                           const char *problem_id_template,
                                                                           const char *problem_name_template) {
-    int *xopt;
-    int temp,t;
-    size_t i;
-    double fopt;
-    double fopt1;
-    IOHprofiler_problem_t *problem;
-    xopt = IOHprofiler_allocate_int_vector(dimension);
-    problem = f_leading_ones_allocate(dimension);
-  
+  int *z;
+  int temp,t;
+  size_t i;
+  double a;
+  double b;
+  IOHprofiler_problem_t *problem;
 
-
-
+  z = IOHprofiler_allocate_int_vector(dimension);
+  problem = f_leading_ones_allocate(dimension);
   if(instance == 1){
     for(i = 0; i < dimension; i++)
-      xopt[i] = 0;
-    fopt = 0.0;
-    problem = transform_vars_xor(problem,xopt,0);
-    problem = transform_obj_shift(problem,fopt);
+        z[i] = 0;
+    a = 0.0;
+    problem = transform_vars_xor(problem,z,0);
+    problem = transform_obj_shift(problem,a);
   }
   else if(instance > 1 && instance <= 100){
-    
-    fopt = IOHprofiler_compute_fopt(function,instance);
-    fopt1 = IOHprofiler_compute_fopt(function,instance + 100);
-    fopt1 = fabs(fopt1) / 1000 * 4.8 + 0.2;
-    problem = transform_vars_sigma(problem,xopt,0);
-    assert(fopt1 <= 5.0 && fopt1 >= 0.2);
-    problem = transform_obj_scale(problem,fopt1);
-    problem = transform_obj_shift(problem,fopt);
-  }else{
     for(i = 0; i < dimension; i++)
-      xopt[i] = 0;
-    fopt = 0.0;
-    problem = transform_vars_sigma(problem,xopt,0);
-    problem = transform_obj_shift(problem,fopt);
-  }
+      z[i] = 0;
+    problem = transform_vars_xor(problem,z,0);
 
+    a = IOHprofiler_compute_fopt(function,instance + 100);
+    a = fabs(a) / 1000 * 4.8 + 0.2;
+    b = IOHprofiler_compute_fopt(function, instance);
+    assert(a <= 5.0 && a >= 0.2);
+    problem = transform_obj_scale(problem,a);
+    problem = transform_obj_shift(problem,b);
+  }
+  else {
+    for (i = 0; i < dimension; i++)
+        z[i] = 0;
+    a = 0.0;
+    problem = transform_vars_xor(problem, z, 0);
+    problem = transform_obj_shift(problem, a);
+  }
   
   IOHprofiler_problem_set_id(problem, problem_id_template, function, instance, dimension);
   IOHprofiler_problem_set_name(problem, problem_name_template, function, instance, dimension);
   IOHprofiler_problem_set_type(problem, "pseudo-Boolean");
   
-  IOHprofiler_free_memory(xopt);
+  IOHprofiler_free_memory(z);
   return problem;
 }
