@@ -82,7 +82,7 @@ static IOHprofiler_problem_t *f_MIS_allocate(const size_t number_of_variables) {
 
     /* Compute best solution */
     /*f_MIS_evaluate(problem, problem->best_parameter, problem->best_value);*/
-    problem->best_value[0] = number_of_variables / 2.0 + 1.0;
+    problem->best_value[0] = number_of_variables / 2 + 1.0;
     return problem;
 }
 
