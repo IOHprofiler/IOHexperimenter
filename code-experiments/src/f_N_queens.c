@@ -93,7 +93,7 @@ static double f_N_queens_raw(const int *x, const size_t number_of_variables) {
         }
         l_penalty+=max(0.0, (-1.0+sum_l));
     }
-    result = number_of_queens_on_board - columns_penalty - raws_penalty - k_penalty - l_penalty;
+    result = (double) (number_of_queens_on_board - (C*raws_penalty) - (C*columns_penalty) -(C*k_penalty) - (C*l_penalty));
     return result;
 }
 
