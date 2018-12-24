@@ -28,20 +28,13 @@ long f_linear_ins;
 static double f_linear_raw(const int *x, const size_t number_of_variables) {
     size_t i = 0;
     double result;
-    double *weight;
     if (IOHprofiler_vector_contains_nan(x, number_of_variables))
         return NAN;
 
-    weight = IOHprofiler_allocate_vector(number_of_variables);
-    IOHprofiler_unif(weight, number_of_variables, f_linear_ins * 10000);
-
     result = 0.0;
     for (i = 0; i < number_of_variables; ++i) {
-        result += (double)x[i] * (double)(weight[i] * 5);
-        assert(weight[i] * 5 > 0 && weight[i] * 5 < 5);
+        result += (double)x[i] * (double)(i);
     }
-
-    IOHprofiler_free_memory(weight);
     return result;
 }
 
