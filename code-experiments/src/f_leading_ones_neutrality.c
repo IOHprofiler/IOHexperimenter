@@ -126,6 +126,7 @@ static IOHprofiler_problem_t *f_leading_ones_neutrality_IOHprofiler_problem_allo
     IOHprofiler_problem_set_name(problem, problem_name_template, function, instance, dimension);
     IOHprofiler_problem_set_type(problem, "pseudo-Boolean");
 
+    IOHprofiler_free_memory(neutrality);
     IOHprofiler_free_memory(z);
     IOHprofiler_free_memory(sigma);
     IOHprofiler_free_memory(xins);

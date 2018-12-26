@@ -128,6 +128,7 @@ static IOHprofiler_problem_t *f_leading_ones_dummy1_IOHprofiler_problem_allocate
     IOHprofiler_problem_set_name(problem, problem_name_template, function, instance, dimension);
     IOHprofiler_problem_set_type(problem, "pseudo-Boolean");
     
+    IOHprofiler_free_memory(dummy);
     IOHprofiler_free_memory(z);
     IOHprofiler_free_memory(sigma);
     IOHprofiler_free_memory(xins);

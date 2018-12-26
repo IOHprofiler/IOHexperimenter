@@ -124,7 +124,8 @@ static IOHprofiler_problem_t *f_leading_ones_epistasis_IOHprofiler_problem_alloc
     IOHprofiler_problem_set_id(problem, problem_id_template, function, instance, dimension);
     IOHprofiler_problem_set_name(problem, problem_name_template, function, instance, dimension);
     IOHprofiler_problem_set_type(problem, "pseudo-Boolean");
-
+    
+    IOHprofiler_free_memory(epistasis);
     IOHprofiler_free_memory(z);
     IOHprofiler_free_memory(sigma);
     IOHprofiler_free_memory(xins);
