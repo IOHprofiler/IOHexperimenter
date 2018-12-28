@@ -33,7 +33,7 @@ static double f_linear_raw(const int *x, const size_t number_of_variables) {
 
     result = 0.0;
     for (i = 0; i < number_of_variables; ++i) {
-        result += (double)x[i] * (double)(i);
+        result += (double)x[i] * (double)(i+1);
     }
     return result;
 }
