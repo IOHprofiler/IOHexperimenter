@@ -16,6 +16,8 @@
 #include "transform_obj_shift.c"
 #include "transform_vars_neutrality.c"
 #include "transform_obj_scale.c"
+#include "transform_vars_neutrality_sigma.c"
+#include "transform_vars_neutrality_xor.c"
 /**
  * @brief Implements the one_max_neutrality function without connections to any IOHprofiler structures.
  */
@@ -69,15 +71,12 @@ static IOHprofiler_problem_t *f_one_max_neutrality_IOHprofiler_problem_allocate(
 
     int * neutrality;
     int *z, *sigma;
-    int temp,t;
+    int temp,t,new_dim;
     size_t i;
     double a;
     double b;
     double *xins;
     IOHprofiler_problem_t *problem;
-    z = IOHprofiler_allocate_int_vector(dimension);
-    sigma = IOHprofiler_allocate_int_vector(dimension);
-    xins = IOHprofiler_allocate_vector(dimension);
 
   
     neutrality = IOHprofiler_allocate_int_vector(1);
@@ -87,24 +86,35 @@ static IOHprofiler_problem_t *f_one_max_neutrality_IOHprofiler_problem_allocate(
         problem = transform_vars_neutrality(problem, neutrality, 0);
     }
     else if(instance > 1 && instance <= 50){
-        IOHprofiler_compute_xopt(z,rseed,dimension);
+        neutrality[0] = 3;
+        new_dim = dimension/neutrality[0];
+        z = IOHprofiler_allocate_int_vector(new_dim);
+
+        IOHprofiler_compute_xopt(z,rseed,new_dim);
         a = IOHprofiler_compute_fopt(function,instance + 100);
         a = fabs(a) / 1000 * 4.8 + 0.2;
         b = IOHprofiler_compute_fopt(function,instance);
-        problem = transform_vars_xor(problem,z,0);
         assert(a <= 5.0 && a >= 0.2);
+        problem = transform_vars_neutrality_xor(problem, neutrality,z, 0);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
+        IOHprofiler_free_memory(z);
     }
     else if(instance > 50 && instance <= 100)
     {
-        IOHprofiler_compute_xopt_double(xins,rseed,dimension);
-        for(i = 0; i < dimension; i++){
+        neutrality[0] = 3;
+        new_dim = dimension / 3;
+        sigma = IOHprofiler_allocate_int_vector(new_dim);
+        xins = IOHprofiler_allocate_vector(new_dim);
+
+        
+        IOHprofiler_compute_xopt_double(xins,rseed,new_dim);
+        for(i = 0; i < new_dim; i++){
             sigma[i] = (int)i;
         }
-        for(i = 0; i < dimension; i++){
-            t = (int)(xins[i] * (double)dimension);
-            assert(t >= 0 && t < dimension);
+        for(i = 0; i < new_dim; i++){
+            t = (int)(xins[i] * (double)new_dim);
+            assert(t >= 0 && t < new_dim);
             temp = sigma[0];
             sigma[0] = sigma[t];
             sigma[t] = temp; 
@@ -112,23 +122,24 @@ static IOHprofiler_problem_t *f_one_max_neutrality_IOHprofiler_problem_allocate(
         a = IOHprofiler_compute_fopt(function,instance + 100);
         a = fabs(a) / 1000 * 4.8 + 0.2;
         b = IOHprofiler_compute_fopt(function, instance);
-        problem = transform_vars_sigma(problem, sigma, 0);
         assert(a <= 5.0 && a >= 0.2);
+
+        problem = transform_vars_neutrality_sigma(problem, neutrality,sigma, 0);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
+
+        IOHprofiler_free_memory(sigma);
+        IOHprofiler_free_memory(xins);
     } else {
-        for (i = 0; i < dimension; i++)
-            z[i] = 0;
-        a = 0.0;
-        problem = transform_vars_xor(problem, z, 0);
-        problem = transform_obj_shift(problem, a);
+        neutrality[0] = 3;
+        problem = transform_vars_neutrality(problem, neutrality, 0);
     }
     IOHprofiler_problem_set_id(problem, problem_id_template, function, instance, dimension);
     IOHprofiler_problem_set_name(problem, problem_name_template, function, instance, dimension);
     IOHprofiler_problem_set_type(problem, "pseudo-Boolean");
 
-    IOHprofiler_free_memory(z);
-    IOHprofiler_free_memory(sigma);
-    IOHprofiler_free_memory(xins);
+    IOHprofiler_free_memory(neutrality);
+
+
     return problem;
 }

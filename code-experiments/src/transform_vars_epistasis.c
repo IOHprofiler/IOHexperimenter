@@ -106,7 +106,7 @@ static IOHprofiler_problem_t *transform_vars_epistasis(IOHprofiler_problem_t *in
 
  
   data = (transform_vars_epistasis_data_t *) IOHprofiler_allocate_memory(sizeof(*data));
-  data->offset = IOHprofiler_duplicate_int_vector(offset, inner_problem->number_of_variables);
+  data->offset = IOHprofiler_duplicate_int_vector(offset, 1);
   data->epistasis_x = IOHprofiler_allocate_int_vector(inner_problem->number_of_variables);
 
   

@@ -62,6 +62,7 @@ static IOHprofiler_problem_t *transform_vars_sigma(IOHprofiler_problem_t *inner_
     
   transform_vars_sigma_data_t *data;
   IOHprofiler_problem_t *problem;
+  int * temp_best;
   size_t i;
   if (sigma_bounds)
     IOHprofiler_error("sigma_bounds not implemented.");
@@ -69,12 +70,17 @@ static IOHprofiler_problem_t *transform_vars_sigma(IOHprofiler_problem_t *inner_
   data = (transform_vars_sigma_data_t *) IOHprofiler_allocate_memory(sizeof(*data));
   data->offset = IOHprofiler_duplicate_int_vector(offset, inner_problem->number_of_variables);
   data->sigma_x = IOHprofiler_allocate_int_vector(inner_problem->number_of_variables);
+  temp_best = IOHprofiler_allocate_int_vector(inner_problem->number_of_variables);
 
   problem = IOHprofiler_problem_transformed_allocate(inner_problem, data, transform_vars_sigma_free, "transform_vars_sigma");
   problem->evaluate_function = transform_vars_sigma_evaluate;
   /* Compute best parameter */
   for (i = 0; i < problem->number_of_variables; i++) {
-      problem->best_parameter[i] = sigma_compute(problem->best_parameter,data->offset[i]);
+      temp_best[i] = sigma_compute(problem->best_parameter,data->offset[i]);
   }
+  for (i = 0; i < problem->number_of_variables; i++) {
+      problem->best_parameter[i] = temp_best[i];
+  }
+  IOHprofiler_free_memory(temp_best);
   return problem;
 }

@@ -81,17 +81,20 @@ static IOHprofiler_problem_t *f_one_max_ruggedness1_IOHprofiler_problem_allocate
        problem = transform_obj_ruggedness1(problem);
     }
     else if(instance > 1 && instance <= 50){
+
         IOHprofiler_compute_xopt(z,rseed,dimension);
         a = IOHprofiler_compute_fopt(function,instance + 100);
         a = fabs(a) / 1000 * 4.8 + 0.2;
         b = IOHprofiler_compute_fopt(function,instance);
         problem = transform_vars_xor(problem,z,0);
         assert(a <= 5.0 && a >= 0.2);
+        problem = transform_obj_ruggedness1(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
     }
     else if(instance > 50 && instance <= 100)
-    {
+    {   
+
         IOHprofiler_compute_xopt_double(xins,rseed,dimension);
         for(i = 0; i < dimension; i++){
             sigma[i] = (int)i;
@@ -108,14 +111,12 @@ static IOHprofiler_problem_t *f_one_max_ruggedness1_IOHprofiler_problem_allocate
         b = IOHprofiler_compute_fopt(function, instance);
         problem = transform_vars_sigma(problem, sigma, 0);
         assert(a <= 5.0 && a >= 0.2);
+
+        problem = transform_obj_ruggedness1(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
     } else {
-        for (i = 0; i < dimension; i++)
-            z[i] = 0;
-        a = 0.0;
-        problem = transform_vars_xor(problem, z, 0);
-        problem = transform_obj_shift(problem, a);
+        problem = transform_obj_ruggedness1(problem);
     }
     IOHprofiler_problem_set_id(problem, problem_id_template, function, instance, dimension);
     IOHprofiler_problem_set_name(problem, problem_name_template, function, instance, dimension);

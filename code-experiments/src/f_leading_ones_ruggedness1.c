@@ -87,6 +87,7 @@ static IOHprofiler_problem_t *f_leading_ones_ruggedness1_IOHprofiler_problem_all
         b = IOHprofiler_compute_fopt(function,instance);
         problem = transform_vars_xor(problem,z,0);
         assert(a <= 5.0 && a >= 0.2);
+        problem = transform_obj_ruggedness1(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
     }
@@ -108,6 +109,7 @@ static IOHprofiler_problem_t *f_leading_ones_ruggedness1_IOHprofiler_problem_all
         b = IOHprofiler_compute_fopt(function, instance);
         problem = transform_vars_sigma(problem, sigma, 0);
         assert(a <= 5.0 && a >= 0.2);
+        problem = transform_obj_ruggedness1(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
     } else {
