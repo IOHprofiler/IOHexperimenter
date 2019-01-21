@@ -627,10 +627,10 @@ static IOHprofiler_problem_t *logger_PBO(IOHprofiler_observer_t *observer, IOHpr
   logger_PBO->function_id = IOHprofiler_problem_get_suite_dep_function(inner_problem);
   logger_PBO->instance_id = IOHprofiler_problem_get_suite_dep_instance(inner_problem);
   logger_PBO->written_last_eval = 1;
-  logger_PBO->last_fvalue = DBL_MIN_EXP;
+  logger_PBO->last_fvalue = -DBL_MAX;
   logger_PBO->is_initialized = 0;
-  logger_PBO->best_fvalue = DBL_MIN_EXP;
-  logger_PBO->best_raw_value  = DBL_MIN_EXP;
+  logger_PBO->best_fvalue = -DBL_MAX;
+  logger_PBO->best_raw_value  = -DBL_MAX;
   /* Initialize triggers based on target values and number of evaluations */
   logger_PBO->targets = IOHprofiler_observer_targets(observer->number_target_triggers, observer->target_precision);
   logger_PBO->evaluations = IOHprofiler_observer_evaluations(observer->base_evaluation_triggers, inner_problem->number_of_variables);

@@ -301,7 +301,7 @@ static void IOHprofiler_observer_evaluations_free(IOHprofiler_observer_evaluatio
  */
 static IOHprofiler_observer_update_t  *IOHprofiler_observer_update(void) {
    IOHprofiler_observer_update_t *updating = (IOHprofiler_observer_update_t *) IOHprofiler_allocate_memory(sizeof(*updating));
-   updating->previous_value = DBL_MIN_EXP;
+   updating->previous_value = -DBL_MAX;
 
    return updating;
 }
