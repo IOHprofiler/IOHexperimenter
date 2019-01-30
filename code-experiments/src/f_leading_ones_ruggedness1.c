@@ -27,9 +27,12 @@ static double f_leading_ones_ruggedness1_raw(const int *x, const size_t number_o
         return NAN;
     result = 0.0;
     for (i = 0; i < number_of_variables; ++i) {
-        result += (double)x[i];
+        if (x[i] == 1.0) {
+            result = (double)(i + 1);
+        } else {
+            break;
+        }
     }
-
     return result;
 }
 
