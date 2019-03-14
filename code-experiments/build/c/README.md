@@ -19,7 +19,7 @@ To run your experiment using the tool, following files are necessary:
 
 With these files, you can invoke **make** to compile, then run your experiment. To specify the experiment, you need to take care of [_Configuration_](#Configuration) and [_Implementation of Algorithms_](#Algorithms). 
 
-#	Configuration <a name="Configuration"></a>
+###	Configuration <a name="Configuration"></a>
 `Configuration.ini` consists of three parts: **[suite]**, **[observer]** and **[triggers]**.
 
 *	**[suite]** is the session that collects problems to be tested in the experiment. 
@@ -40,7 +40,7 @@ With these files, you can invoke **make** to compile, then run your experiment. 
 	*	`complete_triggers`: is for .cdat files.
 	*	`number_interval_triggers`: is for .idat files.
 
-#	Implementation of Algorithm <a name="Algorithms"></a>
+###	Implementation of Algorithm <a name="Algorithms"></a>
 `user_algorithm.c` includes the implementation of algorithms to be tested. Take the exiting `user_algorithm.c` as an example, a random local search algorithm is implemented in the function **User_Algorithm()**. 
 
 ```
