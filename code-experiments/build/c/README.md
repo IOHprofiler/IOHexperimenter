@@ -17,7 +17,7 @@ To run your experiment using the tool, following files are necessary:
 - `user_algorithm.c` the file including implementation of the algorithm to be tested.
 - `Makefile.in`
 
-With these files, you can invoke `make**` to run your experiment. To specify the experiment, you need to take care of [_Configuration_](#Configuration) and [_Implementation of Algorithms_](#Algorithms). 
+With these files, you can invoke **make** to compile, then run your experiment. To specify the experiment, you need to take care of [_Configuration_](#Configuration) and [_Implementation of Algorithms_](#Algorithms). 
 
 #	Configuration <a name="Configuration"></a>
 `Configuration.ini` consists of three parts: **[suite]**, **[observer]** and **[triggers]**.
