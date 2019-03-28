@@ -1,0 +1,16 @@
+*.csv
+**.o
+**.so
+**.dll
+*.log
+*.RData
+*.Rhistory
+*.pdf
+*.html
+.*
+.vscode/
+
+!/.Rbuildignore
+!/.gitignore
+.Rproj.user
+*.Rproj
