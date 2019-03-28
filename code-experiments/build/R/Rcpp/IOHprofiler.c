@@ -533,8 +533,6 @@ char *IOHprofiler_strdupf(const char *str, ...);
 }
 #endif
 #endif
-
-
 /************************************************************************
  * WARNING
  *
@@ -4253,15 +4251,6 @@ static IOHprofiler_problem_t *f_jump_IOHprofiler_problem_allocate(const size_t f
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -4283,15 +4272,6 @@ static IOHprofiler_problem_t *f_jump_IOHprofiler_problem_allocate(const size_t f
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         for (i = 0; i < dimension; i++)
             z[i] = 0;
@@ -4413,15 +4393,6 @@ static IOHprofiler_problem_t *f_leading_ones_IOHprofiler_problem_allocate(const 
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -4443,15 +4414,6 @@ static IOHprofiler_problem_t *f_leading_ones_IOHprofiler_problem_allocate(const 
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         for (i = 0; i < dimension; i++)
             z[i] = 0;
@@ -4573,15 +4535,6 @@ static IOHprofiler_problem_t *f_linear_IOHprofiler_problem_allocate(const size_t
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -4603,15 +4556,6 @@ static IOHprofiler_problem_t *f_linear_IOHprofiler_problem_allocate(const size_t
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         for (i = 0; i < dimension; i++)
             z[i] = 0;
@@ -4728,16 +4672,6 @@ static IOHprofiler_problem_t *f_one_max_IOHprofiler_problem_allocate(const size_
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
-
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -4759,15 +4693,6 @@ static IOHprofiler_problem_t *f_one_max_IOHprofiler_problem_allocate(const size_
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         for (i = 0; i < dimension; i++)
             z[i] = 0;
@@ -4994,15 +4919,6 @@ static IOHprofiler_problem_t *f_labs_IOHprofiler_problem_allocate(const size_t f
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -5024,15 +4940,6 @@ static IOHprofiler_problem_t *f_labs_IOHprofiler_problem_allocate(const size_t f
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         for (i = 0; i < dimension; i++)
             z[i] = 0;
@@ -5541,17 +5448,8 @@ static IOHprofiler_problem_t *f_one_max_dummy1_IOHprofiler_problem_allocate(cons
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dummy[0]; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
-        IOHprofiler_free_memory(z);
 
+        IOHprofiler_free_memory(z);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -5576,15 +5474,7 @@ static IOHprofiler_problem_t *f_one_max_dummy1_IOHprofiler_problem_allocate(cons
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dummy[0]; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
+
         IOHprofiler_free_memory(sigma);
         IOHprofiler_free_memory(xins);
     } else {
@@ -5699,15 +5589,6 @@ static IOHprofiler_problem_t *f_one_max_dummy2_IOHprofiler_problem_allocate(cons
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-                FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dummy[0]; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
 
         IOHprofiler_free_memory(z);
     }
@@ -5735,15 +5616,6 @@ static IOHprofiler_problem_t *f_one_max_dummy2_IOHprofiler_problem_allocate(cons
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dummy[0]; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
         IOHprofiler_free_memory(sigma);
         IOHprofiler_free_memory(xins);
     } else {
@@ -6253,15 +6125,6 @@ static IOHprofiler_problem_t *f_one_max_epistasis_IOHprofiler_problem_allocate(c
         problem = transform_vars_epistasis_xor(problem,epistasis, z, 0);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-                FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -6285,15 +6148,6 @@ static IOHprofiler_problem_t *f_one_max_epistasis_IOHprofiler_problem_allocate(c
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         epistasis[0] = 4;
         problem = transform_vars_epistasis(problem, epistasis,0);
@@ -6777,15 +6631,6 @@ static IOHprofiler_problem_t *f_one_max_neutrality_IOHprofiler_problem_allocate(
         problem = transform_vars_neutrality_xor(problem, neutrality,z, 0);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-                FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < new_dim; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
         IOHprofiler_free_memory(z);
     }
     else if(instance > 50 && instance <= 100)
@@ -6815,15 +6660,7 @@ static IOHprofiler_problem_t *f_one_max_neutrality_IOHprofiler_problem_allocate(
         problem = transform_vars_neutrality_sigma(problem, neutrality,sigma, 0);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < new_dim; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
+
         IOHprofiler_free_memory(sigma);
         IOHprofiler_free_memory(xins);
     } else {
@@ -7010,15 +6847,6 @@ static IOHprofiler_problem_t *f_one_max_ruggedness1_IOHprofiler_problem_allocate
         problem = transform_obj_ruggedness1(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-                FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {   
@@ -7043,15 +6871,6 @@ static IOHprofiler_problem_t *f_one_max_ruggedness1_IOHprofiler_problem_allocate
         problem = transform_obj_ruggedness1(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         problem = transform_obj_ruggedness1(problem);
     }
@@ -7241,15 +7060,6 @@ static IOHprofiler_problem_t *f_one_max_ruggedness2_IOHprofiler_problem_allocate
         problem = transform_obj_ruggedness2(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-                FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -7272,15 +7082,7 @@ static IOHprofiler_problem_t *f_one_max_ruggedness2_IOHprofiler_problem_allocate
 
         problem = transform_obj_ruggedness2(problem);
         problem = transform_obj_scale(problem,a);
-        problem = transform_obj_shift(problem,b);FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
+        problem = transform_obj_shift(problem,b);
     } else {
         problem = transform_obj_ruggedness2(problem);
     }
@@ -7467,15 +7269,6 @@ static IOHprofiler_problem_t *f_one_max_ruggedness3_IOHprofiler_problem_allocate
         problem = transform_obj_ruggedness3(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-                FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -7498,15 +7291,6 @@ static IOHprofiler_problem_t *f_one_max_ruggedness3_IOHprofiler_problem_allocate
         problem = transform_obj_ruggedness3(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         problem = transform_obj_ruggedness3(problem);
     }
@@ -7553,9 +7337,12 @@ static double f_leading_ones_dummy1_raw(const int *x, const size_t number_of_var
         return NAN;
     result = 0.0;
     for (i = 0; i < number_of_variables; ++i) {
-        result += (double)x[i];
+        if (x[i] == 1.0) {
+            result = (double)(i + 1);
+        } else {
+            break;
+        }
     }
-
     return result;
 }
 
@@ -7620,17 +7407,7 @@ static IOHprofiler_problem_t *f_leading_ones_dummy1_IOHprofiler_problem_allocate
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-                FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dummy[0]; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
         IOHprofiler_free_memory(z);
-
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -7656,15 +7433,6 @@ static IOHprofiler_problem_t *f_leading_ones_dummy1_IOHprofiler_problem_allocate
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dummy[0]; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
         IOHprofiler_free_memory(sigma);
         IOHprofiler_free_memory(xins);
     } else {
@@ -7713,7 +7481,11 @@ static double f_leading_ones_dummy2_raw(const int *x, const size_t number_of_var
         return NAN;
     result = 0.0;
     for (i = 0; i < number_of_variables; ++i) {
-        result += (double)x[i];
+        if (x[i] == 1.0) {
+            result = (double)(i + 1);
+        } else {
+            break;
+        }
     }
 
     return result;
@@ -7778,17 +7550,7 @@ static IOHprofiler_problem_t *f_leading_ones_dummy2_IOHprofiler_problem_allocate
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-                FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dummy[0]; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
         IOHprofiler_free_memory(z);
-
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -7814,15 +7576,6 @@ static IOHprofiler_problem_t *f_leading_ones_dummy2_IOHprofiler_problem_allocate
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dummy[0]; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
         IOHprofiler_free_memory(sigma);
         IOHprofiler_free_memory(xins);
     } else {
@@ -7868,7 +7621,11 @@ static double f_leading_ones_epistasis_raw(const int *x, const size_t number_of_
         return NAN;
     result = 0.0;
     for (i = 0; i < number_of_variables; ++i) {
-        result += (double)x[i];
+        if (x[i] == 1.0) {
+            result = (double)(i + 1);
+        } else {
+            break;
+        }
     }
 
     return result;
@@ -7938,15 +7695,6 @@ static IOHprofiler_problem_t *f_leading_ones_epistasis_IOHprofiler_problem_alloc
         problem = transform_vars_epistasis_xor(problem,epistasis, z, 0);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -7970,15 +7718,6 @@ static IOHprofiler_problem_t *f_leading_ones_epistasis_IOHprofiler_problem_alloc
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         epistasis[0] = 4;
         problem = transform_vars_epistasis(problem, epistasis,0);
@@ -8024,7 +7763,11 @@ static double f_leading_ones_neutrality_raw(const int *x, const size_t number_of
         return NAN;
     result = 0.0;
     for (i = 0; i < number_of_variables; ++i) {
-        result += (double)x[i];
+        if (x[i] == 1.0) {
+            result = (double)(i + 1);
+        } else {
+            break;
+        }
     }
 
     return result;
@@ -8092,17 +7835,7 @@ static IOHprofiler_problem_t *f_leading_ones_neutrality_IOHprofiler_problem_allo
         problem = transform_vars_neutrality_xor(problem, neutrality,z, 0);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < new_dim; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
         IOHprofiler_free_memory(z);
-
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -8131,15 +7864,6 @@ static IOHprofiler_problem_t *f_leading_ones_neutrality_IOHprofiler_problem_allo
         problem = transform_vars_neutrality_sigma(problem, neutrality,sigma, 0);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < new_dim; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
 
         IOHprofiler_free_memory(sigma);
         IOHprofiler_free_memory(xins);
@@ -8187,9 +7911,12 @@ static double f_leading_ones_ruggedness1_raw(const int *x, const size_t number_o
         return NAN;
     result = 0.0;
     for (i = 0; i < number_of_variables; ++i) {
-        result += (double)x[i];
+        if (x[i] == 1.0) {
+            result = (double)(i + 1);
+        } else {
+            break;
+        }
     }
-
     return result;
 }
 
@@ -8250,15 +7977,6 @@ static IOHprofiler_problem_t *f_leading_ones_ruggedness1_IOHprofiler_problem_all
         problem = transform_obj_ruggedness1(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -8281,15 +7999,6 @@ static IOHprofiler_problem_t *f_leading_ones_ruggedness1_IOHprofiler_problem_all
         problem = transform_obj_ruggedness1(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         for (i = 0; i < dimension; i++)
             z[i] = 0;
@@ -8337,7 +8046,11 @@ static double f_leading_ones_ruggedness2_raw(const int *x, const size_t number_o
         return NAN;
     result = 0.0;
     for (i = 0; i < number_of_variables; ++i) {
-        result += (double)x[i];
+        if (x[i] == 1.0) {
+            result = (double)(i + 1);
+        } else {
+            break;
+        }
     }
 
     return result;
@@ -8400,15 +8113,6 @@ static IOHprofiler_problem_t *f_leading_ones_ruggedness2_IOHprofiler_problem_all
         problem = transform_obj_ruggedness2(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -8431,15 +8135,6 @@ static IOHprofiler_problem_t *f_leading_ones_ruggedness2_IOHprofiler_problem_all
         problem = transform_obj_ruggedness2(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         for (i = 0; i < dimension; i++)
             z[i] = 0;
@@ -8487,7 +8182,11 @@ static double f_leading_ones_ruggedness3_raw(const int *x, const size_t number_o
         return NAN;
     result = 0.0;
     for (i = 0; i < number_of_variables; ++i) {
-        result += (double)x[i];
+        if (x[i] == 1.0) {
+            result = (double)(i + 1);
+        } else {
+            break;
+        }
     }
 
     return result;
@@ -8550,15 +8249,6 @@ static IOHprofiler_problem_t *f_leading_ones_ruggedness3_IOHprofiler_problem_all
         problem = transform_obj_ruggedness3(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -8581,15 +8271,6 @@ static IOHprofiler_problem_t *f_leading_ones_ruggedness3_IOHprofiler_problem_all
         problem = transform_obj_ruggedness3(problem);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         for (i = 0; i < dimension; i++)
             z[i] = 0;
@@ -8716,15 +8397,6 @@ static IOHprofiler_problem_t *f_ising_1D_IOHprofiler_problem_allocate(const size
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -8746,15 +8418,6 @@ static IOHprofiler_problem_t *f_ising_1D_IOHprofiler_problem_allocate(const size
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         for (i = 0; i < dimension; i++)
             z[i] = 0;
@@ -8893,15 +8556,6 @@ static IOHprofiler_problem_t *f_ising_2D_IOHprofiler_problem_allocate(const size
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -8923,15 +8577,6 @@ static IOHprofiler_problem_t *f_ising_2D_IOHprofiler_problem_allocate(const size
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         for (i = 0; i < dimension; i++)
             z[i] = 0;
@@ -9074,15 +8719,6 @@ static IOHprofiler_problem_t *f_ising_triangle_IOHprofiler_problem_allocate(cons
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -9104,15 +8740,6 @@ static IOHprofiler_problem_t *f_ising_triangle_IOHprofiler_problem_allocate(cons
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         for (i = 0; i < dimension; i++)
             z[i] = 0;
@@ -9293,15 +8920,6 @@ static IOHprofiler_problem_t *f_N_queens_IOHprofiler_problem_allocate(const size
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -9323,15 +8941,6 @@ static IOHprofiler_problem_t *f_N_queens_IOHprofiler_problem_allocate(const size
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         for (i = 0; i < dimension; i++)
             z[i] = 0;
@@ -9477,15 +9086,6 @@ static IOHprofiler_problem_t *f_MIS_IOHprofiler_problem_allocate(const size_t fu
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d", z[i]);
-        }
-        fprintf(fp," Na %lf %lf\n",a,b);
-        fclose(fp);
     }
     else if(instance > 50 && instance <= 100)
     {
@@ -9507,15 +9107,6 @@ static IOHprofiler_problem_t *f_MIS_IOHprofiler_problem_allocate(const size_t fu
         assert(a <= 5.0 && a >= 0.2);
         problem = transform_obj_scale(problem,a);
         problem = transform_obj_shift(problem,b);
-        FILE *fp;
-        fp = fopen("./instances","a+");
-        fprintf(fp,"%d %d %d Na ",function,dimension,instance);
-        for (i = 0; i < dimension; ++i)
-        {
-            fprintf(fp,"%d,", sigma[i]);
-        }
-        fprintf(fp," %lf %lf\n",a,b);
-        fclose(fp);
     } else {
         for (i = 0; i < dimension; i++)
             z[i] = 0;
@@ -11779,7 +11370,7 @@ IOHprofiler_observer_t *IOHprofiler_observer(const char *observer_name, const ch
 
   number_interval_triggers = 0;
   if (IOHprofiler_options_read_size_t(observer_options, "number_interval_triggers", &number_interval_triggers) != 0) {
-    if(number_interval_triggers == 0)
+    if(number_interval_triggers <= 0)
       number_interval_triggers = 0;
   }
 
