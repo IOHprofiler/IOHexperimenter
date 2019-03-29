@@ -8,7 +8,7 @@
 #' @export
 #'
 IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000), 
-  functions = seq(24), instances = seq(100), algorithm_info = '', algorithm_name = '',
+  functions = seq(23), instances = seq(100), algorithm_info = '', algorithm_name = '',
   data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = NULL) {
   
   assert_that(is.numeric(dims))
@@ -17,24 +17,43 @@ IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
   base_evaluation_triggers <- 3
   
   # intialize the backend C code
-  init_suite(paste0(functions, collapse = '-'), 
-             paste0(dims, collapse = '-'),
-             paste0(instances, collapse = '-'))
+  c_init_suite(
+    paste0(functions, collapse = '-'), 
+    paste0(dims, collapse = '-'),
+    paste0(instances, collapse = '-')
+  )
   
   # add parameters here
-  init_observer()
+  c_init_observer()
   
   structure(
     list(
+      f_eval = function (x) {
+        if (is.null(dim(x))) x <- t(x)
+        if (ncol(x) != exp$curr_dim) x <- t(x)
+        
+        stopifnot(ncol(x) == exp$curr_dim)
+        apply(x, 1, c_eval)
+      },
       curr_dim = dims[1],
       curr_function_id = functions[1],
-      curr_instance = instances[1]
+      curr_instance = instances[1],
+      fopt = NULL,
+      xopt = NULL
     ), 
     class = c('IOHexperimenter', 'list'),
     dims = dims, functions = functions, instances = instances,
     cdat =  cdat, idat = 0, tdat = 3, param.track = param.track,
-    data.dir = data.dir, C.state = T,
+    data.dir = data.dir, C.state = T
   )
+}
+
+print.IOHexperimenter <- function() {
+  
+}
+
+cat.IOHexperimenter <- function() {
+  
 }
 
 #' S3 generic summary operator for IOHexperimenter
@@ -54,7 +73,10 @@ summary.IOHexperimenter <- function(object, ...) {
   cat(paste('current instancee: ', paste(object$curr_instance, collapse = ',')))
 }
 
-get_function.IOHexperimenter <- function(exp, dim, function_id, instance) {
+
+get_number_
+
+get_function <- function(exp, dim, function_id, instance) {
   exp$curr_dim <- dim
   exp$curr_function_id <- function_id
   exp$curr_instance <- instance
@@ -69,7 +91,7 @@ get_function.IOHexperimenter <- function(exp, dim, function_id, instance) {
   }
 }
 
-get_next_function.IOHexperimenter <- function(exp) {
+get_next_function <- function(exp) {
   curr_dim <- exp$curr_dim 
   curr_function_id <- exp$curr_function_id 
   curr_instance <- exp$curr_instance
@@ -85,15 +107,15 @@ get_next_function.IOHexperimenter <- function(exp) {
   }
 }
 
-evaluate.IOHexperimenter <- function(exp, x) {
-  function (x) {
-    if (is.null(dim(x))) x <- t(x)
-    if (ncol(x) != exp$curr_dim) x <- t(x)
-    
-    stopifnot(ncol(x) == exp$curr_dim)
-    apply(x, 1, c_eval)
-  }
-}
+# evaluate.IOHexperimenter <- function(exp, x) {
+#   function (x) {
+#     if (is.null(dim(x))) x <- t(x)
+#     if (ncol(x) != exp$curr_dim) x <- t(x)
+#     
+#     stopifnot(ncol(x) == exp$curr_dim)
+#     apply(x, 1, c_eval)
+#   }
+# }
 
  
 
