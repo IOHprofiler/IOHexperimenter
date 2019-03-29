@@ -33,7 +33,7 @@ IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
     class = c('IOHexperimenter', 'list'),
     dims = dims, functions = functions, instances = instances,
     cdat =  cdat, idat = 0, tdat = 3, param.track = param.track,
-    data.dir = data.dir
+    data.dir = data.dir, C.state = T,
   )
 }
 

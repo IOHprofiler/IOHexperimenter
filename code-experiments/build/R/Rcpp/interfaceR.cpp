@@ -287,10 +287,11 @@ String get_problem_info(){
 double c_eval(NumericVector x){
 	double *result = IOHprofiler_allocate_vector(1);
 	int n = x.size();
-	if(n != suite.current_problem->number_of_variables){
-		Rcout << "Error! Dimension of input vector is incorrect.\n";
-		return -DBL_MAX;
-	}
+	// if(n != suite.current_problem->number_of_variables){
+	// 	Rcout << "Error! Dimension of input vector is incorrect.\n";
+	// 	return -DBL_MAX;
+	// }
+
 	int *input = IOHprofiler_allocate_int_vector(n);
 	for(int i = 0; i < n; ++i){
 		input[i] = x(i);
