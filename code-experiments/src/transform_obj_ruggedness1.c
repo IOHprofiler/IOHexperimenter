@@ -39,7 +39,6 @@ double compute_ruggedness(double y, size_t dimension){
  * @brief Evaluates the transformation.
  */
 static void transform_obj_ruggedness1_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
-  transform_obj_ruggedness1_data_t *data;
   size_t i;
 
   if (IOHprofiler_vector_contains_nan(x, IOHprofiler_problem_get_dimension(problem))) {
@@ -47,7 +46,6 @@ static void transform_obj_ruggedness1_evaluate(IOHprofiler_problem_t *problem, c
   	return;
   }
 
-  data = (transform_obj_ruggedness1_data_t *) IOHprofiler_problem_transformed_get_data(problem);
   IOHprofiler_evaluate_function(IOHprofiler_problem_transformed_get_inner_problem(problem), x, y);
   for (i = 0; i < problem->number_of_objectives; i++) {
       y[i] = compute_ruggedness(y[i],problem->number_of_variables);

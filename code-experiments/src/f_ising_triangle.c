@@ -32,14 +32,15 @@ int modulo_ising_triangle(int x,int N){
 
 static int f_ising_triangle_raw(const int *x, const size_t number_of_variables) {
 
-    if (IOHprofiler_vector_contains_nan(x, number_of_variables))
-        return NAN;
-    size_t i,j,neig;
+    int i,j,neig;
     int result = 0;
     int neighbors[6];
-    int lattice_size = (int)sqrt(number_of_variables);
+    int lattice_size = (int)sqrt((double)number_of_variables);
     int (*spin_array)[lattice_size] = (int (*)[lattice_size])x;
-
+    
+    if (IOHprofiler_vector_contains_nan(x, number_of_variables))
+        return NAN;
+    
     for (i = 0; i < lattice_size; ++i) {
            for (j = 0; j < lattice_size; ++j) {
                 neighbors[0] = spin_array[modulo_ising_triangle((i - 1), lattice_size)][j] ;
@@ -48,9 +49,19 @@ static int f_ising_triangle_raw(const int *x, const size_t number_of_variables) 
                 neighbors[3] = spin_array[i][modulo_ising_triangle((i + 1) , lattice_size)] ;
                 neighbors[4] = spin_array[modulo_ising_triangle((i - 1) , lattice_size)][modulo_ising_triangle((j - 1) , lattice_size)] ;
                 neighbors[5] = spin_array[modulo_ising_triangle((i + 1) , lattice_size)][modulo_ising_triangle((j + 1) , lattice_size)];
+                
+
+                /*neighbors[0] = x[modulo_ising_triangle((i - 1), lattice_size) * lattice_size + j] ;
+                neighbors[1] = x[modulo_ising_triangle((i + 1), lattice_size) * lattice_size + j] ;
+                neighbors[2] = x[i * lattice_size + modulo_ising_triangle((j - 1) , lattice_size)] ;
+                neighbors[3] = x[i * lattice_size + modulo_ising_triangle((i + 1) , lattice_size)] ;
+                neighbors[4] = x[modulo_ising_triangle((i - 1) , lattice_size) * lattice_size + modulo_ising_triangle((j - 1) , lattice_size)] ;
+                neighbors[5] = x[modulo_ising_triangle((i + 1) , lattice_size) * lattice_size + modulo_ising_triangle((j + 1) , lattice_size)];
+                */
 
                 for (neig=0; neig<6; neig++) {
-                    result+= (spin_array[i][j] * neighbors[neig]) + ((1- spin_array[i][j])*(1- neighbors[neig]));
+                     result+= (spin_array[i][j] * neighbors[neig]) + ((1- spin_array[i][j])*(1- neighbors[neig])); 
+                   /* result+= (x[i * lattice_size + j] * neighbors[neig]) + ((1- spin_array[i * lattice_size + j])*(1- neighbors[neig]));*/
                 }
            }
     }

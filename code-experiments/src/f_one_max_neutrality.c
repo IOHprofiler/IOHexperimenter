@@ -71,7 +71,8 @@ static IOHprofiler_problem_t *f_one_max_neutrality_IOHprofiler_problem_allocate(
 
     int * neutrality;
     int *z, *sigma;
-    int temp,t,new_dim;
+    int temp,t;
+    size_t new_dim;
     size_t i;
     double a;
     double b;
@@ -87,7 +88,7 @@ static IOHprofiler_problem_t *f_one_max_neutrality_IOHprofiler_problem_allocate(
     }
     else if(instance > 1 && instance <= 50){
         neutrality[0] = 3;
-        new_dim = dimension/neutrality[0];
+        new_dim = dimension/(size_t)neutrality[0];
         z = IOHprofiler_allocate_int_vector(new_dim);
 
         IOHprofiler_compute_xopt(z,rseed,new_dim);

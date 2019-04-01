@@ -43,8 +43,8 @@ static void epistasis_compute_beforesigma(const int *x, int * epistasis_x,  int 
     }
     h += block_size;
   }
-  if(dimension - h > 0){
-    block_size = dimension - h;
+  if((int)dimension - h > 0){
+    block_size = (int)dimension - h;
     i = 0;
     while(i < block_size){
       epistasis_result = -1;
@@ -113,7 +113,7 @@ static IOHprofiler_problem_t *transform_vars_epistasis_sigma(IOHprofiler_problem
     
   transform_vars_epistasis_sigma_data_t *data;
   IOHprofiler_problem_t *problem;
-  size_t i;
+  
   if (epistasis_sigma_bounds)
     IOHprofiler_error("epistasis_sigma_bounds not implemented.");
 

@@ -25,7 +25,7 @@ static void compute_ruggedness3(double * y, size_t dimension){
     }
   }
   for(k = 0; k < dimension - dimension / 5 * 5; ++k){
-    y[k] = dimension - dimension / 5 * 5 - 1 - k;
+    y[k] = (double)(dimension - dimension / 5 * 5 - 1 - k);
   }
   y[dimension] = (double)dimension;
 }
