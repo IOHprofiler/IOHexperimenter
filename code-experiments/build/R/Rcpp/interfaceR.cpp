@@ -1,10 +1,8 @@
 #include <Rcpp.h>
-#include <string>
+#include <string>   //@Furong: is this library necessary?
+#include <stdlib.h>
 
 #include "IOHprofiler.c"
-
-
-
 
 using namespace Rcpp;
 
@@ -112,85 +110,8 @@ void init_observer(String result_folder, String algorithm_name, String algorithm
                                                 number_target_triggers,parameters_name.get_cstring());
  
 	current_observer = IOHprofiler_observer("PBO", observer_options);
-//	Rcout << "A new observer PBO has been created.\n";
 }
 
-
-// Those would not be necesary
-
-// //[[Rcpp::export]]
-// void set_result_folder(String folder){
-// 	result_folder = folder;
-// 	Rcout << "Output path has been set as " << folder.get_cstring() << ".\n";
-// }
-
-// //[[Rcpp::export]]
-// void set_algorithm_name(String alg_name){
-// 	algorithm_name = alg_name;
-// 	Rcout << "Algorithm name has been set as " << alg_name.get_cstring() << ".\n";
-// }
-
-// //[[Rcpp::export]]
-// void set_algorithm_info(String alg_info){
-// 	algorithm_info = alg_info;
-// 	Rcout << "Algorithm info has been set as " << alg_info.get_cstring() << ".\n";
-// }
-
-// //[[Rcpp::export]]
-// void set_complete_trigger(String complete_trig){
-// 	complete_triggers = complete_trig;
-// 	if(complete_trig == "True" || complete_trig == "true" || complete_trig == "TRUE"){
-// 		Rcout << ".cdat files that store evaluations for each iteration will be output.\n";
-// 	}else{
-// 		Rcout << ".cdat files are closed.\n";
-// 	}
-// }
-
-// //[[Rcpp::export]]
-// void set_number_interval_triggers(int num_interval_trig){
-// 	number_target_triggers = num_interval_trig;
-// 	if(num_interval_trig == 0){
-// 		Rcout << ".idat files are closed.\n";
-// 	}else{
-// 		Rcout << ".idat files that store evaluations for each " << num_interval_trig << " iteration will be output.\n";
-// 	}
-// }
-
-// //[[Rcpp::export]]
-// void set_number_target_triggers(int num_target_targ){
-// 	number_target_triggers = num_target_targ;
-// 	Rcout << "number_target_triggers has been set as " << num_target_targ << "\n.";
-// }
-
-// //[[Rcpp::export]]
-// void set_parameter_names(String para_names){
-// 	parameters_name = para_names;
-// 	Rcout << "Parameter names have been set as " << para_names.get_cstring() << ".\n Please confirm that there is no blank, and multiple names are separate by comma \',\'.\n";
-// }
-
-// Acquire a problem based on arguments, but the problem must be included in the 
-// @Furong: set each c procedure name with prefix 'c_'
-// //[[Rcpp::export]]
-// void c_set_function(int dimension, int problem_id, int instance_id){
-//	if(state == 0){
-//		Rcout << "Please create a suite at first.\n";
-//	}
-//	if(state == 0){
-//		Rcout << "Please create an observer at first.\n";
-//	}
-//	if(current_problem != NULL) {
-//		IOHprofiler_problem_free(current_problem);
-//	}
-//	current_problem = IOHprofiler_suite_get_problem_by_function_dimension_instance(current_suite,problem_id,dimension,instance_id);
-//	current_problem = IOHprofiler_problem_add_observer(current_problem,current_observer);
-//	if(current_problem == NULL){
-//		Rcout << "The problem is not found in \n";
-//	}else{
-//		Rcout << "Currently working on " << IOHprofiler_problem_get_name(current_problem) << ".\n";	
-//	}
-//}
-
-// Returns a list of problem ids.
 
 //[[Rcpp::export]]
 IntegerVector get_problem_list() {
@@ -206,8 +127,6 @@ IntegerVector get_problem_list() {
 	}
 	return problem_list;
 }
-
-// Returens a list of dimensions. 
 
 //[[Rcpp::export]]
 IntegerVector get_dimension_list() {
@@ -225,7 +144,6 @@ IntegerVector get_dimension_list() {
 }
 
 
-
 //[[Rcpp::export]]
 List get_suite_info() {
 	if(current_suite == NULL) {
@@ -237,7 +155,6 @@ List get_suite_info() {
 						_["instances"] = IntegerVector(current_suite->instances,current_suite->instances + current_suite->number_of_instances));
 	}
 }
-
 
 
 //[[Rcpp::export]]
@@ -256,7 +173,7 @@ List get_problem_info() {
 // Acquire a problem in suite by order.
 
 //[[Rcpp::export]]
-List get_next_problem() {
+List c_get_next_problem() {
 	// if(state == 0){
 	// 	Rcout << "Please create a suite at first.\n";
 	// }
@@ -292,28 +209,6 @@ List reset_problem() {
 	}
 }
 
-
-// 
-
-// //[[Rcpp::export]]
-// NumericVector get_instance_list(){
-// 	if(current_suite == NULL){
-// 		Rcout << "There is no suite exists.\n";
-// 		return 1;
-// 	}
-// 	NumericVector instance_list(current_suite->number_of_instances);
-// 	for(int i = 0; i < current_suite->number_of_instances; ++i){
-// 		instance_list(i) = current_suite->instances[i];
-// 	} 
-// 	return instance_list;
-// }
-
-// Returns name string of current problem.
-
-
-
-// Return fitness of input variables.
-
 //[[Rcpp::export]]
 double c_eval(IntegerVector x) {
 	if(current_problem == NULL) {
@@ -322,19 +217,26 @@ double c_eval(IntegerVector x) {
 
 	double *result = IOHprofiler_allocate_vector(1);
 	
-	if(x.size() != current_problem->number_of_variables){
+	if(x.size() != current_problem->number_of_variables) {
 		Rcout << "Error! Dimension of input vector is incorrect.\n";
 	 	return -DBL_MAX;
 	}
 
-	IOHprofiler_evaluate_function(current_problem, INTEGER(x), result);
+	int N = x.size();
+	int* x_ptr = (int*) malloc(sizeof(int) * N);
+	for (int i = 0; i < N; ++i) {
+		x_ptr[i] = x[i];
+	}
+
+	IOHprofiler_evaluate_function(current_problem, x_ptr, result);
+	free(x_ptr);
 	return result[0];
 }
 
 // To test if the optimal has been found. Return 1 if it is found.
 
 //[[Rcpp::export]]
-int hit_optimal() {
+int c_is_target_hit() {
 	if(current_problem == NULL) {
 		return -1;
 	}
@@ -345,7 +247,7 @@ int hit_optimal() {
 // Returns evaluation time has been done.
 
 //[[Rcpp::export]]
-int eval_times() {
+int c_get_evaluations() {
 	if(current_problem == NULL) {
 		return -1;
 	}
@@ -356,7 +258,7 @@ int eval_times() {
 // Return statement of optimal variables.
 
 //[[Rcpp::export]]
-IntegerVector optimal_variables() {
+IntegerVector c_get_xopt() {
 	if(current_problem == NULL) {
 		return NULL;
 	}
@@ -367,7 +269,7 @@ IntegerVector optimal_variables() {
 // Return the optimal value.
 
 //[[Rcpp::export]]
-double optimal() {
+double c_get_fopt() {
 	if(current_problem == NULL) {
 		return -DBL_MAX;
 	}

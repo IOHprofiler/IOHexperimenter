@@ -9,7 +9,7 @@
 #'
 IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000), 
   functions = seq(23), instances = seq(100), algorithm_info = '', algorithm_name = '',
-  data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = NULL) {
+  data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = '') {
   
   assert_that(is.numeric(dims))
   assert_that(is.numeric(functions))
@@ -23,12 +23,19 @@ IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
     paste0(instances, collapse = '-')
   )
   
-  # add parameters here
-  c_init_observer()
+  # intialize the observer
+  c_init_observer(
+    data.dir, algorithm_name, algorithm_info, 
+    complete_triggers = ifelse(cdat, 'true', 'false'), # @Furong: why this is a string in C?
+    number_interval_triggers = idat,
+		base_evaluation_triggers = "1,2,3", # @Diederick: this seems Furong's default value... no idea
+		number_target_triggers = tdat,
+		param.track   # @Diederick: I'm not sure about Furong's default value on this
+  )
   
   structure(
     list(
-      f_eval = function (x) {
+      obj_func = function(x) {
         if (is.null(dim(x))) x <- t(x)
         if (ncol(x) != exp$curr_dim) x <- t(x)
         
@@ -73,49 +80,42 @@ summary.IOHexperimenter <- function(object, ...) {
   cat(paste('current instancee: ', paste(object$curr_instance, collapse = ',')))
 }
 
-
-get_number_
-
-get_function <- function(exp, dim, function_id, instance) {
-  exp$curr_dim <- dim
-  exp$curr_function_id <- function_id
-  exp$curr_instance <- instance
-  c_set_function(function_id, dim, instance)
-  
-  function (x) {
-    if (is.null(dim(x))) x <- t(x)
-    if (ncol(x) != exp$curr_dim) x <- t(x)
-    
-    stopifnot(ncol(x) == exp$curr_dim)
-    apply(x, 1, c_eval)
-  }
-}
-
-get_next_function <- function(exp) {
-  curr_dim <- exp$curr_dim 
-  curr_function_id <- exp$curr_function_id 
-  curr_instance <- exp$curr_instance
-  # TODO: check how to get the next function
-  c_set_function(function_id, dim, instance)
-  
-  function (x) {
-    if (is.null(dim(x))) x <- t(x)
-    if (ncol(x) != exp$curr_dim) x <- t(x)
-    
-    stopifnot(ncol(x) == exp$curr_dim)
-    apply(x, 1, c_eval)
-  }
-}
-
-# evaluate.IOHexperimenter <- function(exp, x) {
-#   function (x) {
-#     if (is.null(dim(x))) x <- t(x)
-#     if (ncol(x) != exp$curr_dim) x <- t(x)
-#     
-#     stopifnot(ncol(x) == exp$curr_dim)
-#     apply(x, 1, c_eval)
-#   }
+# we don't need this fuction for now...
+# set_function <- function(exp, dim, function_id, instance) {
+#   exp$curr_dim <- dim
+#   exp$curr_function_id <- function_id
+#   exp$curr_instance <- instance
+#   c_set_function(function_id, dim, instance)
 # }
+
+next_function <- function(exp) {
+  ans <- c_get_next_problem()
+  
+  exp$fopt <- c_get_fopt()
+  exp$xopt <- c_get_xopt()
+  exp$curr_dim <- ans$dimension 
+  exp$curr_function_id <- ans$problem 
+  exp$curr_instance <- exp$instance
+  exp
+}
+
+get_evaluations <- function() {
+  c_get_evaluations()
+}
+
+is_target_hit <- function() {
+  c_is_target_hit()
+}
+
+
+# exmaple testing case
+exp <- IOHexperimenter()
+while (T) {
+  exp <- next_function(exp)
+  dim <- exp$curr_dim
+  exp$obj_func(runif(dim))
+}
+
 
  
 
