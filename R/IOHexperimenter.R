@@ -90,6 +90,7 @@ summary.IOHexperimenter <- function(object, ...) {
 
 next_function <- function(exp) {
   ans <- c_get_next_problem()
+  if (is.null(ans)) return(NULL)
   
   exp$fopt <- c_get_fopt()
   exp$xopt <- c_get_xopt()
@@ -112,6 +113,8 @@ is_target_hit <- function() {
 exp <- IOHexperimenter()
 while (T) {
   exp <- next_function(exp)
+  if (is.null(exp)) break
+
   dim <- exp$curr_dim
   exp$obj_func(runif(dim))
 }
