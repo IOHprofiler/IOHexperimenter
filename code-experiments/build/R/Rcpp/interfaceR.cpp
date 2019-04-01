@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 #include <string>
-
+#undef Realloc
+#undef Free
 #include "IOHprofiler.c"
 
 
@@ -275,6 +276,7 @@ List get_next_problem() {
 	//		Rcout << "Currently working on " << IOHprofiler_problem_get_name(current_problem) << ".\n";
 		}
 	}
+	Rcout << "Here";
 	return NULL;
 }
 
@@ -391,4 +393,26 @@ void IOHfree() {
   	}
   	Rcout << "IOHExperimentor free.\n";
 }
+
+//[[Rcpp::export]]
+void freeProblem(){
+	if(current_problem != NULL){
+		IOHprofiler_problem_free(current_problem);
+	}
+}
+
+//[[Rcpp::export]]
+void freeSuite(){
+	if(current_suite != NULL){
+  		IOHprofiler_suite_free(current_suite);
+  	}
+}
+//[[Rcpp::export]]
+void freeObserver(){
+	if(current_observer != NULL){
+		IOHprofiler_observer_free(current_observer);
+	}
+}
+
+
 

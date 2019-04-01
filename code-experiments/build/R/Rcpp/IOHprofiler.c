@@ -1511,6 +1511,11 @@ int rmdir(const char *pathname);
 int unlink(const char *file_name);
 int mkdir(const char *pathname, mode_t mode);
 /** @endcond */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 
 /* Definition of the S_IRWXU constant needed to set file permissions */
@@ -1523,9 +1528,6 @@ int mkdir(const char *pathname, mode_t mode);
 #pragma warning(disable : 4996)
 #endif
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif
 #line 7 "code-experiments/src/IOHprofiler_utilities.c"
