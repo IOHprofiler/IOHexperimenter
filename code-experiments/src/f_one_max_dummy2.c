@@ -83,13 +83,13 @@ static IOHprofiler_problem_t *f_one_max_dummy2_IOHprofiler_problem_allocate(cons
     dummy = IOHprofiler_allocate_int_vector(1);
     problem = f_one_max_dummy2_allocate(dimension);
     if(instance == 1){
-        dummy[0] = dimension * 0.9;
+        dummy[0] = (int)((double)dimension * 0.9);
         problem = transform_vars_dummy(problem, dummy, 0);   
     }
     else if(instance > 1 && instance <= 50){
-        dummy[0] = dimension * 0.9;
-        z = IOHprofiler_allocate_int_vector(dummy[0]);
-        IOHprofiler_compute_xopt(z,rseed,dummy[0]);
+        dummy[0] = (int)((double)dimension * 0.9);
+        z = IOHprofiler_allocate_int_vector((size_t)dummy[0]);
+        IOHprofiler_compute_xopt(z,rseed,(size_t)dummy[0]);
         a = IOHprofiler_compute_fopt(function,instance + 100);
         a = fabs(a) / 1000 * 4.8 + 0.2;
         b = IOHprofiler_compute_fopt(function,instance);
@@ -103,10 +103,10 @@ static IOHprofiler_problem_t *f_one_max_dummy2_IOHprofiler_problem_allocate(cons
     else if(instance > 50 && instance <= 100)
     {
 
-        dummy[0] = dimension * 0.9;
-        sigma = IOHprofiler_allocate_int_vector(dummy[0]);
-        xins = IOHprofiler_allocate_vector(dummy[0]);
-        IOHprofiler_compute_xopt_double(xins,rseed,dummy[0]);
+        dummy[0] = (int)((double)dimension * 0.9);
+        sigma = IOHprofiler_allocate_int_vector((size_t)dummy[0]);
+        xins = IOHprofiler_allocate_vector((size_t)dummy[0]);
+        IOHprofiler_compute_xopt_double(xins,rseed,(size_t)dummy[0]);
         for(i = 0; i < dummy[0]; i++){
             sigma[i] = (int)i;
         }
@@ -127,7 +127,7 @@ static IOHprofiler_problem_t *f_one_max_dummy2_IOHprofiler_problem_allocate(cons
         IOHprofiler_free_memory(sigma);
         IOHprofiler_free_memory(xins);
     } else {
-        dummy[0] = dimension * 0.9;
+        dummy[0] = (int)((double)dimension * 0.9);
         problem = transform_vars_dummy(problem, dummy, 0);
     }
     IOHprofiler_problem_set_id(problem, problem_id_template, function, instance, dimension);

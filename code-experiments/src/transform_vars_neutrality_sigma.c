@@ -20,7 +20,7 @@ typedef struct {
 } transform_vars_neutrality_sigma_data_t;
 
 static int neutrality_compute_before_sigma(const int *x, const int index, const int block_size){
-  size_t number_of_one, number_of_zero, i;
+  int number_of_one, number_of_zero, i;
   number_of_zero = 0;
   number_of_one = 0;
   i = 0;
@@ -41,7 +41,7 @@ static int neutrality_sigma_compute(const int *x, const int pos){
 }
 
 static void transform_vars_neutrality_sigma_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
-  size_t i;
+  int i;
   transform_vars_neutrality_sigma_data_t *data;
   IOHprofiler_problem_t *inner_problem;
 
@@ -86,14 +86,14 @@ static IOHprofiler_problem_t *transform_vars_neutrality_sigma(IOHprofiler_proble
   transform_vars_neutrality_sigma_data_t *data;
   IOHprofiler_problem_t *problem;
   int * temp_best;
-  size_t i;
+  int i;
   size_t new_dimension;
   if (neutrality_sigma_bounds)
     IOHprofiler_error("neutrality_sigma_bounds not implemented.");
 
   if(inner_problem->number_of_variables >= offset[0])
   {
-    new_dimension = inner_problem->number_of_variables / offset[0];
+    new_dimension = inner_problem->number_of_variables / (size_t)offset[0];
   }
   else{
     return inner_problem;

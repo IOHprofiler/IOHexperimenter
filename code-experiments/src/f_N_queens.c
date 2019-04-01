@@ -20,7 +20,7 @@
  * @brief Implements the N Queens one dimension function without connections to any IOHprofiler structures.
  */
 
-static double max(double element1 , double element2) {
+static double _max(double element1 , double element2) {
     if (element1>element2) return element1;
     else return element2;
 }
@@ -28,21 +28,24 @@ static double max(double element1 , double element2) {
  * @brief Implements the N_queens function without connections to any IOHprofiler structures.
  */
 static double f_N_queens_raw(const int *x, const size_t number_of_variables) {
-    if(floor(sqrt(number_of_variables))!=sqrt(number_of_variables)){
-      fprintf(stderr, "Number of parameters in the N Queen problem must be a square number\n");
-      exit(-1);
-    }
-
+    
     double result;
     int index,j,i,k,l;
-    int N_queens=sqrt(number_of_variables);
+    int N_queens=(int)(sqrt((double)number_of_variables)+0.5);
     int number_of_queens_on_board = 0;
     double k_penalty=0.0;
     double l_penalty =0.0;
     double raws_penalty=0.0;
     double columns_penalty=0.0;
     int indx=0;
-    float C = N_queens;
+    float C = (float)N_queens;
+
+    if(floor(sqrt((double)number_of_variables))!=sqrt((double)number_of_variables)){
+      fprintf(stderr, "Number of parameters in the N Queen problem must be a square number\n");
+      exit(-1);
+    }
+
+    
     if (IOHprofiler_vector_contains_nan(x, number_of_variables))
         return NAN;
 
@@ -59,18 +62,18 @@ static double f_N_queens_raw(const int *x, const size_t number_of_variables) {
             indx=((i-1)*N_queens) + ((j-1)%N_queens);
             sum_column+=(double)x[indx];
         }
-        columns_penalty+=max(0.0, (-1.0+sum_column));
+        columns_penalty+=_max(0.0, (-1.0+sum_column));
     }
 
     for(i=1; i<=N_queens; i++){
         double sum_raw = 0.0;
-        double sum_k = 0.0;
-        double sum_l = 0.0;
+        /*double sum_k = 0.0;
+        double sum_l = 0.0;*/
         for(j=1; j <=N_queens; j++){
             indx=((i-1)*N_queens) + ((j-1)%N_queens);
             sum_raw+=(double)x[indx];
         }
-        raws_penalty+=max(0.0, (-1.0+sum_raw));
+        raws_penalty+=_max(0.0, (-1.0+sum_raw));
     }
 
     for(k=2-N_queens; k<=N_queens-2; k++){
@@ -81,7 +84,7 @@ static double f_N_queens_raw(const int *x, const size_t number_of_variables) {
                 sum_k += (double)x[indx];
             }
         }
-        k_penalty+=max(0.0, (-1.0+sum_k));
+        k_penalty+=_max(0.0, (-1.0+sum_k));
     }
     for(l=3; l<=2*N_queens-1; l++){
         double sum_l=0.0;
@@ -91,7 +94,7 @@ static double f_N_queens_raw(const int *x, const size_t number_of_variables) {
                 sum_l += (double)x[indx];
             }
         }
-        l_penalty+=max(0.0, (-1.0+sum_l));
+        l_penalty+=_max(0.0, (-1.0+sum_l));
     }
     result = (double) (number_of_queens_on_board - (C*raws_penalty) - (C*columns_penalty) -(C*k_penalty) - (C*l_penalty));
     return result;
@@ -117,7 +120,7 @@ static IOHprofiler_problem_t *f_N_queens_allocate(const size_t number_of_variabl
 
     /* Compute best solution */
     /*f_N_queens_evaluate(problem, problem->best_parameter, problem->best_value);*/
-    problem->best_value[0] = sqrt(number_of_variables);
+    problem->best_value[0] = sqrt((double)number_of_variables);
     return problem;
 }
 
