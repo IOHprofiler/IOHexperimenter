@@ -533,6 +533,10 @@ char *IOHprofiler_strdupf(const char *str, ...);
 }
 #endif
 #endif
+
+
+
+
 /************************************************************************
  * WARNING
  *
@@ -1507,6 +1511,11 @@ int rmdir(const char *pathname);
 int unlink(const char *file_name);
 int mkdir(const char *pathname, mode_t mode);
 /** @endcond */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 
 /* Definition of the S_IRWXU constant needed to set file permissions */
@@ -1519,9 +1528,6 @@ int mkdir(const char *pathname, mode_t mode);
 #pragma warning(disable : 4996)
 #endif
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif
 #line 7 "code-experiments/src/IOHprofiler_utilities.c"
@@ -3819,8 +3825,8 @@ static void transform_obj_shift_evaluate(IOHprofiler_problem_t *problem, const i
   size_t i;
 
   if (IOHprofiler_vector_contains_nan(x, IOHprofiler_problem_get_dimension(problem))) {
-  	IOHprofiler_vector_set_to_nan(y, IOHprofiler_problem_get_number_of_objectives(problem));
-  	return;
+    IOHprofiler_vector_set_to_nan(y, IOHprofiler_problem_get_number_of_objectives(problem));
+    return;
   }
 
   data = (transform_obj_shift_data_t *) IOHprofiler_problem_transformed_get_data(problem);
@@ -3885,8 +3891,8 @@ static void transform_vars_xor_evaluate(IOHprofiler_problem_t *problem, const in
   IOHprofiler_problem_t *inner_problem;
 
   if (IOHprofiler_vector_contains_nan(x, IOHprofiler_problem_get_dimension(problem))) {
-  	IOHprofiler_vector_set_to_nan(y, IOHprofiler_problem_get_number_of_objectives(problem));
-  	return;
+    IOHprofiler_vector_set_to_nan(y, IOHprofiler_problem_get_number_of_objectives(problem));
+    return;
   }
 
   data = (transform_vars_xor_data_t *) IOHprofiler_problem_transformed_get_data(problem);
@@ -3969,8 +3975,8 @@ static void transform_vars_sigma_evaluate(IOHprofiler_problem_t *problem, const 
   IOHprofiler_problem_t *inner_problem;
 
   if (IOHprofiler_vector_contains_nan(x, IOHprofiler_problem_get_dimension(problem))) {
-  	IOHprofiler_vector_set_to_nan(y, IOHprofiler_problem_get_number_of_objectives(problem));
-  	return;
+    IOHprofiler_vector_set_to_nan(y, IOHprofiler_problem_get_number_of_objectives(problem));
+    return;
   }
   data = (transform_vars_sigma_data_t *) IOHprofiler_problem_transformed_get_data(problem);
   inner_problem = IOHprofiler_problem_transformed_get_inner_problem(problem);
@@ -4135,8 +4141,8 @@ static void transform_obj_scale_evaluate(IOHprofiler_problem_t *problem, const i
   size_t i;
 
   if (IOHprofiler_vector_contains_nan(x, IOHprofiler_problem_get_dimension(problem))) {
-  	IOHprofiler_vector_set_to_nan(y, IOHprofiler_problem_get_number_of_objectives(problem));
-  	return;
+    IOHprofiler_vector_set_to_nan(y, IOHprofiler_problem_get_number_of_objectives(problem));
+    return;
   }
   data = (transform_obj_scale_data_t *) IOHprofiler_problem_transformed_get_data(problem);
   IOHprofiler_evaluate_function(IOHprofiler_problem_transformed_get_inner_problem(problem), x, y);
@@ -4758,12 +4764,12 @@ static void transform_vars_shift_evaluate(IOHprofiler_problem_t *problem, const 
   IOHprofiler_problem_t *inner_problem;
 
   if (IOHprofiler_vector_contains_nan(x, IOHprofiler_problem_get_dimension(problem))) {
-  	IOHprofiler_vector_set_to_nan(y, IOHprofiler_problem_get_number_of_objectives(problem));
-  	return;
+    IOHprofiler_vector_set_to_nan(y, IOHprofiler_problem_get_number_of_objectives(problem));
+    return;
   }
 
   data = (transform_vars_shift_data_t *) IOHprofiler_problem_transformed_get_data(problem);
-  
+  inner_problem = IOHprofiler_problem_transformed_get_inner_problem(problem);
 
   for (i = 0; i < problem->number_of_variables; ++i) {
     data->shifted_x[i] = x[i] + data->offset[i];
@@ -4997,7 +5003,7 @@ typedef struct {
   IOHprofiler_problem_free_function_t old_free_problem;
 } transform_vars_dummy_data_t;
 
-static void compute_dummy_match(int * postion_match, const int old_dimension, const int new_dimension){
+static void compute_dummy_match(int * postion_match, const size_t old_dimension, const size_t new_dimension){
   size_t i,j;
   int temp;
   double *randN = IOHprofiler_allocate_vector(1);
@@ -5005,7 +5011,7 @@ static void compute_dummy_match(int * postion_match, const int old_dimension, co
   int dummyins = 10000;
   for(i = 0; i < new_dimension;){
     IOHprofiler_unif(randN, 1, dummyins++);
-    temp = (int)(randN[0] * old_dimension);
+    temp = (int)(randN[0] * (double)old_dimension);
     flag = 1;
     for(j = 0; j < i; ++j){
       if(postion_match[j] == temp){
@@ -5068,7 +5074,7 @@ static IOHprofiler_problem_t *transform_vars_dummy(IOHprofiler_problem_t *inner_
   if (dummy_bounds)
     IOHprofiler_error("dummy_bounds not implemented.");
 
-  new_dimension = offset[0];
+  new_dimension = (size_t)offset[0];
   data = (transform_vars_dummy_data_t *) IOHprofiler_allocate_memory(sizeof(*data));
   data->offset = IOHprofiler_duplicate_int_vector(offset, 1);
   data->reduncted_x = IOHprofiler_allocate_int_vector(new_dimension);
@@ -5115,7 +5121,7 @@ typedef struct {
   IOHprofiler_problem_free_function_t old_free_problem;
 } transform_vars_dummy_sigma_data_t;
 
-static void compute_dummy_sigma_match(int * postion_match, const int old_dimension, const int new_dimension){
+static void compute_dummy_sigma_match(int * postion_match, const size_t old_dimension, const size_t new_dimension){
   size_t i,j;
   int temp;
   double *randN = IOHprofiler_allocate_vector(1);
@@ -5123,7 +5129,7 @@ static void compute_dummy_sigma_match(int * postion_match, const int old_dimensi
   int dummyins = 10000;
   for(i = 0; i < new_dimension;){
     IOHprofiler_unif(randN, 1, dummyins++);
-    temp = (int)(randN[0] * old_dimension);
+    temp = (int)(randN[0] * (double)old_dimension);
     flag = 1;
     for(j = 0; j < i; ++j){
       if(postion_match[j] == temp){
@@ -5197,7 +5203,7 @@ static IOHprofiler_problem_t *transform_vars_dummy_sigma(IOHprofiler_problem_t *
   if (dummy_bounds)
     IOHprofiler_error("dummy_bounds not implemented.");
 
-  new_dimension = offset[0];
+  new_dimension = (size_t)offset[0];
   temp_best = IOHprofiler_allocate_int_vector(new_dimension);
   data = (transform_vars_dummy_sigma_data_t *) IOHprofiler_allocate_memory(sizeof(*data));
   data->offset = IOHprofiler_duplicate_int_vector(offset1, new_dimension);
@@ -5256,7 +5262,7 @@ typedef struct {
   IOHprofiler_problem_free_function_t old_free_problem;
 } transform_vars_dummy_xor_data_t;
 
-static void compute_dummy_xor_match(int * postion_match, const int old_dimension, const int new_dimension){
+static void compute_dummy_xor_match(int * postion_match, const size_t old_dimension, const size_t new_dimension){
   size_t i,j;
   int temp;
   double *randN = IOHprofiler_allocate_vector(1);
@@ -5264,7 +5270,7 @@ static void compute_dummy_xor_match(int * postion_match, const int old_dimension
   int dummyins = 10000;
   for(i = 0; i < new_dimension;){
     IOHprofiler_unif(randN, 1, dummyins++);
-    temp = (int)(randN[0] * old_dimension);
+    temp = (int)(randN[0] * (double)old_dimension);
     flag = 1;
     for(j = 0; j < i; ++j){
       if(postion_match[j] == temp){
@@ -5337,7 +5343,7 @@ static IOHprofiler_problem_t *transform_vars_dummy_xor(IOHprofiler_problem_t *in
   if (dummy_bounds)
     IOHprofiler_error("dummy_bounds not implemented.");
 
-  new_dimension = offset[0];
+  new_dimension = (size_t)offset[0];
   data = (transform_vars_dummy_xor_data_t *) IOHprofiler_allocate_memory(sizeof(*data));
   data->offset = IOHprofiler_duplicate_int_vector(offset1, new_dimension);
   data->reduncted_x = IOHprofiler_allocate_int_vector(new_dimension);
@@ -5433,14 +5439,14 @@ static IOHprofiler_problem_t *f_one_max_dummy1_IOHprofiler_problem_allocate(cons
     problem = f_one_max_dummy1_allocate(dimension);
 
     if(instance == 1){
-        dummy[0] = dimension * 0.5;
+        dummy[0] = (int)((double)dimension * 0.5);
         problem = transform_vars_dummy(problem, dummy, 0);   
     }
     else if(instance > 1 && instance <= 50){
-        dummy[0] = dimension * 0.5;
+        dummy[0] = (int)((double)dimension * 0.5);
 
-        z = IOHprofiler_allocate_int_vector(dummy[0]);
-        IOHprofiler_compute_xopt(z,rseed,dummy[0]);
+        z = IOHprofiler_allocate_int_vector((size_t)dummy[0]);
+        IOHprofiler_compute_xopt(z,rseed,(size_t)dummy[0]);
         a = IOHprofiler_compute_fopt(function,instance + 100);
         a = fabs(a) / 1000 * 4.8 + 0.2;
         b = IOHprofiler_compute_fopt(function,instance);
@@ -5453,10 +5459,10 @@ static IOHprofiler_problem_t *f_one_max_dummy1_IOHprofiler_problem_allocate(cons
     }
     else if(instance > 50 && instance <= 100)
     {
-        dummy[0] = dimension * 0.5;
-        sigma = IOHprofiler_allocate_int_vector(dummy[0]);
-        xins = IOHprofiler_allocate_vector(dummy[0]);
-        IOHprofiler_compute_xopt_double(xins,rseed,dummy[0]);
+        dummy[0] = (int)((double)dimension * 0.5);
+        sigma = IOHprofiler_allocate_int_vector((size_t)dummy[0]);
+        xins = IOHprofiler_allocate_vector((size_t)dummy[0]);
+        IOHprofiler_compute_xopt_double(xins,rseed,(size_t)dummy[0]);
         for(i = 0; i < dummy[0]; i++){
             sigma[i] = (int)i;
         }
@@ -5478,7 +5484,7 @@ static IOHprofiler_problem_t *f_one_max_dummy1_IOHprofiler_problem_allocate(cons
         IOHprofiler_free_memory(sigma);
         IOHprofiler_free_memory(xins);
     } else {
-        dummy[0] = dimension * 0.5;
+        dummy[0] = (int)((double)dimension * 0.5);
         problem = transform_vars_dummy(problem, dummy, 0);  
     }
     IOHprofiler_problem_set_id(problem, problem_id_template, function, instance, dimension);
@@ -5575,13 +5581,13 @@ static IOHprofiler_problem_t *f_one_max_dummy2_IOHprofiler_problem_allocate(cons
     dummy = IOHprofiler_allocate_int_vector(1);
     problem = f_one_max_dummy2_allocate(dimension);
     if(instance == 1){
-        dummy[0] = dimension * 0.9;
+        dummy[0] = (int)((double)dimension * 0.9);
         problem = transform_vars_dummy(problem, dummy, 0);   
     }
     else if(instance > 1 && instance <= 50){
-        dummy[0] = dimension * 0.9;
-        z = IOHprofiler_allocate_int_vector(dummy[0]);
-        IOHprofiler_compute_xopt(z,rseed,dummy[0]);
+        dummy[0] = (int)((double)dimension * 0.9);
+        z = IOHprofiler_allocate_int_vector((size_t)dummy[0]);
+        IOHprofiler_compute_xopt(z,rseed,(size_t)dummy[0]);
         a = IOHprofiler_compute_fopt(function,instance + 100);
         a = fabs(a) / 1000 * 4.8 + 0.2;
         b = IOHprofiler_compute_fopt(function,instance);
@@ -5595,10 +5601,10 @@ static IOHprofiler_problem_t *f_one_max_dummy2_IOHprofiler_problem_allocate(cons
     else if(instance > 50 && instance <= 100)
     {
 
-        dummy[0] = dimension * 0.9;
-        sigma = IOHprofiler_allocate_int_vector(dummy[0]);
-        xins = IOHprofiler_allocate_vector(dummy[0]);
-        IOHprofiler_compute_xopt_double(xins,rseed,dummy[0]);
+        dummy[0] = (int)((double)dimension * 0.9);
+        sigma = IOHprofiler_allocate_int_vector((size_t)dummy[0]);
+        xins = IOHprofiler_allocate_vector((size_t)dummy[0]);
+        IOHprofiler_compute_xopt_double(xins,rseed,(size_t)dummy[0]);
         for(i = 0; i < dummy[0]; i++){
             sigma[i] = (int)i;
         }
@@ -5619,7 +5625,7 @@ static IOHprofiler_problem_t *f_one_max_dummy2_IOHprofiler_problem_allocate(cons
         IOHprofiler_free_memory(sigma);
         IOHprofiler_free_memory(xins);
     } else {
-        dummy[0] = dimension * 0.9;
+        dummy[0] = (int)((double)dimension * 0.9);
         problem = transform_vars_dummy(problem, dummy, 0);
     }
     IOHprofiler_problem_set_id(problem, problem_id_template, function, instance, dimension);
@@ -5692,8 +5698,8 @@ static void epistasis_compute(const int *x, int * epistasis_x,  int block_size, 
     }
     h += block_size;
   }
-  if(dimension - h > 0){
-    block_size = dimension - h;
+  if((int)dimension - h > 0){
+    block_size = (int)dimension - h;
     i = 0;
     while(i < block_size){
       epistasis_result = -1;
@@ -5714,7 +5720,7 @@ static void epistasis_compute(const int *x, int * epistasis_x,  int block_size, 
 }
 
 static void transform_vars_epistasis_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
-  size_t i;
+
   transform_vars_epistasis_data_t *data;
   IOHprofiler_problem_t *inner_problem;
 
@@ -5751,7 +5757,7 @@ static IOHprofiler_problem_t *transform_vars_epistasis(IOHprofiler_problem_t *in
     
   transform_vars_epistasis_data_t *data;
   IOHprofiler_problem_t *problem;
-  size_t i;
+
   if (epistasis_bounds)
     IOHprofiler_error("epistasis_bounds not implemented.");
 
@@ -5816,8 +5822,8 @@ static void epistasis_compute_beforexor(const int *x, int * epistasis_x,  int bl
     }
     h += block_size;
   }
-  if(dimension - h > 0){
-    block_size = dimension - h;
+  if((int)dimension - h > 0){
+    block_size = (int)dimension - h;
     i = 0;
     while(i < block_size){
       epistasis_result = -1;
@@ -5886,7 +5892,7 @@ static IOHprofiler_problem_t *transform_vars_epistasis_xor(IOHprofiler_problem_t
     
   transform_vars_epistasis_xor_data_t *data;
   IOHprofiler_problem_t *problem;
-  size_t i;
+
   if (epistasis_xor_bounds)
     IOHprofiler_error("epistasis_xor_bounds not implemented.");
 
@@ -5953,8 +5959,8 @@ static void epistasis_compute_beforesigma(const int *x, int * epistasis_x,  int 
     }
     h += block_size;
   }
-  if(dimension - h > 0){
-    block_size = dimension - h;
+  if((int)dimension - h > 0){
+    block_size = (int)dimension - h;
     i = 0;
     while(i < block_size){
       epistasis_result = -1;
@@ -6023,7 +6029,7 @@ static IOHprofiler_problem_t *transform_vars_epistasis_sigma(IOHprofiler_problem
     
   transform_vars_epistasis_sigma_data_t *data;
   IOHprofiler_problem_t *problem;
-  size_t i;
+  
   if (epistasis_sigma_bounds)
     IOHprofiler_error("epistasis_sigma_bounds not implemented.");
 
@@ -6201,7 +6207,7 @@ typedef struct {
 } transform_vars_neutrality_data_t;
 
 static int neutrality_compute(const int *x, const int index, const int block_size){
-  size_t number_of_one, number_of_zero, i;
+  int number_of_one, number_of_zero, i;
   number_of_zero = 0;
   number_of_one = 0;
   i = 0;
@@ -6218,7 +6224,7 @@ static int neutrality_compute(const int *x, const int index, const int block_siz
 }
 
 static void transform_vars_neutrality_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
-  size_t i;
+  int i;
   transform_vars_neutrality_data_t *data;
   IOHprofiler_problem_t *inner_problem;
 
@@ -6256,14 +6262,14 @@ static IOHprofiler_problem_t *transform_vars_neutrality(IOHprofiler_problem_t *i
     
   transform_vars_neutrality_data_t *data;
   IOHprofiler_problem_t *problem;
-  size_t i;
+  int i;
   size_t new_dimension;
   if (neutrality_bounds)
     IOHprofiler_error("neutrality_bounds not implemented.");
 
   if(inner_problem->number_of_variables >= offset[0])
   {
-    new_dimension = inner_problem->number_of_variables / offset[0];
+    new_dimension = inner_problem->number_of_variables / (size_t)offset[0];
   }
   else{
     return inner_problem;
@@ -6315,7 +6321,7 @@ typedef struct {
 } transform_vars_neutrality_sigma_data_t;
 
 static int neutrality_compute_before_sigma(const int *x, const int index, const int block_size){
-  size_t number_of_one, number_of_zero, i;
+  int number_of_one, number_of_zero, i;
   number_of_zero = 0;
   number_of_one = 0;
   i = 0;
@@ -6336,7 +6342,7 @@ static int neutrality_sigma_compute(const int *x, const int pos){
 }
 
 static void transform_vars_neutrality_sigma_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
-  size_t i;
+  int i;
   transform_vars_neutrality_sigma_data_t *data;
   IOHprofiler_problem_t *inner_problem;
 
@@ -6381,14 +6387,14 @@ static IOHprofiler_problem_t *transform_vars_neutrality_sigma(IOHprofiler_proble
   transform_vars_neutrality_sigma_data_t *data;
   IOHprofiler_problem_t *problem;
   int * temp_best;
-  size_t i;
+  int i;
   size_t new_dimension;
   if (neutrality_sigma_bounds)
     IOHprofiler_error("neutrality_sigma_bounds not implemented.");
 
   if(inner_problem->number_of_variables >= offset[0])
   {
-    new_dimension = inner_problem->number_of_variables / offset[0];
+    new_dimension = inner_problem->number_of_variables / (size_t)offset[0];
   }
   else{
     return inner_problem;
@@ -6449,7 +6455,7 @@ typedef struct {
 } transform_vars_neutrality_xor_data_t;
 
 static int neutrality_compute_before_xor(const int *x, const int index, const int block_size){
-  size_t number_of_one, number_of_zero, i;
+  int number_of_one, number_of_zero, i;
   number_of_zero = 0;
   number_of_one = 0;
   i = 0;
@@ -6470,7 +6476,7 @@ static int neutrality_xor_compute(const int x1, const int x2){
 }
 
 static void transform_vars_neutrality_xor_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
-  size_t i;
+  int i;
   transform_vars_neutrality_xor_data_t *data;
   IOHprofiler_problem_t *inner_problem;
 
@@ -6513,14 +6519,14 @@ static IOHprofiler_problem_t *transform_vars_neutrality_xor(IOHprofiler_problem_
     
   transform_vars_neutrality_xor_data_t *data;
   IOHprofiler_problem_t *problem;
-  size_t i;
+  int i;
   size_t new_dimension;
   if (neutrality_xor_bounds)
     IOHprofiler_error("neutrality_xor_bounds not implemented.");
 
   if(inner_problem->number_of_variables >= offset[0])
   {
-    new_dimension = inner_problem->number_of_variables / offset[0];
+    new_dimension = inner_problem->number_of_variables / (size_t)offset[0];
   }
   else{
     return inner_problem;
@@ -6604,7 +6610,8 @@ static IOHprofiler_problem_t *f_one_max_neutrality_IOHprofiler_problem_allocate(
 
     int * neutrality;
     int *z, *sigma;
-    int temp,t,new_dim;
+    int temp,t;
+    size_t new_dim;
     size_t i;
     double a;
     double b;
@@ -6620,7 +6627,7 @@ static IOHprofiler_problem_t *f_one_max_neutrality_IOHprofiler_problem_allocate(
     }
     else if(instance > 1 && instance <= 50){
         neutrality[0] = 3;
-        new_dim = dimension/neutrality[0];
+        new_dim = dimension/(size_t)neutrality[0];
         z = IOHprofiler_allocate_int_vector(new_dim);
 
         IOHprofiler_compute_xopt(z,rseed,new_dim);
@@ -6737,15 +6744,13 @@ double compute_ruggedness(double y, size_t dimension){
  * @brief Evaluates the transformation.
  */
 static void transform_obj_ruggedness1_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
-  transform_obj_ruggedness1_data_t *data;
   size_t i;
 
   if (IOHprofiler_vector_contains_nan(x, IOHprofiler_problem_get_dimension(problem))) {
-  	IOHprofiler_vector_set_to_nan(y, IOHprofiler_problem_get_number_of_objectives(problem));
-  	return;
+    IOHprofiler_vector_set_to_nan(y, IOHprofiler_problem_get_number_of_objectives(problem));
+    return;
   }
 
-  data = (transform_obj_ruggedness1_data_t *) IOHprofiler_problem_transformed_get_data(problem);
   IOHprofiler_evaluate_function(IOHprofiler_problem_transformed_get_inner_problem(problem), x, y);
   for (i = 0; i < problem->number_of_objectives; i++) {
       y[i] = compute_ruggedness(y[i],problem->number_of_variables);
@@ -6950,7 +6955,6 @@ double compute_ruggedness2(double y, size_t dimension){
  * @brief Evaluates the transformation.
  */
 static void transform_obj_ruggedness2_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
-  transform_obj_ruggedness2_data_t *data;
   size_t i;
 
   if (IOHprofiler_vector_contains_nan(x, IOHprofiler_problem_get_dimension(problem))) {
@@ -6958,7 +6962,6 @@ static void transform_obj_ruggedness2_evaluate(IOHprofiler_problem_t *problem, c
     return;
   }
 
-  data = (transform_obj_ruggedness2_data_t *) IOHprofiler_problem_transformed_get_data(problem);
   IOHprofiler_evaluate_function(IOHprofiler_problem_transformed_get_inner_problem(problem), x, y);
   for (i = 0; i < problem->number_of_objectives; i++) {
       y[i] = compute_ruggedness2(y[i],problem->number_of_variables);
@@ -7142,7 +7145,7 @@ static void compute_ruggedness3(double * y, size_t dimension){
     }
   }
   for(k = 0; k < dimension - dimension / 5 * 5; ++k){
-    y[k] = dimension - dimension / 5 * 5 - 1 - k;
+    y[k] = (double)(dimension - dimension / 5 * 5 - 1 - k);
   }
   y[dimension] = (double)dimension;
 }
@@ -7392,14 +7395,14 @@ static IOHprofiler_problem_t *f_leading_ones_dummy1_IOHprofiler_problem_allocate
     problem = f_leading_ones_dummy1_allocate(dimension);
     
     if(instance == 1){
-        dummy[0] = dimension * 0.5;
+        dummy[0] = (int)((double)dimension * 0.5);
         problem = transform_vars_dummy(problem, dummy, 0);  
     }
     else if(instance > 1 && instance <= 50){
-        dummy[0] = dimension * 0.5;
+        dummy[0] = (int)((double)dimension * 0.5);
         
-        z = IOHprofiler_allocate_int_vector(dummy[0]);
-        IOHprofiler_compute_xopt(z,rseed,dummy[0]);
+        z = IOHprofiler_allocate_int_vector((size_t)dummy[0]);
+        IOHprofiler_compute_xopt(z,rseed,(size_t)dummy[0]);
         a = IOHprofiler_compute_fopt(function,instance + 100);
         a = fabs(a) / 1000 * 4.8 + 0.2;
         b = IOHprofiler_compute_fopt(function,instance);
@@ -7412,10 +7415,10 @@ static IOHprofiler_problem_t *f_leading_ones_dummy1_IOHprofiler_problem_allocate
     else if(instance > 50 && instance <= 100)
     {
 
-        dummy[0] = dimension * 0.5;
-        sigma = IOHprofiler_allocate_int_vector(dummy[0]);
-        xins = IOHprofiler_allocate_vector(dummy[0]);
-        IOHprofiler_compute_xopt_double(xins,rseed,dummy[0]);
+        dummy[0] = (int)((double)dimension * 0.5);
+        sigma = IOHprofiler_allocate_int_vector((size_t)dummy[0]);
+        xins = IOHprofiler_allocate_vector((size_t)dummy[0]);
+        IOHprofiler_compute_xopt_double(xins,rseed,(size_t)dummy[0]);
         for(i = 0; i < dummy[0]; i++){
             sigma[i] = (int)i;
         }
@@ -7436,7 +7439,7 @@ static IOHprofiler_problem_t *f_leading_ones_dummy1_IOHprofiler_problem_allocate
         IOHprofiler_free_memory(sigma);
         IOHprofiler_free_memory(xins);
     } else {
-        dummy[0] = dimension * 0.5;
+        dummy[0] = (int)((double)dimension * 0.5);
         problem = transform_vars_dummy(problem, dummy, 0);
     }
     IOHprofiler_problem_set_id(problem, problem_id_template, function, instance, dimension);
@@ -7535,14 +7538,14 @@ static IOHprofiler_problem_t *f_leading_ones_dummy2_IOHprofiler_problem_allocate
     dummy = IOHprofiler_allocate_int_vector(1);
     problem = f_leading_ones_dummy2_allocate(dimension);
     if(instance == 1){
-        dummy[0] = dimension * 0.9;
+        dummy[0] = (int)((double)dimension * 0.9);
         problem = transform_vars_dummy(problem, dummy, 0);   
     }
     else if(instance > 1 && instance <= 50){
-        dummy[0] = dimension * 0.9;
+        dummy[0] = (int)((double)dimension * 0.9);
         
-        z = IOHprofiler_allocate_int_vector(dummy[0]);
-        IOHprofiler_compute_xopt(z,rseed,dummy[0]);
+        z = IOHprofiler_allocate_int_vector((size_t)dummy[0]);
+        IOHprofiler_compute_xopt(z,rseed,(size_t)dummy[0]);
         a = IOHprofiler_compute_fopt(function,instance + 100);
         a = fabs(a) / 1000 * 4.8 + 0.2;
         b = IOHprofiler_compute_fopt(function,instance);
@@ -7555,10 +7558,10 @@ static IOHprofiler_problem_t *f_leading_ones_dummy2_IOHprofiler_problem_allocate
     else if(instance > 50 && instance <= 100)
     {
 
-        dummy[0] = dimension * 0.9;
-        sigma = IOHprofiler_allocate_int_vector(dummy[0]);
-        xins = IOHprofiler_allocate_vector(dummy[0]);
-        IOHprofiler_compute_xopt_double(xins,rseed,dummy[0]);
+        dummy[0] = (int)((double)dimension * 0.9);
+        sigma = IOHprofiler_allocate_int_vector((size_t)dummy[0]);
+        xins = IOHprofiler_allocate_vector((size_t)dummy[0]);
+        IOHprofiler_compute_xopt_double(xins,rseed,(size_t)dummy[0]);
         for(i = 0; i < dummy[0]; i++){
             sigma[i] = (int)i;
         }
@@ -7579,7 +7582,7 @@ static IOHprofiler_problem_t *f_leading_ones_dummy2_IOHprofiler_problem_allocate
         IOHprofiler_free_memory(sigma);
         IOHprofiler_free_memory(xins);
     } else {
-        dummy[0] = dimension * 0.9;
+        dummy[0] = (int)((double)dimension * 0.9);
         problem = transform_vars_dummy(problem, dummy, 0);
     }
     IOHprofiler_problem_set_id(problem, problem_id_template, function, instance, dimension);
@@ -7809,7 +7812,8 @@ static IOHprofiler_problem_t *f_leading_ones_neutrality_IOHprofiler_problem_allo
 
     int * neutrality;
     int *z, *sigma;
-    int temp,t,new_dim;
+    int temp,t;
+    size_t new_dim;
     size_t i;
     double a;
     double b;
@@ -7824,7 +7828,7 @@ static IOHprofiler_problem_t *f_leading_ones_neutrality_IOHprofiler_problem_allo
     }
     else if(instance > 1 && instance <= 50){
         neutrality[0] = 3;
-        new_dim = dimension/neutrality[0];
+        new_dim = dimension/(size_t)neutrality[0];
         z = IOHprofiler_allocate_int_vector(new_dim);
 
         IOHprofiler_compute_xopt(z,rseed,new_dim);
@@ -8320,13 +8324,13 @@ int modulo_ising_1D(int x,int N){
  */
 static int f_ising_1D_raw(const int *x, const size_t number_of_variables) {
     int result= 0;
-    size_t i;
+    int i;
     if (IOHprofiler_vector_contains_nan(x, number_of_variables))
         return NAN;
 
     for (i = 0; i < number_of_variables; ++i) {
-        int first_neig=x[modulo_ising_1D((i+1), number_of_variables)];
-        int second_neig=x[modulo_ising_1D((i -1) , number_of_variables)];
+        int first_neig=x[modulo_ising_1D((i+1), (int)number_of_variables)];
+        int second_neig=x[modulo_ising_1D((i -1) , (int)number_of_variables)];
 
         result += (x[i] *first_neig) + ((1- x[i])*(1- first_neig));
         result += (x[i] *second_neig) + ((1- x[i])*(1- second_neig));
@@ -8465,18 +8469,21 @@ int modulo_ising_2D(int x,int N){
  * @brief Uses the raw function to evaluate the IOHprofiler problem.
  */
 static int f_ising_2D_raw(const int *x, const size_t number_of_variables) {
-    if(floor(sqrt(number_of_variables))!=sqrt(number_of_variables)){
+
+    int i,j,neig;
+    int result= 0;
+    int neighbors[4];
+    int lattice_size = (int)sqrt((double)number_of_variables);
+    int (*spin_array)[lattice_size] = (int (*)[lattice_size])x; 
+
+    if (IOHprofiler_vector_contains_nan(x, number_of_variables))
+        return NAN;
+    
+    if(floor(sqrt((double)number_of_variables))!=sqrt((double)number_of_variables)){
       fprintf(stderr, "Number of parameters in the Ising square problem must be a square number\n");
       exit(-1);
     }
 
-    if (IOHprofiler_vector_contains_nan(x, number_of_variables))
-        return NAN;
-    size_t i,j,neig;
-    int result= 0;
-    int neighbors[4];
-    int lattice_size = (int)sqrt(number_of_variables);
-    int (*spin_array)[lattice_size] = (int (*)[lattice_size])x;
 
     for (i = 0; i < lattice_size; ++i) {
            for (j = 0; j < lattice_size; ++j) {
@@ -8484,9 +8491,16 @@ static int f_ising_2D_raw(const int *x, const size_t number_of_variables) {
                 neighbors[1]  = spin_array[modulo_ising_2D(i + 1, lattice_size)][j];
                 neighbors[2]  = spin_array[i][modulo_ising_2D((j - 1) , lattice_size)];
                 neighbors[3]  = spin_array[i][modulo_ising_2D((j + 1) , lattice_size)];
+                
 
+                /*neighbors[0]  = x[modulo_ising_2D(i - 1, lattice_size) * lattice_size + j];
+                neighbors[1]  = x[modulo_ising_2D(i + 1, lattice_size) * lattice_size + j];
+                neighbors[2]  = x[i * lattice_size + modulo_ising_2D((j - 1) , lattice_size)];
+                neighbors[3]  = x[i * lattice_size + modulo_ising_2D((j + 1) , lattice_size)];
+                */
                 for (neig=0; neig<4; neig++) {
-                    result+= (spin_array[i][j] * neighbors[neig]) + ((1- spin_array[i][j])*(1- neighbors[neig]));
+                    result+= (spin_array[i][j] * neighbors[neig]) + ((1- spin_array[i][j])*(1- neighbors[neig])); 
+                    /*result+= (x[i*lattice_size + j] * neighbors[neig]) + ((1- x[i * lattice_size + j])*(1- neighbors[neig]));*/
                 }
            }
     }
@@ -8629,14 +8643,15 @@ int modulo_ising_triangle(int x,int N){
 
 static int f_ising_triangle_raw(const int *x, const size_t number_of_variables) {
 
-    if (IOHprofiler_vector_contains_nan(x, number_of_variables))
-        return NAN;
-    size_t i,j,neig;
+    int i,j,neig;
     int result = 0;
     int neighbors[6];
-    int lattice_size = (int)sqrt(number_of_variables);
+    int lattice_size = (int)sqrt((double)number_of_variables);
     int (*spin_array)[lattice_size] = (int (*)[lattice_size])x;
-
+    
+    if (IOHprofiler_vector_contains_nan(x, number_of_variables))
+        return NAN;
+    
     for (i = 0; i < lattice_size; ++i) {
            for (j = 0; j < lattice_size; ++j) {
                 neighbors[0] = spin_array[modulo_ising_triangle((i - 1), lattice_size)][j] ;
@@ -8645,9 +8660,19 @@ static int f_ising_triangle_raw(const int *x, const size_t number_of_variables) 
                 neighbors[3] = spin_array[i][modulo_ising_triangle((i + 1) , lattice_size)] ;
                 neighbors[4] = spin_array[modulo_ising_triangle((i - 1) , lattice_size)][modulo_ising_triangle((j - 1) , lattice_size)] ;
                 neighbors[5] = spin_array[modulo_ising_triangle((i + 1) , lattice_size)][modulo_ising_triangle((j + 1) , lattice_size)];
+                
+
+                /*neighbors[0] = x[modulo_ising_triangle((i - 1), lattice_size) * lattice_size + j] ;
+                neighbors[1] = x[modulo_ising_triangle((i + 1), lattice_size) * lattice_size + j] ;
+                neighbors[2] = x[i * lattice_size + modulo_ising_triangle((j - 1) , lattice_size)] ;
+                neighbors[3] = x[i * lattice_size + modulo_ising_triangle((i + 1) , lattice_size)] ;
+                neighbors[4] = x[modulo_ising_triangle((i - 1) , lattice_size) * lattice_size + modulo_ising_triangle((j - 1) , lattice_size)] ;
+                neighbors[5] = x[modulo_ising_triangle((i + 1) , lattice_size) * lattice_size + modulo_ising_triangle((j + 1) , lattice_size)];
+                */
 
                 for (neig=0; neig<6; neig++) {
-                    result+= (spin_array[i][j] * neighbors[neig]) + ((1- spin_array[i][j])*(1- neighbors[neig]));
+                     result+= (spin_array[i][j] * neighbors[neig]) + ((1- spin_array[i][j])*(1- neighbors[neig])); 
+                   /* result+= (x[i * lattice_size + j] * neighbors[neig]) + ((1- spin_array[i * lattice_size + j])*(1- neighbors[neig]));*/
                 }
            }
     }
@@ -8780,7 +8805,7 @@ static IOHprofiler_problem_t *f_ising_triangle_IOHprofiler_problem_allocate(cons
  * @brief Implements the N Queens one dimension function without connections to any IOHprofiler structures.
  */
 
-static double max(double element1 , double element2) {
+static double _max(double element1 , double element2) {
     if (element1>element2) return element1;
     else return element2;
 }
@@ -8788,21 +8813,24 @@ static double max(double element1 , double element2) {
  * @brief Implements the N_queens function without connections to any IOHprofiler structures.
  */
 static double f_N_queens_raw(const int *x, const size_t number_of_variables) {
-    if(floor(sqrt(number_of_variables))!=sqrt(number_of_variables)){
-      fprintf(stderr, "Number of parameters in the N Queen problem must be a square number\n");
-      exit(-1);
-    }
-
+    
     double result;
     int index,j,i,k,l;
-    int N_queens=sqrt(number_of_variables);
+    int N_queens=(int)(sqrt((double)number_of_variables)+0.5);
     int number_of_queens_on_board = 0;
     double k_penalty=0.0;
     double l_penalty =0.0;
     double raws_penalty=0.0;
     double columns_penalty=0.0;
     int indx=0;
-    float C = N_queens;
+    float C = (float)N_queens;
+
+    if(floor(sqrt((double)number_of_variables))!=sqrt((double)number_of_variables)){
+      fprintf(stderr, "Number of parameters in the N Queen problem must be a square number\n");
+      exit(-1);
+    }
+
+    
     if (IOHprofiler_vector_contains_nan(x, number_of_variables))
         return NAN;
 
@@ -8819,18 +8847,18 @@ static double f_N_queens_raw(const int *x, const size_t number_of_variables) {
             indx=((i-1)*N_queens) + ((j-1)%N_queens);
             sum_column+=(double)x[indx];
         }
-        columns_penalty+=max(0.0, (-1.0+sum_column));
+        columns_penalty+=_max(0.0, (-1.0+sum_column));
     }
 
     for(i=1; i<=N_queens; i++){
         double sum_raw = 0.0;
-        double sum_k = 0.0;
-        double sum_l = 0.0;
+        /*double sum_k = 0.0;
+        double sum_l = 0.0;*/
         for(j=1; j <=N_queens; j++){
             indx=((i-1)*N_queens) + ((j-1)%N_queens);
             sum_raw+=(double)x[indx];
         }
-        raws_penalty+=max(0.0, (-1.0+sum_raw));
+        raws_penalty+=_max(0.0, (-1.0+sum_raw));
     }
 
     for(k=2-N_queens; k<=N_queens-2; k++){
@@ -8841,7 +8869,7 @@ static double f_N_queens_raw(const int *x, const size_t number_of_variables) {
                 sum_k += (double)x[indx];
             }
         }
-        k_penalty+=max(0.0, (-1.0+sum_k));
+        k_penalty+=_max(0.0, (-1.0+sum_k));
     }
     for(l=3; l<=2*N_queens-1; l++){
         double sum_l=0.0;
@@ -8851,7 +8879,7 @@ static double f_N_queens_raw(const int *x, const size_t number_of_variables) {
                 sum_l += (double)x[indx];
             }
         }
-        l_penalty+=max(0.0, (-1.0+sum_l));
+        l_penalty+=_max(0.0, (-1.0+sum_l));
     }
     result = (double) (number_of_queens_on_board - (C*raws_penalty) - (C*columns_penalty) -(C*k_penalty) - (C*l_penalty));
     return result;
@@ -8877,7 +8905,7 @@ static IOHprofiler_problem_t *f_N_queens_allocate(const size_t number_of_variabl
 
     /* Compute best solution */
     /*f_N_queens_evaluate(problem, problem->best_parameter, problem->best_value);*/
-    problem->best_value[0] = sqrt(number_of_variables);
+    problem->best_value[0] = sqrt((double)number_of_variables);
     return problem;
 }
 
@@ -8981,8 +9009,8 @@ static IOHprofiler_problem_t *f_N_queens_IOHprofiler_problem_allocate(const size
 
  static int isEdge(int i, int j, size_t problem_size) {
     if (i!=problem_size/2 && j==i+1){return 1;}
-    else if (i<=(problem_size/2)-1 && j==i+(problem_size/2)+1 ){return 1;}
-    else if (i<=(problem_size/2) && i>=2 && j==i+(problem_size/2)-1){return 1;}
+    else if (i<=((int)problem_size/2)-1 && j==i+((int)problem_size/2)+1 ){return 1;}
+    else if (i<=((int)problem_size/2) && i>=2 && j==i+((int)problem_size/2)-1){return 1;}
     else {return 0;}
 }
 
@@ -8991,20 +9019,21 @@ static IOHprofiler_problem_t *f_N_queens_IOHprofiler_problem_allocate(const size
  */
 static int f_MIS_raw(const int *x, const size_t number_of_variables) {
 
-    if (IOHprofiler_vector_contains_nan(x, number_of_variables))
-        return NAN;
     int i, j,index;
     int result= 0;
     int num_of_ones=0;
     int sum_edges_in_the_set=0;
-    int number_of_variables_even=number_of_variables;
-
-    if (number_of_variables%2!=0){
-        number_of_variables_even=number_of_variables-1;
-    }
-
+    int number_of_variables_even=(int)number_of_variables;
     int ones_array[number_of_variables_even+1];
 
+    if (IOHprofiler_vector_contains_nan(x, number_of_variables))
+        return NAN;
+  
+    if (number_of_variables%2!=0){
+        number_of_variables_even=(int)number_of_variables-1;
+    }
+
+   
     for (index=0; index<number_of_variables_even; index++){
         if (x[index]==1){
             ones_array[num_of_ones] = index;
@@ -9014,7 +9043,7 @@ static int f_MIS_raw(const int *x, const size_t number_of_variables) {
 
     for (i=0; i<num_of_ones; i++){
         for (j=i+1; j<num_of_ones; j++){
-            if(isEdge(ones_array[i]+1,ones_array[j]+1,number_of_variables_even)==1){
+            if(isEdge(ones_array[i]+1,ones_array[j]+1,(size_t)number_of_variables_even)==1){
                 sum_edges_in_the_set+=1;
             }
         }
@@ -9043,7 +9072,7 @@ static IOHprofiler_problem_t *f_MIS_allocate(const size_t number_of_variables) {
 
     /* Compute best solution */
     /*f_MIS_evaluate(problem, problem->best_parameter, problem->best_value);*/
-    problem->best_value[0] = number_of_variables / 2 + 1.0;
+    problem->best_value[0] = (double)(number_of_variables / 2) + 1.0;
     return problem;
 }
 
@@ -11370,7 +11399,7 @@ IOHprofiler_observer_t *IOHprofiler_observer(const char *observer_name, const ch
 
   number_interval_triggers = 0;
   if (IOHprofiler_options_read_size_t(observer_options, "number_interval_triggers", &number_interval_triggers) != 0) {
-    if(number_interval_triggers <= 0)
+    if(number_interval_triggers == 0)
       number_interval_triggers = 0;
   }
 

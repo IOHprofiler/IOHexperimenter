@@ -29,13 +29,13 @@ int modulo_ising_1D(int x,int N){
  */
 static int f_ising_1D_raw(const int *x, const size_t number_of_variables) {
     int result= 0;
-    size_t i;
+    int i;
     if (IOHprofiler_vector_contains_nan(x, number_of_variables))
         return NAN;
 
     for (i = 0; i < number_of_variables; ++i) {
-        int first_neig=x[modulo_ising_1D((i+1), number_of_variables)];
-        int second_neig=x[modulo_ising_1D((i -1) , number_of_variables)];
+        int first_neig=x[modulo_ising_1D((i+1), (int)number_of_variables)];
+        int second_neig=x[modulo_ising_1D((i -1) , (int)number_of_variables)];
 
         result += (x[i] *first_neig) + ((1- x[i])*(1- first_neig));
         result += (x[i] *second_neig) + ((1- x[i])*(1- second_neig));

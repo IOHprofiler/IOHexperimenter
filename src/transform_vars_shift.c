@@ -31,7 +31,7 @@ static void transform_vars_shift_evaluate(IOHprofiler_problem_t *problem, const 
   }
 
   data = (transform_vars_shift_data_t *) IOHprofiler_problem_transformed_get_data(problem);
-  
+  inner_problem = IOHprofiler_problem_transformed_get_inner_problem(problem);
 
   for (i = 0; i < problem->number_of_variables; ++i) {
     data->shifted_x[i] = x[i] + data->offset[i];

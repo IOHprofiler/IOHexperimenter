@@ -19,7 +19,7 @@ typedef struct {
   IOHprofiler_problem_free_function_t old_free_problem;
 } transform_vars_dummy_sigma_data_t;
 
-static void compute_dummy_sigma_match(int * postion_match, const int old_dimension, const int new_dimension){
+static void compute_dummy_sigma_match(int * postion_match, const size_t old_dimension, const size_t new_dimension){
   size_t i,j;
   int temp;
   double *randN = IOHprofiler_allocate_vector(1);
@@ -27,7 +27,7 @@ static void compute_dummy_sigma_match(int * postion_match, const int old_dimensi
   int dummyins = 10000;
   for(i = 0; i < new_dimension;){
     IOHprofiler_unif(randN, 1, dummyins++);
-    temp = (int)(randN[0] * old_dimension);
+    temp = (int)(randN[0] * (double)old_dimension);
     flag = 1;
     for(j = 0; j < i; ++j){
       if(postion_match[j] == temp){
@@ -101,7 +101,7 @@ static IOHprofiler_problem_t *transform_vars_dummy_sigma(IOHprofiler_problem_t *
   if (dummy_bounds)
     IOHprofiler_error("dummy_bounds not implemented.");
 
-  new_dimension = offset[0];
+  new_dimension = (size_t)offset[0];
   temp_best = IOHprofiler_allocate_int_vector(new_dimension);
   data = (transform_vars_dummy_sigma_data_t *) IOHprofiler_allocate_memory(sizeof(*data));
   data->offset = IOHprofiler_duplicate_int_vector(offset1, new_dimension);

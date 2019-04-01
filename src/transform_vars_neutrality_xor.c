@@ -20,7 +20,7 @@ typedef struct {
 } transform_vars_neutrality_xor_data_t;
 
 static int neutrality_compute_before_xor(const int *x, const int index, const int block_size){
-  size_t number_of_one, number_of_zero, i;
+  int number_of_one, number_of_zero, i;
   number_of_zero = 0;
   number_of_one = 0;
   i = 0;
@@ -41,7 +41,7 @@ static int neutrality_xor_compute(const int x1, const int x2){
 }
 
 static void transform_vars_neutrality_xor_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
-  size_t i;
+  int i;
   transform_vars_neutrality_xor_data_t *data;
   IOHprofiler_problem_t *inner_problem;
 
@@ -84,14 +84,14 @@ static IOHprofiler_problem_t *transform_vars_neutrality_xor(IOHprofiler_problem_
     
   transform_vars_neutrality_xor_data_t *data;
   IOHprofiler_problem_t *problem;
-  size_t i;
+  int i;
   size_t new_dimension;
   if (neutrality_xor_bounds)
     IOHprofiler_error("neutrality_xor_bounds not implemented.");
 
   if(inner_problem->number_of_variables >= offset[0])
   {
-    new_dimension = inner_problem->number_of_variables / offset[0];
+    new_dimension = inner_problem->number_of_variables / (size_t)offset[0];
   }
   else{
     return inner_problem;

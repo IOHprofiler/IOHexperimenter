@@ -1,6 +1,10 @@
 #include <Rcpp.h>
-#include <string>   //@Furong: is this library necessary?
+#include <string>
 #include <stdlib.h>
+
+// @Furong: what are those used for?
+#undef Realloc
+#undef Free
 
 #include "IOHprofiler.c"
 
@@ -293,4 +297,26 @@ void IOHfree() {
   	}
   	Rcout << "IOHExperimentor free.\n";
 }
+
+//[[Rcpp::export]]
+void freeProblem(){
+	if(current_problem != NULL){
+		IOHprofiler_problem_free(current_problem);
+	}
+}
+
+//[[Rcpp::export]]
+void freeSuite(){
+	if(current_suite != NULL){
+  		IOHprofiler_suite_free(current_suite);
+  	}
+}
+//[[Rcpp::export]]
+void freeObserver(){
+	if(current_observer != NULL){
+		IOHprofiler_observer_free(current_observer);
+	}
+}
+
+
 

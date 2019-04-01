@@ -20,8 +20,8 @@
 
  static int isEdge(int i, int j, size_t problem_size) {
     if (i!=problem_size/2 && j==i+1){return 1;}
-    else if (i<=(problem_size/2)-1 && j==i+(problem_size/2)+1 ){return 1;}
-    else if (i<=(problem_size/2) && i>=2 && j==i+(problem_size/2)-1){return 1;}
+    else if (i<=((int)problem_size/2)-1 && j==i+((int)problem_size/2)+1 ){return 1;}
+    else if (i<=((int)problem_size/2) && i>=2 && j==i+((int)problem_size/2)-1){return 1;}
     else {return 0;}
 }
 
@@ -30,20 +30,21 @@
  */
 static int f_MIS_raw(const int *x, const size_t number_of_variables) {
 
-    if (IOHprofiler_vector_contains_nan(x, number_of_variables))
-        return NAN;
     int i, j,index;
     int result= 0;
     int num_of_ones=0;
     int sum_edges_in_the_set=0;
-    int number_of_variables_even=number_of_variables;
-
-    if (number_of_variables%2!=0){
-        number_of_variables_even=number_of_variables-1;
-    }
-
+    int number_of_variables_even=(int)number_of_variables;
     int ones_array[number_of_variables_even+1];
 
+    if (IOHprofiler_vector_contains_nan(x, number_of_variables))
+        return NAN;
+  
+    if (number_of_variables%2!=0){
+        number_of_variables_even=(int)number_of_variables-1;
+    }
+
+   
     for (index=0; index<number_of_variables_even; index++){
         if (x[index]==1){
             ones_array[num_of_ones] = index;
@@ -53,7 +54,7 @@ static int f_MIS_raw(const int *x, const size_t number_of_variables) {
 
     for (i=0; i<num_of_ones; i++){
         for (j=i+1; j<num_of_ones; j++){
-            if(isEdge(ones_array[i]+1,ones_array[j]+1,number_of_variables_even)==1){
+            if(isEdge(ones_array[i]+1,ones_array[j]+1,(size_t)number_of_variables_even)==1){
                 sum_edges_in_the_set+=1;
             }
         }
@@ -82,7 +83,7 @@ static IOHprofiler_problem_t *f_MIS_allocate(const size_t number_of_variables) {
 
     /* Compute best solution */
     /*f_MIS_evaluate(problem, problem->best_parameter, problem->best_value);*/
-    problem->best_value[0] = number_of_variables / 2 + 1.0;
+    problem->best_value[0] = (double)(number_of_variables / 2) + 1.0;
     return problem;
 }
 

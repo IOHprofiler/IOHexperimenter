@@ -41,8 +41,8 @@ static void epistasis_compute(const int *x, int * epistasis_x,  int block_size, 
     }
     h += block_size;
   }
-  if(dimension - h > 0){
-    block_size = dimension - h;
+  if((int)dimension - h > 0){
+    block_size = (int)dimension - h;
     i = 0;
     while(i < block_size){
       epistasis_result = -1;
@@ -63,7 +63,7 @@ static void epistasis_compute(const int *x, int * epistasis_x,  int block_size, 
 }
 
 static void transform_vars_epistasis_evaluate(IOHprofiler_problem_t *problem, const int *x, double *y) {
-  size_t i;
+
   transform_vars_epistasis_data_t *data;
   IOHprofiler_problem_t *inner_problem;
 
@@ -100,7 +100,7 @@ static IOHprofiler_problem_t *transform_vars_epistasis(IOHprofiler_problem_t *in
     
   transform_vars_epistasis_data_t *data;
   IOHprofiler_problem_t *problem;
-  size_t i;
+
   if (epistasis_bounds)
     IOHprofiler_error("epistasis_bounds not implemented.");
 
