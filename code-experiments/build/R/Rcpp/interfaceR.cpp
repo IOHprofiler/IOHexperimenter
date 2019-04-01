@@ -276,7 +276,6 @@ List get_next_problem() {
 	//		Rcout << "Currently working on " << IOHprofiler_problem_get_name(current_problem) << ".\n";
 		}
 	}
-	Rcout << "Here";
 	return NULL;
 }
 
