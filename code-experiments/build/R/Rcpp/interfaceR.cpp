@@ -2,7 +2,6 @@
 #include <string>
 #include <stdlib.h>
 
-// @Furong: what are those used for?
 #undef Realloc
 #undef Free
 
@@ -288,20 +287,28 @@ double c_get_fopt() {
 void IOHfree() {
 	if(current_problem != NULL){
 		IOHprofiler_problem_free(current_problem);
+		current_problem = NULL;
+		current_suite->current_problem = NULL;
+		Rcout << "Problem free.\n";
 	}
 	if(current_observer != NULL){
 		IOHprofiler_observer_free(current_observer);
+		current_observer = NULL;
+		Rcout << "Observer free.\n";
 	}
 	if(current_suite != NULL){
   		IOHprofiler_suite_free(current_suite);
+  		current_suite = NULL;
+  		Rcout << "Suite free.\n";
   	}
-  	Rcout << "IOHExperimentor free.\n";
 }
 
 //[[Rcpp::export]]
 void freeProblem(){
 	if(current_problem != NULL){
 		IOHprofiler_problem_free(current_problem);
+		current_suite->current_problem = NULL;
+		current_problem = NULL;
 	}
 }
 
@@ -309,14 +316,13 @@ void freeProblem(){
 void freeSuite(){
 	if(current_suite != NULL){
   		IOHprofiler_suite_free(current_suite);
+  		current_suite = NULL;
   	}
 }
 //[[Rcpp::export]]
 void freeObserver(){
 	if(current_observer != NULL){
 		IOHprofiler_observer_free(current_observer);
+		current_observer = NULL;
 	}
 }
-
-
-
