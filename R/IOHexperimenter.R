@@ -27,7 +27,7 @@ IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
   assert_that(is.numeric(functions))
   assert_that(is.numeric(instances))
   base_evaluation_triggers <- 3
-
+  IOHfree()
   # intialize the backend C code
   c_init_suite(
     paste0(functions, collapse = ','),
