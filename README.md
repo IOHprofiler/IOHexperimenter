@@ -13,9 +13,10 @@ For the analyzer part, please visit [IOHAnalyzer page](https://github.com/IOHpro
 
 Requirements  <a name="Requirements"></a>
 ------------
-1. The experimentation of IOHprofiler has been test with:
+1. The experimentation of IOHprofiler has been tested with:
   - gcc 5.4.1
   - python 2.7.12
+  - R 3.4.4 and above (should also work on other versions)
 2. For a machine running the anylizing process,
   - Visit [IOHAnalyzer page](https://github.com/IOHprofiler/IOHAnalyzer)
 
@@ -24,7 +25,9 @@ Getting Started <a name="Getting-Started"></a>
 ---------------
 0. Check out the [_Requirements_](#Requirements) above.
 
-1. **Download** IOHprofiler experimentation code from github [link](https://github.com/IOHprofiler/IOHExperimenter) and unzip the `zip` file, or **type** `git clone https://github.com/IOHprofiler/Experimentation.git` (`git` needs to be installed)
+1a. To use the R-version of the IOHexperimenter, please look at the R-package branch of this repository [link](https://github.com/IOHprofiler/IOHexperimenter/tree/R-package)
+
+1b. For the other versions of the IOHexperimenter, **Download** IOHprofiler experimentation code from github [link](https://github.com/IOHprofiler/IOHExperimenter) and unzip the `zip` file, or **type** `git clone https://github.com/IOHprofiler/Experimentation.git` (`git` needs to be installed)
 
 2. In a system shell, **`cd` into** the `Experimenter` folder, 
   where the file `do.py` can be found. **execute** the following statement:
