@@ -4,7 +4,10 @@
 \alias{is_target_hit}
 \title{Is the target of the current function hit}
 \usage{
-is_target_hit()
+is_target_hit(problem)
+}
+\arguments{
+\item{problem}{The current IOHproblem}
 }
 \value{
 something

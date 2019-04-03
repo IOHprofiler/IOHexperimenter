@@ -2,9 +2,9 @@
 
 S3method(summary,IOHexperimenter)
 export(IOHexperimenter)
-export(get_evaluations)
+export(benchmark_algorithm)
 export(is_target_hit)
-export(next_function)
+export(next_problem)
 export(obj_func)
 import(Rcpp)
 importFrom(assertthat,assert_that)

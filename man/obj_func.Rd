@@ -4,12 +4,15 @@
 \alias{obj_func}
 \title{Evaluate the current function}
 \usage{
-obj_func(exp, x)
+obj_func(prob, x)
 }
 \arguments{
-\item{exp}{the current IOHexperimenter}
+\item{prob}{the current IOHproblem}
 
 \item{x}{point to evaluate}
+}
+\value{
+The value of f(x) in the current problem instance
 }
 \description{
 Evaluate the current function
