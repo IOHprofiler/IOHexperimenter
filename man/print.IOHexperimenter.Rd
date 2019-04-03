@@ -2,54 +2,15 @@
 % Please edit documentation in R/IOHexperimenter.R
 \name{print.IOHexperimenter}
 \alias{print.IOHexperimenter}
-\title{#' Constructor for S3 class 'IOHproblem'
-#'
-#' @param epxerimenter The current IOHexperimenter object
-#'
-#' @return A S3 object 'IOHproblem'
-#' @export
-#'
-IOHproblem <- function(){
-  structure(
-    list(
-      dimension = dims[1],
-      function_id = functions[1],
-      instance = instances[1],
-      fopt = NULL,
-      xopt = NULL,
-      objective_function = obj_func
-    ),
-    class = c('IOHexperimenter', 'list'),
-    dims = dims, functions = functions, instances = instances,
-    cdat =  cdat, idat = 0, tdat = 3, param.track = param.track,
-    data.dir = data.dir, C.state = T,
-  )
-}}
+\title{S3 print function for IOHexperimenter}
 \usage{
-\method{print}{IOHexperimenter}()
+\method{print}{IOHexperimenter}(x, ...)
+}
+\arguments{
+\item{x}{The IOHexperimenter to print}
+
+\item{...}{Arguments for underlying function}
 }
 \description{
-#' Constructor for S3 class 'IOHproblem'
-#'
-#' @param epxerimenter The current IOHexperimenter object
-#'
-#' @return A S3 object 'IOHproblem'
-#' @export
-#'
-IOHproblem <- function(){
-  structure(
-    list(
-      dimension = dims[1],
-      function_id = functions[1],
-      instance = instances[1],
-      fopt = NULL,
-      xopt = NULL,
-      objective_function = obj_func
-    ),
-    class = c('IOHexperimenter', 'list'),
-    dims = dims, functions = functions, instances = instances,
-    cdat =  cdat, idat = 0, tdat = 3, param.track = param.track,
-    data.dir = data.dir, C.state = T,
-  )
-}
+S3 print function for IOHexperimenter
 }

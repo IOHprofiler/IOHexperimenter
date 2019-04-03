@@ -29,12 +29,16 @@ c_get_next_problem <- function() {
     .Call('_IOHexperimenter_c_get_next_problem', PACKAGE = 'IOHexperimenter')
 }
 
-reset_problem <- function() {
-    .Call('_IOHexperimenter_reset_problem', PACKAGE = 'IOHexperimenter')
+c_reset_problem <- function() {
+    .Call('_IOHexperimenter_c_reset_problem', PACKAGE = 'IOHexperimenter')
 }
 
 c_eval <- function(x) {
     .Call('_IOHexperimenter_c_eval', PACKAGE = 'IOHexperimenter', x)
+}
+
+c_set_parameters <- function(parameters) {
+    invisible(.Call('_IOHexperimenter_c_set_parameters', PACKAGE = 'IOHexperimenter', parameters))
 }
 
 c_is_target_hit <- function() {

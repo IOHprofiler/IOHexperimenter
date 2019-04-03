@@ -204,7 +204,7 @@ List c_get_next_problem() {
 // To reset status of current problem. Applying this function to re-run current problem.
 
 //[[Rcpp::export]]
-List reset_problem() {
+List c_reset_problem() {
 	if(current_problem == NULL){
 		Rcout << "There is no problem exists.\n";
 		return NULL;
@@ -229,15 +229,22 @@ double c_eval(IntegerVector x) {
 	 	return -DBL_MAX;
 	}
 
-	int N = x.size();
-	int* x_ptr = (int*) malloc(sizeof(int) * N);
-	for (int i = 0; i < N; ++i) {
-		x_ptr[i] = x[i];
-	}
+	// int N = x.size();
+	// int* x_ptr = (int*) malloc(sizeof(int) * N);
+	// for (int i = 0; i < N; ++i) {
+	// 	x_ptr[i] = x[i];
+	// }
 
-	IOHprofiler_evaluate_function(current_problem, x_ptr, result);
-	free(x_ptr);
+	IOHprofiler_evaluate_function(current_problem, INTEGER(x), result);
+	// free(x_ptr);
 	return result[0];
+}
+
+// Set parameters.
+
+//[[Rcpp::export]]
+void c_set_parameters(NumericVector parameters){
+  IOHprofiler_problem_set_parameters(current_problem,parameters.size(),REAL(parameters));
 }
 
 // To test if the optimal has been found. Return 1 if it is found.

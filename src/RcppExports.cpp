@@ -84,13 +84,13 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// reset_problem
-List reset_problem();
-RcppExport SEXP _IOHexperimenter_reset_problem() {
+// c_reset_problem
+List c_reset_problem();
+RcppExport SEXP _IOHexperimenter_c_reset_problem() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(reset_problem());
+    rcpp_result_gen = Rcpp::wrap(c_reset_problem());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -103,6 +103,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(c_eval(x));
     return rcpp_result_gen;
+END_RCPP
+}
+// c_set_parameters
+void c_set_parameters(NumericVector parameters);
+RcppExport SEXP _IOHexperimenter_c_set_parameters(SEXP parametersSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type parameters(parametersSEXP);
+    c_set_parameters(parameters);
+    return R_NilValue;
 END_RCPP
 }
 // c_is_target_hit
@@ -190,8 +200,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_IOHexperimenter_get_suite_info", (DL_FUNC) &_IOHexperimenter_get_suite_info, 0},
     {"_IOHexperimenter_get_problem_info", (DL_FUNC) &_IOHexperimenter_get_problem_info, 0},
     {"_IOHexperimenter_c_get_next_problem", (DL_FUNC) &_IOHexperimenter_c_get_next_problem, 0},
-    {"_IOHexperimenter_reset_problem", (DL_FUNC) &_IOHexperimenter_reset_problem, 0},
+    {"_IOHexperimenter_c_reset_problem", (DL_FUNC) &_IOHexperimenter_c_reset_problem, 0},
     {"_IOHexperimenter_c_eval", (DL_FUNC) &_IOHexperimenter_c_eval, 1},
+    {"_IOHexperimenter_c_set_parameters", (DL_FUNC) &_IOHexperimenter_c_set_parameters, 1},
     {"_IOHexperimenter_c_is_target_hit", (DL_FUNC) &_IOHexperimenter_c_is_target_hit, 0},
     {"_IOHexperimenter_c_get_evaluations", (DL_FUNC) &_IOHexperimenter_c_get_evaluations, 0},
     {"_IOHexperimenter_c_get_xopt", (DL_FUNC) &_IOHexperimenter_c_get_xopt, 0},
