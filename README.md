@@ -38,16 +38,19 @@ Getting Started <a name="Getting-Started"></a>
 ?benchmark_algorithm
 ```
 
-Note that your algorithm will need to accept exactly one parameter: An IOHproblem argument, which contains the following information about the current problem:
--dimension
--function_id
--instance
--fopt (if known)
--xopt (if known)
+Note that your algorithm will need to accept exactly one parameter: An IOHproblem object, which contains the following information about the current problem:
+
+* dimension
+* function_id
+* instance
+* fopt (if known)
+* xopt (if known)
+
 And the following functions:
--obj_func()
--target_hit()
--set_parameters()
+
+* obj_func()
+* target_hit()
+* set_parameters()
 
 2. Run the benchmarks using the function 'benchmark_algorithm'
   
@@ -56,4 +59,4 @@ And the following functions:
 
 Using C or Python <a name="Using-C"></a>
 ---------------
-To use the IOHexperimenter in C or python, please look at the other branches in this repository
+To use the IOHexperimenter in C or python, please look at the other branches in [this repository](https://github.com/IOHprofiler/IOHexperimenter)
