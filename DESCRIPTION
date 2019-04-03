@@ -1,7 +1,7 @@
 Package: IOHexperimenter
 Type: Package
-Title: Benchmarking part of the 'IOHprofiler'
-Version: 0.1.0
+Title: Benchmarking Part of the 'IOHprofiler'
+Version: 0.0.0.9000
 Author: Furong Ye [cre, aut], Hao Wang [aut], Diederick Vermetten [aut], Carola Doerr [aut], Thomas Bäck [aut]
 Maintainer: Furong Ye <f.ye@liacs.leidenuniv.nl>
 Description: The benchmarking module for the Iterative Optimization Heuristics
