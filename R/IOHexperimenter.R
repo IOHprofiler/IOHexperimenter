@@ -28,6 +28,12 @@ IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
   assert_that(is.numeric(instances))
   base_evaluation_triggers <- 3
   IOHfree()
+
+  if (dir.exists(data.dir)) {
+    data.dir <- tempdir()
+    print(data.dir)
+  }
+
   # intialize the backend C code
   c_init_suite(
     paste0(functions, collapse = ','),

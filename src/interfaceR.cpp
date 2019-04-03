@@ -188,7 +188,9 @@ List c_get_next_problem() {
 		current_problem = IOHprofiler_suite_get_next_problem(current_suite, current_observer);
 		if(current_problem == NULL){
 			IOHprofiler_observer_free(current_observer);
-	  		IOHprofiler_suite_free(current_suite);
+		  current_observer = NULL;
+	  	IOHprofiler_suite_free(current_suite);
+		  current_suite = NULL;
 	//  		Rcout << "All problems have been tested, suite and observer are free. Thanks for using IOHExperimentor.\n";
 		}
 		else{
@@ -291,17 +293,14 @@ void IOHfree() {
     IOHprofiler_problem_free(current_problem);
     current_problem = NULL;
     current_suite->current_problem = NULL;
-    Rcout << "Problem free.\n";
   }
   if(current_observer != NULL){
     IOHprofiler_observer_free(current_observer);
     current_observer = NULL;
-    Rcout << "Observer free.\n";
   }
   if(current_suite != NULL){
     IOHprofiler_suite_free(current_suite);
     current_suite = NULL;
-    Rcout << "Suite free.\n";
   }
 }
 
