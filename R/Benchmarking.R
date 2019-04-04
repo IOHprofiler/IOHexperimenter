@@ -24,7 +24,7 @@
 #' @param cdat Whether or not to generate a .cdat-file
 #' @param idat Integer
 #' @param tdat What frequency to use in a .tdat-file
-#' @param params.track Which parameters to track
+#' @param params.track Which parameters to track. Should be a vector of strings, containing no spaces or commas
 #' @param repetitions How many independent runs of the algorithm to do for each problem
 #'
 #' @examples
@@ -46,7 +46,7 @@
 #' @export
 benchmark_algorithm <- function(user_alg, functions = NULL, instances = NULL, dimensions = NULL,
                                 data.dir = NULL, algorithm.info = '', algorithm.name = '',
-                                cdat = FALSE, idat = 0, tdat = 3, params.track = '',
+                                cdat = FALSE, idat = 0, tdat = 3, params.track = NULL,
                                 repetitions = 5) {
   # Setting default parameters if needed and verifying parameter integrity
   if (is.null(functions)) functions <- seq(2)

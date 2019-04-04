@@ -1,5 +1,6 @@
 #' @importFrom assertthat assert_that
 #' @import Rcpp
+#' @importFrom stats rnorm
 #' @useDynLib IOHexperimenter
 NULL
 
@@ -14,19 +15,22 @@ NULL
 #' @param cdat Whether or not to generate a .cdat-file
 #' @param idat Integer
 #' @param tdat What frequency to use in a .tdat-file
-#' @param param.track Which parameters to track
+#' @param param.track Which parameters to track. Should be a vector of strings, containing no spaces or commas
 #'
 #' @return A S3 object 'DataSet'
 #' @export
 #'
 IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
   functions = seq(23), instances = seq(100), algorithm_info = '', algorithm_name = '',
-  data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = '') {
+  data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = NULL) {
 
   assert_that(is.numeric(dims))
   assert_that(is.numeric(functions))
   assert_that(is.numeric(instances))
   base_evaluation_triggers <- 3
+  if( !is.null(param.track) ) param_str <- paste0(param.track, collapse = ',')
+  else param_str <- ''
+
 
   # intialize the backend C code
   c_init_suite(
@@ -42,7 +46,7 @@ IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
     number_interval_triggers = idat,
 		base_evaluation_triggers = "1,2,5",
 		number_target_triggers = tdat,
-		param.track
+		param_str
   )
 
   structure(

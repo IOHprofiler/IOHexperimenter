@@ -7,7 +7,7 @@
 IOHexperimenter(dims = c(100, 500, 1000, 2000, 3000),
   functions = seq(23), instances = seq(100), algorithm_info = "",
   algorithm_name = "", data.dir = "./data", cdat = FALSE, idat = 0,
-  tdat = 3, param.track = "")
+  tdat = 3, param.track = NULL)
 }
 \arguments{
 \item{dims}{Numerical}
@@ -28,7 +28,7 @@ IOHexperimenter(dims = c(100, 500, 1000, 2000, 3000),
 
 \item{tdat}{What frequency to use in a .tdat-file}
 
-\item{param.track}{Which parameters to track}
+\item{param.track}{Which parameters to track. Should be a vector of strings, containing no spaces or commas}
 }
 \value{
 A S3 object 'DataSet'

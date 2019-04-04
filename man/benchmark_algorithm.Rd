@@ -7,7 +7,7 @@
 benchmark_algorithm(user_alg, functions = NULL, instances = NULL,
   dimensions = NULL, data.dir = NULL, algorithm.info = "",
   algorithm.name = "", cdat = FALSE, idat = 0, tdat = 3,
-  params.track = "", repetitions = 5)
+  params.track = NULL, repetitions = 5)
 }
 \arguments{
 \item{user_alg}{Function defining the custom algorithm. Needs to accept one paramter:
@@ -44,7 +44,7 @@ And the following functions:
 
 \item{tdat}{What frequency to use in a .tdat-file}
 
-\item{params.track}{Which parameters to track}
+\item{params.track}{Which parameters to track. Should be a vector of strings, containing no spaces or commas}
 
 \item{repetitions}{How many independent runs of the algorithm to do for each problem}
 }
