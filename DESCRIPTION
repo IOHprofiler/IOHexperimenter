@@ -2,8 +2,8 @@ Package: IOHexperimenter
 Type: Package
 Title: Benchmarking Part of the 'IOHprofiler'
 Version: 0.0.0.9000
-Author: Furong Ye [cre, aut], Hao Wang [aut], Diederick Vermetten [aut], Carola Doerr [aut], Thomas Bäck [aut]
-Maintainer: Furong Ye <f.ye@liacs.leidenuniv.nl>
+Author: Diederick Vermetten [cre, aut], Furong Ye [cre, aut], Hao Wang [aut], Carola Doerr [aut], Thomas Bäck [aut]
+Maintainer: Diederick Vermetten <d.vermetten@gmail.com>
 Description: The benchmarking module for the Iterative Optimization Heuristics
     Profiler ('IOHprofiler'). This module provides benchmarking in the 'IOHprofiler'
     format, which can be visulized using the 'IOHanalyzer' module.
@@ -18,6 +18,6 @@ Imports:
 LinkingTo: Rcpp
 RoxygenNote: 6.1.1
 SystemRequirements: GNU make
-Date: 2019-04-02
+Date: 2019-04-04
 Suggests: 
     testthat

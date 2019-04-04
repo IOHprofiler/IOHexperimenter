@@ -14,35 +14,6 @@ IOHprofiler_observer_t * current_observer;
 IOHprofiler_suite_t* current_suite;
 IOHprofiler_problem_t* current_problem;
 
-// struct Suite{
-//     IOHprofiler_suite_t* current_suite;
-//     IOHprofiler_problem_t* current_problem;
-//     String name;
-//     String instance;
-//     String function;
-//     String dimension;
-//     int current_problem_id = 0;
-//     int current_instance_id = 0;
-//     int current_dimension = 0;
-//     int state = 0;
-//     int problem_flag = 0;
-// }suite;
-
-
-// struct Observer{
-// 	IOHprofiler_observer_t * current_observer;
-// 	String name;
-// 	int state = 0;
-// 	String result_folder = "IOHresult";
-// 	String algorithm_name = "ALG";
-// 	String algorithm_info = "ALG";
-// 	String complete_triggers = "false";
-// 	int number_interval_triggers = 0;
-// 	String base_evaluation_triggers = "1,2,3";
-// 	int number_target_triggers = 3;
-// 	String parameters_name = "";
-// }observer;
-
 // Create a suite with specific arguments.
 
 //[[Rcpp::export]]
@@ -63,29 +34,6 @@ void c_init_suite(String functions, String dimensions, String instances){
 	Rcout << "Suite PBO has been initialized.\n";
 }
 
-// Create a default suite including all functions and instances in dimension 100,500,1000,2000,3000.
-
-// //[[Rcpp::export]]
-// void default_suite(){
-// 	if(current_suite != NULL){
-// 		IOHprofiler_suite_free(current_suite);
-// 		Rcout << "Current suite has been erased.\n";
-// 	}
-// 	String ins = " instances: ";
-// 	String func = " function_indices: ";
-// 	String dim =  " dimensions: ";
-// 	ins += "1-100";
-// 	func += "1-24";
-// 	dim += "100,500,1000,2000,3000";
-// 	func += dim;
-// 	current_suite = IOHprofiler_suite("PBO", ins.get_cstring() ,func.get_cstring());
-// 	name = "PBO";
-// 	instance = "1-100";
-// 	dimension = "100,500,1000,2000,3000";
-// 	function = "1-24";
-// 	state = 1;
-// 	Rcout << "Suite PBO has been initialized.\n";
-// }
 
 
 // Create an  All options are with default values. To config output path and format, apply following functions.
@@ -95,10 +43,7 @@ void c_init_observer(String result_folder, String algorithm_name, String algorit
 					String complete_triggers, int number_interval_triggers,
 					String base_evaluation_triggers, int number_target_triggers,
 					String parameters_name) {
-//	if(current_observer != NULL){
-//		IOHprofiler_observer_free(current_observer);
-//		Rcout << "Current observer has been erased.\n";
-//	}
+
 
 	char *observer_options = IOHprofiler_strdupf( "result_folder:  %s "
                                                 "algorithm_name: %s "
@@ -178,12 +123,6 @@ List get_problem_info() {
 
 //[[Rcpp::export]]
 List c_get_next_problem() {
-	// if(state == 0){
-	// 	Rcout << "Please create a suite at first.\n";
-	// }
-	// if(state == 0){
-	// 	Rcout << "Please create an observer at first.\n";
-	// }
 	if(current_suite != NULL && current_observer != NULL){
 		current_problem = IOHprofiler_suite_get_next_problem(current_suite, current_observer);
 		if(current_problem == NULL){
@@ -191,11 +130,9 @@ List c_get_next_problem() {
 		  current_observer = NULL;
 	  	IOHprofiler_suite_free(current_suite);
 		  current_suite = NULL;
-	//  		Rcout << "All problems have been tested, suite and observer are free. Thanks for using IOHExperimentor.\n";
 		}
 		else{
 			return get_problem_info();
-	//		Rcout << "Currently working on " << IOHprofiler_problem_get_name(current_problem) << ".\n";
 		}
 	}
 	return NULL;
@@ -229,14 +166,8 @@ double c_eval(IntegerVector x) {
 	 	return -DBL_MAX;
 	}
 
-	// int N = x.size();
-	// int* x_ptr = (int*) malloc(sizeof(int) * N);
-	// for (int i = 0; i < N; ++i) {
-	// 	x_ptr[i] = x[i];
-	// }
 
 	IOHprofiler_evaluate_function(current_problem, INTEGER(x), result);
-	// free(x_ptr);
 	return result[0];
 }
 
