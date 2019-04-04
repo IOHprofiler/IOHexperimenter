@@ -40,7 +40,7 @@ IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
     data.dir, algorithm_name, algorithm_info,
     complete_triggers = ifelse(cdat, 'true', 'false'), # @Furong: why this is a string in C?
     number_interval_triggers = idat,
-		base_evaluation_triggers = "1,2,3", # @Diederick: this seems Furong's default value... no idea
+		base_evaluation_triggers = "1,2,5", # @Diederick: this seems Furong's default value... no idea
 		number_target_triggers = tdat,
 		param.track   # @Diederick: I'm not sure about Furong's default value on this
   )
