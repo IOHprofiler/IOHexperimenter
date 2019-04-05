@@ -1,67 +1,95 @@
+#' @importFrom assertthat assert_that
+#' @import Rcpp
+#' @importFrom stats rnorm
+#' @useDynLib IOHexperimenter
+NULL
+
 #' S3 class 'IOHexperimenter'
 #'
-#' @param dims Numerical 
+#' @param dims Numerical
 #' @param functions Numerical
 #' @param instances Numerical Whether the underlying optimization algorithm performs a maximization?
+#' @param algorithm_info Additional information about the algorithm you plan on running
+#' @param algorithm_name The name of the algorithm you plan on running
+#' @param data.dir Where the data should be stored
+#' @param cdat Whether or not to generate a .cdat-file
+#' @param idat Integer
+#' @param tdat What frequency to use in a .tdat-file
+#' @param param.track Which parameters to track. Should be a vector of strings, containing no spaces or commas
 #'
 #' @return A S3 object 'DataSet'
 #' @export
 #'
-IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000), 
+IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
   functions = seq(23), instances = seq(100), algorithm_info = '', algorithm_name = '',
-  data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = '') {
-  
+  data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = NULL) {
+
   assert_that(is.numeric(dims))
   assert_that(is.numeric(functions))
   assert_that(is.numeric(instances))
   base_evaluation_triggers <- 3
-  
+  if( !is.null(param.track) ) param_str <- paste0(param.track, collapse = ',')
+  else param_str <- ''
+
+
   # intialize the backend C code
   c_init_suite(
-    paste0(functions, collapse = '-'), 
-    paste0(dims, collapse = '-'),
-    paste0(instances, collapse = '-')
+    paste0(functions, collapse = ','),
+    paste0(dims, collapse = ','),
+    paste0(instances, collapse = ',')
   )
-  
+
   # intialize the observer
   c_init_observer(
-    data.dir, algorithm_name, algorithm_info, 
-    complete_triggers = ifelse(cdat, 'true', 'false'), # @Furong: why this is a string in C?
+    data.dir, algorithm_name, algorithm_info,
+    complete_triggers = ifelse(cdat, 'true', 'false'),
     number_interval_triggers = idat,
-		base_evaluation_triggers = "1,2,3", # @Diederick: this seems Furong's default value... no idea
+		base_evaluation_triggers = "1,2,5",
 		number_target_triggers = tdat,
-		param.track   # @Diederick: I'm not sure about Furong's default value on this
+		param_str
   )
-  
+
   structure(
     list(
-      obj_func = function(x) {
-        if (is.null(dim(x))) x <- t(x)
-        if (ncol(x) != exp$curr_dim) x <- t(x)
-        
-        stopifnot(ncol(x) == exp$curr_dim)
-        apply(x, 1, c_eval)
-      },
-      curr_dim = dims[1],
-      curr_function_id = functions[1],
-      curr_instance = instances[1],
-      fopt = NULL,
-      xopt = NULL
-    ), 
+      dims = dims,
+      functions = functions,
+      instances = instances,
+      param.track = param.track
+    ),
     class = c('IOHexperimenter', 'list'),
-    dims = dims, functions = functions, instances = instances,
-    cdat =  cdat, idat = 0, tdat = 3, param.track = param.track,
+    cdat =  cdat, idat = 0, tdat = 3,
     data.dir = data.dir, C.state = T
   )
 }
 
-print.IOHexperimenter <- function() {
-  
+#' S3 print function for IOHexperimenter
+#'
+#' @param x The IOHexperimenter to print
+#' @param ... Arguments for underlying function
+#'
+#' @export
+print.IOHexperimenter <- function(x, ...) {
+  cat(as.character.IOHexperimenter(x, ...))
 }
 
-cat.IOHexperimenter <- function() {
-  
+#' S3 generic cat function for IOHexperimenter
+#'
+#' @param x The IOHexperimenter to print
+#'
+#' @export
+cat.IOHexperimenter <- function(x) cat(as.character(x))
+
+#' S3 generic as.character function for IOHexperimenter
+#'
+#' @param x The IOHexperimenter to print
+#' @param ... Arguments for underlying function
+#'
+#' @export
+as.character.IOHexperimenter <- function(x, ...) {
+  sprintf('IOHexperimenter (Instances %d of functions %d %dD)', x$instances, x$functions, x$dims)
 }
+
+
 
 #' S3 generic summary operator for IOHexperimenter
 #'
@@ -75,52 +103,13 @@ summary.IOHexperimenter <- function(object, ...) {
   cat(paste('dimensions: ', paste(object$dims, collapse = ',')))
   cat(paste('functions: ', paste(object$functions, collapse = ',')))
   cat(paste('instances: ', paste(object$instances, collapse = ',')))
-  cat(paste('current dimension: ', paste(object$curr_dim, collapse = ',')))
-  cat(paste('current function ID: ', paste(object$curr_function_id, collapse = ',')))
-  cat(paste('current instancee: ', paste(object$curr_instance, collapse = ',')))
-}
-
-# we don't need this fuction for now...
-# set_function <- function(exp, dim, function_id, instance) {
-#   exp$curr_dim <- dim
-#   exp$curr_function_id <- function_id
-#   exp$curr_instance <- instance
-#   c_set_function(function_id, dim, instance)
-# }
-
-next_function <- function(exp) {
-  ans <- c_get_next_problem()
-  if (is.null(ans)) return(NULL)
-  
-  exp$fopt <- c_get_fopt()
-  exp$xopt <- c_get_xopt()
-  exp$curr_dim <- ans$dimension 
-  exp$curr_function_id <- ans$problem 
-  exp$curr_instance <- exp$instance
-  exp
-}
-
-get_evaluations <- function() {
-  c_get_evaluations()
-}
-
-is_target_hit <- function() {
-  c_is_target_hit()
 }
 
 
-# exmaple testing case
-exp <- IOHexperimenter()
-while (T) {
-  exp <- next_function(exp)
-  if (is.null(exp)) break
-
-  dim <- exp$curr_dim
-  exp$obj_func(runif(dim))
-}
 
 
- 
+
+
 
 
 

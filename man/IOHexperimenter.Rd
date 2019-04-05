@@ -15,6 +15,20 @@ IOHexperimenter(dims = c(100, 500, 1000, 2000, 3000),
 \item{functions}{Numerical}
 
 \item{instances}{Numerical Whether the underlying optimization algorithm performs a maximization?}
+
+\item{algorithm_info}{Additional information about the algorithm you plan on running}
+
+\item{algorithm_name}{The name of the algorithm you plan on running}
+
+\item{data.dir}{Where the data should be stored}
+
+\item{cdat}{Whether or not to generate a .cdat-file}
+
+\item{idat}{Integer}
+
+\item{tdat}{What frequency to use in a .tdat-file}
+
+\item{param.track}{Which parameters to track. Should be a vector of strings, containing no spaces or commas}
 }
 \value{
 A S3 object 'DataSet'

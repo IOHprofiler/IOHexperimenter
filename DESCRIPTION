@@ -1,0 +1,23 @@
+Package: IOHexperimenter
+Type: Package
+Title: Benchmarking Part of the 'IOHprofiler'
+Version: 0.0.0.9000
+Author: Diederick Vermetten [cre, aut], Furong Ye [cre, aut], Hao Wang [aut], Carola Doerr [aut], Thomas Bäck [aut]
+Maintainer: Diederick Vermetten <d.vermetten@gmail.com>
+Description: The benchmarking module for the Iterative Optimization Heuristics
+    Profiler ('IOHprofiler'). This module provides benchmarking in the 'IOHprofiler'
+    format, which can be visulized using the 'IOHanalyzer' module.
+License: BSD_3_clause + file LICENSE
+Encoding: UTF-8
+LazyData: true
+URL: https://github.com/IOHprofiler/IOHexperimenter
+BugReports: https://github.com/IOHprofiler/IOHexperimenter/issues
+Imports: 
+  Rcpp (>= 1.0.1),
+  assertthat
+LinkingTo: Rcpp
+RoxygenNote: 6.1.1
+SystemRequirements: GNU make
+Date: 2019-04-04
+Suggests: 
+    testthat

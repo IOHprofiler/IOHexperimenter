@@ -11,54 +11,52 @@ For the analyzer part, please visit [IOHAnalyzer page](https://github.com/IOHpro
 
 
 
-Requirements  <a name="Requirements"></a>
+R-package  <a name="package"></a>
 ------------
-1. The experimentation of IOHprofiler has been test with:
-  - gcc 5.4.1
-  - python 2.7.12
-2. For a machine running the anylizing process,
-  - Visit [IOHAnalyzer page](https://github.com/IOHprofiler/IOHAnalyzer)
+This branch of the IOHexperimenter consists of the R-implementation of the experimenter, built using Rcpp.
+To use this package, either clone this repository and install locally, or use the following commands to use devtools to install the package directely:
+
+If devtools is not yet installed, please first use
+```r
+install.packages('devtools')
+```
+Error messages will be shown in your R console if there is any installation issue.
+Now, the IOHexperimenter package can be installed and loaded using the following commands:
+```r
+devtools::install_github('IOHprofiler/IOHexperimenter@R-package')
+library('IOHexperimenter')
+```
+This will install the package and all required dependencies.
 
 
 Getting Started <a name="Getting-Started"></a>
 ---------------
-0. Check out the [_Requirements_](#Requirements) above.
+0. Install the package using one of the methods mentioned [_package_](#package) above.
 
-1. **Download** IOHprofiler experimentation code from github [link](https://github.com/IOHprofiler/IOHExperimenter) and unzip the `zip` file, or **type** `git clone https://github.com/IOHprofiler/Experimentation.git` (`git` needs to be installed)
+1. Create you own algorithm, or use the example algorithm provided in the documentation accessed by:
+```r
+?benchmark_algorithm
+```
 
-2. In a system shell, **`cd` into** the `Experimenter` folder, 
-  where the file `do.py` can be found. **execute** the following statement:
-  ```
-    python do.py `options`
-  ```  
-  Available options are:
+Note that your algorithm will need to accept exactly one parameter: An IOHproblem object, which contains the following information about the current problem:
 
-    - `build-c` Builds the C module. Two files, IOHprofiler.c and IOHprofiler.h, will be generated at `code-experiment/build/c`
+* dimension
+* function_id
+* instance
+* fopt (if known)
+* xopt (if known)
 
-    - `run-c` Builds the C module and runs as an example some experiments in C.
+And the following functions:
 
-    - `build-python` Builds the python module. A python package named IOHprofiler will be installed
+* obj_func()
+* target_hit()
+* set_parameters()
 
-    - `run-python` Builds the python module and runs as an example some experiments in python.
-
+2. Run the benchmarks using the function 'benchmark_algorithm'
   
 3. Using the analyzer by visiting [IOHAnalyzer page](https://github.com/IOHprofiler/IOHAnalyzer)
 
 
-Using C <a name="Using-C"></a>
+Using C or Python <a name="Using-C"></a>
 ---------------
-For a quick view of experimental result from Experimenter by C, excute the following statement in the directory of `Experimenter`: 
-```
-  python do.py run-c
-``` 
-Then you can find compiled and output files in the directory `code-experiments/build/c`. If you want to test your algorithms, please visit the the page [Using Experimenter by C](https://github.com/IOHprofiler/IOHExperimenter/tree/master/code-experiments/build/c).
-
-
-Using Python <a name="Using-Python"></a>
----------------
-For a quick view of experimental result from Experimenter by python, excute the following statement in the directory of `Experimenter`: 
-```
-  python do.py run-python
-``` 
-Then you can find output files in the directory `code-experiments/build/python`. If you want to test your algorithms, please visit the the page [Using Experimenter by Python](https://github.com/IOHprofiler/IOHExperimenter/tree/master/code-experiments/build/python).
-
+To use the IOHexperimenter in C or python, please look at the other branches in [this repository](https://github.com/IOHprofiler/IOHexperimenter)
