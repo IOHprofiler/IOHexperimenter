@@ -23,7 +23,7 @@ install.packages('devtools')
 Error messages will be shown in your R console if there is any installation issue.
 Now, the IOHexperimenter package can be installed and loaded using the following commands:
 ```r
-devtools::install_github('IOHprofiler/IOHexperimenter@R-package')
+devtools::install_github('IOHprofiler/IOHexperimenter@R')
 library('IOHexperimenter')
 ```
 This will install the package and all required dependencies.
