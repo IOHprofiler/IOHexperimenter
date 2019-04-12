@@ -2,7 +2,7 @@
 #define IOHPROFILER_TRANSFORMATION_HPP
 
 
-#include "common.h"
+#include "common.hpp"
 #include "IOHprofiler_random.hpp"
 
 class IOHprofiler_transformation: public Random_methods{

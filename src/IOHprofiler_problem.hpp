@@ -2,7 +2,7 @@
 #define _IOHPROFILER_PROBLEM_HPP
 
 
-#include "common.h"
+#include "common.hpp"
 #include "IOHprofiler_transformation.hpp"
 #include "IOHprofiler_logger.h"
 
@@ -43,7 +43,7 @@
 //      y.push_back((double)result);
 //    };
 
-template <class InputType> class IOHprofiler_problem : public IOHprofiler_transformation, public IOHprofiler_logger {
+template <class InputType> class IOHprofiler_problem : public IOHprofiler_transformation {
 public:
   //void problem();
   //~problem();
@@ -75,7 +75,7 @@ public:
     printf("No constraints function defined");
   };  
 
-  void addLogger(IOHprofiler_logger logger);
+  //void addLogger(IOHprofiler_logger logger);
 
   //Interface for info of problems
   int IOHprofiler_get_number_of_varibles();
@@ -115,7 +115,7 @@ public:
   std::vector<double> optimal;
 
 
-  IOHprofiler_logger logger = NULL;
+  //IOHprofiler_logger logger = NULL;
 
   bool optimalFound = false;
   //IOHprofiler_logger logger;

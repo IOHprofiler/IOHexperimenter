@@ -2,7 +2,7 @@
 
 class OneMax : public IOHprofiler_problem<int> {
 public:
-  OneMax(){
+  OneMax() {
     problem_id = 1;
     instance_id = 1;
     problem_name = "OneMax";
@@ -10,6 +10,7 @@ public:
 
     number_of_objectives = 1;
   };
+  ~OneMax();
   
 
   void Initilize_problem(int  dimension) {

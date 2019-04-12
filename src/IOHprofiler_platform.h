@@ -40,16 +40,8 @@
 #else
 #include <dirent.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-/* To silence the compiler (implicit-function-declaration warning). */
-/** @cond */
-int rmdir(const char *pathname);
-int unlink(const char *file_name);
-int mkdir(const char *pathname, mode_t mode);
-/** @endcond */
+
 #endif
 
 /* Definition of the S_IRWXU constant needed to set file permissions */
@@ -60,10 +52,6 @@ int mkdir(const char *pathname, mode_t mode);
 /* To silence the Visual Studio compiler (C4996 warnings in the python build). */
 #ifdef _MSC_VER
 #pragma warning(disable : 4996)
-#endif
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif
