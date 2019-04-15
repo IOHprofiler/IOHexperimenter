@@ -53,17 +53,6 @@ Base procedure for benchmarking a custom algorithm
 }
 \examples{
 \donttest{
-random_search <- function(IOHproblem) {
-iter <- 0
-fopt <- -Inf
-max_iter <- IOHproblem$dimension
-while (iter < max_iter && !IOHproblem$target_hit()){
-  candidate <- sample(c(0, 1), IOHproblem$dimension, TRUE)
-  IOHproblem$set_parameters(0)
-  fopt <- max(IOHproblem$obj_func(candidate), fopt)
-  iter <- iter+1
-}
-}
 
 benchmark_algorithm(random_search, params.track = 'Test_param')
 }

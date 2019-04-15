@@ -19,6 +19,39 @@ random_search <- function(IOHproblem) {
   }
 }
 
+
+#' A random local search implementation
+#'
+#' This implements a bare-bones random local search algorithm.
+#' This serves as an example of how to implement an optimization algorithm
+#' for use with the IOHexperimenter.
+#'
+#'
+#' @param IOHproblem An IOHproblem object
+#' @param budget How many times the objective function can be evaluated
+#'
+#' @export
+random_local_search <- function(IOHproblem, budget = NULL) {
+  if (is.null(budget)) budget <- 10*IOHproblem$dimension
+  starting_point <- sample(c(0, 1), IOHproblem$dimension, TRUE)
+  fopt <- IOHproblem$obj_func(starting_point)
+  xopt <- starting_point
+  iter <- 1
+  while ( iter < budget && !IOHproblem$target_hit() ){
+    candidate <- xopt
+    switch_idx <- sample(1:IOHproblem$dimension, 1)
+    candidate[switch_idx] <- 1 - candidate[switch_idx]
+    fval <- IOHproblem$obj_func(candidate)
+    if (fval >= fopt){
+      fopt <- fval
+      xopt <- candidate
+    }
+    iter <- iter+1
+  }
+  return(fopt)
+}
+
+
 #' Mutation operator for 1+lambda EA
 #'
 #'
