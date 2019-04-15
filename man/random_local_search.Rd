@@ -2,17 +2,17 @@
 % Please edit documentation in R/Algorithms.R
 \name{random_local_search}
 \alias{random_local_search}
-\title{A random local search implementation}
+\title{Random Local Search (RLS) Algorithm}
 \usage{
 random_local_search(IOHproblem, budget = NULL)
 }
 \arguments{
 \item{IOHproblem}{An IOHproblem object}
 
-\item{budget}{How many times the objective function can be evaluated}
+\item{budget}{integer, maximal allowable number of function evaluations}
 }
 \description{
-This implements a bare-bones random local search algorithm.
-This serves as an example of how to implement an optimization algorithm
-for use with the IOHexperimenter.
+The simplest stochastic optimization algorithm for discrete problems. A randomly
+chosen position in the solution vector is perturbated in each iteration. Only
+improvements are accepted after perturbation.
 }
