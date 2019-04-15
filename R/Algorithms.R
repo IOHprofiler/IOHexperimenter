@@ -1,22 +1,109 @@
-#' A random_search implementation
+#' Random Search
 #'
-#' This implements a bare-bones random search algorithm.
-#' This serves as an example of how to implement an optimization algorithm
-#' for use with the IOHexperimenter.
+#' Random walk in \eqn{{0, 1}^d} space  
 #'
 #'
 #' @param IOHproblem An IOHproblem object
 #'
 #' @export
-random_search <- function(IOHproblem) {
-  iter <- 0
-  max_iter <- IOHproblem$dimension
-  while ( iter < max_iter && !IOHproblem$target_hit() ){
-    candidate <- sample(c(0, 1), IOHproblem$dimension, TRUE)
-    IOHproblem$store_parameters(0)
-    IOHproblem$obj_func(candidate)
-    iter <- iter+1
+random_search <- function(dim, obj_func, budget = NULL) {
+  if (is.null(budget)) budget <- 10 * dim
+  fopt <- -Inf
+  
+  while (budget > 0) {
+    x <- sample(c(0, 1), dim, TRUE)
+    f <- obj_func(x)
+    budget <- budget - 1
+    
+    if (f > fopt) {
+      xopt <- x
+      fopt <- f
+    }
   }
+  list(xopt = x, fopt = fopt)
+}
+
+#' Random Local Search (RLS) Algorithm
+#' 
+#' The simplest stochastic optimization algorithm for discrete problems. A randomly 
+#' chosen position in the solution vector is perturbated in each iteration. Only
+#' improvements are accepted after perturbation.
+#'
+#' @param dim integer, the dimension of the 
+#' @param obj_func the objective function to be maximized
+#' @param target double, the target value to hit 
+#' @param budget integer, maximal allowable number of function evaluations
+#'
+#' @export
+#' @examples
+RLS <- function(dim, obj_func, target = NULL, budget = NULL) {
+  if (is.null(budget)) budget <- 10 * dim
+
+  x <- sample(c(0, 1), dim, TRUE)
+  fopt <- obj_func(x)
+  budget <- budget - 1
+
+  while (budget > 0) {
+    x_ <- x
+    index <- sample(dim, 1)
+    x_[index] <- sample(c(0, 1), 1)
+    f <- obj_func(x_)
+    
+    if(f > fopt) {
+      fopt <- f
+      x <- x_
+    }
+    budget <- budget - 1
+  }
+  list(xopt = x, fopt = fopt)
+}
+
+#' One-Comma-Lambda Self-Adapative Genetic Algorithm
+#' 
+#' A genetic algorithm that controls the mutation rate (strength) using the so-called 
+#' self-adaptation mechanism: the mutation rate is firstly perturbated and then the 
+#' resulting value is taken to mutate Lambda solution vector. The best solution is 
+#' selected along with its mutation rate.
+#'
+#' @param dim integer, the dimension of the 
+#' @param obj_func the objective function to be maximized
+#' @param target double, the target value to hit 
+#' @param budget integer, maximal allowable number of function evaluations
+#' @param lambda_ integer, the population size > 1
+#'
+#' @export
+#' @examples
+self_adaptive_GA <- function(dim, obj_func, target = NULL, budget = NULL,
+                             lambda_ = 10) {
+  if (is.null(budget)) budget <- 10 * dim
+  
+  x <- sample(c(0, 1), dim, TRUE)
+  xopt <- x
+  fopt <- fx <- obj_func(x)
+  budget <- budget - 1
+  
+  r <- 1.0 / dim
+  tau <- 0.22
+  
+  while (budget > 0) {
+    x_ <- tcrossprod(rep(1, lambda_), x)
+    r_ <- (1.0 / (1 + (1 - r) / r * exp(tau * rnorm(lambda_))))  %*% t(rep(1, dim))
+    idx <- matrix(runif(lambda_ * dim), lambda_, dim) < r_
+    x_[idx] <- 1 - x_[idx]
+    
+    f <- obj_func(x_)
+    budget <- budget - lambda_
+    
+    selected <- which(min(f) == f)
+    x <- x_[selected, ]
+    r <- r_[selected, 1]
+    
+    if (f[selected] > fopt) {
+      fopt <- f[selected] 
+      xopt <- x
+    }
+  }
+  list(xopt = xopt, fopt = fopt)
 }
 
 #' Mutation operator for 1+lambda EA
@@ -51,7 +138,7 @@ mutate <- function(ind, mutation_rate){
 #' }
 one_plus_lambda_EA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
   dim = IOHproblem$dimension
-  if ( is.null(budget) ) budget <- 10*dim
+  if (is.null(budget)) budget <- 10*dim
   obj <- IOHproblem$obj_func
 
   parent <- sample(c(0, 1), dim, TRUE)
