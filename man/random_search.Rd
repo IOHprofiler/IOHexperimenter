@@ -2,15 +2,13 @@
 % Please edit documentation in R/Algorithms.R
 \name{random_search}
 \alias{random_search}
-\title{A random_search implementation}
+\title{Random Search}
 \usage{
-random_search(IOHproblem)
+random_search(dim, obj_func, budget = NULL)
 }
 \arguments{
 \item{IOHproblem}{An IOHproblem object}
 }
 \description{
-This implements a bare-bones random search algorithm.
-This serves as an example of how to implement an optimization algorithm
-for use with the IOHexperimenter.
+Random walk in \eqn{{0, 1}^d} space
 }
