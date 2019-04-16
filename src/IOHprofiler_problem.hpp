@@ -4,13 +4,6 @@
 
 #include "common.hpp"
 #include "IOHprofiler_transformation.hpp"
-#include "IOHprofiler_logger.h"
-
-// void(*EVALUATE_METHOD) (std::vector<int>,std::vector<double>);
-//typedef void(*TRANSFER_VARIABLES_METHOD) (std::vector<int>, std::vector<int>)
-//typedef void(*TRANSFER_OBJECTIVES_METHOD) (std::vector<double>, std::vector<double>)
-//typedef void(*CONSTRAINT_METHOD) (std::vector<int>,std::vector<double>);
-
 
 // Basic structure for IOHExperimentor, which is used for generating benchmark problems.
 // To define a new problem, values of 'number_of_variables', 'lowerbound', 'upperbound',
@@ -43,25 +36,57 @@
 //      y.push_back((double)result);
 //    };
 
-template <class InputType> class IOHprofiler_problem : public IOHprofiler_transformation {
+template <class InputType> class IOHprofiler_problem {
 public:
   //void problem();
   //~problem();
+
+  int problem_id;
+  int instance_id;
+  std::string problem_name;
+  /* If could be good to set as enum{}*/
+  std::string problem_type;
+  std::vector<InputType> lowerbound;
+  std::vector<InputType> upperbound;
+
+  size_t number_of_variables;
+  size_t number_of_objectives;
+
+  std::vector<double> raw_objectives;
+
+  int transformed_number_of_variables;;
+  std::vector<InputType> transformed_variables; 
+
+
+  std::vector<InputType> best_variables;
+  std::vector<InputType> best_transformed_variables;
+  std::vector<double> optimal;
+
+  //size_t number_of_constraints;
+  //std::vector<double> constraints;
+
+  /*still needs to think how to settle the type of this. */
+  //IOHprofiler_logger logger = NULL;
+
   void evaluate(std::vector<InputType> x, std::vector<double> &y) {
     if(instance_id >= 1 && instance_id < 50) { 
       transform_vars_xor(x,instance_id);
     } else if(instance_id >= 50 && instance_id < 100) {
       transform_vars_sigma(x,instance_id);
     }
+    
     internal_evaluate(x,y);
+    
     copyVector(y,raw_objectives);
     transform_obj_scale(y,instance_id);
     transform_obj_shift(y,instance_id);
-    //internal_transfer_objectives(y);
     if(compareVector(y,optimal)) {
       optimalFound = true;
     }
   };
+
+  //virtual double constraints() {};
+  
   virtual void internal_evaluate(std::vector<InputType> x, std::vector<double> &y) {
     printf("No evaluate function defined");
   };
@@ -75,7 +100,9 @@ public:
     printf("No constraints function defined");
   };  
 
+
   //void addLogger(IOHprofiler_logger logger);
+  //void reset_logger(IOHprofiler_logger logger);
 
   //Interface for info of problems
   int IOHprofiler_get_number_of_varibles();
@@ -93,32 +120,14 @@ public:
   std::vector<InputType> IOHprofiler_get_transformed_variables();
   std::vector<double> IOHprofiler_get_transformed_objectives();
 
-  int problem_id;
-  int instance_id;
-  std::string problem_name;
-  /* If could be good to set as enum{}*/
-  std::string problem_type;
-
-  int number_of_variables;
-  int number_of_objectives;
-  std::vector<double> raw_objectives;
-  //size_t number_of_constraints;
-  //std::vector<double> constraints;
-
-  int transformed_number_of_variables;;
-  std::vector<InputType> transformed_variables; 
-
-  std::vector<InputType> lowerbound;
-  std::vector<InputType> upperbound;
-  std::vector<InputType> best_variables;
-  std::vector<InputType> best_transformed_variables;
-  std::vector<double> optimal;
 
 
-  //IOHprofiler_logger logger = NULL;
+
+ 
+
 
   bool optimalFound = false;
   //IOHprofiler_logger logger;
 };
 
-#endif
+#endif //_IOHPROFILER_PROBLEM_HPP
