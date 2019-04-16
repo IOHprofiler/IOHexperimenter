@@ -196,7 +196,7 @@ two_rate_GA <- function(IOHproblem, lambda_ = 2, budget = NULL){
 
   while ( budget > 0 ){
     selected_r <- r;
-    selected_obj <- Inf
+    selected_obj <- -Inf
 
     for (i in 1:lambda_){
       offspring <- parent
@@ -230,10 +230,10 @@ two_rate_GA <- function(IOHproblem, lambda_ = 2, budget = NULL){
       } else{
         r = 2.0 * r
       }
-
-      if(r < 2.0) r = 2.0
-      if(r > dim / 4.0) r = dim / 4.0
     }
+
+    if(r < 2.0) r = 2.0
+    if(r > dim / 4.0) r = dim / 4.0
 
   }
   return(best_value)
