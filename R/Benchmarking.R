@@ -51,17 +51,17 @@ benchmark_algorithm <- function(user_alg, functions = NULL, instances = NULL, di
   # Setting default parameters if needed and verifying parameter integrity
   if (is.null(functions)) functions <- seq(2)
   else {
-    assert_that( is.numeric(functions) )
+    # assert_that( is.numeric(functions) )
     stopifnot( all( functions %in% get_problem_list() ) )
   }
   if (is.null(instances)) instances <- seq(2)
   else {
-    assert_that( is.numeric(instances) )
+    # assert_that( is.numeric(instances) )
     stopifnot( all( instances %in% seq(100) ) )
   }
   if (is.null(dimensions)) dimensions <- c(100, 300)
   else {
-    assert_that( is.numeric(dimensions) )
+    # assert_that( is.numeric(dimensions) )
     stopifnot( all( dimensions %in% get_dimension_list() ) )
   }
   if (is.null(data.dir)) data.dir <- './data'

@@ -14,3 +14,4 @@
 !/.gitignore
 .Rproj.user
 *.Rproj
+data*/

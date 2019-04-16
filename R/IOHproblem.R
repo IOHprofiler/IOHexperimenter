@@ -8,13 +8,6 @@ print.IOHproblem <- function(x, ...) {
   cat(as.character.IOHproblem(x, ...))
 }
 
-#' S3 generic cat function for IOHproblem
-#'
-#' @param x The IOHproblem to print
-#'
-#' @export
-cat.IOHproblem <- function(x) cat(as.character(x))
-
 #' S3 generic as.character function for IOHproblem
 #'
 #' @param x The IOHproblem to print
@@ -22,7 +15,8 @@ cat.IOHproblem <- function(x) cat(as.character(x))
 #'
 #' @export
 as.character.IOHproblem <- function(x, ...) {
-  sprintf('IOHproblem (Instance %d of function %d %dD)', x$instance, x$function_id, x$dimension)
+  sprintf('IOHproblem (Instance %d of function %d %dD)\n', x$instance, x$function_id, 
+          x$dimension)
 }
 
 #' Get the next function of the currently initialized suite
