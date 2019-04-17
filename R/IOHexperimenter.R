@@ -9,8 +9,8 @@ NULL
 #' @param dims Numerical
 #' @param functions Numerical
 #' @param instances Numerical Whether the underlying optimization algorithm performs a maximization?
-#' @param algorithm_info Additional information about the algorithm you plan on running
-#' @param algorithm_name The name of the algorithm you plan on running
+#' @param algorithm.info Additional information about the algorithm you plan on running
+#' @param algorithm.name The name of the algorithm you plan on running
 #' @param data.dir Where the data should be stored
 #' @param cdat Whether or not to generate a .cdat-file
 #' @param idat Integer
@@ -21,7 +21,7 @@ NULL
 #' @export
 #'
 IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
-  functions = seq(23), instances = seq(100), algorithm_info = '', algorithm_name = '',
+  functions = seq(23), instances = seq(100), algorithm.info = '', algorithm.name = '',
   data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = NULL) {
 
   # assert_that(is.numeric(dims))
@@ -29,6 +29,8 @@ IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
   # assert_that(is.numeric(instances))
   base_evaluation_triggers <- 3
   
+  if (is.null(data.dir)) data.dir <- tempdir() #temporary directory, deleted when R closes
+  print(data.dir)
   if (!is.null(param.track)) param_str <- paste0(param.track, collapse = ',')
   else param_str <- ''
 
@@ -41,7 +43,7 @@ IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
 
   # intialize the observer
   c_init_observer(
-    data.dir, algorithm_name, algorithm_info,
+    data.dir, algorithm.name, algorithm.info,
     complete_triggers = ifelse(cdat, 'true', 'false'),
     number_interval_triggers = idat,
 		base_evaluation_triggers = "1,2,5",
