@@ -4,15 +4,16 @@
 #'
 #'
 #' @param IOHproblem An IOHproblem object
+#' @param budget integer, maximal allowable number of function evaluations
 #'
 #' @export
-random_search <- function(dim, obj_func, budget = NULL) {
-  if (is.null(budget)) budget <- 10 * dim
+random_search <- function(IOHproblem, budget = NULL) {
+  if (is.null(budget)) budget <- 10 * IOHproblem$dimension
   fopt <- -Inf
-  
-  while (budget > 0) {
-    x <- sample(c(0, 1), dim, TRUE)
-    f <- obj_func(x)
+  xopt <- NULL
+  while (budget > 0 && !IOHproblem$target_hit()) {
+    x <- sample(c(0, 1), IOHproblem$dimension, TRUE)
+    f <- IOHproblem$obj_func(x)
     budget <- budget - 1
     
     if (f > fopt) {
@@ -20,43 +21,9 @@ random_search <- function(dim, obj_func, budget = NULL) {
       fopt <- f
     }
   }
-  list(xopt = x, fopt = fopt)
+  list(xopt = xopt, fopt = fopt)
 }
 
-#' Random Local Search (RLS) Algorithm
-#' 
-#' The simplest stochastic optimization algorithm for discrete problems. A randomly 
-#' chosen position in the solution vector is perturbated in each iteration. Only
-#' improvements are accepted after perturbation.
-#'
-#' @param dim integer, the dimension of the 
-#' @param obj_func the objective function to be maximized
-#' @param target double, the target value to hit 
-#' @param budget integer, maximal allowable number of function evaluations
-#'
-#' @export
-#' @examples
-RLS <- function(dim, obj_func, target = NULL, budget = NULL) {
-  if (is.null(budget)) budget <- 10 * dim
-
-  x <- sample(c(0, 1), dim, TRUE)
-  fopt <- obj_func(x)
-  budget <- budget - 1
-
-  while (budget > 0) {
-    x_ <- x
-    index <- sample(dim, 1)
-    x_[index] <- sample(c(0, 1), 1)
-    f <- obj_func(x_)
-    
-    if(f > fopt) {
-      fopt <- f
-      x <- x_
-    }
-    budget <- budget - 1
-  }
-  list(xopt = x, fopt = fopt)
-}
 
 #' Random Local Search (RLS) Algorithm
 #'
@@ -86,7 +53,7 @@ random_local_search <- function(IOHproblem, budget = NULL) {
     }
     iter <- iter+1
   }
-  return(fopt)
+  list(xopt = xopt, fopt = fopt)
 }
 
 
@@ -268,5 +235,5 @@ two_rate_GA <- function(IOHproblem, lambda_ = 2, budget = NULL){
     if(r > dim / 4.0) r = dim / 4.0
 
   }
-  return(best_value)
+  list(xopt = best, fopt = best_value)
 }
