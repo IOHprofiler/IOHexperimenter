@@ -24,13 +24,13 @@ IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
   functions = seq(23), instances = seq(100), algorithm_info = '', algorithm_name = '',
   data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = NULL) {
 
-  assert_that(is.numeric(dims))
-  assert_that(is.numeric(functions))
-  assert_that(is.numeric(instances))
+  # assert_that(is.numeric(dims))
+  # assert_that(is.numeric(functions))
+  # assert_that(is.numeric(instances))
   base_evaluation_triggers <- 3
-  if( !is.null(param.track) ) param_str <- paste0(param.track, collapse = ',')
+  
+  if (!is.null(param.track)) param_str <- paste0(param.track, collapse = ',')
   else param_str <- ''
-
 
   # intialize the backend C code
   c_init_suite(
@@ -72,13 +72,6 @@ print.IOHexperimenter <- function(x, ...) {
   cat(as.character.IOHexperimenter(x, ...))
 }
 
-#' S3 generic cat function for IOHexperimenter
-#'
-#' @param x The IOHexperimenter to print
-#'
-#' @export
-cat.IOHexperimenter <- function(x) cat(as.character(x))
-
 #' S3 generic as.character function for IOHexperimenter
 #'
 #' @param x The IOHexperimenter to print
@@ -86,10 +79,14 @@ cat.IOHexperimenter <- function(x) cat(as.character(x))
 #'
 #' @export
 as.character.IOHexperimenter <- function(x, ...) {
-  sprintf('IOHexperimenter (Instances %d of functions %d %dD)', x$instances, x$functions, x$dims)
+  paste0(
+    sprintf('IOHexperimenter (%d instances, %d functions, %d dimensions)\n', 
+              length(x$instances), length(x$functions), length(x$dims)),
+    sprintf('Dimensions: %s\n', paste0(x$dims, collapse = ', ')),
+    sprintf('Functions: %s\n', paste0(x$functions, collapse = ', ')),
+    sprintf('Instances: %s\n', paste0(x$instances, collapse = ', '))
+  )
 }
-
-
 
 #' S3 generic summary operator for IOHexperimenter
 #'
@@ -104,12 +101,3 @@ summary.IOHexperimenter <- function(object, ...) {
   cat(paste('functions: ', paste(object$functions, collapse = ',')))
   cat(paste('instances: ', paste(object$instances, collapse = ',')))
 }
-
-
-
-
-
-
-
-
-

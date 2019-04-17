@@ -4,7 +4,7 @@
 \alias{random_search}
 \title{Random Search}
 \usage{
-random_search(IOHproblem)
+random_search(dim, obj_func, budget = NULL)
 }
 \arguments{
 \item{IOHproblem}{An IOHproblem object}

@@ -9,6 +9,7 @@ self_adaptive_GA(IOHproblem, budget = NULL, lambda_ = 10)
 \arguments{
 \item{IOHproblem}{An IOHproblem object}
 
+
 \item{budget}{integer, maximal allowable number of function evaluations}
 
 \item{lambda_}{integer, the population size > 1}

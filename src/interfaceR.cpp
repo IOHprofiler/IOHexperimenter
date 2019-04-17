@@ -2,7 +2,6 @@
 #include <string>
 #include <stdlib.h>
 
-// @Furong: what are those used for?
 #undef Realloc
 #undef Free
 
@@ -166,7 +165,6 @@ double c_eval(IntegerVector x) {
 	 	return -DBL_MAX;
 	}
 
-
 	IOHprofiler_evaluate_function(current_problem, INTEGER(x), result);
 	return result[0];
 }
@@ -221,7 +219,6 @@ double c_get_fopt() {
 
 	return current_problem->best_value[0];
 }
-
 
 // Free memory.
 
