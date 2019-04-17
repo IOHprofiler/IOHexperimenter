@@ -29,17 +29,6 @@
 #'
 #' @examples
 #' \donttest{
-#' random_search <- function(IOHproblem) {
-#' iter <- 0
-#' fopt <- -Inf
-#' max_iter <- IOHproblem$dimension
-#' while (iter < max_iter && !IOHproblem$target_hit()){
-#'   candidate <- sample(c(0, 1), IOHproblem$dimension, TRUE)
-#'   IOHproblem$set_parameters(0)
-#'   fopt <- max(IOHproblem$obj_func(candidate), fopt)
-#'   iter <- iter+1
-#' }
-#' }
 #'
 #' benchmark_algorithm(random_search, params.track = 'Test_param')
 #' }
@@ -51,8 +40,10 @@ benchmark_algorithm <- function(user_alg, functions = NULL, instances = NULL, di
   # Setting default parameters if needed and verifying parameter integrity
   if (is.null(functions)) functions <- seq(2)
   else {
-    # assert_that( is.numeric(functions) )
-    stopifnot( all( functions %in% get_problem_list() ) )
+    #assert_that( is.numeric(functions) )
+    #TODO: make a funcion which returns all possible functions / dimensions
+    stopifnot( all( functions %in% 1:23 ) )
+
   }
   if (is.null(instances)) instances <- seq(2)
   else {
@@ -61,8 +52,9 @@ benchmark_algorithm <- function(user_alg, functions = NULL, instances = NULL, di
   }
   if (is.null(dimensions)) dimensions <- c(100, 300)
   else {
-    # assert_that( is.numeric(dimensions) )
-    stopifnot( all( dimensions %in% get_dimension_list() ) )
+
+    #assert_that( is.numeric(dimensions) )
+    stopifnot( all( dimensions %in% 1:5000 ) )
   }
   if (is.null(data.dir)) data.dir <- './data'
 

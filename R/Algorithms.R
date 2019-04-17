@@ -1,6 +1,6 @@
 #' Random Search
 #'
-#' Random walk in \eqn{{0, 1}^d} space  
+#' Random walk in \eqn{{0, 1}^d} space
 #'
 #'
 #' @param IOHproblem An IOHproblem object
@@ -58,53 +58,37 @@ RLS <- function(dim, obj_func, target = NULL, budget = NULL) {
   list(xopt = x, fopt = fopt)
 }
 
-#' One-Comma-Lambda Self-Adapative Genetic Algorithm
-#' 
-#' A genetic algorithm that controls the mutation rate (strength) using the so-called 
-#' self-adaptation mechanism: the mutation rate is firstly perturbated and then the 
-#' resulting value is taken to mutate Lambda solution vector. The best solution is 
-#' selected along with its mutation rate.
+#' Random Local Search (RLS) Algorithm
 #'
-#' @param dim integer, the dimension of the 
-#' @param obj_func the objective function to be maximized
-#' @param target double, the target value to hit 
+#' The simplest stochastic optimization algorithm for discrete problems. A randomly
+#' chosen position in the solution vector is perturbated in each iteration. Only
+#' improvements are accepted after perturbation.
+#'
+#'
+#' @param IOHproblem An IOHproblem object
 #' @param budget integer, maximal allowable number of function evaluations
-#' @param lambda_ integer, the population size > 1
 #'
 #' @export
-#' @examples
-self_adaptive_GA <- function(dim, obj_func, target = NULL, budget = NULL,
-                             lambda_ = 10) {
-  if (is.null(budget)) budget <- 10 * dim
-  
-  x <- sample(c(0, 1), dim, TRUE)
-  xopt <- x
-  fopt <- fx <- obj_func(x)
-  budget <- budget - 1
-  
-  r <- 1.0 / dim
-  tau <- 0.22
-  
-  while (budget > 0) {
-    x_ <- tcrossprod(rep(1, lambda_), x)
-    r_ <- (1.0 / (1 + (1 - r) / r * exp(tau * rnorm(lambda_))))  %*% t(rep(1, dim))
-    idx <- matrix(runif(lambda_ * dim), lambda_, dim) < r_
-    x_[idx] <- 1 - x_[idx]
-    
-    f <- obj_func(x_)
-    budget <- budget - lambda_
-    
-    selected <- which(min(f) == f)
-    x <- x_[selected, ]
-    r <- r_[selected, 1]
-    
-    if (f[selected] > fopt) {
-      fopt <- f[selected] 
-      xopt <- x
+random_local_search <- function(IOHproblem, budget = NULL) {
+  if (is.null(budget)) budget <- 10*IOHproblem$dimension
+  starting_point <- sample(c(0, 1), IOHproblem$dimension, TRUE)
+  fopt <- IOHproblem$obj_func(starting_point)
+  xopt <- starting_point
+  iter <- 1
+  while ( iter < budget && !IOHproblem$target_hit() ){
+    candidate <- xopt
+    switch_idx <- sample(1:IOHproblem$dimension, 1)
+    candidate[switch_idx] <- 1 - candidate[switch_idx]
+    fval <- IOHproblem$obj_func(candidate)
+    if (fval >= fopt){
+      fopt <- fval
+      xopt <- candidate
     }
+    iter <- iter+1
   }
-  list(xopt = xopt, fopt = fopt)
+  return(fopt)
 }
+
 
 #' Mutation operator for 1+lambda EA
 #'
@@ -148,7 +132,7 @@ one_plus_lambda_EA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
   best_value <- obj(parent)
   budget <- budget-1
 
-  while ( budget > 0 && !IOHproblem$taget_hit() ){
+  while ( budget > 0 && !IOHproblem$target_hit() ){
     for (i in 1:lambda_){
       offspring <- parent
       offspring <- mutate(offspring, mutation_rate)
@@ -168,6 +152,54 @@ one_plus_lambda_EA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
   return(best_value)
 }
 
+
+#' One-Comma-Lambda Self-Adapative Genetic Algorithm
+#'
+#' A genetic algorithm that controls the mutation rate (strength) using the so-called
+#' self-adaptation mechanism: the mutation rate is firstly perturbated and then the
+#' resulting value is taken to mutate Lambda solution vector. The best solution is
+#' selected along with its mutation rate.
+#'
+#' @param IOHproblem An IOHproblem object
+#' @param budget integer, maximal allowable number of function evaluations
+#' @param lambda_ integer, the population size > 1
+#'
+#' @export
+self_adaptive_GA <- function(IOHproblem, budget = NULL, lambda_ = 10) {
+  dim <- IOHproblem$dimension
+  obj_func <- IOHproblem$obj_func
+  if (is.null(budget)) budget <- 10 * dim
+
+  r <- 1.0 / dim
+  IOHproblem$set_parameters(r)
+
+  x <- sample(c(0, 1), dim, TRUE)
+  xopt <- x
+  fopt <- fx <- obj_func(x)
+  budget <- budget - 1
+
+  tau <- 0.22
+
+  while (budget > 0 && !IOHproblem$target_hit()) {
+    lambda_ <- min(lambda_, budget) #ensure budget is not exceeded
+    x_ <- tcrossprod(rep(1, lambda_), x)
+    r_ <- (1.0 / (1 + (1 - r) / r * exp(tau * rnorm(lambda_))))  %*% t(rep(1, dim))
+    idx <- matrix(runif(lambda_ * dim), lambda_, dim) < r_
+    x_[idx] <- 1 - x_[idx]
+
+    IOHproblem$set_parameters(r)
+    f <- obj_func(x_)
+    budget <- budget - lambda_
+    selected <- which(min(f) == f)[[1]]
+    x <- x_[selected, ]
+    r <- r_[selected, 1]
+    if (f[selected] > fopt) {
+      fopt <- f[selected]
+      xopt <- x
+    }
+  }
+  list(xopt = xopt, fopt = fopt)
+}
 
 #' One-Comma-Lambda Genetic Algorithm with 2-rate self-adaptive mutation rate
 #' 

@@ -4,23 +4,19 @@
 \alias{self_adaptive_GA}
 \title{One-Comma-Lambda Self-Adapative Genetic Algorithm}
 \usage{
-self_adaptive_GA(dim, obj_func, target = NULL, budget = NULL,
-  lambda_ = 10)
+self_adaptive_GA(IOHproblem, budget = NULL, lambda_ = 10)
 }
 \arguments{
-\item{dim}{integer, the dimension of the}
+\item{IOHproblem}{An IOHproblem object}
 
-\item{obj_func}{the objective function to be maximized}
-
-\item{target}{double, the target value to hit}
 
 \item{budget}{integer, maximal allowable number of function evaluations}
 
 \item{lambda_}{integer, the population size > 1}
 }
 \description{
-A genetic algorithm that controls the mutation rate (strength) using the so-called 
-self-adaptation mechanism: the mutation rate is firstly perturbated and then the 
-resulting value is taken to mutate Lambda solution vector. The best solution is 
+A genetic algorithm that controls the mutation rate (strength) using the so-called
+self-adaptation mechanism: the mutation rate is firstly perturbated and then the
+resulting value is taken to mutate Lambda solution vector. The best solution is
 selected along with its mutation rate.
 }
