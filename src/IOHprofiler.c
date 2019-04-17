@@ -594,7 +594,7 @@ static char *IOHprofiler_string_trim(char *string) {
 /**
  * @brief Initializes the logging level to IOHprofiler_INFO.
  */
-static IOHprofiler_log_level_type_e IOHprofiler_log_level = IOHprofiler_INFO;
+static IOHprofiler_log_level_type_e IOHprofiler_log_level = IOHprofiler_ERROR;
 
 /**
  * @param log_level Denotes the level of information given to the user through the standard output and

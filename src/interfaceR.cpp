@@ -19,7 +19,6 @@ IOHprofiler_problem_t* current_problem;
 void c_init_suite(String functions, String dimensions, String instances){
 	if(current_suite != NULL){
 		IOHprofiler_suite_free(current_suite);
-		Rcout << "Current suite has been erased.\n";
 	}
 	String ins = " instances: ";
 	String func = " function_indices: ";
@@ -30,7 +29,6 @@ void c_init_suite(String functions, String dimensions, String instances){
 	func += dim;
 	current_suite = IOHprofiler_suite("PBO", ins.get_cstring() ,func.get_cstring());
 
-	Rcout << "Suite PBO has been initialized.\n";
 }
 
 
