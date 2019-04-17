@@ -9918,9 +9918,9 @@ IOHprofiler_observer_t *IOHprofiler_observer(const char *observer_name, const ch
 
   result_folder = IOHprofiler_allocate_string(IOHprofiler_PATH_MAX);
   algorithm_name = IOHprofiler_allocate_string(IOHprofiler_PATH_MAX);
-  parameters_name = IOHprofiler_allocate_string(5 * IOHprofiler_PATH_MAX);
-  parameters_namet = IOHprofiler_allocate_string(5 * IOHprofiler_PATH_MAX);
-  algorithm_info = IOHprofiler_allocate_string(5 * IOHprofiler_PATH_MAX);
+  parameters_name = IOHprofiler_allocate_string(IOHprofiler_PATH_MAX);
+  parameters_namet = IOHprofiler_allocate_string(IOHprofiler_PATH_MAX);
+  algorithm_info = IOHprofiler_allocate_string(IOHprofiler_PATH_MAX);
   complete_triggers = IOHprofiler_allocate_string(IOHprofiler_PATH_MAX);
   /* Read result_folder, algorithm_name and algorithm_info from the observer_options and use
    * them to initialize the observer */
@@ -9990,7 +9990,7 @@ IOHprofiler_observer_t *IOHprofiler_observer(const char *observer_name, const ch
   else
     strcpy(complete_triggers,"FALSE");
   if (IOHprofiler_options_read_string(observer_options, "parameters_name", parameters_namet) == 0 || strcmp(parameters_namet,"") == 0) {
-     parameters_name = "No parameters";
+     strncpy(parameters_name,"No parameters",IOHprofiler_PATH_MAX);
   }
   else{
     j = 0;
@@ -10021,7 +10021,6 @@ IOHprofiler_observer_t *IOHprofiler_observer(const char *observer_name, const ch
   observer = IOHprofiler_observer_allocate(path, observer_name, algorithm_name, algorithm_info,
       number_target_triggers, target_precision, number_evaluation_triggers, base_evaluation_triggers,number_interval_triggers,complete_triggers,
       precision_x, precision_f,parameters_name);
-
   IOHprofiler_free_memory(complete_triggers);
   IOHprofiler_free_memory(path);
   IOHprofiler_free_memory(result_folder);
@@ -10030,7 +10029,6 @@ IOHprofiler_observer_t *IOHprofiler_observer(const char *observer_name, const ch
   IOHprofiler_free_memory(base_evaluation_triggers);
   IOHprofiler_free_memory(parameters_name);
   IOHprofiler_free_memory(parameters_namet);
-
   /* Here each observer must have an entry - a call to a specific function that sets the additional_option_keys
    * and the following observer fields:
    * - logger_allocate_function
@@ -10067,7 +10065,6 @@ IOHprofiler_observer_t *IOHprofiler_observer(const char *observer_name, const ch
   }
   IOHprofiler_option_keys_free(known_option_keys);
   IOHprofiler_option_keys_free(additional_option_keys);
-
   return observer;
 }
 
