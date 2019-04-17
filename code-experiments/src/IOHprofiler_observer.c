@@ -564,7 +564,7 @@ IOHprofiler_observer_t *IOHprofiler_observer(const char *observer_name, const ch
   else
     strcpy(complete_triggers,"FALSE");
   if (IOHprofiler_options_read_string(observer_options, "parameters_name", parameters_namet) == 0 || strcmp(parameters_namet,"") == 0) {
-     parameters_name = "No parameters";
+     strncpy(parameters_name,"No parameters",5 * IOHprofiler_PATH_MAX);
   }
   else{
     j = 0;
