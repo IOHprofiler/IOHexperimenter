@@ -2,7 +2,7 @@
 #define _IOHPROFILER_PROBLEM_HPP
 
 
-#include "common.hpp"
+#include "common.h"
 #include "IOHprofiler_transformation.hpp"
 
 // Basic structure for IOHExperimentor, which is used for generating benchmark problems.
@@ -49,11 +49,11 @@ public:
   std::vector<InputType> lowerbound;
   std::vector<InputType> upperbound;
 
-  size_t number_of_variables;
-  size_t number_of_objectives;
+  std::size_t number_of_variables;
+  std::size_t number_of_objectives;
 
   std::vector<double> raw_objectives;
-
+  
   int transformed_number_of_variables;;
   std::vector<InputType> transformed_variables; 
 
@@ -61,8 +61,14 @@ public:
   std::vector<InputType> best_variables;
   std::vector<InputType> best_transformed_variables;
   std::vector<double> optimal;
+  std::vector<double> transformed_optimal;
 
-  //size_t number_of_constraints;
+  std::vector<double> best_so_far_raw_objectives;
+  std::vector<double> best_so_far_transformed_objectives;  
+
+  IOHprofiler_transformation transformation;
+
+  //std::size_t number_of_constraints;
   //std::vector<double> constraints;
 
   /*still needs to think how to settle the type of this. */
@@ -70,18 +76,28 @@ public:
 
   void evaluate(std::vector<InputType> x, std::vector<double> &y) {
     if(instance_id >= 1 && instance_id < 50) { 
-      transform_vars_xor(x,instance_id);
+      transformation.transform_vars_xor(x,instance_id);
     } else if(instance_id >= 50 && instance_id < 100) {
-      transform_vars_sigma(x,instance_id);
+      transformation.transform_vars_sigma(x,instance_id);
     }
     
     internal_evaluate(x,y);
     
     copyVector(y,raw_objectives);
-    transform_obj_scale(y,instance_id);
-    transform_obj_shift(y,instance_id);
+    if(compareObjectives(y,best_so_far_raw_objectives)) {
+      copyVector(y,best_so_far_raw_objectives);
+    }
     if(compareVector(y,optimal)) {
-      optimalFound = true;
+      rawOptimalFound = true;
+    }
+    
+    transformation.transform_obj_scale(y,instance_id);
+    transformation.transform_obj_shift(y,instance_id);
+    if(compareObjectives(y,best_so_far_transformed_objectives)){
+      copyVector(y,best_so_far_transformed_objectives);
+    }
+    if(compareVector(y,transformed_optimal)) {
+      transformedOptimalFound = true;
     }
   };
 
@@ -126,7 +142,8 @@ public:
  
 
 
-  bool optimalFound = false;
+  bool rawOptimalFound = false;
+  bool transformedOptimalFound = false;
   //IOHprofiler_logger logger;
 };
 
