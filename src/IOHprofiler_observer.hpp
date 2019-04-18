@@ -1,7 +1,7 @@
 #ifndef _IOHPROFILER_OBSERVER_H
 #define _IOHPROFILER_OBSERVER_H
 
-
+#include "common.h"
 // Defines a general framework of logger methods for IOHprofiler.
 //   init_logger(): Implementation for preparing work for logging process.
 //   For example: open/create folder for logging csv file, or connect 
@@ -22,20 +22,53 @@
 //   update_trigger(): set as true as a new better solution is found.
 class IOHprofiler_observer {
 public:
-  virtual void init_logger();
-  virtual void write_evaluation_info();
-  virtual void close_logger();
+  virtual void init_logger() {};
+  virtual void write_evaluation_info() {};
+  virtual void close_logger() {};
+
+  // Operations for *.cdat 
+  void set_complete_flag(bool complete_flag) {
+    this->observer_complete_flag = complete_flag;
+  }
+
+  bool complete_status() {
+    return observer_complete_flag;
+  }
 
   bool complete_trigger() {
   	return observer_complete_flag;
   }
-  
-  bool interval_trigger(size_t evaluations) {
-  	if(evaluations == 1 && evaluations % observer_interval == 0) return true;
-  	else return false;
+  // End for *.cdat
+
+  // Operations for *.idat  
+  void set_interval(int interval) {
+    this->observer_interval = interval;  
   }
 
-  bool update(double fitness) {
+  bool interval_status() {
+    if(observer_interval == 0) return false;
+    else return true;
+  }
+
+  bool interval_trigger(std::size_t evaluations) {
+    if(observer_interval == 0) return false;
+  	if(evaluations == 1 || evaluations % observer_interval == 0) return true;
+  	else return false;
+  }
+  // End for *.idat
+
+  // Operations for *.dat
+  void set_update_flag(bool update_flag) {
+    this->observer_update_flag = update_flag;
+  }
+
+  bool update_status() {
+    return observer_update_flag;
+  }
+
+  bool update_trigger(double fitness) {
+    if(observer_update_flag == false) return false;
+
     if(fitness > current_best_fitness) {
     	this->current_best_fitness = fitness;
     	return true;
@@ -43,12 +76,17 @@ public:
 
     return false;
   }
+  // End for *.ddat
+
+
+  
 
 private:
   int observer_interval;
   bool observer_complete_flag;
+  bool observer_update_flag;
 
   double current_best_fitness = DBL_MIN;
 };
 
-#endif #_IOHPROFILER_OBSERVER_H
+#endif //_IOHPROFILER_OBSERVER_H
