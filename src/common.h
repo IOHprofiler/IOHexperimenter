@@ -9,10 +9,22 @@
 #include <vector>
 #include <assert.h>
 #include <math.h>
-
+#include <cstdlib> 
+#include <cstddef>
+#include <climits>
+#include <cfloat>
 
 //The maximum length for path of IOHprofiler files.
 #define IOHprofiler_PATH_MAX 200
+
+void IOH_error(std::string error_info);
+
+void IOH_warning(std::string warning_info);
+
+void IOH_log(std::string log_info);
+
+void IOH_log(std::string log_info, std::ofstream &log_stream);
+
 
 template<class valueType>
 void copyVector(const std::vector<valueType> v1, std::vector<valueType> &v2){
@@ -23,12 +35,28 @@ template<class valueType>
 bool compareVector(std::vector<valueType> &v1, std::vector<valueType> v2){
   int n = v1.size();
   if(n != v2.size()){
-    printf("Two compared vector must be with the same size\n");
+    IOH_error("Two compared vector must be with the same size\n");
     return false;
   }
   for (int i = 0; i != n; ++i)
   {
     if(v1[i] != v2[i]){
+      return false;
+    }
+  }
+  return true;
+};
+
+template<class valueType>
+bool compareObjectives(std::vector<valueType> &v1, std::vector<valueType> v2){
+  int n = v1.size();
+  if(n != v2.size()){
+    IOH_error("Two compared objective vector must be with the same size\n");
+    return false;
+  }
+  for (int i = 0; i != n; ++i)
+  {
+    if(v1[i] <= v2[i]){
       return false;
     }
   }
