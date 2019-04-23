@@ -5,8 +5,8 @@
 \title{S3 class 'IOHexperimenter'}
 \usage{
 IOHexperimenter(dims = c(100, 500, 1000, 2000, 3000),
-  functions = seq(23), instances = seq(100), algorithm_info = "",
-  algorithm_name = "", data.dir = "./data", cdat = FALSE, idat = 0,
+  functions = seq(23), instances = seq(100), algorithm.info = "",
+  algorithm.name = "", data.dir = "./data", cdat = FALSE, idat = 0,
   tdat = 3, param.track = NULL)
 }
 \arguments{
@@ -16,9 +16,9 @@ IOHexperimenter(dims = c(100, 500, 1000, 2000, 3000),
 
 \item{instances}{Numerical Whether the underlying optimization algorithm performs a maximization?}
 
-\item{algorithm_info}{Additional information about the algorithm you plan on running}
+\item{algorithm.info}{Additional information about the algorithm you plan on running}
 
-\item{algorithm_name}{The name of the algorithm you plan on running}
+\item{algorithm.name}{The name of the algorithm you plan on running}
 
 \item{data.dir}{Where the data should be stored}
 

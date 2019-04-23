@@ -1,6 +1,6 @@
 #' @importFrom assertthat assert_that
 #' @import Rcpp
-#' @importFrom stats rnorm
+#' @importFrom stats rnorm runif
 #' @useDynLib IOHexperimenter
 NULL
 

@@ -59,7 +59,7 @@ benchmark_algorithm <- function(user_alg, functions = NULL, instances = NULL, di
   if (is.null(data.dir)) data.dir <- './data'
 
   experimenter <- IOHexperimenter(dims = dimensions, functions = functions, instances = instances,
-                                  algorithm_info = algorithm.info, algorithm_name = algorithm.name,
+                                  algorithm.info = algorithm.info, algorithm.name = algorithm.name,
                                   data.dir = data.dir, cdat = cdat, idat = idat, tdat = tdat,
                                   param.track = params.track)
   IOHproblem <- next_problem(experimenter)

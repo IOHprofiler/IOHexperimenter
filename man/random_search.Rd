@@ -4,10 +4,12 @@
 \alias{random_search}
 \title{Random Search}
 \usage{
-random_search(dim, obj_func, budget = NULL)
+random_search(IOHproblem, budget = NULL)
 }
 \arguments{
 \item{IOHproblem}{An IOHproblem object}
+
+\item{budget}{integer, maximal allowable number of function evaluations}
 }
 \description{
 Random walk in \eqn{{0, 1}^d} space
