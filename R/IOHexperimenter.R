@@ -21,13 +21,13 @@ NULL
 #' @export
 #'
 IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
-  functions = seq(23), instances = seq(100), algorithm.info = '', algorithm.name = '',
+  functions = seq(23), instances = seq(100), algorithm.info = ' ', algorithm.name = ' ',
   data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = NULL) {
 
   # assert_that(is.numeric(dims))
   # assert_that(is.numeric(functions))
   # assert_that(is.numeric(instances))
-  base_evaluation_triggers <- 3
+  base_evaluation_triggers <- 
   
   if (is.null(data.dir)) data.dir <- tempdir() #temporary directory, deleted when R closes
   print(data.dir)
@@ -40,7 +40,12 @@ IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
     paste0(dims, collapse = ','),
     paste0(instances, collapse = ',')
   )
-
+  
+  if (algorithm.info == '') algorithm.info <- "N/A"
+  else algorithm.info <- gsub(" ", "_", algorithm.info)
+  if (algorithm.name == '') algorithm.name <- "N/A"
+  else algorithm.name <- gsub(" ", "_", algorithm.name)
+  
   # intialize the observer
   c_init_observer(
     data.dir, algorithm.name, algorithm.info,

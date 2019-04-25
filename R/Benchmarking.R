@@ -34,7 +34,7 @@
 #' }
 #' @export
 benchmark_algorithm <- function(user_alg, functions = NULL, instances = NULL, dimensions = NULL,
-                                data.dir = NULL, algorithm.info = '', algorithm.name = '',
+                                data.dir = NULL, algorithm.info = ' ', algorithm.name = ' ',
                                 cdat = FALSE, idat = 0, tdat = 3, params.track = NULL,
                                 repetitions = 5) {
   # Setting default parameters if needed and verifying parameter integrity
