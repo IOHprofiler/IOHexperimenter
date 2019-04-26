@@ -39,7 +39,7 @@ void c_init_suite(String functions, String dimensions, String instances){
 void c_init_observer(String result_folder, String algorithm_name, String algorithm_info,
 					String complete_triggers, int number_interval_triggers,
 					String base_evaluation_triggers, int number_target_triggers,
-					String parameters_name) {
+					String parameters_name, String observer_name) {
 
 
 	char *observer_options = IOHprofiler_strdupf( "result_folder:  %s "
@@ -55,7 +55,7 @@ void c_init_observer(String result_folder, String algorithm_name, String algorit
                                                 number_interval_triggers, base_evaluation_triggers.get_cstring(),
                                                 number_target_triggers,parameters_name.get_cstring());
 
-	current_observer = IOHprofiler_observer("PBO", observer_options);
+	current_observer = IOHprofiler_observer(observer_name.get_cstring(), observer_options);
 }
 
 
@@ -120,7 +120,7 @@ List get_problem_info() {
 
 //[[Rcpp::export]]
 List c_get_next_problem() {
-	if(current_suite != NULL && current_observer != NULL){
+	if(current_suite != NULL ){
 		current_problem = IOHprofiler_suite_get_next_problem(current_suite, current_observer);
 		if(current_problem == NULL){
 			IOHprofiler_observer_free(current_observer);

@@ -20,17 +20,19 @@ NULL
 #' @return A S3 object 'DataSet'
 #' @export
 #'
-IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
+IOHexperimenter <- function(dims = c(16, 100, 625, 2500),
   functions = seq(23), instances = seq(100), algorithm.info = ' ', algorithm.name = ' ',
   data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = NULL) {
 
   # assert_that(is.numeric(dims))
   # assert_that(is.numeric(functions))
   # assert_that(is.numeric(instances))
-  base_evaluation_triggers <- 
-  
-  if (is.null(data.dir)) data.dir <- tempdir() #temporary directory, deleted when R closes
-  print(data.dir)
+
+  if (is.null(data.dir)) {
+    observer_name <- "no_observer"
+    data.dir <- "N/A"
+  }
+  else observer_name <- "PBO"
   if (!is.null(param.track)) param_str <- paste0(param.track, collapse = ',')
   else param_str <- ''
 
@@ -53,7 +55,8 @@ IOHexperimenter <- function(dims = c(100, 500, 1000, 2000, 3000),
     number_interval_triggers = idat,
 		base_evaluation_triggers = "1,2,5",
 		number_target_triggers = tdat,
-		param_str
+		parameters_name = param_str,
+		observer_name = observer_name
   )
 
   structure(

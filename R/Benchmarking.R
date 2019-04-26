@@ -30,7 +30,7 @@
 #' @examples
 #' \donttest{
 #'
-#' benchmark_algorithm(random_search, params.track = 'Test_param')
+#' benchmark_algorithm(IOH_random_search, params.track = 'Test_param')
 #' }
 #' @export
 benchmark_algorithm <- function(user_alg, functions = NULL, instances = NULL, dimensions = NULL,

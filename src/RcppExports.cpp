@@ -18,8 +18,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // c_init_observer
-void c_init_observer(String result_folder, String algorithm_name, String algorithm_info, String complete_triggers, int number_interval_triggers, String base_evaluation_triggers, int number_target_triggers, String parameters_name);
-RcppExport SEXP _IOHexperimenter_c_init_observer(SEXP result_folderSEXP, SEXP algorithm_nameSEXP, SEXP algorithm_infoSEXP, SEXP complete_triggersSEXP, SEXP number_interval_triggersSEXP, SEXP base_evaluation_triggersSEXP, SEXP number_target_triggersSEXP, SEXP parameters_nameSEXP) {
+void c_init_observer(String result_folder, String algorithm_name, String algorithm_info, String complete_triggers, int number_interval_triggers, String base_evaluation_triggers, int number_target_triggers, String parameters_name, String observer_name);
+RcppExport SEXP _IOHexperimenter_c_init_observer(SEXP result_folderSEXP, SEXP algorithm_nameSEXP, SEXP algorithm_infoSEXP, SEXP complete_triggersSEXP, SEXP number_interval_triggersSEXP, SEXP base_evaluation_triggersSEXP, SEXP number_target_triggersSEXP, SEXP parameters_nameSEXP, SEXP observer_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< String >::type result_folder(result_folderSEXP);
@@ -30,7 +30,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< String >::type base_evaluation_triggers(base_evaluation_triggersSEXP);
     Rcpp::traits::input_parameter< int >::type number_target_triggers(number_target_triggersSEXP);
     Rcpp::traits::input_parameter< String >::type parameters_name(parameters_nameSEXP);
-    c_init_observer(result_folder, algorithm_name, algorithm_info, complete_triggers, number_interval_triggers, base_evaluation_triggers, number_target_triggers, parameters_name);
+    Rcpp::traits::input_parameter< String >::type observer_name(observer_nameSEXP);
+    c_init_observer(result_folder, algorithm_name, algorithm_info, complete_triggers, number_interval_triggers, base_evaluation_triggers, number_target_triggers, parameters_name, observer_name);
     return R_NilValue;
 END_RCPP
 }
@@ -194,7 +195,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_IOHexperimenter_c_init_suite", (DL_FUNC) &_IOHexperimenter_c_init_suite, 3},
-    {"_IOHexperimenter_c_init_observer", (DL_FUNC) &_IOHexperimenter_c_init_observer, 8},
+    {"_IOHexperimenter_c_init_observer", (DL_FUNC) &_IOHexperimenter_c_init_observer, 9},
     {"_IOHexperimenter_get_problem_list", (DL_FUNC) &_IOHexperimenter_get_problem_list, 0},
     {"_IOHexperimenter_get_dimension_list", (DL_FUNC) &_IOHexperimenter_get_dimension_list, 0},
     {"_IOHexperimenter_get_suite_info", (DL_FUNC) &_IOHexperimenter_get_suite_info, 0},

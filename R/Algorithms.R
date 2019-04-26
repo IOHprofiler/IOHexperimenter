@@ -1,19 +1,39 @@
+#' IOHexperimenter-based wrapper 
+#' 
+#' For easier use with the IOHexperimenter
+#'
+#' @rdname random_search
+#' @param IOHproblem An IOHproblem object
+#'
+#' @export
+#' @examples 
+#' benchmark_algorithm(IOH_random_search)
+IOH_random_search <- function(IOHproblem, budget = NULL) {
+  random_search(IOHproblem$dimension, IOHproblem$obj_func, IOHproblem$fopt, budget)
+}
+
 #' Random Search
 #'
 #' Random walk in \eqn{{0, 1}^d} space
-#'
-#'
-#' @param IOHproblem An IOHproblem object
+#' @param dim Dimension of search space
+#' @param obj_func The evaluation function
+#' @param target Optional, enables early stopping if this value is reached
 #' @param budget integer, maximal allowable number of function evaluations
-#'
+#' 
 #' @export
-random_search <- function(IOHproblem, budget = NULL) {
-  if (is.null(budget)) budget <- 10 * IOHproblem$dimension
+random_search <- function(dim, obj_func, target = NULL, budget = NULL) {
+  if (is.null(budget)) budget <- 10 * dim
   fopt <- -Inf
   xopt <- NULL
-  while (budget > 0 && !IOHproblem$target_hit()) {
-    x <- sample(c(0, 1), IOHproblem$dimension, TRUE)
-    f <- IOHproblem$obj_func(x)
+  
+  target_hit <- function() {
+    if (is.null(target)) return(FALSE)
+    else return (target<=fopt)
+  }
+  
+  while (budget > 0 && !target_hit()) {
+    x <- sample(c(0, 1), dim, TRUE)
+    f <- obj_func(x)
     budget <- budget - 1
     
     if (f > fopt) {

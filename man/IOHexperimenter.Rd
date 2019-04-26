@@ -4,10 +4,10 @@
 \alias{IOHexperimenter}
 \title{S3 class 'IOHexperimenter'}
 \usage{
-IOHexperimenter(dims = c(100, 500, 1000, 2000, 3000),
-  functions = seq(23), instances = seq(100), algorithm.info = "",
-  algorithm.name = "", data.dir = "./data", cdat = FALSE, idat = 0,
-  tdat = 3, param.track = NULL)
+IOHexperimenter(dims = c(16, 100, 625, 2500), functions = seq(23),
+  instances = seq(100), algorithm.info = " ", algorithm.name = " ",
+  data.dir = "./data", cdat = FALSE, idat = 0, tdat = 3,
+  param.track = NULL)
 }
 \arguments{
 \item{dims}{Numerical}

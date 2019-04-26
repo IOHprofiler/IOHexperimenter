@@ -5,8 +5,8 @@
 \title{Base procedure for benchmarking a custom algorithm}
 \usage{
 benchmark_algorithm(user_alg, functions = NULL, instances = NULL,
-  dimensions = NULL, data.dir = NULL, algorithm.info = "",
-  algorithm.name = "", cdat = FALSE, idat = 0, tdat = 3,
+  dimensions = NULL, data.dir = NULL, algorithm.info = " ",
+  algorithm.name = " ", cdat = FALSE, idat = 0, tdat = 3,
   params.track = NULL, repetitions = 5)
 }
 \arguments{
@@ -54,6 +54,6 @@ Base procedure for benchmarking a custom algorithm
 \examples{
 \donttest{
 
-benchmark_algorithm(random_search, params.track = 'Test_param')
+benchmark_algorithm(IOH_random_search, params.track = 'Test_param')
 }
 }

@@ -5,8 +5,8 @@ c_init_suite <- function(functions, dimensions, instances) {
     invisible(.Call('_IOHexperimenter_c_init_suite', PACKAGE = 'IOHexperimenter', functions, dimensions, instances))
 }
 
-c_init_observer <- function(result_folder, algorithm_name, algorithm_info, complete_triggers, number_interval_triggers, base_evaluation_triggers, number_target_triggers, parameters_name) {
-    invisible(.Call('_IOHexperimenter_c_init_observer', PACKAGE = 'IOHexperimenter', result_folder, algorithm_name, algorithm_info, complete_triggers, number_interval_triggers, base_evaluation_triggers, number_target_triggers, parameters_name))
+c_init_observer <- function(result_folder, algorithm_name, algorithm_info, complete_triggers, number_interval_triggers, base_evaluation_triggers, number_target_triggers, parameters_name, observer_name) {
+    invisible(.Call('_IOHexperimenter_c_init_observer', PACKAGE = 'IOHexperimenter', result_folder, algorithm_name, algorithm_info, complete_triggers, number_interval_triggers, base_evaluation_triggers, number_target_triggers, parameters_name, observer_name))
 }
 
 get_problem_list <- function() {
