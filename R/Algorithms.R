@@ -7,9 +7,67 @@
 #'
 #' @export
 #' @examples 
-#' benchmark_algorithm(IOH_random_search)
+#' \donttest{
+#' benchmark_algorithm(IOH_random_search, data.dir = NULL)
+#' }
 IOH_random_search <- function(IOHproblem, budget = NULL) {
   random_search(IOHproblem$dimension, IOHproblem$obj_func, IOHproblem$fopt, budget)
+}
+
+#' IOHexperimenter-based wrapper 
+#' 
+#' For easier use with the IOHexperimenter
+#'
+#' @param IOHproblem An IOHproblem object
+#' 
+#' @rdname random_local_search
+#' @export
+#' @examples 
+#' \donttest{
+#' benchmark_algorithm(IOH_random_local_search, data.dir = NULL)
+#' }
+IOH_random_local_search <- function(IOHproblem, budget = NULL) {
+  random_local_search(IOHproblem$dimension, IOHproblem$obj_func, IOHproblem$fopt, budget) 
+}
+
+#' IOHexperimenter-based wrapper 
+#' 
+#' For easier use with the IOHexperimenter
+#'
+#' @param IOHproblem An IOHproblem object
+#' 
+#' @rdname self_adaptive_GA
+#' @export
+#' @examples 
+#' \donttest{
+#' one_comma_two_EA <- function(IOHproblem) { IOH_self_adaptive_GA(IOHproblem, lambda_=2) }
+#'
+#' benchmark_algorithm(one_comma_two_EA, params.track = "Mutation rate",
+#' algorithm.name = "one_comma_two_EA", data.dir = NULL,
+#' algorithm.info = "Using one_comma_two_EA with specific parameter" )
+#' }
+IOH_self_adaptive_GA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
+  self_adaptive_GA(IOHproblem$dimension, IOHproblem$obj_func, 
+                     target = IOHproblem$fopt, budget = budget,
+                     lambda_ = lambda_, set_parameters = IOHproblem$set_parameters) 
+}
+
+#' IOHexperimenter-based wrapper 
+#' 
+#' For easier use with the IOHexperimenter
+#'
+#' @param IOHproblem An IOHproblem object
+#' 
+#' @rdname two_rate_GA
+#' @export
+#' @examples 
+#' \donttest{
+#' bechmark_algorithm(IOH_two_rate_GA)
+#' }
+IOH_two_rate_GA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
+  two_rate_GA(IOHproblem$dimension, IOHproblem$obj_func, 
+                   target = IOHproblem$fopt, budget = budget,
+                   lambda_ = lambda_, set_parameters = IOHproblem$set_parameters) 
 }
 
 #' Random Search
@@ -52,21 +110,29 @@ random_search <- function(dim, obj_func, target = NULL, budget = NULL) {
 #' improvements are accepted after perturbation.
 #'
 #'
-#' @param IOHproblem An IOHproblem object
+#' @param dimension Dimension of search space
+#' @param obj_func The evaluation function
+#' @param target Optional, enables early stopping if this value is reached
 #' @param budget integer, maximal allowable number of function evaluations
-#'
+#' 
 #' @export
-random_local_search <- function(IOHproblem, budget = NULL) {
-  if (is.null(budget)) budget <- 10*IOHproblem$dimension
-  starting_point <- sample(c(0, 1), IOHproblem$dimension, TRUE)
-  fopt <- IOHproblem$obj_func(starting_point)
+random_local_search <- function(dimension, obj_func, target = NULL, budget = NULL) {
+  if (is.null(budget)) budget <- 10*dimension
+  starting_point <- sample(c(0, 1), dimension, TRUE)
+  fopt <- obj_func(starting_point)
   xopt <- starting_point
   iter <- 1
-  while ( iter < budget && !IOHproblem$target_hit() ){
+  
+  target_hit <- function() {
+    if (is.null(target)) return(FALSE)
+    else return (target<=fopt)
+  }
+  
+  while ( iter < budget && !target_hit() ){
     candidate <- xopt
-    switch_idx <- sample(1:IOHproblem$dimension, 1)
+    switch_idx <- sample(1:dimension, 1)
     candidate[switch_idx] <- 1 - candidate[switch_idx]
-    fval <- IOHproblem$obj_func(candidate)
+    fval <- obj_func(candidate)
     if (fval >= fopt){
       fopt <- fval
       xopt <- candidate
@@ -92,53 +158,6 @@ mutate <- function(ind, mutation_rate){
   as.integer( xor(ind, mutations) )
 }
 
-#' A (1+lambda) EA implementation
-#'
-#' @param IOHproblem An IOHproblem object
-#' @param lambda_ The size of the offspring
-#' @param budget How many times the objective function can be evaluated
-#'
-#' @export
-#' @examples
-#' \donttest{
-#' one_plus_two_EA <- function(IOHproblem) { one_plus_lambda_EA(IOHproblem, lambda_=2) }
-#'
-#' benchmark_algorithm(one_plut_two_EA, params.track = "Mutation rate",
-#' algorithm.name = "one_plus_two_EA",
-#' algorithm.info = "Using one_plus_lambda_EA with specific parameter" )
-#' }
-one_plus_lambda_EA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
-  dim = IOHproblem$dimension
-  if (is.null(budget)) budget <- 10*dim
-  obj <- IOHproblem$obj_func
-
-  parent <- sample(c(0, 1), dim, TRUE)
-  best <- parent
-  mutation_rate <- 1.0/dim
-  IOHproblem$set_parameters(mutation_rate)
-  best_value <- obj(parent)
-  budget <- budget-1
-
-  while ( budget > 0 && !IOHproblem$target_hit() ){
-    for (i in 1:lambda_){
-      offspring <- parent
-      offspring <- mutate(offspring, mutation_rate)
-      v <- obj(offspring)
-      if(v > best_value){
-        best_value <- v
-        best <- offspring
-      }
-      budget <- budget - 1
-      if (budget == 0 ) break
-    }
-    parent <- best
-    mutation_rate = 1.0 / (1 + (1 - mutation_rate) / mutation_rate * exp(0.22 * rnorm(1)))
-    mutation_rate = min(max(mutation_rate, 1.0/dim), 0.5)
-    IOHproblem$set_parameters(mutation_rate)
-  }
-  return(best_value)
-}
-
 
 #' One-Comma-Lambda Self-Adapative Genetic Algorithm
 #'
@@ -147,34 +166,42 @@ one_plus_lambda_EA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
 #' resulting value is taken to mutate Lambda solution vector. The best solution is
 #' selected along with its mutation rate.
 #'
-#' @param IOHproblem An IOHproblem object
-#' @param budget integer, maximal allowable number of function evaluations
-#' @param lambda_ integer, the population size > 1
-#'
+#' @param lambda_ The size of the offspring
+#' @param budget How many times the objective function can be evaluated
+#' @param dimension Dimension of search space
+#' @param obj_func The evaluation function
+#' @param target Optional, enables early stopping if this value is reached
+#' @param set_parameters Function to call to store the value of the registered parameters
+#' 
 #' @export
-self_adaptive_GA <- function(IOHproblem, budget = NULL, lambda_ = 10) {
-  dim <- IOHproblem$dimension
-  obj_func <- IOHproblem$obj_func
-  if (is.null(budget)) budget <- 10 * dim
+self_adaptive_GA <- function(dimension, obj_func, target = NULL, lambda_ = 10, budget = NULL,
+                             set_parameters = NULL) {
+  obj_func <- obj_func
+  if (is.null(budget)) budget <- 10 * dimension
 
   r <- 1.0 / dim
-  IOHproblem$set_parameters(r)
+  if (is.function(set_parameters)) set_parameters(r)
 
-  x <- sample(c(0, 1), dim, TRUE)
+  x <- sample(c(0, 1), dimension, TRUE)
   xopt <- x
   fopt <- fx <- obj_func(x)
   budget <- budget - 1
 
   tau <- 0.22
 
-  while (budget > 0 && !IOHproblem$target_hit()) {
+  target_hit <- function() {
+    if (is.null(target)) return(FALSE)
+    else return (target<=fopt)
+  }
+  
+  while (budget > 0 && !target_hit()) {
     lambda_ <- min(lambda_, budget) #ensure budget is not exceeded
     x_ <- tcrossprod(rep(1, lambda_), x)
-    r_ <- (1.0 / (1 + (1 - r) / r * exp(tau * rnorm(lambda_))))  %*% t(rep(1, dim))
-    idx <- matrix(runif(lambda_ * dim), lambda_, dim) < r_
+    r_ <- (1.0 / (1 + (1 - r) / r * exp(tau * rnorm(lambda_))))  %*% t(rep(1, dimension))
+    idx <- matrix(runif(lambda_ * dimension), lambda_, dimension) < r_
     x_[idx] <- 1 - x_[idx]
 
-    IOHproblem$set_parameters(r)
+    if (is.function(set_parameters)) set_parameters(r)
     f <- obj_func(x_)
     budget <- budget - lambda_
     selected <- which(min(f) == f)[[1]]
@@ -196,24 +223,30 @@ self_adaptive_GA <- function(IOHproblem, budget = NULL, lambda_ = 10) {
 #' r/2dim. r that the best offspring has been created with will be inherited by 
 #' probability 3/4, the other by 1/4.
 #'
-#' @param IOHproblem An IOHproblem object
-#' @param lambda_ integer, the population size > 1
+#' @param lambda_ The size of the offspring
 #' @param budget How many times the objective function can be evaluated
-#'
+#' @param dimension Dimension of search space
+#' @param obj_func The evaluation function
+#' @param target Optional, enables early stopping if this value is reached
+#' @param set_parameters Function to call to store the value of the registered parameters
+#' 
 #' @export
-#' @examples
-two_rate_GA <- function(IOHproblem, lambda_ = 2, budget = NULL){
-  dim = IOHproblem$dimension
-  if (is.null(budget)) budget <- 100*dim
-  obj <- IOHproblem$obj_func
+two_rate_GA <- function(dimension, obj_func, target = NULL, lambda_ = 2, budget = NULL, set_parameters = NULL){
+  if (is.null(budget)) budget <- 100*dimension
 
-  parent <- sample(c(0, 1), dim, TRUE)
+  parent <- sample(c(0, 1), dimension, TRUE)
   best <- parent
   r <- 2.0
-  best_value <- obj(parent)
+  fopt <- obj_func(parent)
   budget <- budget-1
-
-  while ( budget > 0 ){
+  if (is.function(set_parameters)) set_parameters(r)
+  
+  target_hit <- function() {
+    if (is.null(target)) return(FALSE)
+    else return (target<=fopt)
+  }
+  
+  while (budget > 0 && !target_hit()) {
     selected_r <- r;
     selected_obj <- -Inf
 
@@ -221,20 +254,20 @@ two_rate_GA <- function(IOHproblem, lambda_ = 2, budget = NULL){
       offspring <- parent
 
       if(i <= lambda_/2){
-        mutation_rate = r / 2.0 / dim;
+        mutation_rate = r / 2.0 / dimension;
       } else{
-        mutation_rate = 2.0 * r / dim;
+        mutation_rate = 2.0 * r / dimension;
       }
       offspring <- mutate(offspring, mutation_rate)
 
-      v <- obj(offspring)
-      if(v >= best_value){
-        best_value <- v
+      v <- obj_func(offspring)
+      if(v >= fopt){
+        fopt <- v
         best <- offspring
       }
       if(v >= selected_obj){
         selected_obj = v
-        selected_r = mutation_rate * dim;
+        selected_r = mutation_rate * dimension;
       }
       budget <- budget - 1
       if (budget == 0 ) break
@@ -252,8 +285,9 @@ two_rate_GA <- function(IOHproblem, lambda_ = 2, budget = NULL){
     }
 
     if(r < 2.0) r = 2.0
-    if(r > dim / 4.0) r = dim / 4.0
-
+    if(r > dimension / 4.0) r = dimension / 4.0
+    if (is.function(set_parameters)) set_parameters(r)
+    
   }
-  list(xopt = best, fopt = best_value)
+  list(xopt = best, fopt = fopt)
 }
