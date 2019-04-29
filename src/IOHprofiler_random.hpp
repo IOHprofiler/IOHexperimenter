@@ -6,7 +6,7 @@
 
 class Random_methods{
 public:
-  void IOHprofiler_unif(std::vector<double> &r, const std::size_t N,  long inseed) {
+  void IOHprofiler_unif(std::vector<double> &r, const size_t N,  long inseed) {
       /* generates N uniform numbers with starting seed */
       r.reserve(N);
       long aktseed;
@@ -45,9 +45,9 @@ public:
       return;
   }
 
-   void IOHprofiler_gauss(std::vector<double> &g, const std::size_t N, const long seed) {
+   void IOHprofiler_gauss(std::vector<double> &g, const size_t N, const long seed) {
       g.reserve(N);
-      std::size_t i;
+      size_t i;
 
       std::vector<double> uniftmp;
       IOHprofiler_unif(uniftmp, 2 * N, seed);

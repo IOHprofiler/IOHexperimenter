@@ -10,7 +10,7 @@ public:
 
     number_of_objectives = 1;
   };
-  ~OneMax();
+  //~OneMax();
   
 
   void Initilize_problem(int  dimension) {
@@ -30,12 +30,12 @@ public:
 
   void internal_evaluate(std::vector<int> x,std::vector<double> &y) {
     y.clear();
-    y.reserve(number_of_variables);
+    y.reserve(number_of_objectives);
     int n = x.size();
     int result = 0;
     for(int i = 0; i != n; ++i) {
       result += x[i];
     }
-    y.push_back((double)result);
+    y.push_back(result);
   };
 };
