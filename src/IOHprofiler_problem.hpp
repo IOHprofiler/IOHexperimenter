@@ -4,6 +4,7 @@
 
 #include "common.h"
 #include "IOHprofiler_transformation.hpp"
+#include "IOHprofiler_csv_logger.h"
 
 // Basic structure for IOHExperimentor, which is used for generating benchmark problems.
 // To define a new problem, values of 'number_of_variables', 'lowerbound', 'upperbound',
@@ -63,8 +64,11 @@ public:
   std::vector<double> optimal;
   std::vector<double> transformed_optimal;
 
+  int evaluations = 0;
   std::vector<double> best_so_far_raw_objectives;
-  std::vector<double> best_so_far_transformed_objectives;  
+  int best_so_far_raw_evaluations;
+  std::vector<double> best_so_far_transformed_objectives;
+  int best_so_far_transformed_evaluations; 
 
   IOHprofiler_transformation transformation;
 
@@ -75,30 +79,66 @@ public:
   //IOHprofiler_logger logger = NULL;
 
   void evaluate(std::vector<InputType> x, std::vector<double> &y) {
-    if(instance_id >= 1 && instance_id < 50) { 
+    if(evaluations == 0) {
+      best_so_far_raw_objectives.reserve(number_of_objectives);
+      best_so_far_transformed_objectives.reserve(number_of_objectives);
+      for(int i = 0; i !=  number_of_objectives; ++i) {
+        best_so_far_raw_objectives.push_back(DBL_MIN_EXP);
+        best_so_far_transformed_objectives.push_back(DBL_MIN_EXP);
+      }
+
+      compareVector(best_variables,best_transformed_variables);
+      if(instance_id > 1 && instance_id <= 50) { 
+        transformation.transform_vars_xor(best_transformed_variables,instance_id);
+      } else if(instance_id > 50 && instance_id <= 100) {
+        transformation.transform_vars_sigma(best_transformed_variables,instance_id);
+      }
+      internal_evaluate(best_transformed_variables,transformed_optimal);
+      if(instance_id > 1) {
+        transformation.transform_obj_scale(transformed_optimal,instance_id);
+        transformation.transform_obj_shift(transformed_optimal,instance_id);
+      }
+      
+    }
+    ++evaluations;
+
+    if(instance_id > 1 && instance_id <= 50) { 
       transformation.transform_vars_xor(x,instance_id);
-    } else if(instance_id >= 50 && instance_id < 100) {
+    } else if(instance_id > 50 && instance_id <= 100) {
       transformation.transform_vars_sigma(x,instance_id);
     }
     
     internal_evaluate(x,y);
-    
+    raw_objectives.reserve(number_of_objectives);
     copyVector(y,raw_objectives);
     if(compareObjectives(y,best_so_far_raw_objectives)) {
       copyVector(y,best_so_far_raw_objectives);
+      best_so_far_raw_evaluations = evaluations;
     }
     if(compareVector(y,optimal)) {
       rawOptimalFound = true;
     }
-    
-    transformation.transform_obj_scale(y,instance_id);
-    transformation.transform_obj_shift(y,instance_id);
+    if(instance_id > 1) {
+      transformation.transform_obj_scale(y,instance_id);
+      transformation.transform_obj_shift(y,instance_id);
+    }
     if(compareObjectives(y,best_so_far_transformed_objectives)){
       copyVector(y,best_so_far_transformed_objectives);
+      best_so_far_transformed_evaluations = evaluations;
     }
     if(compareVector(y,transformed_optimal)) {
       transformedOptimalFound = true;
     }
+
+    std::cout << this->evaluations << " " << this->raw_objectives[0] 
+              << " " << this->best_so_far_raw_objectives[0] << " " <<  y[0]
+              << " " << this->best_so_far_transformed_objectives[0] << " " << std::endl;
+    if(&this->csv_logger != NULL) {
+      (this->csv_logger).write_line(this->evaluations,
+                                  this->raw_objectives[0],this->best_so_far_raw_objectives[0],
+                                  y[0],this->best_so_far_transformed_objectives[0]);
+    }
+
   };
 
   //virtual double constraints() {};
@@ -117,7 +157,10 @@ public:
   };  
 
 
-  //void addLogger(IOHprofiler_logger logger);
+  void addCSVLogger(IOHprofiler_csv_logger &logger) {
+    csv_logger = logger;
+    csv_logger.target_problem(this->problem_id,this->number_of_variables,this->instance_id);
+  };
   //void reset_logger(IOHprofiler_logger logger);
 
   //Interface for info of problems
@@ -137,14 +180,13 @@ public:
   std::vector<double> IOHprofiler_get_transformed_objectives();
 
 
-
+  IOHprofiler_csv_logger csv_logger;
 
  
 
 
   bool rawOptimalFound = false;
   bool transformedOptimalFound = false;
-  //IOHprofiler_logger logger;
 };
 
 #endif //_IOHPROFILER_PROBLEM_HPP
