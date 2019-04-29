@@ -31,6 +31,7 @@ void copyVector(const std::vector<valueType> v1, std::vector<valueType> &v2){
   v2.assign(v1.begin(),v1.end());
 };
 
+// Reture 'true' if all elements in two vectors are the same.
 template<class valueType>
 bool compareVector(std::vector<valueType> &v1, std::vector<valueType> v2){
   int n = v1.size();
@@ -47,6 +48,9 @@ bool compareVector(std::vector<valueType> &v1, std::vector<valueType> v2){
   return true;
 };
 
+// Return true if values of vl's elements are larger than v2's in each index.
+// This is used to compare to objectives vector, details needs to be discussed
+// for multi-objective optimization.
 template<class valueType>
 bool compareObjectives(std::vector<valueType> &v1, std::vector<valueType> v2){
   int n = v1.size();
