@@ -75,9 +75,9 @@ public:
   //std::size_t number_of_constraints;
   //std::vector<double> constraints;
 
-  /*still needs to think how to settle the type of this. */
-  //IOHprofiler_logger logger = NULL;
-
+  // A common function for evaluating fitness of problems.
+  // Raw evaluate process, tranformation operations, and logging process are excuted 
+  // in this function.
   void evaluate(std::vector<InputType> x, std::vector<double> &y) {
     if(evaluations == 0) {
       best_so_far_raw_objectives.reserve(number_of_objectives);
@@ -98,7 +98,7 @@ public:
         transformation.transform_obj_scale(transformed_optimal,instance_id);
         transformation.transform_obj_shift(transformed_optimal,instance_id);
       }
-      
+
     }
     ++evaluations;
 
@@ -109,6 +109,7 @@ public:
     }
     
     internal_evaluate(x,y);
+    
     raw_objectives.reserve(number_of_objectives);
     copyVector(y,raw_objectives);
     if(compareObjectives(y,best_so_far_raw_objectives)) {
@@ -130,9 +131,6 @@ public:
       transformedOptimalFound = true;
     }
 
-    std::cout << this->evaluations << " " << this->raw_objectives[0] 
-              << " " << this->best_so_far_raw_objectives[0] << " " <<  y[0]
-              << " " << this->best_so_far_transformed_objectives[0] << " " << std::endl;
     if(&this->csv_logger != NULL) {
       (this->csv_logger).write_line(this->evaluations,
                                   this->raw_objectives[0],this->best_so_far_raw_objectives[0],
@@ -156,7 +154,8 @@ public:
     printf("No constraints function defined");
   };  
 
-
+  // If want to output csv files, a csv_logger needs to be assigned to the problem.
+  // Otherwise there will be no csv files outputed with 'csv_logger == NULL'.
   void addCSVLogger(IOHprofiler_csv_logger &logger) {
     csv_logger = logger;
     csv_logger.target_problem(this->problem_id,this->number_of_variables,this->instance_id);

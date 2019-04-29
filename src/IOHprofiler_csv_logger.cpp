@@ -54,7 +54,7 @@ std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name() {
   return renamed_directory;
 }
 
-
+// This function is to be invoked by IOHprofiler_problem class.
 void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int instance){
   this->problem_id = problem_id;
   this->dimension = dimension;
