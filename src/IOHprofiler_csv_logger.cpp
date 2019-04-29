@@ -1,5 +1,24 @@
 #include "IOHprofiler_csv_logger.h"
 
+
+void IOHprofiler_csv_logger::init_logger(std::string directory, std::string folder_name,
+                     std::string alg_name, std::string alg_info, 
+                     bool complete_triggers, bool update_triggers, int number_interval_triggers
+                    ) {
+  this->output_directory = directory;
+  this->folder_name = folder_name;
+  this->algorithm_name =  alg_name;
+  this->algorithm_info = alg_info;
+
+  set_complete_flag(complete_triggers);
+  set_update_flag(update_triggers);
+  set_interval(number_interval_triggers);
+  
+  openIndex();
+}
+
+
+
 int IOHprofiler_csv_logger::openIndex() { 
   std::string experiment_folder_name = IOHprofiler_experiment_folder_name();
   IOHprofiler_create_folder(experiment_folder_name);
@@ -14,7 +33,6 @@ int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) {
     return 0;
   }
 }
-
 
 // To create a folder for logging files.
 // If there exists a files or a folder with the same name, the expected 
@@ -42,6 +60,8 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
   this->dimension = dimension;
   this->instance = instance;
   
+  if(update_status()) reset_fitness_for_update_trigger();
+
   std::string sub_directory_name = this->output_directory + IOHprofiler_path_separator 
                           + this->folder_name + IOHprofiler_path_separator
                           + "data_f" + std::to_string(problem_id);
@@ -56,14 +76,6 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
     }
   }
 
-  std::string infoFile_name = this->output_directory + IOHprofiler_path_separator 
-                            + this->folder_name + IOHprofiler_path_separator
-                            + "IOHprofiler_f" + std::to_string(problem_id) + "_i1"
-                            + ".info"; 
-  if(infoFile.is_open()) infoFile.close();
-  infoFile.open(infoFile_name.c_str());
-
-
   if(complete_status()){
     std::string cdat_name = sub_directory_name + IOHprofiler_path_separator 
                           + "IOHprofiler_f" + std::to_string(problem_id) + "_DIM"
@@ -71,7 +83,7 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
 
     if(cdat.is_open()) cdat.close();
     cdat.open(cdat_name.c_str());
-    cdat << dat_header;
+    cdat << dat_header << std::endl;
   }
 
   if(interval_status()){
@@ -81,7 +93,7 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
 
     if(idat.is_open()) idat.close();
     idat.open(idat_name.c_str());
-    idat << dat_header;
+    idat << dat_header << std::endl;
   }
 
   if(update_status()) {
@@ -91,7 +103,7 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
 
     if(dat.is_open()) dat.close();
     dat.open(dat_name.c_str());
-    dat << dat_header;
+    dat << dat_header << std::endl;
   }
   
 };
@@ -129,7 +141,7 @@ void IOHprofiler_csv_logger::write_line(size_t evaluations, double y, double bes
 
   if(complete_trigger()) {
     if(!cdat.is_open()) IOH_error("*.cdat file is not open");
-    cdat << written_line;
+    cdat << written_line << std::endl;
   }
   if(interval_trigger(evaluations)) {
     if(!idat.is_open()) IOH_error("*.idat file is not open");
@@ -140,3 +152,46 @@ void IOHprofiler_csv_logger::write_line(size_t evaluations, double y, double bes
     dat << written_line;
   }
 };
+
+
+/* The strategy for writing into needs to be discussed.
+ * Here we suppose that problems are to be tested by order of problem_id,
+ * which means that an infoFile will not be opened twice.*/
+void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension) {
+  if(infoFile.is_open()) {
+    if(problem_id != this->last_problem_id) {
+      infoFile.close();
+      std::string infoFile_name = this->output_directory + IOHprofiler_path_separator 
+                            + this->folder_name + IOHprofiler_path_separator
+                            + "IOHprofiler_f" + std::to_string(problem_id) + "_i1"
+                            + ".info";
+      infoFile.open(infoFile_name.c_str());
+      infoFile << "funcId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
+      infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" << "dimension_i1.dat,";    
+    } else if(dimension != this->last_dimension) {
+      infoFile << "\nfuncId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
+      infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" << "dimension_i1.dat,";    
+    }
+  }
+  else {
+    std::string infoFile_name = this->output_directory + IOHprofiler_path_separator 
+                            + this->folder_name + IOHprofiler_path_separator
+                            + "IOHprofiler_f" + std::to_string(problem_id) + "_i1"
+                            + ".info";
+    infoFile.open(infoFile_name.c_str());
+    infoFile << "funcId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
+    infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" << "dimension_i1.dat,";    
+  }
+}
+
+void IOHprofiler_csv_logger::write_info(int instance, double optimal, int evaluations) {
+  if(!infoFile.is_open()) IOH_error("write_info(): writing info into unopened infoFile");
+  infoFile << " " << instance << ":" << optimal << "|" << evaluations; 
+}
+
+void IOHprofiler_csv_logger::clear_logger() {
+  if(cdat.is_open()) cdat.close();
+  if(idat.is_open()) idat.close();
+  if(dat.is_open())  dat.close();
+  if(infoFile.is_open()) infoFile.close();
+}
