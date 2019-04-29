@@ -22,10 +22,12 @@
 //   update_trigger(): set as true as a new better solution is found.
 class IOHprofiler_observer {
 public:
-  virtual void init_logger() {};
-  virtual void write_evaluation_info() {};
-  virtual void close_logger() {};
 
+  /*IOHprofiler_observer(){};
+  virtual void init_logger() ;
+  virtual void write_evaluation_info() ;
+  virtual void close_logger() ;
+*/
   // Operations for *.cdat 
   void set_complete_flag(bool complete_flag) {
     this->observer_complete_flag = complete_flag;
@@ -50,7 +52,7 @@ public:
     else return true;
   }
 
-  bool interval_trigger(std::size_t evaluations) {
+  bool interval_trigger(size_t evaluations) {
     if(observer_interval == 0) return false;
   	if(evaluations == 1 || evaluations % observer_interval == 0) return true;
   	else return false;
@@ -76,17 +78,26 @@ public:
 
     return false;
   }
+
+  void reset_fitness_for_update_trigger(){
+    this->current_best_fitness = DBL_MIN_EXP;
+  }
   // End for *.ddat
 
 
-  
-
-private:
   int observer_interval;
   bool observer_complete_flag;
   bool observer_update_flag;
 
-  double current_best_fitness = DBL_MIN;
+  double current_best_fitness = DBL_MIN_EXP;
+
+  IOHprofiler_observer& operator = (IOHprofiler_observer& observer) {
+    this->observer_interval = observer.observer_interval;
+    this->observer_complete_flag = observer.observer_complete_flag;
+    this->observer_update_flag = observer.observer_update_flag;
+    this->current_best_fitness = observer.current_best_fitness;
+  };
+  
 };
 
 #endif //_IOHPROFILER_OBSERVER_H
