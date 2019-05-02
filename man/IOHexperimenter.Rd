@@ -36,3 +36,6 @@ A S3 object 'DataSet'
 \description{
 S3 class 'IOHexperimenter'
 }
+\examples{
+exp <- IOHexperimenter()
+}

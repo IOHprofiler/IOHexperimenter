@@ -26,5 +26,7 @@ For easier use with the IOHexperimenter
 Random walk in \eqn{{0, 1}^d} space
 }
 \examples{
+\donttest{
 benchmark_algorithm(IOH_random_search, data.dir = NULL)
+}
 }

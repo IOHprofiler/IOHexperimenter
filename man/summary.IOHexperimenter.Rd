@@ -17,3 +17,6 @@ A summary of the DataSet containing both function-value and runtime based statis
 \description{
 S3 generic summary operator for IOHexperimenter
 }
+\examples{
+summary(IOHexperimenter())
+}

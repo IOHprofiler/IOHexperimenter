@@ -14,3 +14,6 @@
 \description{
 S3 print function for IOHexperimenter
 }
+\examples{
+print(IOHexperimenter())
+}

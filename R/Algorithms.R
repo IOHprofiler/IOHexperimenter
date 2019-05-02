@@ -148,7 +148,7 @@ random_local_search <- function(dimension, obj_func, target = NULL, budget = NUL
 #'
 #' @param ind The individual to mutate
 #' @param mutation_rate The mutation rate
-#'
+#' @noRd
 mutate <- function(ind, mutation_rate){
   dim <- length(ind)
   mutations <- seq(0, 0, length.out = dim)

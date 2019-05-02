@@ -1,8 +1,11 @@
 #' @importFrom assertthat assert_that
 #' @import Rcpp
 #' @importFrom stats rnorm runif
+#' @importFrom magrittr %>%
 #' @useDynLib IOHexperimenter
 NULL
+
+utils::globalVariables(c("."))
 
 #' S3 class 'IOHexperimenter'
 #'
@@ -19,15 +22,19 @@ NULL
 #'
 #' @return A S3 object 'DataSet'
 #' @export
-#'
+#' @examples 
+#' exp <- IOHexperimenter()
 IOHexperimenter <- function(dims = c(16, 100, 625, 2500),
   functions = seq(23), instances = seq(100), algorithm.info = ' ', algorithm.name = ' ',
   data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = NULL) {
 
-  # assert_that(is.numeric(dims))
-  # assert_that(is.numeric(functions))
-  # assert_that(is.numeric(instances))
-
+  stopifnot({
+    instances %in% seq(100) %>%
+      c(., functions %in% seq(23)) %>%
+      c(., dims %in% if(any(functions == 23)) (seq(50)^2) else seq(50^2)) %>% 
+      all
+  })
+  
   if (is.null(data.dir)) {
     observer_name <- "no_observer"
     data.dir <- "N/A"
@@ -78,6 +85,8 @@ IOHexperimenter <- function(dims = c(16, 100, 625, 2500),
 #' @param ... Arguments for underlying function
 #'
 #' @export
+#' @examples 
+#' print(IOHexperimenter())
 print.IOHexperimenter <- function(x, ...) {
   cat(as.character.IOHexperimenter(x, ...))
 }
@@ -88,6 +97,8 @@ print.IOHexperimenter <- function(x, ...) {
 #' @param ... Arguments for underlying function
 #'
 #' @export
+#' @examples 
+#' as.character(IOHexperimenter())
 as.character.IOHexperimenter <- function(x, ...) {
   paste0(
     sprintf('IOHexperimenter (%d instances, %d functions, %d dimensions)\n', 
@@ -105,6 +116,8 @@ as.character.IOHexperimenter <- function(x, ...) {
 #'
 #' @return A summary of the DataSet containing both function-value and runtime based statistics.
 #' @export
+#' @examples 
+#' summary(IOHexperimenter())
 summary.IOHexperimenter <- function(object, ...) {
   cat('IOHexperimenter:\n')
   cat(paste('dimensions: ', paste(object$dims, collapse = ',')))

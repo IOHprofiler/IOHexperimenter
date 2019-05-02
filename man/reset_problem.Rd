@@ -15,3 +15,9 @@ An IOHproblem object
 \description{
 Reset the IOHproblem
 }
+\examples{
+exp <- IOHexperimenter()
+p <- next_problem(exp)
+IOH_random_search(p)
+p <- reset_problem(p)
+}

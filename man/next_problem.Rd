@@ -15,3 +15,7 @@ An IOHproblem object
 \description{
 Get the next function of the currently initialized suite
 }
+\examples{
+exp <- IOHexperimenter()
+p <- next_problem(exp)
+}

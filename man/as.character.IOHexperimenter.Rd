@@ -14,3 +14,6 @@
 \description{
 S3 generic as.character function for IOHexperimenter
 }
+\examples{
+as.character(IOHexperimenter())
+}

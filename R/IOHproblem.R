@@ -4,6 +4,10 @@
 #' @param ... Arguments for underlying function
 #'
 #' @export
+#' @examples 
+#' exp <- IOHexperimenter()
+#' p <- next_problem(exp)
+#' print(p)
 print.IOHproblem <- function(x, ...) {
   cat(as.character.IOHproblem(x, ...))
 }
@@ -14,6 +18,10 @@ print.IOHproblem <- function(x, ...) {
 #' @param ... Arguments for underlying function
 #'
 #' @export
+#' @examples 
+#' exp <- IOHexperimenter()
+#' p <- next_problem(exp)
+#' as.character(p)
 as.character.IOHproblem <- function(x, ...) {
   sprintf('IOHproblem (Instance %d of function %d %dD)\n', x$instance, x$function_id, 
           x$dimension)
@@ -25,6 +33,9 @@ as.character.IOHproblem <- function(x, ...) {
 #'
 #' @return An IOHproblem object
 #' @export
+#' @examples 
+#' exp <- IOHexperimenter()
+#' p <- next_problem(exp)
 next_problem <- function(experimenter) {
   ans <- c_get_next_problem()
   if (is.null(ans) || is.null(ans$problem)) return(NULL)
@@ -64,6 +75,11 @@ next_problem <- function(experimenter) {
 #'
 #' @return An IOHproblem object
 #' @export
+#' @examples 
+#' exp <- IOHexperimenter()
+#' p <- next_problem(exp)
+#' IOH_random_search(p)
+#' p <- reset_problem(p)
 reset_problem <- function(problem) {
   ans <- c_reset_problem()
   if (is.null(ans) || is.null(ans$problem)) return(NULL)

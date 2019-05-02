@@ -14,7 +14,8 @@ URL: https://github.com/IOHprofiler/IOHexperimenter
 BugReports: https://github.com/IOHprofiler/IOHexperimenter/issues
 Imports: 
   Rcpp (>= 1.0.1),
-  assertthat
+  assertthat,
+  magrittr
 LinkingTo: Rcpp
 RoxygenNote: 6.1.1
 SystemRequirements: GNU make

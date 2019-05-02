@@ -14,3 +14,8 @@
 \description{
 S3 print function for IOHproblem
 }
+\examples{
+exp <- IOHexperimenter()
+p <- next_problem(exp)
+print(p)
+}

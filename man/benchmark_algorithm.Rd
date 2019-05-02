@@ -54,6 +54,6 @@ Base procedure for benchmarking a custom algorithm
 \examples{
 \donttest{
 
-benchmark_algorithm(IOH_random_search, params.track = 'Test_param')
+benchmark_algorithm(IOH_two_rate_GA, params.track = 'Mutation_rate', data.dir = './data')
 }
 }

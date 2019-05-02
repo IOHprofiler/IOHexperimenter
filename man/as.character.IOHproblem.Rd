@@ -14,3 +14,8 @@
 \description{
 S3 generic as.character function for IOHproblem
 }
+\examples{
+exp <- IOHexperimenter()
+p <- next_problem(exp)
+as.character(p)
+}

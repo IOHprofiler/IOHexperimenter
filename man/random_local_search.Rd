@@ -28,5 +28,7 @@ chosen position in the solution vector is perturbated in each iteration. Only
 improvements are accepted after perturbation.
 }
 \examples{
+\donttest{
 benchmark_algorithm(IOH_random_local_search, data.dir = NULL)
+}
 }
