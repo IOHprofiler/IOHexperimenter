@@ -194,7 +194,7 @@ static int IOHprofiler_observer_targets_trigger(IOHprofiler_observer_targets_t *
  * evaluations dim*1, dim*2, dim*5, 10*dim*1, 10*dim*2, 10*dim*5, 100*dim*1, 100*dim*2, 100*dim*5, ...
  */
 static IOHprofiler_observer_evaluations_t *IOHprofiler_observer_evaluations(const char *base_evaluations,
-                                                              const size_t dimension) {
+                                                              const size_t dimension, const size_t number_of_variables) {
 
   IOHprofiler_observer_evaluations_t *evaluations = (IOHprofiler_observer_evaluations_t *) IOHprofiler_allocate_memory(
       sizeof(*evaluations));
@@ -202,7 +202,7 @@ static IOHprofiler_observer_evaluations_t *IOHprofiler_observer_evaluations(cons
   /* First trigger */
   evaluations->value1 = 1;
   evaluations->exponent1 = 0;
-  evaluations->number_of_triggers = 20;
+  evaluations->number_of_triggers = number_of_variables;
 
   /* Second trigger */
   evaluations->base_evaluations = IOHprofiler_string_parse_ranges(base_evaluations, 1, 0, "base_evaluations",

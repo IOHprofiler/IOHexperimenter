@@ -633,7 +633,7 @@ static IOHprofiler_problem_t *logger_PBO(IOHprofiler_observer_t *observer, IOHpr
   logger_PBO->best_raw_value  = -DBL_MAX;
   /* Initialize triggers based on target values and number of evaluations */
   logger_PBO->targets = IOHprofiler_observer_targets(observer->number_target_triggers, observer->target_precision);
-  logger_PBO->evaluations = IOHprofiler_observer_evaluations(observer->base_evaluation_triggers, inner_problem->number_of_variables);
+  logger_PBO->evaluations = IOHprofiler_observer_evaluations(observer->base_evaluation_triggers, inner_problem->number_of_variables, observer->number_target_triggers);
   logger_PBO->updating = IOHprofiler_observer_update();
   logger_PBO->interval = observer->number_interval_triggers;
   problem = IOHprofiler_problem_transformed_allocate(inner_problem, logger_PBO, logger_PBO_free, observer->observer_name);
