@@ -24,21 +24,6 @@ public:
 
     Initilize_problem(dimension);
   }
-  
-  OneMax(const OneMax &om) {
-    this->problem_id = om.problem_id;
-    this->instance_id = om.instance_id;
-    this->problem_name = om.problem_name;
-    this->problem_type = om.problem_type;
-    this->number_of_variables = om.number_of_variables;
-    this->number_of_objectives = om.number_of_objectives;
-
-    this->evaluations = 0;
-    copyVector(om.lowerbound,this->lowerbound);
-    copyVector(om.upperbound,this->upperbound);
-    copyVector(om.best_variables,this->best_variables);
-    copyVector(om.optimal,this->optimal);  
-  }
 
   void Initilize_problem(int  dimension) {
     number_of_variables = dimension;

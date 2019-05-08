@@ -7,7 +7,7 @@
 class LeadingOnes : public IOHprofiler_problem<int> {
 public:
   LeadingOnes() {
-    problem_id = 1;
+    problem_id = 2;
     instance_id = 1;
     problem_name = "Leading_Ones";
     problem_type = "pseudo_Boolean_problem";
@@ -16,28 +16,13 @@ public:
   }
   //~LeadingOnes();
   LeadingOnes(int instance_id, int dimension) {
-    this->problem_id = 1;
+    this->problem_id = 2;
     this->instance_id = instance_id;
     this->problem_name = "LeadingOnes";
     this->problem_type = "pseudo_Boolean_problem";
     number_of_objectives = 1;
 
     Initilize_problem(dimension);
-  }
-
-  LeadingOnes( const LeadingOnes &lo) {
-    this->problem_id = lo.problem_id;
-    this->instance_id = lo.instance_id;
-    this->problem_name = lo.problem_name;
-    this->problem_type = lo.problem_type;
-    this->number_of_variables = lo.number_of_variables;
-    this->number_of_objectives = lo.number_of_objectives;
-
-    this->evaluations = 0;
-    copyVector(lo.lowerbound,this->lowerbound);
-    copyVector(lo.upperbound,this->upperbound);
-    copyVector(lo.best_variables,this->best_variables);
-    copyVector(lo.optimal,this->optimal);  
   }
 
   void Initilize_problem(int  dimension) {

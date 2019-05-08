@@ -41,6 +41,42 @@ template <class InputType> class IOHprofiler_problem {
 public:
   //void problem();
   //~problem();
+  IOHprofiler_problem(){}
+
+  IOHprofiler_problem(int instance_id, int dimension){}
+
+  IOHprofiler_problem( const IOHprofiler_problem &problem) {
+    this->problem_id = problem.problem_id;
+    this->instance_id = problem.instance_id;
+    this->problem_name = problem.problem_name;
+    this->problem_type = problem.problem_type;
+    
+    copyVector(problem.lowerbound,this->lowerbound);
+    copyVector(problem.upperbound,this->upperbound);
+  
+    this->number_of_variables = problem.number_of_variables;
+    this->number_of_objectives = problem.number_of_objectives;
+    
+    copyVector(problem.raw_objectives,this->raw_objectives);
+
+    this->transformed_number_of_variables = problem.transformed_number_of_variables;
+    copyVector(problem.transformed_variables,this->transformed_variables);
+
+    copyVector(problem.best_variables,this->best_variables);
+    copyVector(problem.best_transformed_variables,this->best_variables);
+    copyVector(problem.optimal,this->optimal);
+    copyVector(problem.transformed_optimal,this->transformed_optimal);
+
+
+    this->evaluations = 0;
+
+    copyVector(problem.best_so_far_raw_objectives,this->best_so_far_raw_objectives);
+    int best_so_far_raw_evaluations = 0;
+    copyVector(problem.best_so_far_transformed_objectives,this->best_so_far_transformed_objectives);
+    int best_so_far_transformed_evaluations = 0;
+    if(problem.csv_logger != NULL) this->csv_logger = IOHprofiler_csv_logger(problem.csv_logger);
+
+  }
 
   int problem_id;
   int instance_id;
@@ -66,7 +102,7 @@ public:
 
   int evaluations = 0;
   std::vector<double> best_so_far_raw_objectives;
-  int best_so_far_raw_evaluations;
+  int best_so_far_raw_evaluations = 0;
   std::vector<double> best_so_far_transformed_objectives;
   int best_so_far_transformed_evaluations; 
 
@@ -142,16 +178,16 @@ public:
   //virtual double constraints() {};
   
   virtual void internal_evaluate(std::vector<InputType> x, std::vector<double> &y) {
-    printf("No evaluate function defined");
+    printf("No evaluate function defined\n");
   };
   virtual void constraints(std::vector<InputType> x, std::vector<double> c) {
-    printf("No constraints function defined");
+    printf("No constraints function defined\n");
   };
   void internal_transfer_variables(std::vector<InputType> x) {
-    printf("No constraints function defined");
+    printf("No transfer variables function defined\n");
   };
   void internal_transfer_objectives(std::vector<InputType> y) {
-    printf("No constraints function defined");
+    printf("No transfer objectives function defined\n");
   };  
 
   // If want to output csv files, a csv_logger needs to be assigned to the problem.
@@ -181,11 +217,12 @@ public:
 
   IOHprofiler_csv_logger csv_logger;
 
- 
-
-
   bool rawOptimalFound = false;
   bool transformedOptimalFound = false;
+
+
+
+
 };
 
 #endif //_IOHPROFILER_PROBLEM_HPP
