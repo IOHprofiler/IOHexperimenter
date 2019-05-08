@@ -82,8 +82,8 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
                           + std::to_string(dimension) + "_i1.cdat";
 
     if(cdat.is_open()) cdat.close();
-    cdat.open(cdat_name.c_str());
-    cdat << dat_header << std::endl;
+    cdat.open(cdat_name.c_str(),std::ofstream::app);
+    cdat << dat_header << '\n';
   }
 
   if(interval_status()){
@@ -92,8 +92,8 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
                           + std::to_string(dimension) + "_i1.idat";
 
     if(idat.is_open()) idat.close();
-    idat.open(idat_name.c_str());
-    idat << dat_header << std::endl;
+    idat.open(idat_name.c_str(),std::ofstream::app);
+    idat << dat_header << '\n';
   }
 
   if(update_status()) {
@@ -102,12 +102,17 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
                             + std::to_string(dimension) + "_i1.dat";
 
     if(dat.is_open()) dat.close();
-    dat.open(dat_name.c_str());
-    dat << dat_header << std::endl;
+    dat.open(dat_name.c_str(),std::ofstream::app);
+    dat << dat_header << '\n';
   }
   
 };
 
+void IOHprofiler_csv_logger::target_suite(std::string suite_name){
+  this->suite_name = suite_name;
+}
+
+// The precision of double values needs to be updated.
 void IOHprofiler_csv_logger::write_line(size_t evaluations, double y, double best_so_far_y,
                            double transformed_y, double best_so_far_transformed_y,
                            std::vector<double> parameters) {
@@ -117,8 +122,7 @@ void IOHprofiler_csv_logger::write_line(size_t evaluations, double y, double bes
   for (std::vector<double>::iterator iter = parameters.begin(); iter != parameters.end(); ++iter) {
     written_line = written_line + " " + std::to_string(*iter);
   }
-  written_line += "\n";
-
+  written_line += '\n';
   if(complete_trigger()) {
     if(!cdat.is_open()) IOH_error("*.cdat file is not open");
     cdat << written_line;
@@ -133,15 +137,16 @@ void IOHprofiler_csv_logger::write_line(size_t evaluations, double y, double bes
   }
 };
 
+// The precision of double values needs to be updated.
 void IOHprofiler_csv_logger::write_line(size_t evaluations, double y, double best_so_far_y,
                            double transformed_y, double best_so_far_transformed_y) {
   std::string written_line = std::to_string(evaluations) + " " + std::to_string(y) + " "
                            + std::to_string(best_so_far_y) + " " + std::to_string(transformed_y) + " "
-                           + std::to_string(best_so_far_transformed_y) + "\n";
-
+                           + std::to_string(best_so_far_transformed_y);
+  written_line += '\n';
   if(complete_trigger()) {
     if(!cdat.is_open()) IOH_error("*.cdat file is not open");
-    cdat << written_line << std::endl;
+    cdat << written_line;
   }
   if(interval_trigger(evaluations)) {
     if(!idat.is_open()) IOH_error("*.idat file is not open");
@@ -166,11 +171,15 @@ void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension) {
                             + "IOHprofiler_f" + std::to_string(problem_id) + "_i1"
                             + ".info";
       infoFile.open(infoFile_name.c_str());
-      infoFile << "funcId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
-      infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" << "dimension_i1.dat,";    
+      infoFile << "suite = " << suite_name << ", funcId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
+      infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << "_i1.dat";     
+      this->last_problem_id = problem_id;
+      this->last_dimension = dimension;
     } else if(dimension != this->last_dimension) {
-      infoFile << "\nfuncId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
-      infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" << "dimension_i1.dat,";    
+      infoFile << "\nsuite = " << suite_name << ", funcId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
+      infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << "_i1.dat";    
+      this->last_problem_id = problem_id;
+      this->last_dimension = dimension;
     }
   }
   else {
@@ -179,14 +188,16 @@ void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension) {
                             + "IOHprofiler_f" + std::to_string(problem_id) + "_i1"
                             + ".info";
     infoFile.open(infoFile_name.c_str());
-    infoFile << "funcId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
-    infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" << "dimension_i1.dat,";    
+    infoFile << "suite = \'" << suite_name << "\', funcId = " << problem_id << ", DIM = " << dimension << ", algId = \'" << this->algorithm_name << "\', algInfo = \'" << this->algorithm_info << "\'\n%\n";
+    infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" <<  dimension << "_i1.dat"; 
+    this->last_problem_id = problem_id;
+    this->last_dimension = dimension;
   }
 }
 
 void IOHprofiler_csv_logger::write_info(int instance, double optimal, int evaluations) {
   if(!infoFile.is_open()) IOH_error("write_info(): writing info into unopened infoFile");
-  infoFile << " " << instance << ":" << optimal << "|" << evaluations; 
+  infoFile << ", " << instance << ":" << evaluations << "|" << optimal; 
 }
 
 void IOHprofiler_csv_logger::clear_logger() {

@@ -42,11 +42,12 @@ public:
                            double transformed_y, double best_so_far_transformed_y);
 
   void target_problem(int problem_id, int dimension, int instance);
+  void target_suite(std::string suite_name);
 
   size_t evaluations;
   std::string folder_name;
   std::string output_directory;
-
+  std::string suite_name = "";
 
   // The information of logged problems.
   int dimension;
@@ -54,7 +55,7 @@ public:
   int instance;
   std::string algorithm_name;
   std::string algorithm_info;
-  //std::string suite_name;
+
   std::vector<std::string> parameter_name;
 
   //Variables for logging files
@@ -71,6 +72,7 @@ public:
     this->evaluations = logger.evaluations;
     this->folder_name = logger.folder_name;
     this->output_directory = logger.output_directory;
+    this->suite_name = logger.suite_name;
 
     this->dimension = logger.dimension;
     this->problem_id = logger.problem_id;
@@ -83,16 +85,21 @@ public:
     this->observer_complete_flag = logger.observer_complete_flag;
     this->observer_update_flag = logger.observer_update_flag;
     this->current_best_fitness = logger.current_best_fitness;
+
+    this->last_dimension = logger.last_dimension;
+    this->last_problem_id = logger.last_dimension;
   };
+  void write_info(int instance, double optimal, int evaluations);
+  void openInfo(int problem_id, int dimension);
+  void clear_logger();
 
 private:
-  void write_info(int instance, double optimal, int evaluations);
+  
   int IOHprofiler_create_folder(const std::string path);
 
   // Creating the folder for logging files of the corresponding problem.
   int openIndex();
-  void openInfo(int problem_id, int dimension);
-  void clear_logger();
+
   
   // Returns a name that is allowed.
   std::string IOHprofiler_experiment_folder_name();
