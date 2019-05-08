@@ -2,6 +2,7 @@
 #include "../Problems/f_leading_ones.hpp"
 #include "../IOHprofiler_problem.hpp"
 #include "../common.h"
+#include "../IOHprofiler_csv_logger.h"
 // This is a suite consists of pseudo-Boolean problmes. By calling problem from a suite, .info
 // files will be generated with log files.
 
@@ -20,9 +21,14 @@ public:
   int instance_id_index = 0;
   int dimension_id_index = 0;
 
-  IOHprofiler_problem<int> *current_problem;
-  // OneMax om;
-  // LeadingOnes lo;
+  // Common variables for different classes of problems.
+  OneMax *om;
+  LeadingOnes *lo;
+
+  // An common interface of the problem to be tested.
+  IOHprofiler_problem<int> *current_problem = NULL;
+
+  IOHprofiler_csv_logger csv_logger;
 
   PBO_suite() {
     number_of_problems = 2;
@@ -41,7 +47,6 @@ public:
 
   PBO_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension){
 
-
     // Need to check if the input values are valid.
     number_of_problems = problem_id.size();
     number_of_instances = instance_id.size();
@@ -52,17 +57,25 @@ public:
     copyVector(dimension,this->dimension);
   }
 
+  // The function to acquire problems of the suite one by one until NULL returns.
   IOHprofiler_problem<int> * get_next_problem() {
-    if(problem_id_index == number_of_problems) return NULL;
-
+    if(problem_id_index == number_of_problems) {
+      csv_logger.write_info(current_problem->instance_id,current_problem->best_so_far_transformed_objectives[0],current_problem->best_so_far_transformed_evaluations);
+      current_problem->csv_logger.clear_logger();
+      return NULL;
+    }
+    if(current_problem != NULL) {
+      csv_logger.write_info(current_problem->instance_id,current_problem->best_so_far_transformed_objectives[0],current_problem->best_so_far_transformed_evaluations);
+      current_problem->csv_logger.clear_logger();
+    }
 
     // More problems need to be added here
     if(problem_id[problem_id_index] == 1) {
-      OneMax om(instance_id[instance_id_index],dimension[dimension_id_index]);
-      current_problem = &om; 
+      om = new OneMax(instance_id[instance_id_index],dimension[dimension_id_index]);
+      current_problem = om;
     } else if(problem_id[problem_id_index] == 2 ) {
-      LeadingOnes lo(instance_id[instance_id_index],dimension[dimension_id_index]); 
-      current_problem = &lo;
+      lo = new LeadingOnes(instance_id[instance_id_index],dimension[dimension_id_index]); 
+      current_problem = lo;
     }
     
     instance_id_index++;
@@ -74,7 +87,16 @@ public:
         problem_id_index++;
       }
     }
+    current_problem->addCSVLogger(csv_logger);
+    csv_logger.openInfo(current_problem->problem_id,current_problem->number_of_variables);
     return current_problem;
   };
 
+  // Add a csvLogger for the suite. 
+  // The logger of the suite will only control .info files.
+  // To output files for evaluation of problems, this logger needs to be added to problems.
+  void addCSVLogger(IOHprofiler_csv_logger &logger) {
+    csv_logger = logger;
+    csv_logger.target_suite(suite_name);
+  };
 };
