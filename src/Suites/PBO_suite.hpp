@@ -60,13 +60,13 @@ public:
   // The function to acquire problems of the suite one by one until NULL returns.
   IOHprofiler_problem<int> * get_next_problem() {
     if(problem_id_index == number_of_problems) {
-      csv_logger.write_info(current_problem->instance_id,current_problem->best_so_far_transformed_objectives[0],current_problem->best_so_far_transformed_evaluations);
-      current_problem->csv_logger.clear_logger();
+      csv_logger.write_info(current_problem->IOHprofiler_get_instance_id(),current_problem->IOHprofiler_get_best_so_far_transformed_objectives()[0],current_problem->IOHprofiler_get_best_so_far_transformed_evaluations());
+      current_problem->clearLogger();
       return NULL;
     }
     if(current_problem != NULL) {
-      csv_logger.write_info(current_problem->instance_id,current_problem->best_so_far_transformed_objectives[0],current_problem->best_so_far_transformed_evaluations);
-      current_problem->csv_logger.clear_logger();
+      csv_logger.write_info(current_problem->IOHprofiler_get_instance_id(),current_problem->IOHprofiler_get_best_so_far_transformed_objectives()[0],current_problem->IOHprofiler_get_best_so_far_transformed_evaluations());
+      current_problem->clearLogger();
     }
 
     // More problems need to be added here
@@ -88,7 +88,7 @@ public:
       }
     }
     current_problem->addCSVLogger(csv_logger);
-    csv_logger.openInfo(current_problem->problem_id,current_problem->number_of_variables);
+    csv_logger.openInfo(current_problem->IOHprofiler_get_problem_id(),current_problem->IOHprofiler_get_number_of_variables());
     return current_problem;
   };
 

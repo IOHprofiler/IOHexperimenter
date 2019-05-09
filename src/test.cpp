@@ -9,13 +9,13 @@
 
 int main(){
 
-
-   double best_value;
-   IOHprofiler_csv_logger logger;
-   logger.init_logger("./","test","alg","alg",true,true,2);
-      IOHprofiler_csv_logger logger1;
-   logger1.init_logger("./","test","alg","alg",true,true,2);
-   OneMax om;
+  std::vector<int> time_points{1,2,5};
+  double best_value;
+  IOHprofiler_csv_logger logger;
+  logger.init_logger("./","test","alg","alg",true,true,2,time_points,3);
+  IOHprofiler_csv_logger logger1;
+  logger1.init_logger("./","test","alg","alg",true,true,2,time_points,3);
+  OneMax om;
   std::vector<int> x;
   std::vector<int> x_star;
   std::vector<double> y;
@@ -23,13 +23,13 @@ int main(){
    std::vector<int> instance_id ={1,3,4,5,6};
    std::vector<int> dimension = {100,200,300};
    om.Initilize_problem(1000);
-   om.instance_id=1;
+   om.IOHprofiler_set_instance_id(1);
 
    om.addCSVLogger(logger1);
  
    srand((unsigned)time(NULL)); 
 
-    for(int i = 0; i != om.number_of_variables; ++i){
+    for(int i = 0; i != om.IOHprofiler_get_number_of_variables(); ++i){
         x.push_back(rand()% 2);
     }
     copyVector(x,x_star);
@@ -38,7 +38,7 @@ int main(){
     int tt= 0;
     while(tt < 20) {
       copyVector(x_star,x);
-      for(int i = 0; i != om.number_of_variables; ++i) {
+      for(int i = 0; i != om.IOHprofiler_get_number_of_variables(); ++i) {
         if(rand() / double(RAND_MAX) < 0.001) {
           x[i] = (x[i] + 1) % 2;
         }
@@ -49,11 +49,11 @@ int main(){
         best_value = y[0];
         copyVector(x,x_star);
       }
-      if(best_value == om.number_of_variables) break;
+      if(best_value == om.IOHprofiler_get_number_of_variables()) break;
           tt++;
     }
   //IOHprofiler_csv_logger logger("./","test","alg","alg",true,true,2);
-/*  logger.target_problem(1,100,1);
+  /*logger.target_problem(1,100,1);
   logger.write_line(1,1.0,1.0,1.0,1.0);
   logger.write_line(2,1.0,1.0,3.0,1.0);
   logger.write_line(3,1.0,1.0,2.0,1.0);
@@ -75,7 +75,7 @@ int main(){
     x_star.clear();
      srand((unsigned)time(NULL)); 
 
-    for(int i = 0; i != problem->number_of_variables; ++i){
+    for(int i = 0; i != problem->IOHprofiler_get_number_of_variables(); ++i){
         x.push_back(rand()% 2);
     }
     copyVector(x,x_star);
@@ -84,7 +84,7 @@ int main(){
     int tt= 0;
     while(tt < 20) {
       copyVector(x_star,x);
-      for(int i = 0; i != problem->number_of_variables; ++i) {
+      for(int i = 0; i != problem->IOHprofiler_get_number_of_variables(); ++i) {
         if(rand() / double(RAND_MAX) < 0.001) {
           x[i] = (x[i] + 1) % 2;
         }
@@ -95,10 +95,10 @@ int main(){
         best_value = y[0];
         copyVector(x,x_star);
       }
-      if(best_value == problem->number_of_variables) break;
+      if(best_value == problem->IOHprofiler_get_number_of_variables()) break;
           tt++;
     }
-    std::cout << problem->problem_name << " " << problem->instance_id << " " << problem->number_of_variables << std::endl;
+    std::cout << problem->IOHprofiler_get_problem_name() << " " << problem->IOHprofiler_get_instance_id() << " " << problem->IOHprofiler_get_number_of_variables() << std::endl;
 
   }
 

@@ -27,11 +27,27 @@ public:
   // Experiments on different problems can sure the same logger, but the problem info
   // needs to be set by function "IOHprofiler_logger_target_problem()" for experiment 
   // on each function. So does parameters infomation.
-  IOHprofiler_csv_logger(){};
+  IOHprofiler_csv_logger() {}
+  IOHprofiler_csv_logger(std::string directory, std::string folder_name,
+                         std::string alg_name, std::string alg_info, 
+                         bool complete_triggers, bool update_triggers, int number_interval_triggers,
+                         std::vector<int> time_points_trigger, int number_evaluation_triggers) {
+    this->output_directory = directory;
+    this->folder_name = folder_name;
+    this->algorithm_name =  alg_name;
+    this->algorithm_info = alg_info;
+
+    set_complete_flag(complete_triggers);
+    set_update_flag(update_triggers);
+    set_interval(number_interval_triggers);
+    set_time_points(time_points_trigger,number_evaluation_triggers);
+    openIndex();
+  }
 
   void init_logger(std::string directory, std::string folder_name,
                      std::string alg_name, std::string alg_info, 
-                     bool complete_triggers, bool update_triggers, int number_interval_triggers
+                     bool complete_triggers, bool update_triggers, int number_interval_triggers,
+                     std::vector<int> time_points_trigger, int number_evaluation_triggers
                     );
   //~IOHprofiler_logger();
 
@@ -85,6 +101,14 @@ public:
     this->observer_complete_flag = logger.observer_complete_flag;
     this->observer_update_flag = logger.observer_update_flag;
     this->current_best_fitness = logger.current_best_fitness;
+    copyVector(logger.observer_time_points,this->observer_time_points);
+    this->observer_number_of_evaluations = logger.observer_number_of_evaluations;
+    this->evaluations_value1 = logger.evaluations_value1;
+    this->evaluations_value2 = logger.evaluations_value2;
+    this->time_points_expi = logger.time_points_expi;
+    this->time_points_index = logger.time_points_index;
+    this->evaluations_expi = logger.evaluations_expi;
+
 
     this->last_dimension = logger.last_dimension;
     this->last_problem_id = logger.last_dimension;

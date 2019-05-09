@@ -3,7 +3,8 @@
 
 void IOHprofiler_csv_logger::init_logger(std::string directory, std::string folder_name,
                      std::string alg_name, std::string alg_info, 
-                     bool complete_triggers, bool update_triggers, int number_interval_triggers
+                     bool complete_triggers, bool update_triggers, int number_interval_triggers,
+                     std::vector<int> time_points_trigger, int number_evaluation_triggers
                     ) {
   this->output_directory = directory;
   this->folder_name = folder_name;
@@ -13,7 +14,7 @@ void IOHprofiler_csv_logger::init_logger(std::string directory, std::string fold
   set_complete_flag(complete_triggers);
   set_update_flag(update_triggers);
   set_interval(number_interval_triggers);
-  
+  set_time_points(time_points_trigger,number_evaluation_triggers);
   openIndex();
 }
 
