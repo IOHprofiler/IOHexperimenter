@@ -78,16 +78,69 @@ public:
 
     return false;
   }
+  // End for *dat.
+
+  // Operations for *.tdat
+  void set_time_points(std::vector<int> time_points, int number_of_evaluations) {
+    copyVector(time_points, this->observer_time_points);
+    this->observer_number_of_evaluations = number_of_evaluations;
+  }
+
+  bool time_points_status() {
+    if(this->observer_time_points.size() > 0) return true;
+    if(this->observer_number_of_evaluations > 0) return true;
+    return false;
+  }
+
+  bool time_points_trigger(size_t evaluations) {
+    bool result = false;
+
+    if(evaluations == this->evaluations_value1) {
+      result = true;
+      if(this->time_points_index < this->observer_time_points.size() - 1) {
+        this->time_points_index++;
+      }
+      else {
+        this->time_points_index = 0;
+        this->time_points_expi++;
+      }
+      this->evaluations_value1 = (size_t)(this->observer_time_points[this->time_points_index] * pow(10,this->time_points_expi));
+      result = true;
+    }
+
+
+    if(evaluations == this->evaluations_value2) {
+      while((size_t)floor(pow(10,(double)this->evaluations_expi/(double)this->observer_number_of_evaluations)) <= this->evaluations_value2) {
+        this->evaluations_expi++;
+      }
+      this->evaluations_value2 = (size_t)floor(pow(10,(double)this->evaluations_expi/(double)this->observer_number_of_evaluations));
+      result = true;
+    }
+    return result;
+  }
+  // End for *.tdat
 
   void reset_fitness_for_update_trigger(){
     this->current_best_fitness = DBL_MIN_EXP;
   }
-  // End for *.ddat
-
-
+  
+  // For *.idat
   int observer_interval;
+  
+  // For *.cdat
   bool observer_complete_flag;
+  
+  // For *.dat
   bool observer_update_flag;
+ 
+  // For *.tdat
+  std::vector<int> observer_time_points;
+  int observer_number_of_evaluations;
+  size_t evaluations_value1;
+  size_t evaluations_value2;
+  int time_points_expi = 0;
+  size_t time_points_index = 0;
+  int evaluations_expi = 0;
 
   double current_best_fitness = DBL_MIN_EXP;
 
@@ -95,6 +148,13 @@ public:
     this->observer_interval = observer.observer_interval;
     this->observer_complete_flag = observer.observer_complete_flag;
     this->observer_update_flag = observer.observer_update_flag;
+    copyVector(observer.observer_time_points,this->observer_time_points);
+    this->observer_number_of_evaluations = observer.observer_number_of_evaluations;
+    this->evaluations_value1 = observer.evaluations_value1;
+    this->evaluations_value2 = observer.evaluations_value2;
+    this->time_points_expi = observer.time_points_expi;
+    this->time_points_index = observer.time_points_index;
+    this->evaluations_expi = observer.evaluations_expi;
     this->current_best_fitness = observer.current_best_fitness;
   };
   
