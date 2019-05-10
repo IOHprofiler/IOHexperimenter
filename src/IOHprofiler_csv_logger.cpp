@@ -1,4 +1,4 @@
-#include "IOHprofiler_csv_logger.h"
+#include "IOHprofiler_csv_logger.hpp"
 
 
 void IOHprofiler_csv_logger::init_logger(std::string directory, std::string folder_name,

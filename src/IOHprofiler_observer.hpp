@@ -22,12 +22,22 @@
 //   update_trigger(): set as true as a new better solution is found.
 class IOHprofiler_observer {
 public:
+  
+  IOHprofiler_observer(){};
+  IOHprofiler_observer& operator = (IOHprofiler_observer& observer) {
+    this->observer_interval = observer.observer_interval;
+    this->observer_complete_flag = observer.observer_complete_flag;
+    this->observer_update_flag = observer.observer_update_flag;
+    copyVector(observer.observer_time_points,this->observer_time_points);
+    this->observer_number_of_evaluations = observer.observer_number_of_evaluations;
+    this->evaluations_value1 = observer.evaluations_value1;
+    this->evaluations_value2 = observer.evaluations_value2;
+    this->time_points_expi = observer.time_points_expi;
+    this->time_points_index = observer.time_points_index;
+    this->evaluations_expi = observer.evaluations_expi;
+    this->current_best_fitness = observer.current_best_fitness;
+  };
 
-  /*IOHprofiler_observer(){};
-  virtual void init_logger() ;
-  virtual void write_evaluation_info() ;
-  virtual void close_logger() ;
-*/
   // Operations for *.cdat 
   void set_complete_flag(bool complete_flag) {
     this->observer_complete_flag = complete_flag;
@@ -143,20 +153,6 @@ public:
   int evaluations_expi = 0;
 
   double current_best_fitness = DBL_MIN_EXP;
-
-  IOHprofiler_observer& operator = (IOHprofiler_observer& observer) {
-    this->observer_interval = observer.observer_interval;
-    this->observer_complete_flag = observer.observer_complete_flag;
-    this->observer_update_flag = observer.observer_update_flag;
-    copyVector(observer.observer_time_points,this->observer_time_points);
-    this->observer_number_of_evaluations = observer.observer_number_of_evaluations;
-    this->evaluations_value1 = observer.evaluations_value1;
-    this->evaluations_value2 = observer.evaluations_value2;
-    this->time_points_expi = observer.time_points_expi;
-    this->time_points_index = observer.time_points_index;
-    this->evaluations_expi = observer.evaluations_expi;
-    this->current_best_fitness = observer.current_best_fitness;
-  };
   
 };
 

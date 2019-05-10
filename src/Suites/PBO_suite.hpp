@@ -2,7 +2,7 @@
 #include "../Problems/f_leading_ones.hpp"
 #include "../IOHprofiler_problem.hpp"
 #include "../common.h"
-#include "../IOHprofiler_csv_logger.h"
+#include "../IOHprofiler_csv_logger.hpp"
 // This is a suite consists of pseudo-Boolean problmes. By calling problem from a suite, .info
 // files will be generated with log files.
 

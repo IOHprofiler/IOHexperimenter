@@ -19,7 +19,7 @@ namespace fs = boost::filesystem;
 // Hint: Only use an unique logger for each experiments for an algorithm.
 // But a logger is avaiable for test of an algorithm on multiple prorblems.
 
-class IOHprofiler_csv_logger : public IOHprofiler_observer {
+class IOHprofiler_csv_logger : private IOHprofiler_observer {
 public:
 
   // Once a logger is created, the working directory is established, and data files
@@ -27,7 +27,7 @@ public:
   // Experiments on different problems can sure the same logger, but the problem info
   // needs to be set by function "IOHprofiler_logger_target_problem()" for experiment 
   // on each function. So does parameters infomation.
-  IOHprofiler_csv_logger() {}
+  IOHprofiler_csv_logger() {};
   IOHprofiler_csv_logger(std::string directory, std::string folder_name,
                          std::string alg_name, std::string alg_info, 
                          bool complete_triggers, bool update_triggers, int number_interval_triggers,
@@ -43,46 +43,9 @@ public:
     set_time_points(time_points_trigger,number_evaluation_triggers);
     openIndex();
   }
-
-  void init_logger(std::string directory, std::string folder_name,
-                     std::string alg_name, std::string alg_info, 
-                     bool complete_triggers, bool update_triggers, int number_interval_triggers,
-                     std::vector<int> time_points_trigger, int number_evaluation_triggers
-                    );
-  //~IOHprofiler_logger();
-
-  void write_line(size_t evaluations, double y, double best_so_far_y,
-                           double transformed_y, double best_so_far_transformed_y,
-                           std::vector<double> parameters);
-  void write_line(size_t evaluations, double y, double best_so_far_y,
-                           double transformed_y, double best_so_far_transformed_y);
-
-  void target_problem(int problem_id, int dimension, int instance);
-  void target_suite(std::string suite_name);
-
-  size_t evaluations;
-  std::string folder_name;
-  std::string output_directory;
-  std::string suite_name = "";
-
-  // The information of logged problems.
-  int dimension;
-  int problem_id;
-  int instance;
-  std::string algorithm_name;
-  std::string algorithm_info;
-
-  std::vector<std::string> parameter_name;
-
-  //Variables for logging files
-  std::ofstream cdat;
-  std::ofstream idat;
-  std::ofstream dat;
-  std::ofstream infoFile;
-
-  // For openInfo function, to check if write headline.
-  int last_dimension = 0;
-  int last_problem_id;
+  ~IOHprofiler_csv_logger() {
+    this->clear_logger();
+  };
 
   IOHprofiler_csv_logger& operator = (IOHprofiler_csv_logger& logger) {
     this->evaluations = logger.evaluations;
@@ -113,20 +76,60 @@ public:
     this->last_dimension = logger.last_dimension;
     this->last_problem_id = logger.last_dimension;
   };
-  void write_info(int instance, double optimal, int evaluations);
-  void openInfo(int problem_id, int dimension);
+
+
+  void init_logger(std::string directory, std::string folder_name,
+                     std::string alg_name, std::string alg_info, 
+                     bool complete_triggers, bool update_triggers, int number_interval_triggers,
+                     std::vector<int> time_points_trigger, int number_evaluation_triggers
+                    );
   void clear_logger();
 
-private:
+  void target_problem(int problem_id, int dimension, int instance);
+  void target_suite(std::string suite_name);
+
+  void openInfo(int problem_id, int dimension);
+  void write_info(int instance, double optimal, int evaluations);
+
+  void write_line(size_t evaluations, double y, double best_so_far_y,
+                           double transformed_y, double best_so_far_transformed_y,
+                           std::vector<double> parameters);
+  void write_line(size_t evaluations, double y, double best_so_far_y,
+                           double transformed_y, double best_so_far_transformed_y);
+
   
+
+private:
+  size_t evaluations;
+  std::string folder_name;
+  std::string output_directory;
+  std::string suite_name = "";
+
+  // The information of logged problems.
+  int dimension;
+  int problem_id;
+  int instance;
+  std::string algorithm_name;
+  std::string algorithm_info;
+
+  std::vector<std::string> parameter_name;
+
+  //Variables for logging files
+  std::ofstream cdat;
+  std::ofstream idat;
+  std::ofstream dat;
+  std::ofstream infoFile;
+
+  // For openInfo function, to check if write headline.
+  int last_dimension = 0;
+  int last_problem_id;
+  
+  // Returns a name that is allowed.
+  std::string IOHprofiler_experiment_folder_name();
   int IOHprofiler_create_folder(const std::string path);
 
   // Creating the folder for logging files of the corresponding problem.
   int openIndex();
-
-  
-  // Returns a name that is allowed.
-  std::string IOHprofiler_experiment_folder_name();
 };
 
 #endif

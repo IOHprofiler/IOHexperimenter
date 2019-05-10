@@ -3,7 +3,7 @@
 
 
 #include "Problems/f_one_max.hpp"
-#include "IOHprofiler_csv_logger.h"
+#include "IOHprofiler_csv_logger.hpp"
 #include "Suites/PBO_suite.hpp"
 #include <iostream>
 

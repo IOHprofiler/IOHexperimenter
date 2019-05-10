@@ -4,7 +4,7 @@
 
 #include "common.h"
 #include "IOHprofiler_transformation.hpp"
-#include "IOHprofiler_csv_logger.h"
+#include "IOHprofiler_csv_logger.hpp"
 
 // Basic structure for IOHExperimentor, which is used for generating benchmark problems.
 // To define a new problem, values of 'number_of_variables', 'lowerbound', 'upperbound',
@@ -76,11 +76,7 @@ public:
     if(problem.csv_logger != NULL) this->csv_logger = IOHprofiler_csv_logger(problem.csv_logger);
 
   }
-
-  
-
-  //std::size_t number_of_constraints;
-  //std::vector<double> constraints;
+  ~IOHprofiler_problem(){};
 
   // A common function for evaluating fitness of problems.
   // Raw evaluate process, tranformation operations, and logging process are excuted 
@@ -144,21 +140,15 @@ public:
     }
 
   };
-
-  //virtual double constraints() {};
   
   virtual void internal_evaluate(std::vector<InputType> x, std::vector<double> &y) {
     printf("No evaluate function defined\n");
   };
-  virtual void constraints(std::vector<InputType> x, std::vector<double> c) {
-    printf("No constraints function defined\n");
-  };
-  void internal_transfer_variables(std::vector<InputType> x) {
-    printf("No transfer variables function defined\n");
-  };
-  void internal_transfer_objectives(std::vector<InputType> y) {
-    printf("No transfer objectives function defined\n");
-  };  
+  
+  // virtual double constraints() {};
+  // virtual void constraints(std::vector<InputType> x, std::vector<double> c) {
+  //   printf("No constraints function defined\n");
+  // };
 
   // If want to output csv files, a csv_logger needs to be assigned to the problem.
   // Otherwise there will be no csv files outputed with 'csv_logger == NULL'.
@@ -168,18 +158,14 @@ public:
   };
   //void reset_logger(IOHprofiler_logger logger);
 
-  //Interface for info of problems
-
   void clearLogger() {
     this->csv_logger.clear_logger();
   }
-  
-  
+    
   
   bool IOHprofiler_hit_optimal() {
     return optimalFound;
   }
-
 
   int IOHprofiler_get_problem_id() {
     return this->problem_id;
@@ -328,6 +314,7 @@ public:
   }
 
 private:
+  
   int problem_id;
   int instance_id;
   std::string problem_name;
@@ -348,6 +335,9 @@ private:
   std::vector<InputType> best_variables;
   std::vector<InputType> best_transformed_variables;
   std::vector<double> optimal;
+
+  //std::size_t number_of_constraints;
+  //std::vector<double> constraints;
 
   int evaluations = 0;
   std::vector<double> best_so_far_raw_objectives;
