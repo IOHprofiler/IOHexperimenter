@@ -53,6 +53,8 @@ public:
     
     copyVector(problem.lowerbound,this->lowerbound);
     copyVector(problem.upperbound,this->upperbound);
+    if(problem.evaluate_int_info.size() != 0) copyVector(problem.evaluate_int_info,this->evaluate_int_info);
+    if(problem.evaluate_double_info.size() != 0) copyVector(problem.evaluate_double_info,this->evaluate_double_info);
   
     this->number_of_variables = problem.number_of_variables;
     this->number_of_objectives = problem.number_of_objectives;
@@ -230,6 +232,22 @@ public:
   void IOHprofiler_set_upperbound(std::vector<InputType> upperbound) {
     copyVector(upperbound,this->upperbound);
   };
+
+  std::vector<int> IOHprofiler_get_evaluate_int_info() {
+    return this->evaluate_int_info;
+  };
+
+  void IOHprofiler_set_evaluate_int_info(std::vector<int> evaluate_int_info) {
+    copyVector(evaluate_int_info, this->evaluate_int_info);
+  };
+
+  std::vector<double> IOHprofiler_get_evaluate_double_info() {
+    return this->evaluate_double_info;
+  };
+
+  void IOHprofiler_set_evaluate_double_info(std::vector<double> evaluate_double_info) {
+    copyVector(evaluate_double_info, this->evaluate_double_info);
+  };
  
   int IOHprofiler_get_number_of_variables() {
     return this->number_of_variables;
@@ -269,7 +287,7 @@ public:
     for (int i = 0; i < this->number_of_variables; ++i) {
       this->best_variables.push_back(best_variables);
     }
-  }
+  };
 
   void IOHprofiler_set_best_variables(std::vector<InputType> best_variables) {
     copyVector(best_variables,this->best_variables);
@@ -291,6 +309,13 @@ public:
     copyVector(optimal,this->optimal);
   };
 
+  void IOHprofiler_evaluate_optimal(std::vector<InputType> best_variables) {
+    this->evaluate(best_variables,this->optimal);
+  };
+
+  void IOHprofiler_evaluate_optimal() {
+    this->evaluate(this->best_variables,this->optimal);
+  };
 
   int IOHprofiler_get_evaluations() {
     return evaluations;
@@ -322,6 +347,9 @@ private:
   std::string problem_type;
   std::vector<InputType> lowerbound;
   std::vector<InputType> upperbound;
+  // These are used for potential common used info for evaluating variables.
+  std::vector<int> evaluate_int_info;
+  std::vector<double> evaluate_double_info;
 
   std::size_t number_of_variables;
   std::size_t number_of_objectives;

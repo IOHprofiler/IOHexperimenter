@@ -12,22 +12,10 @@ public:
     IOHprofiler_set_problem_name("OneMax");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
-    // problem_id = 1;
-    // instance_id = 1;
-    // problem_name = "OneMax";
-    // problem_type = "pseudo_Boolean_problem";
-
-    // number_of_objectives = 1;
-  
   }
   //~OneMax();
   
   OneMax(int instance_id, int dimension) {
-    // this->problem_id = 1;
-    // this->instance_id = instance_id;
-    // this->problem_name = "OneMax";
-    // this->problem_type = "pseudo_Boolean_problem";
-    // number_of_objectives = 1;
     IOHprofiler_set_problem_id(1);
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("OneMax");
@@ -52,7 +40,7 @@ public:
     for(int i = 0; i != n; ++i) {
       result += x[i];
     }
-    y.push_back(result);
+    y.push_back((double)result);
   };
 };
 
