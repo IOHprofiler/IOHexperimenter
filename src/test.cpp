@@ -21,37 +21,38 @@ int main(){
   std::vector<int> x;
   std::vector<int> x_star;
   std::vector<double> y;
-   om.Initilize_problem(1000);
-   om.IOHprofiler_set_instance_id(1);
+  om.Initilize_problem(1000);
+  om.IOHprofiler_set_instance_id(1);
+  // If no logger is added, there will be not any output files, but users
+  // can still get fitness values.
+  om.addCSVLogger(logger1);
 
-   om.addCSVLogger(logger1);
- 
-   srand((unsigned)time(NULL)); 
+  srand((unsigned)time(NULL)); 
 
-    for(int i = 0; i != om.IOHprofiler_get_number_of_variables(); ++i){
-        x.push_back(rand()% 2);
+  for(int i = 0; i != om.IOHprofiler_get_number_of_variables(); ++i){
+      x.push_back(rand()% 2);
+  }
+  copyVector(x,x_star);
+  // Get fitness.
+  om.evaluate(x,y);
+  best_value = y[0];
+  int tt= 0;
+  while(tt < 20) {
+    copyVector(x_star,x);
+    for(int i = 0; i != om.IOHprofiler_get_number_of_variables(); ++i) {
+      if(rand() / double(RAND_MAX) < 0.001) {
+        x[i] = (x[i] + 1) % 2;
+      }
     }
-    copyVector(x,x_star);
-    // Get fitness.
+
     om.evaluate(x,y);
-    best_value = y[0];
-    int tt= 0;
-    while(tt < 20) {
-      copyVector(x_star,x);
-      for(int i = 0; i != om.IOHprofiler_get_number_of_variables(); ++i) {
-        if(rand() / double(RAND_MAX) < 0.001) {
-          x[i] = (x[i] + 1) % 2;
-        }
-      }
-
-      om.evaluate(x,y);
-      if(y[0] > best_value) {
-        best_value = y[0];
-        copyVector(x,x_star);
-      }
-      if(best_value == om.IOHprofiler_get_number_of_variables()) break;
-          tt++;
+    if(y[0] > best_value) {
+      best_value = y[0];
+      copyVector(x,x_star);
     }
+    if(best_value == om.IOHprofiler_get_number_of_variables()) break;
+        tt++;
+  }
 
 
   // In this session multiple problems in PBO suite will be tested.
@@ -64,6 +65,8 @@ int main(){
   PBO_suite pbo(problem_id,instance_id,dimension);
   IOHprofiler_csv_logger logger1;
   logger1.init_logger("./","test","alg","alg",true,true,2,time_points,3);
+  // If no logger is added, there will be not any output files, but users
+  // can still get fitness values.
   pbo.addCSVLogger(logger1);
   IOHprofiler_problem<int> *problem;
 
