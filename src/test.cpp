@@ -13,15 +13,14 @@ int main(){
   double best_value;
   IOHprofiler_csv_logger logger;
   logger.init_logger("./","test","alg","alg",true,true,2,time_points,3);
-  IOHprofiler_csv_logger logger1;
-  logger1.init_logger("./","test","alg","alg",true,true,2,time_points,3);
+  
+  // In this session, the algorithm will be tested on only one problem (OneMax).
+  // Therefore we declare a OneMax class, and get the fitness by the statement
+  // om.evaluate().
   OneMax om;
   std::vector<int> x;
   std::vector<int> x_star;
   std::vector<double> y;
-   std::vector<int> problem_id = {1,2};
-   std::vector<int> instance_id ={1,3,4,5,6};
-   std::vector<int> dimension = {100,200,300};
    om.Initilize_problem(1000);
    om.IOHprofiler_set_instance_id(1);
 
@@ -33,6 +32,7 @@ int main(){
         x.push_back(rand()% 2);
     }
     copyVector(x,x_star);
+    // Get fitness.
     om.evaluate(x,y);
     best_value = y[0];
     int tt= 0;
@@ -52,23 +52,22 @@ int main(){
       if(best_value == om.IOHprofiler_get_number_of_variables()) break;
           tt++;
     }
-  //IOHprofiler_csv_logger logger("./","test","alg","alg",true,true,2);
-  /*logger.target_problem(1,100,1);
-  logger.write_line(1,1.0,1.0,1.0,1.0);
-  logger.write_line(2,1.0,1.0,3.0,1.0);
-  logger.write_line(3,1.0,1.0,2.0,1.0);
-  logger.write_line(4,1.0,1.0,3.0,1.0);
-  logger.write_line(5,1.0,1.0,4.0,1.0);
-  logger.write_line(6,1.0,1.0,5.0,1.0);
-  logger.write_line(7,1.0,1.0,6.0,1.0);
-  logger.write_line(8,1.0,1.0,1.0,1.0);
-  */
 
+
+  // In this session multiple problems in PBO suite will be tested.
+  // In the example, specfic problems are selected from PBO_suite.
+  // User can also get a complete problem collection with default 
+  // instances and dimension by the statement '  PBO_suite pbo;'
+  std::vector<int> problem_id = {1,2};
+  std::vector<int> instance_id ={1,3,4,5,6};
+  std::vector<int> dimension = {100,200,300};
   PBO_suite pbo(problem_id,instance_id,dimension);
-  pbo.addCSVLogger(logger);
+  IOHprofiler_csv_logger logger1;
+  logger1.init_logger("./","test","alg","alg",true,true,2,time_points,3);
+  pbo.addCSVLogger(logger1);
   IOHprofiler_problem<int> *problem;
 
-
+  // Problems are tested one by one until 'get_next_problem' returns NULL.
   while(problem = pbo.get_next_problem()){
 
     x.clear();
