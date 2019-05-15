@@ -25,7 +25,7 @@ int main(){
   om.IOHprofiler_set_instance_id(1);
   // If no logger is added, there will be not any output files, but users
   // can still get fitness values.
-  om.addCSVLogger(logger1);
+  om.addCSVLogger(logger);
 
   srand((unsigned)time(NULL)); 
 
