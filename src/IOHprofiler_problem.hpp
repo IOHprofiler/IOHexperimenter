@@ -98,7 +98,7 @@ public:
       } else if(instance_id > 50 && instance_id <= 100) {
         transformation.transform_vars_sigma(best_transformed_variables,instance_id);
       }
-      internal_evaluate(best_transformed_variables,optimal);
+      optimal = internal_evaluate(best_transformed_variables);
       if(instance_id > 1) {
         transformation.transform_obj_scale(optimal,instance_id);
         transformation.transform_obj_shift(optimal,instance_id);
@@ -113,7 +113,7 @@ public:
       transformation.transform_vars_sigma(x,instance_id);
     }
     
-    internal_evaluate(x,y);
+    y = internal_evaluate(x);
     
     raw_objectives.reserve(number_of_objectives);
     copyVector(y,raw_objectives);
@@ -142,9 +142,72 @@ public:
     }
 
   };
+
+  std::vector<double> evaluate(std::vector<InputType> x) {
+    std::vector<double> y;
+    if(evaluations == 0) {
+      best_so_far_raw_objectives.reserve(number_of_objectives);
+      best_so_far_transformed_objectives.reserve(number_of_objectives);
+      for(int i = 0; i !=  number_of_objectives; ++i) {
+        best_so_far_raw_objectives.push_back(DBL_MIN_EXP);
+        best_so_far_transformed_objectives.push_back(DBL_MIN_EXP);
+      }
+
+      copyVector(best_variables,best_transformed_variables);
+      if(instance_id > 1 && instance_id <= 50) { 
+        transformation.transform_vars_xor(best_transformed_variables,instance_id);
+      } else if(instance_id > 50 && instance_id <= 100) {
+        transformation.transform_vars_sigma(best_transformed_variables,instance_id);
+      }
+      optimal = internal_evaluate(best_transformed_variables);
+      if(instance_id > 1) {
+        transformation.transform_obj_scale(optimal,instance_id);
+        transformation.transform_obj_shift(optimal,instance_id);
+      }
+
+    }
+    ++evaluations;
+
+    if(instance_id > 1 && instance_id <= 50) { 
+      transformation.transform_vars_xor(x,instance_id);
+    } else if(instance_id > 50 && instance_id <= 100) {
+      transformation.transform_vars_sigma(x,instance_id);
+    }
+    
+    y = internal_evaluate(x);
+    
+    raw_objectives.reserve(number_of_objectives);
+    copyVector(y,raw_objectives);
+    if(compareObjectives(y,best_so_far_raw_objectives)) {
+      copyVector(y,best_so_far_raw_objectives);
+      best_so_far_raw_evaluations = evaluations;
+    }
+    
+    if(instance_id > 1) {
+      transformation.transform_obj_scale(y,instance_id);
+      transformation.transform_obj_shift(y,instance_id);
+    }
+
+    if(compareObjectives(y,best_so_far_transformed_objectives)){
+      copyVector(y,best_so_far_transformed_objectives);
+      best_so_far_transformed_evaluations = evaluations;
+    }
+    if(compareVector(y,optimal)) {
+      optimalFound = true;
+    }
+
+    if(&this->csv_logger != NULL) {
+      (this->csv_logger).write_line(this->evaluations,
+                                  this->raw_objectives[0],this->best_so_far_raw_objectives[0],
+                                  y[0],this->best_so_far_transformed_objectives[0]);
+    }
+    return y;
+  };
   
-  virtual void internal_evaluate(std::vector<InputType> x, std::vector<double> &y) {
+  virtual std::vector<double> internal_evaluate(std::vector<InputType> x) {
+    std::vector<double> result;
     printf("No evaluate function defined\n");
+    return result;
   };
   
   // virtual double constraints() {};
@@ -310,11 +373,11 @@ public:
   };
 
   void IOHprofiler_evaluate_optimal(std::vector<InputType> best_variables) {
-    this->evaluate(best_variables,this->optimal);
+    this->optimal = this->evaluate(best_variables);
   };
 
   void IOHprofiler_evaluate_optimal() {
-    this->evaluate(this->best_variables,this->optimal);
+    this->optimal = this->evaluate(this->best_variables);
   };
 
   int IOHprofiler_get_evaluations() {

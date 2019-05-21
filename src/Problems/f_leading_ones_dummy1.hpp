@@ -36,8 +36,8 @@ public:
     IOHprofiler_set_optimal(floor((double)(dimension * 0.5)));
   };
 
-  void internal_evaluate(std::vector<int> x,std::vector<double> &y) {
-    y.clear();
+  std::vector<double> internal_evaluate(std::vector<int> x) {
+    std::vector<double> y;
     int n = IOHprofiler_get_evaluate_int_info().size();
     int result = 0;
     for(int i = 0; i != n; ++i) {
@@ -47,6 +47,7 @@ public:
         break;
     }
     y.push_back((double)result);
+    return y;
   };
 };
 

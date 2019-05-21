@@ -56,8 +56,8 @@ public:
     return result;
   }
 
-  void internal_evaluate(std::vector<int> x,std::vector<double> &y) {
-    y.clear();
+  std::vector<double> internal_evaluate(std::vector<int> x) {
+    std::vector<double> y;
     int n = x.size();
     double result = 0.0, cor;
     for(int k = 1; k != n; ++k) {
@@ -66,6 +66,7 @@ public:
     }
     result = (double)(n*n)/2.0/result;
     y.push_back(result);
+    return y;
   };
 };
 

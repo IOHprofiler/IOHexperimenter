@@ -36,8 +36,8 @@ public:
     return (x % N + N) %N;
   }
 
-  void internal_evaluate(std::vector<int> x,std::vector<double> &y) {
-    y.clear();
+  std::vector<double> internal_evaluate(std::vector<int> x) {
+    std::vector<double> y;
     int result= 0, n = x.size();
 
     for(int i = 0; i < n; ++i) {
@@ -49,6 +49,7 @@ public:
     }
 
     y.push_back((double)result);
+    return y;
   };
 };
 

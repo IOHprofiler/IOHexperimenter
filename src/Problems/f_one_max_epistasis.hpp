@@ -37,8 +37,8 @@ public:
     IOHprofiler_set_best_variables(1);
   };
 
-  void internal_evaluate(std::vector<int> x,std::vector<double> &y) {
-    y.clear();
+  std::vector<double> internal_evaluate(std::vector<int> x) {
+    std::vector<double> y;
     std::vector<int> new_variables = epistasis(x,4);
     int n = new_variables.size();
     int result = 0;
@@ -46,6 +46,7 @@ public:
       result += new_variables[i];
     }
     y.push_back(result);
+    return y;
   };
 };
 

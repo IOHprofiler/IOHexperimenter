@@ -42,8 +42,8 @@ public:
   }
 
 
-  void internal_evaluate(std::vector<int> x,std::vector<double> &y) {
-    y.clear();
+std::vector<double> internal_evaluate(std::vector<int> x) {
+    std::vector<double> y;
     int i, j,index;
     int n = x.size();
     int result= 0;
@@ -73,6 +73,7 @@ public:
     }
     result=num_of_ones - (number_of_variables_even*sum_edges_in_the_set);
     y.push_back((double)result);
+    return y;
   };
 };
 

@@ -38,8 +38,8 @@ public:
     else return element2;
   }
 
-  void internal_evaluate(std::vector<int> x,std::vector<double> &y) {
-    y.clear();
+  std::vector<double> internal_evaluate(std::vector<int> x) {
+    std::vector<double> y;
     double result;
     int n = x.size();
     int index,j,i,k,l;
@@ -104,6 +104,7 @@ public:
     }
     result = (double) (number_of_queens_on_board - (C*raws_penalty) - (C*columns_penalty) -(C*k_penalty) - (C*l_penalty));
     y.push_back(result);
+    return y;
   };
 };
 

@@ -34,8 +34,8 @@ public:
 
   };
 
-  void internal_evaluate(std::vector<int> x,std::vector<double> &y) {
-    y.clear();
+  std::vector<double> internal_evaluate(std::vector<int> x) {
+    std::vector<double> y;
     int n = x.size();
     int result = 0;
     for(int i = 0; i != n; ++i) {
@@ -43,6 +43,7 @@ public:
     }
     result = IOHprofiler_get_evaluate_double_info()[(int)(result+0.5)];
     y.push_back(result);
+    return y;
   };
 };
 
