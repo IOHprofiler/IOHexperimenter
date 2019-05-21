@@ -14,6 +14,7 @@
 #include <climits>
 #include <cfloat>
 #include <algorithm>
+#include <memory>
 
 //The maximum length for path of IOHprofiler files.
 #define IOHprofiler_PATH_MAX 200
