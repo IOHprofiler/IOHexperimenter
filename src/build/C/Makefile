@@ -12,5 +12,5 @@ clean:
 
 ########################################################################
 ## Programs 
-IOHprofiler_experiment : ../common* ../IOHprofiler* IOHprofiler_experiment.cpp
-	g++ ${CCFLAGS} -o IOHprofiler_experiment ../common* ../IOHprofiler* IOHprofiler_experiment.cpp ${LDFLAGS}
+IOHprofiler_experiment : ../../common* ../../IOHprofiler* IOHprofiler_experiment.cpp
+	g++ ${CCFLAGS} -o IOHprofiler_experiment ../../common* ../../IOHprofiler* IOHprofiler_experiment.cpp ${LDFLAGS}

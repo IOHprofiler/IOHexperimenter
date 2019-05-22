@@ -1,7 +1,7 @@
-#include "../Problems/f_one_max.hpp"
-#include "../IOHprofiler_csv_logger.hpp"
-#include "../Suites/PBO_suite.hpp"
-#include "../Experiments/IOHprofiler_experimenter.hpp"
+#include "../../Problems/f_one_max.hpp"
+#include "../../IOHprofiler_csv_logger.hpp"
+#include "../../Suites/PBO_suite.hpp"
+#include "../../Experiments/IOHprofiler_experimenter.hpp"
 
 std::vector<int> Initialization(int dimension) {
   std::vector<int> x;
@@ -62,9 +62,8 @@ void _run_problem() {
   
   // If no logger is added, there will be not any output files, but users
   // can still get fitness values.
-  IOHprofiler_csv_logger logger;
   std::vector<int> time_points{1,2,5};
-  logger.init_logger("./","run_problem","EA","EA",true,true,2,time_points,3);
+  IOHprofiler_csv_logger logger("./","run_problem","EA","EA",true,true,2,time_points,3);
   om.addCSVLogger(logger);
 
   std::vector<int> x;
@@ -105,9 +104,8 @@ void _run_suite() {
 
   // If no logger is added, there will be not any output files, but users
   // can still get fitness values.
-  IOHprofiler_csv_logger logger1;
   std::vector<int> time_points{1,2,5};
-  logger1.init_logger("./","run_suite","EA","EA",true,true,2,time_points,3);
+  IOHprofiler_csv_logger logger1("./","run_suite","EA","EA",true,true,2,time_points,3);
   pbo.addCSVLogger(logger1);
   std::shared_ptr<IOHprofiler_problem<int>> problem;
 
