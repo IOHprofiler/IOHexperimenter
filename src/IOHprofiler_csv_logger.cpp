@@ -44,7 +44,7 @@ int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) {
 //     until there is no such a folder or file. 
 std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name() {
   std::string renamed_directory = this->output_directory + IOHprofiler_path_separator + this->folder_name;
-  std::string temp_folder_name;
+  std::string temp_folder_name = this->folder_name;
   int index = 0;
   while(fs::exists(renamed_directory.c_str())) {
     ++index;
