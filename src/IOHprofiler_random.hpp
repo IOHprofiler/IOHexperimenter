@@ -3,62 +3,122 @@
 
 #include "common.h"
 
+#define PI 3.1415926
 
-class Random_methods{
+class IOHprofiler_random{
 public:
-  void IOHprofiler_unif(std::vector<double> &r, const size_t N,  long inseed) {
-      /* generates N uniform numbers with starting seed */
-      r.reserve(N);
-      long aktseed;
-      long tmp;
-      long rgrand[32];
-      long aktrand;
-      long i;
-
-      if (inseed < 0)
-          inseed = -inseed;
-      if (inseed < 1)
-          inseed = 1;
-      aktseed = inseed;
-      for (i = 39; i >= 0; i--) {
-          tmp = (int)floor((double)aktseed / (double)127773);
-          aktseed = 16807 * (aktseed - tmp * 127773) - 2836 * tmp;
-          if (aktseed < 0)
-              aktseed = aktseed + 2147483647;
-          if (i < 32)
-              rgrand[i] = aktseed;
-      }
-      aktrand = rgrand[0];
-      for (i = 0; i < N; i++) {
-          tmp = (int)floor((double)aktseed / (double)127773);
-          aktseed = 16807 * (aktseed - tmp * 127773) - 2836 * tmp;
-          if (aktseed < 0)
-              aktseed = aktseed + 2147483647;
-          tmp = (int)floor((double)aktrand / (double)67108865);
-          aktrand = rgrand[tmp];
-          rgrand[tmp] = aktseed;
-          r.push_back((double)aktrand / 2.147483647e9);
-          if (r[i] == 0.) {
-              r[i] = 1e-99;
-          }
-      }
-      return;
+  IOHprofiler_random() {
+    _seed_index = 0;
+    for(int i = 0; i < 32; ++i) {
+      this->_seed[i] = (long)time(NULL);
+    }
   }
 
-   void IOHprofiler_gauss(std::vector<double> &g, const size_t N, const long seed) {
-      g.reserve(N);
-      size_t i;
-
-      std::vector<double> uniftmp;
-      IOHprofiler_unif(uniftmp, 2 * N, seed);
-
-      for (i = 0; i < N; i++) {
-          g.push_back(sqrt(-2 * log(uniftmp[i])) * cos(2 * 3.1415926 * uniftmp[N + i]));
-          if (g[i] == 0.)
-              g[i] = 1e-99;
-      }
-      return;
+  IOHprofiler_random(long seed) {
+    _seed_index = 0;
+    for (int i = 64; i >= 0; --i)
+    {
+      seed = _lcg_rand(seed);
+      if(i < 32) this->_seed[i] = seed;
+    } 
   }
+
+  long _lcg_rand(long inseed) {
+    // multiplier
+    long a = 16807;
+    // modulus
+    long  m = 2147483647;
+    // modulusdiv multiplier
+    long q = 127773;
+    // modulus mod multiplier
+    long r = 2836;
+
+    long tmp = (long)floor((double)inseed / (double)q);
+    long new_inseed =  (long)(a * (inseed - tmp * q) - r * tmp);
+    if(new_inseed < 0)
+        new_inseed = new_inseed + m;
+    return new_inseed;
+  }
+
+  std::vector<double> IOHprofiler_uniform_rand(const size_t N, const long inseed) {
+    std::vector<double> rand_vec;
+    rand_vec.reserve(N);
+    long rand_seed[32];
+    long seed;
+    long rand_value;
+
+    if (inseed < 0) seed = -inseed;
+    if (seed < 1) seed = 1;
+
+    seed = inseed;
+    for (int i = 64; i >= 0; --i) {
+      seed = _lcg_rand(seed);
+      if(i < 32) rand_seed[i] = seed;
+    }
+    
+    int seed_index = 0;
+    seed = rand_seed[0];
+    for (int i = 0; i < N; ++i) {
+      rand_value = _lcg_rand(seed);
+
+      rand_seed[seed_index] = rand_value;
+      seed_index = (int)floor((double)rand_value / (double)67108865);
+      seed = rand_seed[seed_index];
+
+
+      rand_vec.push_back((double)rand_value/2.147483647e9);
+      if (rand_vec[i] == 0.) rand_vec[i] = 1e-99;
+    }
+    return rand_vec;
+  }
+
+  std::vector<double> IOHprofiler_gauss(const size_t N, const long inseed) {
+    std::vector<double> rand_vec;
+    std::vector<double> uniform_rand_vec;
+    rand_vec.reserve(N);
+
+    long seed;
+    long rand_value;
+
+    if (inseed < 0) seed = -inseed;
+    if (seed < 1) seed = 1;
+
+    uniform_rand_vec = IOHprofiler_uniform_rand(2 * N, seed);
+
+    for (int i = 0; i < N; i++) {
+        rand_vec.push_back(sqrt(-2 * log(uniform_rand_vec[i])) * cos(2 * PI * uniform_rand_vec[N + i]));
+        if (rand_vec[i] == 0.) rand_vec[i] = 1e-99;
+    }
+    return rand_vec;
+  }
+
+  double IOHprofiler_uniform_rand() {
+    double r;
+    long _rand = _lcg_rand(this->_seed[_seed_index]);
+    
+    this->_seed[this->_seed_index] = _rand;
+    this->_seed_index = (int)floor((double)_rand / (double)67108865);
+    
+
+    r = (double)_rand/2.147483647e9;
+    if (r == 0.) r = 1e-99;
+    return r;
+  }
+
+  double IOHprofiler_normal_rand() {
+    double r;
+    double u1, u2;
+    
+    u1 = IOHprofiler_uniform_rand();
+    u2 = IOHprofiler_uniform_rand();
+
+    r = sqrt(-2 * log(u1) * cos(2 * PI * u2));
+    return r;
+  }
+
+private:
+  long _seed[32];
+  size_t _seed_index;
 };
 
 #endif
