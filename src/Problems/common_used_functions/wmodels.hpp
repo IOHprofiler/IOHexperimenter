@@ -5,7 +5,7 @@
 
 #include "../../IOHprofiler_random.hpp"
 
-Random_methods random_methods;
+IOHprofiler_random random_methods;
 
 std::vector<int> dummy(int number_of_variables, double select_rate, long inseed) {
   std::vector<int> position;
@@ -19,7 +19,7 @@ std::vector<int> dummy(int number_of_variables, double select_rate, long inseed)
     position.push_back(i);
   }
 
-  random_methods.IOHprofiler_unif(random_numbers,(size_t)select_num,inseed);
+  random_numbers = random_methods.IOHprofiler_uniform_rand((size_t)select_num,inseed);
   for (int i = 0; i < select_num; ++i){
     random_index.push_back((int)floor(random_numbers[i] * 1e4 / 1e4 * number_of_variables));
   }

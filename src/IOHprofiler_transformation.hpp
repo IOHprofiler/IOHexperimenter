@@ -5,7 +5,7 @@
 #include "common.h"
 #include "IOHprofiler_random.hpp"
 
-class IOHprofiler_transformation: public Random_methods{
+class IOHprofiler_transformation: public IOHprofiler_random{
 public:
   int xor_compute(const int x1, const int x2){
       return (int) x1 != x2;
@@ -16,7 +16,7 @@ public:
     std::vector<double> random_x;
     int xor_value;
 
-    IOHprofiler_unif(random_x,x.size(),seed);
+    random_x = IOHprofiler_uniform_rand(x.size(),seed);
     for(int i = 0; i < x.size(); ++i){
       xor_value = (int)(2 * floor(1e4 * random_x[i]) / 1e4 / 1);
       x[i] = xor_compute(x[i],xor_value);
@@ -42,7 +42,7 @@ public:
       index[i] = i;
     }
 
-    IOHprofiler_unif(random_x,x.size(),seed);
+    random_x = IOHprofiler_uniform_rand(x.size(),seed);
     for(int i = 0; i != N; ++i){
       t = (int)floor(random_x[i] * N);
       assert(t >= 0 && t < N);
@@ -60,7 +60,7 @@ public:
 
   void transform_obj_scale(std::vector<double> &y, const int seed){
     std::vector<double> scale;
-    IOHprofiler_unif(scale,1,seed);
+    scale = IOHprofiler_uniform_rand(1,seed);
     scale[0] = scale[0] * 1e4 / 1e4 * 4.8 + 0.2;
     for (int i = 0; i < y.size(); ++i){
       y[i] = y[i] * scale[0];
@@ -69,7 +69,7 @@ public:
 
   void transform_obj_shift(std::vector<double> &y, const int seed){
     std::vector<double> shift;
-    IOHprofiler_unif(shift,1,seed);
+    shift = IOHprofiler_uniform_rand(1,seed);
     shift[0] = shift[0] * 1e4 / 1e4 * 2000 - 1000;
     for (int i = 0; i < y.size(); ++i){
       y[i] = y[i] + shift[0];
