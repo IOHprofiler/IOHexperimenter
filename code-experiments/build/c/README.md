@@ -41,7 +41,9 @@ With these files, you can invoke **make** to compile, then run your experiment. 
 	*	`number_interval_triggers`: is for .idat files.
 
 ###	Implementation of Algorithm <a name="Algorithms"></a>
-`user_algorithm.c` includes the implementation of algorithms to be tested. Take the exiting `user_algorithm.c` as an example, a random local search algorithm is implemented in the function **User_Algorithm()**. 
+[user_algorithm.c](https://github.com/IOHprofiler/IOHexperimenter/blob/master/code-experiments/build/c/user_algorithm.c) includes the implementation of the algorithm to be tested, a random local search algorithm is implemented in the function **User_Algorithm()**. 
+
+Arguments of the function **User_Algorithm()** provide information of the problem to be tested. And by the function `evaluate(offspring, y)`, the fitness of `offspring` is evaluated and stored in `y`. where `y` is a vector. In addition, the following two extern variables are used to set the budget of evaluations for each run and the number of independent runs.
 
 ```
 static const size_t BUDGET_MULTIPLIER = 50;
@@ -52,11 +54,5 @@ configs the maximal budget for evaluations as dimension * 50.
 static const size_t INDEPENDENT_RESTARTS = 1;
 ```
 configs that the algorithm will be tested once for each problem.
-
-```
-evalute(parent,y)
-```
-returns the fitness of **parent** to **y**. The size of **parent**
-should be equal to the dimension of the problem.
 
 To test your algorithm, please replace the content of **User_Algorithm()**.
