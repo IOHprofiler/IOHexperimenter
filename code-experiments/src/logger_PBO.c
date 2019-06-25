@@ -599,7 +599,7 @@ static IOHprofiler_problem_t *logger_PBO(IOHprofiler_observer_t *observer, IOHpr
 
   
   logger_PBO->f_flag = 1;
-  if(strcmp(observer->base_evaluation_triggers,"") != 0)
+  if(strcmp(observer->base_evaluation_triggers,"") != 0 && observer->number_target_triggers != 0)
     logger_PBO->t_flag = 1;
   if(observer->number_interval_triggers != 0)
     logger_PBO->i_flag = 1;
