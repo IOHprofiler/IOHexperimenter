@@ -7,30 +7,28 @@
 class LeadingOnes : public IOHprofiler_problem<int> {
 public:
    LeadingOnes() {
-
-    IOHprofiler_set_problem_id(2);
-    IOHprofiler_set_instance_id(1);
     IOHprofiler_set_problem_name("LeadingOnes");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
+    IOHprofiler_set_lowerbound(0);
+    IOHprofiler_set_upperbound(1);
+    IOHprofiler_set_best_variables(1);
   }
   //~LeadingOnes();
   
   LeadingOnes(int instance_id, int dimension) {
-    IOHprofiler_set_problem_id(2);
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("LeadingOnes");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
-
+    IOHprofiler_set_lowerbound(0);
+    IOHprofiler_set_upperbound(1);
+    IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
     IOHprofiler_set_optimal((double)dimension);
   };
 
@@ -46,6 +44,14 @@ public:
     }
     y.push_back((double)result);
     return y;
+  };
+
+  static LeadingOnes * createInstance() {
+    return new LeadingOnes();
+  };
+
+  static LeadingOnes * createInstance(int instance_id, int dimension) {
+    return new LeadingOnes(instance_id, dimension);
   };
 };
 

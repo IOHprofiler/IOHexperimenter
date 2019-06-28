@@ -57,6 +57,11 @@ std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name() {
 
 // This function is to be invoked by IOHprofiler_problem class.
 void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int instance){
+  // Handle for the last problem.
+  if(infoFile.is_open()) write_info(this->instance,this->found_optimal[0],this->optimal_evaluations);
+
+  optimal_evaluations = 0;
+  found_optimal.clear();
   this->problem_id = problem_id;
   this->dimension = dimension;
   this->instance = instance;
@@ -106,6 +111,7 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
     dat.open(dat_name.c_str(),std::ofstream::app);
     dat << dat_header << '\n';
   }
+  openInfo(problem_id,dimension);
   
 };
 
@@ -164,36 +170,28 @@ void IOHprofiler_csv_logger::write_line(size_t evaluations, double y, double bes
  * Here we suppose that problems are to be tested by order of problem_id,
  * which means that an infoFile will not be opened twice.*/
 void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension) {
-  if(infoFile.is_open()) {
-    if(problem_id != this->last_problem_id) {
-      infoFile.close();
-      std::string infoFile_name = this->output_directory + IOHprofiler_path_separator 
-                            + this->folder_name + IOHprofiler_path_separator
-                            + "IOHprofiler_f" + std::to_string(problem_id) + "_i1"
-                            + ".info";
-      infoFile.open(infoFile_name.c_str());
-      infoFile << "suite = " << suite_name << ", funcId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
-      infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << "_i1.dat";     
-      this->last_problem_id = problem_id;
-      this->last_dimension = dimension;
-    } else if(dimension != this->last_dimension) {
-      infoFile << "\nsuite = " << suite_name << ", funcId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
-      infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << "_i1.dat";    
-      this->last_problem_id = problem_id;
-      this->last_dimension = dimension;
-    }
-  }
-  else {
+  std::string titleflag = "";
+  
+  if(problem_id != this->last_problem_id) {
+    infoFile.close();
     std::string infoFile_name = this->output_directory + IOHprofiler_path_separator 
-                            + this->folder_name + IOHprofiler_path_separator
-                            + "IOHprofiler_f" + std::to_string(problem_id) + "_i1"
-                            + ".info";
-    infoFile.open(infoFile_name.c_str());
-    infoFile << "suite = \'" << suite_name << "\', funcId = " << problem_id << ", DIM = " << dimension << ", algId = \'" << this->algorithm_name << "\', algInfo = \'" << this->algorithm_info << "\'\n%\n";
-    infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" <<  dimension << "_i1.dat"; 
+                          + this->folder_name + IOHprofiler_path_separator
+                          + "IOHprofiler_f" + std::to_string(problem_id) + "_i1"
+                          + ".info";
+    if(fs::exists(infoFile_name.c_str())) titleflag = "\n";
+    infoFile.open(infoFile_name.c_str(),std::ofstream::app);
+    infoFile << titleflag;
+    infoFile << "suite = " << suite_name << ", funcId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
+    infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << "_i1.dat";     
+    this->last_problem_id = problem_id;
+    this->last_dimension = dimension;
+  } else if(dimension != this->last_dimension) {
+    infoFile << "\nsuite = " << suite_name << ", funcId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
+    infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << "_i1.dat";    
     this->last_problem_id = problem_id;
     this->last_dimension = dimension;
   }
+  
 }
 
 void IOHprofiler_csv_logger::write_info(int instance, double optimal, int evaluations) {
@@ -201,9 +199,18 @@ void IOHprofiler_csv_logger::write_info(int instance, double optimal, int evalua
   infoFile << ", " << instance << ":" << evaluations << "|" << optimal; 
 }
 
+void IOHprofiler_csv_logger::update_logger_info(size_t optimal_evaluations, std::vector<double> found_optimal) {
+  this->optimal_evaluations = optimal_evaluations;
+  copyVector(found_optimal,this->found_optimal);
+}
+
 void IOHprofiler_csv_logger::clear_logger() {
   if(cdat.is_open()) cdat.close();
   if(idat.is_open()) idat.close();
   if(dat.is_open())  dat.close();
-  if(infoFile.is_open()) infoFile.close();
+  if(infoFile.is_open()) {
+    write_info(this->instance,this->found_optimal[0],this->optimal_evaluations);
+    infoFile.close();
+  }
 }
+

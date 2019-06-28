@@ -6,30 +6,29 @@
 class Ising_Triangle : public IOHprofiler_problem<int> {
 public:
   Ising_Triangle() {
-
-    IOHprofiler_set_problem_id(21);
-    IOHprofiler_set_instance_id(1);
     IOHprofiler_set_problem_name("Ising_Triangle");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
+    IOHprofiler_set_lowerbound(0);
+    IOHprofiler_set_upperbound(1);
+    IOHprofiler_set_best_variables(1);
   }
   //~Ising_Triangle();
   
   Ising_Triangle(int instance_id, int dimension) {
-    IOHprofiler_set_problem_id(21);
+
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Ising_Triangle");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
-
+    IOHprofiler_set_lowerbound(0);
+    IOHprofiler_set_upperbound(1);
+    IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
   };
   
   int modulo_ising_triangle(int x,int N){
@@ -60,6 +59,14 @@ public:
     }
     y.push_back((double)result);
     return y;
+  };
+
+  static Ising_Triangle * createInstance() {
+    return new Ising_Triangle();
+  };
+
+  static Ising_Triangle * createInstance(int instance_id, int dimension) {
+    return new Ising_Triangle(instance_id, dimension);
   };
 };
 

@@ -6,31 +6,26 @@
 class LABS : public IOHprofiler_problem<int> {
 public:
   LABS() {
-
-    IOHprofiler_set_problem_id(18);
-    IOHprofiler_set_instance_id(1);
     IOHprofiler_set_problem_name("LABS");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
+    IOHprofiler_set_lowerbound(0);
+    IOHprofiler_set_upperbound(1);
   }
   //~LABS();
   
   LABS(int instance_id, int dimension) {
-    IOHprofiler_set_problem_id(18);
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("LABS");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
-
+    IOHprofiler_set_lowerbound(0);
+    IOHprofiler_set_upperbound(1);
     Initilize_problem(dimension);
   }
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
-    IOHprofiler_set_optimal(DBL_MAX);
   };
 
   double correlation(const std::vector<int> x, const int number_of_variables, int k)
@@ -67,6 +62,14 @@ public:
     result = (double)(n*n)/2.0/result;
     y.push_back(result);
     return y;
+  };
+
+  static LABS * createInstance() {
+    return new LABS();
+  };
+
+  static LABS * createInstance(int instance_id, int dimension) {
+    return new LABS(instance_id, dimension);
   };
 };
 

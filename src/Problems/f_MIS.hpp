@@ -6,30 +6,28 @@
 class MIS : public IOHprofiler_problem<int> {
 public:
   MIS() {
-
-    IOHprofiler_set_problem_id(22);
-    IOHprofiler_set_instance_id(1);
     IOHprofiler_set_problem_name("MIS");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
+    IOHprofiler_set_lowerbound(0);
+    IOHprofiler_set_upperbound(1);
+    IOHprofiler_set_best_variables(1);
   }
   //~MIS();
   
   MIS(int instance_id, int dimension) {
-    IOHprofiler_set_problem_id(22);
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("MIS");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
-
+    IOHprofiler_set_lowerbound(0);
+    IOHprofiler_set_upperbound(1);
+    IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
     IOHprofiler_set_optimal((double)(dimension/2.0)+1.0);
   };
   
@@ -74,6 +72,14 @@ std::vector<double> internal_evaluate(std::vector<int> x) {
     result=num_of_ones - (number_of_variables_even*sum_edges_in_the_set);
     y.push_back((double)result);
     return y;
+  };
+
+  static MIS * createInstance() {
+    return new MIS();
+  };
+
+  static MIS * createInstance(int instance_id, int dimension) {
+    return new MIS(instance_id, dimension);
   };
 };
 

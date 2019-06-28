@@ -1,32 +1,11 @@
 #ifndef _IOHPROFILER_SUITE_HPP
 #define _IOHPROFILER_SUITE_HPP
 
-#include "Problems/f_one_max.hpp"
-#include "Problems/f_leading_ones.hpp"
-#include "Problems/f_linear.hpp"
-#include "Problems/f_one_max_dummy1.hpp"
-#include "Problems/f_one_max_dummy2.hpp"
-#include "Problems/f_one_max_neutrality.hpp"
-#include "Problems/f_one_max_epistasis.hpp"
-#include "Problems/f_one_max_ruggedness1.hpp"
-#include "Problems/f_one_max_ruggedness2.hpp"
-#include "Problems/f_one_max_ruggedness3.hpp"
-#include "Problems/f_leading_ones_dummy1.hpp"
-#include "Problems/f_leading_ones_dummy2.hpp"
-#include "Problems/f_leading_ones_neutrality.hpp"
-#include "Problems/f_leading_ones_epistasis.hpp"
-#include "Problems/f_leading_ones_ruggedness1.hpp"
-#include "Problems/f_leading_ones_ruggedness2.hpp"
-#include "Problems/f_leading_ones_ruggedness3.hpp"
-#include "Problems/f_labs.hpp"
-#include "Problems/f_ising_1D.hpp"
-#include "Problems/f_ising_2D.hpp"
-#include "Problems/f_ising_triangle.hpp"
-#include "Problems/f_MIS.hpp"
-#include "Problems/f_N_queens.hpp"
+#include "IOHprofiler_problem_generator.hpp"
 #include "IOHprofiler_problem.hpp"
-#include "common.h"
-#include "IOHprofiler_csv_logger.hpp"
+
+using PROBLEM_NAME_ID =  std::map<std::string, int>; 
+using PROBLEM_ID_NAME =  std::map<int, std::string>; 
 
 template <class InputType> class IOHprofiler_suite {
 public:
@@ -36,32 +15,42 @@ public:
 
   IOHprofiler_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension){};
 
-  void init_problem_set(){
-    size = number_of_problems * number_of_instances * number_of_dimensions;
-    for(int i = 0; i != number_of_problems; ++i)
-      for (int j = 0; j != number_of_instances; ++j)
-        for (int h = 0; h != number_of_dimensions; ++h)
-          add_problem(problem_id[i],instance_id[j],dimension[h]);
-  };
-
-  void virtual add_problem(int problem_id, int instance_id, int dimension){
-  };
-
   // The function to acquire problems of the suite one by one until NULL returns.
-  std::shared_ptr<IOHprofiler_problem<InputType>> get_next_problem(int problem_index) {
-    current_problem =  problem_list[problem_index];
-    current_problem->addCSVLogger(this->csv_logger);
+  std::shared_ptr<IOHprofiler_problem<InputType>> get_next_problem() {
+    instance_index++;
+    if(instance_index == number_of_instances) {
+      instance_index = 0;
+      dimension_index++;
+      if(dimension_index == number_of_dimensions) {
+        dimension_index = 0;
+        problem_index++;
+        if(problem_index == number_of_problems) return nullptr;
+      }
+    }
+    current_problem = get_problem(problem_id_name_map[problem_id[problem_index]],instance_id[instance_index],dimension[dimension_index]);
+    if(this->csv_logger) current_problem->addCSVLogger(this->csv_logger);
     return current_problem;
   };
 
+  virtual void registerProblem() {};
 
+  std::shared_ptr<IOHprofiler_problem<InputType>> get_problem(std::string problem_name, int instance, int dimension) {
+    std::shared_ptr<IOHprofiler_problem<InputType>> p = genericGenerator<IOHprofiler_problem<InputType>>::instance().create(problem_name);
+    p->IOHprofiler_set_problem_id(problem_name_id_map[problem_name]);
+    p->IOHprofiler_set_instance_id(instance);
+    p->IOHprofiler_set_number_of_variables(dimension);
+    //p->reset_problem();
+    if(p->IOHprofiler_get_optimal().size() == 0) 
+        std::cout << "asafdsa";
+    return p;
+  }
 
   // Add a csvLogger for the suite. 
   // The logger of the suite will only control .info files.
   // To output files for evaluation of problems, this logger needs to be added to problem_list.
-  void addCSVLogger(IOHprofiler_csv_logger &logger) {
+  void addCSVLogger(std::shared_ptr<IOHprofiler_csv_logger> logger) {
     this->csv_logger = logger;
-    this->csv_logger.target_suite(this->suite_name);
+    this->csv_logger->target_suite(this->suite_name);
   };
 
   int IOHprofiler_suite_get_number_of_problems() {
@@ -92,7 +81,7 @@ public:
     return this->suite_name;
   };
 
-  std::vector<IOHprofiler_problem<int> > get_problems(){
+  std::vector< std::shared_ptr< IOHprofiler_problem<InputType> > > get_problems(){
     return this->problem_list;
   };
 
@@ -115,14 +104,12 @@ public:
     this->suite_name = suite_name;
   };
 
-  std::vector< std::shared_ptr< IOHprofiler_problem<InputType> > > problem_list;
-
-  int get_size(){
-    return this->size;
-  };
+  void mapIDTOName(int id, std::string name){
+    problem_id_name_map[id] = name;
+    problem_name_id_map[name] = id;
+  }
 
 private:
-  int size = 0;
 
   std::string suite_name = "default";
   int number_of_problems;
@@ -133,10 +120,17 @@ private:
   std::vector<int> instance_id;
   std::vector<int> dimension;
 
-  // An common interface of the problem to be tested.
-  std::shared_ptr< IOHprofiler_problem<InputType> > current_problem = NULL;
+  int problem_index = 0;
+  int instance_index = 0;
+  int dimension_index = 0;
 
-  IOHprofiler_csv_logger csv_logger;
+  PROBLEM_ID_NAME problem_id_name_map;
+  PROBLEM_NAME_ID problem_name_id_map;
+
+  // An common interface of the problem to be tested.
+  std::shared_ptr< IOHprofiler_problem<InputType> > current_problem = nullptr;
+
+  std::shared_ptr<IOHprofiler_csv_logger> csv_logger = nullptr;
 };
 
 #endif

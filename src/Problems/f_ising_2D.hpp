@@ -6,30 +6,28 @@
 class Ising_2D : public IOHprofiler_problem<int> {
 public:
   Ising_2D() {
-
-    IOHprofiler_set_problem_id(20);
-    IOHprofiler_set_instance_id(1);
     IOHprofiler_set_problem_name("Ising_2D");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
+    IOHprofiler_set_lowerbound(0);
+    IOHprofiler_set_upperbound(1);
+    IOHprofiler_set_best_variables(1);
   }
   //~Ising_2D();
   
   Ising_2D(int instance_id, int dimension) {
-    IOHprofiler_set_problem_id(20);
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Ising_2D");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
-
+    IOHprofiler_set_lowerbound(0);
+    IOHprofiler_set_upperbound(1);
+    IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
   };
 
   int modulo_ising_2D(int x,int N) {
@@ -64,6 +62,14 @@ public:
 
     y.push_back((double)result);
     return y;
+  };
+
+  static Ising_2D * createInstance() {
+    return new Ising_2D();
+  };
+
+  static Ising_2D * createInstance(int instance_id, int dimension) {
+    return new Ising_2D(instance_id, dimension);
   };
 };
 

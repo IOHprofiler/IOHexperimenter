@@ -27,7 +27,8 @@ public:
   // Experiments on different problems can sure the same logger, but the problem info
   // needs to be set by function "IOHprofiler_logger_target_problem()" for experiment 
   // on each function. So does parameters infomation.
-  IOHprofiler_csv_logger() {};
+  IOHprofiler_csv_logger();
+ 
   IOHprofiler_csv_logger(std::string directory, std::string folder_name,
                          std::string alg_name, std::string alg_info, 
                          bool complete_triggers, bool update_triggers, int number_interval_triggers,
@@ -47,35 +48,37 @@ public:
     this->clear_logger();
   };
 
-  IOHprofiler_csv_logger& operator = (IOHprofiler_csv_logger& logger) {
-    this->evaluations = logger.evaluations;
-    this->folder_name = logger.folder_name;
-    this->output_directory = logger.output_directory;
-    this->suite_name = logger.suite_name;
+  // IOHprofiler_csv_logger& operator = (IOHprofiler_csv_logger& logger) {
+  //   this->evaluations = logger.evaluations;
+  //   this->folder_name = logger.folder_name;
+  //   this->output_directory = logger.output_directory;
+  //   this->suite_name = logger.suite_name;
 
-    this->dimension = logger.dimension;
-    this->problem_id = logger.problem_id;
-    this->instance = logger.instance;
-    this->algorithm_info = logger.algorithm_info;
-    this->algorithm_name = logger.algorithm_name;
-    copyVector(logger.parameter_name,this->parameter_name);
+  //   this->dimension = logger.dimension;
+  //   this->problem_id = logger.problem_id;
+  //   this->instance = logger.instance;
+  //   this->algorithm_info = logger.algorithm_info;
+  //   this->algorithm_name = logger.algorithm_name;
+  //   copyVector(logger.parameter_name,this->parameter_name);
 
-    this->observer_interval = logger.observer_interval;
-    this->observer_complete_flag = logger.observer_complete_flag;
-    this->observer_update_flag = logger.observer_update_flag;
-    this->current_best_fitness = logger.current_best_fitness;
-    copyVector(logger.observer_time_points,this->observer_time_points);
-    this->observer_number_of_evaluations = logger.observer_number_of_evaluations;
-    this->evaluations_value1 = logger.evaluations_value1;
-    this->evaluations_value2 = logger.evaluations_value2;
-    this->time_points_expi = logger.time_points_expi;
-    this->time_points_index = logger.time_points_index;
-    this->evaluations_expi = logger.evaluations_expi;
+  //   this->observer_interval = logger.observer_interval;
+  //   this->observer_complete_flag = logger.observer_complete_flag;
+  //   this->observer_update_flag = logger.observer_update_flag;
+  //   this->current_best_fitness = logger.current_best_fitness;
+  //   copyVector(logger.observer_time_points,this->observer_time_points);
+  //   this->observer_number_of_evaluations = logger.observer_number_of_evaluations;
+  //   this->evaluations_value1 = logger.evaluations_value1;
+  //   this->evaluations_value2 = logger.evaluations_value2;
+  //   this->time_points_expi = logger.time_points_expi;
+  //   this->time_points_index = logger.time_points_index;
+  //   this->evaluations_expi = logger.evaluations_expi;
 
+  //   copyVector(logger.found_optimal,this->found_optimal);
+  //   this->optimal_evaluations = logger.optimal_evaluations;
 
-    this->last_dimension = logger.last_dimension;
-    this->last_problem_id = logger.last_dimension;
-  };
+  //   this->last_dimension = logger.last_dimension;
+  //   this->last_problem_id = logger.last_problem_id;
+  // };
 
 
   void init_logger(std::string directory, std::string folder_name,
@@ -96,10 +99,12 @@ public:
                            std::vector<double> parameters);
   void write_line(size_t evaluations, double y, double best_so_far_y,
                            double transformed_y, double best_so_far_transformed_y);
+  void update_logger_info(size_t optimal_evaluations, std::vector<double> found_optimal);
 
   
 
 private:
+
   size_t evaluations;
   std::string folder_name;
   std::string output_directory;
@@ -115,14 +120,17 @@ private:
   std::vector<std::string> parameter_name;
 
   //Variables for logging files
-  std::ofstream cdat;
-  std::ofstream idat;
-  std::ofstream dat;
-  std::ofstream infoFile;
+  std::fstream cdat;
+  std::fstream idat;
+  std::fstream dat;
+  std::fstream infoFile;
+
+  std::vector<double> found_optimal;
+  size_t optimal_evaluations;
 
   // For openInfo function, to check if write headline.
   int last_dimension = 0;
-  int last_problem_id;
+  int last_problem_id = -1;
   
   // Returns a name that is allowed.
   std::string IOHprofiler_experiment_folder_name();
