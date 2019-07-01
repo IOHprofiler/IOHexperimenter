@@ -1,8 +1,13 @@
+/// \file f_one_max_neutrality.hpp
+/// \brief cpp file for class f_one_max_neutrality.
+///
+/// This file implements a OneMax problem with neutrality transformation method from w-model.
+/// The parameter mu is chosen as 3.
+///
+/// \author Furong Ye
+/// \date 2019-06-27
 #ifndef _F_ONE_MAX_NEUTRALITY_H
 #define _F_ONE_MAX_NEUTRALITY_H
-
-// This file implements a OneMax problem with neutrality transformation method from w-model.
-// The parameter mu is chosen as 3.
 
 #include "../IOHprofiler_problem.hpp"
 #include "common_used_functions/wmodels.hpp"
@@ -17,8 +22,7 @@ public:
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);  
   }
-  //~OneMax_Neutrality();
-  
+
   OneMax_Neutrality(int instance_id, int dimension) {
 
     IOHprofiler_set_instance_id(instance_id);
@@ -30,6 +34,8 @@ public:
     IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
+  
+  ~OneMax_Neutrality() {};
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
@@ -41,7 +47,7 @@ public:
     std::vector<int> new_variables = neutrality(x,3);
     int n = new_variables.size();
     int result = 0;
-    for(int i = 0; i != n; ++i) {
+    for (int i = 0; i != n; ++i) {
       result += new_variables[i];
     }
     y.push_back(result);

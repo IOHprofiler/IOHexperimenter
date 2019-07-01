@@ -1,3 +1,10 @@
+/// \file f_ising_2D.hpp
+/// \brief cpp file for class f_ising_2D.
+///
+/// A detailed file description.
+///
+/// \author Naama Horesh and Furong Ye
+/// \date 2019-06-27
 #ifndef _F_ISING_TWOD_H
 #define _F_ISING_TWOD_H
 
@@ -13,8 +20,7 @@ public:
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
   }
-  //~Ising_2D();
-  
+
   Ising_2D(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Ising_2D");
@@ -25,6 +31,7 @@ public:
     IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
+  ~Ising_2D() {};
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);

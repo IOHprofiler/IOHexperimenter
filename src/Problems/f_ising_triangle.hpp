@@ -1,3 +1,10 @@
+/// \file f_ising_triangle.hpp
+/// \brief cpp file for class f_ising_triangle.
+///
+/// A detailed file description.
+///
+/// \author Naama Horesh and Furong Ye
+/// \date 2019-06-27
 #ifndef _F_ISING_TRIANGLE_H
 #define _F_ISING_TRIANGLE_H
 
@@ -13,8 +20,6 @@ public:
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
   }
-  //~Ising_Triangle();
-  
   Ising_Triangle(int instance_id, int dimension) {
 
     IOHprofiler_set_instance_id(instance_id);
@@ -26,12 +31,13 @@ public:
     IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
+  ~Ising_Triangle() {};
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
   };
   
-  int modulo_ising_triangle(int x,int N){
+  int modulo_ising_triangle(int x,int N) {
     return (x % N + N) %N;
   }
 

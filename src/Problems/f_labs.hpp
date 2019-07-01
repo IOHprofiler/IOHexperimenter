@@ -1,3 +1,10 @@
+/// \file f_labs.hpp
+/// \brief cpp file for class f_labs.
+///
+/// A detailed file description.
+///
+/// \author Furong Ye
+/// \date 2019-06-27
 #ifndef _F_LABS_H
 #define _F_LABS_H
 
@@ -12,8 +19,6 @@ public:
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
   }
-  //~LABS();
-  
   LABS(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("LABS");
@@ -23,6 +28,8 @@ public:
     IOHprofiler_set_upperbound(1);
     Initilize_problem(dimension);
   }
+  
+  ~LABS() {};
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
@@ -33,18 +40,16 @@ public:
     int x1,x2;
     double result;
     result = 0.0;
-    for(int i = 0 ; i < number_of_variables - k; ++i){
-        if(x[i] == 0){
-            x1 = -1;
+    for (int i = 0 ; i < number_of_variables - k; ++i) {
+        if (x[i] == 0) {
+          x1 = -1;
+        } else {
+          x1 = 1;
         }
-        else{
-            x1 = 1;
-        }
-        if(x[i + k] == 0){
-            x2 = -1;
-        }
-        else{
-            x2 = 1;
+        if (x[i + k] == 0) {
+          x2 = -1;
+        } else {
+          x2 = 1;
         }
         result += x1 * x2;
     }
@@ -55,7 +60,7 @@ public:
     std::vector<double> y;
     int n = x.size();
     double result = 0.0, cor;
-    for(int k = 1; k != n; ++k) {
+    for (int k = 1; k != n; ++k) {
       cor = correlation(x,n,k);
       result += cor * cor;
     }

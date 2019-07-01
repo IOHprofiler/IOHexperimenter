@@ -17,8 +17,20 @@
 #include <memory>
 #include <map>
 
-//The maximum length for path of IOHprofiler files.
+/// < The maximum length for path of IOHprofiler files.
 #define IOHprofiler_PATH_MAX 200
+
+/// < The maximum allowed testing dimension.
+#define IOHprofiler_MAX_DIMENSION 20000
+
+/// < Default problem id as not being assigned to a suite.
+#define DEFAULT_PROBLEM_ID 0
+
+/// < Default instance_id
+#define DEFAULT_INSTANCE 1
+
+/// < Default dimension
+#define DEFAULT_DIMENSION 100
 
 void IOH_error(std::string error_info);
 

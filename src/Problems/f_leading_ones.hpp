@@ -1,3 +1,10 @@
+/// \file f_leading_ones.hpp
+/// \brief cpp file for class f_leading_ones.
+///
+/// A detailed file description.
+///
+/// \author Furong Ye
+/// \date 2019-06-27
 #ifndef _F_LEADING_ONES_H
 #define _F_LEADING_ONES_H
 
@@ -14,8 +21,6 @@ public:
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
   }
-  //~LeadingOnes();
-  
   LeadingOnes(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("LeadingOnes");
@@ -26,6 +31,8 @@ public:
     IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
+  
+  ~LeadingOnes() {};
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
@@ -36,7 +43,7 @@ public:
     std::vector<double> y;
     int n = x.size();
     int result = 0;
-    for(int i = 0; i != n; ++i) {
+    for (int i = 0; i != n; ++i) {
       if(x[i] == 1)
         result = i + 1;
       else

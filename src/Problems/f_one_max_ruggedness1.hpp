@@ -1,3 +1,10 @@
+/// \file f_one_max_ruggedness1.hpp
+/// \brief cpp file for class f_one_max_ruggedness1.
+///
+/// A detailed file description.
+///
+/// \author Furong Ye
+/// \date 2019-06-27
 #ifndef _F_ONE_MAX_RUGGEDNESSONE_H
 #define _F_ONE_MAX_RUGGEDNESSONE_H
 
@@ -14,8 +21,7 @@ public:
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
   }
-  //~OneMax_Ruggedness1();
-  
+
   OneMax_Ruggedness1(int instance_id, int dimension) {
 
     IOHprofiler_set_instance_id(instance_id);
@@ -27,6 +33,8 @@ public:
     IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
+  
+  ~OneMax_Ruggedness1() {};
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
@@ -36,7 +44,7 @@ public:
     std::vector<double> y;
     int n = x.size();
     int result = 0;
-    for(int i = 0; i != n; ++i) {
+    for (int i = 0; i != n; ++i) {
       result += x[i];
     }
     result = ruggedness1(result,n);

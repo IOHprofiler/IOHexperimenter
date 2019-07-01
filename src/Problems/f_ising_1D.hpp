@@ -1,3 +1,10 @@
+/// \file f_ising_1D.hpp
+/// \brief cpp file for class f_ising_1D.
+///
+/// A detailed file description.
+///
+/// \author Naama Horesh and Furong Ye
+/// \date 2019-06-27
 #ifndef _F_ISING_ONED_H
 #define _F_ISING_ONED_H
 
@@ -13,8 +20,6 @@ public:
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
   }
-  //~Ising_1D();
-  
   Ising_1D(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Ising_1D");
@@ -25,6 +30,7 @@ public:
     IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
+  ~Ising_1D() {};
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
@@ -38,7 +44,7 @@ public:
     std::vector<double> y;
     int result= 0, n = x.size();
 
-    for(int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i) {
         int first_neig=x[modulo_ising_1D((i+1), n)];
         int second_neig=x[modulo_ising_1D((i -1), n)];
 

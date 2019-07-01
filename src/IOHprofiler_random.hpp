@@ -1,42 +1,45 @@
+/// \file IOHprofiler_random.hpp
+/// \brief Head file for class IOHprofiler_transformation.
+///
+/// A detailed file description.
+///
+/// \author Furong Ye
+/// \date 2019-06-27
 #ifndef _IOHPROFILER_RANDOM_HPP
 #define _IOHPROFILER_RANDOM_HPP
 
 #include "common.h"
 
-#define PI 3.1415926
+#define PI 3.14159265359
 
-class IOHprofiler_random{
+class IOHprofiler_random {
 public:
   IOHprofiler_random() {
     _seed_index = 0;
-    for(int i = 0; i < 32; ++i) {
+    for (int i = 0; i < 32; ++i) {
       this->_seed[i] = (long)time(NULL);
     }
   }
 
   IOHprofiler_random(long seed) {
     _seed_index = 0;
-    for (int i = 64; i >= 0; --i)
-    {
+    for (int i = 64; i >= 0; --i) {
       seed = _lcg_rand(seed);
       if(i < 32) this->_seed[i] = seed;
     } 
   }
 
   long _lcg_rand(long inseed) {
-    // multiplier
-    long a = 16807;
-    // modulus
-    long  m = 2147483647;
-    // modulusdiv multiplier
-    long q = 127773;
-    // modulus mod multiplier
-    long r = 2836;
+    long a = 16807; /// < multiplier.
+    long  m = 2147483647; /// < modulus.
+    long q = 127773; /// < modulusdiv multiplier.
+    long r = 2836; /// < modulus mod multiplier.
 
     long tmp = (long)floor((double)inseed / (double)q);
     long new_inseed =  (long)(a * (inseed - tmp * q) - r * tmp);
-    if(new_inseed < 0)
-        new_inseed = new_inseed + m;
+    if (new_inseed < 0) {
+      new_inseed = new_inseed + m;
+    }
     return new_inseed;
   }
 
@@ -47,13 +50,19 @@ public:
     long seed;
     long rand_value;
 
-    if (inseed < 0) seed = -inseed;
-    if (seed < 1) seed = 1;
+    if (inseed < 0) {
+      seed = -inseed;
+    }
+    if (seed < 1) {
+      seed = 1;
+    }
 
     seed = inseed;
     for (int i = 64; i >= 0; --i) {
       seed = _lcg_rand(seed);
-      if(i < 32) rand_seed[i] = seed;
+      if(i < 32) {
+        rand_seed[i] = seed;
+      }
     }
     
     int seed_index = 0;
@@ -67,7 +76,9 @@ public:
 
 
       rand_vec.push_back((double)rand_value/2.147483647e9);
-      if (rand_vec[i] == 0.) rand_vec[i] = 1e-99;
+      if (rand_vec[i] == 0.) {
+        rand_vec[i] = 1e-99;
+      }
     }
     return rand_vec;
   }
@@ -80,14 +91,20 @@ public:
     long seed;
     long rand_value;
 
-    if (inseed < 0) seed = -inseed;
-    if (seed < 1) seed = 1;
+    if (inseed < 0) {
+      seed = -inseed;
+    }
+    if (seed < 1) {
+      seed = 1;
+    }
 
     uniform_rand_vec = IOHprofiler_uniform_rand(2 * N, seed);
 
     for (int i = 0; i < N; i++) {
-        rand_vec.push_back(sqrt(-2 * log(uniform_rand_vec[i])) * cos(2 * PI * uniform_rand_vec[N + i]));
-        if (rand_vec[i] == 0.) rand_vec[i] = 1e-99;
+      rand_vec.push_back(sqrt(-2 * log(uniform_rand_vec[i])) * cos(2 * PI * uniform_rand_vec[N + i]));
+      if (rand_vec[i] == 0.) {
+        rand_vec[i] = 1e-99;
+      }
     }
     return rand_vec;
   }
@@ -101,7 +118,9 @@ public:
     
 
     r = (double)_rand/2.147483647e9;
-    if (r == 0.) r = 1e-99;
+    if (r == 0.) {
+      r = 1e-99;
+    }
     return r;
   }
 
@@ -121,4 +140,4 @@ private:
   size_t _seed_index;
 };
 
-#endif
+#endif //_IOHPROFILER_RANDOM_HPP

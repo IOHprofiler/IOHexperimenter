@@ -67,7 +67,11 @@ void _run_problem() {
   // If no logger is added, there will be not any output files, but users
   // can still get fitness values.
   std::vector<int> time_points{1,2,5};
-  std::shared_ptr<IOHprofiler_csv_logger> logger(new IOHprofiler_csv_logger("./","run_problem","EA","EA",true,true,2,time_points,3));
+  std::shared_ptr<IOHprofiler_csv_logger> logger(new IOHprofiler_csv_logger("./","run_problem","EA","EA"));
+  logger->set_complete_flag(true);
+  logger->set_interval(0);
+  logger->set_time_points(time_points,10);
+  logger->activate_logger();
   om.addCSVLogger(std::move(logger));
 
   std::vector<int> x;
@@ -109,12 +113,13 @@ void _run_suite() {
   // If no logger is added, there will be not any output files, but users
   // can still get fitness values.
   std::vector<int> time_points{1,2,5};
-  std::shared_ptr<IOHprofiler_csv_logger> logger1(new IOHprofiler_csv_logger("./","run_suite","EA","EA",true,true,2,time_points,3));
+  std::shared_ptr<IOHprofiler_csv_logger> logger1(new IOHprofiler_csv_logger("./","run_suite","EA","EA"));
+  logger1->set_complete_flag(true);
+  logger1->set_interval(2);
+  logger1->set_time_points(time_points,3);
+  logger1->activate_logger();
   pbo.addCSVLogger(logger1);
   std::shared_ptr<IOHprofiler_problem<int>> problem;
-
-  
-
 
   // Problems are tested one by one until 'get_next_problem' returns NULL.
   while(problem = pbo.get_next_problem()){

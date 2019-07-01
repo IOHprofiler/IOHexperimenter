@@ -1,7 +1,12 @@
+/// \file wmodels.cpp
+/// \brief cpp file for class w-models.
+///
+/// A detailed file description.
+///
+/// \author Furong Ye
+/// \date 2019-06-27
 #ifndef _F_WMODELS_H
 #define _F_WMODELS_H
-
-// W-model
 
 #include "../../IOHprofiler_random.hpp"
 
@@ -15,21 +20,21 @@ std::vector<int> dummy(int number_of_variables, double select_rate, long inseed)
   int select_num = (int)floor((double)(number_of_variables * select_rate));
   
   position.reserve(number_of_variables);
-  for(int i = 0; i != number_of_variables; ++i){
+  for (int i = 0; i != number_of_variables; ++i) {
     position.push_back(i);
   }
 
   random_numbers = random_methods.IOHprofiler_uniform_rand((size_t)select_num,inseed);
-  for (int i = 0; i < select_num; ++i){
+  for (int i = 0; i < select_num; ++i) {
     random_index.push_back((int)floor(random_numbers[i] * 1e4 / 1e4 * number_of_variables));
   }
-  for(int i = 0; i != select_num; ++i) {
+  for (int i = 0; i != select_num; ++i) {
     temp = position[i];
     position[i] = position[random_index[i]];
     position[random_index[i]] = temp;
   }
 
-  // This is a stl algorithm.
+  /// This is a stl algorithm.
   partial_sort(position.begin(),position.begin()+select_num,position.end());
   return position;
 }
@@ -41,18 +46,24 @@ std::vector<int> neutrality(std::vector<int> variables, int mu) {
 
   new_variables.reserve(n);
   int i = 0, temp = 0;
-  while(i != number_of_variables) {
+  while (i != number_of_variables) {
     temp += variables[i];
-    if((i+1) % mu == 0 && i != 0) {
-      if(temp >= mu / 2.0) new_variables.push_back(1);
-      else new_variables.push_back(0);
+    if ((i+1) % mu == 0 && i != 0) {
+      if (temp >= mu / 2.0) {
+        new_variables.push_back(1);
+      } else {
+        new_variables.push_back(0);
+      }
       temp = 0;
     }
     i++;
   }
-  if(i % mu != 0) {
-    if(temp >= (i - i / mu * mu) * 2) new_variables.push_back(1);
-    else new_variables.push_back(0);
+  if (i % mu != 0) {
+    if (temp >= (i - i / mu * mu) * 2) {
+      new_variables.push_back(1);
+    } else {
+      new_variables.push_back(0);
+    }
   }
 
   return new_variables;
@@ -64,14 +75,17 @@ std::vector<int> epistasis(std::vector<int> variables, int v) {
   std::vector<int> new_variables;
   new_variables.reserve(number_of_variables);
   h = 0;
-  while(h + v - 1 < number_of_variables) {
+  while (h + v - 1 < number_of_variables) {
     int i = 0;
     while(i < v) {
       epistasis_result = -1;
       for (int j = 0; j < v; ++j) {
-        if((v - j - 1) != ((v - i - 1) - 1) % 4) {
-          if(epistasis_result == -1) epistasis_result = variables[h+j];
-          else epistasis_result = (epistasis_result != variables[h+j]);
+        if ((v - j - 1) != ((v - i - 1) - 1) % 4) {
+          if (epistasis_result == -1) {
+            epistasis_result = variables[h+j];
+          } else {
+            epistasis_result = (epistasis_result != variables[h+j]);
+          }
         }
       }
       new_variables.push_back(epistasis_result);
@@ -82,12 +96,15 @@ std::vector<int> epistasis(std::vector<int> variables, int v) {
   if(number_of_variables - h > 0) {
     v = number_of_variables - h;
     int i = 0;
-    while(i < v) {
+    while (i < v) {
       epistasis_result = -1;
       for (int j = 0; j < v; ++j) {
-        if((v - j - 1) != ((v - i - 1) - 1) % 4) {
-          if(epistasis_result == -1) epistasis_result = variables[h+j];
-          else epistasis_result = (epistasis_result != variables[h+j]);
+        if ((v - j - 1) != ((v - i - 1) - 1) % 4) {
+          if (epistasis_result == -1) {
+            epistasis_result = variables[h+j];
+          } else {
+            epistasis_result = (epistasis_result != variables[h+j]);
+          }
         }
       }
       new_variables.push_back(epistasis_result);
@@ -101,16 +118,13 @@ std::vector<int> epistasis(std::vector<int> variables, int v) {
 double ruggedness1(double y, int number_of_variables) {
   double ruggedness_y, s;
   s = (double)number_of_variables;
-  if(y == s){
+  if(y == s) {
     ruggedness_y = ceil(y/2.0) + 1.0;
-  }
-  else if(y < s && number_of_variables % 2 == 0){
+  } else if (y < s && number_of_variables % 2 == 0) {
     ruggedness_y = floor(y / 2.0) + 1.0;
-  }
-  else if(y < s && number_of_variables % 2 != 0){
+  } else if (y < s && number_of_variables % 2 != 0) {
     ruggedness_y = ceil(y / 2.0) + 1.0;
-  }
-  else{
+  } else {
     ruggedness_y = y;
     assert(y <= s);
   }
@@ -120,38 +134,32 @@ double ruggedness1(double y, int number_of_variables) {
 double ruggedness2(double y, int number_of_variables) {
   double ruggedness_y;
   int tempy=(int)(y+0.5);
-  if(tempy == number_of_variables){
+  if (tempy == number_of_variables) {
     ruggedness_y = y;
-  }
-  else if(tempy < number_of_variables && tempy % 2 == 0 && number_of_variables % 2 == 0){
+  } else if (tempy < number_of_variables && tempy % 2 == 0 && number_of_variables % 2 == 0) {
     ruggedness_y = y + 1.0;
-  }
-  else if(tempy < number_of_variables && tempy % 2 == 0 && number_of_variables % 2 != 0){
+  } else if (tempy < number_of_variables && tempy % 2 == 0 && number_of_variables % 2 != 0) {
     ruggedness_y = (y - 1.0) > 0 ? (y - 1.0) : 0;
-  }
-  else if(tempy < number_of_variables && tempy % 2 != 0 && number_of_variables % 2 == 0){
+  } else if (tempy < number_of_variables && tempy % 2 != 0 && number_of_variables % 2 == 0) {
     ruggedness_y = (y - 1.0) > 0 ? (y - 1.0) : 0;
-  }
-  else if(tempy < number_of_variables && tempy % 2 != 0 && number_of_variables % 2 != 0){
+  } else if (tempy < number_of_variables && tempy % 2 != 0 && number_of_variables % 2 != 0) {
     ruggedness_y = y + 1.0;
-  }
-  else{
+  } else {
     ruggedness_y = y;
     assert(tempy <= number_of_variables);
   }
-  
   return ruggedness_y;
 }
 
 std::vector<double> ruggedness3(int number_of_variables) {
   std::vector<double> ruggedness_fitness(number_of_variables,0.0);
   
-  for(int j = 1; j <= number_of_variables/5; ++j){
-    for(int k = 0; k < 5; ++k){
+  for (int j = 1; j <= number_of_variables/5; ++j) {
+    for (int k = 0; k < 5; ++k) {
       ruggedness_fitness[number_of_variables-5*j+k] = (double)(number_of_variables - 5 * j + (4-k));
     }
   }
-  for(int k = 0; k < number_of_variables - number_of_variables / 5 * 5; ++k){
+  for (int k = 0; k < number_of_variables - number_of_variables / 5 * 5; ++k) {
     ruggedness_fitness[k] = (double)(number_of_variables - number_of_variables / 5 * 5 - 1 - k);
   }
   ruggedness_fitness[number_of_variables] = (double)number_of_variables;

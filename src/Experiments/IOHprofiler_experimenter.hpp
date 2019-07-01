@@ -18,10 +18,12 @@ public:
     this->conf.readcfg(configFileName);
     if(conf.get_suite_name() == "PBO")
     configSuite = std::shared_ptr<IOHprofiler_suite<InputType>>(new PBO_suite(conf.get_problem_id(),conf.get_instance_id(),conf.get_dimension()));
-    std::shared_ptr<IOHprofiler_csv_logger> logger(new IOHprofiler_csv_logger("./",conf.get_result_folder(),conf.get_algorithm_name(),conf.get_algorithm_info(),
-                conf.get_complete_triggers(),conf.get_update_triggers(),conf.get_number_interval_triggers(),
-                conf.get_base_evaluation_triggers(),conf.get_number_target_triggers()));
+    std::shared_ptr<IOHprofiler_csv_logger> logger(new IOHprofiler_csv_logger("./",conf.get_result_folder(),conf.get_algorithm_name(),conf.get_algorithm_info()));
+    logger->set_complete_flag(conf.get_complete_triggers());
+    logger->set_interval(conf.get_number_interval_triggers());
+    logger->set_time_points(conf.get_base_evaluation_triggers(),conf.get_number_target_triggers());
     config_csv_logger = logger;
+    config_csv_logger->activate_logger();
     configSuite->addCSVLogger(config_csv_logger);
     this->algorithm = algorithm;
   };

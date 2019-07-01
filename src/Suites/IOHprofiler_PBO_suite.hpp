@@ -1,3 +1,10 @@
+/// \file IOHprofiler_PBO_suite.cpp
+/// \brief cpp file for class IOHprofiler_PBO_suite.
+///
+/// A suite of Pseudo Boolean problems (23 problems, 1-100 instances, and dimension <= 20000).
+///
+/// \author Furong Ye
+/// \date 2019-06-27
 #ifndef _IOHPROFILER_PBO_SUITE_HPP
 #define _IOHPROFILER_PBO_SUITE_HPP
 
@@ -48,9 +55,25 @@ public:
     registerProblem();
   };
 
-  PBO_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension){
+  PBO_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
+    for (int i = 0; i < problem_id.size(); ++i) {
+      if (problem_id[i] < 0 || problem_id[i] > 23) {
+        IOH_error("problem_id " + std::to_string(problem_id[i]) + " is not in PBO_suite");
+      }
+    }
+    
+    for (int i = 0; i < instance_id.size(); ++i) {
+      if (instance_id[i] < 0 || instance_id[i] > 100) {
+        IOH_error("instance_id " + std::to_string(instance_id[i]) + " is not in PBO_suite");
+      }
+    }
 
-    // Need to check if the input values are valid.
+    for (int i = 0; i < dimension.size(); ++i) {
+      if (dimension[i] < 0 || dimension[i] > 20000) {
+        IOH_error("dimension " + std::to_string(dimension[i]) + " is not in PBO_suite");
+      }
+    }
+
     IOHprofiler_set_suite_problem_id(problem_id);
     IOHprofiler_set_suite_instance_id(instance_id);
     IOHprofiler_set_suite_dimension(dimension);
@@ -58,6 +81,10 @@ public:
     registerProblem();
   }
 
+  /// \fn void registerProblem()
+  /// \brief Implementation of virtual function of base class IOHprofiler_suite.
+  /// 
+  /// 23 functions are included in the PBO_suite. 
   void registerProblem() {
     registerInFactory<IOHprofiler_problem<int>,OneMax> regOneMax("OneMax");
     registerInFactory<IOHprofiler_problem<int>,OneMax_Dummy1> regOneMax_Dummy1("OneMax_Dummy1");

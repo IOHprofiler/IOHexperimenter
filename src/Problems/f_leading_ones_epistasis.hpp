@@ -1,8 +1,13 @@
+/// \file f_leading_ones_epistasis.hpp
+/// \brief cpp file for class f_leading_ones_epistasis.
+///
+/// This file implements a LeadingOnes problem with epistasis transformation method from w-model.
+/// The parameter v is chosen as 4.
+///
+/// \author Furong Ye
+/// \date 2019-06-27
 #ifndef _F_LEADING_ONES_EPISTASIS_H
 #define _F_LEADING_ONES_EPISTASIS_H
-
-// This file implements a LeadingOnes problem with epistasis transformation method from w-model.
-// The parameter v is chosen as 4.
 
 #include "../IOHprofiler_problem.hpp"
 #include "common_used_functions/wmodels.hpp"
@@ -18,8 +23,6 @@ public:
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
   }
-  //~LeadingOnes_Epistasis();
-  
   LeadingOnes_Epistasis(int instance_id, int dimension) {
     
     IOHprofiler_set_instance_id(instance_id);
@@ -32,6 +35,8 @@ public:
     Initilize_problem(dimension);
   }
 
+  ~LeadingOnes_Epistasis() {};
+
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
   };
@@ -41,11 +46,12 @@ public:
     std::vector<int> new_variables = epistasis(x,4);
     int n = new_variables.size();
     int result = 0;
-    for(int i = 0; i != n; ++i) {
-      if(new_variables[i] == 1)
+    for (int i = 0; i != n; ++i) {
+      if(new_variables[i] == 1) {
         result = i + 1;
-      else
+      } else {
         break;
+      }
     }
     y.push_back((double)result);
     return y;

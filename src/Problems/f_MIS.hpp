@@ -1,3 +1,10 @@
+/// \file f_MIS.hpp
+/// \brief cpp file for class f_MIS.
+///
+/// A detailed file description.
+///
+/// \author Naama Horesh and Furong Ye
+/// \date 2019-06-27
 #ifndef _F_MIS_H
 #define _F_MIS_H
 
@@ -13,7 +20,6 @@ public:
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
   }
-  //~MIS();
   
   MIS(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -26,17 +32,24 @@ public:
     Initilize_problem(dimension);
   }
 
+  ~MIS() {};
+
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_optimal((double)(dimension/2.0)+1.0);
   };
   
 
-  int isEdge(int i, int j, size_t problem_size) {
-    if (i!=problem_size/2 && j==i+1){return 1;}
-    else if (i<=((int)problem_size/2)-1 && j==i+((int)problem_size/2)+1 ){return 1;}
-    else if (i<=((int)problem_size/2) && i>=2 && j==i+((int)problem_size/2)-1){return 1;}
-    else {return 0;}
+  int isEdge (int i, int j, size_t problem_size) {
+    if (i!=problem_size/2 && j==i+1) {
+      return 1;
+    } else if (i<=((int)problem_size/2)-1 && j==i+((int)problem_size/2)+1 ) {
+      return 1;
+    } else if (i<=((int)problem_size/2) && i>=2 && j==i+((int)problem_size/2)-1) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 
 
@@ -50,24 +63,24 @@ std::vector<double> internal_evaluate(std::vector<int> x) {
     int number_of_variables_even=(int)n;
     int ones_array[number_of_variables_even+1];
   
-    if (n%2!=0){
+    if (n%2!=0) {
         number_of_variables_even=(int)n-1;
     }
 
    
-    for (index=0; index<number_of_variables_even; index++){
-        if (x[index]==1){
-            ones_array[num_of_ones] = index;
-            num_of_ones+=1;
-        }
+    for (index=0; index<number_of_variables_even; index++) {
+      if (x[index]==1) {
+        ones_array[num_of_ones] = index;
+        num_of_ones+=1;
+      }
     }
 
-    for (i=0; i<num_of_ones; i++){
-        for (j=i+1; j<num_of_ones; j++){
-            if(isEdge(ones_array[i]+1,ones_array[j]+1,(size_t)number_of_variables_even)==1){
-                sum_edges_in_the_set+=1;
-            }
+    for (i=0; i<num_of_ones; i++) {
+      for (j=i+1; j<num_of_ones; j++) {
+        if (isEdge(ones_array[i]+1,ones_array[j]+1,(size_t)number_of_variables_even)==1) {
+          sum_edges_in_the_set+=1;
         }
+      }
     }
     result=num_of_ones - (number_of_variables_even*sum_edges_in_the_set);
     y.push_back((double)result);
