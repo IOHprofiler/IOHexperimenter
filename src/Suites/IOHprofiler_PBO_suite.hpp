@@ -136,6 +136,14 @@ public:
     mapIDTOName(21,"Ising_Triangle");
     mapIDTOName(23,"NQueens");
   };
+
+  static PBO_suite * createInstance() {
+    return new PBO_suite();
+  };
+
+  static PBO_suite * createInstance(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
+    return new PBO_suite(problem_id, instance_id, dimension);
+  };
 };
 
 #endif

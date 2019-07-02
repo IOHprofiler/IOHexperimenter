@@ -5,8 +5,8 @@
 ///
 /// \author Furong Ye
 /// \date 2019-06-27
-#ifndef _IOHPROFILER_PROBLEM_FACTORY_HPP
-#define _IOHPROFILER_PROBLEM_FACTORY_HPP
+#ifndef _IOHPROFILER_ALL_PROBLEMS_HPP
+#define _IOHPROFILER_ALL_PROBLEMS_HPP
 
 #include "Problems/f_one_max.hpp"
 #include "Problems/f_leading_ones.hpp"
@@ -32,7 +32,7 @@
 #include "Problems/f_MIS.hpp"
 #include "Problems/f_N_queens.hpp"
 
-#include "IOHprofiler_problem_generator.hpp"
+#include "../IOHprofiler_class_generator.hpp"
 
 registerInFactory<IOHprofiler_problem<int>,OneMax> regOneMax("OneMax");
 registerInFactory<IOHprofiler_problem<int>,OneMax_Dummy1> regOneMax_Dummy1("OneMax_Dummy1");
@@ -60,4 +60,4 @@ registerInFactory<IOHprofiler_problem<int>,Ising_1D> regIsing_1D("Ising_1D");
 registerInFactory<IOHprofiler_problem<int>,Ising_2D> regIsing_2D("Ising_2D");
 registerInFactory<IOHprofiler_problem<int>,Ising_Triangle> regIsing_Triangle("Ising_Triangle");
 
-#endif //_IOHPROFILER_PROBLEM_FACTORY_HPP
+#endif //_IOHPROFILER_ALL_PROBLEMS_HPP
