@@ -1,29 +1,24 @@
+/// \file IOHprofiler_configuration.cpp
+/// \brief head file for class of IOHprofiler_configuration.
+///
+/// \author Furong Ye
+/// \date 2019-06-27
 #ifndef _IOHPROFILER_CONFIGURATION_HPP
 #define _IOHPROFILER_CONFIGURATION_HPP
 
-
-// #include <iostream>
-// #include <string>
-// #include <vector>
-// #include <stdio.h>
-// #include <fstream>
 #include "IOHprofiler_string.hpp"
 #define MAXLINESIZE 1024
 #define MAXKEYNUMBER 100
 
-
+/// A class of configuration files, to be used in IOHprofiler_experimenter.
 class IOHprofiler_configuration {
 public:
-  IOHprofiler_configuration(){
-    //readcfg(this->cfgFile);
-    //this->configSuite = new IOHprofiler_suite()
-  }
-
+  IOHprofiler_configuration() {}
 
   class Dict {
   public:
-    Dict(){};
-    ~Dict(){};
+    Dict() {};
+    ~Dict() {};
     int n = 0;
     size_t size;
     std::vector<std::string> section;
@@ -31,7 +26,7 @@ public:
     std::vector<std::string> key;
   };
 
-  typedef enum _LINE_{
+  typedef enum _LINE_ {
     EMPTY,
     COMMENT,
     SECTION,
@@ -39,19 +34,25 @@ public:
     ERROR
   } linecontent;
 
-
-
   int set_Dict(Dict &dict, const std::string section, const std::string key, const std::string value) {
     size_t i ;
 
-    if (dict.n > 0){
-      for(i = 0; i < dict.n; ++i){
-        if(key.length() == 0) continue;
-        if(value.length() == 0) continue;
-        if(dict.key[i].length() == 0) continue;
-        if(dict.section[i].length() == 0) continue;
-        if((key == dict.key[i]) && (section==dict.section[i])){
-          if(dict.value[i].length() != 0){
+    if (dict.n > 0) {
+      for (i = 0; i < dict.n; ++i) {
+        if (key.length() == 0) {
+          continue;
+        }
+        if (value.length() == 0) {
+          continue;
+        }
+        if (dict.key[i].length() == 0) {
+          continue;
+        }
+        if (dict.section[i].length() == 0) {
+          continue;
+        }
+        if ((key == dict.key[i]) && (section==dict.section[i])) {
+          if (dict.value[i].length() != 0) {
             std::cout << "Multi setting of key(" << key << ") or section(" << section << ")\n";
             return -1;
           }
@@ -67,46 +68,49 @@ public:
 
   std::string get_Dict_String(const Dict dict, const std::string section, const std::string key){
     size_t i;
-    if(key.length() == 0){
+    if (key.length() == 0) {
       std::cout << "EMPTY KEY INPUT.\n";
-      //exit(1);
     }
-    if(section.length() == 0){
+    if (section.length() == 0) {
       std::cout << "EMPTY SECTION INPUT.\n";
-      //exit(1);
     }
-    for(i = 0; i < dict.n; ++i){
-      if(dict.key[i].length() == 0) continue;
-      if(dict.section[i].length() == 0) continue;
-      if((key == dict.key[i]) && (section == dict.section[i]))
+    for (i = 0; i < dict.n; ++i) {
+      if (dict.key[i].length() == 0) {
+        continue;
+      }
+      if (dict.section[i].length() == 0) {
+        continue;
+      }
+      if ((key == dict.key[i]) && (section == dict.section[i])) {
         return dict.value[i];
+      }
     }
     std::cout << "Can not find the corresponding configuration for key: " << key << " in section : "<< section << "\n";
-    //exit(1);
     return NULL;
   };
 
   std::vector<int> get_Dict_int_vector(const Dict dict, const std::string section, const std::string key, const int _min, const int _max){
     size_t i;
     std::vector<int> result;
-    if(key.length() == 0){
+    if (key.length() == 0) {
       std::cout << "EMPTY KEY INPUT.\n";
-      //exit(1);
     }
-    if(section.length() == 0){
+    if (section.length() == 0){
       std::cout << "EMPTY SECTION INPUT.\n";
-      //exit(1);
     }
-    for(i = 0; i < dict.n; ++i){
-      if(dict.key[i].length() == 0) continue;
-      if(dict.section[i].length() == 0) continue;
-      if(key == dict.key[i] && section == dict.section[i]) {
+    for (i = 0; i < dict.n; ++i) {
+      if (dict.key[i].length() == 0) {
+        continue;
+      }
+      if (dict.section[i].length() == 0) {
+        continue;
+      }
+      if (key == dict.key[i] && section == dict.section[i]) {
         result = get_int_vector_parse_string(dict.value[i],_min,_max);
         return result;
       }
     }
     std::cout << "Can not find the corresponding configuration for key: "<< key << " in section : "<< section << "\n";
-    //exit(1);
     return result;
   }
 
@@ -123,7 +127,9 @@ public:
     std::string str;
     str = get_Dict_String(dict, section, key);
     transform(str.begin(), str.end(), str.begin(), ::tolower);
-    if(str == "true") result = true;
+    if (str == "true") {
+      result = true;
+    }
     return result;
   };
 
@@ -138,38 +144,29 @@ public:
     line = strstrip(input_line);
     len = line.length();
 
-    if(len < 0)
+    if (len < 0) {
       content = EMPTY;
-    else if(line[0] == '#' || line[0] == ';')
+    } else if (line[0] == '#' || line[0] == ';') {
       content = COMMENT;
-    else if(line[0] == '['  && line[len-1] == ']'){
+    } else if(line[0] == '['  && line[len-1] == ']') {
       sscanf(line.c_str(), "[%[^]]",tempsection);
       section = tempsection;
       content = SECTION;
-    }
-    else if(sscanf (line.c_str(), "%[^=] = \"%[^\"]", tempkey, tempvalue) == 2 || sscanf (line.c_str(), "%[^=] = '%[^\']", tempkey, tempvalue) == 2){
+    } else if(sscanf (line.c_str(), "%[^=] = \"%[^\"]", tempkey, tempvalue) == 2 || sscanf (line.c_str(), "%[^=] = '%[^\']", tempkey, tempvalue) == 2) {
       value = tempvalue;
       key = tempkey;
       content = VALUE;
-    }
-    else if(sscanf (line.c_str(), "%[^=] = %[^;#]", tempkey, tempvalue) == 2){
-            value = tempvalue;
+    } else if(sscanf (line.c_str(), "%[^=] = %[^;#]", tempkey, tempvalue) == 2) {
+      value = tempvalue;
       key = tempkey;
       content = VALUE;
-    }
-    else{
+    } else {
      content = ERROR;
     }
-
     return content;
   };
 
-
-  // std::vector<int> get_int_vector_from_string(std::string str) {
-
-  // }
-
-  Dict load(const std::string filename){
+  Dict load(const std::string filename) {
     std::ifstream fp(filename.c_str());
 
     std::string line;
@@ -181,19 +178,19 @@ public:
     Dict dict;
     linecontent lc;
 
-    if(!fp.is_open()){
+    if (!fp.is_open()) {
       std::cout << "Cannot open file " << filename << std::endl;
-      //exit(1);
     }
 
-    while(!fp.eof()) {
+    while (!fp.eof()) {
       getline(fp,line);
       len = line.length() -1;
-      if(len <= 0)
-          continue;
+      if (len <= 0) {
+        continue;
+      }
 
       lc = add_Line(line,section,key,value);
-      switch(lc){
+      switch(lc) {
         case EMPTY:
           break;
         case COMMENT:
@@ -210,17 +207,15 @@ public:
           std::cout << "There is an error for line: \" "<< line << "\"";
           break;
       }
-      if(lc == ERROR){
+      if (lc == ERROR) {
         break;
       }
     }
     fp.close();
     return dict;
-    
   };
 
 void readcfg(std::string filename){
-
   Dict dict;
   dict = load(filename);
   suite_name = get_Dict_String(dict,"suite","suite_name");
@@ -241,8 +236,6 @@ void readcfg(std::string filename){
   base_evaluation_triggers = get_Dict_int_vector(dict,"triggers","base_evaluation_triggers",1,10);
   number_target_triggers = get_Dict_Int(dict,"triggers","number_target_triggers");
   number_interval_triggers = get_Dict_Int(dict,"triggers","number_interval_triggers");
-
-
   };
 
   std::string get_suite_name() {
@@ -290,11 +283,7 @@ void readcfg(std::string filename){
     return this->number_interval_triggers;
   };
 
-
 private:
-  //IOHprofiler_suite configSuite;
-  //IOHprofiler_csv_logger configLogger;
-
   std::string cfgFile = "configuration.ini";
 
   std::string suite_name;

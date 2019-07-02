@@ -8,7 +8,7 @@
 #ifndef _IOHPROFILER_SUITE_HPP
 #define _IOHPROFILER_SUITE_HPP
 
-#include "IOHprofiler_problem_generator.hpp"
+#include "IOHprofiler_class_generator.hpp"
 #include "IOHprofiler_problem.hpp"
 
 using PROBLEM_NAME_ID =  std::map<std::string, int>; 
@@ -34,7 +34,7 @@ public:
   ///
   /// This function implements interfaces of available problems of a suite. With those interface,
   /// user are able to request problem together with problem_id, instance_id, and dimension.
-  virtual void registerProblem() {};
+  virtual void registerInSuite() {};
 
   /// \fn std::shared_ptr<IOHprofiler_problem<InputType>> get_next_problem()
   /// \brief An interface of requesting problems in suite.
