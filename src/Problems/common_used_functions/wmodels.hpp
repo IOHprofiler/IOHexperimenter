@@ -152,7 +152,7 @@ double ruggedness2(double y, int number_of_variables) {
 }
 
 std::vector<double> ruggedness3(int number_of_variables) {
-  std::vector<double> ruggedness_fitness(number_of_variables,0.0);
+  std::vector<double> ruggedness_fitness(number_of_variables+1,0.0);
   
   for (int j = 1; j <= number_of_variables/5; ++j) {
     for (int k = 0; k < 5; ++k) {

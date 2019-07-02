@@ -37,8 +37,12 @@ public:
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-    IOHprofiler_set_evaluate_double_info(ruggedness3(dimension));
   };
+
+  void update_evaluate_double_info() {
+    int length = IOHprofiler_get_number_of_variables();
+    IOHprofiler_set_evaluate_double_info(ruggedness3(length));
+  }
 
   std::vector<double> internal_evaluate(std::vector<int> x) {
     std::vector<double> y;

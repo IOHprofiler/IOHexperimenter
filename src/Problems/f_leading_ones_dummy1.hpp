@@ -38,9 +38,13 @@ public:
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-    IOHprofiler_set_evaluate_int_info(dummy(dimension,0.5,10000));
     IOHprofiler_set_optimal(floor((double)(dimension * 0.5)));
   };
+
+  void update_evaluate_int_info() {
+    int length = IOHprofiler_get_number_of_variables();
+    IOHprofiler_set_evaluate_int_info(dummy(length,0.5,10000));
+  }
 
   std::vector<double> internal_evaluate(std::vector<int> x) {
     std::vector<double> y;
