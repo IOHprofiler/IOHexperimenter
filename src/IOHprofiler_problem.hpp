@@ -43,6 +43,11 @@ public:
     return result;
   };
 
+  virtual void update_evaluate_double_info() {
+  }
+
+  virtual void update_evaluate_int_info() {
+  }
   /// \fn std::vector<double> evaluate(std::vector<InputType> x)
   /// \brife A common function for evaluating fitness of problems.
   ///
@@ -224,6 +229,8 @@ public:
   /// \para instance_id 
   void IOHprofiler_set_instance_id(int instance_id) {
     this->instance_id = instance_id;
+    this->update_evaluate_double_info();
+    this->update_evaluate_int_info();
     this->calc_optimal();
   };
 
@@ -312,6 +319,8 @@ public:
     if (this->upperbound.size() != 0) {
       this->IOHprofiler_set_upperbound(this->upperbound[0]);
     }
+    this->update_evaluate_double_info();
+    this->update_evaluate_int_info();
     this->calc_optimal();
   };
 
@@ -331,6 +340,8 @@ public:
     if (this->upperbound.size() != 0) {
       this->IOHprofiler_set_upperbound(this->upperbound[0]);
     }
+    this->update_evaluate_double_info();
+    this->update_evaluate_int_info();
     this->calc_optimal();
   };
 
