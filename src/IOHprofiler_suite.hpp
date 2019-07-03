@@ -41,6 +41,17 @@ public:
   ///
   /// To request 'the next' problem in the suite of correponding problem_id, instance_id and dimension index.
   std::shared_ptr<IOHprofiler_problem<InputType>> get_next_problem() {
+    if(this->problem_index == this->number_of_problems) {
+          return nullptr;
+    }
+
+    this->current_problem = get_problem(this->problem_id_name_map[this->problem_id[this->problem_index]],
+                                        this->instance_id[this->instance_index],
+                                        this->dimension[this->dimension_index]);
+    if (this->csv_logger) {
+      this->current_problem->addCSVLogger(this->csv_logger);
+    }
+
     this->instance_index++;
     if (this->instance_index == this->number_of_instances) {
       this->instance_index = 0;
@@ -48,16 +59,7 @@ public:
       if (this->dimension_index == this->number_of_dimensions) {
         this->dimension_index = 0;
         this->problem_index++;
-        if (this->problem_index == this->number_of_problems) {
-          return nullptr;
-        }
       }
-    }
-    this->current_problem = get_problem(this->problem_id_name_map[this->problem_id[this->problem_index]],
-                                        this->instance_id[this->instance_index],
-                                        this->dimension[this->dimension_index]);
-    if (this->csv_logger) {
-      this->current_problem->addCSVLogger(this->csv_logger);
     }
     return this->current_problem;
   };
