@@ -13,14 +13,22 @@ public:
   IOHprofiler_experimenter() {};
   IOHprofiler_experimenter(std::string configFileName, _algorithm *algorithm) {
     this->conf.readcfg(configFileName);
+    
     configSuite = genericGenerator<IOHprofiler_suite<int>>::instance().create(conf.get_suite_name());
+    configSuite->IOHprofiler_set_suite_problem_id(conf.get_problem_id());
+    configSuite->IOHprofiler_set_suite_instance_id(conf.get_instance_id());
+    configSuite->IOHprofiler_set_suite_dimension(conf.get_dimension());
+    
     std::shared_ptr<IOHprofiler_csv_logger> logger(new IOHprofiler_csv_logger("./",conf.get_result_folder(),conf.get_algorithm_name(),conf.get_algorithm_info()));
     logger->set_complete_flag(conf.get_complete_triggers());
     logger->set_interval(conf.get_number_interval_triggers());
     logger->set_time_points(conf.get_base_evaluation_triggers(),conf.get_number_target_triggers());
+    logger->set_update_flag(conf.get_update_triggers());
+    
     config_csv_logger = logger;
     config_csv_logger->activate_logger();
     configSuite->addCSVLogger(config_csv_logger);
+    
     this->algorithm = algorithm;
   };
 

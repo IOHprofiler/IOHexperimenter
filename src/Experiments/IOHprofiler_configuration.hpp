@@ -233,7 +233,7 @@ void readcfg(std::string filename){
   
   complete_triggers = get_Dict_bool(dict,"triggers","complete_triggers");
   update_triggers = get_Dict_bool(dict,"triggers","update_triggers");
-  base_evaluation_triggers = get_Dict_int_vector(dict,"triggers","base_evaluation_triggers",1,10);
+  base_evaluation_triggers = get_Dict_int_vector(dict,"triggers","base_evaluation_triggers",0,10);
   number_target_triggers = get_Dict_Int(dict,"triggers","number_target_triggers");
   number_interval_triggers = get_Dict_Int(dict,"triggers","number_interval_triggers");
   };
