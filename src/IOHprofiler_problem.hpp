@@ -124,7 +124,7 @@ public:
     }
 
     if (&this->csv_logger != NULL) {
-      (this->csv_logger).write_line(this->evaluations,
+      (this->csv_logger)->write_line(this->evaluations,
                                   this->raw_objectives[0],this->best_so_far_raw_objectives[0],
                                   y[0],this->best_so_far_transformed_objectives[0]);
     }
@@ -186,7 +186,7 @@ public:
     this->csv_logger->target_problem(this->problem_id,this->number_of_variables,this->instance_id);
   };
   void clearLogger() {
-    this->csv_logger.clear_logger();
+    this->csv_logger->clear_logger();
   }
   
   /// \fn void reset_problem()
