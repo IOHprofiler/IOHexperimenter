@@ -88,7 +88,9 @@ public:
 
   bool time_points_status() {
     if (this->observer_time_points.size() > 0) {
-      return true;
+      if(!(this->observer_time_points.size() == 1 && this->observer_time_points[0] == 0)) {
+        return true;
+      }
     }
     if (this->observer_number_of_evaluations > 0) {
       return true;
@@ -97,6 +99,9 @@ public:
   }
 
   bool time_points_trigger(size_t evaluations) {
+    if (this->time_points_status() == false) {
+      return false;
+    }
     bool result = false;
 
     /// evaluations_values is to be set by 10^n * elements of observer_time_points.
@@ -136,10 +141,10 @@ public:
 
 private:
   int observer_interval = 0; /// < variable for recording by a static interval.
-  bool observer_complete_flag = true; /// < variable for recording complete optimization process. 
-  bool observer_update_flag; /// < variable for recording when a better solution is found.
+  bool observer_complete_flag = false; /// < variable for recording complete optimization process. 
+  bool observer_update_flag = true; /// < variable for recording when a better solution is found.
  
-  std::vector<int> observer_time_points; /// < variables for recording at pre-defined points.
+  std::vector<int> observer_time_points = {0}; /// < variables for recording at pre-defined points.
   size_t evaluations_value1 = 1; /// < intermediate variables for calculating points with 'observer_time_points'.
   size_t time_points_index = 0; /// < intermediate variables for calculating points with 'observer_time_points'.
   int time_points_expi = 0; /// < intermediate variables for calculating points with 'observer_time_points'.
