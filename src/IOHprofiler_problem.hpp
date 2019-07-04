@@ -10,7 +10,7 @@
 
 #include "common.h"
 #include "IOHprofiler_transformation.hpp"
-#include "IOHprofiler_csv_logger.hpp"
+#include "IOHprofiler_csv_logger.h"
 
 /// < transformation methods. 
 IOHprofiler_transformation transformation;

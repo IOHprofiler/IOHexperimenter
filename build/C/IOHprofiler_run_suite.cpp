@@ -1,4 +1,4 @@
-#include "../../Suites/IOHprofiler_PBO_suite.hpp"
+#include "../../src/Suites/IOHprofiler_PBO_suite.hpp"
 
 std::vector<int> Initialization(int dimension) {
   std::vector<int> x;
