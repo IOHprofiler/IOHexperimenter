@@ -14,7 +14,7 @@
 ///
 /// \para s string
 /// \return string
-std::string strstrip(std::string s)
+static std::string strstrip(std::string s)
 {
   if (s.empty()) {
       return s;
@@ -38,7 +38,7 @@ std::string strstrip(std::string s)
 /// \para _int int
 /// \para _max int
 /// \return std::vector<int>
-std::vector<int> get_int_vector_parse_string(std::string input, const int _min, const int _max) {
+static std::vector<int> get_int_vector_parse_string(std::string input, const int _min, const int _max) {
   std::vector<std::string> spiltstring;
   std::string tmp;
   int tmpvalue,tmpvalue1;

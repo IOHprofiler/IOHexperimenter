@@ -13,7 +13,7 @@
 #include "IOHprofiler_csv_logger.h"
 
 /// < transformation methods. 
-IOHprofiler_transformation transformation;
+static IOHprofiler_transformation transformation;
 
 /// \brief A base class for defining problems.
 ///

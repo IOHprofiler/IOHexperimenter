@@ -12,6 +12,6 @@
 
 #include "../IOHprofiler_class_generator.hpp"
 
-registerInFactory<IOHprofiler_suite<int>,PBO_suite> regPBO("PBO");
+static registerInFactory<IOHprofiler_suite<int>,PBO_suite> regPBO("PBO");
 
 #endif //_IOHPROFILER_ALL_SUITES_HPP

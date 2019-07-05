@@ -10,9 +10,9 @@
 
 #include "../../IOHprofiler_random.hpp"
 
-IOHprofiler_random random_methods;
+static IOHprofiler_random random_methods;
 
-std::vector<int> dummy(int number_of_variables, double select_rate, long inseed) {
+static std::vector<int> dummy(int number_of_variables, double select_rate, long inseed) {
   std::vector<int> position;
   std::vector<int> random_index;
   std::vector<double> random_numbers;
@@ -39,7 +39,7 @@ std::vector<int> dummy(int number_of_variables, double select_rate, long inseed)
   return position;
 }
 
-std::vector<int> neutrality(std::vector<int> variables, int mu) {
+static std::vector<int> neutrality(std::vector<int> variables, int mu) {
   int number_of_variables = variables.size();
   int n = (int)ceil((double)number_of_variables/(double)mu);
   std::vector<int> new_variables;
@@ -69,7 +69,7 @@ std::vector<int> neutrality(std::vector<int> variables, int mu) {
   return new_variables;
 }
 
-std::vector<int> epistasis(std::vector<int> variables, int v) {
+static std::vector<int> epistasis(std::vector<int> variables, int v) {
   int h, epistasis_result;
   int number_of_variables = variables.size();
   std::vector<int> new_variables;
@@ -115,7 +115,7 @@ std::vector<int> epistasis(std::vector<int> variables, int v) {
   return new_variables;
 }
 
-double ruggedness1(double y, int number_of_variables) {
+static double ruggedness1(double y, int number_of_variables) {
   double ruggedness_y, s;
   s = (double)number_of_variables;
   if(y == s) {
@@ -131,7 +131,7 @@ double ruggedness1(double y, int number_of_variables) {
   return ruggedness_y;
 }
 
-double ruggedness2(double y, int number_of_variables) {
+static double ruggedness2(double y, int number_of_variables) {
   double ruggedness_y;
   int tempy=(int)(y+0.5);
   if (tempy == number_of_variables) {
@@ -151,7 +151,7 @@ double ruggedness2(double y, int number_of_variables) {
   return ruggedness_y;
 }
 
-std::vector<double> ruggedness3(int number_of_variables) {
+static std::vector<double> ruggedness3(int number_of_variables) {
   std::vector<double> ruggedness_fitness(number_of_variables+1,0.0);
   
   for (int j = 1; j <= number_of_variables/5; ++j) {
