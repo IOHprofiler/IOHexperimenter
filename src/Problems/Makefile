@@ -1,4 +1,4 @@
-SUBDIRS=$(shell ls -l | grep ^d | awk '{print $$9}')
+SUBDIRS=common_used_functions
 CPP_SOURCE=${wildcard *.cpp}
 CPP_OBJS=${patsubst %.cpp, %.o, $(CPP_SOURCE)}
 HPP_SOURCE=${wildcard *.hpp}
@@ -7,8 +7,8 @@ all:$(SUBDIRS) $(CPP_OBJS) $(HPP_OBJS)
 $(SUBDIRS):ECHO
 	make -C $@
 $(CPP_OBJS):%.o:%.cpp
-	$(CC) ${CCFLAGS} -c $^ -o $(ROOT_DIR)/$(OBJS_DIR)/$@ ${LDFLAGS}
+	$(CC) ${CCFLAGS} -c -x c++ $^ -o $(ROOT_DIR)/$(OBJS_DIR)/$@ ${LDFLAGS}
 $(HPP_OBJS):%.o:%.hpp
-	$(CC) ${CCFLAGS} -c $^ -o $(ROOT_DIR)/$(OBJS_DIR)/$@ ${LDFLAGS}
+	$(CC) ${CCFLAGS} -c  -x c++ $^ -o $(ROOT_DIR)/$(OBJS_DIR)/$@ ${LDFLAGS}
 ECHO:
 	@echo $(SUBDIRS)
