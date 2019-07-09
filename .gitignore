@@ -1,0 +1,12 @@
+*.csv
+**.o
+**.so
+**.dll
+*.log
+*.pdf
+*.html
+.*
+
+!/.Rbuildignore
+!/.gitignore
+__pycache__
