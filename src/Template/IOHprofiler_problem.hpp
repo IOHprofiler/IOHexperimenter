@@ -8,9 +8,9 @@
 #ifndef _IOHPROFILER_PROBLEM_HPP
 #define _IOHPROFILER_PROBLEM_HPP
 
-#include "common.h"
+#include "IOHprofiler_common.h"
 #include "IOHprofiler_transformation.hpp"
-#include "IOHprofiler_csv_logger.h"
+#include "Loggers/IOHprofiler_csv_logger.h"
 
 /// < transformation methods. 
 static IOHprofiler_transformation transformation;
@@ -135,7 +135,7 @@ public:
   /// A function to calculate optimal of the problem.
   /// It will be revoked after setting dimension (number_of_variables) or instance_id.
   void calc_optimal() {
-    if (this->best_variables.size() != 0) {
+    if (this->best_variables.size() != 0 || this->best_variables.size() != this->number_of_variables) {
       copyVector(this->best_variables,this->best_transformed_variables);
       variables_transformation(this->best_transformed_variables);
       this->optimal = internal_evaluate(this->best_transformed_variables);

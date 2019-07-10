@@ -8,7 +8,7 @@
 #ifndef _IOHPROFILER_RANDOM_HPP
 #define _IOHPROFILER_RANDOM_HPP
 
-#include "common.h"
+#include "IOHprofiler_common.h"
 
 #define PI 3.14159265359
 

@@ -1,6 +1,5 @@
-SUBDIRS=Suites \
-		Problems \
-	    Template
+SUBDIRS=Experiments \
+		Loggers
 CPP_SOURCE=${wildcard *.cpp}
 CPP_OBJS=${patsubst %.cpp, %.o, $(CPP_SOURCE)}
 HPP_SOURCE=${wildcard *.hpp}

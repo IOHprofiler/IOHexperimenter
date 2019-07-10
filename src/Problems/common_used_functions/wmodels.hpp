@@ -8,7 +8,7 @@
 #ifndef _F_WMODELS_H
 #define _F_WMODELS_H
 
-#include "../../IOHprofiler_random.hpp"
+#include "../../Template/IOHprofiler_random.hpp"
 
 static IOHprofiler_random random_methods;
 

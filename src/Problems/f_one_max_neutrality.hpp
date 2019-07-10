@@ -9,7 +9,7 @@
 #ifndef _F_ONE_MAX_NEUTRALITY_H
 #define _F_ONE_MAX_NEUTRALITY_H
 
-#include "../IOHprofiler_problem.hpp"
+#include "../Template/IOHprofiler_problem.hpp"
 #include "common_used_functions/wmodels.hpp"
 
 class OneMax_Neutrality : public IOHprofiler_problem<int> {

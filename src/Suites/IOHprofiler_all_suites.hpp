@@ -10,7 +10,7 @@
 
 #include "IOHprofiler_PBO_suite.hpp"
 
-#include "../IOHprofiler_class_generator.hpp"
+#include "../Template/IOHprofiler_class_generator.hpp"
 
 static registerInFactory<IOHprofiler_suite<int>,PBO_suite> regPBO("PBO");
 

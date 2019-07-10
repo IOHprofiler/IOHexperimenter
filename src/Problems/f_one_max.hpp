@@ -8,7 +8,7 @@
 #ifndef _F_ONE_MAX_H
 #define _F_ONE_MAX_H
 
-#include "../IOHprofiler_problem.hpp"
+#include "../Template/IOHprofiler_problem.hpp"
 
 class OneMax : public IOHprofiler_problem<int> {
 public:

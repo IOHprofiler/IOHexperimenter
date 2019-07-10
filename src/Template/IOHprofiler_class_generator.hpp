@@ -8,7 +8,7 @@
 #ifndef _IOHPROFILER_PROBLEM_GENERATOR_HPP
 #define _IOHPROFILER_PROBLEM_GENERATOR_HPP
 
-#include "common.h"
+#include "IOHprofiler_common.h"
 
 using defaultIDKeyType = std::string;
 

@@ -1,8 +1,8 @@
 #ifndef _IOHPROFILER_EXPERIMENTER_HPP
 #define _IOHPROFILER_EXPERIMENTER_HPP
 
-#include "../common.h"
-#include "../Suites/IOHprofiler_all_suites.hpp"
+#include "../IOHprofiler_common.h"
+#include "../../Suites/IOHprofiler_all_suites.hpp"
 #include "IOHprofiler_configuration.hpp"
 
 

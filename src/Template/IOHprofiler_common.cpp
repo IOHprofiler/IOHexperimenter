@@ -1,4 +1,4 @@
-#include "common.h"
+#include "IOHprofiler_common.h"
 
 void IOH_error(std::string error_info) {
   std::cout << "IOH_ERROR_INFO : " << error_info << std::endl;

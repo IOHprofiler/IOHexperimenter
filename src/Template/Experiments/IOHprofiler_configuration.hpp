@@ -223,13 +223,9 @@ void readcfg(std::string filename){
   instance_id = get_Dict_int_vector(dict,"suite","instance_id",1,100);
   dimension = get_Dict_int_vector(dict,"suite","dimension",1,20000);
   
-  
-  observer_name = get_Dict_String(dict,"observer","observer_name");
   result_folder = get_Dict_String(dict,"observer","result_folder");
   algorithm_info = get_Dict_String(dict,"observer","algorithm_info");
   algorithm_name = get_Dict_String(dict,"observer","algorithm_name");
-  parameters_name = get_Dict_String(dict,"observer","parameters_name");
-
   
   complete_triggers = get_Dict_bool(dict,"triggers","complete_triggers");
   update_triggers = get_Dict_bool(dict,"triggers","update_triggers");
@@ -251,10 +247,6 @@ void readcfg(std::string filename){
   std::vector<int> get_dimension() {
     return this->dimension;
   };
-
-  std::string get_observer_name() {
-    return this->observer_name;
-  }
   std::string get_result_folder() {
     return this->result_folder;
   };
@@ -263,9 +255,6 @@ void readcfg(std::string filename){
   };
   std::string get_algorithm_name() {
     return this->algorithm_name;
-  };
-  std::string get_parameters_name() {
-    return this->parameters_name;
   };
   bool get_complete_triggers() {
     return this->complete_triggers;
@@ -290,11 +279,9 @@ private:
   std::vector<int> problem_id;
   std::vector<int> instance_id;
   std::vector<int> dimension;
-  std::string observer_name;
   std::string result_folder;
   std::string algorithm_info;
   std::string algorithm_name;
-  std::string parameters_name;
   bool complete_triggers;
   bool update_triggers;
   std::vector<int> base_evaluation_triggers;
