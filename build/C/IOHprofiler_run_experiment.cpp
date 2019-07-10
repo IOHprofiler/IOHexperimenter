@@ -1,10 +1,12 @@
-#include "../../src/Experiments/IOHprofiler_experimenter.hpp"
+#include "../../src/Template/Experiments/IOHprofiler_experimenter.hpp"
+
+IOHprofiler_random random_generator(1);
 
 std::vector<int> Initialization(int dimension) {
   std::vector<int> x;
   x.reserve(dimension);
   for (int i = 0; i != dimension; ++i) {
-      x.push_back(rand()% 2);
+      x.push_back((int)(random_generator.IOHprofiler_uniform_rand() * 2));
   }
   return x;
 };
@@ -13,7 +15,7 @@ int mutation(std::vector<int> &x, double mutation_rate) {
   int result = 0;
   int n = x.size();
   for(int i = 0; i != n; ++i) {
-    if(rand() / double(RAND_MAX) < mutation_rate) {
+    if(rand() / random_generator.IOHprofiler_uniform_rand() < mutation_rate) {
       x[i] = (x[i] + 1) % 2;
       result = 1;
     }
