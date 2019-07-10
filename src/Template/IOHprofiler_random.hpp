@@ -50,8 +50,9 @@ public:
     long seed;
     long rand_value;
 
-    if (inseed < 0) {
-      seed = -inseed;
+    seed = inseed;
+    if (seed < 0) {
+      seed = -seed;
     }
     if (seed < 1) {
       seed = 1;
@@ -91,8 +92,9 @@ public:
     long seed;
     long rand_value;
 
-    if (inseed < 0) {
-      seed = -inseed;
+    seed = inseed;
+    if (seed < 0) {
+      seed = -seed;
     }
     if (seed < 1) {
       seed = 1;

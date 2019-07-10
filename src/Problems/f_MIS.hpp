@@ -18,7 +18,6 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
   }
   
   MIS(int instance_id, int dimension) {
@@ -28,7 +27,6 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
 
@@ -36,7 +34,6 @@ public:
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-    IOHprofiler_set_optimal((double)(dimension/2.0)+1.0);
   };
   
 

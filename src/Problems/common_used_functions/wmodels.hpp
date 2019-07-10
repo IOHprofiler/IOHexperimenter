@@ -36,7 +36,12 @@ static std::vector<int> dummy(int number_of_variables, double select_rate, long 
 
   /// This is a stl algorithm.
   partial_sort(position.begin(),position.begin()+select_num,position.end());
-  return position;
+
+  random_index.clear();
+  for(int i = 0; i != select_num; ++i){
+    random_index.push_back(position[i]);
+  }
+  return random_index;
 }
 
 static std::vector<int> neutrality(std::vector<int> variables, int mu) {

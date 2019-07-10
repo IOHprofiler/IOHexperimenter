@@ -18,7 +18,6 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
   }
   NQueens(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -27,14 +26,12 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
   ~NQueens() {};
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-    IOHprofiler_set_optimal(sqrt((double)dimension));
   };
 
   double _max(double element1 , double element2) {

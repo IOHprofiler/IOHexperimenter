@@ -44,10 +44,11 @@ public:
   };
 
   virtual void update_evaluate_double_info() {
-  }
+  };
 
   virtual void update_evaluate_int_info() {
-  }
+  };
+
   /// \fn std::vector<double> evaluate(std::vector<InputType> x)
   /// \brife A common function for evaluating fitness of problems.
   ///
@@ -77,6 +78,10 @@ public:
         (this->csv_logger)->update_logger_info(this->evaluations,y);
       }
     }
+      
+    if(this->optimal[0] < y[0])
+      std::cout << "EROORRE" << this->problem_id << "("<< this->optimal[0] << ":" << y[0] <<")" << std::endl;
+
 
     if (compareVector(y,this->optimal)) {
       this->optimalFound = true;
@@ -135,10 +140,9 @@ public:
   /// A function to calculate optimal of the problem.
   /// It will be revoked after setting dimension (number_of_variables) or instance_id.
   void calc_optimal() {
-    if (this->best_variables.size() != 0 || this->best_variables.size() != this->number_of_variables) {
-      copyVector(this->best_variables,this->best_transformed_variables);
-      variables_transformation(this->best_transformed_variables);
-      this->optimal = internal_evaluate(this->best_transformed_variables);
+    if (this->best_variables.size() == this->number_of_variables) {
+      /// Do not apply transformation on best_variables as calculating optimal
+      this->optimal = internal_evaluate(this->best_variables);
       objectives_transformation(this->optimal);
     }
     else {
@@ -377,8 +381,7 @@ public:
   };
 
   void IOHprofiler_set_best_variables(int best_variables) {
-    std::vector<InputType>().swap(this->best_variables);
-    this->best_variables.reserve(this->number_of_variables);
+    this->best_variables.clear();
     for (int i = 0; i < this->number_of_variables; ++i) {
       this->best_variables.push_back(best_variables);
     }
