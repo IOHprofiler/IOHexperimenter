@@ -2,7 +2,7 @@
 
 [IOHprofiler_problem](/src/Template/IOHprofiler_problem.hpp) is the base `class` of problems of __IOHexperimenter__. The property variables of problems include:
 * `problem_id`, will be assigned if the problem is added to a suite, otherwise default by 0.
-* `instance_id`, sets the transformation on the problem. The original problem is with instance_id 1, <i>scale</i> and <i>shift</i> are applied on objectives for instance_id in [2,100], <i>XOR</i> will be applied on variables for instance_id in [2,50], and <i>sigma</i> function is applied on variables for instance_id in [51,100].
+* `instance_id`,  sets transformation methods on problems. The original problem is with instance_id 1, <i>scale</i> and <i>shift</i> are applied on objectives for instance_id in [2,100], <i>XOR</i> will be applied on variables for instance_id in [2,50], and <i>sigma</i> function is applied on variables for instance_id in [51,100].
 * `problem_name`
 * `problem_type`
 * `lowerbound`, is a vector of lowerbound for variables.
@@ -15,7 +15,7 @@
 * `evaluate_int_info`, is a vector of __int__ values that are iteratively used in <i>evaluate</i>.
 * `evaluate_double_info`, is a vector of __double__ values that are iteratively used in <i>evaluate</i>.
 
-And some functions for experiments are supplied:
+And some functions for personal experiments are supplied:
 * <i>evaluate(x)</i>, returns a vector of fitness values. The argument __x__ is a vector of variables.
 * <i>evaluate(x,y)</i>, updates __y__ with a vector of fitness values, and __x__ is a vector of variables.
 * <i>addCSVLogger(logger)</i>, assigns a __IOHprofiler_csv_logger__ class to the problem.

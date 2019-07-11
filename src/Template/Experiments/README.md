@@ -11,9 +11,9 @@ __suite__ configures the problems to be tested.
 * __problem_id__, configures problems to be tested. Note that id of problems are configured by the suite, please make sure that id is within the valid range.
 * __instance_id__, configures the transformation methods applied on problems. 
 	For `PBO`:
-	** `1` : no transformer operations on the problem.
-	** `2-50` :  XOR and SHIFT operations are applied on the problem.
-	** `51-100`: SIGMA and SHIFT operations are applied on the problem.
+	* `1` : no transformer operations on the problem.
+	* `2-50` :  XOR and SHIFT operations are applied on the problem.
+	* `51-100`: SIGMA and SHIFT operations are applied on the problem.
 * __dimension__, configures dimension of problems to be tested. Note that allowed dimension is not larger than 20000.
 
 __logger__ configures the setting of output csv files.
