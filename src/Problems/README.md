@@ -82,7 +82,7 @@ static OneMax * createInstance(int instance_id, int dimension) {
   return new OneMax(instance_id, dimension);
 };
 ```
-To register the problem, you can use the <i>geniricGenerator</i> in [IOHprofiler_class_generator](/src/Template/IOHprofiler_csv_logger.hpp). For example, you can use the following statement to register and create __OneMax__ ,
+To register the problem, you can use the <i>geniricGenerator</i> in [IOHprofiler_class_generator](/src/Template/). For example, you can use the following statement to register and create __OneMax__ ,
 ```cpp
 // Register
 static registerInFactory<IOHprofiler_problem<int>,OneMax> regOneMax("OneMax");
