@@ -1,6 +1,6 @@
 ## Source codes of IOHexperimenter
 
-[This folder] includes common used codes of __IOHexperimenter__. For details of `IOHprofiler_problem` and `IOHprofiler_suite`, please visit [problem page](src/Problems) and [suite page](src/Suites).
+[This folder] includes common used codes of __IOHexperimenter__. For details of `IOHprofiler_problem` and `IOHprofiler_suite`, please visit [problem page](/src/Problems/) and [suite page](/src/Suites).
 
 ### IOHprofiler_transformation
 

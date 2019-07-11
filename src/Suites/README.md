@@ -1,6 +1,6 @@
 ## Suites of IOHexperimenter
 
-[IOHprofiler_suite](src/Template/IOHprofiler_suite.hpp) is the base `class` of suites of __IOHexperimenter__. The property variables of problems include:
+[IOHprofiler_suite](/src/Template/IOHprofiler_suite.hpp) is the base `class` of suites of __IOHexperimenter__. The property variables of problems include:
 * `problem_id`, a vector of id which problems are to be tested.
 * `instance_id`, a vector of instance id of problems. intanced id sets the transformation on the problem. The original problem is with instance_id 1, <i>scale</i> and <i>shift</i> are applied on objectives for instance_id in [2,100], <i>XOR</i> will be applied on variables for instance_id in [2,50], and <i>sigma</i> function is applied on variables for instance_id in [51,100].
 * `dimension`, a vector of dimension of problems.
@@ -131,7 +131,7 @@ static PBO_suite * createInstance(std::vector<int> problem_id, std::vector<int> 
   return new PBO_suite(problem_id, instance_id, dimension);
 };
 ```
-To register the suite, you can use the <i>geniricGenerator</i> in [IOHprofiler_class_generator](src/Template/IOHprofiler_csv_logger.hpp). For example, you can use the following statement to register and create __PBO_suite__ ,
+To register the suite, you can use the <i>geniricGenerator</i> in [IOHprofiler_class_generator](/src/Template/). For example, you can use the following statement to register and create __PBO_suite__ ,
 ```cpp
 // Register
 static registerInFactory<IOHprofiler_suite<int>,PBO_suite> regPBO("PBO");
