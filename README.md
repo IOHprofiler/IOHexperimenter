@@ -38,18 +38,18 @@ If you are using the tool for the first time, please download or clone the proje
 * three exectuable files will be generated in `build/c/bin`
 
 Afterwards, you can copy the folder `build/c` and use the `Makefile` for your future work.
-For the details of `C++` experiments, please visit [here](build/C).
+For the details of `C++` experiments, please visit [here](/build/C).
 
 #### Using by R
 For the use of `R`, please visit [R branch](https://github.com/IOHprofiler/IOHexperimenter/tree/R).
 
 ### Creating test problems
 
-The supported problems of __IOHexperimenter__ are with a vector of variables with a unique type and a vector of real objectives. For detailed steps of creating a problem, please visit [here](src/Problems).
+The supported problems of __IOHexperimenter__ are with a vector of variables with a unique type and a vector of real objectives. For detailed steps of creating a problem, please visit [here](/src/Problems).
 
 ### Configuring test suites
 Suites are collections of test problems. By including problems into a suite, it is easier for users to maintain their experiments.
-Note that the variables type of problems of a suite need to be the same. For detailed steps of creating and using suites, please visit [here](src/Suites).
+Note that the variables type of problems of a suite need to be the same. For detailed steps of creating and using suites, please visit [here](/src/Suites).
 
 ## Contact
 

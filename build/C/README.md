@@ -8,7 +8,7 @@ There are three ways to test algorithms:
 * Test through a designed experiment class and edit by configuration files
 
 ### Test through problem class
-All problems of __IOHexperimenter__ are defined as specific `class` inheriting problem `IOHprofiler_problem` class, the implementation of problems are in the [`problems` folder](src/Problems). To know the definition of problems, please visit the wiki page [https://iohprofiler.github.io/Benchmark/Problems/](https://iohprofiler.github.io/Benchmark/Problems/).
+All problems of __IOHexperimenter__ are defined as specific `class` inheriting problem `IOHprofiler_problem` class, the implementation of problems are in the [problems folder](/src/Problems). To know the definition of problems, please visit the wiki page [https://iohprofiler.github.io/Benchmark/Problems/](https://iohprofiler.github.io/Benchmark/Problems/).
 
 An example testing evolutionary algorithm with mutation operator on __OneMax__ is implemented in `IOHprofiler_run_problem.cpp`. 
 
@@ -33,7 +33,7 @@ while(!om.IOHprofiler_hit_optimal()) {
 }
 ```
 
-If you want to generate result data for __IOHanalyzer__, a `IOHprofiler_csv_logger` should be added. The arguments of `IOHprofiler_csv_logger` are directory of result folder, name of result folder, name of the algorithm and infomation of the algorithm. In addition, you can set up mutilple triggers of recording evaluations. For the details of triggers, please visit the introduction of [`IOHprofiler_observer`]().
+If you want to generate result data for __IOHanalyzer__, a `IOHprofiler_csv_logger` should be added. The arguments of `IOHprofiler_csv_logger` are directory of result folder, name of result folder, name of the algorithm and infomation of the algorithm. In addition, you can set up mutilple triggers of recording evaluations. For the details of triggers, please visit the introduction of [`IOHprofiler_observer`](/src/Template/).
 ```cpp
 std::vector<int> time_points{1,2,5};
 std::shared_ptr<IOHprofiler_csv_logger> logger(new IOHprofiler_csv_logger("./","run_problem","EA","EA"));
@@ -45,9 +45,9 @@ om.addCSVLogger(std::move(logger));
 ```
 
 ### Test through suite
-Suites are collections of test problems. The idea is packing problems with similar/same properties toghther and making it easier to test algorithms on a class of problems. Currently a suite called __PBO__ consisting of 23 __pseudo Boolean problems__ are provied by __IOHexperimenter__. To create your own suites, please visit [here](src/Suites).
+Suites are collections of test problems. The idea is packing problems with similar/same properties toghther and making it easier to test algorithms on a class of problems. Currently a suite called __PBO__ consisting of 23 __pseudo Boolean problems__ are provied by __IOHexperimenter__. To create your own suites, please visit [here](/src/Suites).
 
-An example testing evolutionary algorithm with mutation operator on __PBO__ suite is implemented in `IOHprofiler_run_suite.cpp`. __PBO__ suite includes pointers for 23 problems. To instantiate problems you want to test, the vectors of problem id, instances and dimensions need to be given. For id of problems, please find the [map code](src/Suites/IOHprofiler_PBO_suite.hpp) of `PBO_suite`. 
+An example testing evolutionary algorithm with mutation operator on __PBO__ suite is implemented in `IOHprofiler_run_suite.cpp`. __PBO__ suite includes pointers for 23 problems. To instantiate problems you want to test, the vectors of problem id, instances and dimensions need to be given. For id of problems, please find the [map code](/src/Suites/IOHprofiler_PBO_suite.hpp) of `PBO_suite`. 
 ```cpp
 std::vector<int> problem_id = {1,2};
 std::vector<int> instance_id ={1,2};
@@ -89,7 +89,7 @@ pbo.addCSVLogger(logger1);
 
 ### Test through configuration file
 
-By using the provided `IOHprofiler_experiment` class, you can use a configuration file to configure both the suite and the logger for csv files. For the setting of configuration, please visit the description in the file [configuration.ini](src/Template/Experiments). 
+By using the provided `IOHprofiler_experiment` class, you can use a configuration file to configure both the suite and the logger for csv files. For the setting of configuration, please visit the description in the file [configuration.ini](/src/Template/Experiments). 
 
 With a `function` of optimizer algorithm and assiging the path of configuration file, `experimenter._run` will finish all tasks of the experiment.
 
