@@ -13,18 +13,6 @@ std::vector<int> Initialization(int dimension) {
   return x;
 };
 
-// int mutation(std::vector<int> &x, double mutation_rate) {
-//   int result = 0;
-//   int n = x.size();
-//   for(int i = 0; i != n; ++i) {
-//     if(random_generator.IOHprofiler_uniform_rand() < mutation_rate) {
-//       x[i] = (x[i] + 1) % 2;
-//       result = 1;
-//     }
-//   }
-//   return result;
-// }
-
 int mutation(std::vector<int> &x, double mutation_rate) {
   int result = 0;
   int n = x.size();
