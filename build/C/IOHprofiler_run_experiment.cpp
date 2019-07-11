@@ -2,7 +2,7 @@
 
 IOHprofiler_random random_generator(1);
 
-static int budget_scale = 5;
+static int budget_scale = 100;
 
 std::vector<int> Initialization(int dimension) {
   std::vector<int> x;
@@ -12,6 +12,18 @@ std::vector<int> Initialization(int dimension) {
   }
   return x;
 };
+
+// int mutation(std::vector<int> &x, double mutation_rate) {
+//   int result = 0;
+//   int n = x.size();
+//   for(int i = 0; i != n; ++i) {
+//     if(random_generator.IOHprofiler_uniform_rand() < mutation_rate) {
+//       x[i] = (x[i] + 1) % 2;
+//       result = 1;
+//     }
+//   }
+//   return result;
+// }
 
 int mutation(std::vector<int> &x, double mutation_rate) {
   int result = 0;
@@ -46,7 +58,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem) {
     if (mutation(x,mutation_rate)) {
       y = problem->evaluate(x);
     }
-    if (y[0] > best_value) {
+    if (y[0] >= best_value) {
       best_value = y[0];
       copyVector(x,x_star);
     }
@@ -57,6 +69,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem) {
 void _run_experiment() {
   std::string configName = "./configuration.ini";
   IOHprofiler_experimenter<int> experimenter(configName,evolutionary_algorithm);
+  experimenter._set_independent_runs(1);
   experimenter._run();
 }
 

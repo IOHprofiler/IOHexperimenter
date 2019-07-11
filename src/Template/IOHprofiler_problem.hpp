@@ -78,10 +78,6 @@ public:
         (this->csv_logger)->update_logger_info(this->evaluations,y);
       }
     }
-      
-    if(this->optimal[0] < y[0])
-      std::cout << "EROORRE" << this->problem_id << "("<< this->optimal[0] << ":" << y[0] <<")" << std::endl;
-
 
     if (compareVector(y,this->optimal)) {
       this->optimalFound = true;

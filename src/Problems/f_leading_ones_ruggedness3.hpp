@@ -57,7 +57,7 @@ public:
       }
     }
     result = IOHprofiler_get_evaluate_double_info()[(int)(result+0.5)];
-    y.push_back((double)result);
+    y.push_back(result);
     return y;
   };
 

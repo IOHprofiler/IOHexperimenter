@@ -46,7 +46,7 @@ static std::vector<int> dummy(int number_of_variables, double select_rate, long 
 
 static std::vector<int> neutrality(std::vector<int> variables, int mu) {
   int number_of_variables = variables.size();
-  int n = (int)ceil((double)number_of_variables/(double)mu);
+  int n = (int)floor((double)number_of_variables/(double)mu);
   std::vector<int> new_variables;
 
   new_variables.reserve(n);
@@ -62,13 +62,6 @@ static std::vector<int> neutrality(std::vector<int> variables, int mu) {
       temp = 0;
     }
     i++;
-  }
-  if (i % mu != 0) {
-    if (temp >= (i - i / mu * mu) * 2) {
-      new_variables.push_back(1);
-    } else {
-      new_variables.push_back(0);
-    }
   }
 
   return new_variables;

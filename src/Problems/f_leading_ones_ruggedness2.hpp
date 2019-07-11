@@ -52,7 +52,7 @@ public:
       }
     }
     result = ruggedness2(result,n);
-    y.push_back((double)result);
+    y.push_back(result);
     return y;
   };
 
