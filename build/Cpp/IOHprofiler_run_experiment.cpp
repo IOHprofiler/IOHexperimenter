@@ -54,10 +54,35 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem) {
   }
 }
 
+void random_search(std::shared_ptr<IOHprofiler_problem<int>> problem) {
+  /// Declaration for variables in the algorithm
+  std::vector<int> x;
+  std::vector<int> x_star;
+  std::vector<double> y;
+  double best_value;
+  int budget = budget_scale * problem->IOHprofiler_get_number_of_variables() * problem->IOHprofiler_get_number_of_variables();
+
+  x = Initialization(problem->IOHprofiler_get_number_of_variables());
+  y = problem->evaluate(x);
+  best_value = y[0];
+  copyVector(x,x_star);
+
+  int count = 0;
+  while (count <= 1000000) {
+    x = Initialization(problem->IOHprofiler_get_number_of_variables());
+    y = problem->evaluate(x);
+    if (y[0] >= best_value) {
+      best_value = y[0];
+      copyVector(x,x_star);
+    }
+    count++;
+  }
+}
+
 void _run_experiment() {
   std::string configName = "./configuration.ini";
-  IOHprofiler_experimenter<int> experimenter(configName,evolutionary_algorithm);
-  experimenter._set_independent_runs(1);
+  IOHprofiler_experimenter<int> experimenter(configName,random_search);
+  experimenter._set_independent_runs(2);
   experimenter._run();
 }
 

@@ -1,6 +1,6 @@
 ## Using IOHexperimenter by C++
 
-After compiling the tool by running `make` in the root directory, `/bin` and `/obj` are to be created in this folder. To use __IOHexperimenter__ to test your algorithms, you can copy this `C` folder and replace the `Makefile` by the `Makefile-local`. Afterwards, you can edit your algorithm in the provided `cpp` files and compile them by `make` statement.
+After compiling the tool by running `make` in the root directory, `/bin` and `/obj` are to be created in this folder. To use __IOHexperimenter__ to test your algorithms, you can work this `C` folder and replace the `Makefile` by the `Makefile-local`. Afterwards, you can edit your algorithm in the provided `cpp` files and compile them by `make` statement.
 
 There are three ways to test algorithms:
 * Test through problem class.

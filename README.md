@@ -38,7 +38,7 @@ If you are using the tool for the first time, please download or clone the proje
 * three exectuable files will be generated in `build/c/bin`
 
 Afterwards, you can copy the folder `build/c` and use the `Makefile` for your future work.
-For the details of `C++` experiments, please visit [here](/build/C).
+For the details of `C++` experiments, please visit [here](/build/Cpp).
 
 #### Using by R
 For the use of `R`, please visit [R branch](https://github.com/IOHprofiler/IOHexperimenter/tree/R).
