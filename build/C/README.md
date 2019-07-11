@@ -89,7 +89,7 @@ pbo.addCSVLogger(logger1);
 
 ### Test through configuration file
 
-By using the provided `IOHprofiler_experiment` class, you can use a configuration file to configure both the suite and the logger for csv files. For the setting of configuration, please visit the description in the file [configuration.ini](build/C/configuration.ini). 
+By using the provided `IOHprofiler_experiment` class, you can use a configuration file to configure both the suite and the logger for csv files. For the setting of configuration, please visit the description in the file [configuration.ini](src/Template/Experiments). 
 
 With a `function` of optimizer algorithm and assiging the path of configuration file, `experimenter._run` will finish all tasks of the experiment.
 
