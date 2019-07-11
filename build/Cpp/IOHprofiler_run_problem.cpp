@@ -21,34 +21,6 @@ int mutation(std::vector<int> &x, double mutation_rate) {
   return result;
 }
 
-/// This is an (1+1)_EA with static mutation rate = 1/n.
-void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem) {
-  /// Declaration for variables in the algorithm
-  std::vector<int> x;
-  std::vector<int> x_star;
-  std::vector<double> y;
-  double best_value;
-  double mutation_rate = 1.0/problem->IOHprofiler_get_number_of_variables();
-
-  x = Initialization(problem->IOHprofiler_get_number_of_variables());
-  copyVector(x,x_star);
-  y = problem->evaluate(x);
-  best_value = y[0];
-
-  int count= 0;
-  while (count <= 100) {
-    copyVector(x_star,x);
-    if (mutation(x,mutation_rate)) {
-      y = problem->evaluate(x);
-    }
-    if (y[0] > best_value) {
-      best_value = y[0];
-      copyVector(x,x_star);
-    }
-    count++;
-  }
-}
-
 /// In this session, the algorithm will be tested on only one problem (OneMax).
 /// Therefore we declare a OneMax class, and get the fitness by the statement
 /// om.evaluate().

@@ -8,7 +8,7 @@
 #ifndef _F_LABS_H
 #define _F_LABS_H
 
-#include "../IOHprofiler_problem.hpp"
+#include "../Template/IOHprofiler_problem.hpp"
 
 class LABS : public IOHprofiler_problem<int> {
 public:
@@ -35,12 +35,12 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  double correlation(const std::vector<int> x, const int number_of_variables, int k)
+  double correlation(const std::vector<int> x, const int n, int k)
   {
     int x1,x2;
     double result;
     result = 0.0;
-    for (int i = 0 ; i < number_of_variables - k; ++i) {
+    for (int i = 0 ; i < n - k; ++i) {
         if (x[i] == 0) {
           x1 = -1;
         } else {

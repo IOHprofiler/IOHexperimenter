@@ -64,6 +64,46 @@ public:
     return this->current_problem;
   };
   
+  /// \fn std::shared_ptr<IOHprofiler_problem<InputType>> get_current_problem()
+  /// \brief An interface of requesting problems in suite.
+  ///
+  /// To request 'the current' problem in the suite of correponding problem_id, instance_id and dimension index.
+  
+  std::shared_ptr<IOHprofiler_problem<InputType>> get_current_problem() {
+    
+    this->instance_index--;
+    if(this->instance_index < 0) {
+      this->instance_index = this->number_of_instances - 1;
+      this->dimension_index--;
+      if(this->dimension_index < 0) {
+        this->dimension_index = this->number_of_dimensions - 1;
+        this->problem_index--;
+        if(this->problem_index < 0) {
+          this->problem_index = 0;
+        }
+      }
+    }
+
+    this->current_problem = get_problem(this->problem_id_name_map[this->problem_id[this->problem_index]],
+                                        this->instance_id[this->instance_index],
+                                        this->dimension[this->dimension_index]);
+    if (this->csv_logger) {
+      this->current_problem->addCSVLogger(this->csv_logger);
+    }
+
+    this->instance_index++;
+    if (this->instance_index == this->number_of_instances) {
+      this->instance_index = 0;
+      this->dimension_index++;
+      if (this->dimension_index == this->number_of_dimensions) {
+        this->dimension_index = 0;
+        this->problem_index++;
+      }
+    }
+    return this->current_problem;
+  };
+  
+
   /// \fn std::shared_ptr<IOHprofiler_problem<InputType>> get_next_problem()
   /// \brief An interface of requesting problems in suite.
   ///
@@ -77,6 +117,7 @@ public:
     p->IOHprofiler_set_number_of_variables(dimension);
     return p;
   }
+
 
   void addCSVLogger(std::shared_ptr<IOHprofiler_csv_logger> logger) {
     this->csv_logger = logger;

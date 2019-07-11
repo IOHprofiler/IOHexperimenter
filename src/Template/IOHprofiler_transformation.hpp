@@ -8,7 +8,7 @@
 #ifndef IOHPROFILER_TRANSFORMATION_HPP
 #define IOHPROFILER_TRANSFORMATION_HPP
 
-#include "common.h"
+#include "IOHprofiler_common.h"
 #include "IOHprofiler_random.hpp"
 
 /// \brief A class consisting of transformation methods.

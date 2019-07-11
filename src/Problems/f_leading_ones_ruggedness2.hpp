@@ -8,7 +8,7 @@
 #ifndef _F_LEADING_ONES_RUGGEDNESSTWO_H
 #define _F_LEADING_ONES_RUGGEDNESSTWO_H
 
-#include "../IOHprofiler_problem.hpp"
+#include "../Template/IOHprofiler_problem.hpp"
 #include "common_used_functions/wmodels.hpp"
 
 class LeadingOnes_Ruggedness2 : public IOHprofiler_problem<int> {
@@ -52,7 +52,7 @@ public:
       }
     }
     result = ruggedness2(result,n);
-    y.push_back((double)result);
+    y.push_back(result);
     return y;
   };
 

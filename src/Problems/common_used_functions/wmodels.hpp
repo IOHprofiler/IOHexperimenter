@@ -8,7 +8,7 @@
 #ifndef _F_WMODELS_H
 #define _F_WMODELS_H
 
-#include "../../IOHprofiler_random.hpp"
+#include "../../Template/IOHprofiler_random.hpp"
 
 static IOHprofiler_random random_methods;
 
@@ -36,12 +36,17 @@ static std::vector<int> dummy(int number_of_variables, double select_rate, long 
 
   /// This is a stl algorithm.
   partial_sort(position.begin(),position.begin()+select_num,position.end());
-  return position;
+
+  random_index.clear();
+  for(int i = 0; i != select_num; ++i){
+    random_index.push_back(position[i]);
+  }
+  return random_index;
 }
 
 static std::vector<int> neutrality(std::vector<int> variables, int mu) {
   int number_of_variables = variables.size();
-  int n = (int)ceil((double)number_of_variables/(double)mu);
+  int n = (int)floor((double)number_of_variables/(double)mu);
   std::vector<int> new_variables;
 
   new_variables.reserve(n);
@@ -57,13 +62,6 @@ static std::vector<int> neutrality(std::vector<int> variables, int mu) {
       temp = 0;
     }
     i++;
-  }
-  if (i % mu != 0) {
-    if (temp >= (i - i / mu * mu) * 2) {
-      new_variables.push_back(1);
-    } else {
-      new_variables.push_back(0);
-    }
   }
 
   return new_variables;

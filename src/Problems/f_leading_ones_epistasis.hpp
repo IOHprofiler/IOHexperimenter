@@ -9,7 +9,7 @@
 #ifndef _F_LEADING_ONES_EPISTASIS_H
 #define _F_LEADING_ONES_EPISTASIS_H
 
-#include "../IOHprofiler_problem.hpp"
+#include "../Template/IOHprofiler_problem.hpp"
 #include "common_used_functions/wmodels.hpp"
 
 class LeadingOnes_Epistasis : public IOHprofiler_problem<int> {
@@ -21,7 +21,6 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
   }
   LeadingOnes_Epistasis(int instance_id, int dimension) {
     
@@ -31,7 +30,6 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
 

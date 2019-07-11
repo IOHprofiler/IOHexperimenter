@@ -1,8 +1,8 @@
 #ifndef _IOHPROFILER_EXPERIMENTER_HPP
 #define _IOHPROFILER_EXPERIMENTER_HPP
 
-#include "../common.h"
-#include "../Suites/IOHprofiler_all_suites.hpp"
+#include "../IOHprofiler_common.h"
+#include "../../Suites/IOHprofiler_all_suites.hpp"
 #include "IOHprofiler_configuration.hpp"
 
 
@@ -43,13 +43,21 @@ public:
   ~IOHprofiler_experimenter(){};
 
   void _run() {
-    int index = 0;
     /// Problems are tested one by one until 'get_next_problem' returns NULL.
     while (current_problem = configSuite->get_next_problem()) {
       algorithm(current_problem);
-      index++;
+      int count = 1;
+      while(independent_runs > count) {
+        current_problem = configSuite->get_current_problem();
+        algorithm(current_problem);
+        ++count;
+      }
     }
   };
+
+  void _set_independent_runs(int n) {
+    this->independent_runs = n;
+  }
 
 
 private:
@@ -57,7 +65,8 @@ private:
   std::shared_ptr<IOHprofiler_suite<InputType>> configSuite;
   std::shared_ptr<IOHprofiler_problem<InputType>> current_problem;
   std::shared_ptr<IOHprofiler_csv_logger> config_csv_logger;
-  
+  int independent_runs = 1;
+
   _algorithm *algorithm;
 };
 

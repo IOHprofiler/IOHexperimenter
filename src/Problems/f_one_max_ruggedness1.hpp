@@ -8,7 +8,7 @@
 #ifndef _F_ONE_MAX_RUGGEDNESSONE_H
 #define _F_ONE_MAX_RUGGEDNESSONE_H
 
-#include "../IOHprofiler_problem.hpp"
+#include "../Template/IOHprofiler_problem.hpp"
 #include "common_used_functions/wmodels.hpp"
 
 class OneMax_Ruggedness1 : public IOHprofiler_problem<int> {

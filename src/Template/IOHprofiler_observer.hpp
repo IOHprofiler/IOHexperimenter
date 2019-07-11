@@ -8,7 +8,7 @@
 #ifndef _IOHPROFILER_OBSERVER_H
 #define _IOHPROFILER_OBSERVER_H
 
-#include "common.h"
+#include "IOHprofiler_common.h"
 /// \brief A class of methods of setting triggers recording evaluations.
 ///
 /// Four methods is introduced here:

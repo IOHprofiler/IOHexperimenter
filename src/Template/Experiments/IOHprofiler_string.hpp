@@ -7,7 +7,7 @@
 #define _IOHPROFILER_STRING_HPP
 
 #include <sstream>
-#include "../common.h"
+#include "../IOHprofiler_common.h"
 
 /// \fn std::string strstrip(std::string s)
 /// \brief To erase blanks in the front and end of a string.

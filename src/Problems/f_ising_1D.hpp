@@ -8,7 +8,7 @@
 #ifndef _F_ISING_ONED_H
 #define _F_ISING_ONED_H
 
-#include "../IOHprofiler_problem.hpp"
+#include "../Template/IOHprofiler_problem.hpp"
 
 class Ising_1D : public IOHprofiler_problem<int> {
 public:
