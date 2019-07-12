@@ -1,15 +1,15 @@
 ## Suites of IOHexperimenter
 
 [IOHprofiler_suite](/src/Template/IOHprofiler_suite.hpp) is the base `class` of suites of __IOHexperimenter__. The property variables of problems include:
-* `problem_id`, a vector of id which problems are to be tested.
-* `instance_id`, a vector of instance id of problems. intanced id sets the transformation on the problem. The original problem is with instance_id 1, <i>scale</i> and <i>shift</i> are applied on objectives for instance_id in [2,100], <i>XOR</i> will be applied on variables for instance_id in [2,50], and <i>sigma</i> function is applied on variables for instance_id in [51,100].
-* `dimension`, a vector of dimension of problems.
+* `problem_id`, a vector containing the ids of the problems to be tested.
+* `instance_id`, a vector containing the ids of the instances of the problems. Intance ids specify which transformations will be applied to the problem. The original problem has instance_id 1; <i>scale</i> and <i>shift</i> are applied on objectives for instance_id in [2,100]; <i>XOR</i> will be applied on variables for instance_id in [2,50], and <i>sigma</i> function is applied on variables for instance_id in [51,100].
+* `dimension`, a vector containing the dimensions of the problems.
 * `number_of_problems`
 * `number_of_instances`
 * `number_of_dimensions`
 
 
-And some functions for experiments are supplied:
+The following functions for experiments are available to a suite:
 * <i>get_next_problem</i>, return a shared point of problems of the suite in order.
 * <i>addCSVLogger(logger)</i>, assigns a __IOHprofiler_csv_logger__ class to the suite.
 * <i>IOHprofiler_set_suite_problem_id(problem_id)</i>
@@ -18,9 +18,9 @@ And some functions for experiments are supplied:
 * <i>mapIDTOName</i>, is to match problem id and name. 
 
 ### Creating a suite
-__IOHexperimenter__ provides a __PBO_suite__ for pseudo Boolean problems, but it is also easy to add your own suite. Creating a suite is to register problems in the suite and assign id to problems.
+__IOHexperimenter__ provides a __PBO_suite__ for pseudo Boolean problems, but it is also easy to add your own suite. Creating a suite is done by registering problems in the suite and assigning ids to them.
 
-Taking the implementation of __PBO_suite__ as an example, <i>construct functions</i> are as below. In the construct functions, the range of allowed `problem_id`, `instance_id` and `dimension` should be identified. In addition, <i>registerProblem()</i> must be included in construct functions.
+Taking the implementation of __PBO_suite__ as an example, <i>constructor functions</i> are as below. In the constructor functions, the range of allowed `problem_id`, `instance_id` and `dimension` should be identified. In addition, <i>registerProblem()</i> must be included in the constructor functions.
 ```cpp
 PBO_suite() {
   std::vector<int> problem_id;
@@ -121,7 +121,7 @@ PBO_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector
   mapIDTOName(23,"NQueens");
 ```
 
-If you want to register your suite by `suite_name`, please add following codes and modify names.
+If you want to register your suite called `suite_name`, please add following codes and modify names.
 ```cpp
 static PBO_suite * createInstance() {
   return new PBO_suite();
@@ -131,7 +131,7 @@ static PBO_suite * createInstance(std::vector<int> problem_id, std::vector<int> 
   return new PBO_suite(problem_id, instance_id, dimension);
 };
 ```
-To register the suite, you can use the <i>geniricGenerator</i> in [IOHprofiler_class_generator](/src/Template/). For example, you can use the following statement to register and create __PBO_suite__ ,
+To register the suite, you can use the <i>genericGenerator</i> in [IOHprofiler_class_generator](/src/Template/). For example, you can use the following statement to register and create __PBO_suite__ ,
 ```cpp
 // Register
 static registerInFactory<IOHprofiler_suite<int>,PBO_suite> regPBO("PBO");
