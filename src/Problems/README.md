@@ -2,7 +2,7 @@
 
 [IOHprofiler_problem](/src/Template/IOHprofiler_problem.hpp) is the base `class` of problems of __IOHexperimenter__. The property variables of problems include:
 * `problem_id`, will be assigned if the problem is added to a suite, otherwise default by 0.
-* `instance_id`,  sets transformation methods on problems. The original problem is with instance_id 1, <i>scale</i> and <i>shift</i> are applied on objectives for instance_id in [2,100], <i>XOR</i> will be applied on variables for instance_id in [2,50], and <i>sigma</i> function is applied on variables for instance_id in [51,100].
+* `instance_id`,  sets transformation methods on problems. The original problem is with instance_id 1, <i>scale</i> and <i>shift</i> are applied on objectives for instance_id in [2,100], <i>XOR</i> is applied on variables for instance_id in [2,50], and <i>sigma</i> function is applied on variables for instance_id in [51,100].
 * `problem_name`
 * `problem_type`
 * `lowerbound`, is a vector of lowerbound for variables.
@@ -26,7 +26,7 @@ And some functions for personal experiments are supplied:
 * <i>IOHprofiler_set_instance_id(instance_id)</i>
 
 ### Creating a problem
-__IOHexperimenter__ provides a variety of problems for testing algorithms, but it is also easy to add your own problem. Overall, to create a problem of __IOHexperimenter__, two functions need to be implemented: <i>construct functions</i> and <i>internel_evaluate</i>. Optionally, you can define <i>update_evaluate_double_info</i> and <i>update_evaluate_int_info</i> to make evluate process more efficiently.
+__IOHexperimenter__ provides a variety of problems for testing algorithms, but it is also easy to add your own problems. Overall, to create a problem of __IOHexperimenter__, two functions need to be implemented: <i>construct functions</i> and <i>internel_evaluate</i>. Additionally, you can define <i>update_evaluate_double_info</i> and <i>update_evaluate_int_info</i> to make evluate process more efficiently.
 
 Taking the implementation of __OneMax__ as an instance, <i>construct functions</i> are as below. `problem_name` and `number_of_objectives` __must__ be set. In general, two methods of construction of the problems are given. One is constructing without giving `instance_id` and `dimension`, and the other one is with.
 ```cpp
@@ -58,7 +58,7 @@ void Initilize_problem(int dimension) {
 };
 ```
 
-In addition, the <i>internal_evaluate</i> __must__ be implemented as well. It will be used during evaluate process, returning a vector of (real) objective values of the corresponding variables __x__.
+The <i>internal_evaluate</i> __must__ be implemented as well. It is used during evaluate process, returning a vector of (real) objective values of the corresponding variables __x__.
 ```cpp
 std::vector<double> internal_evaluate(std::vector<int> x) {
   std::vector<double> y;
@@ -72,7 +72,7 @@ std::vector<double> internal_evaluate(std::vector<int> x) {
 };
 ```
 
-If you want to register your problem by `problem_name` and add it into a suite, please add following codes and modify names.
+If you want to register your problem by `problem_name` and add it into a suite, please add functions creating instances as following codes.
 ```cpp
 static OneMax * createInstance() {
   return new OneMax();
