@@ -20,7 +20,7 @@ And some functions for experiments are supplied:
 ### Creating a suite
 __IOHexperimenter__ provides a __PBO_suite__ for pseudo Boolean problems, but it is also easy to add your own suite. Creating a suite is to register problems in the suite and assign id to problems.
 
-Taking the implementation of __PBO_suite__ as an instance, <i>construct functions</i> are as below. In the construct functions, the range of allowed `problem_id`, `instance_id` and `dimension` should be identified. In addition, <i>registerProblem()</i> must be called when a suite is constructed.
+Taking the implementation of __PBO_suite__ as an example, <i>construct functions</i> are as below. In the construct functions, the range of allowed `problem_id`, `instance_id` and `dimension` should be identified. In addition, <i>registerProblem()</i> must be included in construct functions.
 ```cpp
 PBO_suite() {
   std::vector<int> problem_id;
@@ -68,7 +68,7 @@ PBO_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector
 }
 ```
 
-<i>registerProblem()</i> is a virtual function of the base `IOHprofiler_suite` class. When you create a suite, it __must__ be implemented. In the function, problems included in the suite need to be registered, and problem id and name should be mapped. The following is the <i>registerProblem()</i> function of __PBO_suite__.
+<i>registerProblem()</i> is a virtual function of the base `IOHprofiler_suite` class. When you create a suite, it __must__ be implemented. Problems to be included in the suite can be registered by name. Afterwards, problem id and name should be mapped through <i>mapIDTOName></i> function, which enables the suite to recognize problems by problem id. Following is the <i>registerProblem()</i> function of __PBO_suite__.
 ```cpp
   registerInFactory<IOHprofiler_problem<int>,OneMax> regOneMax("OneMax");
   registerInFactory<IOHprofiler_problem<int>,OneMax_Dummy1> regOneMax_Dummy1("OneMax_Dummy1");
@@ -121,7 +121,7 @@ PBO_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector
   mapIDTOName(23,"NQueens");
 ```
 
-If you want to register your problem by `suite_name`, please add following codes and modify names.
+If you want to register your suite by `suite_name`, please add following codes and modify names.
 ```cpp
 static PBO_suite * createInstance() {
   return new PBO_suite();
