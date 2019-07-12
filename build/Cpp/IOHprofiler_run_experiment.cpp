@@ -56,7 +56,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem) {
 
 void _run_experiment() {
   std::string configName = "./configuration.ini";
-  IOHprofiler_experimenter<int> experimenter(configName,random_search);
+  IOHprofiler_experimenter<int> experimenter(configName,evolutionary_algorithm);
   experimenter._set_independent_runs(2);
   experimenter._run();
 }

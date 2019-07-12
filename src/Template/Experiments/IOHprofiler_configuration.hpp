@@ -223,15 +223,15 @@ void readcfg(std::string filename){
   instance_id = get_Dict_int_vector(dict,"suite","instance_id",1,100);
   dimension = get_Dict_int_vector(dict,"suite","dimension",1,20000);
   
-  result_folder = get_Dict_String(dict,"observer","result_folder");
-  algorithm_info = get_Dict_String(dict,"observer","algorithm_info");
-  algorithm_name = get_Dict_String(dict,"observer","algorithm_name");
+  result_folder = get_Dict_String(dict,"logger","result_folder");
+  algorithm_info = get_Dict_String(dict,"logger","algorithm_info");
+  algorithm_name = get_Dict_String(dict,"logger","algorithm_name");
   
-  complete_triggers = get_Dict_bool(dict,"triggers","complete_triggers");
-  update_triggers = get_Dict_bool(dict,"triggers","update_triggers");
-  base_evaluation_triggers = get_Dict_int_vector(dict,"triggers","base_evaluation_triggers",0,10);
-  number_target_triggers = get_Dict_Int(dict,"triggers","number_target_triggers");
-  number_interval_triggers = get_Dict_Int(dict,"triggers","number_interval_triggers");
+  complete_triggers = get_Dict_bool(dict,"observer","complete_triggers");
+  update_triggers = get_Dict_bool(dict,"observer","update_triggers");
+  base_evaluation_triggers = get_Dict_int_vector(dict,"observer","base_evaluation_triggers",0,10);
+  number_target_triggers = get_Dict_Int(dict,"observer","number_target_triggers");
+  number_interval_triggers = get_Dict_Int(dict,"observer","number_interval_triggers");
   };
 
   std::string get_suite_name() {

@@ -8,6 +8,7 @@ BIN2=IOHprofiler_run_suite
 BIN3=IOHprofiler_run_problem
 all: bin/$(BIN1) bin/$(BIN2) bin/$(BIN3)
 bin/$(BIN1):$(ODIR)/$(OBJS)
+	cp configuration.ini bin/
 	$(CC) ${CCFLAGS} -pthread -o $@ $^ IOHprofiler_run_experiment.cpp ${LDFLAGS}
 bin/$(BIN2):$(ODIR)/$(OBJS)
 	$(CC) ${CCFLAGS} -pthread -o $@ $^ IOHprofiler_run_suite.cpp ${LDFLAGS}
