@@ -29,6 +29,7 @@ public:
   IOHprofiler_suite(const IOHprofiler_suite&) = delete;
   IOHprofiler_suite &operator =(const IOHprofiler_suite&) = delete;
 
+  typedef std::shared_ptr<IOHprofiler_problem<InputType>> Problem_ptr;
   /// \fn virtual void registerProblem()
   /// \brief A virtual function for registering problems.
   ///
@@ -36,31 +37,54 @@ public:
   /// user are able to request problem together with problem_id, instance_id, and dimension.
   virtual void registerInSuite() {};
 
+  /// \fn loadProblems()
+  /// \brief Allocating memeory and creating instances of problems to be included in the suite.
+  ///
+  /// Before acquiring a problem from the suite, this function must be invoked.
+  /// Otherwise the list of problem is empty.
+  void loadProblem() {
+    std::vector<Problem_ptr>().swap(this->problem_list);
+    this->size_of_problem_list = this->number_of_dimensions * this->number_of_instances * this->number_of_problems;
+    this->problem_list_index = 0;
+
+    for (int i = 0; i != this->number_of_problems; ++i) {
+      for (int j = 0; j != this->number_of_dimensions; ++j) {
+        for (int h = 0; h != this->number_of_instances; ++h) {
+          Problem_ptr p = get_problem(this->problem_id_name_map[this->problem_id[i]],
+                                        this->instance_id[h],
+                                        this->dimension[j]);
+          this->problem_list.push_back(p);
+        }
+      }
+    }
+    this->get_problem_flag = false;
+  }
+
   /// \fn std::shared_ptr<IOHprofiler_problem<InputType>> get_next_problem()
   /// \brief An interface of requesting problems in suite.
   ///
   /// To request 'the next' problem in the suite of correponding problem_id, instance_id and dimension index.
-  std::shared_ptr<IOHprofiler_problem<InputType>> get_next_problem() {
-    if(this->problem_index == this->number_of_problems) {
-          return nullptr;
+  Problem_ptr get_next_problem() {
+    if (this->size_of_problem_list == 0) {
+      IOH_warning("There is no problem in the suite");
+      return nullptr;
     }
 
-    this->current_problem = get_problem(this->problem_id_name_map[this->problem_id[this->problem_index]],
-                                        this->instance_id[this->instance_index],
-                                        this->dimension[this->dimension_index]);
+    if (this->problem_list_index == this->size_of_problem_list - 1) {
+      return nullptr;
+    }
+
+    if (this->get_problem_flag == false) {
+      this->get_problem_flag = true;
+    } else {
+      this->problem_list_index++;
+    }    
+    this->current_problem = this->problem_list[problem_list_index];
+    
     if (this->csv_logger) {
       this->current_problem->addCSVLogger(this->csv_logger);
     }
-
-    this->instance_index++;
-    if (this->instance_index == this->number_of_instances) {
-      this->instance_index = 0;
-      this->dimension_index++;
-      if (this->dimension_index == this->number_of_dimensions) {
-        this->dimension_index = 0;
-        this->problem_index++;
-      }
-    }
+    this->current_problem->reset_problem();
     return this->current_problem;
   };
   
@@ -69,48 +93,26 @@ public:
   ///
   /// To request 'the current' problem in the suite of correponding problem_id, instance_id and dimension index.
   
-  std::shared_ptr<IOHprofiler_problem<InputType>> get_current_problem() {
-    
-    this->instance_index--;
-    if(this->instance_index < 0) {
-      this->instance_index = this->number_of_instances - 1;
-      this->dimension_index--;
-      if(this->dimension_index < 0) {
-        this->dimension_index = this->number_of_dimensions - 1;
-        this->problem_index--;
-        if(this->problem_index < 0) {
-          this->problem_index = 0;
-        }
-      }
+  Problem_ptr get_current_problem() {
+    if (this->get_problem_flag == false) {
+      this->get_problem_flag = true;
     }
-
-    this->current_problem = get_problem(this->problem_id_name_map[this->problem_id[this->problem_index]],
-                                        this->instance_id[this->instance_index],
-                                        this->dimension[this->dimension_index]);
+    this->current_problem = this->problem_list[this->problem_list_index];
     if (this->csv_logger) {
       this->current_problem->addCSVLogger(this->csv_logger);
     }
-
-    this->instance_index++;
-    if (this->instance_index == this->number_of_instances) {
-      this->instance_index = 0;
-      this->dimension_index++;
-      if (this->dimension_index == this->number_of_dimensions) {
-        this->dimension_index = 0;
-        this->problem_index++;
-      }
-    }
+    this->current_problem->reset_problem();
     return this->current_problem;
   };
   
 
-  /// \fn std::shared_ptr<IOHprofiler_problem<InputType>> get_next_problem()
+  /// \fn Problem_ptr get_next_problem()
   /// \brief An interface of requesting problems in suite.
   ///
   /// To request a specific problem with corresponding problem_id, instance_id and dimension,
   /// without concerning the order of testing problems.
-  std::shared_ptr<IOHprofiler_problem<InputType>> get_problem(std::string problem_name, int instance, int dimension) {
-    std::shared_ptr<IOHprofiler_problem<InputType>> p = genericGenerator<IOHprofiler_problem<InputType>>::instance().create(problem_name);
+  Problem_ptr get_problem(std::string problem_name, int instance, int dimension) {
+    Problem_ptr p = genericGenerator<IOHprofiler_problem<InputType>>::instance().create(problem_name);
     p->reset_problem();
     p->IOHprofiler_set_problem_id(this->problem_name_id_map[problem_name]);
     p->IOHprofiler_set_instance_id(instance);
@@ -187,14 +189,15 @@ private:
   std::vector<int> instance_id;
   std::vector<int> dimension;
 
-  int problem_index = 0;
-  int instance_index = 0;
-  int dimension_index = 0;
-
   PROBLEM_ID_NAME problem_id_name_map;
   PROBLEM_NAME_ID problem_name_id_map;
 
-  std::shared_ptr< IOHprofiler_problem<InputType> > current_problem = nullptr;
+  std::vector<Problem_ptr> problem_list;
+  size_t problem_list_index = 0;
+  size_t size_of_problem_list;
+  bool get_problem_flag = false;
+
+  Problem_ptr current_problem = nullptr;
 
   std::shared_ptr<IOHprofiler_csv_logger> csv_logger = nullptr;
 };

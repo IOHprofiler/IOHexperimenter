@@ -18,7 +18,8 @@ public:
     configSuite->IOHprofiler_set_suite_problem_id(conf.get_problem_id());
     configSuite->IOHprofiler_set_suite_instance_id(conf.get_instance_id());
     configSuite->IOHprofiler_set_suite_dimension(conf.get_dimension());
-    
+    configSuite->loadProblem();
+
     std::shared_ptr<IOHprofiler_csv_logger> logger(new IOHprofiler_csv_logger("./",conf.get_result_folder(),conf.get_algorithm_name(),conf.get_algorithm_info()));
     logger->set_complete_flag(conf.get_complete_triggers());
     logger->set_interval(conf.get_number_interval_triggers());
