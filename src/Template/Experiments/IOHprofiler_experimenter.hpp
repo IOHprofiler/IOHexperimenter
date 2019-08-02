@@ -3,16 +3,17 @@
 
 #include "../IOHprofiler_common.h"
 #include "../../Suites/IOHprofiler_all_suites.hpp"
+#include "../Loggers/IOHprofiler_csv_logger.h"
 #include "IOHprofiler_configuration.hpp"
 
 
 template <class InputType> class IOHprofiler_experimenter {
 public:
-  typedef void _algorithm(std::shared_ptr<IOHprofiler_problem<InputType>>);
+  typedef void _algorithm(std::shared_ptr<IOHprofiler_problem<InputType>>, std::shared_ptr<IOHprofiler_csv_logger> logger);
 
   IOHprofiler_experimenter() {};
   IOHprofiler_experimenter(std::string configFileName, _algorithm *algorithm) {
-    this->conf.readcfg(configFileName);
+      this->conf.readcfg(configFileName);
     
     configSuite = genericGenerator<IOHprofiler_suite<int>>::instance().create(conf.get_suite_name());
     configSuite->IOHprofiler_set_suite_problem_id(conf.get_problem_id());
@@ -28,29 +29,36 @@ public:
     
     config_csv_logger = logger;
     config_csv_logger->activate_logger();
-    configSuite->addCSVLogger(config_csv_logger);
     
     this->algorithm = algorithm;
   };
 
-
   IOHprofiler_experimenter(IOHprofiler_suite<InputType> suite, std::shared_ptr<IOHprofiler_csv_logger> csv_logger, _algorithm * algorithm) {
     configSuite = suite;
     config_csv_logger = csv_logger;
-    configSuite->addCSVLogger(config_csv_logger);
     this->algorithm = algorithm;
   };
 
   ~IOHprofiler_experimenter(){};
 
   void _run() {
+    this->config_csv_logger->target_suite(this->configSuite->IOHprofiler_suite_get_suite_name());
+
     /// Problems are tested one by one until 'get_next_problem' returns NULL.
     while (current_problem = configSuite->get_next_problem()) {
-      algorithm(current_problem);
+
+      this->config_csv_logger->target_problem(current_problem->IOHprofiler_get_problem_id(), 
+                                              current_problem->IOHprofiler_get_number_of_variables(), 
+                                              current_problem->IOHprofiler_get_instance_id());
+
+      algorithm(current_problem,this->config_csv_logger);
       int count = 1;
       while(independent_runs > count) {
         current_problem = configSuite->get_current_problem();
-        algorithm(current_problem);
+        this->config_csv_logger->target_problem(current_problem->IOHprofiler_get_problem_id(), 
+                                              current_problem->IOHprofiler_get_number_of_variables(), 
+                                              current_problem->IOHprofiler_get_instance_id());
+        algorithm(current_problem,this->config_csv_logger);
         ++count;
       }
     }
@@ -60,6 +68,7 @@ public:
     this->independent_runs = n;
   }
 
+  
 
 private:
   IOHprofiler_configuration conf;

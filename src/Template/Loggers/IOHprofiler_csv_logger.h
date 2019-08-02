@@ -55,7 +55,8 @@ public:
                   std::vector<double> parameters);
   void write_line(size_t evaluations, double y, double best_so_far_y,
                   double transformed_y, double best_so_far_transformed_y);
-  void update_logger_info(size_t optimal_evaluations, std::vector<double> found_optimal);
+  void write_line(std::vector<std::variant<size_t,int,double,std::string>> logger_info);
+  void update_logger_info(size_t optimal_evaluations, double found_optimal);
 
   
 

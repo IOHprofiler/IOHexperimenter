@@ -10,7 +10,6 @@
 
 #include "IOHprofiler_common.h"
 #include "IOHprofiler_transformation.hpp"
-#include "Loggers/IOHprofiler_csv_logger.h"
 
 /// < transformation methods. 
 static IOHprofiler_transformation transformation;
@@ -74,20 +73,13 @@ public:
     if (compareObjectives(y,this->best_so_far_transformed_objectives)) {
       copyVector(y,this->best_so_far_transformed_objectives);
       this->best_so_far_transformed_evaluations = this->evaluations;
-      if (&this->csv_logger != NULL) {
-        (this->csv_logger)->update_logger_info(this->evaluations,y);
-      }
     }
 
     if (compareVector(y,this->optimal)) {
       this->optimalFound = true;
     }
 
-    if (&this->csv_logger != NULL) {
-      (this->csv_logger)->write_line(this->evaluations,
-                                  this->raw_objectives[0],this->best_so_far_raw_objectives[0],
-                                  y[0],this->best_so_far_transformed_objectives[0]);
-    }
+    copyVector(y, this->transformed_objectives);
     return y;
   };
   
@@ -115,19 +107,11 @@ public:
     if (compareObjectives(y,this->best_so_far_transformed_objectives)) {
       copyVector(y,this->best_so_far_transformed_objectives);
       this->best_so_far_transformed_evaluations = this->evaluations;
-      if (&this->csv_logger != NULL) {
-        (this->csv_logger)->update_logger_info(this->evaluations,y);
-      }
     }
     
+    copyVector(y, this->transformed_objectives);
     if (compareVector(y,this->optimal)) {
       this->optimalFound = true;
-    }
-
-    if (&this->csv_logger != NULL) {
-      (this->csv_logger)->write_line(this->evaluations,
-                                  this->raw_objectives[0],this->best_so_far_raw_objectives[0],
-                                  y[0],this->best_so_far_transformed_objectives[0]);
     }
   };
 
@@ -180,14 +164,6 @@ public:
   virtual void constraints(std::vector<InputType> x, std::vector<double> c) {
     printf("No constraints function defined\n");
   };
-
-  void addCSVLogger(std::shared_ptr<IOHprofiler_csv_logger> logger) {
-    this->csv_logger = logger;
-    this->csv_logger->target_problem(this->problem_id,this->number_of_variables,this->instance_id);
-  };
-  void clearLogger() {
-    this->csv_logger->clear_logger();
-  }
   
   /// \fn void reset_problem()
   ///
@@ -202,6 +178,24 @@ public:
       this->best_so_far_transformed_objectives[i] = DBL_MIN_EXP;
     }
   };
+
+  /// \fn std::vector<std::variant<int,double,std::string>> loggerInfo()
+  ///
+  /// Return a vector logger_info may be used by loggers.
+  /// logger_info[0] evaluations
+  /// logger_info[1] raw_objectives
+  /// logger_info[2] best_so_far_raw_objectives
+  /// logger_info[3] transformed_objective
+  /// logger_info[4] best_so_far_transformed_objectives
+  std::vector<std::variant<size_t,int,double,std::string>> loggerInfo() {
+    std::vector<std::variant<size_t,int,double,std::string>> logger_info(5);
+    logger_info[0] = this->evaluations;
+    logger_info[1] = this->raw_objectives[0];
+    logger_info[2] = this->best_so_far_raw_objectives[0];
+    logger_info[3] = this->transformed_objectives[0];
+    logger_info[4] = this->best_so_far_transformed_objectives[0];
+    return logger_info;
+  }
   
   /// \fn IOHprofiler_hit_optimal()
   ///
@@ -351,17 +345,22 @@ public:
 
   void IOHprofiler_set_number_of_objectives(int number_of_objectives) {
     this->number_of_objectives = number_of_objectives;
-    raw_objectives.reserve(number_of_objectives);
-    best_so_far_raw_objectives.reserve(number_of_objectives);
-    best_so_far_transformed_objectives.reserve(number_of_objectives);
-    for (int i = 0; i !=  number_of_objectives; ++i) {
-      best_so_far_raw_objectives.push_back(DBL_MIN_EXP);
-      best_so_far_transformed_objectives.push_back(DBL_MIN_EXP);
+    this->raw_objectives.reserve(this->number_of_objectives);
+    this->transformed_objectives.reserve(this->number_of_objectives);
+    this->best_so_far_raw_objectives.reserve(this->number_of_objectives);
+    this->best_so_far_transformed_objectives.reserve(this->number_of_objectives);
+    for (int i = 0; i !=  this->number_of_objectives; ++i) {
+      this->best_so_far_raw_objectives.push_back(DBL_MIN_EXP);
+      this->best_so_far_transformed_objectives.push_back(DBL_MIN_EXP);
     }
   };
 
   std::vector<double> IOHprofiler_get_raw_objectives() {
     return this->raw_objectives;
+  };
+
+  std::vector<double> IOHprofiler_get_transformed_objectives() {
+    return this->transformed_objectives;
   };
 
   int IOHprofiler_get_transformed_number_of_variables() {
@@ -428,12 +427,6 @@ public:
     return this->best_so_far_transformed_evaluations;
   };
 
-  std::shared_ptr<IOHprofiler_csv_logger> IOHprofiler_get_csv_logger() {
-    if (this->csv_logger != NULL) {
-      return this->csv_logger;
-    }
-  }
-
 private:
   
   int problem_id = DEFAULT_PROBLEM_ID; /// < problem id, assigned as being added into a suite.
@@ -457,6 +450,7 @@ private:
   bool optimalFound = false;
 
   std::vector<double> raw_objectives; /// < to record objectives before transformation.
+  std::vector<double> transformed_objectives; /// < to record objectives after transformation.
   int transformed_number_of_variables; /// < intermediate variables in evaluate. 
   std::vector<InputType> transformed_variables; /// < intermediate variables in evaluate.
 
@@ -468,8 +462,6 @@ private:
   int best_so_far_raw_evaluations = 0; /// < to record optimization process.
   std::vector<double> best_so_far_transformed_objectives; /// < to record optimization process.
   int best_so_far_transformed_evaluations; /// < to record optimization process.
-
-  std::shared_ptr<IOHprofiler_csv_logger> csv_logger;
 };
 
 #endif //_IOHPROFILER_PROBLEM_HPP

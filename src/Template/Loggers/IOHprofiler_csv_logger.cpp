@@ -57,7 +57,11 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
   if(infoFile.is_open()) write_info(this->instance,this->found_optimal[0],this->optimal_evaluations);
 
   this->optimal_evaluations = 0;
+
+  /// TO DO: Update the method of initializing this value.
   this->found_optimal.clear();
+  this->found_optimal.push_back(-DBL_MAX);
+  
   reset_observer();
 
   this->problem_id = problem_id;
@@ -168,7 +172,53 @@ void IOHprofiler_csv_logger::write_line(size_t evaluations, double y, double bes
     }
     this->tdat << written_line;
   }
+
+  if (transformed_y > this->found_optimal[0]) {
+    this->update_logger_info(evaluations,transformed_y);
+  }
 };
+
+void IOHprofiler_csv_logger::write_line(const std::vector<std::variant<size_t,int,double,std::string>> logger_info) {
+  size_t evaluations = std::get<size_t>(logger_info[0]);
+  double y = std::get<double>(logger_info[1]);
+  double best_so_far_y = std::get<double>(logger_info[2]);
+  double transformed_y = std::get<double>(logger_info[3]);
+  double best_so_far_transformed_y = std::get<double>(logger_info[4]);
+
+  std::string written_line = std::to_string(evaluations) + " " + std::to_string(y) + " "
+                           + std::to_string(best_so_far_y) + " " + std::to_string(transformed_y) + " "
+                           + std::to_string(best_so_far_transformed_y);
+  written_line += '\n';
+  if (complete_trigger()) {
+    if (!this->cdat.is_open()) {
+      IOH_error("*.cdat file is not open");
+    }
+    this->cdat << written_line;
+  }
+  if (interval_trigger(evaluations)) {
+    if (!this->idat.is_open()) {
+      IOH_error("*.idat file is not open");
+    }
+    this->idat << written_line;
+  }
+  if (update_trigger(transformed_y)) {
+    if (!this->dat.is_open()) {
+      IOH_error("*.dat file is not open");
+    }
+    this->dat << written_line;
+  }
+  if (time_points_trigger(evaluations)) {
+    if (!this->tdat.is_open()) {
+      IOH_error("*.tdat file is not open");
+    }
+    this->tdat << written_line;
+  }
+
+  if (transformed_y > this->found_optimal[0]) {
+    this->update_logger_info(evaluations,transformed_y);
+  }
+};
+
 
 /// todo The precision of double values.
 void IOHprofiler_csv_logger::write_line(size_t evaluations, double y, double best_so_far_y,
@@ -201,6 +251,10 @@ void IOHprofiler_csv_logger::write_line(size_t evaluations, double y, double bes
       IOH_error("*.tdat file is not open");
     }
     this->tdat << written_line;
+  }
+
+  if (transformed_y > this->found_optimal[0]) {
+    this->update_logger_info(evaluations,transformed_y);
   }
 };
 
@@ -239,9 +293,9 @@ void IOHprofiler_csv_logger::write_info(int instance, double optimal, int evalua
 
 /// \fn void IOHprofiler_csv_logger::update_logger_info(size_t optimal_evaluations, std::vector<double> found_optimal)
 /// This functions is to update infomation to be used in *.info files.
-void IOHprofiler_csv_logger::update_logger_info(size_t optimal_evaluations, std::vector<double> found_optimal) {
+void IOHprofiler_csv_logger::update_logger_info(size_t optimal_evaluations, double found_optimal) {
   this->optimal_evaluations = optimal_evaluations;
-  copyVector(found_optimal,this->found_optimal);
+  this->found_optimal[0] =  found_optimal;
 };
 
 void IOHprofiler_csv_logger::clear_logger() {

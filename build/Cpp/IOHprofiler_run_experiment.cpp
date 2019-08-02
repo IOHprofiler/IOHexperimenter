@@ -1,7 +1,6 @@
 #include "../../src/Template/Experiments/IOHprofiler_experimenter.hpp"
 
 IOHprofiler_random random_generator(1);
-
 static int budget_scale = 100;
 
 std::vector<int> Initialization(int dimension) {
@@ -26,7 +25,7 @@ int mutation(std::vector<int> &x, double mutation_rate) {
 }
 
 /// This is an (1+1)_EA with static mutation rate = 1/n.
-void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem) {
+void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, std::shared_ptr<IOHprofiler_csv_logger> logger) {
   /// Declaration for variables in the algorithm
   std::vector<int> x;
   std::vector<int> x_star;
@@ -38,6 +37,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem) {
   x = Initialization(problem->IOHprofiler_get_number_of_variables());
   copyVector(x,x_star);
   y = problem->evaluate(x);
+  logger->write_line(problem->loggerInfo());
   best_value = y[0];
 
   int count = 0;
@@ -45,6 +45,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem) {
     copyVector(x_star,x);
     if (mutation(x,mutation_rate)) {
       y = problem->evaluate(x);
+      logger->write_line(problem->loggerInfo());
     }
     if (y[0] >= best_value) {
       best_value = y[0];

@@ -81,9 +81,6 @@ public:
     }    
     this->current_problem = this->problem_list[problem_list_index];
     
-    if (this->csv_logger) {
-      this->current_problem->addCSVLogger(this->csv_logger);
-    }
     this->current_problem->reset_problem();
     return this->current_problem;
   };
@@ -98,9 +95,6 @@ public:
       this->get_problem_flag = true;
     }
     this->current_problem = this->problem_list[this->problem_list_index];
-    if (this->csv_logger) {
-      this->current_problem->addCSVLogger(this->csv_logger);
-    }
     this->current_problem->reset_problem();
     return this->current_problem;
   };
@@ -119,12 +113,6 @@ public:
     p->IOHprofiler_set_number_of_variables(dimension);
     return p;
   }
-
-
-  void addCSVLogger(std::shared_ptr<IOHprofiler_csv_logger> logger) {
-    this->csv_logger = logger;
-    this->csv_logger->target_suite(this->suite_name);
-  };
 
   int IOHprofiler_suite_get_number_of_problems() {
     return this->number_of_problems;
@@ -198,8 +186,6 @@ private:
   bool get_problem_flag = false;
 
   Problem_ptr current_problem = nullptr;
-
-  std::shared_ptr<IOHprofiler_csv_logger> csv_logger = nullptr;
 };
 
 #endif //_IOHPROFILER_SUITE_HPP
