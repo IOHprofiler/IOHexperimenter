@@ -133,7 +133,7 @@ public:
     u1 = IOHprofiler_uniform_rand();
     u2 = IOHprofiler_uniform_rand();
 
-    r = sqrt(-2 * log(u1) * cos(2 * PI * u2));
+    r = sqrt(-2 * log(u1)) * cos(2 * PI * u2);
     return r;
   }
 
