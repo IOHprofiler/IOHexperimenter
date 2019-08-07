@@ -21,7 +21,7 @@ public:
     configSuite->IOHprofiler_set_suite_dimension(conf.get_dimension());
     configSuite->loadProblem();
 
-    std::shared_ptr<IOHprofiler_csv_logger> logger(new IOHprofiler_csv_logger("./",conf.get_result_folder(),conf.get_algorithm_name(),conf.get_algorithm_info()));
+    std::shared_ptr<IOHprofiler_csv_logger> logger(new IOHprofiler_csv_logger(conf.get_output_directory(),conf.get_result_folder(),conf.get_algorithm_name(),conf.get_algorithm_info()));
     logger->set_complete_flag(conf.get_complete_triggers());
     logger->set_interval(conf.get_number_interval_triggers());
     logger->set_time_points(conf.get_base_evaluation_triggers(),conf.get_number_target_triggers());

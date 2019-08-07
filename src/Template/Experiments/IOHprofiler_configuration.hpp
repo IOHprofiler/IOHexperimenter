@@ -223,6 +223,7 @@ void readcfg(std::string filename){
   instance_id = get_Dict_int_vector(dict,"suite","instance_id",1,100);
   dimension = get_Dict_int_vector(dict,"suite","dimension",1,20000);
   
+  output_directory = get_Dict_String(dict,"logger","output_directory");
   result_folder = get_Dict_String(dict,"logger","result_folder");
   algorithm_info = get_Dict_String(dict,"logger","algorithm_info");
   algorithm_name = get_Dict_String(dict,"logger","algorithm_name");
@@ -246,6 +247,9 @@ void readcfg(std::string filename){
   };
   std::vector<int> get_dimension() {
     return this->dimension;
+  };
+  std::string get_output_directory() {
+    return this->output_directory;
   };
   std::string get_result_folder() {
     return this->result_folder;
@@ -279,6 +283,7 @@ private:
   std::vector<int> problem_id;
   std::vector<int> instance_id;
   std::vector<int> dimension;
+  std::string output_directory;
   std::string result_folder;
   std::string algorithm_info;
   std::string algorithm_name;
