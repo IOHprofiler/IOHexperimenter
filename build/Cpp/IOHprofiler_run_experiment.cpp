@@ -31,8 +31,13 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, s
   std::vector<int> x_star;
   std::vector<double> y;
   double best_value;
-  double mutation_rate = 1.0/problem->IOHprofiler_get_number_of_variables();
+  double * mutation_rate = new double(1);
+  *mutation_rate = 1.0/problem->IOHprofiler_get_number_of_variables();
   int budget = budget_scale * problem->IOHprofiler_get_number_of_variables() * problem->IOHprofiler_get_number_of_variables();
+
+  std::vector<std::shared_ptr<double>> parameters;
+  parameters.push_back(std::shared_ptr<double>(mutation_rate));
+  logger->set_parameters(parameters);
 
   x = Initialization(problem->IOHprofiler_get_number_of_variables());
   copyVector(x,x_star);
@@ -43,7 +48,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, s
   int count = 0;
   while (count <= budget && !problem->IOHprofiler_hit_optimal()) {
     copyVector(x_star,x);
-    if (mutation(x,mutation_rate)) {
+    if (mutation(x,*mutation_rate)) {
       y = problem->evaluate(x);
       logger->write_line(problem->loggerInfo());
     }

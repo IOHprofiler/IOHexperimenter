@@ -16,7 +16,6 @@
 #include <algorithm>
 #include <memory>
 #include <map>
-#include <variant>
 
 /// < The maximum length for path of IOHprofiler files.
 #define IOHprofiler_PATH_MAX 200

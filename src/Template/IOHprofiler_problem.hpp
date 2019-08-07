@@ -187,9 +187,9 @@ public:
   /// logger_info[2] best_so_far_raw_objectives
   /// logger_info[3] transformed_objective
   /// logger_info[4] best_so_far_transformed_objectives
-  std::vector<std::variant<size_t,int,double,std::string>> loggerInfo() {
-    std::vector<std::variant<size_t,int,double,std::string>> logger_info(5);
-    logger_info[0] = this->evaluations;
+  std::vector<double> loggerInfo() {
+    std::vector<double> logger_info(5);
+    logger_info[0] = (double)this->evaluations;
     logger_info[1] = this->raw_objectives[0];
     logger_info[2] = this->best_so_far_raw_objectives[0];
     logger_info[3] = this->transformed_objectives[0];

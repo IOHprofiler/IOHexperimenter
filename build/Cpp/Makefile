@@ -1,6 +1,6 @@
 CC=g++
 LDFLAGS += -lm -lboost_system -lboost_filesystem
-CCFLAGS = -g -std=c++17 -w
+CCFLAGS = -g -std=c++11 -w
 OBJS=*.o
 ODIR=obj
 BIN1=IOHprofiler_run_experiment

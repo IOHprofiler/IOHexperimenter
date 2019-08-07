@@ -67,6 +67,9 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
   this->problem_id = problem_id;
   this->dimension = dimension;
   this->instance = instance;
+  if (this->logging_parameters.size() != 0) {
+    this->logging_parameters.clear();
+  }
 
   std::string sub_directory_name = this->output_directory + IOHprofiler_path_separator 
                           + this->folder_name + IOHprofiler_path_separator
@@ -136,6 +139,12 @@ void IOHprofiler_csv_logger::target_suite(std::string suite_name){
   this->suite_name = suite_name;
 }
 
+void IOHprofiler_csv_logger::set_parameters(std::vector<std::shared_ptr<double>> parameters) {
+  for (size_t i = 0; i != parameters.size(); i++) {
+    this->logging_parameters.push_back(parameters[i]);
+  }
+}
+
 /// todo The precision of double values.
 void IOHprofiler_csv_logger::write_line(size_t evaluations, double y, double best_so_far_y,
                            double transformed_y, double best_so_far_transformed_y,
@@ -178,45 +187,14 @@ void IOHprofiler_csv_logger::write_line(size_t evaluations, double y, double bes
   }
 };
 
-void IOHprofiler_csv_logger::write_line(const std::vector<std::variant<size_t,int,double,std::string>> logger_info) {
-  size_t evaluations = std::get<size_t>(logger_info[0]);
-  double y = std::get<double>(logger_info[1]);
-  double best_so_far_y = std::get<double>(logger_info[2]);
-  double transformed_y = std::get<double>(logger_info[3]);
-  double best_so_far_transformed_y = std::get<double>(logger_info[4]);
+void IOHprofiler_csv_logger::write_line(const std::vector<double> logger_info) {
+  size_t evaluations = (size_t)(logger_info[0]);
+  double y = logger_info[1];
+  double best_so_far_y = logger_info[2];
+  double transformed_y = logger_info[3];
+  double best_so_far_transformed_y = logger_info[4];
 
-  std::string written_line = std::to_string(evaluations) + " " + std::to_string(y) + " "
-                           + std::to_string(best_so_far_y) + " " + std::to_string(transformed_y) + " "
-                           + std::to_string(best_so_far_transformed_y);
-  written_line += '\n';
-  if (complete_trigger()) {
-    if (!this->cdat.is_open()) {
-      IOH_error("*.cdat file is not open");
-    }
-    this->cdat << written_line;
-  }
-  if (interval_trigger(evaluations)) {
-    if (!this->idat.is_open()) {
-      IOH_error("*.idat file is not open");
-    }
-    this->idat << written_line;
-  }
-  if (update_trigger(transformed_y)) {
-    if (!this->dat.is_open()) {
-      IOH_error("*.dat file is not open");
-    }
-    this->dat << written_line;
-  }
-  if (time_points_trigger(evaluations)) {
-    if (!this->tdat.is_open()) {
-      IOH_error("*.tdat file is not open");
-    }
-    this->tdat << written_line;
-  }
-
-  if (transformed_y > this->found_optimal[0]) {
-    this->update_logger_info(evaluations,transformed_y);
-  }
+  this->write_line(evaluations,y,best_so_far_transformed_y,transformed_y,best_so_far_transformed_y);
 };
 
 
@@ -227,6 +205,14 @@ void IOHprofiler_csv_logger::write_line(size_t evaluations, double y, double bes
   std::string written_line = std::to_string(evaluations) + " " + std::to_string(y) + " "
                            + std::to_string(best_so_far_y) + " " + std::to_string(transformed_y) + " "
                            + std::to_string(best_so_far_transformed_y);
+  
+  if (this->logging_parameters.size() != 0) {
+    for (size_t i = 0; i != this->logging_parameters.size(); i++) {
+      written_line += " ";
+      written_line += std::to_string(*logging_parameters[i]);
+    }
+  }
+  
   written_line += '\n';
   if (complete_trigger()) {
     if (!this->cdat.is_open()) {

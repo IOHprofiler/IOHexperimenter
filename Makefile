@@ -1,6 +1,6 @@
 CC=g++
 LDFLAGS += -lm -lboost_system -lboost_filesystem
-CCFLAGS = -g -std=c++17 -w
+CCFLAGS = -g -std=c++11 -w
 SUBDIRS=src
 ROOT_DIR=$(shell pwd)
 OBJS_DIR=build/Cpp/obj

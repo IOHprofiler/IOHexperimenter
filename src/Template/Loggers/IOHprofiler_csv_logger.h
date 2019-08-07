@@ -55,10 +55,10 @@ public:
                   std::vector<double> parameters);
   void write_line(size_t evaluations, double y, double best_so_far_y,
                   double transformed_y, double best_so_far_transformed_y);
-  void write_line(std::vector<std::variant<size_t,int,double,std::string>> logger_info);
+  void write_line(std::vector<double> logger_info);
   void update_logger_info(size_t optimal_evaluations, double found_optimal);
 
-  
+  void set_parameters(std::vector<std::shared_ptr<double>> parameters);
 
 private:
   std::string folder_name;
@@ -86,6 +86,8 @@ private:
   int last_dimension = 0;
   int last_problem_id = -1;
   
+  std::vector<std::shared_ptr<double>> logging_parameters; /// < parameters to be logged as logging evaluation information.
+
   /// \fn std::string IOHprofiler_experiment_folder_name()
   /// \brief return an available name of folder to be created.
   std::string IOHprofiler_experiment_folder_name();
