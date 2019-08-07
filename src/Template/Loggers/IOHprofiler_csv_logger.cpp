@@ -92,7 +92,7 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
     if (this->cdat.is_open()) {
       this->cdat.close();
     }
-    this->cdat.open(cdat_name.c_str(),std::ofstream::app);
+    this->cdat.open(cdat_name.c_str(),std::ofstream::out | std::ofstream::app);
     this->cdat << dat_header << '\n';
   }
 
@@ -104,7 +104,7 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
     if (this->idat.is_open()) {
       this->idat.close();
     }
-    this->idat.open(idat_name.c_str(),std::ofstream::app);
+    this->idat.open(idat_name.c_str(),std::ofstream::out | std::ofstream::app);
     this->idat << dat_header << '\n';
   }
 
@@ -116,7 +116,7 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
     if (this->dat.is_open()) {
       this->dat.close();
     }
-    this->dat.open(dat_name.c_str(),std::ofstream::app);
+    this->dat.open(dat_name.c_str(),std::ofstream::out | std::ofstream::app);
     this->dat << dat_header << '\n';
   }
 
@@ -128,7 +128,7 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
     if (this->tdat.is_open()) {
       this->tdat.close();
     }
-    this->tdat.open(tdat_name.c_str(),std::ofstream::app);
+    this->tdat.open(tdat_name.c_str(),std::ofstream::out | std::ofstream::app);
     this->tdat << dat_header << '\n';
   }
   openInfo(problem_id,dimension);
@@ -256,7 +256,7 @@ void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension) {
     if (fs::exists(infoFile_name.c_str())) {
       titleflag = "\n";
     }
-    this->infoFile.open(infoFile_name.c_str(),std::ofstream::app);
+    this->infoFile.open(infoFile_name.c_str(),std::ofstream::out | std::ofstream::app);
     this->infoFile << titleflag;
     this->infoFile << "suite = " << this->suite_name << ", funcId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
     this->infoFile << "data_f" << problem_id << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << ".dat";     
