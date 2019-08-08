@@ -50,7 +50,7 @@ public:
   }
 
 
-std::vector<double> internal_evaluate(std::vector<int> x) {
+std::vector<double> internal_evaluate(const std::vector<int> &x) {
     std::vector<double> y;
     int i, j,index;
     int n = x.size();

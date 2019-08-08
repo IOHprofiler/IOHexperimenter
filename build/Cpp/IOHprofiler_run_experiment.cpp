@@ -40,21 +40,21 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, s
   logger->set_parameters(parameters);
 
   x = Initialization(problem->IOHprofiler_get_number_of_variables());
-  copyVector(x,x_star);
+  x_star = x;
   y = problem->evaluate(x);
   logger->write_line(problem->loggerInfo());
   best_value = y[0];
 
   int count = 0;
   while (count <= budget && !problem->IOHprofiler_hit_optimal()) {
-    copyVector(x_star,x);
+    x = x_star;
     if (mutation(x,*mutation_rate)) {
       y = problem->evaluate(x);
       logger->write_line(problem->loggerInfo());
     }
     if (y[0] >= best_value) {
       best_value = y[0];
-      copyVector(x,x_star);
+      x_star = x;
     }
     count++;
   }
@@ -63,7 +63,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, s
 void _run_experiment() {
   std::string configName = "./configuration.ini";
   IOHprofiler_experimenter<int> experimenter(configName,evolutionary_algorithm);
-  experimenter._set_independent_runs(2);
+  experimenter._set_independent_runs(10);
   experimenter._run();
 }
 

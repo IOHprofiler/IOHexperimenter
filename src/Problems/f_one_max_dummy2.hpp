@@ -47,12 +47,13 @@ public:
     IOHprofiler_set_evaluate_int_info(dummy(length,0.9,10000));
   }
   
-  std::vector<double> internal_evaluate(std::vector<int> x) {
+  std::vector<double> internal_evaluate(const std::vector<int> &x) {
     std::vector<double> y;
-    int n = IOHprofiler_get_evaluate_int_info().size();
+    std::vector<int> info = IOHprofiler_get_evaluate_int_info();
+    int n = info.size();
     int result = 0;
     for (int i = 0; i != n; ++i) {
-      result += x[IOHprofiler_get_evaluate_int_info()[i]];
+      result += x[info[i]];
     }
     y.push_back(result);
     return y;

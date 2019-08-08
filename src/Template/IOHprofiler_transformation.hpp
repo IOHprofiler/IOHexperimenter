@@ -28,15 +28,15 @@ public:
   void transform_vars_xor(std::vector<int> &x, const int seed) {
     std::vector<double> random_x;
     int xor_value;
-
-    random_x = IOHprofiler_uniform_rand(x.size(),seed);
-    for (int i = 0; i < x.size(); ++i) {
+    int n = x.size();
+    random_x = IOHprofiler_uniform_rand(n,seed);
+    for (int i = 0; i < n; ++i) {
       xor_value = (int)(2 * floor(1e4 * random_x[i]) / 1e4 / 1);
       x[i] = xor_compute(x[i],xor_value);
     }
   }
 
-  static int sigma_compute(const std::vector<int> x, const int pos) {
+  static int sigma_compute(const std::vector<int> &x, const int pos) {
     return x[pos];
   }
 
@@ -49,7 +49,7 @@ public:
     std::vector<double> random_x;
     int N = x.size(),t,temp;
     
-    copyVector(x,copy_x);
+    copy_x = x;
 
     index.reserve(N);
     for (int i = 0; i != N; ++i) {

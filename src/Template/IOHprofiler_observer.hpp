@@ -82,7 +82,7 @@ public:
   }
   
   void set_time_points(std::vector<int> time_points, int number_of_evaluations) {
-    copyVector(time_points, this->observer_time_points);
+    this->observer_time_points = time_points;
     this->observer_number_of_evaluations = number_of_evaluations;
   }
 

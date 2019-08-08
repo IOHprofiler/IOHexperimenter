@@ -40,7 +40,7 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> internal_evaluate(std::vector<int> x) {
+  std::vector<double> internal_evaluate(const std::vector<int> &x) {
     std::vector<double> y;
     int n = x.size();
     int result = 0;

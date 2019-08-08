@@ -41,7 +41,7 @@ public:
     return (x % N + N) %N;
   }
 
-  std::vector<double> internal_evaluate(std::vector<int> x) {
+  std::vector<double> internal_evaluate(const std::vector<int> &x) {
     std::vector<double> y;
     int i,j,neig;
     int n = x.size();

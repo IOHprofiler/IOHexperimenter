@@ -39,7 +39,7 @@ public:
     IOHprofiler_set_optimal((double)dimension);
   };
 
-  std::vector<double> internal_evaluate(std::vector<int> x) {
+  std::vector<double> internal_evaluate(const std::vector<int> &x) {
     std::vector<double> y;
     int n = x.size();
     int result = 0;

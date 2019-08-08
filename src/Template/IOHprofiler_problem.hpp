@@ -36,7 +36,7 @@ public:
   ///
   /// The internal_evaluate function is to be used in evaluate function.
   /// This function must be decalred in derived function of new problems.
-  virtual std::vector<double> internal_evaluate(std::vector<InputType> x) {
+  virtual std::vector<double> internal_evaluate(const std::vector<InputType> &x) {
     std::vector<double> result;
     printf("No evaluate function defined\n");
     return result;
@@ -55,32 +55,27 @@ public:
   /// in this function.
   /// \param x A InputType vector of variables.
   /// \return A double vector of objectives.
-  std::vector<double> evaluate(std::vector<InputType> x) {
-    std::vector<double> y;  
+  std::vector<double> evaluate(std::vector<InputType> x) { 
     ++this->evaluations;
 
     variables_transformation(x);
-    y = internal_evaluate(x);
+    this->raw_objectives = internal_evaluate(x);
     
-
-    copyVector(y,this->raw_objectives);
-    if (compareObjectives(y,this->best_so_far_raw_objectives)) {
-      copyVector(y,this->best_so_far_raw_objectives);
-      this->best_so_far_raw_evaluations = this->evaluations;
-    }
-    
-    objectives_transformation(y);
-    if (compareObjectives(y,this->best_so_far_transformed_objectives)) {
-      copyVector(y,this->best_so_far_transformed_objectives);
+    this->transformed_objectives = this->raw_objectives;
+    objectives_transformation(this->transformed_objectives);
+    if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives)) {
+      this->best_so_far_transformed_objectives = this->transformed_objectives;
       this->best_so_far_transformed_evaluations = this->evaluations;
+      this->best_so_far_raw_objectives = this->raw_objectives;
+      this->best_so_far_raw_evaluations = this->evaluations;
+    
     }
 
-    if (compareVector(y,this->optimal)) {
+    if (compareVector(this->transformed_objectives,this->optimal)) {
       this->optimalFound = true;
     }
 
-    copyVector(y, this->transformed_objectives);
-    return y;
+    return this->transformed_objectives;
   };
   
 
@@ -97,19 +92,19 @@ public:
     variables_transformation(x);
     y = internal_evaluate(x);
     
-    copyVector(y,this->raw_objectives);
+    this->raw_objectives = y;
     if (compareObjectives(y,this->best_so_far_raw_objectives)) {
-      copyVector(y,this->best_so_far_raw_objectives);
+      this->best_so_far_raw_objectives = y;
       this->best_so_far_raw_evaluations = this->evaluations;
     }
     
     objectives_transformation(y);
     if (compareObjectives(y,this->best_so_far_transformed_objectives)) {
-      copyVector(y,this->best_so_far_transformed_objectives);
+      this->best_so_far_transformed_objectives = y;
       this->best_so_far_transformed_evaluations = this->evaluations;
     }
     
-    copyVector(y, this->transformed_objectives);
+    this->transformed_objectives = y;
     if (compareVector(y,this->optimal)) {
       this->optimalFound = true;
     }
@@ -257,7 +252,7 @@ public:
   };
 
   void IOHprofiler_set_lowerbound(std::vector<InputType> lowerbound) {
-    copyVector(lowerbound,this->lowerbound);
+    this->lowerbound = lowerbound;
   };
 
   std::vector<InputType> IOHprofiler_get_upperbound() {
@@ -273,7 +268,7 @@ public:
   };
 
   void IOHprofiler_set_upperbound(std::vector<InputType> upperbound) {
-    copyVector(upperbound,this->upperbound);
+    this->upperbound = upperbound;
   };
 
   std::vector<int> IOHprofiler_get_evaluate_int_info() {
@@ -281,7 +276,7 @@ public:
   };
 
   void IOHprofiler_set_evaluate_int_info(std::vector<int> evaluate_int_info) {
-    copyVector(evaluate_int_info, this->evaluate_int_info);
+    this->evaluate_int_info = evaluate_int_info;
   };
 
   std::vector<double> IOHprofiler_get_evaluate_double_info() {
@@ -289,7 +284,7 @@ public:
   };
 
   void IOHprofiler_set_evaluate_double_info(std::vector<double> evaluate_double_info) {
-    copyVector(evaluate_double_info, this->evaluate_double_info);
+    this->evaluate_double_info = evaluate_double_info;
   };
  
   int IOHprofiler_get_number_of_variables() {
@@ -327,7 +322,7 @@ public:
   /// \para number_of_variables, best_variables
   void IOHprofiler_set_number_of_variables(int number_of_variables, std::vector<InputType> best_variables) {
     this->number_of_variables = number_of_variables;
-    copyVector(best_variables,this->best_variables);
+    this->best_variables = best_variables;
     if (this->lowerbound.size() != 0) {
       this->IOHprofiler_set_lowerbound(this->lowerbound[0]);
     }
@@ -345,14 +340,8 @@ public:
 
   void IOHprofiler_set_number_of_objectives(int number_of_objectives) {
     this->number_of_objectives = number_of_objectives;
-    this->raw_objectives.reserve(this->number_of_objectives);
-    this->transformed_objectives.reserve(this->number_of_objectives);
-    this->best_so_far_raw_objectives.reserve(this->number_of_objectives);
-    this->best_so_far_transformed_objectives.reserve(this->number_of_objectives);
-    for (int i = 0; i !=  this->number_of_objectives; ++i) {
-      this->best_so_far_raw_objectives.push_back(DBL_MIN_EXP);
-      this->best_so_far_transformed_objectives.push_back(DBL_MIN_EXP);
-    }
+    this->best_so_far_raw_objectives = std::vector<double>(this->number_of_objectives,-DBL_MAX);
+    this->best_so_far_transformed_objectives = std::vector<double>(this->number_of_objectives,-DBL_MAX);
   };
 
   std::vector<double> IOHprofiler_get_raw_objectives() {
@@ -383,7 +372,7 @@ public:
   };
 
   void IOHprofiler_set_best_variables(std::vector<InputType> best_variables) {
-    copyVector(best_variables,this->best_variables);
+    this->best_variables = best_variables;
   };
 
   std::vector<double> IOHprofiler_get_optimal() {
@@ -399,7 +388,7 @@ public:
   };
 
   void IOHprofiler_set_optimal(std::vector<double> optimal) {
-    copyVector(optimal,this->optimal);
+    this->optimal = optimal;
   };
 
   void IOHprofiler_evaluate_optimal(std::vector<InputType> best_variables) {
