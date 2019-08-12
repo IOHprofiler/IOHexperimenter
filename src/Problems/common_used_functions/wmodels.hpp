@@ -24,7 +24,7 @@ static std::vector<int> dummy(int number_of_variables, double select_rate, long 
     position.push_back(i);
   }
 
-  random_numbers = random_methods.IOHprofiler_uniform_rand((size_t)select_num,inseed);
+  random_methods.IOHprofiler_uniform_rand((size_t)select_num,inseed,random_numbers);
   for (int i = 0; i < select_num; ++i) {
     random_index.push_back((int)floor(random_numbers[i] * 1e4 / 1e4 * number_of_variables));
   }

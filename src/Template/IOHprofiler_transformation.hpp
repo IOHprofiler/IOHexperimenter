@@ -29,7 +29,7 @@ public:
     std::vector<double> random_x;
     int xor_value;
     int n = x.size();
-    random_x = IOHprofiler_uniform_rand(n,seed);
+    IOHprofiler_uniform_rand(n,seed, random_x);
     for (int i = 0; i < n; ++i) {
       xor_value = (int)(2 * floor(1e4 * random_x[i]) / 1e4 / 1);
       x[i] = xor_compute(x[i],xor_value);
@@ -56,7 +56,7 @@ public:
       index[i] = i;
     }
 
-    random_x = IOHprofiler_uniform_rand(N,seed);
+    IOHprofiler_uniform_rand(N,seed,random_x);
     for (int i = 0; i != N; ++i) {
       t = (int)floor(random_x[i] * N);
       temp = index[0];
@@ -72,7 +72,7 @@ public:
   /// \brief transformation 'a * f(x)'.
   void transform_obj_scale(std::vector<double> &y, const int seed) {
     std::vector<double> scale;
-    scale = IOHprofiler_uniform_rand(1,seed);
+    IOHprofiler_uniform_rand(1,seed,scale);
     scale[0] = scale[0] * 1e4 / 1e4 * 4.8 + 0.2;
     for (int i = 0; i < y.size(); ++i) {
       y[i] = y[i] * scale[0];
@@ -83,11 +83,29 @@ public:
   /// \brief transformation 'f(x) + b'.
   void transform_obj_shift(std::vector<double> &y, const int seed) {
     std::vector<double> shift;
-    shift = IOHprofiler_uniform_rand(1,seed);
+    IOHprofiler_uniform_rand(1,seed,shift);
     shift[0] = shift[0] * 1e4 / 1e4 * 2000 - 1000;
     for (int i = 0; i < y.size(); ++i) {
       y[i] = y[i] + shift[0];
     }
+  }
+
+  /// \fn void transform_obj_scale(std::vector<double> &y, const int seed)
+  /// \brief transformation 'a * f(x)'.
+  void transform_obj_scale(double &y, const int seed) {
+    std::vector<double> scale;
+    IOHprofiler_uniform_rand(1,seed,scale);
+    scale[0] = scale[0] * 1e4 / 1e4 * 4.8 + 0.2;
+    y = y * scale[0];
+  }
+
+  /// \fn void transform_obj_shift(std::vector<double> &y, const int seed)
+  /// \brief transformation 'f(x) + b'.
+  void transform_obj_shift(double &y, const int seed) {
+    std::vector<double> shift;
+    IOHprofiler_uniform_rand(1,seed,shift);
+    shift[0] = shift[0] * 1e4 / 1e4 * 2000 - 1000;
+    y = y + shift[0];
   }
 };
 #endif //IOHPROFILER_TRANSFORMATION_HPP

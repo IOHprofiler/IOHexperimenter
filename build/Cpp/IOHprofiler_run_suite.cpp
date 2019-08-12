@@ -27,26 +27,26 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, s
   /// Declaration for variables in the algorithm
   std::vector<int> x;
   std::vector<int> x_star;
-  std::vector<double> y;
+  double y;
   double best_value;
   double mutation_rate = 1.0/problem->IOHprofiler_get_number_of_variables();
 
   x = Initialization(problem->IOHprofiler_get_number_of_variables());
-  copyVector(x,x_star);
+  x_star = x;
   y = problem->evaluate(x);
   logger->write_line(problem->loggerInfo());
-  best_value = y[0];
+  best_value = y;
 
   int count= 0;
   while (count <= 100) {
-    copyVector(x_star,x);
+    x = x_star;
     if (mutation(x,mutation_rate)) {
       y = problem->evaluate(x);
       logger->write_line(problem->loggerInfo());
     }
-    if (y[0] > best_value) {
-      best_value = y[0];
-      copyVector(x,x_star);
+    if (y > best_value) {
+      best_value = y;
+      x_star = x;
     }
     count++;
   }

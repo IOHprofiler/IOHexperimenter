@@ -41,21 +41,18 @@ public:
     IOHprofiler_set_optimal(floor((double)(dimension * 0.5)));
   };
 
-  void update_evaluate_int_info() {
-    int length = IOHprofiler_get_number_of_variables();
-    IOHprofiler_set_evaluate_int_info(dummy(length,0.5,10000));
+  std::vector<int> info;
+  void prepare_problem() {
+    info = dummy(IOHprofiler_get_number_of_variables(),0.5,10000);
   }
-  
-  std::vector<double> internal_evaluate(const std::vector<int> &x) {
-    std::vector<double> y;
-    std::vector<int> info = IOHprofiler_get_evaluate_int_info();
-    int n = info.size();
+
+  double internal_evaluate(const std::vector<int> &x) {
+    int n = this->info.size();
     int result = 0;
     for (int i = 0; i != n; ++i) {
-      result += x[info[i]];
+      result += x[this->info[i]];
     }
-    y.push_back(result);
-    return y;
+    return (double)result;
   };
 
   static OneMax_Dummy1 * createInstance() {

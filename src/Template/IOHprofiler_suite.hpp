@@ -70,7 +70,7 @@ public:
       return nullptr;
     }
 
-    if (this->problem_list_index == this->size_of_problem_list - 1) {
+    if (this->problem_list_index == this->size_of_problem_list - 1 && this->get_problem_flag == true) {
       return nullptr;
     }
 

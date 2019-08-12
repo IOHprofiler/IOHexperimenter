@@ -50,7 +50,7 @@ void copyVector(const std::vector<valueType> v1, std::vector<valueType> &v2){
 ///
 /// Return 'true' if all elements in two vectors are the same.
 template<class valueType>
-bool compareVector(std::vector<valueType> &v1, std::vector<valueType> v2){
+bool compareVector(const std::vector<valueType> &v1, const std::vector<valueType> v2){
   int n = v1.size();
   if(n != v2.size()){
     IOH_error("Two compared vector must be with the same size\n");
@@ -71,7 +71,7 @@ bool compareVector(std::vector<valueType> &v1, std::vector<valueType> v2){
 /// This is used to compare to objectives vector, details needs to be discussed
 /// for multi-objective optimization.
 template<class valueType>
-bool compareObjectives(std::vector<valueType> &v1, std::vector<valueType> v2){
+bool compareObjectives(const std::vector<valueType> &v1, const std::vector<valueType> &v2){
   int n = v1.size();
   if(n != v2.size()){
     IOH_error("Two compared objective vector must be with the same size\n");

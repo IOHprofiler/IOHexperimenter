@@ -39,15 +39,14 @@ public:
     IOHprofiler_set_optimal((double)dimension);
   };
 
-  std::vector<double> internal_evaluate(const std::vector<int> &x) {
-    std::vector<double> y;
+  double internal_evaluate(const std::vector<int> &x) {
+  
     int n = x.size();
     int result = 0;
     for (int i = 0; i != n; ++i) {
       result += x[i];
     }
-    y.push_back((double)result);
-    return y;
+    return (double)result;
   };
 
   static OneMax * createInstance() {

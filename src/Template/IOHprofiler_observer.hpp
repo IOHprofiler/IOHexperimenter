@@ -131,7 +131,7 @@ public:
   }
 
   void reset_observer() {
-    this->current_best_fitness = DBL_MIN_EXP;
+    this->current_best_fitness = -DBL_MAX;
     this->evaluations_value1 = 1;
     this->time_points_index = 0;
     this->time_points_expi = 0;
@@ -154,7 +154,7 @@ private:
   int evaluations_expi = 0; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
 
   /// todo. Currently this is only for single objective optimization.
-  double current_best_fitness = DBL_MIN_EXP;
+  double current_best_fitness = -DBL_MAX;
   
 };
 

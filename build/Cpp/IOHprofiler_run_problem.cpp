@@ -46,25 +46,25 @@ void _run_problem() {
 
   std::vector<int> x;
   std::vector<int> x_star;
-  std::vector<double> y;
+  double y;
   double best_value;
   double mutation_rate = 1.0/dimension;
 
   x = Initialization(dimension);
-  copyVector(x,x_star);
+  x_star = x;
   y = om.evaluate(x);
   logger.write_line(om.loggerInfo());
-  best_value = y[0];
+  best_value = y;
 
   while(!om.IOHprofiler_hit_optimal()) {
-    copyVector(x_star,x);
+    x = x_star;
     if(mutation(x,mutation_rate)) {
       y = om.evaluate(x);
       logger.write_line(om.loggerInfo());
     }
-    if(y[0] > best_value) {
-      best_value = y[0];
-      copyVector(x,x_star);
+    if(y > best_value) {
+      best_value = y;
+      x_star = x;
     }
   }
 }

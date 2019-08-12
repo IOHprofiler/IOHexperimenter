@@ -56,8 +56,8 @@ public:
     return result;
   }
 
-  std::vector<double> internal_evaluate(const std::vector<int> &x) {
-    std::vector<double> y;
+  double internal_evaluate(const std::vector<int> &x) {
+
     int n = x.size();
     double result = 0.0, cor;
     for (int k = 1; k != n; ++k) {
@@ -65,8 +65,7 @@ public:
       result += cor * cor;
     }
     result = (double)(n*n)/2.0/result;
-    y.push_back(result);
-    return y;
+    return (double)result;
   };
 
   static LABS * createInstance() {

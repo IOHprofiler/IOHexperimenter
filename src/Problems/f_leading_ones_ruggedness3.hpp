@@ -40,13 +40,13 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  void update_evaluate_double_info() {
-    int length = IOHprofiler_get_number_of_variables();
-    IOHprofiler_set_evaluate_double_info(ruggedness3(length));
+  std::vector<double> info;
+  void prepare_problem() {
+    info = ruggedness3(IOHprofiler_get_number_of_variables());
   }
 
-  std::vector<double> internal_evaluate(const std::vector<int> &x) {
-    std::vector<double> y;
+  double internal_evaluate(const std::vector<int> &x) {
+    
     int n = x.size();
     int result = 0;
     for (int i = 0; i != n; ++i) {
@@ -56,9 +56,8 @@ public:
         break;
       }
     }
-    result = IOHprofiler_get_evaluate_double_info()[(int)(result+0.5)];
-    y.push_back(result);
-    return y;
+    result = this->info[(int)(result+0.5)];
+    return (double)result;
   };
 
   static LeadingOnes_Ruggedness3 * createInstance() {
