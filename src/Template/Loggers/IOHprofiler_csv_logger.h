@@ -50,15 +50,12 @@ public:
   void openInfo(int problem_id, int dimension);
   void write_info(int instance, double optimal, int evaluations);
 
-  void write_line(size_t evaluations, double y, double best_so_far_y,
-                  double transformed_y, double best_so_far_transformed_y,
-                  std::vector<double> parameters);
-  void write_line(size_t evaluations, double y, double best_so_far_y,
-                  double transformed_y, double best_so_far_transformed_y);
-  void write_line(std::vector<double> logger_info);
+  void write_line(const size_t &evaluations, const double &y, const double &best_so_far_y,
+                 const double &transformed_y, const double &best_so_far_transformed_y);
+  void write_line(const std::vector<double> &logger_info);
   void update_logger_info(size_t optimal_evaluations, double found_optimal);
 
-  void set_parameters(std::vector<std::shared_ptr<double>> parameters);
+  void set_parameters(const std::vector<std::shared_ptr<double>> &parameters);
 
 private:
   std::string folder_name;
