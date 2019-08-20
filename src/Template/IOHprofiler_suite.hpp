@@ -43,7 +43,9 @@ public:
   /// Before acquiring a problem from the suite, this function must be invoked.
   /// Otherwise the list of problem is empty.
   void loadProblem() {
-    std::vector<Problem_ptr>().swap(this->problem_list);
+    if (this->size() != 0) {
+      this->clear();
+    }
     this->size_of_problem_list = this->number_of_dimensions * this->number_of_instances * this->number_of_problems;
     this->problem_list_index = 0;
 
@@ -53,7 +55,7 @@ public:
           Problem_ptr p = get_problem(this->problem_id_name_map[this->problem_id[i]],
                                         this->instance_id[h],
                                         this->dimension[j]);
-          this->problem_list.push_back(p);
+          this->push_back(p);
         }
       }
     }
@@ -79,7 +81,7 @@ public:
     } else {
       this->problem_list_index++;
     }    
-    this->current_problem = this->problem_list[problem_list_index];
+    this->current_problem = (*this)[problem_list_index];
     
     this->current_problem->reset_problem();
     return this->current_problem;
@@ -94,7 +96,7 @@ public:
     if (this->get_problem_flag == false) {
       this->get_problem_flag = true;
     }
-    this->current_problem = this->problem_list[this->problem_list_index];
+    this->current_problem = (*this)[this->problem_list_index];
     this->current_problem->reset_problem();
     return this->current_problem;
   };
@@ -180,7 +182,6 @@ private:
   PROBLEM_ID_NAME problem_id_name_map;
   PROBLEM_NAME_ID problem_name_id_map;
 
-  std::vector<Problem_ptr> problem_list;
   size_t problem_list_index = 0;
   size_t size_of_problem_list;
   bool get_problem_flag = false;
