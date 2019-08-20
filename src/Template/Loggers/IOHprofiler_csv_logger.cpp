@@ -48,35 +48,20 @@ std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name() {
   return renamed_directory;
 }
 
-/// \fn void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int instance)
+/// \fn void IOHprofiler_csv_logger::write_header()
 ///
-/// This function is to be invoked by IOHprofiler_problem class.
-/// To update info of current working problem, and to write headline in corresponding files.
-void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int instance){
-  /// Handle info of the previous problem.
-  if(infoFile.is_open()) write_info(this->instance,this->found_optimal[0],this->optimal_evaluations);
-
-  this->optimal_evaluations = 0;
-
-  /// TO DO: Update the method of initializing this value.
-  this->found_optimal.clear();
-  this->found_optimal.push_back(-DBL_MAX);
-  
-  reset_observer();
-
-  this->problem_id = problem_id;
-  this->dimension = dimension;
-  this->instance = instance;
-  if (this->logging_parameters.size() != 0) {
-    this->logging_parameters.clear();
-  }
-
+/// This function is to be invoked before recoring evaluations (if evaluations == 0).
+void IOHprofiler_csv_logger::write_header() {
   std::string sub_directory_name = this->output_directory + IOHprofiler_path_separator 
-                          + this->folder_name + IOHprofiler_path_separator
-                          + "data_f" + std::to_string(problem_id);
+                        + this->folder_name + IOHprofiler_path_separator
+                        + "data_f" + std::to_string(problem_id);
   
-  
-  const std::string dat_header = "\"function evaluation\" \"current f(x)\" \"best-so-far f(x)\" \"current af(x)+b\"  \"best af(x)+b\"";
+  std::string dat_header = "\"function evaluation\" \"current f(x)\" \"best-so-far f(x)\" \"current af(x)+b\"  \"best af(x)+b\"";
+  if(this->logging_parameters_name.size() != 0) {
+    for (int i = 0; i != this->logging_parameters_name.size(); ++i) {
+      dat_header = dat_header + " \"" + this->logging_parameters_name[i] + "\"";
+    }
+  }
 
   if (!fs::exists(sub_directory_name.c_str())) {
     if (!fs::create_directory(sub_directory_name.c_str())) {
@@ -131,6 +116,28 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
     this->tdat.open(tdat_name.c_str(),std::ofstream::out | std::ofstream::app);
     this->tdat << dat_header << '\n';
   }
+}
+
+/// \fn void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int instance)
+///
+/// This function is to be invoked by IOHprofiler_problem class.
+/// To update info of current working problem, and to write headline in corresponding files.
+void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int instance){
+  /// Handle info of the previous problem.
+  if(infoFile.is_open()) write_info(this->instance,this->found_optimal[0],this->optimal_evaluations);
+
+  this->optimal_evaluations = 0;
+
+  /// TO DO: Update the method of initializing this value.
+  this->found_optimal.clear();
+  this->found_optimal.push_back(-DBL_MAX);
+  
+  reset_observer();
+
+  this->problem_id = problem_id;
+  this->dimension = dimension;
+  this->instance = instance;
+  
   openInfo(problem_id,dimension);
   
 };
@@ -140,8 +147,27 @@ void IOHprofiler_csv_logger::target_suite(std::string suite_name){
 }
 
 void IOHprofiler_csv_logger::set_parameters(const std::vector<std::shared_ptr<double>> &parameters) {
+  if (this->logging_parameters.size() != 0) {
+    this->logging_parameters.clear();
+    this->logging_parameters_name.clear();
+  }
   for (size_t i = 0; i != parameters.size(); i++) {
     this->logging_parameters.push_back(parameters[i]);
+    this->logging_parameters_name.push_back("parameter" + std::to_string(i+1));
+  }
+}
+
+void IOHprofiler_csv_logger::set_parameters(const std::vector<std::shared_ptr<double>> &parameters, const std::vector<std::string> &parameters_name) {
+  if (parameters_name.size() != parameters.size()) {
+    IOH_error("Parameters and their names are given with different size.");
+  }
+  if (this->logging_parameters.size() != 0) {
+    this->logging_parameters.clear();
+    this->logging_parameters_name.clear();
+  }
+  for (size_t i = 0; i != parameters.size(); i++) {
+    this->logging_parameters.push_back(parameters[i]);
+    this->logging_parameters_name.push_back(parameters_name[i]);
   }
 }
 
@@ -153,6 +179,9 @@ void IOHprofiler_csv_logger::write_line(const std::vector<double> &logger_info) 
 /// todo The precision of double values.
 void IOHprofiler_csv_logger::write_line(const size_t &evaluations, const double &y, const double &best_so_far_y,
                  const double &transformed_y, const double &best_so_far_transformed_y) {
+  if (evaluations == 1) {
+    this->write_header();
+  }
 
   std::string written_line = std::to_string(evaluations) + " " + std::to_string(y) + " "
                            + std::to_string(best_so_far_y) + " " + std::to_string(transformed_y) + " "
