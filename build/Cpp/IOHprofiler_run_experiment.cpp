@@ -38,7 +38,9 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, s
 
   std::vector<std::shared_ptr<double>> parameters;
   parameters.push_back(std::shared_ptr<double>(mutation_rate));
-  logger->set_parameters(parameters);
+  std::vector<std::string> parameters_name;
+  parameters_name.push_back("mutation_rate");
+  logger->set_parameters(parameters,parameters_name);
 
   x = Initialization(problem->IOHprofiler_get_number_of_variables());
   x_star = x;

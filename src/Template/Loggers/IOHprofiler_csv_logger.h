@@ -56,6 +56,7 @@ public:
   void update_logger_info(size_t optimal_evaluations, double found_optimal);
 
   void set_parameters(const std::vector<std::shared_ptr<double>> &parameters);
+  void set_parameters(const std::vector<std::shared_ptr<double>> &parameters, const std::vector<std::string> &parameters_name);
 
 private:
   std::string folder_name;
@@ -69,7 +70,6 @@ private:
   int dimension;
   int problem_id;
   int instance;
-  std::vector<std::string> parameter_name;
 
   std::fstream cdat;
   std::fstream idat;
@@ -84,11 +84,14 @@ private:
   int last_problem_id = -1;
   
   std::vector<std::shared_ptr<double>> logging_parameters; /// < parameters to be logged as logging evaluation information.
+  std::vector<std::string> logging_parameters_name; /// < name of parameters to be logged as logging evaluation information.
 
   /// \fn std::string IOHprofiler_experiment_folder_name()
   /// \brief return an available name of folder to be created.
   std::string IOHprofiler_experiment_folder_name();
   int IOHprofiler_create_folder(const std::string path);
+
+  void write_header();
 
   /// \fn openIndex()
   /// \brief to create the folder of logging files.
