@@ -1,7 +1,7 @@
 /// \file IOHprofiler_random.hpp
 /// \brief Head file for class IOHprofiler_transformation.
 ///
-/// A detailed file description.
+/// A detailed file description. The implementation refer to the work of NumBBO/CoCO team.
 ///
 /// \author Furong Ye
 /// \date 2019-06-27
@@ -11,23 +11,42 @@
 #include "IOHprofiler_common.h"
 
 #define PI 3.14159265359
+#define DEFAULT_SEED 1000
 
 class IOHprofiler_random {
 public:
   IOHprofiler_random() {
-    _seed_index = 0;
-    for (int i = 0; i < 32; ++i) {
-      this->_seed[i] = (long)time(NULL);
+    uint32_t seed = DEFAULT_SEED;
+    for (int i = 0; i < IOHprofiler_LONG_LAG; ++i) {
+      x[i] = ((double)seed) / (double)(((uint64_t)1UL << 32) - 1);
+      seed = (uint32_t)1812433253UL * (seed ^ (seed >> 30)) + ((uint32_t)i + 1);
     }
+    _seed_index = 0;
   }
 
-  IOHprofiler_random(long seed) {
+  IOHprofiler_random(uint32_t seed) {
+    for (int i = 0; i < IOHprofiler_LONG_LAG; ++i) {
+      x[i] = ((double)seed) / (double)(((uint64_t)1UL << 32) - 1);
+      seed = (uint32_t)1812433253UL * (seed ^ (seed >> 30)) + ((uint32_t)i + 1);
+    }
     _seed_index = 0;
-    for (int i = 64; i >= 0; --i) {
-      seed = _lcg_rand(seed);
-      if(i < 32) this->_seed[i] = seed;
-    } 
   }
+
+  void IOHprofiler_random_generate() {
+    for (int i = 0; i < IOHprofiler_SHORT_LAG; ++i) {
+        double t = this->x[i] + this->x[i + (IOHprofiler_LONG_LAG - IOHprofiler_SHORT_LAG)];
+        if (t >= 1.0)
+            t -= 1.0;
+        this->x[i] = t;
+    }
+    for (int i = IOHprofiler_SHORT_LAG; i < IOHprofiler_LONG_LAG; ++i) {
+        double t = this->x[i] + this->x[i - IOHprofiler_SHORT_LAG];
+        if (t >= 1.0)
+            t -= 1.0;
+        this->x[i] = t;
+    }
+    this->_seed_index = 0;
+}
 
   long _lcg_rand(const long &inseed) {
     
@@ -58,7 +77,7 @@ public:
     }
 
     seed = inseed;
-    for (int i = 34; i >= 0; --i) {
+    for (int i = 39; i >= 0; --i) {
       seed = _lcg_rand(seed);
       if(i < 32) {
         rand_seed[i] = seed;
@@ -69,13 +88,12 @@ public:
     seed = rand_seed[0];
     for (int i = 0; i < N; ++i) {
       rand_value = _lcg_rand(seed);
-
-      rand_seed[seed_index] = rand_value;
-      seed_index = (int)floor((double)rand_value / (double)67108865);
+      
+      seed_index = (int)floor((double)seed / (double)67108865);
       seed = rand_seed[seed_index];
+      rand_seed[seed_index] = rand_value;
 
-
-      rand_vec.push_back((double)rand_value/2.147483647e9);
+      rand_vec.push_back((double)seed/2.147483647e9);
       if (rand_vec[i] == 0.) {
         rand_vec[i] = 1e-99;
       }
@@ -110,27 +128,20 @@ public:
   }
 
   double IOHprofiler_uniform_rand() {
-    long _rand = _lcg_rand(this->_seed[_seed_index]);
-    
-    this->_seed[this->_seed_index] = _rand;
-    this->_seed_index = (int)floor((double)_rand / (double)67108865);
-    
-
-    rand_r = (double)_rand/2.147483647e9;
-    if (rand_r == 0.) {
-      rand_r = 1e-99;
+    if (this->_seed_index >= IOHprofiler_LONG_LAG) {
+      IOHprofiler_random_generate();
     }
-    return rand_r;
+    return this->x[this->_seed_index++];
   }
 
   double IOHprofiler_normal_rand() {
-    double u1, u2;
-    
-    u1 = IOHprofiler_uniform_rand();
-    u2 = IOHprofiler_uniform_rand();
-
-    rand_r = sqrt(-2 * log(u1)) * cos(2 * PI * u2);
-    return rand_r;
+    double normal;
+    normal = 0.0;
+    for (int i = 0; i < 12; ++i) {
+        normal += this->IOHprofiler_uniform_rand();
+    }
+    normal -= 6.0;
+    return normal;
   }
 
 private:
@@ -139,10 +150,14 @@ private:
 
   double rand_r;
 
-  long a = 16807; /// < multiplier.
-  long m = 2147483647; /// < modulus.
-  long q = 127773; /// < modulusdiv multiplier.
-  long r = 2836; /// < modulus mod multiplier.
+  const long a = 16807; /// < multiplier.
+  const long m = 2147483647; /// < modulus.
+  const long q = 127773; /// < modulusdiv multiplier.
+  const long r = 2836; /// < modulus mod multiplier.
+
+  const int IOHprofiler_SHORT_LAG  = 273;
+  const int IOHprofiler_LONG_LAG = 607;
+  double x[607];
 };
 
 #endif //_IOHPROFILER_RANDOM_HPP
