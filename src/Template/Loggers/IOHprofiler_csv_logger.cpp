@@ -153,6 +153,7 @@ void IOHprofiler_csv_logger::set_parameters(const std::vector<std::shared_ptr<do
     this->logging_parameters.clear();
     this->logging_parameters_name.clear();
   }
+
   for (size_t i = 0; i != parameters.size(); i++) {
     this->logging_parameters.push_back(parameters[i]);
     this->logging_parameters_name.push_back("parameter" + std::to_string(i+1));
