@@ -42,7 +42,8 @@ void _run_problem() {
   logger.activate_logger();
   logger.target_problem(om.IOHprofiler_get_problem_id(), 
                       om.IOHprofiler_get_number_of_variables(), 
-                      om.IOHprofiler_get_instance_id());
+                      om.IOHprofiler_get_instance_id(),
+                      om.IOHprofiler_get_problem_name());
 
   std::vector<int> x;
   std::vector<int> x_star;

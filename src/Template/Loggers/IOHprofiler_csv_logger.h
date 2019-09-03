@@ -44,10 +44,10 @@ public:
   void activate_logger();
   void clear_logger();
 
-  void target_problem(int problem_id, int dimension, int instance);
+  void target_problem(int problem_id, int dimension, int instance, std::string problem_name);
   void target_suite(std::string suite_name);
 
-  void openInfo(int problem_id, int dimension);
+  void openInfo(int problem_id, int dimension, std::string problem_name);
   void write_info(int instance, double optimal, int evaluations);
 
   void write_line(const size_t &evaluations, const double &y, const double &best_so_far_y,
@@ -70,6 +70,7 @@ private:
   int dimension;
   int problem_id;
   int instance;
+  std::string problem_name;
 
   std::fstream cdat;
   std::fstream idat;

@@ -58,13 +58,14 @@ public:
       std::clock_t c_start = std::clock();
       info = "f";
       info += std::to_string(current_problem->IOHprofiler_get_problem_id());
-      info += "_d" + std::to_string(current_problem->IOHprofiler_get_problem_id());
+      info += "_d" + std::to_string(current_problem->IOHprofiler_get_number_of_variables());
       info += "_i" + std::to_string(current_problem->IOHprofiler_get_instance_id());
       print_info(info);
 
       this->config_csv_logger->target_problem(current_problem->IOHprofiler_get_problem_id(), 
                                               current_problem->IOHprofiler_get_number_of_variables(), 
-                                              current_problem->IOHprofiler_get_instance_id());
+                                              current_problem->IOHprofiler_get_instance_id(),
+                                              current_problem->IOHprofiler_get_problem_name());
 
       algorithm(current_problem,this->config_csv_logger);
       
@@ -75,7 +76,8 @@ public:
         current_problem = configSuite->get_current_problem();
         this->config_csv_logger->target_problem(current_problem->IOHprofiler_get_problem_id(), 
                                               current_problem->IOHprofiler_get_number_of_variables(), 
-                                              current_problem->IOHprofiler_get_instance_id());
+                                              current_problem->IOHprofiler_get_instance_id(),
+                                              current_problem->IOHprofiler_get_problem_name());
         algorithm(current_problem,this->config_csv_logger);
         ++count;
 

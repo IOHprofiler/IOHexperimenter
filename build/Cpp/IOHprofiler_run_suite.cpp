@@ -80,7 +80,8 @@ void _run_suite() {
   while (problem = pbo.get_next_problem()) {
     logger->target_problem(problem->IOHprofiler_get_problem_id(), 
                           problem->IOHprofiler_get_number_of_variables(), 
-                          problem->IOHprofiler_get_instance_id());
+                          problem->IOHprofiler_get_instance_id(),
+                          problem->IOHprofiler_get_problem_name());
     evolutionary_algorithm(problem,logger);
   }
 }
