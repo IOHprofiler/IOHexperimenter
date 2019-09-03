@@ -1,4 +1,5 @@
 #include "../../src/Problems/f_one_max.hpp"
+#include "../../src/Template/Loggers/IOHprofiler_csv_logger.h"
 
 std::vector<int> Initialization(int dimension) {
   std::vector<int> x;
@@ -34,32 +35,37 @@ void _run_problem() {
   /// If no logger is added, there will be not any output files, but users
   /// can still get fitness values.
   std::vector<int> time_points{1,2,5};
-  std::shared_ptr<IOHprofiler_csv_logger> logger(new IOHprofiler_csv_logger("./","run_problem","EA","EA"));
-  logger->set_complete_flag(true);
-  logger->set_interval(0);
-  logger->set_time_points(time_points,10);
-  logger->activate_logger();
-  om.addCSVLogger(std::move(logger));
+  IOHprofiler_csv_logger logger("./","run_problem","EA","EA");
+  logger.set_complete_flag(true);
+  logger.set_interval(0);
+  logger.set_time_points(time_points,10);
+  logger.activate_logger();
+  logger.target_problem(om.IOHprofiler_get_problem_id(), 
+                      om.IOHprofiler_get_number_of_variables(), 
+                      om.IOHprofiler_get_instance_id(),
+                      om.IOHprofiler_get_problem_name());
 
   std::vector<int> x;
   std::vector<int> x_star;
-  std::vector<double> y;
+  double y;
   double best_value;
   double mutation_rate = 1.0/dimension;
 
   x = Initialization(dimension);
-  copyVector(x,x_star);
+  x_star = x;
   y = om.evaluate(x);
-  best_value = y[0];
+  logger.write_line(om.loggerInfo());
+  best_value = y;
 
   while(!om.IOHprofiler_hit_optimal()) {
-    copyVector(x_star,x);
+    x = x_star;
     if(mutation(x,mutation_rate)) {
       y = om.evaluate(x);
+      logger.write_line(om.loggerInfo());
     }
-    if(y[0] > best_value) {
-      best_value = y[0];
-      copyVector(x,x_star);
+    if(y > best_value) {
+      best_value = y;
+      x_star = x;
     }
   }
 }

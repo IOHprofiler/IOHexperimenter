@@ -44,20 +44,19 @@ public:
   void activate_logger();
   void clear_logger();
 
-  void target_problem(int problem_id, int dimension, int instance);
+  void target_problem(int problem_id, int dimension, int instance, std::string problem_name);
   void target_suite(std::string suite_name);
 
-  void openInfo(int problem_id, int dimension);
+  void openInfo(int problem_id, int dimension, std::string problem_name);
   void write_info(int instance, double optimal, int evaluations);
 
-  void write_line(size_t evaluations, double y, double best_so_far_y,
-                  double transformed_y, double best_so_far_transformed_y,
-                  std::vector<double> parameters);
-  void write_line(size_t evaluations, double y, double best_so_far_y,
-                  double transformed_y, double best_so_far_transformed_y);
-  void update_logger_info(size_t optimal_evaluations, std::vector<double> found_optimal);
+  void write_line(const size_t &evaluations, const double &y, const double &best_so_far_y,
+                 const double &transformed_y, const double &best_so_far_transformed_y);
+  void write_line(const std::vector<double> &logger_info);
+  void update_logger_info(size_t optimal_evaluations, double found_optimal);
 
-  
+  void set_parameters(const std::vector<std::shared_ptr<double>> &parameters);
+  void set_parameters(const std::vector<std::shared_ptr<double>> &parameters, const std::vector<std::string> &parameters_name);
 
 private:
   std::string folder_name;
@@ -71,7 +70,7 @@ private:
   int dimension;
   int problem_id;
   int instance;
-  std::vector<std::string> parameter_name;
+  std::string problem_name;
 
   std::fstream cdat;
   std::fstream idat;
@@ -85,10 +84,15 @@ private:
   int last_dimension = 0;
   int last_problem_id = -1;
   
+  std::vector<std::shared_ptr<double>> logging_parameters; /// < parameters to be logged as logging evaluation information.
+  std::vector<std::string> logging_parameters_name; /// < name of parameters to be logged as logging evaluation information.
+
   /// \fn std::string IOHprofiler_experiment_folder_name()
   /// \brief return an available name of folder to be created.
   std::string IOHprofiler_experiment_folder_name();
   int IOHprofiler_create_folder(const std::string path);
+
+  void write_header();
 
   /// \fn openIndex()
   /// \brief to create the folder of logging files.

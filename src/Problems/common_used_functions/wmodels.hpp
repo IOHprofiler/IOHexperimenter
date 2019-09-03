@@ -24,7 +24,7 @@ static std::vector<int> dummy(int number_of_variables, double select_rate, long 
     position.push_back(i);
   }
 
-  random_numbers = random_methods.IOHprofiler_uniform_rand((size_t)select_num,inseed);
+  random_methods.IOHprofiler_uniform_rand((size_t)select_num,inseed,random_numbers);
   for (int i = 0; i < select_num; ++i) {
     random_index.push_back((int)floor(random_numbers[i] * 1e4 / 1e4 * number_of_variables));
   }
@@ -44,7 +44,7 @@ static std::vector<int> dummy(int number_of_variables, double select_rate, long 
   return random_index;
 }
 
-static std::vector<int> neutrality(std::vector<int> variables, int mu) {
+static std::vector<int> neutrality(const std::vector<int> &variables, int mu) {
   int number_of_variables = variables.size();
   int n = (int)floor((double)number_of_variables/(double)mu);
   std::vector<int> new_variables;
@@ -67,7 +67,7 @@ static std::vector<int> neutrality(std::vector<int> variables, int mu) {
   return new_variables;
 }
 
-static std::vector<int> epistasis(std::vector<int> variables, int v) {
+static std::vector<int> epistasis(const std::vector<int> &variables, int v) {
   int h, epistasis_result;
   int number_of_variables = variables.size();
   std::vector<int> new_variables;

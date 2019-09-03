@@ -39,8 +39,8 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> internal_evaluate(std::vector<int> x) {
-    std::vector<double> y;
+  double internal_evaluate(const std::vector<int> &x) {
+
     std::vector<int> new_variables = epistasis(x,4);
     int n = new_variables.size();
     int result = 0;
@@ -51,8 +51,7 @@ public:
         break;
       }
     }
-    y.push_back((double)result);
-    return y;
+    return (double)result;
   };
 
   static LeadingOnes_Epistasis * createInstance() {

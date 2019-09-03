@@ -1,4 +1,5 @@
 #include "../../src/Suites/IOHprofiler_PBO_suite.hpp"
+#include "../../src/Template/Loggers/IOHprofiler_csv_logger.h"
 
 std::vector<int> Initialization(int dimension) {
   std::vector<int> x;
@@ -22,28 +23,30 @@ int mutation(std::vector<int> &x, double mutation_rate) {
 }
 
 /// This is an (1+1)_EA with static mutation rate = 1/n.
-void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem) {
+void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, std::shared_ptr<IOHprofiler_csv_logger> logger) {
   /// Declaration for variables in the algorithm
   std::vector<int> x;
   std::vector<int> x_star;
-  std::vector<double> y;
+  double y;
   double best_value;
   double mutation_rate = 1.0/problem->IOHprofiler_get_number_of_variables();
 
   x = Initialization(problem->IOHprofiler_get_number_of_variables());
-  copyVector(x,x_star);
+  x_star = x;
   y = problem->evaluate(x);
-  best_value = y[0];
+  logger->write_line(problem->loggerInfo());
+  best_value = y;
 
   int count= 0;
   while (count <= 100) {
-    copyVector(x_star,x);
+    x = x_star;
     if (mutation(x,mutation_rate)) {
       y = problem->evaluate(x);
+      logger->write_line(problem->loggerInfo());
     }
-    if (y[0] > best_value) {
-      best_value = y[0];
-      copyVector(x,x_star);
+    if (y > best_value) {
+      best_value = y;
+      x_star = x;
     }
     count++;
   }
@@ -60,21 +63,26 @@ void _run_suite() {
   std::vector<int> instance_id ={1,2};
   std::vector<int> dimension = {100,200,300};
   PBO_suite pbo(problem_id,instance_id,dimension);
-
+  pbo.loadProblem();
   /// If no logger is added, there will be not any output files, but users
   /// can still get fitness values.
   std::vector<int> time_points{1,2,5};
-  std::shared_ptr<IOHprofiler_csv_logger> logger1(new IOHprofiler_csv_logger("./","run_suite","EA","EA"));
-  logger1->set_complete_flag(true);
-  logger1->set_interval(2);
-  logger1->set_time_points(time_points,3);
-  logger1->activate_logger();
-  pbo.addCSVLogger(logger1);
+  std::shared_ptr<IOHprofiler_csv_logger> logger(new IOHprofiler_csv_logger("./","run_suite","EA","EA"));
+  logger->set_complete_flag(true);
+  logger->set_interval(2);
+  logger->set_time_points(time_points,3);
+  logger->activate_logger();
+  logger->target_suite(pbo.IOHprofiler_suite_get_suite_name());
+  
   std::shared_ptr<IOHprofiler_problem<int>> problem;
 
   /// Problems are tested one by one until 'get_next_problem' returns NULL.
   while (problem = pbo.get_next_problem()) {
-    evolutionary_algorithm(problem);
+    logger->target_problem(problem->IOHprofiler_get_problem_id(), 
+                          problem->IOHprofiler_get_number_of_variables(), 
+                          problem->IOHprofiler_get_instance_id(),
+                          problem->IOHprofiler_get_problem_name());
+    evolutionary_algorithm(problem,logger);
   }
 }
 

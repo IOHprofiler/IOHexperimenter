@@ -40,8 +40,8 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> internal_evaluate(std::vector<int> x) {
-    std::vector<double> y;
+  double internal_evaluate(const std::vector<int> &x) {
+
     int n = x.size();
     int result = 0;
     for (int i = 0; i != n; ++i) {
@@ -52,8 +52,7 @@ public:
       }
     }
     result = ruggedness2(result,n);
-    y.push_back(result);
-    return y;
+    return (double)result;
   };
 
   static LeadingOnes_Ruggedness2 * createInstance() {

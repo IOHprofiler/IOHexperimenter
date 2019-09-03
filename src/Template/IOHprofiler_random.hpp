@@ -29,23 +29,22 @@ public:
     } 
   }
 
-  long _lcg_rand(long inseed) {
-    long a = 16807; /// < multiplier.
-    long  m = 2147483647; /// < modulus.
-    long q = 127773; /// < modulusdiv multiplier.
-    long r = 2836; /// < modulus mod multiplier.
-
-    long tmp = (long)floor((double)inseed / (double)q);
-    long new_inseed =  (long)(a * (inseed - tmp * q) - r * tmp);
+  long _lcg_rand(const long &inseed) {
+    
+    long new_inseed =  (long)(a * (inseed - (long)floor((double)inseed / (double)q) * q) - r * (long)floor((double)inseed / (double)q));
     if (new_inseed < 0) {
       new_inseed = new_inseed + m;
     }
     return new_inseed;
   }
 
-  std::vector<double> IOHprofiler_uniform_rand(const size_t N, const long inseed) {
-    std::vector<double> rand_vec;
+  void IOHprofiler_uniform_rand(const size_t &N, const long &inseed, std::vector<double> &rand_vec) {
+    if (rand_vec.size() != 0) {
+      std::vector<double>().swap(rand_vec);
+    }
     rand_vec.reserve(N);
+
+
     long rand_seed[32];
     long seed;
     long rand_value;
@@ -59,7 +58,7 @@ public:
     }
 
     seed = inseed;
-    for (int i = 64; i >= 0; --i) {
+    for (int i = 34; i >= 0; --i) {
       seed = _lcg_rand(seed);
       if(i < 32) {
         rand_seed[i] = seed;
@@ -81,7 +80,6 @@ public:
         rand_vec[i] = 1e-99;
       }
     }
-    return rand_vec;
   }
 
   std::vector<double> IOHprofiler_gauss(const size_t N, const long inseed) {
@@ -100,7 +98,7 @@ public:
       seed = 1;
     }
 
-    uniform_rand_vec = IOHprofiler_uniform_rand(2 * N, seed);
+     IOHprofiler_uniform_rand(2 * N, seed,uniform_rand_vec);
 
     for (int i = 0; i < N; i++) {
       rand_vec.push_back(sqrt(-2 * log(uniform_rand_vec[i])) * cos(2 * PI * uniform_rand_vec[N + i]));
@@ -112,34 +110,39 @@ public:
   }
 
   double IOHprofiler_uniform_rand() {
-    double r;
     long _rand = _lcg_rand(this->_seed[_seed_index]);
     
     this->_seed[this->_seed_index] = _rand;
     this->_seed_index = (int)floor((double)_rand / (double)67108865);
     
 
-    r = (double)_rand/2.147483647e9;
-    if (r == 0.) {
-      r = 1e-99;
+    rand_r = (double)_rand/2.147483647e9;
+    if (rand_r == 0.) {
+      rand_r = 1e-99;
     }
-    return r;
+    return rand_r;
   }
 
   double IOHprofiler_normal_rand() {
-    double r;
     double u1, u2;
     
     u1 = IOHprofiler_uniform_rand();
     u2 = IOHprofiler_uniform_rand();
 
-    r = sqrt(-2 * log(u1) * cos(2 * PI * u2));
-    return r;
+    rand_r = sqrt(-2 * log(u1)) * cos(2 * PI * u2);
+    return rand_r;
   }
 
 private:
   long _seed[32];
   size_t _seed_index;
+
+  double rand_r;
+
+  long a = 16807; /// < multiplier.
+  long m = 2147483647; /// < modulus.
+  long q = 127773; /// < modulusdiv multiplier.
+  long r = 2836; /// < modulus mod multiplier.
 };
 
 #endif //_IOHPROFILER_RANDOM_HPP

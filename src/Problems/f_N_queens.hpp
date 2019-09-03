@@ -42,8 +42,8 @@ public:
     }
   }
 
-  std::vector<double> internal_evaluate(std::vector<int> x) {
-    std::vector<double> y;
+  double internal_evaluate(const std::vector<int> &x) {
+    
     double result;
     int n = x.size();
     int index,j,i,k,l;
@@ -107,8 +107,7 @@ public:
         l_penalty+=_max(0.0, (-1.0+sum_l));
     }
     result = (double) (number_of_queens_on_board - (C*raws_penalty) - (C*columns_penalty) -(C*k_penalty) - (C*l_penalty));
-    y.push_back(result);
-    return y;
+    return (double)result;
   };
 
   static NQueens * createInstance() {

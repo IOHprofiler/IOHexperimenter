@@ -42,16 +42,15 @@ public:
     IOHprofiler_set_optimal((double)ceil(dimension/3));
   };
 
-  std::vector<double> internal_evaluate(std::vector<int> x) {
-    std::vector<double> y;
+  double internal_evaluate(const std::vector<int> &x) {
+    
     std::vector<int> new_variables = neutrality(x,3);
     int n = new_variables.size();
     int result = 0;
     for (int i = 0; i != n; ++i) {
       result += new_variables[i];
     }
-    y.push_back((double)result);
-    return y;
+    return (double)result;
   };
 
   static OneMax_Neutrality * createInstance() {

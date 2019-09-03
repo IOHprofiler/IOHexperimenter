@@ -41,24 +41,22 @@ public:
     IOHprofiler_set_optimal(floor((double)(dimension * 0.9)));
   };
 
-  void update_evaluate_int_info() {
-    int length = IOHprofiler_get_number_of_variables();
-    IOHprofiler_set_evaluate_int_info(dummy(length,0.9,10000));
+  std::vector<int> info;
+  void prepare_problem() {
+    info = dummy(IOHprofiler_get_number_of_variables(),0.5,10000);
   }
-  
-  std::vector<double> internal_evaluate(std::vector<int> x) {
-    std::vector<double> y;
-    int n = IOHprofiler_get_evaluate_int_info().size();
+
+  double internal_evaluate(const std::vector<int> &x) {
+    int n = this->info.size();
     int result = 0;
     for (int i = 0; i != n; ++i) {
-      if (x[IOHprofiler_get_evaluate_int_info()[i]] == 1) {
+      if (x[this->info[i]] == 1) {
         result = i + 1;
       } else {
         break;
       }
     }
-    y.push_back((double)result);
-    return y;
+    return (double)result;
   };
 
   static LeadingOnes_Dummy2 * createInstance() {

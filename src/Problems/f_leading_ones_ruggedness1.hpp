@@ -43,8 +43,8 @@ public:
 
   };
 
-  std::vector<double> internal_evaluate(std::vector<int> x) {
-    std::vector<double> y;
+  double internal_evaluate(const std::vector<int> &x) {
+    
     int n = x.size();
     int result = 0;
     for (int i = 0; i != n; ++i) {
@@ -55,8 +55,7 @@ public:
       }
     }
     result = ruggedness1(result,n);
-    y.push_back(result);
-    return y;
+    return (double)result;
   };
 
   static LeadingOnes_Ruggedness1 * createInstance() {

@@ -50,8 +50,7 @@ public:
   }
 
 
-std::vector<double> internal_evaluate(std::vector<int> x) {
-    std::vector<double> y;
+double internal_evaluate(const std::vector<int> &x) {
     int i, j,index;
     int n = x.size();
     int result= 0;
@@ -80,8 +79,7 @@ std::vector<double> internal_evaluate(std::vector<int> x) {
       }
     }
     result=num_of_ones - (number_of_variables_even*sum_edges_in_the_set);
-    y.push_back((double)result);
-    return y;
+    return (double)result;
   };
 
   static MIS * createInstance() {

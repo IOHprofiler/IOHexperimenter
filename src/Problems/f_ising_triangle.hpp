@@ -41,8 +41,7 @@ public:
     return (x % N + N) %N;
   }
 
-  std::vector<double> internal_evaluate(std::vector<int> x) {
-    std::vector<double> y;
+  double internal_evaluate(const std::vector<int> &x) {
     int i,j,neig;
     int n = x.size();
     int result = 0;
@@ -63,8 +62,7 @@ public:
         }
       }
     }
-    y.push_back((double)result);
-    return y;
+    return (double)result;
   };
 
   static Ising_Triangle * createInstance() {

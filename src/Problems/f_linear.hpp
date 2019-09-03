@@ -40,15 +40,13 @@ public:
     IOHprofiler_set_optimal((double)dimension);
   };
 
-  std::vector<double> internal_evaluate(std::vector<int> x) {
-    std::vector<double> y;
+  double internal_evaluate(const std::vector<int> &x) {
     int n = x.size();
     double result = 0;
     for (int i = 0; i < n; ++i) {
       result += (double)x[i] * (double)(i+1);
     }
-    y.push_back(result);
-    return y;
+    return (double)result;
   };
 
   static Linear * createInstance() {

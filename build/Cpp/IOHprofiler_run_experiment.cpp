@@ -1,7 +1,6 @@
 #include "../../src/Template/Experiments/IOHprofiler_experimenter.hpp"
 
 IOHprofiler_random random_generator(1);
-
 static int budget_scale = 100;
 
 std::vector<int> Initialization(int dimension) {
@@ -25,30 +24,40 @@ int mutation(std::vector<int> &x, double mutation_rate) {
   return result;
 }
 
+
 /// This is an (1+1)_EA with static mutation rate = 1/n.
-void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem) {
+void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, std::shared_ptr<IOHprofiler_csv_logger> logger) {
   /// Declaration for variables in the algorithm
   std::vector<int> x;
   std::vector<int> x_star;
-  std::vector<double> y;
+  double y;
   double best_value;
-  double mutation_rate = 1.0/problem->IOHprofiler_get_number_of_variables();
+  double * mutation_rate = new double(1);
+  *mutation_rate = 1.0/problem->IOHprofiler_get_number_of_variables();
   int budget = budget_scale * problem->IOHprofiler_get_number_of_variables() * problem->IOHprofiler_get_number_of_variables();
 
+  std::vector<std::shared_ptr<double>> parameters;
+  parameters.push_back(std::shared_ptr<double>(mutation_rate));
+  std::vector<std::string> parameters_name;
+  parameters_name.push_back("mutation_rate");
+  logger->set_parameters(parameters,parameters_name);
+
   x = Initialization(problem->IOHprofiler_get_number_of_variables());
-  copyVector(x,x_star);
+  x_star = x;
   y = problem->evaluate(x);
-  best_value = y[0];
+  logger->write_line(problem->loggerInfo());
+  best_value = y;
 
   int count = 0;
   while (count <= budget && !problem->IOHprofiler_hit_optimal()) {
-    copyVector(x_star,x);
-    if (mutation(x,mutation_rate)) {
+    x = x_star;
+    if (mutation(x,*mutation_rate)) {
       y = problem->evaluate(x);
+      logger->write_line(problem->loggerInfo());
     }
-    if (y[0] >= best_value) {
-      best_value = y[0];
-      copyVector(x,x_star);
+    if (y >= best_value) {
+      best_value = y;
+      x_star = x;
     }
     count++;
   }
@@ -57,7 +66,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem) {
 void _run_experiment() {
   std::string configName = "./configuration.ini";
   IOHprofiler_experimenter<int> experimenter(configName,evolutionary_algorithm);
-  experimenter._set_independent_runs(2);
+  experimenter._set_independent_runs(10);
   experimenter._run();
 }
 

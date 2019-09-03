@@ -40,16 +40,15 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> internal_evaluate(std::vector<int> x) {
-    std::vector<double> y;
+  double internal_evaluate(const std::vector<int> &x) {
+    
     int n = x.size();
     int result = 0;
     for (int i = 0; i != n; ++i) {
       result += x[i];
     }
     result = ruggedness1(result,n);
-    y.push_back(result);
-    return y;
+    return (double)result;
   };
 
   static OneMax_Ruggedness1 * createInstance() {

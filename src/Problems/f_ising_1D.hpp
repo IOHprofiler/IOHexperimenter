@@ -40,8 +40,7 @@ public:
     return (x % N + N) %N;
   }
 
-  std::vector<double> internal_evaluate(std::vector<int> x) {
-    std::vector<double> y;
+  double internal_evaluate(const std::vector<int> &x) {
     int result= 0, n = x.size();
 
     for (int i = 0; i < n; ++i) {
@@ -51,9 +50,7 @@ public:
         result += (x[i] *first_neig) + ((1- x[i])*(1- first_neig));
         result += (x[i] *second_neig) + ((1- x[i])*(1- second_neig));
     }
-
-    y.push_back((double)result);
-    return y;
+    return (double)result;
   };
   
   static Ising_1D * createInstance() {
