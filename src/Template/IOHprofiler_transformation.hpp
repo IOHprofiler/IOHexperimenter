@@ -14,6 +14,38 @@
 /// \brief A class consisting of transformation methods.
 class IOHprofiler_transformation: public IOHprofiler_random {
 public:
+
+  /// \fn void variables_transformation(std::vector<InputType> &x)
+  /// \brief Transformation operations on variables.
+  ///
+  /// For instance_id in ]1,50], xor operation is applied.
+  /// For instance_id in ]50,100], \sigma function is applied.
+  void variables_transformation(std::vector<int> &x, const int instance_id) { 
+    if (instance_id > 1 && instance_id <= 50) { 
+      this->transform_vars_xor(x,instance_id);
+    } else if (instance_id > 50 && instance_id <= 100) {
+      this->transform_vars_sigma(x,instance_id);
+    }
+  };
+
+  /// \fn void objectives_transformation(std::vector<double> &y)
+  /// \brief Transformation operations on objectives (a * f(x) + b).
+  void objectives_transformation(std::vector<double> &y, const int instance_id) {
+    if (instance_id > 1) {
+      this->transform_obj_scale(y,instance_id);
+      this->transform_obj_shift(y,instance_id);
+    }
+  };
+
+  /// \fn void objectives_transformation(std::vector<double> &y)
+  /// \brief Transformation operations on objectives (a * f(x) + b).
+  void objectives_transformation(double &y, const int instance_id) {
+    if (instance_id > 1) {
+      this->transform_obj_scale(y,instance_id);
+      this->transform_obj_shift(y,instance_id);
+    }
+  };
+
   
   /// \fn xor_compute(const int x1, const int x2)
   ///
