@@ -13,6 +13,7 @@
 
 /// \brief A class consisting of transformation methods.
 class IOHprofiler_transformation: public IOHprofiler_random {
+/// todo. No inheritance here.
 public:
 
   /// \fn void variables_transformation(std::vector<InputType> &x)

@@ -101,6 +101,7 @@ public:
 
     transformation.variables_transformation(x,this->instance_id);
     this->raw_objectives[0] = internal_evaluate(x);
+    /// todo. make it as vector assign.
     
     this->transformed_objectives[0] = this->raw_objectives[0];
     transformation.objectives_transformation(this->transformed_objectives,this->instance_id);
@@ -109,7 +110,7 @@ public:
       this->best_so_far_transformed_evaluations = this->evaluations;
       this->best_so_far_raw_objectives = this->raw_objectives;
       this->best_so_far_raw_evaluations = this->evaluations;
-    
+      /// todo. add a function for this.
     }
 
     if (compareVector(this->transformed_objectives,this->optimal)) {
@@ -186,6 +187,7 @@ public:
   /// It will be revoked after setting dimension (number_of_variables) or instance_id.
   void calc_optimal() {
     if (this->best_variables.size() == this->number_of_variables) {
+      /// todo. Make Exception.
       /// Do not apply transformation on best_variables as calculating optimal
       if (this->number_of_objectives == 1) {
         this->optimal[0] = internal_evaluate(this->best_variables);
@@ -475,7 +477,7 @@ private:
   int instance_id = DEFAULT_INSTANCE; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
   
   std::string problem_name;
-  std::string problem_type;   /// todo. eet it as enum.
+  std::string problem_type;   /// todo. make it as enum.
   
   std::vector<InputType> lowerbound;
   std::vector<InputType> upperbound;
@@ -486,20 +488,22 @@ private:
   std::size_t number_of_variables = DEFAULT_DIMENSION; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
   std::size_t number_of_objectives;
 
-  std::vector<InputType> best_variables;
+  std::vector<InputType> best_variables; /// todo. comments, rename?
   std::vector<InputType> best_transformed_variables;
-  std::vector<double> optimal;
+  std::vector<double> optimal; /// todo. How to evluate distance to optima. In global optima case, which optimum to be recorded.
   bool optimalFound = false;
 
   std::vector<double> raw_objectives; /// < to record objectives before transformation.
   std::vector<double> transformed_objectives; /// < to record objectives after transformation.
-  int transformed_number_of_variables; /// < intermediate variables in evaluate. 
+  int transformed_number_of_variables; /// < intermediate variables in evaluate.
+  /// todo.  check.
   std::vector<InputType> transformed_variables; /// < intermediate variables in evaluate.
 
   /// todo. constrainted optimization.
   std::size_t number_of_constraints;
 
-  size_t evaluations = 0; /// < to record optimization process.
+  std::size_t evaluations = 0; /// < to record optimization process. 
+  /// todo. rename number_of_evaluations.
   std::vector<double> best_so_far_raw_objectives; /// < to record optimization process.
   int best_so_far_raw_evaluations = 0; /// < to record optimization process.
   std::vector<double> best_so_far_transformed_objectives; /// < to record optimization process.
