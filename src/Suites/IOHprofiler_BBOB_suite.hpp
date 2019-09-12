@@ -35,7 +35,7 @@
 
 #include "../Template/IOHprofiler_suite.hpp"
 
-class BBOB_suite : public IOHprofiler_suite<int> {
+class BBOB_suite : public IOHprofiler_suite<double> {
 public:
   BBOB_suite() {
     std::vector<int> problem_id;

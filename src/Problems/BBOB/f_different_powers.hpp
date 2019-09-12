@@ -5,8 +5,8 @@
 ///
 /// \author Naama Horesh and Furong Ye
 /// \date 2019-06-27
-#ifndef _F_ISING_ONED_H
-#define _F_ISING_ONED_H
+#ifndef _F_DIFFERENT_POWERS_HPP
+#define _F_DIFFERENT_POWERS_HPP
 
 #include "../../Template/IOHprofiler_problem.hpp"
 #include "bbob_common_used_functions/coco_transformation_vars.hpp"

@@ -15,7 +15,7 @@ public:
   IOHprofiler_experimenter(std::string configFileName, _algorithm *algorithm) {
       this->conf.readcfg(configFileName);
     
-    configSuite = genericGenerator<IOHprofiler_suite<int>>::instance().create(conf.get_suite_name());
+    configSuite = genericGenerator<IOHprofiler_suite<InputType>>::instance().create(conf.get_suite_name());
     configSuite->IOHprofiler_set_suite_problem_id(conf.get_problem_id());
     configSuite->IOHprofiler_set_suite_instance_id(conf.get_instance_id());
     configSuite->IOHprofiler_set_suite_dimension(conf.get_dimension());

@@ -10,6 +10,9 @@
 #define MAXLINESIZE 1024
 #define MAXKEYNUMBER 100
 
+static int max_number_of_problem;
+static int max_dimension;
+
 /// A class of configuration files, to be used in IOHprofiler_experimenter.
 class IOHprofiler_configuration {
 public:
@@ -219,9 +222,16 @@ void readcfg(std::string filename){
   Dict dict;
   dict = load(filename);
   suite_name = get_Dict_String(dict,"suite","suite_name");
-  problem_id = get_Dict_int_vector(dict,"suite","problem_id",1,23);
+  if (suite_name == "BBOB") {
+    max_number_of_problem = 24;
+    max_dimension = 100;
+  } else if (suite_name == "PBO") {
+    max_dimension = 20000;
+    max_number_of_problem = 23;
+  }
+  problem_id = get_Dict_int_vector(dict,"suite","problem_id",1,max_number_of_problem);
   instance_id = get_Dict_int_vector(dict,"suite","instance_id",1,100);
-  dimension = get_Dict_int_vector(dict,"suite","dimension",1,20000);
+  dimension = get_Dict_int_vector(dict,"suite","dimension",1,max_dimension);
   
   output_directory = get_Dict_String(dict,"logger","output_directory");
   result_folder = get_Dict_String(dict,"logger","result_folder");

@@ -67,7 +67,7 @@ public:
     
     static const double condition = 1.0e6;
     size_t i;
-    std::vector<double> temp_x;
+    std::vector<double> temp_x = x;
     int n = temp_x.size();
     std::vector<double> result(1);
 

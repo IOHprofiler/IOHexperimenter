@@ -92,6 +92,7 @@ static void bbob2009_reshape(std::vector<std::vector<double>> &B, const std::vec
  */
 static void bbob2009_gauss(std::vector<double> &g, const size_t N, const long seed) {
   size_t i;
+  g = std::vector<double> (N);
   std::vector<double> uniftmp(6000);
   assert(2 * N < 6000);
   bbob2009_unif(uniftmp, 2 * N, seed);
