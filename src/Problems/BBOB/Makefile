@@ -1,5 +1,4 @@
-SUBDIRS=common_used_functions \
-				BBOB
+SUBDIRS=bbob_common_used_functions
 CPP_SOURCE=${wildcard *.cpp}
 CPP_OBJS=${patsubst %.cpp, %.o, $(CPP_SOURCE)}
 HPP_SOURCE=${wildcard *.hpp}
