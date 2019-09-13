@@ -35,7 +35,7 @@ static std::vector<int> dummy(int number_of_variables, double select_rate, long 
   }
 
   /// This is a stl algorithm.
-  partial_sort(position.begin(),position.begin()+select_num,position.end());
+  sort(position.begin(),position.begin()+select_num);
 
   random_index.clear();
   for(int i = 0; i != select_num; ++i){
