@@ -13,7 +13,7 @@ void IOHprofiler_csv_logger::activate_logger() {
 
 int IOHprofiler_csv_logger::openIndex() { 
   std::string experiment_folder_name = IOHprofiler_experiment_folder_name();
-  IOHprofiler_create_folder(experiment_folder_name);
+  return IOHprofiler_create_folder(experiment_folder_name);
 }
 
 
