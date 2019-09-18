@@ -186,41 +186,46 @@ void IOHprofiler_csv_logger::write_line(const size_t &evaluations, const double 
     this->write_header();
   }
 
-  std::string written_line = std::to_string(evaluations) + " " + std::to_string(y) + " "
-                           + std::to_string(best_so_far_y) + " " + std::to_string(transformed_y) + " "
-                           + std::to_string(best_so_far_transformed_y);
-  
-  if (this->logging_parameters.size() != 0) {
-    for (size_t i = 0; i != this->logging_parameters.size(); i++) {
-      written_line += " ";
-      written_line += std::to_string(*logging_parameters[i]);
+  bool need_write =  complete_trigger() || interval_trigger(evaluations) ||
+                     update_trigger(transformed_y) || time_points_trigger(evaluations);
+
+  if (need_write) {
+    std::string written_line = std::to_string(evaluations) + " " + std::to_string(y) + " "
+                             + std::to_string(best_so_far_y) + " " + std::to_string(transformed_y) + " "
+                             + std::to_string(best_so_far_transformed_y);
+    
+    if (this->logging_parameters.size() != 0) {
+      for (size_t i = 0; i != this->logging_parameters.size(); i++) {
+        written_line += " ";
+        written_line += std::to_string(*logging_parameters[i]);
+      }
     }
-  }
-  
-  written_line += '\n';
-  if (complete_trigger()) {
-    if (!this->cdat.is_open()) {
-      IOH_error("*.cdat file is not open");
+    
+    written_line += '\n';
+    if (complete_trigger()) {
+      if (!this->cdat.is_open()) {
+        IOH_error("*.cdat file is not open");
+      }
+      this->cdat << written_line;
     }
-    this->cdat << written_line;
-  }
-  if (interval_trigger(evaluations)) {
-    if (!this->idat.is_open()) {
-      IOH_error("*.idat file is not open");
+    if (interval_trigger(evaluations)) {
+      if (!this->idat.is_open()) {
+        IOH_error("*.idat file is not open");
+      }
+      this->idat << written_line;
     }
-    this->idat << written_line;
-  }
-  if (update_trigger(transformed_y)) {
-    if (!this->dat.is_open()) {
-      IOH_error("*.dat file is not open");
+    if (update_trigger(transformed_y)) {
+      if (!this->dat.is_open()) {
+        IOH_error("*.dat file is not open");
+      }
+      this->dat << written_line;
     }
-    this->dat << written_line;
-  }
-  if (time_points_trigger(evaluations)) {
-    if (!this->tdat.is_open()) {
-      IOH_error("*.tdat file is not open");
+    if (time_points_trigger(evaluations)) {
+      if (!this->tdat.is_open()) {
+        IOH_error("*.tdat file is not open");
+      }
+      this->tdat << written_line;
     }
-    this->tdat << written_line;
   }
 
   if (transformed_y > this->found_optimal[0]) {
