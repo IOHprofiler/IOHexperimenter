@@ -52,12 +52,16 @@ public:
     info += "Suite: " + this->configSuite->IOHprofiler_suite_get_suite_name() + "\n";
     info += "Problem: " + vectorToString(this->configSuite->IOHprofiler_suite_get_problem_id()) + "\n";
     info += "Instance: " + vectorToString(this->configSuite->IOHprofiler_suite_get_instance_id()) + "\n";
-    info += "Dimension: " + vectorToString(this->configSuite->IOHprofiler_suite_get_dimension()) + "\n";
+    info += "Dimension: " + vectorToString(this->configSuite->IOHprofiler_suite_get_dimension());
     print_info(info);
 
+    size_t num_problems = configSuite->size();
+    size_t num_done = 0;
+    std::mutex num_done_mutex;
+
     ctpl::thread_pool pool(conf.get_number_threads());
-    for (size_t problem_nr = 0; problem_nr < configSuite->size(); ++problem_nr) {
-      pool.push([this, problem_nr](int _thread_id) {
+    for (size_t problem_nr = 0; problem_nr < num_problems; ++problem_nr) {
+      pool.push([this, problem_nr, num_problems, &num_done, &num_done_mutex](int _thread_id) {
         std::shared_ptr<IOHprofiler_csv_logger> local_logger(new IOHprofiler_csv_logger(*config_csv_logger));
         local_logger->target_suite(this->configSuite->IOHprofiler_suite_get_suite_name());
 
@@ -69,7 +73,7 @@ public:
 
 
         auto start = std::chrono::high_resolution_clock::now();
-        print_info("Starting " + id + "\n");
+        print_info("\nStarted " + id + "  ");
 
         current_problem->reset_problem();
         local_logger->target_problem(current_problem->IOHprofiler_get_problem_id(), 
@@ -86,18 +90,23 @@ public:
                                        current_problem->IOHprofiler_get_instance_id(),
                                        current_problem->IOHprofiler_get_problem_name());
           algorithm(current_problem,local_logger);
-          indicate_progress();
+          print_info(".");
           ++count;
         }
 
-        auto end = std::chrono::high_resolution_clock::now();
-        print_info("Finished " + id + " Time " + std::to_string(std::chrono::duration<double>(end-start).count()) + "s\n");
+        {
+          std::lock_guard<std::mutex> guard(num_done_mutex);
+          num_done += 1;
+
+          auto end = std::chrono::high_resolution_clock::now();
+          print_info("\nFinished " + id + " Time " + std::to_string(std::chrono::duration<double>(end-start).count()) + "s [" + std::to_string(num_done) + "/" + std::to_string(num_problems) + "]  ");
+        }
       });
     }
     pool.stop(true);
 
     auto end_overall = std::chrono::high_resolution_clock::now();
-    print_info("Total Time " + std::to_string(std::chrono::duration<double>(end_overall-start_overall).count()) + "s\n");
+    print_info("\nTotal Time " + std::to_string(std::chrono::duration<double>(end_overall-start_overall).count()) + "s\n");
   };
 
   void _set_independent_runs(int n) {
@@ -106,17 +115,7 @@ public:
 
   void print_info(std::string info) {
     std::lock_guard<std::mutex> guard(output_mutex);
-    if (this->last_output_is_progress) {
-        std::cout << "\n";
-    }
     std::cout << info << std::flush;
-    this->last_output_is_progress = false;
-  }
-
-  void indicate_progress() {
-    std::lock_guard<std::mutex> guard(output_mutex);
-    std::cout << "." << std::flush;
-    this->last_output_is_progress = true;
   }
   
   std::string vectorToString(std::vector<int> v) {
@@ -140,7 +139,7 @@ private:
   std::shared_ptr<IOHprofiler_csv_logger> config_csv_logger;
   int independent_runs = 1;
   std::mutex output_mutex;
-  bool last_output_is_progress;
+
 
   _algorithm *algorithm;
 };
