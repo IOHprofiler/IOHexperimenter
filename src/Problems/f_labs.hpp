@@ -8,6 +8,7 @@
 #ifndef _F_LABS_H
 #define _F_LABS_H
 
+#include <cstdint>
 #include "../Template/IOHprofiler_problem.hpp"
 
 class LABS : public IOHprofiler_problem<int> {
@@ -35,37 +36,25 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  double correlation(const std::vector<int> x, const int n, int k)
-  {
-    int x1,x2;
-    double result;
-    result = 0.0;
+  int64_t correlation(const std::vector<int> x, const int n, int k) {
+    int64_t result = 0;
     for (int i = 0 ; i < n - k; ++i) {
-        if (x[i] == 0) {
-          x1 = -1;
-        } else {
-          x1 = 1;
-        }
-        if (x[i + k] == 0) {
-          x2 = -1;
-        } else {
-          x2 = 1;
-        }
-        result += x1 * x2;
+        // x[i] and x[i+k] different = -1, otherwise 1, this logically gives:
+        //     result += 1 - 2*(x[i] != x[i+k]);
+        // But we can take out the +1 and 2* out of the loop.
+        result += x[i] != x[i+k];
     }
-    return result;
+    return n - k - 2*result;
   }
 
   double internal_evaluate(const std::vector<int> &x) {
-
-    int n = x.size();
-    double result = 0.0, cor;
+    size_t n = x.size();
+    int64_t result = 0, cor;
     for (int k = 1; k != n; ++k) {
       cor = correlation(x,n,k);
       result += cor * cor;
     }
-    result = (double)(n*n)/2.0/result;
-    return (double)result;
+    return double(n*n)/2.0/result;
   };
 
   static LABS * createInstance() {
