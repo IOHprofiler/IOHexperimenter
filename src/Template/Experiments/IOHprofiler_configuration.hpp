@@ -233,6 +233,8 @@ void readcfg(std::string filename){
   base_evaluation_triggers = get_Dict_int_vector(dict,"observer","base_evaluation_triggers",0,10);
   number_target_triggers = get_Dict_Int(dict,"observer","number_target_triggers");
   number_interval_triggers = get_Dict_Int(dict,"observer","number_interval_triggers");
+
+  number_threads = get_Dict_Int(dict,"performance","number_threads");
   };
 
   std::string get_suite_name() {
@@ -276,6 +278,10 @@ void readcfg(std::string filename){
     return this->number_interval_triggers;
   };
 
+  int get_number_threads() {
+    return this->number_threads;
+  }
+
 private:
   std::string cfgFile = "configuration.ini";
 
@@ -292,6 +298,7 @@ private:
   std::vector<int> base_evaluation_triggers;
   int number_target_triggers;
   int number_interval_triggers;
+  int number_threads;
 };
 
 #endif

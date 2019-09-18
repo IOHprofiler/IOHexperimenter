@@ -22,7 +22,8 @@ public:
   IOHprofiler_observer() {};
   ~IOHprofiler_observer() {};
 
-  IOHprofiler_observer(const IOHprofiler_observer &) = delete;
+  // Allow copies.
+  // IOHprofiler_observer(const IOHprofiler_observer &) = delete;
   IOHprofiler_observer &operator = (const IOHprofiler_observer&) = delete;
   
   void set_complete_flag(bool complete_flag) {

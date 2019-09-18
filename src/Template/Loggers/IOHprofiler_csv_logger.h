@@ -37,6 +37,33 @@ public:
     this->algorithm_name =  alg_name;
     this->algorithm_info = alg_info;
   }
+
+  IOHprofiler_csv_logger(const IOHprofiler_csv_logger& other) {
+    if (other.cdat.is_open()     ||
+        other.idat.is_open()     ||
+        other.dat.is_open()      ||
+        other.tdat.is_open()     ||
+        other.infoFile.is_open()) {
+        throw std::runtime_error("Attempted to copy logger that isn't clear.");
+    }
+
+    this->folder_name = other.folder_name;
+    this->output_directory = other.output_directory;
+    this->algorithm_name = other.algorithm_name;
+    this->algorithm_info = other.algorithm_info;
+    this->suite_name = other.suite_name;
+    this->dimension = other.dimension;
+    this->problem_id = other.problem_id;
+    this->instance = other.instance;
+    this->problem_name = other.problem_name;
+    this->found_optimal = other.found_optimal;
+    this->optimal_evaluations = other.optimal_evaluations;
+    this->last_dimension = other.last_dimension;
+    this->last_problem_id = other.last_problem_id;
+    this->logging_parameters = other.logging_parameters;
+    this->logging_parameters_name = other.logging_parameters_name;
+  }
+
   ~IOHprofiler_csv_logger() {
     this->clear_logger();
   };
