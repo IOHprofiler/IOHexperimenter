@@ -7,6 +7,7 @@
 #include "IOHprofiler_configuration.hpp"
 
 #include <mutex>
+#include <chrono>
 #include "../../ctpl_stl.h"
 
 
@@ -45,7 +46,7 @@ public:
   ~IOHprofiler_experimenter(){};
 
   void _run() {
-    std::clock_t c_start_overall = std::clock();
+    auto start_overall = std::chrono::high_resolution_clock::now();
 
     std::string info = "IOHprofiler_experiment\n";
     info += "Suite: " + this->configSuite->IOHprofiler_suite_get_suite_name() + "\n";
@@ -67,7 +68,7 @@ public:
         id += "_i" + std::to_string(current_problem->IOHprofiler_get_instance_id());
 
 
-        std::clock_t c_start = std::clock();
+        auto start = std::chrono::high_resolution_clock::now();
         print_info("Starting " + id + "\n");
 
         current_problem->reset_problem();
@@ -89,14 +90,14 @@ public:
           ++count;
         }
 
-        std::clock_t c_end = std::clock();
-        print_info("Finished " + id + " CPU Time " + std::to_string(1000.0 * (c_end-c_start) / CLOCKS_PER_SEC) + "ms\n");
+        auto end = std::chrono::high_resolution_clock::now();
+        print_info("Finished " + id + " Time " + std::to_string(std::chrono::duration<double>(end-start).count()) + "s\n");
       });
     }
     pool.stop(true);
 
-    std::clock_t c_end_overall = std::clock();
-    print_info("Total CPU Time " + std::to_string(1000.0 * (c_end_overall-c_start_overall) / CLOCKS_PER_SEC) + "ms\n");
+    auto end_overall = std::chrono::high_resolution_clock::now();
+    print_info("Total Time " + std::to_string(std::chrono::duration<double>(end_overall-start_overall).count()) + "s\n");
   };
 
   void _set_independent_runs(int n) {
