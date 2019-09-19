@@ -186,8 +186,12 @@ void IOHprofiler_csv_logger::write_line(const size_t &evaluations, const double 
     this->write_header();
   }
 
-  bool need_write =  complete_trigger() || interval_trigger(evaluations) ||
-                     update_trigger(transformed_y) || time_points_trigger(evaluations);
+  bool complete_trigger_check = complete_trigger();
+  bool interval_trigger_check = interval_trigger(evaluations);
+  bool update_trigger_check = update_trigger(transformed_y);
+  bool time_points_trigger_check = time_points_trigger(evaluations);
+  bool need_write = complete_trigger_check || interval_trigger_check ||
+                    update_trigger_check || time_points_trigger_check;
 
   if (need_write) {
     std::string written_line = std::to_string(evaluations) + " " + std::to_string(y) + " "
@@ -202,25 +206,25 @@ void IOHprofiler_csv_logger::write_line(const size_t &evaluations, const double 
     }
     
     written_line += '\n';
-    if (complete_trigger()) {
+    if (complete_trigger_check) {
       if (!this->cdat.is_open()) {
         IOH_error("*.cdat file is not open");
       }
       this->cdat << written_line;
     }
-    if (interval_trigger(evaluations)) {
+    if (interval_trigger_check) {
       if (!this->idat.is_open()) {
         IOH_error("*.idat file is not open");
       }
       this->idat << written_line;
     }
-    if (update_trigger(transformed_y)) {
+    if (update_trigger_check) {
       if (!this->dat.is_open()) {
         IOH_error("*.dat file is not open");
       }
       this->dat << written_line;
     }
-    if (time_points_trigger(evaluations)) {
+    if (time_points_trigger_check) {
       if (!this->tdat.is_open()) {
         IOH_error("*.tdat file is not open");
       }
