@@ -80,7 +80,7 @@ private:
   std::fstream infoFile;
 
   std::vector<double> best_y;
-  std::vector<double> best_trasnformed_y;
+  std::vector<double> best_transformed_y;
   size_t optimal_evaluations;
   std::vector<double> last_y;
   std::vector<double> last_transformed_y;

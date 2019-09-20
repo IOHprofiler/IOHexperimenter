@@ -125,8 +125,10 @@ void IOHprofiler_csv_logger::write_header() {
 /// To update info of current working problem, and to write headline in corresponding files.
 void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int instance, std::string problem_name){
   /// Handle info of the previous problem.
-  if(infoFile.is_open()) write_info(this->instance,this->best_y[0],this->best_trasnformed_y[0],this->optimal_evaluations,
-                                    this->last_y[0],this->last_transformed_y[0],this->last_evaluations);
+  if (infoFile.is_open()) {
+    write_info(this->instance, this->best_y[0], this->best_transformed_y[0], this->optimal_evaluations,
+                                    this->last_y[0], this->last_transformed_y[0], this->last_evaluations);
+  }
 
   this->optimal_evaluations = 0;
   this->last_evaluations = 0;
@@ -134,8 +136,8 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
   /// TO DO: Update the method of initializing this value.
   this->best_y.clear();
   this->best_y.push_back(-DBL_MAX);
-  this->best_trasnformed_y.clear();
-  this->best_trasnformed_y.push_back(-DBL_MAX);
+  this->best_transformed_y.clear();
+  this->best_transformed_y.push_back(-DBL_MAX);
   this->last_y.clear();
   this->last_y.push_back(-DBL_MAX);
   this->last_transformed_y.clear();
@@ -243,7 +245,7 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
     }
   }
 
-  if (transformed_y > this->best_trasnformed_y[0]) {
+  if (transformed_y > this->best_transformed_y[0]) {
     this->update_logger_info(evaluations,y,transformed_y);
   }
 };
@@ -316,13 +318,13 @@ void IOHprofiler_csv_logger::write_info(int instance, double best_y, double best
 void IOHprofiler_csv_logger::update_logger_info(size_t optimal_evaluations, double y, double transformed_y) {
   this->optimal_evaluations = optimal_evaluations;
   this->best_y[0] =  y;
-  this->best_trasnformed_y[0] = transformed_y;
+  this->best_transformed_y[0] = transformed_y;
 };
 
 void IOHprofiler_csv_logger::clear_logger() {
   if (infoFile.is_open()) {
-    write_info(this->instance,this->best_y[0],this->best_trasnformed_y[0],this->optimal_evaluations,
-                                    this->last_y[0],this->last_transformed_y[0],this->last_evaluations);
+    write_info(this->instance, this->best_y[0], this->best_transformed_y[0], this->optimal_evaluations,
+              this->last_y[0], this->last_transformed_y[0], this->last_evaluations);
     infoFile.close();
   }
 
