@@ -26,7 +26,7 @@ public:
   
   IOHprofiler_problem() {};
   IOHprofiler_problem(int instance_id, int dimension){};
-  ~IOHprofiler_problem(){};
+  virtual ~IOHprofiler_problem(){};
 
   IOHprofiler_problem(const IOHprofiler_problem&) = delete;
   IOHprofiler_problem &operator=(const IOHprofiler_problem&) = delete;
@@ -69,11 +69,11 @@ public:
   std::vector<double> evaluate_multi(std::vector<InputType> x) { 
     ++this->evaluations;
 
-    variables_transformation(x);
+    transformation.variables_transformation(x,this->instance_id);
     this->raw_objectives = internal_evaluate_multi(x);
     
     this->transformed_objectives = this->raw_objectives;
-    objectives_transformation(this->transformed_objectives);
+    transformation.objectives_transformation(this->transformed_objectives,this->instance_id);
     if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives)) {
       this->best_so_far_transformed_objectives = this->transformed_objectives;
       this->best_so_far_transformed_evaluations = this->evaluations;
@@ -99,17 +99,18 @@ public:
   double evaluate(std::vector<InputType> x) { 
     ++this->evaluations;
 
-    variables_transformation(x);
+    transformation.variables_transformation(x,this->instance_id);
     this->raw_objectives[0] = internal_evaluate(x);
+    /// todo. make it as vector assign.
     
     this->transformed_objectives[0] = this->raw_objectives[0];
-    objectives_transformation(this->transformed_objectives);
+    transformation.objectives_transformation(this->transformed_objectives,this->instance_id);
     if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives)) {
       this->best_so_far_transformed_objectives = this->transformed_objectives;
       this->best_so_far_transformed_evaluations = this->evaluations;
       this->best_so_far_raw_objectives = this->raw_objectives;
       this->best_so_far_raw_evaluations = this->evaluations;
-    
+      /// todo. add a function for this.
     }
 
     if (compareVector(this->transformed_objectives,this->optimal)) {
@@ -130,7 +131,7 @@ public:
   void evaluate_multi(std::vector<InputType> x, std::vector<double> &y) {
     ++this->evaluations;
 
-    variables_transformation(x);
+    transformation.variables_transformation(x,this->instance_id);
     y = internal_evaluate_multi(x);
     
     this->raw_objectives = y;
@@ -139,7 +140,7 @@ public:
       this->best_so_far_raw_evaluations = this->evaluations;
     }
     
-    objectives_transformation(y);
+    transformation.objectives_transformation(y,this->instance_id);
     if (compareObjectives(y,this->best_so_far_transformed_objectives)) {
       this->best_so_far_transformed_objectives = y;
       this->best_so_far_transformed_evaluations = this->evaluations;
@@ -161,12 +162,12 @@ public:
   void evaluate(std::vector<InputType> x, double &y) {
     ++this->evaluations;
 
-    variables_transformation(x);
+    transformation.variables_transformation(x,this->instance_id);
     y = internal_evaluate(x);
     
     this->raw_objectives = y;
     
-    objectives_transformation(y);
+    transformation.objectives_transformation(y,this->instance_id);
     if (y > this->best_so_far_transformed_objectives[0]) {
       this->best_so_far_transformed_objectives[0] = y;
       this->best_so_far_transformed_evaluations = this->evaluations;
@@ -186,50 +187,20 @@ public:
   /// It will be revoked after setting dimension (number_of_variables) or instance_id.
   void calc_optimal() {
     if (this->best_variables.size() == this->number_of_variables) {
+      /// todo. Make Exception.
       /// Do not apply transformation on best_variables as calculating optimal
       if (this->number_of_objectives == 1) {
         this->optimal[0] = internal_evaluate(this->best_variables);
       } else {
         this->optimal = internal_evaluate_multi(this->best_variables);
       }
-      objectives_transformation(this->optimal);
+      transformation.objectives_transformation(this->optimal,this->instance_id);
     }
     else {
       this->optimal.clear();
       for (int i = 0; i < this->number_of_objectives; ++i) {
         this->optimal.push_back(DBL_MAX);
       }
-    }
-  };
-
-  /// \fn void variables_transformation(std::vector<InputType> &x)
-  /// \brief Transformation operations on variables.
-  ///
-  /// For instance_id in ]1,50], xor operation is applied.
-  /// For instance_id in ]50,100], \sigma function is applied.
-  void variables_transformation(std::vector<InputType> &x) { 
-    if (instance_id > 1 && instance_id <= 50) { 
-      transformation.transform_vars_xor(x,this->instance_id);
-    } else if (instance_id > 50 && instance_id <= 100) {
-      transformation.transform_vars_sigma(x,this->instance_id);
-    }
-  };
-
-  /// \fn void objectives_transformation(std::vector<double> &y)
-  /// \brief Transformation operations on objectives (a * f(x) + b).
-  void objectives_transformation(std::vector<double> &y) {
-    if (instance_id > 1) {
-      transformation.transform_obj_scale(y,this->instance_id);
-      transformation.transform_obj_shift(y,this->instance_id);
-    }
-  };
-
-  /// \fn void objectives_transformation(std::vector<double> &y)
-  /// \brief Transformation operations on objectives (a * f(x) + b).
-  void objectives_transformation(double &y) {
-    if (instance_id > 1) {
-      transformation.transform_obj_scale(y,this->instance_id);
-      transformation.transform_obj_shift(y,this->instance_id);
     }
   };
 
@@ -506,7 +477,7 @@ private:
   int instance_id = DEFAULT_INSTANCE; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
   
   std::string problem_name;
-  std::string problem_type;   /// todo. eet it as enum.
+  std::string problem_type;   /// todo. make it as enum.
   
   std::vector<InputType> lowerbound;
   std::vector<InputType> upperbound;
@@ -517,20 +488,22 @@ private:
   std::size_t number_of_variables = DEFAULT_DIMENSION; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
   std::size_t number_of_objectives;
 
-  std::vector<InputType> best_variables;
+  std::vector<InputType> best_variables; /// todo. comments, rename?
   std::vector<InputType> best_transformed_variables;
-  std::vector<double> optimal;
+  std::vector<double> optimal; /// todo. How to evluate distance to optima. In global optima case, which optimum to be recorded.
   bool optimalFound = false;
 
   std::vector<double> raw_objectives; /// < to record objectives before transformation.
   std::vector<double> transformed_objectives; /// < to record objectives after transformation.
-  int transformed_number_of_variables; /// < intermediate variables in evaluate. 
+  int transformed_number_of_variables; /// < intermediate variables in evaluate.
+  /// todo.  check.
   std::vector<InputType> transformed_variables; /// < intermediate variables in evaluate.
 
   /// todo. constrainted optimization.
   std::size_t number_of_constraints;
 
-  size_t evaluations = 0; /// < to record optimization process.
+  std::size_t evaluations = 0; /// < to record optimization process. 
+  /// todo. rename number_of_evaluations.
   std::vector<double> best_so_far_raw_objectives; /// < to record optimization process.
   int best_so_far_raw_evaluations = 0; /// < to record optimization process.
   std::vector<double> best_so_far_transformed_objectives; /// < to record optimization process.

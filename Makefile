@@ -1,5 +1,5 @@
 CC=g++
-LDFLAGS += -lm -lboost_system -lboost_filesystem
+LDFLAGS = 
 CCFLAGS = -g -std=c++11 -Wall -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -O2
 SUBDIRS=src
 ROOT_DIR=$(shell pwd)

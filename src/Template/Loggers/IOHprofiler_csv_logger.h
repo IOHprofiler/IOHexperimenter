@@ -48,13 +48,14 @@ public:
   void target_suite(std::string suite_name);
 
   void openInfo(int problem_id, int dimension, std::string problem_name);
-  void write_info(int instance, double optimal, int evaluations);
+  void write_info(int instance, double best_y, double best_transformed_y, int evaluations, 
+                  double last_y, double last_transformed_y, int last_evaluations);
 
-  void write_line(const size_t &evaluations, const double &y, const double &best_so_far_y,
-                 const double &transformed_y, const double &best_so_far_transformed_y);
+  void write_line(const size_t evaluations, const double y, const double best_so_far_y,
+                 const double transformed_y, const double best_so_far_transformed_y);
   void write_line(const std::vector<double> &logger_info);
-  void update_logger_info(size_t optimal_evaluations, double found_optimal);
-
+  void update_logger_info(size_t optimal_evaluations, double y, double transformed_y);
+  
   void set_parameters(const std::vector<std::shared_ptr<double>> &parameters);
   void set_parameters(const std::vector<std::shared_ptr<double>> &parameters, const std::vector<std::string> &parameters_name);
 
@@ -78,8 +79,13 @@ private:
   std::fstream tdat;
   std::fstream infoFile;
 
-  std::vector<double> found_optimal;
+  std::vector<double> best_y;
+  std::vector<double> best_transformed_y;
   size_t optimal_evaluations;
+  std::vector<double> last_y;
+  std::vector<double> last_transformed_y;
+  size_t last_evaluations;
+
 
   int last_dimension = 0;
   int last_problem_id = -1;
