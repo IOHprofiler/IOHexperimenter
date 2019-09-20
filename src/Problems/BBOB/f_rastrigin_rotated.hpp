@@ -10,8 +10,7 @@
 #define _F_RASTRIGIN_ROTATED_HPP
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 class Rastrigin_Rotated : public IOHprofiler_problem<double> {
 public:
@@ -22,6 +21,7 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_as_minimization();
   }
   Rastrigin_Rotated(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -32,6 +32,7 @@ public:
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Rastrigin_Rotated() {};
 
@@ -39,13 +40,14 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> xopt;
-  double fopt;
-  std::vector<std::vector<double>> M;
-  std::vector<double> b;
-  std::vector<std::vector<double>> M1;
-  std::vector<double> b1;
+
   void prepare_problem() {
+      std::vector<double> xopt;
+    double fopt;
+    std::vector<std::vector<double>> M;
+    std::vector<double> b;
+    std::vector<std::vector<double>> M1;
+    std::vector<double> b1;
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
@@ -77,6 +79,13 @@ public:
         }
     }
     bbob2009_copy_rotation_matrix(rot1, M1, b1, n);
+
+    Coco_Transformation_Data::fopt = fopt;
+    Coco_Transformation_Data::xopt = xopt;
+    Coco_Transformation_Data::M = M;
+    Coco_Transformation_Data::b = b;
+    Coco_Transformation_Data::M1 = M1;
+    Coco_Transformation_Data::b1 = b1;
   }
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -85,12 +94,7 @@ public:
     std::vector<double> temp_x = x;
     int n = temp_x.size();
     double sum1 = 0.0, sum2 = 0.0;
-      
-    transform_vars_affine_evaluate_function(temp_x,M,b);
-    transform_vars_asymmetric_evaluate_function(temp_x,0.2);
-    transform_vars_oscillate_evaluate_function(temp_x);
-    transform_vars_affine_evaluate_function(temp_x,M1,b1);
-    transform_vars_shift_evaluate_function(temp_x,xopt);
+    
     for (i = 0; i < n; ++i) {
       sum1 += cos(2.0 * coco_pi * temp_x[i]);
       sum2 += temp_x[i] * temp_x[i];
@@ -100,7 +104,7 @@ public:
       return sum2;
     }
     result[0] = 10.0 * ((double) (long) n - sum1) + sum2;
-    transform_obj_shift_evaluate_function(result,fopt);
+
     return result[0];
   };
   

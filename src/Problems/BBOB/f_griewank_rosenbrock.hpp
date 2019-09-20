@@ -10,8 +10,7 @@
 #define _F_GRIEWANK_ROSENBROCK_H
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 class Griewank_RosenBrock : public IOHprofiler_problem<double> {
 public:
@@ -22,6 +21,7 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_as_minimization();
   }
   Griewank_RosenBrock(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -32,6 +32,7 @@ public:
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Griewank_RosenBrock() {};
 
@@ -39,19 +40,20 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> shift;
-  double fopt,scales;
-  std::vector<std::vector<double>> M;
-  std::vector<double> b;
+  double scales;
   void prepare_problem() {
+    std::vector<double> xopt;
+    double fopt;
+    std::vector<std::vector<double>> M;
+    std::vector<double> b;
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
     const long rseed = (long) (19 + 10000 * this->IOHprofiler_get_instance_id());
     fopt = bbob2009_compute_fopt(19, this->IOHprofiler_get_instance_id());
-    shift = std::vector<double>(n);
+    xopt = std::vector<double>(n);
     for (int i = 0; i != n; ++i) {
-      shift[i] = -0.5;
+      xopt[i] = -0.5;
     }
     
     /* compute M and b */
@@ -69,6 +71,10 @@ public:
       }
     }
     bbob2009_copy_rotation_matrix(rot1,M,b,n);
+    Coco_Transformation_Data::fopt = fopt;
+    Coco_Transformation_Data::xopt = xopt;
+    Coco_Transformation_Data::M = M;
+    Coco_Transformation_Data::b = b;
     
   }
 
@@ -79,7 +85,6 @@ public:
     std::vector<double> result(1);
     int n = temp_x.size();
 
-    transform_vars_shift_evaluate_function(temp_x,shift);
     /* Computation core */
     result[0] = 0.0;
     for (i = 0; i < n - 1; ++i) {
@@ -89,8 +94,6 @@ public:
       result[0] += tmp / 4000. - cos(tmp);
     }
     result[0] = 10. + 10. * result[0] / (double) (n - 1);
-
-    transform_obj_shift_evaluate_function(result,fopt);
 
     return result[0];
   };

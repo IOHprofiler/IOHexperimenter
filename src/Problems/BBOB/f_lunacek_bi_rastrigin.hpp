@@ -10,8 +10,7 @@
 #define _F_LUNACEK_BI_RASTRIGIN_HPP
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 class Lunacek_Bi_Rastrigin : public IOHprofiler_problem<double> {
 public:
@@ -22,6 +21,7 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_as_minimization();
   }
   Lunacek_Bi_Rastrigin(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -32,6 +32,7 @@ public:
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Lunacek_Bi_Rastrigin() {};
 
@@ -39,20 +40,34 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
+  
   std::vector<double> xopt;
-  double fopt;
   std::vector<std::vector<double>> rot1;
   std::vector<std::vector<double>> rot2;
   void prepare_problem() {
+    double fopt;
+    std::vector<double> tmpxopt,tmpvect;
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
     const long rseed = (long) (24 + 10000 * this->IOHprofiler_get_instance_id());
-    bbob2009_compute_xopt(xopt, rseed, n);
+    
     fopt = bbob2009_compute_fopt(24, this->IOHprofiler_get_instance_id());
-  
+    bbob2009_compute_xopt(xopt, rseed, n);
     bbob2009_compute_rotation(rot1, rseed + 1000000, n);
     bbob2009_compute_rotation(rot2, rseed, n);
+
+    Coco_Transformation_Data::fopt = fopt;
+  
+    bbob2009_compute_xopt(tmpxopt, rseed, n);
+    bbob2009_gauss(tmpvect, n, rseed);
+    for (int i = 0; i < n; ++i) {
+      tmpxopt[i] = 0.5 * 2.5;
+      if (tmpvect[i] < 0.0) {
+        tmpxopt[i] *= -1.0;
+      }
+    }
+    IOHprofiler_set_best_variables(tmpxopt);
   }
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -108,8 +123,6 @@ public:
     }
     result[0] = (sum1 <= (d * (double) n + s * sum2) ? sum1 : (d * (double) n + s * sum2))
         + 10. * ((double) n - sum3) + 1e4 * penalty;
-
-    transform_obj_shift_evaluate_function(result,fopt);
 
     return result[0];
   };

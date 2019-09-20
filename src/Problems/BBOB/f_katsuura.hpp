@@ -10,8 +10,7 @@
 #define _F_KATSUURA_H
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 class Katsuura : public IOHprofiler_problem<double> {
 public:
@@ -22,6 +21,7 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_as_minimization();
   }
   Katsuura(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -32,6 +32,7 @@ public:
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Katsuura() {};
 
@@ -39,12 +40,13 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> xopt;
-  double fopt;
-  std::vector<std::vector<double>> M;
-  std::vector<double> b;
-  const double penalty_factor = 1.0;
+
   void prepare_problem() {
+    std::vector<double> xopt;
+    double fopt;
+    std::vector<std::vector<double>> M;
+    std::vector<double> b;
+    const double penalty_factor = 1.0;
     /* compute xopt, fopt*/
     int n = this->IOHprofiler_get_number_of_variables();
     const long rseed = (long) (23 + 10000 * this->IOHprofiler_get_instance_id());
@@ -71,6 +73,11 @@ public:
         }
       }
     }
+    Coco_Transformation_Data::fopt = fopt;
+    Coco_Transformation_Data::xopt = xopt;
+    Coco_Transformation_Data::M = M;
+    Coco_Transformation_Data::b = b;
+    Coco_Transformation_Data::penalty_factor = penalty_factor;
   }
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -80,8 +87,6 @@ public:
     double tmp, tmp2;
     std::vector<double> result(1);
 
-    transform_vars_affine_evaluate_function(temp_x,M,b);
-    transform_vars_shift_evaluate_function(temp_x,xopt);
     /* Computation core */
     result[0] = 1.0;
     for (i = 0; i < n; ++i) {
@@ -98,9 +103,7 @@ public:
         * (-1. + pow(result, 10. / pow((double) number_of_variables, 1.2)));*/
     result[0] = 10. / ((double) n) / ((double) n) * (-1. + result[0]);
 
-    transform_obj_shift_evaluate_function(result,fopt);
-    transform_obj_penalize_evaluate(temp_x,this->IOHprofiler_get_lowerbound(),this->IOHprofiler_get_upperbound(),penalty_factor,result);
-      return result[0];
+    return result[0];
   };
   
   static Katsuura * createInstance() {

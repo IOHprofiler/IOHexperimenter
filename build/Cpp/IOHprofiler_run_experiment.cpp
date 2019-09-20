@@ -63,9 +63,27 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, s
   }
 }
 
+/// This is an (1+1)_EA with static mutation rate = 1/n.
+void random_search(std::shared_ptr<IOHprofiler_problem<double>> problem, std::shared_ptr<IOHprofiler_csv_logger> logger) {
+  /// Declaration for variables in the algorithm
+  std::vector<double> x(problem->IOHprofiler_get_number_of_variables());
+  double y;
+
+  int count = 0;
+  while (count <= 500) {
+    for (int i = 0; i != problem->IOHprofiler_get_number_of_variables(); ++i) {
+      x[i] = random_generator.IOHprofiler_uniform_rand() * 10 - 5;
+    }
+  
+    y = problem->evaluate(x);
+    logger->write_line(problem->loggerCOCOInfo());
+    count++;
+  }
+}
+
 void _run_experiment() {
   std::string configName = "./configuration.ini";
-  IOHprofiler_experimenter<int> experimenter(configName,evolutionary_algorithm);
+  IOHprofiler_experimenter<double> experimenter(configName,random_search);
   experimenter._set_independent_runs(10);
   experimenter._run();
 }

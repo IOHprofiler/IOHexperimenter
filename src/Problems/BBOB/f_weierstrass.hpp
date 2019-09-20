@@ -9,8 +9,7 @@
 #define _F_WEIERSTRASS_HPP
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 /** @brief Number of summands in the Weierstrass problem. */
 #define F_WEIERSTRASS_SUMMANDS 12
@@ -19,21 +18,23 @@ class Weierstrass : public IOHprofiler_problem<double> {
 public:
   Weierstrass() {
     IOHprofiler_set_problem_name("Weierstrass");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
+    IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
+    IOHprofiler_set_lowerbound(-5.0);
+    IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(1);
+    IOHprofiler_set_as_minimization();
   }
   Weierstrass(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Weierstrass");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
+    IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
+    IOHprofiler_set_lowerbound(-5.0);
+    IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Weierstrass() {};
 
@@ -41,17 +42,18 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> xopt;
-  double fopt;
-  std::vector<std::vector<double>> M;
-  std::vector<double> b;
-  std::vector<std::vector<double>> M1;
-  std::vector<double> b1;
   const double condition = 100.0;
   double f0;
   double ak[F_WEIERSTRASS_SUMMANDS];
   double bk[F_WEIERSTRASS_SUMMANDS];
   void prepare_problem() {
+
+    std::vector<double> xopt;
+    double fopt;
+    std::vector<std::vector<double>> M;
+    std::vector<double> b;
+    std::vector<std::vector<double>> M1;
+    std::vector<double> b1;
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
@@ -91,6 +93,13 @@ public:
       bk[i] = pow(3., (double) i);
       f0 += ak[i] * cos(2 * coco_pi * bk[i] * 0.5);
     }
+    Coco_Transformation_Data::fopt = fopt;
+    Coco_Transformation_Data::xopt = xopt;
+    Coco_Transformation_Data::M = M;
+    Coco_Transformation_Data::b = b;
+    Coco_Transformation_Data::M1 = M1;
+    Coco_Transformation_Data::b1 = b1;
+    Coco_Transformation_Data::penalty_factor = 10.0 / (double) n;
   }
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -98,13 +107,7 @@ public:
     int n = temp_x.size();
     size_t i, j;
 
-    const double penalty_factor = 10.0 / (double) n;
     std::vector<double> result(1);
-
-    transform_vars_affine_evaluate_function(temp_x,M,b);
-    transform_vars_oscillate_evaluate_function(temp_x);
-    transform_vars_affine_evaluate_function(temp_x,M1,b1);
-    transform_vars_shift_evaluate_function(temp_x,xopt);
 
     result[0] = 0.0;
     for (i = 0; i < n; ++i) {
@@ -113,9 +116,6 @@ public:
       }
     }
     result[0] = 10.0 * pow(result[0] / (double) (long) n - f0, 3.0);
-
-    transform_obj_shift_evaluate_function(result,fopt);
-    transform_obj_penalize_evaluate(temp_x,this->IOHprofiler_get_lowerbound(),this->IOHprofiler_get_upperbound(),penalty_factor,result);
 
     return result[0];
   };

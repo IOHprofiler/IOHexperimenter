@@ -10,8 +10,7 @@
 #define _F_LINEAR_SLOPE_H
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 class Linear_Slope : public IOHprofiler_problem<double> {
 public:
@@ -22,6 +21,7 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_as_minimization();
   }
   Linear_Slope(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -32,6 +32,7 @@ public:
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Linear_Slope() {};
 
@@ -39,15 +40,19 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> xopt;
-  double fopt;
+  
   void prepare_problem() {
+    std::vector<double> xopt;
+    double fopt;
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
     const long rseed = (long) (5 + 10000 * this->IOHprofiler_get_instance_id());
     bbob2009_compute_xopt(xopt, rseed, n);
     fopt = bbob2009_compute_fopt(5, this->IOHprofiler_get_instance_id());
+
+    Coco_Transformation_Data::fopt = fopt;
+    Coco_Transformation_Data::xopt = xopt;
   }
   
   double internal_evaluate(const std::vector<double> &x) {
@@ -61,19 +66,19 @@ public:
 
       base = sqrt(alpha);
       exponent = (double) (long) i / ((double) (long) n - 1);
-      if (xopt[i] > 0.0) {
+      if (Coco_Transformation_Data::xopt[i] > 0.0) {
         si = pow(base, exponent);
       } else {
         si = -pow(base, exponent);
       }
       /* boundary handling */
-      if (x[i] * xopt[i] < 25.0) {
+      if (x[i] * Coco_Transformation_Data::xopt[i] < 25.0) {
         result[0] += 5.0 * fabs(si) - si * x[i];
       } else {
-        result[0] += 5.0 * fabs(si) - si * xopt[i];
+        result[0] += 5.0 * fabs(si) - si * Coco_Transformation_Data::xopt[i];
       }
     }
-    transform_obj_shift_evaluate_function(result,fopt);
+
     return result[0];
   };
   

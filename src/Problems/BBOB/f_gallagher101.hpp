@@ -10,8 +10,7 @@
 #define _F_GALLAGHERONEZEROONE_H
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 typedef struct f_gallagher_permutation_t1{
   double value;
@@ -36,6 +35,7 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_as_minimization();
   }
   Gallagher101(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -46,6 +46,7 @@ public:
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Gallagher101() {};
 
@@ -54,7 +55,6 @@ public:
   };
 
   std::vector<double> xopt;
-  double fopt;
   const size_t number_of_peaks = 101;
   std::vector<std::vector<double>> rotation;
   const long rseed = (long) (21 + 10000 * this->IOHprofiler_get_instance_id());
@@ -62,12 +62,13 @@ public:
   std::vector<std::vector<double>> x_local;
   std::vector<double> peak_values;
   void prepare_problem() {
+    double fopt;
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
     bbob2009_compute_xopt(xopt, rseed, n);
     fopt = bbob2009_compute_fopt(21, this->IOHprofiler_get_instance_id());
-
+    std::vector<double> tmp_best_variables(n,0.0);
     /* compute rotation */
     rotation = std::vector<std::vector<double>> (n);
     for (int i = 0; i != n; i++) {
@@ -148,6 +149,7 @@ public:
     bbob2009_unif(random_numbers, n * number_of_peaks, rseed);
     for (i = 0; i < n; ++i) {
       xopt[i] = 0.8 * (b * random_numbers[i] - c);
+      tmp_best_variables[i] = 0.8 * (b * random_numbers[i] - c);
       for (j = 0; j < number_of_peaks; ++j) {
         x_local[i][j] = 0.;
         for (k = 0; k < n; ++k) {
@@ -158,7 +160,8 @@ public:
         }
       }
     }
-
+    Coco_Transformation_Data::fopt = fopt;
+    IOHprofiler_set_best_variables(tmp_best_variables);
   }
 
 
@@ -219,7 +222,6 @@ public:
     f_true += f_add;
     result[0] = f_true;
    
-    transform_obj_shift_evaluate_function(result,fopt);
     return result[0];
   };
   

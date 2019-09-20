@@ -9,8 +9,7 @@
 #define _F_BUECHE_RASTRIGIN_H
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 class Bueche_Rastrigin : public IOHprofiler_problem<double> {
 public:
@@ -21,6 +20,7 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(1);
+    IOHprofiler_set_as_minimization();
   }
   Bueche_Rastrigin(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -31,6 +31,7 @@ public:
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Bueche_Rastrigin() {};
 
@@ -38,10 +39,10 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> xopt;
-  double fopt;
-  const double penalty_factor = 100.0;
+  
   void prepare_problem() {
+    std::vector<double> xopt;
+    double fopt;
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
@@ -52,6 +53,12 @@ public:
     for (int i = 0; i < n; i += 2) {
       xopt[i] = fabs(xopt[i]);
     }
+
+    Coco_Transformation_Data::xopt = xopt;
+    Coco_Transformation_Data::fopt = fopt;
+    Coco_Transformation_Data::penalty_factor = 100.0;
+    Coco_Transformation_Data::lower_bound = -5.0;
+    Coco_Transformation_Data::upper_bound = 5.0;
   }
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -60,10 +67,6 @@ public:
     std::vector<double> temp_x = x;
     int n = temp_x.size();
 
-    transform_vars_brs_evaluate(temp_x);
-    transform_vars_oscillate_evaluate_function(temp_x);
-    transform_vars_shift_evaluate_function(temp_x,xopt);
-
     result[0] = 0.0;
     for (int i = 0; i < n; ++i) {
       tmp += cos(2 * coco_pi * temp_x[i]);
@@ -71,9 +74,6 @@ public:
     }
     result[0] = 10.0 * ((double) (long) n - tmp) + tmp2 + 0;
 
-    /* ignore large-scale test */
-    transform_obj_shift_evaluate_function(result,fopt);
-    transform_obj_penalize_evaluate(temp_x,this->IOHprofiler_get_lowerbound(),this->IOHprofiler_get_upperbound(),penalty_factor,result);
     return result[0];
   };
   

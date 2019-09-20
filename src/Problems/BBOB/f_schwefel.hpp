@@ -10,8 +10,7 @@
 #define _F_SCHWEFEL_HPP
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 class Schwefel : public IOHprofiler_problem<double> {
 public:
@@ -22,6 +21,7 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_as_minimization();
   }
   Schwefel(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -32,6 +32,7 @@ public:
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Schwefel() {};
 
@@ -39,10 +40,11 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> xopt,tmp1,tmp2;
-  double fopt;
-  const double condition = 10.;
+
+  
   void prepare_problem() {
+    std::vector<double> xopt,tmp1,tmp2;
+    double fopt;
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
@@ -59,6 +61,12 @@ public:
       tmp2[i] = 2 * fabs(xopt[i]);
     }
     
+    Coco_Transformation_Data::xopt = xopt;
+    Coco_Transformation_Data::fopt = fopt;
+    Coco_Transformation_Data::tmp1 = tmp1;
+    Coco_Transformation_Data::tmp2 = tmp2;
+    Coco_Transformation_Data::condition = 10.0;
+    Coco_Transformation_Data::rseed = rseed;
   }
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -69,13 +77,7 @@ public:
     double penalty, sum;
     const long rseed = (long) (20 + 10000 * this->IOHprofiler_get_instance_id());
 
-    transform_vars_scale_evaluate(temp_x,100);
-    transform_vars_shift_evaluate_function(temp_x,tmp1);
-    transform_vars_conditioning_evaluate(temp_x,condition);
-    transform_vars_shift_evaluate_function(temp_x,tmp2);
-    transform_vars_z_hat_evaluate(temp_x,xopt);
-    transform_vars_scale_evaluate(temp_x,2);
-    transform_vars_x_hat_evaluate(temp_x,rseed);
+
     /* Boundary handling*/
     penalty = 0.0;
     for (i = 0; i < n; ++i) {
@@ -90,8 +92,6 @@ public:
       sum += temp_x[i] * sin(sqrt(fabs(temp_x[i])));
     }
     result[0] = 0.01 * (penalty + 418.9828872724339 - sum / (double) n);
-
-    transform_obj_shift_evaluate_function(result,fopt);
 
     return result[0];
   };

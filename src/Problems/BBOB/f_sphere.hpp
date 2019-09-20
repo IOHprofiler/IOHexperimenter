@@ -10,8 +10,7 @@
 #define _F_SPHERE_HPP_
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 class Sphere : public IOHprofiler_problem<double> {
 public:
@@ -22,6 +21,7 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_as_minimization();
   }
   Sphere(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -32,6 +32,7 @@ public:
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Sphere() {};
 
@@ -39,15 +40,19 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> xopt;
-  double fopt;
+
   void prepare_problem() {
     /* compute xopt, fopt*/
-    
+    std::vector<double> xopt;
+    double fopt;
     int n = this->IOHprofiler_get_number_of_variables();
     const long rseed = (long) (13 + 10000 * this->IOHprofiler_get_instance_id());
     bbob2009_compute_xopt(xopt, rseed, n);
     fopt = bbob2009_compute_fopt(13, this->IOHprofiler_get_instance_id());
+
+    Coco_Transformation_Data::fopt = fopt;
+    Coco_Transformation_Data::xopt = xopt;
+    
   }
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -55,15 +60,11 @@ public:
     int n = temp_x.size();
     size_t i = 0;
     std::vector<double> result(1);
-      
-    transform_vars_shift_evaluate_function(temp_x,xopt);
 
     result[0] = 0.0;
     for (i = 0; i < n; ++i) {
       result[0] += temp_x[i] * temp_x[i];
     }
-
-    transform_obj_shift_evaluate_function(result,fopt);
     
     return result[0];
   };

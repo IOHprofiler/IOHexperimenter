@@ -10,8 +10,7 @@
 #define _F_STEP_ELLIPSOID_HPP
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 class Step_Ellipsoid : public IOHprofiler_problem<double> {
 public:
@@ -22,16 +21,18 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_as_minimization();
   }
   Step_Ellipsoid(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Step_Ellipsoid");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
+    IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Step_Ellipsoid() {};
 
@@ -41,10 +42,12 @@ public:
 
   std::vector<double> xopt;
   double fopt;
-  std::vector<std::vector<double>> rot1;
-  std::vector<std::vector<double>> rot2;
-  std::vector<double> datax,dataxx;
+  std::vector<std::vector<double> > rot1;
+  std::vector<std::vector<double> > rot2;
+  std::vector<double> datax,dataxx;  
   void prepare_problem() {
+
+
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
@@ -58,6 +61,8 @@ public:
 
     datax = std::vector<double>(n);
     dataxx = std::vector<double>(n);
+
+    IOHprofiler_set_best_variables(xopt);
   }
 
   double internal_evaluate(const std::vector<double> &x) {

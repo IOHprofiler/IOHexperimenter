@@ -29,15 +29,15 @@ static void transform_obj_oscillate_evaluate(std::vector<double> &y) {
 /**
  * @brief Evaluates the transformation.
  */
-static void transform_obj_penalize_evaluate(const std::vector<double> &x, const std::vector<double> &lower_bounds, const std::vector<double> &upper_bounds, const double factor,std::vector<double> &y) {
+static void transform_obj_penalize_evaluate(const std::vector<double> &x, const double lower_bounds, const double upper_bounds, const double factor,std::vector<double> &y) {
   double penalty = 0.0;
   size_t i;
   int number_of_objectives = y.size();
   int n = x.size();
 
   for (i = 0; i < n; ++i) {
-    const double c1 = x[i] - upper_bounds[i];
-    const double c2 = lower_bounds[i] - x[i];
+    const double c1 = x[i] - upper_bounds;
+    const double c2 = lower_bounds - x[i];
     if (c1 > 0.0) {
       penalty += c1 * c1;
     } else if (c2 > 0.0) {

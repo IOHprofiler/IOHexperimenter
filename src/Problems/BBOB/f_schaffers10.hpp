@@ -10,8 +10,7 @@
 #define _F_SCHAFFERSTEN_HPP
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 class Schaffers10 : public IOHprofiler_problem<double> {
 public:
@@ -22,6 +21,7 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_as_minimization();
   }
   Schaffers10(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -32,6 +32,7 @@ public:
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Schaffers10() {};
 
@@ -39,15 +40,15 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> xopt;
-  double fopt;
-  std::vector<std::vector<double>> M;
-  std::vector<std::vector<double>> M1;
-  std::vector<double> b;
-  std::vector<double> b1;
-  const double penalty_factor = 10.0;
+
   const double conditioning = 10;
   void prepare_problem() {
+    std::vector<double> xopt;
+    double fopt;
+    std::vector<std::vector<double>> M;
+    std::vector<std::vector<double>> M1;
+    std::vector<double> b;
+    std::vector<double> b1;
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
@@ -76,6 +77,14 @@ public:
       }
     }
     bbob2009_copy_rotation_matrix(rot1,M1,b1,n);
+
+    Coco_Transformation_Data::fopt = fopt;
+    Coco_Transformation_Data::xopt = xopt;
+    Coco_Transformation_Data::M = M;
+    Coco_Transformation_Data::b = b;
+    Coco_Transformation_Data::M1 = M1;
+    Coco_Transformation_Data::b1 = b1;
+    Coco_Transformation_Data::penalty_factor = 10.0;
   }
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -83,11 +92,6 @@ public:
     int n = temp_x.size();
     size_t i = 0;
     std::vector<double> result(1);
-
-    transform_vars_affine_evaluate_function(temp_x,M,b);
-    transform_vars_asymmetric_evaluate_function(temp_x,0.5);
-    transform_vars_affine_evaluate_function(temp_x,M1,b1);
-    transform_vars_shift_evaluate_function(temp_x,xopt);
 
     /* Computation core */
     result[0] = 0.0;
@@ -99,9 +103,7 @@ public:
       result[0] += pow(tmp, 0.25) * (1.0 + pow(sin(50.0 * pow(tmp, 0.1)), 2.0));
     }
     result[0] = pow(result[0] / ((double) (long) n - 1.0), 2.0);
-
-    transform_obj_shift_evaluate_function(result,fopt);
-    transform_obj_penalize_evaluate(temp_x,this->IOHprofiler_get_lowerbound(),this->IOHprofiler_get_upperbound(),penalty_factor,result);
+    
     return result[0];
   };
   

@@ -10,8 +10,7 @@
 #define _F_ROSENBROCK_ROTATED_HPP
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 class Rosenbrock_Rotated : public IOHprofiler_problem<double> {
 public:
@@ -22,6 +21,7 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_as_minimization();
   }
   Rosenbrock_Rotated(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -32,6 +32,7 @@ public:
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Rosenbrock_Rotated() {};
 
@@ -39,11 +40,10 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-
-  double fopt, factor;
-  std::vector<std::vector<double>> M;
-  std::vector<double> b;
   void prepare_problem() {
+    double fopt, factor;
+    std::vector<std::vector<double>> M;
+    std::vector<double> b;
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
@@ -66,6 +66,21 @@ public:
     }
 
     factor = 1.0 > (sqrt((double) n) / 8.0) ? 1 : (sqrt((double) n) / 8.0);
+
+    std::vector<double> tmp_best_variables(n,0.0);
+    for (int column = 0; column < n; ++column) { /* Wassim: manually set xopt = rot1^T ones(dimension)/(2*factor) */
+      double tmp = 0;
+      for (int row = 0; row < n; ++row) {
+        tmp += rot1[row][column];
+      }
+      tmp_best_variables[column] = tmp / (2. * factor);
+    }
+    IOHprofiler_set_best_variables(tmp_best_variables);
+
+    Coco_Transformation_Data::fopt = fopt;
+    Coco_Transformation_Data::factor = factor;
+    Coco_Transformation_Data::M = M;
+    Coco_Transformation_Data::b = b;
   }
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -75,8 +90,6 @@ public:
     std::vector<double> result(1);
     double s1 = 0.0, s2 = 0.0, tmp;
 
-    transform_vars_affine_evaluate_function(temp_x,M,b);
-
     for (i = 0; i < n - 1; ++i) {
       tmp = (temp_x[i] * temp_x[i] - temp_x[i + 1]);
       s1 += tmp * tmp;
@@ -84,8 +97,6 @@ public:
       s2 += tmp * tmp;
     }
     result[0] = 100.0 * s1 + s2;
-
-    transform_obj_shift_evaluate_function(result,fopt);
 
     return result[0];
   };

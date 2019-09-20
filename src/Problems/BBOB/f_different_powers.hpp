@@ -9,8 +9,7 @@
 #define _F_DIFFERENT_POWERS_HPP
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 class Different_Powers : public IOHprofiler_problem<double> {
 public:
@@ -21,6 +20,7 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_as_minimization();
   }
   Different_Powers(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -31,6 +31,7 @@ public:
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Different_Powers() {};
 
@@ -38,11 +39,12 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> xopt;
-  double fopt;
-  std::vector<std::vector<double>> M;
-  std::vector<double> b;
+
   void prepare_problem() {
+    std::vector<double> xopt;
+    double fopt;
+    std::vector<std::vector<double>> M;
+    std::vector<double> b;
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
@@ -60,6 +62,10 @@ public:
     bbob2009_compute_rotation(rot1, rseed + 1000000, n);
     bbob2009_copy_rotation_matrix(rot1,M,b,n);
     
+    Coco_Transformation_Data::fopt = fopt;
+    Coco_Transformation_Data::xopt = xopt;
+    Coco_Transformation_Data::M = M;
+    Coco_Transformation_Data::b = b;
   }
   double internal_evaluate(const std::vector<double> &x) {
     size_t i;
@@ -68,16 +74,11 @@ public:
     int n = temp_x.size();
     std::vector<double> result(1);
 
-    transform_vars_affine_evaluate_function(temp_x,M,b);
-    transform_vars_shift_evaluate_function(temp_x,xopt);
-
-    for (i = 0; i < n; ++i) {
+   for (i = 0; i < n; ++i) {
       double exponent = 2.0 + (4.0 * (double) (long) i) / ((double) (long) n - 1.0);
       sum += pow(fabs(temp_x[i]), exponent);
     }
     result[0] = sqrt(sum);
-    
-    transform_obj_shift_evaluate_function(result,fopt);
 
     return result[0];
   };

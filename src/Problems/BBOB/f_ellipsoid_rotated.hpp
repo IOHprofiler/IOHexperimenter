@@ -10,8 +10,7 @@
 #define _F_ELLIPSOID_ROTATED_H
 
 #include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation_vars.hpp"
-#include "bbob_common_used_functions/coco_transformation_objs.hpp"
+#include "bbob_common_used_functions/coco_transformation.h"
 
 class Ellipsoid_Rotated : public IOHprofiler_problem<double> {
 public:
@@ -22,6 +21,7 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_as_minimization();
   }
   Ellipsoid_Rotated(int instance_id, int dimension) {
     IOHprofiler_set_instance_id(instance_id);
@@ -32,6 +32,7 @@ public:
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
     Initilize_problem(dimension);
+    IOHprofiler_set_as_minimization();
   }
   ~Ellipsoid_Rotated() {};
 
@@ -39,13 +40,14 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
-  std::vector<double> xopt;
-  double fopt;
-  std::vector<std::vector<double>> M;
-  std::vector<double> b;
+
   void prepare_problem() {
     /* compute xopt, fopt*/
-    
+    std::vector<double> xopt;
+    double fopt;
+    std::vector<std::vector<double>> M;
+    std::vector<double> b;
+
     int n = this->IOHprofiler_get_number_of_variables();
     const long rseed = (long) (10 + 10000 * this->IOHprofiler_get_instance_id());
     bbob2009_compute_xopt(xopt, rseed, n);
@@ -60,6 +62,11 @@ public:
     std::vector<std::vector<double>> rot1;
     bbob2009_compute_rotation(rot1, rseed + 1000000, n);
     bbob2009_copy_rotation_matrix(rot1, M, b, n);
+
+    Coco_Transformation_Data::fopt = fopt;
+    Coco_Transformation_Data::xopt = xopt;
+    Coco_Transformation_Data::M = M;
+    Coco_Transformation_Data::b = b;
   }
 
 
@@ -70,17 +77,12 @@ public:
     int n = temp_x.size();
     std::vector<double> result(1);
 
-    transform_vars_oscillate_evaluate_function(temp_x);
-    transform_vars_affine_evaluate_function(temp_x,M,b);
-    transform_vars_shift_evaluate_function(temp_x,xopt);
 
     result[0] = temp_x[i] * temp_x[i];
     for (i = 1; i < n; ++i) {
       const double exponent = 1.0 * (double) (long) i / ((double) (long) n - 1.0);
       result[0] += pow(condition, exponent) * temp_x[i] * temp_x[i];
     }
-
-    transform_obj_shift_evaluate_function(result,fopt);
 
     return result[0];
   };

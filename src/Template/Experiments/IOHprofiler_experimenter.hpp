@@ -65,7 +65,8 @@ public:
       this->config_csv_logger->target_problem(current_problem->IOHprofiler_get_problem_id(), 
                                               current_problem->IOHprofiler_get_number_of_variables(), 
                                               current_problem->IOHprofiler_get_instance_id(),
-                                              current_problem->IOHprofiler_get_problem_name());
+                                              current_problem->IOHprofiler_get_problem_name(),
+                                              current_problem->IOHprofiler_get_optimization_type());
 
       algorithm(current_problem,this->config_csv_logger);
       
@@ -77,7 +78,8 @@ public:
         this->config_csv_logger->target_problem(current_problem->IOHprofiler_get_problem_id(), 
                                               current_problem->IOHprofiler_get_number_of_variables(), 
                                               current_problem->IOHprofiler_get_instance_id(),
-                                              current_problem->IOHprofiler_get_problem_name());
+                                              current_problem->IOHprofiler_get_problem_name(),
+                                              current_problem->IOHprofiler_get_optimization_type());
         algorithm(current_problem,this->config_csv_logger);
         ++count;
 

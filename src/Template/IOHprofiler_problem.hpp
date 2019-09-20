@@ -69,12 +69,12 @@ public:
   std::vector<double> evaluate_multi(std::vector<InputType> x) { 
     ++this->evaluations;
 
-    transformation.variables_transformation(x,this->instance_id);
+    transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
     this->raw_objectives = internal_evaluate_multi(x);
     
     this->transformed_objectives = this->raw_objectives;
-    transformation.objectives_transformation(x,this->transformed_objectives,this->instance_id);
-    if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives)) {
+    transformation.objectives_transformation(x,this->transformed_objectives,this->problem_id,this->instance_id,this->problem_type);
+    if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives,this->maximization_minimization_flag)) {
       this->best_so_far_transformed_objectives = this->transformed_objectives;
       this->best_so_far_transformed_evaluations = this->evaluations;
       this->best_so_far_raw_objectives = this->raw_objectives;
@@ -99,13 +99,13 @@ public:
   double evaluate(std::vector<InputType> x) { 
     ++this->evaluations;
 
-    transformation.variables_transformation(x,this->instance_id);
+    transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
     this->raw_objectives[0] = internal_evaluate(x);
     /// todo. make it as vector assign.
     
     this->transformed_objectives[0] = this->raw_objectives[0];
-    transformation.objectives_transformation(x,this->transformed_objectives,this->instance_id);
-    if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives)) {
+    transformation.objectives_transformation(x,this->transformed_objectives,this->problem_id,this->instance_id,this->problem_type);
+    if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives,this->maximization_minimization_flag)) {
       this->best_so_far_transformed_objectives = this->transformed_objectives;
       this->best_so_far_transformed_evaluations = this->evaluations;
       this->best_so_far_raw_objectives = this->raw_objectives;
@@ -131,17 +131,17 @@ public:
   void evaluate_multi(std::vector<InputType> x, std::vector<double> &y) {
     ++this->evaluations;
 
-    transformation.variables_transformation(x,this->instance_id);
+    transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
     y = internal_evaluate_multi(x);
     
     this->raw_objectives = y;
-    if (compareObjectives(y,this->best_so_far_raw_objectives)) {
+    if (compareObjectives(y,this->best_so_far_raw_objectives,this->maximization_minimization_flag)) {
       this->best_so_far_raw_objectives = y;
       this->best_so_far_raw_evaluations = this->evaluations;
     }
     
-    transformation.objectives_transformation(x,y,this->instance_id);
-    if (compareObjectives(y,this->best_so_far_transformed_objectives)) {
+    transformation.objectives_transformation(x,y,this->problem_id,this->instance_id,this->problem_type);
+    if (compareObjectives(y,this->best_so_far_transformed_objectives,this->maximization_minimization_flag)) {
       this->best_so_far_transformed_objectives = y;
       this->best_so_far_transformed_evaluations = this->evaluations;
     }
@@ -162,12 +162,12 @@ public:
   void evaluate(std::vector<InputType> x, double &y) {
     ++this->evaluations;
 
-    transformation.variables_transformation(x,this->instance_id);
+    transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
     y = internal_evaluate(x);
     
     this->raw_objectives = y;
     
-    transformation.objectives_transformation(x,y,this->instance_id);
+    transformation.objectives_transformation(x,y,this->problem_id,this->instance_id,this->problem_type);
     if (y > this->best_so_far_transformed_objectives[0]) {
       this->best_so_far_transformed_objectives[0] = y;
       this->best_so_far_transformed_evaluations = this->evaluations;
@@ -194,12 +194,16 @@ public:
       } else {
         this->optimal = internal_evaluate_multi(this->best_variables);
       }
-      transformation.objectives_transformation(this->best_variables,this->optimal,this->instance_id);
+      transformation.objectives_transformation(this->best_variables,this->optimal,this->problem_id,this->instance_id,this->problem_type);
     }
     else {
       this->optimal.clear();
       for (int i = 0; i < this->number_of_objectives; ++i) {
-        this->optimal.push_back(DBL_MAX);
+        if (this->maximization_minimization_flag == 1) {
+          this->optimal.push_back(DBL_MAX); 
+        } else {
+          this->optimal.push_back(-DBL_MAX);
+        }
       }
     }
   };
@@ -223,11 +227,34 @@ public:
     this->best_so_far_transformed_evaluations = 0;
     this->optimalFound = false;
     for (int i = 0; i !=  this->number_of_objectives; ++i) {
-      this->best_so_far_raw_objectives[i] = -DBL_MAX;
-      this->best_so_far_transformed_objectives[i] = -DBL_MAX;
+      if (this->maximization_minimization_flag == 1) {
+        this->best_so_far_raw_objectives[i] = -DBL_MAX;
+        this->best_so_far_transformed_objectives[i] = -DBL_MAX;
+      } else {
+        this->best_so_far_raw_objectives[i] = DBL_MAX;
+        this->best_so_far_transformed_objectives[i] = DBL_MAX;
+      }
     }
   };
 
+  /// \fn std::vector<std::variant<int,double,std::string>> loggerInfo()
+  ///
+  /// Return a vector logger_info may be used by loggers.
+  /// logger_info[0] evaluations
+  /// logger_info[1] raw_objectives
+  /// logger_info[2] best_so_far_raw_objectives
+  /// logger_info[3] transformed_objective
+  /// logger_info[4] best_so_far_transformed_objectives
+  std::vector<double> loggerCOCOInfo() {
+    std::vector<double> logger_info(5);
+    logger_info[0] = (double)this->evaluations;
+    logger_info[1] = this->transformed_objectives[0];
+    logger_info[2] = this->transformed_objectives[0] - this->optimal[0];
+    logger_info[3] = this->best_so_far_transformed_objectives[0];
+    logger_info[4] = this->best_so_far_transformed_objectives[0] - this->optimal[0];
+    return logger_info;
+  }
+  
   /// \fn std::vector<std::variant<int,double,std::string>> loggerInfo()
   ///
   /// Return a vector logger_info may be used by loggers.
@@ -245,6 +272,7 @@ public:
     logger_info[4] = this->best_so_far_transformed_objectives[0];
     return logger_info;
   }
+  
   
   /// \fn IOHprofiler_hit_optimal()
   ///
@@ -471,6 +499,18 @@ public:
     return this->best_so_far_transformed_evaluations;
   };
 
+  int IOHprofiler_get_optimization_type() {
+    return this->maximization_minimization_flag;
+  }
+
+  void IOHprofiler_set_as_maximization() {
+    this->maximization_minimization_flag = 1;
+  }
+
+  void IOHprofiler_set_as_minimization() {
+    this->maximization_minimization_flag = 0;
+  }
+
 private:
   
   int problem_id = DEFAULT_PROBLEM_ID; /// < problem id, assigned as being added into a suite.
@@ -478,6 +518,7 @@ private:
   
   std::string problem_name;
   std::string problem_type;   /// todo. make it as enum.
+  int maximization_minimization_flag = 1; /// < set as maximization if flag = 1, otherwise minimization.
   
   std::vector<InputType> lowerbound;
   std::vector<InputType> upperbound;

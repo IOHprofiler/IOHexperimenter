@@ -81,7 +81,8 @@ void _run_suite() {
     logger->target_problem(problem->IOHprofiler_get_problem_id(), 
                           problem->IOHprofiler_get_number_of_variables(), 
                           problem->IOHprofiler_get_instance_id(),
-                          problem->IOHprofiler_get_problem_name());
+                          problem->IOHprofiler_get_problem_name(),
+                          problem->IOHprofiler_get_optimization_type());
     evolutionary_algorithm(problem,logger);
   }
 }
