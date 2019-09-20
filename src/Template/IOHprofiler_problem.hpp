@@ -26,7 +26,7 @@ public:
   
   IOHprofiler_problem() {};
   IOHprofiler_problem(int instance_id, int dimension){};
-  ~IOHprofiler_problem(){};
+  virtual ~IOHprofiler_problem(){};
 
   IOHprofiler_problem(const IOHprofiler_problem&) = delete;
   IOHprofiler_problem &operator=(const IOHprofiler_problem&) = delete;

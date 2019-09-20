@@ -6,7 +6,7 @@
 ///
 /// \author Furong Ye
 /// \date 2019-06-27
-#ifndef _F_LEADING_ONES_DUMMYTWI_H
+#ifndef _F_LEADING_ONES_DUMMYTWO_H
 #define _F_LEADING_ONES_DUMMYTWO_H
 
 #include "../Template/IOHprofiler_problem.hpp"

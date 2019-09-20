@@ -77,7 +77,7 @@ void _run_suite() {
   std::shared_ptr<IOHprofiler_problem<int>> problem;
 
   /// Problems are tested one by one until 'get_next_problem' returns NULL.
-  while (problem = pbo.get_next_problem()) {
+  while ((problem = pbo.get_next_problem()) != nullptr) {
     logger->target_problem(problem->IOHprofiler_get_problem_id(), 
                           problem->IOHprofiler_get_number_of_variables(), 
                           problem->IOHprofiler_get_instance_id(),

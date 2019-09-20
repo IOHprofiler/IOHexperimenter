@@ -145,10 +145,10 @@ public:
   }
 
 private:
-  long _seed[32];
+  //long _seed[32];
   size_t _seed_index;
 
-  double rand_r;
+  //double rand_r;
 
   const long a = 16807; /// < multiplier.
   const long m = 2147483647; /// < modulus.
