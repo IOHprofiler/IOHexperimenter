@@ -81,10 +81,20 @@ void random_search(std::shared_ptr<IOHprofiler_problem<double>> problem, std::sh
   }
 }
 
+void grid_search(std::shared_ptr<IOHprofiler_problem<double>> problem, std::shared_ptr<IOHprofiler_csv_logger> logger) {
+	int count = -5;
+	while (count <= 5) {
+		std::vector<double> x(5, count);
+		problem->evaluate(x);
+		logger->write_line(problem->loggerCOCOInfo());
+		count++;
+	}
+}
+
 void _run_experiment() {
   std::string configName = "./configuration.ini";
-  IOHprofiler_experimenter<double> experimenter(configName,random_search);
-  experimenter._set_independent_runs(10);
+  IOHprofiler_experimenter<double> experimenter(configName, grid_search);
+  experimenter._set_independent_runs(3);
   experimenter._run();
 }
 
