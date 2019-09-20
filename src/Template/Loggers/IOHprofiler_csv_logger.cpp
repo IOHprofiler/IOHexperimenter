@@ -195,6 +195,7 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
   if (evaluations == 1) {
     this->write_header();
   }
+
   this->last_evaluations = evaluations;
   this->last_y[0] = y;
   this->last_transformed_y[0] = transformed_y;
@@ -205,6 +206,7 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
   bool tdat_flag = time_points_trigger(evaluations);
 
   bool need_write =  cdat_flag || idat_flag || dat_flag || tdat_flag;
+
 
   if (need_write) {
     std::string written_line = std::to_string(evaluations) + " " + std::to_string(y) + " "
@@ -219,24 +221,28 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
     }
     
     written_line += '\n';
+
     if (cdat_flag) {
       if (!this->cdat.is_open()) {
         IOH_error("*.cdat file is not open");
       }
       this->cdat << written_line;
     }
+
     if (idat_flag) {
       if (!this->idat.is_open()) {
         IOH_error("*.idat file is not open");
       }
       this->idat << written_line;
     }
+
     if (dat_flag) {
       if (!this->dat.is_open()) {
         IOH_error("*.dat file is not open");
       }
       this->dat << written_line;
     }
+
     if (tdat_flag) {
       if (!this->tdat.is_open()) {
         IOH_error("*.tdat file is not open");

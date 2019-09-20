@@ -31,7 +31,7 @@ public:
     COMMENT,
     SECTION,
     VALUE,
-    ERROR
+    CON_ERROR
   } linecontent;
 
   int set_Dict(Dict &dict, const std::string section, const std::string key, const std::string value) {
@@ -161,7 +161,7 @@ public:
       key = tempkey;
       content = VALUE;
     } else {
-     content = ERROR;
+     content = CON_ERROR;
     }
     return content;
   };
@@ -203,11 +203,11 @@ public:
           strstrip(key);
           this->set_Dict(dict,section,key,value);
           break;
-        case ERROR:
+        case CON_ERROR:
           std::cout << "There is an error for line: \" "<< line << "\"";
           break;
       }
-      if (lc == ERROR) {
+      if (lc == CON_ERROR) {
         break;
       }
     }

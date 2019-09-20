@@ -49,7 +49,7 @@ public:
 
   void openInfo(int problem_id, int dimension, std::string problem_name);
   void write_info(int instance, double best_y, double best_transformed_y, int evaluations, 
-                                          double last_y, double last_transformed_y, int last_evaluations);
+                  double last_y, double last_transformed_y, int last_evaluations);
 
   void write_line(const size_t evaluations, const double y, const double best_so_far_y,
                  const double transformed_y, const double best_so_far_transformed_y);
