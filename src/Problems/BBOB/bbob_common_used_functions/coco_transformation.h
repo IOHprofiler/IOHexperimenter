@@ -110,7 +110,7 @@ static void coco_tranformation_vars (std::vector<double> &x, const int problem_i
     transform_vars_scale_evaluate(x,2);
     transform_vars_z_hat_evaluate(x,Coco_Transformation_Data::xopt);
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::tmp2);
-    transform_vars_conditioning_evaluate(x,Coco_Transformation_Data::condition);
+    transform_vars_conditioning_evaluate(x,10.0);
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::tmp1);
     transform_vars_scale_evaluate(x,100);
   } else if (problem_id == 21) {

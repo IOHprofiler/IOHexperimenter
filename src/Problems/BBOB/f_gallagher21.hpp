@@ -19,7 +19,7 @@ typedef struct f_gallagher_permutation_t{
 
 static bool compareRperm(f_gallagher_permutation_t a, f_gallagher_permutation_t b) {
   double temp = a.value - b.value;
-  if (temp > 0)
+  if (temp >= 0)
     return true;
   else
     return false;
@@ -63,55 +63,50 @@ public:
   std::vector<double> peak_values;
   void prepare_problem() {
     const long rseed = (long) (22 + 10000 * this->IOHprofiler_get_instance_id());
+    int n = IOHprofiler_get_number_of_variables();
 
     double fopt;
-    /* compute xopt, fopt*/
-    
-    int n = this->IOHprofiler_get_number_of_variables();
-    bbob2009_compute_xopt(xopt, rseed, n);
-    fopt = bbob2009_compute_fopt(21, this->IOHprofiler_get_instance_id());
-    std::vector<double> tmp_best_variables(n,0.0);
-    /* compute rotation */
-    rotation = std::vector<std::vector<double>> (n);
-    for (int i = 0; i != n; i++) {
-      rotation[i] = std::vector<double> (n);
-    }
-    bbob2009_compute_rotation(rotation,rseed,n);
-
-    const size_t peaks_101 = 101;
-
     size_t i, j, k;
     double maxcondition = 1000.;
     /* maxcondition1 satisfies the old code and the doc but seems wrong in that it is, with very high
     * probability, not the largest condition level!!! */
     double maxcondition1 = 1000.;
-    
+    std::vector<double> arrCondition;
     double fitvalues[2] = { 1.1, 9.1 };
     /* Parameters for generating local optima. In the old code, they are different in f21 and f22 */
     double b, c;
     /* Random permutation */
-    std::vector<double> random_numbers(number_of_peaks * n);
+    std::vector<f_gallagher_permutation_t> rperm;
+    std::vector<double> random_numbers;
+    arr_scales = std::vector<std::vector<double> > (number_of_peaks);
+    for (i = 0; i != number_of_peaks; ++i) {
+      arr_scales[i] = std::vector<double>(n);
+    }
 
-  
+    x_local = std::vector<std::vector<double> > (n);
+    for (i = 0; i != n; ++i) {
+      x_local[i] = std::vector<double>(number_of_peaks);
+    }
+
+    /* Allocate temporary storage and space for the rotation matrices */
+    std::vector<double >xopt = std::vector<double>(n);
+    
     b = 9.8;
     c = 4.9;
 
+    bbob2009_compute_rotation(rotation, rseed, n);
+
     /* Initialize all the data of the inner problem */
     bbob2009_unif(random_numbers, number_of_peaks - 1, rseed);
-    
-    std::vector<f_gallagher_permutation_t> rperm;
+    rperm = std::vector<f_gallagher_permutation_t> (number_of_peaks - 1);
     for (i = 0; i < number_of_peaks - 1; ++i) {
-      f_gallagher_permutation_t temp_rperm;
-      temp_rperm.value = random_numbers[i];
-      temp_rperm.index = i;
-      rperm.push_back(temp_rperm);
+      rperm[i].value = random_numbers[i];
+      rperm[i].index = i;
     }
-
-    
-    std::sort(rperm.begin(), rperm.end(),compareRperm);
+    std::sort(rperm.begin(), rperm.end(), compareRperm);
 
     /* Random permutation */
-    std::vector<double> arrCondition(number_of_peaks);
+    arrCondition = std::vector<double>(number_of_peaks);
     arrCondition[0] = maxcondition1;
     peak_values = std::vector<double>(number_of_peaks);
     peak_values[0] = 10;
@@ -121,36 +116,25 @@ public:
           + fitvalues[0];
     }
 
-    rperm.clear();
-    for (i = 0; i < n; ++i) {
-      f_gallagher_permutation_t temp_rperm;
-      rperm.push_back(temp_rperm);
-    }
-
-    arr_scales = std::vector<std::vector<double>> (number_of_peaks);
-    for (int i = 0; i != number_of_peaks; i++) {
-      arr_scales[i] = std::vector<double> (n);
-    }
+    rperm = std::vector<f_gallagher_permutation_t> (n);
     for (i = 0; i < number_of_peaks; ++i) {
       bbob2009_unif(random_numbers, n, rseed + (long) (1000 * i));
       for (j = 0; j < n; ++j) {
         rperm[j].value = random_numbers[j];
         rperm[j].index = j;
       }
-      sort(rperm.begin(), rperm.end(),compareRperm);
+      std::sort(rperm.begin(), rperm.end(), compareRperm);
       for (j = 0; j < n; ++j) {
-        arr_scales[i][j] = pow(arrCondition[i],((double) rperm[j].index) / ((double) (n - 1)) - 0.5);
+        arr_scales[i][j] = pow(arrCondition[i],                             /* Lambda^alpha_i from the doc */
+            ((double) rperm[j].index) / ((double) (n - 1)) - 0.5);
       }
     }
 
-    x_local = std::vector<std::vector<double>> (n);
-    for (int i = 0; i != n; i++) {
-      x_local[i] = std::vector<double> (number_of_peaks);
-    }
     bbob2009_unif(random_numbers, n * number_of_peaks, rseed);
+    std::vector<double> best_variables(n);
     for (i = 0; i < n; ++i) {
       xopt[i] = 0.8 * (b * random_numbers[i] - c);
-      tmp_best_variables[i] = 0.8 * (b * random_numbers[i] - c);
+      best_variables[i] = 0.8 * (b * random_numbers[i] - c);
       for (j = 0; j < number_of_peaks; ++j) {
         x_local[i][j] = 0.;
         for (k = 0; k < n; ++k) {
@@ -161,14 +145,15 @@ public:
         }
       }
     }
+    IOHprofiler_set_best_variables(best_variables);
+     
+    fopt = bbob2009_compute_fopt(22, this->IOHprofiler_get_instance_id());
     Coco_Transformation_Data::fopt = fopt;
-    IOHprofiler_set_best_variables(tmp_best_variables);
   }
 
 
   double internal_evaluate(const std::vector<double> &x) {
-    std::vector<double> temp_x = x;
-    int n = temp_x.size();
+    int n = x.size();
 
     size_t i, j; /* Loop over dim */
     std::vector<double> tmx(n);

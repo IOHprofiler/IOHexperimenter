@@ -41,12 +41,13 @@ public:
   };
 
   
-  std::vector<double> xopt;
-  std::vector<std::vector<double> > rot1;
-  std::vector<std::vector<double> > rot2;
+
   void prepare_problem() {
+    std::vector<double> xopt;
+    std::vector<std::vector<double> > rot1;
+    std::vector<std::vector<double> > rot2;
     double fopt;
-    std::vector<double> tmpxopt,tmpvect;
+    std::vector<double> tmpvect;
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
@@ -58,16 +59,20 @@ public:
     bbob2009_compute_rotation(rot2, rseed, n);
 
     Coco_Transformation_Data::fopt = fopt;
+
+    Coco_Transformation_Data::rot1 = rot1;
+    Coco_Transformation_Data::rot2 = rot2;
+
   
-    bbob2009_compute_xopt(tmpxopt, rseed, n);
     bbob2009_gauss(tmpvect, n, rseed);
     for (int i = 0; i < n; ++i) {
-      tmpxopt[i] = 0.5 * 2.5;
+      xopt[i] = 0.5 * 2.5;
       if (tmpvect[i] < 0.0) {
-        tmpxopt[i] *= -1.0;
+        xopt[i] *= -1.0;
       }
     }
-    IOHprofiler_set_best_variables(tmpxopt);
+    Coco_Transformation_Data::xopt = xopt;
+    IOHprofiler_set_best_variables(xopt);
   }
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -80,7 +85,10 @@ public:
     static const double d = 1.;
     const double s = 1. - 0.5 / (sqrt((double) (n + 20)) - 4.1);
     const double mu1 = -sqrt((mu0 * mu0 - d) / s);
-    double sum1 = 0., sum2 = 0., sum3 = 0.;    
+    double sum1 = 0., sum2 = 0., sum3 = 0.;
+    std::vector<double> tmpvect(n);
+    std::vector<double> x_hat(n);
+    std::vector<double> z(n);
 
     for (i = 0; i < n; ++i) {
       double tmp;
@@ -90,29 +98,25 @@ public:
     }
 
     /* x_hat */
-    std::vector<double> x_hat(n);
     for (i = 0; i < n; ++i) {
       x_hat[i] = 2. * x[i];
-      if (xopt[i] < 0.) {
+      if (Coco_Transformation_Data::xopt[i] < 0.) {
         x_hat[i] *= -1.;
       }
     }
-
-    std::vector<double>tmpvect(n);
     /* affine transformation */
     for (i = 0; i < n; ++i) {
       double c1;
       tmpvect[i] = 0.0;
       c1 = pow(sqrt(condition), ((double) i) / (double) (n - 1));
       for (j = 0; j < n; ++j) {
-        tmpvect[i] += c1 * rot2[i][j] * (x_hat[j] - mu0);
+        tmpvect[i] += c1 * Coco_Transformation_Data::rot2[i][j] * (x_hat[j] - mu0);
       }
     }
-    std::vector<double>z(n);
     for (i = 0; i < n; ++i) {
       z[i] = 0;
       for (j = 0; j < n; ++j) {
-        z[i] += rot1[i][j] * tmpvect[j];
+        z[i] += Coco_Transformation_Data::rot1[i][j] * tmpvect[j];
       }
     }
     /* Computation core */
@@ -121,8 +125,9 @@ public:
       sum2 += (x_hat[i] - mu1) * (x_hat[i] - mu1);
       sum3 += cos(2 * coco_pi * z[i]);
     }
-    result[0] = (sum1 <= (d * (double) n + s * sum2) ? sum1 : (d * (double) n + s * sum2))
+    result[0] = std::min(sum1, d * (double) n + s * sum2)
         + 10. * ((double) n - sum3) + 1e4 * penalty;
+
 
     return result[0];
   };

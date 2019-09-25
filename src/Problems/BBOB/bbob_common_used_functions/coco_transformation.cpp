@@ -1,5 +1,6 @@
 #include "coco_transformation.h"
 
+std::vector<double> Coco_Transformation_Data::raw_x = std::vector<double>(0);
 std::vector<double> Coco_Transformation_Data::xopt = std::vector<double>(0);
 std::vector<double> Coco_Transformation_Data::tmp1 = std::vector<double>(0);
 std::vector<double> Coco_Transformation_Data::tmp2 = std::vector<double>(0);
@@ -19,6 +20,7 @@ std::vector<double> Coco_Transformation_Data::dataxx = std::vector<double>(0);;
 std::vector<double> Coco_Transformation_Data::minus_one = std::vector<double>(0);;
 double Coco_Transformation_Data::condition = 0;
 long Coco_Transformation_Data::rseed = 0;
+
 
 
 

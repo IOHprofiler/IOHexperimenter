@@ -20,7 +20,7 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_best_variables(420.96874633);
     IOHprofiler_set_as_minimization();
   }
   Schwefel(int instance_id, int dimension) {
@@ -30,7 +30,7 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_best_variables(420.96874633);
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }

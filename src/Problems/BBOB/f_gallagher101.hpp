@@ -19,11 +19,10 @@ typedef struct f_gallagher_permutation_t1{
 
 static bool compareRperm1(f_gallagher_permutation_t1 a, f_gallagher_permutation_t1 b) {
   double temp = a.value - b.value;
-  if (temp > 0)
+  if (temp >= 0)
     return true;
   else
     return false;
-  
 };
 
 class Gallagher101 : public IOHprofiler_problem<double> {
@@ -75,9 +74,6 @@ public:
       rotation[i] = std::vector<double> (n);
     }
     bbob2009_compute_rotation(rotation,rseed,n);
-
-    const size_t peaks_101 = 101;
-
     size_t i, j, k;
     double maxcondition = 1000.;
     /* maxcondition1 satisfies the old code and the doc but seems wrong in that it is, with very high
