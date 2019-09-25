@@ -131,10 +131,10 @@ public:
     mapIDTOName(16,"Weierstrass");
     mapIDTOName(17,"Schaffers10");
     mapIDTOName(18,"Schaffers1000");
-    mapIDTOName(22,"Griewank_RosenBrock");
-    mapIDTOName(19,"Schwefel");
-    mapIDTOName(20,"Gallagher101");
-    mapIDTOName(21,"Gallagher21");
+    mapIDTOName(19,"Griewank_RosenBrock");
+    mapIDTOName(20,"Schwefel");
+    mapIDTOName(21,"Gallagher101");
+    mapIDTOName(22,"Gallagher21");
     mapIDTOName(23,"Katsuura");
     mapIDTOName(24,"Lunacek_Bi_Rastrigin");
   };

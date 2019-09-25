@@ -70,26 +70,25 @@ public:
   }
 
   double internal_evaluate(const std::vector<double> &x) {
-    std::vector<double> temp_x = x;
-    int n = temp_x.size();
+    int n = x.size();
     size_t i = 0;
     std::vector<double> result(1);
     double penalty, sum;
-    const long rseed = (long) (20 + 10000 * this->IOHprofiler_get_instance_id());
 
 
     /* Boundary handling*/
     penalty = 0.0;
     for (i = 0; i < n; ++i) {
-      const double tmp = fabs(temp_x[i]) - 500.0;
-      if (tmp > 0.0)
+      const double tmp = fabs(x[i]) - 500.0;
+      if (tmp > 0.0) {
         penalty += tmp * tmp;
+      }
     }
 
     /* Computation core */
     sum = 0.0;
     for (i = 0; i < n; ++i) {
-      sum += temp_x[i] * sin(sqrt(fabs(temp_x[i])));
+      sum += x[i] * sin(sqrt(fabs(x[i])));
     }
     result[0] = 0.01 * (penalty + 418.9828872724339 - sum / (double) n);
 

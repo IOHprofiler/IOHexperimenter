@@ -44,7 +44,7 @@ public:
   void prepare_problem() {
     std::vector<double> xopt;
     double fopt;
-    std::vector<std::vector<double>> M;
+    std::vector<std::vector<double> > M;
     std::vector<double> b;
     /* compute xopt, fopt*/
     
@@ -82,8 +82,7 @@ public:
   double internal_evaluate(const std::vector<double> &x) {
     std::vector<double> result(1,0.0);
 
-    std::vector<double> temp_x;
-    int n = temp_x.size();
+    int n = x.size();
     
     for (int i = 0; i < n; ++i) {
       if (Coco_Transformation_Data::xopt[i] * x[i] > 0.0) {

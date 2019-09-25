@@ -46,10 +46,12 @@ public:
     std::vector<double> b;
     /* compute xopt, fopt*/
     
+    
     int n = this->IOHprofiler_get_number_of_variables();
     const long rseed = (long) (9 + 10000 * this->IOHprofiler_get_instance_id());
     fopt = bbob2009_compute_fopt(9, this->IOHprofiler_get_instance_id());
-
+    
+    factor = 1.0 > (sqrt((double) n) / 8.0) ? 1 : (sqrt((double) n) / 8.0);
     /* compute M and b */
     M = std::vector<std::vector<double>> (n);
     for (int i = 0; i != n; i++) {
@@ -65,7 +67,6 @@ public:
       b[row] = 0.5;
     }
 
-    factor = 1.0 > (sqrt((double) n) / 8.0) ? 1 : (sqrt((double) n) / 8.0);
 
     std::vector<double> tmp_best_variables(n,0.0);
     for (int column = 0; column < n; ++column) { /* Wassim: manually set xopt = rot1^T ones(dimension)/(2*factor) */

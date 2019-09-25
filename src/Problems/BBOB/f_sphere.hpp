@@ -46,9 +46,9 @@ public:
     std::vector<double> xopt;
     double fopt;
     int n = this->IOHprofiler_get_number_of_variables();
-    const long rseed = (long) (13 + 10000 * this->IOHprofiler_get_instance_id());
+    const long rseed = (long) (1 + 10000 * this->IOHprofiler_get_instance_id());
     bbob2009_compute_xopt(xopt, rseed, n);
-    fopt = bbob2009_compute_fopt(13, this->IOHprofiler_get_instance_id());
+    fopt = bbob2009_compute_fopt(1, this->IOHprofiler_get_instance_id());
 
     Coco_Transformation_Data::fopt = fopt;
     Coco_Transformation_Data::xopt = xopt;
@@ -56,14 +56,13 @@ public:
   }
 
   double internal_evaluate(const std::vector<double> &x) {
-    std::vector<double> temp_x = x;
-    int n = temp_x.size();
+    int n = x.size();
     size_t i = 0;
     std::vector<double> result(1);
 
     result[0] = 0.0;
     for (i = 0; i < n; ++i) {
-      result[0] += temp_x[i] * temp_x[i];
+      result[0] += x[i] * x[i];
     }
     
     return result[0];

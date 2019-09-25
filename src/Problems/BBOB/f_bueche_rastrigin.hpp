@@ -64,13 +64,12 @@ public:
   double internal_evaluate(const std::vector<double> &x) {
     double tmp = 0., tmp2 = 0.;
     std::vector<double> result(1);
-    std::vector<double> temp_x = x;
-    int n = temp_x.size();
+    int n = x.size();
 
     result[0] = 0.0;
     for (int i = 0; i < n; ++i) {
-      tmp += cos(2 * coco_pi * temp_x[i]);
-      tmp2 += temp_x[i] * temp_x[i];
+      tmp += cos(2 * coco_pi * x[i]);
+      tmp2 += x[i] * x[i];
     }
     result[0] = 10.0 * ((double) (long) n - tmp) + tmp2 + 0;
 

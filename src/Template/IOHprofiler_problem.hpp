@@ -235,6 +235,7 @@ public:
         this->best_so_far_transformed_objectives[i] = DBL_MAX;
       }
     }
+    this->prepare_problem();
   };
 
   /// \fn std::vector<std::variant<int,double,std::string>> loggerInfo()

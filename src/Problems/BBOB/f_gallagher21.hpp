@@ -57,12 +57,13 @@ public:
   std::vector<double> xopt;
 
   const size_t number_of_peaks = 21;
-  std::vector<std::vector<double>> rotation;
-  const long rseed = (long) (21 + 10000 * this->IOHprofiler_get_instance_id());
-  std::vector<std::vector<double>> arr_scales;
-  std::vector<std::vector<double>> x_local;
+  std::vector<std::vector<double> > rotation;
+  std::vector<std::vector<double> > arr_scales;
+  std::vector<std::vector<double> > x_local;
   std::vector<double> peak_values;
   void prepare_problem() {
+    const long rseed = (long) (22 + 10000 * this->IOHprofiler_get_instance_id());
+
     double fopt;
     /* compute xopt, fopt*/
     

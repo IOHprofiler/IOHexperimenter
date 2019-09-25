@@ -50,7 +50,7 @@ public:
     
     int n = this->IOHprofiler_get_number_of_variables();
     const long rseed = (long) (12 + 10000 * this->IOHprofiler_get_instance_id());
-    bbob2009_compute_xopt(xopt, rseed, n);
+    bbob2009_compute_xopt(xopt, rseed + 1000000, n);
     fopt = bbob2009_compute_fopt(12, this->IOHprofiler_get_instance_id());
     
     /* compute M and b */
@@ -59,7 +59,7 @@ public:
       M[i] = std::vector<double> (n);
     }
     b = std::vector<double> (n);
-    std::vector<std::vector<double>> rot1;
+    std::vector<std::vector<double> > rot1;
     bbob2009_compute_rotation(rot1, rseed + 1000000, n);
     bbob2009_copy_rotation_matrix(rot1,M,b,n);
     

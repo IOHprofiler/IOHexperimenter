@@ -52,7 +52,7 @@ public:
     const long rseed = (long) (19 + 10000 * this->IOHprofiler_get_instance_id());
     fopt = bbob2009_compute_fopt(19, this->IOHprofiler_get_instance_id());
     xopt = std::vector<double>(n);
-    for (int i = 0; i != n; ++i) {
+    for (int i = 0; i < n; ++i) {
       xopt[i] = -0.5;
     }
     
@@ -63,7 +63,7 @@ public:
     }
     b = std::vector<double> (n);
     std::vector<std::vector<double>> rot1;
-    bbob2009_compute_rotation(rot1, rseed + 1000000, n);
+    bbob2009_compute_rotation(rot1, rseed, n);
     scales = 1. > (sqrt((double) n) / 8.) ? 1. : (sqrt((double) n) / 8.);
     for (int i = 0; i < n; ++i) {
       for (int j = 0; j < n; ++j) {
@@ -75,7 +75,17 @@ public:
     Coco_Transformation_Data::xopt = xopt;
     Coco_Transformation_Data::M = M;
     Coco_Transformation_Data::b = b;
-    
+
+    double tmp;
+    std::vector<double> tmp_best_variables(n,0);
+    for (int j = 0; j < n; ++j) {
+      tmp = 0;
+      for (int i = 0; i < n; ++i) {
+        tmp += rot1[i][j];
+      }
+      tmp_best_variables[j] = tmp / (2. * scales);
+    }
+    IOHprofiler_set_best_variables(tmp_best_variables);
   }
 
   double internal_evaluate(const std::vector<double> &x) {

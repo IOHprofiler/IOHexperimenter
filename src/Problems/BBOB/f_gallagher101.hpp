@@ -56,13 +56,13 @@ public:
 
   std::vector<double> xopt;
   const size_t number_of_peaks = 101;
-  std::vector<std::vector<double>> rotation;
-  const long rseed = (long) (21 + 10000 * this->IOHprofiler_get_instance_id());
+  std::vector<std::vector<double> > rotation;
   std::vector<std::vector<double>> arr_scales;
   std::vector<std::vector<double>> x_local;
   std::vector<double> peak_values;
   void prepare_problem() {
     double fopt;
+    const long rseed = (long) (21 + 10000 * this->IOHprofiler_get_instance_id());
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
@@ -126,7 +126,7 @@ public:
       rperm.push_back(temp_rperm);
     }
 
-    arr_scales = std::vector<std::vector<double>> (number_of_peaks);
+    arr_scales = std::vector<std::vector<double> > (number_of_peaks);
     for (int i = 0; i != number_of_peaks; i++) {
       arr_scales[i] = std::vector<double> (n);
     }
@@ -142,7 +142,7 @@ public:
       }
     }
 
-    x_local = std::vector<std::vector<double>> (n);
+    x_local = std::vector<std::vector<double> > (n);
     for (int i = 0; i != n; i++) {
       x_local[i] = std::vector<double> (number_of_peaks);
     }
@@ -166,8 +166,7 @@ public:
 
 
   double internal_evaluate(const std::vector<double> &x) {
-    std::vector<double> temp_x = x;
-    int n = temp_x.size();
+    int n = x.size();
 
     size_t i, j; /* Loop over dim */
     std::vector<double> tmx(n);

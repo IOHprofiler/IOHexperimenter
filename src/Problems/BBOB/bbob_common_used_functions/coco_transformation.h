@@ -7,6 +7,7 @@
 
 class Coco_Transformation_Data {
 public:
+  static std::vector<double> raw_x;
   static std::vector<double> xopt;
   static std::vector<double> tmp1;
   static std::vector<double> tmp2;
@@ -32,87 +33,94 @@ static void coco_tranformation_vars (std::vector<double> &x, const int problem_i
   if (problem_id == 1) {
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
   } else if (problem_id == 2) {
-    transform_vars_oscillate_evaluate_function(x);
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_oscillate_evaluate_function(x);
   } else if (problem_id == 3) {
-    transform_vars_conditioning_evaluate(x,10.0);
+    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_oscillate_evaluate_function(x);
     transform_vars_asymmetric_evaluate_function(x,0.2);
-    transform_vars_oscillate_evaluate_function(x);
-    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_conditioning_evaluate(x,10.0);
+
   } else if (problem_id == 4) {
-    transform_vars_brs_evaluate(x);
-    transform_vars_oscillate_evaluate_function(x);
+    Coco_Transformation_Data::raw_x = x;
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_oscillate_evaluate_function(x);
+    transform_vars_brs_evaluate(x);
   } else if (problem_id == 5) {
 
   } else if (problem_id == 6) {
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
   } else if (problem_id == 7) {
 
   } else if (problem_id == 8) {
-    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::minus_one);
-    transform_vars_scale_evaluate(x,Coco_Transformation_Data::factor);
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_scale_evaluate(x,Coco_Transformation_Data::factor);
+    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::minus_one);
   } else if (problem_id == 9) {
     transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
   } else if (problem_id == 10) {
-    transform_vars_oscillate_evaluate_function(x);
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
+    transform_vars_oscillate_evaluate_function(x);
   } else if (problem_id == 11) {
-    transform_vars_oscillate_evaluate_function(x);
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
+    transform_vars_oscillate_evaluate_function(x);
   } else if (problem_id == 12) {
+    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
     transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
     transform_vars_asymmetric_evaluate_function(x,0.5);
     transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
-    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
   } else if (problem_id == 13) {
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
   } else if (problem_id == 14) {
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
   } else if (problem_id == 15) {
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
+    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M1,Coco_Transformation_Data::b1);
+    transform_vars_oscillate_evaluate_function(x);
     transform_vars_asymmetric_evaluate_function(x,0.2);
-    transform_vars_oscillate_evaluate_function(x);
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M1,Coco_Transformation_Data::b1);
-    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
   } else if (problem_id == 16) {
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
+    Coco_Transformation_Data::raw_x = x;
+    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M1,Coco_Transformation_Data::b1);
     transform_vars_oscillate_evaluate_function(x);
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M1,Coco_Transformation_Data::b1);
-    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
   } else if (problem_id == 17) {
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
-    transform_vars_asymmetric_evaluate_function(x,0.5);
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M1,Coco_Transformation_Data::b1);
+    Coco_Transformation_Data::raw_x = x;
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M1,Coco_Transformation_Data::b1);
+    transform_vars_asymmetric_evaluate_function(x,0.5);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
   } else if (problem_id == 18) {
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
-    transform_vars_asymmetric_evaluate_function(x,0.5);
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M1,Coco_Transformation_Data::b1);
+    Coco_Transformation_Data::raw_x = x;
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M1,Coco_Transformation_Data::b1);
+    transform_vars_asymmetric_evaluate_function(x,0.5);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
   } else if (problem_id == 19) {
-    transform_vars_scale_evaluate(x,100);
-    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::tmp1);
-    transform_vars_conditioning_evaluate(x,Coco_Transformation_Data::condition);
-    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::tmp2);
-    transform_vars_z_hat_evaluate(x,Coco_Transformation_Data::xopt);
-    transform_vars_scale_evaluate(x,2);
-    transform_vars_x_hat_evaluate(x,Coco_Transformation_Data::rseed);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
+    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
   } else if (problem_id == 20) {
-
+    transform_vars_x_hat_evaluate(x,Coco_Transformation_Data::rseed);
+    transform_vars_scale_evaluate(x,2);
+    transform_vars_z_hat_evaluate(x,Coco_Transformation_Data::xopt);
+    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::tmp2);
+    transform_vars_conditioning_evaluate(x,Coco_Transformation_Data::condition);
+    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::tmp1);
+    transform_vars_scale_evaluate(x,100);
   } else if (problem_id == 21) {
 
   } else if (problem_id == 22) {
-    transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    
   } else if (problem_id == 23) {
-    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
+    Coco_Transformation_Data::raw_x = x;
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
+    transform_vars_affine_evaluate_function(x,Coco_Transformation_Data::M,Coco_Transformation_Data::b);
   } else if (problem_id == 24) {
 
   } else {
@@ -132,8 +140,8 @@ static void coco_tranformation_objs (const std::vector<double> &x, std::vector<d
   } else if (problem_id == 4) {
     /* ignore large-scale test */
     transform_obj_shift_evaluate_function(y,Coco_Transformation_Data::fopt);
-    transform_obj_penalize_evaluate(x,Coco_Transformation_Data::lower_bound,Coco_Transformation_Data::upper_bound,Coco_Transformation_Data::penalty_factor,y);
-  } else if (problem_id == 5) {
+    transform_obj_penalize_evaluate(Coco_Transformation_Data::raw_x,Coco_Transformation_Data::lower_bound,Coco_Transformation_Data::upper_bound,Coco_Transformation_Data::penalty_factor,y);
+      } else if (problem_id == 5) {
     transform_obj_shift_evaluate_function(y,Coco_Transformation_Data::fopt);
   } else if (problem_id == 6) {
     transform_obj_oscillate_evaluate(y);
@@ -159,13 +167,13 @@ static void coco_tranformation_objs (const std::vector<double> &x, std::vector<d
     transform_obj_shift_evaluate_function(y,Coco_Transformation_Data::fopt);
   } else if (problem_id == 16) {
     transform_obj_shift_evaluate_function(y,Coco_Transformation_Data::fopt);
-    transform_obj_penalize_evaluate(x,Coco_Transformation_Data::lower_bound,Coco_Transformation_Data::upper_bound,Coco_Transformation_Data::penalty_factor,y);
+    transform_obj_penalize_evaluate(Coco_Transformation_Data::raw_x,Coco_Transformation_Data::lower_bound,Coco_Transformation_Data::upper_bound,Coco_Transformation_Data::penalty_factor,y);
   } else if (problem_id == 17) {
     transform_obj_shift_evaluate_function(y,Coco_Transformation_Data::fopt);
-    transform_obj_penalize_evaluate(x,Coco_Transformation_Data::lower_bound,Coco_Transformation_Data::upper_bound,Coco_Transformation_Data::penalty_factor,y);
+    transform_obj_penalize_evaluate(Coco_Transformation_Data::raw_x,Coco_Transformation_Data::lower_bound,Coco_Transformation_Data::upper_bound,Coco_Transformation_Data::penalty_factor,y);
   } else if (problem_id == 18) {
     transform_obj_shift_evaluate_function(y,Coco_Transformation_Data::fopt);
-    transform_obj_penalize_evaluate(x,Coco_Transformation_Data::lower_bound,Coco_Transformation_Data::upper_bound,Coco_Transformation_Data::penalty_factor,y);
+    transform_obj_penalize_evaluate(Coco_Transformation_Data::raw_x,Coco_Transformation_Data::lower_bound,Coco_Transformation_Data::upper_bound,Coco_Transformation_Data::penalty_factor,y);
   } else if (problem_id == 19) {
     transform_obj_shift_evaluate_function(y,Coco_Transformation_Data::fopt);
   } else if (problem_id == 20) {
@@ -176,7 +184,7 @@ static void coco_tranformation_objs (const std::vector<double> &x, std::vector<d
     transform_obj_shift_evaluate_function(y,Coco_Transformation_Data::fopt);
   } else if (problem_id == 23) {
     transform_obj_shift_evaluate_function(y,Coco_Transformation_Data::fopt);
-    transform_obj_penalize_evaluate(x,Coco_Transformation_Data::lower_bound,Coco_Transformation_Data::upper_bound,Coco_Transformation_Data::penalty_factor,y);
+    transform_obj_penalize_evaluate(Coco_Transformation_Data::raw_x,Coco_Transformation_Data::lower_bound,Coco_Transformation_Data::upper_bound,Coco_Transformation_Data::penalty_factor,y);
   } else if (problem_id == 24) {
     transform_obj_shift_evaluate_function(y,Coco_Transformation_Data::fopt);
   } else {}

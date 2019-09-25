@@ -103,8 +103,7 @@ public:
   }
 
   double internal_evaluate(const std::vector<double> &x) {
-    std::vector<double> temp_x = x;
-    int n = temp_x.size();
+    int n = x.size();
     size_t i, j;
 
     std::vector<double> result(1);
@@ -112,7 +111,7 @@ public:
     result[0] = 0.0;
     for (i = 0; i < n; ++i) {
       for (j = 0; j < F_WEIERSTRASS_SUMMANDS; ++j) {
-        result[0] += cos(2 * coco_pi * (temp_x[i] + 0.5) * bk[j]) * ak[j];
+        result[0] += cos(2 * coco_pi * (x[i] + 0.5) * bk[j]) * ak[j];
       }
     }
     result[0] = 10.0 * pow(result[0] / (double) (long) n - f0, 3.0);

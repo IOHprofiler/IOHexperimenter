@@ -42,8 +42,8 @@ public:
 
   
   std::vector<double> xopt;
-  std::vector<std::vector<double>> rot1;
-  std::vector<std::vector<double>> rot2;
+  std::vector<std::vector<double> > rot1;
+  std::vector<std::vector<double> > rot2;
   void prepare_problem() {
     double fopt;
     std::vector<double> tmpxopt,tmpvect;
