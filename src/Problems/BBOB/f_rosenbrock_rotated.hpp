@@ -20,7 +20,7 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_best_variables(1);
     IOHprofiler_set_as_minimization();
   }
   Rosenbrock_Rotated(int instance_id, int dimension) {
@@ -30,7 +30,7 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
@@ -68,20 +68,21 @@ public:
     }
 
 
-    std::vector<double> tmp_best_variables(n,0.0);
-    for (int column = 0; column < n; ++column) { /* Wassim: manually set xopt = rot1^T ones(dimension)/(2*factor) */
-      double tmp = 0;
-      for (int row = 0; row < n; ++row) {
-        tmp += rot1[row][column];
-      }
-      tmp_best_variables[column] = tmp / (2. * factor);
-    }
-    IOHprofiler_set_best_variables(tmp_best_variables);
+    // std::vector<double> tmp_best_variables(n,0.0);
+    // for (int column = 0; column < n; ++column) { /* Wassim: manually set xopt = rot1^T ones(dimension)/(2*factor) */
+    //   double tmp = 0;
+    //   for (int row = 0; row < n; ++row) {
+    //     tmp += rot1[row][column];
+    //   }
+    //   tmp_best_variables[column] = tmp / (2. * factor);
+    // }
+    // IOHprofiler_set_best_variables(tmp_best_variables);
 
     Coco_Transformation_Data::fopt = fopt;
     Coco_Transformation_Data::factor = factor;
     Coco_Transformation_Data::M = M;
     Coco_Transformation_Data::b = b;
+    
   }
 
   double internal_evaluate(const std::vector<double> &x) {

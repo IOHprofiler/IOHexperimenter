@@ -20,7 +20,7 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_best_variables(1);
     IOHprofiler_set_as_minimization();
   }
   Rosenbrock(int instance_id, int dimension) {
@@ -30,7 +30,7 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
@@ -62,7 +62,7 @@ public:
     Coco_Transformation_Data::xopt = xopt;
     Coco_Transformation_Data::factor = factor;
     Coco_Transformation_Data::fopt = fopt;
-  }
+  };
 
   double internal_evaluate(const std::vector<double> &x) {
     std::vector<double> temp_x = x;

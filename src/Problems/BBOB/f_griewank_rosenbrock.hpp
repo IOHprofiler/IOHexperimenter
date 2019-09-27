@@ -20,7 +20,7 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_best_variables(1);
     IOHprofiler_set_as_minimization();
   }
   Griewank_RosenBrock(int instance_id, int dimension) {
@@ -30,7 +30,7 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
+    IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
@@ -76,16 +76,16 @@ public:
     Coco_Transformation_Data::M = M;
     Coco_Transformation_Data::b = b;
 
-    double tmp;
-    std::vector<double> tmp_best_variables(n,0);
-    for (int j = 0; j < n; ++j) {
-      tmp = 0;
-      for (int i = 0; i < n; ++i) {
-        tmp += rot1[i][j];
-      }
-      tmp_best_variables[j] = tmp / (2. * scales);
-    }
-    IOHprofiler_set_best_variables(tmp_best_variables);
+    // double tmp;
+    // std::vector<double> tmp_best_variables(n,0);
+    // for (int j = 0; j < n; ++j) {
+    //   tmp = 0;
+    //   for (int i = 0; i < n; ++i) {
+    //     tmp += rot1[i][j];
+    //   }
+    //   tmp_best_variables[j] = tmp / (2. * scales);
+    // }
+    // IOHprofiler_set_best_variables(tmp_best_variables);
   }
 
   double internal_evaluate(const std::vector<double> &x) {

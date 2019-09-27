@@ -53,6 +53,16 @@ public:
 
     Coco_Transformation_Data::fopt = fopt;
     Coco_Transformation_Data::xopt = xopt;
+
+    std::vector<double> tmp_best_variables = std::vector<double>(n);
+    for (int i = 0; i < n; ++i) {
+      if (xopt[i] < 0.0) {
+        tmp_best_variables[i] = this->IOHprofiler_get_lowerbound()[i];
+      } else {
+        tmp_best_variables[i] = this->IOHprofiler_get_upperbound()[i];
+      }
+    }
+    this->IOHprofiler_set_best_variables(tmp_best_variables);
   }
   
   double internal_evaluate(const std::vector<double> &x) {
