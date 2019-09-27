@@ -17,14 +17,24 @@ typedef struct f_gallagher_permutation_t{
   size_t index;
 };
 
-static bool compareRperm(f_gallagher_permutation_t a, f_gallagher_permutation_t b) {
-  double temp = a.value - b.value;
-  if (temp >= 0)
-    return true;
+// static bool compareRperm(f_gallagher_permutation_t a, f_gallagher_permutation_t b) {
+//   double temp = a.value - b.value;
+//   if (temp >= 0)
+//     return true;
+//   else
+//     return false;
+// };
+
+static int f_gallagher_compare_doubles(const void *a, const void *b) {
+  double temp = (*(f_gallagher_permutation_t *) a).value - (*(f_gallagher_permutation_t *) b).value;
+  if (temp > 0)
+    return 1;
+  else if (temp < 0)
+    return -1;
   else
-    return false;
-  
+    return 0;
 };
+
 
 class Gallagher21 : public IOHprofiler_problem<double> {
 public:
@@ -76,7 +86,9 @@ public:
     /* Parameters for generating local optima. In the old code, they are different in f21 and f22 */
     double b, c;
     /* Random permutation */
-    std::vector<f_gallagher_permutation_t> rperm;
+    //std::vector<f_gallagher_permutation_t> rperm;
+    f_gallagher_permutation_t *rperm;
+
     std::vector<double> random_numbers;
     arr_scales = std::vector<std::vector<double> > (number_of_peaks);
     for (i = 0; i != number_of_peaks; ++i) {
@@ -98,12 +110,14 @@ public:
 
     /* Initialize all the data of the inner problem */
     bbob2009_unif(random_numbers, number_of_peaks - 1, rseed);
-    rperm = std::vector<f_gallagher_permutation_t> (number_of_peaks - 1);
+    //rperm = std::vector<f_gallagher_permutation_t> (number_of_peaks - 1);
+    rperm = (f_gallagher_permutation_t *)malloc((number_of_peaks-1) * sizeof(f_gallagher_permutation_t));
     for (i = 0; i < number_of_peaks - 1; ++i) {
       rperm[i].value = random_numbers[i];
       rperm[i].index = i;
     }
-    std::sort(rperm.begin(), rperm.end(), compareRperm);
+    //std::sort(rperm.begin(), rperm.end(), compareRperm);
+    qsort(rperm, number_of_peaks - 1, sizeof(f_gallagher_permutation_t), f_gallagher_compare_doubles);
 
     /* Random permutation */
     arrCondition = std::vector<double>(number_of_peaks);
@@ -116,20 +130,24 @@ public:
           + fitvalues[0];
     }
 
-    rperm = std::vector<f_gallagher_permutation_t> (n);
+    free(rperm);
+    rperm = (f_gallagher_permutation_t *)malloc((n) * sizeof(f_gallagher_permutation_t));
+   
+    //rperm = std::vector<f_gallagher_permutation_t> (n);
     for (i = 0; i < number_of_peaks; ++i) {
       bbob2009_unif(random_numbers, n, rseed + (long) (1000 * i));
       for (j = 0; j < n; ++j) {
         rperm[j].value = random_numbers[j];
         rperm[j].index = j;
       }
-      std::sort(rperm.begin(), rperm.end(), compareRperm);
+      //std::sort(rperm.begin(), rperm.end(), compareRperm);
+      qsort(rperm, n, sizeof(f_gallagher_permutation_t), f_gallagher_compare_doubles);
       for (j = 0; j < n; ++j) {
         arr_scales[i][j] = pow(arrCondition[i],                             /* Lambda^alpha_i from the doc */
             ((double) rperm[j].index) / ((double) (n - 1)) - 0.5);
       }
     }
-
+    free(rperm);
     bbob2009_unif(random_numbers, n * number_of_peaks, rseed);
     std::vector<double> best_variables(n);
     for (i = 0; i < n; ++i) {
@@ -149,7 +167,7 @@ public:
      
     fopt = bbob2009_compute_fopt(22, this->IOHprofiler_get_instance_id());
     Coco_Transformation_Data::fopt = fopt;
-  }
+  };
 
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -183,7 +201,7 @@ public:
       }
     }
     /* Computation core*/
-    for (i = 0; i < n; ++i) {
+    for (i = 0; i < number_of_peaks; ++i) {
       tmp2 = 0.;
       for (j = 0; j < n; ++j) {
         tmp = (tmx[j] - x_local[j][i]);
