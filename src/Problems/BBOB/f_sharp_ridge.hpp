@@ -80,8 +80,7 @@ public:
   }
 
   double internal_evaluate(const std::vector<double> &x) {
-    std::vector<double> temp_x = x;
-    int n = temp_x.size();
+    int n = x.size();
     static const double alpha = 100.0;
     const double vars_40 = 1; /* generalized: number_of_variables <= 40 ? 1 : number_of_variables / 40.0; */
     size_t i = 0;
@@ -90,11 +89,11 @@ public:
     
     result[0] = 0.0;
     for (i = (size_t)(ceil(vars_40)); i < n; ++i) {
-      result[0] += temp_x[i] * temp_x[i];
+      result[0] += x[i] * x[i];
     }
     result[0] = alpha * sqrt(result[0] / vars_40);
     for (i = 0; i < (size_t)ceil(vars_40); ++i) {
-      result[0] += temp_x[i] * temp_x[i] / vars_40;
+      result[0] += x[i] * x[i] / vars_40;
     }
 
     return result[0];

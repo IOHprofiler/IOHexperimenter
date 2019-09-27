@@ -73,14 +73,13 @@ public:
     
     static const double condition = 1.0e6;
     size_t i;
-    std::vector<double> temp_x = x;
-    int n = temp_x.size();
+    int n = x.size();
     std::vector<double> result(1);
 
 
-    result[0] = temp_x[0] * temp_x[0];
+    result[0] = x[0] * x[0];
     for (i = 1; i < n; ++i) {
-      result[0] += condition * temp_x[i] * temp_x[i];
+      result[0] += condition * x[i] * x[i];
     }
 
     return result[0];

@@ -73,15 +73,14 @@ public:
   double internal_evaluate(const std::vector<double> &x) {
     static const double condition = 1.0e6;
     size_t i = 0;
-    std::vector<double> temp_x = x;
-    int n = temp_x.size();
+    int n = x.size();
     std::vector<double> result(1);
 
 
-    result[0] = temp_x[i] * temp_x[i];
+    result[0] = x[i] * x[i];
     for (i = 1; i < n; ++i) {
       const double exponent = 1.0 * (double) (long) i / ((double) (long) n - 1.0);
-      result[0] += pow(condition, exponent) * temp_x[i] * temp_x[i];
+      result[0] += pow(condition, exponent) * x[i] * x[i];
     }
 
     return result[0];

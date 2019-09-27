@@ -70,15 +70,14 @@ public:
   }
 
   double internal_evaluate(const std::vector<double> &x) {
-    std::vector<double> temp_x = x;
     static const double condition = 1.0e6;
     std::vector<double> result(1);
-    int n = temp_x.size();
+    int n = x.size();
 
 
-    result[0] = condition * temp_x[0] * temp_x[0];
+    result[0] = condition * x[0] * x[0];
     for (int i = 1; i < n; ++i) {
-      result[0] += temp_x[i] * temp_x[i];
+      result[0] += x[i] * x[i];
     }
 
     return result[0];

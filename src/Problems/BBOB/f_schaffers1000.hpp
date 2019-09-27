@@ -88,15 +88,14 @@ public:
   }
 
   double internal_evaluate(const std::vector<double> &x) {
-    std::vector<double> temp_x = x;
-    int n = temp_x.size();
+    int n = x.size();
     size_t i = 0;
     std::vector<double> result(1);
 
     /* Computation core */
     result[0] = 0.0;
     for (i = 0; i < n - 1; ++i) {
-      const double tmp = temp_x[i] * temp_x[i] + temp_x[i + 1] * temp_x[i + 1];
+      const double tmp = x[i] * x[i] + x[i + 1] * x[i + 1];
       if (isinf(tmp) && isnan(sin(50.0 * pow(tmp, 0.1))))  /* sin(inf) -> nan */
         /* the second condition is necessary to pass the integration tests under Windows and Linux */
         return tmp;

@@ -70,13 +70,12 @@ public:
   double internal_evaluate(const std::vector<double> &x) {
     size_t i;
     double sum = 0.0;
-    std::vector<double> temp_x = x;
-    int n = temp_x.size();
+    int n = x.size();
     std::vector<double> result(1);
 
    for (i = 0; i < n; ++i) {
       double exponent = 2.0 + (4.0 * (double) (long) i) / ((double) (long) n - 1.0);
-      sum += pow(fabs(temp_x[i]), exponent);
+      sum += pow(fabs(x[i]), exponent);
     }
     result[0] = sqrt(sum);
 

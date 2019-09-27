@@ -81,8 +81,7 @@ public:
   }
 
   double internal_evaluate(const std::vector<double> &x) {
-    std::vector<double> temp_x = x;
-    int n = temp_x.size();
+    int n = x.size();
     size_t i, j;
     double tmp, tmp2;
     std::vector<double> result(1);
@@ -93,7 +92,7 @@ public:
       tmp = 0;
       for (j = 1; j < 33; ++j) {
         tmp2 = pow(2., (double) j);
-        tmp += fabs(tmp2 * temp_x[i] - floor(tmp2 * temp_x[i] + 0.5)) / tmp2;
+        tmp += fabs(tmp2 * x[i] - floor(tmp2 * x[i] + 0.5)) / tmp2;
       }
       tmp = 1.0 + ((double) (long) i + 1) * tmp;
       /*result *= tmp;*/ /* Wassim TODO: delete once consistency check passed*/

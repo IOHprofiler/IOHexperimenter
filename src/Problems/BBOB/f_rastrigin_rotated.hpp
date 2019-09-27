@@ -91,13 +91,12 @@ public:
   double internal_evaluate(const std::vector<double> &x) {
     size_t i = 0;
     std::vector<double> result(1);
-    std::vector<double> temp_x = x;
-    int n = temp_x.size();
+    int n = x.size();
     double sum1 = 0.0, sum2 = 0.0;
     
     for (i = 0; i < n; ++i) {
-      sum1 += cos(2.0 * coco_pi * temp_x[i]);
-      sum2 += temp_x[i] * temp_x[i];
+      sum1 += cos(2.0 * coco_pi * x[i]);
+      sum2 += x[i] * x[i];
     }
     /* double check isinf*/
     if (isinf(sum2)) {
