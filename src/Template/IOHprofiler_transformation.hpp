@@ -64,7 +64,7 @@ public:
     int n = x.size();
     IOHprofiler_uniform_rand(n,seed, random_x);
     for (int i = 0; i < n; ++i) {
-      xor_value = (int)(2 * floor(1e4 * random_x[i]) / 1e4 / 1);
+      xor_value = (int)(2 * floor(1e4 * random_x[i]) / 1e4);
       x[i] = xor_compute(x[i],xor_value);
     }
   }
@@ -86,7 +86,7 @@ public:
 
     index.reserve(N);
     for (int i = 0; i != N; ++i) {
-      index[i] = i;
+      index.push_back(i);
     }
 
     IOHprofiler_uniform_rand(N,seed,random_x);
