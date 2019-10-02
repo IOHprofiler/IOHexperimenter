@@ -89,7 +89,7 @@ void _run_experiment() {
   IOHprofiler_experimenter<int> experimenter(configName,evolutionary_algorithm);
 
   /// An exmaple for BBOB suite.
-  /// IOHprofiler_experimenter<double> experimenter(configName, random_methods);
+  /// IOHprofiler_experimenter<double> experimenter(configName, random_search);
   experimenter._set_independent_runs(10);
   experimenter._run();
 }
