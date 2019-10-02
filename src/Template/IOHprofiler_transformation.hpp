@@ -22,6 +22,7 @@ public:
   ///
   /// For instance_id in ]1,50], xor operation is applied.
   /// For instance_id in ]50,100], \sigma function is applied.
+
   void variables_transformation(std::vector<int> &x, const int problem_id, const int instance_id, const std::string problem_type) { 
     if (problem_type == "pseudo_Boolean_problem") {
       if (instance_id > 1 && instance_id <= 50) { 
@@ -40,6 +41,7 @@ public:
 
   /// \fn void objectives_transformation(std::vector<double> &y)
   /// \brief Transformation operations on objectives (a * f(x) + b).
+
   void objectives_transformation(const std::vector<int> &x, std::vector<double> &y, const int problem_id, const int instance_id, const std::string problem_type) {
     if (problem_type == "pseudo_Boolean_problem") {
       if (instance_id > 1) {
@@ -54,7 +56,6 @@ public:
       coco_tranformation_objs(x,y,problem_id);
     }
   }
-
   
   /// \fn xor_compute(const int x1, const int x2)
   ///

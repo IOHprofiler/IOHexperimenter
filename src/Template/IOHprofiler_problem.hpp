@@ -26,7 +26,7 @@ public:
   
   IOHprofiler_problem() {};
   IOHprofiler_problem(int instance_id, int dimension){};
-  ~IOHprofiler_problem(){};
+  virtual ~IOHprofiler_problem(){};
 
   IOHprofiler_problem(const IOHprofiler_problem&) = delete;
   IOHprofiler_problem &operator=(const IOHprofiler_problem&) = delete;
@@ -104,6 +104,7 @@ public:
     /// todo. make it as vector assign.
     
     this->transformed_objectives[0] = this->raw_objectives[0];
+
     transformation.objectives_transformation(x,this->transformed_objectives,this->problem_id,this->instance_id,this->problem_type);
     if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives,this->maximization_minimization_flag)) {
       this->best_so_far_transformed_objectives = this->transformed_objectives;
@@ -167,6 +168,7 @@ public:
     
     this->raw_objectives = y;
     
+
     transformation.objectives_transformation(x,y,this->problem_id,this->instance_id,this->problem_type);
     if (y > this->best_so_far_transformed_objectives[0]) {
       this->best_so_far_transformed_objectives[0] = y;
@@ -242,8 +244,8 @@ public:
   ///
   /// Return a vector logger_info may be used by loggers.
   /// logger_info[0] evaluations
-  /// logger_info[1] raw_objectives
-  /// logger_info[2] best_so_far_raw_objectives
+  /// logger_info[1] precision
+  /// logger_info[2] best_so_far_precision
   /// logger_info[3] transformed_objective
   /// logger_info[4] best_so_far_transformed_objectives
   std::vector<double> loggerCOCOInfo() {
@@ -520,6 +522,7 @@ private:
   
   std::string problem_name;
   std::string problem_type;   /// todo. make it as enum.
+
   int maximization_minimization_flag = 1; /// < set as maximization if flag = 1, otherwise minimization.
   
   std::vector<InputType> lowerbound;

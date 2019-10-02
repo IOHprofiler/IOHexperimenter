@@ -62,7 +62,7 @@ public:
     this->config_csv_logger->target_suite(this->configSuite->IOHprofiler_suite_get_suite_name());
 
     /// Problems are tested one by one until 'get_next_problem' returns NULL.
-    while (current_problem = configSuite->get_next_problem()) {
+    while ((current_problem = configSuite->get_next_problem()) != nullptr) {
       std::clock_t c_start = std::clock();
       info = "f";
       info += std::to_string(current_problem->IOHprofiler_get_problem_id());
