@@ -135,21 +135,25 @@ void IOHprofiler_csv_logger::target_problem(const int problem_id, const int dime
 
   /// TO DO: Update the method of initializing this value.
 
-  this->found_optimal.clear();
   if (maximization_minimization_flag == 1) {
-    this->found_optimal.push_back(-DBL_MAX);
+    this->best_y.clear();
+    this->best_y.push_back(-DBL_MAX);
+    this->best_transformed_y.clear();
+    this->best_transformed_y.push_back(-DBL_MAX);
+    this->last_y.clear();
+    this->last_y.push_back(-DBL_MAX);
+    this->last_transformed_y.clear();
+    this->last_transformed_y.push_back(-DBL_MAX);
   } else {
-    this->found_optimal.push_back(DBL_MAX);
+    this->best_y.clear();
+    this->best_y.push_back(DBL_MAX);
+    this->best_transformed_y.clear();
+    this->best_transformed_y.push_back(DBL_MAX);
+    this->last_y.clear();
+    this->last_y.push_back(DBL_MAX);
+    this->last_transformed_y.clear();
+    this->last_transformed_y.push_back(DBL_MAX);
   }
-
-  this->best_y.clear();
-  this->best_y.push_back(-DBL_MAX);
-  this->best_transformed_y.clear();
-  this->best_transformed_y.push_back(-DBL_MAX);
-  this->last_y.clear();
-  this->last_y.push_back(-DBL_MAX);
-  this->last_transformed_y.clear();
-  this->last_transformed_y.push_back(-DBL_MAX);
   
   reset_observer(maximization_minimization_flag);
 
@@ -211,7 +215,7 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
 
   bool cdat_flag = complete_trigger();
   bool idat_flag = interval_trigger(evaluations);
-  bool dat_flag = update_trigger(transformed_y);
+  bool dat_flag = update_trigger(transformed_y,maximization_minimization_flag);
   bool tdat_flag = time_points_trigger(evaluations);
 
   bool need_write =  cdat_flag || idat_flag || dat_flag || tdat_flag;
@@ -260,8 +264,8 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
     }
   }
 
-  if (compareObjectives(transformed_y,this->found_optimal[0],this->maximization_minimization_flag)) {
-    this->update_logger_info(evaluations,transformed_y);
+  if (compareObjectives(transformed_y,this->best_transformed_y[0],this->maximization_minimization_flag)) {
+    this->update_logger_info(evaluations,y,transformed_y);
   }
 };
 

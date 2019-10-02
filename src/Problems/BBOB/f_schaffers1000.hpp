@@ -7,7 +7,7 @@
 /// \author Furong Ye
 /// \date 2019-09-12
 #ifndef _F_SCHAFFERSTHOUSAND_HPP
-#define _F_SCHAFFERST_F_SCHAFFERSTHOUSAND_HPPEN_HPP
+#define _F_SCHAFFERSTHOUSAND_HPP
 
 #include "../../Template/IOHprofiler_problem.hpp"
 #include "bbob_common_used_functions/coco_transformation.h"

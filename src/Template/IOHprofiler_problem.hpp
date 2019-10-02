@@ -451,7 +451,7 @@ public:
     return this->best_variables;
   };
 
-  void IOHprofiler_set_best_variables(int best_variables) {
+  void IOHprofiler_set_best_variables(InputType best_variables) {
     this->best_variables.clear();
     for (int i = 0; i < this->number_of_variables; ++i) {
       this->best_variables.push_back(best_variables);

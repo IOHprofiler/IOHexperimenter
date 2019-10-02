@@ -15,7 +15,7 @@
 typedef struct f_gallagher_permutation_t1{
   double value;
   size_t index;
-};
+}F_GALLAGHER_PERMUTATION_T1;
 
 // static bool compareRperm(f_gallagher_permutation_t1 a, f_gallagher_permutation_t1 b) {
 //   double temp = a.value - b.value;
