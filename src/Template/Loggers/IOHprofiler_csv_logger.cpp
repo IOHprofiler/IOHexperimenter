@@ -123,7 +123,7 @@ void IOHprofiler_csv_logger::write_header() {
 ///
 /// This function is to be invoked by IOHprofiler_problem class.
 /// To update info of current working problem, and to write headline in corresponding files.
-void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int instance, std::string problem_name){
+void IOHprofiler_csv_logger::target_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag){
   /// Handle info of the previous problem.
   if (infoFile.is_open()) {
     write_info(this->instance, this->best_y[0], this->best_transformed_y[0], this->optimal_evaluations,
@@ -134,6 +134,14 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
   this->last_evaluations = 0;
 
   /// TO DO: Update the method of initializing this value.
+
+  this->found_optimal.clear();
+  if (maximization_minimization_flag == 1) {
+    this->found_optimal.push_back(-DBL_MAX);
+  } else {
+    this->found_optimal.push_back(DBL_MAX);
+  }
+
   this->best_y.clear();
   this->best_y.push_back(-DBL_MAX);
   this->best_transformed_y.clear();
@@ -143,12 +151,13 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
   this->last_transformed_y.clear();
   this->last_transformed_y.push_back(-DBL_MAX);
   
-  reset_observer();
+  reset_observer(maximization_minimization_flag);
 
   this->problem_id = problem_id;
   this->dimension = dimension;
   this->instance = instance;
   this->problem_name = problem_name;
+  this->maximization_minimization_flag = maximization_minimization_flag;
   
   openInfo(problem_id,dimension,problem_name);
   
@@ -251,8 +260,8 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
     }
   }
 
-  if (transformed_y > this->best_transformed_y[0]) {
-    this->update_logger_info(evaluations,y,transformed_y);
+  if (compareObjectives(transformed_y,this->found_optimal[0],this->maximization_minimization_flag)) {
+    this->update_logger_info(evaluations,transformed_y);
   }
 };
 

@@ -10,6 +10,7 @@
 
 #include "IOHprofiler_common.h"
 #include "IOHprofiler_random.hpp"
+#include "../Problems/BBOB/bbob_common_used_functions/coco_transformation.h"
 
 /// \brief A class consisting of transformation methods.
 class IOHprofiler_transformation: public IOHprofiler_random {
@@ -21,32 +22,40 @@ public:
   ///
   /// For instance_id in ]1,50], xor operation is applied.
   /// For instance_id in ]50,100], \sigma function is applied.
-  void variables_transformation(std::vector<int> &x, const int instance_id) { 
-    if (instance_id > 1 && instance_id <= 50) { 
-      this->transform_vars_xor(x,instance_id);
-    } else if (instance_id > 50 && instance_id <= 100) {
-      this->transform_vars_sigma(x,instance_id);
+
+  void variables_transformation(std::vector<int> &x, const int problem_id, const int instance_id, const std::string problem_type) { 
+    if (problem_type == "pseudo_Boolean_problem") {
+      if (instance_id > 1 && instance_id <= 50) { 
+        this->transform_vars_xor(x,instance_id);
+      } else if (instance_id > 50 && instance_id <= 100) {
+        this->transform_vars_sigma(x,instance_id);
+      }
+    }
+  };
+
+  void variables_transformation(std::vector<double> &x, const int problem_id, const int instance_id, const std::string problem_type) {
+    if (problem_type == "bbob") {
+      coco_tranformation_vars(x,problem_id);
     }
   };
 
   /// \fn void objectives_transformation(std::vector<double> &y)
   /// \brief Transformation operations on objectives (a * f(x) + b).
-  void objectives_transformation(std::vector<double> &y, const int instance_id) {
-    if (instance_id > 1) {
-      this->transform_obj_scale(y,instance_id);
-      this->transform_obj_shift(y,instance_id);
+
+  void objectives_transformation(const std::vector<int> &x, std::vector<double> &y, const int problem_id, const int instance_id, const std::string problem_type) {
+    if (problem_type == "pseudo_Boolean_problem") {
+      if (instance_id > 1) {
+        this->transform_obj_scale(y,instance_id);
+        this->transform_obj_shift(y,instance_id);
+      }
     }
   };
 
-  /// \fn void objectives_transformation(std::vector<double> &y)
-  /// \brief Transformation operations on objectives (a * f(x) + b).
-  void objectives_transformation(double &y, const int instance_id) {
-    if (instance_id > 1) {
-      this->transform_obj_scale(y,instance_id);
-      this->transform_obj_shift(y,instance_id);
+  void objectives_transformation(const std::vector<double> &x, std::vector<double> &y, const int problem_id, const int instance_id, const std::string problem_type) {
+    if (problem_type == "bbob") {
+      coco_tranformation_objs(x,y,problem_id);
     }
-  };
-
+  }
   
   /// \fn xor_compute(const int x1, const int x2)
   ///

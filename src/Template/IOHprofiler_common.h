@@ -30,7 +30,7 @@
 #define DEFAULT_INSTANCE 1
 
 /// < Default dimension
-#define DEFAULT_DIMENSION 100
+#define DEFAULT_DIMENSION 2
 
 void IOH_error(std::string error_info);
 
@@ -65,25 +65,58 @@ bool compareVector(const std::vector<valueType> &v1, const std::vector<valueType
   return true;
 };
 
-/// \fn bool compareObjectives(std::vector<valueType> &v1, std::vector<valueType> v2)
+/// \fn bool compareObjectives(std::vector<valueType> &v1, std::vector<valueType> v2,  const int optimization_type)
 ///
-/// Return true if values of vl's elements are larger than v2's in each index.
+/// Return true if values of vl's elements are better than v2's in each index.
+/// set as maximization if optimization_type = 1, otherwise minimization.
 /// This is used to compare to objectives vector, details needs to be discussed
 /// for multi-objective optimization.
 template<class valueType>
-bool compareObjectives(const std::vector<valueType> &v1, const std::vector<valueType> &v2){
+bool compareObjectives(const std::vector<valueType> &v1, const std::vector<valueType> &v2, const int optimization_type){
   int n = v1.size();
   if(n != v2.size()){
     IOH_error("Two compared objective vector must be with the same size\n");
     return false;
   }
-  for (int i = 0; i != n; ++i)
-  {
-    if(v1[i] <= v2[i]){
+  if (optimization_type == 1) {
+    for (int i = 0; i != n; ++i)
+    {
+      if (v1[i] <= v2[i]) {
+        return false;
+      }
+    }
+    return true;
+  } else {
+    for (int i = 0; i != n; ++i)
+    {
+      if (v1[i] >= v2[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+};
+
+
+/// \fn bool compareObjectives(std::vector<valueType> &v1, std::vector<valueType> v2,  const int optimization_type)
+///
+/// Return true if values of vl's elements are better than v2's in each index.
+/// set as maximization if optimization_type = 1, otherwise minimization.
+/// This is used to compare to objectives vector, details needs to be discussed
+/// for multi-objective optimization.
+template<class valueType>
+bool compareObjectives(const valueType v1, const valueType v2, const int optimization_type){
+  if (optimization_type == 1) {
+    if (v1 <= v2){
       return false;
     }
+    return true;
+  } else {
+    if (v1 >= v2) {
+      return false;
+    }
+    return true;
   }
-  return true;
 };
 
 #endif //_IOHPROFILER_COMMON_H

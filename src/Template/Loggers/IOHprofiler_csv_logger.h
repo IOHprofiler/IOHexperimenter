@@ -44,7 +44,7 @@ public:
   void activate_logger();
   void clear_logger();
 
-  void target_problem(int problem_id, int dimension, int instance, std::string problem_name);
+  void target_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag);
   void target_suite(std::string suite_name);
 
   void openInfo(int problem_id, int dimension, std::string problem_name);
@@ -64,6 +64,7 @@ private:
   std::string output_directory;
   std::string algorithm_name;
   std::string algorithm_info;
+  int maximization_minimization_flag = 1; /// < set as maximization if flag = 1, otherwise minimization.
 
   std::string suite_name = "No suite";
 
