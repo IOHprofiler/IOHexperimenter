@@ -249,10 +249,11 @@ public:
   std::vector<double> loggerCOCOInfo() {
     std::vector<double> logger_info(5);
     logger_info[0] = (double)this->evaluations;
-    logger_info[1] = this->transformed_objectives[0];
-    logger_info[2] = this->transformed_objectives[0] - this->optimal[0];
-    logger_info[3] = this->best_so_far_transformed_objectives[0];
-    logger_info[4] = this->best_so_far_transformed_objectives[0] - this->optimal[0];
+    logger_info[1] = this->transformed_objectives[0] - this->optimal[0];
+    logger_info[2] = this->best_so_far_transformed_objectives[0] - this->optimal[0];
+    logger_info[3] = this->transformed_objectives[0];
+    logger_info[4] = this->best_so_far_transformed_objectives[0];
+
     return logger_info;
   }
   
