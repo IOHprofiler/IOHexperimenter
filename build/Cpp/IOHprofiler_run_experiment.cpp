@@ -26,7 +26,8 @@ int mutation(std::vector<int> &x, double mutation_rate) {
 
 
 /// This is an (1+1)_EA with static mutation rate = 1/n.
-void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, std::shared_ptr<IOHprofiler_csv_logger> logger) {
+/// An example for discrete optimization problems, such as PBO suite.
+void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int> > problem, std::shared_ptr<IOHprofiler_csv_logger> logger) {
   /// Declaration for variables in the algorithm
   std::vector<int> x;
   std::vector<int> x_star;
@@ -63,9 +64,32 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, s
   }
 }
 
+/// This is an (1+1)_EA with static mutation rate = 1/n.
+/// An example for continuous optimization problems, such as BBOB suite.
+void random_search(std::shared_ptr<IOHprofiler_problem<double> > problem, std::shared_ptr<IOHprofiler_csv_logger> logger) {
+  /// Declaration for variables in the algorithm
+  std::vector<double> x(problem->IOHprofiler_get_number_of_variables());
+  double y;
+
+  int count = 0;
+  while (count <= 500) {
+    for (int i = 0; i != problem->IOHprofiler_get_number_of_variables(); ++i) {
+      x[i] = random_generator.IOHprofiler_uniform_rand() * 10 - 5;
+    }
+  
+    y = problem->evaluate(x);
+    logger->write_line(problem->loggerCOCOInfo());
+    count++;
+  }
+}
+
 void _run_experiment() {
   std::string configName = "./configuration.ini";
+  /// An example for PBO suite.
   IOHprofiler_experimenter<int> experimenter(configName,evolutionary_algorithm);
+
+  /// An exmaple for BBOB suite.
+  /// IOHprofiler_experimenter<double> experimenter(configName, random_search);
   experimenter._set_independent_runs(10);
   experimenter._run();
 }

@@ -23,7 +23,7 @@ static IOHprofiler_transformation transformation;
 template <class InputType> class IOHprofiler_problem 
 {
 public:
-  
+  /* OMS: Why are these c'tors empty? Also, they could be merged using default values. */
   IOHprofiler_problem() {};
   IOHprofiler_problem(int instance_id, int dimension){};
   virtual ~IOHprofiler_problem(){};
@@ -37,9 +37,9 @@ public:
   ///
   /// The internal_evaluate function is to be used in evaluate function.
   /// This function must be decalred in derived function of new problems.
-  virtual std::vector<double> internal_evaluate_multi(const std::vector<InputType> &x) {
+  virtual std::vector<double> internal_evaluate_multi(const std::vector<InputType> &x) { /* OMS: accessor - should become const */ 
     std::vector<double> result;
-    printf("No multi evaluate function defined\n");
+    printf("No multi evaluate function defined\n"); /* OMS: Usage of printf is inappropriate - please switch to cout (ostream) throughout the code*/
     return result;
   };
 
@@ -48,13 +48,13 @@ public:
   ///
   /// The internal_evaluate function is to be used in evaluate function.
   /// This function must be decalred in derived function of new problems.
-  virtual double internal_evaluate(const std::vector<InputType> &x) {
+  virtual double internal_evaluate(const std::vector<InputType> &x) { /* OMS: accessor - should become const */
     double result = -DBL_MAX;
     printf("No evaluate function defined\n");
     return result;
   };
 
-  virtual void prepare_problem() {
+  virtual void prepare_problem() { /* OMS: why empty ? */
 
   }
 
@@ -66,15 +66,15 @@ public:
   /// in this function.
   /// \param x A InputType vector of variables.
   /// \return A double vector of objectives.
-  std::vector<double> evaluate_multi(std::vector<InputType> x) { 
+  std::vector<double> evaluate_multi(std::vector<InputType> x) { /* OMS: the argument should be passed by-ref (const) */
     ++this->evaluations;
 
-    transformation.variables_transformation(x,this->instance_id);
+    transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
     this->raw_objectives = internal_evaluate_multi(x);
     
     this->transformed_objectives = this->raw_objectives;
-    transformation.objectives_transformation(this->transformed_objectives,this->instance_id);
-    if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives)) {
+    transformation.objectives_transformation(x,this->transformed_objectives,this->problem_id,this->instance_id,this->problem_type);
+    if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives,this->maximization_minimization_flag)) {
       this->best_so_far_transformed_objectives = this->transformed_objectives;
       this->best_so_far_transformed_evaluations = this->evaluations;
       this->best_so_far_raw_objectives = this->raw_objectives;
@@ -96,16 +96,17 @@ public:
   /// in this function.
   /// \param x A InputType vector of variables.
   /// \return A double vector of objectives.
-  double evaluate(std::vector<InputType> x) { 
+  double evaluate(std::vector<InputType> x) { /* OMS: the argument should be passed by-ref (const) */ 
     ++this->evaluations;
 
-    transformation.variables_transformation(x,this->instance_id);
+    transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
     this->raw_objectives[0] = internal_evaluate(x);
     /// todo. make it as vector assign.
     
     this->transformed_objectives[0] = this->raw_objectives[0];
-    transformation.objectives_transformation(this->transformed_objectives,this->instance_id);
-    if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives)) {
+
+    transformation.objectives_transformation(x,this->transformed_objectives,this->problem_id,this->instance_id,this->problem_type);
+    if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives,this->maximization_minimization_flag)) {
       this->best_so_far_transformed_objectives = this->transformed_objectives;
       this->best_so_far_transformed_evaluations = this->evaluations;
       this->best_so_far_raw_objectives = this->raw_objectives;
@@ -128,20 +129,20 @@ public:
   /// in this function.
   /// \param x A InputType vector of variables.
   /// \param y A double vector of objectives.
-  void evaluate_multi(std::vector<InputType> x, std::vector<double> &y) {
+  void evaluate_multi(std::vector<InputType> x, std::vector<double> &y) { /* OMS: the first argument should be passed by-ref (const) */
     ++this->evaluations;
 
-    transformation.variables_transformation(x,this->instance_id);
+    transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
     y = internal_evaluate_multi(x);
     
     this->raw_objectives = y;
-    if (compareObjectives(y,this->best_so_far_raw_objectives)) {
+    if (compareObjectives(y,this->best_so_far_raw_objectives,this->maximization_minimization_flag)) {
       this->best_so_far_raw_objectives = y;
       this->best_so_far_raw_evaluations = this->evaluations;
     }
     
-    transformation.objectives_transformation(y,this->instance_id);
-    if (compareObjectives(y,this->best_so_far_transformed_objectives)) {
+    transformation.objectives_transformation(x,y,this->problem_id,this->instance_id,this->problem_type);
+    if (compareObjectives(y,this->best_so_far_transformed_objectives,this->maximization_minimization_flag)) {
       this->best_so_far_transformed_objectives = y;
       this->best_so_far_transformed_evaluations = this->evaluations;
     }
@@ -159,15 +160,16 @@ public:
   /// in this function.
   /// \param x A InputType vector of variables.
   /// \param y A double vector of objectives.
-  void evaluate(std::vector<InputType> x, double &y) {
+  void evaluate(std::vector<InputType> x, double &y) {/* OMS: the first argument should be passed by-ref (const) */
     ++this->evaluations;
 
-    transformation.variables_transformation(x,this->instance_id);
+    transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
     y = internal_evaluate(x);
     
     this->raw_objectives = y;
     
-    transformation.objectives_transformation(y,this->instance_id);
+
+    transformation.objectives_transformation(x,y,this->problem_id,this->instance_id,this->problem_type);
     if (y > this->best_so_far_transformed_objectives[0]) {
       this->best_so_far_transformed_objectives[0] = y;
       this->best_so_far_transformed_evaluations = this->evaluations;
@@ -194,23 +196,27 @@ public:
       } else {
         this->optimal = internal_evaluate_multi(this->best_variables);
       }
-      transformation.objectives_transformation(this->optimal,this->instance_id);
+      transformation.objectives_transformation(this->best_variables,this->optimal,this->problem_id,this->instance_id,this->problem_type);
     }
     else {
       this->optimal.clear();
       for (int i = 0; i < this->number_of_objectives; ++i) {
-        this->optimal.push_back(DBL_MAX);
+        if (this->maximization_minimization_flag == 1) {
+          this->optimal.push_back(DBL_MAX); 
+        } else {
+          this->optimal.push_back(-DBL_MAX);
+        }
       }
     }
   };
-
+/* OMS: the following function overloading is confusing - consider renaming one of them */
   /// \todo  To support constrained optimization.
-  virtual std::vector<double> constraints() {
+  virtual std::vector<double> constraints() { /* OMS: accessor ==> const */
     std::vector<double> con;
     printf("No constraints function defined\n");
     return con;
   };
-  virtual void constraints(std::vector<InputType> x, std::vector<double> c) {
+  virtual void constraints(std::vector<InputType> x, std::vector<double> c) { /* OMS: arguments should be passed by-ref (const) */
     printf("No constraints function defined\n");
   };
   
@@ -223,11 +229,36 @@ public:
     this->best_so_far_transformed_evaluations = 0;
     this->optimalFound = false;
     for (int i = 0; i !=  this->number_of_objectives; ++i) {
-      this->best_so_far_raw_objectives[i] = -DBL_MAX;
-      this->best_so_far_transformed_objectives[i] = -DBL_MAX;
+      if (this->maximization_minimization_flag == 1) {
+        this->best_so_far_raw_objectives[i] = -DBL_MAX;
+        this->best_so_far_transformed_objectives[i] = -DBL_MAX;
+      } else {
+        this->best_so_far_raw_objectives[i] = DBL_MAX;
+        this->best_so_far_transformed_objectives[i] = DBL_MAX;
+      }
     }
+    this->prepare_problem();
   };
 
+  /// \fn std::vector<std::variant<int,double,std::string>> loggerInfo()
+  ///
+  /// Return a vector logger_info may be used by loggers.
+  /// logger_info[0] evaluations
+  /// logger_info[1] precision
+  /// logger_info[2] best_so_far_precision
+  /// logger_info[3] transformed_objective
+  /// logger_info[4] best_so_far_transformed_objectives
+  std::vector<double> loggerCOCOInfo() { /* OMS: accessor ==> const */
+    std::vector<double> logger_info(5);
+    logger_info[0] = (double)this->evaluations;
+    logger_info[1] = this->transformed_objectives[0] - this->optimal[0];
+    logger_info[2] = this->best_so_far_transformed_objectives[0] - this->optimal[0];
+    logger_info[3] = this->transformed_objectives[0];
+    logger_info[4] = this->best_so_far_transformed_objectives[0];
+
+    return logger_info;
+  }
+  
   /// \fn std::vector<std::variant<int,double,std::string>> loggerInfo()
   ///
   /// Return a vector logger_info may be used by loggers.
@@ -236,7 +267,7 @@ public:
   /// logger_info[2] best_so_far_raw_objectives
   /// logger_info[3] transformed_objective
   /// logger_info[4] best_so_far_transformed_objectives
-  std::vector<double> loggerInfo() {
+  std::vector<double> loggerInfo() { /* OMS: accessor ==> const */
     std::vector<double> logger_info(5);
     logger_info[0] = (double)this->evaluations;
     logger_info[1] = this->raw_objectives[0];
@@ -246,14 +277,15 @@ public:
     return logger_info;
   }
   
+  
   /// \fn IOHprofiler_hit_optimal()
   ///
   /// \brief Detect if the optimal have been found.
-  bool IOHprofiler_hit_optimal() {
+  bool IOHprofiler_hit_optimal() { /* OMS: accessor ==> const */
     return this->optimalFound;
   }
 
-  int IOHprofiler_get_problem_id() {
+  int IOHprofiler_get_problem_id() { /* OMS: accessor ==> const */
     return this->problem_id;
   };
 
@@ -261,7 +293,7 @@ public:
     this->problem_id = problem_id;
   };
   
-  int IOHprofiler_get_instance_id() {
+  int IOHprofiler_get_instance_id() { /* OMS: accessor ==> const */
     return this->instance_id;
   };
   
@@ -276,7 +308,7 @@ public:
     this->calc_optimal();
   };
 
-  std::string IOHprofiler_get_problem_name() {
+  std::string IOHprofiler_get_problem_name() { /* OMS: accessor ==> const */
     return this->problem_name;
   };
 
@@ -284,7 +316,7 @@ public:
     this->problem_name = problem_name;
   };
 
-  std::string IOHprofiler_get_problem_type() {
+  std::string IOHprofiler_get_problem_type() { /* OMS: accessor ==> const */
     return this->problem_type;
   };
 
@@ -292,7 +324,7 @@ public:
     this->problem_type = problem_type;
   };
 
-  std::vector<InputType> IOHprofiler_get_lowerbound() {
+  std::vector<InputType> IOHprofiler_get_lowerbound() { /* OMS: accessor ==> const */
     return this->lowerbound;
   };
   
@@ -308,7 +340,7 @@ public:
     this->lowerbound = lowerbound;
   };
 
-  std::vector<InputType> IOHprofiler_get_upperbound() {
+  std::vector<InputType> IOHprofiler_get_upperbound() { /* OMS: accessor ==> const */
     return this->upperbound;
   };
 
@@ -324,7 +356,7 @@ public:
     this->upperbound = upperbound;
   };
 
-  std::vector<int> IOHprofiler_get_evaluate_int_info() {
+  std::vector<int> IOHprofiler_get_evaluate_int_info() { /* OMS: accessor ==> const */
     return this->evaluate_int_info;
   };
 
@@ -340,7 +372,7 @@ public:
   //  this->evaluate_double_info = evaluate_double_info;
   //};
  
-  int IOHprofiler_get_number_of_variables() {
+  int IOHprofiler_get_number_of_variables() { /* OMS: accessor ==> const */
     return this->number_of_variables;
   };
 
@@ -385,7 +417,7 @@ public:
     this->calc_optimal();
   };
 
-  int IOHprofiler_get_number_of_objectives() {
+  int IOHprofiler_get_number_of_objectives() { /* OMS: accessor ==> const */
     return this->number_of_objectives;
   };
 
@@ -399,34 +431,34 @@ public:
     this->optimal = std::vector<double>(this->number_of_objectives);
   };
 
-  std::vector<double> IOHprofiler_get_raw_objectives() {
+  std::vector<double> IOHprofiler_get_raw_objectives() { /* OMS: accessor ==> const */
     return this->raw_objectives;
   };
 
-  std::vector<double> IOHprofiler_get_transformed_objectives() {
+  std::vector<double> IOHprofiler_get_transformed_objectives() { /* OMS: accessor ==> const */
     return this->transformed_objectives;
   };
 
-  int IOHprofiler_get_transformed_number_of_variables() {
+  int IOHprofiler_get_transformed_number_of_variables() { /* OMS: accessor ==> const */
     return this->transformed_number_of_variables;
   };
 
-  std::vector<InputType> IOHprofiler_get_transformed_variables() {
+  std::vector<InputType> IOHprofiler_get_transformed_variables() { /* OMS: accessor ==> const */
     return this->transformed_variables;
   };
 
-  std::vector<InputType> IOHprofiler_get_best_variables() {
+  std::vector<InputType> IOHprofiler_get_best_variables() { /* OMS: accessor ==> const */
     return this->best_variables;
   };
 
-  void IOHprofiler_set_best_variables(int best_variables) {
+  void IOHprofiler_set_best_variables(InputType best_variables) { /* OMS: argument should be passed by-ref (const) */
     this->best_variables.clear();
     for (int i = 0; i < this->number_of_variables; ++i) {
       this->best_variables.push_back(best_variables);
     }
   };
 
-  void IOHprofiler_set_best_variables(std::vector<InputType> best_variables) {
+  void IOHprofiler_set_best_variables(std::vector<InputType> best_variables) { /* OMS: argument should be passed by-ref (const) */
     this->best_variables = best_variables;
   };
 
@@ -471,13 +503,27 @@ public:
     return this->best_so_far_transformed_evaluations;
   };
 
+  int IOHprofiler_get_optimization_type() {
+    return this->maximization_minimization_flag;
+  }
+
+  void IOHprofiler_set_as_maximization() {
+    this->maximization_minimization_flag = 1;
+  }
+
+  void IOHprofiler_set_as_minimization() {
+    this->maximization_minimization_flag = 0;
+  }
+
 private:
-  
+  /* OMS: All the following assignments are misplaced - should appear in the c'tors */
   int problem_id = DEFAULT_PROBLEM_ID; /// < problem id, assigned as being added into a suite.
   int instance_id = DEFAULT_INSTANCE; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
   
   std::string problem_name;
   std::string problem_type;   /// todo. make it as enum.
+
+  int maximization_minimization_flag = 1; /// < set as maximization if flag = 1, otherwise minimization.
   
   std::vector<InputType> lowerbound;
   std::vector<InputType> upperbound;

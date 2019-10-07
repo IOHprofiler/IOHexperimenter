@@ -123,7 +123,7 @@ void IOHprofiler_csv_logger::write_header() {
 ///
 /// This function is to be invoked by IOHprofiler_problem class.
 /// To update info of current working problem, and to write headline in corresponding files.
-void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int instance, std::string problem_name){
+void IOHprofiler_csv_logger::target_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag){
   /// Handle info of the previous problem.
   if (infoFile.is_open()) {
     write_info(this->instance, this->best_y[0], this->best_transformed_y[0], this->optimal_evaluations,
@@ -134,21 +134,34 @@ void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int i
   this->last_evaluations = 0;
 
   /// TO DO: Update the method of initializing this value.
-  this->best_y.clear();
-  this->best_y.push_back(-DBL_MAX);
-  this->best_transformed_y.clear();
-  this->best_transformed_y.push_back(-DBL_MAX);
-  this->last_y.clear();
-  this->last_y.push_back(-DBL_MAX);
-  this->last_transformed_y.clear();
-  this->last_transformed_y.push_back(-DBL_MAX);
+
+  if (maximization_minimization_flag == 1) {
+    this->best_y.clear();
+    this->best_y.push_back(-DBL_MAX);
+    this->best_transformed_y.clear();
+    this->best_transformed_y.push_back(-DBL_MAX);
+    this->last_y.clear();
+    this->last_y.push_back(-DBL_MAX);
+    this->last_transformed_y.clear();
+    this->last_transformed_y.push_back(-DBL_MAX);
+  } else {
+    this->best_y.clear();
+    this->best_y.push_back(DBL_MAX);
+    this->best_transformed_y.clear();
+    this->best_transformed_y.push_back(DBL_MAX);
+    this->last_y.clear();
+    this->last_y.push_back(DBL_MAX);
+    this->last_transformed_y.clear();
+    this->last_transformed_y.push_back(DBL_MAX);
+  }
   
-  reset_observer();
+  reset_observer(maximization_minimization_flag);
 
   this->problem_id = problem_id;
   this->dimension = dimension;
   this->instance = instance;
   this->problem_name = problem_name;
+  this->maximization_minimization_flag = maximization_minimization_flag;
   
   openInfo(problem_id,dimension,problem_name);
   
@@ -202,7 +215,7 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
 
   bool cdat_flag = complete_trigger();
   bool idat_flag = interval_trigger(evaluations);
-  bool dat_flag = update_trigger(transformed_y);
+  bool dat_flag = update_trigger(transformed_y,maximization_minimization_flag);
   bool tdat_flag = time_points_trigger(evaluations);
 
   bool need_write =  cdat_flag || idat_flag || dat_flag || tdat_flag;
@@ -251,7 +264,7 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
     }
   }
 
-  if (transformed_y > this->best_transformed_y[0]) {
+  if (compareObjectives(transformed_y,this->best_transformed_y[0],this->maximization_minimization_flag)) {
     this->update_logger_info(evaluations,y,transformed_y);
   }
 };

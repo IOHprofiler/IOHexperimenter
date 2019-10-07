@@ -68,12 +68,12 @@ public:
     return observer_update_flag;
   }
 
-  bool update_trigger(double fitness) {
+  bool update_trigger(double fitness, int optimization_type) {
     if (observer_update_flag == false) {
       return false;
     }
 
-    if (fitness > current_best_fitness) {
+    if (compareObjectives(fitness, current_best_fitness, optimization_type)) {
     	this->current_best_fitness = fitness;
     	return true;
     }
@@ -130,8 +130,12 @@ public:
     return result;
   }
 
-  void reset_observer() {
-    this->current_best_fitness = -DBL_MAX;
+  void reset_observer(const int optimization_type) {
+    if (optimization_type == 1) {
+      this->current_best_fitness = -DBL_MAX;
+    } else {
+      this->current_best_fitness = DBL_MAX;
+    }
     this->evaluations_value1 = 1;
     this->time_points_index = 0;
     this->time_points_expi = 0;
@@ -154,7 +158,7 @@ private:
   int evaluations_expi = 0; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
 
   /// todo. Currently this is only for single objective optimization.
-  double current_best_fitness = -DBL_MAX;
+  double current_best_fitness;
   
 };
 
