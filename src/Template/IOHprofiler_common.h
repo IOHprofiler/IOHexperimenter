@@ -30,7 +30,7 @@
 #define DEFAULT_INSTANCE 1
 
 /// < Default dimension
-#define DEFAULT_DIMENSION 2
+#define DEFAULT_DIMENSION 4
 
 void IOH_error(std::string error_info);
 
