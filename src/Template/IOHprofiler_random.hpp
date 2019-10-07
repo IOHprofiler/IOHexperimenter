@@ -12,10 +12,10 @@
 
 #define PI 3.14159265359
 #define DEFAULT_SEED 1000
-
+/* OMS: mutators vs. accessors should be checked throughout; see example in l.137 where const is needed. */
 class IOHprofiler_random {
 public:
-  IOHprofiler_random() {
+  IOHprofiler_random() { /* OMS: The following two c'tors should be merged using a default uint32 */ 
     uint32_t seed = DEFAULT_SEED;
     for (int i = 0; i < IOHprofiler_LONG_LAG; ++i) {
       x[i] = ((double)seed) / (double)(((uint64_t)1UL << 32) - 1);
@@ -134,7 +134,7 @@ public:
     return this->x[this->_seed_index++];
   }
 
-  double IOHprofiler_normal_rand() {
+  double IOHprofiler_normal_rand() { /* OMS: accessor - should become const */
     double normal;
     normal = 0.0;
     for (int i = 0; i < 12; ++i) {
@@ -144,12 +144,12 @@ public:
     return normal;
   }
 
-private:
+private: 
   //long _seed[32];
   size_t _seed_index;
 
   //double rand_r;
-
+/* OMS: All the following assignments are misplaced - should appear in the c'tors */
   const long a = 16807; /// < multiplier.
   const long m = 2147483647; /// < modulus.
   const long q = 127773; /// < modulusdiv multiplier.
