@@ -12,7 +12,7 @@
 \item{...}{Arguments passed to other methods}
 }
 \value{
-A summary of the DataSet containing both function-value and runtime based statistics.
+A summary of the IOHexperimenter object.
 }
 \description{
 S3 generic summary operator for IOHexperimenter

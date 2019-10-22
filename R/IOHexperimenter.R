@@ -9,6 +9,7 @@ utils::globalVariables(c("."))
 
 #' S3 class 'IOHexperimenter'
 #'
+#' @param suite Which suite to use. Available: 'PBO', 'BBOB'
 #' @param dims Numerical
 #' @param functions Numerical
 #' @param instances Numerical Whether the underlying optimization algorithm performs a maximization?
@@ -24,30 +25,23 @@ utils::globalVariables(c("."))
 #' @export
 #' @examples 
 #' exp <- IOHexperimenter()
-IOHexperimenter <- function(dims = c(16, 100, 625, 2500),
-  functions = seq(23), instances = seq(100), algorithm.info = ' ', algorithm.name = ' ',
+IOHexperimenter <- function(suite = "PBO", dims = c(16, 100, 625),
+  functions = seq(23), instances = seq(5), algorithm.info = ' ', algorithm.name = ' ',
   data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = NULL) {
 
   stopifnot({
     instances %in% seq(100) %>%
       c(., functions %in% seq(23)) %>%
-      c(., dims %in% if(any(functions == 23)) (seq(50)^2) else seq(50^2)) %>% 
+      c(., dims %in% if (any(functions == 23) && suite == "PBO") (seq(50)^2) else seq(50^2)) %>% 
+      c(., suite %in% c("BBOB", "PBO")) %>%
       all
   })
   
-  if (is.null(data.dir)) {
-    observer_name <- "no_observer"
-    data.dir <- "N/A"
-  }
-  else observer_name <- "PBO"
-  if (!is.null(param.track)) param_str <- paste0(param.track, collapse = ',')
-  else param_str <- ''
 
+  
   # intialize the backend C code
-  c_init_suite(
-    paste0(functions, collapse = ','),
-    paste0(dims, collapse = ','),
-    paste0(instances, collapse = ',')
+  cpp_init_suite(
+    suite, functions, instances, dims
   )
   
   if (algorithm.info == '') algorithm.info <- "N/A"
@@ -55,27 +49,35 @@ IOHexperimenter <- function(dims = c(16, 100, 625, 2500),
   if (algorithm.name == '') algorithm.name <- "N/A"
   else algorithm.name <- gsub(" ", "_", algorithm.name)
   
-  # intialize the observer
-  c_init_observer(
-    data.dir, algorithm.name, algorithm.info,
-    complete_triggers = ifelse(cdat, 'true', 'false'),
-    number_interval_triggers = idat,
-		base_evaluation_triggers = "1,2,5",
-		number_target_triggers = tdat,
-		parameters_name = param_str,
-		observer_name = observer_name
-  )
+  if (is.null(data.dir)) {
+    observed <- F
+  }
+  else {
+    # intialize the observer
+    cpp_init_logger(
+      dirname(data.dir), basename(data.dir), algorithm.name, algorithm.info
+    )
+    
+    cpp_logger_target_suite()
+    
+    if (!is.null(param.track))
+      cpp_set_parameters_name(param.track)
+    
+    observed <- T
+  }
 
+  
   structure(
     list(
       dims = dims,
       functions = functions,
       instances = instances,
-      param.track = param.track
+      suite = suite,
+      param.track = param.track,
+      observed = observed
     ),
     class = c('IOHexperimenter', 'list'),
-    cdat =  cdat, idat = 0, tdat = 3,
-    data.dir = data.dir, C.state = T
+    data.dir = data.dir
   )
 }
 
@@ -101,8 +103,8 @@ print.IOHexperimenter <- function(x, ...) {
 #' as.character(IOHexperimenter())
 as.character.IOHexperimenter <- function(x, ...) {
   paste0(
-    sprintf('IOHexperimenter (%d instances, %d functions, %d dimensions)\n', 
-              length(x$instances), length(x$functions), length(x$dims)),
+    sprintf('IOHexperimenter (Suite %s: %d instances, %d functions, %d dimensions)\n', 
+              x$suite, length(x$instances), length(x$functions), length(x$dims)),
     sprintf('Dimensions: %s\n', paste0(x$dims, collapse = ', ')),
     sprintf('Functions: %s\n', paste0(x$functions, collapse = ', ')),
     sprintf('Instances: %s\n', paste0(x$instances, collapse = ', '))
@@ -114,7 +116,7 @@ as.character.IOHexperimenter <- function(x, ...) {
 #' @param object A IOHexperimenter object
 #' @param ... Arguments passed to other methods
 #'
-#' @return A summary of the DataSet containing both function-value and runtime based statistics.
+#' @return A summary of the IOHexperimenter object.
 #' @export
 #' @examples 
 #' summary(IOHexperimenter())

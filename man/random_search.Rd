@@ -2,10 +2,13 @@
 % Please edit documentation in R/Algorithms.R
 \name{IOH_random_search}
 \alias{IOH_random_search}
+\alias{random_search_PB}
 \alias{random_search}
 \title{IOHexperimenter-based wrapper}
 \usage{
 IOH_random_search(IOHproblem, budget = NULL)
+
+random_search_PB(dim, obj_func, target = NULL, budget = NULL)
 
 random_search(dim, obj_func, target = NULL, budget = NULL)
 }
@@ -24,6 +27,8 @@ random_search(dim, obj_func, target = NULL, budget = NULL)
 For easier use with the IOHexperimenter
 
 Random walk in \eqn{{0, 1}^d} space
+
+Random walk in \eqn{[-5, 5]^d} space
 }
 \examples{
 \donttest{

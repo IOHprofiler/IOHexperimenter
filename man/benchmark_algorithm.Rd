@@ -4,10 +4,10 @@
 \alias{benchmark_algorithm}
 \title{Base procedure for benchmarking a custom algorithm}
 \usage{
-benchmark_algorithm(user_alg, functions = NULL, instances = NULL,
-  dimensions = NULL, data.dir = NULL, algorithm.info = " ",
-  algorithm.name = " ", cdat = FALSE, idat = 0, tdat = 3,
-  params.track = NULL, repetitions = 5)
+benchmark_algorithm(user_alg, suite = NULL, functions = NULL,
+  instances = NULL, dimensions = NULL, data.dir = NULL,
+  algorithm.info = " ", algorithm.name = " ", cdat = FALSE,
+  idat = 0, tdat = 3, params.track = NULL, repetitions = 5)
 }
 \arguments{
 \item{user_alg}{Function defining the custom algorithm. Needs to accept one paramter:
@@ -16,8 +16,7 @@ an IOHproblem object, which has the following properties:
 \item dimension
 \item function_id
 \item instance
-\item fopt (if known)
-\item xopt (if known)
+\item suite (Currently 'BBOB' or 'PBO')
 }
 And the following functions:
 \itemize{
@@ -25,6 +24,8 @@ And the following functions:
 \item target_hit
 \item set_parameters
 }}
+
+\item{suite}{Which suite to test on}
 
 \item{functions}{Which function to test on}
 

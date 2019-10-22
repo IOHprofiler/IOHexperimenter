@@ -4,12 +4,14 @@
 \alias{IOHexperimenter}
 \title{S3 class 'IOHexperimenter'}
 \usage{
-IOHexperimenter(dims = c(16, 100, 625, 2500), functions = seq(23),
-  instances = seq(100), algorithm.info = " ", algorithm.name = " ",
-  data.dir = "./data", cdat = FALSE, idat = 0, tdat = 3,
-  param.track = NULL)
+IOHexperimenter(suite = "PBO", dims = c(16, 100, 625),
+  functions = seq(23), instances = seq(5), algorithm.info = " ",
+  algorithm.name = " ", data.dir = "./data", cdat = FALSE,
+  idat = 0, tdat = 3, param.track = NULL)
 }
 \arguments{
+\item{suite}{Which suite to use. Available: 'PBO', 'BBOB'}
+
 \item{dims}{Numerical}
 
 \item{functions}{Numerical}

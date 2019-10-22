@@ -11,7 +11,10 @@
 #' benchmark_algorithm(IOH_random_search, data.dir = NULL)
 #' }
 IOH_random_search <- function(IOHproblem, budget = NULL) {
-  random_search(IOHproblem$dimension, IOHproblem$obj_func, IOHproblem$fopt, budget)
+  if (IOHproblem$suite == "PBO")
+    random_search_PB(IOHproblem$dimension, IOHproblem$obj_func, IOHproblem$fopt, budget)
+  else
+    random_search(IOHproblem$dimension, IOHproblem$obj_func, IOHproblem$fopt, budget)
 }
 
 #' IOHexperimenter-based wrapper 
@@ -73,20 +76,17 @@ IOH_two_rate_GA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
 #' Random Search
 #'
 #' Random walk in \eqn{{0, 1}^d} space
-#' @param dim Dimension of search space
-#' @param obj_func The evaluation function
-#' @param target Optional, enables early stopping if this value is reached
-#' @param budget integer, maximal allowable number of function evaluations
 #' 
+#' @rdname random_search
 #' @export
-random_search <- function(dim, obj_func, target = NULL, budget = NULL) {
+random_search_PB <- function(dim, obj_func, target = NULL, budget = NULL) {
   if (is.null(budget)) budget <- 10 * dim
   fopt <- -Inf
   xopt <- NULL
   
   target_hit <- function() {
     if (is.null(target)) return(FALSE)
-    else return (target<=fopt)
+    else return(target <= fopt)
   }
   
   while (budget > 0 && !target_hit()) {
@@ -102,6 +102,37 @@ random_search <- function(dim, obj_func, target = NULL, budget = NULL) {
   list(xopt = xopt, fopt = fopt)
 }
 
+
+#' Random Search
+#'
+#' Random walk in \eqn{[-5, 5]^d} space
+#' @param dim Dimension of search space
+#' @param obj_func The evaluation function
+#' @param target Optional, enables early stopping if this value is reached
+#' @param budget integer, maximal allowable number of function evaluations
+#' @export
+random_search <- function(dim, obj_func, target = NULL, budget = NULL) {
+  if (is.null(budget)) budget <- 10 * dim
+  fopt <- -Inf
+  xopt <- NULL
+  
+  target_hit <- function() {
+    if (is.null(target)) return(FALSE)
+    else return(target <= fopt)
+  }
+  
+  while (budget > 0 && !target_hit()) {
+    x <- runif(dim, -5, 5)
+    f <- obj_func(x)
+    budget <- budget - 1
+    
+    if (f > fopt) {
+      xopt <- x
+      fopt <- f
+    }
+  }
+  list(xopt = xopt, fopt = fopt)
+}
 
 #' Random Local Search (RLS) Algorithm
 #'
