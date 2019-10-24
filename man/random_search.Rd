@@ -26,9 +26,9 @@ random_search(dim, obj_func, target = NULL, budget = NULL)
 \description{
 For easier use with the IOHexperimenter
 
-Random walk in \eqn{{0, 1}^d} space
+Random walk in \eqn{{0, 1}^d} space; Maximization
 
-Random walk in \eqn{[-5, 5]^d} space
+Random walk in \eqn{[-5, 5]^d} space; Mimimization
 }
 \examples{
 \donttest{

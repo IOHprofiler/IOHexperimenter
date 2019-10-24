@@ -76,10 +76,13 @@ next_problem <- function(experimenter) {
       target_hit = function() {
         cpp_is_target_hit()
       },
-      set_parameters = function(param_vals){
-        stopifnot( length(param_vals) == length(experimenter$param.track) )
-        cpp_set_parameters_value(param_vals)
-      }
+      set_parameters = 
+        if (length(experimenter$param.track) > 0) function(param_vals){
+          stopifnot( length(param_vals) == length(experimenter$param.track) )
+          cpp_set_parameters_value(param_vals)
+        }
+        else
+          NULL
 
     ),
     class = c('IOHproblem', 'list')

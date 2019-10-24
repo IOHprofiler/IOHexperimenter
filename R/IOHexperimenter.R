@@ -25,19 +25,39 @@ utils::globalVariables(c("."))
 #' @export
 #' @examples 
 #' exp <- IOHexperimenter()
-IOHexperimenter <- function(suite = "PBO", dims = c(16, 100, 625),
-  functions = seq(23), instances = seq(5), algorithm.info = ' ', algorithm.name = ' ',
-  data.dir = './data', cdat = FALSE, idat = 0, tdat = 3, param.track = NULL) {
-
-  stopifnot({
-    instances %in% seq(100) %>%
-      c(., functions %in% seq(23)) %>%
-      c(., dims %in% if (any(functions == 23) && suite == "PBO") (seq(50)^2) else seq(50^2)) %>% 
-      c(., suite %in% c("BBOB", "PBO")) %>%
-      all
-  })
+IOHexperimenter <- function(suite = "PBO", dims = NULL, functions = NULL, instances = NULL,
+                            algorithm.info = ' ', algorithm.name = ' ',
+                            data.dir = './data', param.track = NULL) {
   
-
+  if (suite == "PBO") {
+    #set default values
+    if (is.null(dims)) dims <- c(16, 100, 625)
+    if (is.null(functions)) functions <- seq(23)
+    if (is.null(instances)) instances <- seq(5)
+    
+    #check validity of parameters
+    stopifnot({
+      instances %in% seq(100) %>%
+        c(., functions %in% seq(23)) %>%
+        c(., dims %in% if (any(functions == 23)) (seq(50)^2) else seq(50^2)) %>% 
+        all
+    })
+  }
+  else if (suite == "BBOB") {
+    #set default values
+    if (is.null(dims)) dims <- c(5, 10)
+    if (is.null(functions)) functions <- seq(24)
+    if (is.null(instances)) instances <- seq(5)
+    
+    #check validity of parameters
+    stopifnot({
+      instances %in% seq(100) %>%
+        c(., functions %in% seq(24)) %>%
+        c(., dims %in% seq(40)) %>% 
+        all
+    })
+  }
+  else stop("Requested suite is not implemented")
   
   # intialize the backend C code
   cpp_init_suite(

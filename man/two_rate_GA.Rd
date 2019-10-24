@@ -7,8 +7,8 @@
 \usage{
 IOH_two_rate_GA(IOHproblem, lambda_ = 1, budget = NULL)
 
-two_rate_GA(dimension, obj_func, target = NULL, lambda_ = 2,
-  budget = NULL, set_parameters = NULL)
+two_rate_GA(dimension, obj_func, target_hit = function() {     FALSE },
+  lambda_ = 2, budget = NULL, set_parameters = NULL)
 }
 \arguments{
 \item{IOHproblem}{An IOHproblem object}
@@ -21,7 +21,7 @@ two_rate_GA(dimension, obj_func, target = NULL, lambda_ = 2,
 
 \item{obj_func}{The evaluation function}
 
-\item{target}{Optional, enables early stopping if this value is reached}
+\item{target_hit}{Optional, function which enables early stopping if a target value is reached}
 
 \item{set_parameters}{Function to call to store the value of the registered parameters}
 }

@@ -51,8 +51,8 @@ IOH_random_local_search <- function(IOHproblem, budget = NULL) {
 #' }
 IOH_self_adaptive_GA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
   self_adaptive_GA(IOHproblem$dimension, IOHproblem$obj_func, 
-                     target = IOHproblem$fopt, budget = budget,
-                     lambda_ = lambda_, set_parameters = IOHproblem$set_parameters) 
+                   target_hit = IOHproblem$target_hit, budget = budget,
+                   lambda_ = lambda_, set_parameters = IOHproblem$set_parameters) 
 }
 
 #' IOHexperimenter-based wrapper 
@@ -68,14 +68,14 @@ IOH_self_adaptive_GA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
 #' bechmark_algorithm(IOH_two_rate_GA)
 #' }
 IOH_two_rate_GA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
-  two_rate_GA(IOHproblem$dimension, IOHproblem$obj_func, 
-                   target = IOHproblem$fopt, budget = budget,
-                   lambda_ = lambda_, set_parameters = IOHproblem$set_parameters) 
+  two_rate_GA(IOHproblem$dimension, IOHproblem$obj_func, budget = budget, 
+              lambda_ = lambda_, set_parameters = IOHproblem$set_parameters,
+              target_hit = IOHproblem$target_hit) 
 }
 
 #' Random Search
 #'
-#' Random walk in \eqn{{0, 1}^d} space
+#' Random walk in \eqn{{0, 1}^d} space; Maximization
 #' 
 #' @rdname random_search
 #' @export
@@ -105,7 +105,8 @@ random_search_PB <- function(dim, obj_func, target = NULL, budget = NULL) {
 
 #' Random Search
 #'
-#' Random walk in \eqn{[-5, 5]^d} space
+#' Random walk in \eqn{[-5, 5]^d} space; Mimimization
+#' 
 #' @param dim Dimension of search space
 #' @param obj_func The evaluation function
 #' @param target Optional, enables early stopping if this value is reached
@@ -126,7 +127,7 @@ random_search <- function(dim, obj_func, target = NULL, budget = NULL) {
     f <- obj_func(x)
     budget <- budget - 1
     
-    if (f > fopt) {
+    if (f < fopt) {
       xopt <- x
       fopt <- f
     }
@@ -156,19 +157,19 @@ random_local_search <- function(dimension, obj_func, target = NULL, budget = NUL
   
   target_hit <- function() {
     if (is.null(target)) return(FALSE)
-    else return (target<=fopt)
+    else return(target <= fopt)
   }
   
-  while ( iter < budget && !target_hit() ){
+  while (iter < budget && !target_hit() ) {
     candidate <- xopt
     switch_idx <- sample(1:dimension, 1)
     candidate[switch_idx] <- 1 - candidate[switch_idx]
     fval <- obj_func(candidate)
-    if (fval >= fopt){
+    if (fval >= fopt) {
       fopt <- fval
       xopt <- candidate
     }
-    iter <- iter+1
+    iter <- iter + 1
   }
   list(xopt = xopt, fopt = fopt)
 }
@@ -183,8 +184,8 @@ random_local_search <- function(dimension, obj_func, target = NULL, budget = NUL
 mutate <- function(ind, mutation_rate){
   dim <- length(ind)
   mutations <- seq(0, 0, length.out = dim)
-  while (sum(mutations) == 0){
-    mutations <- sample(c(0, 1), dim, prob = c(1-mutation_rate, mutation_rate), replace = TRUE)
+  while (sum(mutations) == 0) {
+    mutations <- sample(c(0, 1), dim, prob = c(1 - mutation_rate, mutation_rate), replace = TRUE)
   }
   as.integer( xor(ind, mutations) )
 }
@@ -201,16 +202,16 @@ mutate <- function(ind, mutation_rate){
 #' @param budget How many times the objective function can be evaluated
 #' @param dimension Dimension of search space
 #' @param obj_func The evaluation function
-#' @param target Optional, enables early stopping if this value is reached
+#' @param target_hit Optional, function which enables early stopping if a target value is reached
 #' @param set_parameters Function to call to store the value of the registered parameters
 #' 
 #' @export
-self_adaptive_GA <- function(dimension, obj_func, target = NULL, lambda_ = 10, budget = NULL,
-                             set_parameters = NULL) {
+self_adaptive_GA <- function(dimension, obj_func, lambda_ = 10, budget = NULL,
+                             set_parameters = NULL, target_hit = function(){ FALSE }) {
   obj_func <- obj_func
   if (is.null(budget)) budget <- 10 * dimension
 
-  r <- 1.0 / dim
+  r <- 1.0 / dimension
   if (is.function(set_parameters)) set_parameters(r)
 
   x <- sample(c(0, 1), dimension, TRUE)
@@ -219,11 +220,6 @@ self_adaptive_GA <- function(dimension, obj_func, target = NULL, lambda_ = 10, b
   budget <- budget - 1
 
   tau <- 0.22
-
-  target_hit <- function() {
-    if (is.null(target)) return(FALSE)
-    else return (target<=fopt)
-  }
   
   while (budget > 0 && !target_hit()) {
     lambda_ <- min(lambda_, budget) #ensure budget is not exceeded
@@ -258,33 +254,29 @@ self_adaptive_GA <- function(dimension, obj_func, target = NULL, lambda_ = 10, b
 #' @param budget How many times the objective function can be evaluated
 #' @param dimension Dimension of search space
 #' @param obj_func The evaluation function
-#' @param target Optional, enables early stopping if this value is reached
+#' @param target_hit Optional, function which enables early stopping if a target value is reached
 #' @param set_parameters Function to call to store the value of the registered parameters
 #' 
 #' @export
-two_rate_GA <- function(dimension, obj_func, target = NULL, lambda_ = 2, budget = NULL, set_parameters = NULL){
+two_rate_GA <- function(dimension, obj_func, target_hit = function() { FALSE }, lambda_ = 2, 
+                        budget = NULL, set_parameters = NULL){
   if (is.null(budget)) budget <- 100*dimension
 
   parent <- sample(c(0, 1), dimension, TRUE)
   best <- parent
   r <- 2.0
   fopt <- obj_func(parent)
-  budget <- budget-1
+  budget <- budget - 1
   if (is.function(set_parameters)) set_parameters(r)
-  
-  target_hit <- function() {
-    if (is.null(target)) return(FALSE)
-    else return (target<=fopt)
-  }
   
   while (budget > 0 && !target_hit()) {
     selected_r <- r;
     selected_obj <- -Inf
 
-    for (i in 1:lambda_){
+    for (i in 1:lambda_) {
       offspring <- parent
 
-      if(i <= lambda_/2){
+      if (i <= lambda_/2) {
         mutation_rate = r / 2.0 / dimension;
       } else{
         mutation_rate = 2.0 * r / dimension;
@@ -292,11 +284,11 @@ two_rate_GA <- function(dimension, obj_func, target = NULL, lambda_ = 2, budget 
       offspring <- mutate(offspring, mutation_rate)
 
       v <- obj_func(offspring)
-      if(v >= fopt){
+      if (v >= fopt) {
         fopt <- v
         best <- offspring
       }
-      if(v >= selected_obj){
+      if (v >= selected_obj) {
         selected_obj = v
         selected_r = mutation_rate * dimension;
       }
@@ -304,19 +296,19 @@ two_rate_GA <- function(dimension, obj_func, target = NULL, lambda_ = 2, budget 
       if (budget == 0 ) break
     }
     parent <- best
-    if(runif(1) > 0.5){
+    if (runif(1) > 0.5) {
       r = selected_r
     }
     else{
-      if(runif(1) > 0.5){
+      if (runif(1) > 0.5) {
         r = r / 2.0
       } else{
         r = 2.0 * r
       }
     }
 
-    if(r < 2.0) r = 2.0
-    if(r > dimension / 4.0) r = dimension / 4.0
+    if (r < 2.0) r = 2.0
+    if (r > dimension / 4.0) r = dimension / 4.0
     if (is.function(set_parameters)) set_parameters(r)
     
   }

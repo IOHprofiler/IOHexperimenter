@@ -4,10 +4,9 @@
 \alias{IOHexperimenter}
 \title{S3 class 'IOHexperimenter'}
 \usage{
-IOHexperimenter(suite = "PBO", dims = c(16, 100, 625),
-  functions = seq(23), instances = seq(5), algorithm.info = " ",
-  algorithm.name = " ", data.dir = "./data", cdat = FALSE,
-  idat = 0, tdat = 3, param.track = NULL)
+IOHexperimenter(suite = "PBO", dims = NULL, functions = NULL,
+  instances = NULL, algorithm.info = " ", algorithm.name = " ",
+  data.dir = "./data", param.track = NULL)
 }
 \arguments{
 \item{suite}{Which suite to use. Available: 'PBO', 'BBOB'}
@@ -24,13 +23,13 @@ IOHexperimenter(suite = "PBO", dims = c(16, 100, 625),
 
 \item{data.dir}{Where the data should be stored}
 
+\item{param.track}{Which parameters to track. Should be a vector of strings, containing no spaces or commas}
+
 \item{cdat}{Whether or not to generate a .cdat-file}
 
 \item{idat}{Integer}
 
 \item{tdat}{What frequency to use in a .tdat-file}
-
-\item{param.track}{Which parameters to track. Should be a vector of strings, containing no spaces or commas}
 }
 \value{
 A S3 object 'DataSet'
