@@ -89,15 +89,3 @@ cpp_clear_logger <- function() {
     invisible(.Call('_IOHexperimenter_cpp_clear_logger', PACKAGE = 'IOHexperimenter'))
 }
 
-computeGCD <- function(a, b) {
-    .Call('_IOHexperimenter_computeGCD', PACKAGE = 'IOHexperimenter', a, b)
-}
-
-computeLCM <- function(a, b) {
-    .Call('_IOHexperimenter_computeLCM', PACKAGE = 'IOHexperimenter', a, b)
-}
-
-filetest <- function() {
-    .Call('_IOHexperimenter_filetest', PACKAGE = 'IOHexperimenter')
-}
-

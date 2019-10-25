@@ -6,8 +6,8 @@
 \usage{
 benchmark_algorithm(user_alg, suite = NULL, functions = NULL,
   instances = NULL, dimensions = NULL, data.dir = NULL,
-  algorithm.info = " ", algorithm.name = " ", cdat = FALSE,
-  idat = 0, tdat = 3, params.track = NULL, repetitions = 5)
+  algorithm.info = " ", algorithm.name = " ", params.track = NULL,
+  repetitions = 5)
 }
 \arguments{
 \item{user_alg}{Function defining the custom algorithm. Needs to accept one paramter:
@@ -38,12 +38,6 @@ And the following functions:
 \item{algorithm.info}{Additional information about the algorithm you plan on running}
 
 \item{algorithm.name}{The name of the algorithm you plan on running}
-
-\item{cdat}{Whether or not to generate a .cdat-file}
-
-\item{idat}{Integer}
-
-\item{tdat}{What frequency to use in a .tdat-file}
 
 \item{params.track}{Which parameters to track. Should be a vector of strings, containing no spaces or commas}
 

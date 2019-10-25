@@ -24,12 +24,6 @@ IOHexperimenter(suite = "PBO", dims = NULL, functions = NULL,
 \item{data.dir}{Where the data should be stored}
 
 \item{param.track}{Which parameters to track. Should be a vector of strings, containing no spaces or commas}
-
-\item{cdat}{Whether or not to generate a .cdat-file}
-
-\item{idat}{Integer}
-
-\item{tdat}{What frequency to use in a .tdat-file}
 }
 \value{
 A S3 object 'DataSet'

@@ -17,8 +17,8 @@
 // [[Rcpp::plugins(cpp11)]]
 
 
-#include "IOHprofiler_all_suites.hpp"
-#include "IOHprofiler_csv_logger.h"
+#include "Headers/IOHprofiler_all_suites.hpp"
+#include "Headers/IOHprofiler_csv_logger.h"
 
 
 using namespace Rcpp;

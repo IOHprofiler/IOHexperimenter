@@ -235,40 +235,6 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// computeGCD
-int computeGCD(int a, int b);
-RcppExport SEXP _IOHexperimenter_computeGCD(SEXP aSEXP, SEXP bSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type a(aSEXP);
-    Rcpp::traits::input_parameter< int >::type b(bSEXP);
-    rcpp_result_gen = Rcpp::wrap(computeGCD(a, b));
-    return rcpp_result_gen;
-END_RCPP
-}
-// computeLCM
-int computeLCM(int a, int b);
-RcppExport SEXP _IOHexperimenter_computeLCM(SEXP aSEXP, SEXP bSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type a(aSEXP);
-    Rcpp::traits::input_parameter< int >::type b(bSEXP);
-    rcpp_result_gen = Rcpp::wrap(computeLCM(a, b));
-    return rcpp_result_gen;
-END_RCPP
-}
-// filetest
-int filetest();
-RcppExport SEXP _IOHexperimenter_filetest() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(filetest());
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_IOHexperimenter_cpp_init_suite", (DL_FUNC) &_IOHexperimenter_cpp_init_suite, 4},
@@ -293,9 +259,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_IOHexperimenter_cpp_clear_problem", (DL_FUNC) &_IOHexperimenter_cpp_clear_problem, 0},
     {"_IOHexperimenter_cpp_clear_suite", (DL_FUNC) &_IOHexperimenter_cpp_clear_suite, 0},
     {"_IOHexperimenter_cpp_clear_logger", (DL_FUNC) &_IOHexperimenter_cpp_clear_logger, 0},
-    {"_IOHexperimenter_computeGCD", (DL_FUNC) &_IOHexperimenter_computeGCD, 2},
-    {"_IOHexperimenter_computeLCM", (DL_FUNC) &_IOHexperimenter_computeLCM, 2},
-    {"_IOHexperimenter_filetest", (DL_FUNC) &_IOHexperimenter_filetest, 0},
     {NULL, NULL, 0}
 };
 

@@ -16,9 +16,6 @@ utils::globalVariables(c("."))
 #' @param algorithm.info Additional information about the algorithm you plan on running
 #' @param algorithm.name The name of the algorithm you plan on running
 #' @param data.dir Where the data should be stored
-#' @param cdat Whether or not to generate a .cdat-file
-#' @param idat Integer
-#' @param tdat What frequency to use in a .tdat-file
 #' @param param.track Which parameters to track. Should be a vector of strings, containing no spaces or commas
 #'
 #' @return A S3 object 'DataSet'
@@ -73,6 +70,7 @@ IOHexperimenter <- function(suite = "PBO", dims = NULL, functions = NULL, instan
     observed <- F
   }
   else {
+    dir.create(dirname(data.dir), recursive = T)
     # intialize the observer
     cpp_init_logger(
       dirname(data.dir), basename(data.dir), algorithm.name, algorithm.info
