@@ -27,16 +27,19 @@ as.character.IOHproblem <- function(x, ...) {
           x$function_id, x$dimension)
 }
 
-#' Get the next function of the currently initialized suite
+#' Get the next function of the currently initialized IOHexperimenter object
 #'
 #' @param experimenter The IOHexperimenter object
 #'
-#' @return An IOHproblem object
+#' @return An IOHproblem object if available, NULL otherwise
 #' @export
 #' @examples 
 #' exp <- IOHexperimenter()
 #' p <- next_problem(exp)
 next_problem <- function(experimenter) {
+  if (class(experimenter) != "IOHexperimenter")
+    stop("Please ensure a valid IOHexperimenter object is provided!")
+  
   ans <- cpp_get_next_problem()
   if (is.null(ans) || is.null(ans$problem)) return(NULL)
 
@@ -65,6 +68,9 @@ next_problem <- function(experimenter) {
       suite = experimenter$suite,
       # fopt = cpp_get_fopt(),
       # xopt = cpp_get_xopt(),
+      # lbound = cpp_get_lbound(),
+      # ubound = cpp_get_ubound(),
+      # maximization = cpp_get_maximization(),
       params.track = experimenter$param.track,
       obj_func = function(x) {
         if (is.null(dim(x))) x <- t(x)

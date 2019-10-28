@@ -7,15 +7,31 @@ NULL
 
 utils::globalVariables(c("."))
 
+
+# Options being set upon loading of library
+.onLoad <- function(libname, pkgname) {
+  op <- options()
+  op.IOHexperimenter <- list(
+    IOHexperimenter.idat = 0,
+    IOHexperimenter.tdat = 0,
+    IOHexperimenter.cdat = F,
+    IOHexperimenter.dat = T,
+  )
+  toset <- !(names(op.IOHexperimenter) %in% names(op))
+  if (any(toset)) options(op.IOHexperimenter[toset])
+  
+  invisible()
+}
+
 #' S3 class 'IOHexperimenter'
 #'
 #' @param suite Which suite to use. Available: 'PBO', 'BBOB'
-#' @param dims Numerical
-#' @param functions Numerical
-#' @param instances Numerical Whether the underlying optimization algorithm performs a maximization?
+#' @param dims Numerical Which dimensions to use
+#' @param functions Numerical Which functions from the selected suite to use
+#' @param instances Numerical Which problem instances to use
 #' @param algorithm.info Additional information about the algorithm you plan on running
 #' @param algorithm.name The name of the algorithm you plan on running
-#' @param data.dir Where the data should be stored
+#' @param data.dir Where the data should be stored. Defaults to NULL, meaning no data is stored.
 #' @param param.track Which parameters to track. Should be a vector of strings, containing no spaces or commas
 #'
 #' @return A S3 object 'DataSet'
@@ -24,7 +40,7 @@ utils::globalVariables(c("."))
 #' exp <- IOHexperimenter()
 IOHexperimenter <- function(suite = "PBO", dims = NULL, functions = NULL, instances = NULL,
                             algorithm.info = ' ', algorithm.name = ' ',
-                            data.dir = './data', param.track = NULL) {
+                            data.dir = 'NULL', param.track = NULL) {
   
   if (suite == "PBO") {
     #set default values
@@ -75,6 +91,11 @@ IOHexperimenter <- function(suite = "PBO", dims = NULL, functions = NULL, instan
     cpp_init_logger(
       dirname(data.dir), basename(data.dir), algorithm.name, algorithm.info
     )
+    
+    # cpp_logger_set_state(getOption(IOHexperimenter.dat, default = T), 
+    #                      getOption(IOHexperimenter.cdat, default = F),
+    #                      getOption(IOHexperimenter.tdat, default = 0),
+    #                      getOption(IOHexperimenter.idat, default = 0))
     
     cpp_logger_target_suite()
     
