@@ -56,8 +56,8 @@ public:
   void write_line(const std::vector<double> &logger_info);
   void update_logger_info(size_t optimal_evaluations, double y, double transformed_y);
   
-  void set_parameters(const std::vector<std::shared_ptr<double>> &parameters);
-  void set_parameters(const std::vector<std::shared_ptr<double>> &parameters, const std::vector<std::string> &parameters_name);
+  void set_parameters(const std::vector<std::shared_ptr<double> > &parameters);
+  void set_parameters(const std::vector<std::shared_ptr<double> > &parameters, const std::vector<std::string> &parameters_name);
 
 private:
   std::string folder_name;
@@ -91,7 +91,7 @@ private:
   int last_dimension = 0;
   int last_problem_id = -1;
   
-  std::vector<std::shared_ptr<double>> logging_parameters; /// < parameters to be logged as logging evaluation information.
+  std::vector<std::shared_ptr<double> > logging_parameters; /// < parameters to be logged as logging evaluation information.
   std::vector<std::string> logging_parameters_name; /// < name of parameters to be logged as logging evaluation information.
 
   /// \fn std::string IOHprofiler_experiment_folder_name()

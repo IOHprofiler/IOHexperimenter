@@ -171,7 +171,7 @@ void IOHprofiler_csv_logger::target_suite(std::string suite_name){
   this->suite_name = suite_name;
 }
 
-void IOHprofiler_csv_logger::set_parameters(const std::vector<std::shared_ptr<double>> &parameters) {
+void IOHprofiler_csv_logger::set_parameters(const std::vector<std::shared_ptr<double> > &parameters) {
   if (this->logging_parameters.size() != 0) {
     this->logging_parameters.clear();
     this->logging_parameters_name.clear();
@@ -183,7 +183,7 @@ void IOHprofiler_csv_logger::set_parameters(const std::vector<std::shared_ptr<do
   }
 }
 
-void IOHprofiler_csv_logger::set_parameters(const std::vector<std::shared_ptr<double>> &parameters, const std::vector<std::string> &parameters_name) {
+void IOHprofiler_csv_logger::set_parameters(const std::vector<std::shared_ptr<double> > &parameters, const std::vector<std::string> &parameters_name) {
   if (parameters_name.size() != parameters.size()) {
     IOH_error("Parameters and their names are given with different size.");
   }

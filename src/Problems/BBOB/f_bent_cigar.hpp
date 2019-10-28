@@ -44,7 +44,7 @@ public:
   void prepare_problem() {
     std::vector<double> xopt;
     double fopt;
-    std::vector<std::vector<double>> M;
+    std::vector<std::vector<double> > M;
     std::vector<double> b;
     /* compute xopt, fopt*/
     
@@ -54,7 +54,7 @@ public:
     fopt = bbob2009_compute_fopt(12, this->IOHprofiler_get_instance_id());
     
     /* compute M and b */
-    M = std::vector<std::vector<double>> (n);
+    M = std::vector<std::vector<double> > (n);
     for (int i = 0; i != n; i++) {
       M[i] = std::vector<double> (n);
     }

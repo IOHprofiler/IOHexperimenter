@@ -44,7 +44,7 @@ public:
   void prepare_problem() {
     std::vector<double> xopt;
     double fopt;
-    std::vector<std::vector<double>> M;
+    std::vector<std::vector<double> > M;
     std::vector<double> b;
     /* compute xopt, fopt*/
     
@@ -57,12 +57,12 @@ public:
     }
     
     /* compute M and b */
-    M = std::vector<std::vector<double>> (n);
+    M = std::vector<std::vector<double> > (n);
     for (int i = 0; i != n; i++) {
       M[i] = std::vector<double> (n);
     }
     b = std::vector<double> (n);
-    std::vector<std::vector<double>> rot1;
+    std::vector<std::vector<double> > rot1;
     bbob2009_compute_rotation(rot1, rseed, n);
     scales = 1. > (sqrt((double) n) / 8.) ? 1. : (sqrt((double) n) / 8.);
     for (int i = 0; i < n; ++i) {

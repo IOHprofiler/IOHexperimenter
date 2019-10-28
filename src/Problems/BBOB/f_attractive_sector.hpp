@@ -54,12 +54,12 @@ public:
     fopt = bbob2009_compute_fopt(6, this->IOHprofiler_get_instance_id());
     
     /* compute M and b */
-    M = std::vector<std::vector<double>> (n);
+    M = std::vector<std::vector<double> > (n);
     for (int i = 0; i != n; i++) {
       M[i] = std::vector<double> (n);
     }
     b = std::vector<double> (n);
-    std::vector<std::vector<double>> rot1, rot2;
+    std::vector<std::vector<double> > rot1, rot2;
     bbob2009_compute_rotation(rot1, rseed + 1000000, n);
     bbob2009_compute_rotation(rot2, rseed, n);
     for (int i = 0; i < n; ++i) {

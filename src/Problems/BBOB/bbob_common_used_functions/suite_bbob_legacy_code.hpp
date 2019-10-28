@@ -76,9 +76,9 @@ static void bbob2009_unif(std::vector<double> &r, size_t N, long inseed) {
 /**
  * @brief Converts from packed matrix storage to an array of array of double representation.
  */
-static void bbob2009_reshape(std::vector<std::vector<double>> &B, const std::vector<double> &vector, const size_t m, const size_t n) {
+static void bbob2009_reshape(std::vector<std::vector<double> > &B, const std::vector<double> &vector, const size_t m, const size_t n) {
   size_t i, j;
-  B = std::vector<std::vector<double>> (m);
+  B = std::vector<std::vector<double> > (m);
   for (i = 0; i < m; i++) {
     B[i] = std::vector<double> (n);
     for (j = 0; j < n; j++) {
@@ -107,7 +107,7 @@ static void bbob2009_gauss(std::vector<double> &g, const size_t N, const long se
 /**
  * @brief Computes a DIM by DIM rotation matrix based on seed and stores it in B.
  */
-static void bbob2009_compute_rotation(std::vector<std::vector<double>> &B, const long seed, const size_t DIM) {
+static void bbob2009_compute_rotation(std::vector<std::vector<double> > &B, const long seed, const size_t DIM) {
   /* To ensure temporary data fits into gvec */
   double prod;
   std::vector<double> gvect(2000);
@@ -134,7 +134,7 @@ static void bbob2009_compute_rotation(std::vector<std::vector<double>> &B, const
 
 }
 
-static void bbob2009_copy_rotation_matrix(const std::vector<std::vector<double>> &rot, std::vector<std::vector<double>> &M, std::vector<double> &b, const size_t DIM) {
+static void bbob2009_copy_rotation_matrix(const std::vector<std::vector<double> > &rot, std::vector<std::vector<double> > &M, std::vector<double> &b, const size_t DIM) {
   size_t row, column;
   double *current_row;
 

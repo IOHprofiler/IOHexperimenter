@@ -45,7 +45,7 @@ public:
     /* compute xopt, fopt*/
     std::vector<double> xopt;
     double fopt;
-    std::vector<std::vector<double>> M;
+    std::vector<std::vector<double> > M;
     std::vector<double> b;
 
     int n = this->IOHprofiler_get_number_of_variables();
@@ -54,12 +54,12 @@ public:
     fopt = bbob2009_compute_fopt(10, this->IOHprofiler_get_instance_id());
     
     /* compute M and b */
-    M = std::vector<std::vector<double>> (n);
+    M = std::vector<std::vector<double> > (n);
     for (int i = 0; i != n; i++) {
       M[i] = std::vector<double> (n);
     }
     b = std::vector<double> (n);
-    std::vector<std::vector<double>> rot1;
+    std::vector<std::vector<double> > rot1;
     bbob2009_compute_rotation(rot1, rseed + 1000000, n);
     bbob2009_copy_rotation_matrix(rot1, M, b, n);
 

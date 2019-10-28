@@ -19,7 +19,7 @@ using PROBLEM_ID_NAME =  std::map<int, std::string>;
 /// To specify available problems of a suite, registerProblem must be implemented in derived class.
 /// The default lable of problems are string type. Integer type are also optional, but we highly
 /// recommond registering problem with string lable and creating a map of string problem_name and integer problem_id.
-template <class InputType> class IOHprofiler_suite : public IOHprofiler_problem<InputType>, public std::vector<std::shared_ptr<IOHprofiler_problem<InputType>>> {
+template <class InputType> class IOHprofiler_suite : public IOHprofiler_problem<InputType>, public std::vector<std::shared_ptr<IOHprofiler_problem<InputType> > > {
 public:
 
   IOHprofiler_suite() {};
@@ -29,7 +29,7 @@ public:
   IOHprofiler_suite(const IOHprofiler_suite&) = delete;
   IOHprofiler_suite &operator =(const IOHprofiler_suite&) = delete;
 
-  typedef std::shared_ptr<IOHprofiler_problem<InputType>> Problem_ptr;
+  typedef std::shared_ptr<IOHprofiler_problem<InputType> > Problem_ptr;
   /// \fn virtual void registerProblem()
   /// \brief A virtual function for registering problems.
   ///
@@ -108,7 +108,7 @@ public:
   /// To request a specific problem with corresponding problem_id, instance_id and dimension,
   /// without concerning the order of testing problems.
   Problem_ptr get_problem(std::string problem_name, int instance, int dimension) {
-    Problem_ptr p = genericGenerator<IOHprofiler_problem<InputType>>::instance().create(problem_name);
+    Problem_ptr p = genericGenerator<IOHprofiler_problem<InputType> >::instance().create(problem_name);
     p->reset_problem();
     p->IOHprofiler_set_problem_id(this->problem_name_id_map[problem_name]);
     p->IOHprofiler_set_instance_id(instance);
