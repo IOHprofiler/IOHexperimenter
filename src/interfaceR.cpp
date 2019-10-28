@@ -462,6 +462,28 @@ IntegerVector cpp_get_int_lower_bounds() {
   }
 } 
 
+/// Return 1 if it is maximization.
+//[[Rcpp::export]]
+int cpp_get_optimization_type() {
+  if (currentSuiteName == "PBO" && currentIntSuite != nullptr) {
+    if (currentIntProblem == nullptr) {
+      Rcout << "Error: No problem exist!\n";
+      return -1;
+    } else {
+      return currentIntProblem->IOHprofiler_get_optimization_type();
+    }
+  } else if (currentSuiteName == "BBOB" && currentDoubleSuite != nullptr) {
+    if (currentDoubleProblem == nullptr) {
+      Rcout << "Error: No problem exist!\n";
+      return -1;
+    } else {
+      return currentDoubleProblem->IOHprofiler_get_optimization_type();
+    }
+  } else {
+    Rcout << "Error: No problem exist!\n";
+    return -1;
+  }
+} 
 
 void cpp_clear_int_problem() {
   currentIntProblem = nullptr;
