@@ -21,7 +21,7 @@ public:
   /// \brief Transformation operations on variables.
   ///
   /// For instance_id in ]1,50], xor operation is applied.
-  /// For instance_id in ]50,100], \sigma function is applied.
+  /// For instance_id in ]50,100], sigma function is applied.
 
   void variables_transformation(std::vector<int> &x, const int problem_id, const int instance_id, const std::string problem_type) { 
     if (problem_type == "pseudo_Boolean_problem") {

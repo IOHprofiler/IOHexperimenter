@@ -3,7 +3,7 @@
 ///
 /// A detailed file description.
 ///
-/// \author Furong Ye, Ofer M. Sher
+/// \author Ofer M. Sher, Furong Ye
 /// \date 2019-06-27
 #ifndef _IOHPROFILER_PROBLEM_GENERATOR_HPP
 #define _IOHPROFILER_PROBLEM_GENERATOR_HPP

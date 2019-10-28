@@ -21,9 +21,12 @@ using PROBLEM_ID_NAME =  std::map<int, std::string>;
 /// recommond registering problem with string lable and creating a map of string problem_name and integer problem_id.
 template <class InputType> class IOHprofiler_suite : public IOHprofiler_problem<InputType>, public std::vector<std::shared_ptr<IOHprofiler_problem<InputType> > > {
 public:
-
-  IOHprofiler_suite() {};
-  IOHprofiler_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {};
+  IOHprofiler_suite(std::vector<int> problem_id = std::vector<int>(0), std::vector<int> instance_id = std::vector<int>(0), std::vector<int> dimension = std::vector<int>(0)) {
+    suite_name = "no suite";
+    problem_list_index = 0;
+    get_problem_flag = false;
+    current_problem = nullptr;
+  };
   ~IOHprofiler_suite() {};
 
   IOHprofiler_suite(const IOHprofiler_suite&) = delete;
@@ -116,31 +119,31 @@ public:
     return p;
   }
 
-  int IOHprofiler_suite_get_number_of_problems() {
+  int IOHprofiler_suite_get_number_of_problems() const {
     return this->number_of_problems;
   };
 
-  int IOHprofiler_suite_get_number_of_instances() {
+  int IOHprofiler_suite_get_number_of_instances() const {
     return this->number_of_instances;
   };
 
-  int IOHprofiler_suite_get_number_of_dimensions() {
+  int IOHprofiler_suite_get_number_of_dimensions() const {
     return this->number_of_dimensions;
   };
 
-  std::vector<int> IOHprofiler_suite_get_problem_id() {
+  std::vector<int> IOHprofiler_suite_get_problem_id() const {
     return this->problem_id;
   };
 
-  std::vector<int> IOHprofiler_suite_get_instance_id() {
+  std::vector<int> IOHprofiler_suite_get_instance_id() const {
     return this->instance_id;
   };
 
-  std::vector<int> IOHprofiler_suite_get_dimension() {
+  std::vector<int> IOHprofiler_suite_get_dimension() const {
     return this->dimension;
   };
 
-  std::string IOHprofiler_suite_get_suite_name() {
+  std::string IOHprofiler_suite_get_suite_name() const {
     return this->suite_name;
   };
 
@@ -170,7 +173,7 @@ public:
 
 private:
 
-  std::string suite_name = "default";
+  std::string suite_name;
   int number_of_problems;
   int number_of_instances;
   int number_of_dimensions;
@@ -182,11 +185,11 @@ private:
   PROBLEM_ID_NAME problem_id_name_map;
   PROBLEM_NAME_ID problem_name_id_map;
 
-  size_t problem_list_index = 0;
+  size_t problem_list_index;
   size_t size_of_problem_list;
-  bool get_problem_flag = false;
+  bool get_problem_flag;
 
-  Problem_ptr current_problem = nullptr;
+  Problem_ptr current_problem;
 };
 
 #endif //_IOHPROFILER_SUITE_HPP

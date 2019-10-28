@@ -19,7 +19,20 @@
 class IOHprofiler_observer {
 public:
   
-  IOHprofiler_observer() {};
+  IOHprofiler_observer() {
+    observer_interval = 0;
+    observer_complete_flag = false;
+    observer_update_flag = true;
+ 
+    observer_time_points = {0};
+    evaluations_value1 = 1;
+    time_points_index = 0;
+    time_points_expi = 0;
+
+    evaluations_value2 = 1;
+    evaluations_expi = 0;
+
+  };
   ~IOHprofiler_observer() {};
 
   IOHprofiler_observer(const IOHprofiler_observer &) = delete;
@@ -29,11 +42,11 @@ public:
     this->observer_complete_flag = complete_flag;
   }
 
-  bool complete_status() {
+  bool complete_status() const {
     return observer_complete_flag;
   }
 
-  bool complete_trigger() {
+  bool complete_trigger() const {
   	return observer_complete_flag;
   }
   
@@ -41,7 +54,7 @@ public:
     this->observer_interval = interval;  
   }
 
-  bool interval_status() {
+  bool interval_status() const {
     if (observer_interval == 0) {
       return false;
     } else {
@@ -49,7 +62,7 @@ public:
     }
   }
 
-  bool interval_trigger(size_t evaluations) {
+  bool interval_trigger(size_t evaluations) const {
     if (observer_interval == 0) {
       return false;
     }
@@ -64,7 +77,7 @@ public:
     this->observer_update_flag = update_flag;
   }
 
-  bool update_status() {
+  bool update_status() const {
     return observer_update_flag;
   }
 
@@ -86,7 +99,7 @@ public:
     this->observer_number_of_evaluations = number_of_evaluations;
   }
 
-  bool time_points_status() {
+  bool time_points_status() const {
     if (this->observer_time_points.size() > 0) {
       if(!(this->observer_time_points.size() == 1 && this->observer_time_points[0] == 0)) {
         return true;
@@ -144,18 +157,18 @@ public:
   }
 
 private:
-  int observer_interval = 0; /// < variable for recording by a static interval.
-  bool observer_complete_flag = false; /// < variable for recording complete optimization process. 
-  bool observer_update_flag = true; /// < variable for recording when a better solution is found.
+  int observer_interval; /// < variable for recording by a static interval.
+  bool observer_complete_flag; /// < variable for recording complete optimization process. 
+  bool observer_update_flag; /// < variable for recording when a better solution is found.
  
-  std::vector<int> observer_time_points = {0}; /// < variables for recording at pre-defined points.
-  size_t evaluations_value1 = 1; /// < intermediate variables for calculating points with 'observer_time_points'.
-  size_t time_points_index = 0; /// < intermediate variables for calculating points with 'observer_time_points'.
-  int time_points_expi = 0; /// < intermediate variables for calculating points with 'observer_time_points'.
+  std::vector<int> observer_time_points; /// < variables for recording at pre-defined points.
+  size_t evaluations_value1; /// < intermediate variables for calculating points with 'observer_time_points'.
+  size_t time_points_index; /// < intermediate variables for calculating points with 'observer_time_points'.
+  int time_points_expi; /// < intermediate variables for calculating points with 'observer_time_points'.
 
   int observer_number_of_evaluations; /// < variables for recording with a pre-defined times in each exponential boxplot.
-  size_t evaluations_value2 = 1; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
-  int evaluations_expi = 0; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
+  size_t evaluations_value2; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
+  int evaluations_expi; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
 
   /// todo. Currently this is only for single objective optimization.
   double current_best_fitness;

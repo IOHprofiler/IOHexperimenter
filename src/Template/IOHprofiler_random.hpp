@@ -12,19 +12,9 @@
 
 #define IOH_PI 3.14159265359
 #define DEFAULT_SEED 1000
-/* OMS: mutators vs. accessors should be checked throughout; see example in l.137 where const is needed. */
 class IOHprofiler_random {
 public:
-  IOHprofiler_random() { /* OMS: The following two c'tors should be merged using a default uint32 */ 
-    uint32_t seed = DEFAULT_SEED;
-    for (int i = 0; i < IOHprofiler_LONG_LAG; ++i) {
-      x[i] = ((double)seed) / (double)(((uint64_t)1UL << 32) - 1);
-      seed = (uint32_t)1812433253UL * (seed ^ (seed >> 30)) + ((uint32_t)i + 1);
-    }
-    _seed_index = 0;
-  }
-
-  IOHprofiler_random(uint32_t seed) {
+  IOHprofiler_random(uint32_t seed = DEFAULT_SEED) {
     for (int i = 0; i < IOHprofiler_LONG_LAG; ++i) {
       x[i] = ((double)seed) / (double)(((uint64_t)1UL << 32) - 1);
       seed = (uint32_t)1812433253UL * (seed ^ (seed >> 30)) + ((uint32_t)i + 1);

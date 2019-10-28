@@ -23,9 +23,15 @@ static IOHprofiler_transformation transformation;
 template <class InputType> class IOHprofiler_problem 
 {
 public:
-  /* OMS: Why are these c'tors empty? Also, they could be merged using default values. */
-  IOHprofiler_problem() {};
-  IOHprofiler_problem(int instance_id, int dimension){};
+  IOHprofiler_problem(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+    problem_id = DEFAULT_PROBLEM_ID;
+    instance_id = DEFAULT_INSTANCE;
+    maximization_minimization_flag = 1; /// < set as maximization if flag = 1, otherwise minimization.
+    number_of_variables = DEFAULT_DIMENSION; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
+    optimalFound = false;
+    evaluations = 0;
+    best_so_far_raw_evaluations = 0;
+  };
   virtual ~IOHprofiler_problem(){};
 
   IOHprofiler_problem(const IOHprofiler_problem&) = delete;
@@ -37,9 +43,9 @@ public:
   ///
   /// The internal_evaluate function is to be used in evaluate function.
   /// This function must be decalred in derived function of new problems.
-  virtual std::vector<double> internal_evaluate_multi(const std::vector<InputType> &x) { /* OMS: accessor - should become const */ 
+  virtual std::vector<double> internal_evaluate_multi (const std::vector<InputType> &x) {
     std::vector<double> result;
-    printf("No multi evaluate function defined\n"); /* OMS: Usage of printf is inappropriate - please switch to cout (ostream) throughout the code*/
+    std::cout << "No multi evaluate function defined" << std::endl;
     return result;
   };
 
@@ -48,9 +54,9 @@ public:
   ///
   /// The internal_evaluate function is to be used in evaluate function.
   /// This function must be decalred in derived function of new problems.
-  virtual double internal_evaluate(const std::vector<InputType> &x) { /* OMS: accessor - should become const */
+  virtual double internal_evaluate (const std::vector<InputType> &x) {
     double result = -DBL_MAX;
-    printf("No evaluate function defined\n");
+    std::cout << "No evaluate function defined" << std::endl;
     return result;
   };
 
@@ -66,7 +72,7 @@ public:
   /// in this function.
   /// \param x A InputType vector of variables.
   /// \return A double vector of objectives.
-  std::vector<double> evaluate_multi(std::vector<InputType> x) { /* OMS: the argument should be passed by-ref (const) */
+  std::vector<double> evaluate_multi(std::vector<InputType> x) {
     ++this->evaluations;
 
     transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
@@ -96,7 +102,7 @@ public:
   /// in this function.
   /// \param x A InputType vector of variables.
   /// \return A double vector of objectives.
-  double evaluate(std::vector<InputType> x) { /* OMS: the argument should be passed by-ref (const) */ 
+  double evaluate(std::vector<InputType> x) {
     ++this->evaluations;
 
     transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
@@ -129,7 +135,7 @@ public:
   /// in this function.
   /// \param x A InputType vector of variables.
   /// \param y A double vector of objectives.
-  void evaluate_multi(std::vector<InputType> x, std::vector<double> &y) { /* OMS: the first argument should be passed by-ref (const) */
+  void evaluate_multi(std::vector<InputType> x, std::vector<double> &y) {
     ++this->evaluations;
 
     transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
@@ -160,7 +166,7 @@ public:
   /// in this function.
   /// \param x A InputType vector of variables.
   /// \param y A double vector of objectives.
-  void evaluate(std::vector<InputType> x, double &y) {/* OMS: the first argument should be passed by-ref (const) */
+  void evaluate(std::vector<InputType> x, double &y) {
     ++this->evaluations;
 
     transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
@@ -211,12 +217,13 @@ public:
   };
 /* OMS: the following function overloading is confusing - consider renaming one of them */
   /// \todo  To support constrained optimization.
-  virtual std::vector<double> constraints() { /* OMS: accessor ==> const */
+  virtual std::vector<double> constraints() {
     std::vector<double> con;
     printf("No constraints function defined\n");
     return con;
   };
-  virtual void constraints(std::vector<InputType> x, std::vector<double> c) { /* OMS: arguments should be passed by-ref (const) */
+
+  virtual void constraints(std::vector<InputType> x, std::vector<double> c) {
     printf("No constraints function defined\n");
   };
   
@@ -248,7 +255,7 @@ public:
   /// logger_info[2] best_so_far_precision
   /// logger_info[3] transformed_objective
   /// logger_info[4] best_so_far_transformed_objectives
-  std::vector<double> loggerCOCOInfo() { /* OMS: accessor ==> const */
+  std::vector<double> const loggerCOCOInfo() {
     std::vector<double> logger_info(5);
     logger_info[0] = (double)this->evaluations;
     logger_info[1] = this->transformed_objectives[0] - this->optimal[0];
@@ -267,7 +274,7 @@ public:
   /// logger_info[2] best_so_far_raw_objectives
   /// logger_info[3] transformed_objective
   /// logger_info[4] best_so_far_transformed_objectives
-  std::vector<double> loggerInfo() { /* OMS: accessor ==> const */
+  std::vector<double> const loggerInfo() {
     std::vector<double> logger_info(5);
     logger_info[0] = (double)this->evaluations;
     logger_info[1] = this->raw_objectives[0];
@@ -281,19 +288,19 @@ public:
   /// \fn IOHprofiler_hit_optimal()
   ///
   /// \brief Detect if the optimal have been found.
-  bool IOHprofiler_hit_optimal() { /* OMS: accessor ==> const */
+  bool IOHprofiler_hit_optimal() const {
     return this->optimalFound;
   }
 
-  int IOHprofiler_get_problem_id() { /* OMS: accessor ==> const */
+  int IOHprofiler_get_problem_id() const {
     return this->problem_id;
   };
 
-  void IOHprofiler_set_problem_id(int problem_id) {
+  void IOHprofiler_set_problem_id(int problem_id){
     this->problem_id = problem_id;
   };
   
-  int IOHprofiler_get_instance_id() { /* OMS: accessor ==> const */
+  int IOHprofiler_get_instance_id() const {
     return this->instance_id;
   };
   
@@ -301,14 +308,14 @@ public:
   ///
   /// To set instance_id of the problem. Since the optimal will be updated
   /// as instanced_id updated, calc_optimal() is revoked here.
-  /// \para instance_id 
+  /// \param instance_id 
   void IOHprofiler_set_instance_id(int instance_id) {
     this->instance_id = instance_id;
     this->prepare_problem();
     this->calc_optimal();
   };
 
-  std::string IOHprofiler_get_problem_name() { /* OMS: accessor ==> const */
+  std::string IOHprofiler_get_problem_name() const {
     return this->problem_name;
   };
 
@@ -316,7 +323,7 @@ public:
     this->problem_name = problem_name;
   };
 
-  std::string IOHprofiler_get_problem_type() { /* OMS: accessor ==> const */
+  std::string IOHprofiler_get_problem_type() const {
     return this->problem_type;
   };
 
@@ -324,7 +331,7 @@ public:
     this->problem_type = problem_type;
   };
 
-  std::vector<InputType> IOHprofiler_get_lowerbound() { /* OMS: accessor ==> const */
+  std::vector<InputType> IOHprofiler_get_lowerbound() const {
     return this->lowerbound;
   };
   
@@ -340,7 +347,7 @@ public:
     this->lowerbound = lowerbound;
   };
 
-  std::vector<InputType> IOHprofiler_get_upperbound() { /* OMS: accessor ==> const */
+  std::vector<InputType> IOHprofiler_get_upperbound() const {
     return this->upperbound;
   };
 
@@ -356,7 +363,7 @@ public:
     this->upperbound = upperbound;
   };
 
-  std::vector<int> IOHprofiler_get_evaluate_int_info() { /* OMS: accessor ==> const */
+  std::vector<int> IOHprofiler_get_evaluate_int_info() const {
     return this->evaluate_int_info;
   };
 
@@ -372,7 +379,7 @@ public:
   //  this->evaluate_double_info = evaluate_double_info;
   //};
  
-  int IOHprofiler_get_number_of_variables() { /* OMS: accessor ==> const */
+  int IOHprofiler_get_number_of_variables() const {
     return this->number_of_variables;
   };
 
@@ -381,7 +388,7 @@ public:
   /// To set number_of_variables of the problem. When the number_of_variables is updated,
   /// best_variables, lowerbound, upperbound, and optimal need to be updated as well.
   ///
-  /// \para number_of_variables
+  /// \param number_of_variables
   void IOHprofiler_set_number_of_variables(int number_of_variables) {
     this->number_of_variables = number_of_variables;
     if (this->best_variables.size() != 0) {
@@ -403,7 +410,7 @@ public:
   /// best_variables, lowerbound, upperbound, and optimal need to be updated as well. In case 
   /// the best value for each bit is not staic, another input 'best_variables' is supplied.
   ///
-  /// \para number_of_variables, best_variables
+  /// \param number_of_variables, best_variables
   void IOHprofiler_set_number_of_variables(int number_of_variables, const std::vector<InputType> &best_variables) {
     this->number_of_variables = number_of_variables;
     this->best_variables = best_variables;
@@ -417,7 +424,7 @@ public:
     this->calc_optimal();
   };
 
-  int IOHprofiler_get_number_of_objectives() { /* OMS: accessor ==> const */
+  int IOHprofiler_get_number_of_objectives() const {
     return this->number_of_objectives;
   };
 
@@ -431,42 +438,42 @@ public:
     this->optimal = std::vector<double>(this->number_of_objectives);
   };
 
-  std::vector<double> IOHprofiler_get_raw_objectives() { /* OMS: accessor ==> const */
+  std::vector<double> IOHprofiler_get_raw_objectives() const {
     return this->raw_objectives;
   };
 
-  std::vector<double> IOHprofiler_get_transformed_objectives() { /* OMS: accessor ==> const */
+  std::vector<double> IOHprofiler_get_transformed_objectives() const {
     return this->transformed_objectives;
   };
 
-  int IOHprofiler_get_transformed_number_of_variables() { /* OMS: accessor ==> const */
+  int IOHprofiler_get_transformed_number_of_variables() const {
     return this->transformed_number_of_variables;
   };
 
-  std::vector<InputType> IOHprofiler_get_transformed_variables() { /* OMS: accessor ==> const */
+  std::vector<InputType> IOHprofiler_get_transformed_variables() const {
     return this->transformed_variables;
   };
 
-  std::vector<InputType> IOHprofiler_get_best_variables() { /* OMS: accessor ==> const */
+  std::vector<InputType> IOHprofiler_get_best_variables() const {
     return this->best_variables;
   };
 
-  void IOHprofiler_set_best_variables(InputType best_variables) { /* OMS: argument should be passed by-ref (const) */
+  void IOHprofiler_set_best_variables(const InputType best_variables) {
     this->best_variables.clear();
     for (int i = 0; i < this->number_of_variables; ++i) {
       this->best_variables.push_back(best_variables);
     }
   };
 
-  void IOHprofiler_set_best_variables(std::vector<InputType> best_variables) { /* OMS: argument should be passed by-ref (const) */
+  void IOHprofiler_set_best_variables(const std::vector<InputType> &best_variables) {
     this->best_variables = best_variables;
   };
 
-  std::vector<double> IOHprofiler_get_optimal() {
+  std::vector<double> IOHprofiler_get_optimal() const {
     return this->optimal;
   };
 
-  void IOHprofiler_set_optimal(double optimal) {
+  void IOHprofiler_set_optimal(const double optimal) {
     std::vector<double>().swap(this->optimal);
     this->optimal.reserve(this->number_of_objectives);
     for (int i = 0; i < this->number_of_objectives; ++i) {
@@ -474,7 +481,7 @@ public:
     }
   };
 
-  void IOHprofiler_set_optimal(std::vector<double> optimal) {
+  void IOHprofiler_set_optimal(const std::vector<double> &optimal) {
     this->optimal = optimal;
   };
 
@@ -486,24 +493,24 @@ public:
     this->optimal = this->evaluate(this->best_variables);
   };
 
-  int IOHprofiler_get_evaluations() {
+  int IOHprofiler_get_evaluations() const {
     return this->evaluations;
   };
 
-  std::vector<double> IOHprofiler_get_best_so_far_raw_objectives() {
+  std::vector<double> IOHprofiler_get_best_so_far_raw_objectives() const {
     return this->best_so_far_raw_objectives;
   };
-  int IOHprofiler_get_best_so_far_raw_evaluations() {
+  int IOHprofiler_get_best_so_far_raw_evaluations() const {
     return this-> best_so_far_raw_evaluations;
   };
-  std::vector<double> IOHprofiler_get_best_so_far_transformed_objectives(){
+  std::vector<double> IOHprofiler_get_best_so_far_transformed_objectives() const {
     return this->best_so_far_transformed_objectives;
   };
-  int IOHprofiler_get_best_so_far_transformed_evaluations() {
+  int IOHprofiler_get_best_so_far_transformed_evaluations() const {
     return this->best_so_far_transformed_evaluations;
   };
 
-  int IOHprofiler_get_optimization_type() {
+  int IOHprofiler_get_optimization_type() const {
     return this->maximization_minimization_flag;
   }
 
@@ -516,14 +523,13 @@ public:
   }
 
 private:
-  /* OMS: All the following assignments are misplaced - should appear in the c'tors */
-  int problem_id = DEFAULT_PROBLEM_ID; /// < problem id, assigned as being added into a suite.
-  int instance_id = DEFAULT_INSTANCE; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
+  int problem_id; /// < problem id, assigned as being added into a suite.
+  int instance_id; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
   
   std::string problem_name;
   std::string problem_type;   /// todo. make it as enum.
 
-  int maximization_minimization_flag = 1; /// < set as maximization if flag = 1, otherwise minimization.
+  int maximization_minimization_flag; /// < set as maximization if flag = 1, otherwise minimization.
   
   std::vector<InputType> lowerbound;
   std::vector<InputType> upperbound;
@@ -531,13 +537,13 @@ private:
   ///std::vector<int> evaluate_int_info; /// < common used info for evaluating variables, integer type.
   ///std::vector<double> evaluate_double_info; /// < common used info for evaluating variables, double type.
 
-  std::size_t number_of_variables = DEFAULT_DIMENSION; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
+  std::size_t number_of_variables; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
   std::size_t number_of_objectives;
 
   std::vector<InputType> best_variables; /// todo. comments, rename?
   std::vector<InputType> best_transformed_variables;
   std::vector<double> optimal; /// todo. How to evluate distance to optima. In global optima case, which optimum to be recorded.
-  bool optimalFound = false;
+  bool optimalFound;
 
   std::vector<double> raw_objectives; /// < to record objectives before transformation.
   std::vector<double> transformed_objectives; /// < to record objectives after transformation.
@@ -548,10 +554,10 @@ private:
   /// todo. constrainted optimization.
   std::size_t number_of_constraints;
 
-  std::size_t evaluations = 0; /// < to record optimization process. 
+  std::size_t evaluations; /// < to record optimization process. 
   /// todo. rename number_of_evaluations.
   std::vector<double> best_so_far_raw_objectives; /// < to record optimization process.
-  int best_so_far_raw_evaluations = 0; /// < to record optimization process.
+  int best_so_far_raw_evaluations; /// < to record optimization process.
   std::vector<double> best_so_far_transformed_objectives; /// < to record optimization process.
   int best_so_far_transformed_evaluations; /// < to record optimization process.
 };
