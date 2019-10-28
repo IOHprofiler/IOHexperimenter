@@ -12,14 +12,7 @@
 
 class LABS : public IOHprofiler_problem<int> {
 public:
-  LABS() {
-    IOHprofiler_set_problem_name("LABS");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-  }
-  LABS(int instance_id, int dimension) {
+  LABS(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("LABS");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
@@ -67,12 +60,7 @@ public:
     result = (double)(n*n)/2.0/result;
     return (double)result;
   };
-
-  static LABS * createInstance() {
-    return new LABS();
-  };
-
-  static LABS * createInstance(int instance_id, int dimension) {
+  static LABS * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LABS(instance_id, dimension);
   };
 };

@@ -14,16 +14,7 @@
 
 class Ellipsoid : public IOHprofiler_problem<double> {
 public:
-  Ellipsoid() {
-    IOHprofiler_set_problem_name("Ellipsoid");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Ellipsoid(int instance_id, int dimension) {
+  Ellipsoid(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Ellipsoid");
     IOHprofiler_set_problem_type("bbob");
@@ -71,12 +62,8 @@ public:
 
     return result[0];
   };
-  
-  static Ellipsoid * createInstance() {
-    return new Ellipsoid();
-  };
 
-  static Ellipsoid * createInstance(int instance_id, int dimension) {
+  static Ellipsoid * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Ellipsoid(instance_id, dimension);
   };
 };

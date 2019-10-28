@@ -14,16 +14,7 @@
 
 class Sphere : public IOHprofiler_problem<double> {
 public:
-  Sphere() {
-    IOHprofiler_set_problem_name("Sphere");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Sphere(int instance_id, int dimension) {
+  Sphere(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Sphere");
     IOHprofiler_set_problem_type("bbob");
@@ -67,12 +58,8 @@ public:
     
     return result[0];
   };
-  
-  static Sphere * createInstance() {
-    return new Sphere();
-  };
 
-  static Sphere * createInstance(int instance_id, int dimension) {
+  static Sphere * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Sphere(instance_id, dimension);
   };
 };

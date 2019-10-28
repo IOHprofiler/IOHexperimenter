@@ -14,16 +14,7 @@
 
 class LeadingOnes_Dummy2 : public IOHprofiler_problem<int> {
 public:
-   LeadingOnes_Dummy2() {
-    IOHprofiler_set_problem_name("LeadingOnes_Dummy2");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
-    IOHprofiler_set_number_of_objectives(1);
-  
-  }
-  LeadingOnes_Dummy2(int instance_id, int dimension) {
+  LeadingOnes_Dummy2(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("LeadingOnes_Dummy2");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
@@ -59,11 +50,7 @@ public:
     return (double)result;
   };
 
-  static LeadingOnes_Dummy2 * createInstance() {
-    return new LeadingOnes_Dummy2();
-  };
-
-  static LeadingOnes_Dummy2 * createInstance(int instance_id, int dimension) {
+  static LeadingOnes_Dummy2 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LeadingOnes_Dummy2(instance_id, dimension);
   };
 };

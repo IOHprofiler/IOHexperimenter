@@ -38,16 +38,7 @@ static int f_gallagher_compare_doubles1(const void *a, const void *b) {
 
 class Gallagher101 : public IOHprofiler_problem<double> {
 public:
-  Gallagher101() {
-    IOHprofiler_set_problem_name("Gallagher101");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Gallagher101(int instance_id, int dimension) {
+  Gallagher101(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Gallagher101");
     IOHprofiler_set_problem_type("bbob");
@@ -229,12 +220,8 @@ public:
    
     return result[0];
   };
-  
-  static Gallagher101 * createInstance() {
-    return new Gallagher101();
-  };
 
-  static Gallagher101 * createInstance(int instance_id, int dimension) {
+  static Gallagher101 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Gallagher101(instance_id, dimension);
   };
 };

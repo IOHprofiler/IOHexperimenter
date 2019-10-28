@@ -12,16 +12,7 @@
 
 class OneMax : public IOHprofiler_problem<int> {
 public:
-  OneMax() {
-    IOHprofiler_set_problem_name("OneMax");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
-  }
-
-  OneMax(int instance_id, int dimension) {
+  OneMax(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("OneMax");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
@@ -49,11 +40,7 @@ public:
     return (double)result;
   };
 
-  static OneMax * createInstance() {
-    return new OneMax();
-  };
-
-  static OneMax * createInstance(int instance_id, int dimension) {
+  static OneMax * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new OneMax(instance_id, dimension);
   };
 };

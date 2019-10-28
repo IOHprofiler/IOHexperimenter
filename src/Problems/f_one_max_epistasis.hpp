@@ -14,15 +14,8 @@
 
 class OneMax_Epistasis : public IOHprofiler_problem<int> {
 public:
-  OneMax_Epistasis() {
-    IOHprofiler_set_problem_name("OneMax_Epistasis");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-  }
 
-  OneMax_Epistasis(int instance_id, int dimension) {
+  OneMax_Epistasis(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
 
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("OneMax_Epistasis");
@@ -50,11 +43,7 @@ public:
     return (double)result;
   };
 
-  static OneMax_Epistasis * createInstance() {
-    return new OneMax_Epistasis();
-  };
-
-  static OneMax_Epistasis * createInstance(int instance_id, int dimension) {
+  static OneMax_Epistasis * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new OneMax_Epistasis(instance_id, dimension);
   };
 };

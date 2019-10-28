@@ -12,15 +12,8 @@
 
 class Ising_Triangle : public IOHprofiler_problem<int> {
 public:
-  Ising_Triangle() {
-    IOHprofiler_set_problem_name("Ising_Triangle");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
-  }
-  Ising_Triangle(int instance_id, int dimension) {
+
+  Ising_Triangle(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
 
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Ising_Triangle");
@@ -65,11 +58,7 @@ public:
     return (double)result;
   };
 
-  static Ising_Triangle * createInstance() {
-    return new Ising_Triangle();
-  };
-
-  static Ising_Triangle * createInstance(int instance_id, int dimension) {
+  static Ising_Triangle * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Ising_Triangle(instance_id, dimension);
   };
 };

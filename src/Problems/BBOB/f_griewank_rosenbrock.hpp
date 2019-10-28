@@ -14,16 +14,7 @@
 
 class Griewank_RosenBrock : public IOHprofiler_problem<double> {
 public:
-  Griewank_RosenBrock() {
-    IOHprofiler_set_problem_name("Griewank_RosenBrock");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(1);
-    IOHprofiler_set_as_minimization();
-  }
-  Griewank_RosenBrock(int instance_id, int dimension) {
+  Griewank_RosenBrock(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Griewank_RosenBrock");
     IOHprofiler_set_problem_type("bbob");
@@ -106,12 +97,8 @@ public:
 
     return result[0];
   };
-  
-  static Griewank_RosenBrock * createInstance() {
-    return new Griewank_RosenBrock();
-  };
 
-  static Griewank_RosenBrock * createInstance(int instance_id, int dimension) {
+  static Griewank_RosenBrock * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Griewank_RosenBrock(instance_id, dimension);
   };
 };

@@ -14,16 +14,7 @@
 
 class Sharp_Ridge : public IOHprofiler_problem<double> {
 public:
-  Sharp_Ridge() {
-    IOHprofiler_set_problem_name("Sharp_Ridge");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Sharp_Ridge(int instance_id, int dimension) {
+  Sharp_Ridge(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Sharp_Ridge");
     IOHprofiler_set_problem_type("bbob");
@@ -98,12 +89,8 @@ public:
 
     return result[0];
   };
-  
-  static Sharp_Ridge * createInstance() {
-    return new Sharp_Ridge();
-  };
 
-  static Sharp_Ridge * createInstance(int instance_id, int dimension) {
+  static Sharp_Ridge * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Sharp_Ridge(instance_id, dimension);
   };
 };

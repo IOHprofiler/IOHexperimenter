@@ -13,16 +13,8 @@
 
 class OneMax_Ruggedness1 : public IOHprofiler_problem<int> {
 public:
-  OneMax_Ruggedness1() {
-    IOHprofiler_set_problem_name("OneMax_Ruggedness1");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
-  }
 
-  OneMax_Ruggedness1(int instance_id, int dimension) {
+  OneMax_Ruggedness1(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
 
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("OneMax_Ruggedness1");
@@ -50,12 +42,7 @@ public:
     result = ruggedness1(result,n);
     return (double)result;
   };
-
-  static OneMax_Ruggedness1 * createInstance() {
-    return new OneMax_Ruggedness1();
-  };
-
-  static OneMax_Ruggedness1 * createInstance(int instance_id, int dimension) {
+  static OneMax_Ruggedness1 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new OneMax_Ruggedness1(instance_id, dimension);
   };
 };

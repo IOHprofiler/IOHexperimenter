@@ -12,15 +12,7 @@
 
 class MIS : public IOHprofiler_problem<int> {
 public:
-  MIS() {
-    IOHprofiler_set_problem_name("MIS");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-  }
-  
-  MIS(int instance_id, int dimension) {
+  MIS(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("MIS");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
@@ -82,11 +74,7 @@ double internal_evaluate(const std::vector<int> &x) {
     return (double)result;
   };
 
-  static MIS * createInstance() {
-    return new MIS();
-  };
-
-  static MIS * createInstance(int instance_id, int dimension) {
+  static MIS * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new MIS(instance_id, dimension);
   };
 };

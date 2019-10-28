@@ -14,16 +14,7 @@
 
 class Discus : public IOHprofiler_problem<double> {
 public:
-  Discus() {
-    IOHprofiler_set_problem_name("Discus");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0.0);
-    IOHprofiler_set_as_minimization();
-  }
-  Discus(int instance_id, int dimension) {
+  Discus(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Discus");
     IOHprofiler_set_problem_type("bbob");
@@ -83,11 +74,7 @@ public:
     return result[0];
   };
   
-  static Discus * createInstance() {
-    return new Discus();
-  };
-
-  static Discus * createInstance(int instance_id, int dimension) {
+  static Discus * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Discus(instance_id, dimension);
   };
 };

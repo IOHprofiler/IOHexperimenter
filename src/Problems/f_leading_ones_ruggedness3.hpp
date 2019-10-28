@@ -13,16 +13,7 @@
 
 class LeadingOnes_Ruggedness3 : public IOHprofiler_problem<int> {
 public:
-   LeadingOnes_Ruggedness3() {
-    IOHprofiler_set_problem_name("LeadingOnes_Ruggedness3");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
-  }
-
-  LeadingOnes_Ruggedness3(int instance_id, int dimension) {
+  LeadingOnes_Ruggedness3(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
 
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("LeadingOnes_Ruggedness3");
@@ -60,11 +51,7 @@ public:
     return (double)result;
   };
 
-  static LeadingOnes_Ruggedness3 * createInstance() {
-    return new LeadingOnes_Ruggedness3();
-  };
-
-  static LeadingOnes_Ruggedness3 * createInstance(int instance_id, int dimension) {
+  static LeadingOnes_Ruggedness3 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LeadingOnes_Ruggedness3(instance_id, dimension);
   };
 };

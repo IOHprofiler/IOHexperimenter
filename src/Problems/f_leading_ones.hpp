@@ -13,15 +13,7 @@
 
 class LeadingOnes : public IOHprofiler_problem<int> {
 public:
-   LeadingOnes() {
-    IOHprofiler_set_problem_name("LeadingOnes");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
-  }
-  LeadingOnes(int instance_id, int dimension) {
+  LeadingOnes(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("LeadingOnes");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
@@ -51,12 +43,8 @@ public:
     }
     return (double)result;
   };
-
-  static LeadingOnes * createInstance() {
-    return new LeadingOnes();
-  };
-
-  static LeadingOnes * createInstance(int instance_id, int dimension) {
+  
+  static LeadingOnes * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LeadingOnes(instance_id, dimension);
   };
 };

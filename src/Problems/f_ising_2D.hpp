@@ -12,16 +12,7 @@
 
 class Ising_2D : public IOHprofiler_problem<int> {
 public:
-  Ising_2D() {
-    IOHprofiler_set_problem_name("Ising_2D");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
-  }
-
-  Ising_2D(int instance_id, int dimension) {
+  Ising_2D(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Ising_2D");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
@@ -69,11 +60,7 @@ public:
     return (double)result;
   };
 
-  static Ising_2D * createInstance() {
-    return new Ising_2D();
-  };
-
-  static Ising_2D * createInstance(int instance_id, int dimension) {
+  static Ising_2D * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)  {
     return new Ising_2D(instance_id, dimension);
   };
 };

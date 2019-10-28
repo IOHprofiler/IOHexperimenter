@@ -14,16 +14,7 @@
 
 class Rastrigin : public IOHprofiler_problem<double> {
 public:
-  Rastrigin() {
-    IOHprofiler_set_problem_name("Rastrigin");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Rastrigin(int instance_id, int dimension) {
+  Rastrigin(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Rastrigin");
     IOHprofiler_set_problem_type("bbob");
@@ -72,12 +63,8 @@ public:
     result[0] = 10.0 * ((double) (long) n - sum1) + sum2;
     return result[0];
   };
-  
-  static Rastrigin * createInstance() {
-    return new Rastrigin();
-  };
 
-  static Rastrigin * createInstance(int instance_id, int dimension) {
+  static Rastrigin * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Rastrigin(instance_id, dimension);
   };
 };

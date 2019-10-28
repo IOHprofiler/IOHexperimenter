@@ -14,15 +14,7 @@
 
 class LeadingOnes_Epistasis : public IOHprofiler_problem<int> {
 public:
-   LeadingOnes_Epistasis() {
-
-    IOHprofiler_set_problem_name("LeadingOnes_Epistasis");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-  }
-  LeadingOnes_Epistasis(int instance_id, int dimension) {
+  LeadingOnes_Epistasis(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("LeadingOnes_Epistasis");
@@ -53,12 +45,8 @@ public:
     }
     return (double)result;
   };
-
-  static LeadingOnes_Epistasis * createInstance() {
-    return new LeadingOnes_Epistasis();
-  };
-
-  static LeadingOnes_Epistasis * createInstance(int instance_id, int dimension) {
+  
+  static LeadingOnes_Epistasis * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LeadingOnes_Epistasis(instance_id, dimension);
   };
 };

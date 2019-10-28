@@ -14,16 +14,7 @@
 
 class Schaffers1000 : public IOHprofiler_problem<double> {
 public:
-  Schaffers1000() {
-    IOHprofiler_set_problem_name("Schaffers1000");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Schaffers1000(int instance_id, int dimension) {
+  Schaffers1000(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Schaffers1000");
     IOHprofiler_set_problem_type("bbob");
@@ -106,11 +97,7 @@ public:
     return result[0];
   };
   
-  static Schaffers1000 * createInstance() {
-    return new Schaffers1000();
-  };
-
-  static Schaffers1000 * createInstance(int instance_id, int dimension) {
+  static Schaffers1000 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Schaffers1000(instance_id, dimension);
   };
 };

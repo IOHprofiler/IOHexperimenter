@@ -14,16 +14,7 @@
 
 class Linear_Slope : public IOHprofiler_problem<double> {
 public:
-  Linear_Slope() {
-    IOHprofiler_set_problem_name("Linear_Slope");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Linear_Slope(int instance_id, int dimension) {
+  Linear_Slope(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Linear_Slope");
     IOHprofiler_set_problem_type("bbob");
@@ -91,12 +82,8 @@ public:
 
     return result[0];
   };
-  
-  static Linear_Slope * createInstance() {
-    return new Linear_Slope();
-  };
 
-  static Linear_Slope * createInstance(int instance_id, int dimension) {
+  static Linear_Slope * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Linear_Slope(instance_id, dimension);
   };
 };

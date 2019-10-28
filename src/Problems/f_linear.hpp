@@ -12,16 +12,7 @@
 
 class Linear : public IOHprofiler_problem<int> {
 public:
-  Linear() {
-    IOHprofiler_set_problem_name("Linear");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
-  }
-  
-  Linear(int instance_id, int dimension) {
+  Linear(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
 
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Linear");
@@ -49,11 +40,7 @@ public:
     return (double)result;
   };
 
-  static Linear * createInstance() {
-    return new Linear();
-  };
-
-  static Linear * createInstance(int instance_id, int dimension) {
+  static Linear * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Linear(instance_id, dimension);
   };
 };

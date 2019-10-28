@@ -14,16 +14,7 @@
 
 class OneMax_Neutrality : public IOHprofiler_problem<int> {
 public:
-  OneMax_Neutrality() {
-    IOHprofiler_set_problem_name("OneMax_Neutrality");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);  
-  }
-
-  OneMax_Neutrality(int instance_id, int dimension) {
+  OneMax_Neutrality(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
 
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("OneMax_Neutrality");
@@ -53,11 +44,7 @@ public:
     return (double)result;
   };
 
-  static OneMax_Neutrality * createInstance() {
-    return new OneMax_Neutrality();
-  };
-
-  static OneMax_Neutrality * createInstance(int instance_id, int dimension) {
+  static OneMax_Neutrality * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new OneMax_Neutrality(instance_id, dimension);
   };
 };
