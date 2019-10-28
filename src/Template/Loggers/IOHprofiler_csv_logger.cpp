@@ -271,8 +271,14 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
 
 void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension, std::string problem_name) {
   std::string titleflag = "";
-  
-  if(problem_id != this->last_problem_id) {
+  std::string optimization_type;
+  if (this->maximization_minimization_flag == 1) {
+    optimization_type = "T";
+  } else {
+    optimization_type = "F";
+  }
+
+  if (problem_id != this->last_problem_id) {
     this->infoFile.close();
     std::string infoFile_name = this->output_directory + IOHprofiler_path_separator 
                           + this->folder_name + IOHprofiler_path_separator
@@ -284,12 +290,12 @@ void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension, std::string
     }
     this->infoFile.open(infoFile_name.c_str(),std::ofstream::out | std::ofstream::app);
     this->infoFile << titleflag;
-    this->infoFile << "suite = " << this->suite_name << ", funcId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
+    this->infoFile << "suite = \"" << this->suite_name << "\", funcId = " << problem_id << ", DIM = " << dimension << ", Maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"\n%\n";
     this->infoFile << "data_f" << problem_id << "_" << problem_name << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << ".dat";     
     this->last_problem_id = problem_id;
     this->last_dimension = dimension;
   } else if (dimension != this->last_dimension) {
-    this->infoFile << "\nsuite = " << this->suite_name << ", funcId = " << problem_id << ", DIM = " << dimension << ", algId = " << this->algorithm_name << ", algInfo = " << this->algorithm_info << "\n%\n";
+    this->infoFile << "\nsuite = \"" << this->suite_name << "\", funcId = " << problem_id << ", DIM = " << dimension << ", Maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"\n%\n";
     this->infoFile << "data_f" << problem_id << "_" << problem_name << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << ".dat";    
     this->last_problem_id = problem_id;
     this->last_dimension = dimension;
