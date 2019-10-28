@@ -301,7 +301,7 @@ void IOHprofiler_csv_logger::write_info(int instance, double best_y, double best
   if (!infoFile.is_open()) {
     IOH_error("write_info(): writing info into unopened infoFile");
   }
-  infoFile << ", " << instance << ":" << evaluations << "|" << best_transformed_y; 
+  infoFile << ", " << instance << ":" << evaluations << "|" << best_y; 
 
   bool need_write = (evaluations != last_evaluations);
   if (need_write) {
