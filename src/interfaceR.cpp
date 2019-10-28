@@ -380,6 +380,88 @@ int cpp_get_evaluations() {
   }
 }
 
+//[[Rcpp::export]]
+double cpp_get_optimal() {
+  if (currentSuiteName == "PBO" && currentIntSuite != nullptr) {
+    if (currentIntProblem == nullptr) {
+      Rcout << "Error: No problem exist!\n";
+      return -1;
+    } else {
+      return currentIntProblem->IOHprofiler_get_optimal()[0];
+    }
+  } else if (currentSuiteName == "BBOB" && currentDoubleSuite != nullptr) {
+    if (currentDoubleProblem == nullptr) {
+      Rcout << "Error: No problem exist!\n";
+      return -1;
+    } else {
+      return currentDoubleProblem->IOHprofiler_get_optimal()[0];
+    }
+  } else {
+    Rcout << "Error: No problem exist!\n";
+    return -1;
+  }
+}
+
+//[[Rcpp::export]]
+NumericVector cpp_get_double_upper_bounds() {
+  if (currentSuiteName == "BBOB" && currentDoubleSuite != nullptr) {
+    if (currentDoubleProblem == nullptr) {
+      Rcout << "Error: No problem exist!\n";
+      return -1;
+    } else {
+      return wrap(currentDoubleProblem->IOHprofiler_get_upperbound());
+    }
+  } else {
+    Rcout << "Error: No problem exist!\n";
+    return NULL;
+  }
+} 
+
+//[[Rcpp::export]]
+NumericVector cpp_get_double_lower_bounds() {
+  if (currentSuiteName == "BBOB" && currentDoubleSuite != nullptr) {
+    if (currentDoubleProblem == nullptr) {
+      Rcout << "Error: No problem exist!\n";
+      return -1;
+    } else {
+      return wrap(currentDoubleProblem->IOHprofiler_get_lowerbound());
+    }
+  } else {
+    Rcout << "Error: No problem exist!\n";
+    return NULL;
+  }
+} 
+
+//[[Rcpp::export]]
+IntegerVector cpp_get_int_upper_bounds() {
+  if (currentSuiteName == "PBO" && currentIntSuite != nullptr) {
+    if (currentIntProblem == nullptr) {
+      Rcout << "Error: No problem exist!\n";
+      return -1;
+    } else {
+      return wrap(currentIntProblem->IOHprofiler_get_upperbound());
+    }
+  } else {
+    Rcout << "Error: No problem exist!\n";
+    return NULL;
+  }
+} 
+
+//[[Rcpp::export]]
+IntegerVector cpp_get_int_lower_bounds() {
+  if (currentSuiteName == "PBO" && currentIntSuite != nullptr) {
+    if (currentIntProblem == nullptr) {
+      Rcout << "Error: No problem exist!\n";
+      return -1;
+    } else {
+      return wrap(currentIntProblem->IOHprofiler_get_lowerbound());
+    }
+  } else {
+    Rcout << "Error: No problem exist!\n";
+    return NULL;
+  }
+} 
+
 
 void cpp_clear_int_problem() {
   currentIntProblem = nullptr;
