@@ -77,6 +77,30 @@ cpp_get_evaluations <- function() {
     .Call('_IOHexperimenter_cpp_get_evaluations', PACKAGE = 'IOHexperimenter')
 }
 
+cpp_get_optimal <- function() {
+    .Call('_IOHexperimenter_cpp_get_optimal', PACKAGE = 'IOHexperimenter')
+}
+
+cpp_get_double_upper_bounds <- function() {
+    .Call('_IOHexperimenter_cpp_get_double_upper_bounds', PACKAGE = 'IOHexperimenter')
+}
+
+cpp_get_double_lower_bounds <- function() {
+    .Call('_IOHexperimenter_cpp_get_double_lower_bounds', PACKAGE = 'IOHexperimenter')
+}
+
+cpp_get_int_upper_bounds <- function() {
+    .Call('_IOHexperimenter_cpp_get_int_upper_bounds', PACKAGE = 'IOHexperimenter')
+}
+
+cpp_get_int_lower_bounds <- function() {
+    .Call('_IOHexperimenter_cpp_get_int_lower_bounds', PACKAGE = 'IOHexperimenter')
+}
+
+cpp_get_optimization_type <- function() {
+    .Call('_IOHexperimenter_cpp_get_optimization_type', PACKAGE = 'IOHexperimenter')
+}
+
 cpp_clear_problem <- function() {
     invisible(.Call('_IOHexperimenter_cpp_clear_problem', PACKAGE = 'IOHexperimenter'))
 }

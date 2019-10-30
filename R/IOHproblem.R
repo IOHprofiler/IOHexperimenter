@@ -37,7 +37,7 @@ as.character.IOHproblem <- function(x, ...) {
 #' exp <- IOHexperimenter()
 #' p <- next_problem(exp)
 next_problem <- function(experimenter) {
-  if (class(experimenter) != "IOHexperimenter")
+  if (!"IOHexperimenter" %in% class(experimenter))
     stop("Please ensure a valid IOHexperimenter object is provided!")
   
   ans <- cpp_get_next_problem()
@@ -66,11 +66,14 @@ next_problem <- function(experimenter) {
       function_id = ans$problem,
       instance = ans$instance,
       suite = experimenter$suite,
-      # fopt = cpp_get_fopt(),
-      # xopt = cpp_get_xopt(),
-      # lbound = cpp_get_lbound(),
-      # ubound = cpp_get_ubound(),
-      # maximization = cpp_get_maximization(),
+      fopt = cpp_get_optimal(),
+      lbound = if (experimenter$suite == "PBO")
+                  cpp_get_int_lower_bounds()
+               else cpp_get_double_lower_bounds(),
+      ubound = if (experimenter$suite == "PBO")
+                  cpp_get_int_upper_bounds()
+               else cpp_get_double_upper_bounds(),
+      maximization = (cpp_get_optimization_type() == 1),
       params.track = experimenter$param.track,
       obj_func = function(x) {
         if (is.null(dim(x))) x <- t(x)

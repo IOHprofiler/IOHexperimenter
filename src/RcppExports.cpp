@@ -208,6 +208,66 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_get_optimal
+double cpp_get_optimal();
+RcppExport SEXP _IOHexperimenter_cpp_get_optimal() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_optimal());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_double_upper_bounds
+NumericVector cpp_get_double_upper_bounds();
+RcppExport SEXP _IOHexperimenter_cpp_get_double_upper_bounds() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_double_upper_bounds());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_double_lower_bounds
+NumericVector cpp_get_double_lower_bounds();
+RcppExport SEXP _IOHexperimenter_cpp_get_double_lower_bounds() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_double_lower_bounds());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_int_upper_bounds
+IntegerVector cpp_get_int_upper_bounds();
+RcppExport SEXP _IOHexperimenter_cpp_get_int_upper_bounds() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_int_upper_bounds());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_int_lower_bounds
+IntegerVector cpp_get_int_lower_bounds();
+RcppExport SEXP _IOHexperimenter_cpp_get_int_lower_bounds() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_int_lower_bounds());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_optimization_type
+int cpp_get_optimization_type();
+RcppExport SEXP _IOHexperimenter_cpp_get_optimization_type() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_optimization_type());
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_clear_problem
 void cpp_clear_problem();
 RcppExport SEXP _IOHexperimenter_cpp_clear_problem() {
@@ -256,6 +316,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_IOHexperimenter_cpp_set_parameters_value", (DL_FUNC) &_IOHexperimenter_cpp_set_parameters_value, 1},
     {"_IOHexperimenter_cpp_is_target_hit", (DL_FUNC) &_IOHexperimenter_cpp_is_target_hit, 0},
     {"_IOHexperimenter_cpp_get_evaluations", (DL_FUNC) &_IOHexperimenter_cpp_get_evaluations, 0},
+    {"_IOHexperimenter_cpp_get_optimal", (DL_FUNC) &_IOHexperimenter_cpp_get_optimal, 0},
+    {"_IOHexperimenter_cpp_get_double_upper_bounds", (DL_FUNC) &_IOHexperimenter_cpp_get_double_upper_bounds, 0},
+    {"_IOHexperimenter_cpp_get_double_lower_bounds", (DL_FUNC) &_IOHexperimenter_cpp_get_double_lower_bounds, 0},
+    {"_IOHexperimenter_cpp_get_int_upper_bounds", (DL_FUNC) &_IOHexperimenter_cpp_get_int_upper_bounds, 0},
+    {"_IOHexperimenter_cpp_get_int_lower_bounds", (DL_FUNC) &_IOHexperimenter_cpp_get_int_lower_bounds, 0},
+    {"_IOHexperimenter_cpp_get_optimization_type", (DL_FUNC) &_IOHexperimenter_cpp_get_optimization_type, 0},
     {"_IOHexperimenter_cpp_clear_problem", (DL_FUNC) &_IOHexperimenter_cpp_clear_problem, 0},
     {"_IOHexperimenter_cpp_clear_suite", (DL_FUNC) &_IOHexperimenter_cpp_clear_suite, 0},
     {"_IOHexperimenter_cpp_clear_logger", (DL_FUNC) &_IOHexperimenter_cpp_clear_logger, 0},

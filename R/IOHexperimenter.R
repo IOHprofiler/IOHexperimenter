@@ -15,7 +15,7 @@ utils::globalVariables(c("."))
     IOHexperimenter.idat = 0,
     IOHexperimenter.tdat = 0,
     IOHexperimenter.cdat = F,
-    IOHexperimenter.dat = T,
+    IOHexperimenter.dat = T
   )
   toset <- !(names(op.IOHexperimenter) %in% names(op))
   if (any(toset)) options(op.IOHexperimenter[toset])
@@ -40,7 +40,7 @@ utils::globalVariables(c("."))
 #' exp <- IOHexperimenter()
 IOHexperimenter <- function(suite = "PBO", dims = NULL, functions = NULL, instances = NULL,
                             algorithm.info = ' ', algorithm.name = ' ',
-                            data.dir = 'NULL', param.track = NULL) {
+                            data.dir = NULL, param.track = NULL) {
   
   if (suite == "PBO") {
     #set default values
