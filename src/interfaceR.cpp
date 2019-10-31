@@ -158,7 +158,7 @@ double c_eval(IntegerVector x) {
 
 	double *result = IOHprofiler_allocate_vector(1);
 
-	if(x.size() != current_problem->number_of_variables) {
+		if(x.size() != current_problem->dimension) {
 		Rcout << "Error! Dimension of input vector is incorrect.\n";
 	 	return -DBL_MAX;
 	}
