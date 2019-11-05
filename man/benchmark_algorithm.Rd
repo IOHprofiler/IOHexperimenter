@@ -4,8 +4,8 @@
 \alias{benchmark_algorithm}
 \title{Base procedure for benchmarking a custom algorithm}
 \usage{
-benchmark_algorithm(user_alg, suite = NULL, functions = NULL,
-  instances = NULL, dimensions = NULL, data.dir = NULL,
+benchmark_algorithm(user_alg, suite = "PBO", functions = c(1, 2),
+  instances = c(1, 2), dimensions = 16, data.dir = NULL,
   algorithm.info = " ", algorithm.name = " ", params.track = NULL,
   repetitions = 5)
 }

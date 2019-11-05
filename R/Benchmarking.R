@@ -30,16 +30,11 @@
 #' benchmark_algorithm(IOH_two_rate_GA, params.track = 'Mutation_rate', data.dir = './data')
 #' }
 #' @export
-benchmark_algorithm <- function(user_alg, suite = NULL, functions = NULL, instances = NULL,
-                                dimensions = NULL, data.dir = NULL, algorithm.info = ' ', 
+benchmark_algorithm <- function(user_alg, suite = "PBO", functions = c(1,2), instances = c(1,2),
+                                dimensions = 16, data.dir = NULL, algorithm.info = ' ', 
                                 algorithm.name = ' ', params.track = NULL,
                                 repetitions = 5) {
-  # Setting default parameters if needed and verifying parameter integrity
-  if (is.null(functions)) functions <- seq(2)
-  if (is.null(instances)) instances <- seq(2)
-  if (is.null(dimensions)) dimensions <- c(100, 300)
-  if (is.null(suite)) suite <- "PBO"
-  
+
   experimenter <- IOHexperimenter(suite = suite, dims = dimensions, functions = functions, instances = instances,
                                   algorithm.info = algorithm.info, algorithm.name = algorithm.name,
                                   data.dir = data.dir, param.track = params.track)
@@ -47,7 +42,7 @@ benchmark_algorithm <- function(user_alg, suite = NULL, functions = NULL, instan
   while (!is.null(IOHproblem) ) {
     for (rep in 1:(repetitions - 1) ) {
       user_alg(IOHproblem)
-      reset_problem(IOHproblem)
+      IOHproblem <- reset_problem(IOHproblem)
     }
     user_alg(IOHproblem)
     

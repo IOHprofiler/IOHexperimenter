@@ -6,22 +6,22 @@
 \usage{
 IOHexperimenter(suite = "PBO", dims = NULL, functions = NULL,
   instances = NULL, algorithm.info = " ", algorithm.name = " ",
-  data.dir = "./data", param.track = NULL)
+  data.dir = NULL, param.track = NULL)
 }
 \arguments{
 \item{suite}{Which suite to use. Available: 'PBO', 'BBOB'}
 
-\item{dims}{Numerical}
+\item{dims}{Numerical Which dimensions to use}
 
-\item{functions}{Numerical}
+\item{functions}{Numerical Which functions from the selected suite to use}
 
-\item{instances}{Numerical Whether the underlying optimization algorithm performs a maximization?}
+\item{instances}{Numerical Which problem instances to use}
 
 \item{algorithm.info}{Additional information about the algorithm you plan on running}
 
 \item{algorithm.name}{The name of the algorithm you plan on running}
 
-\item{data.dir}{Where the data should be stored}
+\item{data.dir}{Where the data should be stored. Defaults to NULL, meaning no data is stored.}
 
 \item{param.track}{Which parameters to track. Should be a vector of strings, containing no spaces or commas}
 }

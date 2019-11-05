@@ -12,9 +12,10 @@
 #' }
 IOH_random_search <- function(IOHproblem, budget = NULL) {
   if (IOHproblem$suite == "PBO")
-    random_search_PB(IOHproblem$dimension, IOHproblem$obj_func, IOHproblem$fopt, budget)
+    random_search_PB(IOHproblem$dimension, IOHproblem$obj_func, IOHproblem$target_hit, budget)
   else
-    random_search(IOHproblem$dimension, IOHproblem$obj_func, IOHproblem$fopt, budget)
+    random_search(IOHproblem$dimension, IOHproblem$obj_func, IOHproblem$target_hit, budget,
+                  IOHproblem$lbound, IOHproblem$ubound, IOHproblem$maximization)
 }
 
 #' IOHexperimenter-based wrapper 
@@ -30,7 +31,7 @@ IOH_random_search <- function(IOHproblem, budget = NULL) {
 #' benchmark_algorithm(IOH_random_local_search, data.dir = NULL)
 #' }
 IOH_random_local_search <- function(IOHproblem, budget = NULL) {
-  random_local_search(IOHproblem$dimension, IOHproblem$obj_func, IOHproblem$fopt, budget) 
+  random_local_search(IOHproblem$dimension, IOHproblem$obj_func, IOHproblem$target_hit, budget) 
 }
 
 #' IOHexperimenter-based wrapper 
@@ -79,15 +80,10 @@ IOH_two_rate_GA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
 #' 
 #' @rdname random_search
 #' @export
-random_search_PB <- function(dim, obj_func, target = NULL, budget = NULL) {
+random_search_PB <- function(dim, obj_func, target_hit = function(){ FALSE }, budget = NULL) {
   if (is.null(budget)) budget <- 10 * dim
   fopt <- -Inf
   xopt <- NULL
-  
-  target_hit <- function() {
-    if (is.null(target)) return(FALSE)
-    else return(target <= fopt)
-  }
   
   while (budget > 0 && !target_hit()) {
     x <- sample(c(0, 1), dim, TRUE)
@@ -105,26 +101,32 @@ random_search_PB <- function(dim, obj_func, target = NULL, budget = NULL) {
 
 #' Random Search
 #'
-#' Random walk in \eqn{[-5, 5]^d} space; Mimimization
+#' Random walk in continuous space; 
 #' 
 #' @param dim Dimension of search space
 #' @param obj_func The evaluation function
-#' @param target Optional, enables early stopping if this value is reached
-#' @param budget integer, maximal allowable number of function evaluations
+#' @param target_hit Optional, function which enables early stopping if a target value is reached
+#' @param budget Integer, maximal allowable number of function evaluations
+#' @param lbound Lower bound of search space. Either single number or vector of size `dim`
+#' @param ubound Upper bound of search space. Either single number or vector of size `dim`
+#' @param maximize Whether to perform maximization or minimization. 
+#' The function assumes minimization, achieved by inverting the obj_func when `maximize` is FALSE
 #' @export
-random_search <- function(dim, obj_func, target = NULL, budget = NULL) {
+random_search <- function(dim, obj_func, target_hit = function(){ FALSE }, budget = NULL, 
+                          lbound = -1, ubound = 1, maximize = T) {
   if (is.null(budget)) budget <- 10 * dim
-  fopt <- -Inf
+  if (maximize) { #Assume mimimization in the remainder of this function
+    obj_func_transformed <- function(x) {return(-1*obj_func(x))}
+  }
+  else{
+    obj_func_transformed <- obj_func
+  }
+  fopt <- Inf
   xopt <- NULL
   
-  target_hit <- function() {
-    if (is.null(target)) return(FALSE)
-    else return(target <= fopt)
-  }
-  
   while (budget > 0 && !target_hit()) {
-    x <- runif(dim, -5, 5)
-    f <- obj_func(x)
+    x <- runif(dim, lbound, ubound)
+    f <- obj_func_transformed(x)
     budget <- budget - 1
     
     if (f < fopt) {
@@ -144,21 +146,17 @@ random_search <- function(dim, obj_func, target = NULL, budget = NULL) {
 #'
 #' @param dimension Dimension of search space
 #' @param obj_func The evaluation function
-#' @param target Optional, enables early stopping if this value is reached
+#' @param target_hit Optional, function which enables early stopping if a target value is reached
 #' @param budget integer, maximal allowable number of function evaluations
 #' 
 #' @export
-random_local_search <- function(dimension, obj_func, target = NULL, budget = NULL) {
+random_local_search <- function(dimension, obj_func, target_hit = function(){ FALSE },
+                                budget = NULL) {
   if (is.null(budget)) budget <- 10*dimension
   starting_point <- sample(c(0, 1), dimension, TRUE)
   fopt <- obj_func(starting_point)
   xopt <- starting_point
   iter <- 1
-  
-  target_hit <- function() {
-    if (is.null(target)) return(FALSE)
-    else return(target <= fopt)
-  }
   
   while (iter < budget && !target_hit() ) {
     candidate <- xopt

@@ -86,7 +86,8 @@ IOHexperimenter <- function(suite = "PBO", dims = NULL, functions = NULL, instan
     observed <- F
   }
   else {
-    dir.create(dirname(data.dir), recursive = T)
+    if (!dir.exists(dirname(data.dir)))
+      dir.create(dirname(data.dir), recursive = T)
     # intialize the observer
     cpp_init_logger(
       dirname(data.dir), basename(data.dir), algorithm.name, algorithm.info

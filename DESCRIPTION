@@ -1,12 +1,12 @@
 Package: IOHexperimenter
 Type: Package
 Title: Benchmarking Part of the 'IOHprofiler'
-Version: 0.0.0.9002
+Version: 0.1.0
 Author: Diederick Vermetten [cre, aut], Furong Ye [cre, aut], Hao Wang [aut], Carola Doerr [aut], Thomas Bäck [aut]
-Maintainer: Diederick Vermetten <d.vermetten@gmail.com>
+Maintainer: Diederick Vermetten <d.l.vermetten@liacs.leidenuniv.nl>
 Description: The benchmarking module for the Iterative Optimization Heuristics
     Profiler ('IOHprofiler'). This module provides benchmarking in the 'IOHprofiler'
-    format, which can be visulized using the 'IOHanalyzer' module.
+    format, which can be visualized using the 'IOHanalyzer' module.
 License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
 LazyData: true

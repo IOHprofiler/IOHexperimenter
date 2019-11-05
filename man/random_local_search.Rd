@@ -7,7 +7,8 @@
 \usage{
 IOH_random_local_search(IOHproblem, budget = NULL)
 
-random_local_search(dimension, obj_func, target = NULL, budget = NULL)
+random_local_search(dimension, obj_func, target_hit = function() {    
+  FALSE }, budget = NULL)
 }
 \arguments{
 \item{IOHproblem}{An IOHproblem object}
@@ -18,7 +19,7 @@ random_local_search(dimension, obj_func, target = NULL, budget = NULL)
 
 \item{obj_func}{The evaluation function}
 
-\item{target}{Optional, enables early stopping if this value is reached}
+\item{target_hit}{Optional, function which enables early stopping if a target value is reached}
 }
 \description{
 For easier use with the IOHexperimenter

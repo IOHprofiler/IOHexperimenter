@@ -518,6 +518,8 @@ void cpp_clear_suite() {
 
 //[[Rcpp::export]]
 void cpp_clear_logger() {
-  currentLogger->clear_logger();
+  if (currentLogger != nullptr){
+    currentLogger->clear_logger();
+  }
   currentLogger = nullptr;
 }
