@@ -224,6 +224,7 @@ double cpp_double_evaluate(const std::vector<double> & x) {
     return -DBL_MAX;
   }
 
+
   if (x.size() != currentDoubleProblem->IOHprofiler_get_number_of_variables()) {
     Rcout << "Error! The length of input vector is incorrect. It should be lenght: " << 
       currentDoubleProblem->IOHprofiler_get_number_of_variables() << "\n";
