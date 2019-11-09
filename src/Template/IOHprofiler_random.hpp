@@ -9,8 +9,9 @@
 #define _IOHPROFILER_RANDOM_HPP
 
 #include "IOHprofiler_common.h"
+#define IOHprofiler_NORMAL_POLAR /* Use polar transformation method */
 
-#define IOH_PI 3.14159265359
+#define IOH_PI 3.14159265358979323846
 #define DEFAULT_SEED 1000
 class IOHprofiler_random {
 public:
@@ -125,12 +126,26 @@ public:
   }
 
   double IOHprofiler_normal_rand() { /* OMS: accessor - should become const */
+    // double normal;
+    // normal = 0.0;
+    // for (int i = 0; i < 12; ++i) {
+    //     normal += this->IOHprofiler_uniform_rand();
+    // }
+    // normal -= 6.0;
+    // return normal;
     double normal;
+#ifdef IOHprofiler_NORMAL_POLAR
+    const double u1 = this->IOHprofiler_uniform_rand();
+    const double u2 = this->IOHprofiler_uniform_rand();
+    normal = sqrt(-2 * log(u1)) * cos(2 * IOH_PI * u2);
+#else
+    int i;
     normal = 0.0;
-    for (int i = 0; i < 12; ++i) {
+    for (i = 0; i < 12; ++i) {
         normal += this->IOHprofiler_uniform_rand();
     }
     normal -= 6.0;
+#endif
     return normal;
   }
 
