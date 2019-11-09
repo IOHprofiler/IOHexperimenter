@@ -50,7 +50,7 @@ void copyVector(const std::vector<valueType> v1, std::vector<valueType> &v2){
 ///
 /// Return 'true' if all elements in two vectors are the same.
 template<class valueType>
-bool compareVector(const std::vector<valueType> &v1, const std::vector<valueType> v2){
+bool compareVector(const std::vector<valueType> &v1, const std::vector<valueType> &v2){
   int n = v1.size();
   if(n != v2.size()){
     IOH_error("Two compared vector must be with the same size\n");
