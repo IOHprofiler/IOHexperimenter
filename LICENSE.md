@@ -31,3 +31,11 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Remarks ###
+
+Note that some part of IOHexperimenter have been writthen by other teams.
+We acknowledge that :
+* the random number generator is implemented by NumBBO/CoCO team in the 
+Numerical Black-Box Optimization Benchmarking Framework
+ (https://github.com/numbbo/coco).
