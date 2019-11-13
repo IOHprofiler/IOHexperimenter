@@ -164,4 +164,166 @@ static std::vector<double> ruggedness3(int number_of_variables) {
   return ruggedness_fitness;
 }
 
+/// Following is the w-model soure code from Raphael's work, which refer the source code of Thomas Weise.
+
+static void layer_neutrality_compute(const std::vector<int> &xIn, std::vector<int> &xOut, const int mu){
+  int thresholdFor1 = (mu >> 1) + (mu & 1);
+  int i,j,ones,flush;
+  int temp;
+  int dim = xIn.size();
+  int temp_dim = dim / mu;
+  if (xOut.size() != temp_dim) {
+    xOut.resize(temp_dim);
+  }
+  i=0;j=0; ones=0; flush=mu;
+  while ((i < dim) && (j<temp_dim)){
+    if (xIn[i]==1) {
+      ones+=1;
+    }
+    i+=1;
+    if (i >= flush) {
+      flush+=mu;
+      if (ones >= thresholdFor1) {
+        temp=1;
+      } else {
+        temp=0;
+      }
+      xOut[j]=temp;
+      j+=1;
+      ones=0;
+    }
+  }
+}
+
+static void base_epistasis(const std::vector<int> &xIn, const int start, const int nu, std::vector<int> &xOut) {
+  const int end = (start + nu) - 1;
+  const int flip = xIn[start];
+  int result;
+  int skip = start;
+  for (int i = end ; i >= start; --i) {
+    result = flip;
+    for (int j = end; j > start; --j) {
+      if (j != skip) {
+        result ^= (xIn[j]);
+      }
+    }
+    xOut[i] = result;
+    if ((--skip) < start) {
+      skip = end;
+    }
+  }
+}
+
+static void epistasis_compute(const std::vector<int>  &xIn, std::vector<int> &xOut, const int nu) {
+    const int length = xIn.size();
+    const int end = length - nu;
+    int i;
+    for (i = 0; i <= end; i += nu) {
+      base_epistasis(xIn, i, nu, xOut);
+    }
+    if (i < length) {
+      base_epistasis(xIn, i, length - i, xOut);
+    }
+  }
+
+static void layer_epistasis_compute(const std::vector<int> &x, std::vector<int> &epistasis_x, const int block_size) {
+  epistasis_compute(x,epistasis_x,block_size);
+}
+
+static int max_gamma(int q) {
+    return (int)((q * (q - 1))>>1);
+}
+
+static std::vector<int> ruggedness_raw(int gamma, int q){
+   int i,j,k,start,max;
+   int upper;
+   int t;
+/*fprintf(stderr,"gamma : %d\n",gamma);
+fprintf(stderr,"q : %d\n",q);*/
+   std::vector<int> r(q+1,0);
+   r[0]=0;
+   max = max_gamma(q);
+    if (gamma <= 0){
+      start = 0;
+    } else {
+      start = q - 1 - (int) (0.5 + sqrt(0.25 + ((max - gamma)<<1)));
+    }
+/*
+fprintf(stderr,"part1 : %d\n",((int)(0.25 + ((max - gamma)<<1))));
+fprintf(stderr,"part2 : %f\n",(sqrt((int)(0.25 + ((max - gamma)<<1)))));
+fprintf(stderr,"part3 : %d\n",(int)(0.5 + sqrt((int)(0.25 + ((max - gamma)<<1)))));*/
+/*fprintf(stderr,"start %d\n",start);*/
+
+/*for(i=0;i<q;i++){fprintf(stderr,"%d.",r[i]);}fprintf(stderr,"\n");*/
+    k = 0;
+    for (j = 1; j <= start; j++) {
+      if ((j & 1) != 0){ r[j] = (q - k);}
+      else{k=k+1; r[j] = k;}
+    }
+/*for(i=0;i<q;i++){fprintf(stderr,"%d.",r[i]);}fprintf(stderr,"\n");*/
+    for (; j <= q; j++) {
+      k=k+1;
+      if((start & 1) != 0){r[j] = (q - k);}
+      else{r[j]=k;}
+    }
+    upper = ((gamma - max) +(((q - start - 1) * (q - start)) >> 1));
+    j--;
+/*for(i=0;i<q;i++){fprintf(stderr,"%d.",r[i]);}fprintf(stderr,"\n");*/
+/*fprintf(stderr,"upper %d\n",upper);*/
+    for (i = 1; i <= upper; i++) {
+      j=j-1;
+
+      if(j>0){
+      t = r[j];
+      r[j] = r[q];
+      r[q] = t;}
+    }
+
+/*fprintf(stderr,"r\n");
+for(i=0;i<=q;i++){fprintf(stderr,"%d %d\n",i, r[i]);}*/
+ std::vector<int> r2(q+1,0);
+ for(i=0;i<=q;i++){r2[i]=q-r[q-i];}
+/*fprintf(stderr,"r2\n");
+for(i=0;i<=q;i++){fprintf(stderr,"%d %d\n",i, r2[i]);}*/
+    return r2;
+  }
+
+static int ruggedness_translate(int gamma, int q) {
+    int j, k, max, g, lastUpper;
+
+    if (gamma <= 0) {
+      return 0;
+    }
+    g = gamma;
+    max = max_gamma(q);
+    lastUpper = ((q >> 1) * ((q + 1) >> 1));
+    if (g <= lastUpper) {
+      j = abs(((q + 2) * 0.5)-sqrt((((q * q) * 0.25) + 1) - g));
+
+      k = ((g - ((q + 2) * j)) + (j * j) + q);
+      return ((k + 1 + ((((q + 2) * j) - (j * j) - q - 1) << 1))- (j - 1));
+    }
+
+    j = abs((((q % 2) + 1) * 0.5)
+        + sqrt((((1 - (q % 2)) * 0.25) + g) - 1 - lastUpper));
+
+    k = g - (((j - (q % 2)) * (j - 1)) + 1 + lastUpper);
+
+    return (max - k - ((2 * j * j) - j) - ((q % 2) * ((-2 * j) + 1)));
+  }
+
+
+
+static double layer_compute_ruggedness(const double y, size_t dimension,int gamma){
+  double result;
+  std::vector<int> r=ruggedness_raw(ruggedness_translate(gamma, dimension), dimension);
+  result=r[ (int)y ];
+
+  /*for(i=0;i<dimension+1;i++){fprintf(stderr,"%d ",r[i]);}fprintf(stderr,"\n");
+
+  fprintf(stderr,"dim %d val %f, result %f\n",dimension,y,result);*/
+  assert(result <= (double) dimension);
+  return result;
+}
+
 #endif
