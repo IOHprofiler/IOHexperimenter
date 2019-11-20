@@ -4,29 +4,24 @@
 \alias{IOHexperimenter}
 \title{S3 class 'IOHexperimenter'}
 \usage{
-IOHexperimenter(dims = c(16, 100, 625, 2500), functions = seq(23),
-  instances = seq(100), algorithm.info = " ", algorithm.name = " ",
-  data.dir = "./data", cdat = FALSE, idat = 0, tdat = 3,
-  param.track = NULL)
+IOHexperimenter(suite = "PBO", dims = NULL, functions = NULL,
+  instances = NULL, algorithm.info = " ", algorithm.name = " ",
+  data.dir = NULL, param.track = NULL)
 }
 \arguments{
-\item{dims}{Numerical}
+\item{suite}{Which suite to use. Available: 'PBO', 'BBOB'}
 
-\item{functions}{Numerical}
+\item{dims}{Numerical Which dimensions to use}
 
-\item{instances}{Numerical Whether the underlying optimization algorithm performs a maximization?}
+\item{functions}{Numerical Which functions from the selected suite to use}
+
+\item{instances}{Numerical Which problem instances to use}
 
 \item{algorithm.info}{Additional information about the algorithm you plan on running}
 
 \item{algorithm.name}{The name of the algorithm you plan on running}
 
-\item{data.dir}{Where the data should be stored}
-
-\item{cdat}{Whether or not to generate a .cdat-file}
-
-\item{idat}{Integer}
-
-\item{tdat}{What frequency to use in a .tdat-file}
+\item{data.dir}{Where the data should be stored. Defaults to NULL, meaning no data is stored.}
 
 \item{param.track}{Which parameters to track. Should be a vector of strings, containing no spaces or commas}
 }

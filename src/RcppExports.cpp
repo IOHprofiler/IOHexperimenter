@@ -5,213 +5,326 @@
 
 using namespace Rcpp;
 
-// c_init_suite
-void c_init_suite(String functions, String dimensions, String instances);
-RcppExport SEXP _IOHexperimenter_c_init_suite(SEXP functionsSEXP, SEXP dimensionsSEXP, SEXP instancesSEXP) {
+// cpp_init_suite
+int cpp_init_suite(String suite_name, const std::vector<int>& problem_id, const std::vector<int>& instance_id, const std::vector<int>& dimension);
+RcppExport SEXP _IOHexperimenter_cpp_init_suite(SEXP suite_nameSEXP, SEXP problem_idSEXP, SEXP instance_idSEXP, SEXP dimensionSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< String >::type functions(functionsSEXP);
-    Rcpp::traits::input_parameter< String >::type dimensions(dimensionsSEXP);
-    Rcpp::traits::input_parameter< String >::type instances(instancesSEXP);
-    c_init_suite(functions, dimensions, instances);
-    return R_NilValue;
+    Rcpp::traits::input_parameter< String >::type suite_name(suite_nameSEXP);
+    Rcpp::traits::input_parameter< const std::vector<int>& >::type problem_id(problem_idSEXP);
+    Rcpp::traits::input_parameter< const std::vector<int>& >::type instance_id(instance_idSEXP);
+    Rcpp::traits::input_parameter< const std::vector<int>& >::type dimension(dimensionSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_init_suite(suite_name, problem_id, instance_id, dimension));
+    return rcpp_result_gen;
 END_RCPP
 }
-// c_init_observer
-void c_init_observer(String result_folder, String algorithm_name, String algorithm_info, String complete_triggers, int number_interval_triggers, String base_evaluation_triggers, int number_target_triggers, String parameters_name, String observer_name);
-RcppExport SEXP _IOHexperimenter_c_init_observer(SEXP result_folderSEXP, SEXP algorithm_nameSEXP, SEXP algorithm_infoSEXP, SEXP complete_triggersSEXP, SEXP number_interval_triggersSEXP, SEXP base_evaluation_triggersSEXP, SEXP number_target_triggersSEXP, SEXP parameters_nameSEXP, SEXP observer_nameSEXP) {
+// cpp_init_logger
+int cpp_init_logger(String output_directory, String result_folder, String algorithm_name, String algorithm_info);
+RcppExport SEXP _IOHexperimenter_cpp_init_logger(SEXP output_directorySEXP, SEXP result_folderSEXP, SEXP algorithm_nameSEXP, SEXP algorithm_infoSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< String >::type output_directory(output_directorySEXP);
     Rcpp::traits::input_parameter< String >::type result_folder(result_folderSEXP);
     Rcpp::traits::input_parameter< String >::type algorithm_name(algorithm_nameSEXP);
     Rcpp::traits::input_parameter< String >::type algorithm_info(algorithm_infoSEXP);
-    Rcpp::traits::input_parameter< String >::type complete_triggers(complete_triggersSEXP);
-    Rcpp::traits::input_parameter< int >::type number_interval_triggers(number_interval_triggersSEXP);
-    Rcpp::traits::input_parameter< String >::type base_evaluation_triggers(base_evaluation_triggersSEXP);
-    Rcpp::traits::input_parameter< int >::type number_target_triggers(number_target_triggersSEXP);
-    Rcpp::traits::input_parameter< String >::type parameters_name(parameters_nameSEXP);
-    Rcpp::traits::input_parameter< String >::type observer_name(observer_nameSEXP);
-    c_init_observer(result_folder, algorithm_name, algorithm_info, complete_triggers, number_interval_triggers, base_evaluation_triggers, number_target_triggers, parameters_name, observer_name);
+    rcpp_result_gen = Rcpp::wrap(cpp_init_logger(output_directory, result_folder, algorithm_name, algorithm_info));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_problem_list
+IntegerVector cpp_get_problem_list();
+RcppExport SEXP _IOHexperimenter_cpp_get_problem_list() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_problem_list());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_dimension_list
+IntegerVector cpp_get_dimension_list();
+RcppExport SEXP _IOHexperimenter_cpp_get_dimension_list() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_dimension_list());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_instance_list
+IntegerVector cpp_get_instance_list();
+RcppExport SEXP _IOHexperimenter_cpp_get_instance_list() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_instance_list());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_suite_info
+List cpp_get_suite_info();
+RcppExport SEXP _IOHexperimenter_cpp_get_suite_info() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_suite_info());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_problem_info
+List cpp_get_problem_info();
+RcppExport SEXP _IOHexperimenter_cpp_get_problem_info() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_problem_info());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_next_problem
+List cpp_get_next_problem();
+RcppExport SEXP _IOHexperimenter_cpp_get_next_problem() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_next_problem());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_reset_problem
+List cpp_reset_problem();
+RcppExport SEXP _IOHexperimenter_cpp_reset_problem() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_reset_problem());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_int_evaluate
+double cpp_int_evaluate(const std::vector<int>& x);
+RcppExport SEXP _IOHexperimenter_cpp_int_evaluate(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<int>& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_int_evaluate(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_double_evaluate
+double cpp_double_evaluate(const std::vector<double>& x);
+RcppExport SEXP _IOHexperimenter_cpp_double_evaluate(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_double_evaluate(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_loggerCOCOInfo
+NumericVector cpp_loggerCOCOInfo();
+RcppExport SEXP _IOHexperimenter_cpp_loggerCOCOInfo() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_loggerCOCOInfo());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_loggerInfo
+NumericVector cpp_loggerInfo();
+RcppExport SEXP _IOHexperimenter_cpp_loggerInfo() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_loggerInfo());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_write_line
+int cpp_write_line(const std::vector<double>& line_info);
+RcppExport SEXP _IOHexperimenter_cpp_write_line(SEXP line_infoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type line_info(line_infoSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_write_line(line_info));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_logger_target_suite
+int cpp_logger_target_suite();
+RcppExport SEXP _IOHexperimenter_cpp_logger_target_suite() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_logger_target_suite());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_set_parameters_name
+int cpp_set_parameters_name(const std::vector<std::string>& parameters_name);
+RcppExport SEXP _IOHexperimenter_cpp_set_parameters_name(SEXP parameters_nameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type parameters_name(parameters_nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_set_parameters_name(parameters_name));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_set_parameters_value
+int cpp_set_parameters_value(const std::vector<double>& parameters);
+RcppExport SEXP _IOHexperimenter_cpp_set_parameters_value(SEXP parametersSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type parameters(parametersSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_set_parameters_value(parameters));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_is_target_hit
+bool cpp_is_target_hit();
+RcppExport SEXP _IOHexperimenter_cpp_is_target_hit() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_is_target_hit());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_evaluations
+int cpp_get_evaluations();
+RcppExport SEXP _IOHexperimenter_cpp_get_evaluations() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_evaluations());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_optimal
+double cpp_get_optimal();
+RcppExport SEXP _IOHexperimenter_cpp_get_optimal() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_optimal());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_double_upper_bounds
+NumericVector cpp_get_double_upper_bounds();
+RcppExport SEXP _IOHexperimenter_cpp_get_double_upper_bounds() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_double_upper_bounds());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_double_lower_bounds
+NumericVector cpp_get_double_lower_bounds();
+RcppExport SEXP _IOHexperimenter_cpp_get_double_lower_bounds() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_double_lower_bounds());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_int_upper_bounds
+IntegerVector cpp_get_int_upper_bounds();
+RcppExport SEXP _IOHexperimenter_cpp_get_int_upper_bounds() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_int_upper_bounds());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_int_lower_bounds
+IntegerVector cpp_get_int_lower_bounds();
+RcppExport SEXP _IOHexperimenter_cpp_get_int_lower_bounds() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_int_lower_bounds());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_get_optimization_type
+int cpp_get_optimization_type();
+RcppExport SEXP _IOHexperimenter_cpp_get_optimization_type() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(cpp_get_optimization_type());
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_clear_problem
+void cpp_clear_problem();
+RcppExport SEXP _IOHexperimenter_cpp_clear_problem() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    cpp_clear_problem();
     return R_NilValue;
 END_RCPP
 }
-// get_problem_list
-IntegerVector get_problem_list();
-RcppExport SEXP _IOHexperimenter_get_problem_list() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(get_problem_list());
-    return rcpp_result_gen;
-END_RCPP
-}
-// get_dimension_list
-IntegerVector get_dimension_list();
-RcppExport SEXP _IOHexperimenter_get_dimension_list() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(get_dimension_list());
-    return rcpp_result_gen;
-END_RCPP
-}
-// get_suite_info
-List get_suite_info();
-RcppExport SEXP _IOHexperimenter_get_suite_info() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(get_suite_info());
-    return rcpp_result_gen;
-END_RCPP
-}
-// get_problem_info
-List get_problem_info();
-RcppExport SEXP _IOHexperimenter_get_problem_info() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(get_problem_info());
-    return rcpp_result_gen;
-END_RCPP
-}
-// c_get_next_problem
-List c_get_next_problem();
-RcppExport SEXP _IOHexperimenter_c_get_next_problem() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(c_get_next_problem());
-    return rcpp_result_gen;
-END_RCPP
-}
-// c_reset_problem
-List c_reset_problem();
-RcppExport SEXP _IOHexperimenter_c_reset_problem() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(c_reset_problem());
-    return rcpp_result_gen;
-END_RCPP
-}
-// c_eval
-double c_eval(IntegerVector x);
-RcppExport SEXP _IOHexperimenter_c_eval(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(c_eval(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// c_set_parameters
-void c_set_parameters(NumericVector parameters);
-RcppExport SEXP _IOHexperimenter_c_set_parameters(SEXP parametersSEXP) {
+// cpp_clear_suite
+void cpp_clear_suite();
+RcppExport SEXP _IOHexperimenter_cpp_clear_suite() {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type parameters(parametersSEXP);
-    c_set_parameters(parameters);
+    cpp_clear_suite();
     return R_NilValue;
 END_RCPP
 }
-// c_is_target_hit
-int c_is_target_hit();
-RcppExport SEXP _IOHexperimenter_c_is_target_hit() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(c_is_target_hit());
-    return rcpp_result_gen;
-END_RCPP
-}
-// c_get_evaluations
-int c_get_evaluations();
-RcppExport SEXP _IOHexperimenter_c_get_evaluations() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(c_get_evaluations());
-    return rcpp_result_gen;
-END_RCPP
-}
-// c_get_xopt
-IntegerVector c_get_xopt();
-RcppExport SEXP _IOHexperimenter_c_get_xopt() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(c_get_xopt());
-    return rcpp_result_gen;
-END_RCPP
-}
-// c_get_fopt
-double c_get_fopt();
-RcppExport SEXP _IOHexperimenter_c_get_fopt() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(c_get_fopt());
-    return rcpp_result_gen;
-END_RCPP
-}
-// IOHfree
-void IOHfree();
-RcppExport SEXP _IOHexperimenter_IOHfree() {
+// cpp_clear_logger
+void cpp_clear_logger();
+RcppExport SEXP _IOHexperimenter_cpp_clear_logger() {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    IOHfree();
-    return R_NilValue;
-END_RCPP
-}
-// freeProblem
-void freeProblem();
-RcppExport SEXP _IOHexperimenter_freeProblem() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    freeProblem();
-    return R_NilValue;
-END_RCPP
-}
-// freeSuite
-void freeSuite();
-RcppExport SEXP _IOHexperimenter_freeSuite() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    freeSuite();
-    return R_NilValue;
-END_RCPP
-}
-// freeObserver
-void freeObserver();
-RcppExport SEXP _IOHexperimenter_freeObserver() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    freeObserver();
+    cpp_clear_logger();
     return R_NilValue;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_IOHexperimenter_c_init_suite", (DL_FUNC) &_IOHexperimenter_c_init_suite, 3},
-    {"_IOHexperimenter_c_init_observer", (DL_FUNC) &_IOHexperimenter_c_init_observer, 9},
-    {"_IOHexperimenter_get_problem_list", (DL_FUNC) &_IOHexperimenter_get_problem_list, 0},
-    {"_IOHexperimenter_get_dimension_list", (DL_FUNC) &_IOHexperimenter_get_dimension_list, 0},
-    {"_IOHexperimenter_get_suite_info", (DL_FUNC) &_IOHexperimenter_get_suite_info, 0},
-    {"_IOHexperimenter_get_problem_info", (DL_FUNC) &_IOHexperimenter_get_problem_info, 0},
-    {"_IOHexperimenter_c_get_next_problem", (DL_FUNC) &_IOHexperimenter_c_get_next_problem, 0},
-    {"_IOHexperimenter_c_reset_problem", (DL_FUNC) &_IOHexperimenter_c_reset_problem, 0},
-    {"_IOHexperimenter_c_eval", (DL_FUNC) &_IOHexperimenter_c_eval, 1},
-    {"_IOHexperimenter_c_set_parameters", (DL_FUNC) &_IOHexperimenter_c_set_parameters, 1},
-    {"_IOHexperimenter_c_is_target_hit", (DL_FUNC) &_IOHexperimenter_c_is_target_hit, 0},
-    {"_IOHexperimenter_c_get_evaluations", (DL_FUNC) &_IOHexperimenter_c_get_evaluations, 0},
-    {"_IOHexperimenter_c_get_xopt", (DL_FUNC) &_IOHexperimenter_c_get_xopt, 0},
-    {"_IOHexperimenter_c_get_fopt", (DL_FUNC) &_IOHexperimenter_c_get_fopt, 0},
-    {"_IOHexperimenter_IOHfree", (DL_FUNC) &_IOHexperimenter_IOHfree, 0},
-    {"_IOHexperimenter_freeProblem", (DL_FUNC) &_IOHexperimenter_freeProblem, 0},
-    {"_IOHexperimenter_freeSuite", (DL_FUNC) &_IOHexperimenter_freeSuite, 0},
-    {"_IOHexperimenter_freeObserver", (DL_FUNC) &_IOHexperimenter_freeObserver, 0},
+    {"_IOHexperimenter_cpp_init_suite", (DL_FUNC) &_IOHexperimenter_cpp_init_suite, 4},
+    {"_IOHexperimenter_cpp_init_logger", (DL_FUNC) &_IOHexperimenter_cpp_init_logger, 4},
+    {"_IOHexperimenter_cpp_get_problem_list", (DL_FUNC) &_IOHexperimenter_cpp_get_problem_list, 0},
+    {"_IOHexperimenter_cpp_get_dimension_list", (DL_FUNC) &_IOHexperimenter_cpp_get_dimension_list, 0},
+    {"_IOHexperimenter_cpp_get_instance_list", (DL_FUNC) &_IOHexperimenter_cpp_get_instance_list, 0},
+    {"_IOHexperimenter_cpp_get_suite_info", (DL_FUNC) &_IOHexperimenter_cpp_get_suite_info, 0},
+    {"_IOHexperimenter_cpp_get_problem_info", (DL_FUNC) &_IOHexperimenter_cpp_get_problem_info, 0},
+    {"_IOHexperimenter_cpp_get_next_problem", (DL_FUNC) &_IOHexperimenter_cpp_get_next_problem, 0},
+    {"_IOHexperimenter_cpp_reset_problem", (DL_FUNC) &_IOHexperimenter_cpp_reset_problem, 0},
+    {"_IOHexperimenter_cpp_int_evaluate", (DL_FUNC) &_IOHexperimenter_cpp_int_evaluate, 1},
+    {"_IOHexperimenter_cpp_double_evaluate", (DL_FUNC) &_IOHexperimenter_cpp_double_evaluate, 1},
+    {"_IOHexperimenter_cpp_loggerCOCOInfo", (DL_FUNC) &_IOHexperimenter_cpp_loggerCOCOInfo, 0},
+    {"_IOHexperimenter_cpp_loggerInfo", (DL_FUNC) &_IOHexperimenter_cpp_loggerInfo, 0},
+    {"_IOHexperimenter_cpp_write_line", (DL_FUNC) &_IOHexperimenter_cpp_write_line, 1},
+    {"_IOHexperimenter_cpp_logger_target_suite", (DL_FUNC) &_IOHexperimenter_cpp_logger_target_suite, 0},
+    {"_IOHexperimenter_cpp_set_parameters_name", (DL_FUNC) &_IOHexperimenter_cpp_set_parameters_name, 1},
+    {"_IOHexperimenter_cpp_set_parameters_value", (DL_FUNC) &_IOHexperimenter_cpp_set_parameters_value, 1},
+    {"_IOHexperimenter_cpp_is_target_hit", (DL_FUNC) &_IOHexperimenter_cpp_is_target_hit, 0},
+    {"_IOHexperimenter_cpp_get_evaluations", (DL_FUNC) &_IOHexperimenter_cpp_get_evaluations, 0},
+    {"_IOHexperimenter_cpp_get_optimal", (DL_FUNC) &_IOHexperimenter_cpp_get_optimal, 0},
+    {"_IOHexperimenter_cpp_get_double_upper_bounds", (DL_FUNC) &_IOHexperimenter_cpp_get_double_upper_bounds, 0},
+    {"_IOHexperimenter_cpp_get_double_lower_bounds", (DL_FUNC) &_IOHexperimenter_cpp_get_double_lower_bounds, 0},
+    {"_IOHexperimenter_cpp_get_int_upper_bounds", (DL_FUNC) &_IOHexperimenter_cpp_get_int_upper_bounds, 0},
+    {"_IOHexperimenter_cpp_get_int_lower_bounds", (DL_FUNC) &_IOHexperimenter_cpp_get_int_lower_bounds, 0},
+    {"_IOHexperimenter_cpp_get_optimization_type", (DL_FUNC) &_IOHexperimenter_cpp_get_optimization_type, 0},
+    {"_IOHexperimenter_cpp_clear_problem", (DL_FUNC) &_IOHexperimenter_cpp_clear_problem, 0},
+    {"_IOHexperimenter_cpp_clear_suite", (DL_FUNC) &_IOHexperimenter_cpp_clear_suite, 0},
+    {"_IOHexperimenter_cpp_clear_logger", (DL_FUNC) &_IOHexperimenter_cpp_clear_logger, 0},
     {NULL, NULL, 0}
 };
 

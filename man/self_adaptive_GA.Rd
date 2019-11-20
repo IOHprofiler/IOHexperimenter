@@ -7,8 +7,8 @@
 \usage{
 IOH_self_adaptive_GA(IOHproblem, lambda_ = 1, budget = NULL)
 
-self_adaptive_GA(dimension, obj_func, target = NULL, lambda_ = 10,
-  budget = NULL, set_parameters = NULL)
+self_adaptive_GA(dimension, obj_func, lambda_ = 10, budget = NULL,
+  set_parameters = NULL, target_hit = function() {     FALSE })
 }
 \arguments{
 \item{IOHproblem}{An IOHproblem object}
@@ -21,9 +21,9 @@ self_adaptive_GA(dimension, obj_func, target = NULL, lambda_ = 10,
 
 \item{obj_func}{The evaluation function}
 
-\item{target}{Optional, enables early stopping if this value is reached}
-
 \item{set_parameters}{Function to call to store the value of the registered parameters}
+
+\item{target_hit}{Optional, function which enables early stopping if a target value is reached}
 }
 \description{
 For easier use with the IOHexperimenter

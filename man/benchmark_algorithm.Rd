@@ -4,10 +4,10 @@
 \alias{benchmark_algorithm}
 \title{Base procedure for benchmarking a custom algorithm}
 \usage{
-benchmark_algorithm(user_alg, functions = NULL, instances = NULL,
-  dimensions = NULL, data.dir = NULL, algorithm.info = " ",
-  algorithm.name = " ", cdat = FALSE, idat = 0, tdat = 3,
-  params.track = NULL, repetitions = 5)
+benchmark_algorithm(user_alg, suite = "PBO", functions = c(1, 2),
+  instances = c(1, 2), dimensions = 16, data.dir = NULL,
+  algorithm.info = " ", algorithm.name = " ", params.track = NULL,
+  repetitions = 5)
 }
 \arguments{
 \item{user_alg}{Function defining the custom algorithm. Needs to accept one paramter:
@@ -16,8 +16,7 @@ an IOHproblem object, which has the following properties:
 \item dimension
 \item function_id
 \item instance
-\item fopt (if known)
-\item xopt (if known)
+\item suite (Currently 'BBOB' or 'PBO')
 }
 And the following functions:
 \itemize{
@@ -25,6 +24,8 @@ And the following functions:
 \item target_hit
 \item set_parameters
 }}
+
+\item{suite}{Which suite to test on}
 
 \item{functions}{Which function to test on}
 
@@ -37,12 +38,6 @@ And the following functions:
 \item{algorithm.info}{Additional information about the algorithm you plan on running}
 
 \item{algorithm.name}{The name of the algorithm you plan on running}
-
-\item{cdat}{Whether or not to generate a .cdat-file}
-
-\item{idat}{Integer}
-
-\item{tdat}{What frequency to use in a .tdat-file}
 
 \item{params.track}{Which parameters to track. Should be a vector of strings, containing no spaces or commas}
 

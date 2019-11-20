@@ -6,8 +6,7 @@
 #' \item dimension
 #' \item function_id
 #' \item instance
-#' \item fopt (if known)
-#' \item xopt (if known)
+#' \item suite (Currently 'BBOB' or 'PBO')
 #' }
 #' And the following functions:
 #' \itemize{
@@ -15,15 +14,13 @@
 #' \item target_hit
 #' \item set_parameters
 #' }
+#' @param suite Which suite to test on
 #' @param dimensions Which dimensions to test on
 #' @param functions Which function to test on
 #' @param instances Which instances to test on
 #' @param algorithm.info Additional information about the algorithm you plan on running
 #' @param algorithm.name The name of the algorithm you plan on running
 #' @param data.dir Where the data should be stored (defaults to "./data" when not provided)
-#' @param cdat Whether or not to generate a .cdat-file
-#' @param idat Integer
-#' @param tdat What frequency to use in a .tdat-file
 #' @param params.track Which parameters to track. Should be a vector of strings, containing no spaces or commas
 #' @param repetitions How many independent runs of the algorithm to do for each problem
 #'
@@ -33,26 +30,24 @@
 #' benchmark_algorithm(IOH_two_rate_GA, params.track = 'Mutation_rate', data.dir = './data')
 #' }
 #' @export
-benchmark_algorithm <- function(user_alg, functions = NULL, instances = NULL, dimensions = NULL,
-                                data.dir = NULL, algorithm.info = ' ', algorithm.name = ' ',
-                                cdat = FALSE, idat = 0, tdat = 3, params.track = NULL,
+benchmark_algorithm <- function(user_alg, suite = "PBO", functions = c(1,2), instances = c(1,2),
+                                dimensions = 16, data.dir = NULL, algorithm.info = ' ', 
+                                algorithm.name = ' ', params.track = NULL,
                                 repetitions = 5) {
-  # Setting default parameters if needed and verifying parameter integrity
-  if (is.null(functions)) functions <- seq(2)
-  if (is.null(instances)) instances <- seq(2)
-  if (is.null(dimensions)) dimensions <- c(100, 300)
-  
-  experimenter <- IOHexperimenter(dims = dimensions, functions = functions, instances = instances,
+
+  experimenter <- IOHexperimenter(suite = suite, dims = dimensions, functions = functions, instances = instances,
                                   algorithm.info = algorithm.info, algorithm.name = algorithm.name,
-                                  data.dir = data.dir, cdat = cdat, idat = idat, tdat = tdat,
-                                  param.track = params.track)
+                                  data.dir = data.dir, param.track = params.track)
   IOHproblem <- next_problem(experimenter)
-  while ( !is.null(IOHproblem) ) {
-    for (rep in 1:repetitions){
+  while (!is.null(IOHproblem) ) {
+    for (rep in 1:(repetitions - 1) ) {
       user_alg(IOHproblem)
-      reset_problem(IOHproblem)
+      IOHproblem <- reset_problem(IOHproblem)
     }
+    user_alg(IOHproblem)
+    
     IOHproblem <- next_problem(experimenter)
   }
-
+  cpp_clear_logger()
+  cpp_clear_suite()
 }

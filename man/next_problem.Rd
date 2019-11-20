@@ -2,7 +2,7 @@
 % Please edit documentation in R/IOHproblem.R
 \name{next_problem}
 \alias{next_problem}
-\title{Get the next function of the currently initialized suite}
+\title{Get the next function of the currently initialized IOHexperimenter object}
 \usage{
 next_problem(experimenter)
 }
@@ -10,10 +10,10 @@ next_problem(experimenter)
 \item{experimenter}{The IOHexperimenter object}
 }
 \value{
-An IOHproblem object
+An IOHproblem object if available, NULL otherwise
 }
 \description{
-Get the next function of the currently initialized suite
+Get the next function of the currently initialized IOHexperimenter object
 }
 \examples{
 exp <- IOHexperimenter()

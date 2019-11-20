@@ -23,46 +23,75 @@ print.IOHproblem <- function(x, ...) {
 #' p <- next_problem(exp)
 #' as.character(p)
 as.character.IOHproblem <- function(x, ...) {
-  sprintf('IOHproblem (Instance %d of function %d %dD)\n', x$instance, x$function_id, 
-          x$dimension)
+  sprintf('IOHproblem (Suite %s: Instance %d of function %s %dD)\n', x$suite, x$instance, 
+          x$function_id, x$dimension)
 }
 
-#' Get the next function of the currently initialized suite
+#' Get the next function of the currently initialized IOHexperimenter object
 #'
 #' @param experimenter The IOHexperimenter object
 #'
-#' @return An IOHproblem object
+#' @return An IOHproblem object if available, NULL otherwise
 #' @export
 #' @examples 
 #' exp <- IOHexperimenter()
 #' p <- next_problem(exp)
 next_problem <- function(experimenter) {
-  ans <- c_get_next_problem()
+  if (!"IOHexperimenter" %in% class(experimenter))
+    stop("Please ensure a valid IOHexperimenter object is provided!")
+  
+  ans <- cpp_get_next_problem()
   if (is.null(ans) || is.null(ans$problem)) return(NULL)
 
+  if (experimenter$suite == "PBO") {
+    internal_eval <- function(x) {
+      stopifnot( all(x %in% c(0,1) ))
+      f <- cpp_int_evaluate(x)
+      if (experimenter$observed)
+        cpp_write_line(cpp_loggerInfo())
+      return(f)
+    }
+  }
+  else{
+    internal_eval <- function(x) {
+      f <- cpp_double_evaluate(x)
+      if (experimenter$observed)
+        cpp_write_line(cpp_loggerCOCOInfo())
+      return(f)
+    }
+  }
   return(structure(
     list(
       dimension = ans$dimension,
       function_id = ans$problem,
       instance = ans$instance,
-      fopt = c_get_fopt(),
-      xopt = c_get_xopt(),
+      suite = experimenter$suite,
+      fopt = cpp_get_optimal(),
+      lbound = if (experimenter$suite == "PBO")
+                  cpp_get_int_lower_bounds()
+               else cpp_get_double_lower_bounds(),
+      ubound = if (experimenter$suite == "PBO")
+                  cpp_get_int_upper_bounds()
+               else cpp_get_double_upper_bounds(),
+      maximization = (cpp_get_optimization_type() == 1),
       params.track = experimenter$param.track,
       obj_func = function(x) {
-        stopifnot( all(x %in% c(0,1) ))
         if (is.null(dim(x))) x <- t(x)
         if (ncol(x) != ans$dimension) x <- t(x)
 
         stopifnot(ncol(x) == ans$dimension)
-        apply(x, 1, c_eval)
+        apply(x, 1, internal_eval)
       },
       target_hit = function() {
-        c_is_target_hit()
+        cpp_is_target_hit()
       },
-      set_parameters = function(param_vals){
-        stopifnot( length(param_vals) == length(experimenter$param.track) )
-        c_set_parameters(param_vals)
-      }
+      set_parameters = 
+        if (length(experimenter$param.track) > 0) function(param_vals){
+          stopifnot( length(param_vals) == length(experimenter$param.track) )
+          cpp_set_parameters_value(param_vals)
+        }
+        else
+          NULL
 
     ),
     class = c('IOHproblem', 'list')
@@ -81,7 +110,7 @@ next_problem <- function(experimenter) {
 #' IOH_random_search(p)
 #' p <- reset_problem(p)
 reset_problem <- function(problem) {
-  ans <- c_reset_problem()
+  ans <- cpp_reset_problem()
   if (is.null(ans) || is.null(ans$problem)) return(NULL)
   else return(problem)
 }
