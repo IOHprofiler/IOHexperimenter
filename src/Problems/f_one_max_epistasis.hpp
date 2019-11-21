@@ -14,15 +14,14 @@
 
 class OneMax_Epistasis : public IOHprofiler_problem<int> {
 public:
-
   OneMax_Epistasis(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
-
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("OneMax_Epistasis");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
+    IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
 
