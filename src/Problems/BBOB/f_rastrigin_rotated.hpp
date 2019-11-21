@@ -98,8 +98,8 @@ public:
       sum1 += cos(2.0 * coco_pi * x[i]);
       sum2 += x[i] * x[i];
     }
-    /* double check isinf*/
-    if (isinf(sum2)) {
+    /* double check std::isinf*/
+    if (std::isinf(sum2)) {
       return sum2;
     }
     result[0] = 10.0 * ((double) (long) n - sum1) + sum2;
