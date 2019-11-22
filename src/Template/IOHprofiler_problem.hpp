@@ -538,7 +538,7 @@ private:
   ///std::vector<double> evaluate_double_info; /// < common used info for evaluating variables, double type.
 
   std::size_t number_of_variables; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
-  std::size_t number_of_objectives;
+  std::size_t number_of_objectives = 1;
 
   std::vector<InputType> best_variables; /// todo. comments, rename?
   std::vector<InputType> best_transformed_variables;
