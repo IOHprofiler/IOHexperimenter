@@ -66,7 +66,7 @@ public:
       sum2 += x[i] * x[i];
     }
     /* double check std::isinf*/
-    if (std::isinf(sum2)) {
+    if (isinf(sum2)) {
       return sum2;
     }
     result[0] = 10.0 * ((double) (long) n - sum1) + sum2;

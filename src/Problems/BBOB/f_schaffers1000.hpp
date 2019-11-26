@@ -96,7 +96,7 @@ public:
     result[0] = 0.0;
     for (i = 0; i < n - 1; ++i) {
       const double tmp = x[i] * x[i] + x[i + 1] * x[i + 1];
-      if (std::isinf(tmp) && std::isnan(sin(50.0 * pow(tmp, 0.1))))  /* sin(inf) -> nan */
+      if (isinf(tmp) && isnan(sin(50.0 * pow(tmp, 0.1))))  /* sin(inf) -> nan */
         /* the second condition is necessary to pass the integration tests under Windows and Linux */
         return tmp;
       result[0] += pow(tmp, 0.25) * (1.0 + pow(sin(50.0 * pow(tmp, 0.1)), 2.0));

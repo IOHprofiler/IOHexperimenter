@@ -32,6 +32,14 @@
 /// < Default dimension
 #define DEFAULT_DIMENSION 4
 
+#ifndef isnan
+#define isnan(x) std::isnan(x)
+#endif
+
+#ifndef isinf
+#define isinf(x) std::isinf(x)
+#endif
+
 void IOH_error(std::string error_info);
 
 void IOH_warning(std::string warning_info);
