@@ -49,10 +49,8 @@
 #include "src/f_sphere.hpp"
 #include "src/f_step_ellipsoid.hpp"
 #include "src/f_weierstrass.hpp"
-#include "src/IOHprofiler_all_suites.hpp"
 #include "src/IOHprofiler_BBOB_suite.hpp"
 #include "src/IOHprofiler_class_generator.hpp"
-#include "src/IOHprofiler_all_problems.hpp"
 #include "src/IOHprofiler_configuration.hpp"
 #include "src/IOHprofiler_experimenter.hpp"
 #include "src/IOHprofiler_observer.hpp"
@@ -81,17 +79,28 @@ namespace boost {
     }
 }
 
-typedef  std::map<std::string, int> PROBLEM_NAME_ID; 
-typedef  std::map<int, std::string> PROBLEM_ID_NAME; 
-
-
-
-typedef unsigned int uint32_t;
-
 %include <std_shared_ptr.i>
 %include <std_string.i>
+%include <std_vector.i>
 %include <std_map.i>
-%include <stdint.i>
+%include <stdint.i> 
+%include "src/IOHprofiler_BBOB_suite.hpp"
+%include "src/IOHprofiler_class_generator.hpp"
+%include "src/IOHprofiler_configuration.hpp"
+%include "src/IOHprofiler_experimenter.hpp"
+%include "src/IOHprofiler_observer.hpp"
+%include "src/IOHprofiler_PBO_suite.hpp"
+%include "src/IOHprofiler_problem.hpp"
+%include "src/IOHprofiler_random.hpp"
+%include "src/IOHprofiler_string.hpp"
+%include "src/IOHprofiler_suite.hpp"
+%include "src/IOHprofiler_transformation.hpp"
+%include "src/suite_bbob_legacy_code.hpp"
+%include "src/wmodels.hpp"
+%include "src/coco_transformation.h"
+%include "src/IOHprofiler_csv_logger.h"
+%include "src/IOHprofiler_common.h"
+%include "src/IOHprofiler_platform.h"
 %include "src/coco_transformation_objs.hpp"
 %include "src/coco_transformation_vars.hpp"
 %include "src/f_attractive_sector.hpp"
@@ -141,27 +150,17 @@ typedef unsigned int uint32_t;
 %include "src/f_sphere.hpp"
 %include "src/f_step_ellipsoid.hpp"
 %include "src/f_weierstrass.hpp"
-%include "src/IOHprofiler_all_problems.hpp"
-%include "src/IOHprofiler_all_suites.hpp"
-%include "src/IOHprofiler_BBOB_suite.hpp"
-%include "src/IOHprofiler_class_generator.hpp"
-%include "src/IOHprofiler_configuration.hpp"
-%include "src/IOHprofiler_experimenter.hpp"
-%include "src/IOHprofiler_observer.hpp"
-%include "src/IOHprofiler_PBO_suite.hpp"
-%include "src/IOHprofiler_problem.hpp"
-%include "src/IOHprofiler_random.hpp"
-%include "src/IOHprofiler_string.hpp"
-%include "src/IOHprofiler_suite.hpp"
-%include "src/IOHprofiler_transformation.hpp"
-%include "src/suite_bbob_legacy_code.hpp"
-%include "src/wmodels.hpp"
-%include "src/coco_transformation.h"
-%include "src/IOHprofiler_csv_logger.h"
-%include "src/IOHprofiler_common.h"
-%include "src/IOHprofiler_platform.h"
 
 
+
+
+
+typedef  std::map<std::string, int> PROBLEM_NAME_ID; 
+typedef  std::map<int, std::string> PROBLEM_ID_NAME; 
+
+
+
+typedef unsigned int uint32_t;
 %shared_ptr(std::vector<uint8_t>)
 %shared_ptr(std::vector<double>)
 %shared_ptr(std::vector<int>)
