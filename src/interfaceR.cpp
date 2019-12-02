@@ -62,7 +62,7 @@ int cpp_init_logger(String output_directory, String result_folder, String algori
     Rcout << "Creating logger fails.\n";
     return 1;
   }
-  logger->set_complete_flag(true);
+  logger->set_complete_flag(false);
   logger->set_interval(0);
   logger->set_time_points(std::vector<int> (0),0);
   logger->set_update_flag(true);
