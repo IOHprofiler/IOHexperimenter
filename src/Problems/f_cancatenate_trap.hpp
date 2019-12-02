@@ -44,7 +44,7 @@ public:
         block_result += x[j];
       }
       if (block_result == k) {
-        result += k;
+        result += 1;
       } else {
         result += ((double)(k - 1 - block_result) / (double) k );
       }
