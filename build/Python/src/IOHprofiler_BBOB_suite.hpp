@@ -87,30 +87,30 @@ public:
   /// 
   /// 23 functions are included in the BBOB_suite. 
   void registerProblem() {
-    registerInFactory<IOHprofiler_problem<double>,Sphere> regSphere(std::string name = "Sphere");
-    registerInFactory<IOHprofiler_problem<double>,Ellipsoid> regEllipsoid(std::string name = "Ellipsoid");
-    registerInFactory<IOHprofiler_problem<double>,Rastrigin> regRastrigin(std::string name = "Rastrigin");
-    registerInFactory<IOHprofiler_problem<double>,Bueche_Rastrigin> regBueche_Rastrigin(std::string name = "Bueche_Rastrigin");
-    registerInFactory<IOHprofiler_problem<double>,Linear_Slope> regLinear_Slope(std::string name = "Linear_Slope");
-    registerInFactory<IOHprofiler_problem<double>,Attractive_Sector> regAttractive_Sector(std::string name = "Attractive_Sector");
-    registerInFactory<IOHprofiler_problem<double>,Step_Ellipsoid> regStep_Ellipsoid(std::string name = "Step_Ellipsoid");
-    registerInFactory<IOHprofiler_problem<double>,Rosenbrock> regRosenbrock(std::string name = "Rosenbrock");
-    registerInFactory<IOHprofiler_problem<double>,Rosenbrock_Rotated> regRosenbrock_Rotated(std::string name = "Rosenbrock_Rotated");
-    registerInFactory<IOHprofiler_problem<double>,Ellipsoid_Rotated> regEllipsoid_Rotated(std::string name = "Ellipsoid_Rotated");
-    registerInFactory<IOHprofiler_problem<double>,Discus> regDiscus(std::string name = "Discus");
-    registerInFactory<IOHprofiler_problem<double>,Bent_Ciger> regBent_Ciger(std::string name = "Bent_Ciger");
-    registerInFactory<IOHprofiler_problem<double>,Sharp_Ridge> regSharp_Ridge(std::string name = "Sharp_Ridge");
-    registerInFactory<IOHprofiler_problem<double>,Different_Powers> regDifferent_Powers(std::string name = "Different_Powers");
-    registerInFactory<IOHprofiler_problem<double>,Rastrigin_Rotated> regRastrigin_Rotated(std::string name = "Rastrigin_Rotated");
-    registerInFactory<IOHprofiler_problem<double>,Weierstrass> regWeierstrass(std::string name = "Weierstrass");
-    registerInFactory<IOHprofiler_problem<double>,Schaffers10> regSchaffers10(std::string name = "Schaffers10");
-    registerInFactory<IOHprofiler_problem<double>,Schaffers1000> regSchaffers1000(std::string name = "Schaffers1000");
-    registerInFactory<IOHprofiler_problem<double>,Griewank_RosenBrock> regGriewank_RosenBrock(std::string name = "Griewank_RosenBrock");
-    registerInFactory<IOHprofiler_problem<double>,Schwefel> regSchwefel(std::string name = "Schwefel");
-    registerInFactory<IOHprofiler_problem<double>,Gallagher101> regGallagher101(std::string name = "Gallagher101");
-    registerInFactory<IOHprofiler_problem<double>,Gallagher21> regGallagher21(std::string name = "Gallagher21");
-    registerInFactory<IOHprofiler_problem<double>,Katsuura> regKatsuura(std::string name = "Katsuura");
-    registerInFactory<IOHprofiler_problem<double>,Lunacek_Bi_Rastrigin> regLunacek_Bi_Rastrigin(std::string name = "Lunacek_Bi_Rastrigin");
+    registerInFactory<IOHprofiler_problem<double>,Sphere> regSphere("Sphere");
+    registerInFactory<IOHprofiler_problem<double>,Ellipsoid> regEllipsoid("Ellipsoid");
+    registerInFactory<IOHprofiler_problem<double>,Rastrigin> regRastrigin("Rastrigin");
+    registerInFactory<IOHprofiler_problem<double>,Bueche_Rastrigin> regBueche_Rastrigin("Bueche_Rastrigin");
+    registerInFactory<IOHprofiler_problem<double>,Linear_Slope> regLinear_Slope("Linear_Slope");
+    registerInFactory<IOHprofiler_problem<double>,Attractive_Sector> regAttractive_Sector("Attractive_Sector");
+    registerInFactory<IOHprofiler_problem<double>,Step_Ellipsoid> regStep_Ellipsoid("Step_Ellipsoid");
+    registerInFactory<IOHprofiler_problem<double>,Rosenbrock> regRosenbrock("Rosenbrock");
+    registerInFactory<IOHprofiler_problem<double>,Rosenbrock_Rotated> regRosenbrock_Rotated("Rosenbrock_Rotated");
+    registerInFactory<IOHprofiler_problem<double>,Ellipsoid_Rotated> regEllipsoid_Rotated("Ellipsoid_Rotated");
+    registerInFactory<IOHprofiler_problem<double>,Discus> regDiscus("Discus");
+    registerInFactory<IOHprofiler_problem<double>,Bent_Ciger> regBent_Ciger("Bent_Ciger");
+    registerInFactory<IOHprofiler_problem<double>,Sharp_Ridge> regSharp_Ridge("Sharp_Ridge");
+    registerInFactory<IOHprofiler_problem<double>,Different_Powers> regDifferent_Powers("Different_Powers");
+    registerInFactory<IOHprofiler_problem<double>,Rastrigin_Rotated> regRastrigin_Rotated("Rastrigin_Rotated");
+    registerInFactory<IOHprofiler_problem<double>,Weierstrass> regWeierstrass("Weierstrass");
+    registerInFactory<IOHprofiler_problem<double>,Schaffers10> regSchaffers10("Schaffers10");
+    registerInFactory<IOHprofiler_problem<double>,Schaffers1000> regSchaffers1000("Schaffers1000");
+    registerInFactory<IOHprofiler_problem<double>,Griewank_RosenBrock> regGriewank_RosenBrock("Griewank_RosenBrock");
+    registerInFactory<IOHprofiler_problem<double>,Schwefel> regSchwefel("Schwefel");
+    registerInFactory<IOHprofiler_problem<double>,Gallagher101> regGallagher101("Gallagher101");
+    registerInFactory<IOHprofiler_problem<double>,Gallagher21> regGallagher21("Gallagher21");
+    registerInFactory<IOHprofiler_problem<double>,Katsuura> regKatsuura("Katsuura");
+    registerInFactory<IOHprofiler_problem<double>,Lunacek_Bi_Rastrigin> regLunacek_Bi_Rastrigin("Lunacek_Bi_Rastrigin");
     
   
     mapIDTOName(1,"Sphere");

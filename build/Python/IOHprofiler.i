@@ -1,4 +1,64 @@
 %module IOHprofiler
+%include <std_shared_ptr.i>
+%include <std_string.i>
+%include <std_vector.i>
+%include <std_map.i>
+%include <stdint.i>
+%shared_ptr(IOHprofiler_problem< int >)
+%shared_ptr(IOHprofiler_problem< double >)
+%shared_ptr(IOHprofiler_suite< double >)
+%shared_ptr(IOHprofiler_suite< int >)
+
+%shared_ptr(OneMax)
+%shared_ptr(LeadingOnes)
+%shared_ptr(Linear)
+%shared_ptr(OneMax_Dummy1)
+%shared_ptr(OneMax_Dummy2)
+%shared_ptr(OneMax_Neutrality)
+%shared_ptr(OneMax_Epistasis)
+%shared_ptr(OneMax_Ruggedness1)
+%shared_ptr(OneMax_Ruggedness2)
+%shared_ptr(OneMax_Ruggedness3)
+%shared_ptr(LeadingOnes_Dummy1)
+%shared_ptr(LeadingOnes_Dummy2)
+%shared_ptr(LeadingOnes_Neutrality)
+%shared_ptr(LeadingOnes_Epistasis)
+%shared_ptr(LeadingOnes_Ruggedness1)
+%shared_ptr(LeadingOnes_Ruggedness2)
+%shared_ptr(LeadingOnes_Ruggedness3)
+%shared_ptr(LABS)
+%shared_ptr(MIS)
+%shared_ptr(Ising_1D)
+%shared_ptr(Ising_2D)
+%shared_ptr(Ising_Triangle)
+%shared_ptr(NQueens)
+%shared_ptr(Sphere)
+%shared_ptr(Ellipsoid)
+%shared_ptr(Rastrigin)
+%shared_ptr(Bueche_Rastrigin)
+%shared_ptr(Linear_Slope)
+%shared_ptr(Attractive_Sector)
+%shared_ptr(Step_Ellipsoid)
+%shared_ptr(Rosenbrock)
+%shared_ptr(Rosenbrock_Rotated)
+%shared_ptr(Ellipsoid_Rotated)
+%shared_ptr(Discus)
+%shared_ptr(Bent_Ciger)
+%shared_ptr(Sharp_Ridge)
+%shared_ptr(Different_Powers)
+%shared_ptr(Rastrigin_Rotated)
+%shared_ptr(Weierstrass)
+%shared_ptr(Schaffers10)
+%shared_ptr(Schaffers1000)
+%shared_ptr(Griewank_RosenBrock)
+%shared_ptr(Schwefel)
+%shared_ptr(Gallagher101)
+%shared_ptr(Gallagher21)
+%shared_ptr(Katsuura)
+%shared_ptr(Lunacek_Bi_Rastrigin)
+%shared_ptr(PBO_suite)
+%shared_ptr(BBOB_suite)
+
 %{
 #include "src/coco_transformation_objs.hpp"
 #include "src/coco_transformation_vars.hpp"
@@ -79,21 +139,16 @@ namespace boost {
     }
 }
 
-%include <std_shared_ptr.i>
-%include <std_string.i>
-%include <std_vector.i>
-%include <std_map.i>
-%include <stdint.i> 
-%include "src/IOHprofiler_BBOB_suite.hpp"
-%include "src/IOHprofiler_class_generator.hpp"
+
+
 %include "src/IOHprofiler_configuration.hpp"
 %include "src/IOHprofiler_experimenter.hpp"
 %include "src/IOHprofiler_observer.hpp"
-%include "src/IOHprofiler_PBO_suite.hpp"
+
 %include "src/IOHprofiler_problem.hpp"
 %include "src/IOHprofiler_random.hpp"
 %include "src/IOHprofiler_string.hpp"
-%include "src/IOHprofiler_suite.hpp"
+
 %include "src/IOHprofiler_transformation.hpp"
 %include "src/suite_bbob_legacy_code.hpp"
 %include "src/wmodels.hpp"
@@ -103,6 +158,12 @@ namespace boost {
 %include "src/IOHprofiler_platform.h"
 %include "src/coco_transformation_objs.hpp"
 %include "src/coco_transformation_vars.hpp"
+
+%template(IOHprofiler_Problem_int) IOHprofiler_problem<int>;
+%template(IOHprofiler_Problem_double) IOHprofiler_problem<double>;
+
+
+
 %include "src/f_attractive_sector.hpp"
 %include "src/f_bent_cigar.hpp"
 %include "src/f_bueche_rastrigin.hpp"
@@ -151,36 +212,24 @@ namespace boost {
 %include "src/f_step_ellipsoid.hpp"
 %include "src/f_weierstrass.hpp"
 
+%include "src/IOHprofiler_class_generator.hpp"
 
-
-
-
-typedef  std::map<std::string, int> PROBLEM_NAME_ID; 
-typedef  std::map<int, std::string> PROBLEM_ID_NAME; 
-
-
-
-typedef unsigned int uint32_t;
-%shared_ptr(std::vector<uint8_t>)
-%shared_ptr(std::vector<double>)
-%shared_ptr(std::vector<int>)
-%shared_ptr(IOHprofiler_problem)
-%shared_ptr(IOHprofiler_problem< double >)
-%shared_ptr(IOHprofiler_problem< int >)
-%shared_ptr(IOHprofiler_suite< double >)
-%shared_ptr(IOHprofiler_suite< int >)
-
-%apply int{ UInt32 }
-%template(IOHprofiler_Problem_int) IOHprofiler_problem< int >;
-%template(IOHprofiler_Problem_double) IOHprofiler_problem< double >;
-%template(IOHprofiler_suite_int) IOHprofiler_suite< int >;
-%template(IOHprofiler_suite_double) IOHprofiler_suite< double >;
 %template (genericGenerator_int_problem) genericGenerator<IOHprofiler_problem<int> >;
 %template (genericGenerator_double_problem) genericGenerator<IOHprofiler_problem<double> >;
+%template (registerInFactory_OneMax) registerInFactory<IOHprofiler_problem<int>,OneMax>;
+%include "src/IOHprofiler_suite.hpp"
 
-%template (registerInFactory_onemax) registerInFactory<IOHprofiler_problem< int >, OneMax>;
+%template(IOHprofiler_suite_int) IOHprofiler_suite< int >;
+%template(IOHprofiler_suite_double) IOHprofiler_suite< double >;
 
+%include "src/IOHprofiler_BBOB_suite.hpp"
+%include "src/IOHprofiler_PBO_suite.hpp"
 
+typedef unsigned int uint32_t;
+%template(intvec) std::vector<int>;
+%template(doublevec) std::vector<double>;
+
+%apply int{ UInt32 }
 
 %module IOHprofiler
 #pragma SWIG nowarn=401

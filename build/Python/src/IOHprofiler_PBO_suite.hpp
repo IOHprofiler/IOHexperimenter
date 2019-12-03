@@ -78,7 +78,9 @@ public:
     IOHprofiler_set_suite_instance_id(instance_id);
     IOHprofiler_set_suite_dimension(dimension);
     IOHprofiler_set_suite_name("PBO");
+    std::cout << "inreg" << std::endl;
     registerProblem();
+    std::cout << "outreg" << std::endl;
   }
 
   /// \fn void registerProblem()
@@ -86,31 +88,32 @@ public:
   /// 
   /// 23 functions are included in the PBO_suite. 
   void registerProblem() {
-    registerInFactory<IOHprofiler_problem<int>,OneMax> regOneMax(std::string name = "OneMax");
-    registerInFactory<IOHprofiler_problem<int>,OneMax_Dummy1> regOneMax_Dummy1(std::string name = "OneMax_Dummy1");
-    registerInFactory<IOHprofiler_problem<int>,OneMax_Dummy2> regOneMax_Dummy2(std::string name = "OneMax_Dummy2");
-    registerInFactory<IOHprofiler_problem<int>,OneMax_Epistasis> regOneMax_Epistasis(std::string name = "OneMax_Epistasis");
-    registerInFactory<IOHprofiler_problem<int>,OneMax_Neutrality> regOneMax_Neutrality(std::string name = "OneMax_Neutrality");
-    registerInFactory<IOHprofiler_problem<int>,OneMax_Ruggedness1> regOneMax_Ruggedness1(std::string name = "OneMax_Ruggedness1");
-    registerInFactory<IOHprofiler_problem<int>,OneMax_Ruggedness2> regOneMax_Ruggedness2(std::string name = "OneMax_Ruggedness2");
-    registerInFactory<IOHprofiler_problem<int>,OneMax_Ruggedness3> regOneMax_Ruggedness3(std::string name = "OneMax_Ruggedness3");
+    std::cout << "inreg11" << std::endl;
+    registerInFactory<IOHprofiler_problem<int>,OneMax> regOneMax("OneMax");
+    registerInFactory<IOHprofiler_problem<int>,OneMax_Dummy1> regOneMax_Dummy1("OneMax_Dummy1");
+    registerInFactory<IOHprofiler_problem<int>,OneMax_Dummy2> regOneMax_Dummy2("OneMax_Dummy2");
+    registerInFactory<IOHprofiler_problem<int>,OneMax_Epistasis> regOneMax_Epistasis("OneMax_Epistasis");
+    registerInFactory<IOHprofiler_problem<int>,OneMax_Neutrality> regOneMax_Neutrality("OneMax_Neutrality");
+    registerInFactory<IOHprofiler_problem<int>,OneMax_Ruggedness1> regOneMax_Ruggedness1("OneMax_Ruggedness1");
+    registerInFactory<IOHprofiler_problem<int>,OneMax_Ruggedness2> regOneMax_Ruggedness2("OneMax_Ruggedness2");
+    registerInFactory<IOHprofiler_problem<int>,OneMax_Ruggedness3> regOneMax_Ruggedness3("OneMax_Ruggedness3");
 
-    registerInFactory<IOHprofiler_problem<int>,LeadingOnes> regLeadingOnes(std::string name = "LeadingOnes");
-    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Dummy1> regLeadingOnes_Dummy1(std::string name = "LeadingOnes_Dummy1");
-    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Dummy2> regLeadingOnes_Dummy2(std::string name = "LeadingOnes_Dummy2");
-    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Epistasis> regLeadingOnes_Epistasis(std::string name = "LeadingOnes_Epistasis");
-    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Neutrality> regLeadingOnes_Neutrality(std::string name = "LeadingOnes_Neutrality");
-    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Ruggedness1> regLeadingOnes_Ruggedness1(std::string name = "LeadingOnes_Ruggedness1");
-    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Ruggedness2> regLeadingOnes_Ruggedness2(std::string name = "LeadingOnes_Ruggedness2");
-    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Ruggedness3> regLeadingOnes_Ruggedness3(std::string name = "LeadingOnes_Ruggedness3");
+    registerInFactory<IOHprofiler_problem<int>,LeadingOnes> regLeadingOnes("LeadingOnes");
+    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Dummy1> regLeadingOnes_Dummy1("LeadingOnes_Dummy1");
+    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Dummy2> regLeadingOnes_Dummy2("LeadingOnes_Dummy2");
+    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Epistasis> regLeadingOnes_Epistasis("LeadingOnes_Epistasis");
+    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Neutrality> regLeadingOnes_Neutrality("LeadingOnes_Neutrality");
+    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Ruggedness1> regLeadingOnes_Ruggedness1("LeadingOnes_Ruggedness1");
+    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Ruggedness2> regLeadingOnes_Ruggedness2("LeadingOnes_Ruggedness2");
+    registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Ruggedness3> regLeadingOnes_Ruggedness3("LeadingOnes_Ruggedness3");
     
-    registerInFactory<IOHprofiler_problem<int>,Linear> regLinear(std::string name = "Linear");
-    registerInFactory<IOHprofiler_problem<int>,MIS> regMIS(std::string name = "MIS");
-    registerInFactory<IOHprofiler_problem<int>,LABS> regLABS(std::string name = "LABS");
-    registerInFactory<IOHprofiler_problem<int>,NQueens> regNQueens(std::string name = "NQueens");
-    registerInFactory<IOHprofiler_problem<int>,Ising_1D> regIsing_1D(std::string name = "Ising_1D");
-    registerInFactory<IOHprofiler_problem<int>,Ising_2D> regIsing_2D(std::string name = "Ising_2D");
-    registerInFactory<IOHprofiler_problem<int>,Ising_Triangle> regIsing_Triangle(std::string name = "Ising_Triangle");
+    registerInFactory<IOHprofiler_problem<int>,Linear> regLinear("Linear");
+    registerInFactory<IOHprofiler_problem<int>,MIS> regMIS("MIS");
+    registerInFactory<IOHprofiler_problem<int>,LABS> regLABS("LABS");
+    registerInFactory<IOHprofiler_problem<int>,NQueens> regNQueens("NQueens");
+    registerInFactory<IOHprofiler_problem<int>,Ising_1D> regIsing_1D("Ising_1D");
+    registerInFactory<IOHprofiler_problem<int>,Ising_2D> regIsing_2D("Ising_2D");
+    registerInFactory<IOHprofiler_problem<int>,Ising_Triangle> regIsing_Triangle("Ising_Triangle");
     
     mapIDTOName(1,"OneMax");
     mapIDTOName(2,"LeadingOnes");
@@ -135,6 +138,7 @@ public:
     mapIDTOName(20,"Ising_2D");
     mapIDTOName(21,"Ising_Triangle");
     mapIDTOName(23,"NQueens");
+    std::cout << "outreg11" << std::endl;
   };
 
   static PBO_suite * createInstance() {

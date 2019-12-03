@@ -77,6 +77,7 @@ public:
     }
     registerInFactory(const std::string id) {
       genericGenerator<ancestorType>::instance().regCreateFn(id, createInstance);
+        
     }
 };
 

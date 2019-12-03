@@ -110,7 +110,7 @@ public:
   /// To request a specific problem with corresponding problem_id, instance_id and dimension,
   /// without concerning the order of testing problems.
   Problem_ptr get_problem(std::string problem_name, int instance, int dimension) {
-    Problem_ptr p = genericGenerator<IOHprofiler_problem<InputType> >::instance().create(problem_name);
+    std::shared_ptr<IOHprofiler_problem<InputType> >  p = genericGenerator<IOHprofiler_problem<InputType> >::instance().create(problem_name);
     p->reset_problem();
     p->IOHprofiler_set_problem_id(this->problem_name_id_map[problem_name]);
     p->IOHprofiler_set_instance_id(instance);
