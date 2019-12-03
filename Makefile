@@ -10,9 +10,9 @@ all:$(SUBDIRS) DEBUG
 $(SUBDIRS):ECHO
 	mkdir -p $(BIN_DIR)
 	mkdir -p $(OBJS_DIR)
-	make -C $@
+	$(MAKE) -C $@
 DEBUG:ECHO
-	make -C build/Cpp
+	$(MAKE) -C build/Cpp
 ECHO:
 	@echo $(SUBDIRS)
 CLEAN:
