@@ -37,5 +37,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Note that some part of IOHexperimenter have been writthen by other teams.
 We acknowledge that :
 * the random number generator is implemented by NumBBO/CoCO team in the 
-Numerical Black-Box Optimization Benchmarking Framework
- (https://github.com/numbbo/coco).
+Numerical Black-Box Optimization Benchmarking Framework (https://github.com/numbbo/coco).
+* the original BBOB test functions are implemented by NumBBO/COCO team 
+(https://github.com/numbbo/coco), we did modifications to accommodate our framework.
