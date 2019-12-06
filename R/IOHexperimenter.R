@@ -90,7 +90,11 @@ IOHexperimenter <- function(suite = "PBO", dims = NULL, functions = NULL, instan
       dir.create(dirname(data.dir), recursive = T)
     # intialize the observer
     cpp_init_logger(
-      dirname(data.dir), basename(data.dir), algorithm.name, algorithm.info
+      dirname(data.dir), basename(data.dir), algorithm.name, algorithm.info,
+      getOption('IOHexperimenter.dat', default = T), 
+      getOption('IOHexperimenter.cdat', default = F),
+      getOption('IOHexperimenter.tdat', default = 0),
+      getOption('IOHexperimenter.idat', default = 0)
     )
     
     # cpp_logger_set_state(getOption(IOHexperimenter.dat, default = T), 

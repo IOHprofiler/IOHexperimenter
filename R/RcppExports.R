@@ -5,8 +5,8 @@ cpp_init_suite <- function(suite_name, problem_id, instance_id, dimension) {
     .Call('_IOHexperimenter_cpp_init_suite', PACKAGE = 'IOHexperimenter', suite_name, problem_id, instance_id, dimension)
 }
 
-cpp_init_logger <- function(output_directory, result_folder, algorithm_name, algorithm_info) {
-    .Call('_IOHexperimenter_cpp_init_logger', PACKAGE = 'IOHexperimenter', output_directory, result_folder, algorithm_name, algorithm_info)
+cpp_init_logger <- function(output_directory, result_folder, algorithm_name, algorithm_info, dat, cdat, tdat, idat) {
+    .Call('_IOHexperimenter_cpp_init_logger', PACKAGE = 'IOHexperimenter', output_directory, result_folder, algorithm_name, algorithm_info, dat, cdat, tdat, idat)
 }
 
 cpp_get_problem_list <- function() {

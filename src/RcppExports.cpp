@@ -20,8 +20,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_init_logger
-int cpp_init_logger(String output_directory, String result_folder, String algorithm_name, String algorithm_info);
-RcppExport SEXP _IOHexperimenter_cpp_init_logger(SEXP output_directorySEXP, SEXP result_folderSEXP, SEXP algorithm_nameSEXP, SEXP algorithm_infoSEXP) {
+int cpp_init_logger(String output_directory, String result_folder, String algorithm_name, String algorithm_info, bool dat, bool cdat, int tdat, int idat);
+RcppExport SEXP _IOHexperimenter_cpp_init_logger(SEXP output_directorySEXP, SEXP result_folderSEXP, SEXP algorithm_nameSEXP, SEXP algorithm_infoSEXP, SEXP datSEXP, SEXP cdatSEXP, SEXP tdatSEXP, SEXP idatSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -29,7 +29,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< String >::type result_folder(result_folderSEXP);
     Rcpp::traits::input_parameter< String >::type algorithm_name(algorithm_nameSEXP);
     Rcpp::traits::input_parameter< String >::type algorithm_info(algorithm_infoSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_init_logger(output_directory, result_folder, algorithm_name, algorithm_info));
+    Rcpp::traits::input_parameter< bool >::type dat(datSEXP);
+    Rcpp::traits::input_parameter< bool >::type cdat(cdatSEXP);
+    Rcpp::traits::input_parameter< int >::type tdat(tdatSEXP);
+    Rcpp::traits::input_parameter< int >::type idat(idatSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_init_logger(output_directory, result_folder, algorithm_name, algorithm_info, dat, cdat, tdat, idat));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -298,7 +302,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_IOHexperimenter_cpp_init_suite", (DL_FUNC) &_IOHexperimenter_cpp_init_suite, 4},
-    {"_IOHexperimenter_cpp_init_logger", (DL_FUNC) &_IOHexperimenter_cpp_init_logger, 4},
+    {"_IOHexperimenter_cpp_init_logger", (DL_FUNC) &_IOHexperimenter_cpp_init_logger, 8},
     {"_IOHexperimenter_cpp_get_problem_list", (DL_FUNC) &_IOHexperimenter_cpp_get_problem_list, 0},
     {"_IOHexperimenter_cpp_get_dimension_list", (DL_FUNC) &_IOHexperimenter_cpp_get_dimension_list, 0},
     {"_IOHexperimenter_cpp_get_instance_list", (DL_FUNC) &_IOHexperimenter_cpp_get_instance_list, 0},

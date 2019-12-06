@@ -56,16 +56,17 @@ int cpp_init_suite(String suite_name, const std::vector<int> &problem_id, const 
 }
 
 //[[Rcpp::export]]
-int cpp_init_logger(String output_directory, String result_folder, String algorithm_name, String algorithm_info) {
+int cpp_init_logger(String output_directory, String result_folder, String algorithm_name, String algorithm_info,
+                    bool dat, bool cdat, int tdat, int idat) {
   std::shared_ptr<IOHprofiler_csv_logger> logger(new IOHprofiler_csv_logger(output_directory, result_folder, algorithm_name, algorithm_info));
   if (logger == nullptr) {
     Rcout << "Creating logger fails.\n";
     return 1;
   }
-  logger->set_complete_flag(false);
-  logger->set_interval(0);
-  logger->set_time_points(std::vector<int> (0),0);
-  logger->set_update_flag(true);
+  logger->set_complete_flag(cdat);
+  logger->set_interval(idat);
+  logger->set_time_points(std::vector<int> (tdat),0);
+  logger->set_update_flag(dat);
   currentLogger = logger;
   currentLogger->activate_logger();
   return 0;
