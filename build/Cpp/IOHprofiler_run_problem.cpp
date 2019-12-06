@@ -75,12 +75,6 @@ void _run_w_model() {
     /***
     * Algorithm session
     */
-
-
-    
-    /// If no logger is added, there will be not any output files, but users
-    /// can still get fitness values.
-    
     
     std::vector<int> x;
     std::vector<int> x_star;
