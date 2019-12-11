@@ -6,6 +6,8 @@
 #include "IOHprofiler_csv_logger.h"
 #include "IOHprofiler_configuration.hpp"
 
+#include <ctime>
+
 
 template <class InputType> class IOHprofiler_experimenter {
 public:

@@ -134,11 +134,6 @@ typedef  std::map<int, std::string> PROBLEM_ID_NAME;
 
 %}
 
-namespace boost {
-    namespace filesystem {
-    }
-}
-
 %include "src/IOHprofiler_configuration.hpp"
 %include "src/IOHprofiler_experimenter.hpp"
 %include "src/IOHprofiler_observer.hpp"

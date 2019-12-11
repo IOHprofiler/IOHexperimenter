@@ -7,6 +7,16 @@
 /// \date 2019-06-27
 #include "IOHprofiler_csv_logger.h"
 
+bool IOHprofiler_csv_logger::folder_exist(std::string folder_name) {
+  std::fstream _file;
+  _file.open(folder_name, std::ios::in);
+  if(!_file) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 void IOHprofiler_csv_logger::activate_logger() {
   openIndex();
 }
@@ -18,10 +28,14 @@ int IOHprofiler_csv_logger::openIndex() {
 
 
 int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) { 
-  if (fs::create_directory(folder_name)) {
+#if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)  
+  if (mkdir(folder_name.c_str())) == 0) {
+#else
+  if (mkdir(folder_name.c_str(),S_IRWXU) == 0) {
+#endif
     return 1;
   } else {
-    IOH_error("Error on creating directory");
+    IOH_error("Error on creating directory" + folder_name);
     return 0;
   }
 }
@@ -39,7 +53,8 @@ std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name() {
   std::string renamed_directory = this->output_directory + IOHprofiler_path_separator + this->folder_name;
   std::string temp_folder_name = this->folder_name;
   int index = 0;
-  while (fs::exists(renamed_directory.c_str())) {
+  //while (fs::exists(renamed_directory.c_str())) {
+  while (folder_exist(renamed_directory) ) {
     ++index;
     temp_folder_name = this->folder_name  + '-' + std::to_string(index);
     renamed_directory = this->output_directory + IOHprofiler_path_separator + temp_folder_name;
@@ -64,10 +79,9 @@ void IOHprofiler_csv_logger::write_header() {
     }
   }
 
-  if (!fs::exists(sub_directory_name.c_str())) {
-    if (!fs::create_directory(sub_directory_name.c_str())) {
-      IOH_error("Error on creating sub-directory for problem " + std::to_string(problem_id));
-    }
+  // if (!fs::exists(sub_directory_name.c_str())) {
+  if (!folder_exist(sub_directory_name)) {
+    IOHprofiler_create_folder(sub_directory_name.c_str());
   }
 
   if (complete_status()) {
@@ -285,7 +299,8 @@ void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension, std::string
                           + "IOHprofiler_f" + std::to_string(problem_id)
                           + "_" + problem_name
                           + ".info";
-    if (fs::exists(infoFile_name.c_str())) {
+    // if (fs::exists(infoFile_name.c_str())) {
+    if (folder_exist(infoFile_name)) {
       titleflag = "\n";
     }
     this->infoFile.open(infoFile_name.c_str(),std::ofstream::out | std::ofstream::app);

@@ -11,11 +11,11 @@
 #include "IOHprofiler_observer.hpp"
 #include "IOHprofiler_common.h"
 
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-#undef BOOST_NO_CXX11_SCOPED_ENUMS
+// #define BOOST_NO_CXX11_SCOPED_ENUMS
+// #include <boost/filesystem.hpp>
+// #undef BOOST_NO_CXX11_SCOPED_ENUMS
 
-namespace fs = boost::filesystem;
+// namespace fs = boost::filesystem;
 
 /// \brief A class of logging csv files.
 ///
@@ -40,6 +40,8 @@ public:
   ~IOHprofiler_csv_logger() {
     this->clear_logger();
   };
+
+  bool folder_exist(std::string folder_name);
 
   void activate_logger();
   void clear_logger();

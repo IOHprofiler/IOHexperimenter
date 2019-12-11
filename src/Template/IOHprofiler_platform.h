@@ -28,6 +28,7 @@
   #include <sys/types.h>
   static const char *IOHprofiler_path_separator = "/";
 #else
+  #include <sys/stat.h>
   static const char *IOHprofiler_path_separator = "/";
 #endif
 

@@ -1,6 +1,6 @@
 
 PYTHONVERSION=/usr/include/python2.7
-LDFLAGS += -lm -lboost_system -lboost_filesystem
+LDFLAGS += -lm 
 CCFLAGS = -g -std=c++11 -Wall -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -O2 -fPIC
 ODIR=build
 SOURCE=src
@@ -18,7 +18,7 @@ $(HPP_OBJS):$(ODIR)/%.o:$(SOURCE)/%.hpp
 	$(CC) ${CCFLAGS} -c -x c++ $^ -o $@ ${LDFLAGS}
 $(POBJ):$(HPP_OBJS) $(CPP_OBJS) IOHprofiler.i
 	swig -c++ -python IOHprofiler.i
-	g++ -O2 -fPIC -std=c++11 -c IOHprofiler_wrap.cxx -I$(PYTHONVERSION) -lboost_system -lboost_filesystem
-	g++ -shared $(HPP_OBJS) $(CPP_OBJS) IOHprofiler_wrap.o -o $@ -lboost_system -lboost_filesystem -std=c++11
+	g++ -O2 -fPIC -std=c++11 -c IOHprofiler_wrap.cxx -I$(PYTHONVERSION) 
+	g++ -shared $(HPP_OBJS) $(CPP_OBJS) IOHprofiler_wrap.o -o $@ -std=c++11
 ECHO:
 	@echo $(HPPSUBDIRS)
