@@ -55,12 +55,12 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int> > problem, 
     if (mutation(x,*mutation_rate)) {
       y = problem->evaluate(x);
       logger->write_line(problem->loggerInfo());
+      count++;
     }
     if (y >= best_value) {
       best_value = y;
       x_star = x;
     }
-    count++;
   }
 }
 

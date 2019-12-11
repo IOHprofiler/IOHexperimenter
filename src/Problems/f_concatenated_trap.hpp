@@ -1,21 +1,21 @@
-/// \file f_Cancatenate_Trap.hpp
-/// \brief cpp file for class f_Cancatenate_Trap.
+/// \file f_Concatenated_Trap.hpp
+/// \brief cpp file for class f_concatenated_trap.
 ///
 /// A detailed file description.
 ///
 /// \author Furong Ye
 /// \date 2019-12-01
-#ifndef _F_CANCATENATE_TRAP_H
-#define _F_CANCATENATE_TRAP_H
+#ifndef _F_CONCATENATED_TRAP_H
+#define _F_CONCATENATED_TRAP_H
 
 #include "IOHprofiler_problem.hpp"
 
-class Cancatenate_Trap : public IOHprofiler_problem<int> {
+class Concatenated_Trap : public IOHprofiler_problem<int> {
 public:
 
-  Cancatenate_Trap(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+  Concatenated_Trap(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
-    IOHprofiler_set_problem_name("Cancatenate_Trap");
+    IOHprofiler_set_problem_name("Concatenated_Trap");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
@@ -24,7 +24,7 @@ public:
     Initilize_problem(dimension);
   }
   
-  ~Cancatenate_Trap() {};
+  ~Concatenated_Trap() {};
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
@@ -65,8 +65,8 @@ public:
     return result;
   };
 
-  static Cancatenate_Trap * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
-    return new Cancatenate_Trap(instance_id, dimension);
+  static Concatenated_Trap * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+    return new Concatenated_Trap(instance_id, dimension);
   };
 };
 

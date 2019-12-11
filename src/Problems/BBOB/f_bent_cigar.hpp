@@ -1,5 +1,5 @@
-/// \file f_Bent_Ciger.hpp
-/// \brief cpp file for class f_Bent_Ciger.
+/// \file f_bent_cigar.hpp
+/// \brief cpp file for class f_Bent_Cigar.
 ///
 /// A detailed file description.
 /// Refer "https://github.com/numbbo/coco/blob/master/code-experiments/src/f_bent_cigar.c"
@@ -12,11 +12,11 @@
 #include "IOHprofiler_problem.hpp"
 #include "coco_transformation.h"
 
-class Bent_Ciger : public IOHprofiler_problem<double> {
+class Bent_Cigar : public IOHprofiler_problem<double> {
 public:
-  Bent_Ciger(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+  Bent_Cigar(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
-    IOHprofiler_set_problem_name("Bent_Ciger");
+    IOHprofiler_set_problem_name("Bent_Cigar");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
@@ -25,7 +25,7 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Bent_Ciger() {};
+  ~Bent_Cigar() {};
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
@@ -76,8 +76,8 @@ public:
     return result[0];
   };
   
-  static Bent_Ciger * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
-    return new Bent_Ciger(instance_id, dimension);
+  static Bent_Cigar * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+    return new Bent_Cigar(instance_id, dimension);
   };
 };
 
