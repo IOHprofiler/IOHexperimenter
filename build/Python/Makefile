@@ -11,8 +11,10 @@ HPP_OBJS=${patsubst $(SOURCE)/%.hpp, $(ODIR)/%.o, $(HPP_SOURCE)}
 POBJ=_IOHprofiler.so
 all: $(CPP_OBJS) $(HPP_OBJS) $(POBJ)
 $(CPP_OBJS):$(ODIR)/%.o:$(SOURCE)/%.cpp
+	mkdir -p $(ODIR)
 	$(CC) ${CCFLAGS} -c -x c++ $^ -o $@ ${LDFLAGS}
 $(HPP_OBJS):$(ODIR)/%.o:$(SOURCE)/%.hpp
+	mkdir -p $(ODIR)
 	$(CC) ${CCFLAGS} -c -x c++ $^ -o $@ ${LDFLAGS}
 $(POBJ):$(HPP_OBJS) $(CPP_OBJS) IOHprofiler.i
 	swig -c++ -python IOHprofiler.i
