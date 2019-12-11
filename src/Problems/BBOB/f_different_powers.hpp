@@ -8,8 +8,8 @@
 #ifndef _F_DIFFERENT_POWERS_HPP
 #define _F_DIFFERENT_POWERS_HPP
 
-#include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation.h"
+#include "IOHprofiler_problem.hpp"
+#include "coco_transformation.h"
 
 class Different_Powers : public IOHprofiler_problem<double> {
 public:

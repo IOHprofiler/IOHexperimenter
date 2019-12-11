@@ -10,7 +10,7 @@
 
 #include "IOHprofiler_common.h"
 #include "IOHprofiler_random.hpp"
-#include "../Problems/BBOB/bbob_common_used_functions/coco_transformation.h"
+#include "coco_transformation.h"
 
 /// \brief A class consisting of transformation methods.
 class IOHprofiler_transformation: public IOHprofiler_random {

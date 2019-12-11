@@ -8,7 +8,7 @@
 #ifndef _F_NK_LANDSCAPES_H
 #define _F_NK_LANDSCAPES_H
 
-#include "../Template/IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.hpp"
 
 class NK_Landscapes : public IOHprofiler_random, public IOHprofiler_problem<int> {
 public:

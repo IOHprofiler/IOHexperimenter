@@ -9,8 +9,8 @@
 #ifndef _F_LUNACEK_BI_RASTRIGIN_HPP
 #define _F_LUNACEK_BI_RASTRIGIN_HPP
 
-#include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation.h"
+#include "IOHprofiler_problem.hpp"
+#include "coco_transformation.h"
 
 class Lunacek_Bi_Rastrigin : public IOHprofiler_problem<double> {
 public:

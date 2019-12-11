@@ -8,7 +8,7 @@
 #ifndef _F_LINEAR_H
 #define _F_LINEAR_H
 
-#include "../Template/IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.hpp"
 
 class Linear : public IOHprofiler_problem<int> {
 public:

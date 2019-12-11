@@ -9,8 +9,8 @@
 #ifndef _F_SPHERE_HPP_
 #define _F_SPHERE_HPP_
 
-#include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation.h"
+#include "IOHprofiler_problem.hpp"
+#include "coco_transformation.h"
 
 class Sphere : public IOHprofiler_problem<double> {
 public:

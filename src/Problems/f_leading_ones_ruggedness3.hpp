@@ -8,8 +8,8 @@
 #ifndef _F_LEADING_ONES_RUGGEDNESSTHREE_H
 #define _F_LEADING_ONES_RUGGEDNESSTHREE_H
 
-#include "../Template/IOHprofiler_problem.hpp"
-#include "common_used_functions/wmodels.hpp"
+#include "IOHprofiler_problem.hpp"
+#include "wmodels.hpp"
 
 class LeadingOnes_Ruggedness3 : public IOHprofiler_problem<int> {
 public:

@@ -32,7 +32,7 @@
 #include "f_MIS.hpp"
 #include "f_N_queens.hpp"
 
-#include "../Template/IOHprofiler_class_generator.hpp"
+#include "IOHprofiler_class_generator.hpp"
 
 static registerInFactory<IOHprofiler_problem<int>,OneMax> regOneMax("OneMax");
 static registerInFactory<IOHprofiler_problem<int>,OneMax_Dummy1> regOneMax_Dummy1("OneMax_Dummy1");

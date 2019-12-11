@@ -8,8 +8,8 @@
 #ifndef _F_WEIERSTRASS_HPP
 #define _F_WEIERSTRASS_HPP
 
-#include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation.h"
+#include "IOHprofiler_problem.hpp"
+#include "coco_transformation.h"
 
 /** @brief Number of summands in the Weierstrass problem. */
 #define F_WEIERSTRASS_SUMMANDS 12

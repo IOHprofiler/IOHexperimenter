@@ -8,7 +8,7 @@
 #ifndef _F_MIS_H
 #define _F_MIS_H
 
-#include "../Template/IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.hpp"
 
 class MIS : public IOHprofiler_problem<int> {
 public:

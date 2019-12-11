@@ -9,7 +9,7 @@
 #define _F_LEADING_ONES_H
 
 
-#include "../Template/IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.hpp"
 
 class LeadingOnes : public IOHprofiler_problem<int> {
 public:

@@ -1,9 +1,9 @@
 #ifndef _IOHPROFILER_EXPERIMENTER_HPP
 #define _IOHPROFILER_EXPERIMENTER_HPP
 
-#include "../IOHprofiler_common.h"
-#include "../../Suites/IOHprofiler_all_suites.hpp"
-#include "../Loggers/IOHprofiler_csv_logger.h"
+#include "IOHprofiler_common.h"
+#include "IOHprofiler_all_suites.hpp"
+#include "IOHprofiler_csv_logger.h"
 #include "IOHprofiler_configuration.hpp"
 
 

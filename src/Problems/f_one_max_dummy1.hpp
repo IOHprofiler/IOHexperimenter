@@ -9,8 +9,8 @@
 #ifndef _F_ONE_MAX_DUMMYONE_H
 #define _F_ONE_MAX_DUMMYONE_H
 
-#include "../Template/IOHprofiler_problem.hpp"
-#include "common_used_functions/wmodels.hpp"
+#include "IOHprofiler_problem.hpp"
+#include "wmodels.hpp"
 
 class OneMax_Dummy1 : public IOHprofiler_problem<int> {
 public:

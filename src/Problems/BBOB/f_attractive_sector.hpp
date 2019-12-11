@@ -9,8 +9,8 @@
 #ifndef _F_ATTRACTIVE_SECTOR_HPP
 #define _F_ATTRACTIVE_SECTOR_HPP
 
-#include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation.h"
+#include "IOHprofiler_problem.hpp"
+#include "coco_transformation.h"
 
 class Attractive_Sector : public IOHprofiler_problem<double> {
 public:

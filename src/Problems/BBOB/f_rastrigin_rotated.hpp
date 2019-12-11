@@ -9,8 +9,8 @@
 #ifndef _F_RASTRIGIN_ROTATED_HPP
 #define _F_RASTRIGIN_ROTATED_HPP
 
-#include "../../Template/IOHprofiler_problem.hpp"
-#include "bbob_common_used_functions/coco_transformation.h"
+#include "IOHprofiler_problem.hpp"
+#include "coco_transformation.h"
 
 class Rastrigin_Rotated : public IOHprofiler_problem<double> {
 public:

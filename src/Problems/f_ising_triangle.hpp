@@ -8,7 +8,7 @@
 #ifndef _F_ISING_TRIANGLE_H
 #define _F_ISING_TRIANGLE_H
 
-#include "../Template/IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.hpp"
 
 class Ising_Triangle : public IOHprofiler_problem<int> {
 public:

@@ -9,8 +9,8 @@
 #ifndef _F_LEADING_ONES_DUMMYTWO_H
 #define _F_LEADING_ONES_DUMMYTWO_H
 
-#include "../Template/IOHprofiler_problem.hpp"
-#include "common_used_functions/wmodels.hpp"
+#include "IOHprofiler_problem.hpp"
+#include "wmodels.hpp"
 
 class LeadingOnes_Dummy2 : public IOHprofiler_problem<int> {
 public:

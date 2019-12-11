@@ -9,8 +9,8 @@
 #ifndef _F_W_MODEL_ONE_MAX_HPP
 #define _F_W_MODEL_ONE_MAX_HPP
 
-#include "../Template/IOHprofiler_problem.hpp"
-#include "common_used_functions/wmodels.hpp"
+#include "IOHprofiler_problem.hpp"
+#include "wmodels.hpp"
 
 class W_Model_OneMax : public IOHprofiler_problem<int> {
 public:

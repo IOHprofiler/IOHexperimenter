@@ -11,7 +11,7 @@
 #include "IOHprofiler_PBO_suite.hpp"
 #include "IOHprofiler_BBOB_suite.hpp"
 
-#include "../Template/IOHprofiler_class_generator.hpp"
+#include "IOHprofiler_class_generator.hpp"
 
 static registerInFactory<IOHprofiler_suite<int>,PBO_suite> regPBO("PBO");
 static registerInFactory<IOHprofiler_suite<double>,BBOB_suite> regBBOB("BBOB");

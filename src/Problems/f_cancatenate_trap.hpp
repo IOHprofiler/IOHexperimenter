@@ -8,7 +8,7 @@
 #ifndef _F_CANCATENATE_TRAP_H
 #define _F_CANCATENATE_TRAP_H
 
-#include "../Template/IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.hpp"
 
 class Cancatenate_Trap : public IOHprofiler_problem<int> {
 public:

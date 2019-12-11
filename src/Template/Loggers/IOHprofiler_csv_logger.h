@@ -8,8 +8,8 @@
 #ifndef _IOHPROFILER_CSV_LOGGER_H
 #define _IOHPROFILER_CSV_LOGGER_H
 
-#include "../IOHprofiler_observer.hpp"
-#include "../IOHprofiler_common.h"
+#include "IOHprofiler_observer.hpp"
+#include "IOHprofiler_common.h"
 
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
