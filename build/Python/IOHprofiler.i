@@ -32,6 +32,8 @@
 %shared_ptr(Ising_2D)
 %shared_ptr(Ising_Triangle)
 %shared_ptr(NQueens)
+%shared_ptr(Concatenated_Trap)
+%shared_ptr(NK_Landscapes)
 %shared_ptr(Sphere)
 %shared_ptr(Ellipsoid)
 %shared_ptr(Rastrigin)
@@ -43,7 +45,7 @@
 %shared_ptr(Rosenbrock_Rotated)
 %shared_ptr(Ellipsoid_Rotated)
 %shared_ptr(Discus)
-%shared_ptr(Bent_Ciger)
+%shared_ptr(Bent_Cigar)
 %shared_ptr(Sharp_Ridge)
 %shared_ptr(Different_Powers)
 %shared_ptr(Rastrigin_Rotated)
@@ -132,14 +134,10 @@ typedef  std::map<int, std::string> PROBLEM_ID_NAME;
 
 %}
 
-
-
 namespace boost {
     namespace filesystem {
     }
 }
-
-
 
 %include "src/IOHprofiler_configuration.hpp"
 %include "src/IOHprofiler_experimenter.hpp"
