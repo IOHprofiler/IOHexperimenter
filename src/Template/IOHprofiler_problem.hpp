@@ -28,6 +28,9 @@ public:
     instance_id = DEFAULT_INSTANCE;
     maximization_minimization_flag = 1; /// < set as maximization if flag = 1, otherwise minimization.
     number_of_variables = DEFAULT_DIMENSION; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
+    lowerbound = std::vector<InputType> (number_of_variables);
+    upperbound = std::vector<InputType> (number_of_variables);
+    optimal = std::vector<double>(number_of_objectives);
     optimalFound = false;
     evaluations = 0;
     best_so_far_raw_evaluations = 0;
@@ -135,59 +138,29 @@ public:
   /// in this function.
   /// \param x A InputType vector of variables.
   /// \param y A double vector of objectives.
-  void evaluate_multi(std::vector<InputType> x, std::vector<double> &y) {
-    ++this->evaluations;
+  // void evaluate_multi(std::vector<InputType> x, std::vector<double> &y) {
+  //   ++this->evaluations;
 
-    transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
-    y = internal_evaluate_multi(x);
+  //   transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
+  //   y = internal_evaluate_multi(x);
     
-    this->raw_objectives = y;
-    if (compareObjectives(y,this->best_so_far_raw_objectives,this->maximization_minimization_flag)) {
-      this->best_so_far_raw_objectives = y;
-      this->best_so_far_raw_evaluations = this->evaluations;
-    }
+  //   this->raw_objectives = y;
+  //   if (compareObjectives(y,this->best_so_far_raw_objectives,this->maximization_minimization_flag)) {
+  //     this->best_so_far_raw_objectives = y;
+  //     this->best_so_far_raw_evaluations = this->evaluations;
+  //   }
     
-    transformation.objectives_transformation(x,y,this->problem_id,this->instance_id,this->problem_type);
-    if (compareObjectives(y,this->best_so_far_transformed_objectives,this->maximization_minimization_flag)) {
-      this->best_so_far_transformed_objectives = y;
-      this->best_so_far_transformed_evaluations = this->evaluations;
-    }
+  //   transformation.objectives_transformation(x,y,this->problem_id,this->instance_id,this->problem_type);
+  //   if (compareObjectives(y,this->best_so_far_transformed_objectives,this->maximization_minimization_flag)) {
+  //     this->best_so_far_transformed_objectives = y;
+  //     this->best_so_far_transformed_evaluations = this->evaluations;
+  //   }
     
-    this->transformed_objectives = y;
-    if (compareVector(y,this->optimal)) {
-      this->optimalFound = true;
-    }
-  };
-
-  /// \fn void evaluate(std::vector<InputType> x, std::vector<double> &y)
-  /// \brife A common function for evaluating fitness of problems.
-  ///
-  /// Raw evaluate process, tranformation operations, and logging process are excuted 
-  /// in this function.
-  /// \param x A InputType vector of variables.
-  /// \param y A double vector of objectives.
-  void evaluate(std::vector<InputType> x, double &y) {
-    ++this->evaluations;
-
-    transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
-    y = internal_evaluate(x);
-    
-    this->raw_objectives = y;
-    
-
-    transformation.objectives_transformation(x,y,this->problem_id,this->instance_id,this->problem_type);
-    if (y > this->best_so_far_transformed_objectives[0]) {
-      this->best_so_far_transformed_objectives[0] = y;
-      this->best_so_far_transformed_evaluations = this->evaluations;
-      this->best_so_far_raw_objectives[0] = y;
-      this->best_so_far_raw_evaluations = this->evaluations;
-    }
-    
-    this->transformed_objectives = y;
-    if (y == this->optimal[0]) {
-      this->optimalFound = true;
-    }
-  };
+  //   this->transformed_objectives = y;
+  //   if (compareVector(y,this->optimal)) {
+  //     this->optimalFound = true;
+  //   }
+  // };
 
   /// \fn void calc_optimal()
   ///
@@ -362,22 +335,6 @@ public:
   void IOHprofiler_set_upperbound(const std::vector<InputType> &upperbound) {
     this->upperbound = upperbound;
   };
-
-  std::vector<int> IOHprofiler_get_evaluate_int_info() const {
-    return this->evaluate_int_info;
-  };
-
-  void IOHprofiler_set_evaluate_int_info(const std::vector<int> &evaluate_int_info) {
-    this->evaluate_int_info = evaluate_int_info;
-  };
-
-  //std::vector<double> IOHprofiler_get_evaluate_double_info() {
-  //  return this->evaluate_double_info;
-  //};
-
-  //void IOHprofiler_set_evaluate_double_info(const std::vector<double> &evaluate_double_info) {
-  //  this->evaluate_double_info = evaluate_double_info;
-  //};
  
   int IOHprofiler_get_number_of_variables() const {
     return this->number_of_variables;
@@ -486,11 +443,11 @@ public:
   };
 
   void IOHprofiler_evaluate_optimal(std::vector<InputType> best_variables) {
-    this->optimal = this->evaluate(best_variables);
+    this->optimal[0] = this->evaluate(best_variables);
   };
 
   void IOHprofiler_evaluate_optimal() {
-    this->optimal = this->evaluate(this->best_variables);
+    this->optimal[0] = this->evaluate(this->best_variables);
   };
 
   int IOHprofiler_get_evaluations() const {
