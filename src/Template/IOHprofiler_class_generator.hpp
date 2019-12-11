@@ -10,16 +10,16 @@
 
 #include "IOHprofiler_common.h"
 
-using defaultIDKeyType = std::string;
+typedef std::string defaultIDKeyType;
 
 template <class manufacturedObj> class genericGenerator {
   
-  using BASE_CREATE_FN = std::shared_ptr<manufacturedObj> (*)();
+  /// typedef std::shared_ptr<manufacturedObj> (*BASE_CREATE_FN)() ;
   
   /// FN_REGISTRY is the registry of all the BASE_CREATE_FN
   /// pointers registered.  Functions are registered using the
   /// regCreateFn member function (see below).
-  using FN_registry = std::map<std::string, BASE_CREATE_FN>;
+  typedef  std::map<std::string, std::shared_ptr<manufacturedObj> (*)()> FN_registry;
   FN_registry registry;
 
   genericGenerator();
@@ -33,7 +33,7 @@ public:
   /// Classes derived from manufacturedObj call this function once
   /// per program to register the class ID key, and a pointer to
   /// the function that creates the class.
-  void regCreateFn(std::string, BASE_CREATE_FN);
+  void regCreateFn(std::string, std::shared_ptr<manufacturedObj> (*)());
   
   /// Create a new class of the type specified by className.
   std::shared_ptr<manufacturedObj> create(std::string className) const;
@@ -51,7 +51,7 @@ template <class manufacturedObj> genericGenerator<manufacturedObj> &genericGener
 /// Register the creation function.  
 /// This simply associates the classIDKey with the function used to create the class.  
 /// The return value is a dummy value, which is used to allow static initialization of the registry.
-template <class manufacturedObj> void genericGenerator<manufacturedObj>::regCreateFn(std::string clName, BASE_CREATE_FN func) {
+template <class manufacturedObj> void genericGenerator<manufacturedObj>::regCreateFn(std::string clName, std::shared_ptr<manufacturedObj> (*func)()) {
   registry[clName]=func;
 }
 
