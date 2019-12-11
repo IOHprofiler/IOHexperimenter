@@ -28,7 +28,7 @@
   #include <sys/types.h>
   static const char *IOHprofiler_path_separator = "/";
 #else
-  #error Unknown platform
+  static const char *IOHprofiler_path_separator = "/";
 #endif
 
 /* Definitions needed for creating and removing directories */
