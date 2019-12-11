@@ -11,8 +11,8 @@
 #include "IOHprofiler_class_generator.hpp"
 #include "IOHprofiler_problem.hpp"
 
-using PROBLEM_NAME_ID =  std::map<std::string, int>; 
-using PROBLEM_ID_NAME =  std::map<int, std::string>; 
+typedef std::map<std::string, int> PROBLEM_NAME_ID; 
+typedef std::map<int, std::string> PROBLEM_ID_NAME; 
 
 /// \brief A base class for construct a suite for sets of IOHprofiler_problems.
 ///
