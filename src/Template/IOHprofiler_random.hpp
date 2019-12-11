@@ -13,9 +13,25 @@
 
 #define IOH_PI 3.14159265358979323846
 #define DEFAULT_SEED 1000
+
+
+#define RND_MULTIPLIER 16807
+#define RND_MODULUS 2147483647
+#define RND_MODULUS_DIV 127773
+#define RND_MOD_MULTIPLIER 2836
+
+#define IOHPROFILER_SHORT_LAG  273
+#define IOHPROFILER_LONG_LAG 607
 class IOHprofiler_random {
 public:
   IOHprofiler_random(uint32_t seed = DEFAULT_SEED) {
+    a = RND_MULTIPLIER; /// < multiplier.
+    m = RND_MODULUS; /// < modulus.
+    q = RND_MODULUS_DIV; /// < modulusdiv multiplier.
+    r = RND_MOD_MULTIPLIER; /// < modulus mod multiplier.
+
+    IOHprofiler_SHORT_LAG  = IOHPROFILER_SHORT_LAG;
+    IOHprofiler_LONG_LAG = IOHPROFILER_LONG_LAG;
     for (int i = 0; i < IOHprofiler_LONG_LAG; ++i) {
       x[i] = ((double)seed) / (double)(((uint64_t)1UL << 32) - 1);
       seed = (uint32_t)1812433253UL * (seed ^ (seed >> 30)) + ((uint32_t)i + 1);
@@ -153,15 +169,14 @@ private:
   //long _seed[32];
   size_t _seed_index;
 
+  long a; /// < multiplier.
+  long m; /// < modulus.
+  long q; /// < modulusdiv multiplier.
+  long r; /// < modulus mod multiplier.
   //double rand_r;
-/* OMS: All the following assignments are misplaced - should appear in the c'tors */
-  const long a = 16807; /// < multiplier.
-  const long m = 2147483647; /// < modulus.
-  const long q = 127773; /// < modulusdiv multiplier.
-  const long r = 2836; /// < modulus mod multiplier.
 
-  const int IOHprofiler_SHORT_LAG  = 273;
-  const int IOHprofiler_LONG_LAG = 607;
+  int IOHprofiler_SHORT_LAG;
+  int IOHprofiler_LONG_LAG;
   double x[607];
 };
 
