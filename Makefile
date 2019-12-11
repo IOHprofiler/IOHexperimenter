@@ -1,18 +1,28 @@
+LANG=
 CC=g++
 LDFLAGS = 
 CCFLAGS = -g -std=c++11 -Wall -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -O2
 SUBDIRS=src
 ROOT_DIR=$(shell pwd)
-OBJS_DIR=build/Cpp/obj
-BIN_DIR=build/Cpp/bin
-export CC BIN OBJS_DIR BIN_DIR ROOT_DIR CCFLAGS LDFLAGS
+
+T_DIR=
+ifeq ($(LANG),c++)
+	@echo 'Compile C++'
+	T_DIR=build/Cpp
+else
+ifeq ($(LANG),python)
+	T_DIR=build/Python
+else
+	T_DIR=build/Cpp
+endif
+endif
+export CC T_DIR ROOT_DIR CCFLAGS LDFLAGS
 all:$(SUBDIRS) DEBUG
 $(SUBDIRS):ECHO
-	mkdir -p $(BIN_DIR)
-	mkdir -p $(OBJS_DIR)
+	mkdir -p $(T_DIR)/src
 	make -C $@
 DEBUG:ECHO
-	make -C build/Cpp
+	make -C $(T_DIR)
 ECHO:
 	@echo $(SUBDIRS)
 CLEAN:
