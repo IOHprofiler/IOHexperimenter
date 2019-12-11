@@ -1,4 +1,4 @@
-#include "../../src/Template/Experiments/IOHprofiler_experimenter.hpp"
+#include "src/IOHprofiler_experimenter.hpp"
 
 IOHprofiler_random random_generator(1);
 static int budget_scale = 100;
@@ -69,9 +69,10 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int> > problem, 
 void random_search(std::shared_ptr<IOHprofiler_problem<double> > problem, std::shared_ptr<IOHprofiler_csv_logger> logger) {
   /// Declaration for variables in the algorithm
   std::vector<double> x(problem->IOHprofiler_get_number_of_variables());
-  double y;
+  double y,best_y;
 
   int count = 0;
+  best_y = -DBL_MAX;
   while (count <= 500) {
     for (int i = 0; i != problem->IOHprofiler_get_number_of_variables(); ++i) {
       x[i] = random_generator.IOHprofiler_uniform_rand() * 10 - 5;
@@ -80,6 +81,10 @@ void random_search(std::shared_ptr<IOHprofiler_problem<double> > problem, std::s
     y = problem->evaluate(x);
     logger->write_line(problem->loggerCOCOInfo());
     count++;
+
+    if(y > best_y) {
+      best_y = y;
+    }
   }
 }
 

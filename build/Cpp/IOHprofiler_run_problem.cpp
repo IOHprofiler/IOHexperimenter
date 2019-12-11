@@ -1,5 +1,5 @@
-#include "../../src/Problems/f_one_max.hpp"
-#include "../../src/Template/Loggers/IOHprofiler_csv_logger.h"
+#include "src/f_one_max.hpp"
+#include "src/IOHprofiler_csv_logger.h"
 
 std::vector<int> Initialization(int dimension) {
   std::vector<int> x;
