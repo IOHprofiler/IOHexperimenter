@@ -64,6 +64,7 @@
 %{
 #include "src/coco_transformation_objs.hpp"
 #include "src/coco_transformation_vars.hpp"
+#include "src/coco_transformation.h"
 #include "src/f_attractive_sector.hpp"
 #include "src/f_bent_cigar.hpp"
 #include "src/f_bueche_rastrigin.hpp"
@@ -122,7 +123,6 @@
 #include "src/IOHprofiler_transformation.hpp"
 #include "src/suite_bbob_legacy_code.hpp"
 #include "src/wmodels.hpp"
-#include "src/coco_transformation.h"
 #include "src/IOHprofiler_csv_logger.h"
 #include "src/IOHprofiler_common.h"
 #include "src/IOHprofiler_platform.h"
@@ -139,23 +139,22 @@ typedef  std::map<int, std::string> PROBLEM_ID_NAME;
 %include "src/IOHprofiler_observer.hpp"
 
 %include "src/IOHprofiler_problem.hpp"
+%template(IOHprofiler_Problem_int) IOHprofiler_problem<int>;
+%template(IOHprofiler_Problem_double) IOHprofiler_problem<double>;
+%template(intProblemPtr) std::vector< std::shared_ptr< IOHprofiler_problem< int > > >;
+%template(doubleProblemPtr) std::vector< std::shared_ptr< IOHprofiler_problem< double > > >;
 %include "src/IOHprofiler_random.hpp"
 %include "src/IOHprofiler_string.hpp"
 
 %include "src/IOHprofiler_transformation.hpp"
 %include "src/suite_bbob_legacy_code.hpp"
 %include "src/wmodels.hpp"
-%include "src/coco_transformation.h"
 %include "src/IOHprofiler_csv_logger.h"
 %include "src/IOHprofiler_common.h"
 %include "src/IOHprofiler_platform.h"
 %include "src/coco_transformation_objs.hpp"
 %include "src/coco_transformation_vars.hpp"
-
-%template(IOHprofiler_Problem_int) IOHprofiler_problem<int>;
-%template(IOHprofiler_Problem_double) IOHprofiler_problem<double>;
-
-
+%include "src/coco_transformation.cpp"
 
 %include "src/f_attractive_sector.hpp"
 %include "src/f_bent_cigar.hpp"
@@ -209,19 +208,17 @@ typedef  std::map<int, std::string> PROBLEM_ID_NAME;
 
 %template (genericGenerator_int_problem) genericGenerator<IOHprofiler_problem<int> >;
 %template (genericGenerator_double_problem) genericGenerator<IOHprofiler_problem<double> >;
-%template (registerInFactory_OneMax) registerInFactory<IOHprofiler_problem<int>,OneMax>;
 %include "src/IOHprofiler_suite.hpp"
-
 %template(IOHprofiler_suite_int) IOHprofiler_suite< int >;
 %template(IOHprofiler_suite_double) IOHprofiler_suite< double >;
+
 
 %include "src/IOHprofiler_BBOB_suite.hpp"
 %include "src/IOHprofiler_PBO_suite.hpp"
 
-typedef unsigned int uint32_t;
+
 %template(intvec) std::vector<int>;
 %template(doublevec) std::vector<double>;
-
 %apply int{ UInt32 }
 
 %module IOHprofiler
