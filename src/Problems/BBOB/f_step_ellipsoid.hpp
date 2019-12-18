@@ -16,6 +16,7 @@ class Step_Ellipsoid : public IOHprofiler_problem<double> {
 public:
   Step_Ellipsoid(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(7);
     IOHprofiler_set_problem_name("Step_Ellipsoid");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);

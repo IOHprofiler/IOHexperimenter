@@ -40,6 +40,7 @@ class Gallagher101 : public IOHprofiler_problem<double> {
 public:
   Gallagher101(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(21);
     IOHprofiler_set_problem_name("Gallagher101");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);

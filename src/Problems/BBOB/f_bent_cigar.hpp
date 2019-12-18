@@ -16,6 +16,7 @@ class Bent_Cigar : public IOHprofiler_problem<double> {
 public:
   Bent_Cigar(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(12);   
     IOHprofiler_set_problem_name("Bent_Cigar");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);

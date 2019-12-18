@@ -16,6 +16,7 @@ class Griewank_RosenBrock : public IOHprofiler_problem<double> {
 public:
   Griewank_RosenBrock(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(19);
     IOHprofiler_set_problem_name("Griewank_RosenBrock");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
