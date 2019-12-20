@@ -356,7 +356,7 @@ public:
   /// best_variables, lowerbound, upperbound, and optimal need to be updated as well.
   ///
   /// \param number_of_variables
-  void IOHprofiler_set_number_of_variables(int number_of_variables) {
+  void IOHprofiler_set_number_of_variables(const int number_of_variables) {
     this->number_of_variables = number_of_variables;
     if (this->best_variables.size() != 0) {
       this->IOHprofiler_set_best_variables(this->best_variables[0]);
@@ -378,7 +378,7 @@ public:
   /// the best value for each bit is not staic, another input 'best_variables' is supplied.
   ///
   /// \param number_of_variables, best_variables
-  void IOHprofiler_set_number_of_variables(int number_of_variables, const std::vector<InputType> &best_variables) {
+  void IOHprofiler_set_number_of_variables(const int number_of_variables, const std::vector<InputType> &best_variables) {
     this->number_of_variables = number_of_variables;
     this->best_variables = best_variables;
     if (this->lowerbound.size() != 0) {
@@ -395,7 +395,7 @@ public:
     return this->number_of_objectives;
   };
 
-  void IOHprofiler_set_number_of_objectives(int number_of_objectives) {
+  void IOHprofiler_set_number_of_objectives(const int number_of_objectives) {
     this->number_of_objectives = number_of_objectives;
     this->raw_objectives = std::vector<double>(this->number_of_objectives);
     this->transformed_objectives = std::vector<double>(this->number_of_objectives);
