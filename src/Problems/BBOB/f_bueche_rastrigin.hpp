@@ -15,7 +15,7 @@ class Bueche_Rastrigin : public IOHprofiler_problem<double> {
 public:
   Bueche_Rastrigin(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
-    IOHprofiler_set_problem_id(3);
+    IOHprofiler_set_problem_id(4);
     IOHprofiler_set_problem_name("Bueche_Rastrigin");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
