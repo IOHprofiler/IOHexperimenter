@@ -119,6 +119,20 @@ public:
     return p;
   }
 
+  /// \fn Problem_ptr get_next_problem()
+  /// \brief An interface of requesting problems in suite.
+  ///
+  /// To request a specific problem with corresponding problem_id, instance_id and dimension,
+  /// without concerning the order of testing problems.
+  Problem_ptr get_problem(int problem_id, int instance, int dimension) {
+    Problem_ptr p = genericGenerator<IOHprofiler_problem<InputType> >::instance().create(this->problem_id_name_map[problem_id]);
+    p->reset_problem();
+    p->IOHprofiler_set_problem_id(problem_id);
+    p->IOHprofiler_set_instance_id(instance);
+    p->IOHprofiler_set_number_of_variables(dimension);
+    return p;
+  }
+
   int IOHprofiler_suite_get_number_of_problems() const {
     return this->number_of_problems;
   };
@@ -135,6 +149,10 @@ public:
     return this->problem_id;
   };
 
+  std::map<int, std::string> IOHprofiler_suite_get_problem_name() const {
+    return this->problem_id_name_map;
+  };
+
   std::vector<int> IOHprofiler_suite_get_instance_id() const {
     return this->instance_id;
   };
@@ -147,26 +165,26 @@ public:
     return this->suite_name;
   };
 
-  void IOHprofiler_set_suite_problem_id(std::vector<int> problem_id) {
+  void IOHprofiler_set_suite_problem_id(const std::vector<int> &problem_id) {
     copyVector(problem_id,this->problem_id);
     this->number_of_problems = this->problem_id.size();
   };
 
-  void IOHprofiler_set_suite_instance_id(std::vector<int> instance_id) {
+  void IOHprofiler_set_suite_instance_id(const std::vector<int> &instance_id) {
     copyVector(instance_id,this->instance_id);
     this->number_of_instances = this->instance_id.size();
   };
 
-  void IOHprofiler_set_suite_dimension(std::vector<int> dimension) {
+  void IOHprofiler_set_suite_dimension(const std::vector<int> &dimension) {
     copyVector(dimension,this->dimension);
     this->number_of_dimensions = this->dimension.size();
   };
 
-  void IOHprofiler_set_suite_name(std::string suite_name) {
+  void IOHprofiler_set_suite_name(const std::string suite_name) {
     this->suite_name = suite_name;
   };
 
-  void mapIDTOName(int id, std::string name){
+  void mapIDTOName(const int id, const std::string name){
     problem_id_name_map[id] = name;
     problem_name_id_map[name] = id;
   }
