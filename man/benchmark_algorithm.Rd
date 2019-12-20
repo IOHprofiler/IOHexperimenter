@@ -41,7 +41,7 @@ And the following functions:
 
 \item{params.track}{Which parameters to track. Should be a vector of strings, containing no spaces or commas}
 
-\item{repetitions}{How many independent runs of the algorithm to do for each problem}
+\item{repetitions}{How many independent runs of the algorithm to do for each problem instance}
 }
 \description{
 Base procedure for benchmarking a custom algorithm

@@ -43,7 +43,7 @@ public:
 
   std::vector<int> info;
   void prepare_problem() {
-    info = dummy(IOHprofiler_get_number_of_variables(),0.5,10000);
+    info = dummy(IOHprofiler_get_number_of_variables(),0.9,10000);
   }
 
   double internal_evaluate(const std::vector<int> &x) {

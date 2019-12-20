@@ -22,7 +22,7 @@
 #' @param algorithm.name The name of the algorithm you plan on running
 #' @param data.dir Where the data should be stored (defaults to "./data" when not provided)
 #' @param params.track Which parameters to track. Should be a vector of strings, containing no spaces or commas
-#' @param repetitions How many independent runs of the algorithm to do for each problem
+#' @param repetitions How many independent runs of the algorithm to do for each problem instance
 #'
 #' @examples
 #' \donttest{

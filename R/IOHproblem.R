@@ -27,6 +27,48 @@ as.character.IOHproblem <- function(x, ...) {
           x$function_id, x$dimension)
 }
 
+#' get an IOHproblem objects
+#' 
+#' If an `experimenter`-argument is provided, this is the same function as `next_problem`
+#' If not, this creates a suite consisting of a single function based on the other arguments
+#' 
+#' An IOHproblem-object has the following attributes:
+#' \itemize{
+#'  \item{"Dimension": }{The dimesion of the problem}
+#'  \item{"function_id: }{The number of the function}
+#'  \item{"instance: }{The number of the function-instance}
+#'  \item{suite: }{The suite of the function. Either 'PBO' or 'BBOB'}
+#'  \item{fopt: }{If known, the optimal value of the function}
+#'  \item{lbound: }{The lower bound of the searchspace}
+#'  \item{ubound: }{The upper bound of the searchspace}
+#'  \item{maximization: }{Boolean indicating whether the function should be maximized or minimized}
+#'  \item{params.track: }{The parameters which are being tracked on this function. Only available if initialized
+#'  in the underlying IOHexperimenter-object (or when using the `benchmark_algorithm`-function)}
+#' }
+#' In addition to these attributes, there are three function-attributes available to use:
+#' \itemize{
+#'  \item{obj_function: }{The interface to evaluate the function}
+#'  \item{target_hit: }{Boolean indicating if the optimal has been hit (if known)}
+#'  \item{set_parameters: }{Interface to storing the current parameter values (if param.track is initialized)}
+#' }
+#' 
+#' @param experimenter (optional) an IOHexperimenter object
+#' @param suite The suite to use. Either 'PBO' or 'BBOB'
+#' @param functionnr The number of the function to create
+#' @param instance The instance of the function to create
+#' @param dim The dimension of the function to create
+#' 
+#' @return An IOHproblem object
+#' @export
+#' @examples
+#' p <- IOHproblem()
+IOHproblem <- function(suite = "PBO", functionnr = 1, dim = 16, instance = 1, experimenter = NULL){
+  if (is.null(experimenter)) {
+    experimenter <- IOHexperimenter(suite, dim, functionnr, instance)
+  }
+  next_problem(experimenter)
+}
+
 #' Get the next function of the currently initialized IOHexperimenter object
 #'
 #' @param experimenter The IOHexperimenter object
