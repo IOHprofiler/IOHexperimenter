@@ -29,7 +29,7 @@ int IOHprofiler_csv_logger::openIndex() {
 
 int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) { 
 #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)  
-  if (mkdir(folder_name.c_str())) == 0) {
+  if (mkdir(folder_name.c_str()) == 0) {
 #else
   if (mkdir(folder_name.c_str(),S_IRWXU) == 0) {
 #endif
