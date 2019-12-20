@@ -1,4 +1,7 @@
 %module IOHprofiler
+
+%feature("autodoc", "2");
+
 %include <std_shared_ptr.i>
 %include <std_string.i>
 %include <std_vector.i>
