@@ -28,6 +28,7 @@ public:
     instance_id = DEFAULT_INSTANCE;
     maximization_minimization_flag = 1; /// < set as maximization if flag = 1, otherwise minimization.
     number_of_variables = DEFAULT_DIMENSION; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
+    number_of_objectives = 1;
     lowerbound = std::vector<InputType> (number_of_variables);
     upperbound = std::vector<InputType> (number_of_variables);
     optimal = std::vector<double>(number_of_objectives);
@@ -46,11 +47,11 @@ public:
   ///
   /// The internal_evaluate function is to be used in evaluate function.
   /// This function must be decalred in derived function of new problems.
-  virtual std::vector<double> internal_evaluate_multi (const std::vector<InputType> &x) {
-    std::vector<double> result;
-    std::cout << "No multi evaluate function defined" << std::endl;
-    return result;
-  };
+  // virtual std::vector<double> internal_evaluate_multi (const std::vector<InputType> &x) {
+  //   std::vector<double> result;
+  //   std::cout << "No multi evaluate function defined" << std::endl;
+  //   return result;
+  // };
 
   /// \fn double internal_evaluate(std::vector<InputType> x)
   /// \brief A virtual internal evaluate function.
@@ -75,28 +76,28 @@ public:
   /// in this function.
   /// \param x A InputType vector of variables.
   /// \return A double vector of objectives.
-  std::vector<double> evaluate_multi(std::vector<InputType> x) {
-    ++this->evaluations;
+  // std::vector<double> evaluate_multi(std::vector<InputType> x) {
+  //   ++this->evaluations;
 
-    transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
-    this->raw_objectives = internal_evaluate_multi(x);
+  //   transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
+  //   this->raw_objectives = internal_evaluate_multi(x);
     
-    this->transformed_objectives = this->raw_objectives;
-    transformation.objectives_transformation(x,this->transformed_objectives,this->problem_id,this->instance_id,this->problem_type);
-    if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives,this->maximization_minimization_flag)) {
-      this->best_so_far_transformed_objectives = this->transformed_objectives;
-      this->best_so_far_transformed_evaluations = this->evaluations;
-      this->best_so_far_raw_objectives = this->raw_objectives;
-      this->best_so_far_raw_evaluations = this->evaluations;
+  //   this->transformed_objectives = this->raw_objectives;
+  //   transformation.objectives_transformation(x,this->transformed_objectives,this->problem_id,this->instance_id,this->problem_type);
+  //   if (compareObjectives(this->transformed_objectives,this->best_so_far_transformed_objectives,this->maximization_minimization_flag)) {
+  //     this->best_so_far_transformed_objectives = this->transformed_objectives;
+  //     this->best_so_far_transformed_evaluations = this->evaluations;
+  //     this->best_so_far_raw_objectives = this->raw_objectives;
+  //     this->best_so_far_raw_evaluations = this->evaluations;
     
-    }
+  //   }
 
-    if (compareVector(this->transformed_objectives,this->optimal)) {
-      this->optimalFound = true;
-    }
+  //   if (compareVector(this->transformed_objectives,this->optimal)) {
+  //     this->optimalFound = true;
+  //   }
 
-    return this->transformed_objectives;
-  };
+  //   return this->transformed_objectives;
+  // };
 
   /// \fn double evaluate(std::vector<InputType> x)
   /// \brife A common function for evaluating fitness of problems.
@@ -107,6 +108,18 @@ public:
   /// \return A double vector of objectives.
   double evaluate(std::vector<InputType> x) {
     ++this->evaluations;
+
+    if(x.size() != this->number_of_variables) {
+      IOH_warning("The dimension of solution is incorrect.");
+      if (this->maximization_minimization_flag == 1) {
+        this->raw_objectives[0] = -DBL_MAX;
+        this->transformed_objectives[0] = -DBL_MAX;
+      } else {
+        this->raw_objectives[0] = DBL_MAX;
+        this->transformed_objectives[0] = DBL_MAX;
+      }
+      return this->transformed_objectives[0];
+    }
 
     transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
     this->raw_objectives[0] = internal_evaluate(x);
@@ -173,7 +186,8 @@ public:
       if (this->number_of_objectives == 1) {
         this->optimal[0] = internal_evaluate(this->best_variables);
       } else {
-        this->optimal = internal_evaluate_multi(this->best_variables);
+        /// this->optimal = internal_evaluate_multi(this->best_variables);
+        IOH_warning("Multi-objectives optimization is not supported now.");
       }
       transformation.objectives_transformation(this->best_variables,this->optimal,this->problem_id,this->instance_id,this->problem_type);
     }
@@ -190,15 +204,11 @@ public:
   };
 /* OMS: the following function overloading is confusing - consider renaming one of them */
   /// \todo  To support constrained optimization.
-  virtual std::vector<double> constraints() {
-    std::vector<double> con;
-    printf("No constraints function defined\n");
-    return con;
-  };
-
-  virtual void constraints(std::vector<InputType> x, std::vector<double> c) {
-    printf("No constraints function defined\n");
-  };
+  // virtual std::vector<double> constraints() {
+  //   std::vector<double> con;
+  //   printf("No constraints function defined\n");
+  //   return con;
+  // };
   
   /// \fn void reset_problem()
   ///
@@ -389,9 +399,13 @@ public:
     this->number_of_objectives = number_of_objectives;
     this->raw_objectives = std::vector<double>(this->number_of_objectives);
     this->transformed_objectives = std::vector<double>(this->number_of_objectives);
-    this->best_so_far_raw_objectives = std::vector<double>(this->number_of_objectives,-DBL_MAX);
-    this->best_so_far_transformed_objectives = std::vector<double>(this->number_of_objectives,-DBL_MAX);
-
+    if (this->maximization_minimization_flag == 1) {
+      this->best_so_far_raw_objectives = std::vector<double>(this->number_of_objectives,-DBL_MAX);
+      this->best_so_far_transformed_objectives = std::vector<double>(this->number_of_objectives,-DBL_MAX);
+    } else {
+      this->best_so_far_raw_objectives = std::vector<double>(this->number_of_objectives,DBL_MAX);
+      this->best_so_far_transformed_objectives = std::vector<double>(this->number_of_objectives,DBL_MAX);
+    }
     this->optimal = std::vector<double>(this->number_of_objectives);
   };
 
@@ -495,7 +509,7 @@ private:
   ///std::vector<double> evaluate_double_info; /// < common used info for evaluating variables, double type.
 
   std::size_t number_of_variables; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
-  std::size_t number_of_objectives = 1;
+  std::size_t number_of_objectives;
 
   std::vector<InputType> best_variables; /// todo. comments, rename?
   std::vector<InputType> best_transformed_variables;
