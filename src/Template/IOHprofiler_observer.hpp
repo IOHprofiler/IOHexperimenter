@@ -28,6 +28,8 @@ public:
     evaluations_value1 = 1;
     time_points_index = 0;
     time_points_expi = 0;
+    observer_time_points_exp_base1 = 10;
+    observer_time_points_exp_base2 = 10;
 
     evaluations_value2 = 1;
     evaluations_expi = 0;
@@ -94,9 +96,11 @@ public:
     return false;
   }
   
-  void set_time_points(std::vector<int> time_points, int number_of_evaluations) {
+  void set_time_points(const std::vector<int> & time_points, const int number_of_evaluations, const int time_points_exp_base1 = 10, const int time_points_exp_base2 = 10) {
     this->observer_time_points = time_points;
     this->observer_number_of_evaluations = number_of_evaluations;
+    this->observer_time_points_exp_base1 = time_points_exp_base1;
+    this->observer_time_points_exp_base2 = time_points_exp_base2;
   }
 
   bool time_points_status() const {
@@ -127,17 +131,25 @@ public:
         this->time_points_index = 0;
         this->time_points_expi++;
       }
-      this->evaluations_value1 = (size_t)(this->observer_time_points[this->time_points_index] * pow(10,this->time_points_expi));
-      result = true;
+      this->evaluations_value1 = (size_t)(this->observer_time_points[this->time_points_index] * pow(observer_time_points_exp_base1,this->time_points_expi));
+      while (this->evaluations_value1 <= evaluations) {
+        if (this->time_points_index < this->observer_time_points.size() - 1) {
+          this->time_points_index++;
+        } else {
+          this->time_points_index = 0;
+          this->time_points_expi++;
+        }
+        this->evaluations_value1 = (size_t)(this->observer_time_points[this->time_points_index] * pow(observer_time_points_exp_base1,this->time_points_expi)); 
+      }
     }
     
     /// evaluations_value2 = floor(10^(i/n), n is observer_number_of_evaluations.
     /// It maintains that in each [10^m, 10^(m+1)], there will be observer_number_of_evaluations evaluations are stored.
     if (evaluations == this->evaluations_value2) {
-      while ((size_t)floor(pow(10,(double)this->evaluations_expi/(double)this->observer_number_of_evaluations)) <= this->evaluations_value2) {
+      while ((size_t)floor(pow(observer_time_points_exp_base2,(double)this->evaluations_expi/(double)this->observer_number_of_evaluations)) <= this->evaluations_value2) {
         this->evaluations_expi++;
       }
-      this->evaluations_value2 = (size_t)floor(pow(10,(double)this->evaluations_expi/(double)this->observer_number_of_evaluations));
+      this->evaluations_value2 = (size_t)floor(pow(observer_time_points_exp_base2,(double)this->evaluations_expi/(double)this->observer_number_of_evaluations));
       result = true;
     }
     return result;
@@ -165,11 +177,13 @@ private:
   size_t evaluations_value1; /// < intermediate variables for calculating points with 'observer_time_points'.
   size_t time_points_index; /// < intermediate variables for calculating points with 'observer_time_points'.
   int time_points_expi; /// < intermediate variables for calculating points with 'observer_time_points'.
+  int observer_time_points_exp_base1;
 
   int observer_number_of_evaluations; /// < variables for recording with a pre-defined times in each exponential boxplot.
   size_t evaluations_value2; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
   int evaluations_expi; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
-
+  int observer_time_points_exp_base2;
+  
   /// todo. Currently this is only for single objective optimization.
   double current_best_fitness;
   
