@@ -28,7 +28,6 @@ public:
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-    IOHprofiler_set_optimal((double)dimension);
   };
 
   double internal_evaluate(const std::vector<int> &x) {
