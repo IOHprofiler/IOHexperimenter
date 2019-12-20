@@ -134,6 +134,9 @@ typedef  std::map<int, std::string> PROBLEM_ID_NAME;
 
 %}
 
+%template(intvec) std::vector<int>;
+%template(doublevec) std::vector<double>;
+
 %include "src/IOHprofiler_configuration.hpp"
 %include "src/IOHprofiler_experimenter.hpp"
 %include "src/IOHprofiler_observer.hpp"
@@ -216,9 +219,6 @@ typedef  std::map<int, std::string> PROBLEM_ID_NAME;
 %include "src/IOHprofiler_BBOB_suite.hpp"
 %include "src/IOHprofiler_PBO_suite.hpp"
 
-
-%template(intvec) std::vector<int>;
-%template(doublevec) std::vector<double>;
 %apply int{ UInt32 }
 
 %module IOHprofiler
