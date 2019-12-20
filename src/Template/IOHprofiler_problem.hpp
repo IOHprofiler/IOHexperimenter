@@ -175,6 +175,13 @@ public:
   //   }
   // };
 
+  /// \fn virtual void customized_optimal()
+  ///
+  /// A virtual function to customize optimal of the problem.
+  virtual void customize_optimal(){
+
+  };
+
   /// \fn void calc_optimal()
   ///
   /// A function to calculate optimal of the problem.
@@ -200,6 +207,7 @@ public:
           this->optimal.push_back(-DBL_MAX);
         }
       }
+      customize_optimal();
     }
   };
 /* OMS: the following function overloading is confusing - consider renaming one of them */

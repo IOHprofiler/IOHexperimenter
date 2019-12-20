@@ -27,6 +27,10 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
+  void customize_optimal() {
+    IOHprofiler_set_optimal(sqrt(IOHprofiler_get_number_of_variables()));
+  };
+
   double _max(double element1 , double element2) {
     if (element1>element2) {
       return element1;

@@ -30,6 +30,10 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   };
 
+  void customize_optimal() {
+    IOHprofiler_set_optimal(IOHprofiler_get_number_of_variables());
+  };
+  
   double internal_evaluate(const std::vector<int> &x) {
 
     std::vector<int> new_variables = epistasis(x,4);
