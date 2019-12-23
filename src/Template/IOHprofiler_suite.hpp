@@ -21,12 +21,7 @@ typedef std::map<int, std::string> PROBLEM_ID_NAME;
 /// recommond registering problem with string lable and creating a map of string problem_name and integer problem_id.
 template <class InputType> class IOHprofiler_suite : public IOHprofiler_problem<InputType>, public std::vector<std::shared_ptr<IOHprofiler_problem<InputType> > > {
 public:
-  IOHprofiler_suite(std::vector<int> problem_id = std::vector<int>(0), std::vector<int> instance_id = std::vector<int>(0), std::vector<int> dimension = std::vector<int>(0)) {
-    suite_name = "no suite";
-    problem_list_index = 0;
-    get_problem_flag = false;
-    current_problem = nullptr;
-  };
+  IOHprofiler_suite(std::vector<int> problem_id = std::vector<int>(0), std::vector<int> instance_id = std::vector<int>(0), std::vector<int> dimension = std::vector<int>(0)) : suite_name("no suite"), problem_list_index (0), get_problem_flag(false), current_problem(nullptr)  { }
   ~IOHprofiler_suite() {};
 
   IOHprofiler_suite(const IOHprofiler_suite&) = delete;
