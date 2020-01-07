@@ -135,7 +135,11 @@
 #include "src/IOHprofiler_platform.h"
 
 typedef unsigned int		uint32_t;
-typedef unsigned long long	uint64_t;
+#if defined(SWIGWORDSIZE64)
+typedef unsigned long int unit64_t;
+#else
+typedef unsigned long long int unit64_t;
+#endif
 typedef  std::map<std::string, int> PROBLEM_NAME_ID; 
 typedef  std::map<int, std::string> PROBLEM_ID_NAME; 
 
