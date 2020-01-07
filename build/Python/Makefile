@@ -19,6 +19,6 @@ $(HPP_OBJS):$(ODIR)/%.o:$(SOURCE)/%.hpp
 $(POBJ):$(HPP_OBJS) $(CPP_OBJS) IOHprofiler.i
 	swig -c++ -python IOHprofiler.i
 	g++ -O2 -fPIC -std=c++11 -c IOHprofiler_wrap.cxx -I$(PYTHONVERSION) 
-	g++ -shared $(HPP_OBJS) $(CPP_OBJS) IOHprofiler_wrap.o -o $@ -std=c++11
+	g++ -shared $(HPP_OBJS) $(CPP_OBJS) IOHprofiler_wrap.o -o $@ -std=c++11 -lpython
 ECHO:
 	@echo $(HPPSUBDIRS)

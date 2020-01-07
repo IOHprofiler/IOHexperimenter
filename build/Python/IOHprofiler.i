@@ -1,5 +1,9 @@
 %module IOHprofiler
 
+%begin %{
+#define SWIG_PYTHON_CAST_MODE
+%}
+
 %feature("autodoc", "2");
 
 %include <std_shared_ptr.i>
@@ -131,7 +135,7 @@
 #include "src/IOHprofiler_platform.h"
 
 typedef unsigned int		uint32_t;
-typedef unsigned long int	uint64_t;
+typedef unsigned long long	uint64_t;
 typedef  std::map<std::string, int> PROBLEM_NAME_ID; 
 typedef  std::map<int, std::string> PROBLEM_ID_NAME; 
 
