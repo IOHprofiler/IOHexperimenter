@@ -32,6 +32,8 @@ public:
     lowerbound = std::vector<InputType> (number_of_variables);
     upperbound = std::vector<InputType> (number_of_variables);
     optimal = std::vector<double>(number_of_objectives);
+    best_so_far_raw_objectives = std::vector<double>(number_of_objectives);
+    best_so_far_transformed_objectives = std::vector<double>(number_of_objectives);
     optimalFound = false;
     evaluations = 0;
     best_so_far_raw_evaluations = 0;
@@ -235,7 +237,6 @@ public:
         this->best_so_far_transformed_objectives[i] = DBL_MAX;
       }
     }
-    this->prepare_problem();
   };
 
   /// \fn std::vector<std::variant<int,double,std::string>> loggerInfo()
