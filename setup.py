@@ -37,7 +37,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     cmdclass={'bdist_wheel': bdist_wheel},
     name="IOHexperimenter",
-    version="0.0.1.dev1",
+    version="0.0.1.dev2",
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
     description="The experimenter for Iterative Optimization Heuristic",
