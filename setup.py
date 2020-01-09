@@ -2,6 +2,23 @@ import setuptools, sys, os
 from shutil import copyfile
 from distutils.util import get_platform
 
+lib_file = 'lib/_IOHprofiler'
+plat_name = get_platform()
+py_version = sys.version
+if py_version.startswith('3.7'):
+    lib_file += '-py37'
+elif py_version.startswith('3.6'):
+    lib_file += '-py36'
+
+if plat_name.startswith('macosx'):
+    lib_file += '-macosx_x86_64.so' 
+elif plat_name.startswith('linux'):
+    lib_file += '-manylinux1_x86_64.so'
+    plat_name = plat_name.replace('linux', 'manylinux1')
+
+copyfile(lib_file, 'IOHexperimenter/_IOHprofiler.so')
+
+# make `bdist_wheel` platform specific
 try:
     from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
     class bdist_wheel(_bdist_wheel):
@@ -9,23 +26,10 @@ try:
             _bdist_wheel.finalize_options(self)
             self.universal = False
             self.plat_name_supplied = True
-            self.plat_name = get_platform()
+            self.plat_name = plat_name
 
 except ImportError:
     bdist_wheel = None
-
-lib_file = 'lib/_IOHprofiler'
-if sys.version.startswith('3.7'):
-    lib_file += '-py37'
-elif sys.version.startswith('3.6'):
-    lib_file += '-py36'
-
-if get_platform().startswith('macosx'):
-    lib_file += '-macosx_x86_64.so' 
-elif get_platform().startswith('linux'):
-    lib_file += '-linux_x86_64.so'
-
-copyfile(lib_file, 'IOHexperimenter/_IOHprofiler.so')
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
