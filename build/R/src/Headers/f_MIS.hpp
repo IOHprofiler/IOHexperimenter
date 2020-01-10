@@ -49,7 +49,7 @@ double internal_evaluate(const std::vector<int> &x) {
     int num_of_ones=0;
     int sum_edges_in_the_set=0;
     int number_of_variables_even=(int)n;
-    int ones_array[number_of_variables_even+1];
+    std::vector<int> ones_array(number_of_variables_even+1);
   
     if (n%2!=0) {
         number_of_variables_even=(int)n-1;
