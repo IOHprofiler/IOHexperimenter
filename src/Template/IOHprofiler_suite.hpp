@@ -21,13 +21,8 @@ typedef std::map<int, std::string> PROBLEM_ID_NAME;
 /// recommond registering problem with string lable and creating a map of string problem_name and integer problem_id.
 template <class InputType> class IOHprofiler_suite : public IOHprofiler_problem<InputType>, public std::vector<std::shared_ptr<IOHprofiler_problem<InputType> > > {
 public:
-  IOHprofiler_suite(std::vector<int> problem_id = std::vector<int>(0), std::vector<int> instance_id = std::vector<int>(0), std::vector<int> dimension = std::vector<int>(0)) {
-    suite_name = "no suite";
-    problem_list_index = 0;
-    get_problem_flag = false;
-    current_problem = nullptr;
-  };
-  ~IOHprofiler_suite() {};
+  IOHprofiler_suite(std::vector<int> problem_id = std::vector<int>(0), std::vector<int> instance_id = std::vector<int>(0), std::vector<int> dimension = std::vector<int>(0)) : suite_name("no suite"), problem_list_index(0), get_problem_flag(false), current_problem(nullptr) {}
+  ~IOHprofiler_suite() {}
 
   IOHprofiler_suite(const IOHprofiler_suite&) = delete;
   IOHprofiler_suite &operator =(const IOHprofiler_suite&) = delete;
@@ -38,7 +33,7 @@ public:
   ///
   /// This function implements interfaces of available problems of a suite. With those interface,
   /// user are able to request problem together with problem_id, instance_id, and dimension.
-  virtual void registerInSuite() {};
+  virtual void registerInSuite() {}
 
   /// \fn loadProblems()
   /// \brief Allocating memeory and creating instances of problems to be included in the suite.
@@ -88,7 +83,7 @@ public:
     
     this->current_problem->reset_problem();
     return this->current_problem;
-  };
+  }
   
   /// \fn std::shared_ptr<IOHprofiler_problem<InputType>> get_current_problem()
   /// \brief An interface of requesting problems in suite.
@@ -102,7 +97,7 @@ public:
     this->current_problem = (*this)[this->problem_list_index];
     this->current_problem->reset_problem();
     return this->current_problem;
-  };
+  }
   
 
   /// \fn Problem_ptr get_next_problem()
@@ -135,54 +130,54 @@ public:
 
   int IOHprofiler_suite_get_number_of_problems() const {
     return this->number_of_problems;
-  };
+  }
 
   int IOHprofiler_suite_get_number_of_instances() const {
     return this->number_of_instances;
-  };
+  }
 
   int IOHprofiler_suite_get_number_of_dimensions() const {
     return this->number_of_dimensions;
-  };
+  }
 
   std::vector<int> IOHprofiler_suite_get_problem_id() const {
     return this->problem_id;
-  };
+  }
 
   std::map<int, std::string> IOHprofiler_suite_get_problem_name() const {
     return this->problem_id_name_map;
-  };
+  }
 
   std::vector<int> IOHprofiler_suite_get_instance_id() const {
     return this->instance_id;
-  };
+  }
 
   std::vector<int> IOHprofiler_suite_get_dimension() const {
     return this->dimension;
-  };
+  }
 
   std::string IOHprofiler_suite_get_suite_name() const {
     return this->suite_name;
-  };
+  }
 
   void IOHprofiler_set_suite_problem_id(const std::vector<int> &problem_id) {
     copyVector(problem_id,this->problem_id);
     this->number_of_problems = this->problem_id.size();
-  };
+  }
 
   void IOHprofiler_set_suite_instance_id(const std::vector<int> &instance_id) {
     copyVector(instance_id,this->instance_id);
     this->number_of_instances = this->instance_id.size();
-  };
+  }
 
   void IOHprofiler_set_suite_dimension(const std::vector<int> &dimension) {
     copyVector(dimension,this->dimension);
     this->number_of_dimensions = this->dimension.size();
-  };
+  }
 
   void IOHprofiler_set_suite_name(const std::string suite_name) {
     this->suite_name = suite_name;
-  };
+  }
 
   void mapIDTOName(const int id, const std::string name){
     problem_id_name_map[id] = name;

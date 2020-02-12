@@ -19,23 +19,20 @@
 class IOHprofiler_observer {
 public:
   
-  IOHprofiler_observer() {
-    observer_interval = 0;
-    observer_complete_flag = false;
-    observer_update_flag = true;
- 
-    observer_time_points = {0};
-    evaluations_value1 = 1;
-    time_points_index = 0;
-    time_points_expi = 0;
-    observer_time_points_exp_base1 = 10;
-    observer_time_points_exp_base2 = 10;
+  IOHprofiler_observer() :
+    observer_interval(0),
+    observer_complete_flag(false),
+    observer_update_flag(true),
+    observer_time_points({0}),
+    evaluations_value1(1),
+    time_points_index(0),
+    time_points_expi(0),
+    observer_time_points_exp_base1(10),
+    evaluations_value2(1),
+    evaluations_expi(0),
+    observer_time_points_exp_base2(10) {}
 
-    evaluations_value2 = 1;
-    evaluations_expi = 0;
-
-  };
-  ~IOHprofiler_observer() {};
+  ~IOHprofiler_observer() {}
 
   IOHprofiler_observer(const IOHprofiler_observer &) = delete;
   IOHprofiler_observer &operator = (const IOHprofiler_observer&) = delete;

@@ -23,22 +23,22 @@ static IOHprofiler_transformation transformation;
 template <class InputType> class IOHprofiler_problem 
 {
 public:
-  IOHprofiler_problem(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
-    problem_id = DEFAULT_PROBLEM_ID;
-    instance_id = DEFAULT_INSTANCE;
-    maximization_minimization_flag = 1; /// < set as maximization if flag = 1, otherwise minimization.
-    number_of_variables = DEFAULT_DIMENSION; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
-    number_of_objectives = 1;
-    lowerbound = std::vector<InputType> (number_of_variables);
-    upperbound = std::vector<InputType> (number_of_variables);
-    optimal = std::vector<double>(number_of_objectives);
-    best_so_far_raw_objectives = std::vector<double>(number_of_objectives);
-    best_so_far_transformed_objectives = std::vector<double>(number_of_objectives);
-    optimalFound = false;
-    evaluations = 0;
-    best_so_far_raw_evaluations = 0;
-  };
-  virtual ~IOHprofiler_problem(){};
+  IOHprofiler_problem(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) : 
+    problem_id(DEFAULT_PROBLEM_ID), 
+    instance_id(instance_id), 
+    maximization_minimization_flag(1),
+    lowerbound(std::vector<InputType> (number_of_variables) ), 
+    upperbound(std::vector<InputType> (number_of_variables) ),
+    number_of_variables(DEFAULT_DIMENSION), 
+    number_of_objectives(1),
+    optimal(std::vector<double>(number_of_objectives) ),
+    optimalFound(false),
+    evaluations(0),
+    best_so_far_raw_objectives(std::vector<double>(number_of_objectives) ),
+    best_so_far_raw_evaluations(0),
+    best_so_far_transformed_objectives(std::vector<double>(number_of_objectives) ) {}
+  
+  virtual ~IOHprofiler_problem() {}
 
   IOHprofiler_problem(const IOHprofiler_problem&) = delete;
   IOHprofiler_problem &operator=(const IOHprofiler_problem&) = delete;
@@ -64,7 +64,7 @@ public:
     double result = -DBL_MAX;
     IOH_warning("No evaluate function defined");
     return result;
-  };
+  }
 
   virtual void prepare_problem() { /* OMS: why empty ? */
 
@@ -99,7 +99,7 @@ public:
   //   }
 
   //   return this->transformed_objectives;
-  // };
+  // }
 
   /// \fn double evaluate(std::vector<InputType> x)
   /// \brife A common function for evaluating fitness of problems.
@@ -143,7 +143,7 @@ public:
     }
 
     return this->transformed_objectives[0];
-  };
+  }
   
   /// TODO multi-objectives optimization
   /// \fn void evaluate_multi(std::vector<InputType> x, std::vector<double> &y)
@@ -175,14 +175,14 @@ public:
   //   if (compareVector(y,this->optimal)) {
   //     this->optimalFound = true;
   //   }
-  // };
+  // }
 
   /// \fn virtual void customized_optimal()
   ///
   /// A virtual function to customize optimal of the problem.
   virtual void customize_optimal(){
 
-  };
+  }
 
   /// \fn void calc_optimal()
   ///
@@ -211,7 +211,7 @@ public:
       }
       customize_optimal();
     }
-  };
+  }
 /* OMS: the following function overloading is confusing - consider renaming one of them */
   /// \todo  To support constrained optimization.
   // virtual std::vector<double> constraints() {
@@ -237,7 +237,7 @@ public:
         this->best_so_far_transformed_objectives[i] = DBL_MAX;
       }
     }
-  };
+  }
 
   /// \fn std::vector<std::variant<int,double,std::string>> loggerInfo()
   ///
@@ -286,15 +286,15 @@ public:
 
   int IOHprofiler_get_problem_id() const {
     return this->problem_id;
-  };
+  }
 
   void IOHprofiler_set_problem_id(int problem_id){
     this->problem_id = problem_id;
-  };
+  }
   
   int IOHprofiler_get_instance_id() const {
     return this->instance_id;
-  };
+  }
   
   /// \fn IOHprofiler_set_instance_id(int instance_id)
   ///
@@ -305,27 +305,27 @@ public:
     this->instance_id = instance_id;
     this->prepare_problem();
     this->calc_optimal();
-  };
+  }
 
   std::string IOHprofiler_get_problem_name() const {
     return this->problem_name;
-  };
+  }
 
   void IOHprofiler_set_problem_name(std::string problem_name) {
     this->problem_name = problem_name;
-  };
+  }
 
   std::string IOHprofiler_get_problem_type() const {
     return this->problem_type;
-  };
+  }
 
   void IOHprofiler_set_problem_type(std::string problem_type) {
     this->problem_type = problem_type;
-  };
+  }
 
   std::vector<InputType> IOHprofiler_get_lowerbound() const {
     return this->lowerbound;
-  };
+  }
   
   void IOHprofiler_set_lowerbound(int lowerbound) {
     std::vector<InputType>().swap(this->lowerbound);
@@ -333,15 +333,15 @@ public:
     for (int i = 0; i < this->number_of_variables; ++i) {
       this->lowerbound.push_back(lowerbound);
     }
-  };
+  }
 
   void IOHprofiler_set_lowerbound(const std::vector<InputType> &lowerbound) {
     this->lowerbound = lowerbound;
-  };
+  }
 
   std::vector<InputType> IOHprofiler_get_upperbound() const {
     return this->upperbound;
-  };
+  }
 
   void IOHprofiler_set_upperbound(int upperbound) {
     std::vector<InputType>().swap(this->upperbound);
@@ -349,15 +349,15 @@ public:
     for (int i = 0; i < this->number_of_variables; ++i) {
       this->upperbound.push_back(upperbound);
     }
-  };
+  }
 
   void IOHprofiler_set_upperbound(const std::vector<InputType> &upperbound) {
     this->upperbound = upperbound;
-  };
+  }
  
   int IOHprofiler_get_number_of_variables() const {
     return this->number_of_variables;
-  };
+  }
 
   /// \fn IOHprofiler_set_number_of_variables(int number_of_variables)
   /// 
@@ -378,7 +378,7 @@ public:
     }
     this->prepare_problem();
     this->calc_optimal();
-  };
+  }
 
   /// \fn IOHprofiler_set_number_of_variables(int number_of_variables)
   /// 
@@ -398,11 +398,11 @@ public:
     }
     this->prepare_problem();
     this->calc_optimal();
-  };
+  }
 
   int IOHprofiler_get_number_of_objectives() const {
     return this->number_of_objectives;
-  };
+  }
 
   void IOHprofiler_set_number_of_objectives(const int number_of_objectives) {
     this->number_of_objectives = number_of_objectives;
@@ -416,42 +416,42 @@ public:
       this->best_so_far_transformed_objectives = std::vector<double>(this->number_of_objectives,DBL_MAX);
     }
     this->optimal = std::vector<double>(this->number_of_objectives);
-  };
+  }
 
   std::vector<double> IOHprofiler_get_raw_objectives() const {
     return this->raw_objectives;
-  };
+  }
 
   std::vector<double> IOHprofiler_get_transformed_objectives() const {
     return this->transformed_objectives;
-  };
+  }
 
   int IOHprofiler_get_transformed_number_of_variables() const {
     return this->transformed_number_of_variables;
-  };
+  }
 
   std::vector<InputType> IOHprofiler_get_transformed_variables() const {
     return this->transformed_variables;
-  };
+  }
 
   std::vector<InputType> IOHprofiler_get_best_variables() const {
     return this->best_variables;
-  };
+  }
 
   void IOHprofiler_set_best_variables(const InputType best_variables) {
     this->best_variables.clear();
     for (int i = 0; i < this->number_of_variables; ++i) {
       this->best_variables.push_back(best_variables);
     }
-  };
+  }
 
   void IOHprofiler_set_best_variables(const std::vector<InputType> &best_variables) {
     this->best_variables = best_variables;
-  };
+  }
 
   std::vector<double> IOHprofiler_get_optimal() const {
     return this->optimal;
-  };
+  }
 
   void IOHprofiler_set_optimal(const double optimal) {
     std::vector<double>().swap(this->optimal);
@@ -459,36 +459,39 @@ public:
     for (int i = 0; i < this->number_of_objectives; ++i) {
       this->optimal.push_back(optimal);
     }
-  };
+  }
 
   void IOHprofiler_set_optimal(const std::vector<double> &optimal) {
     this->optimal = optimal;
-  };
+  }
 
   void IOHprofiler_evaluate_optimal(std::vector<InputType> best_variables) {
     this->optimal[0] = this->evaluate(best_variables);
-  };
+  }
 
   void IOHprofiler_evaluate_optimal() {
     this->optimal[0] = this->evaluate(this->best_variables);
-  };
+  }
 
   int IOHprofiler_get_evaluations() const {
     return this->evaluations;
-  };
+  }
 
   std::vector<double> IOHprofiler_get_best_so_far_raw_objectives() const {
     return this->best_so_far_raw_objectives;
-  };
+  }
+
   int IOHprofiler_get_best_so_far_raw_evaluations() const {
     return this-> best_so_far_raw_evaluations;
-  };
+  }
+
   std::vector<double> IOHprofiler_get_best_so_far_transformed_objectives() const {
     return this->best_so_far_transformed_objectives;
-  };
+  }
+
   int IOHprofiler_get_best_so_far_transformed_evaluations() const {
     return this->best_so_far_transformed_evaluations;
-  };
+  }
 
   int IOHprofiler_get_optimization_type() const {
     return this->maximization_minimization_flag;
