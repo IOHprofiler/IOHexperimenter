@@ -26,12 +26,12 @@ public:
     Initilize_problem(dimension);
   }
 
-  ~LeadingOnes_Neutrality() {};
+  ~LeadingOnes_Neutrality() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
 
-  };
+  }
 
   double internal_evaluate(const std::vector<int> &x) {
     std::vector<int> new_variables = neutrality(x,3);
@@ -45,11 +45,11 @@ public:
       }
     }
     return (double)result;
-  };
+  }
 
   static LeadingOnes_Neutrality * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LeadingOnes_Neutrality(instance_id, dimension);
-  };
+  }
 };
 
 #endif

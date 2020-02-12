@@ -24,15 +24,15 @@ public:
     Initilize_problem(dimension);
   }
 
-  ~LeadingOnes_Epistasis() {};
+  ~LeadingOnes_Epistasis() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
   void customize_optimal() {
     IOHprofiler_set_optimal(IOHprofiler_get_number_of_variables());
-  };
+  }
   
   double internal_evaluate(const std::vector<int> &x) {
 
@@ -47,11 +47,11 @@ public:
       }
     }
     return (double)result;
-  };
+  }
   
   static LeadingOnes_Epistasis * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LeadingOnes_Epistasis(instance_id, dimension);
-  };
+  }
 };
 
 #endif

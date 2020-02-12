@@ -30,7 +30,7 @@ public:
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
 
   void prepare_problem() {
@@ -85,11 +85,11 @@ public:
     }
 
     return result[0];
-  };
+  }
   
   static Attractive_Sector * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Attractive_Sector(instance_id, dimension);
-  };
+  }
 };
 
 #endif

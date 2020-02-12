@@ -25,11 +25,11 @@ public:
     Initilize_problem(dimension);
   }
   
-  ~LeadingOnes_Ruggedness2() {};
+  ~LeadingOnes_Ruggedness2() {}
   
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
   double internal_evaluate(const std::vector<int> &x) {
 
@@ -44,11 +44,11 @@ public:
     }
     result = ruggedness2(result,n);
     return (double)result;
-  };
+  }
 
   static LeadingOnes_Ruggedness2 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LeadingOnes_Ruggedness2(instance_id, dimension);
-  };
+  }
 };
 
 #endif

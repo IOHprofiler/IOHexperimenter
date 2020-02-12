@@ -65,7 +65,7 @@ template <class manufacturedObj> std::shared_ptr<manufacturedObj> genericGenerat
     return (*regEntry).second();
   }
   return ret;
-};
+}
 
 /// Helper template to make registration simple.
 template <class ancestorType  ,

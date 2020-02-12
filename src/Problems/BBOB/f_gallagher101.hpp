@@ -23,7 +23,7 @@ typedef struct f_gallagher_permutation_t1{
 //     return true;
 //   else
 //     return false;
-// };
+// }
 
 static int f_gallagher_compare_doubles1(const void *a, const void *b) {
   double temp = (*(f_gallagher_permutation_t1 *) a).value - (*(f_gallagher_permutation_t1 *) b).value;
@@ -33,7 +33,7 @@ static int f_gallagher_compare_doubles1(const void *a, const void *b) {
     return -1;
   else
     return 0;
-};
+}
 
 
 class Gallagher101 : public IOHprofiler_problem<double> {
@@ -50,11 +50,12 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Gallagher101() {};
+
+  ~Gallagher101() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
   std::vector<double> xopt;
 
@@ -160,7 +161,7 @@ public:
      
     fopt = bbob2009_compute_fopt(21, this->IOHprofiler_get_instance_id());
     Coco_Transformation_Data::fopt = fopt;
-  };
+  }
 
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -220,11 +221,11 @@ public:
     result[0] = f_true;
    
     return result[0];
-  };
+  }
 
   static Gallagher101 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Gallagher101(instance_id, dimension);
-  };
+  }
 };
 
 #endif

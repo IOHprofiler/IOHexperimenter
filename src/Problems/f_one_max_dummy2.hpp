@@ -32,8 +32,7 @@ public:
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_optimal(floor((double)(dimension * 0.9)));
-  };
-
+  }
   
   std::vector<int> info;
   void prepare_problem() {
@@ -47,11 +46,11 @@ public:
       result += x[this->info[i]];
     }
     return (double)result;
-  };
+  }
 
   static OneMax_Dummy2 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new OneMax_Dummy2(instance_id, dimension);
-  };
+  }
 };
 
 #endif

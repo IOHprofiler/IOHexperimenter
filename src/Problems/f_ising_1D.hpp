@@ -22,11 +22,12 @@ public:
     IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
-  ~Ising_1D() {};
+
+  ~Ising_1D() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
   int modulo_ising_1D(int x,int N) {
     return (x % N + N) %N;
@@ -43,11 +44,11 @@ public:
         result += (x[i] *second_neig) + ((1- x[i])*(1- second_neig));
     }
     return (double)result;
-  };
+  }
 
   static Ising_1D * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Ising_1D(instance_id, dimension);
-  };
+  }
 };
 
 #endif

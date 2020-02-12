@@ -30,7 +30,7 @@ public:
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
 
   void prepare_problem() {
@@ -75,11 +75,11 @@ public:
     }
 
     return result[0];
-  };
+  }
   
   static Bent_Cigar * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Bent_Cigar(instance_id, dimension);
-  };
+  }
 };
 
 #endif

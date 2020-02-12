@@ -36,8 +36,6 @@ public:
 
   ~W_Model_OneMax() {};
 
-
-
   std::vector<int> dummy_info;
   double dummy_para = 0;
   int epistasis_para = 0;
@@ -67,7 +65,8 @@ public:
     int optimal_value = (int)(dimension*(this->dummy_para == 0 ? 1 : this->dummy_para)) / (this->neutrality_para == 0 ? 1 : this->neutrality_para);
 
     IOHprofiler_set_optimal((double)optimal_value);
-  };
+  }
+
   void set_w_setting(const double dummy_para, const int epistasis_para, const int neutrality_para, const int ruggedness_para) {
     this->dummy_para = dummy_para;
     this->epistasis_para = epistasis_para;
@@ -111,15 +110,15 @@ public:
     }
     
     return (double)result;
-  };
+  }
 
   static W_Model_OneMax * createInstance() {
     return new W_Model_OneMax();
-  };
+  }
 
   static W_Model_OneMax * createInstance(int instance_id, int dimension) {
     return new W_Model_OneMax(instance_id, dimension);
-  };
+  }
 };
 
 #endif

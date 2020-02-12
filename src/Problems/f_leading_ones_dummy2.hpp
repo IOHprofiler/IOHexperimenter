@@ -25,12 +25,12 @@ public:
     Initilize_problem(dimension);
   }
   
-  ~LeadingOnes_Dummy2() {}; 
+  ~LeadingOnes_Dummy2() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_optimal(floor((double)(dimension * 0.9)));
-  };
+  }
 
   std::vector<int> info;
   void prepare_problem() {
@@ -48,11 +48,11 @@ public:
       }
     }
     return (double)result;
-  };
+  }
 
   static LeadingOnes_Dummy2 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LeadingOnes_Dummy2(instance_id, dimension);
-  };
+  }
 };
 
 #endif

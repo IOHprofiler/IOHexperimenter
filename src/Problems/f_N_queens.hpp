@@ -21,15 +21,16 @@ public:
     IOHprofiler_set_upperbound(1);
     Initilize_problem(dimension);
   }
-  ~NQueens() {};
+
+  ~NQueens() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
   void customize_optimal() {
     IOHprofiler_set_optimal(sqrt(IOHprofiler_get_number_of_variables()));
-  };
+  }
 
   double _max(double element1 , double element2) {
     if (element1>element2) {
@@ -105,11 +106,11 @@ public:
     }
     result = (double) (number_of_queens_on_board - (C*raws_penalty) - (C*columns_penalty) -(C*k_penalty) - (C*l_penalty));
     return (double)result;
-  };
+  }
 
   static NQueens * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new NQueens(instance_id, dimension);
-  };
+  }
 };
 
 #endif

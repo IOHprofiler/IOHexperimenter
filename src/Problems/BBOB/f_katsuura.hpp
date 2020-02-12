@@ -26,12 +26,12 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Katsuura() {};
+
+  ~Katsuura() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
-
+  }
 
   void prepare_problem() {
     std::vector<double> xopt;
@@ -95,11 +95,11 @@ public:
     result[0] = 10. / ((double) n) / ((double) n) * (-1. + result[0]);
 
     return result[0];
-  };
+  }
 
   static Katsuura * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Katsuura(instance_id, dimension);
-  };
+  }
 };
 
 #endif

@@ -26,13 +26,12 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Schwefel() {};
+
+  ~Schwefel() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
-
-
+  }
   
   void prepare_problem() {
     std::vector<double> xopt,tmp1,tmp2;
@@ -85,11 +84,11 @@ public:
     result[0] = 0.01 * (penalty + 418.9828872724339 - sum / (double) n);
 
     return result[0];
-  };
+  }
 
   static Schwefel * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Schwefel(instance_id, dimension);
-  };
+  }
 };
 
 #endif

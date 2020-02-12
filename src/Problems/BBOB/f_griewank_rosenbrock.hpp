@@ -26,11 +26,12 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Griewank_RosenBrock() {};
+
+  ~Griewank_RosenBrock() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
   double scales;
   void prepare_problem() {
@@ -97,11 +98,11 @@ public:
     result[0] = 10. + 10. * result[0] / (double) (n - 1);
 
     return result[0];
-  };
+  }
 
   static Griewank_RosenBrock * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Griewank_RosenBrock(instance_id, dimension);
-  };
+  }
 };
 
 #endif

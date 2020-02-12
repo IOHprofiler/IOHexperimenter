@@ -24,11 +24,12 @@ public:
     IOHprofiler_set_best_variables(1);
     Initilize_problem(dimension);
   }
-  ~Ising_Triangle() {};
+
+  ~Ising_Triangle() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
   
   int modulo_ising_triangle(int x,int N) {
     return (x % N + N) %N;
@@ -56,11 +57,11 @@ public:
       }
     }
     return (double)result;
-  };
+  }
 
   static Ising_Triangle * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Ising_Triangle(instance_id, dimension);
-  };
+  }
 };
 
 #endif

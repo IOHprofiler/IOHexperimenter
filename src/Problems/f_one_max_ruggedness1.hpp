@@ -26,11 +26,11 @@ public:
     Initilize_problem(dimension);
   }
   
-  ~OneMax_Ruggedness1() {};
+  ~OneMax_Ruggedness1() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
   double internal_evaluate(const std::vector<int> &x) {
     
@@ -41,10 +41,11 @@ public:
     }
     result = ruggedness1(result,n);
     return (double)result;
-  };
+  }
+
   static OneMax_Ruggedness1 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new OneMax_Ruggedness1(instance_id, dimension);
-  };
+  }
 };
 
 #endif

@@ -25,11 +25,11 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Different_Powers() {};
+  ~Different_Powers() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
 
   void prepare_problem() {
@@ -59,6 +59,7 @@ public:
     Coco_Transformation_Data::M = M;
     Coco_Transformation_Data::b = b;
   }
+
   double internal_evaluate(const std::vector<double> &x) {
     size_t i;
     double sum = 0.0;
@@ -72,11 +73,11 @@ public:
     result[0] = sqrt(sum);
 
     return result[0];
-  };
+  }
 
   static Different_Powers * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Different_Powers(instance_id, dimension);
-  };
+  }
 };
 
 #endif

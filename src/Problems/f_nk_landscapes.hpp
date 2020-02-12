@@ -70,7 +70,7 @@ public:
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_optimal((double)dimension);
-  };
+  }
 
   void prepare_problem() {
     set_n_k(IOHprofiler_get_number_of_variables(),k);
@@ -91,11 +91,11 @@ public:
 
     result = result / (double)n;
     return -result;
-  };
+  }
 
   static NK_Landscapes * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new NK_Landscapes(instance_id, dimension);
-  };
+  }
 };
 
 #endif

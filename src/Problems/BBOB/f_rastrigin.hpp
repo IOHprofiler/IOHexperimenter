@@ -26,13 +26,13 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Rastrigin() {};
+
+  ~Rastrigin() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
-  
   void prepare_problem() {
     std::vector<double> xopt;
     double fopt;
@@ -63,11 +63,11 @@ public:
     }
     result[0] = 10.0 * ((double) (long) n - sum1) + sum2;
     return result[0];
-  };
+  }
 
   static Rastrigin * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Rastrigin(instance_id, dimension);
-  };
+  }
 };
 
 #endif

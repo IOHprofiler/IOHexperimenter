@@ -29,7 +29,7 @@ public:
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
   
   void prepare_problem() {
@@ -66,11 +66,11 @@ public:
     result[0] = 10.0 * ((double) (long) n - tmp) + tmp2 + 0;
 
     return result[0];
-  };
+  }
   
   static Bueche_Rastrigin * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Bueche_Rastrigin(instance_id, dimension);
-  };
+  }
 };
 
 #endif

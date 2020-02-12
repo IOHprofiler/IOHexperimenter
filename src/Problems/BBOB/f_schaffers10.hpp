@@ -26,12 +26,12 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Schaffers10() {};
+
+  ~Schaffers10() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
-
+  }
 
   const double conditioning = 10;
   void prepare_problem() {
@@ -96,11 +96,11 @@ public:
     result[0] = pow(result[0] / ((double) (long) n - 1.0), 2.0);
     
     return result[0];
-  };
+  }
   
   static Schaffers10 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Schaffers10(instance_id, dimension);
-  };
+  }
 };
 
 #endif

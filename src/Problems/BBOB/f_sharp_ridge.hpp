@@ -26,12 +26,12 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Sharp_Ridge() {};
+
+  ~Sharp_Ridge() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
-
+  }
 
   void prepare_problem() {
     std::vector<double> xopt;
@@ -89,11 +89,11 @@ public:
     }
 
     return result[0];
-  };
+  }
 
   static Sharp_Ridge * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Sharp_Ridge(instance_id, dimension);
-  };
+  }
 };
 
 #endif

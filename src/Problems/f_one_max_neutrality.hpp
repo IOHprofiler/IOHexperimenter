@@ -26,12 +26,12 @@ public:
     Initilize_problem(dimension);
   }
   
-  ~OneMax_Neutrality() {};
+  ~OneMax_Neutrality() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_optimal((double)ceil(dimension/3));
-  };
+  }
 
   double internal_evaluate(const std::vector<int> &x) {
     
@@ -42,11 +42,11 @@ public:
       result += new_variables[i];
     }
     return (double)result;
-  };
+  }
 
   static OneMax_Neutrality * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new OneMax_Neutrality(instance_id, dimension);
-  };
+  }
 };
 
 #endif

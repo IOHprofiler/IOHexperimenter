@@ -26,12 +26,12 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Sphere() {};
+
+  ~Sphere() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
-
+  }
 
   void prepare_problem() {
     /* compute xopt, fopt*/
@@ -44,7 +44,6 @@ public:
 
     Coco_Transformation_Data::fopt = fopt;
     Coco_Transformation_Data::xopt = xopt;
-    
   }
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -58,11 +57,11 @@ public:
     }
     
     return result[0];
-  };
+  }
 
   static Sphere * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Sphere(instance_id, dimension);
-  };
+  }
 };
 
 #endif

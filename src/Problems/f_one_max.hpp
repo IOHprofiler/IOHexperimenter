@@ -23,12 +23,12 @@ public:
     Initilize_problem(dimension);
   }
   
-  ~OneMax() {};
+  ~OneMax() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_optimal((double)dimension);
-  };
+  }
 
   double internal_evaluate(const std::vector<int> &x) {
   
@@ -38,11 +38,11 @@ public:
       result += x[i];
     }
     return (double)result;
-  };
+  }
 
   static OneMax * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new OneMax(instance_id, dimension);
-  };
+  }
 };
 
 #endif

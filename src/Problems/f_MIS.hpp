@@ -22,11 +22,11 @@ public:
     Initilize_problem(dimension);
   }
 
-  ~MIS() {};
+  ~MIS() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
   
 
   int isEdge (int i, int j, size_t problem_size) {
@@ -72,11 +72,11 @@ double internal_evaluate(const std::vector<int> &x) {
     }
     result=num_of_ones - (number_of_variables_even*sum_edges_in_the_set);
     return (double)result;
-  };
+  }
 
   static MIS * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new MIS(instance_id, dimension);
-  };
+  }
 };
 
 #endif

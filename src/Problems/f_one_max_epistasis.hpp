@@ -24,15 +24,15 @@ public:
     Initilize_problem(dimension);
   }
 
-  ~OneMax_Epistasis() {};
+  ~OneMax_Epistasis() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
   void customize_optimal() {
     IOHprofiler_set_optimal(IOHprofiler_get_number_of_variables());
-  };
+  }
 
   double internal_evaluate(const std::vector<int> &x) {
     
@@ -43,11 +43,11 @@ public:
       result += new_variables[i];
     }
     return (double)result;
-  };
+  }
 
   static OneMax_Epistasis * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new OneMax_Epistasis(instance_id, dimension);
-  };
+  }
 };
 
 #endif

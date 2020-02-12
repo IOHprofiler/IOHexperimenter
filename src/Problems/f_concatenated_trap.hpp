@@ -29,7 +29,8 @@ public:
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_optimal((double)dimension);
-  };
+  }
+
   int k = 5;
 
   double internal_evaluate(const std::vector<int> &x) {
@@ -63,11 +64,11 @@ public:
     }
 
     return result;
-  };
+  }
 
   static Concatenated_Trap * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Concatenated_Trap(instance_id, dimension);
-  };
+  }
 };
 
 #endif

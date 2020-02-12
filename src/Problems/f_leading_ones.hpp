@@ -24,15 +24,14 @@ public:
     Initilize_problem(dimension);
   }
   
-  ~LeadingOnes() {};
+  ~LeadingOnes() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_optimal((double)dimension);
-  };
+  }
 
   double internal_evaluate(const std::vector<int> &x) {
-    
     int n = x.size();
     int result = 0;
     for (int i = 0; i != n; ++i) {
@@ -42,11 +41,11 @@ public:
         break;
     }
     return (double)result;
-  };
+  }
   
   static LeadingOnes * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LeadingOnes(instance_id, dimension);
-  };
+  }
 };
 
 #endif

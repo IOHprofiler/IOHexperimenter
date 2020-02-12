@@ -67,7 +67,7 @@ public:
     dict.value.push_back(strstrip(value));
     dict.n += 1;
     return 0 ;
-  };
+  }
 
   std::string get_Dict_String(const Dict dict, const std::string section, const std::string key){
     size_t i;
@@ -90,7 +90,7 @@ public:
     }
     std::cout << "Can not find the corresponding configuration for key: " << key << " in section : "<< section << "\n";
     return NULL;
-  };
+  }
 
   std::vector<int> get_Dict_int_vector(const Dict dict, const std::string section, const std::string key, const int _min, const int _max){
     size_t i;
@@ -123,7 +123,7 @@ public:
     str = get_Dict_String(dict, section, key);
     result = std::stoi(str);
     return result;
-  };
+  }
 
   bool get_Dict_bool(const Dict dict, const std::string section, const std::string key){
     bool result = false;
@@ -134,7 +134,7 @@ public:
       result = true;
     }
     return result;
-  };
+  }
 
   linecontent add_Line(const std::string input_line, std::string &section, std::string &key, std::string &value){
     linecontent content;
@@ -167,7 +167,7 @@ public:
      content = CON_ERROR;
     }
     return content;
-  };
+  }
 
   Dict load(const std::string filename) {
     std::ifstream fp(filename.c_str());
@@ -216,7 +216,7 @@ public:
     }
     fp.close();
     return dict;
-  };
+  }
 
 void readcfg(std::string filename){
   Dict dict;
@@ -243,48 +243,59 @@ void readcfg(std::string filename){
   base_evaluation_triggers = get_Dict_int_vector(dict,"observer","base_evaluation_triggers",0,10);
   number_target_triggers = get_Dict_Int(dict,"observer","number_target_triggers");
   number_interval_triggers = get_Dict_Int(dict,"observer","number_interval_triggers");
-  };
+  }
 
   std::string get_suite_name() {
     return this->suite_name;
-  };
+  }
 
   std::vector<int> get_problem_id() {
     return this->problem_id;
-  };
+  }
+
   std::vector<int> get_instance_id() {
     return this->instance_id;
-  };
+  }
+
   std::vector<int> get_dimension() {
     return this->dimension;
-  };
+  }
+
   std::string get_output_directory() {
     return this->output_directory;
-  };
+  }
+
   std::string get_result_folder() {
     return this->result_folder;
-  };
+  }
+
   std::string get_algorithm_info() {
     return this->algorithm_info;
-  };
+  }
+
   std::string get_algorithm_name() {
     return this->algorithm_name;
-  };
+  }
+
   bool get_complete_triggers() {
     return this->complete_triggers;
-  };
+  }
+
   bool get_update_triggers() {
     return this->update_triggers;
-  };
+  }
+
   std::vector<int> get_base_evaluation_triggers() {
     return this->base_evaluation_triggers;
-  };
+  }
+
   int get_number_target_triggers() {
     return this->number_target_triggers;
-  };
+  }
+
   int get_number_interval_triggers() {
     return this->number_interval_triggers;
-  };
+  }
 
 private:
   std::string cfgFile = "configuration.ini";

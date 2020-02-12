@@ -22,11 +22,11 @@ public:
     Initilize_problem(dimension);
   }
   
-  ~LABS() {};
+  ~LABS() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
   double correlation(const std::vector<int> x, const int n, int k)
   {
@@ -59,10 +59,11 @@ public:
     }
     result = (double)(n*n)/2.0/result;
     return (double)result;
-  };
+  }
+  
   static LABS * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LABS(instance_id, dimension);
-  };
+  }
 };
 
 #endif

@@ -26,13 +26,12 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Lunacek_Bi_Rastrigin() {};
+
+  ~Lunacek_Bi_Rastrigin() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
-
-  
+  }
 
   void prepare_problem() {
     std::vector<double> xopt;
@@ -119,14 +118,12 @@ public:
     }
     result[0] = std::min(sum1, d * (double) n + s * sum2)
         + 10. * ((double) n - sum3) + 1e4 * penalty;
-
-
     return result[0];
-  };
+  }
 
   static Lunacek_Bi_Rastrigin * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Lunacek_Bi_Rastrigin(instance_id, dimension);
-  };
+  }
 };
 
 #endif

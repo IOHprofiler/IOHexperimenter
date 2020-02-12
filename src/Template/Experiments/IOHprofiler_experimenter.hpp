@@ -41,13 +41,13 @@ public:
     config_csv_logger->activate_logger();
     
     this->algorithm = algorithm;
-  };
+  }
 
   IOHprofiler_experimenter(IOHprofiler_suite<InputType> suite, std::shared_ptr<IOHprofiler_csv_logger> csv_logger, _algorithm * algorithm) {
     configSuite = suite;
     config_csv_logger = csv_logger;
     this->algorithm = algorithm;
-  };
+  }
 
   ~IOHprofiler_experimenter(){};
 
@@ -102,8 +102,8 @@ public:
 
     std::clock_t c_end_overall = std::clock();
     print_info("Total CPU Time" + std::to_string(1000.0 * (c_end_overall-c_start_overall) / CLOCKS_PER_SEC) + "ms\n");
-  };
-
+  }
+  
   void _set_independent_runs(int n) {
     this->independent_runs = n;
   }

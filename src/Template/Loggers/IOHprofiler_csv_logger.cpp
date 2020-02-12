@@ -179,7 +179,7 @@ void IOHprofiler_csv_logger::target_problem(const int problem_id, const int dime
   
   openInfo(problem_id,dimension,problem_name);
   
-};
+}
 
 void IOHprofiler_csv_logger::target_suite(std::string suite_name){
   this->suite_name = suite_name;
@@ -359,7 +359,7 @@ void IOHprofiler_csv_logger::update_logger_info(size_t optimal_evaluations, doub
   this->optimal_evaluations = optimal_evaluations;
   this->best_y[0] =  y;
   this->best_transformed_y[0] = transformed_y;
-};
+}
 
 void IOHprofiler_csv_logger::clear_logger() {
   if (infoFile.is_open()) {

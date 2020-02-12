@@ -26,12 +26,12 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Linear_Slope() {};
+
+  ~Linear_Slope() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
-
+  }
   
   void prepare_problem() {
     std::vector<double> xopt;
@@ -82,11 +82,11 @@ public:
     }
 
     return result[0];
-  };
+  }
 
   static Linear_Slope * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Linear_Slope(instance_id, dimension);
-  };
+  }
 };
 
 #endif

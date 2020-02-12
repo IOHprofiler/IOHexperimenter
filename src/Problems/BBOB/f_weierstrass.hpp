@@ -28,11 +28,12 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Weierstrass() {};
+  
+  ~Weierstrass() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
   const double condition = 100.0;
   double f0;
@@ -109,11 +110,11 @@ public:
     result[0] = 10.0 * pow(result[0] / (double) (long) n - f0, 3.0);
 
     return result[0];
-  };
+  }
 
   static Weierstrass * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Weierstrass(instance_id, dimension);
-  };
+  }
 };
 
 #endif

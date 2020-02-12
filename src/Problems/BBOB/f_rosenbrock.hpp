@@ -26,11 +26,12 @@ public:
     Initilize_problem(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Rosenbrock() {};
+
+  ~Rosenbrock() {}
 
   void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
 
  
   void prepare_problem() {
@@ -54,7 +55,7 @@ public:
     Coco_Transformation_Data::xopt = xopt;
     Coco_Transformation_Data::factor = factor;
     Coco_Transformation_Data::fopt = fopt;
-  };
+  }
 
   double internal_evaluate(const std::vector<double> &x) {
     int n = x.size();
@@ -71,11 +72,11 @@ public:
     result[0] = 100.0 * s1 + s2;
 
     return result[0];
-  };
+  }
 
   static Rosenbrock * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Rosenbrock(instance_id, dimension);
-  };
+  }
 };
 
 #endif
