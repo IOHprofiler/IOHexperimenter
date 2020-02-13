@@ -27,10 +27,10 @@ public:
     problem_id(DEFAULT_PROBLEM_ID), 
     instance_id(instance_id), 
     maximization_minimization_flag(1),
-    lowerbound(std::vector<InputType> (number_of_variables) ), 
-    upperbound(std::vector<InputType> (number_of_variables) ),
     number_of_variables(DEFAULT_DIMENSION), 
     number_of_objectives(1),
+    lowerbound(std::vector<InputType> (number_of_variables) ), 
+    upperbound(std::vector<InputType> (number_of_variables) ),
     optimal(std::vector<double>(number_of_objectives) ),
     optimalFound(false),
     evaluations(0),
@@ -514,14 +514,14 @@ private:
 
   int maximization_minimization_flag; /// < set as maximization if flag = 1, otherwise minimization.
   
-  std::vector<InputType> lowerbound;
-  std::vector<InputType> upperbound;
-  
   ///std::vector<int> evaluate_int_info; /// < common used info for evaluating variables, integer type.
   ///std::vector<double> evaluate_double_info; /// < common used info for evaluating variables, double type.
 
   std::size_t number_of_variables; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
   std::size_t number_of_objectives;
+
+  std::vector<InputType> lowerbound;
+  std::vector<InputType> upperbound;
 
   std::vector<InputType> best_variables; /// todo. comments, rename?
   std::vector<InputType> best_transformed_variables;
