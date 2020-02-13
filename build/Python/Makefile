@@ -1,10 +1,10 @@
 
-PYTHONVERSION=/usr/include/python2.7
-PYTHONLIB=-lpython
+PYTHONVERSION=/usr/include/python3.5
+PYTHONLIB=-lpython3
 LDFLAGS += -lm 
 CCFLAGS = -g -std=c++11 -Wall -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -O2 -fPIC
 ODIR=build
-SOURCE=src
+SOURCE=IOH
 CPP_SOURCE=${wildcard $(SOURCE)/*.cpp}
 CPP_OBJS=${patsubst $(SOURCE)/%.cpp, $(ODIR)/%.o, $(CPP_SOURCE)}
 HPP_SOURCE=${wildcard $(SOURCE)/*.hpp}

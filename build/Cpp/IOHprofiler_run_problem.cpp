@@ -1,7 +1,7 @@
 
-#include "src/f_one_max.hpp"
-#include "src/f_w_model_one_max.hpp"
-#include "src/IOHprofiler_csv_logger.h"
+#include "IOH/f_one_max.hpp"
+#include "IOH/f_w_model_one_max.hpp"
+#include "IOH/IOHprofiler_csv_logger.h"
 
 
 std::vector<int> Initialization(int dimension) {

@@ -1,7 +1,7 @@
 LANG=
 CC=g++
 LDFLAGS = 
-CCFLAGS = -g -std=c++11 -Wall -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -O2
+CCFLAGS = -g -fPIC -shared -std=c++11 -Wall -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -O2
 SUBDIRS=src
 ROOT_DIR=$(shell pwd)
 
@@ -19,7 +19,9 @@ endif
 export CC T_DIR ROOT_DIR CCFLAGS LDFLAGS
 all:$(SUBDIRS) DEBUG
 $(SUBDIRS):ECHO
-	mkdir -p $(T_DIR)/src
+	mkdir -p $(T_DIR)/IOH
+	mkdir -p $(T_DIR)/bin
+	mkdir -p $(T_DIR)/obj
 	make -C $@
 DEBUG:ECHO
 	make -C $(T_DIR)

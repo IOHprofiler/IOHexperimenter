@@ -1,4 +1,4 @@
-#include "src/IOHprofiler_experimenter.hpp"
+#include "IOH/IOHprofiler_experimenter.hpp"
 
 IOHprofiler_random random_generator(1);
 static int budget_scale = 100;
