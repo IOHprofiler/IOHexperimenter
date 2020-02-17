@@ -19,16 +19,11 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
   }
 
   ~MIS() {}
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  }
   
-
   int isEdge (int i, int j, size_t problem_size) {
     if (i!=problem_size/2 && j==i+1) {
       return 1;
@@ -54,7 +49,6 @@ double internal_evaluate(const std::vector<int> &x) {
     if (n%2!=0) {
         number_of_variables_even=(int)n-1;
     }
-
    
     for (index=0; index<number_of_variables_even; index++) {
       if (x[index]==1) {

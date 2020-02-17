@@ -14,16 +14,7 @@
 
 class W_Model_OneMax : public IOHprofiler_problem<int> {
 public:
-  W_Model_OneMax() {
-    IOHprofiler_set_problem_name("W_Model_OneMax");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
-  }
-  
-  W_Model_OneMax(int instance_id, int dimension) {
+  W_Model_OneMax(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("W_Model_OneMax");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
@@ -31,7 +22,7 @@ public:
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
   }
 
   ~W_Model_OneMax() {};
@@ -60,8 +51,8 @@ public:
     }
   }
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
+  void customize_optimal() {
+    int dimension = IOHprofiler_get_number_of_variables();
     int optimal_value = (int)(dimension*(this->dummy_para == 0 ? 1 : this->dummy_para)) / (this->neutrality_para == 0 ? 1 : this->neutrality_para);
 
     IOHprofiler_set_optimal((double)optimal_value);
@@ -112,11 +103,7 @@ public:
     return (double)result;
   }
 
-  static W_Model_OneMax * createInstance() {
-    return new W_Model_OneMax();
-  }
-
-  static W_Model_OneMax * createInstance(int instance_id, int dimension) {
+  static W_Model_OneMax * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new W_Model_OneMax(instance_id, dimension);
   }
 };

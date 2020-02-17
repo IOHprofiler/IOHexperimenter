@@ -21,15 +21,11 @@ public:
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
-  }
-  
-  ~Concatenated_Trap() {};
-
-  void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_optimal((double)dimension);
   }
+  
+  ~Concatenated_Trap() {};
 
   int k = 5;
 

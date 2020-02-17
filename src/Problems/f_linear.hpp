@@ -34,7 +34,7 @@ public:
     int n = x.size();
     double result = 0;
     for (int i = 0; i < n; ++i) {
-      result += (double)x[i] * (double)(i+1);
+      result += (double)x[i] * (double)(i + 1);
     }
     return (double)result;
   }

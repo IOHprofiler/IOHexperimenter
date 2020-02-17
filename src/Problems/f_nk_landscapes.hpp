@@ -19,10 +19,11 @@ public:
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
   }
   
   ~NK_Landscapes() {};
+  
   std::vector<std::vector<double>> F;
   std::vector<std::vector<int>> E;
   int k = 1;
@@ -65,11 +66,6 @@ public:
         IOHprofiler_uniform_rand((size_t)pow(2,k+1),(long)(k * (i+1) * 2),rand_vec);
         F.push_back(rand_vec);
     }
-  }
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-    IOHprofiler_set_optimal((double)dimension);
   }
 
   void prepare_problem() {

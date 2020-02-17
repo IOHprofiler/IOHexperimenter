@@ -22,15 +22,11 @@ public:
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
-  }
-  
-  ~LeadingOnes_Dummy2() {}
-
-  void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_optimal(floor((double)(dimension * 0.9)));
   }
+  
+  ~LeadingOnes_Dummy2() {}
 
   std::vector<int> info;
   void prepare_problem() {

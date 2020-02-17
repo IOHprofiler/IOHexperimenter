@@ -25,20 +25,17 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
   
   ~Weierstrass() {}
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  }
-
   const double condition = 100.0;
   double f0;
   double ak[F_WEIERSTRASS_SUMMANDS];
   double bk[F_WEIERSTRASS_SUMMANDS];
+  
   void prepare_problem() {
 
     std::vector<double> xopt;

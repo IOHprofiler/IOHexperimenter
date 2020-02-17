@@ -23,15 +23,11 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(420.96874633);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
 
   ~Schwefel() {}
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  }
   
   void prepare_problem() {
     std::vector<double> xopt,tmp1,tmp2;
