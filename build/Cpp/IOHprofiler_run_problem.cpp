@@ -62,7 +62,7 @@ void _run_w_model() {
   /// Set problem_id as 1
   w_model_om.IOHprofiler_set_problem_id(1);
   /// Set dimension.
-  w_model_om.Initilize_problem(dimension);
+  w_model_om.IOHprofiler_set_number_of_variables(dimension);
   int restart_flag = 0;
   while (restart_flag < 10) {
     /// reset_problem must be called before testing the same problem class repeatedly.
@@ -118,7 +118,7 @@ void _run_problem() {
   /// Allocate the problem to be tested.
   OneMax om;
   int dimension = 1000;
-  om.Initilize_problem(dimension);
+  om.IOHprofiler_set_number_of_variables(dimension);
   
   /// If no logger is added, there will be not any output files, but users
   /// can still get fitness values.
