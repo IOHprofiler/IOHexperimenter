@@ -43,15 +43,20 @@ bin/$(BIN3):IOHprofiler_run_problem.cpp $(LIB_OBJ)
 CLEAN:
 	rm -rf ./$(OBJ_DIR)
 ECHO:
-	@echo "Please copy the `libIOH.so` files to the the LD_LIBRARY_PATH and `IOH` folder .h, .hpp files to CPLUS_INCLUDE_PATH."
-	@echo For Linux:
-	@echo "sudo cp libIOH.so libIOH.so.0 libIOH.so.0.0 /usr/lib/"
-	@echo "sudo cp -rf ./IOH/ /usr/include/"
-	@echo For MacOS:
-	@echo "sudo cp libIOH.so libIOH.so.0 libIOH.so.0.0 /usr/local/lib"
-	@echo "sudo cp -rf ./IOH/*.h ./IOH/*.hpp /usr/local/include/"
+	@echo 'Please copy the libIOH.so files to the the LD_LIBRARY_PATH and IOH folder to CPLUS_INCLUDE_PATH.'
+	@echo 'For Linux:'
+	@echo 'sudo cp libIOH.so libIOH.so.0 libIOH.so.0.0 /usr/lib/'
+	@echo 'sudo cp -rf ./IOH/ /usr/include/'
+	@echo 'For MacOS:'
+	@echo 'sudo cp libIOH.so libIOH.so.0 libIOH.so.0.0 /usr/local/lib'
+	@echo 'sudo cp -rf ./IOH/ /usr/local/include/'
 	@echo 
-	@echo "Or add the path to LD_LIBRARY_PATH and CPLUS_INCLUDE_PATH"
-	@echo "echo \"export LD_LIBRARY_PATH={path where libIOH.so files locate: /build/Cpp/}:$LD_LIBRARY_PATH\" >> ~/.bashrc"
-	@echo "echo \"export CPLUS_INCLUDE_PATH={path where the /IOH folder locates: /build/Cpp}:$CPLUS_INCLUDE_PATH\" >> ~/.bashrc"
-	@echo "source ~/.bashrc"
+	@echo 'Or add the path to LD_LIBRARY_PATH and CPLUS_INCLUDE_PATH.'
+	@echo 'For Linux:'
+	@echo 'echo "export LD_LIBRARY_PATH={path where libIOH.so files locate: Path/build/Cpp/}:$$LD_LIBRARY_PATH" >> ~/.bashrc'
+	@echo 'echo "export CPLUS_INCLUDE_PATH={path where the /IOH folder locates: Path/build/Cpp}:$$CPLUS_INCLUDE_PATH" >> ~/.bashrc'
+	@echo 'source ~/.bashrc'
+	@echo 'For MacOs:'
+	@echo 'echo "export DYLD_LIBRARY_PATH={path where libIOH.so files locate: Path/build/Cpp/}:$$DYLD_LIBRARY_PATH" >> ~/.bashrc'
+	@echo 'echo "export CPLUS_INCLUDE_PATH={path where the /IOH folder locates: Path/build/Cpp}:$$CPLUS_INCLUDE_PATH" >> ~/.bashrc'
+	@echo 'source ~/.bashrc'
