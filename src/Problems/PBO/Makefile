@@ -1,7 +1,4 @@
-SUB_DIR=common_used_functions \
-				BBOB \
-				PBO \
-				WModel
+SUB_DIR=
 CPP_SOURCE=${wildcard *.cpp}
 CPP_OBJS=${patsubst %.cpp, $(ROOT_DIR)/$(TAR_DIR)/IOH/%.cpp, $(CPP_SOURCE)}
 HPP_SOURCE=${wildcard *.hpp}
