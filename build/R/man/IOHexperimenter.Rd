@@ -26,10 +26,13 @@ IOHexperimenter(suite = "PBO", dims = NULL, functions = NULL,
 \item{param.track}{Which parameters to track. Should be a vector of strings, containing no spaces or commas}
 }
 \value{
-A S3 object 'IOHexperimenter'
+A S3 object 'IOHexperimenter', with attributes 'dims', 'functions', 'instances', 
+'suite', 'param.track' and 'observed', set according to the specified parameters.
 }
 \description{
-S3 class 'IOHexperimenter'
+A S3 class 'IOHexperimenter', which provides an interface to the C++ functions involved
+in the benchmarking procedure. This object can be used together with the `next_problem`-function 
+to create the `IOHproblem`-objects on which benchmarking can be performed.
 }
 \examples{
 exp <- IOHexperimenter()

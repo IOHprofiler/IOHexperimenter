@@ -25,6 +25,10 @@ utils::globalVariables(c("."))
 
 #' S3 class 'IOHexperimenter'
 #'
+#' A S3 class 'IOHexperimenter', which provides an interface to the C++ functions involved
+#' in the benchmarking procedure. This object can be used together with the `next_problem`-function 
+#' to create the `IOHproblem`-objects on which benchmarking can be performed.
+#'
 #' @param suite Which suite to use. Available: 'PBO', 'BBOB'
 #' @param dims Numerical Which dimensions to use
 #' @param functions Numerical Which functions from the selected suite to use
@@ -34,7 +38,8 @@ utils::globalVariables(c("."))
 #' @param data.dir Where the data should be stored. Defaults to NULL, meaning no data is stored.
 #' @param param.track Which parameters to track. Should be a vector of strings, containing no spaces or commas
 #'
-#' @return A S3 object 'IOHexperimenter'
+#' @return A S3 object 'IOHexperimenter', with attributes 'dims', 'functions', 'instances', 
+#' 'suite', 'param.track' and 'observed', set according to the specified parameters.
 #' @export
 #' @examples 
 #' exp <- IOHexperimenter()
@@ -96,11 +101,6 @@ IOHexperimenter <- function(suite = "PBO", dims = NULL, functions = NULL, instan
       getOption('IOHexperimenter.tdat', default = 0),
       getOption('IOHexperimenter.idat', default = 0)
     )
-    
-    # cpp_logger_set_state(getOption(IOHexperimenter.dat, default = TRUE), 
-    #                      getOption(IOHexperimenter.cdat, default = FALSE),
-    #                      getOption(IOHexperimenter.tdat, default = 0),
-    #                      getOption(IOHexperimenter.idat, default = 0))
     
     cpp_logger_target_suite()
     

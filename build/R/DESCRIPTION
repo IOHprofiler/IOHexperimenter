@@ -11,7 +11,10 @@ Authors@R: c(
 Maintainer: Diederick Vermetten <d.l.vermetten@liacs.leidenuniv.nl>
 Description: The benchmarking module for the Iterative Optimization Heuristics
     Profiler ('IOHprofiler'). This module provides benchmarking in the 'IOHprofiler'
-    format, which can be visualized using the 'IOHanalyzer' module. 
+    format. It enables performance tracking and analysis for any iterative optimization heuristic, 
+    which can be visualized and analyzed using the 'IOHanalyzer' package. It also provides access
+    to predefined benchmarking functions, both for pseudo-boolean and continuous domains, as well
+    as some sample algorithms. 
 License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
 LazyData: true
