@@ -43,6 +43,9 @@ And the following functions:
 
 \item{repetitions}{How many independent runs of the algorithm to do for each problem instance}
 }
+\value{
+None
+}
 \description{
 Base procedure for benchmarking a custom algorithm
 }

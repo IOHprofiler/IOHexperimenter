@@ -2,7 +2,7 @@
 #'
 #' @param x The IOHproblem to print
 #' @param ... Arguments for underlying function
-#'
+#' @return The printed object
 #' @export
 #' @examples 
 #' exp <- IOHexperimenter()
@@ -16,7 +16,7 @@ print.IOHproblem <- function(x, ...) {
 #'
 #' @param x The IOHproblem to print
 #' @param ... Arguments for underlying function
-#'
+#' @return The printed object
 #' @export
 #' @examples 
 #' exp <- IOHexperimenter()

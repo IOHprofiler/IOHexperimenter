@@ -14,8 +14,8 @@ utils::globalVariables(c("."))
   op.IOHexperimenter <- list(
     IOHexperimenter.idat = 0,
     IOHexperimenter.tdat = 0,
-    IOHexperimenter.cdat = F,
-    IOHexperimenter.dat = T
+    IOHexperimenter.cdat = FALSE,
+    IOHexperimenter.dat = TRUE
   )
   toset <- !(names(op.IOHexperimenter) %in% names(op))
   if (any(toset)) options(op.IOHexperimenter[toset])
@@ -34,7 +34,7 @@ utils::globalVariables(c("."))
 #' @param data.dir Where the data should be stored. Defaults to NULL, meaning no data is stored.
 #' @param param.track Which parameters to track. Should be a vector of strings, containing no spaces or commas
 #'
-#' @return A S3 object 'DataSet'
+#' @return A S3 object 'IOHexperimenter'
 #' @export
 #' @examples 
 #' exp <- IOHexperimenter()
@@ -83,22 +83,22 @@ IOHexperimenter <- function(suite = "PBO", dims = NULL, functions = NULL, instan
   else algorithm.name <- gsub(" ", "_", algorithm.name)
   
   if (is.null(data.dir)) {
-    observed <- F
+    observed <- FALSE
   }
   else {
     if (!dir.exists(dirname(data.dir)))
-      dir.create(dirname(data.dir), recursive = T)
+      dir.create(dirname(data.dir), recursive = TRUE)
     # intialize the observer
     cpp_init_logger(
       dirname(data.dir), basename(data.dir), algorithm.name, algorithm.info,
-      getOption('IOHexperimenter.dat', default = T), 
-      getOption('IOHexperimenter.cdat', default = F),
+      getOption('IOHexperimenter.dat', default = TRUE), 
+      getOption('IOHexperimenter.cdat', default = FALSE),
       getOption('IOHexperimenter.tdat', default = 0),
       getOption('IOHexperimenter.idat', default = 0)
     )
     
-    # cpp_logger_set_state(getOption(IOHexperimenter.dat, default = T), 
-    #                      getOption(IOHexperimenter.cdat, default = F),
+    # cpp_logger_set_state(getOption(IOHexperimenter.dat, default = TRUE), 
+    #                      getOption(IOHexperimenter.cdat, default = FALSE),
     #                      getOption(IOHexperimenter.tdat, default = 0),
     #                      getOption(IOHexperimenter.idat, default = 0))
     
@@ -107,7 +107,7 @@ IOHexperimenter <- function(suite = "PBO", dims = NULL, functions = NULL, instan
     if (!is.null(param.track))
       cpp_set_parameters_name(param.track)
     
-    observed <- T
+    observed <- TRUE
   }
 
   
@@ -129,7 +129,7 @@ IOHexperimenter <- function(suite = "PBO", dims = NULL, functions = NULL, instan
 #'
 #' @param x The IOHexperimenter to print
 #' @param ... Arguments for underlying function
-#'
+#' @return The printed object
 #' @export
 #' @examples 
 #' print(IOHexperimenter())
@@ -141,7 +141,7 @@ print.IOHexperimenter <- function(x, ...) {
 #'
 #' @param x The IOHexperimenter to print
 #' @param ... Arguments for underlying function
-#'
+#' @return The printed object
 #' @export
 #' @examples 
 #' as.character(IOHexperimenter())

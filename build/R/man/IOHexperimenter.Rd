@@ -26,7 +26,7 @@ IOHexperimenter(suite = "PBO", dims = NULL, functions = NULL,
 \item{param.track}{Which parameters to track. Should be a vector of strings, containing no spaces or commas}
 }
 \value{
-A S3 object 'DataSet'
+A S3 object 'IOHexperimenter'
 }
 \description{
 S3 class 'IOHexperimenter'

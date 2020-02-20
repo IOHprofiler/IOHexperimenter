@@ -2,11 +2,16 @@ Package: IOHexperimenter
 Type: Package
 Title: Benchmarking Part of the 'IOHprofiler'
 Version: 0.1.0
-Author: Diederick Vermetten [cre, aut], Furong Ye [cre, aut], Hao Wang [aut], Carola Doerr [aut], Thomas Bäck [aut]
+Authors@R: c(
+    person("Furong", "Ye", email = "f.ye@liacs.leidenuniv.nl", role = "aut"),
+    person("Hao", "Wang", email = "h.wang@liacs.leidenuniv.nl", role = "aut"),
+    person("Diederick", "Vermetten", email="d.l.vermetten@liacs.leidenuniv.nl", role = c("aut","cre")),
+    person("Carola", "Doerr", email = "Carola.Doerr@mpi-inf.mpg.de", role = "aut"),
+    person("Thomas", "Bäck", email="t.h.w.baeck@liacs.leidenuniv.nl", role = "aut"))
 Maintainer: Diederick Vermetten <d.l.vermetten@liacs.leidenuniv.nl>
 Description: The benchmarking module for the Iterative Optimization Heuristics
     Profiler ('IOHprofiler'). This module provides benchmarking in the 'IOHprofiler'
-    format, which can be visualized using the 'IOHanalyzer' module.
+    format, which can be visualized using the 'IOHanalyzer' module. 
 License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -20,6 +25,5 @@ LinkingTo: Rcpp,
            BH
 RoxygenNote: 6.1.1
 SystemRequirements: GNU make
-Date: 2019-10-22
 Suggests: 
     testthat
