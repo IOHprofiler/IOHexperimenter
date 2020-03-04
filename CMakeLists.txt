@@ -1,5 +1,5 @@
 # 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.6)
 
 # set the project name and version
 project(IOHexperimenter VERSION 1.0)
