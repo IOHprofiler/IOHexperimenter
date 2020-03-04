@@ -33,12 +33,13 @@ The __IOHexperimenter__ has been built on `C++`.
 
 #### Using IOHexperimenter in C++
 
-If you are using the tool for the first time, please download or clone this branch and run `make` at the root directory of the project. After running `make` to compile,
-* source files will be generated in `build/Cpp/IOH/`
-* A shared library `libIOH.so` will be generated in `build/Cpp/`
-* three exectuable files will be generated in `build/Cpp/bin/`
+[Cmake](https://cmake.org) is used to build this project, please make sure you have it installed.
 
-To set the working environment with __IOH__, you can copy `libIOH.so` files to the library path `/usr/lib/` or `/usr/local/lib/` and copy the folder of header filers `/IOH/` to the include path `/usr/include/` or `/usr/local/include/`. Otherwise. please link the corresponding path to the `LD_LIBRARY_PATY` and the `CPLUS_INCLUDE_PATH`. Afterwards, you can compile your project as follow:
+If you are using the tool for the first time, please download or clone this branch, and run `cmake .` and `make install` at the directory where the project locates.
+* If you want to set up the install directory, please run `cmake -DCMAKE_INSTALL_PREFIX=your/path .` before installation.
+* three exectuable files will be generated in `build/Cpp` for test.
+
+After installation, you can compile your project as follow (with linking IOH library):
 ```
 g++ $CMPL_FLAGS -o IOHprofiler_run_experiment IOHprofiler_run_experiment.cpp -lIOH
 ```
