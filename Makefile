@@ -4,6 +4,7 @@ LDFLAGS =
 CCFLAGS = -g -std=c++11 -Wall -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -O2
 SUBDIRS=src
 ROOT_DIR=$(shell pwd)
+OBJS_DIR=obj
 
 T_DIR=
 ifeq ($(LANG),c++)
@@ -26,4 +27,5 @@ DEBUG:ECHO
 ECHO:
 	@echo $(SUBDIRS)
 CLEAN:
-	@rm $(OBJS_DIR)/*.o
+	@rm -f $(T_DIR)/$(OBJS_DIR)/*.o
+	@rm -f $(T_DIR)/$(OBJS_DIR)/*.a

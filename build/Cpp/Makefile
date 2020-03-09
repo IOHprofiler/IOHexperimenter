@@ -9,7 +9,8 @@ HPP_OBJS=${patsubst src/%.hpp, $(ODIR)/%.o, $(HPP_SOURCE)}
 BIN1=IOHprofiler_run_experiment
 BIN2=IOHprofiler_run_suite
 BIN3=IOHprofiler_run_problem
-all: PREPARE $(CPP_OBJS) $(HPP_OBJS) bin/$(BIN1) bin/$(BIN2) bin/$(BIN3)
+LIBIOH=libioh.a
+all: PREPARE $(CPP_OBJS) $(HPP_OBJS) bin/$(LIBIOH) bin/$(BIN1) bin/$(BIN2) bin/$(BIN3)
 PREPARE:
 	mkdir -p ./$(ODIR)
 	mkdir -p ./bin
@@ -17,6 +18,8 @@ $(CPP_OBJS):$(ODIR)/%.o:src/%.cpp
 	$(CC) ${CCFLAGS} -c -x c++ $^ -o $@ ${LDFLAGS}
 $(HPP_OBJS):$(ODIR)/%.o:src/%.hpp
 	$(CC) ${CCFLAGS} -c -x c++ $^ -o $@ ${LDFLAGS}
+bin/$(LIBIOH):${CPP_OBJS} ${HPP_OBJS}
+	ar rcs bin/$(LIBIOH) ${CPP_OBJS} ${HPP_OBJS}
 bin/$(BIN1):${CPP_OBJS} ${HPP_OBJS} IOHprofiler_run_experiment.cpp
 	cp configuration.ini bin/
 	$(CC) ${CCFLAGS} -pthread -o $@ $^  ${LDFLAGS}
@@ -28,3 +31,4 @@ CLEAN:
 	@rm -rf bin/IOHprofiler_run_experiment
 	@rm -rf bin/IOHprofiler_run_suite
 	@rm -rf bin/IOHprofiler_run_problem
+	@rm -f ./$(ODIR)/*.o ./$(ODIR)/*.a
