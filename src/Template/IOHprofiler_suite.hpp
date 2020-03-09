@@ -148,6 +148,11 @@ public:
     return this->problem_id_name_map;
   }
 
+  //! Return a map of problem name to problem ID, for all the registered problem.
+  std::map<std::string, int> IOHprofiler_suite_get_problems() const {
+    return this->problem_name_id_map;
+  }
+
   std::vector<int> IOHprofiler_suite_get_instance_id() const {
     return this->instance_id;
   }
