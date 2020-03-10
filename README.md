@@ -16,29 +16,34 @@ This is the __benchmarking platform__ for <b>I</b>terative <b>O</b>ptimization <
 
 <b>IOHexperimenter</b> is <i>built on</i>:
 
-* `C++` (tested on `gcc 5.4.0`)
-* `boost.filesystem` library for logging files.
+* `C++`
 
 <b>IOHexperimenter</b> is available for:
 
 * `C++`
 * `R` package [https://github.com/IOHprofiler/IOHexperimenter/tree/R](https://github.com/IOHprofiler/IOHexperimenter/tree/R)
-* `Python` interface (soon to come)
+* `Python` interface
 * `Java` interface (soon to come)
 
 ## Using IOHexperimenter
 
 ### Running Experiments
 
-The __IOHexperimenter__ has been built on `C++` and tested on complier `gcc 5.4.0`. To use the logging of `csv` output files, `boost.filesystem` library is required (To install boost library, please visit [https://www.boost.org](https://www.boost.org)).
+The __IOHexperimenter__ has been built on `C++`.
 
 #### Using IOHexperimenter in C++
 
-If you are using the tool for the first time, please download or clone this branch and run `make` at the root directory of the project. After running `make` to compile,
-* object files will be generated in `build/c/obj`
-* three exectuable files will be generated in `build/c/bin`
+[Cmake](https://cmake.org) is used to build this project, please make sure you have it installed.
 
-Afterwards, you can use the folder `build/c` and use the `Makefile` therein for your experiments.
+If you are using the tool for the first time, please download or clone this branch, and run `cmake .` and `make install` at the directory where the project locates.
+* If you want to set up the install directory, please run `cmake -DCMAKE_INSTALL_PREFIX=your/path .` before installation.
+* three exectuable files will be generated in `build/Cpp` for test.
+
+After installation, you can compile your project as follow (with linking IOH library):
+```
+g++ $CMPL_FLAGS -o IOHprofiler_run_experiment IOHprofiler_run_experiment.cpp -lIOH
+```
+
 For more details of how to use the `C++` version, please visit [this page](/build/Cpp).
 
 #### Using IOHexperimenter in R

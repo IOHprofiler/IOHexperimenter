@@ -23,21 +23,18 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
   
   ~Step_Ellipsoid() {}
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  }
-
   std::vector<double> xopt;
   double fopt;
   std::vector<std::vector<double> > rot1;
   std::vector<std::vector<double> > rot2;
-  std::vector<double> datax,dataxx;  
+  std::vector<double> datax,dataxx;
+  
   void prepare_problem() {
     /* compute xopt, fopt*/
     

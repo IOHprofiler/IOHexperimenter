@@ -11,13 +11,13 @@
 
 template <class InputType> class IOHprofiler_experimenter {
 public:
-  typedef void _algorithm(std::shared_ptr<IOHprofiler_problem<InputType>>, std::shared_ptr<IOHprofiler_csv_logger> logger);
+  typedef void _algorithm(std::shared_ptr<IOHprofiler_problem<InputType> >, std::shared_ptr<IOHprofiler_csv_logger> logger);
 
   IOHprofiler_experimenter() {};
   IOHprofiler_experimenter(std::string configFileName, _algorithm *algorithm) {
       this->conf.readcfg(configFileName);
     
-    configSuite = genericGenerator<IOHprofiler_suite<InputType>>::instance().create(conf.get_suite_name());
+    configSuite = genericGenerator<IOHprofiler_suite<InputType> >::instance().create(conf.get_suite_name());
     if (configSuite == nullptr) {
       IOH_error("Creating suite fails, please check your configuration");
     }
@@ -128,8 +128,8 @@ public:
 
 private:
   IOHprofiler_configuration conf;
-  std::shared_ptr<IOHprofiler_suite<InputType>> configSuite;
-  std::shared_ptr<IOHprofiler_problem<InputType>> current_problem;
+  std::shared_ptr<IOHprofiler_suite<InputType> > configSuite;
+  std::shared_ptr<IOHprofiler_problem<InputType> > current_problem;
   std::shared_ptr<IOHprofiler_csv_logger> config_csv_logger;
   int independent_runs = 1;
 

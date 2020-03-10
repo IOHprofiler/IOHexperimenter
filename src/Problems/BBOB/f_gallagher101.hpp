@@ -47,18 +47,13 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
 
   ~Gallagher101() {}
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  }
-
   std::vector<double> xopt;
-
   const size_t number_of_peaks = 101;
   std::vector<std::vector<double> > rotation;
   std::vector<std::vector<double> > arr_scales;
@@ -162,7 +157,6 @@ public:
     fopt = bbob2009_compute_fopt(21, this->IOHprofiler_get_instance_id());
     Coco_Transformation_Data::fopt = fopt;
   }
-
 
   double internal_evaluate(const std::vector<double> &x) {
     int n = x.size();

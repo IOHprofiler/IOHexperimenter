@@ -1,4 +1,4 @@
-#include "src/IOHprofiler_experimenter.hpp"
+#include <IOHprofiler_experimenter.hpp>
 
 IOHprofiler_random random_generator(1);
 static int budget_scale = 100;
@@ -37,7 +37,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int> > problem, 
   *mutation_rate = 1.0/problem->IOHprofiler_get_number_of_variables();
   int budget = budget_scale * problem->IOHprofiler_get_number_of_variables() * problem->IOHprofiler_get_number_of_variables();
 
-  std::vector<std::shared_ptr<double>> parameters;
+  std::vector<std::shared_ptr<double> > parameters;
   parameters.push_back(std::shared_ptr<double>(mutation_rate));
   std::vector<std::string> parameters_name;
   parameters_name.push_back("mutation_rate");
