@@ -62,7 +62,7 @@ public:
   /// This function must be decalred in derived function of new problems.
   virtual double internal_evaluate (const std::vector<InputType> &x) {
     double result = -DBL_MAX;
-    std::cout << "No evaluate function defined" << std::endl;
+    // std::cout << "No evaluate function defined" << std::endl;
     return result;
   };
 

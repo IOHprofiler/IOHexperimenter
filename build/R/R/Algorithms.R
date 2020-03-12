@@ -4,7 +4,8 @@
 #'
 #' @rdname random_search
 #' @param IOHproblem An IOHproblem object
-#'
+#' 
+#' @return A list containing the location (xopt) and value (fopt) of the optimal value found
 #' @export
 #' @examples 
 #' \donttest{
@@ -23,7 +24,7 @@ IOH_random_search <- function(IOHproblem, budget = NULL) {
 #' For easier use with the IOHexperimenter
 #'
 #' @param IOHproblem An IOHproblem object
-#' 
+#' @return A list containing the location (xopt) and value (fopt) of the optimal value found
 #' @rdname random_local_search
 #' @export
 #' @examples 
@@ -39,7 +40,7 @@ IOH_random_local_search <- function(IOHproblem, budget = NULL) {
 #' For easier use with the IOHexperimenter
 #'
 #' @param IOHproblem An IOHproblem object
-#' 
+#' @return A list containing the location (xopt) and value (fopt) of the optimal value found
 #' @rdname self_adaptive_GA
 #' @export
 #' @examples 
@@ -61,7 +62,7 @@ IOH_self_adaptive_GA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
 #' For easier use with the IOHexperimenter
 #'
 #' @param IOHproblem An IOHproblem object
-#' 
+#' @return A list containing the location (xopt) and value (fopt) of the optimal value found
 #' @rdname two_rate_GA
 #' @export
 #' @examples 
@@ -113,7 +114,7 @@ random_search_PB <- function(dim, obj_func, target_hit = function(){ FALSE }, bu
 #' The function assumes minimization, achieved by inverting the obj_func when `maximize` is FALSE
 #' @export
 random_search <- function(dim, obj_func, target_hit = function(){ FALSE }, budget = NULL, 
-                          lbound = -1, ubound = 1, maximize = T) {
+                          lbound = -1, ubound = 1, maximize = TRUE) {
   if (is.null(budget)) budget <- 10 * dim
   if (maximize) { #Assume mimimization in the remainder of this function
     obj_func_transformed <- function(x) {return(-1*obj_func(x))}
