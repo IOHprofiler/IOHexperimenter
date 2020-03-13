@@ -80,7 +80,7 @@ IntegerVector cpp_get_problem_list() {
     return wrap(currentDoubleSuite->IOHprofiler_suite_get_problem_id());
   } else {
     Rcout << "No suite exists.\n";
-    return NULL;
+    return IntegerVector();
   }
 }
 
@@ -92,7 +92,7 @@ IntegerVector cpp_get_dimension_list() {
     return wrap(currentDoubleSuite->IOHprofiler_suite_get_dimension());
   } else {
     Rcout << "No suite exists.\n";
-    return NULL;
+    return IntegerVector();
   }
 }
 
@@ -104,7 +104,7 @@ IntegerVector cpp_get_instance_list() {
     return wrap(currentDoubleSuite->IOHprofiler_suite_get_instance_id());
   } else {
     Rcout << "No suite exists.\n";
-    return NULL;
+    return IntegerVector();
   }
 }
 
@@ -120,7 +120,7 @@ List cpp_get_suite_info() {
                         _["instances"] = cpp_get_instance_list());   
   } else {
     Rcout << "No suite exists.\n";
-    return NULL;
+    return List();
   }
 }
 
@@ -136,7 +136,7 @@ List cpp_get_problem_info() {
                         _["instance"] = currentDoubleProblem->IOHprofiler_get_instance_id());  
   } else {
     Rcout << "No suite exists.\n";
-    return NULL;
+    return List();
   }
 }
 
@@ -146,7 +146,7 @@ List cpp_get_next_problem() {
     currentIntProblem = currentIntSuite->get_next_problem();
     if (currentIntProblem == nullptr) {
       Rcout << "No problem left.\n";
-      return NULL;
+      return List();
     }
     if (currentLogger != nullptr) {
       currentLogger->target_problem(currentIntProblem->IOHprofiler_get_problem_id(), 
@@ -160,7 +160,7 @@ List cpp_get_next_problem() {
     currentDoubleProblem = currentDoubleSuite->get_next_problem();
     if (currentDoubleProblem == nullptr) {
       Rcout << "No problem left.\n";
-      return NULL;
+      return List();
     }
     if (currentLogger != nullptr) {
       currentLogger->target_problem(currentDoubleProblem->IOHprofiler_get_problem_id(), 
@@ -172,7 +172,7 @@ List cpp_get_next_problem() {
     return cpp_get_problem_info();  
   } else {
     Rcout << "No suite exists.\n";
-    return NULL;
+    return List();
   }
 }
 
@@ -200,7 +200,7 @@ List cpp_reset_problem() {
     return cpp_get_problem_info();    
   } else {
     Rcout << "No suite exists.\n";
-    return NULL;
+    return List();
   }
 }
 
@@ -239,20 +239,20 @@ NumericVector cpp_loggerCOCOInfo() {
   if (currentSuiteName == "PBO" && currentIntSuite != nullptr) {
     if (currentIntProblem == nullptr) {
       Rcout << "Error: No problem exist!\n";
-      return NULL;
+      return NumericVector();
     } else {
       return wrap(currentIntProblem->loggerCOCOInfo());
     }
   } else if (currentSuiteName == "BBOB" && currentDoubleSuite != nullptr) {
     if (currentDoubleProblem == nullptr) {
       Rcout << "Error: No problem exist!\n";
-      return NULL;
+      return NumericVector();
     } else {
       return wrap(currentDoubleProblem->loggerCOCOInfo());
     }
   } else {
     Rcout << "Error: No problem exist!\n";
-    return NULL;
+    return NumericVector();
   }
 }
 
@@ -261,20 +261,20 @@ NumericVector cpp_loggerInfo() {
   if (currentSuiteName == "PBO" && currentIntSuite != nullptr) {
     if (currentIntProblem == nullptr) {
       Rcout << "Error: No problem exist!\n";
-      return NULL;
+      return NumericVector();
     } else {
       return wrap(currentIntProblem->loggerInfo());
     }
   } else if (currentSuiteName == "BBOB" && currentDoubleSuite != nullptr) {
     if (currentDoubleProblem == nullptr) {
       Rcout << "Error: No problem exist!\n";
-      return NULL;
+      return NumericVector();
     } else {
       return wrap(currentDoubleProblem->loggerInfo());
     }
   } else {
     Rcout << "Error: No problem exist!\n";
-    return NULL;
+    return NumericVector();
   }
 }
 
@@ -415,7 +415,7 @@ NumericVector cpp_get_double_upper_bounds() {
     }
   } else {
     Rcout << "Error: No problem exist!\n";
-    return NULL;
+    return NumericVector();
   }
 } 
 
@@ -430,7 +430,7 @@ NumericVector cpp_get_double_lower_bounds() {
     }
   } else {
     Rcout << "Error: No problem exist!\n";
-    return NULL;
+    return NumericVector();
   }
 } 
 
@@ -445,7 +445,7 @@ IntegerVector cpp_get_int_upper_bounds() {
     }
   } else {
     Rcout << "Error: No problem exist!\n";
-    return NULL;
+    return IntegerVector();
   }
 } 
 
@@ -460,7 +460,7 @@ IntegerVector cpp_get_int_lower_bounds() {
     }
   } else {
     Rcout << "Error: No problem exist!\n";
-    return NULL;
+    return IntegerVector();
   }
 } 
 

@@ -21,6 +21,9 @@ random_local_search(dimension, obj_func, target_hit = function() {
 
 \item{target_hit}{Optional, function which enables early stopping if a target value is reached}
 }
+\value{
+A list containing the location (xopt) and value (fopt) of the optimal value found
+}
 \description{
 For easier use with the IOHexperimenter
 
