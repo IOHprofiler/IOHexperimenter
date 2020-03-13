@@ -6,7 +6,10 @@
 *.pdf
 *.html
 .*
-
+tags
 !/.Rbuildignore
 !/.gitignore
 __pycache__
+debug/
+release/
+build/

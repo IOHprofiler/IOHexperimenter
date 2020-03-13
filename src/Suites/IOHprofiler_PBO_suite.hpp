@@ -36,6 +36,8 @@
 
 class PBO_suite : public IOHprofiler_suite<int> {
 public:
+  using InputType = int;
+
   PBO_suite() {
     std::vector<int> problem_id;
     std::vector<int> instance_id;
@@ -47,12 +49,14 @@ public:
       instance_id.push_back(i+1);
     }
     dimension.push_back(100);
-    
+
     IOHprofiler_set_suite_problem_id(problem_id);
     IOHprofiler_set_suite_instance_id(instance_id);
     IOHprofiler_set_suite_dimension(dimension);
     IOHprofiler_set_suite_name("PBO");
-    registerProblem();
+    this->registerProblem();
+    // Load problem, so that the user don't have to think about it.
+    this->loadProblem();
   }
 
   PBO_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
@@ -61,7 +65,7 @@ public:
         IOH_error("problem_id " + std::to_string(problem_id[i]) + " is not in PBO_suite");
       }
     }
-    
+
     for (int i = 0; i < instance_id.size(); ++i) {
       if (instance_id[i] < 0 || instance_id[i] > 100) {
         IOH_error("instance_id " + std::to_string(instance_id[i]) + " is not in PBO_suite");
@@ -78,7 +82,8 @@ public:
     IOHprofiler_set_suite_instance_id(instance_id);
     IOHprofiler_set_suite_dimension(dimension);
     IOHprofiler_set_suite_name("PBO");
-    registerProblem();
+    this->registerProblem();
+    this->loadProblem();
   }
 
   /// \fn void registerProblem()
@@ -103,7 +108,7 @@ public:
     registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Ruggedness1> regLeadingOnes_Ruggedness1("LeadingOnes_Ruggedness1");
     registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Ruggedness2> regLeadingOnes_Ruggedness2("LeadingOnes_Ruggedness2");
     registerInFactory<IOHprofiler_problem<int>,LeadingOnes_Ruggedness3> regLeadingOnes_Ruggedness3("LeadingOnes_Ruggedness3");
-    
+
     registerInFactory<IOHprofiler_problem<int>,Linear> regLinear("Linear");
     registerInFactory<IOHprofiler_problem<int>,MIS> regMIS("MIS");
     registerInFactory<IOHprofiler_problem<int>,LABS> regLABS("LABS");
@@ -111,7 +116,7 @@ public:
     registerInFactory<IOHprofiler_problem<int>,Ising_Ring> regIsing_Ring("Ising_Ring");
     registerInFactory<IOHprofiler_problem<int>,Ising_Torus> regIsing_Torus("Ising_Torus");
     registerInFactory<IOHprofiler_problem<int>,Ising_Triangular> regIsing_Triangular("Ising_Triangular");
-  
+
     mapIDTOName(1,"OneMax");
     mapIDTOName(2,"LeadingOnes");
     mapIDTOName(3,"Linear");
@@ -146,3 +151,4 @@ public:
   }
 };
 #endif //_IOHPROFILER_PBO_SUITE_H
+

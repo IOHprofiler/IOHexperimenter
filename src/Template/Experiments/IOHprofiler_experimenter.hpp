@@ -11,7 +11,7 @@ template <class InputType> IOHprofiler_experimenter<InputType>::IOHprofiler_expe
   configSuite->IOHprofiler_set_suite_dimension(conf.get_dimension());
   configSuite->loadProblem();
 
-  std::shared_ptr<IOHprofiler_csv_logger> logger(new IOHprofiler_csv_logger(conf.get_output_directory(),conf.get_result_folder(),conf.get_algorithm_name(),conf.get_algorithm_info()));
+  std::shared_ptr<IOHprofiler_csv_logger<InputType>> logger(new IOHprofiler_csv_logger<InputType>(conf.get_output_directory(),conf.get_result_folder(),conf.get_algorithm_name(),conf.get_algorithm_info()));
   if (logger == nullptr) {
     IOH_error("Creating logger fails, please check your configuration");
   }
@@ -27,7 +27,7 @@ template <class InputType> IOHprofiler_experimenter<InputType>::IOHprofiler_expe
   this->algorithm = algorithm;
 }
 
-template <class InputType> IOHprofiler_experimenter<InputType>::IOHprofiler_experimenter(IOHprofiler_suite<InputType> suite, std::shared_ptr<IOHprofiler_csv_logger> csv_logger, _algorithm * algorithm) {
+template <class InputType> IOHprofiler_experimenter<InputType>::IOHprofiler_experimenter(IOHprofiler_suite<InputType> suite, std::shared_ptr<IOHprofiler_csv_logger<InputType>> csv_logger, _algorithm * algorithm) {
   configSuite = suite;
   config_csv_logger = csv_logger;
   this->algorithm = algorithm;

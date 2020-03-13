@@ -37,6 +37,8 @@
 
 class BBOB_suite : public IOHprofiler_suite<double> {
 public:
+  using InputType = double;
+
   BBOB_suite() {
     std::vector<int> problem_id;
     std::vector<int> instance_id;
@@ -54,6 +56,8 @@ public:
     IOHprofiler_set_suite_dimension(dimension);
     IOHprofiler_set_suite_name("BBOB");
     registerProblem();
+    // Load problem, so that the user don't have to think about it.
+    this->loadProblem();
   };
 
   BBOB_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
@@ -80,6 +84,7 @@ public:
     IOHprofiler_set_suite_dimension(dimension);
     IOHprofiler_set_suite_name("BBOB");
     registerProblem();
+    this->loadProblem();
   }
 
   /// \fn void registerProblem()

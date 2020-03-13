@@ -1,3 +1,4 @@
+
 template <class InputType> double IOHprofiler_problem<InputType>::evaluate(std::vector<InputType> x) {
   ++this->evaluations;
 
@@ -15,7 +16,7 @@ template <class InputType> double IOHprofiler_problem<InputType>::evaluate(std::
 
   transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
   this->raw_objectives[0] = internal_evaluate(x);
-  
+
   this->transformed_objectives[0] = this->raw_objectives[0];
 
   transformation.objectives_transformation(x,this->transformed_objectives,this->problem_id,this->instance_id,this->problem_type);
