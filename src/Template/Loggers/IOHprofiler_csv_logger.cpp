@@ -35,7 +35,7 @@ int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) {
 #endif
     return 1;
   } else {
-    IOH_error("Error on creating directory" + folder_name);
+    IOH_error("Error on creating directory " + folder_name);
     return 0;
   }
 }
