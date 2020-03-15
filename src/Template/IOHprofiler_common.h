@@ -32,6 +32,8 @@
 /// < Default dimension
 #define DEFAULT_DIMENSION 4
 
+enum IOH_optimization_type {Minimization=0, Maximization=1};
+
 void IOH_error(std::string error_info);
 
 void IOH_warning(std::string warning_info);
@@ -72,13 +74,13 @@ bool compareVector(const std::vector<valueType> &v1, const std::vector<valueType
 /// This is used to compare to objectives vector, details needs to be discussed
 /// for multi-objective optimization.
 template<class valueType>
-bool compareObjectives(const std::vector<valueType> &v1, const std::vector<valueType> &v2, const int optimization_type){
+bool compareObjectives(const std::vector<valueType> &v1, const std::vector<valueType> &v2, const IOH_optimization_type optimization_type){
   int n = v1.size();
   if(n != v2.size()){
     IOH_error("Two compared objective vector must be with the same size\n");
     return false;
   }
-  if (optimization_type == 1) {
+  if (optimization_type == IOH_optimization_type::Maximization) {
     for (int i = 0; i != n; ++i)
     {
       if (v1[i] <= v2[i]) {
@@ -105,8 +107,8 @@ bool compareObjectives(const std::vector<valueType> &v1, const std::vector<value
 /// This is used to compare to objectives vector, details needs to be discussed
 /// for multi-objective optimization.
 template<class valueType>
-bool compareObjectives(const valueType v1, const valueType v2, const int optimization_type){
-  if (optimization_type == 1) {
+bool compareObjectives(const valueType v1, const valueType v2, const IOH_optimization_type optimization_type){
+  if (optimization_type == IOH_optimization_type::Maximization) {
     if (v1 <= v2){
       return false;
     }
