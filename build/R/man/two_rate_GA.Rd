@@ -25,6 +25,9 @@ two_rate_GA(dimension, obj_func, target_hit = function() {     FALSE },
 
 \item{set_parameters}{Function to call to store the value of the registered parameters}
 }
+\value{
+A list containing the location (xopt) and value (fopt) of the optimal value found
+}
 \description{
 For easier use with the IOHexperimenter
 

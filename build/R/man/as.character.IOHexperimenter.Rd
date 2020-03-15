@@ -11,6 +11,9 @@
 
 \item{...}{Arguments for underlying function}
 }
+\value{
+The printed object
+}
 \description{
 S3 generic as.character function for IOHexperimenter
 }

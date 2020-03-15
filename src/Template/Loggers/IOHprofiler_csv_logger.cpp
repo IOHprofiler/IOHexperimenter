@@ -35,7 +35,7 @@ int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) {
 #endif
     return 1;
   } else {
-    IOH_error("Error on creating directory" + folder_name);
+    IOH_error("Error on creating directory " + folder_name);
     return 0;
   }
 }
@@ -47,7 +47,7 @@ int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) {
 /// directory will be renamed by adding a suffix.
 /// For example,
 ///     If a folder or file 'test' has already been in currect path, the 
-///     expected directory will be renamed as 'test-1', 'test-2', ... 
+///     expected directory will be renamed as 'test_1', 'test_2', ... 
 ///     until there is no such a folder or file. 
 std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name() {
   std::string renamed_directory = this->output_directory + IOHprofiler_path_separator + this->folder_name;
@@ -56,7 +56,7 @@ std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name() {
   //while (fs::exists(renamed_directory.c_str())) {
   while (folder_exist(renamed_directory) ) {
     ++index;
-    temp_folder_name = this->folder_name  + '-' + std::to_string(index);
+    temp_folder_name = this->folder_name  + '_' + std::to_string(index);
     renamed_directory = this->output_directory + IOHprofiler_path_separator + temp_folder_name;
   }
   this->folder_name = temp_folder_name;

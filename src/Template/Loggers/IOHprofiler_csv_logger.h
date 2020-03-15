@@ -10,6 +10,7 @@
 
 #include "IOHprofiler_observer.hpp"
 #include "IOHprofiler_common.h"
+#include "IOHprofiler_problem.hpp"
 
 // #define BOOST_NO_CXX11_SCOPED_ENUMS
 // #include <boost/filesystem.hpp>
@@ -47,6 +48,19 @@ public:
   void clear_logger();
 
   void target_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag);
+
+  template<class T>
+  void target_problem(const IOHprofiler_problem<T> & om)
+  {
+    this->target_problem(
+        om.IOHprofiler_get_problem_id(), 
+        om.IOHprofiler_get_number_of_variables(), 
+        om.IOHprofiler_get_instance_id(),
+        om.IOHprofiler_get_problem_name(),
+        om.IOHprofiler_get_optimization_type()
+      );
+  }
+
   void target_suite(std::string suite_name);
 
   void openInfo(int problem_id, int dimension, std::string problem_name);

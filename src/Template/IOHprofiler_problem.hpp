@@ -8,6 +8,8 @@
 #ifndef _IOHPROFILER_PROBLEM_HPP
 #define _IOHPROFILER_PROBLEM_HPP
 
+#include <limits>
+
 #include "IOHprofiler_common.h"
 #include "IOHprofiler_transformation.hpp"
 
@@ -26,7 +28,7 @@ public:
   IOHprofiler_problem(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) : 
     problem_id(DEFAULT_PROBLEM_ID), 
     instance_id(instance_id), 
-    maximization_minimization_flag(1),
+    maximization_minimization_flag(IOH_optimization_type::Maximization),
     number_of_variables(DEFAULT_DIMENSION), 
     number_of_objectives(1),
     lowerbound(std::vector<InputType> (number_of_variables) ), 
@@ -61,7 +63,7 @@ public:
   /// The internal_evaluate function is to be used in evaluate function.
   /// This function must be decalred in derived function of new problems.
   virtual double internal_evaluate (const std::vector<InputType> &x) {
-    double result = -DBL_MAX;
+    double result = std::numeric_limits<double>::lowest();
     IOH_warning("No evaluate function defined");
     return result;
   }
@@ -113,12 +115,12 @@ public:
 
     if(x.size() != this->number_of_variables) {
       IOH_warning("The dimension of solution is incorrect.");
-      if (this->maximization_minimization_flag == 1) {
-        this->raw_objectives[0] = -DBL_MAX;
-        this->transformed_objectives[0] = -DBL_MAX;
+      if (this->maximization_minimization_flag == IOH_optimization_type::Maximization) {
+        this->raw_objectives[0] = std::numeric_limits<double>::lowest();
+        this->transformed_objectives[0] = std::numeric_limits<double>::lowest();
       } else {
-        this->raw_objectives[0] = DBL_MAX;
-        this->transformed_objectives[0] = DBL_MAX;
+        this->raw_objectives[0] = std::numeric_limits<double>::max();
+        this->transformed_objectives[0] = std::numeric_limits<double>::max();
       }
       return this->transformed_objectives[0];
     }
@@ -203,10 +205,10 @@ public:
     else {
       this->optimal.clear();
       for (int i = 0; i < this->number_of_objectives; ++i) {
-        if (this->maximization_minimization_flag == 1) {
-          this->optimal.push_back(DBL_MAX); 
+        if (this->maximization_minimization_flag == IOH_optimization_type::Maximization) {
+          this->optimal.push_back(std::numeric_limits<double>::max()); 
         } else {
-          this->optimal.push_back(-DBL_MAX);
+          this->optimal.push_back(std::numeric_limits<double>::lowest());
         }
       }
       customize_optimal();
@@ -229,12 +231,12 @@ public:
     this->best_so_far_transformed_evaluations = 0;
     this->optimalFound = false;
     for (int i = 0; i !=  this->number_of_objectives; ++i) {
-      if (this->maximization_minimization_flag == 1) {
-        this->best_so_far_raw_objectives[i] = -DBL_MAX;
-        this->best_so_far_transformed_objectives[i] = -DBL_MAX;
+      if (this->maximization_minimization_flag == IOH_optimization_type::Maximization) {
+        this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::lowest();
+        this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::lowest();
       } else {
-        this->best_so_far_raw_objectives[i] = DBL_MAX;
-        this->best_so_far_transformed_objectives[i] = DBL_MAX;
+        this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::max();
+        this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::max();
       }
     }
   }
@@ -408,12 +410,12 @@ public:
     this->number_of_objectives = number_of_objectives;
     this->raw_objectives = std::vector<double>(this->number_of_objectives);
     this->transformed_objectives = std::vector<double>(this->number_of_objectives);
-    if (this->maximization_minimization_flag == 1) {
-      this->best_so_far_raw_objectives = std::vector<double>(this->number_of_objectives,-DBL_MAX);
-      this->best_so_far_transformed_objectives = std::vector<double>(this->number_of_objectives,-DBL_MAX);
+    if (this->maximization_minimization_flag == IOH_optimization_type::Maximization) {
+      this->best_so_far_raw_objectives = std::vector<double>(this->number_of_objectives,std::numeric_limits<double>::lowest());
+      this->best_so_far_transformed_objectives = std::vector<double>(this->number_of_objectives,std::numeric_limits<double>::lowest());
     } else {
-      this->best_so_far_raw_objectives = std::vector<double>(this->number_of_objectives,DBL_MAX);
-      this->best_so_far_transformed_objectives = std::vector<double>(this->number_of_objectives,DBL_MAX);
+      this->best_so_far_raw_objectives = std::vector<double>(this->number_of_objectives,std::numeric_limits<double>::max());
+      this->best_so_far_transformed_objectives = std::vector<double>(this->number_of_objectives,std::numeric_limits<double>::max());
     }
     this->optimal = std::vector<double>(this->number_of_objectives);
   }
@@ -498,11 +500,11 @@ public:
   }
 
   void IOHprofiler_set_as_maximization() {
-    this->maximization_minimization_flag = 1;
+    this->maximization_minimization_flag = IOH_optimization_type::Maximization;
   }
 
   void IOHprofiler_set_as_minimization() {
-    this->maximization_minimization_flag = 0;
+    this->maximization_minimization_flag = IOH_optimization_type::Minimization;
   }
 
 private:
@@ -512,7 +514,7 @@ private:
   std::string problem_name;
   std::string problem_type;   /// todo. make it as enum.
 
-  int maximization_minimization_flag; /// < set as maximization if flag = 1, otherwise minimization.
+  IOH_optimization_type maximization_minimization_flag; /// < set as maximization if flag = 1, otherwise minimization.
   
   ///std::vector<int> evaluate_int_info; /// < common used info for evaluating variables, integer type.
   ///std::vector<double> evaluate_double_info; /// < common used info for evaluating variables, double type.
