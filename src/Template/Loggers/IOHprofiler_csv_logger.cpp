@@ -137,7 +137,7 @@ void IOHprofiler_csv_logger::write_header() {
 ///
 /// This function is to be invoked by IOHprofiler_problem class.
 /// To update info of current working problem, and to write headline in corresponding files.
-void IOHprofiler_csv_logger::target_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag){
+void IOHprofiler_csv_logger::target_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const IOH_optimization_type maximization_minimization_flag){
   /// Handle info of the previous problem.
   if (infoFile.is_open()) {
     write_info(this->instance, this->best_y[0], this->best_transformed_y[0], this->optimal_evaluations,
@@ -149,7 +149,7 @@ void IOHprofiler_csv_logger::target_problem(const int problem_id, const int dime
 
   /// TO DO: Update the method of initializing this value.
 
-  if (maximization_minimization_flag == 1) {
+  if (maximization_minimization_flag == IOH_optimization_type::Maximization) {
     this->best_y.clear();
     this->best_y.push_back(-DBL_MAX);
     this->best_transformed_y.clear();
@@ -286,7 +286,7 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
 void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension, std::string problem_name) {
   std::string titleflag = "";
   std::string optimization_type;
-  if (this->maximization_minimization_flag == 1) {
+  if (this->maximization_minimization_flag == IOH_optimization_type::Maximization) {
     optimization_type = "T";
   } else {
     optimization_type = "F";

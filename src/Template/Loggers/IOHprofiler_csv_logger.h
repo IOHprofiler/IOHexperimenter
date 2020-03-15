@@ -47,7 +47,7 @@ public:
   void activate_logger();
   void clear_logger();
 
-  void target_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag);
+  void target_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const IOH_optimization_type maximization_minimization_flag);
 
   template<class T>
   void target_problem(const IOHprofiler_problem<T> & om)
@@ -80,7 +80,7 @@ private:
   std::string output_directory;
   std::string algorithm_name;
   std::string algorithm_info;
-  int maximization_minimization_flag = 1; /// < set as maximization if flag = 1, otherwise minimization.
+  IOH_optimization_type maximization_minimization_flag = IOH_optimization_type::Maximization; /// < set as maximization if flag = 1, otherwise minimization.
 
   std::string suite_name = "No suite";
 
