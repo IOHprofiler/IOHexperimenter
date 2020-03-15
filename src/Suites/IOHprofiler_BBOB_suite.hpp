@@ -54,6 +54,7 @@ public:
     IOHprofiler_set_suite_dimension(dimension);
     IOHprofiler_set_suite_name("BBOB");
     registerProblem();
+    this->loadProblem();
   };
 
   BBOB_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
@@ -80,6 +81,7 @@ public:
     IOHprofiler_set_suite_dimension(dimension);
     IOHprofiler_set_suite_name("BBOB");
     registerProblem();
+    this->loadProblem();
   }
 
   /// \fn void registerProblem()

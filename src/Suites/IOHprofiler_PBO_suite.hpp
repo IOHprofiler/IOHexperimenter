@@ -53,6 +53,7 @@ public:
     IOHprofiler_set_suite_dimension(dimension);
     IOHprofiler_set_suite_name("PBO");
     registerProblem();
+    this->loadProblem();
   };
 
   PBO_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
@@ -79,6 +80,7 @@ public:
     IOHprofiler_set_suite_dimension(dimension);
     IOHprofiler_set_suite_name("PBO");
     registerProblem();
+    this->loadProblem();
   }
 
   /// \fn void registerProblem()

@@ -58,6 +58,7 @@ public:
       }
     }
     this->get_problem_flag = false;
+    assert(this->size_of_problem_list == this->size());
   }
 
   /// \fn std::shared_ptr<IOHprofiler_problem<InputType>> get_next_problem()
@@ -78,18 +79,19 @@ public:
       this->get_problem_flag = true;
     } else {
       this->problem_list_index++;
-    }    
+    }
+    assert(problem_list_index < this->size());
     this->current_problem = (*this)[problem_list_index];
-    
+
     this->current_problem->reset_problem();
     return this->current_problem;
   }
-  
+
   /// \fn std::shared_ptr<IOHprofiler_problem<InputType>> get_current_problem()
   /// \brief An interface of requesting problems in suite.
   ///
   /// To request 'the current' problem in the suite of correponding problem_id, instance_id and dimension index.
-  
+
   Problem_ptr get_current_problem() {
     if (this->get_problem_flag == false) {
       this->get_problem_flag = true;
@@ -98,7 +100,7 @@ public:
     this->current_problem->reset_problem();
     return this->current_problem;
   }
-  
+
 
   /// \fn Problem_ptr get_next_problem()
   /// \brief An interface of requesting problems in suite.

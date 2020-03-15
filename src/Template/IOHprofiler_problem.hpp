@@ -495,7 +495,7 @@ public:
     return this->best_so_far_transformed_evaluations;
   }
 
-  int IOHprofiler_get_optimization_type() const {
+  IOH_optimization_type IOHprofiler_get_optimization_type() const {
     return this->maximization_minimization_flag;
   }
 
