@@ -11,11 +11,20 @@ add_executable(IOHprofiler_run_problem build/Cpp/IOHprofiler_run_problem.cpp)
 add_executable(IOHprofiler_run_suite build/Cpp/IOHprofiler_run_suite.cpp)
 
 # specify the C++ standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # specify the CXX FLAGS
-set(CMAKE_CXX_FLAGS "-g -std=c++11 -Wall -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -O2")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    option(ENABLE_TESTS "Build tests binaries" ON)
+endif()
+
+
+######################################################################################
+# Gather source files
+######################################################################################
 
 # set source file directorys and prepare for adding libraries.
 SET(PROBLEMS_BBOB_DIR "src/Problems/BBOB")
@@ -78,8 +87,17 @@ add_library(IOH ${IOHEXPERIMENTER_SRC})
 
 # link the IOH library to executable files.
 target_link_libraries(IOHprofiler_run_experiment IOH)
-target_link_libraries(IOHprofiler_run_problem IOH)
-target_link_libraries(IOHprofiler_run_suite IOH)
+target_link_libraries(IOHprofiler_run_problem    IOH)
+target_link_libraries(IOHprofiler_run_suite      IOH)
+
+if(ENABLE_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
+
+######################################################################################
+# Installation
+######################################################################################
 
 # install. set name of the installed library as 'IOH'.
 install (TARGETS IOH DESTINATION lib)
