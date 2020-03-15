@@ -8,6 +8,8 @@
 #ifndef _IOHPROFILER_OBSERVER_H
 #define _IOHPROFILER_OBSERVER_H
 
+#include <limits>
+
 #include "IOHprofiler_common.h"
 /// \brief A class of methods of setting triggers recording evaluations.
 ///
@@ -80,7 +82,7 @@ public:
     return observer_update_flag;
   }
 
-  bool update_trigger(double fitness, int optimization_type) {
+  bool update_trigger(double fitness, IOH_optimization_type optimization_type) {
     if (observer_update_flag == false) {
       return false;
     }
@@ -152,11 +154,11 @@ public:
     return result;
   }
 
-  void reset_observer(const int optimization_type) {
-    if (optimization_type == 1) {
-      this->current_best_fitness = -DBL_MAX;
+  void reset_observer(const IOH_optimization_type optimization_type) {
+    if (optimization_type == IOH_optimization_type::Maximization) {
+      this->current_best_fitness = -std::numeric_limits<double>::lowest();
     } else {
-      this->current_best_fitness = DBL_MAX;
+      this->current_best_fitness = std::numeric_limits<double>::max();
     }
     this->evaluations_value1 = 1;
     this->time_points_index = 0;
