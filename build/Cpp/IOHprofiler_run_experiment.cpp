@@ -46,7 +46,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int> > problem, 
   x = Initialization(problem->IOHprofiler_get_number_of_variables());
   x_star = x;
   y = problem->evaluate(x);
-  logger->write_line(problem->loggerInfo());
+  logger->do_log(problem->loggerInfo());
   best_value = y;
 
   int count = 0;
@@ -54,7 +54,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int> > problem, 
     x = x_star;
     if (mutation(x,*mutation_rate)) {
       y = problem->evaluate(x);
-      logger->write_line(problem->loggerInfo());
+      logger->do_log(problem->loggerInfo());
       count++;
     }
     if (y >= best_value) {
@@ -79,7 +79,7 @@ void random_search(std::shared_ptr<IOHprofiler_problem<double> > problem, std::s
     }
   
     y = problem->evaluate(x);
-    logger->write_line(problem->loggerCOCOInfo());
+    logger->do_log(problem->loggerCOCOInfo());
     count++;
 
     if(y > best_y) {

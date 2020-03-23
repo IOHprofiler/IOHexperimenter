@@ -24,6 +24,7 @@
 /// IOHprofiler_problem by the statement 'problem.add_logger(logger)'.
 class IOHprofiler_csv_logger : public IOHprofiler_observer {
 public:
+
   IOHprofiler_csv_logger() {
     this->output_directory = "./";
     this->folder_name = "IOHprofiler_test";
@@ -47,21 +48,11 @@ public:
   void activate_logger();
   void clear_logger();
 
-  void target_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag);
+  void track_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag);
+  void track_problem(const IOHprofiler_problem<int> & problem);
+  void track_problem(const IOHprofiler_problem<double> & problem);
 
-  template<class T>
-  void target_problem(const IOHprofiler_problem<T> & om)
-  {
-    this->target_problem(
-        om.IOHprofiler_get_problem_id(), 
-        om.IOHprofiler_get_number_of_variables(), 
-        om.IOHprofiler_get_instance_id(),
-        om.IOHprofiler_get_problem_name(),
-        om.IOHprofiler_get_optimization_type()
-      );
-  }
-
-  void target_suite(std::string suite_name);
+  void track_suite(std::string suite_name);
 
   void openInfo(int problem_id, int dimension, std::string problem_name);
   void write_info(int instance, double best_y, double best_transformed_y, int evaluations, 
@@ -69,7 +60,7 @@ public:
 
   void write_line(const size_t evaluations, const double y, const double best_so_far_y,
                  const double transformed_y, const double best_so_far_transformed_y);
-  void write_line(const std::vector<double> &logger_info);
+  void do_log(const std::vector<double> &log_info);
   void update_logger_info(size_t optimal_evaluations, double y, double transformed_y);
   
   void set_parameters(const std::vector<std::shared_ptr<double> > &parameters);
@@ -89,6 +80,7 @@ private:
   int problem_id;
   int instance;
   std::string problem_name;
+  //std::string problem_type;
 
   std::fstream cdat;
   std::fstream idat;
@@ -115,11 +107,15 @@ private:
   std::string IOHprofiler_experiment_folder_name();
   int IOHprofiler_create_folder(const std::string path);
 
+  bool header_flag; /// < parameters to track if the header line is logged.
   void write_header();
 
   /// \fn openIndex()
   /// \brief to create the folder of logging files.
   int openIndex();
+
+  // std::shared_ptr<IOHprofiler_problem<int> >  tracked_problem_int;
+  // std::shared_ptr<IOHprofiler_problem<double> > tracked_problem_double;
 };
 
 #endif //_IOHPROFILER_CSV_LOGGER_H

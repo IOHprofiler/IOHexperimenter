@@ -61,7 +61,7 @@ public:
     info += "Dimension: " + vectorToString(this->configSuite->IOHprofiler_suite_get_dimension()) + "\n";
     print_info(info);
 
-    this->config_csv_logger->target_suite(this->configSuite->IOHprofiler_suite_get_suite_name());
+    this->config_csv_logger->track_suite(this->configSuite->IOHprofiler_suite_get_suite_name());
 
     /// Problems are tested one by one until 'get_next_problem' returns NULL.
     while ((current_problem = configSuite->get_next_problem()) != nullptr) {
@@ -72,7 +72,8 @@ public:
       info += "_i" + std::to_string(current_problem->IOHprofiler_get_instance_id());
       print_info(info);
 
-      this->config_csv_logger->target_problem(current_problem->IOHprofiler_get_problem_id(), 
+
+      this->config_csv_logger->track_problem(current_problem->IOHprofiler_get_problem_id(), 
                                               current_problem->IOHprofiler_get_number_of_variables(), 
                                               current_problem->IOHprofiler_get_instance_id(),
                                               current_problem->IOHprofiler_get_problem_name(),
@@ -85,7 +86,7 @@ public:
       int count = 1;
       while(independent_runs > count) {
         current_problem = configSuite->get_current_problem();
-        this->config_csv_logger->target_problem(current_problem->IOHprofiler_get_problem_id(), 
+        this->config_csv_logger->track_problem(current_problem->IOHprofiler_get_problem_id(), 
                                               current_problem->IOHprofiler_get_number_of_variables(), 
                                               current_problem->IOHprofiler_get_instance_id(),
                                               current_problem->IOHprofiler_get_problem_name(),

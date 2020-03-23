@@ -9,6 +9,7 @@
 #define _IOHPROFILER_OBSERVER_H
 
 #include "IOHprofiler_common.h"
+#include "IOHprofiler_problem.hpp"
 /// \brief A class of methods of setting triggers recording evaluations.
 ///
 /// Four methods is introduced here:
@@ -165,6 +166,16 @@ public:
     this->evaluations_expi = 0;
   }
 
+  virtual void do_log(const std::vector<double> &log_info) {
+  }
+
+  virtual void track_problem(const IOHprofiler_problem<int> & problem) {  
+  }
+  
+  virtual void track_problem(const IOHprofiler_problem<double> & problem) {  
+  }
+
+  // Adding more virtual
 private:
   int observer_interval; /// < variable for recording by a static interval.
   bool observer_complete_flag; /// < variable for recording complete optimization process. 
@@ -183,6 +194,8 @@ private:
   
   /// todo. Currently this is only for single objective optimization.
   double current_best_fitness;
+
+
   
 };
 

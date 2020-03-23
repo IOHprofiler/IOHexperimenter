@@ -47,7 +47,7 @@ int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) {
 /// directory will be renamed by adding a suffix.
 /// For example,
 ///     If a folder or file 'test' has already been in currect path, the 
-///     expected directory will be renamed as 'test_1', 'test_2', ... 
+///     expected directory will be renamed as 'test-1', 'test-2', ... 
 ///     until there is no such a folder or file. 
 std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name() {
   std::string renamed_directory = this->output_directory + IOHprofiler_path_separator + this->folder_name;
@@ -56,7 +56,7 @@ std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name() {
   //while (fs::exists(renamed_directory.c_str())) {
   while (folder_exist(renamed_directory) ) {
     ++index;
-    temp_folder_name = this->folder_name  + '_' + std::to_string(index);
+    temp_folder_name = this->folder_name  + '-' + std::to_string(index);
     renamed_directory = this->output_directory + IOHprofiler_path_separator + temp_folder_name;
   }
   this->folder_name = temp_folder_name;
@@ -133,11 +133,11 @@ void IOHprofiler_csv_logger::write_header() {
   }
 }
 
-/// \fn void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int instance)
+/// \fn void IOHprofiler_csv_logger::track_problem(int problem_id, int dimension, int instance)
 ///
 /// This function is to be invoked by IOHprofiler_problem class.
 /// To update info of current working problem, and to write headline in corresponding files.
-void IOHprofiler_csv_logger::target_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag){
+void IOHprofiler_csv_logger::track_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag){
   /// Handle info of the previous problem.
   if (infoFile.is_open()) {
     write_info(this->instance, this->best_y[0], this->best_transformed_y[0], this->optimal_evaluations,
@@ -178,10 +178,46 @@ void IOHprofiler_csv_logger::target_problem(const int problem_id, const int dime
   this->maximization_minimization_flag = maximization_minimization_flag;
   
   openInfo(problem_id,dimension,problem_name);
-  
+  header_flag = false;
 }
 
-void IOHprofiler_csv_logger::target_suite(std::string suite_name){
+
+/// \fn void IOHprofiler_csv_logger::track_problem(int problem_id, int dimension, int instance)
+///
+/// This function is to be invoked by IOHprofiler_problem class.
+/// To update info of current working problem, and to write headline in corresponding files.
+void IOHprofiler_csv_logger::track_problem(const IOHprofiler_problem<int> & problem) {
+  // this->tracked_problem_int = nullptr;
+  // this->tracked_problem_double = nullptr;
+
+  this->track_problem(
+    problem.IOHprofiler_get_problem_id(), 
+    problem.IOHprofiler_get_number_of_variables(), 
+    problem.IOHprofiler_get_instance_id(),
+    problem.IOHprofiler_get_problem_name(),
+    problem.IOHprofiler_get_optimization_type()
+  );
+  
+  // this->problem_type = problem.IOHprofiler_get_problem_type();
+  // this->tracked_problem_int = std::make_shared<IOHprofiler_problem<int> >(problem);
+}
+
+void IOHprofiler_csv_logger::track_problem(const IOHprofiler_problem<double> & problem) {
+  // this->tracked_problem_int = nullptr;
+  // this->tracked_problem_double = nullptr;
+  this->track_problem(
+    problem.IOHprofiler_get_problem_id(), 
+    problem.IOHprofiler_get_number_of_variables(), 
+    problem.IOHprofiler_get_instance_id(),
+    problem.IOHprofiler_get_problem_name(),
+    problem.IOHprofiler_get_optimization_type()
+  );
+  
+  // this->problem_type = problem.IOHprofiler_get_problem_type();
+  // this->tracked_problem_double = std::make_shared<IOHprofiler_problem<double> >(problem);
+}
+
+void IOHprofiler_csv_logger::track_suite(std::string suite_name){
   this->suite_name = suite_name;
 }
 
@@ -211,16 +247,17 @@ void IOHprofiler_csv_logger::set_parameters(const std::vector<std::shared_ptr<do
   }
 }
 
-void IOHprofiler_csv_logger::write_line(const std::vector<double> &logger_info) {
-  this->write_line( (size_t)(logger_info[0]),logger_info[1],logger_info[2],logger_info[3],logger_info[4]);
+void IOHprofiler_csv_logger::do_log(const std::vector<double> & log_info) {
+  this->write_line( (size_t)(log_info[0]),log_info[1],log_info[2],log_info[3],log_info[4]);
 };
 
 
 /// todo The precision of double values.
 void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y, const double best_so_far_y,
                  const double transformed_y, const double best_so_far_transformed_y) {
-  if (evaluations == 1) {
+  if (header_flag == false) {
     this->write_header();
+    header_flag = true;
   }
 
   this->last_evaluations = evaluations;
@@ -381,5 +418,13 @@ void IOHprofiler_csv_logger::clear_logger() {
   if (tdat.is_open()) {
     tdat.close();
   }
+
+  // if(this->tracked_problem_double != nullptr) {
+  //   this->tracked_problem_double = nullptr;
+  // }
+
+  // if(this->tracked_problem_int != nullptr) {
+  //   this->tracked_problem_int = nullptr;
+  // }
 }
 

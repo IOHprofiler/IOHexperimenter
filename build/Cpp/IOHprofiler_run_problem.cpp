@@ -67,7 +67,7 @@ void _run_w_model() {
   while (restart_flag < 10) {
     /// reset_problem must be called before testing the same problem class repeatedly.
     w_model_om.reset_problem();
-    logger.target_problem(w_model_om.IOHprofiler_get_problem_id(), 
+    logger.track_problem(w_model_om.IOHprofiler_get_problem_id(), 
                         w_model_om.IOHprofiler_get_number_of_variables(), 
                         w_model_om.IOHprofiler_get_instance_id(),
                         w_model_om.IOHprofiler_get_problem_name(),
@@ -87,7 +87,7 @@ void _run_w_model() {
     x = Initialization(dimension);
     x_star = x;
     y = w_model_om.evaluate(x);
-    logger.write_line(w_model_om.loggerInfo());
+    logger.do_log(w_model_om.loggerInfo());
     best_value = y;
 
     int budget = 10000;
@@ -95,7 +95,7 @@ void _run_w_model() {
       x = x_star;
       if(mutation(x,mutation_rate)) {
         y = w_model_om.evaluate(x);
-        logger.write_line(w_model_om.loggerInfo());
+        logger.do_log(w_model_om.loggerInfo());
         budget--;
       }
       if(y > best_value) {
@@ -128,12 +128,12 @@ void _run_problem() {
   logger.set_interval(0);
   logger.set_time_points(time_points,10);
   logger.activate_logger();
-  logger.target_problem(om.IOHprofiler_get_problem_id(), 
-                      om.IOHprofiler_get_number_of_variables(), 
-                      om.IOHprofiler_get_instance_id(),
-                      om.IOHprofiler_get_problem_name(),
-                      om.IOHprofiler_get_optimization_type());
-
+  // logger.track_problem(om.IOHprofiler_get_problem_id(), 
+  //                     om.IOHprofiler_get_number_of_variables(), 
+  //                     om.IOHprofiler_get_instance_id(),
+  //                     om.IOHprofiler_get_problem_name(),
+  //                     om.IOHprofiler_get_optimization_type());
+  logger.track_problem(om);
   std::vector<int> x;
   std::vector<int> x_star;
   double y;
@@ -143,14 +143,16 @@ void _run_problem() {
   x = Initialization(dimension);
   x_star = x;
   y = om.evaluate(x);
-  logger.write_line(om.loggerInfo());
+  //logger.do_log(om.loggerInfo());
+  //logger.do_log();
   best_value = y;
 
   while(!om.IOHprofiler_hit_optimal()) {
     x = x_star;
     if(mutation(x,mutation_rate)) {
       y = om.evaluate(x);
-      logger.write_line(om.loggerInfo());
+      //logger.do_log();
+      logger.do_log(om.loggerInfo());
     }
     if(y > best_value) {
       best_value = y;
