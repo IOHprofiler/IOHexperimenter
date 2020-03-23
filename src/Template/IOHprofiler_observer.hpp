@@ -33,7 +33,7 @@ public:
     evaluations_expi(0),
     observer_time_points_exp_base2(10) {}
 
-  ~IOHprofiler_observer() {}
+  virtual ~IOHprofiler_observer() {}
 
   IOHprofiler_observer(const IOHprofiler_observer &) = delete;
   IOHprofiler_observer &operator = (const IOHprofiler_observer&) = delete;
