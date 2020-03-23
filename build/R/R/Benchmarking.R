@@ -24,6 +24,7 @@
 #' @param params.track Which parameters to track. Should be a vector of strings, containing no spaces or commas
 #' @param repetitions How many independent runs of the algorithm to do for each problem instance
 #'
+#' @return None
 #' @examples
 #' \donttest{
 #'
