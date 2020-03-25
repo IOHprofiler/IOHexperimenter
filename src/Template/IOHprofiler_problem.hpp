@@ -631,10 +631,18 @@ template <class InputType> int IOHprofiler_problem<InputType>::IOHprofiler_get_o
 
 template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_as_maximization() {
   this->maximization_minimization_flag = 1;
+  for (int i = 0; i !=  this->number_of_objectives; ++i) {
+    this->best_so_far_raw_objectives[i] = -DBL_MAX;
+    this->best_so_far_transformed_objectives[i] = -DBL_MAX;
+  }
 }
 
 template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_as_minimization() {
   this->maximization_minimization_flag = 0;
+  for (int i = 0; i !=  this->number_of_objectives; ++i) {
+    this->best_so_far_raw_objectives[i] = DBL_MAX;
+    this->best_so_far_transformed_objectives[i] = DBL_MAX;
+  }
 }
 
 #endif //_IOHPROFILER_PROBLEM_H
