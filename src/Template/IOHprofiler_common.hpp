@@ -1,5 +1,5 @@
-#ifndef _IOHPROFILER_COMMON_H
-#define _IOHPROFILER_COMMON_H
+#ifndef _IOHPROFILER_COMMON_HPP
+#define _IOHPROFILER_COMMON_HPP
 
 #include "IOHprofiler_platform.h"
 
@@ -42,15 +42,15 @@ void IOH_log(std::string log_info, std::ofstream &log_stream);
 
 
 template<class valueType>
-void copyVector(const std::vector<valueType> v1, std::vector<valueType> &v2){
+void copyVector(const std::vector<valueType> v1, std::vector<valueType> &v2) {
   v2.assign(v1.begin(),v1.end());
-};
+}
 
 /// bool compareVector(std::vector<valueType> &v1, std::vector<valueType> v2)
 ///
 /// Return 'true' if all elements in two vectors are the same.
 template<class valueType>
-bool compareVector(const std::vector<valueType> &v1, const std::vector<valueType> &v2){
+bool compareVector(const std::vector<valueType> &v1, const std::vector<valueType> &v2) {
   int n = v1.size();
   if(n != v2.size()){
     IOH_error("Two compared vector must be with the same size\n");
@@ -63,7 +63,7 @@ bool compareVector(const std::vector<valueType> &v1, const std::vector<valueType
     }
   }
   return true;
-};
+}
 
 /// \fn bool compareObjectives(std::vector<valueType> &v1, std::vector<valueType> v2,  const int optimization_type)
 ///
@@ -72,7 +72,7 @@ bool compareVector(const std::vector<valueType> &v1, const std::vector<valueType
 /// This is used to compare to objectives vector, details needs to be discussed
 /// for multi-objective optimization.
 template<class valueType>
-bool compareObjectives(const std::vector<valueType> &v1, const std::vector<valueType> &v2, const int optimization_type){
+bool compareObjectives(const std::vector<valueType> &v1, const std::vector<valueType> &v2, const int optimization_type) {
   int n = v1.size();
   if(n != v2.size()){
     IOH_error("Two compared objective vector must be with the same size\n");
@@ -95,8 +95,7 @@ bool compareObjectives(const std::vector<valueType> &v1, const std::vector<value
     }
     return true;
   }
-};
-
+}
 
 /// \fn bool compareObjectives(std::vector<valueType> &v1, std::vector<valueType> v2,  const int optimization_type)
 ///
@@ -105,7 +104,7 @@ bool compareObjectives(const std::vector<valueType> &v1, const std::vector<value
 /// This is used to compare to objectives vector, details needs to be discussed
 /// for multi-objective optimization.
 template<class valueType>
-bool compareObjectives(const valueType v1, const valueType v2, const int optimization_type){
+bool compareObjectives(const valueType v1, const valueType v2, const int optimization_type) {
   if (optimization_type == 1) {
     if (v1 <= v2){
       return false;
@@ -117,6 +116,5 @@ bool compareObjectives(const valueType v1, const valueType v2, const int optimiz
     }
     return true;
   }
-};
-
-#endif //_IOHPROFILER_COMMON_H
+}
+#endif //_IOHPROFILER_COMMON_HPP

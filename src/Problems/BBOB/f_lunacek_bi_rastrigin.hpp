@@ -10,7 +10,7 @@
 #define _F_LUNACEK_BI_RASTRIGIN_HPP
 
 #include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "coco_transformation.hpp"
 
 class Lunacek_Bi_Rastrigin : public IOHprofiler_problem<double> {
 public:

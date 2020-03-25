@@ -1,4 +1,4 @@
-/// \file IOHprofiler_string.cpp
+/// \file IOHprofiler_string.hpp
 /// \brief head file for common used operations on strings.
 ///
 /// \author Furong Ye
@@ -7,7 +7,7 @@
 #define _IOHPROFILER_STRING_HPP
 
 #include <sstream>
-#include "IOHprofiler_common.h"
+#include "IOHprofiler_common.hpp"
 
 /// \fn std::string strstrip(std::string s)
 /// \brief To erase blanks in the front and end of a string.
@@ -24,7 +24,7 @@ static std::string strstrip(std::string s)
   s.erase(s.find_last_not_of('\r') + 1);
   s.erase(s.find_last_not_of(' ') + 1);
   return s;
-};
+}
 
 /// \fn std::vector<int> get_int_vector_parse_string(std::string input, const int _min, const int _max) {
 /// \brief To get a vector of integer values with a range 'n-m'
@@ -118,6 +118,5 @@ static std::vector<int> get_int_vector_parse_string(std::string input, const int
     } 
   }
   return result;
-};
-
+}
 #endif //_IOHPROFILER_STRING_HPP

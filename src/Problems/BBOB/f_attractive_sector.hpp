@@ -10,7 +10,7 @@
 #define _F_ATTRACTIVE_SECTOR_HPP
 
 #include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "coco_transformation.hpp"
 
 class Attractive_Sector : public IOHprofiler_problem<double> {
 public:

@@ -1,5 +1,5 @@
 #include <IOHprofiler_PBO_suite.hpp>
-#include <IOHprofiler_csv_logger.h>
+#include <IOHprofiler_csv_logger.hpp>
 
 std::vector<int> Initialization(int dimension) {
   std::vector<int> x;

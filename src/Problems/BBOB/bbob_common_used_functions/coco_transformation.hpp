@@ -29,6 +29,7 @@ public:
   static long rseed;
 };
 
+
 static void coco_tranformation_vars (std::vector<double> &x, const int problem_id) {
   if (problem_id == 1) {
     transform_vars_shift_evaluate_function(x,Coco_Transformation_Data::xopt);
@@ -124,10 +125,7 @@ static void coco_tranformation_vars (std::vector<double> &x, const int problem_i
   } else if (problem_id == 24) {
 
   } else {
-    
   }
-
-
 }
 
 static void coco_tranformation_objs (const std::vector<double> &x, std::vector<double> &y, const int problem_id) {
@@ -190,5 +188,4 @@ static void coco_tranformation_objs (const std::vector<double> &x, std::vector<d
   } else {}
 }
 
-
-#endif
+#endif //_COCO_TRANSFORMATION_HPP

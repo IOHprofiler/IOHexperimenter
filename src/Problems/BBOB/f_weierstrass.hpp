@@ -9,7 +9,7 @@
 #define _F_WEIERSTRASS_HPP
 
 #include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "coco_transformation.hpp"
 
 /** @brief Number of summands in the Weierstrass problem. */
 #define F_WEIERSTRASS_SUMMANDS 12

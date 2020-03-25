@@ -10,7 +10,7 @@
 #define _F_LINEAR_SLOPE_H
 
 #include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "coco_transformation.hpp"
 
 class Linear_Slope : public IOHprofiler_problem<double> {
 public:

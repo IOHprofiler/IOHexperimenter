@@ -10,7 +10,7 @@
 #define _F_DISCUS_H
 
 #include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "coco_transformation.hpp"
 
 class Discus : public IOHprofiler_problem<double> {
 public:

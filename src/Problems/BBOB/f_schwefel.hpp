@@ -10,7 +10,7 @@
 #define _F_SCHWEFEL_HPP
 
 #include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "coco_transformation.hpp"
 
 class Schwefel : public IOHprofiler_problem<double> {
 public:

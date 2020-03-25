@@ -10,7 +10,7 @@
 #define _F_SPHERE_HPP_
 
 #include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "coco_transformation.hpp"
 
 class Sphere : public IOHprofiler_problem<double> {
 public:

@@ -10,7 +10,7 @@
 #define _F_BENT_CIGAR_H
 
 #include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "coco_transformation.hpp"
 
 class Bent_Cigar : public IOHprofiler_problem<double> {
 public:

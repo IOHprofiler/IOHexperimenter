@@ -5,7 +5,26 @@
 ///
 /// \author Furong Ye
 /// \date 2019-06-27
-#include "IOHprofiler_csv_logger.h"
+#include "IOHprofiler_csv_logger.hpp"
+
+IOHprofiler_csv_logger::IOHprofiler_csv_logger() {
+  this->output_directory = "./";
+  this->folder_name = "IOHprofiler_test";
+  this->algorithm_name =  "algorithm";
+  this->algorithm_info = "algorithm_info";
+}
+
+IOHprofiler_csv_logger::IOHprofiler_csv_logger(std::string directory, std::string folder_name,
+                        std::string alg_name, std::string alg_info) {
+  this->output_directory = directory;
+  this->folder_name = folder_name;
+  this->algorithm_name =  alg_name;
+  this->algorithm_info = alg_info;
+}
+
+IOHprofiler_csv_logger::~IOHprofiler_csv_logger() {
+  this->clear_logger();
+}
 
 bool IOHprofiler_csv_logger::folder_exist(std::string folder_name) {
   std::fstream _file;
@@ -25,7 +44,6 @@ int IOHprofiler_csv_logger::openIndex() {
   std::string experiment_folder_name = IOHprofiler_experiment_folder_name();
   return IOHprofiler_create_folder(experiment_folder_name);
 }
-
 
 int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) { 
 #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)  
@@ -342,12 +360,12 @@ void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension, std::string
     }
     this->infoFile.open(infoFile_name.c_str(),std::ofstream::out | std::ofstream::app);
     this->infoFile << titleflag;
-    this->infoFile << "suite = \"" << this->suite_name << "\", funcId = " <<  problem_id << ", funcName = \""<< problem_name << "\", DIM = "  << dimension << ", Maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"\n%\n";
+    this->infoFile << "suite = \"" << this->suite_name << "\", funcId = " <<  problem_id << ", funcName = \""<< problem_name << "\", DIM = "  << dimension << ", maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"\n%\n";
     this->infoFile << "data_f" << problem_id << "_" << problem_name << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << ".dat";     
     this->last_problem_id = problem_id;
     this->last_dimension = dimension;
   } else if (dimension != this->last_dimension) {
-    this->infoFile << "\nsuite = \"" << this->suite_name << "\", funcId = " << problem_id << ", funcName = \""<< problem_name << "\", DIM = " << dimension << ", Maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"\n%\n";
+    this->infoFile << "\nsuite = \"" << this->suite_name << "\", funcId = " << problem_id << ", funcName = \""<< problem_name << "\", DIM = " << dimension << ", maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"\n%\n";
     this->infoFile << "data_f" << problem_id << "_" << problem_name << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << ".dat";    
     this->last_problem_id = problem_id;
     this->last_dimension = dimension;

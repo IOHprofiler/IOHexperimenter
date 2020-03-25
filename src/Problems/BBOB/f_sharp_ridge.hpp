@@ -10,7 +10,7 @@
 #define _F_SHARP_RIDGE_HPP
 
 #include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "coco_transformation.hpp"
 
 class Sharp_Ridge : public IOHprofiler_problem<double> {
 public:
