@@ -1,8 +1,9 @@
 import setuptools, sys, os, sysconfig, glob
 from shutil import copyfile
-from setuptools.command.install import install
+from distutils.command.build import build
 
-class CustomInstall(install):
+
+class CustomBuild(build):
     def run(self):
         include_path = sysconfig.get_config_var('INCLUDEDIR')
         header = glob.glob(os.path.join(include_path, '*/Python.h'), recursive=True)[0]
@@ -27,15 +28,18 @@ class CustomInstall(install):
         copyfile('_IOHprofiler.so', 'IOHexperimenter/_IOHprofiler.so')
         copyfile('IOHprofiler.py', 'IOHexperimenter/IOHprofiler.py')
 
-        install.run(self)
+        super().run()
+
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    cmdclass={'install': CustomInstall},
+    cmdclass={
+        'build': CustomBuild,
+    },
     name="IOHexperimenter",
-    version="0.0.3",
+    version="0.0.4",
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
     description="The experimenter for Iterative Optimization Heuristic",
@@ -43,13 +47,13 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/IOHprofiler/IOHexperimenter",
     packages=setuptools.find_packages(),
-    package_dir={'': '.'},
+    package_dir={'IOHexperimenter': 'IOHexperimenter'},
+    package_data={'IOHexperimenter': ['_IOHprofiler.so']},
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)"
     ],
-    python_requires='>=3.6'
+    python_requires='>=3.6',
+    zip_safe=False,  # if enabled, *.so files would be be compressed when buiding the .egg archive
 )
-
-# os.remove('IOHexperimenter/_IOHprofiler.so')
