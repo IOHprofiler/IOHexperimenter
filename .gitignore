@@ -1,6 +1,7 @@
 *.o
 .*
 
+dist/
 build/
 *egg*/
 *bk

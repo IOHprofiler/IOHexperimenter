@@ -10,7 +10,8 @@ class CustomInstall(install):
 
         lib_path = sysconfig.get_config_var('LIBDIR')
         lib_file = glob.glob(os.path.join(lib_path, './*.so')) + \
-              glob.glob(os.path.join(lib_path,'./*.dylib'))
+            glob.glob(os.path.join(lib_path,'./*.dylib')) + \
+            glob.glob(os.path.join(lib_path, './*.a'))
 
         if len(lib_file) != 0:
             lib_file = lib_file[0]
@@ -34,7 +35,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     cmdclass={'install': CustomInstall},
     name="IOHexperimenter",
-    version="0.0.1.dev3",
+    version="0.0.3",
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
     description="The experimenter for Iterative Optimization Heuristic",
@@ -43,7 +44,7 @@ setuptools.setup(
     url="https://github.com/IOHprofiler/IOHexperimenter",
     packages=setuptools.find_packages(),
     package_dir={'': '.'},
-    package_data={'': ['_IOHprofiler.so']},
+    include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)"
