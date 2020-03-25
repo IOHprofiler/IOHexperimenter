@@ -1,9 +1,13 @@
-*.csv
 *.o
 .*
 
 build/
 *egg*/
+*bk
+Makefile
+*.so
+IOHprofiler.py
+IOHprofiler_wrap.cxx
 
 !/.gitignore
 __pycache__

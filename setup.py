@@ -1,43 +1,40 @@
-import setuptools, sys, os
+import setuptools, sys, os, sysconfig, glob
 from shutil import copyfile
-from distutils.util import get_platform
+from setuptools.command.install import install
 
-lib_file = 'lib/_IOHprofiler'
-plat_name = get_platform()
-py_version = sys.version
-if py_version.startswith('3.7'):
-    lib_file += '-py37'
-elif py_version.startswith('3.6'):
-    lib_file += '-py36'
+class CustomInstall(install):
+    def run(self):
+        include_path = sysconfig.get_config_var('INCLUDEDIR')
+        header = glob.glob(os.path.join(include_path, '*/Python.h'), recursive=True)[0]
+        include_path = os.path.dirname(header)
 
-if plat_name.startswith('macosx'):
-    lib_file += '-macosx_x86_64.so' 
-elif plat_name.startswith('linux'):
-    lib_file += '-manylinux1_x86_64.so'
-    plat_name = plat_name.replace('linux', 'manylinux1')
+        lib_path = sysconfig.get_config_var('LIBDIR')
+        lib_file = glob.glob(os.path.join(lib_path, './*.so')) + \
+              glob.glob(os.path.join(lib_path,'./*.dylib'))
 
-copyfile(lib_file, 'IOHexperimenter/_IOHprofiler.so')
+        if len(lib_file) != 0:
+            lib_file = lib_file[0]
+        else:
+            raise Exception('Python dynamic library is not found...')
 
-# make `bdist_wheel` platform specific
-try:
-    from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
-    class bdist_wheel(_bdist_wheel):
-        def finalize_options(self):
-            _bdist_wheel.finalize_options(self)
-            self.universal = False
-            self.plat_name_supplied = True
-            self.plat_name = plat_name
+        command = 'sed -e "s|^PYTHON_LIB=$|PYTHON_LIB={0}|g"\
+            -e "s|-I/python-header|-I{1}|g" Makefile.in > Makefile'.format(lib_file, include_path)
 
-except ImportError:
-    bdist_wheel = None
+        os.system(command)
+        os.system('make')
+        
+        copyfile('_IOHprofiler.so', 'IOHexperimenter/_IOHprofiler.so')
+        copyfile('IOHprofiler.py', 'IOHexperimenter/IOHprofiler.py')
+
+        install.run(self)
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    cmdclass={'bdist_wheel': bdist_wheel},
+    cmdclass={'install': CustomInstall},
     name="IOHexperimenter",
-    version="0.0.1.dev2",
+    version="0.0.1.dev3",
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
     description="The experimenter for Iterative Optimization Heuristic",
@@ -54,4 +51,4 @@ setuptools.setup(
     python_requires='>=3.6'
 )
 
-os.remove('IOHexperimenter/_IOHprofiler.so')
+# os.remove('IOHexperimenter/_IOHprofiler.so')
