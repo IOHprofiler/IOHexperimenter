@@ -6,11 +6,16 @@ from distutils.command.build import build
 class CustomBuild(build):
     def run(self):
         include_path = sysconfig.get_config_var('INCLUDEDIR')
-        header = glob.glob(os.path.join(include_path, '*/Python.h'), recursive=True)[0]
+        py_version = sysconfig.get_python_version()
+        header = [str(p) for p in Path(include_path).rglob('python' + py_version + '*/Python.h')]
+
+        if len(header) == 0:
+            raise Exception('Python.h not found...')
+        header = header[0]
         include_path = os.path.dirname(header)
 
         lib_path = Path(sysconfig.get_config_var('LIBDIR'))
-        py_lib = 'libpython' + sysconfig.get_python_version() + '*'
+        py_lib = 'libpython' + py_version + '*'
         lib_file = [str(p) for p in lib_path.rglob(py_lib + '.so')] + \
             [str(p) for p in lib_path.rglob(py_lib + '.dylib')] + \
             [str(p) for p in lib_path.rglob(py_lib + '.a')]
@@ -39,7 +44,7 @@ setuptools.setup(
         'build': CustomBuild,
     },
     name="IOHexperimenter",
-    version="0.0.6",
+    version="0.0.7",
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
     description="The experimenter for Iterative Optimization Heuristic",

@@ -23,7 +23,7 @@ def one_plus_one_EA(problem, logger):
     fopt = problem.evaluate(x)
     logger.write_line(problem.loggerInfo())
     counter = 0
-    l = 1. / n
+    l = 1
     
     while not problem.IOHprofiler_hit_optimal() and counter < 1000:
         x_prime[:] = mutation(x, l)
@@ -33,6 +33,8 @@ def one_plus_one_EA(problem, logger):
         if f >= fopt:
             x[:] = x_prime
             fopt = f
+            
+        print(x)
         counter += 1
 
     return x, fopt
