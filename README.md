@@ -5,13 +5,25 @@ This is the python interface to [__IOHexperimenter__](https://github.com/IOHprof
 
 ## build/upload the python package
 
-To package the source file:
+To build the source file:
+
+```python
+python setup.py build
+```
+
+To install the built package locally:
+
+```python
+python setup.py install
+```
+
+To prepare the source distribution package:
 
 ```python
 python setup.py sdist
 ```
 
-To push to PyPi:
+To distribute package to PyPI:
 
 ```python
 python -m twine upload dist/*
