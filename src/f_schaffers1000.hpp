@@ -10,7 +10,7 @@
 #define _F_SCHAFFERSTHOUSAND_HPP
 
 #include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "coco_transformation.hpp"
 
 class Schaffers1000 : public IOHprofiler_problem<double> {
 public:
@@ -23,17 +23,14 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
 
   ~Schaffers1000() {}
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  }
-
   const double conditioning = 1000;
+  
   void prepare_problem() {
     std::vector<double> xopt;
     double fopt;

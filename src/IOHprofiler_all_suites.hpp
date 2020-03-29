@@ -1,7 +1,7 @@
-/// \file IOHprofiler_all_problems.cpp
-/// \brief cpp file for class IOHprofiler_all_problems.
+/// \file IOHprofiler_all_suites.hpp
+/// \brief cpp file for class IOHprofiler_all_suites.
 ///
-/// A head file includes all problems of IOHprofiler.
+/// A head file includes all suites of IOHprofiler.
 ///
 /// \author Furong Ye
 /// \date 2019-06-27

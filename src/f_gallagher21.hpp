@@ -10,7 +10,7 @@
 #define _F_GALLAGHERTWOONE_H
 
 #include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "coco_transformation.hpp"
 
 typedef struct f_gallagher_permutation_t{
   double value;
@@ -47,22 +47,19 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
+  
   ~Gallagher21() {}
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  }
-
   std::vector<double> xopt;
-
   const size_t number_of_peaks = 21;
   std::vector<std::vector<double> > rotation;
   std::vector<std::vector<double> > arr_scales;
   std::vector<std::vector<double> > x_local;
   std::vector<double> peak_values;
+  
   void prepare_problem() {
     const long rseed = (long) (22 + 10000 * this->IOHprofiler_get_instance_id());
     int n = IOHprofiler_get_number_of_variables();

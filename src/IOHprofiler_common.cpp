@@ -1,4 +1,7 @@
-#include "IOHprofiler_common.h"
+#ifndef _IOHPROFILER_COMMON_CPP
+#define _IOHPROFILER_COMMON_CPP
+
+#include "IOHprofiler_common.hpp"
 
 void IOH_error(std::string error_info) {
   std::cout << "IOH_ERROR_INFO : " << error_info << std::endl;
@@ -16,3 +19,5 @@ void IOH_log(std::string log_info) {
 void IOH_log(std::string log_info, std::ofstream &log_stream) {
   log_stream << "IOH_LOG_INFO : " << log_info << std::endl;
 }
+
+#endif //IOHPROFILER_COMMON_CPP

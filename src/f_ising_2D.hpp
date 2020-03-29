@@ -20,14 +20,10 @@ public:
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
   }
 
   ~Ising_2D() {}
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  }
 
   int modulo_ising_2D(int x,int N) {
     return (x % N + N) %N;
@@ -37,7 +33,8 @@ public:
     int n = x.size();
     int i,j,neig;
     int result= 0;
-    int neighbors[4];
+    // int neighbors[4];
+    int neighbors[2];
     int lattice_size = (int)sqrt((double)n);
     
     if(floor(sqrt((double)n))!=sqrt((double)n)) {
@@ -47,12 +44,19 @@ public:
 
     for(i = 0; i < lattice_size; ++i) {
       for (j = 0; j < lattice_size; ++j) {
-        neighbors[0]  = x[modulo_ising_2D(i - 1, lattice_size) * lattice_size + j];
-        neighbors[1]  = x[modulo_ising_2D(i + 1, lattice_size) * lattice_size + j];
-        neighbors[2]  = x[i * lattice_size + modulo_ising_2D((j - 1) , lattice_size)];
-        neighbors[3]  = x[i * lattice_size + modulo_ising_2D((j + 1) , lattice_size)];
+        // neighbors[0]  = x[modulo_ising_2D(i - 1, lattice_size) * lattice_size + j];
+        // neighbors[1]  = x[modulo_ising_2D(i + 1, lattice_size) * lattice_size + j];
+        // neighbors[2]  = x[i * lattice_size + modulo_ising_2D((j - 1) , lattice_size)];
+        // neighbors[3]  = x[i * lattice_size + modulo_ising_2D((j + 1) , lattice_size)];
+        
+        neighbors[0]  = x[modulo_ising_2D(i + 1, lattice_size) * lattice_size + j];
+        neighbors[1]  = x[i * lattice_size + modulo_ising_2D((j + 1) , lattice_size)];
 
-        for (neig=0; neig<4; neig++) {
+        // for (neig=0; neig<4; neig++) {
+        //   result+= (x[i*lattice_size + j] * neighbors[neig]) + ((1- x[i * lattice_size + j])*(1- neighbors[neig]));
+        // }
+
+        for (neig=0; neig < 2; neig++) {
           result+= (x[i*lattice_size + j] * neighbors[neig]) + ((1- x[i * lattice_size + j])*(1- neighbors[neig]));
         }
       }

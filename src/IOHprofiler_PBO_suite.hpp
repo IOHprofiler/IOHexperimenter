@@ -1,5 +1,5 @@
-/// \file IOHprofiler_PBO_suite.cpp
-/// \brief cpp file for class IOHprofiler_PBO_suite.
+/// \file IOHprofiler_PBO_suite.h
+/// \brief Hpp file for class IOHprofiler_PBO_suite.
 ///
 /// A suite of Pseudo Boolean problems (23 problems, 1-100 instances, and dimension <= 20000).
 ///
@@ -53,7 +53,7 @@ public:
     IOHprofiler_set_suite_dimension(dimension);
     IOHprofiler_set_suite_name("PBO");
     registerProblem();
-  };
+  }
 
   PBO_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
     for (int i = 0; i < problem_id.size(); ++i) {
@@ -135,15 +135,14 @@ public:
     mapIDTOName(20,"Ising_2D");
     mapIDTOName(21,"Ising_Triangle");
     mapIDTOName(23,"NQueens");
-  };
+  }
 
   static PBO_suite * createInstance() {
     return new PBO_suite();
-  };
+  }
 
   static PBO_suite * createInstance(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
     return new PBO_suite(problem_id, instance_id, dimension);
-  };
+  }
 };
-
-#endif
+#endif //_IOHPROFILER_PBO_SUITE_H

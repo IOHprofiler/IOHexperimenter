@@ -5,7 +5,26 @@
 ///
 /// \author Furong Ye
 /// \date 2019-06-27
-#include "IOHprofiler_csv_logger.h"
+#include "IOHprofiler_csv_logger.hpp"
+
+IOHprofiler_csv_logger::IOHprofiler_csv_logger() {
+  this->output_directory = "./";
+  this->folder_name = "IOHprofiler_test";
+  this->algorithm_name =  "algorithm";
+  this->algorithm_info = "algorithm_info";
+}
+
+IOHprofiler_csv_logger::IOHprofiler_csv_logger(std::string directory, std::string folder_name,
+                        std::string alg_name, std::string alg_info) {
+  this->output_directory = directory;
+  this->folder_name = folder_name;
+  this->algorithm_name =  alg_name;
+  this->algorithm_info = alg_info;
+}
+
+IOHprofiler_csv_logger::~IOHprofiler_csv_logger() {
+  this->clear_logger();
+}
 
 bool IOHprofiler_csv_logger::folder_exist(std::string folder_name) {
   std::fstream _file;
@@ -25,7 +44,6 @@ int IOHprofiler_csv_logger::openIndex() {
   std::string experiment_folder_name = IOHprofiler_experiment_folder_name();
   return IOHprofiler_create_folder(experiment_folder_name);
 }
-
 
 int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) { 
 #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)  
@@ -133,11 +151,11 @@ void IOHprofiler_csv_logger::write_header() {
   }
 }
 
-/// \fn void IOHprofiler_csv_logger::target_problem(int problem_id, int dimension, int instance)
+/// \fn void IOHprofiler_csv_logger::track_problem(int problem_id, int dimension, int instance)
 ///
 /// This function is to be invoked by IOHprofiler_problem class.
 /// To update info of current working problem, and to write headline in corresponding files.
-void IOHprofiler_csv_logger::target_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag){
+void IOHprofiler_csv_logger::track_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag){
   /// Handle info of the previous problem.
   if (infoFile.is_open()) {
     write_info(this->instance, this->best_y[0], this->best_transformed_y[0], this->optimal_evaluations,
@@ -178,10 +196,87 @@ void IOHprofiler_csv_logger::target_problem(const int problem_id, const int dime
   this->maximization_minimization_flag = maximization_minimization_flag;
   
   openInfo(problem_id,dimension,problem_name);
-  
+  header_flag = false;
 }
 
-void IOHprofiler_csv_logger::target_suite(std::string suite_name){
+
+/// \fn void IOHprofiler_csv_logger::track_problem(int problem_id, int dimension, int instance)
+///
+/// This function is to be invoked by IOHprofiler_problem class.
+/// To update info of current working problem, and to write headline in corresponding files.
+// Updated here.
+void IOHprofiler_csv_logger::track_problem(IOHprofiler_problem<int> & problem) {
+  // this->tracked_problem_int = nullptr;
+  // this->tracked_problem_double = nullptr;
+
+  this->track_problem(
+    problem.IOHprofiler_get_problem_id(), 
+    problem.IOHprofiler_get_number_of_variables(), 
+    problem.IOHprofiler_get_instance_id(),
+    problem.IOHprofiler_get_problem_name(),
+    problem.IOHprofiler_get_optimization_type()
+  );
+  
+  problem.link_logger(std::bind(&IOHprofiler_csv_logger::do_log,this));
+  this->problem_type = problem.IOHprofiler_get_problem_type();
+  this->tracked_problem_int = std::shared_ptr<IOHprofiler_problem<int> >(&problem);
+
+}
+
+// Updated here.
+void IOHprofiler_csv_logger::track_problem(IOHprofiler_problem<double> & problem) {
+  // this->tracked_problem_int = nullptr;
+  // this->tracked_problem_double = nullptr;
+  this->track_problem(
+    problem.IOHprofiler_get_problem_id(), 
+    problem.IOHprofiler_get_number_of_variables(), 
+    problem.IOHprofiler_get_instance_id(),
+    problem.IOHprofiler_get_problem_name(),
+    problem.IOHprofiler_get_optimization_type()
+  );
+  
+  problem.link_logger(std::bind(&IOHprofiler_csv_logger::do_log,this));
+  this->problem_type = problem.IOHprofiler_get_problem_type();
+  this->tracked_problem_double = std::shared_ptr<IOHprofiler_problem<double> >(&problem);
+}
+
+// Updated here.
+void IOHprofiler_csv_logger::track_problem(std::shared_ptr< IOHprofiler_problem<int> > problem) {
+  // this->tracked_problem_int = nullptr;
+  // this->tracked_problem_double = nullptr;
+
+  this->track_problem(
+    problem->IOHprofiler_get_problem_id(), 
+    problem->IOHprofiler_get_number_of_variables(), 
+    problem->IOHprofiler_get_instance_id(),
+    problem->IOHprofiler_get_problem_name(),
+    problem->IOHprofiler_get_optimization_type()
+  );
+  
+  problem->link_logger(std::bind(&IOHprofiler_csv_logger::do_log,this));
+  this->problem_type = problem->IOHprofiler_get_problem_type();
+  this->tracked_problem_int = problem;
+
+}
+
+// Updated here.
+void IOHprofiler_csv_logger::track_problem(std::shared_ptr< IOHprofiler_problem<double> > problem) {
+  // this->tracked_problem_int = nullptr;
+  // this->tracked_problem_double = nullptr;
+  this->track_problem(
+    problem->IOHprofiler_get_problem_id(), 
+    problem->IOHprofiler_get_number_of_variables(), 
+    problem->IOHprofiler_get_instance_id(),
+    problem->IOHprofiler_get_problem_name(),
+    problem->IOHprofiler_get_optimization_type()
+  );
+  
+  problem->link_logger(std::bind(&IOHprofiler_csv_logger::do_log,this));
+  this->problem_type = problem->IOHprofiler_get_problem_type();
+  this->tracked_problem_double = problem;
+}
+
+void IOHprofiler_csv_logger::track_suite(std::string suite_name){
   this->suite_name = suite_name;
 }
 
@@ -211,16 +306,28 @@ void IOHprofiler_csv_logger::set_parameters(const std::vector<std::shared_ptr<do
   }
 }
 
-void IOHprofiler_csv_logger::write_line(const std::vector<double> &logger_info) {
-  this->write_line( (size_t)(logger_info[0]),logger_info[1],logger_info[2],logger_info[3],logger_info[4]);
+// Updated here.
+void IOHprofiler_csv_logger::do_log() {
+  if (this->problem_type == "bbob") {
+    this->write_line(this->tracked_problem_double->loggerCOCOInfo() );
+  } else if (this->problem_type == "pseudo_Boolean_problem") {
+    this->write_line(this->tracked_problem_int->loggerInfo() );
+  } else {
+    IOH_warning("No tracking IOHprofiler_problem class");
+  }
+};
+
+void IOHprofiler_csv_logger::write_line(const std::vector<double> & log_info) {
+  this->write_line( (size_t)(log_info[0]),log_info[1],log_info[2],log_info[3],log_info[4]);
 };
 
 
 /// todo The precision of double values.
 void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y, const double best_so_far_y,
                  const double transformed_y, const double best_so_far_transformed_y) {
-  if (evaluations == 1) {
+  if (header_flag == false) {
     this->write_header();
+    header_flag = true;
   }
 
   this->last_evaluations = evaluations;
@@ -305,12 +412,12 @@ void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension, std::string
     }
     this->infoFile.open(infoFile_name.c_str(),std::ofstream::out | std::ofstream::app);
     this->infoFile << titleflag;
-    this->infoFile << "suite = \"" << this->suite_name << "\", funcId = " <<  problem_id << ", funcName = \""<< problem_name << "\", DIM = "  << dimension << ", Maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"\n%\n";
+    this->infoFile << "suite = \"" << this->suite_name << "\", funcId = " <<  problem_id << ", funcName = \""<< problem_name << "\", DIM = "  << dimension << ", maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"\n%\n";
     this->infoFile << "data_f" << problem_id << "_" << problem_name << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << ".dat";     
     this->last_problem_id = problem_id;
     this->last_dimension = dimension;
   } else if (dimension != this->last_dimension) {
-    this->infoFile << "\nsuite = \"" << this->suite_name << "\", funcId = " << problem_id << ", funcName = \""<< problem_name << "\", DIM = " << dimension << ", Maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"\n%\n";
+    this->infoFile << "\nsuite = \"" << this->suite_name << "\", funcId = " << problem_id << ", funcName = \""<< problem_name << "\", DIM = " << dimension << ", maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"\n%\n";
     this->infoFile << "data_f" << problem_id << "_" << problem_name << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << ".dat";    
     this->last_problem_id = problem_id;
     this->last_dimension = dimension;
@@ -381,5 +488,13 @@ void IOHprofiler_csv_logger::clear_logger() {
   if (tdat.is_open()) {
     tdat.close();
   }
+
+  // if(this->tracked_problem_double != nullptr) {
+  //   this->tracked_problem_double = nullptr;
+  // }
+
+  // if(this->tracked_problem_int != nullptr) {
+  //   this->tracked_problem_int = nullptr;
+  // }
 }
 

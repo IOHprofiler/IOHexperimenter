@@ -20,14 +20,10 @@ public:
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
   }
 
   ~Ising_1D() {}
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  }
 
   int modulo_ising_1D(int x,int N) {
     return (x % N + N) %N;
@@ -36,12 +32,16 @@ public:
   double internal_evaluate(const std::vector<int> &x) {
     int result= 0, n = x.size();
 
+    int neig;
     for (int i = 0; i < n; ++i) {
-        int first_neig=x[modulo_ising_1D((i+1), n)];
-        int second_neig=x[modulo_ising_1D((i -1), n)];
+      // int first_neig=x[modulo_ising_1D((i+1), n)];
+      // int second_neig=x[modulo_ising_1D((i -1), n)];
 
-        result += (x[i] *first_neig) + ((1- x[i])*(1- first_neig));
-        result += (x[i] *second_neig) + ((1- x[i])*(1- second_neig));
+      // result += (x[i] *first_neig) + ((1- x[i])*(1- first_neig));
+      // result += (x[i] *second_neig) + ((1- x[i])*(1- second_neig));
+      neig=x[modulo_ising_1D((i -1), n)];
+
+      result += ( (x[i]==neig) & 1);
     }
     return (double)result;
   }

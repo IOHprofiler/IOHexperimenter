@@ -10,7 +10,7 @@
 #define _F_ROSENBROCK_ROTATED_HPP
 
 #include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "coco_transformation.hpp"
 
 class Rosenbrock_Rotated : public IOHprofiler_problem<double> {
 public:
@@ -23,15 +23,11 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
 
   ~Rosenbrock_Rotated() {}
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  }
 
   void prepare_problem() {
     double fopt, factor;

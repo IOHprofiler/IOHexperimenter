@@ -71,7 +71,7 @@
 %{
 #include "src/coco_transformation_objs.hpp"
 #include "src/coco_transformation_vars.hpp"
-#include "src/coco_transformation.h"
+#include "src/coco_transformation.hpp"
 #include "src/f_attractive_sector.hpp"
 #include "src/f_bent_cigar.hpp"
 #include "src/f_bueche_rastrigin.hpp"
@@ -130,11 +130,11 @@
 #include "src/IOHprofiler_transformation.hpp"
 #include "src/suite_bbob_legacy_code.hpp"
 #include "src/wmodels.hpp"
-#include "src/IOHprofiler_csv_logger.h"
-#include "src/IOHprofiler_common.h"
+#include "src/IOHprofiler_csv_logger.hpp"
+#include "src/IOHprofiler_common.hpp"
 #include "src/IOHprofiler_platform.h"
 
-typedef unsigned int		uint32_t;
+typedef unsigned int    uint32_t;
 #if defined(SWIGWORDSIZE64)
 typedef unsigned long int unit64_t;
 #else
@@ -163,12 +163,12 @@ typedef  std::map<int, std::string> PROBLEM_ID_NAME;
 %include "src/IOHprofiler_transformation.hpp"
 %include "src/suite_bbob_legacy_code.hpp"
 %include "src/wmodels.hpp"
-%include "src/IOHprofiler_csv_logger.h"
-%include "src/IOHprofiler_common.h"
+%include "src/IOHprofiler_csv_logger.hpp"
+%include "src/IOHprofiler_common.hpp"
 %include "src/IOHprofiler_platform.h"
 %include "src/coco_transformation_objs.hpp"
 %include "src/coco_transformation_vars.hpp"
-%include "src/coco_transformation.cpp"
+%include "src/coco_transformation.hpp"
 
 %include "src/f_attractive_sector.hpp"
 %include "src/f_bent_cigar.hpp"

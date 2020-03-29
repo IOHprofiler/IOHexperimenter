@@ -10,7 +10,7 @@
 #define _F_GRIEWANK_ROSENBROCK_H
 
 #include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "coco_transformation.hpp"
 
 class Griewank_RosenBrock : public IOHprofiler_problem<double> {
 public:
@@ -23,17 +23,14 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
 
   ~Griewank_RosenBrock() {}
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  }
-
   double scales;
+  
   void prepare_problem() {
     std::vector<double> xopt;
     double fopt;

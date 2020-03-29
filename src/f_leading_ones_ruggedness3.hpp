@@ -47,7 +47,7 @@ public:
         break;
       }
     }
-    result = this->info[(int)(result+0.5)];
+    result = this->info[(int)(result + 0.5)];
     return (double)result;
   }
 
