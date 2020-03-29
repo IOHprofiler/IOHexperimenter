@@ -1,0 +1,3 @@
+recursive-include src/ *
+recursive-include IOHexperimenter/example *
+include IOHprofiler.i Makefile.in

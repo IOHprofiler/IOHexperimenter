@@ -1,12 +1,14 @@
-*.csv
-**.o
-**.so
-**.dll
-*.log
-*.pdf
-*.html
+*.o
 .*
 
-!/.Rbuildignore
+dist/
+build/
+*egg*/
+*bk
+Makefile
+*.so
+IOHprofiler.py
+IOHprofiler_wrap.cxx
+
 !/.gitignore
 __pycache__
