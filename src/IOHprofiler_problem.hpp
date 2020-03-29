@@ -290,7 +290,7 @@ public:
 
   void IOHprofiler_set_as_minimization();
 
-  void link_logger( std::function<void ()> do_log);
+  void link_logger(std::function<void ()> do_log);
 
 private:
   int problem_id; /// < problem id, assigned as being added into a suite.

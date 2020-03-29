@@ -1,22 +1,25 @@
-PYTHON_LIB=
 LDFLAGS=-lm 
 CCFLAGS=-g -std=c++11 -Wall -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -O2 -fPIC -D_GLIBCXX_USE_CXX11_ABI=0
+py_lib=
+py_include=-I/python-header
 
-ODIR=build
-SOURCE=src
-CPP_SOURCE=${wildcard $(SOURCE)/*.cpp}
-CPP_OBJS=${patsubst $(SOURCE)/%.cpp, $(ODIR)/%.o, $(CPP_SOURCE)}
-POBJ=_IOHprofiler.so
+CC=g++
+build=build
+src=src
 
-all: $(CPP_OBJS) $(HPP_OBJS) $(POBJ)
-$(CPP_OBJS):$(ODIR)/%.o:$(SOURCE)/%.cpp
-	mkdir -p $(ODIR)
-	$(CC) ${CCFLAGS} -c -x c++ $^ -o $@ ${LDFLAGS}
-$(POBJ):$(CPP_OBJS) IOHprofiler.i
+hpp=${wildcard $(src)/*.hpp}
+cpp=${wildcard $(src)/*.cpp}
+obj=${patsubst $(src)/%.cpp, $(build)/%.o, $(cpp)}
+target=_IOHprofiler.so
+
+all: $(obj) $(target)
+$(obj): $(build)/%.o: $(src)/%.cpp
+	mkdir -p $(build)
+	$(CC) ${CCFLAGS} -I./src -c -x c++ $^ -o $@ ${LDFLAGS}
+$(target):
 	swig -c++ -python IOHprofiler.i
-	g++ -O2 -D_GLIBCXX_USE_CXX11_ABI=0 -fPIC -I/python-header -std=c++11 -c IOHprofiler_wrap.cxx 
-	g++ -O2 -D_GLIBCXX_USE_CXX11_ABI=0 -shared $(PYTHON_LIB) $(CPP_OBJS) IOHprofiler_wrap.o -o $@ -std=c++11 
-ECHO:
-	@echo $(HPPSUBDIRS)
+	g++ -O2 -D_GLIBCXX_USE_CXX11_ABI=0 -fPIC -std=c++11 $(py_include) -c IOHprofiler_wrap.cxx 
+	g++ -O2 -D_GLIBCXX_USE_CXX11_ABI=0 -shared -std=c++11 $(py_lib) $(obj) IOHprofiler_wrap.o -o $@ 
+
 clean:
-	rm -rf build $(POBJ) IOHprofiler.py IOHprofiler_wrap.*
+	rm -rf $(build) $(obj) $(target) IOHprofiler.py IOHprofiler_wrap.*

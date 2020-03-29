@@ -3,38 +3,34 @@ import numpy as np
 
 def mutation(parent, l):
     n = len(parent)
-    flip = np.random.choice(range(n), l, replace=False)
-
+    index = np.random.choice(range(n), l, replace=False)
     offspring = parent.copy()
-    for i in flip:
-        offspring[i] = (parent[i] + 1) % 2
+    offspring[index] = ~offspring[index]
+    return offspring
 
-    return offspring.copy()
-
-def one_plus_one_EA(problem, logger):
+def one_plus_one_EA(problem, logger, budget=1e3):
     n = problem.IOHprofiler_get_number_of_variables()
-    x = np.zeros(n)
-    x_prime = np.zeros(n)
+    x = np.zeros(n, dtype=np.bool)
+    x_prime = np.zeros(n, dtype=np.bool)
 
     for i in range(n):
-        if np.random.rand() < 0.5:
-            x[i] = 1
+        x[i] = np.random.rand() < 0.5
 
     fopt = problem.evaluate(x)
     logger.write_line(problem.loggerInfo())
     counter = 0
     l = 1
 
-    while not problem.IOHprofiler_hit_optimal() and counter < 1000:
+    while not problem.IOHprofiler_hit_optimal() and counter < budget:
         x_prime[:] = mutation(x, l)
-        f = problem.evaluate(x_prime)
+        f = problem.evaluate(1 * x_prime)
         logger.write_line(problem.loggerInfo())
 
         if f >= fopt:
-            x[:] = x_prime.copy()
+            x[:] = x_prime
             fopt = f
 
-        print(x)
+        print(1 * x)
         counter += 1
 
     return x, fopt

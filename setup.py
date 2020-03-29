@@ -25,7 +25,7 @@ class CustomBuild(build):
         else:
             raise Exception('Python dynamic library is not found...')
 
-        command = 'sed -e "s|^PYTHON_LIB=$|PYTHON_LIB={0}|g"\
+        command = 'sed -e "s|py_lib=|py_lib={0}|g"\
             -e "s|-I/python-header|-I{1}|g" Makefile.in > Makefile'.format(lib_file, include_path)
 
         os.system(command)
@@ -44,7 +44,7 @@ setuptools.setup(
         'build': CustomBuild,
     },
     name="IOHexperimenter",
-    version="0.0.8",
+    version="0.0.9",
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
     description="The experimenter for Iterative Optimization Heuristic",
