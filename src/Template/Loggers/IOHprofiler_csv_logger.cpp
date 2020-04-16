@@ -269,6 +269,10 @@ void IOHprofiler_csv_logger::do_log(const std::vector<double> & log_info) {
   this->write_line( (size_t)(log_info[0]),log_info[1],log_info[2],log_info[3],log_info[4]);
 };
 
+void IOHprofiler_csv_logger::write_line(const std::vector<double> & log_info) {
+  this->write_line( (size_t)(log_info[0]),log_info[1],log_info[2],log_info[3],log_info[4]);
+};
+
 
 /// todo The precision of double values.
 void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y, const double best_so_far_y,

@@ -47,6 +47,7 @@ public:
   void write_line(const size_t evaluations, const double y, const double best_so_far_y,
                  const double transformed_y, const double best_so_far_transformed_y);
   void do_log(const std::vector<double> &log_info);
+  void write_line(const std::vector<double> &log_info);
   
   void update_logger_info(size_t optimal_evaluations, double y, double transformed_y);
   
