@@ -24,8 +24,11 @@ public:
   IOHprofiler_suite(std::vector<int> problem_id = std::vector<int>(0), std::vector<int> instance_id = std::vector<int>(0), std::vector<int> dimension = std::vector<int>(0)) : 
     suite_name("no suite"),
     problem_list_index(0),
+    size_of_problem_list(0),
     get_problem_flag(false),
-    current_problem(nullptr) {}
+    load_problem_flag(false),
+    current_problem(nullptr) {
+    }
   ~IOHprofiler_suite() {}
 
   IOHprofiler_suite(const IOHprofiler_suite&) = delete;
@@ -119,6 +122,7 @@ private:
   size_t problem_list_index;
   size_t size_of_problem_list;
   bool get_problem_flag;
+  bool load_problem_flag;
 
   Problem_ptr current_problem;
 };
@@ -141,9 +145,14 @@ template <class InputType> void IOHprofiler_suite<InputType>::loadProblem() {
     }
   }
   this->get_problem_flag = false;
+  this->load_problem_flag = true;
 }
 
 template <class InputType> std::shared_ptr<IOHprofiler_problem<InputType> > IOHprofiler_suite<InputType>::get_next_problem() {
+  if (this->load_problem_flag == false) {
+    this->loadProblem();
+  }
+  
   if (this->size_of_problem_list == 0) {
     IOH_warning("There is no problem in the suite");
     return nullptr;
@@ -165,6 +174,10 @@ template <class InputType> std::shared_ptr<IOHprofiler_problem<InputType> > IOHp
 }
 
 template <class InputType> std::shared_ptr<IOHprofiler_problem<InputType> > IOHprofiler_suite<InputType>::get_current_problem() {
+  if (this->load_problem_flag == false) {
+    this->loadProblem();
+  }
+
   if (this->get_problem_flag == false) {
     this->get_problem_flag = true;
   }

@@ -63,7 +63,6 @@ void _run_suite() {
   std::vector<int> instance_id ={1,2};
   std::vector<int> dimension = {100,200,300};
   PBO_suite pbo(problem_id,instance_id,dimension);
-  pbo.loadProblem();
   /// If no logger is added, there will be not any output files, but users
   /// can still get fitness values.
   std::vector<int> time_points{1,2,5};
