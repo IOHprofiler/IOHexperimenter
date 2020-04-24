@@ -10,11 +10,8 @@ def mutation(parent, l):
 
 def one_plus_one_EA(problem, logger, budget=1e3):
     n = problem.IOHprofiler_get_number_of_variables()
-    x = np.zeros(n, dtype=np.bool)
+    x = np.random.rand(n) < 0.5
     x_prime = np.zeros(n, dtype=np.bool)
-
-    for i in range(n):
-        x[i] = np.random.rand() < 0.5
 
     fopt = problem.evaluate(x)
     logger.write_line(problem.loggerInfo())
@@ -30,37 +27,39 @@ def one_plus_one_EA(problem, logger, budget=1e3):
             x[:] = x_prime
             fopt = f
 
-        print(1 * x)
         counter += 1
-
     return x, fopt
 
 if __name__ == '__main__':
-    p_id = range(1,24)
-    i_id = range(1,10)
+    p_id = range(1, 24)
+    i_id = [1]
     dimension = [16]
     runs = 10
 
     pbo = IOH.PBO_suite(p_id, i_id, dimension)
     pbo.loadProblem()
-    logger = IOH.IOHprofiler_csv_logger("./", "run_suite", "EA", "EA")
+
+    logger = IOH.IOHprofiler_csv_logger("./", "data", "EA", "EA")
     logger.set_interval(0)
     logger.activate_logger()
     logger.track_suite(pbo.IOHprofiler_suite_get_suite_name())
 
     p = pbo.get_next_problem()
+    k = 1
     while p:
-        while runs > 0:
+        print('F%d '%k + p.IOHprofiler_get_problem_name() + '...')
+        for i in range(runs):
             p = pbo.get_current_problem()
             logger.track_problem(
                 p.IOHprofiler_get_problem_id(),
                 p.IOHprofiler_get_number_of_variables(),
                 p.IOHprofiler_get_instance_id(),
                 p.IOHprofiler_get_problem_name(),
-                p.IOHprofiler_get_optimization_type()
-            )
+                p.IOHprofiler_get_optimization_type())
 
-            one_plus_one_EA(p, logger)
-            runs -= runs
+            print(' ' + 'run {}/{}'.format(i + 1, runs) + '...', end=' ')
+            xopt, fopt = one_plus_one_EA(p, logger)
+            print('xopt: {}, fopt: {:.2f}'.format(1 * xopt, fopt))
 
         p = pbo.get_next_problem()
+        k += 1

@@ -15,7 +15,7 @@ target=_IOHprofiler.so
 all: $(obj) $(target)
 $(obj): $(build)/%.o: $(src)/%.cpp
 	mkdir -p $(build)
-	$(CC) ${CCFLAGS} -I./src -c -x c++ $^ -o $@ ${LDFLAGS}
+	$(CC) ${CCFLAGS} -c -x c++ $^ -o $@ ${LDFLAGS}
 $(target):
 	swig -c++ -python IOHprofiler.i
 	g++ -O2 -D_GLIBCXX_USE_CXX11_ABI=0 -fPIC -std=c++11 $(py_include) -c IOHprofiler_wrap.cxx 
