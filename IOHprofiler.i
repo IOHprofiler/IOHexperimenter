@@ -15,8 +15,8 @@
 %shared_ptr(IOHprofiler_problem< double >)
 %shared_ptr(IOHprofiler_suite< double >)
 %shared_ptr(IOHprofiler_suite< int >)
-%shared_ptr(double)
-%shared_ptr(int)
+%shared_ptr(DoubleValue)
+%shared_ptr(IntValue)
 
 %shared_ptr(OneMax)
 %shared_ptr(LeadingOnes)

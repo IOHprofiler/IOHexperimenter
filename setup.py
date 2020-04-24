@@ -44,7 +44,7 @@ setuptools.setup(
         'build': CustomBuild,
     },
     name="IOHexperimenter",
-    version="0.0.9dev0",
+    version="0.0.9.dev0",
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
     description="The experimenter for Iterative Optimization Heuristic",
