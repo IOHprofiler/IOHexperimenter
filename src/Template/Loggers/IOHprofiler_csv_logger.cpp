@@ -364,12 +364,20 @@ void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension, std::string
     }
     this->infoFile.open(infoFile_name.c_str(),std::ofstream::out | std::ofstream::app);
     this->infoFile << titleflag;
-    this->infoFile << "suite = \"" << this->suite_name << "\", funcId = " <<  problem_id << ", funcName = \""<< problem_name << "\", DIM = "  << dimension << ", maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"\n%\n";
+    this->infoFile << "suite = \"" << this->suite_name << "\", funcId = " <<  problem_id << ", funcName = \""<< problem_name << "\", DIM = "  << dimension << ", maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"";
+	  for (std::map<std::string,std::string>::iterator iter = this->attr_name_value.begin(); iter != this->attr_name_value.end(); iter++) {
+		  this->infoFile << ", \"" << iter->first << "=" << iter->second;
+	  }
+    this->infoFile << "\n%\n";
     this->infoFile << "data_f" << problem_id << "_" << problem_name << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << ".dat";     
     this->last_problem_id = problem_id;
     this->last_dimension = dimension;
   } else if (dimension != this->last_dimension) {
-    this->infoFile << "\nsuite = \"" << this->suite_name << "\", funcId = " << problem_id << ", funcName = \""<< problem_name << "\", DIM = " << dimension << ", maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"\n%\n";
+    this->infoFile << "\nsuite = \"" << this->suite_name << "\", funcId = " << problem_id << ", funcName = \""<< problem_name << "\", DIM = " << dimension << ", maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"";
+    for (std::map<std::string,std::string>::iterator iter = this->attr_name_value.begin(); iter != this->attr_name_value.end(); iter++) {
+		  this->infoFile << ", \"" << iter->first << "=" << iter->second;
+	  }
+    this->infoFile << "\n%\n";
     this->infoFile << "data_f" << problem_id << "_" << problem_name << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << ".dat";    
     this->last_problem_id = problem_id;
     this->last_dimension = dimension;
@@ -418,6 +426,27 @@ void IOHprofiler_csv_logger::update_logger_info(size_t optimal_evaluations, doub
   this->optimal_evaluations = optimal_evaluations;
   this->best_y[0] =  y;
   this->best_transformed_y[0] = transformed_y;
+}
+
+
+void IOHprofiler_csv_logger::add_attribute(std::string name, double value) {
+  this->attr_name_value[name] = std::to_string(value);
+}
+
+void IOHprofiler_csv_logger::add_attribute(std::string name, int value) {
+  this->attr_name_value[name] = std::to_string(value);
+}
+
+void IOHprofiler_csv_logger::add_attribute(std::string name, float value) {
+  this->attr_name_value[name] = std::to_string(value);
+}
+
+void IOHprofiler_csv_logger::add_attribute(std::string name, std::string value) {
+  this->attr_name_value[name] = value;
+}
+
+void IOHprofiler_csv_logger::delete_attribute(std::string name) {
+  this->attr_name_value.erase(name);
 }
 
 void IOHprofiler_csv_logger::clear_logger() {

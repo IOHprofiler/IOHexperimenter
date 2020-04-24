@@ -30,6 +30,16 @@ public:
   void activate_logger();
   
   void clear_logger();
+  
+  void add_attribute(std::string, int);
+
+  void add_attribute(std::string, double);
+
+  void add_attribute(std::string, float);
+
+  void add_attribute(std::string, std::string);
+
+  void delete_attribute(std::string);
 
   void track_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag);
   
@@ -61,6 +71,7 @@ private:
   std::string algorithm_name;
   std::string algorithm_info;
   int maximization_minimization_flag = 1; /// < set as maximization if flag = 1, otherwise minimization.
+  std::map<std::string, std::string> attr_name_value;
 
   std::string suite_name = "No suite";
 
