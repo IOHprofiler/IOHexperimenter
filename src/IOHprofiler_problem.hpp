@@ -379,6 +379,13 @@ template <class InputType> void IOHprofiler_problem<InputType>::calc_optimal() {
     /// todo. Make Exception.
     /// Do not apply transformation on best_variables as calculating optimal
     if (this->number_of_objectives == 1) {
+      /// This only works for F4, F16-18, and F23 of BBOB suite.
+      if(this->problem_type == "bbob") {
+        Coco_Transformation_Data::raw_x.clear();
+        for (int i = 0; i != this->best_variables.size(); ++i) {
+          Coco_Transformation_Data::raw_x.push_back(this->best_variables[i]);
+        }
+      }
       this->optimal[0] = internal_evaluate(this->best_variables);
     } else {
       /// this->optimal = internal_evaluate_multi(this->best_variables);
