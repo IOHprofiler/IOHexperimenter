@@ -31,6 +31,10 @@ public:
   
   void clear_logger();
   
+  void set_attribute(const std::vector<std::shared_ptr<double> > &attributes);
+  
+  void set_attribute(const std::vector<std::shared_ptr<double> > &attributes, const std::vector<std::string> &attributes_name);
+
   void add_attribute(std::string, int);
 
   void add_attribute(std::string, double);
@@ -66,27 +70,25 @@ public:
   void set_parameters(const std::vector<std::shared_ptr<double> > &parameters, const std::vector<std::string> &parameters_name);
 
 private:
+
+  // The information for directory.
   std::string folder_name;
   std::string output_directory;
+
+  // The information for logging.
   std::string algorithm_name;
   std::string algorithm_info;
   IOH_optimization_type maximization_minimization_flag = IOH_optimization_type::Maximization;
-  std::map<std::string, std::string> attr_name_value;
+  std::map<std::string, std::string> attr_per_exp_name_value;
+  std::map<std::string, std::shared_ptr<double> >  attr_per_run_name_value;
 
   std::string suite_name = "No suite";
 
-  // The information of logged problems.
   int dimension;
   int problem_id;
   int instance;
   std::string problem_name;
   //std::string problem_type;
-
-  std::fstream cdat;
-  std::fstream idat;
-  std::fstream dat;
-  std::fstream tdat;
-  std::fstream infoFile;
 
   std::vector<double> best_y;
   std::vector<double> best_transformed_y;
@@ -95,14 +97,20 @@ private:
   std::vector<double> last_transformed_y;
   size_t last_evaluations;
 
+  //std::vector<std::shared_ptr<double> > logging_parameters; /// < parameters to be logged as logging evaluation information.
+  //std::vector<std::string> logging_parameters_name; /// < name of parameters to be logged as logging evaluation information.
+  std::map<std::string, std::shared_ptr<double> > logging_parameters;
+
+  // fstream
+  std::fstream cdat;
+  std::fstream idat;
+  std::fstream dat;
+  std::fstream tdat;
+  std::fstream infoFile;
 
   int last_dimension = 0;
   int last_problem_id = -1;
   
-  std::vector<std::shared_ptr<double> > logging_parameters; /// < parameters to be logged as logging evaluation information.
-  
-  std::vector<std::string> logging_parameters_name; /// < name of parameters to be logged as logging evaluation information.
-
   /// \fn std::string IOHprofiler_experiment_folder_name()
   /// \brief return an available name of folder to be created.
   std::string IOHprofiler_experiment_folder_name();
@@ -121,4 +129,4 @@ private:
   // std::shared_ptr<IOHprofiler_problem<double> > tracked_problem_double;
 };
 
-#endif //_IOHPROFILER_CSV_LOGGER_H
+#endif //_IOHPROFILER_CSV_LOGGER_HPP

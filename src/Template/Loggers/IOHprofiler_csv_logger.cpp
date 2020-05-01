@@ -91,9 +91,9 @@ void IOHprofiler_csv_logger::write_header() {
                         + "_" + problem_name;
   
   std::string dat_header = "\"function evaluation\" \"current f(x)\" \"best-so-far f(x)\" \"current af(x)+b\"  \"best af(x)+b\"";
-  if(this->logging_parameters_name.size() != 0) {
-    for (int i = 0; i != this->logging_parameters_name.size(); ++i) {
-      dat_header = dat_header + " \"" + this->logging_parameters_name[i] + "\"";
+  if(this->logging_parameters.size() != 0) {
+    for (std::map<std::string, std::shared_ptr<double> >::iterator iter = this->logging_parameters.begin(); iter != this->logging_parameters.end(); ++iter) {
+      dat_header = dat_header + " \"" + iter->first + "\"";
     }
   }
 
@@ -242,12 +242,10 @@ void IOHprofiler_csv_logger::track_suite(std::string suite_name){
 void IOHprofiler_csv_logger::set_parameters(const std::vector<std::shared_ptr<double> > &parameters) {
   if (this->logging_parameters.size() != 0) {
     this->logging_parameters.clear();
-    this->logging_parameters_name.clear();
   }
 
   for (size_t i = 0; i != parameters.size(); i++) {
-    this->logging_parameters.push_back(parameters[i]);
-    this->logging_parameters_name.push_back("parameter" + std::to_string(i+1));
+    this->logging_parameters["parameter" + std::to_string(i+1)] = parameters[i];
   }
 }
 
@@ -257,13 +255,35 @@ void IOHprofiler_csv_logger::set_parameters(const std::vector<std::shared_ptr<do
   }
   if (this->logging_parameters.size() != 0) {
     this->logging_parameters.clear();
-    this->logging_parameters_name.clear();
   }
   for (size_t i = 0; i != parameters.size(); i++) {
-    this->logging_parameters.push_back(parameters[i]);
-    this->logging_parameters_name.push_back(parameters_name[i]);
+    this->logging_parameters[parameters_name[i]] = parameters[i];
   }
 }
+
+void IOHprofiler_csv_logger::set_attribute(const std::vector<std::shared_ptr<double> > &attributes) {
+  if (this->attr_per_run_name_value.size() != 0) {
+    this->attr_per_run_name_value.clear();
+  }
+
+  for (size_t i = 0; i != attributes.size(); i++) {
+    this->attr_per_run_name_value["attr" + std::to_string(i+1)] = attributes[i];
+  }
+}
+
+void IOHprofiler_csv_logger::set_attribute(const std::vector<std::shared_ptr<double> > &attributes, const std::vector<std::string> &attributes_name) {
+  if (attributes_name.size() != attributes.size()) {
+    IOH_error("Attributes and their names are given with different size.");
+  }
+  if (this->attr_per_run_name_value.size() != 0) {
+    this->attr_per_run_name_value.clear();
+  }
+  for (size_t i = 0; i != attributes.size(); i++) {
+    this->attr_per_run_name_value[attributes_name[i]] = attributes[i];
+  }
+}
+
+
 
 void IOHprofiler_csv_logger::do_log(const std::vector<double> & log_info) {
   this->write_line( (size_t)(log_info[0]),log_info[1],log_info[2],log_info[3],log_info[4]);
@@ -300,9 +320,9 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
                              + std::to_string(best_so_far_transformed_y);
     
     if (this->logging_parameters.size() != 0) {
-      for (size_t i = 0; i != this->logging_parameters.size(); i++) {
+      for (std::map<std::string, std::shared_ptr<double> >::iterator iter = this->logging_parameters.begin(); iter != this->logging_parameters.end(); ++iter) {
         written_line += " ";
-        written_line += std::to_string(*logging_parameters[i]);
+        written_line += std::to_string(*(iter->second));
       }
     }
     
@@ -365,18 +385,39 @@ void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension, std::string
     this->infoFile.open(infoFile_name.c_str(),std::ofstream::out | std::ofstream::app);
     this->infoFile << titleflag;
     this->infoFile << "suite = \"" << this->suite_name << "\", funcId = " <<  problem_id << ", funcName = \""<< problem_name << "\", DIM = "  << dimension << ", maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"";
-	  for (std::map<std::string,std::string>::iterator iter = this->attr_name_value.begin(); iter != this->attr_name_value.end(); iter++) {
-		  this->infoFile << ", \"" << iter->first << "=" << iter->second;
-	  }
+	  if(this->attr_per_exp_name_value.size() != 0) {
+      for (std::map<std::string,std::string>::iterator iter = this->attr_per_exp_name_value.begin(); iter != this->attr_per_exp_name_value.end(); iter++) {
+		    this->infoFile << ", " << iter->first << " = \"" << iter->second << "\"";
+      }
+
+    }
+    if(this->attr_per_run_name_value.size() != 0) {
+      this->infoFile << ", Dynamic attribute = \"";
+      for (std::map<std::string,std::shared_ptr<double> >::iterator iter = this->attr_per_run_name_value.begin(); iter != this->attr_per_run_name_value.end(); iter++) {
+		    this->infoFile << "|" << iter->first;
+	    }
+      this->infoFile << "\"";
+    }
     this->infoFile << "\n%\n";
     this->infoFile << "data_f" << problem_id << "_" << problem_name << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << ".dat";     
     this->last_problem_id = problem_id;
     this->last_dimension = dimension;
   } else if (dimension != this->last_dimension) {
     this->infoFile << "\nsuite = \"" << this->suite_name << "\", funcId = " << problem_id << ", funcName = \""<< problem_name << "\", DIM = " << dimension << ", maximization = \"" << optimization_type << "\", algId = \"" << this->algorithm_name << "\", algInfo = \"" << this->algorithm_info << "\"";
-    for (std::map<std::string,std::string>::iterator iter = this->attr_name_value.begin(); iter != this->attr_name_value.end(); iter++) {
-		  this->infoFile << ", \"" << iter->first << "=" << iter->second;
-	  }
+    if(this->attr_per_exp_name_value.size() != 0) {
+      for (std::map<std::string,std::string>::iterator iter = this->attr_per_exp_name_value.begin(); iter != this->attr_per_exp_name_value.end(); iter++) {
+		    this->infoFile << ", " << iter->first << " = \"" << iter->second << "\"";
+      }
+
+    }
+
+    if(this->attr_per_run_name_value.size() != 0) {
+      this->infoFile << ", Dynamic attribute = \"";
+      for (std::map<std::string,std::shared_ptr<double> >::iterator iter = this->attr_per_run_name_value.begin(); iter != this->attr_per_run_name_value.end(); iter++) {
+		    this->infoFile << "|" << iter->first;
+	    }
+      this->infoFile << "\"";
+    }
     this->infoFile << "\n%\n";
     this->infoFile << "data_f" << problem_id << "_" << problem_name << "/IOHprofiler_f" << problem_id << "_DIM" << dimension << ".dat";    
     this->last_problem_id = problem_id;
@@ -390,6 +431,9 @@ void IOHprofiler_csv_logger::write_info(int instance, double best_y, double best
     IOH_error("write_info(): writing info into unopened infoFile");
   }
   infoFile << ", " << instance << ":" << evaluations << "|" << best_y; 
+  for (std::map<std::string,std::shared_ptr<double> >::iterator iter = this->attr_per_run_name_value.begin(); iter != this->attr_per_run_name_value.end(); iter++) {
+		this->infoFile << "|" << *(iter->second);
+	}
 
   bool need_write = (evaluations != last_evaluations);
   if (need_write) {
@@ -398,9 +442,9 @@ void IOHprofiler_csv_logger::write_info(int instance, double best_y, double best
                               + std::to_string(best_transformed_y);
     
     if (this->logging_parameters.size() != 0) {
-      for (size_t i = 0; i != this->logging_parameters.size(); i++) {
+      for (std::map<std::string, std::shared_ptr<double> >::iterator iter = this->logging_parameters.begin(); iter != this->logging_parameters.end(); ++iter) {
         written_line += " ";
-        written_line += std::to_string(*logging_parameters[i]);
+        written_line += std::to_string(*(iter->second));
       }
     }
     
@@ -430,23 +474,23 @@ void IOHprofiler_csv_logger::update_logger_info(size_t optimal_evaluations, doub
 
 
 void IOHprofiler_csv_logger::add_attribute(std::string name, double value) {
-  this->attr_name_value[name] = std::to_string(value);
+  this->attr_per_exp_name_value[name] = std::to_string(value);
 }
 
 void IOHprofiler_csv_logger::add_attribute(std::string name, int value) {
-  this->attr_name_value[name] = std::to_string(value);
+  this->attr_per_exp_name_value[name] = std::to_string(value);
 }
 
 void IOHprofiler_csv_logger::add_attribute(std::string name, float value) {
-  this->attr_name_value[name] = std::to_string(value);
+  this->attr_per_exp_name_value[name] = std::to_string(value);
 }
 
 void IOHprofiler_csv_logger::add_attribute(std::string name, std::string value) {
-  this->attr_name_value[name] = value;
+  this->attr_per_exp_name_value[name] = value;
 }
 
 void IOHprofiler_csv_logger::delete_attribute(std::string name) {
-  this->attr_name_value.erase(name);
+  this->attr_per_exp_name_value.erase(name);
 }
 
 void IOHprofiler_csv_logger::clear_logger() {
