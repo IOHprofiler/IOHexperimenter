@@ -46,11 +46,12 @@ public:
 
   bool interval_trigger(size_t evaluations) const;
   
+
   void set_update_flag(bool update_flag);
 
-  bool update_status() const;
+  bool update_trigger(double fitness, IOH_optimization_type optimization_type);
 
-  bool update_trigger(double fitness, int optimization_type);
+  bool update_status() const;
   
   void set_time_points(const std::vector<int> & time_points, const int number_of_evaluations, const int time_points_exp_base1 = 10, const int time_points_exp_base2 = 10);
 
@@ -58,7 +59,7 @@ public:
 
   bool time_points_trigger(size_t evaluations);
 
-  void reset_observer(const int optimization_type);
+  void reset_observer(const IOH_optimization_type optimization_type);
 
   virtual void do_log(const std::vector<double> &log_info) {}
 
