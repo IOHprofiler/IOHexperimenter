@@ -41,7 +41,7 @@ public:
 
   void delete_attribute(std::string);
 
-  void track_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const int maximization_minimization_flag);
+  void track_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const IOH_optimization_type maximization_minimization_flag);
   
   void track_problem(const IOHprofiler_problem<int> & problem);
   
@@ -70,7 +70,7 @@ private:
   std::string output_directory;
   std::string algorithm_name;
   std::string algorithm_info;
-  int maximization_minimization_flag = 1; /// < set as maximization if flag = 1, otherwise minimization.
+  IOH_optimization_type maximization_minimization_flag = IOH_optimization_type::Maximization;
   std::map<std::string, std::string> attr_name_value;
 
   std::string suite_name = "No suite";

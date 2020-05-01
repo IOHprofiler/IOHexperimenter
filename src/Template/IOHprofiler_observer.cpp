@@ -51,7 +51,7 @@ bool IOHprofiler_observer::update_status() const {
   return observer_update_flag;
 }
 
-bool IOHprofiler_observer::update_trigger(double fitness, int optimization_type) {
+bool IOHprofiler_observer::update_trigger(double fitness, IOH_optimization_type optimization_type) {
   if (observer_update_flag == false) {
     return false;
   }
@@ -123,11 +123,11 @@ bool IOHprofiler_observer::time_points_trigger(size_t evaluations) {
   return result;
 }
 
-void IOHprofiler_observer::reset_observer(const int optimization_type) {
-  if (optimization_type == 1) {
-    this->current_best_fitness = -DBL_MAX;
+void IOHprofiler_observer::reset_observer(const IOH_optimization_type optimization_type) {
+  if (optimization_type == IOH_optimization_type::Maximization) {
+    this->current_best_fitness = std::numeric_limits<double>::lowest();
   } else {
-    this->current_best_fitness = DBL_MAX;
+    this->current_best_fitness = std::numeric_limits<double>::max();
   }
   this->evaluations_value1 = 1;
   this->time_points_index = 0;
