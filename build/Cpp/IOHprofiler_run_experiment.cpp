@@ -24,6 +24,18 @@ int mutation(std::vector<int> &x, double mutation_rate) {
   return result;
 }
 
+template<class InputType> double evaluate(std::shared_ptr<IOHprofiler_problem<InputType> > problem, std::shared_ptr<IOHprofiler_csv_logger> logger,const std::vector<InputType> &x) {
+  double result;
+  result = problem->evaluate(x);
+  if (problem->IOHprofiler_get_problem_type() == "pseudo_Boolean_problem") {
+    logger->do_log(problem->loggerInfo());
+  } else if (problem->IOHprofiler_get_problem_type() == "bbob") {
+    logger->do_log(problem->loggerCOCOInfo());
+  } else {
+    // Configure the format you want to log here
+  }
+  return result;
+}
 
 /// This is an (1+1)_EA with static mutation rate = 1/n.
 /// An example for discrete optimization problems, such as PBO suite.
@@ -42,19 +54,19 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int> > problem, 
   std::vector<std::string> parameters_name;
   parameters_name.push_back("mutation_rate");
   logger->set_parameters(parameters,parameters_name);
+  logger->set_attribute(parameters,parameters_name);
+  logger->add_attribute("test",1);
 
   x = Initialization(problem->IOHprofiler_get_number_of_variables());
   x_star = x;
-  y = problem->evaluate(x);
-  logger->do_log(problem->loggerInfo());
+  y = evaluate(problem,logger,x);
   best_value = y;
 
   int count = 0;
   while (count <= budget && !problem->IOHprofiler_hit_optimal()) {
     x = x_star;
     if (mutation(x,*mutation_rate)) {
-      y = problem->evaluate(x);
-      logger->do_log(problem->loggerInfo());
+      y = evaluate(problem,logger,x);
       count++;
     }
     if (y >= best_value) {
