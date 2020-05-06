@@ -31,9 +31,9 @@ public:
   
   void clear_logger();
   
-  void set_attribute(const std::vector<std::shared_ptr<double> > &attributes);
+  void add_dynamic_attribute(const std::vector<std::shared_ptr<double> > &attributes);
   
-  void set_attribute(const std::vector<std::shared_ptr<double> > &attributes, const std::vector<std::string> &attributes_name);
+  void add_dynamic_attribute(const std::vector<std::shared_ptr<double> > &attributes, const std::vector<std::string> &attributes_name);
 
   void add_attribute(std::string, int);
 
@@ -60,7 +60,9 @@ public:
 
   void write_line(const size_t evaluations, const double y, const double best_so_far_y,
                  const double transformed_y, const double best_so_far_transformed_y);
+                 
   void do_log(const std::vector<double> &log_info);
+
   void write_line(const std::vector<double> &log_info);
   
   void update_logger_info(size_t optimal_evaluations, double y, double transformed_y);
@@ -108,6 +110,12 @@ private:
   std::fstream tdat;
   std::fstream infoFile;
 
+  std::string cdat_buffer;
+  std::string idat_buffer;
+  std::string dat_buffer;
+  std::string tdat_buffer;
+  std::string info_buffer;
+
   int last_dimension = 0;
   int last_problem_id = -1;
   
@@ -120,6 +128,10 @@ private:
   bool header_flag; /// < parameters to track if the header line is logged.
   
   void write_header();
+
+  void write_stream(const std::string buffer_string, std::fstream & dat_stream);
+
+  void write_in_buffer(const std::string add_string, std::string & buffer_string, std::fstream & dat_stream);
 
   /// \fn openIndex()
   /// \brief to create the folder of logging files.

@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <assert.h>
@@ -31,6 +32,9 @@
 
 /// < Default dimension
 #define DEFAULT_DIMENSION 4
+
+/// < Max buffer size
+#define MAX_BUFFER_SIZE 65534
 
 enum IOH_optimization_type {Minimization=0, Maximization=1};
 
@@ -118,5 +122,11 @@ bool compareObjectives(const valueType v1, const valueType v2, const IOH_optimiz
     }
     return true;
   }
+}
+
+template<class valueType> std::string _toString(const valueType v) {
+  std::ostringstream ss;
+  ss << v;
+  return ss.str();
 }
 #endif //_IOHPROFILER_COMMON_HPP
