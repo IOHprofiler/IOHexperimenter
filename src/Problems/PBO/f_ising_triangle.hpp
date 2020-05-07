@@ -35,26 +35,15 @@ public:
     int i,j,neig;
     int n = x.size();
     int result = 0;
-    // int neighbors[6];
     int neighbors[3];
     int lattice_size = (int)sqrt((double)n);
     
     for (i = 0; i < lattice_size; ++i) {
       for (j = 0; j < lattice_size; ++j) {
-        // neighbors[0] = x[modulo_ising_triangle((i - 1), lattice_size) * lattice_size + j] ;
-        // neighbors[1] = x[modulo_ising_triangle((i + 1), lattice_size) * lattice_size + j] ;
-        // neighbors[2] = x[i * lattice_size + modulo_ising_triangle((j - 1) , lattice_size)] ;
-        // neighbors[3] = x[i * lattice_size + modulo_ising_triangle((i + 1) , lattice_size)] ;
-        // neighbors[4] = x[modulo_ising_triangle((i - 1) , lattice_size) * lattice_size + modulo_ising_triangle((j - 1) , lattice_size)] ;
-        // neighbors[5] = x[modulo_ising_triangle((i + 1) , lattice_size) * lattice_size + modulo_ising_triangle((j + 1) , lattice_size)];
-
         neighbors[0] = x[modulo_ising_triangle((i + 1), lattice_size) * lattice_size + j] ;
-        neighbors[1] = x[i * lattice_size + modulo_ising_triangle((i + 1) , lattice_size)] ;
+        neighbors[1] = x[i * lattice_size + modulo_ising_triangle((j + 1) , lattice_size)] ;
         neighbors[2] = x[modulo_ising_triangle((i + 1) , lattice_size) * lattice_size + modulo_ising_triangle((j + 1) , lattice_size)];
 
-        // for (neig=0; neig<6; neig++) {
-        //   result+= (x[i * lattice_size + j] * neighbors[neig]) + ((1- x[i * lattice_size + j])*(1- neighbors[neig]));
-        // }
         for (neig=0; neig<3; neig++) {
           result+= (x[i * lattice_size + j] * neighbors[neig]) + ((1- x[i * lattice_size + j])*(1- neighbors[neig]));
         }
