@@ -1,22 +1,22 @@
-/// \file f_ising_triangle.hpp
-/// \brief cpp file for class f_ising_triangle.
+/// \file f_ising_triangular.hpp
+/// \brief cpp file for class Ising_Triangular.
 ///
 /// A detailed file description.
 ///
 /// \author Naama Horesh and Furong Ye
 /// \date 2019-06-27
-#ifndef _F_ISING_TRIANGLE_H
-#define _F_ISING_TRIANGLE_H
+#ifndef _F_ISING_TRIANGULAR_H
+#define _F_ISING_TRIANGULAR_H
 
 #include "IOHprofiler_problem.hpp"
 
-class Ising_Triangle : public IOHprofiler_problem<int> {
+class Ising_Triangular : public IOHprofiler_problem<int> {
 public:
 
-  Ising_Triangle(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+  Ising_Triangular(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
 
     IOHprofiler_set_instance_id(instance_id);
-    IOHprofiler_set_problem_name("Ising_Triangle");
+    IOHprofiler_set_problem_name("Ising_Triangular");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
@@ -25,9 +25,9 @@ public:
     IOHprofiler_set_number_of_variables(dimension);
   }
 
-  ~Ising_Triangle() {}
+  ~Ising_Triangular() {}
 
-  int modulo_ising_triangle(int x,int N) {
+  int modulo_ising_triangular(int x,int N) {
     return (x % N + N) %N;
   }
 
@@ -40,9 +40,9 @@ public:
     
     for (i = 0; i < lattice_size; ++i) {
       for (j = 0; j < lattice_size; ++j) {
-        neighbors[0] = x[modulo_ising_triangle((i + 1), lattice_size) * lattice_size + j] ;
-        neighbors[1] = x[i * lattice_size + modulo_ising_triangle((j + 1) , lattice_size)] ;
-        neighbors[2] = x[modulo_ising_triangle((i + 1) , lattice_size) * lattice_size + modulo_ising_triangle((j + 1) , lattice_size)];
+        neighbors[0] = x[modulo_ising_triangular((i + 1), lattice_size) * lattice_size + j] ;
+        neighbors[1] = x[i * lattice_size + modulo_ising_triangular((j + 1) , lattice_size)] ;
+        neighbors[2] = x[modulo_ising_triangular((i + 1) , lattice_size) * lattice_size + modulo_ising_triangular((j + 1) , lattice_size)];
 
         for (neig=0; neig<3; neig++) {
           result+= (x[i * lattice_size + j] * neighbors[neig]) + ((1- x[i * lattice_size + j])*(1- neighbors[neig]));
@@ -52,8 +52,8 @@ public:
     return (double)result;
   }
 
-  static Ising_Triangle * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
-    return new Ising_Triangle(instance_id, dimension);
+  static Ising_Triangular * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+    return new Ising_Triangular(instance_id, dimension);
   }
 };
 
