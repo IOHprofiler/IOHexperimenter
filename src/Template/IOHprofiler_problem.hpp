@@ -60,13 +60,13 @@ public:
   ///
   /// The internal_evaluate function is to be used in evaluate function.
   /// This function must be decalred in derived function of new problems.
-  virtual double internal_evaluate (const std::vector<InputType> &x) {
+  virtual double internal_evaluate(const std::vector<InputType> &x) {
     double result = std::numeric_limits<double>::lowest();
     IOH_warning("No evaluate function defined");
     return result;
   }
 
-  virtual void prepare_problem() { /* OMS: why empty ? */
+  virtual void prepare_problem() { 
 
   }
 

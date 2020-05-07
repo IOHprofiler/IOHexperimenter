@@ -57,7 +57,6 @@ void IOHprofiler_random::IOHprofiler_uniform_rand(const size_t &N, const long &i
   }
   rand_vec.reserve(N);
 
-
   long rand_seed[32];
   long seed;
   long rand_value;
@@ -110,7 +109,7 @@ std::vector<double> IOHprofiler_random::IOHprofiler_gauss(const size_t N, const 
     seed = 1;
   }
 
-    IOHprofiler_uniform_rand(2 * N, seed,uniform_rand_vec);
+  IOHprofiler_uniform_rand(2 * N, seed,uniform_rand_vec);
 
   for (int i = 0; i < N; i++) {
     rand_vec.push_back(sqrt(-2 * log(uniform_rand_vec[i])) * cos(2 * IOH_PI * uniform_rand_vec[N + i]));

@@ -23,7 +23,7 @@ public:
   void _set_independent_runs(int n);
 
   void print_info(std::string info);
-  
+
   std::string vectorToString(std::vector<int> v);
 
 private:
