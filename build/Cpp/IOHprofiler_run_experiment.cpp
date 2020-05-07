@@ -53,9 +53,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int> > problem, 
   parameters.push_back(std::shared_ptr<double>(mutation_rate));
   std::vector<std::string> parameters_name;
   parameters_name.push_back("mutation_rate");
-  logger->set_parameters(parameters,parameters_name);
-  logger->set_attribute(parameters,parameters_name);
-  logger->add_attribute("test",1);
+  logger->set_parameters(parameters, parameters_name);
 
   x = Initialization(problem->IOHprofiler_get_number_of_variables());
   x_star = x;
@@ -103,7 +101,7 @@ void random_search(std::shared_ptr<IOHprofiler_problem<double> > problem, std::s
 void _run_experiment() {
   std::string configName = "./configuration.ini";
   /// An example for PBO suite.
-  IOHprofiler_experimenter<int> experimenter(configName,evolutionary_algorithm);
+  IOHprofiler_experimenter<int> experimenter(configName, evolutionary_algorithm);
 
   /// An exmaple for BBOB suite.
   /// IOHprofiler_experimenter<double> experimenter(configName, random_search);
