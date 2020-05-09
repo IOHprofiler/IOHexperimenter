@@ -8,7 +8,7 @@
 #ifndef _F_LABS_H
 #define _F_LABS_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 
 class LABS : public IOHprofiler_problem<int> {
 public:

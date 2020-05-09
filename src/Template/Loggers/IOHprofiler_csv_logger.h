@@ -1,15 +1,12 @@
-/// \file IOHprofiler_csv_logger.hpp
-/// \brief Hpp file for class IOHprofiler_csv_logger.
-///
-/// A detailed file description.
+/// \file IOHprofiler_csv_logger.h
+/// \brief Header file for class IOHprofiler_csv_logger.
 ///
 /// \author Furong Ye
-/// \date 2019-06-27
-#ifndef _IOHPROFILER_CSV_LOGGER_HPP
-#define _IOHPROFILER_CSV_LOGGER_HPP
+#ifndef _IOHPROFILER_CSV_LOGGER_H
+#define _IOHPROFILER_CSV_LOGGER_H
 
-#include "IOHprofiler_observer.hpp"
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_observer.h"
+#include "IOHprofiler_problem.h"
 
 /// \brief A class of logging csv files.
 ///
@@ -45,7 +42,13 @@ public:
 
   void delete_attribute(std::string);
 
+  /// \fn track_problem(int problem_id, int dimension, int instance)
+  ///
+  /// This function is to be invoked by IOHprofiler_problem class.
+  /// To update info of current working problem, and to write headline in corresponding files.
+
   void track_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const IOH_optimization_type maximization_minimization_flag);
+  
   
   void track_problem(const IOHprofiler_problem<int> & problem);
   
@@ -72,7 +75,6 @@ public:
   void set_parameters(const std::vector<std::shared_ptr<double> > &parameters, const std::vector<std::string> &parameters_name);
 
 private:
-
   // The information for directory.
   std::string folder_name;
   std::string output_directory;
@@ -121,12 +123,23 @@ private:
   
   /// \fn std::string IOHprofiler_experiment_folder_name()
   /// \brief return an available name of folder to be created.
+  ///
+  /// To create a name of the folder logging files.
+  /// If there exists a files or a folder with the same name, the expected 
+  /// directory will be renamed by adding a suffix.
+  /// For example,
+  ///     If a folder or file 'test' has already been in currect path, the 
+  ///     expected directory will be renamed as 'test-1', 'test-2', ... 
+  ///     until there is no such a folder or file. 
   std::string IOHprofiler_experiment_folder_name();
   
   int IOHprofiler_create_folder(const std::string path);
 
   bool header_flag; /// < parameters to track if the header line is logged.
   
+  /// \fn write_header()
+  ///
+  /// This function is to be invoked before recoring evaluations (if evaluations == 0).
   void write_header();
 
   void write_stream(const std::string buffer_string, std::fstream & dat_stream);
@@ -141,4 +154,4 @@ private:
   // std::shared_ptr<IOHprofiler_problem<double> > tracked_problem_double;
 };
 
-#endif //_IOHPROFILER_CSV_LOGGER_HPP
+#endif //_IOHPROFILER_CSV_LOGGER_H

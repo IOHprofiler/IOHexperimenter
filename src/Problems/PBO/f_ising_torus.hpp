@@ -8,7 +8,7 @@
 #ifndef _F_ISING_TWOD_H
 #define _F_ISING_TWOD_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 
 class Ising_Torus : public IOHprofiler_problem<int> {
 public:

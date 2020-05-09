@@ -1,11 +1,11 @@
 /// \file IOHprofiler_csv_logger.cpp
-/// \brief cpp file for class IOHprofiler_csv_logger.
+/// \brief cpp file for the class IOHprofiler_csv_logger.
 ///
 /// A detailed file description.
 ///
 /// \author Furong Ye
-/// \date 2019-06-27
-#include "IOHprofiler_csv_logger.hpp"
+
+#include "IOHprofiler_csv_logger.h"
 
 IOHprofiler_csv_logger::IOHprofiler_csv_logger() {
   this->output_directory = "./";
@@ -58,15 +58,6 @@ int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) {
   }
 }
 
-/// \fn std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name()
-///
-/// To create a name of the folder logging files.
-/// If there exists a files or a folder with the same name, the expected 
-/// directory will be renamed by adding a suffix.
-/// For example,
-///     If a folder or file 'test' has already been in currect path, the 
-///     expected directory will be renamed as 'test-1', 'test-2', ... 
-///     until there is no such a folder or file. 
 std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name() {
   std::string renamed_directory = this->output_directory + IOHprofiler_path_separator + this->folder_name;
   std::string temp_folder_name = this->folder_name;
@@ -81,9 +72,6 @@ std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name() {
   return renamed_directory;
 }
 
-/// \fn void IOHprofiler_csv_logger::write_header()
-///
-/// This function is to be invoked before recoring evaluations (if evaluations == 0).
 void IOHprofiler_csv_logger::write_header() {
   std::string sub_directory_name = this->output_directory + IOHprofiler_path_separator 
                         + this->folder_name + IOHprofiler_path_separator
@@ -159,10 +147,6 @@ void IOHprofiler_csv_logger::write_header() {
   }
 }
 
-/// \fn void IOHprofiler_csv_logger::track_problem(int problem_id, int dimension, int instance)
-///
-/// This function is to be invoked by IOHprofiler_problem class.
-/// To update info of current working problem, and to write headline in corresponding files.
 void IOHprofiler_csv_logger::track_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const IOH_optimization_type maximization_minimization_flag){
   /// Handle info of the previous problem.
   if (infoFile.is_open()) {
@@ -208,10 +192,6 @@ void IOHprofiler_csv_logger::track_problem(const int problem_id, const int dimen
 }
 
 
-/// \fn void IOHprofiler_csv_logger::track_problem(int problem_id, int dimension, int instance)
-///
-/// This function is to be invoked by IOHprofiler_problem class.
-/// To update info of current working problem, and to write headline in corresponding files.
 void IOHprofiler_csv_logger::track_problem(const IOHprofiler_problem<int> & problem) {
   // this->tracked_problem_int = nullptr;
   // this->tracked_problem_double = nullptr;
@@ -301,8 +281,7 @@ void IOHprofiler_csv_logger::write_line(const std::vector<double> & log_info) {
   this->write_line( (size_t)(log_info[0]),log_info[1],log_info[2],log_info[3],log_info[4]);
 };
 
-
-/// todo The precision of double values.
+/// \todo The precision of double values.
 void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y, const double best_so_far_y,
                  const double transformed_y, const double best_so_far_transformed_y) {
   if (header_flag == false) {
@@ -320,7 +299,6 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
   bool tdat_flag = time_points_trigger(evaluations);
 
   bool need_write =  cdat_flag || idat_flag || dat_flag || tdat_flag;
-
 
   if (need_write) {
     std::string written_line = _toString(evaluations) + " " + _toString(y) + " "
@@ -372,7 +350,7 @@ void IOHprofiler_csv_logger::write_line(const size_t evaluations, const double y
   if (compareObjectives(transformed_y,this->best_transformed_y[0],this->maximization_minimization_flag)) {
     this->update_logger_info(evaluations,y,transformed_y);
   }
-};
+}
 
 void IOHprofiler_csv_logger::openInfo(int problem_id, int dimension, std::string problem_name) {
   this->info_buffer = "";

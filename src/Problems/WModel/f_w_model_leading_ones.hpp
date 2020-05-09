@@ -6,7 +6,7 @@
 #ifndef _F_W_MODEL_LEADING_ONES_HPP
 #define _F_W_MODEL_LEADING_ONES_HPP
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "wmodels.hpp"
 
 class W_Model_LeadingOnes : public IOHprofiler_problem<int> {

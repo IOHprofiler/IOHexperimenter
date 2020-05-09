@@ -9,7 +9,7 @@
 #ifndef _F_SCHAFFERSTEN_HPP
 #define _F_SCHAFFERSTEN_HPP
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "coco_transformation.hpp"
 
 class Schaffers10 : public IOHprofiler_problem<double> {

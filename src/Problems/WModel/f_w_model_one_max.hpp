@@ -6,7 +6,7 @@
 #ifndef _F_W_MODEL_ONE_MAX_HPP
 #define _F_W_MODEL_ONE_MAX_HPP
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "wmodels.hpp"
 
 class W_Model_OneMax : public IOHprofiler_problem<int> {

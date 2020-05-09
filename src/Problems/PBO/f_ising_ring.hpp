@@ -8,7 +8,7 @@
 #ifndef _F_ISING_RING_H
 #define _F_ISING_RING_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 
 class Ising_Ring : public IOHprofiler_problem<int> {
 public:

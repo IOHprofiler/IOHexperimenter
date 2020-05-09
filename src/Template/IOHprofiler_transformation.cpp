@@ -1,14 +1,12 @@
+
 /// \file IOHprofiler_transformation.cpp
 /// \brief Cpp file for the class IOHprofiler_transformation.
 ///
 /// A detailed file description.
 ///
 /// \author Furong Ye
-/// \date 2019-06-27
-#ifndef IOHPROFILER_TRANSFORMATION_CPP
-#define IOHPROFILER_TRANSFORMATION_CPP
 
-#include "IOHprofiler_transformation.hpp"
+#include "IOHprofiler_transformation.h"
 
 void IOHprofiler_transformation::variables_transformation(std::vector<int> &x, const int problem_id, const int instance_id, const std::string problem_type) { 
   if (problem_type == "pseudo_Boolean_problem") {
@@ -116,4 +114,3 @@ void IOHprofiler_transformation::transform_obj_shift(double &y, const int seed) 
   shift[0] = shift[0] * 1e4 / 1e4 * 2000 - 1000;
   y = y + shift[0];
 }
-#endif //IOHPROFILER_TRANSFORMATION_CPP

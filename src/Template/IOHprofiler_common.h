@@ -129,4 +129,5 @@ template<class valueType> std::string _toString(const valueType v) {
   ss << v;
   return ss.str();
 }
+
 #endif //_IOHPROFILER_COMMON_HPP

@@ -32,7 +32,7 @@
 #include "f_MIS.hpp"
 #include "f_N_queens.hpp"
 
-#include "IOHprofiler_suite.hpp"
+#include "IOHprofiler_suite.h"
 
 class PBO_suite : public IOHprofiler_suite<int> {
 public:

@@ -9,7 +9,7 @@
 #ifndef _F_STEP_ELLIPSOID_HPP
 #define _F_STEP_ELLIPSOID_HPP
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "coco_transformation.hpp"
 
 class Step_Ellipsoid : public IOHprofiler_problem<double> {

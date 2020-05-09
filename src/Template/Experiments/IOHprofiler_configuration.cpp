@@ -2,11 +2,8 @@
 /// \brief Cpp file for the class of IOHprofiler_configuration.
 ///
 /// \author Furong Ye
-/// \date 2019-06-27
-#ifndef _IOHPROFILER_CONFIGURATION_CPP
-#define _IOHPROFILER_CONFIGURATION_CPP
 
-#include "IOHprofiler_configuration.hpp"
+#include "IOHprofiler_configuration.h"
 
 int IOHprofiler_configuration::set_Dict(_Dict &dict, const std::string section, const std::string key, const std::string value) {
   size_t i ;
@@ -267,4 +264,3 @@ int IOHprofiler_configuration::get_number_target_triggers() {
 int IOHprofiler_configuration::get_number_interval_triggers() {
   return this->number_interval_triggers;
 }
-#endif

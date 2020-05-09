@@ -1,13 +1,10 @@
 /// \file IOHprofiler_observer.cpp
-/// \brief Cpp file for class IOHprofiler_observer.
+/// \brief Cpp file for the class IOHprofiler_observer.
 ///
 /// \author Furong Ye
-/// \date 2019-06-27
-#ifndef _IOHPROFILER_OBSERVER_CPP
-#define _IOHPROFILER_OBSERVER_CPP
 
-#include "IOHprofiler_observer.hpp"
-  
+#include "IOHprofiler_observer.h"
+
 void IOHprofiler_observer::set_complete_flag(bool complete_flag) {
   this->observer_complete_flag = complete_flag;
 }
@@ -135,5 +132,3 @@ void IOHprofiler_observer::reset_observer(const IOH_optimization_type optimizati
   this->evaluations_value2 = 1;
   this->evaluations_expi = 0;
 }
-
-#endif //_IOHPROFILER_OBSERVER_CPP

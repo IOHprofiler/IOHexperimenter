@@ -8,7 +8,7 @@
 #ifndef _F_WEIERSTRASS_HPP
 #define _F_WEIERSTRASS_HPP
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "coco_transformation.hpp"
 
 /** @brief Number of summands in the Weierstrass problem. */

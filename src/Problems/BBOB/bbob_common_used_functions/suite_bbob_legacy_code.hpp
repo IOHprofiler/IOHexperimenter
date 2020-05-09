@@ -11,7 +11,8 @@
 #ifndef _SUITE_BBOB_LEGACY_CODE_HPP
 #define _SUITE_BBOB_LEGACY_CODE_HPP
 
-#include "IOHprofiler_random.hpp"
+#include "IOHprofiler_random.h"
+
 static const double coco_pi = 3.14159265358979323846;
 /** @brief Maximal dimension used in BBOB2009. */
 #define SUITE_BBOB2009_MAX_DIM 40

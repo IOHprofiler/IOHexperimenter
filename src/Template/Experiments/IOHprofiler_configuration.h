@@ -1,12 +1,12 @@
-/// \file IOHprofiler_configuration.hpp
+/// \file IOHprofiler_configuration.h
 /// \brief head file for the class of IOHprofiler_configuration.
 ///
 /// \author Furong Ye
-/// \date 2019-06-27
-#ifndef _IOHPROFILER_CONFIGURATION_HPP
-#define _IOHPROFILER_CONFIGURATION_HPP
+#ifndef _IOHPROFILER_CONFIGURATION_H
+#define _IOHPROFILER_CONFIGURATION_H
 
 #include "IOHprofiler_string.hpp"
+
 #define MAXLINESIZE 1024
 #define MAXKEYNUMBER 100
 
@@ -36,7 +36,6 @@ typedef enum _LINE_ {
 class IOHprofiler_configuration {
 public:
   IOHprofiler_configuration() {}
-
 
   int set_Dict(_Dict &dict, const std::string section, const std::string key, const std::string value);
 
@@ -82,7 +81,6 @@ public:
 
 private:
   std::string cfgFile = "configuration.ini";
-
   std::string suite_name;
   std::vector<int> problem_id;
   std::vector<int> instance_id;
@@ -97,4 +95,5 @@ private:
   int number_target_triggers;
   int number_interval_triggers;
 };
+
 #endif

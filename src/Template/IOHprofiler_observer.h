@@ -1,13 +1,12 @@
-/// \file IOHprofiler_observer.hpp
-/// \brief Hpp file for the class IOHprofiler_observer.
+/// \file IOHprofiler_observer.h
+/// \brief Header file for the class IOHprofiler_observer.
 ///
 /// \author Furong Ye
-/// \date 2019-06-27
-#ifndef _IOHPROFILER_OBSERVER_HPP
-#define _IOHPROFILER_OBSERVER_HPP
+#ifndef _IOHPROFILER_OBSERVER_H
+#define _IOHPROFILER_OBSERVER_H
 
-#include "IOHprofiler_common.hpp"
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_common.h"
+#include "IOHprofiler_problem.h"
 /// \brief A class of methods of setting triggers recording evaluations.
 ///
 /// Four methods is introduced here:
@@ -45,7 +44,6 @@ public:
   bool interval_status() const;
 
   bool interval_trigger(size_t evaluations) const;
-  
 
   void set_update_flag(bool update_flag);
 
@@ -66,7 +64,7 @@ public:
   virtual void track_problem(const IOHprofiler_problem<int> & problem) {}
   
   virtual void track_problem(const IOHprofiler_problem<double> & problem) {}
-  // Adding virtual functions for more IuputType IOHprofiler_problem.
+  /// \todo Adding virtual functions for more IuputType IOHprofiler_problem.
 
 private:
   int observer_interval; /// < variable for recording by a static interval.
@@ -84,7 +82,8 @@ private:
   int evaluations_expi; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
   int observer_time_points_exp_base2;
   
-  /// todo. Currently this is only for single objective optimization.
+  /// \todo Currently this is only for single objective optimization.
   double current_best_fitness;
 };
-#endif //_IOHPROFILER_OBSERVER_HPP
+
+#endif // _IOHPROFILER_OBSERVER_H

@@ -8,7 +8,7 @@
 #ifndef _F_NQUEENS_H
 #define _F_NQUEENS_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 
 class NQueens : public IOHprofiler_problem<int> {
 public:
