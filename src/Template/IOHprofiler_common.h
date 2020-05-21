@@ -33,12 +33,9 @@
 /// < Default dimension
 #define DEFAULT_DIMENSION 4
 
-<<<<<<< HEAD
 /// < Max buffer size
 #define MAX_BUFFER_SIZE 65534
 
-=======
->>>>>>> 75c3f3b... style: optim. type in enum + use numeric_limits
 enum IOH_optimization_type {Minimization=0, Maximization=1};
 
 void IOH_error(std::string error_info);

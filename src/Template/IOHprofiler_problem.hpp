@@ -1,5 +1,8 @@
 
 template <class InputType> double IOHprofiler_problem<InputType>::evaluate(std::vector<InputType> x) {
+  assert(this->raw_objectives.size() >= 1);
+  assert(this->transformed_objectives.size() == this->raw_objectives.size());
+
   ++this->evaluations;
 
   if(x.size() != this->number_of_variables) {
@@ -15,7 +18,8 @@ template <class InputType> double IOHprofiler_problem<InputType>::evaluate(std::
   }
 
   transformation.variables_transformation(x,this->problem_id,this->instance_id,this->problem_type);
-  this->raw_objectives[0] = internal_evaluate(x);
+
+  this->raw_objectives[0] = this->internal_evaluate(x);
 
   this->transformed_objectives[0] = this->raw_objectives[0];
 

@@ -30,11 +30,26 @@ endif()
 
 
 ######################################################################################
+# Dependencies
+######################################################################################
+
+option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python modules as if they were an IOH problem" OFF)
+if(ENABLE_PYTHON_PROBLEMS)
+    find_package(PythonLibs REQUIRED)
+    if(NOT PYTHONLIBS_FOUND)
+        message(FATAL_ERROR "You requested to build Python problems, but Python cannot be found")
+    else()
+        add_definitions(-DWITH_PYTHON_PROBLEMS)
+        include_directories(${PYTHON_INCLUDE_DIRS})
+    endif()
+endif()
+
+
+######################################################################################
 # Gather source files
 ######################################################################################
 
 # set source file directorys and prepare for adding libraries.
-<<<<<<< HEAD
 SET(PROBLEMS_BBOB_DIR "src/Problems/BBOB")
 FILE (GLOB PROBLEMS_BBOB_SRC "${PROBLEMS_BBOB_DIR}/*.hpp")
 FILE (GLOB PROBLEMS_BBOB_INCLUDE "${PROBLEMS_BBOB_DIR}/*.hpp")
@@ -54,6 +69,10 @@ FILE (GLOB PROBLEMS_PBO_INCLUDE "${PROBLEMS_PBO_DIR}/*.hpp" )
 SET(PROBLEMS_WMODEL_DIR "src/Problems/WModel")
 FILE (GLOB PROBLEMS_WMODEL_SRC  "${PROBLEMS_WMODEL_DIR}/*.hpp")
 FILE (GLOB PROBLEMS_WMODEL_INCLUDE  "${PROBLEMS_WMODEL_DIR}/*.hpp")
+
+SET(PROBLEMS_PYTHON_DIR "src/Problems/Python")
+FILE (GLOB PROBLEMS_PYTHON_SRC "")
+FILE (GLOB PROBLEMS_PYTHON_INCLUDE "${PROBLEMS_Python_DIR}/*.h" "${PROBLEMS_Python_DIR}/*.hpp")
 
 SET(SUITES_DIR "src/Suites")
 FILE (GLOB SUITES_SRC "${SUITES_DIR}/*.h" "${SUITES_DIR}/*.hpp")
@@ -78,6 +97,7 @@ SET(IOHEXPERIMENTER_SRC
   "${PROBLEMS_BBOB_COMMON_SRC}"
   "${PROBLEMS_PBO_SRC}"
   "${PROBLEMS_WMODEL_SRC}"
+  "${PROBLEMS_PYTHON_SRC}"
   "${SUITES_SRC}"
   "${TEMPLATE_SRC}"
   "${TEMPLATE_EXPERIMENTS_SRC}"
@@ -90,6 +110,7 @@ SET(IOHEXPERIMENTER_DIR
   "${PROBLEMS_BBOB_COMMON_DIR}"
   "${PROBLEMS_PBO_DIR}"
   "${PROBLEMS_WMODEL_DIR}"
+  "${PROBLEMS_PYTHON_DIR}"
   "${SUITES_DIR}"
   "${TEMPLATE_DIR}"
   "${TEMPLATE_EXPERIMENTS_DIR}"
@@ -102,11 +123,22 @@ SET(IOHEXPERIMENTER_INCLUDE
   "${PROBLEMS_BBOB_COMMON_INCLUDE}"
   "${PROBLEMS_PBO_INCLUDE}"
   "${PROBLEMS_WMODEL_INCLUDE}"
+  "${PROBLEMS_PYTHON_INCLUDE}"
   "${SUITES_INCLUDE}"
   "${TEMPLATE_INCLUDE}"
   "${TEMPLATE_EXPERIMENTS_INCLUDE}"
   "${TEMPLATE_LOGGERS_INCLUDE}"
 )
+
+if(ENABLE_PYTHON_PROBLEMS AND PYTHONLIBS_FOUND)
+    SET(PROBLEMS_PYTHON_DIR "src/Problems/Python")
+    # FILE(GLOB PROBLEMS_PYTHON_SRC  "${PROBLEMS_PYTHON_DIR}/*.cpp")
+    FILE(GLOB PROBLEMS_PYTHON_INCLUDE  "${PROBLEMS_PYTHON_DIR}/*.h")
+    FILE(GLOB PROBLEMS_PYTHON_INCLUDE  "${PROBLEMS_PYTHON_DIR}/*.hpp")
+
+    list(APPEND IOHEXPERIMENTER_SRC ${PROBLEMS_PYTHON_SRC})
+    list(APPEND IOHEXPERIMENTER_DIR ${PROBLEMS_PYTHON_DIR})
+endif()
 
 
 ######################################################################################
