@@ -28,7 +28,7 @@ public:
   ~Ising_Triangular() {}
 
   int modulo_ising_triangular(int x,int N) {
-    return (x % N + N) % N;
+    return (x % N + N) %N;
   }
 
   double internal_evaluate(const std::vector<int> &x) {
@@ -41,10 +41,10 @@ public:
     for (i = 0; i < lattice_size; ++i) {
       for (j = 0; j < lattice_size; ++j) {
         neighbors[0] = x[modulo_ising_triangular((i + 1), lattice_size) * lattice_size + j];
-        neighbors[1] = x[i * lattice_size + modulo_ising_triangular((j + 1) , lattice_size)];
+        neighbors[1] = x[i * lattice_size + modulo_ising_triangular((j + 1), lattice_size)];
         neighbors[2] = x[modulo_ising_triangular((i + 1) , lattice_size) * lattice_size + modulo_ising_triangular((j + 1), lattice_size)];
 
-        for (neig=0; neig<3; neig++) {
+        for (neig=0; neig < 3; neig++) {
           result += (x[i * lattice_size + j] * neighbors[neig]) - ((1 - x[i * lattice_size + j]) * (1 - neighbors[neig]));
         }
       }
