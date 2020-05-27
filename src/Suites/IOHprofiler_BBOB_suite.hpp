@@ -1,5 +1,5 @@
-/// \file IOHprofiler_BBOB_suite.cpp
-/// \brief cpp file for class IOHprofiler_BBOB_suite.
+/// \file IOHprofiler_BBOB_suite.hpp
+/// \brief HPP file for class IOHprofiler_BBOB_suite.
 ///
 /// A suite of bbob problems (24 problems, 1-100 instances, and dimension <= 100).
 ///
@@ -33,7 +33,7 @@
 #include "f_step_ellipsoid.hpp"
 #include "f_weierstrass.hpp"
 
-#include "IOHprofiler_suite.hpp"
+#include "IOHprofiler_suite.h"
 
 class BBOB_suite : public IOHprofiler_suite<double> {
 public:

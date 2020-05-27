@@ -9,8 +9,8 @@
 #ifndef _F_SCHWEFEL_HPP
 #define _F_SCHWEFEL_HPP
 
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
 class Schwefel : public IOHprofiler_problem<double> {
 public:
@@ -23,15 +23,11 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(420.96874633);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
 
   ~Schwefel() {}
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  }
   
   void prepare_problem() {
     std::vector<double> xopt,tmp1,tmp2;

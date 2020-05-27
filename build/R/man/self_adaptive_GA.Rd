@@ -25,6 +25,9 @@ self_adaptive_GA(dimension, obj_func, lambda_ = 10, budget = NULL,
 
 \item{target_hit}{Optional, function which enables early stopping if a target value is reached}
 }
+\value{
+A list containing the location (xopt) and value (fopt) of the optimal value found
+}
 \description{
 For easier use with the IOHexperimenter
 

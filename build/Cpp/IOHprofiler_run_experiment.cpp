@@ -1,4 +1,4 @@
-#include "src/IOHprofiler_experimenter.hpp"
+#include <IOHprofiler_experimenter.h>
 
 IOHprofiler_random random_generator(1);
 static int budget_scale = 100;
@@ -24,6 +24,18 @@ int mutation(std::vector<int> &x, double mutation_rate) {
   return result;
 }
 
+template<class InputType> double evaluate(std::shared_ptr<IOHprofiler_problem<InputType> > problem, std::shared_ptr<IOHprofiler_csv_logger> logger,const std::vector<InputType> &x) {
+  double result;
+  result = problem->evaluate(x);
+  if (problem->IOHprofiler_get_problem_type() == "pseudo_Boolean_problem") {
+    logger->do_log(problem->loggerInfo());
+  } else if (problem->IOHprofiler_get_problem_type() == "bbob") {
+    logger->do_log(problem->loggerCOCOInfo());
+  } else {
+    // Configure the format you want to log here
+  }
+  return result;
+}
 
 /// This is an (1+1)_EA with static mutation rate = 1/n.
 /// An example for discrete optimization problems, such as PBO suite.
@@ -37,24 +49,22 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int> > problem, 
   *mutation_rate = 1.0/problem->IOHprofiler_get_number_of_variables();
   int budget = budget_scale * problem->IOHprofiler_get_number_of_variables() * problem->IOHprofiler_get_number_of_variables();
 
-  std::vector<std::shared_ptr<double>> parameters;
+  std::vector<std::shared_ptr<double> > parameters;
   parameters.push_back(std::shared_ptr<double>(mutation_rate));
   std::vector<std::string> parameters_name;
   parameters_name.push_back("mutation_rate");
-  logger->set_parameters(parameters,parameters_name);
+  logger->set_parameters(parameters, parameters_name);
 
   x = Initialization(problem->IOHprofiler_get_number_of_variables());
   x_star = x;
-  y = problem->evaluate(x);
-  logger->write_line(problem->loggerInfo());
+  y = evaluate(problem,logger,x);
   best_value = y;
 
   int count = 0;
   while (count <= budget && !problem->IOHprofiler_hit_optimal()) {
     x = x_star;
     if (mutation(x,*mutation_rate)) {
-      y = problem->evaluate(x);
-      logger->write_line(problem->loggerInfo());
+      y = evaluate(problem,logger,x);
       count++;
     }
     if (y >= best_value) {
@@ -79,7 +89,7 @@ void random_search(std::shared_ptr<IOHprofiler_problem<double> > problem, std::s
     }
   
     y = problem->evaluate(x);
-    logger->write_line(problem->loggerCOCOInfo());
+    logger->do_log(problem->loggerCOCOInfo());
     count++;
 
     if(y > best_y) {
@@ -91,7 +101,7 @@ void random_search(std::shared_ptr<IOHprofiler_problem<double> > problem, std::s
 void _run_experiment() {
   std::string configName = "./configuration.ini";
   /// An example for PBO suite.
-  IOHprofiler_experimenter<int> experimenter(configName,evolutionary_algorithm);
+  IOHprofiler_experimenter<int> experimenter(configName, evolutionary_algorithm);
 
   /// An exmaple for BBOB suite.
   /// IOHprofiler_experimenter<double> experimenter(configName, random_search);

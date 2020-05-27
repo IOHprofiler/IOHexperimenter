@@ -12,7 +12,7 @@ random_search_PB(dim, obj_func, target_hit = function() {     FALSE },
   budget = NULL)
 
 random_search(dim, obj_func, target_hit = function() {     FALSE },
-  budget = NULL, lbound = -1, ubound = 1, maximize = T)
+  budget = NULL, lbound = -1, ubound = 1, maximize = TRUE)
 }
 \arguments{
 \item{IOHproblem}{An IOHproblem object}
@@ -31,6 +31,9 @@ random_search(dim, obj_func, target_hit = function() {     FALSE },
 
 \item{maximize}{Whether to perform maximization or minimization. 
 The function assumes minimization, achieved by inverting the obj_func when `maximize` is FALSE}
+}
+\value{
+A list containing the location (xopt) and value (fopt) of the optimal value found
 }
 \description{
 For easier use with the IOHexperimenter

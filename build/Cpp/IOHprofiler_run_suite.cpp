@@ -1,5 +1,5 @@
-#include "src/IOHprofiler_PBO_suite.hpp"
-#include "src/IOHprofiler_csv_logger.h"
+#include <IOHprofiler_PBO_suite.hpp>
+#include <IOHprofiler_csv_logger.h>
 
 std::vector<int> Initialization(int dimension) {
   std::vector<int> x;
@@ -34,7 +34,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, s
   x = Initialization(problem->IOHprofiler_get_number_of_variables());
   x_star = x;
   y = problem->evaluate(x);
-  logger->write_line(problem->loggerInfo());
+  logger->do_log(problem->loggerInfo());
   best_value = y;
 
   int count= 0;
@@ -42,7 +42,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int>> problem, s
     x = x_star;
     if (mutation(x,mutation_rate)) {
       y = problem->evaluate(x);
-      logger->write_line(problem->loggerInfo());
+      logger->do_log(problem->loggerInfo());
     }
     if (y > best_value) {
       best_value = y;
@@ -63,7 +63,6 @@ void _run_suite() {
   std::vector<int> instance_id ={1,2};
   std::vector<int> dimension = {100,200,300};
   PBO_suite pbo(problem_id,instance_id,dimension);
-  pbo.loadProblem();
   /// If no logger is added, there will be not any output files, but users
   /// can still get fitness values.
   std::vector<int> time_points{1,2,5};
@@ -72,13 +71,13 @@ void _run_suite() {
   logger->set_interval(2);
   logger->set_time_points(time_points,3);
   logger->activate_logger();
-  logger->target_suite(pbo.IOHprofiler_suite_get_suite_name());
+  logger->track_suite(pbo.IOHprofiler_suite_get_suite_name());
   
   std::shared_ptr<IOHprofiler_problem<int>> problem;
 
   /// Problems are tested one by one until 'get_next_problem' returns NULL.
   while ((problem = pbo.get_next_problem()) != nullptr) {
-    logger->target_problem(problem->IOHprofiler_get_problem_id(), 
+    logger->track_problem(problem->IOHprofiler_get_problem_id(), 
                           problem->IOHprofiler_get_number_of_variables(), 
                           problem->IOHprofiler_get_instance_id(),
                           problem->IOHprofiler_get_problem_name(),

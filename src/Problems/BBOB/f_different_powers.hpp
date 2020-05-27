@@ -8,8 +8,8 @@
 #ifndef _F_DIFFERENT_POWERS_HPP
 #define _F_DIFFERENT_POWERS_HPP
 
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
 class Different_Powers : public IOHprofiler_problem<double> {
 public:
@@ -22,15 +22,11 @@ public:
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
+  
   ~Different_Powers() {}
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  }
-
 
   void prepare_problem() {
     std::vector<double> xopt;
