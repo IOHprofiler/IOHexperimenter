@@ -44,8 +44,8 @@ public:
       for (j = 0; j < lattice_size; ++j) {
         neighbors[0]  = x[modulo_ising_torus(i + 1, lattice_size) * lattice_size + j];
         neighbors[1]  = x[i * lattice_size + modulo_ising_torus((j + 1) , lattice_size)];
-        for (neig=0; neig < 2; neig++) {
-          result+= (x[i*lattice_size + j] * neighbors[neig]) + ((1- x[i * lattice_size + j])*(1- neighbors[neig]));
+        for (neig = 0; neig < 2; neig++) {
+          result += (x[i*lattice_size + j] * neighbors[neig]) - ((1- x[i * lattice_size + j]) * (1- neighbors[neig]));
         }
       }
     }

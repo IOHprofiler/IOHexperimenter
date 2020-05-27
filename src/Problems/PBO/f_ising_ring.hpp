@@ -30,12 +30,12 @@ public:
   }
 
   double internal_evaluate(const std::vector<int> &x) {
-    int result= 0, n = x.size();
+    int result = 0, n = x.size();
 
     int neig;
     for (int i = 0; i < n; ++i) {
-      neig=x[modulo_ising_ring((i -1), n)];
-      result += ( (x[i]==neig) & 1);
+      neig = x[modulo_ising_ring((i - 1) , n)];
+      result += (x[i] * neig) - ((1 - x[i]) * (1 - neig));
     }
     return (double)result;
   }
