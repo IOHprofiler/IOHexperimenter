@@ -9,7 +9,7 @@
 #ifndef _F_LEADING_ONES_NEUTRALITY_H
 #define _F_LEADING_ONES_NEUTRALITY_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "wmodels.hpp"
 
 class LeadingOnes_Neutrality : public IOHprofiler_problem<int> {

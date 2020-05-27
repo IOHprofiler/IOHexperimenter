@@ -1,10 +1,11 @@
 #ifndef _IOHPROFILER_COMMON_CPP
 #define _IOHPROFILER_COMMON_CPP
 
-#include "IOHprofiler_common.hpp"
+#include "IOHprofiler_common.h"
 
+/// \todo Add specific code for errors.
 void IOH_error(std::string error_info) {
-  std::cout << "IOH_ERROR_INFO : " << error_info << std::endl;
+  std::cerr << "IOH_ERROR_INFO : " << error_info << std::endl;
   exit(1);
 }
 

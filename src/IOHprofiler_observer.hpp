@@ -1,13 +1,12 @@
-/// \file IOHprofiler_observer.hpp
-/// \brief Hpp file for the class IOHprofiler_observer.
+/// \file IOHprofiler_observer.h
+/// \brief Header file for the class IOHprofiler_observer.
 ///
 /// \author Furong Ye
-/// \date 2019-06-27
-#ifndef _IOHPROFILER_OBSERVER_HPP
-#define _IOHPROFILER_OBSERVER_HPP
+#ifndef _IOHPROFILER_OBSERVER_H
+#define _IOHPROFILER_OBSERVER_H
 
-#include "IOHprofiler_common.hpp"
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_common.h"
+#include "IOHprofiler_problem.h"
 /// \brief A class of methods of setting triggers recording evaluations.
 ///
 /// Four methods is introduced here:
@@ -45,12 +44,12 @@ public:
   bool interval_status() const;
 
   bool interval_trigger(size_t evaluations) const;
-  
+
   void set_update_flag(bool update_flag);
 
-  bool update_status() const;
+  bool update_trigger(double fitness, IOH_optimization_type optimization_type);
 
-  bool update_trigger(double fitness, int optimization_type);
+  bool update_status() const;
   
   void set_time_points(const std::vector<int> & time_points, const int number_of_evaluations, const int time_points_exp_base1 = 10, const int time_points_exp_base2 = 10);
 
@@ -58,21 +57,14 @@ public:
 
   bool time_points_trigger(size_t evaluations);
 
-  void reset_observer(const int optimization_type);
+  void reset_observer(const IOH_optimization_type optimization_type);
 
-  virtual void do_log() {}
+  virtual void do_log(const std::vector<double> &log_info) {}
 
-  virtual void track_problem(IOHprofiler_problem<int> & problem) {}
+  virtual void track_problem(const IOHprofiler_problem<int> & problem) {}
   
-  virtual void track_problem(IOHprofiler_problem<double> & problem) {}
-
-  // Updated here.
-  virtual void track_problem(std::shared_ptr< IOHprofiler_problem<int> >  problem) {}
-  
-  // Updated here.
-  virtual void track_problem(std::shared_ptr< IOHprofiler_problem<double> > problem) {}
-  
-  // Adding virtual functions for more IuputType IOHprofiler_problem.
+  virtual void track_problem(const IOHprofiler_problem<double> & problem) {}
+  /// \todo Adding virtual functions for more IuputType IOHprofiler_problem.
 
 private:
   int observer_interval; /// < variable for recording by a static interval.
@@ -90,7 +82,8 @@ private:
   int evaluations_expi; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
   int observer_time_points_exp_base2;
   
-  /// todo. Currently this is only for single objective optimization.
+  /// \todo Currently this is only for single objective optimization.
   double current_best_fitness;
 };
-#endif //_IOHPROFILER_OBSERVER_HPP
+
+#endif // _IOHPROFILER_OBSERVER_H

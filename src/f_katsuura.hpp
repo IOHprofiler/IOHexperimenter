@@ -9,7 +9,7 @@
 #ifndef _F_KATSUURA_H
 #define _F_KATSUURA_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "coco_transformation.hpp"
 
 class Katsuura : public IOHprofiler_problem<double> {

@@ -9,7 +9,7 @@
 #ifndef _F_ROSENBROCK_HPP
 #define _F_ROSENBROCK_HPP
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "coco_transformation.hpp"
 
 class Rosenbrock : public IOHprofiler_problem<double> {

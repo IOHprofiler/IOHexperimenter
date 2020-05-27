@@ -8,7 +8,7 @@
 #ifndef _F_BUECHE_RASTRIGIN_H
 #define _F_BUECHE_RASTRIGIN_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "coco_transformation.hpp"
 
 class Bueche_Rastrigin : public IOHprofiler_problem<double> {

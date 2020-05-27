@@ -1,14 +1,9 @@
 /// \file IOHprofiler_random.cpp
-/// \brief Cpp file for class IOHprofiler_random.
+/// \brief Cpp file for the class IOHprofiler_random.
 ///
 /// A detailed file description. The implementation refer to the work of NumBBO/CoCO team.
-///
-/// \author Furong Ye
-/// \date 2019-06-27
-#ifndef _IOHPROFILER_RANDOM_CPP
-#define _IOHPROFILER_RANDOM_CPP
 
-#include "IOHprofiler_random.hpp"
+#include "IOHprofiler_random.h"
 
 long IOHprofiler_random::a = RND_MULTIPLIER; /// < multiplier.
 long IOHprofiler_random::m = RND_MODULUS; /// < modulus.
@@ -56,7 +51,6 @@ void IOHprofiler_random::IOHprofiler_uniform_rand(const size_t &N, const long &i
     std::vector<double>().swap(rand_vec);
   }
   rand_vec.reserve(N);
-
 
   long rand_seed[32];
   long seed;
@@ -110,7 +104,7 @@ std::vector<double> IOHprofiler_random::IOHprofiler_gauss(const size_t N, const 
     seed = 1;
   }
 
-    IOHprofiler_uniform_rand(2 * N, seed,uniform_rand_vec);
+  IOHprofiler_uniform_rand(2 * N, seed,uniform_rand_vec);
 
   for (int i = 0; i < N; i++) {
     rand_vec.push_back(sqrt(-2 * log(uniform_rand_vec[i])) * cos(2 * IOH_PI * uniform_rand_vec[N + i]));
@@ -151,5 +145,3 @@ double IOHprofiler_random::IOHprofiler_normal_rand() { /* OMS: accessor - should
 #endif
   return normal;
 }
-
-#endif //_IOHPROFILER_RANDOM_CPP

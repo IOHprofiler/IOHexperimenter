@@ -1,41 +1,3 @@
-#ifndef _IOHPROFILER_EXPERIMENTER_HPP
-#define _IOHPROFILER_EXPERIMENTER_HPP
-
-#include "IOHprofiler_common.hpp"
-#include "IOHprofiler_all_suites.hpp"
-#include "IOHprofiler_csv_logger.hpp"
-#include "IOHprofiler_configuration.hpp"
-
-#include <ctime>
-
-template <class InputType> class IOHprofiler_experimenter {
-public:
-  typedef void _algorithm(std::shared_ptr<IOHprofiler_problem<InputType> >, std::shared_ptr<IOHprofiler_csv_logger> logger);
-
-  IOHprofiler_experimenter();
-  IOHprofiler_experimenter(std::string configFileName, _algorithm *algorithm);
-  IOHprofiler_experimenter(IOHprofiler_suite<InputType> suite, std::shared_ptr<IOHprofiler_csv_logger> csv_logger, _algorithm * algorithm);
-
-  ~IOHprofiler_experimenter(){};
-
-  void _run();
-  
-  void _set_independent_runs(int n);
-
-  void print_info(std::string info);
-  
-  std::string vectorToString(std::vector<int> v);
-
-private:
-  IOHprofiler_configuration conf;
-  std::shared_ptr<IOHprofiler_suite<InputType> > configSuite;
-  std::shared_ptr<IOHprofiler_problem<InputType> > current_problem;
-  std::shared_ptr<IOHprofiler_csv_logger> config_csv_logger;
-  int independent_runs = 1;
-
-  _algorithm *algorithm;
-};
-
 template <class InputType> IOHprofiler_experimenter<InputType>::IOHprofiler_experimenter(std::string configFileName, _algorithm *algorithm) {
   this->conf.readcfg(configFileName);
 
@@ -93,13 +55,11 @@ template <class InputType> void IOHprofiler_experimenter<InputType>::_run() {
     print_info(info);
 
 
-    //this->config_csv_logger->track_problem(current_problem->IOHprofiler_get_problem_id(), 
-                                            // current_problem->IOHprofiler_get_number_of_variables(), 
-                                            // current_problem->IOHprofiler_get_instance_id(),
-                                            // current_problem->IOHprofiler_get_problem_name(),
-                                            // current_problem->IOHprofiler_get_optimization_type());
-
-    this->config_csv_logger->track_problem(current_problem);
+    this->config_csv_logger->track_problem(current_problem->IOHprofiler_get_problem_id(), 
+                                            current_problem->IOHprofiler_get_number_of_variables(), 
+                                            current_problem->IOHprofiler_get_instance_id(),
+                                            current_problem->IOHprofiler_get_problem_name(),
+                                            current_problem->IOHprofiler_get_optimization_type());
 
     algorithm(current_problem,this->config_csv_logger);
     
@@ -148,4 +108,3 @@ template <class InputType> std::string IOHprofiler_experimenter<InputType>::vect
 
   return s;
 }
-#endif //_IOHPROFILER_EXPERIMENTER_HPP

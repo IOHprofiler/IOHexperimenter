@@ -9,7 +9,7 @@
 #ifndef _F_GALLAGHERONEZEROONE_H
 #define _F_GALLAGHERONEZEROONE_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "coco_transformation.hpp"
 
 typedef struct f_gallagher_permutation_t1{

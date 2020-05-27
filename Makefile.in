@@ -7,6 +7,7 @@ CC=g++
 build=build
 src=src
 
+header=${wildcard $(src)/*.h}
 hpp=${wildcard $(src)/*.hpp}
 cpp=${wildcard $(src)/*.cpp}
 obj=${patsubst $(src)/%.cpp, $(build)/%.o, $(cpp)}
