@@ -1,6 +1,6 @@
 import setuptools, sys, os, sysconfig, glob
 from pathlib import Path
-from shutil import copyfile
+from shutil import move
 from distutils.command.build import build
 
 class CustomBuild(build):
@@ -31,8 +31,8 @@ class CustomBuild(build):
         os.system(command)
         os.system('make')
         
-        copyfile('_IOHprofiler.so', 'IOHexperimenter/_IOHprofiler.so')
-        copyfile('IOHprofiler.py', 'IOHexperimenter/IOHprofiler.py')
+        move('_IOHprofiler.so', 'IOHexperimenter/_IOHprofiler.so')
+        move('IOHprofiler.py', 'IOHexperimenter/IOHprofiler.py')
 
         super().run()
 
@@ -44,7 +44,7 @@ setuptools.setup(
         'build': CustomBuild,
     },
     name="IOHexperimenter",
-    version="0.0.9.dev0",
+    version="0.1.0",
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
     description="The experimenter for Iterative Optimization Heuristic",

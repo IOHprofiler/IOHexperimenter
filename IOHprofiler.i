@@ -37,9 +37,9 @@
 %shared_ptr(LeadingOnes_Ruggedness3)
 %shared_ptr(LABS)
 %shared_ptr(MIS)
-%shared_ptr(Ising_1D)
-%shared_ptr(Ising_2D)
-%shared_ptr(Ising_Triangle)
+%shared_ptr(Ising_Ring)
+%shared_ptr(Ising_Torus)
+%shared_ptr(Ising_Triangular)
 %shared_ptr(NQueens)
 %shared_ptr(Concatenated_Trap)
 %shared_ptr(NK_Landscapes)
@@ -86,7 +86,7 @@
 #include "src/f_griewank_rosenbrock.hpp"
 #include "src/f_ising_ring.hpp"
 #include "src/f_ising_torus.hpp"
-#include "src/f_ising_triangle.hpp"
+#include "src/f_ising_triangular.hpp"
 #include "src/f_katsuura.hpp"
 #include "src/f_labs.hpp"
 #include "src/f_leading_ones_dummy1.hpp"
@@ -122,18 +122,18 @@
 #include "src/f_step_ellipsoid.hpp"
 #include "src/f_weierstrass.hpp"
 #include "src/IOHprofiler_BBOB_suite.hpp"
-#include "src/IOHprofiler_class_generator.hpp"
-#include "src/IOHprofiler_configuration.hpp"
-#include "src/IOHprofiler_experimenter.hpp"
-#include "src/IOHprofiler_observer.hpp"
+#include "src/IOHprofiler_class_generator.h"
+#include "src/IOHprofiler_configuration.h"
+#include "src/IOHprofiler_experimenter.h"
+#include "src/IOHprofiler_observer.h"
 #include "src/IOHprofiler_PBO_suite.hpp"
 #include "src/IOHprofiler_string.hpp"
-#include "src/IOHprofiler_suite.hpp"
-#include "src/IOHprofiler_transformation.hpp"
+#include "src/IOHprofiler_suite.h"
+#include "src/IOHprofiler_transformation.h"
 #include "src/suite_bbob_legacy_code.hpp"
 #include "src/wmodels.hpp"
-#include "src/IOHprofiler_csv_logger.hpp"
-#include "src/IOHprofiler_common.hpp"
+#include "src/IOHprofiler_csv_logger.h"
+#include "src/IOHprofiler_common.h"
 #include "src/IOHprofiler_platform.h"
 
 typedef unsigned int    uint32_t;
@@ -150,23 +150,23 @@ typedef  std::map<int, std::string> PROBLEM_ID_NAME;
 %template(intvec) std::vector<int>;
 %template(doublevec) std::vector<double>;
 
-%include "src/IOHprofiler_configuration.hpp"
-%include "src/IOHprofiler_experimenter.hpp"
-%include "src/IOHprofiler_observer.hpp"
+%include "src/IOHprofiler_configuration.h"
+%include "src/IOHprofiler_experimenter.h"
+%include "src/IOHprofiler_observer.h"
 
-%include "src/IOHprofiler_problem.hpp"
+%include "src/IOHprofiler_problem.h"
 %template(IOHprofiler_Problem_int) IOHprofiler_problem<int>;
 %template(IOHprofiler_Problem_double) IOHprofiler_problem<double>;
 %template(intProblemPtr) std::vector< std::shared_ptr< IOHprofiler_problem< int > > >;
 %template(doubleProblemPtr) std::vector< std::shared_ptr< IOHprofiler_problem< double > > >;
-%include "src/IOHprofiler_random.hpp"
+%include "src/IOHprofiler_random.h"
 %include "src/IOHprofiler_string.hpp"
 
-%include "src/IOHprofiler_transformation.hpp"
+%include "src/IOHprofiler_transformation.h"
 %include "src/suite_bbob_legacy_code.hpp"
 %include "src/wmodels.hpp"
-%include "src/IOHprofiler_csv_logger.hpp"
-%include "src/IOHprofiler_common.hpp"
+%include "src/IOHprofiler_csv_logger.h"
+%include "src/IOHprofiler_common.h"
 %include "src/IOHprofiler_platform.h"
 %include "src/coco_transformation_objs.hpp"
 %include "src/coco_transformation_vars.hpp"
@@ -182,9 +182,9 @@ typedef  std::map<int, std::string> PROBLEM_ID_NAME;
 %include "src/f_gallagher101.hpp"
 %include "src/f_gallagher21.hpp"
 %include "src/f_griewank_rosenbrock.hpp"
-%include "src/f_ising_1D.hpp"
-%include "src/f_ising_2D.hpp"
-%include "src/f_ising_triangle.hpp"
+%include "src/f_ising_ring.hpp"
+%include "src/f_ising_torus.hpp"
+%include "src/f_ising_triangular.hpp"
 %include "src/f_katsuura.hpp"
 %include "src/f_labs.hpp"
 %include "src/f_leading_ones_dummy1.hpp"
@@ -220,14 +220,12 @@ typedef  std::map<int, std::string> PROBLEM_ID_NAME;
 %include "src/f_step_ellipsoid.hpp"
 %include "src/f_weierstrass.hpp"
 
-%include "src/IOHprofiler_class_generator.hpp"
-
+%include "src/IOHprofiler_class_generator.h"
 %template (genericGenerator_int_problem) genericGenerator<IOHprofiler_problem<int> >;
 %template (genericGenerator_double_problem) genericGenerator<IOHprofiler_problem<double> >;
-%include "src/IOHprofiler_suite.hpp"
+%include "src/IOHprofiler_suite.h"
 %template(IOHprofiler_suite_int) IOHprofiler_suite< int >;
 %template(IOHprofiler_suite_double) IOHprofiler_suite< double >;
-
 
 %include "src/IOHprofiler_BBOB_suite.hpp"
 %include "src/IOHprofiler_PBO_suite.hpp"
