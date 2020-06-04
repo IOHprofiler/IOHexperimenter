@@ -9,35 +9,26 @@
 #ifndef _F_ONE_MAX_EPISTASIS_H
 #define _F_ONE_MAX_EPISTASIS_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "wmodels.hpp"
 
 class OneMax_Epistasis : public IOHprofiler_problem<int> {
 public:
-  OneMax_Epistasis() {
-    IOHprofiler_set_problem_name("OneMax_Epistasis");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-  }
-
-  OneMax_Epistasis(int instance_id, int dimension) {
-
+  OneMax_Epistasis(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("OneMax_Epistasis");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
   }
 
-  ~OneMax_Epistasis() {};
+  ~OneMax_Epistasis() {}
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
+  void customize_optimal() {
+    IOHprofiler_set_optimal(IOHprofiler_get_number_of_variables());
+  }
 
   double internal_evaluate(const std::vector<int> &x) {
     
@@ -48,15 +39,11 @@ public:
       result += new_variables[i];
     }
     return (double)result;
-  };
+  }
 
-  static OneMax_Epistasis * createInstance() {
-    return new OneMax_Epistasis();
-  };
-
-  static OneMax_Epistasis * createInstance(int instance_id, int dimension) {
+  static OneMax_Epistasis * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new OneMax_Epistasis(instance_id, dimension);
-  };
+  }
 };
 
 #endif

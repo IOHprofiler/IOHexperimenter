@@ -9,39 +9,28 @@
 #ifndef _F_SCHAFFERSTHOUSAND_HPP
 #define _F_SCHAFFERSTHOUSAND_HPP
 
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
 class Schaffers1000 : public IOHprofiler_problem<double> {
 public:
-  Schaffers1000() {
-    IOHprofiler_set_problem_name("Schaffers1000");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Schaffers1000(int instance_id, int dimension) {
+  Schaffers1000(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(18);
     IOHprofiler_set_problem_name("Schaffers1000");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Schaffers1000() {};
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
-
+  ~Schaffers1000() {}
 
   const double conditioning = 1000;
+  
   void prepare_problem() {
     std::vector<double> xopt;
     double fopt;
@@ -104,15 +93,11 @@ public:
     result[0] = pow(result[0] / ((double) (long) n - 1.0), 2.0);
 
     return result[0];
-  };
+  }
   
-  static Schaffers1000 * createInstance() {
-    return new Schaffers1000();
-  };
-
-  static Schaffers1000 * createInstance(int instance_id, int dimension) {
+  static Schaffers1000 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Schaffers1000(instance_id, dimension);
-  };
+  }
 };
 
 #endif

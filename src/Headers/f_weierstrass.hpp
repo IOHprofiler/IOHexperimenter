@@ -8,44 +8,34 @@
 #ifndef _F_WEIERSTRASS_HPP
 #define _F_WEIERSTRASS_HPP
 
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
 /** @brief Number of summands in the Weierstrass problem. */
 #define F_WEIERSTRASS_SUMMANDS 12
 
 class Weierstrass : public IOHprofiler_problem<double> {
 public:
-  Weierstrass() {
-    IOHprofiler_set_problem_name("Weierstrass");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(1);
-    IOHprofiler_set_as_minimization();
-  }
-  Weierstrass(int instance_id, int dimension) {
+  Weierstrass(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(16);
     IOHprofiler_set_problem_name("Weierstrass");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Weierstrass() {};
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
+  
+  ~Weierstrass() {}
 
   const double condition = 100.0;
   double f0;
   double ak[F_WEIERSTRASS_SUMMANDS];
   double bk[F_WEIERSTRASS_SUMMANDS];
+  
   void prepare_problem() {
 
     std::vector<double> xopt;
@@ -117,15 +107,11 @@ public:
     result[0] = 10.0 * pow(result[0] / (double) (long) n - f0, 3.0);
 
     return result[0];
-  };
-  
-  static Weierstrass * createInstance() {
-    return new Weierstrass();
-  };
+  }
 
-  static Weierstrass * createInstance(int instance_id, int dimension) {
+  static Weierstrass * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Weierstrass(instance_id, dimension);
-  };
+  }
 };
 
 #endif

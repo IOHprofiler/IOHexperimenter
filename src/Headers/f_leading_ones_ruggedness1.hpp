@@ -8,23 +8,13 @@
 #ifndef _F_LEADING_ONES_RUGGEDNESSONE_H
 #define _F_LEADING_ONES_RUGGEDNESSONE_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "wmodels.hpp"
 
 class LeadingOnes_Ruggedness1 : public IOHprofiler_problem<int> {
 public:
-   LeadingOnes_Ruggedness1() {
 
-
-    IOHprofiler_set_problem_name("LeadingOnes_Ruggedness1");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
-  }
-
-  LeadingOnes_Ruggedness1(int instance_id, int dimension) {
+  LeadingOnes_Ruggedness1(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
 
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("LeadingOnes_Ruggedness1");
@@ -33,15 +23,10 @@ public:
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
   }
   
-  ~LeadingOnes_Ruggedness1() {};
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-
-  };
+  ~LeadingOnes_Ruggedness1() {}
 
   double internal_evaluate(const std::vector<int> &x) {
     
@@ -56,15 +41,11 @@ public:
     }
     result = ruggedness1(result,n);
     return (double)result;
-  };
+  }
 
-  static LeadingOnes_Ruggedness1 * createInstance() {
-    return new LeadingOnes_Ruggedness1();
-  };
-
-  static LeadingOnes_Ruggedness1 * createInstance(int instance_id, int dimension) {
+  static LeadingOnes_Ruggedness1 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LeadingOnes_Ruggedness1(instance_id, dimension);
-  };
+  }
 };
 
 #endif

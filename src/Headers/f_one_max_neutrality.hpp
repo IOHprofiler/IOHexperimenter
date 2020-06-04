@@ -9,21 +9,12 @@
 #ifndef _F_ONE_MAX_NEUTRALITY_H
 #define _F_ONE_MAX_NEUTRALITY_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "wmodels.hpp"
 
 class OneMax_Neutrality : public IOHprofiler_problem<int> {
 public:
-  OneMax_Neutrality() {
-    IOHprofiler_set_problem_name("OneMax_Neutrality");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);  
-  }
-
-  OneMax_Neutrality(int instance_id, int dimension) {
+  OneMax_Neutrality(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
 
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("OneMax_Neutrality");
@@ -32,15 +23,11 @@ public:
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
-  }
-  
-  ~OneMax_Neutrality() {};
-
-  void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_optimal((double)ceil(dimension/3));
-  };
+  }
+  
+  ~OneMax_Neutrality() {}
 
   double internal_evaluate(const std::vector<int> &x) {
     
@@ -51,15 +38,11 @@ public:
       result += new_variables[i];
     }
     return (double)result;
-  };
+  }
 
-  static OneMax_Neutrality * createInstance() {
-    return new OneMax_Neutrality();
-  };
-
-  static OneMax_Neutrality * createInstance(int instance_id, int dimension) {
+  static OneMax_Neutrality * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new OneMax_Neutrality(instance_id, dimension);
-  };
+  }
 };
 
 #endif

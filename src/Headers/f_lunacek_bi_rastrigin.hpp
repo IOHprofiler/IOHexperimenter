@@ -9,38 +9,25 @@
 #ifndef _F_LUNACEK_BI_RASTRIGIN_HPP
 #define _F_LUNACEK_BI_RASTRIGIN_HPP
 
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
 class Lunacek_Bi_Rastrigin : public IOHprofiler_problem<double> {
 public:
-  Lunacek_Bi_Rastrigin() {
-    IOHprofiler_set_problem_name("Lunacek_Bi_Rastrigin");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Lunacek_Bi_Rastrigin(int instance_id, int dimension) {
+  Lunacek_Bi_Rastrigin(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(24);
     IOHprofiler_set_problem_name("Lunacek_Bi_Rastrigin");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Lunacek_Bi_Rastrigin() {};
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
-
-  
+  ~Lunacek_Bi_Rastrigin() {}
 
   void prepare_problem() {
     std::vector<double> xopt;
@@ -127,18 +114,12 @@ public:
     }
     result[0] = std::min(sum1, d * (double) n + s * sum2)
         + 10. * ((double) n - sum3) + 1e4 * penalty;
-
-
     return result[0];
-  };
-  
-  static Lunacek_Bi_Rastrigin * createInstance() {
-    return new Lunacek_Bi_Rastrigin();
-  };
+  }
 
-  static Lunacek_Bi_Rastrigin * createInstance(int instance_id, int dimension) {
+  static Lunacek_Bi_Rastrigin * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Lunacek_Bi_Rastrigin(instance_id, dimension);
-  };
+  }
 };
 
 #endif

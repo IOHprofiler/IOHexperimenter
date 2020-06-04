@@ -8,8 +8,8 @@ static void transform_vars_affine_evaluate_function(std::vector<double> &x,
                                                     const std::vector<double> &b) {
   size_t i, j;
   int number_of_variables = x.size();
-  double *cons_values;
-  int is_feasible;
+  // double *cons_values;
+  // int is_feasible;
   std::vector<double> temp_x = x;
   for (i = 0; i < number_of_variables; ++i) {
     /* data->M has problem->number_of_variables columns and inner_problem->number_of_variables rows. */

@@ -8,31 +8,25 @@
 #ifndef _F_NQUEENS_H
 #define _F_NQUEENS_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 
 class NQueens : public IOHprofiler_problem<int> {
 public:
-  NQueens() {
-    IOHprofiler_set_problem_name("NQueens");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-  }
-  NQueens(int instance_id, int dimension) {
+  NQueens(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("NQueens");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
-    Initilize_problem(dimension);
-  }
-  ~NQueens() {};
-
-  void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
-  };
+  }
+
+  ~NQueens() {}
+
+  void customize_optimal() {
+    IOHprofiler_set_optimal(sqrt(IOHprofiler_get_number_of_variables()));
+  }
 
   double _max(double element1 , double element2) {
     if (element1>element2) {
@@ -108,15 +102,11 @@ public:
     }
     result = (double) (number_of_queens_on_board - (C*raws_penalty) - (C*columns_penalty) -(C*k_penalty) - (C*l_penalty));
     return (double)result;
-  };
+  }
 
-  static NQueens * createInstance() {
-    return new NQueens();
-  };
-
-  static NQueens * createInstance(int instance_id, int dimension) {
+  static NQueens * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new NQueens(instance_id, dimension);
-  };
+  }
 };
 
 #endif

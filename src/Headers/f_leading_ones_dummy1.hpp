@@ -9,20 +9,12 @@
 #ifndef _F_LEADING_ONES_DUMMYONE_H
 #define _F_LEADING_ONES_DUMMYONE_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "wmodels.hpp"
 
 class LeadingOnes_Dummy1 : public IOHprofiler_problem<int> {
 public:
-   LeadingOnes_Dummy1() {
-    IOHprofiler_set_problem_name("LeadingOnes_Dummy1");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
-    IOHprofiler_set_number_of_objectives(1);
-  }
-  LeadingOnes_Dummy1(int instance_id, int dimension) {
+  LeadingOnes_Dummy1(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
 
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("LeadingOnes_Dummy1");
@@ -31,15 +23,11 @@ public:
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
-  }
-
-  ~LeadingOnes_Dummy1() {};
-
-  void Initilize_problem(int dimension) {
     IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_optimal(floor((double)(dimension * 0.5)));
-  };
+  }
+
+  ~LeadingOnes_Dummy1() {}
 
   std::vector<int> info;
   void prepare_problem() {
@@ -57,15 +45,11 @@ public:
       }
     }
     return (double)result;
-  };
+  }
 
-  static LeadingOnes_Dummy1 * createInstance() {
-    return new LeadingOnes_Dummy1();
-  };
-
-  static LeadingOnes_Dummy1 * createInstance(int instance_id, int dimension) {
+  static LeadingOnes_Dummy1 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LeadingOnes_Dummy1(instance_id, dimension);
-  };
+  }
 };
 
 #endif

@@ -1,5 +1,5 @@
-/// \file IOHprofiler_PBO_suite.cpp
-/// \brief cpp file for class IOHprofiler_PBO_suite.
+/// \file IOHprofiler_PBO_suite.h
+/// \brief Hpp file for class IOHprofiler_PBO_suite.
 ///
 /// A suite of Pseudo Boolean problems (23 problems, 1-100 instances, and dimension <= 20000).
 ///
@@ -26,13 +26,13 @@
 #include "f_leading_ones_ruggedness2.hpp"
 #include "f_leading_ones_ruggedness3.hpp"
 #include "f_labs.hpp"
-#include "f_ising_1D.hpp"
-#include "f_ising_2D.hpp"
-#include "f_ising_triangle.hpp"
+#include "f_ising_ring.hpp"
+#include "f_ising_torus.hpp"
+#include "f_ising_triangular.hpp"
 #include "f_MIS.hpp"
 #include "f_N_queens.hpp"
 
-#include "IOHprofiler_suite.hpp"
+#include "IOHprofiler_suite.h"
 
 class PBO_suite : public IOHprofiler_suite<int> {
 public:
@@ -53,7 +53,7 @@ public:
     IOHprofiler_set_suite_dimension(dimension);
     IOHprofiler_set_suite_name("PBO");
     registerProblem();
-  };
+  }
 
   PBO_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
     for (int i = 0; i < problem_id.size(); ++i) {
@@ -108,9 +108,9 @@ public:
     registerInFactory<IOHprofiler_problem<int>,MIS> regMIS("MIS");
     registerInFactory<IOHprofiler_problem<int>,LABS> regLABS("LABS");
     registerInFactory<IOHprofiler_problem<int>,NQueens> regNQueens("NQueens");
-    registerInFactory<IOHprofiler_problem<int>,Ising_1D> regIsing_1D("Ising_1D");
-    registerInFactory<IOHprofiler_problem<int>,Ising_2D> regIsing_2D("Ising_2D");
-    registerInFactory<IOHprofiler_problem<int>,Ising_Triangle> regIsing_Triangle("Ising_Triangle");
+    registerInFactory<IOHprofiler_problem<int>,Ising_Ring> regIsing_Ring("Ising_Ring");
+    registerInFactory<IOHprofiler_problem<int>,Ising_Torus> regIsing_Torus("Ising_Torus");
+    registerInFactory<IOHprofiler_problem<int>,Ising_Triangular> regIsing_Triangular("Ising_Triangular");
   
     mapIDTOName(1,"OneMax");
     mapIDTOName(2,"LeadingOnes");
@@ -131,19 +131,18 @@ public:
     mapIDTOName(17,"LeadingOnes_Ruggedness3");
     mapIDTOName(18,"LABS");
     mapIDTOName(22,"MIS");
-    mapIDTOName(19,"Ising_1D");
-    mapIDTOName(20,"Ising_2D");
-    mapIDTOName(21,"Ising_Triangle");
+    mapIDTOName(19,"Ising_Ring");
+    mapIDTOName(20,"Ising_Torus");
+    mapIDTOName(21,"Ising_Triangular");
     mapIDTOName(23,"NQueens");
-  };
+  }
 
   static PBO_suite * createInstance() {
     return new PBO_suite();
-  };
+  }
 
   static PBO_suite * createInstance(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
     return new PBO_suite(problem_id, instance_id, dimension);
-  };
+  }
 };
-
-#endif
+#endif //_IOHPROFILER_PBO_SUITE_H

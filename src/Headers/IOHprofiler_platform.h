@@ -5,11 +5,6 @@
 
 
 #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)
-  // Taken from http://tolstoy.newcastle.edu.au/R/e2/devel/06/11/1242.html
-  // Undefine the Realloc macro, which is defined by both R and by Windows stuff
-  #undef Realloc
-  // Also need to undefine the Free macro
-  #undef Free
   #include <windows.h>
   static const char *IOHprofiler_path_separator = "\\";
 #elif defined(__gnu_linux__)
@@ -33,7 +28,8 @@
   #include <sys/types.h>
   static const char *IOHprofiler_path_separator = "/";
 #else
-  #error Unknown platform
+  #include <sys/stat.h>
+  static const char *IOHprofiler_path_separator = "/";
 #endif
 
 /* Definitions needed for creating and removing directories */

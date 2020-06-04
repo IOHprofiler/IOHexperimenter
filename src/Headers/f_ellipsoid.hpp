@@ -8,38 +8,26 @@
 /// \date 2019-09-12
 #ifndef _F_ELLIPSOID_H
 #define _F_ELLIPSOID_H
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
 
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
 class Ellipsoid : public IOHprofiler_problem<double> {
 public:
-  Ellipsoid() {
-    IOHprofiler_set_problem_name("Ellipsoid");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Ellipsoid(int instance_id, int dimension) {
+  Ellipsoid(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(2);
     IOHprofiler_set_problem_name("Ellipsoid");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Ellipsoid() {};
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
-
+  
+  ~Ellipsoid() {}
   
   void prepare_problem() {
     std::vector<double> xopt;
@@ -70,15 +58,11 @@ public:
     }
 
     return result[0];
-  };
-  
-  static Ellipsoid * createInstance() {
-    return new Ellipsoid();
-  };
+  }
 
-  static Ellipsoid * createInstance(int instance_id, int dimension) {
+  static Ellipsoid * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Ellipsoid(instance_id, dimension);
-  };
+  }
 };
 
 #endif

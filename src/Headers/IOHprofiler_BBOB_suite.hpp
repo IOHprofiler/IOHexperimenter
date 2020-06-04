@@ -1,5 +1,5 @@
-/// \file IOHprofiler_BBOB_suite.cpp
-/// \brief cpp file for class IOHprofiler_BBOB_suite.
+/// \file IOHprofiler_BBOB_suite.hpp
+/// \brief HPP file for class IOHprofiler_BBOB_suite.
 ///
 /// A suite of bbob problems (24 problems, 1-100 instances, and dimension <= 100).
 ///
@@ -33,7 +33,7 @@
 #include "f_step_ellipsoid.hpp"
 #include "f_weierstrass.hpp"
 
-#include "IOHprofiler_suite.hpp"
+#include "IOHprofiler_suite.h"
 
 class BBOB_suite : public IOHprofiler_suite<double> {
 public:
@@ -98,7 +98,7 @@ public:
     registerInFactory<IOHprofiler_problem<double>,Rosenbrock_Rotated> regRosenbrock_Rotated("Rosenbrock_Rotated");
     registerInFactory<IOHprofiler_problem<double>,Ellipsoid_Rotated> regEllipsoid_Rotated("Ellipsoid_Rotated");
     registerInFactory<IOHprofiler_problem<double>,Discus> regDiscus("Discus");
-    registerInFactory<IOHprofiler_problem<double>,Bent_Ciger> regBent_Ciger("Bent_Ciger");
+    registerInFactory<IOHprofiler_problem<double>,Bent_Cigar> regBent_Ciger("Bent_Cigar");
     registerInFactory<IOHprofiler_problem<double>,Sharp_Ridge> regSharp_Ridge("Sharp_Ridge");
     registerInFactory<IOHprofiler_problem<double>,Different_Powers> regDifferent_Powers("Different_Powers");
     registerInFactory<IOHprofiler_problem<double>,Rastrigin_Rotated> regRastrigin_Rotated("Rastrigin_Rotated");
@@ -124,7 +124,7 @@ public:
     mapIDTOName(9,"Rosenbrock_Rotated");
     mapIDTOName(10,"Ellipsoid_Rotated");
     mapIDTOName(11,"Discus");
-    mapIDTOName(12,"Bent_Ciger");
+    mapIDTOName(12,"Bent_Cigar");
     mapIDTOName(13,"Sharp_Ridge");
     mapIDTOName(14,"Different_Powers");
     mapIDTOName(15,"Rastrigin_Rotated");

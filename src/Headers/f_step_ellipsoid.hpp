@@ -9,45 +9,33 @@
 #ifndef _F_STEP_ELLIPSOID_HPP
 #define _F_STEP_ELLIPSOID_HPP
 
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
 class Step_Ellipsoid : public IOHprofiler_problem<double> {
 public:
-  Step_Ellipsoid() {
-    IOHprofiler_set_problem_name("Step_Ellipsoid");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Step_Ellipsoid(int instance_id, int dimension) {
+  Step_Ellipsoid(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(7);
     IOHprofiler_set_problem_name("Step_Ellipsoid");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Step_Ellipsoid() {};
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
+  
+  ~Step_Ellipsoid() {}
 
   std::vector<double> xopt;
   double fopt;
   std::vector<std::vector<double> > rot1;
   std::vector<std::vector<double> > rot2;
-  std::vector<double> datax,dataxx;  
+  std::vector<double> datax,dataxx;
+  
   void prepare_problem() {
-
-
     /* compute xopt, fopt*/
     
     int n = this->IOHprofiler_get_number_of_variables();
@@ -115,15 +103,11 @@ public:
     result[0] = 0.1 * ((fabs(x1) * 1.0e-4) > result[0] ? (fabs(x1) * 1.0e-4) : result[0]) + penalty + fopt;
     
     return result[0];
-  };
-  
-  static Step_Ellipsoid * createInstance() {
-    return new Step_Ellipsoid();
-  };
+  }
 
-  static Step_Ellipsoid * createInstance(int instance_id, int dimension) {
+  static Step_Ellipsoid * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Step_Ellipsoid(instance_id, dimension);
-  };
+  }
 };
 
 #endif

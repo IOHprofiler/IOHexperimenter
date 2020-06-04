@@ -9,40 +9,28 @@
 #ifndef _F_RASTRIGIN_ROTATED_HPP
 #define _F_RASTRIGIN_ROTATED_HPP
 
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
 class Rastrigin_Rotated : public IOHprofiler_problem<double> {
 public:
-  Rastrigin_Rotated() {
-    IOHprofiler_set_problem_name("Rastrigin_Rotated");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Rastrigin_Rotated(int instance_id, int dimension) {
+  Rastrigin_Rotated(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(15);
     IOHprofiler_set_problem_name("Rastrigin_Rotated");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Rastrigin_Rotated() {};
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
-
+  ~Rastrigin_Rotated() {}
 
   void prepare_problem() {
-      std::vector<double> xopt;
+    std::vector<double> xopt;
     double fopt;
     std::vector<std::vector<double> > M;
     std::vector<double> b;
@@ -98,22 +86,18 @@ public:
       sum1 += cos(2.0 * coco_pi * x[i]);
       sum2 += x[i] * x[i];
     }
-    /* double check isinf*/
+    /* double check std::isinf*/
     if (std::isinf(sum2)) {
       return sum2;
     }
     result[0] = 10.0 * ((double) (long) n - sum1) + sum2;
 
     return result[0];
-  };
-  
-  static Rastrigin_Rotated * createInstance() {
-    return new Rastrigin_Rotated();
-  };
+  }
 
-  static Rastrigin_Rotated * createInstance(int instance_id, int dimension) {
+  static Rastrigin_Rotated * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Rastrigin_Rotated(instance_id, dimension);
-  };
+  }
 };
 
 #endif

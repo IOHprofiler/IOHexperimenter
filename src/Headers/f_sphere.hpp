@@ -9,37 +9,25 @@
 #ifndef _F_SPHERE_HPP_
 #define _F_SPHERE_HPP_
 
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
 class Sphere : public IOHprofiler_problem<double> {
 public:
-  Sphere() {
-    IOHprofiler_set_problem_name("Sphere");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Sphere(int instance_id, int dimension) {
+  Sphere(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(1);
     IOHprofiler_set_problem_name("Sphere");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Sphere() {};
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
-
+  ~Sphere() {}
 
   void prepare_problem() {
     /* compute xopt, fopt*/
@@ -52,7 +40,6 @@ public:
 
     Coco_Transformation_Data::fopt = fopt;
     Coco_Transformation_Data::xopt = xopt;
-    
   }
 
   double internal_evaluate(const std::vector<double> &x) {
@@ -66,15 +53,11 @@ public:
     }
     
     return result[0];
-  };
-  
-  static Sphere * createInstance() {
-    return new Sphere();
-  };
+  }
 
-  static Sphere * createInstance(int instance_id, int dimension) {
+  static Sphere * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Sphere(instance_id, dimension);
-  };
+  }
 };
 
 #endif

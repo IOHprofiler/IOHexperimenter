@@ -9,37 +9,25 @@
 #ifndef _F_SHARP_RIDGE_HPP
 #define _F_SHARP_RIDGE_HPP
 
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
 class Sharp_Ridge : public IOHprofiler_problem<double> {
 public:
-  Sharp_Ridge() {
-    IOHprofiler_set_problem_name("Sharp_Ridge");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Sharp_Ridge(int instance_id, int dimension) {
+  Sharp_Ridge(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(13);
     IOHprofiler_set_problem_name("Sharp_Ridge");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Sharp_Ridge() {};
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
-
+  ~Sharp_Ridge() {}
 
   void prepare_problem() {
     std::vector<double> xopt;
@@ -97,15 +85,11 @@ public:
     }
 
     return result[0];
-  };
-  
-  static Sharp_Ridge * createInstance() {
-    return new Sharp_Ridge();
-  };
+  }
 
-  static Sharp_Ridge * createInstance(int instance_id, int dimension) {
+  static Sharp_Ridge * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Sharp_Ridge(instance_id, dimension);
-  };
+  }
 };
 
 #endif

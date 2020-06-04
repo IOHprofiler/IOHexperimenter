@@ -8,32 +8,21 @@
 #ifndef _F_LABS_H
 #define _F_LABS_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 
 class LABS : public IOHprofiler_problem<int> {
 public:
-  LABS() {
-    IOHprofiler_set_problem_name("LABS");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-  }
-  LABS(int instance_id, int dimension) {
+  LABS(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("LABS");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
   }
   
-  ~LABS() {};
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
+  ~LABS() {}
 
   double correlation(const std::vector<int> x, const int n, int k)
   {
@@ -66,15 +55,11 @@ public:
     }
     result = (double)(n*n)/2.0/result;
     return (double)result;
-  };
-
-  static LABS * createInstance() {
-    return new LABS();
-  };
-
-  static LABS * createInstance(int instance_id, int dimension) {
+  }
+  
+  static LABS * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new LABS(instance_id, dimension);
-  };
+  }
 };
 
 #endif

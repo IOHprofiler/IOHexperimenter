@@ -9,21 +9,13 @@
 #ifndef _F_ONE_MAX_DUMMYTWO_H
 #define _F_ONE_MAX_DUMMYTWO_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "wmodels.hpp"
 
 class OneMax_Dummy2 : public IOHprofiler_problem<int> {
 public:
-  OneMax_Dummy2() {
-    IOHprofiler_set_problem_name("OneMax_Dummy2");
-    IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(0);
-    IOHprofiler_set_upperbound(1);
-    IOHprofiler_set_best_variables(1);
-  }
   
-  OneMax_Dummy2(int instance_id, int dimension) {
+  OneMax_Dummy2(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
 
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("OneMax_Dummy2");
@@ -32,16 +24,11 @@ public:
     IOHprofiler_set_lowerbound(0);
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
+    IOHprofiler_set_optimal(floor((double)(dimension * 0.9)));
   }
 
   ~OneMax_Dummy2() {};
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-    IOHprofiler_set_optimal(floor((double)(dimension * 0.9)));
-  };
-
   
   std::vector<int> info;
   void prepare_problem() {
@@ -55,15 +42,11 @@ public:
       result += x[this->info[i]];
     }
     return (double)result;
-  };
+  }
 
-  static OneMax_Dummy2 * createInstance() {
-    return new OneMax_Dummy2();
-  };
-
-  static OneMax_Dummy2 * createInstance(int instance_id, int dimension) {
+  static OneMax_Dummy2 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new OneMax_Dummy2(instance_id, dimension);
-  };
+  }
 };
 
 #endif

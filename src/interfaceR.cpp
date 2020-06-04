@@ -149,7 +149,7 @@ List cpp_get_next_problem() {
       return NULL;
     }
     if (currentLogger != nullptr) {
-      currentLogger->target_problem(currentIntProblem->IOHprofiler_get_problem_id(), 
+      currentLogger->track_problem(currentIntProblem->IOHprofiler_get_problem_id(), 
                                     currentIntProblem->IOHprofiler_get_number_of_variables(), 
                                     currentIntProblem->IOHprofiler_get_instance_id(),
                                     currentIntProblem->IOHprofiler_get_problem_name(),
@@ -163,7 +163,7 @@ List cpp_get_next_problem() {
       return NULL;
     }
     if (currentLogger != nullptr) {
-      currentLogger->target_problem(currentDoubleProblem->IOHprofiler_get_problem_id(), 
+      currentLogger->track_problem(currentDoubleProblem->IOHprofiler_get_problem_id(), 
                                     currentDoubleProblem->IOHprofiler_get_number_of_variables(), 
                                     currentDoubleProblem->IOHprofiler_get_instance_id(),
                                     currentDoubleProblem->IOHprofiler_get_problem_name(),
@@ -181,7 +181,7 @@ List cpp_reset_problem() {
   if (currentSuiteName == "PBO" && currentIntSuite != nullptr) {
     currentIntProblem = currentIntSuite->get_current_problem();
     if (currentLogger != nullptr && currentIntProblem != nullptr) {
-      currentLogger->target_problem(currentIntProblem->IOHprofiler_get_problem_id(), 
+      currentLogger->track_problem(currentIntProblem->IOHprofiler_get_problem_id(), 
                                     currentIntProblem->IOHprofiler_get_number_of_variables(), 
                                     currentIntProblem->IOHprofiler_get_instance_id(),
                                     currentIntProblem->IOHprofiler_get_problem_name(),
@@ -191,7 +191,7 @@ List cpp_reset_problem() {
   } else if (currentSuiteName == "BBOB" && currentDoubleSuite != nullptr) {
     currentDoubleProblem = currentDoubleSuite->get_current_problem();
     if (currentLogger != nullptr && currentDoubleProblem != nullptr) {
-      currentLogger->target_problem(currentDoubleProblem->IOHprofiler_get_problem_id(), 
+      currentLogger->track_problem(currentDoubleProblem->IOHprofiler_get_problem_id(), 
                                     currentDoubleProblem->IOHprofiler_get_number_of_variables(), 
                                     currentDoubleProblem->IOHprofiler_get_instance_id(),
                                     currentDoubleProblem->IOHprofiler_get_problem_name(),
@@ -298,7 +298,7 @@ int cpp_logger_target_suite() {
     return 1;
   } else if ((currentSuiteName == "PBO" && currentIntSuite != nullptr) || 
     (currentSuiteName == "BBOB" && currentDoubleSuite != nullptr))  {
-    currentLogger->target_suite(currentSuiteName);
+    currentLogger->track_suite(currentSuiteName);
     return 0;
   } else {
     Rcout << "Error! No suite exists.\n";

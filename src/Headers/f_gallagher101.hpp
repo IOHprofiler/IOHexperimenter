@@ -9,9 +9,8 @@
 #ifndef _F_GALLAGHERONEZEROONE_H
 #define _F_GALLAGHERONEZEROONE_H
 
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
-
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
 typedef struct f_gallagher_permutation_t1{
   double value;
@@ -24,7 +23,7 @@ typedef struct f_gallagher_permutation_t1{
 //     return true;
 //   else
 //     return false;
-// };
+// }
 
 static int f_gallagher_compare_doubles1(const void *a, const void *b) {
   double temp = (*(f_gallagher_permutation_t1 *) a).value - (*(f_gallagher_permutation_t1 *) b).value;
@@ -34,39 +33,27 @@ static int f_gallagher_compare_doubles1(const void *a, const void *b) {
     return -1;
   else
     return 0;
-};
+}
 
 
 class Gallagher101 : public IOHprofiler_problem<double> {
 public:
-  Gallagher101() {
-    IOHprofiler_set_problem_name("Gallagher101");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Gallagher101(int instance_id, int dimension) {
+  Gallagher101(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(21);
     IOHprofiler_set_problem_name("Gallagher101");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Gallagher101() {};
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
+  ~Gallagher101() {}
 
   std::vector<double> xopt;
-
   const size_t number_of_peaks = 101;
   std::vector<std::vector<double> > rotation;
   std::vector<std::vector<double> > arr_scales;
@@ -169,8 +156,7 @@ public:
      
     fopt = bbob2009_compute_fopt(21, this->IOHprofiler_get_instance_id());
     Coco_Transformation_Data::fopt = fopt;
-  };
-
+  }
 
   double internal_evaluate(const std::vector<double> &x) {
     int n = x.size();
@@ -229,15 +215,11 @@ public:
     result[0] = f_true;
    
     return result[0];
-  };
-  
-  static Gallagher101 * createInstance() {
-    return new Gallagher101();
-  };
+  }
 
-  static Gallagher101 * createInstance(int instance_id, int dimension) {
+  static Gallagher101 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Gallagher101(instance_id, dimension);
-  };
+  }
 };
 
 #endif

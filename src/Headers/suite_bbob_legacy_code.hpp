@@ -11,7 +11,8 @@
 #ifndef _SUITE_BBOB_LEGACY_CODE_HPP
 #define _SUITE_BBOB_LEGACY_CODE_HPP
 
-#include "IOHprofiler_random.hpp"
+#include "IOHprofiler_random.h"
+
 static const double coco_pi = 3.14159265358979323846;
 /** @brief Maximal dimension used in BBOB2009. */
 #define SUITE_BBOB2009_MAX_DIM 40
@@ -136,7 +137,7 @@ static void bbob2009_compute_rotation(std::vector<std::vector<double> > &B, cons
 
 static void bbob2009_copy_rotation_matrix(const std::vector<std::vector<double> > &rot, std::vector<std::vector<double> > &M, std::vector<double> &b, const size_t DIM) {
   size_t row, column;
-  double *current_row;
+  // double *current_row;
 
   for (row = 0; row < DIM; ++row) {
     for (column = 0; column < DIM; ++column) {

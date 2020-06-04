@@ -1,5 +1,5 @@
-/// \file f_Bent_Ciger.hpp
-/// \brief cpp file for class f_Bent_Ciger.
+/// \file f_bent_cigar.hpp
+/// \brief cpp file for class f_Bent_Cigar.
 ///
 /// A detailed file description.
 /// Refer "https://github.com/numbbo/coco/blob/master/code-experiments/src/f_bent_cigar.c"
@@ -9,37 +9,25 @@
 #ifndef _F_BENT_CIGAR_H
 #define _F_BENT_CIGAR_H
 
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
-class Bent_Ciger : public IOHprofiler_problem<double> {
+class Bent_Cigar : public IOHprofiler_problem<double> {
 public:
-  Bent_Ciger() {
-    IOHprofiler_set_problem_name("Bent_Ciger");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Bent_Ciger(int instance_id, int dimension) {
+  Bent_Cigar(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
-    IOHprofiler_set_problem_name("Bent_Ciger");
+    IOHprofiler_set_problem_id(12);   
+    IOHprofiler_set_problem_name("Bent_Cigar");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Bent_Ciger() {};
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
-
+  
+  ~Bent_Cigar() {};
 
   void prepare_problem() {
     std::vector<double> xopt;
@@ -83,15 +71,11 @@ public:
     }
 
     return result[0];
-  };
+  }
   
-  static Bent_Ciger * createInstance() {
-    return new Bent_Ciger();
-  };
-
-  static Bent_Ciger * createInstance(int instance_id, int dimension) {
-    return new Bent_Ciger(instance_id, dimension);
-  };
+  static Bent_Cigar * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+    return new Bent_Cigar(instance_id, dimension);
+  }
 };
 
 #endif

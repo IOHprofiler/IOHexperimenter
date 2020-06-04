@@ -9,38 +9,26 @@
 #ifndef _F_ROSENBROCK_HPP
 #define _F_ROSENBROCK_HPP
 
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
 class Rosenbrock : public IOHprofiler_problem<double> {
 public:
-  Rosenbrock() {
-    IOHprofiler_set_problem_name("Rosenbrock");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(1);
-    IOHprofiler_set_as_minimization();
-  }
-  Rosenbrock(int instance_id, int dimension) {
+  Rosenbrock(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(8);
     IOHprofiler_set_problem_name("Rosenbrock");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(1);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Rosenbrock() {};
 
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
+  ~Rosenbrock() {}
 
- 
   void prepare_problem() {
     std::vector<double> xopt;
     std::vector<double> minus_one;
@@ -62,7 +50,7 @@ public:
     Coco_Transformation_Data::xopt = xopt;
     Coco_Transformation_Data::factor = factor;
     Coco_Transformation_Data::fopt = fopt;
-  };
+  }
 
   double internal_evaluate(const std::vector<double> &x) {
     int n = x.size();
@@ -79,15 +67,11 @@ public:
     result[0] = 100.0 * s1 + s2;
 
     return result[0];
-  };
-  
-  static Rosenbrock * createInstance() {
-    return new Rosenbrock();
-  };
+  }
 
-  static Rosenbrock * createInstance(int instance_id, int dimension) {
+  static Rosenbrock * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Rosenbrock(instance_id, dimension);
-  };
+  }
 };
 
 #endif

@@ -8,37 +8,25 @@
 #ifndef _F_DIFFERENT_POWERS_HPP
 #define _F_DIFFERENT_POWERS_HPP
 
-#include "IOHprofiler_problem.hpp"
-#include "coco_transformation.h"
+#include "IOHprofiler_problem.h"
+#include "coco_transformation.hpp"
 
 class Different_Powers : public IOHprofiler_problem<double> {
 public:
-  Different_Powers() {
-    IOHprofiler_set_problem_name("Different_Powers");
-    IOHprofiler_set_problem_type("bbob");
-    IOHprofiler_set_number_of_objectives(1);
-    IOHprofiler_set_lowerbound(-5.0);
-    IOHprofiler_set_upperbound(5.0);
-    IOHprofiler_set_best_variables(0);
-    IOHprofiler_set_as_minimization();
-  }
-  Different_Powers(int instance_id, int dimension) {
+  Different_Powers(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     IOHprofiler_set_instance_id(instance_id);
+    IOHprofiler_set_problem_id(14);
     IOHprofiler_set_problem_name("Different_Powers");
     IOHprofiler_set_problem_type("bbob");
     IOHprofiler_set_number_of_objectives(1);
     IOHprofiler_set_lowerbound(-5.0);
     IOHprofiler_set_upperbound(5.0);
     IOHprofiler_set_best_variables(0);
-    Initilize_problem(dimension);
+    IOHprofiler_set_number_of_variables(dimension);
     IOHprofiler_set_as_minimization();
   }
-  ~Different_Powers() {};
-
-  void Initilize_problem(int dimension) {
-    IOHprofiler_set_number_of_variables(dimension);
-  };
-
+  
+  ~Different_Powers() {}
 
   void prepare_problem() {
     std::vector<double> xopt;
@@ -67,6 +55,7 @@ public:
     Coco_Transformation_Data::M = M;
     Coco_Transformation_Data::b = b;
   }
+
   double internal_evaluate(const std::vector<double> &x) {
     size_t i;
     double sum = 0.0;
@@ -80,15 +69,11 @@ public:
     result[0] = sqrt(sum);
 
     return result[0];
-  };
-  
-  static Different_Powers * createInstance() {
-    return new Different_Powers();
-  };
+  }
 
-  static Different_Powers * createInstance(int instance_id, int dimension) {
+  static Different_Powers * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
     return new Different_Powers(instance_id, dimension);
-  };
+  }
 };
 
 #endif

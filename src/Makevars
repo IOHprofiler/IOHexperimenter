@@ -1,5 +1,4 @@
-PKG_CPPFLAGS = -I../inst/include
+PKG_CPPFLAGS = -I./Headers
 CXX_STD = CXX11
-PKG_LIBS=-L"C:/program files/boost/lib" -lboost_filesystem -lboost_system
 
  
