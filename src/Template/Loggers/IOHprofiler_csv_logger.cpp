@@ -27,13 +27,21 @@ IOHprofiler_csv_logger::~IOHprofiler_csv_logger() {
 }
 
 bool IOHprofiler_csv_logger::folder_exist(std::string folder_name) {
-  std::fstream _file;
-  _file.open(folder_name, std::ios::in);
-  if(!_file) {
-    return false;
-  } else {
-    return true;
-  }
+  #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)
+    DWORD ftyp = GetFileAttributesA(folder_name.c_str());
+    if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
+      return true;
+    else
+      return false;
+  #else
+    std::fstream _file;
+    _file.open(folder_name, std::ios::in);
+    if(!_file) {
+      return false;
+    } else {
+      return true;
+    }
+  #endif
 }
 
 void IOHprofiler_csv_logger::activate_logger() {
