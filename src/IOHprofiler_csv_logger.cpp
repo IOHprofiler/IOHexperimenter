@@ -27,25 +27,6 @@ IOHprofiler_csv_logger::~IOHprofiler_csv_logger() {
 }
 
 bool IOHprofiler_csv_logger::folder_exist(std::string folder_name) {
-  std::fstream _file;
-  _file.open(folder_name, std::ios::in);
-  if(!_file) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
-void IOHprofiler_csv_logger::activate_logger() {
-  openIndex();
-}
-
-int IOHprofiler_csv_logger::openIndex() { 
-  std::string experiment_folder_name = IOHprofiler_experiment_folder_name();
-  return IOHprofiler_create_folder(experiment_folder_name);
-}
-
-int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) { 
   // #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)
   //   DWORD ftyp = GetFileAttributesA(folder_name.c_str());
   //   if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
@@ -84,6 +65,28 @@ int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) {
       return false;
     }
   #endif
+}
+
+void IOHprofiler_csv_logger::activate_logger() {
+  openIndex();
+}
+
+int IOHprofiler_csv_logger::openIndex() { 
+  std::string experiment_folder_name = IOHprofiler_experiment_folder_name();
+  return IOHprofiler_create_folder(experiment_folder_name);
+}
+
+int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) { 
+#if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)  
+  if (mkdir(folder_name.c_str()) == 0) {
+#else
+  if (mkdir(folder_name.c_str(),S_IRWXU) == 0) {
+#endif
+    return 1;
+  } else {
+    IOH_error("Error on creating directory" + folder_name);
+    return 0;
+  }
 }
 
 std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name() {
