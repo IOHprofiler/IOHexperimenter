@@ -29,7 +29,7 @@ std::shared_ptr<IOHprofiler_suite<double> > currentDoubleSuite;
 std::shared_ptr<IOHprofiler_problem<double> > currentDoubleProblem;
 std::string currentSuiteName;
 std::shared_ptr<IOHprofiler_csv_logger> currentLogger;
-std::vector<std::shared_ptr<double> > currentParameters;
+//std::vector<std::shared_ptr<double> > currentParameters;
 
 //[[Rcpp::export]]
 int cpp_init_suite(String suite_name, const std::vector<int> &problem_id, const std::vector<int> &instance_id, const std::vector<int> &dimension) {
@@ -308,34 +308,23 @@ int cpp_logger_target_suite() {
 
 
 //[[Rcpp::export]]
-int cpp_set_parameters_name(const std::vector<std::string> &parameters_name) {
+int cpp_set_parameters(const std::vector<std::string> &parameters_name) {
   if (currentLogger == nullptr) {
     Rcout << "Error! No logger exists.\n";
     return 1;
   }
-
-  if (currentParameters.size() != 0) {
-    currentParameters.clear();
-  }
-  for (int i = 0; i != parameters_name.size(); ++i) {
-    currentParameters.push_back(std::make_shared<double>(0));
-  }
-  currentLogger->set_parameters(currentParameters,parameters_name);
+  currentLogger->set_parameters(parameters_name);
   return 0;
 }
 
 //[[Rcpp::export]]
-int cpp_set_parameters_value(const std::vector<double> & parameters) {
-  if (parameters.size() != currentParameters.size()) {
-    Rcout << "Error! The number of parameters does not match.\n";
+int cpp_set_parameters(const std::vector<double> & parameters, const std::vector<string> & parameters_name) {
+  if (currentLogger == nullptr) {
+    Rcout << "Error! No logger exists.\n";
     return 1;
   }
-  else {
-    for (int i = 0; i != parameters.size(); ++i) {
-      *currentParameters[i] = parameters[i];
-    }
-    return 0;
-  }
+  currentLogger->set_parameters(parameters,parameters_name);
+  return 0;
 }
 
 //[[Rcpp::export]]
