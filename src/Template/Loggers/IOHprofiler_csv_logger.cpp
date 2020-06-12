@@ -27,19 +27,42 @@ IOHprofiler_csv_logger::~IOHprofiler_csv_logger() {
 }
 
 bool IOHprofiler_csv_logger::folder_exist(std::string folder_name) {
+  // #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)
+  //   DWORD ftyp = GetFileAttributesA(folder_name.c_str());
+  //   if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
+  //     return true;
+  //   else
+  //     return false;
+  // #else
+  //   std::fstream _file;
+  //   _file.open(folder_name, std::ios::in);
+  //   if(!_file) {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // #endif
+  
+  // Check for existence.
   #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)
-    DWORD ftyp = GetFileAttributesA(folder_name.c_str());
-    if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
-      return true;
-    else
-      return false;
-  #else
-    std::fstream _file;
-    _file.open(folder_name, std::ios::in);
-    if(!_file) {
-      return false;
+    if( _access(folder_name.c_str(), 0 ) != -1 ) {
+      // Check for write permission.
+      // Assume file is read-only.
+      if( _access(folder_name.c_str(), 2 ) == -1 )
+        return false;
+      else 
+        return true;
     } else {
-      return true;
+      return false;
+    }
+  #else
+    if( access(folder_name.c_str(), F_OK ) == 0) {
+      if( access(folder_name.c_str(), W_OK ) == 0)
+        return true;
+      else
+        return false;
+    } else {
+      return false;
     }
   #endif
 }
