@@ -46,16 +46,44 @@ int IOHprofiler_csv_logger::openIndex() {
 }
 
 int IOHprofiler_csv_logger::IOHprofiler_create_folder(std::string folder_name) { 
-#if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)  
-  if (mkdir(folder_name.c_str()) == 0) {
-#else
-  if (mkdir(folder_name.c_str(),S_IRWXU) == 0) {
-#endif
-    return 1;
-  } else {
-    IOH_error("Error on creating directory" + folder_name);
-    return 0;
-  }
+  // #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)
+  //   DWORD ftyp = GetFileAttributesA(folder_name.c_str());
+  //   if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
+  //     return true;
+  //   else
+  //     return false;
+  // #else
+  //   std::fstream _file;
+  //   _file.open(folder_name, std::ios::in);
+  //   if(!_file) {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // #endif
+  
+  // Check for existence.
+  #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)
+    if( _access(folder_name.c_str(), 0 ) != -1 ) {
+      // Check for write permission.
+      // Assume file is read-only.
+      if( _access(folder_name.c_str(), 2 ) == -1 )
+        return false;
+      else 
+        return true;
+    } else {
+      return false;
+    }
+  #else
+    if( access(folder_name.c_str(), F_OK ) == 0) {
+      if( access(folder_name.c_str(), W_OK ) == 0)
+        return true;
+      else
+        return false;
+    } else {
+      return false;
+    }
+  #endif
 }
 
 std::string IOHprofiler_csv_logger::IOHprofiler_experiment_folder_name() {
