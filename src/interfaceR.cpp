@@ -289,6 +289,16 @@ int cpp_write_line(const std::vector<double> &line_info) {
   }
 }
 
+//[[Rcpp::export]]
+int cpp_do_log(const std::vector<double> &line_info) {
+  if (currentLogger == nullptr) {
+    Rcout << "Error! No logger exists.\n";
+    return 1;
+  } else {
+    currentLogger->do_log(line_info);
+    return 0;
+  }
+}
 
 // Since we suppose that users will only get problems from a suite, only target_suite function is provided here.
 //[[Rcpp::export]]
@@ -324,6 +334,66 @@ int cpp_set_parameters(const std::vector<double> & parameters, const std::vector
     return 1;
   }
   currentLogger->set_parameters(parameters,parameters_name);
+  return 0;
+}
+
+//[[Rcpp::export]]
+int cpp_add_dynamic_attribute(const std::vector<std::shared_ptr<double> > &attributes) {
+  if (currentLogger == nullptr) {
+    Rcout << "Error! No logger exists.\n";
+    return 1;
+  }
+  currentLogger->add_dynamic_attribute(attributes);
+  return 0;
+}
+  
+//[[Rcpp::export]]
+int cpp_add_dynamic_attribute(const std::vector<std::shared_ptr<double> > &attributes, const std::vector<std::string> &attributes_name) {
+  if (currentLogger == nullptr) {
+    Rcout << "Error! No logger exists.\n";
+    return 1;
+  }
+  currentLogger->add_dynamic_attribute(attributes,attributes_name);
+  return 0;
+}
+
+//[[Rcpp::export]]
+int cpp_add_attribute(std::string name, double value) {
+  if (currentLogger == nullptr) {
+    Rcout << "Error! No logger exists.\n";
+    return 1;
+  }
+  currentLogger->add_attribute(name,value);
+  return 0;
+}
+
+//[[Rcpp::export]]
+int cpp_add_attribute(std::string name, int value) {
+  if (currentLogger == nullptr) {
+    Rcout << "Error! No logger exists.\n";
+    return 1;
+  }
+  currentLogger->add_attribute(name,value);
+  return 0;
+}
+
+//[[Rcpp::export]]
+int cpp_add_attribute(std::string name, std::string value) {
+  if (currentLogger == nullptr) {
+    Rcout << "Error! No logger exists.\n";
+    return 1;
+  }
+  currentLogger->add_attribute(name,value);
+  return 0;
+}
+
+//[[Rcpp::export]] 
+int cpp_delete_attribute(std::string name) {
+  if (currentLogger == nullptr) {
+    Rcout << "Error! No logger exists.\n";
+    return 1;
+  }
+  currentLogger->delete_attribute(name);
   return 0;
 }
 
