@@ -74,6 +74,11 @@ public:
   
   void set_parameters(const std::vector<std::shared_ptr<double> > &parameters, const std::vector<std::string> &parameters_name);
 
+  // Only for python wrapper.
+  void set_parameters_name(const std::vector<std::string > &parameters_name);
+  void set_parameters_name(const std::vector<std::string > &parameters_name, const std::vector<double> & initial_parameters);
+  void set_parameters(const std::vector<std::string> &parameters_name, const std::vector<double> &parameters);
+
 private:
   // The information for directory.
   std::string folder_name;
@@ -104,6 +109,9 @@ private:
   //std::vector<std::shared_ptr<double> > logging_parameters; /// < parameters to be logged as logging evaluation information.
   //std::vector<std::string> logging_parameters_name; /// < name of parameters to be logged as logging evaluation information.
   std::map<std::string, std::shared_ptr<double> > logging_parameters;
+
+  // Only for python wrapper.
+  std::map<std::string, double > wrapper_logging_parameters;
 
   // fstream
   std::fstream cdat;

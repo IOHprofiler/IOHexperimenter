@@ -280,6 +280,42 @@ void IOHprofiler_csv_logger::set_parameters(const std::vector<std::shared_ptr<do
   }
 }
 
+
+///Only for python wrapper.
+void IOHprofiler_csv_logger::set_parameters_name(const std::vector<std::string > &parameters_name) {
+  if (this->wrapper_logging_parameters.size() != 0) {
+    this->wrapper_logging_parameters.clear();
+  }
+  //default value set as -9999.
+  for (size_t i = 0; i != parameters_name.size(); i++) {
+    this->wrapper_logging_parameters[parameters_name[i]] = -9999;
+  }
+}
+
+///Only for python wrapper.
+void IOHprofiler_csv_logger::set_parameters_name(const std::vector<std::string > &parameters_name, const std::vector<double> &initial_parameters) {
+  if (parameters_name.size() != initial_parameters.size()) {
+    IOH_error("Parameters and their names are given with different size.");
+  }
+  //default value set as -9999.
+  for (size_t i = 0; i != parameters_name.size(); i++) {
+    this->wrapper_logging_parameters[parameters_name[i]] = initial_parameters[i];
+  }
+}
+
+///Only for python wrapper.
+void IOHprofiler_csv_logger::set_parameters(const std::vector<std::string > &parameters_name, const std::vector<double> &parameters) {
+  if (parameters_name.size() != parameters.size()) {
+    IOH_error("Parameters and their names are given with different size.");
+  }
+  for (size_t i = 0; i != parameters_name.size(); ++i)
+  if(this->wrapper_logging_parameters.find(parameters_name[i]) != this->wrapper_logging_parameters.end()) {
+    this->wrapper_logging_parameters[parameters_name[i]] = parameters[i];
+  } else {
+    IOH_error("Parameter " + parameters_name[i] + " does not exist");
+  }
+}
+
 void IOHprofiler_csv_logger::add_dynamic_attribute(const std::vector<std::shared_ptr<double> > &attributes) {
   if (this->attr_per_run_name_value.size() != 0) {
     this->attr_per_run_name_value.clear();
