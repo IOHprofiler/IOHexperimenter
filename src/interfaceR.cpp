@@ -318,47 +318,27 @@ int cpp_logger_target_suite() {
 
 
 //[[Rcpp::export]]
-int cpp_set_parameters(const std::vector<std::string> &parameters_name) {
+int cpp_set_parameters_name(const std::vector<std::string> &parameters_name) {
   if (currentLogger == nullptr) {
     Rcout << "Error! No logger exists.\n";
     return 1;
   }
-  currentLogger->set_parameters(parameters_name);
+  currentLogger->set_parameters_name(parameters_name);
   return 0;
 }
 
 //[[Rcpp::export]]
-int cpp_set_parameters(const std::vector<double> & parameters, const std::vector<string> & parameters_name) {
+int cpp_set_parameters(const std::vector<std::string> & parameters_name,const std::vector<double> &parameters) {
   if (currentLogger == nullptr) {
     Rcout << "Error! No logger exists.\n";
     return 1;
   }
-  currentLogger->set_parameters(parameters,parameters_name);
+  currentLogger->set_parameters_name(parameters_name,parameters);
   return 0;
 }
 
 //[[Rcpp::export]]
-int cpp_add_dynamic_attribute(const std::vector<std::shared_ptr<double> > &attributes) {
-  if (currentLogger == nullptr) {
-    Rcout << "Error! No logger exists.\n";
-    return 1;
-  }
-  currentLogger->add_dynamic_attribute(attributes);
-  return 0;
-}
-  
-//[[Rcpp::export]]
-int cpp_add_dynamic_attribute(const std::vector<std::shared_ptr<double> > &attributes, const std::vector<std::string> &attributes_name) {
-  if (currentLogger == nullptr) {
-    Rcout << "Error! No logger exists.\n";
-    return 1;
-  }
-  currentLogger->add_dynamic_attribute(attributes,attributes_name);
-  return 0;
-}
-
-//[[Rcpp::export]]
-int cpp_add_attribute(std::string name, double value) {
+int cpp_add_double_attribute(std::string name, double value) {
   if (currentLogger == nullptr) {
     Rcout << "Error! No logger exists.\n";
     return 1;
@@ -368,7 +348,7 @@ int cpp_add_attribute(std::string name, double value) {
 }
 
 //[[Rcpp::export]]
-int cpp_add_attribute(std::string name, int value) {
+int cpp_add_int_attribute(std::string name, int value) {
   if (currentLogger == nullptr) {
     Rcout << "Error! No logger exists.\n";
     return 1;
@@ -378,7 +358,7 @@ int cpp_add_attribute(std::string name, int value) {
 }
 
 //[[Rcpp::export]]
-int cpp_add_attribute(std::string name, std::string value) {
+int cpp_add_string_attribute1(std::string name, std::string value) {
   if (currentLogger == nullptr) {
     Rcout << "Error! No logger exists.\n";
     return 1;
