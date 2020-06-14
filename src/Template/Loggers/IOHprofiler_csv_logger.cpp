@@ -338,7 +338,40 @@ void IOHprofiler_csv_logger::add_dynamic_attribute(const std::vector<std::shared
   }
 }
 
+///Only for python wrapper.
+void IOHprofiler_csv_logger::set_dynamic_attributes_name(const std::vector<std::string > &attributes_name) {
+  if (this->wrapper_attr_per_run_name_value.size() != 0) {
+    this->wrapper_attr_per_run_name_value.clear();
+  }
+  //default value set as -9999.
+  for (size_t i = 0; i != attributes_name.size(); i++) {
+    this->wrapper_attr_per_run_name_value[attributes_name[i]] = -9999;
+  }
+}
 
+///Only for python wrapper.
+void IOHprofiler_csv_logger::set_dynamic_attributes_name(const std::vector<std::string > &attributes_name, const std::vector<double> &initial_attributes) {
+  if (attributes_name.size() != initial_attributes.size()) {
+    IOH_error("Attributes and their names are given with different size.");
+  }
+  //default value set as -9999.
+  for (size_t i = 0; i != attributes_name.size(); i++) {
+    this->wrapper_attr_per_run_name_value[attributes_name[i]] = initial_attributes[i];
+  }
+}
+
+///Only for python wrapper.
+void IOHprofiler_csv_logger::set_dynamic_attributes(const std::vector<std::string > &attributes_name, const std::vector<double> &attributes) {
+  if (attributes_name.size() != attributes.size()) {
+    IOH_error("Attributes and their names are given with different size.");
+  }
+  for (size_t i = 0; i != attributes_name.size(); ++i)
+  if(this->wrapper_attr_per_run_name_value.find(attributes_name[i]) != this->wrapper_attr_per_run_name_value.end()) {
+    this->wrapper_attr_per_run_name_value[attributes_name[i]] = attributes[i];
+  } else {
+    IOH_error("Dynamic attributes " + attributes_name[i] + " does not exist");
+  }
+}
 
 void IOHprofiler_csv_logger::do_log(const std::vector<double> & log_info) {
   this->write_line( (size_t)(log_info[0]),log_info[1],log_info[2],log_info[3],log_info[4]);
