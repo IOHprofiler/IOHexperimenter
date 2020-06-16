@@ -95,8 +95,7 @@ private:
   IOH_optimization_type maximization_minimization_flag = IOH_optimization_type::Maximization;
   std::map<std::string, std::string> attr_per_exp_name_value;
   std::map<std::string, std::shared_ptr<double> >  attr_per_run_name_value;
-  std::map<std::string, double >  wrapper_attr_per_run_name_value;
-
+  
   std::string suite_name = "No suite";
 
   int dimension;
@@ -115,9 +114,6 @@ private:
   //std::vector<std::shared_ptr<double> > logging_parameters; /// < parameters to be logged as logging evaluation information.
   //std::vector<std::string> logging_parameters_name; /// < name of parameters to be logged as logging evaluation information.
   std::map<std::string, std::shared_ptr<double> > logging_parameters;
-
-  // Only for python wrapper.
-  std::map<std::string, double > wrapper_logging_parameters;
 
   // fstream
   std::fstream cdat;
