@@ -36,6 +36,6 @@ probability 3/4, the other by 1/4.
 }
 \examples{
 \donttest{
-bechmark_algorithm(IOH_two_rate_GA)
+benchmark_algorithm(IOH_two_rate_GA)
 }
 }

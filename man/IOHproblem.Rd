@@ -43,7 +43,9 @@ In addition to these attributes, there are three function-attributes available t
 \itemize{
  \item{obj_function: }{The interface to evaluate the function}
  \item{target_hit: }{Boolean indicating if the optimal has been hit (if known)}
- \item{set_parameters: }{Interface to storing the current parameter values (if param.track is initialized)}
+ \item{set_parameters: }{Interface to storing the current parameter values (if param.track is initialized),
+ This has two arguments: the list of names of parameters to update (must match those of param.track) and
+ a list of equal length containing their respective values.}
 }
 }
 \examples{

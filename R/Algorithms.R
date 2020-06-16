@@ -46,7 +46,7 @@ IOH_random_local_search <- function(IOHproblem, budget = NULL) {
 #' \donttest{
 #' one_comma_two_EA <- function(IOHproblem) { IOH_self_adaptive_GA(IOHproblem, lambda_=2) }
 #'
-#' benchmark_algorithm(one_comma_two_EA, params.track = "Mutation rate",
+#' benchmark_algorithm(one_comma_two_EA, params.track = "Mutation_rate",
 #' algorithm.name = "one_comma_two_EA", data.dir = NULL,
 #' algorithm.info = "Using one_comma_two_EA with specific parameter" )
 #' }
@@ -66,7 +66,7 @@ IOH_self_adaptive_GA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
 #' @export
 #' @examples 
 #' \donttest{
-#' bechmark_algorithm(IOH_two_rate_GA)
+#' benchmark_algorithm(IOH_two_rate_GA)
 #' }
 IOH_two_rate_GA <- function(IOHproblem, lambda_ = 1, budget = NULL) {
   two_rate_GA(IOHproblem$dimension, IOHproblem$obj_func, budget = budget, 

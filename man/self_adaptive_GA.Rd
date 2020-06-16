@@ -37,7 +37,7 @@ selected along with its mutation rate.
 \donttest{
 one_comma_two_EA <- function(IOHproblem) { IOH_self_adaptive_GA(IOHproblem, lambda_=2) }
 
-benchmark_algorithm(one_comma_two_EA, params.track = "Mutation rate",
+benchmark_algorithm(one_comma_two_EA, params.track = "Mutation_rate",
 algorithm.name = "one_comma_two_EA", data.dir = NULL,
 algorithm.info = "Using one_comma_two_EA with specific parameter" )
 }
