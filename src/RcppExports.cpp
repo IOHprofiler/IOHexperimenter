@@ -160,6 +160,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cpp_do_log
+int cpp_do_log(const std::vector<double>& line_info);
+RcppExport SEXP _IOHexperimenter_cpp_do_log(SEXP line_infoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type line_info(line_infoSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_do_log(line_info));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_logger_target_suite
 int cpp_logger_target_suite();
 RcppExport SEXP _IOHexperimenter_cpp_logger_target_suite() {
@@ -181,14 +192,62 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cpp_set_parameters_value
-int cpp_set_parameters_value(const std::vector<double>& parameters);
-RcppExport SEXP _IOHexperimenter_cpp_set_parameters_value(SEXP parametersSEXP) {
+// cpp_set_parameters
+int cpp_set_parameters(const std::vector<std::string>& parameters_name, const std::vector<double>& parameters);
+RcppExport SEXP _IOHexperimenter_cpp_set_parameters(SEXP parameters_nameSEXP, SEXP parametersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type parameters_name(parameters_nameSEXP);
     Rcpp::traits::input_parameter< const std::vector<double>& >::type parameters(parametersSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_set_parameters_value(parameters));
+    rcpp_result_gen = Rcpp::wrap(cpp_set_parameters(parameters_name, parameters));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_add_double_attribute
+int cpp_add_double_attribute(std::string name, double value);
+RcppExport SEXP _IOHexperimenter_cpp_add_double_attribute(SEXP nameSEXP, SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< double >::type value(valueSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_add_double_attribute(name, value));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_add_int_attribute
+int cpp_add_int_attribute(std::string name, int value);
+RcppExport SEXP _IOHexperimenter_cpp_add_int_attribute(SEXP nameSEXP, SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< int >::type value(valueSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_add_int_attribute(name, value));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_add_string_attribute1
+int cpp_add_string_attribute1(std::string name, std::string value);
+RcppExport SEXP _IOHexperimenter_cpp_add_string_attribute1(SEXP nameSEXP, SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type value(valueSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_add_string_attribute1(name, value));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cpp_delete_attribute
+int cpp_delete_attribute(std::string name);
+RcppExport SEXP _IOHexperimenter_cpp_delete_attribute(SEXP nameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_delete_attribute(name));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -315,9 +374,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_IOHexperimenter_cpp_loggerCOCOInfo", (DL_FUNC) &_IOHexperimenter_cpp_loggerCOCOInfo, 0},
     {"_IOHexperimenter_cpp_loggerInfo", (DL_FUNC) &_IOHexperimenter_cpp_loggerInfo, 0},
     {"_IOHexperimenter_cpp_write_line", (DL_FUNC) &_IOHexperimenter_cpp_write_line, 1},
+    {"_IOHexperimenter_cpp_do_log", (DL_FUNC) &_IOHexperimenter_cpp_do_log, 1},
     {"_IOHexperimenter_cpp_logger_target_suite", (DL_FUNC) &_IOHexperimenter_cpp_logger_target_suite, 0},
     {"_IOHexperimenter_cpp_set_parameters_name", (DL_FUNC) &_IOHexperimenter_cpp_set_parameters_name, 1},
-    {"_IOHexperimenter_cpp_set_parameters_value", (DL_FUNC) &_IOHexperimenter_cpp_set_parameters_value, 1},
+    {"_IOHexperimenter_cpp_set_parameters", (DL_FUNC) &_IOHexperimenter_cpp_set_parameters, 2},
+    {"_IOHexperimenter_cpp_add_double_attribute", (DL_FUNC) &_IOHexperimenter_cpp_add_double_attribute, 2},
+    {"_IOHexperimenter_cpp_add_int_attribute", (DL_FUNC) &_IOHexperimenter_cpp_add_int_attribute, 2},
+    {"_IOHexperimenter_cpp_add_string_attribute1", (DL_FUNC) &_IOHexperimenter_cpp_add_string_attribute1, 2},
+    {"_IOHexperimenter_cpp_delete_attribute", (DL_FUNC) &_IOHexperimenter_cpp_delete_attribute, 1},
     {"_IOHexperimenter_cpp_is_target_hit", (DL_FUNC) &_IOHexperimenter_cpp_is_target_hit, 0},
     {"_IOHexperimenter_cpp_get_evaluations", (DL_FUNC) &_IOHexperimenter_cpp_get_evaluations, 0},
     {"_IOHexperimenter_cpp_get_optimal", (DL_FUNC) &_IOHexperimenter_cpp_get_optimal, 0},

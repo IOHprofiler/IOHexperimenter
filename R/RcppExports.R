@@ -57,6 +57,10 @@ cpp_write_line <- function(line_info) {
     .Call('_IOHexperimenter_cpp_write_line', PACKAGE = 'IOHexperimenter', line_info)
 }
 
+cpp_do_log <- function(line_info) {
+    .Call('_IOHexperimenter_cpp_do_log', PACKAGE = 'IOHexperimenter', line_info)
+}
+
 cpp_logger_target_suite <- function() {
     .Call('_IOHexperimenter_cpp_logger_target_suite', PACKAGE = 'IOHexperimenter')
 }
@@ -65,8 +69,24 @@ cpp_set_parameters_name <- function(parameters_name) {
     .Call('_IOHexperimenter_cpp_set_parameters_name', PACKAGE = 'IOHexperimenter', parameters_name)
 }
 
-cpp_set_parameters_value <- function(parameters) {
-    .Call('_IOHexperimenter_cpp_set_parameters_value', PACKAGE = 'IOHexperimenter', parameters)
+cpp_set_parameters <- function(parameters_name, parameters) {
+    .Call('_IOHexperimenter_cpp_set_parameters', PACKAGE = 'IOHexperimenter', parameters_name, parameters)
+}
+
+cpp_add_double_attribute <- function(name, value) {
+    .Call('_IOHexperimenter_cpp_add_double_attribute', PACKAGE = 'IOHexperimenter', name, value)
+}
+
+cpp_add_int_attribute <- function(name, value) {
+    .Call('_IOHexperimenter_cpp_add_int_attribute', PACKAGE = 'IOHexperimenter', name, value)
+}
+
+cpp_add_string_attribute1 <- function(name, value) {
+    .Call('_IOHexperimenter_cpp_add_string_attribute1', PACKAGE = 'IOHexperimenter', name, value)
+}
+
+cpp_delete_attribute <- function(name) {
+    .Call('_IOHexperimenter_cpp_delete_attribute', PACKAGE = 'IOHexperimenter', name)
 }
 
 cpp_is_target_hit <- function() {

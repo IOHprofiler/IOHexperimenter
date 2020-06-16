@@ -34,15 +34,17 @@ benchmark_algorithm <- function(user_alg, suite = "PBO", functions = c(1,2), ins
                                 dimensions = 16, data.dir = NULL, algorithm.info = ' ', 
                                 algorithm.name = ' ', params.track = NULL,
                                 repetitions = 5) {
-
+  
   experimenter <- IOHexperimenter(suite = suite, dims = dimensions, functions = functions, instances = instances,
                                   algorithm.info = algorithm.info, algorithm.name = algorithm.name,
                                   data.dir = data.dir, param.track = params.track)
   IOHproblem <- next_problem(experimenter)
   while (!is.null(IOHproblem) ) {
-    for (rep in 1:(repetitions - 1) ) {
-      user_alg(IOHproblem)
-      IOHproblem <- reset_problem(IOHproblem)
+    if (repetitions > 1) {
+      for (rep in 1:(repetitions - 1) ) {
+        user_alg(IOHproblem)
+        IOHproblem <- reset_problem(IOHproblem)
+      }
     }
     user_alg(IOHproblem)
     

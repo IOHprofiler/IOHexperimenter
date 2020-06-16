@@ -102,6 +102,9 @@ next_problem <- function(experimenter) {
       return(f)
     }
   }
+  if (!is.null(experimenter$param.track)) {
+    cpp_set_parameters_name(experimenter$param.track)
+  }
   return(structure(
     list(
       dimension = ans$dimension,
@@ -128,9 +131,10 @@ next_problem <- function(experimenter) {
         cpp_is_target_hit()
       },
       set_parameters = 
-        if (length(experimenter$param.track) > 0) function(param_vals){
-          stopifnot( length(param_vals) == length(experimenter$param.track) )
-          cpp_set_parameters_value(param_vals)
+        if (length(experimenter$param.track) > 0) function(param_names, param_vals){
+          stopifnot( length(param_names) == length(param_vals) )
+          stopifnot( all(param_names %in% experimenter$param.track))
+          cpp_set_parameters(param_names, param_vals)
         }
         else
           NULL

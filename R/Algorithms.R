@@ -210,7 +210,7 @@ self_adaptive_GA <- function(dimension, obj_func, lambda_ = 10, budget = NULL,
   if (is.null(budget)) budget <- 10 * dimension
 
   r <- 1.0 / dimension
-  if (is.function(set_parameters)) set_parameters(r)
+  if (is.function(set_parameters)) set_parameters('Mutation_rate', r)
 
   x <- sample(c(0, 1), dimension, TRUE)
   xopt <- x
@@ -226,7 +226,7 @@ self_adaptive_GA <- function(dimension, obj_func, lambda_ = 10, budget = NULL,
     idx <- matrix(runif(lambda_ * dimension), lambda_, dimension) < r_
     x_[idx] <- 1 - x_[idx]
 
-    if (is.function(set_parameters)) set_parameters(r)
+    if (is.function(set_parameters)) set_parameters('Mutation_rate', r)
     f <- obj_func(x_)
     budget <- budget - lambda_
     selected <- which(min(f) == f)[[1]]
@@ -265,7 +265,7 @@ two_rate_GA <- function(dimension, obj_func, target_hit = function() { FALSE }, 
   r <- 2.0
   fopt <- obj_func(parent)
   budget <- budget - 1
-  if (is.function(set_parameters)) set_parameters(r)
+  if (is.function(set_parameters)) set_parameters('Mutation_rate', r)
   
   while (budget > 0 && !target_hit()) {
     selected_r <- r;
@@ -307,7 +307,7 @@ two_rate_GA <- function(dimension, obj_func, target_hit = function() { FALSE }, 
 
     if (r < 2.0) r = 2.0
     if (r > dimension / 4.0) r = dimension / 4.0
-    if (is.function(set_parameters)) set_parameters(r)
+    if (is.function(set_parameters)) set_parameters('Mutation_rate', r)
     
   }
   list(xopt = best, fopt = fopt)
