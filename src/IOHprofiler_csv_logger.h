@@ -5,8 +5,8 @@
 #ifndef _IOHPROFILER_CSV_LOGGER_H
 #define _IOHPROFILER_CSV_LOGGER_H
 
-#include "IOHprofiler_observer.hpp"
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_observer.h"
+#include "IOHprofiler_problem.h"
 
 /// \brief A class of logging csv files.
 ///

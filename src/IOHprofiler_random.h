@@ -1,14 +1,11 @@
 /// \file IOHprofiler_random.hpp
-/// \brief Hpp file for class IOHprofiler_random.
-///
-/// A detailed file description. The implementation refer to the work of NumBBO/CoCO team.
-///
-/// \author Furong Ye
-/// \date 2019-06-27
-#ifndef _IOHPROFILER_RANDOM_HPP
-#define _IOHPROFILER_RANDOM_HPP
+/// \brief Header file for the class IOHprofiler_random.
+/// The implementation refer to the work of NumBBO/CoCO team.
 
-#include "IOHprofiler_common.hpp"
+#ifndef _IOHPROFILER_RANDOM_H
+#define _IOHPROFILER_RANDOM_H
+
+#include "IOHprofiler_common.h"
 #define IOHprofiler_NORMAL_POLAR /* Use polar transformation method */
 
 #define IOH_PI 3.14159265358979323846
@@ -22,6 +19,7 @@
 
 #define IOHPROFILER_SHORT_LAG  273
 #define IOHPROFILER_LONG_LAG 607
+
 class IOHprofiler_random {
 public:
   IOHprofiler_random(uint32_t seed = DEFAULT_SEED);
@@ -38,19 +36,17 @@ public:
   
   double IOHprofiler_normal_rand();
 
-private: 
-  //long _seed[32];
+private:
   size_t _seed_index;
 
   static long a; /// < multiplier.
   static long m; /// < modulus.
   static long q; /// < modulusdiv multiplier.
   static long r; /// < modulus mod multiplier.
-  //double rand_r;
 
   static int IOHprofiler_SHORT_LAG;
   static int IOHprofiler_LONG_LAG;
   double x[607];
 };
 
-#endif //_IOHPROFILER_RANDOM_HPP
+#endif // _IOHPROFILER_RANDOM_H

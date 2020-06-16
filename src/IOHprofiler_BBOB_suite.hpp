@@ -33,7 +33,7 @@
 #include "f_step_ellipsoid.hpp"
 #include "f_weierstrass.hpp"
 
-#include "IOHprofiler_suite.hpp"
+#include "IOHprofiler_suite.h"
 
 class BBOB_suite : public IOHprofiler_suite<double> {
 public:

@@ -9,7 +9,7 @@
 #ifndef _F_SHARP_RIDGE_HPP
 #define _F_SHARP_RIDGE_HPP
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "coco_transformation.hpp"
 
 class Sharp_Ridge : public IOHprofiler_problem<double> {

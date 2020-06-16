@@ -1,15 +1,12 @@
 /// \file f_w_model_one_max.hpp
 /// \brief cpp file for class f_w_model_one_max.hpp
 ///
-/// This file implements a OneMax problem with reduction of dummy variables.
-/// The reduction rate is chosen as 0.5.
-///
 /// \author Furong Ye
 /// \date 2019-08-28
 #ifndef _F_W_MODEL_ONE_MAX_HPP
 #define _F_W_MODEL_ONE_MAX_HPP
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "wmodels.hpp"
 
 class W_Model_OneMax : public IOHprofiler_problem<int> {

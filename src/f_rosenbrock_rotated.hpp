@@ -9,7 +9,7 @@
 #ifndef _F_ROSENBROCK_ROTATED_HPP
 #define _F_ROSENBROCK_ROTATED_HPP
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "coco_transformation.hpp"
 
 class Rosenbrock_Rotated : public IOHprofiler_problem<double> {

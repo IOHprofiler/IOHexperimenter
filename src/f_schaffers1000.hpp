@@ -9,7 +9,7 @@
 #ifndef _F_SCHAFFERSTHOUSAND_HPP
 #define _F_SCHAFFERSTHOUSAND_HPP
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "coco_transformation.hpp"
 
 class Schaffers1000 : public IOHprofiler_problem<double> {

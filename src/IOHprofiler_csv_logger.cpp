@@ -5,7 +5,7 @@
 ///
 /// \author Furong Ye
 
-#include "IOHprofiler_csv_logger.hpp"
+#include "IOHprofiler_csv_logger.h"
 
 IOHprofiler_csv_logger::IOHprofiler_csv_logger() {
   this->output_directory = "./";

@@ -8,7 +8,7 @@
 #ifndef _F_CONCATENATED_TRAP_H
 #define _F_CONCATENATED_TRAP_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 
 class Concatenated_Trap : public IOHprofiler_problem<int> {
 public:

@@ -1,15 +1,12 @@
 /// \file IOHprofiler_transformation.hpp
-/// \brief Hpp file for the class IOHprofiler_transformation.
-///
-/// A detailed file description.
+/// \brief Header file for the class IOHprofiler_transformation.
 ///
 /// \author Furong Ye
-/// \date 2019-06-27
-#ifndef IOHPROFILER_TRANSFORMATION_HPP
-#define IOHPROFILER_TRANSFORMATION_HPP
+#ifndef IOHPROFILER_TRANSFORMATION_H
+#define IOHPROFILER_TRANSFORMATION_H
 
-#include "IOHprofiler_common.hpp"
-#include "IOHprofiler_random.hpp"
+#include "IOHprofiler_common.h"
+#include "IOHprofiler_random.h"
 #include "coco_transformation.hpp"
 
 /// \brief A class consisting of transformation methods.
@@ -64,4 +61,5 @@ public:
   /// \brief transformation 'f(x) + b'.
   void transform_obj_shift(double &y, const int seed);
 };
-#endif //IOHPROFILER_TRANSFORMATION_HPP
+
+#endif //IOHPROFILER_TRANSFORMATION_H

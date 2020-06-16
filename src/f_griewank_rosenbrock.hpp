@@ -9,7 +9,7 @@
 #ifndef _F_GRIEWANK_ROSENBROCK_H
 #define _F_GRIEWANK_ROSENBROCK_H
 
-#include "IOHprofiler_problem.hpp"
+#include "IOHprofiler_problem.h"
 #include "coco_transformation.hpp"
 
 class Griewank_RosenBrock : public IOHprofiler_problem<double> {
