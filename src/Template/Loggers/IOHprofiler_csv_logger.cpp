@@ -567,7 +567,7 @@ void IOHprofiler_csv_logger::write_info(int instance, double best_y, double best
   bool need_write = (evaluations != last_evaluations);
   if (need_write) {
     std::string written_line = _toString(last_evaluations) + " " + _toString(last_y) + " "
-                              + _toString(best_y) + " " + _toString(last_y) + " "
+                              + _toString(best_y) + " " + _toString(last_transformed_y) + " "
                               + _toString(best_transformed_y);
     
     if (this->logging_parameters.size() != 0) {
