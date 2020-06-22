@@ -24,7 +24,7 @@ int IOHprofiler_configuration::set_Dict(_Dict &dict, const std::string section, 
       }
       if ((key == dict.key[i]) && (section==dict.section[i])) {
         if (dict.value[i].length() != 0) {
-          std::cout << "Multi setting of key(" << key << ") or section(" << section << ")\n";
+          // std::cout << "Multi setting of key(" << key << ") or section(" << section << ")\n";
           return -1;
         }
       }
@@ -39,12 +39,12 @@ int IOHprofiler_configuration::set_Dict(_Dict &dict, const std::string section, 
 
 std::string IOHprofiler_configuration::get_Dict_String(const _Dict dict, const std::string section, const std::string key){
   size_t i;
-  if (key.length() == 0) {
-    std::cout << "EMPTY KEY INPUT.\n";
-  }
-  if (section.length() == 0) {
-    std::cout << "EMPTY SECTION INPUT.\n";
-  }
+  // if (key.length() == 0) {
+  //   // std::cout << "EMPTY KEY INPUT.\n";
+  // }
+  // if (section.length() == 0) {
+  //   // std::cout << "EMPTY SECTION INPUT.\n";
+  // }
   for (i = 0; i < dict.n; ++i) {
     if (dict.key[i].length() == 0) {
       continue;
@@ -56,19 +56,19 @@ std::string IOHprofiler_configuration::get_Dict_String(const _Dict dict, const s
       return dict.value[i];
     }
   }
-  std::cout << "Can not find the corresponding configuration for key: " << key << " in section : "<< section << "\n";
+  // std::cout << "Can not find the corresponding configuration for key: " << key << " in section : "<< section << "\n";
   return NULL;
 }
 
 std::vector<int> IOHprofiler_configuration::get_Dict_int_vector(const _Dict dict, const std::string section, const std::string key, const int _min, const int _max){
   size_t i;
   std::vector<int> result;
-  if (key.length() == 0) {
-    std::cout << "EMPTY KEY INPUT.\n";
-  }
-  if (section.length() == 0){
-    std::cout << "EMPTY SECTION INPUT.\n";
-  }
+  // if (key.length() == 0) {
+  //   std::cout << "EMPTY KEY INPUT.\n";
+  // }
+  // if (section.length() == 0){
+  //   std::cout << "EMPTY SECTION INPUT.\n";
+  // }
   for (i = 0; i < dict.n; ++i) {
     if (dict.key[i].length() == 0) {
       continue;
@@ -81,7 +81,7 @@ std::vector<int> IOHprofiler_configuration::get_Dict_int_vector(const _Dict dict
       return result;
     }
   }
-  std::cout << "Can not find the corresponding configuration for key: "<< key << " in section : "<< section << "\n";
+  // std::cout << "Can not find the corresponding configuration for key: "<< key << " in section : "<< section << "\n";
   return result;
 }
 
@@ -149,9 +149,9 @@ _Dict IOHprofiler_configuration::load(const std::string filename) {
   _Dict dict;
   linecontent lc;
 
-  if (!fp.is_open()) {
-    std::cout << "Cannot open file " << filename << std::endl;
-  }
+  // if (!fp.is_open()) {
+  //   std::cout << "Cannot open file " << filename << std::endl;
+  // }
 
   while (!fp.eof()) {
     getline(fp,line);
@@ -175,7 +175,7 @@ _Dict IOHprofiler_configuration::load(const std::string filename) {
         this->set_Dict(dict,section,key,value);
         break;
       case CON_ERROR:
-        std::cout << "There is an error for line: \" "<< line << "\"";
+        // std::cout << "There is an error for line: \" "<< line << "\"";
         break;
     }
     if (lc == CON_ERROR) {
