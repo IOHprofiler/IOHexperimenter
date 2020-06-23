@@ -110,7 +110,7 @@ class IOH_function():
         if self.f.IOHprofiler_get_problem_type() == "bbob":
             return self.f.IOHprofiler_get_best_so_far_raw_objectives()[0] <= self.precision
         else:
-            return self.f.IOHprofiler_get_best_so_far_raw_objectives()[0] >= self.f.IOHprofiler_get_optimal() - self.precision
+            return self.f.IOHprofiler_get_best_so_far_raw_objectives()[0] >= self.f.IOHprofiler_get_optimal()[0] - self.precision
     
     @property
     def evaluations(self):
@@ -230,11 +230,7 @@ class IOH_function():
         ------
         Returns the target value of the function
         '''
-
-        if old_version and self.f.IOHprofiler_get_problem_type() == "bbob":
-            target_raw = targets[self.f.IOHprofiler_get_problem_id()-1][self.f.IOHprofiler_get_instance_id()]
-        else:
-            target_raw = self.f.IOHprofiler_get_optimal()[0]
+        target_raw = self.f.IOHprofiler_get_optimal()[0]
         if raw:
             return target_raw
         return self.precision + target_raw

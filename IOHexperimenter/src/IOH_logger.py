@@ -1,6 +1,7 @@
 import IOHexperimenter as IOH
 import numpy as np
 from pathlib import Path
+from collections.abc import Iterable
 
 class IOH_logger:
     def __init__(self, location, foldername = "run", name = "", info = ""):
@@ -84,7 +85,12 @@ class IOH_logger:
         parameters:
             A list of parameters to track
         '''
-        self.params = parameters
+        if isinstance(parameters, str):
+            self.params = [parameters]
+        elif isinstance(parameters, Iterable):
+            self.params = parameters
+        else:
+            raise typeError("parameters needs to be a string or iterable containing strings")
         self.logger.set_parameters_name(parameters)
         self.alg = algorithm
         
@@ -97,8 +103,13 @@ class IOH_logger:
         attrs:
             A list of parameters to track (should be accessible in the tracked algorithm)
         '''
-        for a in attrs:
-            exec(f"self.logger.add_attribute('{a}', self.alg.{a})")
+        if isinstance(attrs, str):
+            exec(f"self.logger.add_attribute('{attrs}', self.alg.{attrs})")
+        elif isinstance(attrs, Iterable):
+            for a in attrs:
+                exec(f"self.logger.add_attribute('{a}', self.alg.{a})")
+        else:
+            raise typeError("attrs needs to be a string or iterable containing strings")
             
     def set_dynamic_attributes(self, attrs):
         '''Initialize tracking of parameters during the run of the algorithm. Make sure to only 
@@ -109,7 +120,12 @@ class IOH_logger:
         attrs:
             A list of parameters to track (should be accessible in the tracked algorithm)
         '''
-        self.dynamic_attrs = attrs
+        if isinstance(attrs, str):
+            self.dynamic_attrs = [attrs]
+        elif isinstance(attrs, Iterable):
+            self.dynamic_attrs = attrs
+        else:
+            raise typeError("attrs needs to be a string or iterable containing strings")
         self.logger.set_dynamic_attributes_name(attrs)
 
     def process_evaluation(self, info):
