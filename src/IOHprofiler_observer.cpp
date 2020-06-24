@@ -96,7 +96,7 @@ bool IOHprofiler_observer::time_points_trigger(size_t evaluations) {
       this->time_points_index = 0;
       this->time_points_expi++;
     }
-    this->evaluations_value1 = (size_t)(this->observer_time_points[this->time_points_index] * pow(observer_time_points_exp_base1,this->time_points_expi));
+    this->evaluations_value1 = (size_t)(this->observer_time_points[this->time_points_index] * pow( (double) observer_time_points_exp_base1,(double) this->time_points_expi) );
     while (this->evaluations_value1 <= evaluations) {
       if (this->time_points_index < this->observer_time_points.size() - 1) {
         this->time_points_index++;
@@ -104,7 +104,7 @@ bool IOHprofiler_observer::time_points_trigger(size_t evaluations) {
         this->time_points_index = 0;
         this->time_points_expi++;
       }
-      this->evaluations_value1 = (size_t)(this->observer_time_points[this->time_points_index] * pow(observer_time_points_exp_base1,this->time_points_expi)); 
+      this->evaluations_value1 = (size_t)(this->observer_time_points[this->time_points_index] * pow( (double) observer_time_points_exp_base1,(double) this->time_points_expi) ); 
     }
   }
   
