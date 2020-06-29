@@ -59,22 +59,9 @@ class IOHexperimenter():
     '''An interfact to easily run a set of algorithms on multiple functions from the IOHexperimenter.
     '''
     def __init__(self):
-        '''Adds an observer to the problem
+        '''Create an IOHexperimenter object for benchmarking a set of algorithms on multiple functions
 
-        Parameters
-        ----------
-        fids:
-            List of the function numbers within the selected suite. Alternatively, the names of the functions as used in IOHexperimenter.
-        dims:
-            List of the dimensions (number of variables) of the problem
-        iids:
-            List of the instance IDs of the problem
-        repetitions: 
-            Number of repetitions on each function instance
-        target_precision:
-            Optional, how close to the optimum the problem is considered 'solved'
-        suite:
-            Which suite the problem is from. Either 'BBOB' or 'PBO'. Only used if fids are integers
+        Initialize the functions to use by calling 'initialize_PBO', 'initialize_BBOB' or 'initialize_custom'
 
         '''
         self.location = None
@@ -91,6 +78,19 @@ class IOHexperimenter():
         self.precision = 0
     
     def initialize_PBO(self, fids, iids, dims, repetitions):
+        '''Initialize to a set of functions for the PBO suite
+
+        Parameters
+        ----------
+        fids:
+            List of the function numbers within the selected suite. Alternatively, the names of the functions as used in IOHexperimenter.
+        dims:
+            List of the dimensions (number of variables) of the problem
+        iids:
+            List of the instance IDs of the problem
+        repetitions: 
+            Number of repetitions on each function instance
+        '''
         self.fids = fids
         self.iids = iids
         self.dims = dims
@@ -98,6 +98,21 @@ class IOHexperimenter():
         self.suite = "PBO"
     
     def initialize_BBOB(self, fids, iids, dims, repetitions, precision = 1e-8):
+        '''Initialize to a set of functions for the BBOB suite
+
+        Parameters
+        ----------
+        fids:
+            List of the function numbers within the selected suite. Alternatively, the names of the functions as used in IOHexperimenter.
+        dims:
+            List of the dimensions (number of variables) of the problem
+        iids:
+            List of the instance IDs of the problem
+        repetitions: 
+            Number of repetitions on each function instance
+        target_precision:
+            Optional, how close to the optimum the problem is considered 'solved'
+        '''
         self.fids = fids
         self.iids = iids
         self.dims = dims
@@ -106,6 +121,21 @@ class IOHexperimenter():
         self.suite = "BBOB"
     
     def initialize_custom(self, functions, fnames, fdims, repetitions, suite = "No Suite"):
+        '''Initialize to a set of custom functions
+
+        Parameters
+        ----------
+        functions:
+            List of functions to use
+        fnames:
+            List of names corresponding to the provided functions
+        fdims:
+            List of dimensionalities corresponding to the provided functions
+        repetitions: 
+            Number of repetitions on each function instance
+        suite:
+            Optional, a name for the suite of the provided functions
+        '''
         self.functions = functions
         self.fnames = fnames
         self.fdims = fdims
@@ -149,12 +179,42 @@ class IOHexperimenter():
         self.tdat_exp = tdat_exp
         
     def set_parameter_tracking(self, parameters):
+        '''Set which parameters should be tracked during the benchmarking procedure
+        
+        Only usable when 'set_logger_location' has been called previously
+        
+        Parameters
+        ----------
+        parameters:
+            List of the names of the parameters to track. All 'parameters'-variables need to be accessible by 
+            using algorithm.parameter (recommended to use @property) for each of the algorithms to be benchmarked
+        '''
         self.parameters = parameters
     
     def set_dynamic_tracking(self, attributes):
+        '''Set which attributes should be tracked for each algorithm run (stored at the end of the run in the meta-information)
+        
+        Only usable when 'set_logger_location' has been called previously
+        
+        Parameters
+        ----------
+        attributes:
+            List of the names of the parameters to track. All 'attributes'-variables need to be accessible by 
+            using algorithm.parameter (recommended to use @property) for each of the algorithms to be benchmarked
+        '''        
         self.dynamic_attrs = attributes
 
     def set_static_tracking(self, attributes):
+        '''Set which static attributes should be stored in the meta-information of the benchmark data
+        
+        Only usable when 'set_logger_location' has been called previously
+        
+        Parameters
+        ----------
+        attributes:
+            List of the names of the parameters to track. All 'attributes'-variables need to be accessible by 
+            using algorithm.parameter (recommended to use @property) for each of the algorithms to be benchmarked
+        '''        
         self.static_attrs = attributes
     
     def __call__(self, algorithms):
