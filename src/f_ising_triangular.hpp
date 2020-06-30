@@ -13,6 +13,7 @@
 class Ising_Triangular : public IOHprofiler_problem<int> {
 public:
   Ising_Triangular(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+
     IOHprofiler_set_instance_id(instance_id);
     IOHprofiler_set_problem_name("Ising_Triangular");
     IOHprofiler_set_problem_type("pseudo_Boolean_problem");

@@ -95,7 +95,6 @@ private:
   IOH_optimization_type maximization_minimization_flag = IOH_optimization_type::Maximization;
   std::map<std::string, std::string> attr_per_exp_name_value;
   std::map<std::string, std::shared_ptr<double> >  attr_per_run_name_value;
-  
   std::string suite_name = "No suite";
 
   int dimension;

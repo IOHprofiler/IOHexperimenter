@@ -373,6 +373,7 @@ void IOHprofiler_csv_logger::set_dynamic_attributes(const std::vector<std::strin
   }
 }
 
+
 void IOHprofiler_csv_logger::do_log(const std::vector<double> & log_info) {
   this->write_line( (size_t)(log_info[0]),log_info[1],log_info[2],log_info[3],log_info[4]);
 };
@@ -651,7 +652,6 @@ void IOHprofiler_csv_logger::write_in_buffer(const std::string add_string, std::
     buffer_string = add_string;
   }
 }
-
 
 /// \fn void IOHprofiler_csv_logger::update_logger_info(size_t optimal_evaluations, std::vector<double> found_optimal)
 /// This functions is to update infomation to be used in *.info files.

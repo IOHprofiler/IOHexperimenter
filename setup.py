@@ -1,6 +1,6 @@
 import setuptools, sys, os, sysconfig, glob
 from pathlib import Path
-from shutil import copyfile
+from shutil import move
 from distutils.command.build import build
 
 class CustomBuild(build):
@@ -23,7 +23,7 @@ class CustomBuild(build):
         if len(lib_file) != 0:
             lib_file = lib_file[0]
         else:
-            raise Exception('Python dynamic library is not found...')
+            raise Exception('Python dynamic library not found...')
 
         command = 'sed -e "s|py_lib=|py_lib={0}|g"\
             -e "s|-I/python-header|-I{1}|g" Makefile.in > Makefile'.format(lib_file, include_path)
@@ -31,8 +31,8 @@ class CustomBuild(build):
         os.system(command)
         os.system('make')
         
-        copyfile('_IOHprofiler.so', 'IOHexperimenter/_IOHprofiler.so')
-        copyfile('IOHprofiler.py', 'IOHexperimenter/IOHprofiler.py')
+        move('_IOHprofiler.so', 'IOHexperimenter/_IOHprofiler.so')
+        move('IOHprofiler.py', 'IOHexperimenter/IOHprofiler.py')
 
         super().run()
 

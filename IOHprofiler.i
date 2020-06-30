@@ -225,12 +225,12 @@ typedef  std::map<int, std::string> PROBLEM_ID_NAME;
 
 %include "src/IOHprofiler_class_generator.h"
 
+
 %template (genericGenerator_int_problem) genericGenerator<IOHprofiler_problem<int> >;
 %template (genericGenerator_double_problem) genericGenerator<IOHprofiler_problem<double> >;
 %include "src/IOHprofiler_suite.h"
 %template(IOHprofiler_suite_int) IOHprofiler_suite< int >;
 %template(IOHprofiler_suite_double) IOHprofiler_suite< double >;
-
 
 %include "src/IOHprofiler_BBOB_suite.hpp"
 %include "src/IOHprofiler_PBO_suite.hpp"
