@@ -32,6 +32,11 @@ public:
   
   void add_dynamic_attribute(const std::vector<std::shared_ptr<double> > &attributes, const std::vector<std::string> &attributes_name);
 
+  // Only for python wrapper.
+  void set_dynamic_attributes_name(const std::vector<std::string> &attributes_name);
+  void set_dynamic_attributes_name(const std::vector<std::string> &attributes_name, const std::vector<double > &initial_attributes);
+  void set_dynamic_attributes(const std::vector<std::string> &attributes_name, const std::vector<double > &attributes);
+
   void add_attribute(std::string, int);
 
   void add_attribute(std::string, double);
@@ -74,6 +79,11 @@ public:
   
   void set_parameters(const std::vector<std::shared_ptr<double> > &parameters, const std::vector<std::string> &parameters_name);
 
+  // Only for python wrapper.
+  void set_parameters_name(const std::vector<std::string > &parameters_name);
+  void set_parameters_name(const std::vector<std::string > &parameters_name, const std::vector<double> & initial_parameters);
+  void set_parameters(const std::vector<std::string> &parameters_name, const std::vector<double> &parameters);
+
 private:
   // The information for directory.
   std::string folder_name;
@@ -85,7 +95,6 @@ private:
   IOH_optimization_type maximization_minimization_flag = IOH_optimization_type::Maximization;
   std::map<std::string, std::string> attr_per_exp_name_value;
   std::map<std::string, std::shared_ptr<double> >  attr_per_run_name_value;
-
   std::string suite_name = "No suite";
 
   int dimension;
