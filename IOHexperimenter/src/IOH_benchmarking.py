@@ -1,8 +1,10 @@
-from src.IOH_function import IOH_function, custom_IOH_function
-from src.IOH_logger import IOH_logger
+from .IOH_function import IOH_function, custom_IOH_function
+from .IOH_logger import IOH_logger
+from .IOH_Utils import runParallelFunction
+
 from itertools import product
 from functools import partial
-from src.IOH_Utils import runParallelFunction
+
 from multiprocessing import cpu_count
 import numpy as np
             

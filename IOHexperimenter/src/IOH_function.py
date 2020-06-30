@@ -1,12 +1,14 @@
-import IOHexperimenter as IOH
+from .IOH_Utils import runParallelFunction
+from .IOH_logger import IOH_logger
+from .. import IOHprofiler as IOH
+
 import numpy as np
 from pathlib import Path
 import pkg_resources
 from packaging import version
 from functools import partial
 from itertools import product
-from src.IOH_Utils import runParallelFunction
-from src.IOH_logger import IOH_logger
+
 from collections.abc import Iterable
 import operator
 

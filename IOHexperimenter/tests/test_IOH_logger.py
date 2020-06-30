@@ -1,10 +1,9 @@
 import pytest
+
 import numpy as np
-import os.path
 from os import path
-from src.IOH_function import IOH_function, custom_IOH_function
-from src.IOH_logger import IOH_logger
-    
+from .. import IOH_function, custom_IOH_function, IOH_logger
+
 def test_initialization_logger(tmpdir):
     l = IOH_logger(tmpdir.dirname, "temp_run")
     l.clear_logger()

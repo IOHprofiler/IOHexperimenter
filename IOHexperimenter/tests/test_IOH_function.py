@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from src.IOH_function import IOH_function, custom_IOH_function
+from .. import IOH_function, custom_IOH_function
 
 def test_initialization_PBO():
     f = IOH_function(1, 16, 1, suite = "PBO")

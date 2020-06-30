@@ -1,4 +1,5 @@
-import IOHexperimenter as IOH
+from .. import IOHprofiler as IOH
+
 import numpy as np
 from pathlib import Path
 from collections.abc import Iterable

@@ -1,7 +1,6 @@
 import pytest
-from src.IOH_benchmarking import IOHexperimenter
-from src.IOH_function import IOH_function, custom_IOH_function
 import numpy as np
+from .. import IOHexperimenter, IOH_function, custom_IOH_function
 
 class opt_alg:
     def __init__(self, budget):
