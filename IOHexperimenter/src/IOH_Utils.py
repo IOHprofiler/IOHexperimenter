@@ -1,7 +1,7 @@
 from functools import partial
-import src.IOH_Config as Config
+from multiprocessing import cpu_count
 
-def runParallelFunction(runFunction, arguments, force_single = False, timeout = 30):
+def runParallelFunction(runFunction, arguments, parallel_config = None):
     """
         Return the output of runFunction for each set of arguments,
         making use of as much parallelization as possible on this system
@@ -14,15 +14,17 @@ def runParallelFunction(runFunction, arguments, force_single = False, timeout = 
                             Only used when running in parallel without mpi.
         :return:
     """
-    if force_single:
+    if parallel_config is None:
         return runSingleThreaded(runFunction, arguments)    
-    if Config.evaluate_parallel:
-        if Config.use_MPI:
+    if parallel_config['evaluate_parallel']:
+        if parallel_config['use_MPI']:
             return runMPI(runFunction, arguments)
-        elif Config.use_pebble:
-            return runPebblePool(runFunction, arguments, timeout = timeout)
+        elif parallel_config['use_pebble']:
+            return runPebblePool(runFunction, arguments, timeout = parallel_config['timeout'], num_threads = parallel_config['num_threads'])
+        elif parallel_config['use_joblib']:
+            return runJoblib(runFunction, arguments, num_threads = parallel_config['num_threads'])
         else:
-            return runPool(runFunction, arguments)
+            return runPool(runFunction, arguments, num_threads = parallel_config['num_threads'])
     else:
         return runSingleThreaded(runFunction, arguments)
 
@@ -33,7 +35,7 @@ def func_star(a_b, func):
     return func(*a_b)
 
 
-def runPool(runFunction, arguments):
+def runPool(runFunction, arguments, num_threads = None):
     """
         Small overhead-function to handle multi-processing using Python's built-in multiprocessing.Pool
 
@@ -41,22 +43,28 @@ def runPool(runFunction, arguments):
         :param arguments:   The arguments to passed distributedly to ``runFunction``
         :return:            List of any results produced by ``runFunction``
     """
-    print(f"Running pool with {Config.num_threads} threads")
+    if num_threads is None:
+        num_threads = cpu_count()
+    arguments = list(arguments)
+    print(f"Running pool with {min(num_threads, len(arguments))} threads")
     from multiprocessing import Pool
-    p = Pool(Config.num_threads)
+    p = Pool(min(num_threads, len(arguments)))
 
     local_func = partial(func_star, func=runFunction)
     results = p.map(local_func, arguments)
     p.close()
     return results
 
-def runPebblePool(runfunction, arguments, timeout = 30):
+def runPebblePool(runfunction, arguments, timeout = 30, num_threads = None):
     from pebble import ProcessPool
     from concurrent.futures import TimeoutError
     
+    if num_threads is None:
+        num_threads = cpu_count()
+    
     arguments = list(arguments)
     
-    print(f"Running pebble pool with {min(Config.num_threads, len(arguments))} threads")
+    print(f"Running pebble pool with {min(num_threads, len(arguments))} threads")
 
     
     def task_done(future):
@@ -68,12 +76,23 @@ def runPebblePool(runfunction, arguments, timeout = 30):
             print("Function raised %s" % error)
             print(error)  # traceback of the function
             
-    with ProcessPool(max_workers = min(Config.num_threads, len(arguments)), max_tasks = len(arguments)) as pool:
+    with ProcessPool(max_workers = min(num_threads, len(arguments)), max_tasks = len(arguments)) as pool:
         for x in arguments:
             if type(x) is not list and type(x) is not tuple:
                 x = [x]
             future = pool.schedule(runfunction, args=x, timeout=timeout)
             future.add_done_callback(task_done)
+
+def runJoblib(runFunction, arguments, num_threads = None):
+    from joblib import delayed, Parallel
+    
+    if num_threads is None:
+        num_threads = cpu_count()
+#     arguments = list(arguments)
+#     print(f"Running joblib with {min(num_threads, len(arguments))} threads")
+    local_func = partial(func_star, func=runFunction)
+
+    return Parallel(n_jobs = num_threads)(delayed(local_func)(arg) for arg in arguments)
 
 def runSingleThreaded(runFunction, arguments):
     """

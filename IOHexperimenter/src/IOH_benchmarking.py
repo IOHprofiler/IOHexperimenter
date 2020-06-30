@@ -3,6 +3,7 @@ from src.IOH_logger import IOH_logger
 from itertools import product
 from functools import partial
 from src.IOH_Utils import runParallelFunction
+from multiprocessing import cpu_count
 import numpy as np
             
 def _run_default(alg, fid, dim, iid, precision, suite, repetitions, observing,
@@ -62,6 +63,7 @@ class IOHexperimenter():
         '''Create an IOHexperimenter object for benchmarking a set of algorithms on multiple functions
 
         Initialize the functions to use by calling 'initialize_PBO', 'initialize_BBOB' or 'initialize_custom'
+        Set up parallellization by calling 'set_parallell'
 
         '''
         self.location = None
@@ -76,6 +78,7 @@ class IOHexperimenter():
         self.dynamic_attrs = None
         self.static_attrs = None
         self.precision = 0
+        self.parallel_settings = None
     
     def initialize_PBO(self, fids, iids, dims, repetitions):
         '''Initialize to a set of functions for the PBO suite
@@ -155,6 +158,29 @@ class IOHexperimenter():
         self.location = location
         self.foldername = foldername
         self.observing = True
+        
+    def set_parallel(self, parallel, version = "joblib", timeout = 30, num_threads = None):
+        '''Set the parallellization options for the experiments
+        
+        Parameters
+        ----------
+        parallel:
+            Boolean. Whether or not to use parallell execution
+        version:
+            Which parallellization library to use. Options are:
+                - 'multiprocessing'
+                - 'MPI' (using the schwimmbad library)
+                - 'joblib' (recommended) 
+                - 'pebble' (can timeout functions which take too long)
+        num_threads:
+            How many threads to use. Defaults to all available ones from 'cpu_count'
+        timeout:
+            If using pebble, this sets the timeout in seconds after which to cancel the execution
+        '''
+        self.parallel_settings = {"evaluate_parallel" : parallel, "use_MPI" : version == "MPI", 
+                                  "use_pebble" : version == "pebble", "timeout" : timeout, 
+                                  "use_joblib" : version == "joblib",
+                                  "num_threads" : num_threads if num_threads is not None else cpu_count()}
         
     def set_logger_options(self, dat = True, cdat = False, idat = 0, tdat_base = [0], tdat_exp = 0):
         '''Set which datafiles should be stored by the logger
@@ -247,5 +273,5 @@ class IOHexperimenter():
             
 
         
-        results = runParallelFunction(partial_run, arguments)   
+        results = runParallelFunction(partial_run, arguments, self.parallel_settings)   
         return results
