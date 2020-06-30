@@ -78,6 +78,8 @@ template <class InputType> void IOHprofiler_problem<InputType>::reset_problem() 
       this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::max();
     }
   }
+  this->prepare_problem();
+  this->calc_optimal();
 }
 
 template <class InputType> std::vector<double> IOHprofiler_problem<InputType>::loggerCOCOInfo() const{
