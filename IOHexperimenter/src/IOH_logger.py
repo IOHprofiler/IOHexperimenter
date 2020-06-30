@@ -91,7 +91,7 @@ class IOH_logger:
             self.params = parameters
         else:
             raise typeError("parameters needs to be a string or iterable containing strings")
-        self.logger.set_parameters_name(parameters)
+        self.logger.set_parameters_name(self.params)
         self.alg = algorithm
         
     def set_static_attributes(self, attrs):
@@ -126,7 +126,7 @@ class IOH_logger:
             self.dynamic_attrs = attrs
         else:
             raise typeError("attrs needs to be a string or iterable containing strings")
-        self.logger.set_dynamic_attributes_name(attrs)
+        self.logger.set_dynamic_attributes_name(self.dynamic_attrs)
 
     def process_evaluation(self, info):
         '''Internal function for processing evalutation

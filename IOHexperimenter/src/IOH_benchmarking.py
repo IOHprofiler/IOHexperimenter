@@ -20,7 +20,7 @@ def _run_default(alg, fid, dim, iid, precision, suite, repetitions, observing,
         if parameters is not None:
             logger.track_parameters(alg, parameters)
         if dynamic_attrs is not None:
-            logger.track_dynamic_attributes(alg, dynamic_attrs)
+            logger.set_dynamic_attributes(alg, dynamic_attrs)
         if static_attrs is not None:
             logger.set_static_attributes(alg, static_attrs)
         f.add_logger(logger)
@@ -45,7 +45,7 @@ def _run_custom(alg, function, fname, dim, suite, repetitions, observing,
         if parameters is not None:
             logger.track_parameters(alg, parameters)
         if dynamic_attrs is not None:
-            logger.track_dynamic_attributes(alg, dynamic_attrs)
+            logger.set_dynamic_attributes(alg, dynamic_attrs)
         if static_attrs is not None:
             logger.set_static_attributes(alg, static_attrs)
         f.add_logger(logger)
