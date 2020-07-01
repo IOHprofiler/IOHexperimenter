@@ -55,6 +55,15 @@ public:
     IOHprofiler_set_optimal((double)optimal_value);
   }
 
+  /// \fn void set_w_setting(const double dummy_para, const int epistasis_para, const int neutrality_para, const int ruggedness_para)
+  /// \brief A function to configure w-model layers.
+  /// \param dummy_para percentage of valid bits.
+  /// \param epistasis_para size of sub-string for epistasis
+  /// \param neutrality_para size of sub-string for neutrality
+  /// \param ruggedness_para gamma for ruggedness layper
+  ///
+  /// For details of w-model, please read https://www.sciencedirect.com/science/article/pii/S1568494619308099
+  /// and https://dl.acm.org/doi/pdf/10.1145/3205651.3208240
   void set_w_setting(const double dummy_para, const int epistasis_para, const int neutrality_para, const int ruggedness_para) {
     this->dummy_para = dummy_para;
     this->epistasis_para = epistasis_para;
@@ -66,7 +75,8 @@ public:
     std::vector<int> w_model_x;
     std::vector<int> tempX;
     int n;
-    /// dummy step
+    
+    // Dummy Layer
     if (this->dummy_para > 0){
       n = this->dummy_info.size();
       w_model_x.reserve(n);
@@ -76,17 +86,20 @@ public:
     } else {
       w_model_x = x;
     }
-    /// neutrality
+    
+    // Neutrality layer
     if (this->neutrality_para > 0) {
       tempX = w_model_x;
       layer_neutrality_compute(tempX,w_model_x,this->neutrality_para);
     } 
-    ///
+    
+    // Epistasis layer
     if (this->epistasis_para > 0) {
       tempX = w_model_x;
       layer_epistasis_compute(tempX,w_model_x,this->epistasis_para);
     }
-    ///
+    
+    // Base evaluate
     n = w_model_x.size();
     int result = 0;
     for (int i = 0; i != n; ++i) {
@@ -98,6 +111,7 @@ public:
       }
     }
 
+    // Ruggedness layer
     if (this->ruggedness_para > 0) {
       result = this->ruggedness_info[result];
     }
