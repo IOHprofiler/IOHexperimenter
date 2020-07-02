@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from .. import IOH_function, custom_IOH_function
+from .. import IOH_function, custom_IOH_function, W_model_function
 
 def test_initialization_PBO():
     f = IOH_function(1, 16, 1, suite = "PBO")
@@ -33,7 +33,18 @@ def test_initialization_custom():
     assert not f.final_target_hit
     assert all(f.upperbound == 5)
     assert all(f.lowerbound == -5)
-    
+
+def test_W_model():
+    f = W_model_function()
+    assert isinstance(f, IOH_function)
+    assert f.maximization
+    assert f.number_of_variables == 16
+    assert f.suite == "W_model"
+    assert not f.final_target_hit
+    f2 = IOH_function(1, 16, 0, suite = "PBO")
+    assert f(16 * [0]) == f2(16 * [0])
+    assert f(16 * [1]) == f2(16 * [1])
+
 def test_function_calling():
     f = IOH_function(1, 5, 1, suite = "BBOB")
     assert f([0] * 5) == f(np.array([0] * 5))
