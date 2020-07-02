@@ -62,7 +62,7 @@ public:
             M[i][j] = 0.0;
             for (int k = 0; k < n; ++k) {
                 double exponent = 1.0 * (int) k / ((double) (long) n - 1.0);
-                M[i][j] += rot1[i][k] * pow(sqrt(10), exponent) * rot2[k][j];
+                M[i][j] += rot1[i][k] * pow(sqrt(10.0), exponent) * rot2[k][j];
             }
         }
     }

@@ -25,7 +25,7 @@ public:
   ~NQueens() {}
 
   void customize_optimal() {
-    IOHprofiler_set_optimal(sqrt(IOHprofiler_get_number_of_variables()));
+    IOHprofiler_set_optimal(sqrt( (double) IOHprofiler_get_number_of_variables() ) );
   }
 
   double _max(double element1 , double element2) {

@@ -28,7 +28,7 @@ public:
   ~Ising_Triangular() {}
 
   int modulo_ising_triangular(int x,int N) {
-    return (x % N + N) %N;
+    return (x % N + N) % N;
   }
 
   double internal_evaluate(const std::vector<int> &x) {

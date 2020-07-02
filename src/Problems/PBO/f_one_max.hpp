@@ -21,7 +21,6 @@ public:
     IOHprofiler_set_upperbound(1);
     IOHprofiler_set_best_variables(1);
     IOHprofiler_set_number_of_variables(dimension);
-    IOHprofiler_set_optimal((double)dimension);
   }
   
   ~OneMax() {}
