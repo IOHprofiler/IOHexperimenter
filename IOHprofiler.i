@@ -225,6 +225,8 @@ typedef  std::map<int, std::string> PROBLEM_ID_NAME;
 %include "src/f_one_max_ruggedness1.hpp"
 %include "src/f_one_max_ruggedness2.hpp"
 %include "src/f_one_max_ruggedness3.hpp"
+%include "src/f_w_model_one_max.hpp"
+%include "src/f_w_model_leading_ones.hpp"
 
 %include "src/IOHprofiler_class_generator.h"
 
