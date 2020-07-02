@@ -4,7 +4,7 @@ We apply [Doxygen](https://www.doxygen.nl/index.html) and [Sphinx](https://www.s
 
 ### Install dependencies
 #### Sphinx and Doxygen
-Please visit sites of __Doxygen__ [https://www.doxygen.nl/index.html]((https://www.doxygen.nl/index.html) and __Sphinx__ [https://www.sphinx-doc.org](https://www.sphinx-doc.org) and follow instructions there.
+Please visit sites of __Doxygen__ [(https://www.doxygen.nl/index.html)](https://www.doxygen.nl/index.html) and __Sphinx__ [(https://www.sphinx-doc.org)](https://www.sphinx-doc.org), and follow instructions there.
 
 #### Sphinx theme
 We recommend install using pip
