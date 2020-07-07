@@ -43,6 +43,8 @@
 %shared_ptr(NQueens)
 %shared_ptr(Concatenated_Trap)
 %shared_ptr(NK_Landscapes)
+%shared_ptr(W_Model_OneMax)
+%shared_ptr(W_Model_LeadingOnes)
 %shared_ptr(Sphere)
 %shared_ptr(Ellipsoid)
 %shared_ptr(Rastrigin)
@@ -69,7 +71,6 @@
 %shared_ptr(Lunacek_Bi_Rastrigin)
 %shared_ptr(PBO_suite)
 %shared_ptr(BBOB_suite)
-
 %{
 #include "src/coco_transformation_objs.hpp"
 #include "src/coco_transformation_vars.hpp"
@@ -123,6 +124,8 @@
 #include "src/f_one_max_ruggedness1.hpp"
 #include "src/f_one_max_ruggedness2.hpp"
 #include "src/f_one_max_ruggedness3.hpp"
+#include "src/f_w_model_one_max.hpp"
+#include "src/f_w_model_leading_ones.hpp"
 #include "src/IOHprofiler_BBOB_suite.hpp"
 #include "src/IOHprofiler_PBO_suite.hpp"
 #include "src/IOHprofiler_class_generator.h"
@@ -222,6 +225,8 @@ typedef  std::map<int, std::string> PROBLEM_ID_NAME;
 %include "src/f_one_max_ruggedness1.hpp"
 %include "src/f_one_max_ruggedness2.hpp"
 %include "src/f_one_max_ruggedness3.hpp"
+%include "src/f_w_model_one_max.hpp"
+%include "src/f_w_model_leading_ones.hpp"
 
 %include "src/IOHprofiler_class_generator.h"
 
