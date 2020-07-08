@@ -8,19 +8,11 @@
 * `number_of_instances`
 * `number_of_dimensions`
 
-
-The following functions for experiments are available to a suite:
-* <i>get_next_problem</i>, return a shared point of problems of the suite in order.
-* <i>addCSVLogger(logger)</i>, assigns a __IOHprofiler_csv_logger__ class to the suite.
-* <i>IOHprofiler_set_suite_problem_id(problem_id)</i>
-* <i>IOHprofiler_set_suite_instance_id(instance_id)</i>
-* <i>IOHprofiler_set_suite_dimension(dimension)</i>
-* <i>mapIDTOName</i>, is to match problem id and name. 
-
 ### Creating a suite
-__IOHexperimenter__ provides a __PBO_suite__ for pseudo Boolean problems, but it is also easy to add your own suite. Creating a suite is done by registering problems in the suite and assigning ids to them.
+__IOHexperimenter__ provides __PBO_suite__ for pseudo Boolean problems [__BBOB suite__](https://coco.gforge.inria.fr/downloads/download16.00/bbobdocfunctions.pdf) for continuous problems of COCO, but it is also easy to add your own suite. Creating a suite is done by registering problems in the suite and assigning ids to them.
 
 Taking the implementation of __PBO_suite__ as an example, <i>constructor functions</i> are as below. In the constructor functions, the range of allowed `problem_id`, `instance_id` and `dimension` should be identified. In addition, <i>registerProblem()</i> must be included in the constructor functions.
+
 ```cpp
 PBO_suite() {
   std::vector<int> problem_id;
@@ -39,6 +31,7 @@ PBO_suite() {
   IOHprofiler_set_suite_dimension(dimension);
   IOHprofiler_set_suite_name("PBO");
   registerProblem();
+  loadProblem();
 };
 
 PBO_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
@@ -65,6 +58,7 @@ PBO_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector
   IOHprofiler_set_suite_dimension(dimension);
   IOHprofiler_set_suite_name("PBO");
   registerProblem();
+  loadProblem();
 }
 ```
 
