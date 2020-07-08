@@ -34,6 +34,8 @@ public:
     lowerbound(std::vector<InputType> (number_of_variables) ), 
     upperbound(std::vector<InputType> (number_of_variables) ),
     optimal(std::vector<double>(number_of_objectives) ),
+    raw_objectives(std::vector<double>(number_of_objectives)),
+    transformed_objectives(std::vector<double>(number_of_objectives)),
     optimalFound(false),
     evaluations(0),
     best_so_far_raw_objectives(std::vector<double>(number_of_objectives) ),

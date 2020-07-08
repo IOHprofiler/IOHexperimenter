@@ -15,6 +15,7 @@ template <class InputType> void IOHprofiler_suite<InputType>::loadProblem() {
       }
     }
   }
+  assert(this->size_of_problem_list == this->size());
   this->get_problem_flag = false;
   this->load_problem_flag = true;
 }
@@ -59,6 +60,7 @@ template <class InputType> std::shared_ptr<IOHprofiler_problem<InputType> > IOHp
 
 template <class InputType> std::shared_ptr<IOHprofiler_problem<InputType> > IOHprofiler_suite<InputType>::get_problem(std::string problem_name, int instance, int dimension) {
   Problem_ptr p = genericGenerator<IOHprofiler_problem<InputType> >::instance().create(problem_name);
+  assert(p != nullptr);
   p->reset_problem();
   p->IOHprofiler_set_problem_id(this->problem_name_id_map[problem_name]);
   p->IOHprofiler_set_instance_id(instance);
@@ -68,6 +70,7 @@ template <class InputType> std::shared_ptr<IOHprofiler_problem<InputType> > IOHp
 
 template <class InputType> std::shared_ptr<IOHprofiler_problem<InputType> > IOHprofiler_suite<InputType>::get_problem(int problem_id, int instance, int dimension) {
   Problem_ptr p = genericGenerator<IOHprofiler_problem<InputType> >::instance().create(this->problem_id_name_map[problem_id]);
+  assert(p != nullptr);
   p->reset_problem();
   p->IOHprofiler_set_problem_id(problem_id);
   p->IOHprofiler_set_instance_id(instance);

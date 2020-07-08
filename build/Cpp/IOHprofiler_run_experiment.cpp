@@ -24,7 +24,7 @@ int mutation(std::vector<int> &x, double mutation_rate) {
   return result;
 }
 
-template<class InputType> double evaluate(std::shared_ptr<IOHprofiler_problem<InputType> > problem, std::shared_ptr<IOHprofiler_csv_logger> logger,const std::vector<InputType> &x) {
+template<class InputType> double evaluate(std::shared_ptr<IOHprofiler_problem<InputType> > problem, std::shared_ptr<IOHprofiler_csv_logger<int>> logger,const std::vector<InputType> &x) {
   double result;
   result = problem->evaluate(x);
   if (problem->IOHprofiler_get_problem_type() == "pseudo_Boolean_problem") {
@@ -39,7 +39,7 @@ template<class InputType> double evaluate(std::shared_ptr<IOHprofiler_problem<In
 
 /// This is an (1+1)_EA with static mutation rate = 1/n.
 /// An example for discrete optimization problems, such as PBO suite.
-void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int> > problem, std::shared_ptr<IOHprofiler_csv_logger> logger) {
+void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int> > problem, std::shared_ptr<IOHprofiler_csv_logger<int>> logger) {
   /// Declaration for variables in the algorithm
   std::vector<int> x;
   std::vector<int> x_star;
@@ -76,7 +76,7 @@ void evolutionary_algorithm(std::shared_ptr<IOHprofiler_problem<int> > problem, 
 
 /// This is an (1+1)_EA with static mutation rate = 1/n.
 /// An example for continuous optimization problems, such as BBOB suite.
-void random_search(std::shared_ptr<IOHprofiler_problem<double> > problem, std::shared_ptr<IOHprofiler_csv_logger> logger) {
+void random_search(std::shared_ptr<IOHprofiler_problem<double> > problem, std::shared_ptr<IOHprofiler_csv_logger<int>> logger) {
   /// Declaration for variables in the algorithm
   std::vector<double> x(problem->IOHprofiler_get_number_of_variables());
   double y,best_y;
