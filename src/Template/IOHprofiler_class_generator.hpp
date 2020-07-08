@@ -17,6 +17,8 @@ template <class manufacturedObj> std::shared_ptr<manufacturedObj> genericGenerat
   typename FN_registry::const_iterator regEntry = registry.find(className);
   if (regEntry != registry.end()) {
     return (*regEntry).second();
+  } else {
+    IOH_error("Object unknown in the registry");
   }
   return ret;
 }

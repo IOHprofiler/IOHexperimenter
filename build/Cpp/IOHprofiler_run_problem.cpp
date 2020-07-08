@@ -34,7 +34,7 @@ void _run_w_model() {
 
 
   std::vector<int> time_points{1,2,5};
-  IOHprofiler_csv_logger logger("./","run_w_model","EA","EA");
+  IOHprofiler_csv_logger<int> logger("./","run_w_model","EA","EA");
   logger.set_complete_flag(true);
   logger.set_interval(0);
   logger.set_time_points(time_points,10);
@@ -123,7 +123,7 @@ void _run_problem() {
   /// If no logger is added, there will be not any output files, but users
   /// can still get fitness values.
   std::vector<int> time_points{1,2,5};
-  IOHprofiler_csv_logger logger("./","run_problem","EA","EA");
+  IOHprofiler_csv_logger<int> logger("./","run_problem","EA","EA");
   logger.set_complete_flag(true);
   logger.set_interval(0);
   logger.set_time_points(time_points,10);
