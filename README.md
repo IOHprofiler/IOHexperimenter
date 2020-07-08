@@ -35,7 +35,7 @@ The __IOHexperimenter__ has been built on `C++`.
 
 [Cmake](https://cmake.org) is used to build this project, please make sure you have it installed.
 
-If you are using the tool for the first time, please download or clone this branch, and run `cmake .` and `make install` at the directory where the project locates.
+If you are using the tool for the first time, please download or clone this branch, and run `cmake .`; `make install` at the directory where the project locates.
 * If you want to set up the install directory, please run `cmake -DCMAKE_INSTALL_PREFIX=your/path .` before installation.
 * three exectuable files will be generated in `build/Cpp` for test.
 

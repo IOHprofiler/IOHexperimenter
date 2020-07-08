@@ -19,16 +19,16 @@ For this example, a `OneMax` class is declared and initialized with dimension 10
 ```cpp
 OneMax om;
 int dimension = 1000;
-om.Initilize_problem(dimension);
+om.IOHprofiler_set_number_of_variables(dimension);
 ```
 
-During the optimization process, the algorithm can acquire the fitness value through <i>evaluate()</i> function. In the example below, <i>om.evaluate(x)</i> returns the fitness of `x`. Another option is the statement <i>om.evaluate(x,y)</i>, which stores the fitness of `x` in `y`. `logger` is an __IOHprofiler_csv_logger__ class, which stores function evaluations in a format compatible with __IOHanalyzer__. <i>logger.write_line(om.loggerInfo())</i> deliveries the lastest information of tested `om` to the `logger`.  In addition, <i>om.IOHprofiler_hit_optimal()</i> is an indicator you can use to check if the optimum has been found.
+During the optimization process, the algorithm can acquire the fitness value through <i>evaluate()</i> function. In the example below, <i>om.evaluate(x)</i> returns the fitness of `x`. Another option is the statement <i>om.evaluate(x,y)</i>, which stores the fitness of `x` in `y`. `logger` is an __IOHprofiler_csv_logger__ class, which stores function evaluations in a format compatible with __IOHanalyzer__. <i>logger.do_log(om.loggerInfo())</i> deliveries the lastest information of tested `om` to the `logger`.  In addition, <i>om.IOHprofiler_hit_optimal()</i> is an indicator you can use to check if the optimum has been found.
 ```cpp
 while (!om.IOHprofiler_hit_optimal()) {
   x = x_star;
   if (mutation(x, mutation_rate)) {
     y = om.evaluate(x);
-    logger.write_line(om.loggerInfo());
+    logger.do_log(om.loggerInfo());
   }
   if (y[0] > best_value) {
     best_value = y;
@@ -37,7 +37,7 @@ while (!om.IOHprofiler_hit_optimal()) {
 }
 ```
 
-If, for your experiment, you want to generate data to be used in the __IOHanalyzer__, a `IOHprofiler_csv_logger` should be added to the problem you are testing on. The arguments of `IOHprofiler_csv_logger` are directory of result folder, name of result folder, name of the algorithm and infomation of the algorithm. With different setting of triggers (observer), mutilple data files are to be generated for each experiment. More details on the available triggers are available [here](/IOHexperimenter/Loggers/Observer). Before optimizing a problem, `logger` must be targeted with the problem using the statement <i>logger.target_problem()</i>, with which arguments are problem id, dimension, instance id, problem name, and the type of optimization (maximization or minimization).
+If, for your experiment, you want to generate data to be used in the __IOHanalyzer__, a `IOHprofiler_csv_logger` should be added to the problem you are testing on. The arguments of `IOHprofiler_csv_logger` are directory of result folder, name of result folder, name of the algorithm and infomation of the algorithm. With different setting of triggers (observer), mutilple data files are to be generated for each experiment. More details on the available triggers are available [here](/IOHexperimenter/Loggers/Observer). Before optimizing a problem, `logger` must set to track the problem using the statement <i>logger.track_problem()</i>.
 
 ```cpp
 std::vector<int> time_points{1,2,5};
@@ -46,18 +46,14 @@ logger->set_complete_flag(true);
 logger->set_interval(0);
 logger->set_time_points(time_points,10);
 logger->activate_logger();
-logger.target_problem(om.IOHprofiler_get_problem_id(), 
-                      om.IOHprofiler_get_number_of_variables(), 
-                      om.IOHprofiler_get_instance_id(),
-                      om.IOHprofiler_get_problem_name(),
-                      om.IOHprofiler_get_optimization_type());
+logger.target_problem(om);
 ```
 
 <a name="suites"></a>
 ## Test on suites
-Suites are collections of test problems. The idea behind a suite is that packing problems with similar properties toghther makes it easier to test algorithms on a class of problems. Currently, two pre-defined suites are available: [__PBO__](Benchmark/), consisting of 23 __pseudo Boolean problems__, and [__BBOB__](https://coco.gforge.inria.fr/downloads/download16.00/bbobdocfunctions.pdf), consisting of 24 __real-valued problems__. To find out how to create your own suites, please visit [this page](/IOHexperimenter/Adding-Functions/).
+Suites are collections of test problems. The idea behind a suite is that packing problems with similar properties together makes it easier to test an algorithm on a set of problems. Currently, two pre-defined suites are available: [__PBO__](Benchmark/), consisting of 23 __pseudo Boolean problems__, and [__BBOB__](https://coco.gforge.inria.fr/downloads/download16.00/bbobdocfunctions.pdf), consisting of 24 __real-valued problems__. To find out how to create your own suites, please visit [this page](/IOHexperimenter/Adding-Functions/).
 
-An example of testing an evolutionary algorithm with mutation operator on  the __PBO__ suite is implemented in `IOHprofiler_run_suite.cpp`. __PBO__ suite includes pointers to 23 problems. To instantiate problems you want to test, the vectors of problem id, instances and dimensions need to be given as follows:
+An example of testing an evolutionary algorithm with mutation operator on the __PBO__ suite is implemented in `IOHprofiler_run_suite.cpp`. __PBO__ suite includes pointers to 23 problems. To instantiate problems you want to test, the vectors of problem id, instances and dimensions need to be given as follows:
 ```cpp
 std::vector<int> problem_id = {1,2};
 std::vector<int> instance_id ={1,2};
@@ -65,7 +61,7 @@ std::vector<int> dimension = {100,200,300};
 PBO_suite pbo(problem_id,instance_id,dimension);
 ```
 
-With the suite, you can test problems of the suite one by one, until all problems have been tested. In this example, the order of problem is as follow, and an `evlutionary_algorithm` is applied:
+With the suite, you can test problems of the suite one by one, until all problems have been tested. In this example, the order of problem is as follow, and an `evolutionary_algorithm` is applied:
 
 1. problem id 1, instance 1, dimension 100
 2. problem id 1, instance 2, dimension 100

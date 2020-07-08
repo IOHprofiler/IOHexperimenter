@@ -1,91 +1,68 @@
 ## Problems of IOHexperimenter
 
 [IOHprofiler_problem](/src/Template/IOHprofiler_problem.hpp) is the base `class` of problems of __IOHexperimenter__. The property variables of problems include:
-* `problem_id`, will be assigned if the problem is added to a suite, otherwise default by 0.
-* `instance_id`,  sets transformation methods on problems. The original problem is with instance_id 1, <i>scale</i> and <i>shift</i> are applied on objectives for instance_id in [2,100], <i>XOR</i> is applied on variables for instance_id in [2,50], and <i>sigma</i> function is applied on variables for instance_id in [51,100].
+* `problem_id` (optional), will be assigned if the problem is added to a suite, otherwise default by 0.
+* `instance_id` (optional),  sets transformation methods on problems. The original problem is with instance_id 1, <i>scale</i> and <i>shift</i> are applied on objectives for instance_id in [2,100], <i>XOR</i> is applied on variables for instance_id in [2,50], and <i>sigma</i> function is applied on variables for instance_id in [51,100].
 * `problem_name`
-* `problem_type`
+* `problem_type` (optional)
 * `lowerbound`, is a vector of lowerbound for variables.
 * `upperbound`, is a vector of upperbound for variables.
-* `number_of_variables`, is the dimension of the problem.
+* `number_of_variables` (optional), is the dimension of the problem.
 * `number_of_objectives`, is only available as 1 now. The functionality of multi-objectives is under development.
-* `best_variables`, is a vector of optimal solution, which is used to calculate the optimum. If the best_variables is not given, the optimum will be set as __DBL_MAX__.
-* `optimal`, is a vector of optimal objectives, but currently only single objective is supported.
-
-* `evaluate_int_info`, is a vector of __int__ values that are iteratively used in <i>evaluate</i>.
-* `evaluate_double_info`, is a vector of __double__ values that are iteratively used in <i>evaluate</i>.
-
-And some functions for personal experiments are supplied:
-* <i>evaluate(x)</i>, returns a vector of fitness values. The argument __x__ is a vector of variables.
-* <i>evaluate(x,y)</i>, updates __y__ with a vector of fitness values, and __x__ is a vector of variables.
-* <i>addCSVLogger(logger)</i>, assigns a __IOHprofiler_csv_logger__ class to the problem.
-* <i>clearLogger()</i>, delete logger methods of the problem.
-* <i>reset_problem()</i>, reset the history information of problem evaluations. You should call this function at first when you plan to do another test on the same problem class.
-* <i>IOHprofiler_hit_optimal()</i>, returns true if the optimum of the problem has been found.
-* <i>IOHprofiler_set_number_of_variables(number_of_variables)</i>, sets dimension of the problem.
-* <i>IOHprofiler_set_instance_id(instance_id)</i>
+* `best_variables` (optional), is a vector of optimal solution, which is used to calculate the optimum. If both best_variables and optimum are not given, the optimum will be set as `std::numeric_limits<double>::max()` for maximization optimization, and as `std::numeric_limits<double>::lowest()` for minimization optimization.
+* `optimal` (optional), is a vector of optimal objectives, but currently only single objective is supported. If both best_variables and optimum are not given, the optimum will be set as `std::numeric_limits<double>::max()` for maximization optimization, and as `std::numeric_limits<double>::lowest()` for minimization optimization.
+* `maximization_minimization_flag`, sets as 1 for maximization, otherwise for minimization.
 
 ### Creating a problem
-__IOHexperimenter__ provides a variety of problems for testing algorithms, but it is also easy to add your own problems. Overall, to create a problem of __IOHexperimenter__, two functions need to be implemented: <i>construct functions</i> and <i>internel_evaluate</i>. Additionally, you can define <i>update_evaluate_double_info</i> and <i>update_evaluate_int_info</i> to make evluate process more efficiently.
+To create a problem of __IOHexperimenter__, the correct `IOHprofiler_problem<T>` needs to be inherited, and two functions need to be implemented: <i>construct functions</i> and <i>internel_evaluate</i>. Additionally, you can add pre-processing codes of allocating a problem in the virtual <i>prepare_problem</i> function, to make evluate process more efficient.
 
-Taking the implementation of __OneMax__ as an instance, <i>construct functions</i> are as below. `problem_name` and `number_of_objectives` __must__ be set. In general, two methods of construction of the problems are given. One is constructing without giving `instance_id` and `dimension`, and the other one is with.
+Taking the implementation of __OneMax__ with reduction transformation as an example, <i>construct functions</i> are as below. `problem_name` and `number_of_objectives` __must__ be set.
 ```cpp
-OneMax() {
-  IOHprofiler_set_problem_name("OneMax");
-  IOHprofiler_set_problem_type("pseudo_Boolean_problem");
-  IOHprofiler_set_number_of_objectives(1);
-  IOHprofiler_set_lowerbound(0);
-  IOHprofiler_set_upperbound(1);
-  IOHprofiler_set_best_variables(1);
-}
-
-OneMax(int instance_id, int dimension) {
+OneMax_Dummy1(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
   IOHprofiler_set_instance_id(instance_id);
-  IOHprofiler_set_problem_name("OneMax");
+  IOHprofiler_set_problem_name("OneMax_Dummy1");
   IOHprofiler_set_problem_type("pseudo_Boolean_problem");
   IOHprofiler_set_number_of_objectives(1);
   IOHprofiler_set_lowerbound(0);
   IOHprofiler_set_upperbound(1);
   IOHprofiler_set_best_variables(1);
-  Initilize_problem(dimension);
-}
-  
-~OneMax() {};
-
-void Initilize_problem(int dimension) {
   IOHprofiler_set_number_of_variables(dimension);
-  IOHprofiler_set_optimal((double)dimension);
-};
+}
+
+~OneMax_Dummy1() {};
 ```
 
-The <i>internal_evaluate</i> __must__ be implemented as well. It is used during evaluate process, returning a vector of (real) objective values of the corresponding variables __x__.
+The <i>internal_evaluate</i> __must__ be implemented as well. It is used during evaluate process, returning a (real) objective values of the corresponding variables __x__. In this case, the evaluate function applies a variable `info`. To avoid wasting time on calculating `info` within <i>internal_evaluate</i> for each evaluation, `info` is prepared in the <i>prepare_problem</i> function.
 ```cpp
-std::vector<double> internal_evaluate(std::vector<int> x) {
-  std::vector<double> y;
-  int n = x.size();
+std::vector<int> info;
+void prepare_problem() {
+  info = dummy(IOHprofiler_get_number_of_variables(),0.5,10000);
+}
+
+double internal_evaluate(const std::vector<int> &x) {
+  int n = this->info.size();
   int result = 0;
   for (int i = 0; i != n; ++i) {
-    result += x[i];
+    result += x[this->info[i]];
   }
-  y.push_back((double)result);
-  return y;
+  return (double)result;
 };
 ```
 
-If you want to register your problem by `problem_name` and add it into a suite, please add functions creating instances as following codes.
+If you want to register your problem using `problem_name` and add it into a suite, please add functions for creating instances as following codes.
+
 ```cpp
-static OneMax * createInstance() {
-  return new OneMax();
-};
-
-static OneMax * createInstance(int instance_id, int dimension) {
-  return new OneMax(instance_id, dimension);
+static OneMax_Dummy1 * createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+    return new OneMax_Dummy1(instance_id, dimension);
+  };
 };
 ```
-To register the problem, you can use the <i>geniricGenerator</i> in [IOHprofiler_class_generator](/src/Template/). For example, you can use the following statement to register and create __OneMax__ ,
+
+To register the problem, you can use the <i>geniricGenerator</i> in [IOHprofiler_class_generator](https://github.com/IOHprofiler/IOHexperimenter/blob/developing/src/Template/IOHprofiler_class_generator.hpp). For example, you can use the following statement to register and create __OneMax__ with reduction transformation,
+
 ```cpp
 // Register
-static registerInFactory<IOHprofiler_problem<int>,OneMax> regOneMax("OneMax");
+static registerInFactory<IOHprofiler_problem<int>,OneMax_Dummy1> regOneMax_Dummy1("OneMax_Dummy1");
 // Create
-std::shared_ptr<IOHprofiler_problem<int>> problem = genericGenerator<IOHprofiler_problem<int>>::instance().create("OneMax");
+std::shared_ptr<IOHprofiler_problem<int>> problem = genericGenerator<IOHprofiler_problem<int>>::instance().create("OneMax_Dummy1");
 ```
