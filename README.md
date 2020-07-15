@@ -20,10 +20,9 @@ This is the __benchmarking platform__ for <b>I</b>terative <b>O</b>ptimization <
 
 <b>IOHexperimenter</b> is available for:
 
-* `C++`
-* `R` package [https://github.com/IOHprofiler/IOHexperimenter/tree/R](https://github.com/IOHprofiler/IOHexperimenter/tree/R)
-* `Python` interface
-* `Java` interface (soon to come)
+* `C++` on the current GitHub branch; [Wiki Page](https://iohprofiler.github.io/IOHexp/Cpp/).
+* `R` on [this GitHub branch](https://github.com/IOHprofiler/IOHexperimenter/tree/R) or as a [CRAN package](https://cran.r-project.org/package=IOHexperimenter); [Wiki Page](https://iohprofiler.github.io/IOHexp/R/).
+* `Python` on [this GitHub branch](https://github.com/IOHprofiler/IOHexperimenter/tree/python-interface) or as a [pip package](https://pypi.org/project/IOHexperimenter/); [Wiki Page](https://iohprofiler.github.io/IOHexp/python/).
 
 ## Using IOHexperimenter
 
@@ -63,7 +62,7 @@ If you have any questions, comments or suggestions, please don't hesitate contac
 ## Our team
 
 * [Furong Ye](https://www.universiteitleiden.nl/en/staffmembers/furong-ye#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
-* Diederick Vermetten, <i>Leiden Institute of Advanced Computer Science</i>,
+* [Diederick Vermetten](https://www.universiteitleiden.nl/en/staffmembers/diederick-vermetten#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
 * [Hao Wang](https://www.universiteitleiden.nl/en/staffmembers/hao-wang#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
 * [Carola Doerr](http://www-desir.lip6.fr/~doerr/), <i>CNRS and Sorbonne University</i>, 
 * [Thomas Bäck](https://www.universiteitleiden.nl/en/staffmembers/thomas-back#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
