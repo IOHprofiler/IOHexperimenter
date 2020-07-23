@@ -93,6 +93,17 @@ using IOHprofiler_AttainSuite =
             std::map< size_t, // instance
                  IOHprofiler_AttainMat >>>; // ECDF
 
+/** Type used to store all bi-dimensional attainment functions.
+ *
+ * First dimension is the problem id,
+ * second dimension is the dimension id,
+ * Every item is double
+ */
+using IOHprofiler_ECDF_AUC =
+    std::map< size_t,         // problem
+        std::map< size_t,     // dim
+                 double >>;   // AUC value
+
 /** An observer which stores bi-dimensional error/evaluations discretized attainment matrices.
  *
  * A matrix is stored for each triplet (problem,dimension,instance),
@@ -287,6 +298,20 @@ class IOHprofiler_ecdf_sum : public IOHprofiler_ecdf_stat<size_t>
 {
     public:
         size_t operator()(const IOHprofiler_AttainSuite& attainment);
+};
+
+
+/** Computes the Area Under the ECDF curve from an IOHprofiler_AttainSuite data structure.
+ *
+ * @code
+    IOHprofiler_ecdf_auc auc;
+    double s = auc(logger.get());
+ * @endcode
+ */
+class IOHprofiler_ecdf_auc : public IOHprofiler_ecdf_stat<size_t>
+{
+    public:
+        double operator()(const IOHprofiler_AttainSuite& attainment);
 };
 
 #include "IOHprofiler_ecdf_logger.hpp"

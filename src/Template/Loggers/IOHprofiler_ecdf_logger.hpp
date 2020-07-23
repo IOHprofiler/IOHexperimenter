@@ -291,3 +291,34 @@ size_t IOHprofiler_ecdf_sum::operator()(const IOHprofiler_AttainSuite& attainmen
     return sum;
 }
 
+
+/***** IOHprofiler_ecdf_auc *****/
+
+IOHprofiler_ECDF_AUC IOHprofiler_ecdf_auc::operator()(
+    const IOHprofiler_AttainSuite& attainment,
+    const IOHprofiler_Range<size_t> eval_range
+)
+{
+    unsigned int N_ins = attainment.at(_pb).at(_dim).size()
+    unsigned int N_target = eval_range.size(); 
+    unsigned int eval_step = eval_range.step(); 
+    unsigned long int sum = 0;
+
+    for(const auto& pb_dim : attainment) {
+        for(const auto& dim_ins : pb_dim.second) {
+            sum = 0;
+            for(const auto& ins_mat : dim_ins.second) {
+                const IOHprofiler_AttainMat& mat = ins_mat.second;
+                for(const auto& row : mat) {
+                    for(const auto& item : row  {
+                        sum += item;
+                    }
+                }
+            }
+            ecdf_auc[pb_dim.first][dim_ins.first] = eval_step * sum / (1.0 * N_ins * N_target);
+        }
+    }
+
+    return ecdf_auc;
+}
+
