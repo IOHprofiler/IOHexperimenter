@@ -59,7 +59,7 @@ public:
   double internal_evaluate(const std::vector<double> &x) {
     size_t i;
     double sum = 0.0;
-    int n = x.size();
+    size_t n = x.size();
     std::vector<double> result(1);
 
    for (i = 0; i < n; ++i) {

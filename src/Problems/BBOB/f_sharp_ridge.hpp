@@ -68,7 +68,7 @@ public:
   }
 
   double internal_evaluate(const std::vector<double> &x) {
-    int n = x.size();
+    size_t n = x.size();
     static const double alpha = 100.0;
     const double vars_40 = 1; /* generalized: number_of_variables <= 40 ? 1 : number_of_variables / 40.0; */
     size_t i = 0;

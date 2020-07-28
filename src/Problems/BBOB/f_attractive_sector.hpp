@@ -70,9 +70,9 @@ public:
   double internal_evaluate(const std::vector<double> &x) {
     std::vector<double> result(1,0.0);
 
-    int n = x.size();
+    size_t n = x.size();
     
-    for (int i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
       if (Coco_Transformation_Data::xopt[i] * x[i] > 0.0) {
         result[0] += 100.0 * 100.0 * x[i] * x[i];
       } else {

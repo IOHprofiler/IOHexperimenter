@@ -60,11 +60,11 @@ public:
   double internal_evaluate(const std::vector<double> &x) {
     static const double condition = 1.0e6;
     std::vector<double> result(1);
-    int n = x.size();
+    size_t n = x.size();
 
 
     result[0] = condition * x[0] * x[0];
-    for (int i = 1; i < n; ++i) {
+    for (size_t i = 1; i < n; ++i) {
       result[0] += x[i] * x[i];
     }
 

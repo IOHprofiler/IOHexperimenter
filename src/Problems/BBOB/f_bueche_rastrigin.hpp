@@ -51,10 +51,10 @@ public:
   double internal_evaluate(const std::vector<double> &x) {
     double tmp = 0., tmp2 = 0.;
     std::vector<double> result(1);
-    int n = x.size();
+    size_t n = x.size();
 
     result[0] = 0.0;
-    for (int i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
       tmp += cos(2 * coco_pi * x[i]);
       tmp2 += x[i] * x[i];
     }

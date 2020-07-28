@@ -54,7 +54,7 @@ public:
   }
 
   double internal_evaluate(const std::vector<double> &x) {
-    int n = x.size();
+    size_t n = x.size();
     static const double condition = 100;
     static const double alpha = 10.0;
     size_t i, j;

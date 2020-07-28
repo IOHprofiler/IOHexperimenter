@@ -11,7 +11,7 @@ static void transform_obj_norm_by_dim_evaluate(const int dimension,std::vector<d
 static void transform_obj_oscillate_evaluate(std::vector<double> &y) {
   static const double factor = 0.1;
   size_t i;
-  int number_of_objectives = y.size();
+  size_t number_of_objectives = y.size();
 
   for (i = 0; i < number_of_objectives; i++) {
       if (y[i] != 0) {
@@ -32,8 +32,8 @@ static void transform_obj_oscillate_evaluate(std::vector<double> &y) {
 static void transform_obj_penalize_evaluate(const std::vector<double> &x, const double lower_bounds, const double upper_bounds, const double factor,std::vector<double> &y) {
   double penalty = 0.0;
   size_t i;
-  int number_of_objectives = y.size();
-  int n = x.size();
+  size_t number_of_objectives = y.size();
+  size_t n = x.size();
 
   for (i = 0; i < n; ++i) {
     const double c1 = x[i] - upper_bounds;
@@ -54,7 +54,7 @@ static void transform_obj_penalize_evaluate(const std::vector<double> &x, const 
 static void transform_obj_power_evaluate(std::vector<double> &y, const double exponent) {
   
   size_t i;
-  int number_of_objectives = y.size();
+  size_t number_of_objectives = y.size();
 
   for (i = 0; i < number_of_objectives; i++) {
       y[i] = pow(y[i], exponent);
@@ -63,7 +63,7 @@ static void transform_obj_power_evaluate(std::vector<double> &y, const double ex
 
 static void transform_obj_scale_evaluate_function(std::vector<double> &y, const double factor) {
   size_t i;
-  int number_of_objectives = y.size();
+  size_t number_of_objectives = y.size();
   
 
   for (i = 0; i < number_of_objectives; i++)
@@ -73,7 +73,7 @@ static void transform_obj_scale_evaluate_function(std::vector<double> &y, const 
 static void transform_obj_shift_evaluate_function(std::vector<double> &y,  const double offset) {
   
   size_t i;
-  int number_of_objectives = y.size();
+  size_t number_of_objectives = y.size();
   
   for (i = 0; i < number_of_objectives; i++)
     y[i] += offset;

@@ -46,7 +46,7 @@ template <class InputType> void IOHprofiler_problem<InputType>::calc_optimal() {
       /// This only works for F4, F16-18, and F23 of BBOB suite.
       if(this->problem_type == "bbob") {
         Coco_Transformation_Data::raw_x.clear();
-        for (int i = 0; i != this->best_variables.size(); ++i) {
+        for (std::size_t i = 0; i != this->best_variables.size(); ++i) {
           Coco_Transformation_Data::raw_x.push_back(this->best_variables[i]);
         }
       }
@@ -58,7 +58,7 @@ template <class InputType> void IOHprofiler_problem<InputType>::calc_optimal() {
   }
   else {
     this->optimal.clear();
-    for (int i = 0; i < this->number_of_objectives; ++i) {
+    for (std::size_t i = 0; i < this->number_of_objectives; ++i) {
       if (this->maximization_minimization_flag == IOH_optimization_type::Maximization) {
         this->optimal.push_back(std::numeric_limits<double>::max()); 
       } else {
@@ -74,7 +74,7 @@ template <class InputType> void IOHprofiler_problem<InputType>::reset_problem() 
   this->best_so_far_raw_evaluations = 0;
   this->best_so_far_transformed_evaluations = 0;
   this->optimalFound = false;
-  for (int i = 0; i !=  this->number_of_objectives; ++i) {
+  for (size_t i = 0; i != this->number_of_objectives; ++i) {
     if (this->maximization_minimization_flag == IOH_optimization_type::Maximization) {
       this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::lowest();
       this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::lowest();
@@ -153,7 +153,7 @@ template <class InputType> std::vector<InputType> IOHprofiler_problem<InputType>
 template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_lowerbound(int lowerbound) {
   std::vector<InputType>().swap(this->lowerbound);
   this->lowerbound.reserve(this->number_of_variables);
-  for (int i = 0; i < this->number_of_variables; ++i) {
+  for (std::size_t i = 0; i < this->number_of_variables; ++i) {
     this->lowerbound.push_back(lowerbound);
   }
 }
@@ -169,7 +169,7 @@ template <class InputType> std::vector<InputType> IOHprofiler_problem<InputType>
 template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_upperbound(int upperbound) {
   std::vector<InputType>().swap(this->upperbound);
   this->upperbound.reserve(this->number_of_variables);
-  for (int i = 0; i < this->number_of_variables; ++i) {
+  for (std::size_t i = 0; i < this->number_of_variables; ++i) {
     this->upperbound.push_back(upperbound);
   }
 }
@@ -250,7 +250,7 @@ template <class InputType> std::vector<InputType> IOHprofiler_problem<InputType>
 
 template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_best_variables(const InputType best_variables) {
   this->best_variables.clear();
-  for (int i = 0; i < this->number_of_variables; ++i) {
+  for (std::size_t i = 0; i < this->number_of_variables; ++i) {
     this->best_variables.push_back(best_variables);
   }
 }
@@ -266,7 +266,7 @@ template <class InputType> std::vector<double> IOHprofiler_problem<InputType>::I
 template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_optimal(const double optimal) {
   std::vector<double>().swap(this->optimal);
   this->optimal.reserve(this->number_of_objectives);
-  for (int i = 0; i < this->number_of_objectives; ++i) {
+  for (std::size_t i = 0; i < this->number_of_objectives; ++i) {
     this->optimal.push_back(optimal);
   }
 }
@@ -309,7 +309,7 @@ template <class InputType> IOH_optimization_type IOHprofiler_problem<InputType>:
 
 template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_as_maximization() {
   this->maximization_minimization_flag = IOH_optimization_type::Maximization;
-  for (int i = 0; i !=  this->number_of_objectives; ++i) {
+  for (std::size_t i = 0; i !=  this->number_of_objectives; ++i) {
     this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::lowest();
     this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::lowest();
   }
@@ -317,7 +317,7 @@ template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_
 
 template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_as_minimization() {
   this->maximization_minimization_flag = IOH_optimization_type::Minimization;
-  for (int i = 0; i !=  this->number_of_objectives; ++i) {
+  for (std::size_t i = 0; i !=  this->number_of_objectives; ++i) {
     this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::max();
     this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::max();
   }

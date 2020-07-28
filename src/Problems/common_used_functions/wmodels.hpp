@@ -171,7 +171,7 @@ static void layer_neutrality_compute(const std::vector<int> &xIn, std::vector<in
   int temp;
   int dim = xIn.size();
   int temp_dim = dim / mu;
-  if (xOut.size() != temp_dim) {
+  if ((int) xOut.size() != temp_dim) {
     xOut.resize(temp_dim);
   }
   i=0;j=0; ones=0; flush=mu;

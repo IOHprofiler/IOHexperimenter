@@ -35,7 +35,7 @@ static double bbob2009_round(double x) {
 /**
  * @brief Generates N uniform random numbers using inseed as the seed and stores them in r.
  */
-static void bbob2009_unif(std::vector<double> &r, size_t N, long inseed) {
+static void bbob2009_unif(std::vector<double> &r, long N, long inseed) {
   /* generates N uniform numbers with starting seed */
   long aktseed;
   long tmp;
@@ -108,7 +108,7 @@ static void bbob2009_gauss(std::vector<double> &g, const size_t N, const long se
 /**
  * @brief Computes a DIM by DIM rotation matrix based on seed and stores it in B.
  */
-static void bbob2009_compute_rotation(std::vector<std::vector<double> > &B, const long seed, const size_t DIM) {
+static void bbob2009_compute_rotation(std::vector<std::vector<double> > &B, const long seed, const long DIM) {
   /* To ensure temporary data fits into gvec */
   double prod;
   std::vector<double> gvect(2000);
@@ -137,7 +137,7 @@ static void bbob2009_compute_rotation(std::vector<std::vector<double> > &B, cons
 
 static void bbob2009_copy_rotation_matrix(const std::vector<std::vector<double> > &rot, std::vector<std::vector<double> > &M, std::vector<double> &b, const size_t DIM) {
   size_t row, column;
-  double *current_row;
+  //double *current_row;
 
   for (row = 0; row < DIM; ++row) {
     for (column = 0; column < DIM; ++column) {
@@ -150,7 +150,7 @@ static void bbob2009_copy_rotation_matrix(const std::vector<std::vector<double> 
 /**
  * @brief Randomly computes the location of the global optimum.
  */
-static void bbob2009_compute_xopt(std::vector<double> &xopt, const long seed, const size_t DIM) {
+static void bbob2009_compute_xopt(std::vector<double> &xopt, const long seed, const long DIM) {
   long i;
   bbob2009_unif(xopt, DIM, seed);
   for (i = 0; i < DIM; i++) {

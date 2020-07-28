@@ -77,7 +77,7 @@ public:
   }
 
   double internal_evaluate(const std::vector<double> &x) {
-    int n = x.size();
+    size_t n = x.size();
     size_t i = 0;
     std::vector<double> result(1);
 

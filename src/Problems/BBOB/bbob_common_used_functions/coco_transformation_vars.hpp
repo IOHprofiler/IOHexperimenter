@@ -7,7 +7,7 @@ static void transform_vars_affine_evaluate_function(std::vector<double> &x,
                                                     const std::vector<std::vector<double> > &M,
                                                     const std::vector<double> &b) {
   size_t i, j;
-  int number_of_variables = x.size();
+  size_t number_of_variables = x.size();
   double *cons_values;
   int is_feasible;
   std::vector<double> temp_x = x;
@@ -23,7 +23,7 @@ static void transform_vars_affine_evaluate_function(std::vector<double> &x,
 static void transform_vars_asymmetric_evaluate_function(std::vector <double> &x, const double beta) {
   size_t i;
   double exponent;
-  int number_of_variables = x.size();
+  size_t number_of_variables = x.size();
   for (i = 0; i < number_of_variables; ++i) {
     if (x[i] > 0.0) {
       exponent = 1.0
@@ -38,7 +38,7 @@ static void transform_vars_asymmetric_evaluate_function(std::vector <double> &x,
 static void transform_vars_brs_evaluate(std::vector<double> &x) {
   size_t i;
   double factor;
-  int number_of_variables = x.size();
+  size_t number_of_variables = x.size();
 
   for (i = 0; i < number_of_variables; ++i) {
     /* Function documentation says we should compute 10^(0.5 *
@@ -59,7 +59,7 @@ static void transform_vars_brs_evaluate(std::vector<double> &x) {
 
 static void transform_vars_conditioning_evaluate(std::vector<double> &x, const double alpha) {
   size_t i;
-  int number_of_variables = x.size();
+  size_t number_of_variables = x.size();
 
   for (i = 0; i < number_of_variables; ++i) {
     /* OME: We could precalculate the scaling coefficients if we
@@ -72,7 +72,7 @@ static void transform_vars_conditioning_evaluate(std::vector<double> &x, const d
 
 static void transform_vars_oscillate_evaluate_function(std::vector<double> &x) {
   static const double alpha = 0.1;
-  int number_of_variables = x.size();
+  size_t number_of_variables = x.size();
   double tmp, base;
   size_t i;
   
@@ -93,7 +93,7 @@ static void transform_vars_oscillate_evaluate_function(std::vector<double> &x) {
 
 static void transform_vars_scale_evaluate(std::vector<double> &x, const double factor) {
   size_t i;
-  int number_of_variables = x.size();
+  size_t number_of_variables = x.size();
 
   for (i = 0; i < number_of_variables; ++i) {
     x[i] = factor * x[i];
@@ -102,7 +102,7 @@ static void transform_vars_scale_evaluate(std::vector<double> &x, const double f
 
 static void transform_vars_shift_evaluate_function(std::vector<double> &x, const std::vector<double> &offset) {
   size_t i;
-  int number_of_variables = x.size();
+  size_t number_of_variables = x.size();
  
   for (i = 0; i < number_of_variables; ++i) {
     x[i] = x[i] - offset[i];
@@ -111,7 +111,7 @@ static void transform_vars_shift_evaluate_function(std::vector<double> &x, const
 
 static void transform_vars_x_hat_evaluate(std::vector<double> &x, const long seed) {
   size_t i;
-  int number_of_variables = x.size();
+  size_t number_of_variables = x.size();
   std::vector<double> tmp_x;
 
 
@@ -128,7 +128,7 @@ static void transform_vars_x_hat_evaluate(std::vector<double> &x, const long see
 
 static void transform_vars_x_hat_generic_evaluate(std::vector<double> &x, const std::vector<double> &sign_vector) {
   size_t i;
-  int number_of_variables = x.size();
+  size_t number_of_variables = x.size();
 
   for (i = 0; i < number_of_variables; ++i) {
     x[i] = 2.0 * sign_vector[i] * x[i];
@@ -137,7 +137,7 @@ static void transform_vars_x_hat_generic_evaluate(std::vector<double> &x, const 
 
 static void transform_vars_z_hat_evaluate(std::vector<double> &x,  const std::vector<double> &xopt) {
   size_t i;
-  int number_of_variables = x.size();
+  size_t number_of_variables = x.size();
   std::vector<double> temp_x = x;
   x[0] = temp_x[0];
 

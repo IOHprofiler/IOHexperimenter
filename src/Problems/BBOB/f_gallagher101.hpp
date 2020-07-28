@@ -61,7 +61,7 @@ public:
   std::vector<double> peak_values;
   void prepare_problem() {
     const long rseed = (long) (21 + 10000 * this->IOHprofiler_get_instance_id());
-    int n = IOHprofiler_get_number_of_variables();
+    size_t n = (size_t) IOHprofiler_get_number_of_variables();
 
     double fopt;
     size_t i, j, k;
@@ -159,7 +159,7 @@ public:
   }
 
   double internal_evaluate(const std::vector<double> &x) {
-    int n = x.size();
+    size_t n = x.size();
 
     size_t i, j; /* Loop over dim */
     std::vector<double> tmx(n);

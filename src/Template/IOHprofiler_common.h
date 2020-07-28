@@ -57,12 +57,12 @@ void copyVector(const std::vector<valueType> v1, std::vector<valueType> &v2) {
 /// Return 'true' if all elements in two vectors are the same.
 template<class valueType>
 bool compareVector(const std::vector<valueType> &v1, const std::vector<valueType> &v2) {
-  int n = v1.size();
+  size_t n = v1.size();
   if(n != v2.size()){
     IOH_error("Two compared vector must be with the same size\n");
     return false;
   }
-  for (int i = 0; i != n; ++i)
+  for (size_t i = 0; i != n; ++i)
   {
     if(v1[i] != v2[i]){
       return false;
@@ -79,13 +79,13 @@ bool compareVector(const std::vector<valueType> &v1, const std::vector<valueType
 /// for multi-objective optimization.
 template<class valueType>
 bool compareObjectives(const std::vector<valueType> &v1, const std::vector<valueType> &v2, const IOH_optimization_type optimization_type){
-  int n = v1.size();
+  size_t n = v1.size();
   if(n != v2.size()){
     IOH_error("Two compared objective vector must be with the same size\n");
     return false;
   }
   if (optimization_type == IOH_optimization_type::Maximization) {
-    for (int i = 0; i != n; ++i)
+    for (size_t i = 0; i != n; ++i)
     {
       if (v1[i] <= v2[i]) {
         return false;
@@ -93,7 +93,7 @@ bool compareObjectives(const std::vector<valueType> &v1, const std::vector<value
     }
     return true;
   } else {
-    for (int i = 0; i != n; ++i)
+    for (size_t i = 0; i != n; ++i)
     {
       if (v1[i] >= v2[i]) {
         return false;

@@ -57,7 +57,7 @@ static std::vector<int> get_int_vector_parse_string(std::string input, const int
 
   n = spiltstring.size();
   for (size_t i = 0; i < n; ++i) {
-    size_t l = spiltstring[i].size();
+    //size_t l = spiltstring[i].size();
 
     if (spiltstring[i][0] == '-') {
       /// The condition beginning with "-m"

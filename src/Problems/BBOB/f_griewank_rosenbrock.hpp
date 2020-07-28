@@ -82,7 +82,7 @@ public:
     size_t i = 0;
     double tmp = 0;
     std::vector<double> result(1);
-    int n = x.size();
+    size_t n = x.size();
 
     /* Computation core */
     result[0] = 0.0;

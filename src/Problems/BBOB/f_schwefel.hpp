@@ -34,16 +34,16 @@ public:
     double fopt;
     /* compute xopt, fopt*/
     
-    int n = this->IOHprofiler_get_number_of_variables();
+    size_t n = this->IOHprofiler_get_number_of_variables();
     const long rseed = (long) (20 + 10000 * this->IOHprofiler_get_instance_id());
     fopt = bbob2009_compute_fopt(20, this->IOHprofiler_get_instance_id());
     xopt = std::vector<double>(n);
     tmp2 = std::vector<double>(n);
     bbob2009_unif(tmp1, n, rseed);
-    for (int i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
       xopt[i] = (tmp1[i] < 0.5 ? -1 : 1) * 0.5 * 4.2096874637;
     }
-    for (int i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
       tmp1[i] = -2 * fabs(xopt[i]);
       tmp2[i] = 2 * fabs(xopt[i]);
     }
@@ -57,7 +57,7 @@ public:
   }
 
   double internal_evaluate(const std::vector<double> &x) {
-    int n = x.size();
+    size_t n = x.size();
     size_t i = 0;
     std::vector<double> result(1);
     double penalty, sum;

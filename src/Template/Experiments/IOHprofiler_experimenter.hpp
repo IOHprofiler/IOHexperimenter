@@ -102,7 +102,7 @@ template <class InputType> std::string IOHprofiler_experimenter<InputType>::vect
     return s;
   }
   s = std::to_string(v[0]);
-  for (int i = 1; i != v.size(); ++i) {
+  for (std::size_t i = 1; i != v.size(); ++i) {
     s += " " + std::to_string(v[i]);
   }
 

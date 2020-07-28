@@ -60,19 +60,19 @@ public:
   }
 
   PBO_suite(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
-    for (int i = 0; i < problem_id.size(); ++i) {
+    for (size_t i = 0; i < problem_id.size(); ++i) {
       if (problem_id[i] < 0 || problem_id[i] > 23) {
         IOH_error("problem_id " + std::to_string(problem_id[i]) + " is not in PBO_suite");
       }
     }
 
-    for (int i = 0; i < instance_id.size(); ++i) {
+    for (size_t i = 0; i < instance_id.size(); ++i) {
       if (instance_id[i] < 0 || instance_id[i] > 100) {
         IOH_error("instance_id " + std::to_string(instance_id[i]) + " is not in PBO_suite");
       }
     }
 
-    for (int i = 0; i < dimension.size(); ++i) {
+    for (size_t i = 0; i < dimension.size(); ++i) {
       if (dimension[i] < 0 || dimension[i] > 20000) {
         IOH_error("dimension " + std::to_string(dimension[i]) + " is not in PBO_suite");
       }

@@ -20,6 +20,9 @@ template <class InputType> class IOHprofiler_suite : public IOHprofiler_problem<
 public:
   IOHprofiler_suite(std::vector<int> problem_id = std::vector<int>(0), std::vector<int> instance_id = std::vector<int>(0), std::vector<int> dimension = std::vector<int>(0)) : 
     suite_name("no suite"),
+    problem_id(problem_id),
+    instance_id(instance_id),
+    dimension(dimension),
     problem_list_index(0),
     size_of_problem_list(0),
     get_problem_flag(false),

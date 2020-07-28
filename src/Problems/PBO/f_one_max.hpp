@@ -27,9 +27,9 @@ public:
 
   double internal_evaluate(const std::vector<int> &x) {
   
-    int n = x.size();
+    size_t n = x.size();
     int result = 0;
-    for (int i = 0; i != n; ++i) {
+    for (size_t i = 0; i != n; ++i) {
       result += x[i];
     }
     return (double)result;
