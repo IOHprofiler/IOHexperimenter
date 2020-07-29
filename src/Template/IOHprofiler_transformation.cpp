@@ -87,7 +87,7 @@ void IOHprofiler_transformation::transform_obj_scale(std::vector<double> &y, con
   std::vector<double> scale;
   IOHprofiler_random::IOHprofiler_uniform_rand(1,seed,scale);
   scale[0] = scale[0] * 1e4 / 1e4 * 4.8 + 0.2;
-  for (int i = 0; i < y.size(); ++i) {
+  for (size_t i = 0; i < y.size(); ++i) {
     y[i] = y[i] * scale[0];
   }
 }
@@ -96,7 +96,7 @@ void IOHprofiler_transformation::transform_obj_shift(std::vector<double> &y, con
   std::vector<double> shift;
   IOHprofiler_random::IOHprofiler_uniform_rand(1,seed,shift);
   shift[0] = shift[0] * 1e4 / 1e4 * 2000 - 1000;
-  for (int i = 0; i < y.size(); ++i) {
+  for (size_t i = 0; i < y.size(); ++i) {
     y[i] = y[i] + shift[0];
   }
 }

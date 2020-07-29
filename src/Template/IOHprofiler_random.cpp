@@ -74,7 +74,7 @@ void IOHprofiler_random::IOHprofiler_uniform_rand(const size_t &N, const long &i
   
   int seed_index = 0;
   seed = rand_seed[0];
-  for (int i = 0; i < N; ++i) {
+  for (size_t i = 0; i < N; ++i) {
     rand_value = _lcg_rand(seed);
     
     seed_index = (int)floor((double)seed / (double)67108865);
@@ -94,7 +94,7 @@ std::vector<double> IOHprofiler_random::IOHprofiler_gauss(const size_t N, const 
   rand_vec.reserve(N);
 
   long seed;
-  long rand_value;
+  //long rand_value;
 
   seed = inseed;
   if (seed < 0) {
@@ -106,7 +106,7 @@ std::vector<double> IOHprofiler_random::IOHprofiler_gauss(const size_t N, const 
 
   IOHprofiler_uniform_rand(2 * N, seed,uniform_rand_vec);
 
-  for (int i = 0; i < N; i++) {
+  for (size_t i = 0; i < N; i++) {
     rand_vec.push_back(sqrt(-2 * log(uniform_rand_vec[i])) * cos(2 * IOH_PI * uniform_rand_vec[N + i]));
     if (rand_vec[i] == 0.) {
       rand_vec[i] = 1e-99;
@@ -116,7 +116,7 @@ std::vector<double> IOHprofiler_random::IOHprofiler_gauss(const size_t N, const 
 }
 
 double IOHprofiler_random::IOHprofiler_uniform_rand() {
-  if (this->_seed_index >= IOHprofiler_LONG_LAG) {
+  if ((int) this->_seed_index >= IOHprofiler_LONG_LAG) {
     IOHprofiler_random_generate();
   }
   return this->x[this->_seed_index++];

@@ -29,7 +29,7 @@ public:
     problem_id(DEFAULT_PROBLEM_ID), 
     instance_id(instance_id), 
     maximization_minimization_flag(IOH_optimization_type::Maximization),
-    number_of_variables(DEFAULT_DIMENSION), 
+    number_of_variables(dimension), 
     number_of_objectives(1),
     lowerbound(std::vector<InputType> (number_of_variables) ), 
     upperbound(std::vector<InputType> (number_of_variables) ),

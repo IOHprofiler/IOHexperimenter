@@ -6,7 +6,7 @@
 #include "IOHprofiler_configuration.h"
 
 int IOHprofiler_configuration::set_Dict(_Dict &dict, const std::string section, const std::string key, const std::string value) {
-  size_t i ;
+  int i ;
 
   if (dict.n > 0) {
     for (i = 0; i < dict.n; ++i) {
@@ -38,7 +38,7 @@ int IOHprofiler_configuration::set_Dict(_Dict &dict, const std::string section, 
 }
 
 std::string IOHprofiler_configuration::get_Dict_String(const _Dict dict, const std::string section, const std::string key){
-  size_t i;
+  int i;
   if (key.length() == 0) {
     std::cout << "EMPTY KEY INPUT.\n";
   }
@@ -61,7 +61,7 @@ std::string IOHprofiler_configuration::get_Dict_String(const _Dict dict, const s
 }
 
 std::vector<int> IOHprofiler_configuration::get_Dict_int_vector(const _Dict dict, const std::string section, const std::string key, const int _min, const int _max){
-  size_t i;
+  int i;
   std::vector<int> result;
   if (key.length() == 0) {
     std::cout << "EMPTY KEY INPUT.\n";
