@@ -279,7 +279,5 @@ class IOHexperimenter():
                       tdat_exp = self.tdat_exp, parameters = self.parameters,
                       dynamic_attrs = self.dynamic_attrs, static_attrs = self.static_attrs)
             
-
-        
         results = runParallelFunction(partial_run, arguments, self.parallel_settings)   
         return results

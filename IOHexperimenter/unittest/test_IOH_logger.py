@@ -24,7 +24,7 @@ class opt_alg:
         self.x_opt = None
 
     def __call__(self, func):
-        for i in range(self.budget):
+        for _ in range(self.budget):
             x = np.random.uniform(func.lowerbound, func.upperbound)
             f = func(x)
             if f < self.f_opt:

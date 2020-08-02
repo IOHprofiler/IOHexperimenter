@@ -1,5 +1,5 @@
-import IOHexperimenter as IOH
 import numpy as np
+from IOHexperimenter import IOH_function, IOH_logger
 
 def mutation(parent, l):
     n = len(parent)
@@ -8,20 +8,18 @@ def mutation(parent, l):
     offspring[index] = ~offspring[index]
     return offspring
 
-def one_plus_one_EA(problem, logger, budget=1e3):
-    n = problem.IOHprofiler_get_number_of_variables()
+def one_plus_one_EA(problem, target_hit, budget=1e3):
+    n = problem.f.IOHprofiler_get_number_of_variables()
     x = np.random.rand(n) < 0.5
     x_prime = np.zeros(n, dtype=np.bool)
 
-    fopt = problem.evaluate(x)
-    logger.write_line(problem.loggerInfo())
+    fopt = problem(x)
     counter = 0
     l = 1
 
-    while not problem.IOHprofiler_hit_optimal() and counter < budget:
+    while not target_hit and counter < budget:
         x_prime[:] = mutation(x, l)
-        f = problem.evaluate(1 * x_prime)
-        logger.write_line(problem.loggerInfo())
+        f = problem(1 * x_prime)
 
         if f >= fopt:
             x[:] = x_prime
@@ -31,35 +29,21 @@ def one_plus_one_EA(problem, logger, budget=1e3):
     return x, fopt
 
 if __name__ == '__main__':
-    p_id = range(1, 24)
-    i_id = [1]
-    dimension = [16]
     runs = 10
 
-    pbo = IOH.PBO_suite(p_id, i_id, dimension)
-    pbo.loadProblem()
-
-    logger = IOH.IOHprofiler_csv_logger("./", "data", "EA", "EA")
-    logger.set_interval(0)
-    logger.activate_logger()
-    logger.track_suite(pbo.IOHprofiler_suite_get_suite_name())
-
-    p = pbo.get_next_problem()
-    k = 1
-    while p:
-        print('F%d '%k + p.IOHprofiler_get_problem_name() + '...')
+    for fid in range(1, 2):
+        f = IOH_function(fid = fid, dim = 16, iid = 1, suite = 'BBOB')
+        logger = IOH_logger(
+            location = "./data", foldername = "data", 
+            name = "one_plu_one_EA", 
+            info = "test of IOHexperimenter in python"
+        )
+        f.add_logger(logger)
+        
+        print('F%d '%fid + '...')
         for i in range(runs):
-            p = pbo.get_current_problem()
-            logger.track_problem(
-                p.IOHprofiler_get_problem_id(),
-                p.IOHprofiler_get_number_of_variables(),
-                p.IOHprofiler_get_instance_id(),
-                p.IOHprofiler_get_problem_name(),
-                p.IOHprofiler_get_optimization_type())
-
             print(' ' + 'run {}/{}'.format(i + 1, runs) + '...', end=' ')
-            xopt, fopt = one_plus_one_EA(p, logger)
+            xopt, fopt = one_plus_one_EA(f, f.final_target_hit)
             print('xopt: {}, fopt: {:.2f}'.format(1 * xopt, fopt))
-
-        p = pbo.get_next_problem()
-        k += 1
+            f.reset()
+        f.clear_logger()

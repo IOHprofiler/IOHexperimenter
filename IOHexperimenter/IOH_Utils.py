@@ -28,12 +28,10 @@ def runParallelFunction(runFunction, arguments, parallel_config = None):
     else:
         return runSingleThreaded(runFunction, arguments)
 
-
 # Inline function definition to allow the passing of multiple arguments to 'runFunction' through 'Pool.map'
 def func_star(a_b, func):
     """Convert `f([1,2])` to `f(1,2)` call."""
     return func(*a_b)
-
 
 def runPool(runFunction, arguments, num_threads = None):
     """
@@ -107,7 +105,6 @@ def runSingleThreaded(runFunction, arguments):
     for arg in arguments:
         results.append(runFunction(*arg))
     return results
-
 
 def runMPI(runFunction, arguments):
     from schwimmbad import MPIPool

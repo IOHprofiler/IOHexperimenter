@@ -63,7 +63,7 @@ def test_random_search():
         f_opt = np.Inf
         x_opt = None
 
-        for i in range(budget):
+        for _ in range(budget):
             x = np.random.uniform(func.lowerbound, func.upperbound)
             f = func(x)
             if f < f_opt:
