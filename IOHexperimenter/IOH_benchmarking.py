@@ -4,10 +4,10 @@ from .IOH_Utils import runParallelFunction
 
 from itertools import product
 from functools import partial
-
 from multiprocessing import cpu_count
+
 import numpy as np
-            
+       
 def _run_default(alg, fid, dim, iid, precision, suite, repetitions, observing,
         location, foldername, dat, cdat, idat, tdat_base, tdat_exp,
         parameters, dynamic_attrs, static_attrs):
@@ -22,15 +22,17 @@ def _run_default(alg, fid, dim, iid, precision, suite, repetitions, observing,
         if parameters is not None:
             logger.track_parameters(alg, parameters)
         if dynamic_attrs is not None:
-            logger.set_dynamic_attributes(alg, dynamic_attrs)
+            logger.set_dynamic_attributes(dynamic_attrs)
         if static_attrs is not None:
-            logger.set_static_attributes(alg, static_attrs)
+            logger.set_static_attributes(static_attrs)
         f.add_logger(logger)
+
     for rep in range(repetitions):
         np.random.seed = rep
         alg(f)
         print(fid, f.evaluations, f.best_so_far_precision)
         f.reset()
+
     f.clear_logger()
     
 def _run_custom(alg, function, fname, dim, suite, repetitions, observing,
@@ -41,20 +43,22 @@ def _run_custom(alg, function, fname, dim, suite, repetitions, observing,
     name = alg.__class__.__name__
     info = "Run using the IOHexperimenter in python, beta version"
     f = custom_IOH_function(function, fname, dim)
+
     if observing:
         logger = IOH_logger(location, foldername, name, info)
         logger.set_tracking_options(dat, cdat, idat, tdat_base, tdat_exp)
         if parameters is not None:
             logger.track_parameters(alg, parameters)
         if dynamic_attrs is not None:
-            logger.set_dynamic_attributes(alg, dynamic_attrs)
+            logger.set_dynamic_attributes(dynamic_attrs)
         if static_attrs is not None:
-            logger.set_static_attributes(alg, static_attrs)
+            logger.set_static_attributes(static_attrs)
         f.add_logger(logger)
+
     for rep in range(repetitions):
         np.random.seed = rep
         alg(f)
-        print(fid, f.evaluations, f.best_so_far_precision)
+        print(f.fid, f.evaluations, f.best_so_far_precision)
         f.reset()
     f.clear_logger()
                         
@@ -179,10 +183,12 @@ class IOHexperimenter():
         timeout:
             If using pebble, this sets the timeout in seconds after which to cancel the execution
         '''
-        self.parallel_settings = {"evaluate_parallel" : parallel, "use_MPI" : version == "MPI", 
-                                  "use_pebble" : version == "pebble", "timeout" : timeout, 
-                                  "use_joblib" : version == "joblib",
-                                  "num_threads" : num_threads if num_threads is not None else cpu_count()}
+        self.parallel_settings = {
+            "evaluate_parallel" : parallel, "use_MPI" : version == "MPI", 
+            "use_pebble" : version == "pebble", "timeout" : timeout, 
+            "use_joblib" : version == "joblib",
+            "num_threads" : num_threads if num_threads is not None else cpu_count()
+        }
         
     def set_logger_options(self, dat = True, cdat = False, idat = 0, tdat_base = [0], tdat_exp = 0):
         '''Set which datafiles should be stored by the logger

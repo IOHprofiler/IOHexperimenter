@@ -1,34 +1,36 @@
+from . import IOHprofiler as IOH
 from .IOH_Utils import runParallelFunction
 from .IOH_logger import IOH_logger
-from .. import IOHprofiler as IOH
 
+import pkg_resources, operator
 import numpy as np
+
 from pathlib import Path
-import pkg_resources
 from packaging import version
 from functools import partial
 from itertools import product
-
 from collections.abc import Iterable
-import operator
 
-bbob_fid_dict = {1: IOH.Sphere, 2: IOH.Ellipsoid, 3: IOH.Rastrigin, 4: IOH.Bueche_Rastrigin, 5: IOH.Linear_Slope,
-                 6: IOH.Attractive_Sector, 7: IOH.Step_Ellipsoid, 8: IOH.Rosenbrock, 9: IOH.Rosenbrock_Rotated,
-                 10: IOH.Ellipsoid_Rotated,
-                 11: IOH.Discus, 12: IOH.Bent_Cigar, 13: IOH.Sharp_Ridge, 14: IOH.Different_Powers,
-                 15: IOH.Rastrigin_Rotated,
-                 16: IOH.Weierstrass, 17: IOH.Schaffers10, 18: IOH.Schaffers1000, 19: IOH.Griewank_RosenBrock,
-                 20: IOH.Schwefel,
-                 21: IOH.Gallagher101, 22: IOH.Gallagher21, 23: IOH.Katsuura, 24: IOH.Lunacek_Bi_Rastrigin}
+bbob_fid_dict = {
+    1: IOH.Sphere, 2: IOH.Ellipsoid, 3: IOH.Rastrigin, 4: IOH.Bueche_Rastrigin, 
+    5: IOH.Linear_Slope, 6: IOH.Attractive_Sector, 7: IOH.Step_Ellipsoid, 
+    8: IOH.Rosenbrock, 9: IOH.Rosenbrock_Rotated, 10: IOH.Ellipsoid_Rotated,
+    11: IOH.Discus, 12: IOH.Bent_Cigar, 13: IOH.Sharp_Ridge, 14: IOH.Different_Powers,
+    15: IOH.Rastrigin_Rotated, 16: IOH.Weierstrass, 17: IOH.Schaffers10, 
+    18: IOH.Schaffers1000, 19: IOH.Griewank_RosenBrock, 20: IOH.Schwefel,
+    21: IOH.Gallagher101, 22: IOH.Gallagher21, 23: IOH.Katsuura, 24: IOH.Lunacek_Bi_Rastrigin
+}
 
-pbo_fid_dict = {1: IOH.OneMax, 2: IOH.LeadingOnes, 3: IOH.Linear, 4: IOH.OneMax_Dummy1, 5: IOH.OneMax_Dummy2,
-                6: IOH.OneMax_Neutrality, 7: IOH.OneMax_Epistasis, 8: IOH.OneMax_Ruggedness1, 9: IOH.OneMax_Ruggedness2,
-                10: IOH.OneMax_Ruggedness3,
-                11: IOH.LeadingOnes_Dummy1, 12: IOH.LeadingOnes_Dummy2, 13: IOH.LeadingOnes_Neutrality,
-                14: IOH.LeadingOnes_Epistasis,
-                15: IOH.LeadingOnes_Ruggedness1, 16: IOH.LeadingOnes_Ruggedness2, 17: IOH.LeadingOnes_Ruggedness3,
-                18: IOH.LABS, 19: IOH.MIS, 20: IOH.Ising_Ring, 21: IOH.Ising_Torus, 22: IOH.Ising_Triangular,
-                23: IOH.NQueens}
+pbo_fid_dict = {
+    1: IOH.OneMax, 2: IOH.LeadingOnes, 3: IOH.Linear, 4: IOH.OneMax_Dummy1, 
+    5: IOH.OneMax_Dummy2, 6: IOH.OneMax_Neutrality, 7: IOH.OneMax_Epistasis, 
+    8: IOH.OneMax_Ruggedness1, 9: IOH.OneMax_Ruggedness2, 10: IOH.OneMax_Ruggedness3,
+    11: IOH.LeadingOnes_Dummy1, 12: IOH.LeadingOnes_Dummy2, 13: IOH.LeadingOnes_Neutrality,
+    14: IOH.LeadingOnes_Epistasis, 15: IOH.LeadingOnes_Ruggedness1, 
+    16: IOH.LeadingOnes_Ruggedness2, 17: IOH.LeadingOnes_Ruggedness3, 18: IOH.LABS, 
+    19: IOH.MIS, 20: IOH.Ising_Ring, 21: IOH.Ising_Torus, 22: IOH.Ising_Triangular,
+    23: IOH.NQueens
+}
 
 
 class IOH_function():
@@ -52,21 +54,22 @@ class IOH_function():
             Which suite the problem is from. Either 'BBOB' or 'PBO'. Only used if fid is an integer
 
         '''
-        if type(fid) == type(1):
+        if isinstance(fid, int):
             if suite == "BBOB":
                 self.f = bbob_fid_dict[fid](iid, dim)
             elif suite == "PBO":
                 if fid in [21, 23]:
-                    if not np.sqrt(n).is_integer():
+                    if not np.sqrt(dim).is_integer():
                         raise Exception("For this function, the dimension needs to be a perfect square!")
                 self.f = pbo_fid_dict[fid](iid, dim)
             else:
                 raise Exception("This suite is not yet supported")
         else:
             if fid in ["Ising_2D", "NQueens"]:
-                if not np.sqrt(n).is_integer():
+                if not np.sqrt(dim).is_integer():
                     raise Exception("For this function, the dimension needs to be a perfect square!")
             exec (f"self.f = IOH.{fid}({iid}, {dim})")
+
         self.f.reset_problem()
         self.precision = target_precision
         self.logger = None
@@ -219,9 +222,12 @@ class IOH_function():
         '''
         if not isinstance(logger, IOH_logger):
             raise TypeError
-        logger.track_problem(self.f.IOHprofiler_get_problem_id(), self.f.IOHprofiler_get_number_of_variables(),
-                             self.f.IOHprofiler_get_instance_id(), self.f.IOHprofiler_get_problem_name(),
-                             self.f.IOHprofiler_get_optimization_type(), self.suite)
+        
+        logger.track_problem(
+            self.f.IOHprofiler_get_problem_id(), self.f.IOHprofiler_get_number_of_variables(),
+            self.f.IOHprofiler_get_instance_id(), self.f.IOHprofiler_get_problem_name(),
+            self.f.IOHprofiler_get_optimization_type(), self.suite
+        )
         self.logger = logger
 
     def clear_logger(self):
@@ -258,7 +264,6 @@ class IOH_function():
         '''
         self.track_oob = True
         self.oob = 0
-
 
 class custom_IOH_function(IOH_function):
     '''A wrapper to turn any python function into an IOH_function
@@ -407,24 +412,3 @@ class W_model_function(IOH_function):
         self.y_comparison = operator.gt
         self.xopt = None
         self.yopt = -np.inf
-
-if __name__ == '__main__':
-    def random_search(func, budget=None):
-        if budget is None:
-            budget = int(func.number_of_variables * 1e4)
-
-        f_opt = np.Inf
-        x_opt = None
-
-        for i in range(budget):
-            x = np.random.uniform(func.lowerbound, func.upperbound)
-            f = func(x)
-            if f < f_opt:
-                f_opt = f
-                x_opt = x
-        return f_opt, x_opt
-
-
-    f = IOH_function(2, 5, 1)
-    random_search(f)
-    print(f.best_so_far_precision)

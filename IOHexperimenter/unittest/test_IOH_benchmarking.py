@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from .. import IOHexperimenter, IOH_function, custom_IOH_function
+from IOHexperimenter import IOHexperimenter, IOH_function, custom_IOH_function
 
 class opt_alg:
     def __init__(self, budget):

@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from .. import IOH_function, custom_IOH_function, W_model_function
+from IOHexperimenter import IOH_function, custom_IOH_function, W_model_function
 
 def test_initialization_PBO():
     f = IOH_function(1, 16, 1, suite = "PBO")
@@ -54,3 +54,24 @@ def test_function_calling():
     f.reset()
     assert f.evaluations == 0
     assert f.best_so_far_variables is None
+
+def test_random_search():
+    def random_search(func, budget=None):
+        if budget is None:
+            budget = int(func.number_of_variables * 1e4)
+
+        f_opt = np.Inf
+        x_opt = None
+
+        for i in range(budget):
+            x = np.random.uniform(func.lowerbound, func.upperbound)
+            f = func(x)
+            if f < f_opt:
+                f_opt = f
+                x_opt = x
+
+        return f_opt, x_opt
+
+
+    f = IOH_function(2, 5, 1)
+    random_search(f)

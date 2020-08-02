@@ -69,7 +69,7 @@ def runPebblePool(runfunction, arguments, timeout = 30, num_threads = None):
     
     def task_done(future):
         try:
-            result = future.result()  # blocks until results are ready
+            future.result()  # blocks until results are ready
         except TimeoutError as error:
             print("Function took longer than %d seconds" % error.args[1])
         except Exception as error:

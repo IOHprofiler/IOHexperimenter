@@ -1,16 +1,26 @@
-import setuptools, sys, os, sysconfig, glob
+import setuptools, sys, os, sysconfig, glob, subprocess
 from pathlib import Path
 from shutil import move
 from distutils.command.build import build
 
 class CustomBuild(build):
     def run(self):
+        # check the installation of `swig`
+        try:
+            subprocess.call(["swig", "-version"])
+        except OSError as e:
+            print('%s. Please check your SWIG installation.'%e)
+            return 
+
         include_path = sysconfig.get_config_var('INCLUDEDIR')
         py_version = sysconfig.get_python_version()
-        header = [str(p) for p in Path(include_path).rglob('python' + py_version + '*/Python.h')]
+        header = [
+            str(p) for p in Path(include_path).rglob('python' + py_version + '*/Python.h')
+        ]
 
         if len(header) == 0:
             raise Exception('Python.h not found...')
+        
         header = header[0]
         include_path = os.path.dirname(header)
 
@@ -25,8 +35,8 @@ class CustomBuild(build):
         else:
             raise Exception('Python dynamic library not found...')
 
-        command = 'sed -e "s|py_lib=|py_lib={0}|g"\
-            -e "s|-I/python-header|-I{1}|g" Makefile.in > Makefile'.format(lib_file, include_path)
+        command = 'sed -e "s|py_lib=|py_lib=%s|g"\
+            -e "s|-I/python-header|-I%s|g" Makefile.in > Makefile'%(lib_file, include_path)
 
         os.system(command)
         os.system('make')
@@ -44,7 +54,7 @@ setuptools.setup(
         'build': CustomBuild,
     },
     name="IOHexperimenter",
-    version="0.2.2",
+    version="0.2.3",
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
     description="The experimenter for Iterative Optimization Heuristic",

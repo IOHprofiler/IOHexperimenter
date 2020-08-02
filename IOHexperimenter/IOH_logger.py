@@ -1,4 +1,4 @@
-from .. import IOHprofiler as IOH
+from . import IOHprofiler as IOH
 
 import numpy as np
 from pathlib import Path
@@ -25,7 +25,7 @@ class IOH_logger:
         '''
         Path(location).mkdir(parents=True, exist_ok=True)
         self.logger = IOH.IOHprofiler_csv_logger(location, foldername, name, info)
-        self.logger.activate_logger();
+        self.logger.activate_logger()
         self.params = []
         self.dynamic_attrs = []
         self.alg = None
@@ -47,10 +47,10 @@ class IOH_logger:
         tdat_exp:
             Exponent-values for the tdat-file
         '''
-        self.logger.set_complete_flag(cdat); #Set to True to enable cdat
-        self.logger.set_interval(idat); #Set to non-zero to enable idat
-        self.logger.set_time_points(tdat_base, tdat_exp) #tdat
-        self.logger.set_update_flag(dat) #dat
+        self.logger.set_complete_flag(cdat) # Set to True to enable cdat
+        self.logger.set_interval(idat) # Set to non-zero to enable idat
+        self.logger.set_time_points(tdat_base, tdat_exp) # tdat
+        self.logger.set_update_flag(dat) # dat
         
     def track_problem(self, problem_id, nr_variables, instance_id, problem_name, optimization_type, suite = "No Suite"):
         '''Set the problem-specific variables to store in the info-file
@@ -91,7 +91,7 @@ class IOH_logger:
         elif isinstance(parameters, Iterable):
             self.params = parameters
         else:
-            raise typeError("parameters needs to be a string or iterable containing strings")
+            raise TypeError("parameters needs to be a string or iterable containing strings")
         self.logger.set_parameters_name(self.params)
         self.alg = algorithm
         
@@ -110,7 +110,7 @@ class IOH_logger:
             for a in attrs:
                 exec(f"self.logger.add_attribute('{a}', self.alg.{a})")
         else:
-            raise typeError("attrs needs to be a string or iterable containing strings")
+            raise TypeError("attrs needs to be a string or iterable containing strings")
             
     def set_dynamic_attributes(self, attrs):
         '''Initialize tracking of parameters during the run of the algorithm. Make sure to only 
@@ -126,7 +126,7 @@ class IOH_logger:
         elif isinstance(attrs, Iterable):
             self.dynamic_attrs = attrs
         else:
-            raise typeError("attrs needs to be a string or iterable containing strings")
+            raise TypeError("attrs needs to be a string or iterable containing strings")
         self.logger.set_dynamic_attributes_name(self.dynamic_attrs)
 
     def process_evaluation(self, info):
@@ -147,7 +147,6 @@ class IOH_logger:
             exec(f"self.logger.set_parameters(['{param}'], [self.alg.{param}])")
         for param in self.dynamic_attrs:
             exec(f"self.logger.set_dynamic_attributes(['{param}'], [self.alg.{param}])")
-    
     
     def clear_logger(self):
         '''Function to clear the logger once it is no longer needed. Finishes all the writing to file which is still in underlying buffers.
