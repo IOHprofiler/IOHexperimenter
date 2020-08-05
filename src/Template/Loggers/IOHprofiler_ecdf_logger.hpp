@@ -254,19 +254,19 @@ template<class T>
 void IOHprofiler_ecdf_logger<T>::fill_up( size_t i_error, size_t j_evals)
 {
     IOHprofiler_AttainMat& mat = current_ecdf();
-    size_t imax = _range_error.size();
-    size_t jmax = _range_evals.size();
+    size_t ibound = _range_error.size();
+    size_t jbound = _range_evals.size();
     if(_current.maxmin == IOH_optimization_type::Minimization) {
-        for(size_t i = i_error; i < imax; i++) {
+        for(size_t i = i_error; i < ibound; i++) {
             // If we reach a 1 on first col of this row, no need to continue.
             if(mat[i][j_evals] == 1) {
                 break;
             } else {
-                for(size_t j = j_evals; j < jmax; j++) {
+                for(size_t j = j_evals; j < jbound; j++) {
                     // If we reach a 1 on this col, no need to fill
                     // the remaining columns for the next rows..
                     if(mat[i][j] == 1) {
-                        jmax = j;
+                        jbound = j;
                         break;
                     } else {
                         mat[i][j] = 1;
@@ -280,11 +280,11 @@ void IOHprofiler_ecdf_logger<T>::fill_up( size_t i_error, size_t j_evals)
             if(mat[i-1][j_evals] == 1) {
                 continue;
             } else {
-                for(size_t j = j_evals; j < jmax; j++) {
+                for(size_t j = j_evals; j < jbound; j++) {
                     // If we reach a 1 on this col, no need to fill
                     // the remaining columns for the next rows..
                     if(mat[i-1][j] == 1) {
-                        jmax = j;
+                        jbound = j;
                         break;
                     } else {
                         mat[i-1][j] = 1;
