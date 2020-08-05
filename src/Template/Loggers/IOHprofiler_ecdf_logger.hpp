@@ -275,7 +275,7 @@ void IOHprofiler_ecdf_logger<T>::fill_up( size_t i_error, size_t j_evals)
             }
         } // for i
     } else {
-        for(size_t i = 1; i <= i_error; i++) {
+        for(size_t i = i_error; i >= 1; i--) {
             // If we reach a 1 on first col of this row, no need to continue.
             if(mat[i-1][j_evals] == 1) {
                 continue;
