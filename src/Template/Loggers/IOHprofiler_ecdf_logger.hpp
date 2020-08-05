@@ -68,7 +68,7 @@ std::ostream& operator<<(std::ostream& out, const IOHprofiler_AttainMat& mat)
         ndigits = 1+std::floor(std::log10((double)mat.back().back()));
     }
     out.precision(ndigits);
-    for(size_t i=0; i < mat.size(); ++i) {
+    for(size_t i = 0; i < mat.size(); ++i) {
         for(size_t j = 0; j < mat[i].size(); ++j) {
             out << std::fixed << mat[i][j] << " ";
         }
@@ -146,7 +146,12 @@ void IOHprofiler_ecdf_logger<T>::do_log(const std::vector<double>& infos)
 
     // TODO make a struct for loggerInfo?
     double evals = infos[0];
-    double err = std::abs(_current.opt[0] - infos[4]);
+    double err;
+    if (_current.maxmin == IOH_optimization_type::Minimization) {
+        err = std::abs(_current.opt[0] - infos[4]);
+    } else {
+        err = infos[2];
+    }
 
     // If this target is worst than the domain.
     if( evals > _range_evals.max() or err > _range_error.max() ) {
@@ -249,25 +254,45 @@ template<class T>
 void IOHprofiler_ecdf_logger<T>::fill_up( size_t i_error, size_t j_evals)
 {
     IOHprofiler_AttainMat& mat = current_ecdf();
-    size_t imax = _range_error.size();
-    size_t jmax = _range_evals.size();
-    for(size_t i = i_error; i < imax; i++) {
-        // If we reach a 1 on first col of this row, no need to continue.
-        if(mat[i][j_evals] == 1) {
-            break;
-        } else {
-            for(size_t j = j_evals; j < jmax; j++) {
-                // If we reach a 1 on this col, no need to fill
-                // the remaining columns for the next rows..
-                if(mat[i][j] == 1) {
-                    jmax = j;
-                    break;
-                } else {
-                    mat[i][j] = 1;
-                }
-            } // for j
-        }
-    } // for i
+    size_t ibound = _range_error.size();
+    size_t jbound = _range_evals.size();
+    if(_current.maxmin == IOH_optimization_type::Minimization) {
+        for(size_t i = i_error; i < ibound; i++) {
+            // If we reach a 1 on first col of this row, no need to continue.
+            if(mat[i][j_evals] == 1) {
+                break;
+            } else {
+                for(size_t j = j_evals; j < jbound; j++) {
+                    // If we reach a 1 on this col, no need to fill
+                    // the remaining columns for the next rows..
+                    if(mat[i][j] == 1) {
+                        jbound = j;
+                        break;
+                    } else {
+                        mat[i][j] = 1;
+                    }
+                } // for j
+            }
+        } // for i
+    } else {
+        for(size_t i = i_error; i >= 1; i--) {
+            // If we reach a 1 on first col of this row, no need to continue.
+            if(mat[i-1][j_evals] == 1) {
+                continue;
+            } else {
+                for(size_t j = j_evals; j < jbound; j++) {
+                    // If we reach a 1 on this col, no need to fill
+                    // the remaining columns for the next rows..
+                    if(mat[i-1][j] == 1) {
+                        jbound = j;
+                        break;
+                    } else {
+                        mat[i-1][j] = 1;
+                    }
+                } // for j
+            }
+        } // for i
+    }
 }
 
 
