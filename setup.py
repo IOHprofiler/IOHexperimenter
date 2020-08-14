@@ -1,4 +1,4 @@
-import setuptools, sys, os, sysconfig, glob, subprocess, platform
+import setuptools, sys, os, sysconfig, glob, subprocess, platform, re
 from pathlib import Path
 from shutil import move, copy
 from distutils.command.build import build
@@ -74,12 +74,26 @@ def _compile(bdist_wheel=False):
             os.path.basename(lib_file)
         )
 
-    command = 'sed -e "s|py_lib=|py_lib=%s|g"\
-        -e "s|-I/python-header|-I%s|g" Makefile.in > Makefile'%(
-            lib_file, include_path
-        )
+    with open('Makefile.in') as f:
+        lines = f.readlines()
+        _lib = [(i, l) for i, l in enumerate(lines) if re.match(r'^py_lib=.*', l)]
+        for i, l in _lib:
+            lines[i] = re.sub('py_lib=', 'py_lib=%s'%lib_file, l)
 
-    os.system(command)
+        _include = [(i, l) for i, l in enumerate(lines) if re.match(r'^py_include=.*', l)]
+        for i, l in _include:
+            lines[i] = re.sub('py_include=', 'py_include=-I%s'%include_path, l)
+
+        lines = [re.sub(r'(py_lib=)', r'\1%s'%lib_file, l) for l in lines]
+
+    with open('Makefile') as f:
+        f.writelines(lines)
+
+    # command = 'sed -e "s|py_lib=|py_lib=%s|g"\
+    #     -e "s|-I/python-header|-I%s|g" Makefile.in > Makefile'%(
+    #         lib_file, include_path
+    #     )
+
     os.system('make')
     
     move('_IOHprofiler.so', 'IOHexperimenter/_IOHprofiler.so')
