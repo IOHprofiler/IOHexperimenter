@@ -14,8 +14,8 @@ def get_py_info():
         include_path = os.path.join(prefix, 'include')
         lib_path = os.path.join(prefix, 'libs')
         set_trace()
-        lib_file = [str(p) for p in Path(lib_path).rglob('python*' + '.dill')]
-        header = [str(p) for p in Path(include_path).rglob('Python*.h')]
+        lib_file = [str(p) for p in Path(lib_path).rglob('python*' + '.lib')]
+        header = [str(p) for p in Path(include_path).rglob('Python.h')]
     else: 
         include_path = sysconfig.get_config_var('INCLUDEDIR')
         header = [
