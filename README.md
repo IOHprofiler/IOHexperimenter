@@ -29,4 +29,4 @@ To distribute package to PyPI:
 python -m twine upload dist/*
 ```
 
-Of course you need install `twine` package first.
+Of course, you need install `twine` package first.

@@ -16,15 +16,26 @@ def runParallelFunction(runFunction, arguments, parallel_config = None):
     """
     if parallel_config is None:
         return runSingleThreaded(runFunction, arguments)    
+
     if parallel_config['evaluate_parallel']:
         if parallel_config['use_MPI']:
             return runMPI(runFunction, arguments)
         elif parallel_config['use_pebble']:
-            return runPebblePool(runFunction, arguments, timeout = parallel_config['timeout'], num_threads = parallel_config['num_threads'])
+            return runPebblePool(
+                runFunction, arguments, 
+                timeout = parallel_config['timeout'], 
+                num_threads = parallel_config['num_threads']
+            )
         elif parallel_config['use_joblib']:
-            return runJoblib(runFunction, arguments, num_threads = parallel_config['num_threads'])
+            return runJoblib(
+                runFunction, arguments, 
+                num_threads = parallel_config['num_threads']
+            )
         else:
-            return runPool(runFunction, arguments, num_threads = parallel_config['num_threads'])
+            return runPool(
+                runFunction, arguments, 
+                num_threads = parallel_config['num_threads']
+            )
     else:
         return runSingleThreaded(runFunction, arguments)
 
