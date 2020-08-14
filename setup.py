@@ -9,11 +9,13 @@ _platform = platform.system()
 
 def get_py_info():
     py_version = sysconfig.get_config_var('py_version')
-    if _platform == 'windows':
+    if _platform == 'Windows':
         prefix = sysconfig.get_config_var('prefix')
         include_path = os.path.join(prefix, 'include')
         lib_path = os.path.join(prefix, 'libs')
-        lib_file = [str(p) for p in lib_path.rglob('python*' + '.dill')]
+        set_trace()
+        lib_file = [str(p) for p in Path(lib_path).rglob('python*' + '.dill')]
+        header = [str(p) for p in Path(include_path).rglob('Python*.h')]
     else: 
         include_path = sysconfig.get_config_var('INCLUDEDIR')
         header = [
@@ -21,7 +23,6 @@ def get_py_info():
                 'python' + py_version + '*/Python.h'
             )
         ]
-
         lib_path = Path(sysconfig.get_config_var('LIBDIR'))
         py_lib = 'libpython' + py_version + '*'
         lib_file = [str(p) for p in lib_path.rglob(py_lib + '.so')] + \
@@ -29,7 +30,7 @@ def get_py_info():
             [str(p) for p in lib_path.rglob(py_lib + '.a')]
     
     if len(header) != 0:
-            header = os.path.realpath(header[0])
+        header = os.path.realpath(header[0])
     else:
         raise Exception('Python.h not found...')
 
