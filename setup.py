@@ -39,9 +39,14 @@ def get_py_info():
     else:
         raise Exception('Python dynamic library not found...')
 
+    include_path = os.path.dirname(header)
+    if _platform == 'Windows':
+        lib_file = lib_file.replace("\\", "\\\\")
+        include_path = include_path.replace("\\", "\\\\")
+
     return {
         'version' : py_version,
-        'include' : os.path.dirname(header),
+        'include' : include_path,
         'header' : header,
         'library' : lib_file
     }
