@@ -123,11 +123,17 @@ void IOHprofiler_ecdf_logger<T>::track_suite(const IOHprofiler_suite<T>&)
 template<class T>
 void IOHprofiler_ecdf_logger<T>::track_problem(const IOHprofiler_problem<T> & pb)
 {
-    _current.pb     = pb.IOHprofiler_get_problem_id();
-    _current.dim    = pb.IOHprofiler_get_number_of_variables();
-    _current.ins    = pb.IOHprofiler_get_instance_id();
-    _current.maxmin = pb.IOHprofiler_get_optimization_type();
-    _current.opt    = pb.IOHprofiler_get_optimal();
+    _current.pb      = pb.IOHprofiler_get_problem_id();
+    _current.dim     = pb.IOHprofiler_get_number_of_variables();
+    _current.ins     = pb.IOHprofiler_get_instance_id();
+    _current.maxmin  = pb.IOHprofiler_get_optimization_type();
+    _current.has_opt = pb.IOHprofiler_has_optimal();
+    if(_current.has_opt) {
+        IOH_log("Problem has known optimal, will compute the ECDF of the error.");
+        _current.opt    = pb.IOHprofiler_get_optimal();
+    } else {
+        IOH_log("Problem has no known optimal, will compute the absolute ECDF.");
+    }
     // mono-objective only
     assert(_current.opt.size() == 1);
     init_ecdf(_current);
@@ -147,16 +153,22 @@ void IOHprofiler_ecdf_logger<T>::do_log(const std::vector<double>& infos)
     // TODO make a struct for loggerInfo?
     double evals = infos[0];
     double err;
-    if (_current.maxmin == IOH_optimization_type::Minimization) {
+    if (_current.has_opt) {
         err = std::abs(_current.opt[0] - infos[4]);
+
     } else {
-        err = infos[2];
+        err = infos[4]; // FIXME double check that this is what one want
     }
 
     // If this target is worst than the domain.
-    if( evals > _range_evals.max() or err > _range_error.max() ) {
+    if(   _range_evals.min() > evals or evals > _range_evals.max()
+       or _range_error.min() > err   or   err > _range_error.max() ) {
         // Discard it.
-        std::clog << "WARNING: target out of domain. Error:" << err << ", evaluations:" << evals << std::endl;
+        std::clog << "WARNING: target out of domain. "
+                  << "value:" << err   << " [" << _range_error.min() << "," << _range_error.max() << "], "
+                  << "evals:" << evals << " [" << _range_evals.min() << "," << _range_evals.max() << "]"
+                  << " This measure is discarded!"
+                  << std::endl;
         return;
 
     } else {
@@ -172,6 +184,7 @@ void IOHprofiler_ecdf_logger<T>::do_log(const std::vector<double>& infos)
             i_error = 0;
         }
 
+        // Same for evaluations...
         if(_range_evals.min() <= evals and evals <= _range_evals.max()) {
             j_evals = _range_evals.index(evals);
 
@@ -179,7 +192,9 @@ void IOHprofiler_ecdf_logger<T>::do_log(const std::vector<double>& infos)
             j_evals = 0;
         }
 
-        // Fill up the upper/upper quadrant of the attainment matrix with ones.
+        // Fill up the dominated quadrant of the attainment matrix with ones
+        // (either the upper/upper or lower/lower, depending on if it's
+        // a min or max problem and on if the optimum is known).
         fill_up(i_error, j_evals);
     }
 }
@@ -256,7 +271,7 @@ void IOHprofiler_ecdf_logger<T>::fill_up( size_t i_error, size_t j_evals)
     IOHprofiler_AttainMat& mat = current_ecdf();
     size_t ibound = _range_error.size();
     size_t jbound = _range_evals.size();
-    if(_current.maxmin == IOH_optimization_type::Minimization) {
+    if(_current.has_opt or _current.maxmin == IOH_optimization_type::Minimization) {
         for(size_t i = i_error; i < ibound; i++) {
             // If we reach a 1 on first col of this row, no need to continue.
             if(mat[i][j_evals] == 1) {
@@ -275,6 +290,7 @@ void IOHprofiler_ecdf_logger<T>::fill_up( size_t i_error, size_t j_evals)
             }
         } // for i
     } else {
+        assert(not _current.has_opt and _current.maxmin == IOH_optimization_type::Maximization);
         for(size_t i = i_error; i >= 1; i--) {
             // If we reach a 1 on first col of this row, no need to continue.
             if(mat[i-1][j_evals] == 1) {

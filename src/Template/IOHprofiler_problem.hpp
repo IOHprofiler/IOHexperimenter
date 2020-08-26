@@ -259,7 +259,14 @@ template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_
   this->best_variables = best_variables;
 }
 
+template <class InputType> bool IOHprofiler_problem<InputType>::IOHprofiler_has_optimal() const {
+  return this->optimal.size() == this->IOHprofiler_get_number_of_objectives();
+}
+
 template <class InputType> std::vector<double> IOHprofiler_problem<InputType>::IOHprofiler_get_optimal() const {
+  // FIXME unsure if one want to raise an exception in Release mode also?
+  // Assert that the optimum have been initialized.
+  assert(this->IOHprofiler_has_optimal());
   return this->optimal;
 }
 

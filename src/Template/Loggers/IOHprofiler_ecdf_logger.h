@@ -133,6 +133,7 @@ class IOHprofiler_ecdf_logger : public IOHprofiler_observer<T>
             int pb;
             int dim;
             int ins;
+            bool has_opt;
             std::vector<double> opt;
             IOH_optimization_type maxmin;
         };
