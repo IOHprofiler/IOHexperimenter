@@ -297,14 +297,14 @@ static int ruggedness_translate(int gamma, int q) {
     max = max_gamma(q);
     lastUpper = ((q >> 1) * ((q + 1) >> 1));
     if (g <= lastUpper) {
-      j = abs(((q + 2) * 0.5)-sqrt((((q * q) * 0.25) + 1) - g));
+      j = abs( (int) (((q + 2) * 0.5)-sqrt((((q * q) * 0.25) + 1) - g)) );
 
       k = ((g - ((q + 2) * j)) + (j * j) + q);
       return ((k + 1 + ((((q + 2) * j) - (j * j) - q - 1) << 1))- (j - 1));
     }
 
-    j = abs((((q % 2) + 1) * 0.5)
-        + sqrt((((1 - (q % 2)) * 0.25) + g) - 1 - lastUpper));
+    j = abs( (int) ((((q % 2) + 1) * 0.5)
+        + sqrt((((1 - (q % 2)) * 0.25) + g) - 1 - lastUpper)) );
 
     k = g - (((j - (q % 2)) * (j - 1)) + 1 + lastUpper);
 
