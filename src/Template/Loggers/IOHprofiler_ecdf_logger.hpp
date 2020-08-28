@@ -297,8 +297,7 @@ void IOHprofiler_ecdf_logger<T>::fill_up( size_t i_error, size_t j_evals)
 
 
 /***** IOHprofiler_ecdf_sum *****/
-
-size_t IOHprofiler_ecdf_sum::operator()(const IOHprofiler_AttainSuite& attainment)
+inline size_t IOHprofiler_ecdf_sum::operator()(const IOHprofiler_AttainSuite& attainment)
 {
     unsigned long int sum = 0;
     for(const auto& pbid_dimmap : attainment ) {

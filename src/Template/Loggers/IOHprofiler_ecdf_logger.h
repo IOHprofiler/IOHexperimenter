@@ -78,7 +78,7 @@ using IOHprofiler_AttainMat =
 
 /** Print an attainment matrix on an output stream.
  */
-std::ostream& operator<<(std::ostream& out, const IOHprofiler_AttainMat& mat);
+static std::ostream& operator<<(std::ostream& out, const IOHprofiler_AttainMat& mat);
 
 /** Type used to store all bi-dimensional attainment functions.
  *
@@ -286,7 +286,7 @@ class IOHprofiler_ecdf_stat
 class IOHprofiler_ecdf_sum : public IOHprofiler_ecdf_stat<size_t>
 {
     public:
-        size_t operator()(const IOHprofiler_AttainSuite& attainment);
+        inline size_t operator()(const IOHprofiler_AttainSuite& attainment);
 };
 
 #include "IOHprofiler_ecdf_logger.hpp"
