@@ -86,16 +86,10 @@ def _compile(bdist_wheel=False):
 
         lines = [re.sub(r'(py_lib=)', r'\1%s'%lib_file, l) for l in lines]
 
-    with open('Makefile') as f:
+    with open('Makefile', 'w') as f:
         f.writelines(lines)
 
-    # command = 'sed -e "s|py_lib=|py_lib=%s|g"\
-    #     -e "s|-I/python-header|-I%s|g" Makefile.in > Makefile'%(
-    #         lib_file, include_path
-    #     )
-
     os.system('make')
-    
     move('_IOHprofiler.so', 'IOHexperimenter/_IOHprofiler.so')
     move('IOHprofiler.py', 'IOHexperimenter/IOHprofiler.py')
 
