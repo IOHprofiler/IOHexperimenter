@@ -30,7 +30,7 @@ def get_py_info():
             
         lib_path = Path(sysconfig.get_config_var('LIBDIR'))
         lib_file = []
-        for v in [py_version, py_version2, py_version3]:
+        for v in [py_version, py_version2]:
             py_lib = 'libpython' + v + '*'
             lib_file += [str(p) for p in lib_path.rglob(py_lib + '.so')] + \
                 [str(p) for p in lib_path.rglob(py_lib + '.dylib')] + \
@@ -85,13 +85,13 @@ def _compile(bdist_wheel=False):
         lines = f.readlines()
         _lib = [(i, l) for i, l in enumerate(lines) if re.match(r'^py_lib=.*', l)]
         for i, l in _lib:
-            lines[i] = re.sub('py_lib=', 'py_lib=%s'%lib_file, l)
+            lines[i] = re.sub('py_lib=.*', 'py_lib=%s'%lib_file, l)
 
         _include = [(i, l) for i, l in enumerate(lines) if re.match(r'^py_include=.*', l)]
         for i, l in _include:
-            lines[i] = re.sub('py_include=', 'py_include=-I%s'%include_path, l)
+            lines[i] = re.sub('py_include=.*', 'py_include=-I%s'%include_path, l)
 
-        lines = [re.sub(r'(py_lib=)', r'\1%s'%lib_file, l) for l in lines]
+        # lines = [re.sub(r'(py_lib=)', r'\1%s'%lib_file, l) for l in lines]
 
     with open('Makefile', 'w') as f:
         f.writelines(lines)
@@ -111,7 +111,6 @@ class bdist_wheel(_bdist_wheel):
 
 class CustomBuild(build):
     def run(self):
-        set_trace()
         _compile()
         super(CustomBuild, self).run()
 
