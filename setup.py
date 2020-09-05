@@ -91,8 +91,6 @@ def _compile(bdist_wheel=False):
         for i, l in _include:
             lines[i] = re.sub('py_include=.*', 'py_include=-I%s'%include_path, l)
 
-        # lines = [re.sub(r'(py_lib=)', r'\1%s'%lib_file, l) for l in lines]
-
     with open('Makefile', 'w') as f:
         f.writelines(lines)
 
