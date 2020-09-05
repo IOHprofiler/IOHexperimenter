@@ -9,8 +9,9 @@ _platform = platform.system()
 
 def get_py_info():
     py_version = sysconfig.get_config_var('py_version')
-    py_version2 = re.search('(\d\.\d\.).*', py_version).group(1)
+    py_version2 = re.search('(\d\.\d).*', py_version).group(1)
     py_version3 = py_version2 + 'm'
+    
     if _platform == 'Windows':
         prefix = sysconfig.get_config_var('prefix')
         include_path = os.path.join(prefix, 'include')
