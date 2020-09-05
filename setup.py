@@ -9,25 +9,31 @@ _platform = platform.system()
 
 def get_py_info():
     py_version = sysconfig.get_config_var('py_version')
+    py_version2 = re.search('(\d\.\d\.).*', py_version).group(1)
+    py_version3 = py_version2 + 'm'
     if _platform == 'Windows':
         prefix = sysconfig.get_config_var('prefix')
         include_path = os.path.join(prefix, 'include')
         lib_path = os.path.join(prefix, 'libs')
-        set_trace()
         lib_file = [str(p) for p in Path(lib_path).rglob('python*' + '.lib')]
         header = [str(p) for p in Path(include_path).rglob('Python.h')]
     else: 
         include_path = sysconfig.get_config_var('INCLUDEDIR')
-        header = [
-            str(p) for p in Path(include_path).rglob(
-                'python' + py_version + '*/Python.h'
-            )
-        ]
+        header = []
+        for v in [py_version, py_version2, py_version3]:
+            header += [
+                str(p) for p in Path(include_path).rglob(
+                    'python' + v + '*/Python.h'
+                )
+            ] 
+            
         lib_path = Path(sysconfig.get_config_var('LIBDIR'))
-        py_lib = 'libpython' + py_version + '*'
-        lib_file = [str(p) for p in lib_path.rglob(py_lib + '.so')] + \
-            [str(p) for p in lib_path.rglob(py_lib + '.dylib')] + \
-            [str(p) for p in lib_path.rglob(py_lib + '.a')]
+        lib_file = []
+        for v in [py_version, py_version2, py_version3]:
+            py_lib = 'libpython' + v + '*'
+            lib_file += [str(p) for p in lib_path.rglob(py_lib + '.so')] + \
+                [str(p) for p in lib_path.rglob(py_lib + '.dylib')] + \
+                [str(p) for p in lib_path.rglob(py_lib + '.a')]
     
     if len(header) != 0:
         header = os.path.realpath(header[0])
