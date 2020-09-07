@@ -258,6 +258,10 @@ class IOH_function():
         self.f.reset_problem()
         self.yopt = (self.maximization - 0.5) * -np.inf
         self.xopt = None
+        if self.logger is not None:
+            self.logger.track_problem(self.f.IOHprofiler_get_problem_id(), self.f.IOHprofiler_get_number_of_variables(),
+                                  self.f.IOHprofiler_get_instance_id(), self.f.IOHprofiler_get_problem_name(),
+                                  self.f.IOHprofiler_get_optimization_type(), self.suite)
 
     def enable_oob_tracking(self):
         '''Enables the tracking of number of out-of-bounds points evaluated. Can be accessed trough property 'number_out_of_bounds'
@@ -368,10 +372,6 @@ class custom_IOH_function(IOH_function):
         self.yopt = (self.maximization - 0.5) * -np.inf
         self.evals = 0
         self.xopt = None
-        if self.logger is not None:
-            self.logger.track_problem(self.f.IOHprofiler_get_problem_id(), self.f.IOHprofiler_get_number_of_variables(),
-                                  self.f.IOHprofiler_get_instance_id(), self.f.IOHprofiler_get_problem_name(),
-                                  self.f.IOHprofiler_get_optimization_type(), self.suite)
 
 class W_model_function(IOH_function):
     '''A wrapper around the W-model functions from the IOHexperimenter.
