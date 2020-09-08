@@ -1,6 +1,9 @@
 *.o
 .*
 
+*lib
+*.so*
+
 dist/
 build/
 *egg*/
