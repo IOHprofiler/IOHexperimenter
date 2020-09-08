@@ -122,7 +122,7 @@ setuptools.setup(
         'bdist_wheel': bdist_wheel
     },
     name="IOHexperimenter",
-    version="0.2.3",
+    version="0.2.4",
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
     description="The experimenter for Iterative Optimization Heuristic",
