@@ -1,7 +1,5 @@
 FROM python:3.6
 
-RUN pip install twine auditwheel
-
 RUN mkdir /app
 WORKDIR /app
 COPY . /app
