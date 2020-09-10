@@ -4,6 +4,13 @@ from setuptools import setup, Extension, find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+iohprofiler = Extension('_IOHprofiler', 
+    swig_opts=["-c++", "-outdir", "IOHexperimenter"], 
+    sources=[
+        os.path.realpath(os.path.join("src", x))
+        for x in os.listdir("src") if x.endswith(".cpp") or x.endswith(".i")
+])
+
 setup(
     name="IOHexperimenter",
     version="0.2.5",
@@ -14,12 +21,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/IOHprofiler/IOHexperimenter",
-    ext_modules = [
-        Extension('_IOHprofiler', sources=[
-            os.path.realpath(os.path.join("src", x))
-            for x in os.listdir("src") if x.endswith("cpp")
-        ])
-    ],
+    ext_modules = [iohprofiler],
     package_dir={'IOHexperimenter': 'IOHexperimenter'},
     classifiers=[
         "Programming Language :: Python :: 3",
