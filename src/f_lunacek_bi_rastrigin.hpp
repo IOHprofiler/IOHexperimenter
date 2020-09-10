@@ -112,7 +112,7 @@ public:
       sum2 += (x_hat[i] - mu1) * (x_hat[i] - mu1);
       sum3 += cos(2 * coco_pi * z[i]);
     }
-    result[0] = std::min(sum1, d * (double) n + s * sum2)
+    result[0] = (std::min)(sum1, d * (double) n + s * sum2)
         + 10. * ((double) n - sum3) + 1e4 * penalty;
     return result[0];
   }

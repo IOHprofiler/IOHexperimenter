@@ -124,7 +124,7 @@ void IOHprofiler_observer::reset_observer(const IOH_optimization_type optimizati
   if (optimization_type == IOH_optimization_type::Maximization) {
     this->current_best_fitness = std::numeric_limits<double>::lowest();
   } else {
-    this->current_best_fitness = std::numeric_limits<double>::max();
+    this->current_best_fitness = (std::numeric_limits<double>::max)();
   }
   this->evaluations_value1 = 1;
   this->time_points_index = 0;

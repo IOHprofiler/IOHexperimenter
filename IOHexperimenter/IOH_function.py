@@ -6,7 +6,6 @@ import pkg_resources, operator
 import numpy as np
 
 from pathlib import Path
-from packaging import version
 from functools import partial
 from itertools import product
 from collections.abc import Iterable

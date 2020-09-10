@@ -7,8 +7,8 @@ template <class InputType> double IOHprofiler_problem<InputType>::evaluate(std::
       this->raw_objectives[0] = std::numeric_limits<double>::lowest();
       this->transformed_objectives[0] = std::numeric_limits<double>::lowest();
     } else {
-      this->raw_objectives[0] = std::numeric_limits<double>::max();
-      this->transformed_objectives[0] = std::numeric_limits<double>::max();
+      this->raw_objectives[0] = (std::numeric_limits<double>::max)();
+      this->transformed_objectives[0] = (std::numeric_limits<double>::max)();
     }
     return this->transformed_objectives[0];
   }
@@ -55,7 +55,7 @@ template <class InputType> void IOHprofiler_problem<InputType>::calc_optimal() {
     this->optimal.clear();
     for (int i = 0; i < this->number_of_objectives; ++i) {
       if (this->maximization_minimization_flag == IOH_optimization_type::Maximization) {
-        this->optimal.push_back(std::numeric_limits<double>::max()); 
+        this->optimal.push_back((std::numeric_limits<double>::max)()); 
       } else {
         this->optimal.push_back(std::numeric_limits<double>::lowest());
       }
@@ -74,8 +74,8 @@ template <class InputType> void IOHprofiler_problem<InputType>::reset_problem() 
       this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::lowest();
       this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::lowest();
     } else {
-      this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::max();
-      this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::max();
+      this->best_so_far_raw_objectives[i] = (std::numeric_limits<double>::max)();
+      this->best_so_far_transformed_objectives[i] = (std::numeric_limits<double>::max)();
     }
   }
   this->prepare_problem();
@@ -217,8 +217,8 @@ template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_
     this->best_so_far_raw_objectives = std::vector<double>(this->number_of_objectives,std::numeric_limits<double>::lowest());
     this->best_so_far_transformed_objectives = std::vector<double>(this->number_of_objectives,std::numeric_limits<double>::lowest());
   } else {
-    this->best_so_far_raw_objectives = std::vector<double>(this->number_of_objectives,std::numeric_limits<double>::max());
-    this->best_so_far_transformed_objectives = std::vector<double>(this->number_of_objectives,std::numeric_limits<double>::max());
+    this->best_so_far_raw_objectives = std::vector<double>(this->number_of_objectives,(std::numeric_limits<double>::max)());
+    this->best_so_far_transformed_objectives = std::vector<double>(this->number_of_objectives,(std::numeric_limits<double>::max)());
   }
   this->optimal = std::vector<double>(this->number_of_objectives);
 }
@@ -313,7 +313,7 @@ template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_
 template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_as_minimization() {
   this->maximization_minimization_flag = IOH_optimization_type::Minimization;
   for (int i = 0; i !=  this->number_of_objectives; ++i) {
-    this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::max();
-    this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::max();
+    this->best_so_far_raw_objectives[i] = (std::numeric_limits<double>::max)();
+    this->best_so_far_transformed_objectives[i] = (std::numeric_limits<double>::max)();
   }
 }
