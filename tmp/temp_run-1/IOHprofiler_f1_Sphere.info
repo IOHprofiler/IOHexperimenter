@@ -1,3 +1,0 @@
-suite = "No suite", funcId = 1, funcName = "Sphere", DIM = 5, maximization = "F", algId = "", algInfo = "", static_param = "123", dynamicAttribute = "dynamic_prop"
-%
-data_f1_Sphere/IOHprofiler_f1_DIM5.dat, 1:5557|0.661683;1
