@@ -4,12 +4,20 @@ from setuptools import setup, Extension, find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+
+wrap_file = os.path.join("src", "IOHprofiler_wrap.cpp")
+if os.path.isfile(wrap_file):
+    os.remove(wrap_file)
+
+
 iohprofiler = Extension('_IOHprofiler', 
     swig_opts=["-c++", "-outdir", "IOHexperimenter"], 
     sources=[
-        os.path.realpath(os.path.join("src", x))
+        os.path.join("src", x)
         for x in os.listdir("src") if x.endswith(".cpp") or x.endswith(".i")
-])
+    ]
+)
+
 
 setup(
     name="IOHexperimenter",

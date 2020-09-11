@@ -18,3 +18,5 @@ build/
 Makefile
 *.so
 __pycache__
+
+src/IOHprofiler_wrap.cpp
