@@ -33,7 +33,7 @@ public:
     number_of_objectives(1),
     lowerbound(std::vector<InputType> (number_of_variables) ), 
     upperbound(std::vector<InputType> (number_of_variables) ),
-    optimal(std::vector<double>(number_of_objectives) ),
+    optimal( /* std::vector<double>(number_of_objectives) <- do not initialise, so as to check for the exetrn initialization using size */),
     optimalFound(false),
     raw_objectives(std::vector<double>(number_of_objectives)),
     transformed_objectives(std::vector<double>(number_of_objectives)),
@@ -232,6 +232,8 @@ public:
   void IOHprofiler_set_best_variables(const InputType best_variables);
 
   void IOHprofiler_set_best_variables(const std::vector<InputType> &best_variables);
+
+  bool IOHprofiler_has_optimal() const;
 
   std::vector<double> IOHprofiler_get_optimal() const;
 
