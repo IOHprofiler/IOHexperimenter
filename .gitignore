@@ -1,12 +1,30 @@
-*.csv
-**.o
-**.so
-**.dll
-*.log
-*.pdf
-*.html
-.*
+# Ignore C++ build artifacts.
+out/
+build/
+*.a
+*.o
+*.so
+*.exe
+*.dll
 
-!/.Rbuildignore
-!/.gitignore
-__pycache__
+
+# Ignore Vagrant runtime files.
+
+.vagrant/
+
+
+# Ignore settings for various IDEs.
+
+.idea/
+.project/
+.vscode/
+nbproject/
+*.code-workspace
+
+
+# Ignore OS metadata files.
+
+.DS_Store
+Thumbs.db
+
+.vs

@@ -1,0 +1,4 @@
+# Ignore Doxygen build artifacts.
+
+html/
+latex/
