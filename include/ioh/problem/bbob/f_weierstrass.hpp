@@ -29,9 +29,9 @@ namespace ioh
 				}
 
 				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-					std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-					std::vector<std::vector<double>>& rot2,
-					const long rseed, const long n
+				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
+				                          std::vector<std::vector<double>>& rot2,
+				                          const long rseed, const long n
 				) override
 				{
 					std::vector<std::vector<double>> M1(n, std::vector<double>(n));
@@ -49,8 +49,9 @@ namespace ioh
 							for (int k = 0; k < n; ++k)
 							{
 								const double base = 1.0 / sqrt(condition);
-								const double exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<long>(n)) - 1.0
-									);
+								const double exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<
+										long>(n)) - 1.0
+								);
 								M[i][j] += rot1[i][k] * pow(base, exponent) * rot2[k][j];
 							}
 						}
@@ -69,7 +70,7 @@ namespace ioh
 					transformation::coco::data::penalty_factor = 10.0 / static_cast<double>(n);
 				}
 
-				double internal_evaluate(const std::vector<double>& x)
+				double internal_evaluate(const std::vector<double>& x) override
 				{
 					size_t n = x.size();
 					size_t i, j;
@@ -85,7 +86,8 @@ namespace ioh
 					return 10.0 * pow(result / static_cast<double>(static_cast<long>(n)) - f0, 3.0);
 				}
 
-				static Weierstrass* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Weierstrass* createInstance(int instance_id = DEFAULT_INSTANCE,
+				                                   int dimension = DEFAULT_DIMENSION)
 				{
 					return new Weierstrass(instance_id, dimension);
 				}
@@ -93,5 +95,3 @@ namespace ioh
 		}
 	}
 }
-
-

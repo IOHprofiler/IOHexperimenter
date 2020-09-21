@@ -28,9 +28,9 @@ namespace ioh
 				}
 
 				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-					std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-					std::vector<std::vector<double>>& rot2,
-					const long rseed, const long n
+				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
+				                          std::vector<std::vector<double>>& rot2,
+				                          const long rseed, const long n
 				) override
 				{
 					std::vector<std::vector<double>> M1(n, std::vector<double>(n));
@@ -45,7 +45,8 @@ namespace ioh
 						b[i] = 0.0;
 						for (int j = 0; j < n; ++j)
 						{
-							double exponent = 1.0 * static_cast<int>(i) / (static_cast<double>(static_cast<long>(n)) - 1.0);
+							double exponent = 1.0 * static_cast<int>(i) / (static_cast<double>(static_cast<long>(n)) -
+								1.0);
 							M[i][j] = rot2[i][j] * pow(sqrt(conditioning), exponent);
 						}
 					}
@@ -57,7 +58,7 @@ namespace ioh
 				}
 
 
-				double internal_evaluate(const std::vector<double>& x)
+				double internal_evaluate(const std::vector<double>& x) override
 				{
 					size_t n = x.size();
 					/* Computation core */
@@ -70,10 +71,11 @@ namespace ioh
 							return tmp;
 						result += pow(tmp, 0.25) * (1.0 + pow(sin(50.0 * pow(tmp, 0.1)), 2.0));
 					}
-					return  pow(result / (static_cast<double>(static_cast<long>(n)) - 1.0), 2.0);
+					return pow(result / (static_cast<double>(static_cast<long>(n)) - 1.0), 2.0);
 				}
 
-				static Schaffers1000* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Schaffers1000* createInstance(int instance_id = DEFAULT_INSTANCE,
+				                                     int dimension = DEFAULT_DIMENSION)
 				{
 					return new Schaffers1000(instance_id, dimension);
 				}
@@ -81,5 +83,3 @@ namespace ioh
 		}
 	}
 }
-
-

@@ -26,9 +26,9 @@ namespace ioh
 				}
 
 				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-					std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-					std::vector<std::vector<double>>& rot2,
-					const long rseed, const long n
+				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
+				                          std::vector<std::vector<double>>& rot2,
+				                          const long rseed, const long n
 				) override
 				{
 					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
@@ -42,16 +42,19 @@ namespace ioh
 							M[i][j] = 0.0;
 							for (int k = 0; k < n; ++k)
 							{
-								double exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<long>(n)) - 1.0);
+								double exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<long>(n))
+									- 1.0);
 								M[i][j] += rot1[i][k] * pow(sqrt(10.0), exponent) * rot2[k][j];
 							}
 						}
 					}
 				}
-				double internal_evaluate(const std::vector<double>& x)
+
+				double internal_evaluate(const std::vector<double>& x) override
 				{
 					static const double alpha = 100.0;
-					const double vars_40 = 1; /* generalized: number_of_variables <= 40 ? 1 : number_of_variables / 40.0; */
+					const double vars_40 = 1;
+					/* generalized: number_of_variables <= 40 ? 1 : number_of_variables / 40.0; */
 					size_t i = 0;
 
 					double result = 0.0;
@@ -68,7 +71,8 @@ namespace ioh
 					return result;
 				}
 
-				static Sharp_Ridge* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Sharp_Ridge* createInstance(int instance_id = DEFAULT_INSTANCE,
+				                                   int dimension = DEFAULT_DIMENSION)
 				{
 					return new Sharp_Ridge(instance_id, dimension);
 				}

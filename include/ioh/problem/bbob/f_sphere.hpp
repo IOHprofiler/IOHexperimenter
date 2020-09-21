@@ -26,15 +26,15 @@ namespace ioh
 				}
 
 				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-					std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-					std::vector<std::vector<double>>& rot2,
-					const long rseed, const long n
+				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
+				                          std::vector<std::vector<double>>& rot2,
+				                          const long rseed, const long n
 				) override
 				{
 					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
 				}
 
-				double internal_evaluate(const std::vector<double>& x)
+				double internal_evaluate(const std::vector<double>& x) override
 				{
 					double result = 0.0;
 					for (size_t i = 0; i < x.size(); ++i)
@@ -52,4 +52,3 @@ namespace ioh
 		}
 	}
 }
-

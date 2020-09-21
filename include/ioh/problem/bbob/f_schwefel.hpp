@@ -26,9 +26,9 @@ namespace ioh
 				}
 
 				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-					std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-					std::vector<std::vector<double>>& rot2,
-					const long rseed, const long n
+				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
+				                          std::vector<std::vector<double>>& rot2,
+				                          const long rseed, const long n
 				) override
 				{
 					std::vector<double> tmp1, tmp2;
@@ -48,7 +48,7 @@ namespace ioh
 					transformation::coco::data::condition = 10.0;
 				}
 
-				double internal_evaluate(const std::vector<double>& x)
+				double internal_evaluate(const std::vector<double>& x) override
 				{
 					size_t n = x.size();
 					size_t i = 0;
@@ -73,7 +73,7 @@ namespace ioh
 						sum += x[i] * sin(sqrt(fabs(x[i])));
 					}
 
-					return 0.01 * (penalty + 418.9828872724339 - sum / static_cast<double>(n)); 
+					return 0.01 * (penalty + 418.9828872724339 - sum / static_cast<double>(n));
 				}
 
 				static Schwefel* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
@@ -84,4 +84,3 @@ namespace ioh
 		}
 	}
 }
-	
