@@ -1,4 +1,4 @@
-# IOHprofiler: IOHexperimenter
+# IOHprofiler: IOHexperimenter ![CMake](https://github.com/IOHprofiler/IOHexperimenter/workflows/CMake/badge.svg)
 
 This is the __benchmarking platform__ for <b>I</b>terative <b>O</b>ptimization <b>H</b>euristics (IOHs).
 
