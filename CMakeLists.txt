@@ -106,4 +106,4 @@ export(PACKAGE ioh)
 
 # Add subdirectories to build.
 add_subdirectory(test)
-add_subdirectory("example")
+add_subdirectory(example)

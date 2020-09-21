@@ -1,5 +1,6 @@
 #pragma once
 
+#include "bbob/bbob_base.hpp"
 #include "bbob/f_attractive_sector.hpp"
 #include "bbob/f_bent_cigar.hpp"
 #include "bbob/f_bueche_rastrigin.hpp"

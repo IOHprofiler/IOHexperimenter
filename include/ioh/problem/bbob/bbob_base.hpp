@@ -1,7 +1,6 @@
 #pragma once
-#include <vector>
 
-#include "ioh/problem.hpp"
+#include "ioh/problem/base.hpp"
 #include "ioh/transformation.hpp"
 
 //TODO: move the weird data class, these are just members of this class
