@@ -45,7 +45,7 @@ public:
         neighbors[2] = x[modulo_ising_triangular((i + 1) , lattice_size) * lattice_size + modulo_ising_triangular((j + 1), lattice_size)];
 
         for (neig=0; neig < 3; neig++) {
-          result += (x[i * lattice_size + j] * neighbors[neig]) - ((1 - x[i * lattice_size + j]) * (1 - neighbors[neig]));
+          result += (x[i * lattice_size + j] * neighbors[neig]) + ((1 - x[i * lattice_size + j]) * (1 - neighbors[neig]));
         }
       }
     }
