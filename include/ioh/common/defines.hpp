@@ -4,9 +4,10 @@
 
 
 #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)
+#define NOMINMAX
+#define PATH_SEPERATOR = "\\";
 #include <windows.h>
 #include <io.h>
-#define PATH_SEPERATOR = "\\";
 #elif defined(__gnu_linux__)
 	#include <linux/limits.h>
 	#include <sys/stat.h>

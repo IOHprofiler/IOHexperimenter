@@ -1,33 +1,25 @@
 ## Build the ioh library.
 ##
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.11)
 
 project(ioh
     VERSION 0.0.0.1
     LANGUAGES CXX
 )
-
+ 
 set(CMAKE_CXX_STANDARD 17)
 
 if(MSVC)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
-endif()
+endif() 
 
 
 # Define project targets.
- 
-add_library(ioh
-    "src/ioh.cpp"
-    "include/ioh.hpp" 
-    "include/ioh/common.hpp" 
-    "include/ioh/common/utils.hpp" 
-    "include/ioh/common/defines.hpp" 
-    "src/common/utils.cpp" 
-    "include/ioh/common/class_generator.hpp" 
-    "include/ioh/common/random.hpp" 
-    "src/common/random.cpp"
-  "example/main.cpp")
+file(GLOB SOURCES src/*.cpp src/*/*.cpp)
+file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
+
+add_library(ioh ${HEADERS} ${SOURCES})
 add_library(ioh::ioh ALIAS ioh)
 
 target_include_directories(ioh

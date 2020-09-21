@@ -14,14 +14,14 @@ namespace ioh
 		{
 		public:
 			random(uint32_t seed = DEFAULT_SEED);
-			
+
 			void generate();
 
 			static long _lcg_rand(const long& inseed);
 
 			static void uniform_rand(const size_t& N, const long& inseed, std::vector<double>& rand_vec);
 
-			static std::vector<double> gauss(const size_t N, const long inseed);
+			static std::vector<double> gauss(size_t N, long inseed);
 
 			// TODO: I think only these methods should be public
 			double uniform_rand();
@@ -39,7 +39,6 @@ namespace ioh
 			inline static unsigned int short_lag = SHORT_LAG;
 			inline static unsigned int long_lag = LONG_LAG;
 			double x[607];
-			
 		};
 	}
 }

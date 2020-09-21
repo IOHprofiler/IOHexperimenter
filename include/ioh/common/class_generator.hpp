@@ -22,11 +22,14 @@ namespace ioh
 			FN_registry registry;
 
 
-			genericGenerator() {}
+			genericGenerator()
+			{
+			}
+
 			genericGenerator(const genericGenerator&) = delete;
 			genericGenerator& operator=(const genericGenerator&) = delete;
 
-		
+
 		public:
 			/// Singleton access.
 			static genericGenerator<manufacturedObj>& instance()

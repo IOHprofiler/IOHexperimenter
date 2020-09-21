@@ -1,12 +1,10 @@
 #include "../include/ioh/common/utils.hpp"
 
 
-
 namespace ioh
 {
 	namespace common
 	{
-
 		namespace log
 		{
 			void error(std::string error_info)
@@ -28,9 +26,7 @@ namespace ioh
 			void info(std::string log_info, std::ofstream& log_stream)
 			{
 				log_stream << "IOH_LOG_INFO : " << log_info << std::endl;
-
+			}
 		}
-		}
-		
 	}
 }

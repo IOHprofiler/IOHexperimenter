@@ -4,13 +4,13 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
-#include <sstream>  
+#include <sstream>
 
 namespace ioh
 {
 	namespace common
 	{
-		enum optimization_type { minimization = 0, maximization = 1 };
+		enum class optimization_type { minimization = 0, maximization = 1 };
 
 
 		namespace log
@@ -69,7 +69,7 @@ namespace ioh
 				log::error("Two compared objective vector must be with the same size\n");
 				return false;
 			}
-			if (optimization_type == maximization)
+			if (optimization_type == optimization_type::maximization)
 			{
 				for (int i = 0; i != n; ++i)
 				{
@@ -99,7 +99,7 @@ namespace ioh
 		template <typename T>
 		bool compare_objectives(const T v1, const T v2, const optimization_type optimization_type)
 		{
-			if (optimization_type == maximization)
+			if (optimization_type == optimization_type::maximization)
 				return v1 > v2;
 			return v1 < v2;
 		}
