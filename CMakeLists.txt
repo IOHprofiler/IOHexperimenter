@@ -27,7 +27,7 @@ add_library(ioh
     "include/ioh/common/class_generator.hpp" 
     "include/ioh/common/random.hpp" 
     "src/common/random.cpp"
- )
+  "example/main.cpp")
 add_library(ioh::ioh ALIAS ioh)
 
 target_include_directories(ioh
@@ -114,3 +114,4 @@ export(PACKAGE ioh)
 
 # Add subdirectories to build.
 add_subdirectory(test)
+add_subdirectory(example)
