@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
+#include <sstream>  
 
 namespace ioh
 {
@@ -39,7 +40,7 @@ namespace ioh
 			int n = v1.size();
 			if (n != v2.size())
 			{
-				common::error("Two compared vectors must be with the same size\n");
+				log::error("Two compared vectors must be with the same size\n");
 				return false;
 			}
 			for (int i = 0; i != n; ++i)
@@ -65,7 +66,7 @@ namespace ioh
 			int n = v1.size();
 			if (n != v2.size())
 			{
-				error("Two compared objective vector must be with the same size\n");
+				log::error("Two compared objective vector must be with the same size\n");
 				return false;
 			}
 			if (optimization_type == maximization)

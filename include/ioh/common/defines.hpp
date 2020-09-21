@@ -57,7 +57,7 @@
 #pragma warning(disable : 4996)
 #endif
 
-#define PATH_MAX 200
+#define IOH_PATH_MAX 200
 
 /// < The maximum allowed testing dimension.
 #define MAX_DIMENSION 20000

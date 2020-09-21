@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 #include <vector>
+#include <cmath>
+#include <cstdlib>
 
 #include "defines.hpp"
 
@@ -34,8 +36,8 @@ namespace ioh
 			inline static long m = RND_MODULUS; /// < modulus.
 			inline static long q = RND_MODULUS_DIV; /// < modulusdiv multiplier.
 			inline static long r = RND_MOD_MULTIPLIER; /// < modulus mod multiplier.
-			inline static int short_lag = SHORT_LAG;
-			inline static int long_lag = LONG_LAG;
+			inline static unsigned int short_lag = SHORT_LAG;
+			inline static unsigned int long_lag = LONG_LAG;
 			double x[607];
 			
 		};

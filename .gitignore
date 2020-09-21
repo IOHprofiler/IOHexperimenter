@@ -1,5 +1,5 @@
 # Ignore C++ build artifacts.
-out/
+
 build/
 *.a
 *.o

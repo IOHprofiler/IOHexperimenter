@@ -8,7 +8,7 @@ namespace ioh
 	{
 		random::random(uint32_t seed) : _seed_index(0)
 		{
-			for (int i = 0; i < long_lag; ++i) {
+			for (unsigned int i = 0; i < long_lag; ++i) {
 				this->x[i] = ((double)seed) / (double)(((uint64_t)1UL << 32) - 1);
 				seed = (uint32_t)1812433253UL * (seed ^ (seed >> 30)) + ((uint32_t)i + 1);
 			}
@@ -16,13 +16,13 @@ namespace ioh
 
 		void random::generate()
 		{
-			for (int i = 0; i < short_lag; ++i) {
+			for (unsigned int i = 0; i < short_lag; ++i) {
 				double t = this->x[i] + this->x[i + (long_lag - short_lag)];
 				if (t >= 1.0)
 					t -= 1.0;
 				this->x[i] = t;
 			}
-			for (int i = short_lag; i < long_lag; ++i) {
+			for (unsigned int i = short_lag; i < long_lag; ++i) {
 				double t = this->x[i] + this->x[i - short_lag];
 				if (t >= 1.0)
 					t -= 1.0;
@@ -33,8 +33,8 @@ namespace ioh
 
 		long random::_lcg_rand(const long& inseed)
 		{
-			long new_inseed = (long)(a * (inseed - (long)floor((double)inseed 
-				/ (double)q) * q) - r * (long)floor((double)inseed / (double)q));
+			long new_inseed = (long)(a * (inseed - (long)std::floor((double)inseed 
+				/ (double)q) * q) - r * (long)std::floor((double)inseed / (double)q));
 			if (new_inseed < 0) {
 				new_inseed = new_inseed + m;
 			}
@@ -50,15 +50,7 @@ namespace ioh
 
 			long rand_seed[32];
 			long seed;
-			long rand_value;
-
-			seed = inseed;
-			if (seed < 0) {
-				seed = -seed;
-			}
-			if (seed < 1) {
-				seed = 1;
-			}
+			long rand_value;		
 
 			seed = inseed;
 			for (int i = 39; i >= 0; --i) {
@@ -70,14 +62,14 @@ namespace ioh
 
 			int seed_index = 0;
 			seed = rand_seed[0];
-			for (int i = 0; i < N; ++i) {
+			for (unsigned int i = 0; i < N; ++i) {
 				rand_value = _lcg_rand(seed);
 
-				seed_index = (int)floor((double)seed / (double)67108865);
+				seed_index = (int)std::floor((double)seed / (double)67108865);
 				seed = rand_seed[seed_index];
 				rand_seed[seed_index] = rand_value;
 
-				rand_vec.push_back((double)seed / 2.147483647e9);
+				rand_vec.emplace_back((double)seed / 2.147483647e9);
 				if (rand_vec[i] == 0.) {
 					rand_vec[i] = 1e-99;
 				}
@@ -90,11 +82,11 @@ namespace ioh
 			std::vector<double> uniform_rand_vec;
 			rand_vec.reserve(N);
 
-			const long seed = max(1, abs(inseed));
+			const long seed = (std::max)(1L, std::abs(inseed));
 			uniform_rand(2 * N, seed, uniform_rand_vec);
 
-			for (int i = 0; i < N; i++) {
-				rand_vec.push_back(sqrt(-2 * log(uniform_rand_vec[i])) * cos(2 * IOH_PI * uniform_rand_vec[N + i]));
+			for (unsigned int i = 0; i < N; i++) {
+				rand_vec.emplace_back(std::sqrt(-2 * std::log(uniform_rand_vec[i])) * std::cos(2 * IOH_PI * uniform_rand_vec[N + i]));
 				if (rand_vec[i] == 0.) {
 					rand_vec[i] = 1e-99;
 				}
@@ -116,7 +108,7 @@ namespace ioh
 			#ifdef NORMAL_POLAR
 			const double u1 = this->uniform_rand();
 			const double u2 = this->uniform_rand();
-			normal = sqrt(-2 * log(u1)) * cos(2 * IOH_PI * u2);
+			normal = std::sqrt(-2 * std::log(u1)) * std::cos(2 * IOH_PI * u2);
 			#else
 			normal = 0.0;
 			for (int i = 0; i < 12; ++i) {

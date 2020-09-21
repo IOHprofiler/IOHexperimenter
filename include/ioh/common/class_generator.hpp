@@ -21,15 +21,15 @@ namespace ioh
 			typedef std::map<std::string, std::shared_ptr<manufacturedObj>(*)()> FN_registry;
 			FN_registry registry;
 
-			genericGenerator()
-			{
-			};
+
+			genericGenerator() {}
 			genericGenerator(const genericGenerator&) = delete;
 			genericGenerator& operator=(const genericGenerator&) = delete;
 
+		
 		public:
 			/// Singleton access.
-			static genericGenerator& instance()
+			static genericGenerator<manufacturedObj>& instance()
 			{
 				/// Note that this is not thread-safe!
 				static genericGenerator theInstance;
@@ -41,7 +41,7 @@ namespace ioh
 			/// Classes derived from manufacturedObj call this function once
 			/// per program to register the class ID key, and a pointer to
 			/// the function that creates the class.
-			void regCreateFn(std::string, std::shared_ptr<manufacturedObj> (*)())
+			void regCreateFn(std::string clName, std::shared_ptr<manufacturedObj> (*func)())
 			{
 				registry[clName] = func;
 			}
@@ -50,6 +50,7 @@ namespace ioh
 			///
 			/// Create a new class of the type specified by className.
 			/// The create function simple looks up the class ID, and if it's in the list, the statement "(*i).second();" calls the function.
+			///
 			std::shared_ptr<manufacturedObj> create(std::string className) const
 			{
 				std::shared_ptr<manufacturedObj> ret(nullptr);

@@ -5,18 +5,29 @@ cmake_minimum_required(VERSION 3.8)
 project(ioh
     VERSION 0.0.0.1
     LANGUAGES CXX
-)  
+)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+
+if(MSVC)
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+endif()
 
 
 # Define project targets.
  
 add_library(ioh
     "src/ioh.cpp"
- "include/ioh.hpp" "include/ioh/common.hpp" "include/ioh/common/utils.hpp" "include/ioh/common/defines.hpp" "src/common/utils.cpp" "include/ioh/common/class_generator.hpp" "include/ioh/common/random.hpp" "src/common/random.cpp")
+    "include/ioh.hpp" 
+    "include/ioh/common.hpp" 
+    "include/ioh/common/utils.hpp" 
+    "include/ioh/common/defines.hpp" 
+    "src/common/utils.cpp" 
+    "include/ioh/common/class_generator.hpp" 
+    "include/ioh/common/random.hpp" 
+    "src/common/random.cpp"
+ )
 add_library(ioh::ioh ALIAS ioh)
 
 target_include_directories(ioh
