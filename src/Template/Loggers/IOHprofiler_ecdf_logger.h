@@ -91,7 +91,8 @@ using IOHprofiler_AttainSuite =
     std::map< size_t,         // problem
         std::map< size_t,     // dim
             std::map< size_t, // instance
-                 IOHprofiler_AttainMat >>>; // ECDF
+                 std::map< size_t, // run
+                    IOHprofiler_AttainMat >>>>; // ECDF
 
 /** An observer which stores bi-dimensional error/evaluations discretized attainment matrices.
  *
@@ -194,8 +195,19 @@ class IOHprofiler_ecdf_logger : public IOHprofiler_observer<T>
          * First index: problem id,
          * second index: instance id,
          * third index: dimension id.
+         * fourth index: run id
          */
-        const IOHprofiler_AttainMat& at(size_t problem_id, size_t instance_id, size_t dim_id) const;
+        const IOHprofiler_AttainMat& at(size_t problem_id, size_t instance_id, size_t dim_id, size_t run_id) const;
+
+        /** Access an averaged attainment matrix of multiple runs on a problem
+         *
+         * @note Use the same indices order than IOHprofiler_problem.
+         *
+         * First index: problem id,
+         * second index: instance id,
+         * third index: dimension id.
+         */
+        IOHprofiler_AttainMat at(size_t problem_id, size_t instance_id, size_t dim_id) const;
 
         /** Returns the size of the computed data, in its internal order.
          *
@@ -246,6 +258,9 @@ class IOHprofiler_ecdf_logger : public IOHprofiler_observer<T>
 
         //! Currently targeted problem metadata.
         Problem _current;
+        
+        ///! The number of independent runs have been tested on _current problem.
+        int _current_run; 
 
         //! An attainment matrix filled with zeros, copied for each new problem/instance/dim.
         IOHprofiler_AttainMat _empty;

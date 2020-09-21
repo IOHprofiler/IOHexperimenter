@@ -191,12 +191,44 @@ const IOHprofiler_AttainSuite& IOHprofiler_ecdf_logger<T>::data()
 }
 
 template<class T>
-const IOHprofiler_AttainMat& IOHprofiler_ecdf_logger<T>::at(size_t problem_id, size_t instance_id, size_t dim_id) const
+const IOHprofiler_AttainMat& IOHprofiler_ecdf_logger<T>::at(size_t problem_id, size_t instance_id, size_t dim_id, size_t run_id) const
 {
     assert(_ecdf_suite.count(problem_id) != 0);
     assert(_ecdf_suite.at(problem_id).count(dim_id) != 0);
     assert(_ecdf_suite.at(problem_id).at(dim_id).count(instance_id) != 0);
-    return _ecdf_suite.at(problem_id).at(dim_id).at(instance_id);
+    assert(_ecdf_suite.at(problem_id).at(dim_id).at(instance_id).count(run_id) != 0);
+    return _ecdf_suite.at(problem_id).at(dim_id).at(instance_id).at(run_id);
+}
+
+template<class T>
+IOHprofiler_AttainMat IOHprofiler_ecdf_logger<T>::at(size_t problem_id, size_t instance_id, size_t dim_id) const
+{
+    size_t runs;
+    IOHprofiler_AttainMat mat = _empty;
+    std::vector< std::vector< int >> c_mat(_range_error.size(),std::vector<int>( _range_evals.size(),0));
+    size_t ibound = _range_error.size();
+    size_t jbound = _range_evals.size();
+
+    assert(_ecdf_suite.count(problem_id) != 0);
+    assert(_ecdf_suite.at(problem_id).count(dim_id) != 0);
+    assert(_ecdf_suite.at(problem_id).at(dim_id).count(instance_id) != 0);
+
+    runs = _ecdf_suite.at(problem_id).at(dim_id).at(instance_id).size();
+    for(size_t i = 0; i < ibound; ++i) {
+        for(size_t j = 0; j < jbound; ++j) {
+            for(size_t r = 0; r < runs; ++r) {
+                c_mat[i][j] += _ecdf_suite.at(problem_id).at(dim_id).at(instance_id).at(r)[i][j]==true?1:0;
+            }  // for r
+        } // for j
+    } // for i
+    
+    for(size_t i = 0; i < ibound; ++i) {
+        for(size_t j = 0; j < jbound; ++j) {
+            mat[i][j] = (double)c_mat[i][j] / (double)runs > 0.5;
+        } // for j
+    }  // for i
+
+    return mat;
 }
 
 template<class T>
@@ -230,15 +262,20 @@ template<class T>
 void IOHprofiler_ecdf_logger<T>::init_ecdf( const Problem& cur )
 {
     if(_ecdf_suite.count(cur.pb) == 0) {
-        _ecdf_suite[cur.pb] = std::map< size_t, std::map< size_t, IOHprofiler_AttainMat >>();
+        _ecdf_suite[cur.pb] = std::map< size_t, std::map< size_t, std::map< size_t, IOHprofiler_AttainMat >>>();
     }
     if(_ecdf_suite[cur.pb].count(cur.dim) == 0) {
-        _ecdf_suite[cur.pb][cur.dim] = std::map< size_t, IOHprofiler_AttainMat >();
+        _ecdf_suite[cur.pb][cur.dim] = std::map< size_t, std::map< size_t, IOHprofiler_AttainMat >>();
     }
+    
     if(_ecdf_suite[cur.pb][cur.dim].count(cur.ins) == 0) {
-        _ecdf_suite[cur.pb][cur.dim][cur.ins] = _empty;
+        _ecdf_suite[cur.pb][cur.dim][cur.ins] = std::map< size_t, IOHprofiler_AttainMat >();
     }
-    assert(_ecdf_suite.at(cur.pb).at(cur.dim).at(cur.ins).at(0).at(0) == 0);
+    
+    _current_run = _ecdf_suite[cur.pb][cur.dim][cur.ins].size();
+    _ecdf_suite[cur.pb][cur.dim][cur.ins][_current_run] = _empty;
+    
+    assert(_ecdf_suite.at(cur.pb).at(cur.dim).at(cur.ins).at(_current_run).at(0).at(0) == 0);
 }
 
 template<class T>
@@ -247,7 +284,8 @@ IOHprofiler_AttainMat& IOHprofiler_ecdf_logger<T>::current_ecdf()
     assert(_ecdf_suite.count(_current.pb) != 0);
     assert(_ecdf_suite[_current.pb].count(_current.dim) != 0);
     assert(_ecdf_suite[_current.pb][_current.dim].count(_current.ins) != 0);
-    return _ecdf_suite[_current.pb][_current.dim][_current.ins];
+    assert(_ecdf_suite[_current.pb][_current.dim][_current.ins].count(_current_run) != 0);
+    return _ecdf_suite[_current.pb][_current.dim][_current.ins][_current_run];
 }
 
 template<class T>
@@ -303,10 +341,12 @@ inline size_t IOHprofiler_ecdf_sum::operator()(const IOHprofiler_AttainSuite& at
     for(const auto& pbid_dimmap : attainment ) {
         for(const auto& dimid_insmap : pbid_dimmap.second ) {
             for(const auto& insid_mat : dimid_insmap.second) {
-                const IOHprofiler_AttainMat& mat = insid_mat.second;
-                for(const auto& row : mat) {
-                    for(const auto& item : row ) {
-                        sum += item;
+                for(const auto& runid_mat : insid_mat.second) {
+                    const IOHprofiler_AttainMat& mat = runid_mat.second;
+                    for(const auto& row : mat) {
+                        for(const auto& item : row ) {
+                            sum += item;
+                        }
                     }
                 }
             }
