@@ -3,6 +3,7 @@
 #include "ioh/problem/base.hpp"
 #include "ioh/transformation.hpp"
 
+
 //TODO: move the weird data class, these are just members of this class
 //TODO: move create instance here
 //TODO: create generic function for similar functions
@@ -14,6 +15,7 @@ namespace ioh
 		{
 			class bbob_base : public base<double>
 			{
+				long rseed;
 			public:
 				bbob_base(int problem_id, std::string problem_name, int instance_id = DEFAULT_INSTANCE)
 				{
@@ -26,12 +28,12 @@ namespace ioh
 					set_upperbound(5.0);
 					set_best_variables(0);
 					set_as_minimization();
+					rseed = (problem_id == 4 || problem_id == 18 ? problem_id - 1 : problem_id) + 10000 * instance_id;
 				}
 
 				void prepare_problem() override
 				{
 					using namespace transformation::coco;
-					const long rseed = static_cast<long>(this->get_problem_id() + 10000 * this->get_instance_id());
 					const int n = this->get_number_of_variables();
 
 					std::vector<double> xopt(n);

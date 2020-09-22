@@ -179,7 +179,6 @@ namespace ioh
 				                                                  this->problem_type);
 
 				this->raw_objectives[0] = this->internal_evaluate(x);
-
 				this->transformed_objectives[0] = this->raw_objectives[0];
 
 				transformation::methods::objectives_transformation(x, this->transformed_objectives, this->problem_id,

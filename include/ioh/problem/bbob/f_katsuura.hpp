@@ -32,9 +32,7 @@ namespace ioh
 				) override
 				{
 					using namespace transformation::coco;
-					const double penalty_factor = 1.0;
-
-
+		
 					bbob2009_compute_xopt(xopt, rseed, n);
 					bbob2009_compute_rotation(rot1, rseed + 1000000, n);
 					bbob2009_compute_rotation(rot2, rseed, n);
@@ -52,7 +50,7 @@ namespace ioh
 							}
 						}
 					}
-					data::penalty_factor = penalty_factor;
+					data::penalty_factor = 1.0;
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override
@@ -75,7 +73,9 @@ namespace ioh
 						/*result *= tmp;*/ /* Wassim TODO: delete once consistency check passed*/
 						result *= pow(tmp, 10. / pow(static_cast<double>(n), 1.2));
 					}
-					return 10. / static_cast<double>(n) / static_cast<double>(n) * (-1. + result);
+					result = 10. / static_cast<double>(n) / static_cast<double>(n) * (-1. + result);
+					return result;
+				
 				}
 
 				static Katsuura* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)

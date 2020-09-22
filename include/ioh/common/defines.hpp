@@ -94,4 +94,3 @@
 #define LONG_LAG 607
 
 
-#define print(x) std::cout << x << std::endl

@@ -30,13 +30,12 @@ namespace ioh
 				                          const long rseed, const long n
 				) override
 				{
-					using namespace transformation::coco;
-					bbob2009_compute_xopt(xopt, rseed, n);
+					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
 					for (int i = 0; i < n; i += 2)
 					{
 						xopt[i] = fabs(xopt[i]);
 					}
-					data::penalty_factor = 100.0;
+					transformation::coco::data::penalty_factor = 100.0;
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override

@@ -20,7 +20,7 @@ namespace ioh
 				Bent_Cigar(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 					: bbob_base(12, "Bent_Cigar", instance_id)
 				{
-					calc_optimal(); // Not sure what this does gets called very often
+					set_number_of_variables(dimension); 
 				}
 
 				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
