@@ -50,7 +50,10 @@ namespace ioh
 				size_of_problem_list(0),
 				get_problem_flag(false),
 				load_problem_flag(false),
-				current_problem(nullptr)
+				current_problem(nullptr),
+				number_of_dimensions(0),
+				number_of_problems(0),
+				number_of_instances(0)
 			{
 				std::cout << "Is this called? " << std::endl;
 			}
@@ -82,11 +85,11 @@ namespace ioh
 					number_of_problems;
 				this->problem_list_index = 0;
 
-				for (int i = 0; i != this->number_of_problems; ++i)
+				for (auto i = 0; i != this->number_of_problems; ++i)
 				{
-					for (int j = 0; j != this->number_of_dimensions; ++j)
+					for (auto j = 0; j != this->number_of_dimensions; ++j)
 					{
-						for (int h = 0; h != this->number_of_instances; ++h)
+						for (auto h = 0; h != this->number_of_instances; ++h)
 						{
 							Problem_ptr p = get_problem(this->problem_id_name_map[this->problem_id[i]],
 							                            this->instance_id[h],
@@ -241,22 +244,20 @@ namespace ioh
 
 			void set_suite_problem_id(const std::vector<int>& problem_id)
 			{
-
-
 				common::compare_vector(problem_id, this->problem_id);
-				this->number_of_problems = this->problem_id.size();
+				this->number_of_problems = static_cast<int>(this->problem_id.size());
 			}
 
 			void set_suite_instance_id(const std::vector<int>& instance_id)
 			{
 				common::compare_vector(instance_id, this->instance_id);
-				this->number_of_instances = this->instance_id.size();
+				this->number_of_instances = static_cast<int>(this->instance_id.size());
 			}
 
 			void set_suite_dimension(const std::vector<int>& dimension)
 			{
 				common::compare_vector(dimension, this->dimension);
-				this->number_of_dimensions = this->dimension.size();
+				this->number_of_dimensions = static_cast<int>(this->dimension.size());
 			}
 
 

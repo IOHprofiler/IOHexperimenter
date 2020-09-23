@@ -43,6 +43,6 @@ TEST(common, random)
 {
 	using namespace ioh;
 	common::random r(1);
-	ASSERT_FLOAT_EQ(r.normal_rand(), -5.87625);
-	ASSERT_FLOAT_EQ(r.uniform_rand(), 0.86453754);
+	ASSERT_DOUBLE_EQ(r.normal_rand(), -5.8762480600075353);
+	ASSERT_DOUBLE_EQ(r.uniform_rand(), 0.86453751611163321);
 }

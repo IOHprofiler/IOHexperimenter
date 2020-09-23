@@ -32,11 +32,10 @@ namespace ioh
 				) override
 				{
 					std::vector<double> minus_one;
-					double factor;
 					/* compute xopt, fopt*/
 
 					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
-					for (int i = 0; i < n; ++i)
+					for (auto i = 0; i < n; ++i)
 					{
 						minus_one.push_back(-1.0);
 						xopt[i] *= 0.75;

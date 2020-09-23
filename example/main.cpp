@@ -59,16 +59,12 @@ void test_problems()
 	test_eval(std::make_unique<Discus>());
 	test_eval(std::make_unique<Ellipsoid>());
 	test_eval(std::make_unique<Ellipsoid_Rotated>());
-	
-	test_eval(std::make_unique<Gallagher101>());
-	test_eval(std::make_unique<Gallagher21>());
-	
+	test_eval(std::make_unique<Gallagher101>()); // 100.6898
+	test_eval(std::make_unique<Gallagher21>()); // -924.8833
 	test_eval(std::make_unique<Griewank_RosenBrock>());
-	
 	test_eval(std::make_unique<Katsuura>()); // however I think in old version this is incorrect
 	test_eval(std::make_unique<Linear_Slope>());
 	test_eval(std::make_unique<Lunacek_Bi_Rastrigin>());
-	
 	test_eval(std::make_unique<Rastrigin>());
 	test_eval(std::make_unique<Rastrigin_Rotated>());
 	test_eval(std::make_unique<Rosenbrock>());
@@ -82,7 +78,7 @@ void test_problems()
 	test_eval(std::make_unique<Weierstrass>());
 
 	// // test PBO
-	// using namespace ioh::problem::pbo;
+	using namespace ioh::problem::pbo;
 	// test_eval(std::make_unique<MIS>());
 	// test_eval(std::make_unique<NQueens>());
 	// test_eval(std::make_unique<Concatenated_Trap>());
@@ -121,4 +117,11 @@ int main()
 {
 	// ioh::suite::bbob b;
 	test_problems();
+	// for (int i = 0; i < 100; i++)
+	// {
+	// 	auto x = ioh::common::random::integers(10);
+	// 	vprint(x);
+	// }
+	
 }
+

@@ -17,7 +17,7 @@ namespace ioh
 		{
 			class Griewank_RosenBrock : public bbob_base
 			{
-				double scales;
+				double scales = 0.0;
 
 			public:
 				Griewank_RosenBrock(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
@@ -32,15 +32,15 @@ namespace ioh
 				                          const long rseed, const long n
 				) override
 				{
-					for (int i = 0; i < n; ++i)
+					for (auto i = 0; i < n; ++i)
 					{
 						xopt[i] = -0.5;
 					}
 					transformation::coco::bbob2009_compute_rotation(rot1, rseed, n);
 					scales = 1. > (sqrt(static_cast<double>(n)) / 8.) ? 1. : (sqrt(static_cast<double>(n)) / 8.);
-					for (int i = 0; i < n; ++i)
+					for (auto i = 0; i < n; ++i)
 					{
-						for (int j = 0; j < n; ++j)
+						for (auto j = 0; j < n; ++j)
 						{
 							rot1[i][j] *= scales;
 						}
@@ -51,13 +51,13 @@ namespace ioh
 				double internal_evaluate(const std::vector<double>& x) override
 				{
 					double tmp = 0;
-					double result = 0.0;
-					size_t n = x.size();
+					auto result = 0.0;
+					auto n = x.size();
 
 					for (size_t i = 0; i < n - 1; ++i)
 					{
-						const double c1 = x[i] * x[i] - x[i + 1];
-						const double c2 = 1.0 - x[i];
+						const auto c1 = x[i] * x[i] - x[i + 1];
+						const auto c2 = 1.0 - x[i];
 						tmp = 100.0 * c1 * c1 + c2 * c2;
 						result += tmp / 4000. - cos(tmp);
 					}

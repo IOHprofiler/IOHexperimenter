@@ -16,10 +16,10 @@ namespace ioh
 			                                                    const std::vector<double>& b)
 			{
 				size_t i, j;
-				size_t number_of_variables = x.size();
+				auto number_of_variables = x.size();
 				//double *cons_values;
 				//int is_feasible;
-				std::vector<double> temp_x = x;
+				auto temp_x = x;
 				for (i = 0; i < number_of_variables; ++i)
 				{
 					/* data->M has problem->number_of_variables columns and inner_problem->number_of_variables rows. */
@@ -35,7 +35,7 @@ namespace ioh
 			{
 				size_t i;
 				double exponent;
-				size_t number_of_variables = x.size();
+				auto number_of_variables = x.size();
 				for (i = 0; i < number_of_variables; ++i)
 				{
 					if (x[i] > 0.0)
@@ -56,7 +56,7 @@ namespace ioh
 			{
 				size_t i;
 				double factor;
-				size_t number_of_variables = x.size();
+				auto number_of_variables = x.size();
 
 				for (i = 0; i < number_of_variables; ++i)
 				{
@@ -83,7 +83,7 @@ namespace ioh
 			static void transform_vars_conditioning_evaluate(std::vector<double>& x, const double alpha)
 			{
 				size_t i;
-				size_t number_of_variables = x.size();
+				auto number_of_variables = x.size();
 
 				for (i = 0; i < number_of_variables; ++i)
 				{
@@ -100,8 +100,8 @@ namespace ioh
 
 			static void transform_vars_oscillate_evaluate_function(std::vector<double>& x)
 			{
-				static const double alpha = 0.1;
-				size_t number_of_variables = x.size();
+				static const auto alpha = 0.1;
+				auto number_of_variables = x.size();
 				double tmp, base;
 				size_t i;
 
@@ -129,7 +129,7 @@ namespace ioh
 			static void transform_vars_scale_evaluate(std::vector<double>& x, const double factor)
 			{
 				size_t i;
-				size_t number_of_variables = x.size();
+				auto number_of_variables = x.size();
 
 				for (i = 0; i < number_of_variables; ++i)
 				{
@@ -141,7 +141,7 @@ namespace ioh
 			                                                   const std::vector<double>& offset)
 			{
 				size_t i;
-				size_t number_of_variables = x.size();
+				auto number_of_variables = x.size();
 
 				for (i = 0; i < number_of_variables; ++i)
 				{
@@ -152,7 +152,7 @@ namespace ioh
 			static void transform_vars_x_hat_evaluate(std::vector<double>& x, const long seed)
 			{
 				size_t i;
-				size_t number_of_variables = x.size();
+				auto number_of_variables = x.size();
 				std::vector<double> tmp_x;
 
 
@@ -175,7 +175,7 @@ namespace ioh
 			                                                  const std::vector<double>& sign_vector)
 			{
 				size_t i;
-				size_t number_of_variables = x.size();
+				auto number_of_variables = x.size();
 
 				for (i = 0; i < number_of_variables; ++i)
 				{
@@ -186,8 +186,8 @@ namespace ioh
 			static void transform_vars_z_hat_evaluate(std::vector<double>& x, const std::vector<double>& xopt)
 			{
 				size_t i;
-				size_t number_of_variables = x.size();
-				std::vector<double> temp_x = x;
+				auto number_of_variables = x.size();
+				auto temp_x = x;
 				x[0] = temp_x[0];
 
 				for (i = 1; i < number_of_variables; ++i)

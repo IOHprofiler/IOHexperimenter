@@ -35,7 +35,7 @@ namespace ioh
 					transformation::coco::bbob2009_compute_rotation(rot1, rseed + 1000000, n);
 					transformation::coco::bbob2009_compute_rotation(rot2, rseed, n);
 					transformation::coco::bbob2009_gauss(tmpvect, n, rseed);
-					for (int i = 0; i < n; ++i)
+					for (auto i = 0; i < n; ++i)
 					{
 						xopt[i] = 0.5 * 2.5;
 						if (tmpvect[i] < 0.0)
@@ -48,15 +48,15 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					size_t n = x.size();
-					static const double condition = 100.;
+					auto n = x.size();
+					static const auto condition = 100.;
 					size_t i, j;
-					double penalty = 0.0;
-					static const double mu0 = 2.5;
-					static const double d = 1.;
-					const double s = 1. - 0.5 / (sqrt(static_cast<double>(n + 20)) - 4.1);
-					const double mu1 = -sqrt((mu0 * mu0 - d) / s);
-					double sum1 = 0., sum2 = 0., sum3 = 0.;
+					auto penalty = 0.0;
+					static const auto mu0 = 2.5;
+					static const auto d = 1.;
+					const auto s = 1. - 0.5 / (sqrt(static_cast<double>(n + 20)) - 4.1);
+					const auto mu1 = -sqrt((mu0 * mu0 - d) / s);
+					auto sum1 = 0., sum2 = 0., sum3 = 0.;
 					std::vector<double> tmpvect(n);
 					std::vector<double> x_hat(n);
 					std::vector<double> z(n);

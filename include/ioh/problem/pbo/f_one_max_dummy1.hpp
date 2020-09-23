@@ -32,12 +32,12 @@ namespace ioh
                 }
 
                 double internal_evaluate(const std::vector<int>& x) {
-                    int n = this->info.size();
-                    int result = 0;
-                    for (int i = 0; i != n; ++i) {
+                    auto n = this->info.size();
+                    auto result = 0.0;
+                    for (auto i = 0; i != n; ++i) {
                         result += x[this->info[i]];
                     }
-                    return (double)result;
+                    return result;
                 }
 
                 static OneMax_Dummy1* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {

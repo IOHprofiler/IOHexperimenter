@@ -1,10 +1,11 @@
 #pragma once
 #include <cstdint>
 #include <vector>
+#include <random>
 #include <cmath>
-#include <cstdlib>
 
 #include "defines.hpp"
+;
 
 namespace ioh
 {
@@ -27,6 +28,12 @@ namespace ioh
 			double uniform_rand();
 
 			double normal_rand();
+
+			static bool bit(double p = 0.5);
+			static int integer(int min = INT_MIN, int max = INT_MAX);
+			static std::vector<int> integers(unsigned int n, int min=INT_MIN, int max=INT_MAX);
+			static std::vector<bool> bitstring(unsigned int n, double p = 0.5);
+
 
 		private:
 			size_t _seed_index;

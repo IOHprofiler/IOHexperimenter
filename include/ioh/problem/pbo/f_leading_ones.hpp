@@ -24,9 +24,9 @@ namespace ioh
                 }
 
                 double internal_evaluate(const std::vector<int>& x)override {
-                    int n = x.size();
-                    int result = 0;
-                    for (int i = 0; i != n; ++i) {
+	                auto n = x.size();
+	                auto result = 0;
+                    for (auto i = 0; i != n; ++i) {
                         if (x[i] == 1)
                             result = i + 1;
                         else

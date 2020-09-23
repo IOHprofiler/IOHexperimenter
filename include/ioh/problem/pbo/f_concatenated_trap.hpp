@@ -29,15 +29,15 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<int>& x) override
 				{
-					int n = x.size();
-					double result = 0.0;
+					auto n = x.size();
+					auto result = 0.0;
 					double block_result;
 
-					int m = n / k;
-					for (int i = 1; i <= m; ++i)
+					auto m = n / k;
+					for (size_t i = 1; i <= m; ++i)
 					{
 						block_result = 0.0;
-						for (int j = i * k - k; j != i * k; ++j)
+						for (auto j = i * k - k; j != i * k; ++j)
 						{
 							block_result += x[j];
 						}
@@ -47,15 +47,15 @@ namespace ioh
 						}
 						else
 						{
-							result += (static_cast<double>(k - 1 - block_result) / static_cast<double>(k));
+							result += (static_cast<double>(k - 1) - block_result) / static_cast<double>(k);
 						}
 					}
-					int remain_k = n - m * k;
+					auto remain_k = n - m * k;
 					if (remain_k != 0)
 					{
 						block_result = 0.0;
 						// TODO: check this, only with braces this works
-						for (int j = m * (k - 1); j != n; ++j)
+						for (auto j = m * (k - 1); j != n; ++j)
 						{
 							block_result += x[j];
 						}

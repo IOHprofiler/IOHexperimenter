@@ -32,26 +32,28 @@ namespace ioh
 				{
 					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
 
-					std::vector<double> tmp_best_variables = std::vector<double>(n);
-					for (int i = 0; i < n; ++i)
+					const auto tmp_best_variables = std::make_unique<std::vector<double>>(n);
+					const auto lb = this->get_lowerbound();
+					const auto ub = this->get_upperbound();
+					for (auto i = 0; i < n; ++i)
 					{
 						if (xopt[i] < 0.0)
 						{
-							tmp_best_variables[i] = this->get_lowerbound()[i];
+							(*tmp_best_variables)[i] = lb[i];
 						}
 						else
 						{
-							tmp_best_variables[i] = this->get_upperbound()[i];
+							(*tmp_best_variables)[i] = ub[i];
 						}
 					}
-					this->set_best_variables(tmp_best_variables);
+					this->set_best_variables(*tmp_best_variables);
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					const size_t n = x.size();
-					static const double alpha = 100.0;
-					double result = 0.0;
+					const auto n = x.size();
+					static const auto alpha = 100.0;
+					auto result = 0.0;
 
 					for (size_t i = 0; i < n; ++i)
 					{

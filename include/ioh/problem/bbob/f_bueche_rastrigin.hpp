@@ -31,7 +31,7 @@ namespace ioh
 				) override
 				{
 					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
-					for (int i = 0; i < n; i += 2)
+					for (auto i = 0; i < n; i += 2)
 					{
 						xopt[i] = fabs(xopt[i]);
 					}
@@ -40,8 +40,8 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					double tmp = 0., tmp2 = 0.;
-					size_t n = x.size();
+					auto tmp = 0., tmp2 = 0.;
+					auto n = x.size();
 					for (size_t i = 0; i < n; ++i)
 					{
 						tmp += cos(2 * transformation::coco::coco_pi * x[i]);

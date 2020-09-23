@@ -30,10 +30,10 @@ namespace ioh
 
                 double internal_evaluate(const std::vector<int>& x) override {
                     int i, j, neig;
-                    int n = x.size();
-                    int result = 0;
+                    auto n = x.size();
+                    auto result = 0;
                     int neighbors[3];
-                    int lattice_size = (int)sqrt((double)n);
+                    auto lattice_size = (int)sqrt((double)n);
 
                     for (i = 0; i < lattice_size; ++i) {
                         for (j = 0; j < lattice_size; ++j) {

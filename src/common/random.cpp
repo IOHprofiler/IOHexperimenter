@@ -37,7 +37,7 @@ namespace ioh
 		{
 			long new_inseed = static_cast<long>(a * (inseed - static_cast<long>(std::floor(static_cast<double>(inseed)
 				/ static_cast<double>(q))) * q) - r * static_cast<long>(std::floor(
-				static_cast<double>(inseed) / static_cast<double>(q))));
+					static_cast<double>(inseed) / static_cast<double>(q))));
 			if (new_inseed < 0)
 			{
 				new_inseed = new_inseed + m;
@@ -131,5 +131,37 @@ namespace ioh
 #endif
 			return normal;
 		}
+
+
+		bool random::bit(const double p) {
+			static std::random_device rd;
+			static std::mt19937 gen(rd());
+			std::bernoulli_distribution d(p);
+			return d(gen);
+		}
+
+		int random::integer(const int min, const int max) {
+			static std::random_device rd;
+			static std::mt19937 gen(rd());
+			std::uniform_int_distribution<int> d(min, max);
+			return d(gen);
+		}
+		 
+		std::vector<int> random::integers(const unsigned int n, const int min, const int max)
+		{
+			std::vector<int> x;
+			x.reserve(n);
+			for (auto i=0; i < n; i++) 
+				x.emplace_back(integer(min, max));
+			return x;
+		}
+		std::vector<bool> random::bitstring(const unsigned int n, const double p)
+		{
+			std::vector<bool> x;
+			x.reserve(n);
+			for (auto i = 0; i < n; i++)
+				x.emplace_back(bit(p));
+			return x;
+		}		
 	}
 }

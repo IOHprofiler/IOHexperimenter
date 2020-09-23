@@ -40,12 +40,12 @@ namespace ioh
 
 					transformation::coco::bbob2009_compute_rotation(rot1, rseed + 1000000, n);
 					transformation::coco::bbob2009_compute_rotation(rot2, rseed, n);
-					for (int i = 0; i < n; ++i)
+					for (auto i = 0; i < n; ++i)
 					{
 						b[i] = 0.0;
-						for (int j = 0; j < n; ++j)
+						for (auto j = 0; j < n; ++j)
 						{
-							double exponent = 1.0 * static_cast<int>(i) / (static_cast<double>(static_cast<long>(n)) -
+							auto exponent = 1.0 * static_cast<int>(i) / (static_cast<double>(static_cast<long>(n)) -
 								1.0);
 							M[i][j] = rot2[i][j] * pow(sqrt(conditioning), exponent);
 						}
@@ -60,12 +60,12 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					size_t n = x.size();
+					auto n = x.size();
 					/* Computation core */
-					double result = 0.0;
+					auto result = 0.0;
 					for (size_t i = 0; i < n - 1; ++i)
 					{
-						const double tmp = x[i] * x[i] + x[i + 1] * x[i + 1];
+						const auto tmp = x[i] * x[i] + x[i + 1] * x[i + 1];
 						if (std::isinf(tmp) && std::isnan(sin(50.0 * pow(tmp, 0.1)))) /* sin(inf) -> nan */
 							/* the second condition is necessary to pass the integration tests under Windows and Linux */
 							return tmp;

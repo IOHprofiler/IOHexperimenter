@@ -43,9 +43,9 @@ namespace ioh
 				double internal_evaluate(const std::vector<double>& x) override
 				{
 					using namespace transformation::coco;
-					size_t n = x.size();
+					auto n = x.size();
 					static const double condition = 100;
-					static const double alpha = 10.0;
+					static const auto alpha = 10.0;
 					size_t i, j;
 					double penalty = 0.0, x1;
 					std::vector<double> result(1);

@@ -37,13 +37,13 @@ namespace ioh
 		template <typename T>
 		bool compare_vector(const std::vector<T>& v1, const std::vector<T>& v2)
 		{
-			int n = v1.size();
+			auto n = v1.size();
 			if (n != v2.size())
 			{
 				log::error("Two compared vectors must be with the same size\n");
 				return false;
 			}
-			for (int i = 0; i != n; ++i)
+			for (auto i = 0; i != n; ++i)
 			{
 				if (v1[i] != v2[i])
 				{
@@ -63,7 +63,7 @@ namespace ioh
 		bool compare_objectives(const std::vector<T>& v1, const std::vector<T>& v2,
 		                        const optimization_type optimization_type)
 		{
-			int n = v1.size();
+			auto n = v1.size();
 			if (n != v2.size())
 			{
 				log::error("Two compared objective vector must be with the same size\n");
@@ -71,7 +71,7 @@ namespace ioh
 			}
 			if (optimization_type == optimization_type::maximization)
 			{
-				for (int i = 0; i != n; ++i)
+				for (auto i = 0; i != n; ++i)
 				{
 					if (v1[i] <= v2[i])
 					{
@@ -80,7 +80,7 @@ namespace ioh
 				}
 				return true;
 			}
-			for (int i = 0; i != n; ++i)
+			for (auto i = 0; i != n; ++i)
 			{
 				if (v1[i] >= v2[i])
 				{

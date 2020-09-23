@@ -20,9 +20,9 @@ namespace ioh
 
 			static void transform_obj_oscillate_evaluate(std::vector<double>& y)
 			{
-				static const double factor = 0.1;
+				static const auto factor = 0.1;
 				size_t i;
-				size_t number_of_objectives = y.size();
+				auto number_of_objectives = y.size();
 
 				for (i = 0; i < number_of_objectives; i++)
 				{
@@ -49,15 +49,15 @@ namespace ioh
 			                                            const double upper_bounds, const double factor,
 			                                            std::vector<double>& y)
 			{
-				double penalty = 0.0;
+				auto penalty = 0.0;
 				size_t i;
-				size_t number_of_objectives = y.size();
-				size_t n = x.size();
+				auto number_of_objectives = y.size();
+				auto n = x.size();
 
 				for (i = 0; i < n; ++i)
 				{
-					const double c1 = x[i] - upper_bounds;
-					const double c2 = lower_bounds - x[i];
+					const auto c1 = x[i] - upper_bounds;
+					const auto c2 = lower_bounds - x[i];
 					if (c1 > 0.0)
 					{
 						penalty += c1 * c1;
@@ -78,7 +78,7 @@ namespace ioh
 			static void transform_obj_power_evaluate(std::vector<double>& y, const double exponent)
 			{
 				size_t i;
-				size_t number_of_objectives = y.size();
+				auto number_of_objectives = y.size();
 
 				for (i = 0; i < number_of_objectives; i++)
 				{
@@ -89,7 +89,7 @@ namespace ioh
 			static void transform_obj_scale_evaluate_function(std::vector<double>& y, const double factor)
 			{
 				size_t i;
-				size_t number_of_objectives = y.size();
+				auto number_of_objectives = y.size();
 
 
 				for (i = 0; i < number_of_objectives; i++)
@@ -99,7 +99,7 @@ namespace ioh
 			static void transform_obj_shift_evaluate_function(std::vector<double>& y, const double offset)
 			{
 				size_t i;
-				size_t number_of_objectives = y.size();
+				auto number_of_objectives = y.size();
 
 				for (i = 0; i < number_of_objectives; i++)
 					y[i] += offset;

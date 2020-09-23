@@ -34,14 +34,13 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<int>& x) override
 				{
-					int n = x.size();
-					int result = 0;
-					for (int i = 0; i != n; ++i)
+					auto n = x.size();
+					auto result = 0;
+					for (auto i = 0; i != n; ++i)
 					{
 						result += x[i];
 					}
-					result = this->info[static_cast<int>(result + 0.5)];
-					return static_cast<double>(result);
+					return this->info[static_cast<int>(result + 0.5)];
 				}
 
 				static OneMax_Ruggedness3* createInstance(int instance_id = DEFAULT_INSTANCE,

@@ -33,9 +33,9 @@ namespace ioh
 
 			common::optimization_type maximization_minimization_flag;
 
-			std::size_t number_of_variables;
+			int number_of_variables;
 			/// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
-			std::size_t number_of_objectives;
+			int number_of_objectives;
 
 			std::vector<InputType> lowerbound;
 			std::vector<InputType> upperbound;
@@ -54,7 +54,7 @@ namespace ioh
 			/// todo. constrainted optimization.
 			/// std::size_t number_of_constraints;
 
-			std::size_t evaluations; /// < to record optimization process. 
+			int evaluations; /// < to record optimization process. 
 			std::vector<double> best_so_far_raw_objectives; /// < to record optimization process.
 			int best_so_far_raw_evaluations; /// < to record optimization process.
 			std::vector<double> best_so_far_transformed_objectives; /// < to record optimization process.
@@ -78,7 +78,9 @@ namespace ioh
 				evaluations(0),
 				best_so_far_raw_objectives(std::vector<double>(number_of_objectives)),
 				best_so_far_raw_evaluations(0),
-				best_so_far_transformed_objectives(std::vector<double>(number_of_objectives))
+				best_so_far_transformed_objectives(std::vector<double>(number_of_objectives)),
+				best_so_far_transformed_evaluations(0),
+				transformed_number_of_variables(0)
 			{
 			}
 
@@ -104,7 +106,7 @@ namespace ioh
 			/// This function must be decalred in derived function of new problems.
 			virtual double internal_evaluate(const std::vector<InputType>& x)
 			{
-				double result = std::numeric_limits<double>::lowest();
+				constexpr const auto result = std::numeric_limits<double>::lowest();
 				common::log::warning("No evaluate function defined");
 				return result;
 			}
@@ -386,7 +388,7 @@ namespace ioh
 				return this->lowerbound;
 			}
 
-			void set_lowerbound(int lowerbound)
+			void set_lowerbound(InputType lowerbound)
 			{
 				std::vector<InputType>().swap(this->lowerbound);
 				this->lowerbound.reserve(this->number_of_variables);
@@ -406,7 +408,7 @@ namespace ioh
 				return this->upperbound;
 			}
 
-			void set_upperbound(int upperbound)
+			void set_upperbound(InputType upperbound)
 			{
 				std::vector<InputType>().swap(this->upperbound);
 				this->upperbound.reserve(this->number_of_variables);

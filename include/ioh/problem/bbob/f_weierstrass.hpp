@@ -23,7 +23,8 @@ namespace ioh
 				double bk[summands];
 			public:
 				Weierstrass(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(16, "Weierstrass", instance_id)
+					: bbob_base(16, "Weierstrass", instance_id),
+					f0(0.0), ak{0.0}, bk{0.0}
 				{
 					set_number_of_variables(dimension);
 				}
@@ -40,16 +41,16 @@ namespace ioh
 					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
 					transformation::coco::bbob2009_compute_rotation(rot1, rseed + 1000000, n);
 					transformation::coco::bbob2009_compute_rotation(rot2, rseed, n);
-					for (int i = 0; i < n; ++i)
+					for (auto i = 0; i < n; ++i)
 					{
 						b[i] = 0.0;
-						for (int j = 0; j < n; ++j)
+						for (auto j = 0; j < n; ++j)
 						{
 							M[i][j] = 0.0;
-							for (int k = 0; k < n; ++k)
+							for (auto k = 0; k < n; ++k)
 							{
-								const double base = 1.0 / sqrt(condition);
-								const double exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<
+								const auto base = 1.0 / sqrt(condition);
+								const auto exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<
 										long>(n)) - 1.0
 								);
 								M[i][j] += rot1[i][k] * pow(base, exponent) * rot2[k][j];
@@ -59,7 +60,7 @@ namespace ioh
 					transformation::coco::bbob2009_copy_rotation_matrix(rot1, M1, b1, n);
 
 					f0 = 0.0;
-					for (int i = 0; i < summands; ++i)
+					for (auto i = 0; i < summands; ++i)
 					{
 						ak[i] = pow(0.5, static_cast<double>(i));
 						bk[i] = pow(3., static_cast<double>(i));
@@ -72,9 +73,9 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					size_t n = x.size();
+					auto n = x.size();
 					size_t i, j;
-					double result = 0.0;
+					auto result = 0.0;
 					for (i = 0; i < n; ++i)
 					{
 						for (j = 0; j < summands; ++j)

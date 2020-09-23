@@ -30,11 +30,10 @@ namespace ioh
                 }
 
                 double internal_evaluate(const std::vector<int>& x) {
-
-                    std::vector<int> new_variables = utils::epistasis(x, 4);
-                    int n = new_variables.size();
-                    int result = 0;
-                    for (int i = 0; i != n; ++i) {
+	                auto new_variables = utils::epistasis(x, 4);
+                    auto n = new_variables.size();
+	                auto result = 0;
+                    for (auto i = 0; i != n; ++i) {
                         result += new_variables[i];
                     }
                     return (double)result;

@@ -42,16 +42,16 @@ namespace ioh
 				double internal_evaluate(const std::vector<int>& x) override
 				{
 					double result;
-					int n = x.size();
+					auto n = x.size();
 					int index, j, i, k, l;
-					int N_queens = static_cast<int>(sqrt(static_cast<double>(n)) + 0.5);
-					int number_of_queens_on_board = 0;
-					double k_penalty = 0.0;
-					double l_penalty = 0.0;
-					double raws_penalty = 0.0;
-					double columns_penalty = 0.0;
-					int indx = 0;
-					float C = static_cast<float>(N_queens);
+					auto N_queens = static_cast<int>(sqrt(static_cast<double>(n)) + 0.5);
+					auto number_of_queens_on_board = 0;
+					auto k_penalty = 0.0;
+					auto l_penalty = 0.0;
+					auto raws_penalty = 0.0;
+					auto columns_penalty = 0.0;
+					auto indx = 0;
+					auto C = static_cast<float>(N_queens);
 
 					if (floor(sqrt(static_cast<double>(n))) != sqrt(static_cast<double>(n)))
 					{
@@ -68,7 +68,7 @@ namespace ioh
 
 					for (j = 1; j <= N_queens; j++)
 					{
-						double sum_column = 0.0;
+						auto sum_column = 0.0;
 						for (i = 1; i <= N_queens; i++)
 						{
 							indx = ((i - 1) * N_queens) + ((j - 1) % N_queens);
@@ -79,7 +79,7 @@ namespace ioh
 
 					for (i = 1; i <= N_queens; i++)
 					{
-						double sum_raw = 0.0;
+						auto sum_raw = 0.0;
 						/*double sum_k = 0.0;
 						double sum_l = 0.0;*/
 						for (j = 1; j <= N_queens; j++)
@@ -92,7 +92,7 @@ namespace ioh
 
 					for (k = 2 - N_queens; k <= N_queens - 2; k++)
 					{
-						double sum_k = 0.0;
+						auto sum_k = 0.0;
 						for (i = 1; i <= N_queens; i++)
 						{
 							if (k + i >= 1 && k + i <= N_queens)
@@ -105,7 +105,7 @@ namespace ioh
 					}
 					for (l = 3; l <= 2 * N_queens - 1; l++)
 					{
-						double sum_l = 0.0;
+						auto sum_l = 0.0;
 						for (i = 1; i <= N_queens; i++)
 						{
 							if (l - i >= 1 && l - i <= N_queens)

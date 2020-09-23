@@ -36,15 +36,15 @@ namespace ioh
 					bbob2009_compute_xopt(xopt, rseed, n);
 					bbob2009_compute_rotation(rot1, rseed + 1000000, n);
 					bbob2009_compute_rotation(rot2, rseed, n);
-					for (int i = 0; i < n; ++i)
+					for (auto i = 0; i < n; ++i)
 					{
 						b[i] = 0.0;
-						for (int j = 0; j < n; ++j)
+						for (auto j = 0; j < n; ++j)
 						{
 							M[i][j] = 0.0;
-							for (int k = 0; k < n; ++k)
+							for (auto k = 0; k < n; ++k)
 							{
-								double exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<long>(n))
+								auto exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<long>(n))
 									- 1.0);
 								M[i][j] += rot1[i][k] * pow(sqrt(100.0), exponent) * rot2[k][j];
 							}
@@ -55,12 +55,12 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					size_t n = x.size();
+					auto n = x.size();
 					size_t i, j;
 					double tmp, tmp2;
 
 					/* Computation core */
-					double result = 1.0;
+					auto result = 1.0;
 					for (i = 0; i < n; ++i)
 					{
 						tmp = 0;

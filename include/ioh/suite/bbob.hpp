@@ -59,7 +59,6 @@ namespace ioh
 				this->loadProblem();
 			}
 			
-
 			void registerProblem()
 			{
 				using namespace common;

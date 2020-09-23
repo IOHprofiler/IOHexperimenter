@@ -28,11 +28,12 @@ namespace ioh
                 }
 
                 double internal_evaluate(const std::vector<int>& x) override {
-                    int result = 0, n = x.size();
+	                auto result = 0;
+	                auto n = x.size();
 
                     int neig;
-                    for (int i = 0; i < n; ++i) {
-                        neig = x[modulo_ising_ring((i - 1), n)];
+                    for (auto i = 0; i < n; ++i) {
+                        neig = x[modulo_ising_ring((i - 1), static_cast<int>(n))];
                         result += (x[i] * neig) - ((1 - x[i]) * (1 - neig));
                     }
                     return (double)result;

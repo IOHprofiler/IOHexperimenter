@@ -36,12 +36,12 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					double sum = 0.0;
-					size_t n = x.size();
+					auto sum = 0.0;
+					auto n = x.size();
 
 					for (size_t i = 0; i < n; ++i)
 					{
-						double exponent = 2.0 + (4.0 * static_cast<double>(static_cast<long>(i))) / (static_cast<double>
+						auto exponent = 2.0 + (4.0 * static_cast<double>(static_cast<long>(i))) / (static_cast<double>
 							(static_cast<long>(n)) - 1.0);
 						sum += pow(fabs(x[i]), exponent);
 					}

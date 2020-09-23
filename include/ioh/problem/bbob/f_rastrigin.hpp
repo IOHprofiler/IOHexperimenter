@@ -36,8 +36,8 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					size_t n = x.size();
-					double sum1 = 0.0, sum2 = 0.0;
+					auto n = x.size();
+					auto sum1 = 0.0, sum2 = 0.0;
 
 					for (size_t i = 0; i < n; ++i)
 					{

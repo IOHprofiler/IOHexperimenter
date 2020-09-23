@@ -50,7 +50,7 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					size_t n = x.size();
+					auto n = x.size();
 					size_t i = 0;
 					double penalty, sum;
 
@@ -59,7 +59,7 @@ namespace ioh
 					penalty = 0.0;
 					for (i = 0; i < n; ++i)
 					{
-						const double tmp = fabs(x[i]) - 500.0;
+						const auto tmp = fabs(x[i]) - 500.0;
 						if (tmp > 0.0)
 						{
 							penalty += tmp * tmp;

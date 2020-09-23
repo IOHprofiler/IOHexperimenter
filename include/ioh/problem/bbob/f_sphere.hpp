@@ -36,7 +36,7 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					double result = 0.0;
+					auto result = 0.0;
 					for (size_t i = 0; i < x.size(); ++i)
 					{
 						result += x[i] * x[i];

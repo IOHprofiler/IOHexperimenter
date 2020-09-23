@@ -37,8 +37,8 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					static const double condition = 1.0e6;
-					double result = condition * x[0] * x[0];
+					static const auto condition = 1.0e6;
+					auto result = condition * x[0] * x[0];
 					for (size_t i = 1; i < x.size(); ++i)
 					{
 						result += x[i] * x[i];

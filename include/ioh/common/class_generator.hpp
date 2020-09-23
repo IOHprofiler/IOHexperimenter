@@ -88,3 +88,5 @@ namespace ioh
 		};
 	}
 }
+
+// auto shpre = factory().createInstance("bbob/sphere");

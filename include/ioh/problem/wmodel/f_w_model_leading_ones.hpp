@@ -25,20 +25,21 @@ namespace ioh
 				int temp_dimension;
 
 				W_Model_LeadingOnes(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) :
-					wmodel_base("W_Model_LeadingOnes", instance_id, dimension)
+					wmodel_base("W_Model_LeadingOnes", instance_id, dimension),
+					temp_dimension(0)
 				{
 					set_number_of_variables(dimension);
 				}
 
 				void prepare_problem() override
 				{
-					this->temp_dimension = this->get_number_of_variables();
+					this->temp_dimension = static_cast<int>(this->get_number_of_variables());
 
 					if (this->dummy_para > 0)
 					{
 						this->dummy_info = utils::dummy(this->temp_dimension, dummy_para, 10000);
 						assert(this->dummy_info.size() == static_cast<size_t>(this->temp_dimension * this->dummy_para));
-						this->temp_dimension = this->dummy_info.size();
+						this->temp_dimension = static_cast<int>(this->dummy_info.size());
 					}
 
 					if (this->neutrality_para > 0)
@@ -55,8 +56,8 @@ namespace ioh
 
 				void customize_optimal() override
 				{
-					int dimension = get_number_of_variables();
-					int optimal_value = static_cast<int>(dimension * (this->dummy_para == 0 ? 1 : this->dummy_para)) / (
+					auto dimension = get_number_of_variables();
+					auto optimal_value = static_cast<int>(dimension * (this->dummy_para == 0 ? 1 : this->dummy_para)) / (
 						this->neutrality_para == 0 ? 1 : this->neutrality_para);
 
 					set_optimal(static_cast<double>(optimal_value));
@@ -84,14 +85,14 @@ namespace ioh
 				{
 					std::vector<int> w_model_x;
 					std::vector<int> tempX;
-					int n;
+					size_t n;
 
 					// Dummy Layer
 					if (this->dummy_para > 0)
 					{
 						n = this->dummy_info.size();
 						w_model_x.reserve(n);
-						for (int i = 0; i != n; ++i)
+						for (auto i = 0; i != n; ++i)
 						{
 							w_model_x.push_back(x[this->dummy_info[i]]);
 						}
@@ -117,8 +118,8 @@ namespace ioh
 
 					// Base evaluate
 					n = w_model_x.size();
-					int result = 0;
-					for (int i = 0; i != n; ++i)
+					auto result = 0;
+					for (auto i = 0; i != n; ++i)
 					{
 						if (w_model_x[i] == 1)
 						{

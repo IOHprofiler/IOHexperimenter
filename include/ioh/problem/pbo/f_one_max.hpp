@@ -25,9 +25,8 @@ namespace ioh
                 }
 
                 double internal_evaluate(const std::vector<int>& x) {
-
-                    size_t n = x.size();
-                    int result = 0;
+	                auto n = x.size();
+	                auto result = 0;
                     for (size_t i = 0; i != n; ++i) {
                         result += x[i];
                     }

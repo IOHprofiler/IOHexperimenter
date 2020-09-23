@@ -37,19 +37,19 @@ namespace ioh
 						common::log::error("NK_Landscapes, k > n");
 					}
 					std::vector<double> rand_vec;
-					for (int i = 0; i != n; ++i)
+					for (auto i = 0; i != n; ++i)
 					{
 						common::random::uniform_rand(static_cast<size_t>(k), static_cast<long>(k * (i + 1)), rand_vec);
 
 						std::vector<int> sampled_number;
 						std::vector<int> population;
-						for (int i = 0; i < n; ++i)
+						for (auto i = 0; i < n; ++i)
 						{
 							population.push_back(i);
 						}
 
 						int temp, randPos;
-						for (int i = n - 1; i > 0; --i)
+						for (auto i = n - 1; i > 0; --i)
 						{
 							randPos = static_cast<int>(floor(rand_vec[n - 1 - i] * (i + 1)));
 							temp = population[i];
@@ -67,7 +67,7 @@ namespace ioh
 						}
 						E.push_back(sampled_number);
 					}
-					for (int i = 0; i != n; ++i)
+					for (auto i = 0; i != n; ++i)
 					{
 						common::random::uniform_rand(static_cast<size_t>(pow(2, k + 1)),
 						                             static_cast<long>(k * (i + 1) * 2), rand_vec);
@@ -82,15 +82,15 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<int>& x) override
 				{
-					int n = x.size();
+					auto n = x.size();
 					double result = 0;
-					int index;
-					for (int i = 0; i != n; ++i)
+					size_t index;
+					for (auto i = 0; i != n; ++i)
 					{
 						index = x[i];
-						for (int j = 0; j != k; ++j)
+						for (auto j = 0; j != k; ++j)
 						{
-							index = index + pow(2, (j + 1)) * x[E[i][j]];
+							index = index + static_cast<size_t>(pow(2, (j + 1)) * x[E[i][j]]);
 						}
 						result += F[i][index];
 					}

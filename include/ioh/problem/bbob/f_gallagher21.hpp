@@ -25,7 +25,7 @@ namespace ioh
 
 				static int f_gallagher_compare_doubles(const void* a, const void* b)
 				{
-					double temp = (*(f_gallagher_permutation_t*)a).value - (*(f_gallagher_permutation_t*)b).value;
+					auto temp = (*(f_gallagher_permutation_t*)a).value - (*(f_gallagher_permutation_t*)b).value;
 					if (temp > 0)
 						return 1;
 					if (temp < 0)
@@ -52,12 +52,11 @@ namespace ioh
 				                          const long rseed, const long n
 				) override
 				{
-					double fopt;
 					size_t i, j, k;
-					double maxcondition = 1000.;
+					auto maxcondition = 1000.;
 					/* maxcondition1 satisfies the old code and the doc but seems wrong in that it is, with very high
 					* probability, not the largest condition level!!! */
-					double maxcondition1 = 1000.;
+					auto maxcondition1 = 1000.;
 					std::vector<double> arrCondition;
 					double fitvalues[2] = {1.1, 9.1};
 					/* Parameters for generating local optima. In the old code, they are different in f21 and f22 */
@@ -159,11 +158,11 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					size_t n = x.size();
+					auto n = x.size();
 
 					size_t i, j; /* Loop over dim */
 					std::vector<double> tmx(n);
-					double a = 0.1;
+					auto a = 0.1;
 					double tmp2, f = 0., f_add, tmp, f_pen = 0., f_true = 0.;
 					double fac;
 

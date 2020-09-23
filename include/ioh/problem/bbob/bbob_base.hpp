@@ -34,7 +34,7 @@ namespace ioh
 				void prepare_problem() override
 				{
 					using namespace transformation::coco;
-					const int n = this->get_number_of_variables();
+					const auto n = this->get_number_of_variables();
 
 					std::vector<double> xopt(n);
 					std::vector<std::vector<double>> M(n, std::vector<double>(n));
@@ -51,7 +51,7 @@ namespace ioh
 					data::xopt = xopt;
 					data::M = M;
 					data::b = b;
-					data::lower_bound = -5.0;
+					data::lower_bound = -5.0;  
 					data::upper_bound = 5.0;
 					data::rot1 = rot1;
 					data::rot2 = rot2;

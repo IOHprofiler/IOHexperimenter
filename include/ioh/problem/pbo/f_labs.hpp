@@ -27,7 +27,7 @@ namespace ioh
                     int x1, x2;
                     double result;
                     result = 0.0;
-                    for (int i = 0; i < n - k; ++i) {
+                    for (auto i = 0; i < n - k; ++i) {
                         if (x[i] == 0) {
                             x1 = -1;
                         }
@@ -46,11 +46,10 @@ namespace ioh
                 }
 
                 double internal_evaluate(const std::vector<int>& x) {
-
-                    int n = x.size();
+	                auto n = x.size();
                     double result = 0.0, cor;
-                    for (int k = 1; k != n; ++k) {
-                        cor = correlation(x, n, k);
+                    for (auto k = 1; k != n; ++k) {
+                        cor = correlation(x, static_cast<int>(n), k);
                         result += cor * cor;
                     }
                     result = (double)(n * n) / 2.0 / result;

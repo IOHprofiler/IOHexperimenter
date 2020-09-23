@@ -37,13 +37,13 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					static const double condition = 1.0e6;
-					size_t n = x.size();
+					static const auto condition = 1.0e6;
+					auto n = x.size();
 
-					double result = x[0] * x[0];
+					auto result = x[0] * x[0];
 					for (size_t i = 1; i < n; ++i)
 					{
-						const double exponent = 1.0 * static_cast<double>(static_cast<long>(i)) / (static_cast<double>(
+						const auto exponent = 1.0 * static_cast<double>(static_cast<long>(i)) / (static_cast<double>(
 							static_cast<long>(n)) - 1.0);
 						result += pow(condition, exponent) * x[i] * x[i];
 					}

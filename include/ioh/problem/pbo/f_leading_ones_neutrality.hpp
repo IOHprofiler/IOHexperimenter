@@ -28,10 +28,10 @@ namespace ioh
 				
 				double internal_evaluate(const std::vector<int>& x) override
 				{
-					std::vector<int> new_variables = utils::neutrality(x, 3);
-					int n = new_variables.size();
-					int result = 0;
-					for (int i = 0; i != n; ++i)
+					auto new_variables = utils::neutrality(x, 3);
+					auto n = new_variables.size();
+					auto result = 0;
+					for (auto i = 0; i != n; ++i)
 					{
 						if (new_variables[i] == 1)
 						{

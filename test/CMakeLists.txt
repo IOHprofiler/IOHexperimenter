@@ -4,7 +4,7 @@
 ##
 add_subdirectory(vendor/googletest EXCLUDE_FROM_ALL)
 
-add_executable(test_${PROJECT_NAME} "src/test_ioh.cpp")
+add_executable(test_${PROJECT_NAME} "src/test_ioh.cpp" "src/test_problems.cpp")
 
 target_include_directories(test_${PROJECT_NAME}
 PRIVATE

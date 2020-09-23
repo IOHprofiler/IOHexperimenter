@@ -40,15 +40,15 @@ namespace ioh
 					/* compute M and b */
 					transformation::coco::bbob2009_compute_rotation(rot1, rseed + 1000000, n);
 					transformation::coco::bbob2009_compute_rotation(rot2, rseed, n);
-					for (int i = 0; i < n; ++i)
+					for (auto i = 0; i < n; ++i)
 					{
 						b[i] = 0.0;
-						for (int j = 0; j < n; ++j)
+						for (auto j = 0; j < n; ++j)
 						{
 							M[i][j] = 0.0;
-							for (int k = 0; k < n; ++k)
+							for (auto k = 0; k < n; ++k)
 							{
-								double exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<long>(n))
+								auto exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<long>(n))
 									- 1.0);
 								M[i][j] += rot1[i][k] * pow(sqrt(10.0), exponent) * rot2[k][j];
 							}
@@ -63,8 +63,8 @@ namespace ioh
 				double internal_evaluate(const std::vector<double>& x) override
 				{
 					std::vector<double> result(1);
-					size_t n = x.size();
-					double sum1 = 0.0, sum2 = 0.0;
+					auto n = x.size();
+					auto sum1 = 0.0, sum2 = 0.0;
 
 					for (size_t i = 0; i < n; ++i)
 					{

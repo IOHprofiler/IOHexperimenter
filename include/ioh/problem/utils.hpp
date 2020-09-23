@@ -24,21 +24,21 @@ namespace ioh
 				std::vector<int> random_index;
 				std::vector<double> random_numbers;
 				int temp;
-				int select_num = static_cast<int>(floor(static_cast<double>(number_of_variables * select_rate)));
+				auto select_num = static_cast<int>(floor(static_cast<double>(number_of_variables * select_rate)));
 
 				position.reserve(number_of_variables);
-				for (int i = 0; i != number_of_variables; ++i)
+				for (auto i = 0; i != number_of_variables; ++i)
 				{
 					position.push_back(i);
 				}
 
 				common::random::uniform_rand(static_cast<size_t>(select_num), inseed, random_numbers);
-				for (int i = 0; i < select_num; ++i)
+				for (auto i = 0; i < select_num; ++i)
 				{
 					random_index.
 						push_back(static_cast<int>(floor(random_numbers[i] * 1e4 / 1e4 * number_of_variables)));
 				}
-				for (int i = 0; i != select_num; ++i)
+				for (auto i = 0; i != select_num; ++i)
 				{
 					temp = position[i];
 					position[i] = position[random_index[i]];
@@ -49,7 +49,7 @@ namespace ioh
 				sort(position.begin(), position.begin() + select_num);
 
 				random_index.clear();
-				for (int i = 0; i != select_num; ++i)
+				for (auto i = 0; i != select_num; ++i)
 				{
 					random_index.push_back(position[i]);
 				}
@@ -58,12 +58,12 @@ namespace ioh
 
 			static std::vector<int> neutrality(const std::vector<int>& variables, int mu)
 			{
-				int number_of_variables = variables.size();
-				int n = static_cast<int>(floor(static_cast<double>(number_of_variables) / static_cast<double>(mu)));
+				auto number_of_variables = variables.size();
+				auto n = static_cast<int>(floor(static_cast<double>(number_of_variables) / static_cast<double>(mu)));
 				std::vector<int> new_variables;
 
 				new_variables.reserve(n);
-				int i = 0, temp = 0;
+				auto i = 0, temp = 0;
 				while (i != number_of_variables)
 				{
 					temp += variables[i];
@@ -88,27 +88,27 @@ namespace ioh
 			static std::vector<int> epistasis(const std::vector<int>& variables, int v)
 			{
 				int h, epistasis_result;
-				int number_of_variables = variables.size();
+				int number_of_variables = static_cast<int>(variables.size());
 				std::vector<int> new_variables;
 				new_variables.reserve(number_of_variables);
 				h = 0;
 				while (h + v - 1 < number_of_variables)
 				{
-					int i = 0;
+					auto i = 0;
 					while (i < v)
 					{
 						epistasis_result = -1;
-						for (int j = 0; j < v; ++j)
+						for (auto j = 0; j < v; ++j)
 						{
 							if ((v - j - 1) != ((v - i - 1) - 1) % 4)
 							{
 								if (epistasis_result == -1)
 								{
-									epistasis_result = variables[h + j];
+									epistasis_result = variables[j + h];
 								}
 								else
 								{
-									epistasis_result = (epistasis_result != variables[h + j]);
+									epistasis_result = (epistasis_result != variables[j + h]);
 								}
 							}
 						}
@@ -119,12 +119,12 @@ namespace ioh
 				}
 				if (number_of_variables - h > 0)
 				{
-					v = number_of_variables - h;
-					int i = 0;
+					v = static_cast<int>(number_of_variables) - h;
+					auto i = 0;
 					while (i < v)
 					{
 						epistasis_result = -1;
-						for (int j = 0; j < v; ++j)
+						for (auto j = 0; j < v; ++j)
 						{
 							if ((v - j - 1) != ((v - i - 1) - 1) % 4)
 							{
@@ -206,16 +206,16 @@ namespace ioh
 			{
 				std::vector<double> ruggedness_fitness(number_of_variables + 1, 0.0);
 
-				for (int j = 1; j <= number_of_variables / 5; ++j)
+				for (auto j = 1; j <= number_of_variables / 5; ++j)
 				{
-					for (int k = 0; k < 5; ++k)
+					for (auto k = 0; k < 5; ++k)
 					{
 						ruggedness_fitness[number_of_variables - 5 * j + k] = static_cast<double>(number_of_variables -
 							5 *
 							j + (4 - k));
 					}
 				}
-				for (int k = 0; k < number_of_variables - number_of_variables / 5 * 5; ++k)
+				for (auto k = 0; k < number_of_variables - number_of_variables / 5 * 5; ++k)
 				{
 					ruggedness_fitness[k] = static_cast<double>(number_of_variables - number_of_variables / 5 * 5 - 1 -
 						k);
@@ -228,11 +228,11 @@ namespace ioh
 
 			static void layer_neutrality_compute(const std::vector<int>& xIn, std::vector<int>& xOut, const int mu)
 			{
-				int thresholdFor1 = (mu >> 1) + (mu & 1);
+				auto thresholdFor1 = (mu >> 1) + (mu & 1);
 				int i, j, ones, flush;
 				int temp;
-				int dim = xIn.size();
-				int temp_dim = dim / mu;
+				int dim = static_cast<int>(xIn.size());
+				auto temp_dim = dim / mu;
 				if (static_cast<int>(xOut.size()) != temp_dim)
 				{
 					xOut.resize(temp_dim);
@@ -269,14 +269,14 @@ namespace ioh
 			static void base_epistasis(const std::vector<int>& xIn, const int start, const int nu,
 			                           std::vector<int>& xOut)
 			{
-				const int end = (start + nu) - 1;
-				const int flip = xIn[start];
+				const auto end = (start + nu) - 1;
+				const auto flip = xIn[start];
 				int result;
-				int skip = start;
-				for (int i = end; i >= start; --i)
+				auto skip = start;
+				for (auto i = end; i >= start; --i)
 				{
 					result = flip;
-					for (int j = end; j > start; --j)
+					for (auto j = end; j > start; --j)
 					{
 						if (j != skip)
 						{
@@ -293,8 +293,8 @@ namespace ioh
 
 			static void epistasis_compute(const std::vector<int>& xIn, std::vector<int>& xOut, const int nu)
 			{
-				const int length = xIn.size();
-				const int end = length - nu;
+				const auto length = xIn.size();
+				const auto end = length - nu;
 				int i;
 				for (i = 0; i <= end; i += nu)
 				{
@@ -302,7 +302,7 @@ namespace ioh
 				}
 				if (i < length)
 				{
-					base_epistasis(xIn, i, length - i, xOut);
+					base_epistasis(xIn, i, static_cast<int>(length - i), xOut);
 				}
 			}
 
@@ -377,7 +377,7 @@ namespace ioh
 
 				/*fprintf(stderr,"r\n");
 				for(i=0;i<=q;i++){fprintf(stderr,"%d %d\n",i, r[i]);}*/
-				std::vector<int> r2(q + 1, 0);
+				std::vector<int> r2(1 + q, 0);
 				for (i = 0; i <= q; i++) { r2[i] = q - r[q - i]; }
 				/*fprintf(stderr,"r2\n");
 				for(i=0;i<=q;i++){fprintf(stderr,"%d %d\n",i, r2[i]);}*/
@@ -412,10 +412,10 @@ namespace ioh
 			}
 
 
-			static double layer_compute_ruggedness(const double y, size_t dimension, int gamma)
+			static double layer_compute_ruggedness(const double y, int dimension, int gamma)
 			{
 				double result;
-				std::vector<int> r = ruggedness_raw(ruggedness_translate(gamma, dimension), dimension);
+				auto r = ruggedness_raw(ruggedness_translate(gamma, dimension), dimension);
 				result = r[static_cast<int>(y)];
 
 				/*for(i=0;i<dimension+1;i++){fprintf(stderr,"%d ",r[i]);}fprintf(stderr,"\n");

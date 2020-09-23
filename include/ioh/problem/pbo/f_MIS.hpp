@@ -46,11 +46,11 @@ namespace ioh
 				double internal_evaluate(const std::vector<int>& x) override
 				{
 					int i, j, index;
-					int n = x.size();
-					int result = 0;
-					int num_of_ones = 0;
-					int sum_edges_in_the_set = 0;
-					int number_of_variables_even = static_cast<int>(n);
+					auto n = x.size();
+					auto result = 0;
+					auto num_of_ones = 0;
+					auto sum_edges_in_the_set = 0;
+					auto number_of_variables_even = static_cast<int>(n);
 					std::vector<int> ones_array(number_of_variables_even + 1);
 
 					if (n % 2 != 0)

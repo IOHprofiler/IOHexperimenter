@@ -27,9 +27,9 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<int>& x) override
 				{
-					int n = x.size();
-					int result = 0;
-					for (int i = 0; i != n; ++i)
+					auto n = x.size();
+					auto result = 0.0;
+					for (auto i = 0; i != n; ++i)
 					{
 						if (x[i] == 1)
 						{
@@ -40,8 +40,7 @@ namespace ioh
 							break;
 						}
 					}
-					result = utils::ruggedness1(result, n);
-					return static_cast<double>(result);
+					return utils::ruggedness1(result, static_cast<int>(n));
 				}
 
 				static LeadingOnes_Ruggedness1* createInstance(int instance_id = DEFAULT_INSTANCE,

@@ -35,9 +35,9 @@ namespace ioh
 						                                     ? 1
 						                                     : (sqrt(static_cast<double>(n)) / 8.0);
 					transformation::coco::bbob2009_compute_rotation(rot1, rseed, n);
-					for (int row = 0; row < n; ++row)
+					for (auto row = 0; row < n; ++row)
 					{
-						for (int column = 0; column < n; ++column)
+						for (auto column = 0; column < n; ++column)
 						{
 							M[row][column] = transformation::coco::data::factor * rot1[row][column];
 						}
