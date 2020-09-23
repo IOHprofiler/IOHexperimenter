@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include "ioh/experiment/string.hpp"
 
 namespace ioh
