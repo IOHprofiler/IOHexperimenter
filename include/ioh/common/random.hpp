@@ -29,10 +29,10 @@ namespace ioh
 
 			double normal_rand();
 
-			static bool bit(double p = 0.5);
+			static int bit(double p = 0.5);
 			static int integer(int min = INT8_MIN, int max = INT8_MAX);
 			static std::vector<int> integers(unsigned int n, int min=INT8_MIN, int max=INT8_MAX);
-			static std::vector<bool> bitstring(unsigned int n, double p = 0.5);
+			static std::vector<int> bitstring(unsigned int n, double p = 0.5);
 
 
 		private:

@@ -1,6 +1,4 @@
 #pragma once
-#include <numeric>
-
 #include "base.hpp"
 #include "ioh/problem/bbob.hpp"
 
@@ -9,44 +7,43 @@ namespace ioh
 {
 	namespace suite
 	{
-		class bbob : public base<double>
+		class bbob : public base<problem::bbob::bbob_base>
 		{
 		public:
 			bbob()
 			{
 				std::vector<int> problem_id(24);
 				std::iota(std::begin(problem_id), std::end(problem_id), 1);
-				std::cout << "1 " << std::endl;
 				set_suite_problem_id(problem_id);
-				std::cout << "2 " << std::endl;
-				set_suite_instance_id({ 1 });
-				std::cout << "3 " << std::endl;
-				set_suite_dimension({ 5 });
-				std::cout << "4 " << std::endl;
+				set_suite_instance_id({DEFAULT_INSTANCE});
+				set_suite_dimension({DEFAULT_DIMENSION});
 				set_suite_name("BBOB");
-				std::cout << "5 " << std::endl;
 				registerProblem();
-				std::cout << "6 " << std::endl;
-				// Load problem, so that the user don't have to think about it.
 				this->loadProblem();
-				std::cout << "7 " << std::endl;
 			}
-			
-			bbob(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
-				for (std::size_t i = 0; i < problem_id.size(); ++i) {
-					if (problem_id[i] < 0 || problem_id[i] > 24) {
+
+			bbob(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension)
+			{
+				for (std::size_t i = 0; i < problem_id.size(); ++i)
+				{
+					if (problem_id[i] < 0 || problem_id[i] > 24)
+					{
 						common::log::error("problem_id " + std::to_string(problem_id[i]) + " is not in BBOB_suite");
 					}
 				}
 
-				for (std::size_t i = 0; i < instance_id.size(); ++i) {
-					if (instance_id[i] < 0 || instance_id[i] > 100) {
+				for (std::size_t i = 0; i < instance_id.size(); ++i)
+				{
+					if (instance_id[i] < 0 || instance_id[i] > 100)
+					{
 						common::log::error("instance_id " + std::to_string(instance_id[i]) + " is not in BBOB_suite");
 					}
 				}
 
-				for (std::size_t i = 0; i < dimension.size(); ++i) {
-					if (dimension[i] < 0 || dimension[i] > 100) {
+				for (std::size_t i = 0; i < dimension.size(); ++i)
+				{
+					if (dimension[i] < 0 || dimension[i] > 100)
+					{
 						common::log::error("dimension " + std::to_string(dimension[i]) + " is not in BBOB_suite");
 					}
 				}
@@ -58,7 +55,7 @@ namespace ioh
 				registerProblem();
 				this->loadProblem();
 			}
-			
+
 			void registerProblem()
 			{
 				using namespace common;
@@ -91,7 +88,6 @@ namespace ioh
 				registerInFactory<bbob_base, Lunacek_Bi_Rastrigin> regLunacek_Bi_Rastrigin(
 					"Lunacek_Bi_Rastrigin");
 
-
 				mapIDTOName(1, "Sphere");
 				mapIDTOName(2, "Ellipsoid");
 				mapIDTOName(3, "Rastrigin");
@@ -117,14 +113,17 @@ namespace ioh
 				mapIDTOName(23, "Katsuura");
 				mapIDTOName(24, "Lunacek_Bi_Rastrigin");
 			}
-			static bbob* createInstance() {
+
+			static bbob* createInstance()
+			{
 				return new bbob();
 			};
 
-			static bbob* createInstance(std::vector<int> problem_id, std::vector<int> instance_id, std::vector<int> dimension) {
+			static bbob* createInstance(std::vector<int> problem_id, std::vector<int> instance_id,
+			                            std::vector<int> dimension)
+			{
 				return new bbob(problem_id, instance_id, dimension);
 			};
-			
 		};
 	}
 }

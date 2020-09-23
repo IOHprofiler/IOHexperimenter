@@ -5,37 +5,37 @@
 
 #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)
 #define NOMINMAX
-#define PATH_SEPERATOR = "\\";
 #include <windows.h>
 #include <io.h>
+constexpr static char* path_separator = "\\";
 #elif defined(__gnu_linux__)
 	#include <linux/limits.h>
 	#include <sys/stat.h>
 	#include <sys/types.h>
 	#include <unistd.h>
-	#define PATH_SEPERATOR = "/";
+constexpr static char* path_separator = "/";
 #elif defined(__APPLE__)
 	#include <sys/stat.h>
 	#include <sys/syslimits.h>
 	#include <sys/types.h>
 	#include <unistd.h>
-	#define PATH_SEPERATOR = "/";
+constexpr static char* path_separator = "/";
 #elif defined(__FreeBSD__)
 	#include <limits.h>
 	#include <sys/stat.h>
 	#include <sys/types.h>
 	#include <unistd.h>
-	#define PATH_SEPERATOR = "/";
+constexpr static char* path_separator = "/";
 #elif (defined(__sun) || defined(sun)) && (defined(__SVR4) || defined(__svr4__))
 	#include <limits.h>
 	#include <sys/stat.h>
 	#include <sys/types.h>
 	#include <unistd.h>
-	#define PATH_SEPERATOR = "/";
+constexpr static char* path_separator = "/";
 #else
 	#include <sys/stat.h>
 	#include <unistd.h>
-	#define PATH_SEPERATOR = "/";
+constexpr static char* path_separator = "/";
 #endif
 
 /* Definitions needed for creating and removing directories */
@@ -93,4 +93,5 @@
 #define SHORT_LAG  273
 #define LONG_LAG 607
 
-
+#define MAXLINESIZE 1024
+#define MAXKEYNUMBER 100

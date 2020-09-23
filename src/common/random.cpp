@@ -133,7 +133,7 @@ namespace ioh
 		}
 
 
-		bool random::bit(const double p) {
+		int random::bit(const double p) {
 			static std::random_device rd;
 			static std::mt19937 gen(rd());
 			std::bernoulli_distribution d(p);
@@ -155,13 +155,13 @@ namespace ioh
 				x.emplace_back(integer(min, max));
 			return x;
 		}
-		std::vector<bool> random::bitstring(const unsigned int n, const double p)
-		{
-			std::vector<bool> x;
+		std::vector<int> random::bitstring(const unsigned int n, const double p)
+		{ 
+			std::vector<int> x;
 			x.reserve(n);
 			for (auto i = 0; i < n; i++)
 				x.emplace_back(bit(p));
 			return x;
-		}		
+		}
 	}
 }

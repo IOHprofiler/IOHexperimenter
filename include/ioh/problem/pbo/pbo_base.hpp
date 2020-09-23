@@ -11,6 +11,7 @@ namespace ioh
 			class pbo_base : public base<int>
 			{
 			public:
+				pbo_base() = default;
 				pbo_base(std::string problem_name, int instance_id = DEFAULT_INSTANCE)
 				{
 					set_instance_id(instance_id);

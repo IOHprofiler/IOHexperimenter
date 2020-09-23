@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <limits>
+#include <numeric>
 
 #include "ioh/common.hpp"
 #include "ioh/transformation.hpp"

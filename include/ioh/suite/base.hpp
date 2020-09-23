@@ -16,10 +16,10 @@ namespace ioh
 		/// To specify available problems of a suite, registerProblem must be implemented in derived class.
 		/// The default lable of problems are string type. Integer type are also optional, but we highly
 		/// recommond registering problem with string lable and creating a map of string problem_name and integer problem_id.
-		template <typename T>
-		class base : public problem::base<T>, public std::vector<std::shared_ptr<problem::base<T>>>
+		template <typename ProblemType>
+		class base : public ProblemType, public std::vector<std::shared_ptr<ProblemType>>
 		{
-			typedef std::shared_ptr<problem::base<T>> Problem_ptr;
+			typedef std::shared_ptr<ProblemType> problem_ptr;
 
 			std::string suite_name;
 			int number_of_problems;
@@ -38,7 +38,7 @@ namespace ioh
 			bool get_problem_flag;
 			bool load_problem_flag;
 
-			Problem_ptr current_problem;
+			problem_ptr current_problem;
 		public:
 			base(std::vector<int> problem_id = std::vector<int>(0), std::vector<int> instance_id = std::vector<int>(0),
 			     std::vector<int> dimension = std::vector<int>(0)) :
@@ -50,12 +50,8 @@ namespace ioh
 				size_of_problem_list(0),
 				get_problem_flag(false),
 				load_problem_flag(false),
-				current_problem(nullptr),
-				number_of_dimensions(0),
-				number_of_problems(0),
-				number_of_instances(0)
+				current_problem(nullptr)
 			{
-				std::cout << "Is this called? " << std::endl;
 			}
 
 			base(const base&) = delete;
@@ -91,7 +87,7 @@ namespace ioh
 					{
 						for (auto h = 0; h != this->number_of_instances; ++h)
 						{
-							Problem_ptr p = get_problem(this->problem_id_name_map[this->problem_id[i]],
+							problem_ptr p = get_problem(this->problem_id_name_map[this->problem_id[i]],
 							                            this->instance_id[h],
 							                            this->dimension[j]);
 							this->push_back(p);
@@ -107,7 +103,7 @@ namespace ioh
 			/// \brief An interface of requesting problems in suite.
 			///
 			/// To request 'the next' problem in the suite of corresponding problem_id, instance_id and dimension index.
-			Problem_ptr get_next_problem()
+			problem_ptr get_next_problem()
 			{
 				if (this->load_problem_flag == false)
 				{
@@ -143,7 +139,7 @@ namespace ioh
 			/// \brief An interface of requesting problems in suite.
 			///
 			/// To request 'the current' problem in the suite of correponding problem_id, instance_id and dimension index.
-			Problem_ptr get_current_problem()
+			problem_ptr get_current_problem()
 			{
 				if (this->load_problem_flag == false)
 				{
@@ -165,9 +161,9 @@ namespace ioh
 			///
 			/// To request a specific problem with corresponding problem_id, instance_id and dimension,
 			/// without concerning the order of testing problems.
-			Problem_ptr get_problem(std::string problem_name, int instance, int dimension)
+			problem_ptr get_problem(std::string problem_name, int instance, int dimension)
 			{
-				Problem_ptr p = common::genericGenerator<problem::base<T>>::instance().create(problem_name);
+				problem_ptr p = common::genericGenerator<ProblemType>::instance().create(problem_name);
 				assert(p != nullptr);
 				p->reset_problem();
 				p->set_problem_id(this->problem_name_id_map[problem_name]);
@@ -181,9 +177,9 @@ namespace ioh
 			///
 			/// To request a specific problem with corresponding problem_id, instance_id and dimension,
 			/// without concerning the order of testing problems.
-			Problem_ptr get_problem(int problem_id, int instance, int dimension)
+			problem_ptr get_problem(int problem_id, int instance, int dimension)
 			{
-				Problem_ptr p = common::genericGenerator<problem::base<T>>::instance().create(
+				problem_ptr p = common::genericGenerator<ProblemType>::instance().create(
 					this->problem_id_name_map[problem_id]);
 				assert(p != nullptr);
 				p->reset_problem();
@@ -244,19 +240,19 @@ namespace ioh
 
 			void set_suite_problem_id(const std::vector<int>& problem_id)
 			{
-				common::compare_vector(problem_id, this->problem_id);
+				common::copy_vector(problem_id, this->problem_id);
 				this->number_of_problems = static_cast<int>(this->problem_id.size());
 			}
 
 			void set_suite_instance_id(const std::vector<int>& instance_id)
 			{
-				common::compare_vector(instance_id, this->instance_id);
+				common::copy_vector(instance_id, this->instance_id);
 				this->number_of_instances = static_cast<int>(this->instance_id.size());
 			}
 
 			void set_suite_dimension(const std::vector<int>& dimension)
 			{
-				common::compare_vector(dimension, this->dimension);
+				common::copy_vector(dimension, this->dimension);
 				this->number_of_dimensions = static_cast<int>(this->dimension.size());
 			}
 

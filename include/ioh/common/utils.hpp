@@ -105,7 +105,7 @@ namespace ioh
 		}
 
 		template <typename T>
-		std::string _toString(const T v)
+		std::string to_string(const T v)
 		{
 			std::ostringstream ss;
 			ss << v;

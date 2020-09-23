@@ -17,6 +17,7 @@ namespace ioh
 			{
 				long rseed;
 			public:
+				bbob_base() = default;
 				bbob_base(int problem_id, std::string problem_name, int instance_id = DEFAULT_INSTANCE)
 				{
 					set_instance_id(instance_id);

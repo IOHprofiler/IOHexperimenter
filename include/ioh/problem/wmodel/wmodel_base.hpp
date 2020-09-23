@@ -1,6 +1,5 @@
 #pragma once
 #include "ioh/problem/base.hpp"
-#include "ioh/problem/utils.hpp"
 
 namespace ioh
 {
@@ -11,6 +10,7 @@ namespace ioh
 			class wmodel_base : public base<int>
 			{
 			public:
+				wmodel_base() = default;
 				wmodel_base(std::string problem_name, int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
 					set_instance_id(instance_id);
 					set_problem_name(problem_name);
