@@ -135,7 +135,7 @@ void algo(std::shared_ptr<ioh::problem::bbob::bbob_base> f, std::shared_ptr<ioh:
 	std::vector<double> x(n);
 	double y;
 	int count = 0;
-	double best_y = -DBL_MAX;
+	double best_y = -std::numeric_limits<double>::max();
 
 	while (count++ <= 500)
 	{

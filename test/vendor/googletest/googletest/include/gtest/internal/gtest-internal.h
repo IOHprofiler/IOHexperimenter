@@ -401,7 +401,7 @@ class FloatingPoint {
 template <>
 inline float FloatingPoint<float>::Max() { return FLT_MAX; }
 template <>
-inline double FloatingPoint<double>::Max() { return DBL_MAX; }
+inline double FloatingPoint<double>::Max() { return std::numeric_limits<double>::max(); }
 
 // Typedefs the instances of the FloatingPoint template class that we
 // care to use.

@@ -222,24 +222,24 @@ namespace ioh
 			if (maximization_minimization_flag == common::optimization_type::maximization)
 			{
 				this->best_y.clear();
-				this->best_y.push_back(-DBL_MAX);
+				this->best_y.push_back(-std::numeric_limits<double>::max());
 				this->best_transformed_y.clear();
-				this->best_transformed_y.push_back(-DBL_MAX);
+				this->best_transformed_y.push_back(-std::numeric_limits<double>::max());
 				this->last_y.clear();
-				this->last_y.push_back(-DBL_MAX);
+				this->last_y.push_back(-std::numeric_limits<double>::max());
 				this->last_transformed_y.clear();
-				this->last_transformed_y.push_back(-DBL_MAX);
+				this->last_transformed_y.push_back(-std::numeric_limits<double>::max());
 			}
 			else
 			{
 				this->best_y.clear();
-				this->best_y.push_back(DBL_MAX);
+				this->best_y.push_back(std::numeric_limits<double>::max());
 				this->best_transformed_y.clear();
-				this->best_transformed_y.push_back(DBL_MAX);
+				this->best_transformed_y.push_back(std::numeric_limits<double>::max());
 				this->last_y.clear();
-				this->last_y.push_back(DBL_MAX);
+				this->last_y.push_back(std::numeric_limits<double>::max());
 				this->last_transformed_y.clear();
-				this->last_transformed_y.push_back(DBL_MAX);
+				this->last_transformed_y.push_back(std::numeric_limits<double>::max());
 			}
 
 			reset_observer(maximization_minimization_flag);
