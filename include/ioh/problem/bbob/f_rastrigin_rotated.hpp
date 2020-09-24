@@ -18,9 +18,13 @@ namespace ioh
 		{
 			class Rastrigin_Rotated : public bbob_base
 			{
+				std::vector<std::vector<double>> M1_;
+				std::vector<double> b1_;
 			public:
 				Rastrigin_Rotated(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(15, "Rastrigin_Rotated", instance_id)
+					: bbob_base(15, "Rastrigin_Rotated", instance_id),
+					M1_(dimension, std::vector<double>(dimension)),
+					b1_(dimension)
 				{
 					set_number_of_variables(dimension);
 				}
@@ -31,13 +35,7 @@ namespace ioh
 				                          const long rseed, const long n
 				) override
 				{
-					std::vector<std::vector<double>> M1(n, std::vector<double>(n));
-					std::vector<double> b1(n);
-					/* compute xopt, fopt*/
-
 					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
-
-					/* compute M and b */
 					transformation::coco::bbob2009_compute_rotation(rot1, rseed + 1000000, n);
 					transformation::coco::bbob2009_compute_rotation(rot2, rseed, n);
 					for (auto i = 0; i < n; ++i)
@@ -54,10 +52,7 @@ namespace ioh
 							}
 						}
 					}
-					transformation::coco::bbob2009_copy_rotation_matrix(rot1, M1, b1, n);
-
-					transformation::coco::data::M1 = M1;
-					transformation::coco::data::b1 = b1;
+					transformation::coco::bbob2009_copy_rotation_matrix(rot1, M1_, b1_, n);
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override
@@ -78,6 +73,23 @@ namespace ioh
 					}
 					return 10.0 * (static_cast<double>(static_cast<long>(n)) - sum1) + sum2;
 				}
+
+				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
+					const int transformation_id, const int instance_id) override
+				{
+					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
+				}
+
+				void variables_transformation(std::vector<double>& x, const int transformation_id,
+					const int instance_id) override
+				{
+					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
+					transformation::coco::transform_vars_affine_evaluate_function(x, M1_, b1_);
+					transformation::coco::transform_vars_oscillate_evaluate_function(x);
+					transformation::coco::transform_vars_asymmetric_evaluate_function(x, 0.2);
+					transformation::coco::transform_vars_affine_evaluate_function(x, M_, b_);
+				}
+
 
 				static Rastrigin_Rotated* createInstance(int instance_id = DEFAULT_INSTANCE,
 				                                         int dimension = DEFAULT_DIMENSION)

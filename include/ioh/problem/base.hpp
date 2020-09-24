@@ -76,12 +76,12 @@ namespace ioh
 				optimalFound(false),
 				raw_objectives(std::vector<double>(number_of_objectives)),
 				transformed_objectives(std::vector<double>(number_of_objectives)),
+				transformed_number_of_variables(0),
 				evaluations(0),
 				best_so_far_raw_objectives(std::vector<double>(number_of_objectives)),
 				best_so_far_raw_evaluations(0),
 				best_so_far_transformed_objectives(std::vector<double>(number_of_objectives)),
-				best_so_far_transformed_evaluations(0),
-				transformed_number_of_variables(0)
+				best_so_far_transformed_evaluations(0)
 			{
 			}
 
@@ -107,7 +107,7 @@ namespace ioh
 			/// This function must be decalred in derived function of new problems.
 			virtual double internal_evaluate(const std::vector<InputType>& x)
 			{
-				constexpr const auto result = std::numeric_limits<double>::lowest();
+				constexpr auto result = std::numeric_limits<double>::lowest();
 				common::log::warning("No evaluate function defined");
 				return result;
 			}
@@ -178,14 +178,14 @@ namespace ioh
 				}
 
 
-				transformation::methods::variables_transformation(x, this->problem_id, this->instance_id,
-				                                                  this->problem_type);
+				
+				variables_transformation(x, problem_id, instance_id);
 
 				this->raw_objectives[0] = this->internal_evaluate(x);
 				this->transformed_objectives[0] = this->raw_objectives[0];
 
-				transformation::methods::objectives_transformation(x, this->transformed_objectives, this->problem_id,
-				                                                   this->instance_id, this->problem_type);
+				objectives_transformation(x, transformed_objectives, problem_id, instance_id);
+
 				if (common::compare_objectives(this->transformed_objectives, this->best_so_far_transformed_objectives,
 				                               this->maximization_minimization_flag))
 				{
@@ -200,6 +200,16 @@ namespace ioh
 					this->optimalFound = true;
 				}
 				return this->transformed_objectives[0];
+			}
+
+			virtual void objectives_transformation(const std::vector<InputType>& x, std::vector<double>& y,
+			                                       const int transformation_id, const int instance_id)
+			{
+			}
+
+			virtual void variables_transformation(std::vector<InputType>& x, const int transformation_id,
+			                                      const int instance_id)
+			{
 			}
 
 			/// \fn virtual void customized_optimal()
@@ -236,9 +246,8 @@ namespace ioh
 					{
 						common::log::warning("Multi-objectives optimization is not supported now.");
 					}
-					transformation::methods::objectives_transformation(this->best_variables, this->optimal,
-					                                                   this->problem_id, this->instance_id,
-					                                                   this->problem_type);
+					objectives_transformation(this->best_variables, this->optimal,
+						this->problem_id, this->instance_id);
 				}
 				else
 				{

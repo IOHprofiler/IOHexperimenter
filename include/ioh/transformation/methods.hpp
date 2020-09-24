@@ -9,6 +9,7 @@
 #include "ioh/common/random.hpp"
 #include "coco.hpp"
 
+
 namespace ioh
 {
 	namespace transformation
@@ -20,19 +21,19 @@ namespace ioh
 			///
 			/// For instance_id in ]1,50], xor operation is applied.
 			/// For instance_id in ]50,100], sigma function is applied.
-			void variables_transformation(std::vector<int>& x, int problem_id, int instance_id,
-			                              std::string problem_type);
-
-			void variables_transformation(std::vector<double>& x, int problem_id, int instance_id,
-			                              std::string problem_type);
-
-			/// \fn void objectives_transformation(const std::vector<int> &x, std::vector<double> &y, const int problem_id, const int instance_id, const std::string problem_type)
-			/// \brief Transformation operations on objectives (a * f(x) + b).
-			void objectives_transformation(const std::vector<int>& x, std::vector<double>& y, int problem_id,
-			                               int instance_id, std::string problem_type);
-
-			void objectives_transformation(const std::vector<double>& x, std::vector<double>& y, int problem_id,
-			                               int instance_id, std::string problem_type);
+			// void variables_transformation(std::vector<int>& x, int problem_id, int instance_id,
+			//                               std::string problem_type);
+			//
+			// void variables_transformation(std::vector<double>& x, int problem_id, int instance_id,
+			//                               std::string problem_type);
+			//
+			// /// \fn void objectives_transformation(const std::vector<int> &x, std::vector<double> &y, const int problem_id, const int instance_id, const std::string problem_type)
+			// /// \brief Transformation operations on objectives (a * f(x) + b).
+			// void objectives_transformation(const std::vector<int>& x, std::vector<double>& y, int problem_id,
+			//                                int instance_id, std::string problem_type);
+			//
+			// void objectives_transformation(const std::vector<double>& x, std::vector<double>& y, int problem_id,
+			//                                int instance_id, std::string problem_type);
 
 			/// \fn xor_compute(const int x1, const int x2)
 			///

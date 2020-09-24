@@ -33,7 +33,7 @@ namespace ioh
 						return -1;
 					return 0;
 				}
-
+			
 				const size_t number_of_peaks = 101;
 				std::vector<std::vector<double>> rotation;
 				std::vector<std::vector<double>> arr_scales;
@@ -231,6 +231,13 @@ namespace ioh
 					return f_true;
 				}
 
+
+				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
+					const int transformation_id, const int instance_id) override
+				{
+					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
+				}
+				
 				static Gallagher101* createInstance(int instance_id = DEFAULT_INSTANCE,
 				                                    int dimension = DEFAULT_DIMENSION)
 				{

@@ -64,6 +64,20 @@ namespace ioh
 					return 10. + 10. * result / static_cast<double>(n - 1);
 				}
 
+				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
+					const int transformation_id, const int instance_id) override
+				{
+					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
+				}
+
+				void variables_transformation(std::vector<double>& x, const int transformation_id,
+					const int instance_id) override
+				{
+					transformation::coco::transform_vars_affine_evaluate_function(x, M_, b_);
+					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
+				}
+
+
 				static Griewank_RosenBrock* createInstance(int instance_id = DEFAULT_INSTANCE,
 				                                           int dimension = DEFAULT_DIMENSION)
 				{

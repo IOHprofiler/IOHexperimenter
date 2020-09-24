@@ -17,9 +17,12 @@ namespace ioh
 		{
 			class Katsuura : public bbob_base
 			{
+				const double penalty_factor_ = 1.0;
+				std::vector<double> raw_x_;
+				
 			public:
 				Katsuura(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(23, "Katsuura", instance_id)
+					: bbob_base(23, "Katsuura", instance_id), raw_x_(dimension)
 				{
 					set_number_of_variables(dimension);
 				}
@@ -50,7 +53,6 @@ namespace ioh
 							}
 						}
 					}
-					data::penalty_factor = 1.0;
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override
@@ -78,6 +80,21 @@ namespace ioh
 				
 				}
 
+				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
+					const int transformation_id, const int instance_id) override
+				{
+					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
+					transformation::coco::transform_obj_penalize_evaluate(raw_x_, lower_bound_, upper_bound_,penalty_factor_, y);
+				}
+
+				void variables_transformation(std::vector<double>& x, const int transformation_id,
+					const int instance_id) override
+				{
+					raw_x_ = x;
+					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
+					transformation::coco::transform_vars_affine_evaluate_function(x, M_, b_);
+				}
+				
 				static Katsuura* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 				{
 					return new Katsuura(instance_id, dimension);

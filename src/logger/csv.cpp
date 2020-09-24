@@ -218,7 +218,6 @@ namespace ioh
 			this->last_evaluations = 0;
 
 			/// TO DO: Update the method of initializing this value.
-
 			if (maximization_minimization_flag == common::optimization_type::maximization)
 			{
 				this->best_y.clear();

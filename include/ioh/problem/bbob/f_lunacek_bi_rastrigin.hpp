@@ -108,6 +108,12 @@ namespace ioh
 						+ 10. * (static_cast<double>(n) - sum3) + 1e4 * penalty;
 				}
 
+				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
+					const int transformation_id, const int instance_id) override
+				{
+					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
+				}
+
 				static Lunacek_Bi_Rastrigin* createInstance(int instance_id = DEFAULT_INSTANCE,
 				                                            int dimension = DEFAULT_DIMENSION)
 				{

@@ -15,10 +15,21 @@ namespace ioh
 		{
 			class bbob_base : public base<double>
 			{
-				long rseed;
+			protected:
+				long rseed_;
+				double fopt_;
+				std::vector<double> xopt_;
+				std::vector<std::vector<double>> M_;
+				std::vector<double> b_;
+				std::vector<std::vector<double>> rot1_;
+				std::vector<std::vector<double>> rot2_;
+				double lower_bound_;
+				double upper_bound_;
 			public:
 				bbob_base() = default;
-				bbob_base(int problem_id, std::string problem_name, int instance_id = DEFAULT_INSTANCE)
+				bbob_base(const int problem_id, const std::string& problem_name, const int instance_id = DEFAULT_INSTANCE):
+				fopt_(0.0)
+				
 				{
 					set_instance_id(instance_id);
 					set_problem_id(problem_id);
@@ -29,7 +40,7 @@ namespace ioh
 					set_upperbound(5.0);
 					set_best_variables(0);
 					set_as_minimization();
-					rseed = (problem_id == 4 || problem_id == 18 ? problem_id - 1 : problem_id) + 10000 * instance_id;
+					rseed_ = (problem_id == 4 || problem_id == 18 ? problem_id - 1 : problem_id) + 10000 * instance_id;
 				}
 
 				void prepare_problem() override
@@ -45,7 +56,7 @@ namespace ioh
 
 
 					// This is the only portion of the function that is variable
-					prepare_bbob_problem(xopt, M, b, rot1, rot2, rseed, n);
+					prepare_bbob_problem(xopt, M, b, rot1, rot2, rseed_, n);
 
 					// update static data
 					data::fopt = bbob2009_compute_fopt(this->get_problem_id(), this->get_instance_id());
@@ -56,7 +67,28 @@ namespace ioh
 					data::upper_bound = 5.0;
 					data::rot1 = rot1;
 					data::rot2 = rot2;
-					data::rseed = rseed;
+					data::rseed = rseed_;
+
+					fopt_ = data::fopt;
+					xopt_ = xopt;
+					M_ = M;
+					b_ = b;
+					lower_bound_ = data::lower_bound;
+					upper_bound_ = data::upper_bound;
+					rot1_ = rot1;
+					rot2_ = rot2;				
+				}
+
+				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
+					const int transformation_id, const int instance_id) override
+				{
+					transformation::coco::coco_tranformation_objs(x, y, transformation_id);
+				}
+
+				void variables_transformation(std::vector<double>& x, const int transformation_id,
+					const int instance_id) override
+				{
+					transformation::coco::coco_tranformation_vars(x, transformation_id);
 				}
 
 				virtual void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,

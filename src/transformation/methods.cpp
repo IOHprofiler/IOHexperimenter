@@ -9,54 +9,56 @@
 
 using namespace ioh::transformation;
 
-void methods::variables_transformation(std::vector<int>& x, const int transformation_id, const int instance_id,
-                                       const std::string transformation_type)
-{
-	if (transformation_type == "pseudo_Boolean_transformation")
-	{
-		if (instance_id > 1 && instance_id <= 50)
-		{
-			transform_vars_xor(x, instance_id);
-		}
-		else if (instance_id > 50 && instance_id <= 100)
-		{
-			transform_vars_sigma(x, instance_id);
-		}
-	}
-}
+// void methods::variables_transformation(std::vector<int>& x, const int transformation_id, const int instance_id,
+//                                        const std::string transformation_type)
+// {
+// 	if (transformation_type == "pseudo_Boolean_transformation")
+// 	{
+// 		if (instance_id > 1 && instance_id <= 50)
+// 		{
+// 			transform_vars_xor(x, instance_id);
+// 		}
+// 		else if (instance_id > 50 && instance_id <= 100)
+// 		{
+// 			transform_vars_sigma(x, instance_id);
+// 		}
+// 	}
+// }
+//
+// void methods::variables_transformation(std::vector<double>& x, const int transformation_id,
+//                                        const int instance_id, const std::string transformation_type)
+// {
+// 	if (transformation_type == "bbob")
+// 	{
+// 		coco::coco_tranformation_vars(x, transformation_id);
+// 	}
+// }
+//
+// void methods::objectives_transformation(const std::vector<int>& x, std::vector<double>& y,
+//                                         const int transformation_id, const int instance_id,
+//                                         const std::string transformation_type)
+// {
+// 	if (transformation_type == "pseudo_Boolean_transformation")
+// 	{
+// 		if (instance_id > 1)
+// 		{
+// 			transform_obj_scale(y, instance_id);
+// 			transform_obj_shift(y, instance_id);
+// 		}
+// 	}
+// }
+//
+// void methods::objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
+//                                         const int transformation_id, const int instance_id,
+//                                         const std::string transformation_type)
+// {
+// 	if (transformation_type == "bbob")
+// 	{
+// 		coco::coco_tranformation_objs(x, y, transformation_id);
+// 	}
+// }
 
-void methods::variables_transformation(std::vector<double>& x, const int transformation_id,
-                                       const int instance_id, const std::string transformation_type)
-{
-	if (transformation_type == "bbob")
-	{
-		coco::coco_tranformation_vars(x, transformation_id);
-	}
-}
 
-void methods::objectives_transformation(const std::vector<int>& x, std::vector<double>& y,
-                                        const int transformation_id, const int instance_id,
-                                        const std::string transformation_type)
-{
-	if (transformation_type == "pseudo_Boolean_transformation")
-	{
-		if (instance_id > 1)
-		{
-			transform_obj_scale(y, instance_id);
-			transform_obj_shift(y, instance_id);
-		}
-	}
-}
-
-void methods::objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
-                                        const int transformation_id, const int instance_id,
-                                        const std::string transformation_type)
-{
-	if (transformation_type == "bbob")
-	{
-		coco::coco_tranformation_objs(x, y, transformation_id);
-	}
-}
 
 int methods::xor_compute(const int x1, const int x2)
 {

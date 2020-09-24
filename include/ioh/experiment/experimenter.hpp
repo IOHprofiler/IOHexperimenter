@@ -26,7 +26,7 @@ namespace ioh
 
 			~experimenter()
 			{
-			};
+			}
 
 			experimenter(std::string configFileName, _algorithm* algorithm)
 			{

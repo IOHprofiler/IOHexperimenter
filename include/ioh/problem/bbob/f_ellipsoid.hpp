@@ -47,6 +47,19 @@ namespace ioh
 					return result;
 				}
 
+				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
+					const int transformation_id, const int instance_id) override
+				{
+					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
+				}
+
+				void variables_transformation(std::vector<double>& x, const int transformation_id,
+					const int instance_id) override
+				{
+					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
+					transformation::coco::transform_vars_oscillate_evaluate_function(x);
+				}
+
 				static Ellipsoid* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 				{
 					return new Ellipsoid(instance_id, dimension);

@@ -109,6 +109,7 @@ void test_problems()
 	// test_eval(std::make_shared<W_Model_OneMax>());	
 }
 
+
 void run_bbob_suite()
 {
 	ioh::suite::bbob bbob;
@@ -149,11 +150,45 @@ void algo(std::shared_ptr<ioh::problem::bbob::bbob_base> f, std::shared_ptr<ioh:
 	
 }
 
+
+class Base
+{
+public:
+	virtual void x() { print("Base"); }
+};
+
+
+class Derived: public Base
+{
+public:
+	void x() override { print("Derived"); }
+};
+
+
+
+class DerivedDerived : public Derived
+{
+public:
+	void x() override { print("DerivedDerived"); }
+};
+
+class DerivedDerived2 : public Derived
+{
+};
+
+
 int main()
 {
-	auto suite = std::make_shared<ioh::suite::bbob>();
-	auto logger = std::make_shared<ioh::logger::csv>("C:\\Users\\Jacob\\Desktop", "tmp", "crazyalg", "crazyinfo");
-	auto experimenter = ioh::experiment::experimenter<ioh::problem::bbob::bbob_base>(suite, logger, algo);
-	experimenter._set_independent_runs(10);
-	experimenter._run();
+	// auto suite = std::make_shared<ioh::suite::bbob>();
+	// auto logger = std::make_shared<ioh::logger::csv>("C:\\Users\\Jacob\\Desktop", "tmp", "crazyalg", "crazyinfo");
+	// auto experimenter = ioh::experiment::experimenter<ioh::problem::bbob::bbob_base>(suite, logger, algo);
+	// experimenter._set_independent_runs(10);
+	// experimenter._run();
+
+	// DerivedDerived d;
+	// d.x();
+	// DerivedDerived2 d2;
+	// d2.x();
+	// ;
+	// vprint(minus_one);
 }

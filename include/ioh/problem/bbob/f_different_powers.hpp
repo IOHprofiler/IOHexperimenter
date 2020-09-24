@@ -33,6 +33,20 @@ namespace ioh
 					transformation::coco::bbob2009_compute_rotation(rot1, rseed + 1000000, n);
 					transformation::coco::bbob2009_copy_rotation_matrix(rot1, M, b, n);
 				}
+				
+				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
+					const int transformation_id, const int instance_id) override
+				{
+					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
+				}
+
+				void variables_transformation(std::vector<double>& x, const int transformation_id,
+					const int instance_id) override
+				{
+					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
+					transformation::coco::transform_vars_affine_evaluate_function(x, M_, b_);
+				}
+				
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{

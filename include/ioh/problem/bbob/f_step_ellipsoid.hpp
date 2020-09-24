@@ -18,9 +18,14 @@ namespace ioh
 		{
 			class Step_Ellipsoid : public bbob_base
 			{
+				std::vector<double> datax_;
+				std::vector<double> dataxx_;
+				
 			public:
 				Step_Ellipsoid(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(7, "Step_Ellipsoid", instance_id)
+					: bbob_base(7, "Step_Ellipsoid", instance_id),
+					datax_(dimension),
+					dataxx_(dimension)
 				{
 					set_number_of_variables(dimension);
 				}
@@ -34,8 +39,6 @@ namespace ioh
 					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
 					transformation::coco::bbob2009_compute_rotation(rot1, rseed + 1000000, n);
 					transformation::coco::bbob2009_compute_rotation(rot2, rseed, n);
-					transformation::coco::data::datax = std::vector<double>(n);
-					transformation::coco::data::dataxx = std::vector<double>(n);
 					set_best_variables(xopt);
 				}
 
@@ -61,29 +64,29 @@ namespace ioh
 					for (i = 0; i < n; ++i)
 					{
 						double c1;
-						data::datax[i] = 0.0;
+						datax_[i] = 0.0;
 						c1 = sqrt(pow(condition / 10., static_cast<double>(i) / static_cast<double>(n - 1)));
 						for (j = 0; j < n; ++j)
 						{
-							data::datax[i] += c1 * data::rot2[i][j] * (x[j] - data::xopt[j]);
+							datax_[i] += c1 * rot2_[i][j] * (x[j] - xopt_[j]);
 						}
 					}
-					x1 = data::datax[0];
+					x1 = datax_[0];
 
 					for (i = 0; i < n; ++i)
 					{
-						if (fabs(data::datax[i]) > 0.5) /* TODO: Documentation: no fabs() in documentation */
-							data::datax[i] = static_cast<double>(floor(data::datax[i] + 0.5));
+						if (fabs(datax_[i]) > 0.5) /* TODO: Documentation: no fabs() in documentation */
+							datax_[i] = static_cast<double>(floor(datax_[i] + 0.5));
 						else
-							data::datax[i] = static_cast<double>(floor(alpha * data::datax[i] + 0.5)) / alpha;
+							datax_[i] = static_cast<double>(floor(alpha * datax_[i] + 0.5)) / alpha;
 					}
 
 					for (i = 0; i < n; ++i)
 					{
-						data::dataxx[i] = 0.0;
+						dataxx_[i] = 0.0;
 						for (j = 0; j < n; ++j)
 						{
-							data::dataxx[i] += data::rot1[i][j] * data::datax[j];
+							dataxx_[i] += rot1_[i][j] * datax_[j];
 						}
 					}
 
@@ -94,14 +97,22 @@ namespace ioh
 						double exponent;
 						exponent = static_cast<double>(static_cast<long>(i)) / (static_cast<double>(static_cast<long>(n)
 						) - 1.0);
-						result[0] += pow(condition, exponent) * data::dataxx[i] * data::dataxx[i];
+						result[0] += pow(condition, exponent) * dataxx_[i] * dataxx_[i];
 					}
 					result[0] = 0.1 * ((fabs(x1) * 1.0e-4) > result[0] ? (fabs(x1) * 1.0e-4) : result[0]) + penalty +
-						data::fopt;
+						fopt_;
 
 					return result[0];
 				}
 
+
+
+				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
+					const int transformation_id, const int instance_id) override
+				{
+					// Needs to override default beviour
+				}
+				
 				static Step_Ellipsoid* createInstance(int instance_id = DEFAULT_INSTANCE,
 				                                      int dimension = DEFAULT_DIMENSION)
 				{

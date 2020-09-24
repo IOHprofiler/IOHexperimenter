@@ -18,9 +18,14 @@ namespace ioh
 		{
 			class Rosenbrock : public bbob_base
 			{
+				std::vector<double> minus_one_;
+				double factor_;
+				
 			public:
 				Rosenbrock(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(8, "Rosenbrock", instance_id)
+					: bbob_base(8, "Rosenbrock", instance_id),
+					minus_one_(dimension, -1),
+					factor_(std::max(1.0, std::sqrt(dimension) / 8.0))
 				{
 					set_number_of_variables(dimension);
 				}
@@ -31,20 +36,9 @@ namespace ioh
 				                          const long rseed, const long n
 				) override
 				{
-					std::vector<double> minus_one;
-					/* compute xopt, fopt*/
-
 					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
 					for (auto i = 0; i < n; ++i)
-					{
-						minus_one.push_back(-1.0);
 						xopt[i] *= 0.75;
-					}
-
-					transformation::coco::data::minus_one = minus_one;
-					transformation::coco::data::factor = 1.0 > (sqrt(static_cast<double>(n)) / 8.0)
-						                                     ? 1
-						                                     : (sqrt(static_cast<double>(n)) / 8.0);
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override
@@ -58,6 +52,20 @@ namespace ioh
 						s2 += tmp * tmp;
 					}
 					return 100.0 * s1 + s2;
+				}
+
+				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
+					const int transformation_id, const int instance_id) override
+				{
+					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
+				}
+
+				void variables_transformation(std::vector<double>& x, const int transformation_id,
+					const int instance_id) override
+				{
+					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
+					transformation::coco::transform_vars_scale_evaluate(x, factor_);
+					transformation::coco::transform_vars_shift_evaluate_function(x, minus_one_);
 				}
 
 				static Rosenbrock* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
