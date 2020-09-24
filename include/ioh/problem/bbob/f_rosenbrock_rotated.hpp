@@ -21,33 +21,29 @@ namespace ioh
 				double factor_;
 			public:
 				Rosenbrock_Rotated(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(9, "Rosenbrock_Rotated", instance_id),
+					: bbob_base(9, "Rosenbrock_Rotated", instance_id, dimension),
 					factor_(std::max(1.0, std::sqrt(dimension) / 8.0))
 				{
 					set_number_of_variables(dimension);
 				}
 
-				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-				                          std::vector<std::vector<double>>& rot2,
-				                          const long rseed, const long n
-				) override
+				void prepare_problem() override
 				{
-					transformation::coco::bbob2009_compute_rotation(rot1, rseed, n);
-					for (auto row = 0; row < n; ++row)
+					transformation::coco::bbob2009_compute_rotation(rot1_, rseed_, n_);
+					for (auto row = 0; row < n_; ++row)
 					{
-						for (auto column = 0; column < n; ++column)
+						for (auto column = 0; column < n_; ++column)
 						{
-							M[row][column] = factor_ * rot1[row][column];
+							m_[row][column] = factor_ * rot1_[row][column];
 						}
-						b[row] = 0.5;
+						b_[row] = 0.5;
 					}
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
 					double s1 = 0.0, s2 = 0.0, tmp;
-					for (size_t i = 0; i < x.size() - 1; ++i)
+					for (size_t i = 0; i < n_ - 1; ++i)
 					{
 						tmp = (x[i] * x[i] - x[i + 1]);
 						s1 += tmp * tmp;
@@ -61,7 +57,7 @@ namespace ioh
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
 					const int instance_id) override
 				{
-					transformation::coco::transform_vars_affine_evaluate_function(x, M_, b_);
+					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
 
 				static Rosenbrock_Rotated* createInstance(int instance_id = DEFAULT_INSTANCE,

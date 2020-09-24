@@ -22,34 +22,30 @@ namespace ioh
 				
 			public:
 				Katsuura(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(23, "Katsuura", instance_id), raw_x_(dimension)
+					: bbob_base(23, "Katsuura", instance_id, dimension), raw_x_(dimension)
 				{
 					set_number_of_variables(dimension);
 				}
 
 
-				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-				                          std::vector<std::vector<double>>& rot2,
-				                          const long rseed, const long n
-				) override
+				void prepare_problem() override
 				{
 					using namespace transformation::coco;
 		
-					bbob2009_compute_xopt(xopt, rseed, n);
-					bbob2009_compute_rotation(rot1, rseed + 1000000, n);
-					bbob2009_compute_rotation(rot2, rseed, n);
-					for (auto i = 0; i < n; ++i)
+					bbob2009_compute_xopt(xopt_, rseed_, n_);
+					bbob2009_compute_rotation(rot1_, rseed_ + 1000000, n_);
+					bbob2009_compute_rotation(rot2_, rseed_, n_);
+					for (auto i = 0; i < n_; ++i)
 					{
-						b[i] = 0.0;
-						for (auto j = 0; j < n; ++j)
+						b_[i] = 0.0;
+						for (auto j = 0; j < n_; ++j)
 						{
-							M[i][j] = 0.0;
-							for (auto k = 0; k < n; ++k)
+							m_[i][j] = 0.0;
+							for (auto k = 0; k < n_; ++k)
 							{
-								auto exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<long>(n))
+								auto exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<long>(n_))
 									- 1.0);
-								M[i][j] += rot1[i][k] * pow(sqrt(100.0), exponent) * rot2[k][j];
+								m_[i][j] += rot1_[i][k] * pow(sqrt(100.0), exponent) * rot2_[k][j];
 							}
 						}
 					}
@@ -57,13 +53,12 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					auto n = x.size();
 					size_t i, j;
 					double tmp, tmp2;
 
 					/* Computation core */
 					auto result = 1.0;
-					for (i = 0; i < n; ++i)
+					for (i = 0; i < n_; ++i)
 					{
 						tmp = 0;
 						for (j = 1; j < 33; ++j)
@@ -73,9 +68,9 @@ namespace ioh
 						}
 						tmp = 1.0 + (static_cast<double>(static_cast<long>(i)) + 1) * tmp;
 						/*result *= tmp;*/ /* Wassim TODO: delete once consistency check passed*/
-						result *= pow(tmp, 10. / pow(static_cast<double>(n), 1.2));
+						result *= pow(tmp, 10. / pow(static_cast<double>(n_), 1.2));
 					}
-					result = 10. / static_cast<double>(n) / static_cast<double>(n) * (-1. + result);
+					result = 10. / static_cast<double>(n_) / static_cast<double>(n_) * (-1. + result);
 					return result;
 				
 				}
@@ -92,7 +87,7 @@ namespace ioh
 				{
 					raw_x_ = x;
 					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
-					transformation::coco::transform_vars_affine_evaluate_function(x, M_, b_);
+					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
 				
 				static Katsuura* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)

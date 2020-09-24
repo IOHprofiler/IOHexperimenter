@@ -23,37 +23,32 @@ namespace ioh
 				
 			public:
 				Step_Ellipsoid(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(7, "Step_Ellipsoid", instance_id),
+					: bbob_base(7, "Step_Ellipsoid", instance_id, dimension),
 					datax_(dimension),
 					dataxx_(dimension)
 				{
 					set_number_of_variables(dimension);
 				}
 
-				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-				                          std::vector<std::vector<double>>& rot2,
-				                          const long rseed, const long n
-				) override
+				void prepare_problem() override
 				{
-					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
-					transformation::coco::bbob2009_compute_rotation(rot1, rseed + 1000000, n);
-					transformation::coco::bbob2009_compute_rotation(rot2, rseed, n);
-					set_best_variables(xopt);
+					transformation::coco::bbob2009_compute_xopt(xopt_, rseed_, n_);
+					transformation::coco::bbob2009_compute_rotation(rot1_, rseed_ + 1000000, n_);
+					transformation::coco::bbob2009_compute_rotation(rot2_, rseed_, n_);
+					set_best_variables(xopt_);
 				}
 
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
 					using namespace transformation::coco;
-					auto n = x.size();
 					static const double condition = 100;
 					static const auto alpha = 10.0;
 					size_t i, j;
 					double penalty = 0.0, x1;
 					std::vector<double> result(1);
 
-					for (i = 0; i < n; ++i)
+					for (i = 0; i < n_; ++i)
 					{
 						double tmp;
 						tmp = fabs(x[i]) - 5.0;
@@ -61,19 +56,19 @@ namespace ioh
 							penalty += tmp * tmp;
 					}
 
-					for (i = 0; i < n; ++i)
+					for (i = 0; i < n_; ++i)
 					{
 						double c1;
 						datax_[i] = 0.0;
-						c1 = sqrt(pow(condition / 10., static_cast<double>(i) / static_cast<double>(n - 1)));
-						for (j = 0; j < n; ++j)
+						c1 = sqrt(pow(condition / 10., static_cast<double>(i) / static_cast<double>(n_ - 1)));
+						for (j = 0; j < n_; ++j)
 						{
 							datax_[i] += c1 * rot2_[i][j] * (x[j] - xopt_[j]);
 						}
 					}
 					x1 = datax_[0];
 
-					for (i = 0; i < n; ++i)
+					for (i = 0; i < n_; ++i)
 					{
 						if (fabs(datax_[i]) > 0.5) /* TODO: Documentation: no fabs() in documentation */
 							datax_[i] = static_cast<double>(floor(datax_[i] + 0.5));
@@ -81,10 +76,10 @@ namespace ioh
 							datax_[i] = static_cast<double>(floor(alpha * datax_[i] + 0.5)) / alpha;
 					}
 
-					for (i = 0; i < n; ++i)
+					for (i = 0; i < n_; ++i)
 					{
 						dataxx_[i] = 0.0;
-						for (j = 0; j < n; ++j)
+						for (j = 0; j < n_; ++j)
 						{
 							dataxx_[i] += rot1_[i][j] * datax_[j];
 						}
@@ -92,10 +87,10 @@ namespace ioh
 
 					/* Computation core */
 					result[0] = 0.0;
-					for (i = 0; i < n; ++i)
+					for (i = 0; i < n_; ++i)
 					{
 						double exponent;
-						exponent = static_cast<double>(static_cast<long>(i)) / (static_cast<double>(static_cast<long>(n)
+						exponent = static_cast<double>(static_cast<long>(i)) / (static_cast<double>(static_cast<long>(n_)
 						) - 1.0);
 						result[0] += pow(condition, exponent) * dataxx_[i] * dataxx_[i];
 					}

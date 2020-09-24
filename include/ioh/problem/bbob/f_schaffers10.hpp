@@ -19,37 +19,33 @@ namespace ioh
 			{
 				const double conditioning_ = 10.0;
 				const double penalty_factor_ = 10.0;
-				std::vector<std::vector<double>> M1_;
+				std::vector<std::vector<double>> m1_;
 				std::vector<double> b1_;
 				std::vector<double> raw_x_;
 			public:
 				Schaffers10(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(17, "Schaffers10", instance_id),
-					M1_(dimension, std::vector<double>(dimension)),
+					: bbob_base(17, "Schaffers10", instance_id, dimension),
+					m1_(dimension, std::vector<double>(dimension)),
 					b1_(dimension),
 					raw_x_(dimension)
 				{
 					set_number_of_variables(dimension);
 				}
 
-				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-				                          std::vector<std::vector<double>>& rot2,
-				                          const long rseed, const long n
-				) override
+				void prepare_problem() override
 				{
-					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
-					transformation::coco::bbob2009_compute_rotation(rot1, rseed + 1000000, n);
-					transformation::coco::bbob2009_compute_rotation(rot2, rseed, n);
-					transformation::coco::bbob2009_copy_rotation_matrix(rot1, M1_, b1_, n);
-					for (auto i = 0; i < n; ++i)
+					transformation::coco::bbob2009_compute_xopt(xopt_, rseed_, n_);
+					transformation::coco::bbob2009_compute_rotation(rot1_, rseed_ + 1000000, n_);
+					transformation::coco::bbob2009_compute_rotation(rot2_, rseed_, n_);
+					transformation::coco::bbob2009_copy_rotation_matrix(rot1_, m1_, b1_, n_);
+					for (auto i = 0; i < n_; ++i)
 					{
-						b[i] = 0.0;
-						for (auto j = 0; j < n; ++j)
+						b_[i] = 0.0;
+						for (auto j = 0; j < n_; ++j)
 						{
-							auto exponent = 1.0 * static_cast<int>(i) / (static_cast<double>(static_cast<long>(n)) -
+							auto exponent = 1.0 * static_cast<int>(i) / (static_cast<double>(static_cast<long>(n_)) -
 								1.0);
-							M[i][j] = rot2[i][j] * pow(sqrt(conditioning_), exponent);
+							m_[i][j] = rot2_[i][j] * pow(sqrt(conditioning_), exponent);
 						}
 					}
 					
@@ -57,9 +53,8 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					auto n = x.size();
 					auto result = 0.0;
-					for (size_t i = 0; i < n - 1; ++i)
+					for (size_t i = 0; i < n_ - 1; ++i)
 					{
 						const auto tmp = x[i] * x[i] + x[i + 1] * x[i + 1];
 						if (std::isinf(tmp) && std::isnan(sin(50.0 * pow(tmp, 0.1)))) /* sin(inf) -> nan */
@@ -67,7 +62,7 @@ namespace ioh
 							return tmp;
 						result += pow(tmp, 0.25) * (1.0 + pow(sin(50.0 * pow(tmp, 0.1)), 2.0));
 					}
-					return pow(result / (static_cast<double>(static_cast<long>(n)) - 1.0), 2.0);
+					return pow(result / (static_cast<double>(static_cast<long>(n_)) - 1.0), 2.0);
 				}
 
 
@@ -83,9 +78,9 @@ namespace ioh
 				{
 					raw_x_ = x;
 					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
-					transformation::coco::transform_vars_affine_evaluate_function(x, M1_, b1_);
+					transformation::coco::transform_vars_affine_evaluate_function(x, m1_, b1_);
 					transformation::coco::transform_vars_asymmetric_evaluate_function(x, 0.5);
-					transformation::coco::transform_vars_affine_evaluate_function(x, M_, b_);
+					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
 
 				static Schaffers10* createInstance(int instance_id = DEFAULT_INSTANCE,

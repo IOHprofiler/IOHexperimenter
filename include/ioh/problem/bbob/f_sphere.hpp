@@ -20,24 +20,20 @@ namespace ioh
 			{
 			public:
 				Sphere(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(1, "Sphere", instance_id)
+					: bbob_base(1, "Sphere", instance_id, dimension)
 				{
 					set_number_of_variables(dimension);
 				}
 
-				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-				                          std::vector<std::vector<double>>& rot2,
-				                          const long rseed, const long n
-				) override
+				void prepare_problem() override
 				{
-					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
+					transformation::coco::bbob2009_compute_xopt(xopt_, rseed_, n_);
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
 					auto result = 0.0;
-					for (size_t i = 0; i < x.size(); ++i)
+					for (size_t i = 0; i < n_; ++i)
 					{
 						result += x[i] * x[i];
 					}

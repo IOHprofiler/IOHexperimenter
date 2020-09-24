@@ -19,22 +19,18 @@ namespace ioh
 			{
 			public:
 				Linear_Slope(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(5, "Linear_Slope", instance_id)
+					: bbob_base(5, "Linear_Slope", instance_id, dimension)
 				{
 					set_number_of_variables(dimension);
 				}
 
-				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-				                          std::vector<std::vector<double>>& rot2,
-				                          const long rseed, const long n
-				) override
+				void prepare_problem() override
 				{
-					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
-					const auto tmp_best_variables = std::make_unique<std::vector<double>>(n);
-					for (auto i = 0; i < n; ++i)
+					transformation::coco::bbob2009_compute_xopt(xopt_, rseed_, n_);
+					const auto tmp_best_variables = std::make_unique<std::vector<double>>(n_);
+					for (auto i = 0; i < n_; ++i)
 					{
-						if (xopt[i] < 0.0)
+						if (xopt_[i] < 0.0)
 						{
 							(*tmp_best_variables)[i] = lower_bound_;
 						}
@@ -48,16 +44,15 @@ namespace ioh
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					const auto n = x.size();
 					static const auto alpha = 100.0;
 					auto result = 0.0;
 
-					for (size_t i = 0; i < n; ++i)
+					for (size_t i = 0; i < n_; ++i)
 					{
 						double base, exponent, si;
 
 						base = sqrt(alpha);
-						exponent = static_cast<double>(static_cast<long>(i)) / (static_cast<double>(static_cast<long>(n)
+						exponent = static_cast<double>(static_cast<long>(i)) / (static_cast<double>(static_cast<long>(n_)
 						) - 1);
 						if (xopt_[i] > 0.0)
 							si = pow(base, exponent);

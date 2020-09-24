@@ -18,50 +18,45 @@ namespace ioh
 		{
 			class Rastrigin_Rotated : public bbob_base
 			{
-				std::vector<std::vector<double>> M1_;
+				std::vector<std::vector<double>> m1_;
 				std::vector<double> b1_;
 			public:
 				Rastrigin_Rotated(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(15, "Rastrigin_Rotated", instance_id),
-					M1_(dimension, std::vector<double>(dimension)),
+					: bbob_base(15, "Rastrigin_Rotated", instance_id, dimension),
+					m1_(dimension, std::vector<double>(dimension)),
 					b1_(dimension)
 				{
 					set_number_of_variables(dimension);
 				}
 
-				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-				                          std::vector<std::vector<double>>& rot2,
-				                          const long rseed, const long n
-				) override
+				void prepare_problem() override
 				{
-					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
-					transformation::coco::bbob2009_compute_rotation(rot1, rseed + 1000000, n);
-					transformation::coco::bbob2009_compute_rotation(rot2, rseed, n);
-					for (auto i = 0; i < n; ++i)
+					transformation::coco::bbob2009_compute_xopt(xopt_, rseed_, n_);
+					transformation::coco::bbob2009_compute_rotation(rot1_, rseed_ + 1000000, n_);
+					transformation::coco::bbob2009_compute_rotation(rot2_, rseed_, n_);
+					for (auto i = 0; i < n_; ++i)
 					{
-						b[i] = 0.0;
-						for (auto j = 0; j < n; ++j)
+						b_[i] = 0.0;
+						for (auto j = 0; j < n_; ++j)
 						{
-							M[i][j] = 0.0;
-							for (auto k = 0; k < n; ++k)
+							m_[i][j] = 0.0;
+							for (auto k = 0; k < n_; ++k)
 							{
-								auto exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<long>(n))
+								auto exponent = 1.0 * static_cast<int>(k) / (static_cast<double>(static_cast<long>(n_))
 									- 1.0);
-								M[i][j] += rot1[i][k] * pow(sqrt(10.0), exponent) * rot2[k][j];
+								m_[i][j] += rot1_[i][k] * pow(sqrt(10.0), exponent) * rot2_[k][j];
 							}
 						}
 					}
-					transformation::coco::bbob2009_copy_rotation_matrix(rot1, M1_, b1_, n);
+					transformation::coco::bbob2009_copy_rotation_matrix(rot1_, m1_, b1_, n_);
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
 					std::vector<double> result(1);
-					auto n = x.size();
 					auto sum1 = 0.0, sum2 = 0.0;
 
-					for (size_t i = 0; i < n; ++i)
+					for (size_t i = 0; i < n_; ++i)
 					{
 						sum1 += cos(2.0 * transformation::coco::coco_pi * x[i]);
 						sum2 += x[i] * x[i];
@@ -71,17 +66,17 @@ namespace ioh
 					{
 						return sum2;
 					}
-					return 10.0 * (static_cast<double>(static_cast<long>(n)) - sum1) + sum2;
+					return 10.0 * (static_cast<double>(static_cast<long>(n_)) - sum1) + sum2;
 				}
 
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
 					const int instance_id) override
 				{
 					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
-					transformation::coco::transform_vars_affine_evaluate_function(x, M1_, b1_);
+					transformation::coco::transform_vars_affine_evaluate_function(x, m1_, b1_);
 					transformation::coco::transform_vars_oscillate_evaluate_function(x);
 					transformation::coco::transform_vars_asymmetric_evaluate_function(x, 0.2);
-					transformation::coco::transform_vars_affine_evaluate_function(x, M_, b_);
+					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
 
 

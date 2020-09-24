@@ -22,32 +22,27 @@ namespace ioh
 				
 			public:
 				Bueche_Rastrigin(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(4, "Bueche_Rastrigin", instance_id), raw_x_(dimension)
+					: bbob_base(4, "Bueche_Rastrigin", instance_id, dimension), raw_x_(dimension)
 				{
 					set_number_of_variables(dimension);
 				}
 
-				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-				                          std::vector<std::vector<double>>& rot2,
-				                          const long rseed, const long n
-				) override
+				void prepare_problem() override
 				{
-					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
-					for (auto i = 0; i < n; i += 2)
-						xopt[i] = fabs(xopt[i]);
+					transformation::coco::bbob2009_compute_xopt(xopt_, rseed_, n_);
+					for (auto i = 0; i < n_; i += 2)
+						xopt_[i] = fabs(xopt_[i]);
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
 					auto tmp = 0., tmp2 = 0.;
-					auto n = x.size();
-					for (size_t i = 0; i < n; ++i)
+					for (size_t i = 0; i < n_; ++i)
 					{
 						tmp += cos(2 * transformation::coco::coco_pi * x[i]);
 						tmp2 += x[i] * x[i];
 					}
-					return 10.0 * (static_cast<double>(static_cast<long>(n)) - tmp) + tmp2 + 0;
+					return 10.0 * (static_cast<double>(static_cast<long>(n_)) - tmp) + tmp2 + 0;
 				}
 
 				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,

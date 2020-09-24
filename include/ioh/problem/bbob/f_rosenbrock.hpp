@@ -23,28 +23,24 @@ namespace ioh
 				
 			public:
 				Rosenbrock(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(8, "Rosenbrock", instance_id),
+					: bbob_base(8, "Rosenbrock", instance_id, dimension),
 					minus_one_(dimension, -1),
 					factor_(std::max(1.0, std::sqrt(dimension) / 8.0))
 				{
 					set_number_of_variables(dimension);
 				}
 
-				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-				                          std::vector<std::vector<double>>& rot2,
-				                          const long rseed, const long n
-				) override
+				void prepare_problem() override
 				{
-					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
-					for (auto i = 0; i < n; ++i)
-						xopt[i] *= 0.75;
+					transformation::coco::bbob2009_compute_xopt(xopt_, rseed_, n_);
+					for (auto i = 0; i < n_; ++i)
+						xopt_[i] *= 0.75;
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
 					double s1 = 0.0, s2 = 0.0, tmp;
-					for (size_t i = 0; i < x.size() - 1; ++i)
+					for (size_t i = 0; i < n_ - 1; ++i)
 					{
 						tmp = (x[i] * x[i] - x[i + 1]);
 						s1 += tmp * tmp;

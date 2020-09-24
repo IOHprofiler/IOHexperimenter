@@ -24,39 +24,34 @@ namespace ioh
 				
 			public:
 				Schwefel(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-					: bbob_base(20, "Schwefel", instance_id),
+					: bbob_base(20, "Schwefel", instance_id, dimension),
 					negative_offset_(dimension),
 					positive_offset_(dimension)
 				{
 					set_number_of_variables(dimension);
 				}
 
-				void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-				                          std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-				                          std::vector<std::vector<double>>& rot2,
-				                          const long rseed, const long n
-				) override
+				void prepare_problem() override
 				{
-					transformation::coco::bbob2009_unif(negative_offset_, n, rseed);
-					for (size_t i = 0; i < n; ++i)
-						xopt[i] = (negative_offset_[i] < 0.5 ? -1 : 1) * 0.5 * 4.2096874637;
+					transformation::coco::bbob2009_unif(negative_offset_, n_, rseed_);
+					for (size_t i = 0; i < n_; ++i)
+						xopt_[i] = (negative_offset_[i] < 0.5 ? -1 : 1) * 0.5 * 4.2096874637;
 
-					for (size_t i = 0; i < n; ++i)
+					for (size_t i = 0; i < n_; ++i)
 					{
-						negative_offset_[i] = -2 * fabs(xopt[i]);
-						positive_offset_[i] = 2 * fabs(xopt[i]);
+						negative_offset_[i] = -2 * fabs(xopt_[i]);
+						positive_offset_[i] = 2 * fabs(xopt_[i]);
 					}
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
-					auto n = x.size();
 					size_t i = 0;
 					double penalty, sum;
 
 					/* Boundary handling*/
 					penalty = 0.0;
-					for (i = 0; i < n; ++i)
+					for (i = 0; i < n_; ++i)
 					{
 						const auto tmp = fabs(x[i]) - 500.0;
 						if (tmp > 0.0)
@@ -67,12 +62,12 @@ namespace ioh
 
 					/* Computation core */
 					sum = 0.0;
-					for (i = 0; i < n; ++i)
+					for (i = 0; i < n_; ++i)
 					{
 						sum += x[i] * sin(sqrt(fabs(x[i])));
 					}
 
-					return 0.01 * (penalty + 418.9828872724339 - sum / static_cast<double>(n));
+					return 0.01 * (penalty + 418.9828872724339 - sum / static_cast<double>(n_));
 				}
 
 

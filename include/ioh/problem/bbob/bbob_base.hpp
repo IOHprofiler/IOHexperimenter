@@ -19,7 +19,7 @@ namespace ioh
 				long rseed_;
 				double fopt_;
 				std::vector<double> xopt_;
-				std::vector<std::vector<double>> M_;
+				std::vector<std::vector<double>> m_;
 				std::vector<double> b_;
 				std::vector<std::vector<double>> rot1_;
 				std::vector<std::vector<double>> rot2_;
@@ -34,10 +34,11 @@ namespace ioh
 					rseed_((problem_id == 4 || problem_id == 18 ? problem_id - 1 : problem_id) + 10000 * instance_id),
 					fopt_(transformation::coco::bbob2009_compute_fopt(problem_id, instance_id)),
 					xopt_(dimension),
-					M_(dimension, std::vector<double>(dimension)),
+					m_(dimension, std::vector<double>(dimension)),
 					b_(dimension),
 					rot1_(dimension, std::vector<double>(dimension)),
-					rot2_(dimension, std::vector<double>(dimension))			
+					rot2_(dimension, std::vector<double>(dimension)),
+					n_(dimension)
 				{
 					set_instance_id(instance_id);
 					set_problem_id(problem_id);
@@ -50,26 +51,10 @@ namespace ioh
 					set_as_minimization();
 				}
 
-				void prepare_problem() override
-				{
-					const auto n = this->get_number_of_variables();
-					// This is the only portion of the function that is variable
-					prepare_bbob_problem(xopt_, M_, b_, rot1_, rot2_, rseed_, n);
-					
-				}
-
 				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
 				                               const int transformation_id, const int instance_id) override
 				{
 					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
-				}
-
-				virtual void prepare_bbob_problem(std::vector<double>& xopt, std::vector<std::vector<double>>& M,
-				                                  std::vector<double>& b, std::vector<std::vector<double>>& rot1,
-				                                  std::vector<std::vector<double>>& rot2,
-				                                  const long rseed, const long n
-				)
-				{
 				}
 			};
 		}
