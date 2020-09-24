@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include "data.hpp"
 #include "legacy.hpp"
 
 
@@ -103,123 +102,6 @@ namespace ioh
 
 				for (i = 0; i < number_of_objectives; i++)
 					y[i] += offset;
-			}
-
-		
-			static void coco_tranformation_objs(const std::vector<double>& x, std::vector<double>& y,
-			                                    const int problem_id)
-			{
-				if (problem_id == 1)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 2)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 3)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 4)
-				{
-					/* ignore large-scale test */
-					transform_obj_shift_evaluate_function(y, data::fopt);
-					transform_obj_penalize_evaluate(data::raw_x, data::lower_bound, data::upper_bound,
-					                                data::penalty_factor, y);
-				}
-				else if (problem_id == 5)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 6)
-				{
-					transform_obj_oscillate_evaluate(y);
-					transform_obj_power_evaluate(y, 0.9);
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 7)
-				{
-				}
-				else if (problem_id == 8)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 9)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 10)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 11)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 12)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 13)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 14)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 15)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 16)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-					transform_obj_penalize_evaluate(data::raw_x, data::lower_bound, data::upper_bound,
-					                                data::penalty_factor, y);
-				}
-				else if (problem_id == 17)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-					transform_obj_penalize_evaluate(data::raw_x, data::lower_bound, data::upper_bound,
-					                                data::penalty_factor, y);
-				}
-				else if (problem_id == 18)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-					transform_obj_penalize_evaluate(data::raw_x, data::lower_bound, data::upper_bound,
-					                                data::penalty_factor, y);
-				}
-				else if (problem_id == 19)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 20)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 21)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 22)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else if (problem_id == 23)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-					transform_obj_penalize_evaluate(data::raw_x, data::lower_bound, data::upper_bound,
-					                                data::penalty_factor, y);
-				}
-				else if (problem_id == 24)
-				{
-					transform_obj_shift_evaluate_function(y, data::fopt);
-				}
-				else
-				{
-				}
 			}
 		}
 	}

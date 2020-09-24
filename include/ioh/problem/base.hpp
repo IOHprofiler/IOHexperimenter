@@ -232,14 +232,14 @@ namespace ioh
 					if (this->number_of_objectives == 1)
 					{
 						/// This only works for F4, F16-18, and F23 of BBOB suite.
-						if (this->problem_type == "bbob")
-						{
-							transformation::coco::data::raw_x.clear();
-							for (std::size_t i = 0; i != this->best_variables.size(); ++i)
-							{
-								transformation::coco::data::raw_x.push_back(this->best_variables[i]);
-							}
-						}
+						// if (this->problem_type == "bbob")
+						// {
+						// 	transformation::coco::data::raw_x.clear();
+						// 	for (std::size_t i = 0; i != this->best_variables.size(); ++i)
+						// 	{
+						// 		transformation::coco::data::raw_x.push_back(this->best_variables[i]);
+						// 	}
+						// }
 						this->optimal[0] = internal_evaluate(this->best_variables);
 					}
 					else

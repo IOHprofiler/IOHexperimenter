@@ -31,19 +31,16 @@ namespace ioh
 				) override
 				{
 					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
-
 					const auto tmp_best_variables = std::make_unique<std::vector<double>>(n);
-					const auto lb = this->get_lowerbound();
-					const auto ub = this->get_upperbound();
 					for (auto i = 0; i < n; ++i)
 					{
 						if (xopt[i] < 0.0)
 						{
-							(*tmp_best_variables)[i] = lb[i];
+							(*tmp_best_variables)[i] = lower_bound_;
 						}
 						else
 						{
-							(*tmp_best_variables)[i] = ub[i];
+							(*tmp_best_variables)[i] = upper_bound_;
 						}
 					}
 					this->set_best_variables(*tmp_best_variables);
@@ -62,31 +59,17 @@ namespace ioh
 						base = sqrt(alpha);
 						exponent = static_cast<double>(static_cast<long>(i)) / (static_cast<double>(static_cast<long>(n)
 						) - 1);
-						if (transformation::coco::data::xopt[i] > 0.0)
-						{
+						if (xopt_[i] > 0.0)
 							si = pow(base, exponent);
-						}
 						else
-						{
 							si = -pow(base, exponent);
-						}
 						/* boundary handling */
-						if (x[i] * transformation::coco::data::xopt[i] < 25.0)
-						{
+						if (x[i] * xopt_[i] < 25.0)
 							result += 5.0 * fabs(si) - si * x[i];
-						}
 						else
-						{
-							result += 5.0 * fabs(si) - si * transformation::coco::data::xopt[i];
-						}
+							result += 5.0 * fabs(si) - si * xopt_[i];
 					}
 					return result;
-				}
-
-				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
-					const int transformation_id, const int instance_id) override
-				{
-					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
 				}
 							
 				static Linear_Slope* createInstance(int instance_id = DEFAULT_INSTANCE,

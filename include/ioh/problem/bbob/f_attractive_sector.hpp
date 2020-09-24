@@ -31,10 +31,9 @@ namespace ioh
 				                          const long rseed, const long n
 				) override
 				{
-					using namespace transformation::coco;
-					bbob2009_compute_xopt(xopt, rseed, n);
-					bbob2009_compute_rotation(rot1, rseed + 1000000, n);
-					bbob2009_compute_rotation(rot2, rseed, n);
+					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
+					transformation::coco::bbob2009_compute_rotation(rot1, rseed + 1000000, n);
+					transformation::coco::bbob2009_compute_rotation(rot2, rseed, n);
 					for (auto i = 0; i < n; ++i)
 					{
 						b[i] = 0.0;
@@ -54,18 +53,16 @@ namespace ioh
 				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
 				                               const int transformation_id, const int instance_id) override
 				{
-					using namespace transformation::coco;
-					transform_obj_oscillate_evaluate(y);
-					transform_obj_power_evaluate(y, 0.9);
-					transform_obj_shift_evaluate_function(y, fopt_);
+					transformation::coco::transform_obj_oscillate_evaluate(y);
+					transformation::coco::transform_obj_power_evaluate(y, 0.9);
+					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
 				}
 
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
 				                              const int instance_id) override
 				{
-					using namespace transformation::coco;
-					transform_vars_shift_evaluate_function(x, xopt_);
-					transform_vars_affine_evaluate_function(x, M_, b_);
+					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
+					transformation::coco::transform_vars_affine_evaluate_function(x, M_, b_);
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override
@@ -73,14 +70,10 @@ namespace ioh
 					auto result = 0.0;
 					for (size_t i = 0; i < x.size(); ++i)
 					{
-						if (transformation::coco::data::xopt[i] * x[i] > 0.0)
-						{
+						if (xopt_[i] * x[i] > 0.0)
 							result += 100.0 * 100.0 * x[i] * x[i];
-						}
 						else
-						{
 							result += x[i] * x[i];
-						}
 					}
 					return result;
 				}

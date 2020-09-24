@@ -75,24 +75,17 @@ namespace ioh
 					return 0.01 * (penalty + 418.9828872724339 - sum / static_cast<double>(n));
 				}
 
-				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
-					const int transformation_id, const int instance_id) override
-				{
-					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
-					
-				}
 
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
 					const int instance_id) override
 				{
-					using namespace transformation::coco;
-					transform_vars_x_hat_evaluate(x, rseed_);
-					transform_vars_scale_evaluate(x, 2);
-					transform_vars_z_hat_evaluate(x, xopt_);
-					transform_vars_shift_evaluate_function(x, positive_offset_);
-					transform_vars_conditioning_evaluate(x, 10.0);
-					transform_vars_shift_evaluate_function(x, negative_offset_);
-					transform_vars_scale_evaluate(x, 100);
+					transformation::coco::transform_vars_x_hat_evaluate(x, rseed_);
+					transformation::coco::transform_vars_scale_evaluate(x, 2);
+					transformation::coco::transform_vars_z_hat_evaluate(x, xopt_);
+					transformation::coco::transform_vars_shift_evaluate_function(x, positive_offset_);
+					transformation::coco::transform_vars_conditioning_evaluate(x, 10.0);
+					transformation::coco::transform_vars_shift_evaluate_function(x, negative_offset_);
+					transformation::coco::transform_vars_scale_evaluate(x, 100);
 				}
 
 				static Schwefel* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)

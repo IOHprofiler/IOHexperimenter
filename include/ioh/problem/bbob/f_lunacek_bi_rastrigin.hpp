@@ -73,7 +73,7 @@ namespace ioh
 					for (i = 0; i < n; ++i)
 					{
 						x_hat[i] = 2. * x[i];
-						if (transformation::coco::data::xopt[i] < 0.)
+						if (xopt_[i] < 0.)
 						{
 							x_hat[i] *= -1.;
 						}
@@ -86,7 +86,7 @@ namespace ioh
 						c1 = pow(sqrt(condition), static_cast<double>(i) / static_cast<double>(n - 1));
 						for (j = 0; j < n; ++j)
 						{
-							tmpvect[i] += c1 * transformation::coco::data::rot2[i][j] * (x_hat[j] - mu0);
+							tmpvect[i] += c1 * rot2_[i][j] * (x_hat[j] - mu0);
 						}
 					}
 					for (i = 0; i < n; ++i)
@@ -94,7 +94,7 @@ namespace ioh
 						z[i] = 0;
 						for (j = 0; j < n; ++j)
 						{
-							z[i] += transformation::coco::data::rot1[i][j] * tmpvect[j];
+							z[i] += rot1_[i][j] * tmpvect[j];
 						}
 					}
 					/* Computation core */
@@ -106,12 +106,6 @@ namespace ioh
 					}
 					return std::min(sum1, d * static_cast<double>(n) + s * sum2)
 						+ 10. * (static_cast<double>(n) - sum3) + 1e4 * penalty;
-				}
-
-				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
-					const int transformation_id, const int instance_id) override
-				{
-					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
 				}
 
 				static Lunacek_Bi_Rastrigin* createInstance(int instance_id = DEFAULT_INSTANCE,

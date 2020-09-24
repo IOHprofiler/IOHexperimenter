@@ -24,7 +24,6 @@ namespace ioh
 				Bueche_Rastrigin(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 					: bbob_base(4, "Bueche_Rastrigin", instance_id), raw_x_(dimension)
 				{
-					//TODO: This has to be called inside the child class need we to think of something here
 					set_number_of_variables(dimension);
 				}
 
@@ -36,9 +35,7 @@ namespace ioh
 				{
 					transformation::coco::bbob2009_compute_xopt(xopt, rseed, n);
 					for (auto i = 0; i < n; i += 2)
-					{
 						xopt[i] = fabs(xopt[i]);
-					}
 				}
 
 				double internal_evaluate(const std::vector<double>& x) override
@@ -56,20 +53,17 @@ namespace ioh
 				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
 					const int transformation_id, const int instance_id) override
 				{
-					using namespace transformation::coco;
-					transform_obj_shift_evaluate_function(y, fopt_);
-					transform_obj_penalize_evaluate(raw_x_, lower_bound_, upper_bound_,
-						penalty_factor_, y);
+					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
+					transformation::coco::transform_obj_penalize_evaluate(raw_x_, lower_bound_, upper_bound_, penalty_factor_, y);
 				}
 
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
 					const int instance_id) override
 				{
 					raw_x_ = x;
-					using namespace transformation::coco;
-					transform_vars_shift_evaluate_function(x, xopt_);
-					transform_vars_oscillate_evaluate_function(x);
-					transform_vars_brs_evaluate(x);
+					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
+					transformation::coco::transform_vars_oscillate_evaluate_function(x);
+					transformation::coco::transform_vars_brs_evaluate(x);
 				}
 
 				static Bueche_Rastrigin* createInstance(int instance_id = DEFAULT_INSTANCE,
