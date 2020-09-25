@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 
-if platform.system() == "Darwin":
+if True:#platform.system() == "Darwin":
     os.environ["CC"] = "clang"
     os.environ["CXX"] = "clang"
 
@@ -22,7 +22,8 @@ iohprofiler = Extension('_IOHprofiler',
     sources=[
         os.path.join("src", x)
         for x in os.listdir("src") if x.endswith(".cpp") or x.endswith(".i")
-    ]
+    ],
+    extra_compile_args=["-std=c++14"]
 )
 
 

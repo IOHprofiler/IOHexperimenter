@@ -3721,9 +3721,9 @@ DEFAULT_DIMENSION = _IOHprofiler.DEFAULT_DIMENSION
 
 MAX_BUFFER_SIZE = _IOHprofiler.MAX_BUFFER_SIZE
 
-Minimization = _IOHprofiler.Minimization
+IOH_optimization_type_Minimization = _IOHprofiler.IOH_optimization_type_Minimization
 
-Maximization = _IOHprofiler.Maximization
+IOH_optimization_type_Maximization = _IOHprofiler.IOH_optimization_type_Maximization
 
 
 def IOH_error(error_info):

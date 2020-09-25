@@ -36,7 +36,9 @@
 /// < Max buffer size
 #define MAX_BUFFER_SIZE 65534
 
-enum IOH_optimization_type {Minimization=0, Maximization=1};
+enum class IOH_optimization_type {
+  Minimization=0, Maximization=1
+};
 
 void IOH_error(std::string error_info);
 

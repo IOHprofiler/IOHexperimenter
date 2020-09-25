@@ -15,12 +15,29 @@
 ///   3. Recording evaluations as the best found solution is updated.
 ///   4. Recording evaluations at pre-defined points or/and with a static number for each exponential bucket.
 class IOHprofiler_observer {
+  int observer_interval; /// < variable for recording by a static interval.
+  bool observer_complete_flag; /// < variable for recording complete optimization process. 
+  bool observer_update_flag; /// < variable for recording when a better solution is found.
+ 
+  std::vector<int> observer_time_points; /// < variables for recording at pre-defined points.
+  size_t evaluations_value1; /// < intermediate variables for calculating points with 'observer_time_points'.
+  size_t time_points_index; /// < intermediate variables for calculating points with 'observer_time_points'.
+  int time_points_expi; /// < intermediate variables for calculating points with 'observer_time_points'.
+  int observer_time_points_exp_base1;
+
+  int observer_number_of_evaluations; /// < variables for recording with a pre-defined times in each exponential boxplot.
+  size_t evaluations_value2; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
+  int evaluations_expi; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
+  int observer_time_points_exp_base2;
+  
+  /// \todo Currently this is only for single objective optimization.
+  double current_best_fitness;
 public:
   IOHprofiler_observer() :
     observer_interval(0),
     observer_complete_flag(false),
     observer_update_flag(true),
-    observer_time_points({0}),
+    observer_time_points(0),
     evaluations_value1(1),
     time_points_index(0),
     time_points_expi(0),
@@ -65,25 +82,7 @@ public:
   
   virtual void track_problem(const IOHprofiler_problem<double> & problem) {}
   /// \todo Adding virtual functions for more IuputType IOHprofiler_problem.
-
-private:
-  int observer_interval; /// < variable for recording by a static interval.
-  bool observer_complete_flag; /// < variable for recording complete optimization process. 
-  bool observer_update_flag; /// < variable for recording when a better solution is found.
  
-  std::vector<int> observer_time_points; /// < variables for recording at pre-defined points.
-  size_t evaluations_value1; /// < intermediate variables for calculating points with 'observer_time_points'.
-  size_t time_points_index; /// < intermediate variables for calculating points with 'observer_time_points'.
-  int time_points_expi; /// < intermediate variables for calculating points with 'observer_time_points'.
-  int observer_time_points_exp_base1;
-
-  int observer_number_of_evaluations; /// < variables for recording with a pre-defined times in each exponential boxplot.
-  size_t evaluations_value2; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
-  int evaluations_expi; /// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
-  int observer_time_points_exp_base2;
-  
-  /// \todo Currently this is only for single objective optimization.
-  double current_best_fitness;
 };
 
 #endif // _IOHPROFILER_OBSERVER_H
