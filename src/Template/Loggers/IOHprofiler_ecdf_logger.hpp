@@ -161,8 +161,9 @@ void IOHprofiler_ecdf_logger<T>::do_log(const std::vector<double>& infos)
     }
 
     // If this target is worst than the domain.
-    if(   _range_evals.min() > evals or evals > _range_evals.max()
-       or _range_error.min() > err   or   err > _range_error.max() ) {
+    if(    evals < _range_evals.min() or _range_evals.max() < evals
+        or   err < _range_error.min() or _range_error.max() < err
+      ) {
         // Discard it.
         std::clog << "WARNING: target out of domain. "
                   << "value:" << err   << " [" << _range_error.min() << "," << _range_error.max() << "], "
@@ -176,21 +177,11 @@ void IOHprofiler_ecdf_logger<T>::do_log(const std::vector<double>& infos)
         size_t j_evals;
 
         // If the target is in domain
-        if(_range_error.min() <= err and err <= _range_error.max()) {
-            i_error = _range_error.index(err);
+        assert(_range_error.min() <= err and err <= _range_error.max());
+        i_error = _range_error.index(err);
 
-        // If the target is better than the domain
-        } else if( err < _range_error.min() ) {
-            i_error = 0;
-        }
-
-        // Same for evaluations...
-        if(_range_evals.min() <= evals and evals <= _range_evals.max()) {
-            j_evals = _range_evals.index(evals);
-
-        } else if( evals < _range_evals.min() ) {
-            j_evals = 0;
-        }
+        assert(_range_evals.min() <= evals and evals <= _range_evals.max());
+        j_evals = _range_evals.index(evals);
 
         // Fill up the dominated quadrant of the attainment matrix with ones
         // (either the upper/upper or lower/lower, depending on if it's
@@ -225,13 +216,13 @@ std::tuple<size_t, size_t, size_t> IOHprofiler_ecdf_logger<T>::size()
 }
 
 template<class T>
-IOHprofiler_Range<double> IOHprofiler_ecdf_logger<T>::error_range()
+IOHprofiler_Range<double>& IOHprofiler_ecdf_logger<T>::error_range()
 {
     return _range_error;
 }
 
 template<class T>
-IOHprofiler_Range<size_t> IOHprofiler_ecdf_logger<T>::eval_range() {
+IOHprofiler_Range<size_t>& IOHprofiler_ecdf_logger<T>::eval_range() {
     return _range_evals;
 }
 

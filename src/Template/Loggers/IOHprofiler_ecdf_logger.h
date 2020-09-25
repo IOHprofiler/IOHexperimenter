@@ -209,10 +209,10 @@ class IOHprofiler_ecdf_logger : public IOHprofiler_observer<T>
         std::tuple<size_t, size_t, size_t> size();
 
         /** Accessor to the range used for error targets in this logger instance. */
-        IOHprofiler_Range<double> error_range();
+        IOHprofiler_Range<double>& error_range();
 
         /** Accessor to the range used for evaluations targets in this logger instance. */
-        IOHprofiler_Range<size_t> eval_range();
+        IOHprofiler_Range<size_t>& eval_range();
 
         /** @} */
 
@@ -236,6 +236,13 @@ class IOHprofiler_ecdf_logger : public IOHprofiler_observer<T>
 
         /** @} */
 
+    private:
+        //! Default range for errors is logarithmic.
+        IOHprofiler_RangeLog<double> _default_range_error;
+
+        //! Default range for evaluations is logarithmic.
+        IOHprofiler_RangeLog<size_t> _default_range_evals;
+
     protected:
         /** Internal members  @{ */
 
@@ -253,13 +260,6 @@ class IOHprofiler_ecdf_logger : public IOHprofiler_observer<T>
 
         //! The whole main data structure.
         IOHprofiler_AttainSuite _ecdf_suite;
-
-    private:
-        //! Default range for errors is logarithmic.
-        IOHprofiler_RangeLog<double> _default_range_error;
-
-        //! Default range for evaluations is logarithmic.
-        IOHprofiler_RangeLog<size_t> _default_range_evals;
 
         /** @} */
 };
