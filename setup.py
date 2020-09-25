@@ -1,8 +1,15 @@
 import os
+import platform
 from setuptools import setup, Extension, find_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
+
+
+if platform.system() == "Darwin":
+    os.environ["CC"] = "clang"
+    os.environ["CXX"] = "clang"
+
 
 
 wrap_file = os.path.join("src", "IOHprofiler_wrap.cpp")
