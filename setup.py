@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 
-if True:#platform.system() == "Darwin":
+if platform.system() == "Darwin":
     os.environ["CC"] = "clang"
     os.environ["CXX"] = "clang"
 
@@ -17,7 +17,7 @@ if os.path.isfile(wrap_file):
     os.remove(wrap_file)
 
 
-iohprofiler = Extension('_IOHprofiler', 
+iohprofiler = Extension('IOHexperimenter._IOHprofiler', 
     swig_opts=["-c++", "-outdir", "IOHexperimenter"], 
     sources=[
         os.path.join("src", x)
@@ -29,7 +29,7 @@ iohprofiler = Extension('_IOHprofiler',
 
 setup(
     name="IOHexperimenter",
-    version="0.2.5",
+    version="0.2.6",
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
     packages=find_packages(),
