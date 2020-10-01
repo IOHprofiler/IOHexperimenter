@@ -115,22 +115,26 @@ void IOHprofiler_ecdf_logger<T>::activate_logger()
 }
 
 template<class T>
-void IOHprofiler_ecdf_logger<T>::track_suite(const IOHprofiler_suite<T>&)
+void IOHprofiler_ecdf_logger<T>::track_suite(IOHprofiler_suite<T>&)
 {
     reset();
 }
 
 template<class T>
-void IOHprofiler_ecdf_logger<T>::track_problem(const IOHprofiler_problem<T> & pb)
+void IOHprofiler_ecdf_logger<T>::track_problem(IOHprofiler_problem<T> & pb)
 {
     _current.pb     = pb.IOHprofiler_get_problem_id();
     _current.dim    = pb.IOHprofiler_get_number_of_variables();
     _current.ins    = pb.IOHprofiler_get_instance_id();
+    _current.run    = pb.IOHprofiler_get_run_id();
     _current.maxmin = pb.IOHprofiler_get_optimization_type();
     _current.opt    = pb.IOHprofiler_get_optimal();
     // mono-objective only
     assert(_current.opt.size() == 1);
+
     init_ecdf(_current);
+
+    pb.IOHprofiler_set_next_run_id(_current.run+1);
 }
 
 template<class T>
@@ -201,37 +205,6 @@ const IOHprofiler_AttainMat& IOHprofiler_ecdf_logger<T>::at(size_t problem_id, s
 }
 
 template<class T>
-IOHprofiler_AttainMat IOHprofiler_ecdf_logger<T>::at(size_t problem_id, size_t instance_id, size_t dim_id) const
-{
-    size_t runs;
-    IOHprofiler_AttainMat mat = _empty;
-    std::vector< std::vector< int >> c_mat(_range_error.size(),std::vector<int>( _range_evals.size(),0));
-    size_t ibound = _range_error.size();
-    size_t jbound = _range_evals.size();
-
-    assert(_ecdf_suite.count(problem_id) != 0);
-    assert(_ecdf_suite.at(problem_id).count(dim_id) != 0);
-    assert(_ecdf_suite.at(problem_id).at(dim_id).count(instance_id) != 0);
-
-    runs = _ecdf_suite.at(problem_id).at(dim_id).at(instance_id).size();
-    for(size_t i = 0; i < ibound; ++i) {
-        for(size_t j = 0; j < jbound; ++j) {
-            for(size_t r = 0; r < runs; ++r) {
-                c_mat[i][j] += _ecdf_suite.at(problem_id).at(dim_id).at(instance_id).at(r)[i][j]==true?1:0;
-            }  // for r
-        } // for j
-    } // for i
-    
-    for(size_t i = 0; i < ibound; ++i) {
-        for(size_t j = 0; j < jbound; ++j) {
-            mat[i][j] = (double)c_mat[i][j] / (double)runs > 0.5;
-        } // for j
-    }  // for i
-
-    return mat;
-}
-
-template<class T>
 std::tuple<size_t, size_t, size_t> IOHprofiler_ecdf_logger<T>::size()
 {
     return std::make_tuple(
@@ -271,11 +244,9 @@ void IOHprofiler_ecdf_logger<T>::init_ecdf( const Problem& cur )
     if(_ecdf_suite[cur.pb][cur.dim].count(cur.ins) == 0) {
         _ecdf_suite[cur.pb][cur.dim][cur.ins] = std::map< size_t, IOHprofiler_AttainMat >();
     }
+    _ecdf_suite[cur.pb][cur.dim][cur.ins][cur.run] = _empty;
     
-    _current_run = _ecdf_suite[cur.pb][cur.dim][cur.ins].size();
-    _ecdf_suite[cur.pb][cur.dim][cur.ins][_current_run] = _empty;
-    
-    assert(_ecdf_suite.at(cur.pb).at(cur.dim).at(cur.ins).at(_current_run).at(0).at(0) == 0);
+    assert(_ecdf_suite.at(cur.pb).at(cur.dim).at(cur.ins).at(cur.run).at(0).at(0) == 0);
 }
 
 template<class T>
@@ -284,8 +255,10 @@ IOHprofiler_AttainMat& IOHprofiler_ecdf_logger<T>::current_ecdf()
     assert(_ecdf_suite.count(_current.pb) != 0);
     assert(_ecdf_suite[_current.pb].count(_current.dim) != 0);
     assert(_ecdf_suite[_current.pb][_current.dim].count(_current.ins) != 0);
-    assert(_ecdf_suite[_current.pb][_current.dim][_current.ins].count(_current_run) != 0);
-    return _ecdf_suite[_current.pb][_current.dim][_current.ins][_current_run];
+    assert(_ecdf_suite[_current.pb][_current.dim][_current.ins].count(_current.run) != 0);
+    return _ecdf_suite[_current.pb][_current.dim][_current.ins][_current.run];
+
+
 }
 
 template<class T>

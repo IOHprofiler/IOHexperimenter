@@ -236,7 +236,7 @@ void IOHprofiler_csv_logger<T>::track_problem(const int problem_id, const int di
 
 
 template<class T>
-void IOHprofiler_csv_logger<T>::track_problem(const IOHprofiler_problem<T> & problem) {
+void IOHprofiler_csv_logger<T>::track_problem(IOHprofiler_problem<T> & problem) {
   // this->tracked_problem_int = nullptr;
   // this->tracked_problem_double = nullptr;
 

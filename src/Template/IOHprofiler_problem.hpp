@@ -130,6 +130,14 @@ template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_
   this->calc_optimal();
 }
 
+template <class InputType> std::size_t IOHprofiler_problem<InputType>::IOHprofiler_get_run_id() const {
+  return this->run_id;
+}
+
+template <class InputType> void IOHprofiler_problem<InputType>::IOHprofiler_set_next_run_id(std::size_t run_id) {
+  this->run_id = run_id;
+}
+
 template <class InputType> std::string IOHprofiler_problem<InputType>::IOHprofiler_get_problem_name() const {
   return this->problem_name;
 }

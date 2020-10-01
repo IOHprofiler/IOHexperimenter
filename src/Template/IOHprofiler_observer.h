@@ -22,9 +22,9 @@ public:
   /** API for subclasses @{ */
   using InputType = T;
 
-  virtual void track_problem(const IOHprofiler_problem<InputType> & problem) = 0;
+  virtual void track_problem(IOHprofiler_problem<InputType> & problem) = 0;
 
-  virtual void track_suite(const IOHprofiler_suite<T>& suite) = 0;
+  virtual void track_suite(IOHprofiler_suite<T>& suite) = 0;
 
   virtual void do_log(const std::vector<double> &log_info) = 0;
   /** }@ */

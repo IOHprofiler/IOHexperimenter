@@ -82,9 +82,10 @@ static std::ostream& operator<<(std::ostream& out, const IOHprofiler_AttainMat& 
 
 /** Type used to store all bi-dimensional attainment functions.
  *
- * First dimension is the problem id,
- * second dimension is the dimension id,
- * last dimension is the instance id.
+ * The first dimension is the problem id,
+ * the second dimension is the dimension id,
+ * the third dimension is the instance id,
+ * and the last dimension is the run id.
  * Every item is an IOHprofiler_AttainMat.
  */
 using IOHprofiler_AttainSuite =
@@ -134,6 +135,7 @@ class IOHprofiler_ecdf_logger : public IOHprofiler_observer<T>
             int pb;
             int dim;
             int ins;
+            size_t run;
             std::vector<double> opt;
             IOH_optimization_type maxmin;
         };
@@ -168,10 +170,10 @@ class IOHprofiler_ecdf_logger : public IOHprofiler_observer<T>
         void activate_logger();
 
         //! Not used, but part of the interface.
-        void track_suite(const IOHprofiler_suite<T>&);
+        void track_suite(IOHprofiler_suite<T>&);
 
         //! Initialize on the given problem.
-        void track_problem(const IOHprofiler_problem<T> & pb);
+        void track_problem(IOHprofiler_problem<T> & pb);
 
         /** Actually store information about the last evaluation.
          *
@@ -198,16 +200,6 @@ class IOHprofiler_ecdf_logger : public IOHprofiler_observer<T>
          * fourth index: run id
          */
         const IOHprofiler_AttainMat& at(size_t problem_id, size_t instance_id, size_t dim_id, size_t run_id) const;
-
-        /** Access an averaged attainment matrix of multiple runs on a problem
-         *
-         * @note Use the same indices order than IOHprofiler_problem.
-         *
-         * First index: problem id,
-         * second index: instance id,
-         * third index: dimension id.
-         */
-        IOHprofiler_AttainMat at(size_t problem_id, size_t instance_id, size_t dim_id) const;
 
         /** Returns the size of the computed data, in its internal order.
          *
@@ -258,9 +250,6 @@ class IOHprofiler_ecdf_logger : public IOHprofiler_observer<T>
 
         //! Currently targeted problem metadata.
         Problem _current;
-        
-        ///! The number of independent runs have been tested on _current problem.
-        int _current_run; 
 
         //! An attainment matrix filled with zeros, copied for each new problem/instance/dim.
         IOHprofiler_AttainMat _empty;

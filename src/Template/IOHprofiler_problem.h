@@ -27,7 +27,8 @@ template <class InputType> class IOHprofiler_problem
 public:
   IOHprofiler_problem(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) : 
     problem_id(DEFAULT_PROBLEM_ID), 
-    instance_id(instance_id), 
+    instance_id(instance_id),
+    run_id(1),
     maximization_minimization_flag(IOH_optimization_type::Maximization),
     number_of_variables(dimension), 
     number_of_objectives(1),
@@ -176,6 +177,10 @@ public:
   /// \param instance_id 
   void IOHprofiler_set_instance_id(int instance_id);
 
+  std::size_t IOHprofiler_get_run_id() const;
+
+  void IOHprofiler_set_next_run_id(std::size_t run_id);
+
   std::string IOHprofiler_get_problem_name() const;
 
   void IOHprofiler_set_problem_name(std::string problem_name);
@@ -262,7 +267,8 @@ public:
 private:
   int problem_id; /// < problem id, assigned as being added into a suite.
   int instance_id; /// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
-  
+  std::size_t run_id; /// < id of independent runs on the same instance.
+
   std::string problem_name;
   std::string problem_type;   /// todo. make it as enum.
 

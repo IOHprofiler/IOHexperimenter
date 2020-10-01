@@ -18,7 +18,7 @@ void IOHprofiler_observer_combine<T>::add( IOHprofiler_observer<T>& observer )
 }
 
 template<class T>
-void IOHprofiler_observer_combine<T>::track_suite(const IOHprofiler_suite<T>& suite)
+void IOHprofiler_observer_combine<T>::track_suite(IOHprofiler_suite<T>& suite)
 {
     for(auto& p : _observers) {
         p->track_suite(suite);
@@ -26,7 +26,7 @@ void IOHprofiler_observer_combine<T>::track_suite(const IOHprofiler_suite<T>& su
 }
 
 template<class T>
-void IOHprofiler_observer_combine<T>::track_problem(const IOHprofiler_problem<T> & pb)
+void IOHprofiler_observer_combine<T>::track_problem(IOHprofiler_problem<T> & pb)
 {
     for(auto& p : _observers) {
         p->track_problem(pb);

@@ -59,9 +59,9 @@ class IOHprofiler_observer_combine : public IOHprofiler_observer<T>
 
         /** Observer interface @{ */
 
-        void track_suite(const IOHprofiler_suite<T>& suite);
+        void track_suite(IOHprofiler_suite<T>& suite);
 
-        void track_problem(const IOHprofiler_problem<T> & pb);
+        void track_problem(IOHprofiler_problem<T> & pb);
 
         void do_log(const std::vector<double> &logger_info);
 

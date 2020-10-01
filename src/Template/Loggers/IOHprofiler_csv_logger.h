@@ -55,11 +55,11 @@ public:
   void track_problem(const int problem_id, const int dimension, const int instance, const std::string problem_name, const IOH_optimization_type maximization_minimization_flag);
 
 
-  void track_problem(const IOHprofiler_problem<T> & problem);
+  void track_problem(IOHprofiler_problem<T> & problem);
 
   void track_suite(std::string suite_name);
 
-  void track_suite(const IOHprofiler_suite<T>& suite)
+  void track_suite(IOHprofiler_suite<T>& suite)
   {
     this->track_suite(suite.IOHprofiler_suite_get_suite_name());
   }
