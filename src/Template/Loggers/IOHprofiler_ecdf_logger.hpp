@@ -44,19 +44,31 @@ size_t IOHprofiler_RangeLinear<R>::index( double x )
 }
 
 
-/***** IOHprofiler_RangeLog ****/
+/***** IOHprofiler_RangeLog_Min ****/
 
 template<class R>
-IOHprofiler_RangeLog<R>::IOHprofiler_RangeLog(R min, R max, size_t size) :
+IOHprofiler_RangeLog_Min<R>::IOHprofiler_RangeLog_Min(R min, R max, size_t size) :
     IOHprofiler_Range<R>(min,max,size)
 { }
 
 template<class R>
-size_t IOHprofiler_RangeLog<R>::index( double x )
+size_t IOHprofiler_RangeLog_Min<R>::index( double x )
 {
     return std::floor( std::log10(1+(x-this->min())) / std::log10(1+this->length()) * this->size() );
 }
 
+/***** IOHprofiler_RangeLog_Max ****/
+
+template<class R>
+IOHprofiler_RangeLog_Max<R>::IOHprofiler_RangeLog_Max(R min, R max, size_t size) :
+    IOHprofiler_Range<R>(min,max,size)
+{ }
+
+template<class R>
+size_t IOHprofiler_RangeLog_Max<R>::index( double x )
+{
+    return this->size() - std::floor( std::log10(1+(this->max()-x)) / std::log10(1+this->length()) * this->size() );
+}
 
 /***** IOHprofiler_AttainMat *****/
 

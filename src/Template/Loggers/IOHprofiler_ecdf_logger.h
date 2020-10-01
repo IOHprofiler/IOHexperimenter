@@ -50,13 +50,24 @@ class IOHprofiler_RangeLinear : public IOHprofiler_Range<R>
         virtual size_t index( double x );
 };
 
-/** Logarithmic (base 10) range.
+/** Logarithmic (base 10) range for minimization.
  */
 template<class R>
-class IOHprofiler_RangeLog : public IOHprofiler_Range<R>
+class IOHprofiler_RangeLog_Min : public IOHprofiler_Range<R>
 {
     public:
-        IOHprofiler_RangeLog(R min, R max, size_t size);
+        IOHprofiler_RangeLog_Min(R min, R max, size_t size);
+
+        virtual size_t index( double x );
+};
+
+/** Logarithmic (base 10) range for maximization.
+ */
+template<class R>
+class IOHprofiler_RangeLog_Max : public IOHprofiler_Range<R>
+{
+    public:
+        IOHprofiler_RangeLog_Max(R min, R max, size_t size);
 
         virtual size_t index( double x );
 };
@@ -259,10 +270,10 @@ class IOHprofiler_ecdf_logger : public IOHprofiler_observer<T>
 
     private:
         //! Default range for errors is logarithmic.
-        IOHprofiler_RangeLog<double> _default_range_error;
+        IOHprofiler_RangeLog_Min<double> _default_range_error;
 
         //! Default range for evaluations is logarithmic.
-        IOHprofiler_RangeLog<size_t> _default_range_evals;
+        IOHprofiler_RangeLog_Min<size_t> _default_range_evals;
 
         /** @} */
 };

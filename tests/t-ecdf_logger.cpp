@@ -24,8 +24,8 @@ int main()
 
     size_t ecdf_width = 20;
     using Logger = IOHprofiler_ecdf_logger<BBOB_suite::InputType>;
-    IOHprofiler_RangeLog<double> error(0,6e7,ecdf_width);
-    IOHprofiler_RangeLog<size_t> evals(0,sample_size,ecdf_width);
+    IOHprofiler_RangeLog_Min<double> error(0,6e7,ecdf_width);
+    IOHprofiler_RangeLog_Min<size_t> evals(0,sample_size,ecdf_width);
     Logger logger(error, evals);
 
     logger.activate_logger();
