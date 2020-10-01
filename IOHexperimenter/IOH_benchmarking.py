@@ -29,9 +29,10 @@ def _run_default(alg, fid, dim, iid, precision, suite, repetitions, observing,
 
     for rep in range(repetitions):
         np.random.seed = rep
+        if rep > 0:
+            f.reset()
         alg(f)
         print(fid, f.evaluations, f.best_so_far_precision)
-        f.reset()
 
     f.clear_logger()
     
@@ -57,9 +58,10 @@ def _run_custom(alg, function, fname, dim, suite, repetitions, observing,
 
     for rep in range(repetitions):
         np.random.seed = rep
+        if rep > 0:
+            f.reset()
         alg(f)
         print(f.fid, f.evaluations, f.best_so_far_precision)
-        f.reset()
     f.clear_logger()
                         
 class IOHexperimenter():
