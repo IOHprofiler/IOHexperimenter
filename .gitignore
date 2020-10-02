@@ -15,4 +15,3 @@ Makefile
 __pycache__
 Pipfile
 
-src/IOHprofiler_wrap.cpp

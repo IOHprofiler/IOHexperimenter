@@ -12,18 +12,17 @@ if platform.system() == "Darwin":
 
 
 
-wrap_file = os.path.join("src", "IOHprofiler_wrap.cpp")
-if os.path.isfile(wrap_file):
-    os.remove(wrap_file)
+has_wrap_file = os.path.isfile(os.path.join("src", "IOHprofiler_wrap.cpp"))
 
 
 iohprofiler = Extension('IOHexperimenter._IOHprofiler', 
-    swig_opts=["-c++", "-outdir", "IOHexperimenter"], 
+    swig_opts=(None if has_wrap_file else 
+        ["-c++", "-outdir", "IOHexperimenter"]), 
     sources=[
         os.path.join("src", x)
-        for x in os.listdir("src") if x.endswith(".cpp") or x.endswith(".i")
-    ],
-    extra_compile_args=["-std=c++14"]
+        for x in os.listdir("src") if x.endswith(".cpp") or (
+            x.endswith(".i") and not has_wrap_file)
+    ]
 )
 
 
