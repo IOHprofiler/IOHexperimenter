@@ -15,20 +15,21 @@ if platform.system() == "Darwin":
 has_wrap_file = os.path.isfile(os.path.join("src", "IOHprofiler_wrap.cpp"))
 sources = [
      os.path.join("src", x)
-     for x in os.listdir("src") if x.endswith(".cpp") or (
-        x.endswith(".i") and not has_wrap_file)
+     for x in os.listdir("src") 
+     if x.endswith(".cpp") or (x.endswith(".i") and not has_wrap_file)
 ]
 
 iohprofiler = Extension('IOHexperimenter._IOHprofiler', 
     swig_opts=(None if has_wrap_file else 
         ["-c++", "-outdir", "IOHexperimenter"]), 
-    sources=sources
+    sources=sources,
+    include_dirs=["src"]
 )
 
 
 setup(
     name="IOHexperimenter",
-    version="0.2.7",
+    version="0.2.8",
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
     packages=find_packages(),
