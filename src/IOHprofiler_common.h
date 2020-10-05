@@ -36,8 +36,9 @@
 /// < Max buffer size
 #define MAX_BUFFER_SIZE 65534
 
-enum class IOH_optimization_type {
-  Minimization=0, Maximization=1
+enum IOH_optimization_type {
+  Minimization=0, 
+  Maximization=1
 };
 
 void IOH_error(std::string error_info);
@@ -86,7 +87,7 @@ bool compareObjectives(const std::vector<valueType> &v1, const std::vector<value
     IOH_error("Two compared objective vector must be with the same size\n");
     return false;
   }
-  if (optimization_type == IOH_optimization_type::Maximization) {
+  if (optimization_type == Maximization) {
     for (int i = 0; i != n; ++i)
     {
       if (v1[i] <= v2[i]) {
@@ -113,7 +114,7 @@ bool compareObjectives(const std::vector<valueType> &v1, const std::vector<value
 /// for multi-objective optimization.
 template<class valueType>
 bool compareObjectives(const valueType v1, const valueType v2, const IOH_optimization_type optimization_type){
-  if (optimization_type == IOH_optimization_type::Maximization) {
+  if (optimization_type == Maximization) {
     if (v1 <= v2){
       return false;
     }
