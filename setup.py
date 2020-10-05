@@ -9,8 +9,11 @@ with open("README.md", "r") as fh:
 if platform.system() == "Darwin":
     os.environ["CC"] = "clang"
     os.environ["CXX"] = "clang"
+    os.environ["ARCHFLAGS"] = "-std=c++14"
 
-
+extra_compile_args = None if platform.system() == 'Windows' else [
+    "-std=c++14"
+]
 
 has_wrap_file = os.path.isfile(os.path.join("src", "IOHprofiler_wrap.cpp"))
 sources = [
@@ -23,7 +26,8 @@ iohprofiler = Extension('IOHexperimenter._IOHprofiler',
     swig_opts=(None if has_wrap_file else 
         ["-c++", "-outdir", "IOHexperimenter"]), 
     sources=sources,
-    include_dirs=["src"]
+    include_dirs=["src"],
+    extra_compile_args=extra_compile_args
 )
 
 
