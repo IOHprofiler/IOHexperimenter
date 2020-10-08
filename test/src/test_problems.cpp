@@ -81,7 +81,7 @@ TEST(suite, bbob)
 {
 	ioh::suite::bbob bbob;
 	std::shared_ptr<ioh::problem::bbob::bbob_base> problem;
-	std::list<double> results = {
+	auto results = std::list<double>({
 		85.3339,
 		4670466.7111,
 		-351.7320,
@@ -106,7 +106,7 @@ TEST(suite, bbob)
 		-924.8833,
 		21.7005,
 		177.9893	
-	};
+	});
 	while ((problem = bbob.get_next_problem()) != nullptr)
 	{
 		ASSERT_DOUBLE_EQ(test_eval(problem), results.front());
