@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "ioh.hpp"
 #include <cmath>
-#include <stack>
+#include <list>
 
 
 double test_eval(std::shared_ptr<ioh::problem::bbob::bbob_base> f)
