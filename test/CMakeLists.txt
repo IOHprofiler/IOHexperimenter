@@ -4,7 +4,7 @@
 ##
 add_subdirectory(vendor/googletest EXCLUDE_FROM_ALL)
 
-add_executable(test_${PROJECT_NAME} "src/test_ioh.cpp" "src/test_problems.cpp")
+add_executable(test_${PROJECT_NAME} "src/test_ioh.cpp" "src/test_problems.cpp" "src/test_bbob_problem.cpp"  "src/test_pbo_problem.cpp")
 
 target_include_directories(test_${PROJECT_NAME}
 PRIVATE
@@ -13,5 +13,6 @@ PRIVATE
 
 target_link_libraries(test_${PROJECT_NAME}
 PRIVATE
-    ${PROJECT_NAME} gtest gtest_main
+    ${PROJECT_NAME} gtest gtest_main 
 )
+ 

@@ -179,11 +179,11 @@ class DerivedDerived2 : public Derived
 
 int main()
 {
-	// auto suite = std::make_shared<ioh::suite::bbob>();
-	// auto logger = std::make_shared<ioh::logger::csv>("C:\\Users\\Jacob\\Desktop", "tmp", "crazyalg", "crazyinfo");
-	// auto experimenter = ioh::experiment::experimenter<ioh::problem::bbob::bbob_base>(suite, logger, algo);
-	// experimenter._set_independent_runs(10);
-	// experimenter._run();
+	auto suite = std::make_shared<ioh::suite::bbob>();
+	auto logger = std::make_shared<ioh::logger::csv>("C:\\Users\\Jacob\\Desktop", "tmp", "crazyalg", "crazyinfo");
+	auto experimenter = ioh::experiment::experimenter<ioh::problem::bbob::bbob_base>(suite, logger, algo);
+	experimenter._set_independent_runs(10);
+	experimenter._run();
 
 	// DerivedDerived d;
 	// d.x();
@@ -191,4 +191,5 @@ int main()
 	// d2.x();
 	// ;
 	// vprint(minus_one);
+	// run_bbob_suite();
 }

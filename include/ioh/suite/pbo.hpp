@@ -17,6 +17,7 @@ namespace ioh
                 set_suite_dimension({100});
                 set_suite_name("PBO");
                 registerProblem();
+                loadProblem();
             }
 
 
