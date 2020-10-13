@@ -1,10 +1,11 @@
 #include <vector>
 #include <fstream>
 #include <string>
-#include "ioh.hpp"
-#include <gtest/gtest.h>
 
+#include <gtest/gtest.h>
+#include "ioh.hpp"
 #include "utils.hpp"
+
 
 using namespace std;
 
@@ -26,7 +27,7 @@ TEST(PBOfitness, dimension16) {
       tmp = split(s," ");
       funcId = stoi(tmp[0]);
       insId = stoi(tmp[1]);
-      x =  stringToVectorInt(tmp[2]);
+      x =  string_to_vector_int(tmp[2]);
       f = stod(tmp[3]);
       
       problem = pbo.get_problem(funcId,insId,16);
@@ -53,7 +54,7 @@ TEST(PBOfitness, dimension100) {
       tmp = split(s," ");
       funcId = stoi(tmp[0]);
       insId = stoi(tmp[1]);
-      x =  stringToVectorInt(tmp[2]);
+      x = string_to_vector_int(tmp[2]);
       f = stod(tmp[3]);
       
       problem = pbo.get_problem(funcId,insId,100);

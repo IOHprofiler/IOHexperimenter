@@ -27,7 +27,7 @@ TEST(BBOBfitness, dimension5) {
       tmp = split(s," ");
       funcId = stoi(tmp[0]);
       insId = stoi(tmp[1]);
-      x =  stringToVectorDouble(tmp[2]);
+      x =  string_to_vector_double(tmp[2]);
       f = stod(tmp[3]);
       
       problem = bbob.get_problem(funcId,insId,5);
@@ -54,7 +54,7 @@ TEST(BBOBfitness, dimension20) {
       tmp = split(s," ");
       funcId = stoi(tmp[0]);
       insId = stoi(tmp[1]);
-      x =  stringToVectorDouble(tmp[2]);
+      x = string_to_vector_double(tmp[2]);
       f = stod(tmp[3]);
       
       problem = bbob.get_problem(funcId,insId,20);

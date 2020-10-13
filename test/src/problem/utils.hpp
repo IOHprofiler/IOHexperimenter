@@ -1,21 +1,10 @@
-#ifndef _UTILS_HPP_
-#define _UTILS_HPP_
+#pragma once
 
 #include <vector>
 #include <fstream>
 #include <string>
 
 using namespace std;
-
-static vector<int> stringToVectorInt(string s) {
-  vector<int> x;
-  int i = 0;
-  while(i != s.size()) {
-    x.push_back(s[i] - '0');
-    i++;
-  }
-  return x;
-}
 
 static vector<string> split(const string &str, const string &pattern)
 {
@@ -35,8 +24,8 @@ static vector<string> split(const string &str, const string &pattern)
     }
     return res;
 }
-
-static vector<double> stringToVectorDouble(string s) {
+ 
+static vector<double> string_to_vector_double(string s) {
   vector<double> x;
   vector<string> tmp;
   int i = 0;
@@ -49,4 +38,13 @@ static vector<double> stringToVectorDouble(string s) {
   return x;
 }
 
-#endif //_UTILS_HPP_
+static vector<int> string_to_vector_int(string s) {
+    vector<int> x;
+    int i = 0;
+    while (i != s.size()) {
+        x.push_back(s[i] - '0');
+        i++;
+    }
+    return x;
+}
+
