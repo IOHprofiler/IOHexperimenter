@@ -58,7 +58,7 @@ namespace ioh
 					transformation::coco::transform_vars_conditioning_evaluate(x, 10.0);
 				}
 
-				static Rastrigin* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Rastrigin* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 				{
 					return new Rastrigin(instance_id, dimension);
 				}

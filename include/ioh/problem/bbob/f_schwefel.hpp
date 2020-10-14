@@ -83,7 +83,7 @@ namespace ioh
 					transformation::coco::transform_vars_scale_evaluate(x, 100);
 				}
 
-				static Schwefel* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Schwefel* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 				{
 					return new Schwefel(instance_id, dimension);
 				}

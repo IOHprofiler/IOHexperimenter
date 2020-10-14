@@ -108,7 +108,7 @@ namespace ioh
 					// Needs to override default beviour
 				}
 				
-				static Step_Ellipsoid* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Step_Ellipsoid* create(int instance_id = DEFAULT_INSTANCE,
 				                                      int dimension = DEFAULT_DIMENSION)
 				{
 					return new Step_Ellipsoid(instance_id, dimension);

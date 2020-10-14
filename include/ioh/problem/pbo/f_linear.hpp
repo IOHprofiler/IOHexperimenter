@@ -35,7 +35,7 @@ namespace ioh
 					return (double)result;
 				}
 
-				static Linear* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+				static Linear* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
 					return new Linear(instance_id, dimension);
 				}
 			};

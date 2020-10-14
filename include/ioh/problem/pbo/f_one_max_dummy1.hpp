@@ -40,7 +40,7 @@ namespace ioh
                     return result;
                 }
 
-                static OneMax_Dummy1* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+                static OneMax_Dummy1* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
                     return new OneMax_Dummy1(instance_id, dimension);
                 }
             };

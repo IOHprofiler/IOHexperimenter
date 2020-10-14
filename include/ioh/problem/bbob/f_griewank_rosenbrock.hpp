@@ -66,7 +66,7 @@ namespace ioh
 				}
 
 
-				static Griewank_RosenBrock* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Griewank_RosenBrock* create(int instance_id = DEFAULT_INSTANCE,
 				                                           int dimension = DEFAULT_DIMENSION)
 				{
 					return new Griewank_RosenBrock(instance_id, dimension);

@@ -56,7 +56,7 @@ namespace ioh
                     return (double)result;
                 }
 
-                static LABS* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+                static LABS* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
                     return new LABS(instance_id, dimension);
                 }
             };

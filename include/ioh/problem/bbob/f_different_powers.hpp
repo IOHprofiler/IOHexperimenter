@@ -50,7 +50,7 @@ namespace ioh
 					return sqrt(sum);
 				}
 
-				static Different_Powers* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Different_Powers* create(int instance_id = DEFAULT_INSTANCE,
 				                                        int dimension = DEFAULT_DIMENSION)
 				{
 					return new Different_Powers(instance_id, dimension);

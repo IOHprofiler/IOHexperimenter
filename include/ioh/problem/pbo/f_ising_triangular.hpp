@@ -49,7 +49,7 @@ namespace ioh
                     return (double)result;
                 }
 
-                static Ising_Triangular* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+                static Ising_Triangular* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
                     return new Ising_Triangular(instance_id, dimension);
                 }
                 

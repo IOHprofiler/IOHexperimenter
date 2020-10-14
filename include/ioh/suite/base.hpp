@@ -19,28 +19,11 @@ namespace ioh
 		template <typename ProblemType>
 		class base : public ProblemType, public std::vector<std::shared_ptr<ProblemType>>
 		{
-			typedef std::shared_ptr<ProblemType> problem_ptr;
-
-			std::string suite_name;
-			int number_of_problems;
-			int number_of_instances;
-			int number_of_dimensions;
-
-			std::vector<int> problem_id;
-			std::vector<int> instance_id;
-			std::vector<int> dimension;
-
-			std::map<int, std::string> problem_id_name_map;
-			std::map<std::string, int> problem_name_id_map;
-
-			size_t problem_list_index;
-			size_t size_of_problem_list;
-			bool get_problem_flag;
-			bool load_problem_flag;
-
-			problem_ptr current_problem;
+			
 		public:
-			base(std::vector<int> problem_id = std::vector<int>(0), std::vector<int> instance_id = std::vector<int>(0),
+			typedef std::shared_ptr<ProblemType> problem_ptr;
+			base(std::vector<int> problem_id = std::vector<int>(0),
+				 std::vector<int> instance_id = std::vector<int>(0),
 			     std::vector<int> dimension = std::vector<int>(0)) :
 				suite_name("no suite"),
 				problem_id(problem_id),
@@ -67,12 +50,13 @@ namespace ioh
 			}
 
 			/// \fn loadProblems()
-			/// \brief Allocating memeory and creating instances of problems to be included in the suite.
+			/// \brief Allocating memory and creating instances of problems to be included in the suite.
 			///
 			/// Before acquiring a problem from the suite, this function must be invoked.
 			/// Otherwise the list of problem is empty.
 			void loadProblem()
 			{
+				
 				if (this->size() != 0)
 				{
 					this->clear();
@@ -87,6 +71,7 @@ namespace ioh
 					{
 						for (auto h = 0; h != this->number_of_instances; ++h)
 						{
+							
 							problem_ptr p = get_problem(this->problem_id_name_map[this->problem_id[i]],
 							                            this->instance_id[h],
 							                            this->dimension[j]);
@@ -106,9 +91,7 @@ namespace ioh
 			problem_ptr get_next_problem()
 			{
 				if (this->load_problem_flag == false)
-				{
 					this->loadProblem();
-				}
 
 				if (this->size_of_problem_list == 0)
 				{
@@ -117,18 +100,13 @@ namespace ioh
 				}
 
 				if (this->problem_list_index == this->size_of_problem_list - 1 && this->get_problem_flag == true)
-				{
 					return nullptr;
-				}
 
 				if (this->get_problem_flag == false)
-				{
 					this->get_problem_flag = true;
-				}
 				else
-				{
 					++this->problem_list_index;
-				}
+
 				this->current_problem = (*this)[problem_list_index];
 
 				this->current_problem->reset_problem();
@@ -142,19 +120,30 @@ namespace ioh
 			problem_ptr get_current_problem()
 			{
 				if (this->load_problem_flag == false)
-				{
 					this->loadProblem();
-				}
 
 				if (this->get_problem_flag == false)
-				{
 					this->get_problem_flag = true;
-				}
+				
 				this->current_problem = (*this)[this->problem_list_index];
 				this->current_problem->reset_problem();
 				return this->current_problem;
 			}
 
+			template<typename P, typename T>
+			void register_problem(const std::string name, const int id)
+			{
+				common::register_in_factory<P, T, int, int> problem(name);
+				this->mapIDTOName(id, name);
+
+			}
+
+			void check_parameter_bounds(std::vector<int> ids, const int lb, const int ub)
+			{
+				for (const auto &e: ids)
+					if (e < lb || e > ub)
+						common::log::error("problem_id " + std::to_string(e) + " is not in " + get_suite_name());
+			}
 
 			/// \fn Problem_ptr get_next_problem()
 			/// \brief An interface of requesting problems in suite.
@@ -163,12 +152,14 @@ namespace ioh
 			/// without concerning the order of testing problems.
 			problem_ptr get_problem(std::string problem_name, int instance, int dimension)
 			{
-				problem_ptr p = common::genericGenerator<ProblemType>::instance().create(problem_name);
+
+				problem_ptr p = common::factory<ProblemType, int, int>::get().create(problem_name, instance, dimension);
 				assert(p != nullptr);
-				p->reset_problem();
-				p->set_problem_id(this->problem_name_id_map[problem_name]);
-				p->set_instance_id(instance);
-				p->set_number_of_variables(dimension);
+				//TODO: check this, move stuff to the constructor
+				// p->reset_problem();
+				// p->set_problem_id(this->problem_name_id_map[problem_name]);
+				// p->set_instance_id(instance);
+				// p->set_number_of_variables(dimension);
 				return p;
 			}
 
@@ -179,14 +170,8 @@ namespace ioh
 			/// without concerning the order of testing problems.
 			problem_ptr get_problem(int problem_id, int instance, int dimension)
 			{
-				problem_ptr p = common::genericGenerator<ProblemType>::instance().create(
-					this->problem_id_name_map[problem_id]);
-				assert(p != nullptr);
-				p->reset_problem();
-				p->set_problem_id(problem_id);
-				p->set_instance_id(instance);
-				p->set_number_of_variables(dimension);
-				return p;
+				auto problem_name = this->problem_id_name_map[problem_id];
+				return get_problem(problem_name, instance, dimension);
 			}
 
 			int get_number_of_problems() const
@@ -267,6 +252,25 @@ namespace ioh
 				problem_id_name_map[id] = name;
 				problem_name_id_map[name] = id;
 			}
+		private:
+			std::string suite_name;
+			int number_of_problems;
+			int number_of_instances;
+			int number_of_dimensions;
+
+			std::vector<int> problem_id;
+			std::vector<int> instance_id;
+			std::vector<int> dimension;
+
+			std::map<int, std::string> problem_id_name_map;
+			std::map<std::string, int> problem_name_id_map;
+
+			size_t problem_list_index;
+			size_t size_of_problem_list;
+			bool get_problem_flag;
+			bool load_problem_flag;
+
+			problem_ptr current_problem;
 		};
 	}
 }

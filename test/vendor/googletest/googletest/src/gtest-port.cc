@@ -530,7 +530,7 @@ void ThreadWithParamBase::Join() {
 
 // Maps a thread to a set of ThreadIdToThreadLocals that have values
 // instantiated on that thread and notifies them when the thread exits.  A
-// ThreadLocal instance is expected to persist until all threads it has
+// ThreadLocal get is expected to persist until all threads it has
 // values on have terminated.
 class ThreadLocalRegistryImpl {
  public:

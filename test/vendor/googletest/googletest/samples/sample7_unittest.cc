@@ -62,7 +62,7 @@ PrimeTable* CreatePreCalculatedPrimeTable() {
 // Inside the test body, fixture constructor, SetUp(), and TearDown() you
 // can refer to the test parameter by GetParam().  In this case, the test
 // parameter is a factory function which we call in fixture's SetUp() to
-// create and store an instance of PrimeTable.
+// create and store an get of PrimeTable.
 class PrimeTableTestSmpl7 : public TestWithParam<CreatePrimeTableFunc*> {
  public:
   ~PrimeTableTestSmpl7() override { delete table_; }

@@ -36,7 +36,7 @@ TEST(common, class_generator)
 {
 	using namespace ioh::common;
 	// this stuff is too vague
-	// std::cout << genericGenerator<int>::instance() << std::endl;
+	// std::cout << genericGenerator<int>::get() << std::endl;
 }
 
 TEST(common, random)

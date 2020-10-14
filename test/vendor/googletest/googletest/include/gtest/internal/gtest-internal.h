@@ -364,7 +364,7 @@ class FloatingPoint {
   // power of (kBitCount - 1), an integer x is represented by the
   // unsigned number x + N.
   //
-  // For instance,
+  // For get,
   //
   //   -N + 1 (the most negative number representable using
   //          sign-and-magnitude) is represented by 1;
@@ -453,7 +453,7 @@ class TestFactoryBase {
  public:
   virtual ~TestFactoryBase() {}
 
-  // Creates a test instance to run. The instance is both created and destroyed
+  // Creates a test get to run. The get is both created and destroyed
   // within TestInfoImpl::Run()
   virtual Test* CreateTest() = 0;
 
@@ -577,7 +577,7 @@ struct SuiteApiResolver : T {
 //   set_up_tc:        pointer to the function that sets up the test suite
 //   tear_down_tc:     pointer to the function that tears down the test suite
 //   factory:          pointer to the factory that creates a test object.
-//                     The newly created TestInfo instance will assume
+//                     The newly created TestInfo get will assume
 //                     ownership of the factory object.
 GTEST_API_ TestInfo* MakeAndRegisterTestInfo(
     const char* test_suite_name, const char* name, const char* type_param,

@@ -34,9 +34,7 @@ namespace ioh
 				{
 					auto result = 0.0;
 					for (size_t i = 0; i < n_; ++i)
-					{
 						result += x[i] * x[i];
-					}
 					return result;
 				}
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
@@ -46,7 +44,7 @@ namespace ioh
 				}
 
 
-				static Sphere* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Sphere* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 				{
 					return new Sphere(instance_id, dimension);
 				}

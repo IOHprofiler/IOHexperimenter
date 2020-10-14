@@ -101,7 +101,7 @@ namespace ioh
 					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
 
-				static Weierstrass* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Weierstrass* create(int instance_id = DEFAULT_INSTANCE,
 				                                   int dimension = DEFAULT_DIMENSION)
 				{
 					return new Weierstrass(instance_id, dimension);

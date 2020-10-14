@@ -7,35 +7,29 @@
 #define NOMINMAX
 #include <windows.h>
 #include <io.h>
-constexpr static char* path_separator = "\\";
 #elif defined(__gnu_linux__)
 	#include <linux/limits.h>
 	#include <sys/stat.h>
 	#include <sys/types.h>
 	#include <unistd.h>
-constexpr static char* path_separator = "/";
 #elif defined(__APPLE__)
 	#include <sys/stat.h>
 	#include <sys/syslimits.h>
 	#include <sys/types.h>
 	#include <unistd.h>
-constexpr static char* path_separator = "/";
 #elif defined(__FreeBSD__)
 	#include <limits.h>
 	#include <sys/stat.h>
 	#include <sys/types.h>
 	#include <unistd.h>
-constexpr static char* path_separator = "/";
 #elif (defined(__sun) || defined(sun)) && (defined(__SVR4) || defined(__svr4__))
 	#include <limits.h>
 	#include <sys/stat.h>
 	#include <sys/types.h>
 	#include <unistd.h>
-constexpr static char* path_separator = "/";
 #else
 	#include <sys/stat.h>
 	#include <unistd.h>
-constexpr static char* path_separator = "/";
 #endif
 
 /* Definitions needed for creating and removing directories */

@@ -33,7 +33,7 @@ namespace ioh
                     return (double)result;
                 }
 
-                static OneMax* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+                static OneMax* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
                     return new OneMax(instance_id, dimension);
                 }
 

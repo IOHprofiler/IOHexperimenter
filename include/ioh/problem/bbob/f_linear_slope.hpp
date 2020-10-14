@@ -67,7 +67,7 @@ namespace ioh
 					return result;
 				}
 							
-				static Linear_Slope* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Linear_Slope* create(int instance_id = DEFAULT_INSTANCE,
 				                                    int dimension = DEFAULT_DIMENSION)
 				{
 					return new Linear_Slope(instance_id, dimension);

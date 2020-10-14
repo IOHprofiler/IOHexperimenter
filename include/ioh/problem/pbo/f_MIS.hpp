@@ -82,7 +82,7 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static MIS* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static MIS* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 				{
 					return new MIS(instance_id, dimension);
 				}

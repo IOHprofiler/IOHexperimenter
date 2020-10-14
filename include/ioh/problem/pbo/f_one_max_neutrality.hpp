@@ -39,7 +39,7 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static OneMax_Neutrality* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static OneMax_Neutrality* create(int instance_id = DEFAULT_INSTANCE,
 				                                         int dimension = DEFAULT_DIMENSION)
 				{
 					return new OneMax_Neutrality(instance_id, dimension);

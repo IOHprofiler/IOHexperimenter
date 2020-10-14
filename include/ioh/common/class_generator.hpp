@@ -8,85 +8,59 @@ namespace ioh
 {
 	namespace common
 	{
-		typedef std::string defaultIDKeyType;
-
-		template <class manufacturedObj>
-		class genericGenerator
+		template <class ChildType, typename ...Args>
+		class factory
 		{
-			/// typedef std::shared_ptr<manufacturedObj> (*BASE_CREATE_FN)() ;
-
-			/// FN_REGISTRY is the registry of all the BASE_CREATE_FN
-			/// pointers registered.  Functions are registered using the
-			/// regCreateFn member function (see below).
-			typedef std::map<std::string, std::shared_ptr<manufacturedObj>(*)()> FN_registry;
-			FN_registry registry;
-
-
-			genericGenerator()
-			{
-			}
-
-			genericGenerator(const genericGenerator&) = delete;
-			genericGenerator& operator=(const genericGenerator&) = delete;
-
-
+			std::map<std::string, std::shared_ptr<ChildType>(*)(Args&&...)> registry_;
 		public:
-			/// Singleton access.
-			static genericGenerator<manufacturedObj>& instance()
+			factory() = default;
+			factory(const factory&) = delete;
+			factory& operator=(const factory&) = delete;
+			
+			static factory<ChildType, Args...>& get()
 			{
-				/// Note that this is not thread-safe!
-				static genericGenerator theInstance;
-				return theInstance;
+				static factory instance;
+				return instance;
+			}
+			std::vector<std::string> keys()
+			{
+				std::vector<std::string> keys;
+				for (const auto& e : registry_)
+					keys.emplace_back(e.fist());
+				return keys;
+			}
+			
+			void register_class(std::string id, std::shared_ptr<ChildType>(*func)(Args&&...))
+			{
+				registry_[id] = func;
 			}
 
-			/// \fn regCreateFn(std::string, std::shared_ptr<manufacturedObj> (*)());
-			///
-			/// Classes derived from manufacturedObj call this function once
-			/// per program to register the class ID key, and a pointer to
-			/// the function that creates the class.
-			void regCreateFn(std::string clName, std::shared_ptr<manufacturedObj> (*func)())
+			[[nodiscard]]
+			std::shared_ptr<ChildType> create(std::string id, Args... params) const
 			{
-				registry[clName] = func;
-			}
-
-			/// \fn std::shared_ptr<manufacturedObj> create(std::string className) const;
-			///
-			/// Create a new class of the type specified by className.
-			/// The create function simple looks up the class ID, and if it's in the list, the statement "(*i).second();" calls the function.
-			///
-			std::shared_ptr<manufacturedObj> create(std::string className) const
-			{
-				std::shared_ptr<manufacturedObj> ret(nullptr);
-				typename FN_registry::const_iterator regEntry = registry.find(className);
-				if (regEntry != registry.end())
-				{
-					return (*regEntry).second();
-				}
+				std::shared_ptr<ChildType> ret(nullptr);
+				auto reg_entry = registry_.find(id);
+				if (reg_entry != registry_.end())
+					return (*reg_entry).second(std::forward<Args>(params)...);
 				return ret;
-			}
+			}			
 		};
 
-		/// Helper template to make registration simple.
-		template <class ancestorType, class manufacturedObj, typename classIDKey = defaultIDKeyType>
-		class registerInFactory
+		
+		template <class ParentType, class ChildType, typename ...Args>
+		class register_in_factory
 		{
 		public:
-			static std::shared_ptr<ancestorType> createInstance()
+			static std::shared_ptr<ParentType> create(Args&&... params)
 			{
-				return std::shared_ptr<ancestorType>(manufacturedObj::createInstance());
+				return std::shared_ptr<ParentType>(ChildType::create(std::forward<Args>(params)...));
 			}
-
-			/// \fn registerInFactory(const classIDKey id)
-			/// \brief Register the creation function.  
-			///
-			/// This simply associates the classIDKey with the function used to create the class.  
-			/// The return value is a dummy value, which is used to allow static initialization of the registry.
-			registerInFactory(const classIDKey id)
+			explicit register_in_factory(const std::string id)
 			{
-				genericGenerator<ancestorType>::instance().regCreateFn(id, createInstance);
+				factory<ParentType, Args...>::get().register_class(id, create);
 			}
 		};
 	}
 }
 
-// auto shpre = factory().createInstance("bbob/sphere");
+

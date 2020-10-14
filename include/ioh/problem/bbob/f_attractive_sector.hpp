@@ -74,8 +74,8 @@ namespace ioh
 					return result;
 				}
 
-				static Attractive_Sector* createInstance(int instance_id = DEFAULT_INSTANCE,
-				                                         int dimension = DEFAULT_DIMENSION)
+				static Attractive_Sector* create(int instance_id = DEFAULT_INSTANCE,
+				                                 int dimension = DEFAULT_DIMENSION)
 				{
 					return new Attractive_Sector(instance_id, dimension);
 				}

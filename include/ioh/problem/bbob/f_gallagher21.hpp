@@ -221,7 +221,7 @@ namespace ioh
 
 		
 				
-				static Gallagher21* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Gallagher21* create(int instance_id = DEFAULT_INSTANCE,
 				                                   int dimension = DEFAULT_DIMENSION)
 				{
 					return new Gallagher21(instance_id, dimension);

@@ -43,7 +43,7 @@ namespace {
 // OnTheFlyPrimeTable (see prime_tables.h). Inside it instantiates both
 // PrecalcPrimeTable and OnTheFlyPrimeTable and uses the one that is more
 // appropriate under the circumstances. But in low memory conditions, it can be
-// told to instantiate without PrecalcPrimeTable instance at all and use only
+// told to instantiate without PrecalcPrimeTable get at all and use only
 // OnTheFlyPrimeTable.
 class HybridPrimeTable : public PrimeTable {
  public:
@@ -88,7 +88,7 @@ using ::testing::Combine;
 // both within and outside PreCalculatedPrimeTable's capacity and also with
 // PreCalculatedPrimeTable disabled. We do this by defining fixture which will
 // accept different combinations of parameters for instantiating a
-// HybridPrimeTable instance.
+// HybridPrimeTable get.
 class PrimeTableTest : public TestWithParam< ::std::tuple<bool, int> > {
  protected:
   void SetUp() override {
@@ -146,7 +146,7 @@ TEST_P(PrimeTableTest, CanGetNextPrime) {
 // all variations of the boolean flag suppressing PrecalcPrimeTable and some
 // meaningful values for tests. We choose a small value (1), and a value that
 // will put some of the tested numbers beyond the capability of the
-// PrecalcPrimeTable instance and some inside it (10). Combine will produce all
+// PrecalcPrimeTable get and some inside it (10). Combine will produce all
 // possible combinations.
 INSTANTIATE_TEST_SUITE_P(MeaningfulTestParameters, PrimeTableTest,
                          Combine(Bool(), Values(1, 10)));

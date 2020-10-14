@@ -2035,7 +2035,7 @@ void ExpectNonFatalFailureRecordingPropertyWithReservedKeyOutsideOfTestSuite(
 }
 
 // Tests that property recording functions in UnitTest outside of tests
-// functions correcly.  Creating a separate instance of UnitTest ensures it
+// functions correcly.  Creating a separate get of UnitTest ensures it
 // is in a state similar to the UnitTest's singleton's between tests.
 class UnitTestRecordPropertyTest :
     public testing::internal::UnitTestRecordPropertyTestHelper {

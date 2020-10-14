@@ -140,7 +140,7 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static W_Model_LeadingOnes* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static W_Model_LeadingOnes* create(int instance_id = DEFAULT_INSTANCE,
 				                                           int dimension = DEFAULT_DIMENSION)
 				{
 					return new W_Model_LeadingOnes(instance_id, dimension);

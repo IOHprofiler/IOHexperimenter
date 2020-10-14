@@ -35,7 +35,7 @@ namespace ioh
                     return (double)result;
                 }
 
-                static LeadingOnes* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+                static LeadingOnes* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
                     return new LeadingOnes(instance_id, dimension);
                 }
             };

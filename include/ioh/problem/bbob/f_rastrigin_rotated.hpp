@@ -80,7 +80,7 @@ namespace ioh
 				}
 
 
-				static Rastrigin_Rotated* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Rastrigin_Rotated* create(int instance_id = DEFAULT_INSTANCE,
 				                                         int dimension = DEFAULT_DIMENSION)
 				{
 					return new Rastrigin_Rotated(instance_id, dimension);

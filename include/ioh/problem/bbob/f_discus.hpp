@@ -51,7 +51,7 @@ namespace ioh
 				}
 
 
-				static Discus* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Discus* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 				{
 					return new Discus(instance_id, dimension);
 				}

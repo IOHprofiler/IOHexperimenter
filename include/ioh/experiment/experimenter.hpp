@@ -13,44 +13,38 @@ namespace ioh
 		template <typename ProblemType>
 		class experimenter
 		{
-			typedef void _algorithm(std::shared_ptr<ProblemType>, std::shared_ptr<logger::csv> logger);
-			configuration conf;
-			std::shared_ptr<suite::base<ProblemType>> configSuite;
-			std::shared_ptr<ProblemType> current_problem;
-			std::shared_ptr<logger::csv> config_csv_logger;
-			int independent_runs = 1;
-
-			_algorithm* algorithm;
 		public:
-			experimenter();
+			typedef void algorithm_type(std::shared_ptr<ProblemType>, std::shared_ptr<logger::csv<ProblemType>>);
 
+			experimenter() = delete;
+			
 			~experimenter()
 			{
 			}
 
-			experimenter(std::string configFileName, _algorithm* algorithm)
+			experimenter(std::string configFileName, algorithm_type* algorithm)
 			{
 				this->conf.readcfg(configFileName);
 
 				configSuite = common::genericGenerator<suite::base<ProblemType>>::instance().create(
 					conf.get_suite_name());
 				if (configSuite == nullptr)
-				{
 					common::log::error("Creating suite fails, please check your configuration");
-				}
 
 				configSuite->set_suite_problem_id(conf.get_problem_id());
 				configSuite->set_suite_instance_id(conf.get_instance_id());
 				configSuite->set_suite_dimension(conf.get_dimension());
 				configSuite->loadProblem();
 
-				std::shared_ptr<logger::csv> logger(new logger::csv(
+				// std::shared_ptr<logger::csv<ProblemType>> logger(new logger::csv(
+				// 	conf.get_output_directory(), conf.get_result_folder(), conf.get_algorithm_name(),
+				// 	conf.get_algorithm_info()));
+				auto logger = std::make_shared<logger::csv<ProblemType>>(
 					conf.get_output_directory(), conf.get_result_folder(), conf.get_algorithm_name(),
-					conf.get_algorithm_info()));
+					conf.get_algorithm_info());
+				
 				if (logger == nullptr)
-				{
 					common::log::error("Creating logger fails, please check your configuration");
-				}
 
 				logger->set_complete_flag(conf.get_complete_triggers());
 				logger->set_interval(conf.get_number_interval_triggers());
@@ -58,13 +52,13 @@ namespace ioh
 				logger->set_update_flag(conf.get_update_triggers());
 
 				config_csv_logger = logger;
-				config_csv_logger->activate_logger();
+				config_csv_logger->open_index();
 
 				this->algorithm = algorithm;
 			}
 
-			experimenter(std::shared_ptr<suite::base<ProblemType>> suite, std::shared_ptr<logger::csv> csv_logger,
-			             _algorithm* algorithm)
+			experimenter(std::shared_ptr<suite::base<ProblemType>> suite, std::shared_ptr<logger::csv<ProblemType>> csv_logger,
+			             algorithm_type* algorithm)
 			{
 				configSuite = suite;
 				config_csv_logger = csv_logger;
@@ -155,6 +149,17 @@ namespace ioh
 
 				return s;
 			}
+
+		private:
+			configuration conf;
+			std::shared_ptr<suite::base<ProblemType>> configSuite;
+			std::shared_ptr<ProblemType> current_problem;
+			std::shared_ptr<logger::csv<ProblemType>> config_csv_logger;
+			int independent_runs = 1;
+
+			algorithm_type* algorithm;
 		};
+
+		
 	}
 }

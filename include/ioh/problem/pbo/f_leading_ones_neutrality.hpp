@@ -45,7 +45,7 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static LeadingOnes_Neutrality* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static LeadingOnes_Neutrality* create(int instance_id = DEFAULT_INSTANCE,
 				                                              int dimension = DEFAULT_DIMENSION)
 				{
 					return new LeadingOnes_Neutrality(instance_id, dimension);

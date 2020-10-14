@@ -225,7 +225,7 @@ namespace ioh
 					return f_true;
 				}
 
-				static Gallagher101* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Gallagher101* create(int instance_id = DEFAULT_INSTANCE,
 				                                    int dimension = DEFAULT_DIMENSION)
 				{
 					return new Gallagher101(instance_id, dimension);

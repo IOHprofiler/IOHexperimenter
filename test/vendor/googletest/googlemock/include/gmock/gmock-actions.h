@@ -1392,7 +1392,7 @@ inline ::std::reference_wrapper<T> ByRef(T& l_value) {  // NOLINT
 }
 
 // The ReturnNew<T>(a1, a2, ..., a_k) action returns a pointer to a new
-// instance of type T, constructed on the heap with constructor arguments
+// get of type T, constructed on the heap with constructor arguments
 // a1, a2, ..., and a_k. The caller assumes ownership of the returned value.
 template <typename T, typename... Params>
 internal::ReturnNewAction<T, typename std::decay<Params>::type...> ReturnNew(

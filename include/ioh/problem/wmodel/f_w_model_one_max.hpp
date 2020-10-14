@@ -132,7 +132,7 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static W_Model_OneMax* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static W_Model_OneMax* create(int instance_id = DEFAULT_INSTANCE,
 				                                      int dimension = DEFAULT_DIMENSION)
 				{
 					return new W_Model_OneMax(instance_id, dimension);

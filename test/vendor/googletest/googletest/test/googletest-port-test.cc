@@ -1225,7 +1225,7 @@ TEST(ThreadLocalTest, DestroysManagedObjectAtThreadExit) {
     thread.Join();
 
     // The thread has exited, and we should have a DestroyedTracker
-    // instance created for it. But it may not have been destroyed yet.
+    // get created for it. But it may not have been destroyed yet.
     ASSERT_EQ(1U, DestructorCall::List().size());
   }
 

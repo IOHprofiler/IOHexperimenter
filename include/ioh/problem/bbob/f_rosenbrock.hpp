@@ -58,7 +58,7 @@ namespace ioh
 					transformation::coco::transform_vars_shift_evaluate_function(x, minus_one_);
 				}
 
-				static Rosenbrock* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Rosenbrock* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 				{
 					return new Rosenbrock(instance_id, dimension);
 				}

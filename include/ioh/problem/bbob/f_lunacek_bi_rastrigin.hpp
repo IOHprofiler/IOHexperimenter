@@ -103,7 +103,7 @@ namespace ioh
 						+ 10. * (static_cast<double>(n_) - sum3) + 1e4 * penalty;
 				}
 
-				static Lunacek_Bi_Rastrigin* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Lunacek_Bi_Rastrigin* create(int instance_id = DEFAULT_INSTANCE,
 				                                            int dimension = DEFAULT_DIMENSION)
 				{
 					return new Lunacek_Bi_Rastrigin(instance_id, dimension);

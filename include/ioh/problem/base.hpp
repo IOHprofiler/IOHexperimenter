@@ -27,7 +27,7 @@ namespace ioh
 		{
 			int problem_id; /// < problem id, assigned as being added into a suite.
 			int instance_id;
-			/// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
+			/// < evaluate function is validated with get and dimension. set default to avoid invalid class.
 
 			std::string problem_name;
 			std::string problem_type; /// todo. make it as enum.
@@ -35,7 +35,7 @@ namespace ioh
 			common::optimization_type maximization_minimization_flag;
 
 			int number_of_variables;
-			/// < evaluate function is validated with instance and dimension. set default to avoid invalid class.
+			/// < evaluate function is validated with get and dimension. set default to avoid invalid class.
 			int number_of_objectives;
 
 			std::vector<InputType> lowerbound;
@@ -225,27 +225,17 @@ namespace ioh
 			/// It will be invoked after setting dimension (number_of_variables) or instance_id.
 			void calc_optimal()
 			{
+
 				if (this->best_variables.size() == this->number_of_variables)
 				{
 					/// todo. Make Exception.
 					/// Do not apply transformation on best_variables as calculating optimal
 					if (this->number_of_objectives == 1)
-					{
-						/// This only works for F4, F16-18, and F23 of BBOB suite.
-						// if (this->problem_type == "bbob")
-						// {
-						// 	transformation::coco::data::raw_x.clear();
-						// 	for (std::size_t i = 0; i != this->best_variables.size(); ++i)
-						// 	{
-						// 		transformation::coco::data::raw_x.push_back(this->best_variables[i]);
-						// 	}
-						// }
+						
 						this->optimal[0] = internal_evaluate(this->best_variables);
-					}
 					else
-					{
-						common::log::warning("Multi-objectives optimization is not supported now.");
-					}
+						common::log::error("Multi-objectives optimization is not supported now.");
+					
 					objectives_transformation(this->best_variables, this->optimal,
 						this->problem_id, this->instance_id);
 				}
@@ -255,13 +245,9 @@ namespace ioh
 					for (std::size_t i = 0; i < this->number_of_objectives; ++i)
 					{
 						if (this->maximization_minimization_flag == common::optimization_type::maximization)
-						{
 							this->optimal.push_back(std::numeric_limits<double>::max());
-						}
 						else
-						{
 							this->optimal.push_back(std::numeric_limits<double>::lowest());
-						}
 					}
 					customize_optimal();
 				}
@@ -446,6 +432,7 @@ namespace ioh
 			/// \param number_of_variables
 			void set_number_of_variables(int number_of_variables)
 			{
+
 				this->number_of_variables = number_of_variables;
 				if (this->best_variables.size() != 0)
 				{
@@ -459,6 +446,7 @@ namespace ioh
 				{
 					this->set_upperbound(this->upperbound[0]);
 				}
+				
 				this->prepare_problem();
 				this->calc_optimal();
 			}

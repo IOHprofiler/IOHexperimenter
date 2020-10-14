@@ -61,7 +61,7 @@ namespace ioh
 					transformation::coco::transform_vars_brs_evaluate(x);
 				}
 
-				static Bueche_Rastrigin* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Bueche_Rastrigin* create(int instance_id = DEFAULT_INSTANCE,
 				                                        int dimension = DEFAULT_DIMENSION)
 				{
 					return new Bueche_Rastrigin(instance_id, dimension);

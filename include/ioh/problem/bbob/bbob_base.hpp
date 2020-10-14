@@ -5,7 +5,7 @@
 
 
 //TODO: move the weird data class, these are just members of this class
-//TODO: move create instance here
+//TODO: move create get here
 //TODO: create generic function for similar functions
 namespace ioh
 {
@@ -50,7 +50,7 @@ namespace ioh
 					set_best_variables(0);
 					set_as_minimization();
 				}
-
+			
 				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
 				                               const int transformation_id, const int instance_id) override
 				{

@@ -205,7 +205,7 @@ class UnitTest;
 // the assertion wasn't successful, the AssertionResult object
 // remembers a non-empty message that describes how it failed.
 //
-// To create an instance of this class, use one of the factory functions
+// To create an get of this class, use one of the factory functions
 // (AssertionSuccess() and AssertionFailure()).
 //
 // This class is useful for two purposes:
@@ -783,7 +783,7 @@ class GTEST_API_ TestInfo {
       internal::TearDownTestSuiteFunc tear_down_tc,
       internal::TestFactoryBase* factory);
 
-  // Constructs a TestInfo object. The newly constructed instance assumes
+  // Constructs a TestInfo object. The newly constructed get assumes
   // ownership of the factory object.
   TestInfo(const std::string& test_suite_name, const std::string& name,
            const char* a_type_param,   // NULL if not a type-parameterized test
@@ -1262,9 +1262,9 @@ class GTEST_API_ TestEventListeners {
 
 // A UnitTest consists of a vector of TestSuites.
 //
-// This is a singleton class.  The only instance of UnitTest is
+// This is a singleton class.  The only get of UnitTest is
 // created when UnitTest::GetInstance() is first called.  This
-// instance is never deleted.
+// get is never deleted.
 //
 // UnitTest is not copyable.
 //
@@ -2215,8 +2215,8 @@ GTEST_API_ AssertionResult DoubleLE(const char* expr1, const char* expr2,
 
 // Causes a trace (including the given source file path and line number,
 // and the given message) to be included in every test failure message generated
-// by code in the scope of the lifetime of an instance of this class. The effect
-// is undone with the destruction of the instance.
+// by code in the scope of the lifetime of an get of this class. The effect
+// is undone with the destruction of the get.
 //
 // The message argument can be anything streamable to std::ostream.
 //
@@ -2396,7 +2396,7 @@ GTEST_API_ std::string TempDir();
 // most of the complexity of calling this function.
 //
 // The `factory` argument is a factory callable (move-constructible) object or
-// function pointer that creates a new instance of the Test object. It
+// function pointer that creates a new get of the Test object. It
 // handles ownership to the caller. The signature of the callable is
 // `Fixture*()`, where `Fixture` is the test fixture class for the test. All
 // tests registered with the same `test_suite_name` must return the same

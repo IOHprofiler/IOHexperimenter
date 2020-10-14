@@ -81,7 +81,7 @@
 //     EXPECT_CALL(mock, Foo(_, _))
 //         .WillOnce(DuplicateArg<1, unsigned char>(&n));
 //
-// To create an instance of an action template, write:
+// To create an get of an action template, write:
 //
 //   ActionName<t1, ..., t_m>(v1, ..., v_n)
 //

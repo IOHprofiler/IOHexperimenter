@@ -2,8 +2,17 @@
 #include <iomanip>
 #include <numeric>
 
+#include <vector>
+#include <algorithm>
+
+#include <cassert>
+#include <iostream>
+#include <random>
+
+
 #include "ioh.hpp"
-#include "ioh/common/random.hpp"
+#include "ioh/logger/ecdf.hpp"
+
 
 #define print(x) std::cout << std::fixed << std::setprecision(4) << x << std::endl
 
@@ -19,118 +28,9 @@ void vprint(std::vector<T> v)
 	std::cout << " ]" << std::endl;
 }
 
-void test_eval(std::shared_ptr<ioh::problem::bbob::bbob_base> f)
-{
-	std::cout << f->get_problem_id() << ": " << f->get_problem_name() << std::endl;
-	std::vector<double> x = ioh::common::random::gauss(4, 42);
-	print(f->evaluate(x));
-	print("***************");
-}
-
-void test_eval(std::shared_ptr<ioh::problem::pbo::pbo_base> f)
-{
-	print(f->get_problem_name());
-	std::vector<int> xj = ioh::common::random::bitstring(100);
-	print(f->evaluate(xj));
-	print("***************");
-}
-
-void test_eval(std::shared_ptr<ioh::problem::wmodel::wmodel_base> f)
-{
-	print(f->get_problem_name());
-	f->reset_problem();
-	std::vector<double> x = ioh::common::random::gauss(4, 42);
-	std::vector<bool> xi(x.begin(), x.end());
-	std::vector<int> xj(xi.begin(), xi.end());
-	vprint(xj);
-	print(f->evaluate(xj));
-	print("***************");
-}
-
-void test_problems()
-{
-	using namespace ioh::problem::bbob;
-	test_eval(std::make_shared<Attractive_Sector>());
-	test_eval(std::make_shared<Bent_Cigar>()); // incorrect 43065603.7200
-	test_eval(std::make_shared<Bueche_Rastrigin>()); // incorrect  -377.5170
-	test_eval(std::make_shared<Different_Powers>());
-	test_eval(std::make_shared<Discus>());
-	test_eval(std::make_shared<Ellipsoid>());
-	test_eval(std::make_shared<Ellipsoid_Rotated>());
-	test_eval(std::make_shared<Gallagher101>()); // 100.6898
-	test_eval(std::make_shared<Gallagher21>()); // -924.8833
-	test_eval(std::make_shared<Griewank_RosenBrock>());
-	test_eval(std::make_shared<Katsuura>()); // however I think in old version this is incorrect
-	test_eval(std::make_shared<Linear_Slope>());
-	test_eval(std::make_shared<Lunacek_Bi_Rastrigin>());
-	test_eval(std::make_shared<Rastrigin>());
-	test_eval(std::make_shared<Rastrigin_Rotated>());
-	test_eval(std::make_shared<Rosenbrock>());
-	test_eval(std::make_shared<Rosenbrock_Rotated>());
-	test_eval(std::make_shared<Schaffers10>());
-	test_eval(std::make_shared<Schaffers1000>()); // incorrect 39.4152
-	test_eval(std::make_shared<Schwefel>());
-	test_eval(std::make_shared<Sharp_Ridge>());
-	test_eval(std::make_shared<Sphere>());
-	test_eval(std::make_shared<Step_Ellipsoid>());
-	test_eval(std::make_shared<Weierstrass>());
-
-	// // test PBO
-	using namespace ioh::problem::pbo;
-	// test_eval(std::make_shared<MIS>());
-	// test_eval(std::make_shared<NQueens>());
-	// test_eval(std::make_shared<Concatenated_Trap>());
-	// test_eval(std::make_shared<Ising_Ring>());
-	// test_eval(std::make_shared<Ising_Torus>());
-	// test_eval(std::make_shared<Ising_Triangular>());
-	// test_eval(std::make_shared<LABS>());
-	// test_eval(std::make_shared<LeadingOnes>());
-	// test_eval(std::make_shared<LeadingOnes_Dummy1>());
-	// test_eval(std::make_shared<LeadingOnes_Dummy2>());
-	// test_eval(std::make_shared<LeadingOnes_Epistasis>());
-	// test_eval(std::make_shared<LeadingOnes_Neutrality>());
-	// test_eval(std::make_shared<LeadingOnes_Ruggedness1>());
-	// test_eval(std::make_shared<LeadingOnes_Ruggedness2>());
-	// test_eval(std::make_shared<LeadingOnes_Ruggedness3>());
-	// test_eval(std::make_shared<Linear>());
-	// test_eval(std::make_shared<NK_Landscapes>());
-	// test_eval(std::make_shared<OneMax>());
-	// test_eval(std::make_shared<OneMax_Dummy1>());
-	// test_eval(std::make_shared<OneMax_Dummy2>());
-	// test_eval(std::make_shared<OneMax_Epistasis>());
-	// test_eval(std::make_shared<OneMax_Neutrality>());
-	// test_eval(std::make_shared<OneMax_Ruggedness1>());
-	// test_eval(std::make_shared<OneMax_Ruggedness2>());
-	// test_eval(std::make_shared<OneMax_Ruggedness3>());
-	//
-	// // test Wmodel
-	// using namespace ioh::problem::wmodel;
-	// test_eval(std::make_shared<W_Model_LeadingOnes>());
-	// test_eval(std::make_shared<W_Model_OneMax>());	
-}
 
 
-void run_bbob_suite()
-{
-	ioh::suite::bbob bbob;
-	std::shared_ptr<ioh::problem::bbob::bbob_base> problem;
-	while ((problem = bbob.get_next_problem()) != nullptr)
-	{
-		test_eval(problem);
-	}
-}
-
-void run_pbo_suite()
-{
-	ioh::suite::pbo pbo;
-	std::shared_ptr<ioh::problem::pbo::pbo_base> problem;
-	while ((problem = pbo.get_next_problem()) != nullptr)
-	{
-		test_eval(problem);
-	}
-}
-
-void algo(std::shared_ptr<ioh::problem::bbob::bbob_base> f, std::shared_ptr<ioh::logger::csv> l)
+void algo(std::shared_ptr<ioh::problem::bbob::bbob_base> f, std::shared_ptr<ioh::logger::csv<ioh::problem::bbob::bbob_base>> l)
 {
 	size_t n = f->get_number_of_variables();
 	std::vector<double> x(n);
@@ -147,49 +47,122 @@ void algo(std::shared_ptr<ioh::problem::bbob::bbob_base> f, std::shared_ptr<ioh:
 		l->do_log(f->loggerCOCOInfo());
 		best_y = std::max(y, best_y);
 	}
-	
 }
 
 
-class Base
-{
-public:
-	virtual void x() { print("Base"); }
-};
-
-
-class Derived: public Base
-{
-public:
-	void x() override { print("Derived"); }
-};
-
-
-
-class DerivedDerived : public Derived
-{
-public:
-	void x() override { print("DerivedDerived"); }
-};
-
-class DerivedDerived2 : public Derived
-{
-};
-
+// ioh::suite::bbob bbob;
+// std::shared_ptr<ioh::problem::bbob::bbob_base> problem;
+// while ((problem = bbob.get_next_problem()) != nullptr)
+// 	std::cout << problem->get_problem_name() << std::endl;
+//
+//
+// std::cout << "*****************" << std::endl;
+// ioh::suite::bbob bbob({1}, {1, 2}, {5, 6});
+// std::shared_ptr<ioh::problem::bbob::bbob_base> problem;
+// while ((problem = bbob.get_next_problem()) != nullptr)
+// 	std::cout << problem->get_problem_name() << std::endl <<
+// 		problem->get_instance_id() << std::endl <<
+// 		problem->get_number_of_objectives() << std::endl;
+//
+//
+// std::vector<int> p{1};
+// std::vector<int> i{2};
+// std::vector<int> d{4};
+//
+// register_in_factory<BaseOneArg, C, int> c("C");
+// register_in_factory<BaseOneArg, D, int> d("D");
+// std::cout << factory<BaseOneArg, int>::get().create("D", 1)->get_name() << std::endl;
 
 int main()
 {
-	auto suite = std::make_shared<ioh::suite::bbob>();
-	auto logger = std::make_shared<ioh::logger::csv>("C:\\Users\\Jacob\\Desktop", "tmp", "crazyalg", "crazyinfo");
-	auto experimenter = ioh::experiment::experimenter<ioh::problem::bbob::bbob_base>(suite, logger, algo);
-	experimenter._set_independent_runs(10);
-	experimenter._run();
 
-	// DerivedDerived d;
-	// d.x();
-	// DerivedDerived2 d2;
-	// d2.x();
-	// ;
-	// vprint(minus_one);
-	// run_bbob_suite();
+	using namespace ioh::problem;
+	using namespace ioh::logger;
+
+	size_t sample_size = 100;
+
+	std::vector<int> pbs = { 1,2 };
+	std::vector<int> ins = { 1,2 };
+	std::vector<int> dims = { 2,10 };
+	
+	
+	ioh::suite::bbob bench(pbs, ins, dims);
+	size_t ecdf_width = 20;
+	using Logger = ecdf<bbob::bbob_base>;
+	
+	range_log<double> error(0, 6e7, ecdf_width);
+	range_log<size_t> evals(0, sample_size, ecdf_width);
+	Logger logger(error, evals);
+	
+	logger.activate_logger();
+	logger.track_suite(bench);
+	
+	
+	size_t seed = 5;
+	std::mt19937 gen(seed);
+	std::uniform_real_distribution<> dis(-5, 5);
+	ioh::suite::bbob::problem_ptr pb;
+	
+	size_t n = 0;
+	while ((pb = bench.get_next_problem())) {
+		logger.track_problem(*pb);
+	
+		std::clog << "Problem " << pb->get_problem_id()
+			<< " (" << pb->get_problem_name() << ")"
+			<< " get " << pb->get_instance_id()
+			<< ", optimum: ";
+		
+		for (double o : pb->get_optimal()) {
+			std::clog << o << " ";
+		}
+		std::clog << std::endl;
+	
+		size_t d = pb->get_number_of_variables();
+		for (size_t s = 0; s < sample_size; ++s) {
+			std::vector<double> sol;
+			sol.reserve(d);
+			std::generate_n(std::back_inserter(sol), d, [&dis, &gen]() {return dis(gen); });
+			
+			double f = pb->evaluate(sol);
+			logger.do_log(pb->loggerInfo());
+		}
+		n++;
+	} // for name_id
+	
+	std::clog << "Done " << n << " function test" << std::endl;
+	
+	size_t i, j, k;
+	std::tie(i, j, k) = logger.size();
+	std::clog << i << " problems × " << j << " dimensions × " << k << " instances" << std::endl;
+	assert(i == pbs.size());
+	assert(j == dims.size());
+	assert(k == ins.size());
+	
+	
+	
+	for (int ipb : pbs) {
+		for (int idim : dims) {
+			for (int iins : ins) {
+				std::clog << "Problem " << ipb
+					<< ", dimension " << idim
+					<< ", get " << iins
+					<< ": " << std::endl;
+				const auto& m = logger.at(ipb, iins, idim);
+				// std::clog << m << std::endl;
+				assert(m.size() == ecdf_width);
+				assert(m[0].size() == ecdf_width);
+			}
+		}
+	}
+	
+	ecdf_sum sum;
+	size_t s = sum(logger.data());
+	std::clog << "Attainments sum: ";
+	std::cout << s << std::endl;
+	assert(s <= sample_size * ecdf_width * ecdf_width * i * j * k);
 }
+
+
+
+
+//

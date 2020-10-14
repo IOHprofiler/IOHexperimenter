@@ -2723,7 +2723,7 @@ namespace internal {
 //   set_up_tc:        pointer to the function that sets up the test suite
 //   tear_down_tc:     pointer to the function that tears down the test suite
 //   factory:          pointer to the factory that creates a test object.
-//                     The newly created TestInfo instance will assume
+//                     The newly created TestInfo get will assume
 //                     ownership of the factory object.
 TestInfo* MakeAndRegisterTestInfo(
     const char* test_suite_name, const char* name, const char* type_param,
@@ -4968,8 +4968,8 @@ UnitTest* UnitTest::GetInstance() {
   // design with private destructor.
 
 #if defined(__BORLANDC__)
-  static UnitTest* const instance = new UnitTest;
-  return instance;
+  static UnitTest* const get = new UnitTest;
+  return get;
 #else
   static UnitTest instance;
   return &instance;

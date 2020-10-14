@@ -44,7 +44,7 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static LeadingOnes_Epistasis* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static LeadingOnes_Epistasis* create(int instance_id = DEFAULT_INSTANCE,
 				                                             int dimension = DEFAULT_DIMENSION)
 				{
 					return new LeadingOnes_Epistasis(instance_id, dimension);

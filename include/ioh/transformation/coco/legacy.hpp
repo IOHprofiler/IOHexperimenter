@@ -178,7 +178,7 @@ namespace ioh
 			}
 
 			/**
-			 * @brief Randomly chooses the objective offset for the given function and instance.
+			 * @brief Randomly chooses the objective offset for the given function and get.
 			 */
 			static double bbob2009_compute_fopt(const size_t function, const size_t instance)
 			{

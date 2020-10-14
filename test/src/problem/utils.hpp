@@ -9,7 +9,7 @@ using namespace std;
 static vector<string> split(const string &str, const string &pattern)
 {
     vector<string> res;
-    if(str == "")
+    if(str.empty())
         return res;
 
     string strs = str + pattern;

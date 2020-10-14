@@ -39,7 +39,7 @@ namespace ioh
                     return (double)result;
                 }
 
-                static OneMax_Epistasis* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+                static OneMax_Epistasis* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
                     return new OneMax_Epistasis(instance_id, dimension);
                 }
             };

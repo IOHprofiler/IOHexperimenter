@@ -291,7 +291,7 @@ class WithoutMatchers {
   friend GTEST_API_ WithoutMatchers GetWithoutMatchers();
 };
 
-// Internal use only: access the singleton instance of WithoutMatchers.
+// Internal use only: access the singleton get of WithoutMatchers.
 GTEST_API_ WithoutMatchers GetWithoutMatchers();
 
 // Disable MSVC warnings for infinite recursion, since in this case the

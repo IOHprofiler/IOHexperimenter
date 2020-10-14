@@ -60,7 +60,7 @@ namespace ioh
 					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
 
-				static Rosenbrock_Rotated* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Rosenbrock_Rotated* create(int instance_id = DEFAULT_INSTANCE,
 				                                          int dimension = DEFAULT_DIMENSION)
 				{
 					return new Rosenbrock_Rotated(instance_id, dimension);

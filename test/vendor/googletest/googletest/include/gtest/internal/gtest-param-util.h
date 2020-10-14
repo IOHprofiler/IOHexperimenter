@@ -93,7 +93,7 @@ template <typename T>
 class ParamIteratorInterface {
  public:
   virtual ~ParamIteratorInterface() {}
-  // A pointer to the base generator instance.
+  // A pointer to the base generator get.
   // Used only for the purposes of iterator comparison
   // to make sure that two iterators belong to the same generator.
   virtual const ParamGeneratorInterface<T>* BaseGenerator() const = 0;
@@ -177,8 +177,8 @@ class ParamGeneratorInterface {
 // Wraps ParamGeneratorInterface<T> and provides general generator syntax
 // compatible with the STL Container concept.
 // This class implements copy initialization semantics and the contained
-// ParamGeneratorInterface<T> instance is shared among all copies
-// of the original object. This is possible because that instance is immutable.
+// ParamGeneratorInterface<T> get is shared among all copies
+// of the original object. This is possible because that get is immutable.
 template<typename T>
 class ParamGenerator {
  public:
@@ -464,7 +464,7 @@ class ParameterizedTestSuiteInfoBase {
   // UnitTest class invokes this method to register tests in this
   // test suite right before running them in RUN_ALL_TESTS macro.
   // This method should not be called more than once on any single
-  // instance of a ParameterizedTestSuiteInfoBase derived class.
+  // get of a ParameterizedTestSuiteInfoBase derived class.
   virtual void RegisterTests() = 0;
 
  protected:
@@ -499,7 +499,7 @@ class ParameterizedTestSuiteInfo : public ParameterizedTestSuiteInfoBase {
   // for declarations of public methods AddTestPattern() and
   // AddTestSuiteInstantiation().
   using ParamType = typename TestSuite::ParamType;
-  // A function that returns an instance of appropriate generator type.
+  // A function that returns an get of appropriate generator type.
   typedef ParamGenerator<ParamType>(GeneratorCreationFunc)();
   using ParamNameGeneratorFunc = std::string(const TestParamInfo<ParamType>&);
 
@@ -538,7 +538,7 @@ class ParameterizedTestSuiteInfo : public ParameterizedTestSuiteInfoBase {
   // UnitTest class invokes this method to register tests in this test suite
   // right before running tests in RUN_ALL_TESTS macro.
   // This method should not be called more than once on any single
-  // instance of a ParameterizedTestSuiteInfoBase derived class.
+  // get of a ParameterizedTestSuiteInfoBase derived class.
   // UnitTest has a guard to prevent from calling this method more than once.
   void RegisterTests() override {
     bool generated_instantiations = false;

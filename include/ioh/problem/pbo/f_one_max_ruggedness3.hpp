@@ -43,7 +43,7 @@ namespace ioh
 					return this->info[static_cast<int>(result + 0.5)];
 				}
 
-				static OneMax_Ruggedness3* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static OneMax_Ruggedness3* create(int instance_id = DEFAULT_INSTANCE,
 				                                          int dimension = DEFAULT_DIMENSION)
 				{
 					return new OneMax_Ruggedness3(instance_id, dimension);

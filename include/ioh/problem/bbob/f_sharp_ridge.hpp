@@ -74,7 +74,7 @@ namespace ioh
 					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
 
-				static Sharp_Ridge* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Sharp_Ridge* create(int instance_id = DEFAULT_INSTANCE,
 				                                   int dimension = DEFAULT_DIMENSION)
 				{
 					return new Sharp_Ridge(instance_id, dimension);

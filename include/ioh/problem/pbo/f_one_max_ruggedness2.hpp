@@ -45,7 +45,7 @@ namespace ioh
 				}
 
 
-				static OneMax_Ruggedness2* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static OneMax_Ruggedness2* create(int instance_id = DEFAULT_INSTANCE,
 				                                          int dimension = DEFAULT_DIMENSION)
 				{
 					return new OneMax_Ruggedness2(instance_id, dimension);

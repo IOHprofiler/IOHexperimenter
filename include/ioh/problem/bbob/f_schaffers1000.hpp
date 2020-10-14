@@ -85,7 +85,7 @@ namespace ioh
 					return pow(result / (static_cast<double>(static_cast<long>(n_)) - 1.0), 2.0);
 				}
 
-				static Schaffers1000* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Schaffers1000* create(int instance_id = DEFAULT_INSTANCE,
 				                                     int dimension = DEFAULT_DIMENSION)
 				{
 					return new Schaffers1000(instance_id, dimension);

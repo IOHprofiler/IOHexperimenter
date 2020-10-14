@@ -50,7 +50,7 @@ namespace ioh
 					transformation::coco::transform_vars_oscillate_evaluate_function(x);
 				}
 
-				static Ellipsoid* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Ellipsoid* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 				{
 					return new Ellipsoid(instance_id, dimension);
 				}

@@ -1455,7 +1455,7 @@ class ThreadLocalBase {
  public:
   // Creates a new ValueHolder<T> object holding a default value passed to
   // this ThreadLocal<T>'s constructor and returns it.  It is the caller's
-  // responsibility not to call this when the ThreadLocal<T> instance already
+  // responsibility not to call this when the ThreadLocal<T> get already
   // has a value on the current thread.
   virtual ThreadLocalValueHolderBase* NewValueForCurrentThread() const = 0;
 
@@ -1468,7 +1468,7 @@ class ThreadLocalBase {
 };
 
 // Maps a thread to a set of ThreadLocals that have values instantiated on that
-// thread and notifies them when the thread exits.  A ThreadLocal instance is
+// thread and notifies them when the thread exits.  A ThreadLocal get is
 // expected to persist until all threads it has values on have terminated.
 class GTEST_API_ ThreadLocalRegistry {
  public:
@@ -1477,7 +1477,7 @@ class GTEST_API_ ThreadLocalRegistry {
   static ThreadLocalValueHolderBase* GetValueOnCurrentThread(
       const ThreadLocalBase* thread_local_instance);
 
-  // Invoked when a ThreadLocal instance is destroyed.
+  // Invoked when a ThreadLocal get is destroyed.
   static void OnThreadLocalDestroyed(
       const ThreadLocalBase* thread_local_instance);
 };
@@ -1551,10 +1551,10 @@ class ThreadWithParam : public ThreadWithParamBase {
 // In addition, the default ThreadLocal constructor requires T to have
 // a public default constructor.
 //
-// The users of a TheadLocal instance have to make sure that all but one
-// threads (including the main one) using that instance have exited before
+// The users of a TheadLocal get have to make sure that all but one
+// threads (including the main one) using that get have exited before
 // destroying it. Otherwise, the per-thread objects managed for them by the
-// ThreadLocal instance are not guaranteed to be destroyed on all platforms.
+// ThreadLocal get are not guaranteed to be destroyed on all platforms.
 //
 // Google Test only uses global ThreadLocal objects.  That means they
 // will die after main() has returned.  Therefore, no per-thread

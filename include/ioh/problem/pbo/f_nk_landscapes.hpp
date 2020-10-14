@@ -99,7 +99,7 @@ namespace ioh
 					return -result;
 				}
 
-				static NK_Landscapes* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static NK_Landscapes* create(int instance_id = DEFAULT_INSTANCE,
 				                                     int dimension = DEFAULT_DIMENSION)
 				{
 					return new NK_Landscapes(instance_id, dimension);

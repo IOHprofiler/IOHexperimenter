@@ -72,7 +72,7 @@ namespace ioh
 					return result;
 				}
 
-				static Concatenated_Trap* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Concatenated_Trap* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 				{
 					return new Concatenated_Trap(instance_id, dimension);
 				}

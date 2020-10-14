@@ -18,7 +18,7 @@ endif()
 # Define project targets.
 file(GLOB SOURCES src/*.cpp src/*/*.cpp)
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
-
+ 
 add_library(ioh ${HEADERS} ${SOURCES})
 add_library(ioh::ioh ALIAS ioh)
 

@@ -5,5 +5,7 @@
 #include "suite/bbob.hpp"
 
 // What is the use of these things?
-static ioh::common::registerInFactory<ioh::problem::pbo::pbo_base, ioh::suite::pbo> regPBO("PBO");
-static ioh::common::registerInFactory<ioh::problem::bbob::bbob_base, ioh::suite::bbob> regBBOB("BBOB");
+static ioh::common::register_in_factory<ioh::problem::pbo::pbo_base, ioh::suite::pbo, std::vector<int>, std::vector<int>
+                                        , std::vector<int>> regPBO("PBO");
+static ioh::common::register_in_factory<ioh::problem::bbob::bbob_base, ioh::suite::bbob,
+		std::vector<int>, std::vector<int>, std::vector<int>> regBBOB("BBOB");

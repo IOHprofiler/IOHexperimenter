@@ -43,7 +43,7 @@ namespace ioh
 					return utils::ruggedness1(result, static_cast<int>(n));
 				}
 
-				static LeadingOnes_Ruggedness1* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static LeadingOnes_Ruggedness1* create(int instance_id = DEFAULT_INSTANCE,
 				                                               int dimension = DEFAULT_DIMENSION)
 				{
 					return new LeadingOnes_Ruggedness1(instance_id, dimension);

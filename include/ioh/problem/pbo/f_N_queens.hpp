@@ -122,7 +122,7 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static NQueens* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static NQueens* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 				{
 					return new NQueens(instance_id, dimension);
 				}

@@ -52,7 +52,7 @@ namespace ioh
 					transformation::coco::transform_vars_oscillate_evaluate_function(x);
 				}
 
-				static Ellipsoid_Rotated* createInstance(int instance_id = DEFAULT_INSTANCE,
+				static Ellipsoid_Rotated* create(int instance_id = DEFAULT_INSTANCE,
 				                                         int dimension = DEFAULT_DIMENSION)
 				{
 					return new Ellipsoid_Rotated(instance_id, dimension);

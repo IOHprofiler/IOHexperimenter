@@ -46,7 +46,7 @@ namespace ioh
                     return (double)result;
                 }
 
-                static LeadingOnes_Dummy1* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+                static LeadingOnes_Dummy1* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
                     return new LeadingOnes_Dummy1(instance_id, dimension);
                 }
             };

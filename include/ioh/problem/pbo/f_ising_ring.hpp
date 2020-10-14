@@ -39,7 +39,7 @@ namespace ioh
                     return (double)result;
                 }
 
-                static Ising_Ring* createInstance(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+                static Ising_Ring* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
                     return new Ising_Ring(instance_id, dimension);
                 }
             	
