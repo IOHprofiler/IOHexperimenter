@@ -37,4 +37,4 @@ jobs:
     - name: Test
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: test/test_ioh
+      run: test\Debug\test_ioh.exe
