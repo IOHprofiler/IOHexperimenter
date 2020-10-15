@@ -9,19 +9,7 @@ namespace ioh
 {
 	namespace experiment
 	{
-		static int max_number_of_problem;
-		static int max_dimension;
 		
-
-		typedef enum _LINE_
-		{
-			EMPTY,
-			COMMENT,
-			SECTION,
-			VALUE,
-			CON_ERROR
-		} linecontent;
-
 		/// A class of configuration files, to be used in experimenter.
 		class configuration
 		{
@@ -39,7 +27,10 @@ namespace ioh
 			std::vector<int> base_evaluation_triggers;
 			int number_target_triggers;
 			int number_interval_triggers;
+			int max_number_of_problem;
+			int max_dimension;
 
+			
 			common::container data;
 		public:
 			configuration(const std::string& filename) : config_file(filename)
@@ -90,12 +81,12 @@ namespace ioh
 			
 			void load(const std::string& filename)
 			{
-				std::string line, section, key, value;
+				std::string line;
 				std::ifstream fp = open_file(filename);
 
-				char tempkey[MAXKEYNUMBER];
-				char tempvalue[MAXKEYNUMBER];
-				char tempsection[MAXKEYNUMBER];
+				char key[MAXKEYNUMBER];
+				char value[MAXKEYNUMBER];
+				char section[MAXKEYNUMBER];
 				
 				while (getline(fp, line))
 				{
@@ -104,21 +95,16 @@ namespace ioh
 						continue;
 
 					if (line.front() == '[' && line.back() == ']')
-					{
-						sscanf(line.c_str(), "[%[^]]", tempsection);
-						section = tempsection;
-					}
+						sscanf(line.c_str(), "[%[^]]", section);
 					else if (
-						sscanf(line.c_str(), "%[^=] = \"%[^\"]", tempkey, tempvalue) == 2 
-						|| sscanf(line.c_str(), "%[^=] = '%[^\']", tempkey, tempvalue) == 2)
-						data.set(section, tempkey, tempvalue);
-					else if(sscanf(line.c_str(), "%[^=] = %[^;#]", tempkey, tempvalue) == 2)
-						data.set(section, tempkey, tempvalue);
+						sscanf(line.c_str(), "%[^=] = \"%[^\"]", key, value) == 2 
+						|| sscanf(line.c_str(), "%[^=] = '%[^\']", key, value) == 2
+						|| sscanf(line.c_str(), "%[^=] = %[^;#]", key, value) == 2)
+						data.set(section, key, value);
 					else
 						common::log::error("Error in parsing .ini file on line:\n" + line);
 				}
 			}
-
 			
 			std::string get_suite_name()
 			{
