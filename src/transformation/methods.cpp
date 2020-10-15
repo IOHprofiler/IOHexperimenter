@@ -5,9 +5,9 @@
 ///
 /// \author Furong Ye
 
-#include "ioh/transformation.hpp"
+#include "ioh/problem/transformation.hpp"
 
-using namespace ioh::transformation;
+using namespace ioh::problem::transformation;
 
 
 int methods::xor_compute(const int x1, const int x2)

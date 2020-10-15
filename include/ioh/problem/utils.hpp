@@ -322,8 +322,6 @@ namespace ioh
 				int i, j, k, start, max;
 				int upper;
 				int t;
-				/*fprintf(stderr,"gamma : %d\n",gamma);
-				fprintf(stderr,"q : %d\n",q);*/
 				std::vector<int> r(q + 1, 0);
 				r[0] = 0;
 				max = max_gamma(q);
@@ -335,13 +333,6 @@ namespace ioh
 				{
 					start = q - 1 - static_cast<int>(0.5 + sqrt(0.25 + ((max - gamma) << 1)));
 				}
-				/*
-				fprintf(stderr,"part1 : %d\n",((int)(0.25 + ((max - gamma)<<1))));
-				fprintf(stderr,"part2 : %f\n",(sqrt((int)(0.25 + ((max - gamma)<<1)))));
-				fprintf(stderr,"part3 : %d\n",(int)(0.5 + sqrt((int)(0.25 + ((max - gamma)<<1)))));*/
-				/*fprintf(stderr,"start %d\n",start);*/
-
-				/*for(i=0;i<q;i++){fprintf(stderr,"%d.",r[i]);}fprintf(stderr,"\n");*/
 				k = 0;
 				for (j = 1; j <= start; j++)
 				{
@@ -352,7 +343,6 @@ namespace ioh
 						r[j] = k;
 					}
 				}
-				/*for(i=0;i<q;i++){fprintf(stderr,"%d.",r[i]);}fprintf(stderr,"\n");*/
 				for (; j <= q; j++)
 				{
 					k = k + 1;
@@ -361,8 +351,6 @@ namespace ioh
 				}
 				upper = ((gamma - max) + (((q - start - 1) * (q - start)) >> 1));
 				j--;
-				/*for(i=0;i<q;i++){fprintf(stderr,"%d.",r[i]);}fprintf(stderr,"\n");*/
-				/*fprintf(stderr,"upper %d\n",upper);*/
 				for (i = 1; i <= upper; i++)
 				{
 					j = j - 1;
@@ -375,12 +363,8 @@ namespace ioh
 					}
 				}
 
-				/*fprintf(stderr,"r\n");
-				for(i=0;i<=q;i++){fprintf(stderr,"%d %d\n",i, r[i]);}*/
 				std::vector<int> r2(1 + q, 0);
 				for (i = 0; i <= q; i++) { r2[i] = q - r[q - i]; }
-				/*fprintf(stderr,"r2\n");
-				for(i=0;i<=q;i++){fprintf(stderr,"%d %d\n",i, r2[i]);}*/
 				return r2;
 			}
 

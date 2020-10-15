@@ -99,7 +99,7 @@ namespace ioh
 			size_t ndigits = 1;
 			if (mat.back().back() > 0)
 			{
-				ndigits = 1 + std::floor(std::log10(static_cast<double>(mat.back().back())));
+				ndigits = 1 + static_cast<size_t>(std::floor(std::log10(static_cast<double>(mat.back().back()))));
 			}
 			out.precision(ndigits);
 			for (size_t i = 0; i < mat.size(); ++i)

@@ -12,6 +12,8 @@
 
 namespace ioh
 {
+	namespace problem
+	{
 	namespace transformation
 	{
 		namespace methods
@@ -50,4 +52,5 @@ namespace ioh
 			void transform_obj_shift(double& y, int seed);
 		};
 	}
+}
 }
