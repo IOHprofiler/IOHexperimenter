@@ -7,7 +7,7 @@ namespace fs = std::filesystem;
 
 TEST(experiment, config)
 {
-	fs::path config = fs::path("example") / "conf.ini";
+	fs::path config = fs::path("IOHexperimenter/example") / "conf.ini";
 	fs::path root;
 	bool found = false;
 	for (const auto& e : fs::current_path())
@@ -19,6 +19,8 @@ TEST(experiment, config)
 			found = true;
 			break;
 		}
+
+		
 	}
 	
 	if (!found)
