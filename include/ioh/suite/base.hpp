@@ -48,7 +48,7 @@ namespace ioh
 			/// user are able to request problem together with problem_id, instance_id, and dimension.
 			virtual void register_problems()
 			{
-			};
+			}
 
 
 			/// \fn loadProblems()

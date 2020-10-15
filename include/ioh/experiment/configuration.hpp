@@ -1,7 +1,10 @@
 #pragma once
 
 #include <algorithm>
+#include <filesystem>
 #include "ioh/common.hpp"
+
+namespace fs = std::filesystem;
 
 namespace ioh
 {
@@ -10,11 +13,11 @@ namespace ioh
 		static int max_number_of_problem;
 		static int max_dimension;
 
-		class _dict
+		class dict
 		{
 		public:
-			_dict() = default;
-			~_dict() = default;
+			dict() = default;
+			~dict() = default;
 
 			int n = 0;
 			size_t size;
@@ -35,7 +38,7 @@ namespace ioh
 		/// A class of configuration files, to be used in experimenter.
 		class configuration
 		{
-			std::string cfgFile = "configuration.ini";
+			std::string config_file = "configuration.ini";
 			std::string suite_name;
 			std::vector<int> problem_id;
 			std::vector<int> instance_id;
@@ -50,9 +53,13 @@ namespace ioh
 			int number_target_triggers;
 			int number_interval_triggers;
 		public:
-			configuration() = default;
+			configuration(const std::string filename) : config_file(filename)
+			{
+				readcfg(filename);
+			}
+			
 
-			int set_dict(_dict& dict, std::string section, std::string key, std::string value)
+			int set_dict(dict& dict, std::string section, std::string key, std::string value)
 			{
 				if (dict.n > 0)
 				{
@@ -91,7 +98,7 @@ namespace ioh
 				return 0;
 			}
 
-			std::string get_dict_String(_dict dict, std::string section, std::string key)
+			std::string get_dict_String(dict dict, std::string section, std::string key)
 			{
 				{
 					if (key.length() == 0)
@@ -116,7 +123,7 @@ namespace ioh
 				}
 			}
 
-			std::vector<int> get_dict_int_vector(_dict dict, std::string section, std::string key, int _min, int _max)
+			std::vector<int> get_dict_int_vector(dict dict, std::string section, std::string key, int _min, int _max)
 			{
 				size_t i;
 				std::vector<int> result;
@@ -149,7 +156,7 @@ namespace ioh
 				return result;
 			}
 
-			int get_dict_Int(_dict dict, std::string section, std::string key)
+			int get_dict_Int(dict dict, std::string section, std::string key)
 			{
 				int result;
 				std::string str;
@@ -158,7 +165,7 @@ namespace ioh
 				return result;
 			}
 
-			bool get_dict_bool(_dict dict, std::string section, std::string key)
+			bool get_dict_bool(dict dict, std::string section, std::string key)
 			{
 				bool result = false;
 				std::string str;
@@ -181,7 +188,7 @@ namespace ioh
 				line = common::strstrip(input_line);
 				len = line.length();
 
-				if (line.empty())
+				if (line.size() == 0)
 				{
 					content = EMPTY;
 				}
@@ -214,9 +221,8 @@ namespace ioh
 				}
 				return content;
 			}
-			
 
-			_dict load(std::string filename)
+			dict load(std::string filename)
 			{
 				std::ifstream fp(filename.c_str());
 
@@ -226,7 +232,7 @@ namespace ioh
 				std::string value;
 
 				int len;
-				_dict dict;
+				dict dict;
 				linecontent lc;
 
 				if (!fp.is_open())
@@ -246,6 +252,7 @@ namespace ioh
 					lc = add_Line(line, section, key, value);
 					switch (lc)
 					{
+						
 					case EMPTY:
 						break;
 					case COMMENT:
@@ -274,7 +281,10 @@ namespace ioh
 
 			void readcfg(std::string filename)
 			{
-				_dict dict;
+				if (!fs::exists(filename))
+					return;
+
+				dict dict;
 				dict = load(filename);
 				suite_name = get_dict_String(dict, "suite", "suite_name");
 				if (suite_name == "BBOB")

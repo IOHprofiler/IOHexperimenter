@@ -77,7 +77,17 @@ void suite_test()
 	// std::cout << ioh::common::factory<BaseOneArg, int>::get().create("D", 1)->get_name() << std::endl;
 }
 
-
+template < class T >
+std::ostream& operator << (std::ostream& os, const std::vector<T>& v)
+{
+	os << "[";
+	for (typename std::vector<T>::const_iterator ii = v.begin(); ii != v.end(); ++ii)
+	{
+		os << " " << *ii;
+	}
+	os << "]";
+	return os;
+}
 
 void compbiner()
 {
@@ -137,13 +147,46 @@ void compbiner()
 
 }
 
+
+
+
+
+
 int main()
 {
 
-	std::string config = "C:\\Users\\Jacob\\Source\\Repos\\IOHprofiler\\IOHexperimenter\\example\\CMakeLists.txt";
-	/// An example for PBO suite.
-	ioh::experiment::experimenter<ioh::problem::bbob::bbob_base> experimenter(config, algo);
+	std::string config = "example\\conf.ini";
 
+
+	
+	/// An example for PBO suite.
+	// ioh::experiment::experimenter<ioh::problem::bbob::bbob_base> experimenter(config, algo);
+
+	// ioh::experiment::configuration conf(config);
+	//
+	// std::cout << conf.get_suite_name() << std::endl
+	// 	<< conf.get_problem_id() << std::endl
+	// 	<< conf.get_instance_id() << std::endl
+	// 	<< conf.get_dimension() << std::endl
+	// 	<< conf.get_output_directory() << std::endl
+	// 	<< conf.get_result_folder() << std::endl
+	// 	<< conf.get_algorithm_info() << std::endl
+	// 	<< conf.get_algorithm_name() << std::endl
+	// 	<< conf.get_base_evaluation_triggers() << std::endl
+	// 	<< conf.get_update_triggers() << std::endl
+	// 	<< conf.get_complete_triggers() << std::endl
+	// 	<< conf.get_number_target_triggers() << std::endl
+	// 	<< conf.get_number_interval_triggers() << std::endl;
+		
+	
+	fs::path root;
+	for (auto e: fs::current_path())
+	{
+		root /= e;
+		if(fs::exists(root / config))
+			std::cout << root/config << std::endl;
+	}
+		
 	
 }
 

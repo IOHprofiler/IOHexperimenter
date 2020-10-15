@@ -20,10 +20,8 @@ namespace ioh
 			experimenter() = delete;
 			~experimenter() = default;
 
-			experimenter(std::string configFileName, algorithm_type* algorithm)
+			experimenter(std::string configFileName, algorithm_type* algorithm): conf(configFileName)
 			{
-				this->conf.readcfg(configFileName);
-
 				auto suite_name  = conf.get_suite_name();
 				auto problems = conf.get_problem_id();
 				auto instances = conf.get_instance_id();
@@ -53,7 +51,7 @@ namespace ioh
 
 			experimenter(std::shared_ptr<suite::base<ProblemType>> suite,
 			             std::shared_ptr<logger::csv<ProblemType>> csv_logger,
-			             algorithm_type* algorithm)
+			             algorithm_type* algorithm) : conf("")
 			{
 				configSuite = suite;
 				config_csv_logger = csv_logger;
