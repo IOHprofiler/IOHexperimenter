@@ -8,11 +8,7 @@ env:
 
 jobs:
   build:
-    # The CMake configure and build commands are platform agnostic and should work equally
-    # well on Windows or Mac.  You can convert this to a matrix build if you need
-    # cross-platform coverage.
-    # See: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#configuring-a-build-matrix
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v2
@@ -41,6 +37,4 @@ jobs:
     - name: Test
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      # Execute tests defined by the CMake configuration.  
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: test/test_ioh
