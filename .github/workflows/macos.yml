@@ -22,6 +22,7 @@ jobs:
       # We'll use this as our working directory for all subsequent commands
       env:
         CXX: ${{ matrix.compiler }}
+        ARCHFLAGS: "-lstdc++fs"
       run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Configure CMake
@@ -30,6 +31,7 @@ jobs:
       shell: bash
       env:
         CXX: ${{ matrix.compiler }}
+        ARCHFLAGS: "-lstdc++fs"
       working-directory: ${{runner.workspace}}/build
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
@@ -41,6 +43,7 @@ jobs:
       shell: bash
       env:
         CXX: ${{ matrix.compiler }}
+        ARCHFLAGS: "-lstdc++fs"
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: cmake --build . --config $BUILD_TYPE
 
