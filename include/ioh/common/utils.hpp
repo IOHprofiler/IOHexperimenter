@@ -5,6 +5,8 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
+#include <unordered_map>
 
 namespace ioh
 {
@@ -155,6 +157,12 @@ namespace ioh
 			return s;
 		}
 
+		static std::string to_lower(std::string s)
+		{
+			std::transform(s.begin(), s.end(), s.begin(), tolower);
+			return s;
+		}
+
 		/// \fn std::vector<int> get_int_vector_parse_string(std::string input, const int _min, const int _max) {
 		/// \brief To get a vector of integer values with a range 'n-m'
 		///
@@ -273,5 +281,58 @@ namespace ioh
 			}
 			return result;
 		}
+
+		class container
+		{
+			std::unordered_map<std::string,
+				std::unordered_map<std::string, std::string>> data;
+
+			static std::string nice(const std::string& key)
+			{
+				return common::to_lower(common::strstrip(key));
+			}
+		public:
+			void set(const std::string& section, const std::string& key, const std::string& value)
+			{
+				data[nice(section)][nice(key)] = value;
+			}
+
+			[[nodiscard]]
+			std::unordered_map<std::string, std::string> get(const std::string& section) const
+			{
+				const auto iter = data.find(nice(section));
+				if (iter != data.end())
+					return iter->second;
+				std::cout << "Cannot find section: " << section << std::endl;
+			}
+
+			[[nodiscard]]
+			std::string get(const std::string& section, const std::string& key) const
+			{
+				auto map = get(section);
+				const auto iter = map.find(nice(key));
+				if (iter != map.end())
+					return iter->second;
+				std::cout << "Cannot find key: " << section << std::endl;
+			}
+
+			int get_int(const std::string& section, const std::string& key) const
+			{
+				return std::stoi(get(section, key));
+			}
+
+			int get_bool(const std::string& section, const std::string& key) const
+			{
+				return nice(get(section, key)) == "true";
+			}
+
+			std::vector<int> get_int_vector(const std::string& section, const std::string& key, const int _min, const int _max) const
+			{
+				return get_int_vector_parse_string(get(section, key), _min, _max);
+			}
+		};
+
+
+		
 	}
 }
