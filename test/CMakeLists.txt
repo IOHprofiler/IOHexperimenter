@@ -2,7 +2,7 @@
 ##
 ## This will build a Google Test test runner for all contained tests.
 ##
-add_subdirectory(vendor/googletest EXCLUDE_FROM_ALL)
+add_subdirectory(vendor/googletest)
 
 
 add_executable(test_${PROJECT_NAME} 
