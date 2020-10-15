@@ -21,7 +21,7 @@ endif()
 # Define project targets.
 file(GLOB SOURCES src/*.cpp src/*/*.cpp)
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
-
+ 
 # Exlude python problems if not enabled
 if(NOT ENABLE_PYTHON_PROBLEMS)
     list(FILTER HEADERS EXCLUDE REGEX "include/ioh/problem/python/*")

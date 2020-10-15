@@ -10,6 +10,7 @@ namespace ioh
 		class bbob : public base<problem::bbob::bbob_base>
 		{
 		public:
+			using input_type = double;
 			bbob(std::vector<int> problem_id = vector<int>(0),
 			     const std::vector<int> instance_id = vector<int>({DEFAULT_INSTANCE}),
 			     const std::vector<int> dimension = vector<int>({DEFAULT_DIMENSION}))

@@ -1,8 +1,3 @@
-/// Test suite for the sample module.
-///
-/// Link all test files with the `gtest_main` library to create a command-line 
-/// test runner.
-///
 #include <gtest/gtest.h>
 #include "ioh.hpp"
 
@@ -10,6 +5,7 @@
 TEST(common, test)
 {
 	using namespace ioh::common;
+
 	ASSERT_TRUE(compare_objectives(4, 2, optimization_type::maximization));
 	ASSERT_FALSE(compare_objectives(2, 2, optimization_type::maximization));
 

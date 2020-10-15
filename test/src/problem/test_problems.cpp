@@ -1,7 +1,8 @@
-#include <gtest/gtest.h>
-#include "ioh.hpp"
 #include <cmath>
 #include <list>
+#include <gtest/gtest.h>
+#include "ioh.hpp"
+
 
 
 double test_eval(std::shared_ptr<ioh::problem::bbob::bbob_base> f)
@@ -79,8 +80,10 @@ TEST(problems, pbo)
 
 TEST(suite, bbob)
 {
+	ioh::common::log::log_level = ioh::common::log::level::warning;
+
 	ioh::suite::bbob bbob;
-	std::shared_ptr<ioh::problem::bbob::bbob_base> problem;
+	std::shared_ptr<ioh::problem::bbob::bbob_base> problem;	
 	auto results = std::list<double>({
 		85.3339,
 		4670466.7111,

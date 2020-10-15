@@ -12,16 +12,41 @@ namespace ioh
 	{
 		enum class optimization_type { minimization = 0, maximization = 1 };
 
-
 		namespace log
 		{
-			void error(std::string error_info);
+			enum class level
+			{
+				info, warning, error
+			};
 
-			void warning(std::string warning_info);
+			inline level log_level = level::info;
+				
+			inline void error(const std::string error_info)
+			{
+				if (log_level <= level::error)
+				{
+					std::cerr << "IOH_ERROR_INFO : " << error_info << std::endl;
+					exit(1);
+				}
+			}
 
-			void info(std::string log_info);
+			inline void warning(const std::string warning_info)
+			{
+				if (log_level <= level::warning)
+					std::cout << "IOH_WARNING_INFO : " << warning_info << std::endl;
+			}
 
-			void info(std::string log_info, std::ofstream& log_stream);
+			inline void info(const std::string log_info)
+			{
+				if (log_level <= level::info)
+					std::cout << "IOH_LOG_INFO : " << log_info << std::endl;
+			}
+
+			inline void info(const std::string log_info, std::ofstream& log_stream)
+			{
+				if (log_level >= level::info)
+					log_stream << "IOH_LOG_INFO : " << log_info << std::endl;
+			}
 		}
 
 

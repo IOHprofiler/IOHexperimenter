@@ -23,8 +23,7 @@ namespace ioh
 		{
 			// The information for directory.
 			std::string folder_name;
-			std::string output_directory;
-			fs::path output_path;
+			fs::path output_directory;
 
 			// The information for logging.
 			std::string algorithm_name;
@@ -81,14 +80,14 @@ namespace ioh
 			///     until there is no such a folder or file. 
 			fs::path experiment_folder_name()
 			{
-				auto renamed_directory = output_path / folder_name;
+				auto renamed_directory = output_directory / folder_name;
 				auto temp_folder_name = folder_name;
 				auto index = 0;
 				while (exists(renamed_directory))
 				{
 					++index;
 					temp_folder_name = folder_name + '-' + common::to_string(index);
-					renamed_directory = output_path / temp_folder_name;
+					renamed_directory = output_directory / temp_folder_name;
 				}
 				folder_name = temp_folder_name;
 				return renamed_directory;
@@ -119,7 +118,7 @@ namespace ioh
 
 			fs::path sub_directory() const
 			{
-				return output_path / folder_name /
+				return output_directory / folder_name /
 					("data_f" + common::to_string(problem_id) + "_" + problem_name);
 			}
 
@@ -207,23 +206,14 @@ namespace ioh
 
 		public:
 
-			csv() :
-				folder_name{"IOHprofiler_test"},
-				output_directory{"./"},
-				output_path{"./"},
-				algorithm_name{"algorithm"},
-				algorithm_info{"algorithm_info"}
-			{
-			}
-
-			csv(std::string directory, std::string folder_name,
-			    std::string alg_name, std::string alg_info) :
+			csv(const std::string output_directory = "./", const std::string folder_name = "IOHprofiler_test",
+			    const std::string algorithm_name = "algorithm", const std::string algorithm_info = "algorithm_info") :
 				folder_name{folder_name},
-				output_directory{directory},
-				output_path{directory},
-				algorithm_name{alg_name},
-				algorithm_info{alg_info}
+				output_directory{output_directory},
+				algorithm_name{algorithm_name},
+				algorithm_info{algorithm_info}
 			{
+				open_index();
 			}
 
 			~csv()
@@ -341,7 +331,7 @@ namespace ioh
 				if (problem_id != this->last_problem_id)
 				{
 					this->info_file.close();
-					fs::path infofile_path = output_path / folder_name /
+					fs::path infofile_path = output_directory / folder_name /
 						("IOHprofiler_f" + common::to_string(problem_id) + "_" + problem_name + ".info");
 
 
@@ -425,8 +415,8 @@ namespace ioh
 			}
 
 			void write_info(const int instance, const double best_y, const double best_transformed_y,
-			                const int evaluations,
-			                const double last_y, const double last_transformed_y, const int last_evaluations)
+			                const size_t evaluations,
+			                const double last_y, const double last_transformed_y, const size_t last_evaluations)
 			{
 				if (!info_file.is_open())
 					common::log::error("write_info(): writing info into unopened info_file");

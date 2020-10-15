@@ -86,7 +86,7 @@ namespace ioh
 			void do_log(const std::vector<double>& logger_info) override
 			{
 				for (auto& p : _observers)
-					p->track_problem(logger_info);
+					p->do_log(logger_info);
 			}
 
 			/** @} */

@@ -75,7 +75,9 @@ namespace ioh
 
 			size_t index(double x) override
 			{
-				return std::floor(std::log10(1 + (x - this->min())) / std::log10(1 + this->length()) * this->size());
+				return static_cast<size_t>(
+					std::floor(std::log10(1 + (x - this->min())) / std::log10(1 + this->length()) * this->size())
+				);
 			}
 		};
 
@@ -97,10 +99,9 @@ namespace ioh
 		static std::ostream& operator<<(std::ostream& out, const attain_mat& mat)
 		{
 			size_t ndigits = 1;
-			if (mat.back().back() > 0)
-			{
+			if (mat.back().back())
 				ndigits = 1 + static_cast<size_t>(std::floor(std::log10(static_cast<double>(mat.back().back()))));
-			}
+
 			out.precision(ndigits);
 			for (size_t i = 0; i < mat.size(); ++i)
 			{

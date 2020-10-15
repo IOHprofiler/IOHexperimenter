@@ -15,30 +15,26 @@ namespace ioh
 		{
 		public:
 			typedef void algorithm_type(std::shared_ptr<ProblemType>, std::shared_ptr<logger::csv<ProblemType>>);
+			typedef common::factory<suite::base<ProblemType>, std::vector<int>, std::vector<int>, std::vector<int>> suite_factory;
 
 			experimenter() = delete;
-
-			~experimenter()
-			{
-			}
+			~experimenter() = default;
 
 			experimenter(std::string configFileName, algorithm_type* algorithm)
 			{
 				this->conf.readcfg(configFileName);
 
-				configSuite = common::factory<suite::base<ProblemType>>::instance().create(
-					conf.get_suite_name());
+				auto suite_name  = conf.get_suite_name();
+				auto problems = conf.get_problem_id();
+				auto instances = conf.get_instance_id();
+				auto dimensions = conf.get_dimension();
+				
+				configSuite = suite_factory::get().create(suite_name, problems, instances, dimensions);
+
+
 				if (configSuite == nullptr)
 					common::log::error("Creating suite fails, please check your configuration");
-
-				configSuite->set_suite_problem_id(conf.get_problem_id());
-				configSuite->set_suite_instance_id(conf.get_instance_id());
-				configSuite->set_suite_dimension(conf.get_dimension());
-				configSuite->loadProblem();
-
-				// std::shared_ptr<logger::csv<ProblemType>> logger(new logger::csv(
-				// 	conf.get_output_directory(), conf.get_result_folder(), conf.get_algorithm_name(),
-				// 	conf.get_algorithm_info()));
+				
 				auto logger = std::make_shared<logger::csv<ProblemType>>(
 					conf.get_output_directory(), conf.get_result_folder(), conf.get_algorithm_name(),
 					conf.get_algorithm_info());
@@ -52,8 +48,6 @@ namespace ioh
 				logger->set_update_flag(conf.get_update_triggers());
 
 				config_csv_logger = logger;
-				config_csv_logger->open_index();
-
 				this->algorithm = algorithm;
 			}
 

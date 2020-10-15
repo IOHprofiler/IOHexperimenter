@@ -35,6 +35,7 @@ namespace ioh
 				load_problem_flag(false),
 				current_problem(nullptr)
 			{
+				
 			}
 
 			base(const base&) = delete;

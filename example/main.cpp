@@ -10,6 +10,8 @@
 #include <random>
 #include <filesystem>
 
+#include "ioh/experiment/experimenter.hpp"
+
 namespace fs = std::filesystem;
 
 #include "ioh.hpp"
@@ -77,104 +79,72 @@ void suite_test()
 
 
 
-void ecdf_test()
+void compbiner()
 {
+	using namespace ioh;
 	using namespace ioh::problem;
-	using namespace ioh::logger;
-	
+
+
 	size_t sample_size = 100;
-	
+
 	std::vector<int> pbs = { 1,2 };
 	std::vector<int> ins = { 1,2 };
 	std::vector<int> dims = { 2,10 };
-	
-	
+
 	ioh::suite::bbob bench(pbs, ins, dims);
-	size_t ecdf_width = 20;
-	using Logger = ecdf<bbob::bbob_base>;
-	
-	range_log<double> error(0, 6e7, ecdf_width);
-	range_log<size_t> evals(0, sample_size, ecdf_width);
-	Logger logger(error, evals);
-	
-	logger.activate_logger();
-	logger.track_suite(bench);
-	
-	
-	size_t seed = 5;
+	// bench.loadProblem();
+
+	logger::ecdf<bbob::bbob_base> log_ecdf(0, 6e7, 20, 0, sample_size, 20);
+	logger::csv<bbob::bbob_base> log_csv; // Use default arguments.
+
+	logger::observer_combine<bbob::bbob_base> loggers({ &log_ecdf, &log_csv });
+	//
+	loggers.track_suite(bench);
+
+	int seed = 5;
 	std::mt19937 gen(seed);
+	// std::mt19937 gen(time(0));
 	std::uniform_real_distribution<> dis(-5, 5);
+
+
 	ioh::suite::bbob::problem_ptr pb;
-	
 	size_t n = 0;
 	while ((pb = bench.get_next_problem())) {
-		logger.track_problem(*pb);
-	
+		loggers.track_problem(*pb);
+
 		std::clog << "Problem " << pb->get_problem_id()
 			<< " (" << pb->get_problem_name() << ")"
-			<< " get " << pb->get_instance_id()
+			<< " instance " << pb->get_instance_id()
 			<< ", optimum: ";
-	
 		for (double o : pb->get_optimal()) {
 			std::clog << o << " ";
 		}
 		std::clog << std::endl;
-	
+
 		size_t d = pb->get_number_of_variables();
 		for (size_t s = 0; s < sample_size; ++s) {
 			std::vector<double> sol;
 			sol.reserve(d);
 			std::generate_n(std::back_inserter(sol), d, [&dis, &gen]() {return dis(gen); });
-	
+
 			double f = pb->evaluate(sol);
-			logger.do_log(pb->loggerInfo());
+			loggers.do_log(pb->loggerInfo());
 		}
+
 		n++;
 	} // for name_id
-	
 	std::clog << "Done " << n << " function test" << std::endl;
-	
-	size_t i, j, k;
-	std::tie(i, j, k) = logger.size();
-	std::clog << i << " problems × " << j << " dimensions × " << k << " instances" << std::endl;
-	assert(i == pbs.size());
-	assert(j == dims.size());
-	assert(k == ins.size());
-	
-	
-	
-	for (int ipb : pbs) {
-		for (int idim : dims) {
-			for (int iins : ins) {
-				std::clog << "Problem " << ipb
-					<< ", dimension " << idim
-					<< ", get " << iins
-					<< ": " << std::endl;
-				const auto& m = logger.at(ipb, iins, idim);
-				// std::clog << m << std::endl;
-				assert(m.size() == ecdf_width);
-				assert(m[0].size() == ecdf_width);
-			}
-		}
-	}
-	
-	ecdf_sum sum;
-	size_t s = sum(logger.data());
-	std::clog << "Attainments sum: ";
-	std::cout << s << std::endl;
-	assert(s <= sample_size * ecdf_width * ecdf_width * i * j * k);
+
 }
 
 int main()
 {
-	// 	
-	// ioh::problem::python::ExternPythonProblem<int> e("test_problem", "pb1");
-	// size_t d = e.get_number_of_variables();
-	//
-	// std::vector<int> sol(d, 6);
-	// double fit = e.evaluate(sol);
-	// std::cout << fit << std::endl;
 
+	std::string config = "C:\\Users\\Jacob\\Source\\Repos\\IOHprofiler\\IOHexperimenter\\example\\CMakeLists.txt";
+	/// An example for PBO suite.
+	ioh::experiment::experimenter<ioh::problem::bbob::bbob_base> experimenter(config, algo);
+
+	
 }
 
 

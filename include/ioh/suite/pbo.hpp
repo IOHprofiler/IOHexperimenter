@@ -10,6 +10,7 @@ namespace ioh
 		class pbo : public base<problem::pbo::pbo_base>
 		{
 		public:
+			using input_type = int;
 			pbo(std::vector<int> problem_id = vector<int>(0),
 			    const std::vector<int> instance_id = vector<int>({DEFAULT_INSTANCE}),
 			    const std::vector<int> dimension = vector<int>({100}))

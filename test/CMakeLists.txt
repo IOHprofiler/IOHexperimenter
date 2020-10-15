@@ -10,8 +10,8 @@ add_executable(test_${PROJECT_NAME}
     "src/problem/test_problems.cpp"  
     "src/problem/test_bbob_problem.cpp"  
     "src/problem/test_pbo_problem.cpp"    
-   # "src/logger/ecdf.cpp"
-   )
+    "src/logger/test_ecdf.cpp"
+  )
 
 target_include_directories(test_${PROJECT_NAME}
 PRIVATE
@@ -22,4 +22,4 @@ target_link_libraries(test_${PROJECT_NAME}
 PRIVATE
     ${PROJECT_NAME} gtest gtest_main 
 )
- 
+  
