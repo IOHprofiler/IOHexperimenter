@@ -1,5 +1,5 @@
 # IOHprofiler: IOHexperimenter 
-![Ubuntu](https://github.com/IOHprofiler/IOHexperimenter/workflows/Ubuntu/badge.svg)
+![Ubuntu (gcc-{10,9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/Ubuntu/badge.svg)
 ![MacOS](https://github.com/IOHprofiler/IOHexperimenter/workflows/MacOS/badge.svg)
 ![Windows](https://github.com/IOHprofiler/IOHexperimenter/workflows/Windows/badge.svg)
 
