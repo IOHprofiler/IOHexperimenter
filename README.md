@@ -1,7 +1,7 @@
 # IOHprofiler: IOHexperimenter 
 ![Ubuntu g++-{10, 9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/Ubuntu/badge.svg)
-![MacOS](https://github.com/IOHprofiler/IOHexperimenter/workflows/MacOS/badge.svg)
-![Windows](https://github.com/IOHprofiler/IOHexperimenter/workflows/Windows/badge.svg)
+![MacOS clang++, g++-{9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/MacOS/badge.svg)
+![Windows MVSC-2019](https://github.com/IOHprofiler/IOHexperimenter/workflows/Windows/badge.svg)
 
 
 This is the __benchmarking platform__ for <b>I</b>terative <b>O</b>ptimization <b>H</b>euristics (IOHs).
