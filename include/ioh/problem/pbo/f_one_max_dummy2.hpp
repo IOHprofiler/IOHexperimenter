@@ -12,39 +12,43 @@
 
 namespace ioh
 {
-    namespace problem
-    {
-        namespace pbo
-        {
-            class OneMax_Dummy2 : public pbo_base
-            {
-            public:
-                std::vector<int> info;
+	namespace problem
+	{
+		namespace pbo
+		{
+			class OneMax_Dummy2 : public pbo_base
+			{
+			public:
+				std::vector<int> info;
 
-                OneMax_Dummy2(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-                    : pbo_base("OneMax_Dummy2", instance_id)
-                {
-                    set_best_variables(1);
-                	set_number_of_variables(dimension);
-                }
-                void prepare_problem() {
-                    info = utils::dummy(get_number_of_variables(), 0.9, 10000);
-                }
+				OneMax_Dummy2(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+					: pbo_base("OneMax_Dummy2", instance_id)
+				{
+					set_best_variables(1);
+					set_number_of_variables(dimension);
+				}
 
-                double internal_evaluate(const std::vector<int>& x) {
-                    auto n = this->info.size();
-                    auto result = 0.0;
-                    for (auto i = 0; i != n; ++i) {
-                        result += x[this->info[i]];
-                    }
-                    return result;
-                }
+				void prepare_problem() override
+				{
+					info = utils::dummy(get_number_of_variables(), 0.9, 10000);
+				}
 
-                static OneMax_Dummy2* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
-                    return new OneMax_Dummy2(instance_id, dimension);
-                }
-            };
-        }
-    }
+				double internal_evaluate(const std::vector<int>& x) override
+				{
+					auto n = this->info.size();
+					auto result = 0.0;
+					for (auto i = 0; i != n; ++i)
+					{
+						result += x[this->info[i]];
+					}
+					return result;
+				}
+
+				static OneMax_Dummy2* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				{
+					return new OneMax_Dummy2(instance_id, dimension);
+				}
+			};
+		}
+	}
 }
-

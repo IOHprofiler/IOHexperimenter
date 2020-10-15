@@ -10,40 +10,44 @@
 
 namespace ioh
 {
-    namespace problem
-    {
-        namespace pbo
-        {
-            class Ising_Ring : public pbo_base
-            {
-            public:
-                Ising_Ring(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-                    : pbo_base("Ising_Ring", instance_id)
-                {
-                    set_best_variables(1);
-                	set_number_of_variables(dimension);
-                }
-                int modulo_ising_ring(int x, int N) {
-                    return (x % N + N) % N;
-                }
+	namespace problem
+	{
+		namespace pbo
+		{
+			class Ising_Ring : public pbo_base
+			{
+			public:
+				Ising_Ring(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+					: pbo_base("Ising_Ring", instance_id)
+				{
+					set_best_variables(1);
+					set_number_of_variables(dimension);
+				}
 
-                double internal_evaluate(const std::vector<int>& x) override {
-	                auto result = 0;
-	                auto n = x.size();
+				int modulo_ising_ring(int x, int N)
+				{
+					return (x % N + N) % N;
+				}
 
-                    int neig;
-                    for (auto i = 0; i < n; ++i) {
-                        neig = x[modulo_ising_ring((i - 1), static_cast<int>(n))];
-                        result += (x[i] * neig) - ((1 - x[i]) * (1 - neig));
-                    }
-                    return (double)result;
-                }
+				double internal_evaluate(const std::vector<int>& x) override
+				{
+					auto result = 0;
+					auto n = x.size();
 
-                static Ising_Ring* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
-                    return new Ising_Ring(instance_id, dimension);
-                }
-            	
-            };
-        }
-    }
+					int neig;
+					for (auto i = 0; i < n; ++i)
+					{
+						neig = x[modulo_ising_ring((i - 1), static_cast<int>(n))];
+						result += (x[i] * neig) - ((1 - x[i]) * (1 - neig));
+					}
+					return static_cast<double>(result);
+				}
+
+				static Ising_Ring* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				{
+					return new Ising_Ring(instance_id, dimension);
+				}
+			};
+		}
+	}
 }

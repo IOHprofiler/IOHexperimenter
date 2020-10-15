@@ -21,12 +21,12 @@ namespace ioh
 				const double condition_ = 10.0;
 				std::vector<double> negative_offset_;
 				std::vector<double> positive_offset_;
-				
+
 			public:
 				Schwefel(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 					: bbob_base(20, "Schwefel", instance_id, dimension),
-					negative_offset_(dimension),
-					positive_offset_(dimension)
+					  negative_offset_(dimension),
+					  positive_offset_(dimension)
 				{
 					set_number_of_variables(dimension);
 				}
@@ -72,7 +72,7 @@ namespace ioh
 
 
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
-					const int instance_id) override
+				                              const int instance_id) override
 				{
 					transformation::coco::transform_vars_x_hat_evaluate(x, rseed_);
 					transformation::coco::transform_vars_scale_evaluate(x, 2);

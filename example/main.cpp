@@ -8,10 +8,11 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <filesystem>
 
+namespace fs = std::filesystem;
 
 #include "ioh.hpp"
-#include "ioh/logger/ecdf.hpp"
 
 
 #define print(x) std::cout << std::fixed << std::setprecision(4) << x << std::endl
@@ -50,37 +51,39 @@ void algo(std::shared_ptr<ioh::problem::bbob::bbob_base> f, std::shared_ptr<ioh:
 }
 
 
-// ioh::suite::bbob bbob;
-// std::shared_ptr<ioh::problem::bbob::bbob_base> problem;
-// while ((problem = bbob.get_next_problem()) != nullptr)
-// 	std::cout << problem->get_problem_name() << std::endl;
-//
-//
-// std::cout << "*****************" << std::endl;
-// ioh::suite::bbob bbob({1}, {1, 2}, {5, 6});
-// std::shared_ptr<ioh::problem::bbob::bbob_base> problem;
-// while ((problem = bbob.get_next_problem()) != nullptr)
-// 	std::cout << problem->get_problem_name() << std::endl <<
-// 		problem->get_instance_id() << std::endl <<
-// 		problem->get_number_of_objectives() << std::endl;
-//
-//
-// std::vector<int> p{1};
-// std::vector<int> i{2};
-// std::vector<int> d{4};
-//
-// register_in_factory<BaseOneArg, C, int> c("C");
-// register_in_factory<BaseOneArg, D, int> d("D");
-// std::cout << factory<BaseOneArg, int>::get().create("D", 1)->get_name() << std::endl;
-
-int main()
+void suite_test()
 {
 
+	{
+		ioh::suite::bbob bbob;
+		std::shared_ptr<ioh::problem::bbob::bbob_base> problem;
+		while ((problem = bbob.get_next_problem()) != nullptr)
+			std::cout << problem->get_problem_name() << std::endl;
+	}
+	std::cout << "*****************" << std::endl;
+	ioh::suite::bbob bbob({1}, {1, 2}, {5, 6});
+	std::shared_ptr<ioh::problem::bbob::bbob_base> problem;
+	while ((problem = bbob.get_next_problem()) != nullptr)
+		std::cout << problem->get_problem_name() << std::endl <<
+			problem->get_instance_id() << std::endl <<
+			problem->get_number_of_objectives() << std::endl;
+	
+	
+
+	// ioh::common::register_in_factory<BaseOneArg, C, int> c("C");
+	// ioh::common::register_in_factory<BaseOneArg, D, int> d("D");
+	// std::cout << ioh::common::factory<BaseOneArg, int>::get().create("D", 1)->get_name() << std::endl;
+}
+
+
+
+void ecdf_test()
+{
 	using namespace ioh::problem;
 	using namespace ioh::logger;
-
+	
 	size_t sample_size = 100;
-
+	
 	std::vector<int> pbs = { 1,2 };
 	std::vector<int> ins = { 1,2 };
 	std::vector<int> dims = { 2,10 };
@@ -111,7 +114,7 @@ int main()
 			<< " (" << pb->get_problem_name() << ")"
 			<< " get " << pb->get_instance_id()
 			<< ", optimum: ";
-		
+	
 		for (double o : pb->get_optimal()) {
 			std::clog << o << " ";
 		}
@@ -122,7 +125,7 @@ int main()
 			std::vector<double> sol;
 			sol.reserve(d);
 			std::generate_n(std::back_inserter(sol), d, [&dis, &gen]() {return dis(gen); });
-			
+	
 			double f = pb->evaluate(sol);
 			logger.do_log(pb->loggerInfo());
 		}
@@ -162,7 +165,16 @@ int main()
 	assert(s <= sample_size * ecdf_width * ecdf_width * i * j * k);
 }
 
+int main()
+{
+	// 	
+	// ioh::problem::python::ExternPythonProblem<int> e("test_problem", "pb1");
+	// size_t d = e.get_number_of_variables();
+	//
+	// std::vector<int> sol(d, 6);
+	// double fit = e.evaluate(sol);
+	// std::cout << fit << std::endl;
+
+}
 
 
-
-//

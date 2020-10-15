@@ -11,8 +11,8 @@ namespace ioh
 		{
 		public:
 			pbo(std::vector<int> problem_id = vector<int>(0),
-				const std::vector<int> instance_id = vector<int>({ DEFAULT_INSTANCE }),
-				const std::vector<int> dimension = vector<int>({ 100 }))
+			    const std::vector<int> instance_id = vector<int>({DEFAULT_INSTANCE}),
+			    const std::vector<int> dimension = vector<int>({100}))
 			{
 				if (problem_id.empty())
 				{
@@ -22,16 +22,17 @@ namespace ioh
 				}
 				check_parameter_bounds(problem_id, 0, 23);
 				check_parameter_bounds(instance_id, 0, 100);
-				check_parameter_bounds(dimension, 0, 20000);							
+				check_parameter_bounds(dimension, 0, 20000);
 
 				set_suite_problem_id(problem_id);
 				set_suite_instance_id(instance_id);
 				set_suite_dimension(dimension);
 				set_suite_name("PBO");
-				register_problems();
+				pbo::register_problems();
+				loadProblem();
 			}
 
-			void register_problems()
+			void register_problems() override
 			{
 				using namespace problem::pbo;
 				register_problem<pbo_base, OneMax>("OneMax", 1);
@@ -58,10 +59,10 @@ namespace ioh
 				register_problem<pbo_base, Ising_Triangular>("Ising_Triangular", 21);
 				register_problem<pbo_base, NQueens>("NQueens", 23);
 			}
-						
+
 			static pbo* create(std::vector<int> problem_id = vector<int>(0),
-							   const std::vector<int> instance_id = vector<int>({ DEFAULT_INSTANCE }),
-							   const std::vector<int> dimension = vector<int>({ 100 }))
+			                   const std::vector<int> instance_id = vector<int>({DEFAULT_INSTANCE}),
+			                   const std::vector<int> dimension = vector<int>({100}))
 			{
 				return new pbo(problem_id, instance_id, dimension);
 			}

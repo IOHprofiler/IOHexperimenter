@@ -41,9 +41,9 @@ namespace ioh
 					}
 					return result;
 				}
-			
+
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
-					const int instance_id) override
+				                              const int instance_id) override
 				{
 					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
 					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);

@@ -1,6 +1,7 @@
 #pragma once
+
 #include <algorithm>
-#include "ioh/experiment/string.hpp"
+#include "ioh/common.hpp"
 
 namespace ioh
 {
@@ -12,13 +13,9 @@ namespace ioh
 		class _dict
 		{
 		public:
-			_dict()
-			{
-			};
+			_dict() = default;
+			~_dict() = default;
 
-			~_dict()
-			{
-			};
 			int n = 0;
 			size_t size;
 			std::vector<std::string> section;

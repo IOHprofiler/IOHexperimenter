@@ -178,7 +178,6 @@ namespace ioh
 				}
 
 
-				
 				variables_transformation(x, problem_id, instance_id);
 
 				this->raw_objectives[0] = this->internal_evaluate(x);
@@ -225,19 +224,18 @@ namespace ioh
 			/// It will be invoked after setting dimension (number_of_variables) or instance_id.
 			void calc_optimal()
 			{
-
 				if (this->best_variables.size() == this->number_of_variables)
 				{
 					/// todo. Make Exception.
 					/// Do not apply transformation on best_variables as calculating optimal
 					if (this->number_of_objectives == 1)
-						
+
 						this->optimal[0] = internal_evaluate(this->best_variables);
 					else
 						common::log::error("Multi-objectives optimization is not supported now.");
-					
+
 					objectives_transformation(this->best_variables, this->optimal,
-						this->problem_id, this->instance_id);
+					                          this->problem_id, this->instance_id);
 				}
 				else
 				{
@@ -432,7 +430,6 @@ namespace ioh
 			/// \param number_of_variables
 			void set_number_of_variables(int number_of_variables)
 			{
-
 				this->number_of_variables = number_of_variables;
 				if (this->best_variables.size() != 0)
 				{
@@ -446,7 +443,7 @@ namespace ioh
 				{
 					this->set_upperbound(this->upperbound[0]);
 				}
-				
+
 				this->prepare_problem();
 				this->calc_optimal();
 			}

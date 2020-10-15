@@ -19,7 +19,7 @@ namespace ioh
 			protected:
 				const double penalty_factor_ = 100.0;
 				std::vector<double> raw_x_;
-				
+
 			public:
 				Bueche_Rastrigin(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 					: bbob_base(4, "Bueche_Rastrigin", instance_id, dimension), raw_x_(dimension)
@@ -46,14 +46,15 @@ namespace ioh
 				}
 
 				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
-					const int transformation_id, const int instance_id) override
+				                               const int transformation_id, const int instance_id) override
 				{
 					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
-					transformation::coco::transform_obj_penalize_evaluate(raw_x_, lower_bound_, upper_bound_, penalty_factor_, y);
+					transformation::coco::transform_obj_penalize_evaluate(
+						raw_x_, lower_bound_, upper_bound_, penalty_factor_, y);
 				}
 
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
-					const int instance_id) override
+				                              const int instance_id) override
 				{
 					raw_x_ = x;
 					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
@@ -62,7 +63,7 @@ namespace ioh
 				}
 
 				static Bueche_Rastrigin* create(int instance_id = DEFAULT_INSTANCE,
-				                                        int dimension = DEFAULT_DIMENSION)
+				                                int dimension = DEFAULT_DIMENSION)
 				{
 					return new Bueche_Rastrigin(instance_id, dimension);
 				}

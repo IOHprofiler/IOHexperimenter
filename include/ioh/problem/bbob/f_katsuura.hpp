@@ -19,7 +19,7 @@ namespace ioh
 			{
 				const double penalty_factor_ = 1.0;
 				std::vector<double> raw_x_;
-				
+
 			public:
 				Katsuura(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 					: bbob_base(23, "Katsuura", instance_id, dimension), raw_x_(dimension)
@@ -31,7 +31,7 @@ namespace ioh
 				void prepare_problem() override
 				{
 					using namespace transformation::coco;
-		
+
 					bbob2009_compute_xopt(xopt_, rseed_, n_);
 					bbob2009_compute_rotation(rot1_, rseed_ + 1000000, n_);
 					bbob2009_compute_rotation(rot2_, rseed_, n_);
@@ -72,24 +72,24 @@ namespace ioh
 					}
 					result = 10. / static_cast<double>(n_) / static_cast<double>(n_) * (-1. + result);
 					return result;
-				
 				}
 
 				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
-					const int transformation_id, const int instance_id) override
+				                               const int transformation_id, const int instance_id) override
 				{
 					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
-					transformation::coco::transform_obj_penalize_evaluate(raw_x_, lower_bound_, upper_bound_,penalty_factor_, y);
+					transformation::coco::transform_obj_penalize_evaluate(
+						raw_x_, lower_bound_, upper_bound_, penalty_factor_, y);
 				}
 
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
-					const int instance_id) override
+				                              const int instance_id) override
 				{
 					raw_x_ = x;
 					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
 					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
-				
+
 				static Katsuura* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 				{
 					return new Katsuura(instance_id, dimension);

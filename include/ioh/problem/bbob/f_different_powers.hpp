@@ -29,14 +29,14 @@ namespace ioh
 					transformation::coco::bbob2009_compute_rotation(rot1_, rseed_ + 1000000, n_);
 					transformation::coco::bbob2009_copy_rotation_matrix(rot1_, m_, b_, n_);
 				}
-				
+
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
-					const int instance_id) override
+				                              const int instance_id) override
 				{
 					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
 					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
-				
+
 
 				double internal_evaluate(const std::vector<double>& x) override
 				{
@@ -51,7 +51,7 @@ namespace ioh
 				}
 
 				static Different_Powers* create(int instance_id = DEFAULT_INSTANCE,
-				                                        int dimension = DEFAULT_DIMENSION)
+				                                int dimension = DEFAULT_DIMENSION)
 				{
 					return new Different_Powers(instance_id, dimension);
 				}

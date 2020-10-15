@@ -23,8 +23,8 @@ namespace ioh
 			public:
 				Rastrigin_Rotated(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 					: bbob_base(15, "Rastrigin_Rotated", instance_id, dimension),
-					m1_(dimension, std::vector<double>(dimension)),
-					b1_(dimension)
+					  m1_(dimension, std::vector<double>(dimension)),
+					  b1_(dimension)
 				{
 					set_number_of_variables(dimension);
 				}
@@ -70,7 +70,7 @@ namespace ioh
 				}
 
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
-					const int instance_id) override
+				                              const int instance_id) override
 				{
 					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
 					transformation::coco::transform_vars_affine_evaluate_function(x, m1_, b1_);
@@ -81,7 +81,7 @@ namespace ioh
 
 
 				static Rastrigin_Rotated* create(int instance_id = DEFAULT_INSTANCE,
-				                                         int dimension = DEFAULT_DIMENSION)
+				                                 int dimension = DEFAULT_DIMENSION)
 				{
 					return new Rastrigin_Rotated(instance_id, dimension);
 				}

@@ -33,7 +33,7 @@ namespace ioh
 						return -1;
 					return 0;
 				}
-			
+
 				const size_t number_of_peaks = 101;
 				std::vector<std::vector<double>> rotation;
 				std::vector<std::vector<double>> arr_scales;
@@ -90,7 +90,7 @@ namespace ioh
 					//rperm = std::vector<f_gallagher_permutation_t1> (number_of_peaks - 1);
 					rperm = static_cast<f_gallagher_permutation_t1*>(malloc(
 						(number_of_peaks - 1) * sizeof(f_gallagher_permutation_t1)));
-					
+
 					for (i = 0; i < number_of_peaks - 1; ++i)
 					{
 						rperm[i].value = random_numbers[i];
@@ -226,7 +226,7 @@ namespace ioh
 				}
 
 				static Gallagher101* create(int instance_id = DEFAULT_INSTANCE,
-				                                    int dimension = DEFAULT_DIMENSION)
+				                            int dimension = DEFAULT_DIMENSION)
 				{
 					return new Gallagher101(instance_id, dimension);
 				}

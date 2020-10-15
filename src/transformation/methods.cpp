@@ -18,13 +18,12 @@ int methods::xor_compute(const int x1, const int x2)
 void methods::transform_vars_xor(std::vector<int>& x, const int seed)
 {
 	std::vector<double> random_x;
-	int xor_value;
 	int n = x.size();
 	common::random::uniform_rand(n, seed, random_x);
 
-	for (int i = 0; i < n; ++i)
+	for (auto i = 0; i < n; ++i)
 	{
-		xor_value = static_cast<int>(2 * floor(1e4 * random_x[i]) / 1e4);
+		int xor_value = static_cast<int>(2 * floor(1e4 * random_x[i]) / 1e4);
 		x[i] = xor_compute(x[i], xor_value);
 	}
 }

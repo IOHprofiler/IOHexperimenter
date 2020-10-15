@@ -17,7 +17,7 @@ namespace ioh
 			typedef void algorithm_type(std::shared_ptr<ProblemType>, std::shared_ptr<logger::csv<ProblemType>>);
 
 			experimenter() = delete;
-			
+
 			~experimenter()
 			{
 			}
@@ -26,7 +26,7 @@ namespace ioh
 			{
 				this->conf.readcfg(configFileName);
 
-				configSuite = common::genericGenerator<suite::base<ProblemType>>::instance().create(
+				configSuite = common::factory<suite::base<ProblemType>>::instance().create(
 					conf.get_suite_name());
 				if (configSuite == nullptr)
 					common::log::error("Creating suite fails, please check your configuration");
@@ -42,7 +42,7 @@ namespace ioh
 				auto logger = std::make_shared<logger::csv<ProblemType>>(
 					conf.get_output_directory(), conf.get_result_folder(), conf.get_algorithm_name(),
 					conf.get_algorithm_info());
-				
+
 				if (logger == nullptr)
 					common::log::error("Creating logger fails, please check your configuration");
 
@@ -57,7 +57,8 @@ namespace ioh
 				this->algorithm = algorithm;
 			}
 
-			experimenter(std::shared_ptr<suite::base<ProblemType>> suite, std::shared_ptr<logger::csv<ProblemType>> csv_logger,
+			experimenter(std::shared_ptr<suite::base<ProblemType>> suite,
+			             std::shared_ptr<logger::csv<ProblemType>> csv_logger,
 			             algorithm_type* algorithm)
 			{
 				configSuite = suite;
@@ -159,7 +160,5 @@ namespace ioh
 
 			algorithm_type* algorithm;
 		};
-
-		
 	}
 }

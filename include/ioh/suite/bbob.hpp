@@ -23,16 +23,16 @@ namespace ioh
 				check_parameter_bounds(problem_id, 0, 24);
 				check_parameter_bounds(instance_id, 0, 100);
 				check_parameter_bounds(dimension, 0, 100);
-				
+
 				set_suite_problem_id(problem_id);
 				set_suite_instance_id(instance_id);
 				set_suite_dimension(dimension);
 				set_suite_name("BBOB");
-				register_problems();
-				this->loadProblem();
+				bbob::register_problems();
+				loadProblem();
 			}
 
-			void register_problems()
+			void register_problems() override
 			{
 				using namespace problem::bbob;
 				register_problem<bbob_base, Sphere>("Sphere", 1);

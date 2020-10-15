@@ -19,11 +19,11 @@ namespace ioh
 		template <typename ProblemType>
 		class base : public ProblemType, public std::vector<std::shared_ptr<ProblemType>>
 		{
-			
 		public:
 			typedef std::shared_ptr<ProblemType> problem_ptr;
+
 			base(std::vector<int> problem_id = std::vector<int>(0),
-				 std::vector<int> instance_id = std::vector<int>(0),
+			     std::vector<int> instance_id = std::vector<int>(0),
 			     std::vector<int> dimension = std::vector<int>(0)) :
 				suite_name("no suite"),
 				problem_id(problem_id),
@@ -45,9 +45,10 @@ namespace ioh
 			///
 			/// This function implements interfaces of available problems of a suite. With those interface,
 			/// user are able to request problem together with problem_id, instance_id, and dimension.
-			virtual void registerInSuite()
+			virtual void register_problems()
 			{
-			}
+			};
+
 
 			/// \fn loadProblems()
 			/// \brief Allocating memory and creating instances of problems to be included in the suite.
@@ -56,7 +57,6 @@ namespace ioh
 			/// Otherwise the list of problem is empty.
 			void loadProblem()
 			{
-				
 				if (this->size() != 0)
 				{
 					this->clear();
@@ -71,7 +71,6 @@ namespace ioh
 					{
 						for (auto h = 0; h != this->number_of_instances; ++h)
 						{
-							
 							problem_ptr p = get_problem(this->problem_id_name_map[this->problem_id[i]],
 							                            this->instance_id[h],
 							                            this->dimension[j]);
@@ -124,23 +123,22 @@ namespace ioh
 
 				if (this->get_problem_flag == false)
 					this->get_problem_flag = true;
-				
+
 				this->current_problem = (*this)[this->problem_list_index];
 				this->current_problem->reset_problem();
 				return this->current_problem;
 			}
 
-			template<typename P, typename T>
+			template <typename P, typename T>
 			void register_problem(const std::string name, const int id)
 			{
 				common::register_in_factory<P, T, int, int> problem(name);
 				this->mapIDTOName(id, name);
-
 			}
 
 			void check_parameter_bounds(std::vector<int> ids, const int lb, const int ub)
 			{
-				for (const auto &e: ids)
+				for (const auto& e : ids)
 					if (e < lb || e > ub)
 						common::log::error("problem_id " + std::to_string(e) + " is not in " + get_suite_name());
 			}
@@ -152,7 +150,6 @@ namespace ioh
 			/// without concerning the order of testing problems.
 			problem_ptr get_problem(std::string problem_name, int instance, int dimension)
 			{
-
 				problem_ptr p = common::factory<ProblemType, int, int>::get().create(problem_name, instance, dimension);
 				assert(p != nullptr);
 				//TODO: check this, move stuff to the constructor
@@ -252,6 +249,7 @@ namespace ioh
 				problem_id_name_map[id] = name;
 				problem_name_id_map[name] = id;
 			}
+
 		private:
 			std::string suite_name;
 			int number_of_problems;

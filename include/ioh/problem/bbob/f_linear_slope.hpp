@@ -52,7 +52,8 @@ namespace ioh
 						double base, exponent, si;
 
 						base = sqrt(alpha);
-						exponent = static_cast<double>(static_cast<long>(i)) / (static_cast<double>(static_cast<long>(n_)
+						exponent = static_cast<double>(static_cast<long>(i)) / (static_cast<double>(static_cast<long>(n_
+							)
 						) - 1);
 						if (xopt_[i] > 0.0)
 							si = pow(base, exponent);
@@ -66,9 +67,9 @@ namespace ioh
 					}
 					return result;
 				}
-							
+
 				static Linear_Slope* create(int instance_id = DEFAULT_INSTANCE,
-				                                    int dimension = DEFAULT_DIMENSION)
+				                            int dimension = DEFAULT_DIMENSION)
 				{
 					return new Linear_Slope(instance_id, dimension);
 				}

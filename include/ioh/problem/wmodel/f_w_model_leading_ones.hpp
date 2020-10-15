@@ -57,7 +57,8 @@ namespace ioh
 				void customize_optimal() override
 				{
 					auto dimension = get_number_of_variables();
-					auto optimal_value = static_cast<int>(dimension * (this->dummy_para == 0 ? 1 : this->dummy_para)) / (
+					auto optimal_value = static_cast<int>(dimension * (this->dummy_para == 0 ? 1 : this->dummy_para)) /
+					(
 						this->neutrality_para == 0 ? 1 : this->neutrality_para);
 
 					set_optimal(static_cast<double>(optimal_value));
@@ -141,7 +142,7 @@ namespace ioh
 				}
 
 				static W_Model_LeadingOnes* create(int instance_id = DEFAULT_INSTANCE,
-				                                           int dimension = DEFAULT_DIMENSION)
+				                                   int dimension = DEFAULT_DIMENSION)
 				{
 					return new W_Model_LeadingOnes(instance_id, dimension);
 				}

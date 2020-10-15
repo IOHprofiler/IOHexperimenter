@@ -65,7 +65,8 @@ namespace ioh
 						}
 						else
 						{
-							result += (static_cast<double>(remain_k - 1 - block_result) / static_cast<double>(remain_k));
+							result += (static_cast<double>(remain_k - 1 - block_result) / static_cast<double>(remain_k)
+							);
 						}
 					}
 
@@ -76,10 +77,7 @@ namespace ioh
 				{
 					return new Concatenated_Trap(instance_id, dimension);
 				}
-
 			};
 		}
 	}
 }
-
-

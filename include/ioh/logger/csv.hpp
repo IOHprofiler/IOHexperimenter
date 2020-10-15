@@ -162,10 +162,10 @@ namespace ioh
 				if (!exists(sub_directory()))
 					create_folder(sub_directory());
 
-				recreate_handle(complete_status(), ".cdat", cdat, cdat_buffer);
-				recreate_handle(interval_status(), ".idat", idat, idat_buffer);
-				recreate_handle(update_status(), ".dat", dat, dat_buffer);
-				recreate_handle(time_points_status(), ".tdat", dat, dat_buffer);
+				recreate_handle(this->complete_status(), ".cdat", cdat, cdat_buffer);
+				recreate_handle(this->interval_status(), ".idat", idat, idat_buffer);
+				recreate_handle(this->update_status(), ".dat", dat, dat_buffer);
+				recreate_handle(this->time_points_status(), ".tdat", dat, dat_buffer);
 			}
 
 			void write_stream(std::string buffer_string, std::fstream& dat_stream)
@@ -189,14 +189,13 @@ namespace ioh
 						buffer_string = add_string;
 					}
 				}
-
 			}
 
-			void conditional_write_in_buffer(const bool write, std::string add_string, std::string& buffer_string, std::fstream& dat_stream)
+			void conditional_write_in_buffer(const bool write, std::string add_string, std::string& buffer_string,
+			                                 std::fstream& dat_stream)
 			{
 				if (write)
 					write_in_buffer(add_string, buffer_string, dat_stream);
-					
 			}
 
 			/// \fn openIndex()
@@ -343,27 +342,27 @@ namespace ioh
 				{
 					this->info_file.close();
 					fs::path infofile_path = output_path / folder_name /
-						("IOHprofiler_f" + common::to_string(problem_id) + "_" + problem_name+ ".info");
-					
-					
-					if (fs::exists(infofile_path))
+						("IOHprofiler_f" + common::to_string(problem_id) + "_" + problem_name + ".info");
+
+
+					if (exists(infofile_path))
 						titleflag = "\n";
 
 					this->info_file.open(infofile_path.c_str(), std::ofstream::out | std::ofstream::app);
 					this->info_buffer += titleflag;
-					
+
 					this->info_buffer += ("suite = \"" + this->suite_name + "\", funcId = " +
 						common::to_string(problem_id) + ", funcName = \"" + problem_name + "\", DIM = " +
 						common::to_string(dimension) + ", maximization = \"" + optimization_type + "\", algId = \"" +
 						this->algorithm_name + "\", algInfo = \"" + this->algorithm_info + "\"");
 
-					
+
 					if (this->attr_per_exp_name_value.size() != 0)
 					{
-						for (const auto &e: attr_per_exp_name_value)
+						for (const auto& e : attr_per_exp_name_value)
 							this->info_buffer += (", " + e.first + " = \"" + e.second + "\"");
 					}
-					
+
 					if (this->attr_per_run_name_value.size() != 0)
 					{
 						this->info_buffer += ", dynamicAttribute = \"";
@@ -396,8 +395,7 @@ namespace ioh
 						this->algorithm_name + "\", algInfo = \"" + this->algorithm_info + "\"");
 					if (this->attr_per_exp_name_value.size() != 0)
 					{
-	
-						for (const auto & [fst, snd]: attr_per_exp_name_value)
+						for (const auto& [fst, snd] : attr_per_exp_name_value)
 							this->info_buffer += (", " + fst + " = \"" + snd + "\"");
 					}
 
@@ -426,7 +424,8 @@ namespace ioh
 				}
 			}
 
-			void write_info(const int instance, const double best_y, const double best_transformed_y, const int evaluations,
+			void write_info(const int instance, const double best_y, const double best_transformed_y,
+			                const int evaluations,
 			                const double last_y, const double last_transformed_y, const int last_evaluations)
 			{
 				if (!info_file.is_open())
@@ -558,7 +557,7 @@ namespace ioh
 			{
 				if (parameters_name.size() != parameters.size())
 					common::log::error("Parameters and their names are given with different size.");
-				
+
 				if (this->logging_parameters.size() != 0)
 					this->logging_parameters.clear();
 				for (size_t i = 0; i != parameters.size(); i++)

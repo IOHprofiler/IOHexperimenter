@@ -102,7 +102,7 @@ namespace ioh
 				g = std::vector<double>(N);
 				std::vector<double> uniftmp(6000);
 				assert(2 * N < 6000);
-				
+
 				bbob2009_unif(uniftmp, (2 * N), seed);
 
 				for (i = 0; i < N; i++)

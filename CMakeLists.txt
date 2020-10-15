@@ -9,7 +9,10 @@ project(ioh
  
 set(CMAKE_CXX_STANDARD 17)
 
+option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python modules as if they were an IOH problem" ON)
+
 if(MSVC)
+    set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windowss
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 endif() 
@@ -18,9 +21,24 @@ endif()
 # Define project targets.
 file(GLOB SOURCES src/*.cpp src/*/*.cpp)
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
- 
+
+# Exlude python problems if not enabled
+if(NOT ENABLE_PYTHON_PROBLEMS)
+    list(FILTER HEADERS EXCLUDE REGEX "include/ioh/problem/python/*")
+endif()
+
+
 add_library(ioh ${HEADERS} ${SOURCES})
 add_library(ioh::ioh ALIAS ioh)
+
+# Add Python Library
+if(ENABLE_PYTHON_PROBLEMS)
+    find_package(PythonLibs REQUIRED)
+    include_directories(${PYTHON_INCLUDE_DIRS})
+    target_link_libraries(ioh ${PYTHON_LIBRARIES})
+    add_compile_definitions(PYTHON_DEFINED)
+endif()
+
 
 target_include_directories(ioh
 PUBLIC
@@ -107,3 +125,9 @@ export(PACKAGE ioh)
 # Add subdirectories to build.
 add_subdirectory(test)
 add_subdirectory(example)
+
+
+
+
+
+

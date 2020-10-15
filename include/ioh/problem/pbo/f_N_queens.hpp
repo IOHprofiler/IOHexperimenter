@@ -38,7 +38,7 @@ namespace ioh
 					}
 					return element2;
 				}
-				
+
 				double internal_evaluate(const std::vector<int>& x) override
 				{
 					double result;

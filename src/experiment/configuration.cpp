@@ -43,9 +43,9 @@ namespace ioh
 					}
 				}
 			}
-			dict.section.push_back(strstrip(section));
-			dict.key.push_back(strstrip(key));
-			dict.value.push_back(strstrip(value));
+			dict.section.push_back(common::strstrip(section));
+			dict.key.push_back(common::strstrip(key));
+			dict.value.push_back(common::strstrip(value));
 			dict.n += 1;
 			return 0;
 		}
@@ -106,7 +106,7 @@ namespace ioh
 				}
 				if (key == dict.key[i] && section == dict.section[i])
 				{
-					result = get_int_vector_parse_string(dict.value[i], _min, _max);
+					result = common::get_int_vector_parse_string(dict.value[i], _min, _max);
 					return result;
 				}
 			}
@@ -147,7 +147,7 @@ namespace ioh
 			char tempvalue[MAXKEYNUMBER];
 			char tempsection[MAXKEYNUMBER];
 
-			line = strstrip(input_line);
+			line = common::strstrip(input_line);
 			len = line.length();
 
 			if (len < 0)
@@ -219,11 +219,11 @@ namespace ioh
 				case COMMENT:
 					break;
 				case SECTION:
-					strstrip(section);
+					common::strstrip(section);
 					this->set_dict(dict, section, key, value);
 					break;
 				case VALUE:
-					strstrip(key);
+					common::strstrip(key);
 					this->set_dict(dict, section, key, value);
 					break;
 				case CON_ERROR:

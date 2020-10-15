@@ -25,7 +25,7 @@ namespace ioh
 					set_best_variables(1);
 					set_number_of_variables(dimension);
 				}
-				
+
 				double internal_evaluate(const std::vector<int>& x) override
 				{
 					auto new_variables = utils::neutrality(x, 3);
@@ -46,7 +46,7 @@ namespace ioh
 				}
 
 				static LeadingOnes_Neutrality* create(int instance_id = DEFAULT_INSTANCE,
-				                                              int dimension = DEFAULT_DIMENSION)
+				                                      int dimension = DEFAULT_DIMENSION)
 				{
 					return new LeadingOnes_Neutrality(instance_id, dimension);
 				}

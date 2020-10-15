@@ -12,45 +12,50 @@
 
 namespace ioh
 {
-    namespace problem
-    {
-        namespace pbo
-        {
-            class LeadingOnes_Dummy1 : public pbo_base
-            {
-            public:
-                std::vector<int> info;
+	namespace problem
+	{
+		namespace pbo
+		{
+			class LeadingOnes_Dummy1 : public pbo_base
+			{
+			public:
+				std::vector<int> info;
 
-                LeadingOnes_Dummy1(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-                    : pbo_base("LeadingOnes_Dummy1", instance_id)
-                {
-                    set_best_variables(1);
-                	set_number_of_variables(dimension);
-                }
-               
-                void prepare_problem()override {
-                    info = utils::dummy(get_number_of_variables(), 0.5, 10000);
-                }
+				LeadingOnes_Dummy1(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+					: pbo_base("LeadingOnes_Dummy1", instance_id)
+				{
+					set_best_variables(1);
+					set_number_of_variables(dimension);
+				}
 
-                double internal_evaluate(const std::vector<int>& x)override {
-	                auto n = this->info.size();
-	                auto result = 0;
-                    for (auto i = 0; i != n; ++i) {
-                        if (x[this->info[i]] == 1) {
-                            result = i + 1;
-                        }
-                        else {
-                            break;
-                        }
-                    }
-                    return (double)result;
-                }
+				void prepare_problem() override
+				{
+					info = utils::dummy(get_number_of_variables(), 0.5, 10000);
+				}
 
-                static LeadingOnes_Dummy1* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
-                    return new LeadingOnes_Dummy1(instance_id, dimension);
-                }
-            };
-        }
-    }
+				double internal_evaluate(const std::vector<int>& x) override
+				{
+					auto n = this->info.size();
+					auto result = 0;
+					for (auto i = 0; i != n; ++i)
+					{
+						if (x[this->info[i]] == 1)
+						{
+							result = i + 1;
+						}
+						else
+						{
+							break;
+						}
+					}
+					return static_cast<double>(result);
+				}
+
+				static LeadingOnes_Dummy1* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				{
+					return new LeadingOnes_Dummy1(instance_id, dimension);
+				}
+			};
+		}
+	}
 }
-

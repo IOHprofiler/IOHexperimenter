@@ -12,6 +12,7 @@ namespace ioh
 			{
 			public:
 				pbo_base() = default;
+
 				pbo_base(std::string problem_name, int instance_id = DEFAULT_INSTANCE)
 				{
 					set_instance_id(instance_id);
@@ -19,11 +20,11 @@ namespace ioh
 					set_problem_type("pseudo_Boolean_problem");
 					set_number_of_objectives(1);
 					set_lowerbound(0);
-					set_upperbound(1);					
+					set_upperbound(1);
 				}
 
 				void objectives_transformation(const std::vector<int>& x, std::vector<double>& y,
-					const int transformation_id, const int instance_id) override
+				                               const int transformation_id, const int instance_id) override
 				{
 					if (instance_id > 1)
 					{
@@ -33,7 +34,7 @@ namespace ioh
 				}
 
 				void variables_transformation(std::vector<int>& x, const int transformation_id,
-					const int instance_id) override
+				                              const int instance_id) override
 				{
 					if (instance_id > 1 && instance_id <= 50)
 					{
@@ -44,7 +45,6 @@ namespace ioh
 						transformation::methods::transform_vars_sigma(x, instance_id);
 					}
 				}
-
 			};
 		}
 	}

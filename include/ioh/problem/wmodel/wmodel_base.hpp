@@ -11,7 +11,10 @@ namespace ioh
 			{
 			public:
 				wmodel_base() = default;
-				wmodel_base(std::string problem_name, int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+
+				wmodel_base(std::string problem_name, int instance_id = DEFAULT_INSTANCE,
+				            int dimension = DEFAULT_DIMENSION)
+				{
 					set_instance_id(instance_id);
 					set_problem_name(problem_name);
 					set_problem_type("pseudo_Boolean_problem");

@@ -26,20 +26,22 @@ namespace ioh
 					set_number_of_variables(dimension);
 				}
 
-				double internal_evaluate(const std::vector<int>& x) {
+				double internal_evaluate(const std::vector<int>& x) override
+				{
 					auto n = x.size();
 					double result = 0;
-					for (auto i = 0; i < n; ++i) {
-						result += (double)x[i] * (double)(i + 1);
+					for (auto i = 0; i < n; ++i)
+					{
+						result += static_cast<double>(x[i]) * static_cast<double>(i + 1);
 					}
-					return (double)result;
+					return static_cast<double>(result);
 				}
 
-				static Linear* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
+				static Linear* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				{
 					return new Linear(instance_id, dimension);
 				}
 			};
 		};
 	}
 }
-

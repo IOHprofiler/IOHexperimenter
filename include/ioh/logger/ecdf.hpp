@@ -9,7 +9,6 @@
 #include "observer.hpp"
 
 
-
 namespace ioh
 {
 	namespace logger
@@ -26,7 +25,7 @@ namespace ioh
 		{
 		public:
 			range(R amin, R amax, size_t asize) :
-				_min(amin),
+				_min(amin), 
 				_max(amax),
 				_size(asize)
 			{
@@ -53,7 +52,7 @@ namespace ioh
 		{
 		public:
 			range_linear(R min, R max, size_t size) :
-				range(min, max, size)
+				range<R>(min, max, size)
 			{
 			}
 
@@ -70,7 +69,7 @@ namespace ioh
 		{
 		public:
 			range_log(R min, R max, size_t size)
-				: range(min, max, size)
+				: range<R>(min, max, size)
 			{
 			}
 
@@ -91,19 +90,22 @@ namespace ioh
 		 * instead of the (supposedly) faster vector of char.
 		 */
 		using attain_mat =
-			std::vector<       // error targets
-				std::vector<   // function evaluations
-					bool>>;    // occurence count
-		
+		std::vector< // error targets
+			std::vector< // function evaluations
+				bool>>; // occurence count
+
 		static std::ostream& operator<<(std::ostream& out, const attain_mat& mat)
 		{
 			size_t ndigits = 1;
-			if (mat.back().back() > 0) {
-				ndigits = 1 + std::floor(std::log10((double)mat.back().back()));
+			if (mat.back().back() > 0)
+			{
+				ndigits = 1 + std::floor(std::log10(static_cast<double>(mat.back().back())));
 			}
 			out.precision(ndigits);
-			for (size_t i = 0; i < mat.size(); ++i) {
-				for (size_t j = 0; j < mat[i].size(); ++j) {
+			for (size_t i = 0; i < mat.size(); ++i)
+			{
+				for (size_t j = 0; j < mat[i].size(); ++j)
+				{
 					out << std::fixed << mat[i][j] << " ";
 				}
 				out << std::endl;
@@ -119,10 +121,10 @@ namespace ioh
 		 * Every item is an attain_mat.
 		 */
 		using attain_suite =
-			std::map< size_t,         // problem
-				std::map< size_t,     // dim
-					std::map< size_t, // instance
-						attain_mat >>>;
+		std::map<size_t, // problem
+		         std::map<size_t, // dim
+		                  std::map<size_t, // instance
+		                           attain_mat>>>;
 
 
 		/** An observer which stores bi-dimensional error/evaluations discretized attainment matrices.
@@ -155,13 +157,14 @@ namespace ioh
 			std::clog << logger.at(1,2,2) << std::endl;
 		 * @endcode
 		 */
-		template<class T>
-		class ecdf : public observer<T> 
+		template <class T>
+		class ecdf : public observer<T>
 		{
 		protected:
 			/** Internal types  @{ */
 			/** Keep essential metadata about the problem. */
-			struct Problem {
+			struct Problem
+			{
 				int pb;
 				int dim;
 				int ins;
@@ -169,6 +172,7 @@ namespace ioh
 				std::vector<double> opt;
 				common::optimization_type maxmin;
 			};
+
 			/** @} */
 
 		public:
@@ -188,9 +192,10 @@ namespace ioh
 				_range_error(_default_range_error),
 				_range_evals(_default_range_evals),
 				_empty(error_buckets,
-					std::vector<bool>(evals_buckets,
-						0))
-			{ }
+				       std::vector<bool>(evals_buckets,
+				                         false))
+			{
+			}
 
 			/** Complete constructor, with which you can define linear || semi-log scale.
 			 *
@@ -205,35 +210,40 @@ namespace ioh
 				_range_error(error_buckets),
 				_range_evals(evals_buckets),
 				_empty(error_buckets.size(),
-					std::vector<bool>(evals_buckets.size(),
-						0))
-			{ }
+				       std::vector<bool>(evals_buckets.size(),
+				                         false))
+			{
+			}
 
 		public:
 			/** Observer interface  @{ */
 
 			//! Not used, but part of the interface.
-			void activate_logger() {}
+			void activate_logger()
+			{
+			}
 
 			//! Not used, but part of the interface.
-			void track_suite(const suite::base<T>&)
+			void track_suite(const suite::base<T>&) override
 			{
 				reset();
 			}
 
 			//! Initialize on the given problem.
-			void track_problem(const T& pb)
+			void track_problem(const T& pb) override
 			{
 				_current.pb = pb.get_problem_id();
 				_current.dim = pb.get_number_of_variables();
 				_current.ins = pb.get_instance_id();
 				_current.maxmin = pb.get_optimization_type();
 				_current.has_opt = pb.has_optimal();
-				if (_current.has_opt) {
+				if (_current.has_opt)
+				{
 					common::log::info("Problem has known optimal, will compute the ECDF of the error.");
 					_current.opt = pb.get_optimal();
 				}
-				else {
+				else
+				{
 					common::log::info("Problem has no known optimal, will compute the absolute ECDF.");
 				}
 				// mono-objective only
@@ -246,7 +256,7 @@ namespace ioh
 			 * Should be called right after problem::evaluate,
 			 * passing problem::loggerInfo().
 			 */
-			void do_log(const std::vector<double>& infos)
+			void do_log(const std::vector<double>& infos) override
 			{
 				/* loggerInfo:
 				 *   evaluations,
@@ -256,20 +266,23 @@ namespace ioh
 				 *   best_so_far_transformed_objectives
 				 */
 
-				 // TODO make a struct for loggerInfo?
+				// TODO make a struct for loggerInfo?
 				double evals = infos[0];
 				double err;
-				if (_current.has_opt) {
+				if (_current.has_opt)
+				{
 					err = std::abs(_current.opt[0] - infos[4]);
-				} 
-				else {
+				}
+				else
+				{
 					err = infos[4]; // FIXME double check that this is what one want
 				}
 
 				// If this target is worst than the domain.
 				if (evals < _range_evals.min() || _range_evals.max() < evals
 					|| err < _range_error.min() || _range_error.max() < err
-					) {
+				)
+				{
 					// Discard it.
 					std::clog << "WARNING: target out of domain. "
 						<< "value:" << err << " [" << _range_error.min() << "," << _range_error.max() << "], "
@@ -277,24 +290,21 @@ namespace ioh
 						<< " This measure is discarded!"
 						<< std::endl;
 					return;
-
 				}
-				else {
-					size_t i_error;
-					size_t j_evals;
+				size_t i_error;
+				size_t j_evals;
 
-					// If the target is in domain
-					assert(_range_error.min() <= err && err <= _range_error.max());
-					i_error = _range_error.index(err);
+				// If the target is in domain
+				assert(_range_error.min() <= err && err <= _range_error.max());
+				i_error = _range_error.index(err);
 
-					assert(_range_evals.min() <= evals && evals <= _range_evals.max());
-					j_evals = _range_evals.index(evals);
+				assert(_range_evals.min() <= evals && evals <= _range_evals.max());
+				j_evals = _range_evals.index(evals);
 
-					// Fill up the dominated quadrant of the attainment matrix with ones
-					// (either the upper/upper || lower/lower, depending on if it's
-					// a min || max problem && on if the optimum is known).
-					fill_up(i_error, j_evals);
-				}
+				// Fill up the dominated quadrant of the attainment matrix with ones
+				// (either the upper/upper || lower/lower, depending on if it's
+				// a min || max problem && on if the optimum is known).
+				fill_up(i_error, j_evals);
 			}
 
 			/** @} observer interface */
@@ -367,13 +377,16 @@ namespace ioh
 			//! Create maps && matrix for this problem.
 			void init_ecdf(const Problem& cur)
 			{
-				if (_ecdf_suite.count(cur.pb) == 0) {
-					_ecdf_suite[cur.pb] = std::map< size_t, std::map< size_t, attain_mat >>();
+				if (_ecdf_suite.count(cur.pb) == 0)
+				{
+					_ecdf_suite[cur.pb] = std::map<size_t, std::map<size_t, attain_mat>>();
 				}
-				if (_ecdf_suite[cur.pb].count(cur.dim) == 0) {
-					_ecdf_suite[cur.pb][cur.dim] = std::map< size_t, attain_mat >();
+				if (_ecdf_suite[cur.pb].count(cur.dim) == 0)
+				{
+					_ecdf_suite[cur.pb][cur.dim] = std::map<size_t, attain_mat>();
 				}
-				if (_ecdf_suite[cur.pb][cur.dim].count(cur.ins) == 0) {
+				if (_ecdf_suite[cur.pb][cur.dim].count(cur.ins) == 0)
+				{
 					_ecdf_suite[cur.pb][cur.dim][cur.ins] = _empty;
 				}
 				assert(_ecdf_suite.at(cur.pb).at(cur.dim).at(cur.ins).at(0).at(0) == 0);
@@ -394,56 +407,58 @@ namespace ioh
 			 */
 			void fill_up(size_t i_error, size_t j_evals)
 			{
-
 				auto& mat = current_ecdf();
 				size_t ibound = _range_error.size();
 				size_t jbound = _range_evals.size();
 
-				if (_current.has_opt || _current.maxmin == common::optimization_type::minimization) {
-					for (size_t i = i_error; i < ibound; i++) {
+				if (_current.has_opt || _current.maxmin == common::optimization_type::minimization)
+				{
+					for (size_t i = i_error; i < ibound; i++)
+					{
 						// If we reach a 1 on first col of this row, no need to continue.
 						// TODO: check this, out of bound error for mscv
-						if (mat[i][std::min(j_evals, jbound -1)] == 1) {
+						if (mat[i][std::min(j_evals, jbound - 1)] == 1)
+						{
 							break;
 						}
-						else {
-							for (size_t j = j_evals; j < jbound; j++) {
-								// If we reach a 1 on this col, no need to fill
-								// the remaining columns for the next rows..
-								if (mat[i][j] == 1) {
-									jbound = j;
-									break;
-								}
-								else {
-									mat[i][j] = 1;
-								}
-							} // for j
-						}
+						for (size_t j = j_evals; j < jbound; j++)
+						{
+							// If we reach a 1 on this col, no need to fill
+							// the remaining columns for the next rows..
+							if (mat[i][j] == 1)
+							{
+								jbound = j;
+								break;
+							}
+							mat[i][j] = true;
+						} // for j
 					} // for i
 				}
-				else {
+				else
+				{
 					assert(!_current.has_opt && _current.maxmin == common::optimization_type::maximization);
-					for (size_t i = i_error; i >= 1; i--) {
+					for (size_t i = i_error; i >= 1; i--)
+					{
 						// If we reach a 1 on first col of this row, no need to continue.
-						if (mat[i - 1][j_evals] == 1) {
+						if (mat[i - 1][j_evals] == 1)
+						{
 							continue;
 						}
-						else {
-							for (size_t j = j_evals; j < jbound; j++) {
-								// If we reach a 1 on this col, no need to fill
-								// the remaining columns for the next rows..
-								if (mat[i - 1][j] == 1) {
-									jbound = j;
-									break;
-								}
-								else {
-									mat[i - 1][j] = 1;
-								}
-							} // for j
-						}
+						for (size_t j = j_evals; j < jbound; j++)
+						{
+							// If we reach a 1 on this col, no need to fill
+							// the remaining columns for the next rows..
+							if (mat[i - 1][j] == 1)
+							{
+								jbound = j;
+								break;
+							}
+							mat[i - 1][j] = true;
+						} // for j
 					} // for i
 				}
 			}
+
 			/** @} */
 
 		private:
@@ -479,7 +494,7 @@ namespace ioh
 		 *
 		 * The template indicates the return type of the functor interface.
 		 */
-		template<class T>
+		template <class T>
 		class ecdf_stat
 		{
 		public:
@@ -498,15 +513,20 @@ namespace ioh
 		class ecdf_sum : public ecdf_stat<size_t>
 		{
 		public:
-			inline size_t operator()(const attain_suite& attainment)
+			size_t operator()(const attain_suite& attainment) override
 			{
 				unsigned long int sum = 0;
-				for (const auto& pbid_dimmap : attainment) {
-					for (const auto& dimid_insmap : pbid_dimmap.second) {
-						for (const auto& insid_mat : dimid_insmap.second) {
+				for (const auto& pbid_dimmap : attainment)
+				{
+					for (const auto& dimid_insmap : pbid_dimmap.second)
+					{
+						for (const auto& insid_mat : dimid_insmap.second)
+						{
 							const attain_mat& mat = insid_mat.second;
-							for (const auto& row : mat) {
-								for (const auto& item : row) {
+							for (const auto& row : mat)
+							{
+								for (const auto& item : row)
+								{
 									sum += item;
 								}
 							}
@@ -515,6 +535,6 @@ namespace ioh
 				}
 				return sum;
 			}
-		};		
+		};
 	}
 }

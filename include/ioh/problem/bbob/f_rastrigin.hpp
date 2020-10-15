@@ -47,10 +47,9 @@ namespace ioh
 					return 10.0 * (static_cast<double>(static_cast<long>(n_)) - sum1) + sum2;
 				}
 
-		
 
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
-					const int instance_id) override
+				                              const int instance_id) override
 				{
 					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
 					transformation::coco::transform_vars_oscillate_evaluate_function(x);

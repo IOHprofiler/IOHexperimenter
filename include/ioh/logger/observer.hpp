@@ -43,7 +43,7 @@ namespace ioh
 
 			/// \todo Currently this is only for single objective optimization.
 			double current_best_fitness;
-			
+
 		public:
 			/** API for subclasses @{ */
 			using input_type = ProblemType;
@@ -210,10 +210,12 @@ namespace ioh
 
 			void reset_observer(const common::optimization_type optimization_type)
 			{
-				if (optimization_type == common::optimization_type::maximization) {
+				if (optimization_type == common::optimization_type::maximization)
+				{
 					current_best_fitness = std::numeric_limits<double>::lowest();
 				}
-				else {
+				else
+				{
 					current_best_fitness = std::numeric_limits<double>::max();
 				}
 				evaluations_value1 = 1;

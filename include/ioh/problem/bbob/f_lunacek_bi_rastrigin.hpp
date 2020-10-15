@@ -104,7 +104,7 @@ namespace ioh
 				}
 
 				static Lunacek_Bi_Rastrigin* create(int instance_id = DEFAULT_INSTANCE,
-				                                            int dimension = DEFAULT_DIMENSION)
+				                                    int dimension = DEFAULT_DIMENSION)
 				{
 					return new Lunacek_Bi_Rastrigin(instance_id, dimension);
 				}

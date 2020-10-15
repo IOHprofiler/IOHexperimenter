@@ -10,34 +10,36 @@
 
 namespace ioh
 {
-    namespace problem
-    {
-        namespace pbo
-        {
-            class OneMax : public pbo_base
-            {
-            public:
-                OneMax(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
-                    : pbo_base("OneMax", instance_id)
-                {
-                    set_best_variables(1);
-                	set_number_of_variables(dimension);
-                }
+	namespace problem
+	{
+		namespace pbo
+		{
+			class OneMax : public pbo_base
+			{
+			public:
+				OneMax(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+					: pbo_base("OneMax", instance_id)
+				{
+					set_best_variables(1);
+					set_number_of_variables(dimension);
+				}
 
-                double internal_evaluate(const std::vector<int>& x) {
-	                auto n = x.size();
-	                auto result = 0;
-                    for (size_t i = 0; i != n; ++i) {
-                        result += x[i];
-                    }
-                    return (double)result;
-                }
+				double internal_evaluate(const std::vector<int>& x) override
+				{
+					auto n = x.size();
+					auto result = 0;
+					for (size_t i = 0; i != n; ++i)
+					{
+						result += x[i];
+					}
+					return static_cast<double>(result);
+				}
 
-                static OneMax* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) {
-                    return new OneMax(instance_id, dimension);
-                }
-
-            };
-        }
-    }
+				static OneMax* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				{
+					return new OneMax(instance_id, dimension);
+				}
+			};
+		}
+	}
 }

@@ -20,12 +20,12 @@ namespace ioh
 			{
 				std::vector<double> datax_;
 				std::vector<double> dataxx_;
-				
+
 			public:
 				Step_Ellipsoid(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 					: bbob_base(7, "Step_Ellipsoid", instance_id, dimension),
-					datax_(dimension),
-					dataxx_(dimension)
+					  datax_(dimension),
+					  dataxx_(dimension)
 				{
 					set_number_of_variables(dimension);
 				}
@@ -90,7 +90,8 @@ namespace ioh
 					for (i = 0; i < n_; ++i)
 					{
 						double exponent;
-						exponent = static_cast<double>(static_cast<long>(i)) / (static_cast<double>(static_cast<long>(n_)
+						exponent = static_cast<double>(static_cast<long>(i)) / (static_cast<double>(static_cast<long>(n_
+							)
 						) - 1.0);
 						result[0] += pow(condition, exponent) * dataxx_[i] * dataxx_[i];
 					}
@@ -101,15 +102,14 @@ namespace ioh
 				}
 
 
-
 				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
-					const int transformation_id, const int instance_id) override
+				                               const int transformation_id, const int instance_id) override
 				{
 					// Needs to override default beviour
 				}
-				
+
 				static Step_Ellipsoid* create(int instance_id = DEFAULT_INSTANCE,
-				                                      int dimension = DEFAULT_DIMENSION)
+				                              int dimension = DEFAULT_DIMENSION)
 				{
 					return new Step_Ellipsoid(instance_id, dimension);
 				}

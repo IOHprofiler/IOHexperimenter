@@ -4,7 +4,6 @@
 #include "legacy.hpp"
 
 
-
 namespace ioh
 {
 	namespace transformation

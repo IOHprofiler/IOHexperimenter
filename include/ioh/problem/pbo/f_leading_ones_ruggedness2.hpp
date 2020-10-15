@@ -45,7 +45,7 @@ namespace ioh
 				}
 
 				static LeadingOnes_Ruggedness2* create(int instance_id = DEFAULT_INSTANCE,
-				                                               int dimension = DEFAULT_DIMENSION)
+				                                       int dimension = DEFAULT_DIMENSION)
 				{
 					return new LeadingOnes_Ruggedness2(instance_id, dimension);
 				}

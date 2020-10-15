@@ -60,7 +60,7 @@ namespace ioh
 				}
 
 				static Ising_Torus* create(int instance_id = DEFAULT_INSTANCE,
-				                                   int dimension = DEFAULT_DIMENSION)
+				                           int dimension = DEFAULT_DIMENSION)
 				{
 					return new Ising_Torus(instance_id, dimension);
 				}

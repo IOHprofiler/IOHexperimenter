@@ -27,9 +27,9 @@ namespace ioh
 			public:
 				Schaffers1000(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
 					: bbob_base(18, "Schaffers1000", instance_id, dimension),
-					m1_(dimension, std::vector<double>(dimension)),
-					b1_(dimension),
-					raw_x_(dimension)
+					  m1_(dimension, std::vector<double>(dimension)),
+					  b1_(dimension),
+					  raw_x_(dimension)
 				{
 					set_number_of_variables(dimension);
 				}
@@ -53,14 +53,15 @@ namespace ioh
 				}
 
 				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
-					const int transformation_id, const int instance_id) override
+				                               const int transformation_id, const int instance_id) override
 				{
 					transformation::coco::transform_obj_shift_evaluate_function(y, fopt_);
-					transformation::coco::transform_obj_penalize_evaluate(raw_x_, lower_bound_, upper_bound_,	penalty_factor_, y);
+					transformation::coco::transform_obj_penalize_evaluate(
+						raw_x_, lower_bound_, upper_bound_, penalty_factor_, y);
 				}
 
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
-					const int instance_id) override
+				                              const int instance_id) override
 				{
 					raw_x_ = x;
 					transformation::coco::transform_vars_shift_evaluate_function(x, xopt_);
@@ -86,7 +87,7 @@ namespace ioh
 				}
 
 				static Schaffers1000* create(int instance_id = DEFAULT_INSTANCE,
-				                                     int dimension = DEFAULT_DIMENSION)
+				                             int dimension = DEFAULT_DIMENSION)
 				{
 					return new Schaffers1000(instance_id, dimension);
 				}

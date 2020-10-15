@@ -100,7 +100,7 @@ namespace ioh
 				}
 
 				static NK_Landscapes* create(int instance_id = DEFAULT_INSTANCE,
-				                                     int dimension = DEFAULT_DIMENSION)
+				                             int dimension = DEFAULT_DIMENSION)
 				{
 					return new NK_Landscapes(instance_id, dimension);
 				}

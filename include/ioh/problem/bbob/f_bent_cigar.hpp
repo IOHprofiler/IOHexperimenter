@@ -40,7 +40,7 @@ namespace ioh
 					}
 					return result;
 				}
-				
+
 				void variables_transformation(std::vector<double>& x, const int transformation_id,
 				                              const int instance_id) override
 				{
