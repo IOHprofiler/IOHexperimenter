@@ -22,8 +22,12 @@ TEST(experiment, config)
 	}
 	
 	if (!found)
-		std::cout << "Cannot find config file in: " 
+	{
+		std::cout << "Cannot find config file in: "
 			<< fs::current_path() << std::endl;
+		ASSERT_TRUE(true);
+	}
+		
 	else
 	{
 		std::cout << "found conf file: " << config;
