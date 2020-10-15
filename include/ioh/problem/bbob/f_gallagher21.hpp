@@ -7,7 +7,10 @@
 /// \author Furong Ye
 /// \date 2019-09-12
 #pragma once
+#include <algorithm>
+
 #include "bbob_base.hpp"
+
 
 namespace ioh
 {
