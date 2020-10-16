@@ -1,6 +1,5 @@
 #pragma once
 
-#include <algorithm>
 #include <filesystem>
 #include "ioh/common.hpp"
 
@@ -10,31 +9,7 @@ namespace ioh
 {
 	namespace experiment
 	{
-		static int max_number_of_problem;
-		static int max_dimension;
-
-		class dict
-		{
-		public:
-			dict() = default;
-			~dict() = default;
-
-			int n = 0;
-			size_t size;
-			std::vector<std::string> section;
-			std::vector<std::string> value;
-			std::vector<std::string> key;
-		};
-
-		typedef enum _LINE_
-		{
-			EMPTY,
-			COMMENT,
-			SECTION,
-			VALUE,
-			CON_ERROR
-		} linecontent;
-
+		
 		/// A class of configuration files, to be used in experimenter.
 		class configuration
 		{
@@ -52,241 +27,21 @@ namespace ioh
 			std::vector<int> base_evaluation_triggers;
 			int number_target_triggers;
 			int number_interval_triggers;
+			int max_number_of_problem;
+			int max_dimension;
+
+			
+			common::container data;
 		public:
-			configuration(const std::string filename) : config_file(filename)
+			configuration(const std::string& filename) : config_file(filename)
 			{
 				readcfg(filename);
-			}
-			
+			}		
 
-			int set_dict(dict& dict, std::string section, std::string key, std::string value)
+			void readcfg(const std::string& filename)
 			{
-				if (dict.n > 0)
-				{
-					for (auto i = 0; i < dict.n; ++i)
-					{
-						if (key.length() == 0)
-						{
-							continue;
-						}
-						if (value.length() == 0)
-						{
-							continue;
-						}
-						if (dict.key[i].length() == 0)
-						{
-							continue;
-						}
-						if (dict.section[i].length() == 0)
-						{
-							continue;
-						}
-						if ((key == dict.key[i]) && (section == dict.section[i]))
-						{
-							if (dict.value[i].length() != 0)
-							{
-								std::cout << "Multi setting of key(" << key << ") or section(" << section << ")\n";
-								return -1;
-							}
-						}
-					}
-				}
-				dict.section.push_back(common::strstrip(section));
-				dict.key.push_back(common::strstrip(key));
-				dict.value.push_back(common::strstrip(value));
-				dict.n += 1;
-				return 0;
-			}
-
-			std::string get_dict_String(dict dict, std::string section, std::string key)
-			{
-				{
-					if (key.length() == 0)
-					{
-						std::cout << "EMPTY KEY INPUT.\n";
-					}
-					if (section.length() == 0)
-					{
-						std::cout << "EMPTY SECTION INPUT.\n";
-					}
-					for (auto i = 0; i < dict.n; ++i)
-					{
-						if (dict.key[i].empty() || dict.section[i].empty())
-							continue;
-						if ((key == dict.key[i]) && (section == dict.section[i]))
-							return dict.value[i];
-					}
-					std::cout << "Can not find the corresponding configuration for key: "
-						<< key << " in section : " << section << std::endl;
-
-					return nullptr;
-				}
-			}
-
-			std::vector<int> get_dict_int_vector(dict dict, std::string section, std::string key, int _min, int _max)
-			{
-				size_t i;
-				std::vector<int> result;
-				if (key.length() == 0)
-				{
-					std::cout << "EMPTY KEY INPUT.\n";
-				}
-				if (section.length() == 0)
-				{
-					std::cout << "EMPTY SECTION INPUT.\n";
-				}
-				for (i = 0; i < dict.n; ++i)
-				{
-					if (dict.key[i].length() == 0)
-					{
-						continue;
-					}
-					if (dict.section[i].length() == 0)
-					{
-						continue;
-					}
-					if (key == dict.key[i] && section == dict.section[i])
-					{
-						result = common::get_int_vector_parse_string(dict.value[i], _min, _max);
-						return result;
-					}
-				}
-				std::cout << "Can not find the corresponding configuration for key: " << key << " in section : " << section
-					<< "\n";
-				return result;
-			}
-
-			int get_dict_Int(dict dict, std::string section, std::string key)
-			{
-				int result;
-				std::string str;
-				str = get_dict_String(dict, section, key);
-				result = std::stoi(str);
-				return result;
-			}
-
-			bool get_dict_bool(dict dict, std::string section, std::string key)
-			{
-				bool result = false;
-				std::string str;
-				str = get_dict_String(dict, section, key);
-				transform(str.begin(), str.end(), str.begin(), tolower);
-				if (str == "true")
-					result = true;
-				return result;
-			}
-
-			linecontent add_Line(std::string input_line, std::string& section, std::string& key, std::string& value)
-			{
-				linecontent content;
-				std::string line;
-				size_t len;
-				char tempkey[MAXKEYNUMBER];
-				char tempvalue[MAXKEYNUMBER];
-				char tempsection[MAXKEYNUMBER];
-
-				line = common::strstrip(input_line);
-				len = line.length();
-
-				if (line.size() == 0)
-				{
-					content = EMPTY;
-				}
-				if (line[0] == '#' || line[0] == ';')
-				{
-					content = COMMENT;
-				}
-				else if (line[0] == '[' && line[len - 1] == ']')
-				{
-					sscanf(line.c_str(), "[%[^]]", tempsection);
-					section = tempsection;
-					content = SECTION;
-				}
-				else if (sscanf(line.c_str(), "%[^=] = \"%[^\"]", tempkey, tempvalue) == 2 || sscanf(
-					line.c_str(), "%[^=] = '%[^\']", tempkey, tempvalue) == 2)
-				{
-					value = tempvalue;
-					key = tempkey;
-					content = VALUE;
-				}
-				else if (sscanf(line.c_str(), "%[^=] = %[^;#]", tempkey, tempvalue) == 2)
-				{
-					value = tempvalue;
-					key = tempkey;
-					content = VALUE;
-				}
-				else
-				{
-					content = CON_ERROR;
-				}
-				return content;
-			}
-
-			dict load(std::string filename)
-			{
-				std::ifstream fp(filename.c_str());
-
-				std::string line;
-				std::string section;
-				std::string key;
-				std::string value;
-
-				int len;
-				dict dict;
-				linecontent lc;
-
-				if (!fp.is_open())
-				{
-					std::cout << "Cannot open file " << filename << std::endl;
-				}
-
-				while (!fp.eof())
-				{
-					getline(fp, line);
-					len = line.length() - 1;
-					if (len <= 0)
-					{
-						continue;
-					}
-
-					lc = add_Line(line, section, key, value);
-					switch (lc)
-					{
-						
-					case EMPTY:
-						break;
-					case COMMENT:
-						break;
-					case SECTION:
-						common::strstrip(section);
-						this->set_dict(dict, section, key, value);
-						break;
-					case VALUE:
-						common::strstrip(key);
-						this->set_dict(dict, section, key, value);
-						break;
-					case CON_ERROR:
-						std::cout << "There is an error for line: \" " << line << "\"";
-						break;
-					}
-					if (lc == CON_ERROR)
-					{
-						break;
-					}
-				}
-				fp.close();
-				return dict;
-			}
-			
-
-			void readcfg(std::string filename)
-			{
-				if (!fs::exists(filename))
-					return;
-
-				dict dict;
-				dict = load(filename);
-				suite_name = get_dict_String(dict, "suite", "suite_name");
+				load(filename);
+				suite_name = data.get("suite", "suite_name");
 				if (suite_name == "BBOB")
 				{
 					max_number_of_problem = 24;
@@ -297,22 +52,60 @@ namespace ioh
 					max_dimension = 20000;
 					max_number_of_problem = 23;
 				}
-				problem_id = get_dict_int_vector(dict, "suite", "problem_id", 1, max_number_of_problem);
-				instance_id = get_dict_int_vector(dict, "suite", "instance_id", 1, 100);
-				dimension = get_dict_int_vector(dict, "suite", "dimension", 1, max_dimension);
+				problem_id = data.get_int_vector("suite", "problem_id", 1, max_number_of_problem);
+				instance_id = data.get_int_vector("suite", "instance_id", 1, 100);
+				dimension = data.get_int_vector("suite", "dimension", 1, max_dimension);
 
-				output_directory = get_dict_String(dict, "logger", "output_directory");
-				result_folder = get_dict_String(dict, "logger", "result_folder");
-				algorithm_info = get_dict_String(dict, "logger", "algorithm_info");
-				algorithm_name = get_dict_String(dict, "logger", "algorithm_name");
+				output_directory = data.get("logger", "output_directory");
+				result_folder = data.get("logger", "result_folder");
+				algorithm_info = data.get("logger", "algorithm_info");
+				algorithm_name = data.get("logger", "algorithm_name");
 
-				complete_triggers = get_dict_bool(dict, "observer", "complete_triggers");
-				update_triggers = get_dict_bool(dict, "observer", "update_triggers");
-				base_evaluation_triggers = get_dict_int_vector(dict, "observer", "base_evaluation_triggers", 0, 10);
-				number_target_triggers = get_dict_Int(dict, "observer", "number_target_triggers");
-				number_interval_triggers = get_dict_Int(dict, "observer", "number_interval_triggers");
+				complete_triggers = data.get_bool("observer", "complete_triggers");
+				update_triggers = data.get_bool("observer", "update_triggers");
+				base_evaluation_triggers = data.get_int_vector("observer", "base_evaluation_triggers", 0, 10);
+				number_target_triggers = data.get_int("observer", "number_target_triggers");
+				number_interval_triggers = data.get_int("observer", "number_interval_triggers");
 			}
 
+			std::ifstream open_file(const std::string& filename) const
+			{
+				if (!fs::exists(filename))
+					common::log::error("Cannot find file " + filename);
+
+				std::ifstream file(filename.c_str());
+				if (!file.is_open())
+					common::log::error("Cannot open file " + filename);
+				return file;				
+			}
+			
+			void load(const std::string& filename)
+			{
+				std::string line;
+				std::ifstream fp = open_file(filename);
+
+				char key[MAXKEYNUMBER];
+				char value[MAXKEYNUMBER];
+				char section[MAXKEYNUMBER];
+				
+				while (getline(fp, line))
+				{
+					line = common::strstrip(line);
+					if (line.empty() || line.front() == '#' || line.front() == ';')
+						continue;
+
+					if (line.front() == '[' && line.back() == ']')
+						sscanf(line.c_str(), "[%[^]]", section);
+					else if (
+						sscanf(line.c_str(), "%[^=] = \"%[^\"]", key, value) == 2 
+						|| sscanf(line.c_str(), "%[^=] = '%[^\']", key, value) == 2
+						|| sscanf(line.c_str(), "%[^=] = %[^;#]", key, value) == 2)
+						data.set(section, key, value);
+					else
+						common::log::error("Error in parsing .ini file on line:\n" + line);
+				}
+			}
+			
 			std::string get_suite_name()
 			{
 				return this->suite_name;
