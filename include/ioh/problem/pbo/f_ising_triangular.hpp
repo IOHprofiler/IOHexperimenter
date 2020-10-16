@@ -48,8 +48,8 @@ namespace ioh
 
 							for (neig = 0; neig < 3; neig++)
 							{
-								result += (x[i * lattice_size + j] * neighbors[neig]) - ((1 - x[i * lattice_size + j]) *
-									(1 - neighbors[neig]));
+								result += ( (x[i * lattice_size + j] * neighbors[neig]) + ( (1 - x[i * lattice_size + j]) *
+									(1 - neighbors[neig]) ) );
 							}
 						}
 					}

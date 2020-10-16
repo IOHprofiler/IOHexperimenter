@@ -50,8 +50,8 @@ namespace ioh
 							neighbors[1] = x[lattice_size * i + modulo_ising_torus((j + 1), lattice_size)];
 							for (neig = 0; neig < 2; neig++)
 							{
-								result += (x[lattice_size * i + j] * neighbors[neig]) - ((1 - x[i * lattice_size + j]) *
-									(1 - neighbors[neig]));
+								result += ( (x[lattice_size * i + j] * neighbors[neig]) + ((1 - x[i * lattice_size + j]) *
+									(1 - neighbors[neig])) );
 							}
 						}
 					}
