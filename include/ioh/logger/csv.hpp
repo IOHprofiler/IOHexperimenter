@@ -158,13 +158,15 @@ namespace ioh
 
 			void write_header()
 			{
-				if (!exists(sub_directory()))
-					create_folder(sub_directory());
+				auto sub_dir = sub_directory();
+				
+				if (!exists(sub_dir))
+					create_folder(sub_dir);
 
 				recreate_handle(this->complete_status(), ".cdat", cdat, cdat_buffer);
 				recreate_handle(this->interval_status(), ".idat", idat, idat_buffer);
 				recreate_handle(this->update_status(), ".dat", dat, dat_buffer);
-				recreate_handle(this->time_points_status(), ".tdat", dat, dat_buffer);
+				recreate_handle(this->time_points_status(), ".tdat", tdat, tdat_buffer);
 			}
 
 			void write_stream(std::string buffer_string, std::fstream& dat_stream)

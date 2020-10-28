@@ -2,7 +2,7 @@
 #include <ctime>
 
 #include "ioh/common.hpp"
-#include "ioh/suite/base.hpp"
+#include "ioh/suite.hpp"
 #include "ioh/logger.hpp"
 #include "configuration.hpp"
 
@@ -15,7 +15,8 @@ namespace ioh
 		{
 		public:
 			typedef void algorithm_type(std::shared_ptr<ProblemType>, std::shared_ptr<logger::csv<ProblemType>>);
-			typedef common::factory<suite::base<ProblemType>, std::vector<int>, std::vector<int>, std::vector<int>> suite_factory;
+			typedef common::factory<suite::base<ProblemType>,
+				std::vector<int>, std::vector<int>, std::vector<int>> suite_factory;
 
 			experimenter() = delete;
 			~experimenter() = default;
@@ -26,10 +27,8 @@ namespace ioh
 				auto problems = conf.get_problem_id();
 				auto instances = conf.get_instance_id();
 				auto dimensions = conf.get_dimension();
-				
+
 				configSuite = suite_factory::get().create(suite_name, problems, instances, dimensions);
-
-
 				if (configSuite == nullptr)
 					common::log::error("Creating suite fails, please check your configuration");
 				
@@ -58,7 +57,7 @@ namespace ioh
 				this->algorithm = algorithm;
 			}
 
-			void _run()
+			void run()
 			{
 				std::clock_t c_start_overall = std::clock();
 
@@ -88,6 +87,7 @@ namespace ioh
 					                                       current_problem->get_problem_name(),
 					                                       current_problem->get_optimization_type());
 
+					auto p = current_problem;
 					algorithm(current_problem, this->config_csv_logger);
 
 					print_info(".");
@@ -117,7 +117,7 @@ namespace ioh
 			}
 
 
-			void _set_independent_runs(int n)
+			void set_independent_runs(int n)
 			{
 				this->independent_runs = n;
 			};

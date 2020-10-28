@@ -53,6 +53,69 @@ void algo(std::shared_ptr<ioh::problem::bbob::bbob_base> f, std::shared_ptr<ioh:
 }
 
 
+std::vector<int> Initialization(int dimension) {
+	std::vector<int> x;
+	x.reserve(dimension);
+	
+	for (int i = 0; i != dimension; ++i) {
+		x.push_back((int)(rng.uniform_rand() * 2));
+	}
+	return x;
+};
+
+int mutation(std::vector<int>& x, double mutation_rate) {
+	int result = 0;
+	int n = x.size();
+	for (int i = 0; i != n; ++i) {
+		if (rng.uniform_rand() < mutation_rate) {
+			x[i] = (x[i] + 1) % 2;
+			result = 1;
+		}
+	}
+	return result;
+}
+
+void pboalgo(std::shared_ptr<ioh::problem::pbo::pbo_base> problem, std::shared_ptr<ioh::logger::csv<ioh::problem::pbo::pbo_base>> logger)
+{
+	size_t n = problem->get_number_of_variables();
+	const int budget_scale = 100;
+
+	std::vector<int> x;
+	std::vector<int> x_star;
+	double y;
+	double best_value;
+	double* mutation_rate = new double(1);
+	*mutation_rate = 1.0 / n;
+	int budget = budget_scale * n * n;
+
+	std::vector<std::shared_ptr<double> > parameters;
+	parameters.push_back(std::shared_ptr<double>(mutation_rate));
+	std::vector<std::string> parameters_name;
+	parameters_name.push_back("mutation_rate");
+	logger->set_parameters(parameters, parameters_name);
+
+	x = Initialization(n);
+	x_star = x;
+	y = problem->evaluate(x);
+	logger->do_log(problem->loggerInfo());
+
+	best_value = y;
+
+	int count = 0;
+	while (count <= budget && !problem->hit_optimal()) {
+		x = x_star;
+		if (mutation(x, *mutation_rate)) {
+			y = problem->evaluate(x);
+			logger->do_log(problem->loggerInfo());
+			count++;
+		}
+		if (y >= best_value) {
+			best_value = y;
+			x_star = x;
+		}
+	}
+}
+
 void suite_test()
 {
 
@@ -89,7 +152,7 @@ std::ostream& operator << (std::ostream& os, const std::vector<T>& v)
 	return os;
 }
 
-void compbiner()
+void combiner()
 {
 	using namespace ioh;
 	using namespace ioh::problem;
@@ -102,7 +165,7 @@ void compbiner()
 	std::vector<int> dims = { 2,10 };
 
 	ioh::suite::bbob bench(pbs, ins, dims);
-	// bench.loadProblem();
+	// bench.load_problem();
 
 	logger::ecdf<bbob::bbob_base> log_ecdf(0, 6e7, 20, 0, sample_size, 20);
 	logger::csv<bbob::bbob_base> log_csv; // Use default arguments.
@@ -149,19 +212,16 @@ void compbiner()
 
 
 
-
-
-
 int main()
 {
 
-	std::string config = "example\\conf.ini";
-
+	std::string config = "C:\\Users\\Jacob\\Source\\Repos\\IOHprofiler\\IOHexperimenter\\example\\conf.ini";
+	// /// An example for PBO suite.
+	ioh::experiment::experimenter<ioh::problem::pbo::pbo_base> experimenter(config, pboalgo);
+	experimenter.set_independent_runs(10);
+	experimenter.run();
 
 	
-	/// An example for PBO suite.
-	// ioh::experiment::experimenter<ioh::problem::bbob::bbob_base> experimenter(config, algo);
-
 	// ioh::experiment::configuration conf(config);
 	//
 	// std::cout << conf.get_suite_name() << std::endl
@@ -179,13 +239,13 @@ int main()
 	// 	<< conf.get_number_interval_triggers() << std::endl;
 		
 	
-	fs::path root;
-	for (auto e: fs::current_path())
-	{
-		root /= e;
-		if(fs::exists(root / config))
-			std::cout << root/config << std::endl;
-	}
+	// fs::path root;
+	// for (auto e: fs::current_path())
+	// {
+	// 	root /= e;
+	// 	if(fs::exists(root / config))
+	// 		std::cout << root/config << std::endl;
+	// }
 		
 	
 }

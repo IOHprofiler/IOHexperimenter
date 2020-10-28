@@ -11,13 +11,20 @@ namespace ioh
 {
 	namespace suite
 	{
+		class abstract_suite
+		{
+		public:
+			abstract_suite() = default;
+		};
+
+
 		/// \brief A base class for construct a suite for sets of problem::bases.
 		///
 		/// To specify available problems of a suite, registerProblem must be implemented in derived class.
 		/// The default lable of problems are string type. Integer type are also optional, but we highly
 		/// recommond registering problem with string lable and creating a map of string problem_name and integer problem_id.
 		template <typename ProblemType>
-		class base : public ProblemType, public std::vector<std::shared_ptr<ProblemType>>
+		class base : public ProblemType, public std::vector<std::shared_ptr<ProblemType>>, public abstract_suite
 		{
 		public:
 			typedef std::shared_ptr<ProblemType> problem_ptr;
@@ -56,7 +63,7 @@ namespace ioh
 			///
 			/// Before acquiring a problem from the suite, this function must be invoked.
 			/// Otherwise the list of problem is empty.
-			void loadProblem()
+			void load_problem()
 			{
 				if (this->size() != 0)
 				{
@@ -91,7 +98,7 @@ namespace ioh
 			problem_ptr get_next_problem()
 			{
 				if (this->load_problem_flag == false)
-					this->loadProblem();
+					this->load_problem();
 
 				if (this->size_of_problem_list == 0)
 				{
@@ -120,7 +127,7 @@ namespace ioh
 			problem_ptr get_current_problem()
 			{
 				if (this->load_problem_flag == false)
-					this->loadProblem();
+					this->load_problem();
 
 				if (this->get_problem_flag == false)
 					this->get_problem_flag = true;

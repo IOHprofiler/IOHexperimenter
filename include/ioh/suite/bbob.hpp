@@ -30,7 +30,7 @@ namespace ioh
 				set_suite_dimension(dimension);
 				set_suite_name("BBOB");
 				bbob::register_problems();
-				loadProblem();
+				load_problem();
 			}
 
 			void register_problems() override

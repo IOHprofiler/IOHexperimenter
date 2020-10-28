@@ -19,7 +19,7 @@ TEST(BBOBfitness, dimension5) {
   double y,f;
 
   ioh::suite::bbob bbob;
-  bbob.loadProblem();
+  bbob.load_problem();
   std::shared_ptr< ioh::problem::bbob::bbob_base > problem;
 
 
