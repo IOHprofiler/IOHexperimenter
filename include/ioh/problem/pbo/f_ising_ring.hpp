@@ -38,7 +38,7 @@ namespace ioh
 					for (auto i = 0; i < n; ++i)
 					{
 						neig = x[modulo_ising_ring((i - 1), static_cast<int>(n))];
-						result += (x[i] * neig) - ((1 - x[i]) * (1 - neig));
+						result += ( (x[i] * neig) + ( (1 - x[i]) * (1 - neig) ) );
 					}
 					return static_cast<double>(result);
 				}
