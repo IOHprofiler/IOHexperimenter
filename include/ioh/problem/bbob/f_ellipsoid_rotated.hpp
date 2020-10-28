@@ -18,7 +18,7 @@ namespace ioh
 			class Ellipsoid_Rotated : public bbob_base
 			{
 			public:
-				Ellipsoid_Rotated(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Ellipsoid_Rotated(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(10, "Ellipsoid_Rotated", instance_id, dimension)
 				{
 					set_number_of_variables(dimension);
@@ -52,8 +52,8 @@ namespace ioh
 					transformation::coco::transform_vars_oscillate_evaluate_function(x);
 				}
 
-				static Ellipsoid_Rotated* create(int instance_id = DEFAULT_INSTANCE,
-				                                 int dimension = DEFAULT_DIMENSION)
+				static Ellipsoid_Rotated* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                                 int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Ellipsoid_Rotated(instance_id, dimension);
 				}

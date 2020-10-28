@@ -25,7 +25,7 @@ namespace ioh
 				std::vector<double> b1_;
 				std::vector<double> raw_x_;
 			public:
-				Schaffers1000(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Schaffers1000(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(18, "Schaffers1000", instance_id, dimension),
 					  m1_(dimension, std::vector<double>(dimension)),
 					  b1_(dimension),
@@ -86,8 +86,8 @@ namespace ioh
 					return pow(result / (static_cast<double>(static_cast<long>(n_)) - 1.0), 2.0);
 				}
 
-				static Schaffers1000* create(int instance_id = DEFAULT_INSTANCE,
-				                             int dimension = DEFAULT_DIMENSION)
+				static Schaffers1000* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                             int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Schaffers1000(instance_id, dimension);
 				}

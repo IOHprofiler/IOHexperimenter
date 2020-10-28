@@ -42,7 +42,7 @@ namespace ioh
 
 
 			public:
-				Gallagher101(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Gallagher101(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(21, "Gallagher101", instance_id, dimension)
 				{
 					set_number_of_variables(dimension);
@@ -225,8 +225,8 @@ namespace ioh
 					return f_true;
 				}
 
-				static Gallagher101* create(int instance_id = DEFAULT_INSTANCE,
-				                            int dimension = DEFAULT_DIMENSION)
+				static Gallagher101* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                            int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Gallagher101(instance_id, dimension);
 				}

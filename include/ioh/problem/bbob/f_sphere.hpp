@@ -19,7 +19,7 @@ namespace ioh
 			class Sphere : public bbob_base
 			{
 			public:
-				Sphere(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Sphere(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(1, "Sphere", instance_id, dimension)
 				{
 					set_number_of_variables(dimension);
@@ -45,7 +45,7 @@ namespace ioh
 				}
 
 
-				static Sphere* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Sphere* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Sphere(instance_id, dimension);
 				}

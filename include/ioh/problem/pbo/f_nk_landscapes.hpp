@@ -21,7 +21,7 @@ namespace ioh
 				std::vector<std::vector<int>> E;
 				int k = 1;
 
-				NK_Landscapes(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				NK_Landscapes(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: pbo_base("NK_Landscapes", instance_id)
 				{
 					set_number_of_variables(dimension);
@@ -99,8 +99,8 @@ namespace ioh
 					return -result;
 				}
 
-				static NK_Landscapes* create(int instance_id = DEFAULT_INSTANCE,
-				                             int dimension = DEFAULT_DIMENSION)
+				static NK_Landscapes* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                             int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new NK_Landscapes(instance_id, dimension);
 				}

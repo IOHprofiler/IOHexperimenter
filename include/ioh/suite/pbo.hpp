@@ -12,7 +12,7 @@ namespace ioh
 		public:
 			using input_type = int;
 			pbo(std::vector<int> problem_id = vector<int>(0),
-			    const std::vector<int> instance_id = vector<int>({DEFAULT_INSTANCE}),
+			    const std::vector<int> instance_id = vector<int>({IOH_DEFAULT_INSTANCE}),
 			    const std::vector<int> dimension = vector<int>({100}))
 			{
 				if (problem_id.empty())
@@ -62,7 +62,7 @@ namespace ioh
 			}
 
 			static pbo* create(std::vector<int> problem_id = vector<int>(0),
-			                   const std::vector<int> instance_id = vector<int>({DEFAULT_INSTANCE}),
+			                   const std::vector<int> instance_id = vector<int>({IOH_DEFAULT_INSTANCE}),
 			                   const std::vector<int> dimension = vector<int>({100}))
 			{
 				return new pbo(problem_id, instance_id, dimension);

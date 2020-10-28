@@ -21,7 +21,7 @@ namespace ioh
 				std::vector<std::vector<double>> m1_;
 				std::vector<double> b1_;
 			public:
-				Rastrigin_Rotated(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Rastrigin_Rotated(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(15, "Rastrigin_Rotated", instance_id, dimension),
 					  m1_(dimension, std::vector<double>(dimension)),
 					  b1_(dimension)
@@ -80,8 +80,8 @@ namespace ioh
 				}
 
 
-				static Rastrigin_Rotated* create(int instance_id = DEFAULT_INSTANCE,
-				                                 int dimension = DEFAULT_DIMENSION)
+				static Rastrigin_Rotated* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                                 int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Rastrigin_Rotated(instance_id, dimension);
 				}

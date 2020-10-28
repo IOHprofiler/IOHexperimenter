@@ -17,7 +17,7 @@ namespace ioh
 			class MIS : public pbo_base
 			{
 			public:
-				MIS(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				MIS(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: pbo_base("MIS", instance_id)
 				{
 					set_number_of_variables(dimension);
@@ -82,7 +82,7 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static MIS* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static MIS* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new MIS(instance_id, dimension);
 				}

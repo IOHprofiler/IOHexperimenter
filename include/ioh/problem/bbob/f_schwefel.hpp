@@ -23,7 +23,7 @@ namespace ioh
 				std::vector<double> positive_offset_;
 
 			public:
-				Schwefel(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Schwefel(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(20, "Schwefel", instance_id, dimension),
 					  negative_offset_(dimension),
 					  positive_offset_(dimension)
@@ -83,7 +83,7 @@ namespace ioh
 					transformation::coco::transform_vars_scale_evaluate(x, 100);
 				}
 
-				static Schwefel* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Schwefel* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Schwefel(instance_id, dimension);
 				}

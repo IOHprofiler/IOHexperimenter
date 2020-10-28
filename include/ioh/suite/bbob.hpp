@@ -12,8 +12,8 @@ namespace ioh
 		public:
 			using input_type = double;
 			bbob(std::vector<int> problem_id = vector<int>(0),
-			     const std::vector<int> instance_id = vector<int>({DEFAULT_INSTANCE}),
-			     const std::vector<int> dimension = vector<int>({DEFAULT_DIMENSION}))
+			     const std::vector<int> instance_id = vector<int>({IOH_DEFAULT_INSTANCE}),
+			     const std::vector<int> dimension = vector<int>({IOH_DEFAULT_DIMENSION}))
 			{
 				if (problem_id.empty())
 				{
@@ -63,8 +63,8 @@ namespace ioh
 			}
 
 			static bbob* create(const std::vector<int> problem_id = vector<int>(0),
-			                    const std::vector<int> instance_id = vector<int>({DEFAULT_INSTANCE}),
-			                    const std::vector<int> dimension = vector<int>({DEFAULT_DIMENSION}))
+			                    const std::vector<int> instance_id = vector<int>({IOH_DEFAULT_INSTANCE}),
+			                    const std::vector<int> dimension = vector<int>({IOH_DEFAULT_DIMENSION}))
 			{
 				return new bbob(problem_id, instance_id, dimension);
 			}

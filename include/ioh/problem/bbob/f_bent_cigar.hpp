@@ -17,7 +17,7 @@ namespace ioh
 			class Bent_Cigar : public bbob_base
 			{
 			public:
-				Bent_Cigar(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Bent_Cigar(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(12, "Bent_Cigar", instance_id, dimension)
 				{
 					set_number_of_variables(dimension);
@@ -50,7 +50,7 @@ namespace ioh
 					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
 
-				static Bent_Cigar* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Bent_Cigar* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Bent_Cigar(instance_id, dimension);
 				}

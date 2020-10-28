@@ -19,7 +19,7 @@ namespace ioh
 			class LeadingOnes_Epistasis : public pbo_base
 			{
 			public:
-				LeadingOnes_Epistasis(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				LeadingOnes_Epistasis(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: pbo_base("LeadingOnes_Epistasis", instance_id)
 				{
 					set_number_of_variables(dimension);
@@ -44,8 +44,8 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static LeadingOnes_Epistasis* create(int instance_id = DEFAULT_INSTANCE,
-				                                     int dimension = DEFAULT_DIMENSION)
+				static LeadingOnes_Epistasis* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                                     int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new LeadingOnes_Epistasis(instance_id, dimension);
 				}

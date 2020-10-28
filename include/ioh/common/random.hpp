@@ -4,28 +4,28 @@
 #include <random>
 #include <cmath>
 
-#include "defines.hpp"
+#include "config.hpp"
 
-
+ 
 namespace ioh
 {
 	namespace common
 	{
 		class random
-		{
+		{ 
 			size_t _seed_index;
 
 			// TODO: check why this is done
-			inline static long a = RND_MULTIPLIER; /// < multiplier.
-			inline static long m = RND_MODULUS; /// < modulus.
-			inline static long q = RND_MODULUS_DIV; /// < modulusdiv multiplier.
-			inline static long r = RND_MOD_MULTIPLIER; /// < modulus mod multiplier.
-			inline static unsigned int short_lag = SHORT_LAG;
-			inline static unsigned int long_lag = LONG_LAG;
+			inline static long a = IOH_RND_MULTIPLIER;		/// < multiplier.
+			inline static long m = IOH_RND_MODULUS;			/// < modulus.
+			inline static long q = IOH_RND_MODULUS_DIV;		/// < modulusdiv multiplier.
+			inline static long r = IOH_RND_MOD_MULTIPLIER;	/// < modulus mod multiplier.
+			inline static unsigned int short_lag = IOH_SHORT_LAG;
+			inline static unsigned int long_lag = IOH_LONG_LAG;
 			double x[607];
 			
 		public:
-			random(uint32_t seed = DEFAULT_SEED) : _seed_index(0)
+			random(uint32_t seed = IOH_DEFAULT_SEED) : _seed_index(0)
 			{
 				for (unsigned int i = 0; i < long_lag; ++i)
 				{
@@ -33,7 +33,6 @@ namespace ioh
 					seed = static_cast<uint32_t>(1812433253UL) * (seed ^ (seed >> 30)) + (static_cast<uint32_t>(i) + 1);
 				}
 			}
-
 
 			void generate()
 			{
@@ -106,7 +105,7 @@ namespace ioh
 				}
 			}
 
-			static std::vector<double> gauss(size_t N, long inseed)
+			static std::vector<double> gauss(const size_t N, const long inseed)
 			{
 				std::vector<double> rand_vec;
 				std::vector<double> uniform_rand_vec;
@@ -138,7 +137,7 @@ namespace ioh
 			double normal_rand()
 			{
 				double normal;
-#ifdef NORMAL_POLAR
+#ifdef IOH_NORMAL_POLAR
 				const double u1 = this->uniform_rand();
 				const double u2 = this->uniform_rand();
 				normal = std::sqrt(-2 * std::log(u1)) * std::cos(2 * IOH_PI * u2);
@@ -159,14 +158,14 @@ namespace ioh
 				std::bernoulli_distribution d(p);
 				return d(gen);
 			}
-			static int integer(int min = INT8_MIN, int max = INT8_MAX)
+			static int integer(const int min = std::numeric_limits<int>::min(), const int max = std::numeric_limits<int>::max())
 			{
 				static std::random_device rd;
 				static std::mt19937 gen(rd());
 				std::uniform_int_distribution<int> d(min, max);
 				return d(gen);
 			}
-			static std::vector<int> integers(unsigned int n, int min = INT8_MIN, int max = INT8_MAX)
+			static std::vector<int> integers(const unsigned int n, const int min = std::numeric_limits<int>::min(), const int max = std::numeric_limits<int>::max())
 			{
 				std::vector<int> x;
 				x.reserve(n);
@@ -174,7 +173,7 @@ namespace ioh
 					x.emplace_back(integer(min, max));
 				return x;
 			}
-			static std::vector<int> bitstring(unsigned int n, double p = 0.5)
+			static std::vector<int> bitstring(const unsigned int n, const double p = 0.5)
 			{
 				std::vector<int> x;
 				x.reserve(n);

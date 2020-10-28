@@ -16,7 +16,7 @@ namespace ioh
 			class LeadingOnes : public pbo_base
 			{
 			public:
-				LeadingOnes(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				LeadingOnes(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: pbo_base("LeadingOnes", instance_id)
 				{
 					set_best_variables(1);
@@ -37,7 +37,7 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static LeadingOnes* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static LeadingOnes* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new LeadingOnes(instance_id, dimension);
 				}

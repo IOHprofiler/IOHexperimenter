@@ -20,7 +20,7 @@ namespace ioh
 			{
 				double factor_;
 			public:
-				Rosenbrock_Rotated(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Rosenbrock_Rotated(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(9, "Rosenbrock_Rotated", instance_id, dimension),
 					  factor_(std::max(1.0, std::sqrt(dimension) / 8.0))
 				{
@@ -60,8 +60,8 @@ namespace ioh
 					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
 
-				static Rosenbrock_Rotated* create(int instance_id = DEFAULT_INSTANCE,
-				                                  int dimension = DEFAULT_DIMENSION)
+				static Rosenbrock_Rotated* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                                  int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Rosenbrock_Rotated(instance_id, dimension);
 				}

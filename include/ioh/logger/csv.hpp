@@ -177,7 +177,7 @@ namespace ioh
 				if (!dat_stream.is_open())
 				{
 					common::log::error("file is not open");
-					if (buffer_string.size() + add_string.size() < MAX_BUFFER_SIZE)
+					if (buffer_string.size() + add_string.size() < IOH_MAX_BUFFER_SIZE)
 					{
 						buffer_string = buffer_string + add_string;
 					}

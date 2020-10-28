@@ -18,7 +18,7 @@ namespace ioh
 			class Discus : public bbob_base
 			{
 			public:
-				Discus(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Discus(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(11, "Discus", instance_id, dimension)
 				{
 					set_number_of_variables(dimension);
@@ -51,7 +51,7 @@ namespace ioh
 				}
 
 
-				static Discus* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Discus* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Discus(instance_id, dimension);
 				}

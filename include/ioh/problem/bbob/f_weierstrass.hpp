@@ -26,7 +26,7 @@ namespace ioh
 				std::vector<double> b1_;
 				std::vector<double> raw_x_;
 			public:
-				Weierstrass(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Weierstrass(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(16, "Weierstrass", instance_id, dimension),
 					  penalty_factor_(10.0 / dimension),
 					  f0(0.0), ak{0.0}, bk{0.0},
@@ -101,8 +101,8 @@ namespace ioh
 					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
 
-				static Weierstrass* create(int instance_id = DEFAULT_INSTANCE,
-				                           int dimension = DEFAULT_DIMENSION)
+				static Weierstrass* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                           int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Weierstrass(instance_id, dimension);
 				}

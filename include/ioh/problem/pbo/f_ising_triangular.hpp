@@ -17,7 +17,7 @@ namespace ioh
 			class Ising_Triangular : public pbo_base
 			{
 			public:
-				Ising_Triangular(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Ising_Triangular(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: pbo_base("Ising_Triangular", instance_id)
 				{
 					set_best_variables(1);
@@ -56,7 +56,7 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static Ising_Triangular* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Ising_Triangular* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Ising_Triangular(instance_id, dimension);
 				}

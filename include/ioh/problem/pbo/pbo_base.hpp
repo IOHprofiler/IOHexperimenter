@@ -13,7 +13,7 @@ namespace ioh
 			public:
 				pbo_base() = default;
 
-				pbo_base(std::string problem_name, int instance_id = DEFAULT_INSTANCE)
+				pbo_base(std::string problem_name, int instance_id = IOH_DEFAULT_INSTANCE)
 				{
 					set_instance_id(instance_id);
 					set_problem_name(problem_name);

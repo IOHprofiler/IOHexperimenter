@@ -21,7 +21,7 @@ namespace ioh
 				std::vector<double> raw_x_;
 
 			public:
-				Bueche_Rastrigin(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Bueche_Rastrigin(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(4, "Bueche_Rastrigin", instance_id, dimension), raw_x_(dimension)
 				{
 					set_number_of_variables(dimension);
@@ -62,8 +62,8 @@ namespace ioh
 					transformation::coco::transform_vars_brs_evaluate(x);
 				}
 
-				static Bueche_Rastrigin* create(int instance_id = DEFAULT_INSTANCE,
-				                                int dimension = DEFAULT_DIMENSION)
+				static Bueche_Rastrigin* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                                int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Bueche_Rastrigin(instance_id, dimension);
 				}

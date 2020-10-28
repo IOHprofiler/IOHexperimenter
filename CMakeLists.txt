@@ -36,7 +36,7 @@ add_library(ioh::ioh ALIAS ioh)
 if(ENABLE_PYTHON_PROBLEMS)
     find_package(PythonLibs REQUIRED)
     include_directories(${PYTHON_INCLUDE_DIRS})
-    target_link_libraries(ioh ${PYTHON_LIBRARIES})
+    target_link_libraries(ioh INTERFACE ${PYTHON_LIBRARIES})
     add_compile_definitions(PYTHON_DEFINED)
 endif()
 

@@ -19,7 +19,7 @@ namespace ioh
 			class LeadingOnes_Neutrality : public pbo_base
 			{
 			public:
-				LeadingOnes_Neutrality(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				LeadingOnes_Neutrality(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: pbo_base("LeadingOnes_Neutrality", instance_id)
 				{
 					set_best_variables(1);
@@ -45,8 +45,8 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static LeadingOnes_Neutrality* create(int instance_id = DEFAULT_INSTANCE,
-				                                      int dimension = DEFAULT_DIMENSION)
+				static LeadingOnes_Neutrality* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                                      int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new LeadingOnes_Neutrality(instance_id, dimension);
 				}

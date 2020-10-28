@@ -11,7 +11,8 @@ add_executable(test_${PROJECT_NAME}
     "src/problem/test_bbob_problem.cpp"  
     "src/problem/test_pbo_problem.cpp"    
     "src/logger/test_ecdf.cpp"
-   "src/test_experiment.cpp")
+   "src/test_experiment.cpp"
+ )
 
 target_include_directories(test_${PROJECT_NAME}
 PRIVATE

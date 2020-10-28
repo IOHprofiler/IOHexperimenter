@@ -40,7 +40,7 @@ namespace ioh
 				std::vector<double> peak_values;
 
 			public:
-				Gallagher21(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Gallagher21(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(22, "Gallagher21", instance_id, dimension),
 					arr_scales(std::vector<std::vector<double>>(number_of_peaks, std::vector<double>(n_))),
 					x_local(std::vector<std::vector<double>>(n_, std::vector<double>(number_of_peaks))),
@@ -160,8 +160,8 @@ namespace ioh
 				}
 
 
-				static Gallagher21* create(int instance_id = DEFAULT_INSTANCE,
-				                           int dimension = DEFAULT_DIMENSION)
+				static Gallagher21* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                           int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Gallagher21(instance_id, dimension);
 				}

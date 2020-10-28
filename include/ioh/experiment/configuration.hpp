@@ -84,9 +84,9 @@ namespace ioh
 				std::string line;
 				std::ifstream fp = open_file(filename);
 
-				char key[MAXKEYNUMBER];
-				char value[MAXKEYNUMBER];
-				char section[MAXKEYNUMBER];
+				char key[IOH_MAX_KEYNUMBER];
+				char value[IOH_MAX_KEYNUMBER];
+				char section[IOH_MAX_KEYNUMBER];
 				
 				while (getline(fp, line))
 				{

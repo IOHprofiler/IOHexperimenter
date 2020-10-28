@@ -18,7 +18,7 @@ namespace ioh
 			class NQueens : public pbo_base
 			{
 			public:
-				NQueens(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				NQueens(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: pbo_base("NQueens", instance_id)
 				{
 					set_number_of_variables(dimension);
@@ -122,7 +122,7 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static NQueens* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static NQueens* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new NQueens(instance_id, dimension);
 				}

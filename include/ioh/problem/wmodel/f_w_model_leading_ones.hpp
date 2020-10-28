@@ -24,7 +24,7 @@ namespace ioh
 				std::vector<int> ruggedness_info;
 				int temp_dimension;
 
-				W_Model_LeadingOnes(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) :
+				W_Model_LeadingOnes(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION) :
 					wmodel_base("W_Model_LeadingOnes", instance_id, dimension),
 					temp_dimension(0)
 				{
@@ -141,8 +141,8 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static W_Model_LeadingOnes* create(int instance_id = DEFAULT_INSTANCE,
-				                                   int dimension = DEFAULT_DIMENSION)
+				static W_Model_LeadingOnes* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                                   int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new W_Model_LeadingOnes(instance_id, dimension);
 				}

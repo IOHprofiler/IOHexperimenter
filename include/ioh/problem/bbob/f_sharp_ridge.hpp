@@ -19,7 +19,7 @@ namespace ioh
 			class Sharp_Ridge : public bbob_base
 			{
 			public:
-				Sharp_Ridge(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Sharp_Ridge(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(13, "Sharp_Ridge", instance_id, dimension)
 				{
 					set_number_of_variables(dimension);
@@ -74,8 +74,8 @@ namespace ioh
 					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
 
-				static Sharp_Ridge* create(int instance_id = DEFAULT_INSTANCE,
-				                           int dimension = DEFAULT_DIMENSION)
+				static Sharp_Ridge* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                           int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Sharp_Ridge(instance_id, dimension);
 				}

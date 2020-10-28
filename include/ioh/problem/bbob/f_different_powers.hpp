@@ -17,7 +17,7 @@ namespace ioh
 			class Different_Powers : public bbob_base
 			{
 			public:
-				Different_Powers(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Different_Powers(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(14, "Different_Powers", instance_id, dimension)
 				{
 					set_number_of_variables(dimension);
@@ -50,8 +50,8 @@ namespace ioh
 					return sqrt(sum);
 				}
 
-				static Different_Powers* create(int instance_id = DEFAULT_INSTANCE,
-				                                int dimension = DEFAULT_DIMENSION)
+				static Different_Powers* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                                int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Different_Powers(instance_id, dimension);
 				}

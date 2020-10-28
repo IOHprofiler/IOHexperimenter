@@ -19,7 +19,7 @@ namespace ioh
 				int k = 5;
 			public:
 
-				Concatenated_Trap(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Concatenated_Trap(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: pbo_base("Concatenated_Trap", instance_id)
 				{
 					set_best_variables(1);
@@ -73,7 +73,7 @@ namespace ioh
 					return result;
 				}
 
-				static Concatenated_Trap* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Concatenated_Trap* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Concatenated_Trap(instance_id, dimension);
 				}

@@ -20,7 +20,7 @@ namespace ioh
 			{
 			public:
 
-				OneMax_Neutrality(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				OneMax_Neutrality(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: pbo_base("OneMax_Neutrality", instance_id)
 				{
 					set_best_variables(1);
@@ -39,8 +39,8 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static OneMax_Neutrality* create(int instance_id = DEFAULT_INSTANCE,
-				                                 int dimension = DEFAULT_DIMENSION)
+				static OneMax_Neutrality* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                                 int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new OneMax_Neutrality(instance_id, dimension);
 				}

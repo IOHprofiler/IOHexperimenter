@@ -20,7 +20,7 @@ namespace ioh
 				double scales = 0.0;
 
 			public:
-				Griewank_RosenBrock(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Griewank_RosenBrock(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(19, "Griewank_RosenBrock", instance_id, dimension)
 				{
 					set_number_of_variables(dimension);
@@ -66,8 +66,8 @@ namespace ioh
 				}
 
 
-				static Griewank_RosenBrock* create(int instance_id = DEFAULT_INSTANCE,
-				                                   int dimension = DEFAULT_DIMENSION)
+				static Griewank_RosenBrock* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                                   int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Griewank_RosenBrock(instance_id, dimension);
 				}

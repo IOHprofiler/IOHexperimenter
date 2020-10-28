@@ -18,7 +18,7 @@ namespace ioh
 			class Linear_Slope : public bbob_base
 			{
 			public:
-				Linear_Slope(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Linear_Slope(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(5, "Linear_Slope", instance_id, dimension)
 				{
 					set_number_of_variables(dimension);
@@ -68,8 +68,8 @@ namespace ioh
 					return result;
 				}
 
-				static Linear_Slope* create(int instance_id = DEFAULT_INSTANCE,
-				                            int dimension = DEFAULT_DIMENSION)
+				static Linear_Slope* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                            int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Linear_Slope(instance_id, dimension);
 				}

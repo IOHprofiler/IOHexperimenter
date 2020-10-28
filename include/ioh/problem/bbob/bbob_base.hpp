@@ -25,7 +25,7 @@ namespace ioh
 				bbob_base() = default;
 
 				bbob_base(const int problem_id, const std::string& problem_name,
-				          const int instance_id = DEFAULT_INSTANCE, const int dimension = DEFAULT_DIMENSION):
+				          const int instance_id = IOH_DEFAULT_INSTANCE, const int dimension = IOH_DEFAULT_DIMENSION):
 					rseed_((problem_id == 4 || problem_id == 18 ? problem_id - 1 : problem_id) + 10000 * instance_id),
 					fopt_(transformation::coco::bbob2009_compute_fopt(problem_id, instance_id)),
 					xopt_(dimension),

@@ -17,7 +17,7 @@ namespace ioh
 			class Ising_Torus : public pbo_base
 			{
 			public:
-				Ising_Torus(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Ising_Torus(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: pbo_base("Ising_Torus", instance_id)
 				{
 					set_best_variables(1);
@@ -59,8 +59,8 @@ namespace ioh
 					return result;
 				}
 
-				static Ising_Torus* create(int instance_id = DEFAULT_INSTANCE,
-				                           int dimension = DEFAULT_DIMENSION)
+				static Ising_Torus* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                           int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Ising_Torus(instance_id, dimension);
 				}

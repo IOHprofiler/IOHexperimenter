@@ -17,7 +17,7 @@ namespace ioh
 			class Ising_Ring : public pbo_base
 			{
 			public:
-				Ising_Ring(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Ising_Ring(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: pbo_base("Ising_Ring", instance_id)
 				{
 					set_best_variables(1);
@@ -43,7 +43,7 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static Ising_Ring* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Ising_Ring* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Ising_Ring(instance_id, dimension);
 				}

@@ -17,7 +17,7 @@ namespace ioh
 			class LABS : public pbo_base
 			{
 			public:
-				LABS(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				LABS(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: pbo_base("LABS", instance_id)
 				{
 					set_number_of_variables(dimension);
@@ -64,7 +64,7 @@ namespace ioh
 					return static_cast<double>(result);
 				}
 
-				static LABS* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static LABS* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new LABS(instance_id, dimension);
 				}

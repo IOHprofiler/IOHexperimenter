@@ -19,7 +19,7 @@ namespace ioh
 			class Rastrigin : public bbob_base
 			{
 			public:
-				Rastrigin(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Rastrigin(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(3, "Rastrigin", instance_id, dimension)
 				{
 					set_number_of_variables(dimension);
@@ -57,7 +57,7 @@ namespace ioh
 					transformation::coco::transform_vars_conditioning_evaluate(x, 10.0);
 				}
 
-				static Rastrigin* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Rastrigin* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Rastrigin(instance_id, dimension);
 				}

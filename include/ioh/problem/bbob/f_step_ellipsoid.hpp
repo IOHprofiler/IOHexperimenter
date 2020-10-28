@@ -22,7 +22,7 @@ namespace ioh
 				std::vector<double> dataxx_;
 
 			public:
-				Step_Ellipsoid(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Step_Ellipsoid(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(7, "Step_Ellipsoid", instance_id, dimension),
 					  datax_(dimension),
 					  dataxx_(dimension)
@@ -108,8 +108,8 @@ namespace ioh
 					// Needs to override default beviour
 				}
 
-				static Step_Ellipsoid* create(int instance_id = DEFAULT_INSTANCE,
-				                              int dimension = DEFAULT_DIMENSION)
+				static Step_Ellipsoid* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                              int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Step_Ellipsoid(instance_id, dimension);
 				}

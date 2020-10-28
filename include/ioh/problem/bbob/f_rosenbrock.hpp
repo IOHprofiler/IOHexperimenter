@@ -22,7 +22,7 @@ namespace ioh
 				double factor_;
 
 			public:
-				Rosenbrock(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Rosenbrock(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(8, "Rosenbrock", instance_id, dimension),
 					  minus_one_(dimension, -1),
 					  factor_(std::max(1.0, std::sqrt(dimension) / 8.0))
@@ -58,7 +58,7 @@ namespace ioh
 					transformation::coco::transform_vars_shift_evaluate_function(x, minus_one_);
 				}
 
-				static Rosenbrock* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static Rosenbrock* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Rosenbrock(instance_id, dimension);
 				}

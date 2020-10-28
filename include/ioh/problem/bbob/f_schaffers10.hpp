@@ -23,7 +23,7 @@ namespace ioh
 				std::vector<double> b1_;
 				std::vector<double> raw_x_;
 			public:
-				Schaffers10(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				Schaffers10(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(17, "Schaffers10", instance_id, dimension),
 					  m1_(dimension, std::vector<double>(dimension)),
 					  b1_(dimension),
@@ -83,8 +83,8 @@ namespace ioh
 					transformation::coco::transform_vars_affine_evaluate_function(x, m_, b_);
 				}
 
-				static Schaffers10* create(int instance_id = DEFAULT_INSTANCE,
-				                           int dimension = DEFAULT_DIMENSION)
+				static Schaffers10* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				                           int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new Schaffers10(instance_id, dimension);
 				}

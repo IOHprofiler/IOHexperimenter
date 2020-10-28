@@ -63,8 +63,8 @@ namespace ioh
 
 
 		public:
-			base(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION) :
-				problem_id(DEFAULT_PROBLEM_ID),
+			base(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION) :
+				problem_id(IOH_DEFAULT_PROBLEM_ID),
 				instance_id(instance_id),
 				maximization_minimization_flag(common::optimization_type::maximization),
 				number_of_variables(dimension),

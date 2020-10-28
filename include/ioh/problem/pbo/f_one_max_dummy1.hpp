@@ -21,7 +21,7 @@ namespace ioh
 			public:
 				std::vector<int> info;
 
-				OneMax_Dummy1(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				OneMax_Dummy1(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: pbo_base("OneMax_Dummy1", instance_id)
 				{
 					set_best_variables(1);
@@ -44,7 +44,7 @@ namespace ioh
 					return result;
 				}
 
-				static OneMax_Dummy1* create(int instance_id = DEFAULT_INSTANCE, int dimension = DEFAULT_DIMENSION)
+				static OneMax_Dummy1* create(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 				{
 					return new OneMax_Dummy1(instance_id, dimension);
 				}
