@@ -6,8 +6,8 @@ project(ioh
     VERSION 0.0.0.1
     LANGUAGES CXX
 )
- 
 set(CMAKE_CXX_STANDARD 17)
+
 
 option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python modules as if they were an IOH problem" OFF)
 
@@ -19,16 +19,16 @@ endif()
 
 
 # Define project targets.
-file(GLOB SOURCES src/*.cpp src/*/*.cpp)
+#file(GLOB SOURCES src/*.cpp src/*/*.cpp)
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
- 
+  
 # Exlude python problems if not enabled
 if(NOT ENABLE_PYTHON_PROBLEMS)
     list(FILTER HEADERS EXCLUDE REGEX "include/ioh/problem/python/*")
 endif()
 
 
-add_library(ioh ${HEADERS} ${SOURCES})
+add_library(ioh INTERFACE)
 add_library(ioh::ioh ALIAS ioh)
 
 
@@ -42,29 +42,26 @@ endif()
 
 
 target_include_directories(ioh
-PUBLIC
+INTERFACE
     # Interface paths are relative to the installation path, not the current
     # directory.
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
-PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 target_compile_features(ioh
-PUBLIC
+INTERFACE
     cxx_std_17
 )
 
 target_compile_options(ioh
-PRIVATE
+INTERFACE
     -Wall
     $<$<CXX_COMPILER_ID:GNU>:-pedantic>
 )
 
 
 # Generate package config files.
-
 include(CMakePackageConfigHelpers)
 
 configure_package_config_file(
@@ -82,15 +79,13 @@ write_basic_package_version_file(
 
 
 # Define installation rules.
-
 include(GNUInstallDirs)
 
-install(
-TARGETS 
-    ioh
-EXPORT ioh-targets
-LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+install(TARGETS ioh
+    EXPORT ioh-targets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
 install(DIRECTORY include/
@@ -115,7 +110,6 @@ install(EXPORT ioh-targets
 # Export targets. If an external project adds this project to its build tree
 # via `add_subdirectory()`, then `find_package()` will work without
 # requiring this project to be installed.
-
 export(EXPORT ioh-targets
     FILE ${CMAKE_CURRENT_BINARY_DIR}/ioh-targets.cmake
     NAMESPACE ioh::

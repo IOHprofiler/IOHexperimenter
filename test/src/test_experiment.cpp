@@ -17,8 +17,6 @@ TEST(experiment, config)
 			config = root / config;
 			break;
 		}
-
-		
 	}
 
 	ioh::experiment::configuration conf(config.generic_string());

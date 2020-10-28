@@ -232,9 +232,7 @@ namespace ioh
 				{
 					/// The condition endding with "n-"
 					if (i != spiltstring.size() - 1)
-					{
 						log::error("Format error in configuration.");
-					}
 					else
 					{
 						tmp = spiltstring[i].substr(0, spiltstring[i].length() - 1);
@@ -314,6 +312,7 @@ namespace ioh
 				if (iter != map.end())
 					return iter->second;
 				std::cout << "Cannot find key: " << section << std::endl;
+				return nullptr;
 			}
 
 			int get_int(const std::string& section, const std::string& key) const
