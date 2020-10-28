@@ -93,16 +93,15 @@ namespace ioh
 				return renamed_directory;
 			}
 
-			bool create_folder(const fs::path path) const
+			void create_folder(const fs::path path) const
 			{
 				try
 				{
-					return create_directories(path);
+					create_directories(path);
 				}
 				catch (const std::exception& e)
 				{
 					common::log::error(std::string("Error on creating directory:") + e.what());
-					return false;
 				}
 			}
 
@@ -133,7 +132,9 @@ namespace ioh
 						handle.close();
 					handle.open(file_path.c_str(), std::ofstream::out | std::ofstream::app);
 					buffer = "";
-					write_in_buffer(dat_header() + "\n", buffer, handle);
+					auto header = dat_header();
+					
+					write_in_buffer(header + "\n", buffer, handle);
 				}
 			}
 
@@ -167,6 +168,8 @@ namespace ioh
 				recreate_handle(this->interval_status(), ".idat", idat, idat_buffer);
 				recreate_handle(this->update_status(), ".dat", dat, dat_buffer);
 				recreate_handle(this->time_points_status(), ".tdat", tdat, tdat_buffer);
+
+				
 			}
 
 			void write_stream(std::string buffer_string, std::fstream& dat_stream)
@@ -177,18 +180,17 @@ namespace ioh
 			void write_in_buffer(std::string add_string, std::string& buffer_string, std::fstream& dat_stream)
 			{
 				if (!dat_stream.is_open())
-				{
 					common::log::error("file is not open");
-					if (buffer_string.size() + add_string.size() < IOH_MAX_BUFFER_SIZE)
-					{
-						buffer_string = buffer_string + add_string;
-					}
-					else
-					{
-						write_stream(buffer_string, dat_stream);
-						buffer_string.clear();
-						buffer_string = add_string;
-					}
+				
+				if (buffer_string.size() + add_string.size() < IOH_MAX_BUFFER_SIZE)
+				{
+					buffer_string = buffer_string + add_string;
+				}
+				else
+				{
+					write_stream(buffer_string, dat_stream);
+					buffer_string.clear();
+					buffer_string = add_string;
 				}
 			}
 
@@ -201,9 +203,9 @@ namespace ioh
 
 			/// \fn openIndex()
 			/// \brief to create the folder of logging files.
-			bool open_index()
+			void open_index()
 			{
-				return create_folder(experiment_folder_name());
+				create_folder(experiment_folder_name());
 			}
 
 		public:

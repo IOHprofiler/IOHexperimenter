@@ -33,10 +33,12 @@ namespace ioh
 			
 			common::container data;
 		public:
+			configuration() = default;
+			
 			configuration(const std::string& filename) : config_file(filename)
 			{
 				readcfg(filename);
-			}		
+			}
 
 			void readcfg(const std::string& filename)
 			{

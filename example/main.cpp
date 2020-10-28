@@ -216,38 +216,20 @@ int main()
 {
 
 	std::string config = "C:\\Users\\Jacob\\Source\\Repos\\IOHprofiler\\IOHexperimenter\\example\\conf.ini";
-	// /// An example for PBO suite.
-	ioh::experiment::experimenter<ioh::problem::pbo::pbo_base> experimenter(config, pboalgo);
-	experimenter.set_independent_runs(10);
-	experimenter.run();
+	ioh::experiment::experimenter<ioh::problem::pbo::pbo_base> pexperiment(config, pboalgo);
+	pexperiment.set_independent_runs(10);
+	pexperiment.run();
 
+	using namespace ioh;
+	std::vector<int> pbs = { 1,2 };
+	std::vector<int> ins = { 1,2 };
+	std::vector<int> dims = { 2,10 };
+	auto suite = std::make_shared<suite::bbob>(pbs, ins, dims);
+	auto logger = std::make_shared<logger::csv<problem::bbob::bbob_base>>();
+	auto bexperiment = experiment::experimenter<problem::bbob::bbob_base>(suite, logger, algo);
 	
-	// ioh::experiment::configuration conf(config);
-	//
-	// std::cout << conf.get_suite_name() << std::endl
-	// 	<< conf.get_problem_id() << std::endl
-	// 	<< conf.get_instance_id() << std::endl
-	// 	<< conf.get_dimension() << std::endl
-	// 	<< conf.get_output_directory() << std::endl
-	// 	<< conf.get_result_folder() << std::endl
-	// 	<< conf.get_algorithm_info() << std::endl
-	// 	<< conf.get_algorithm_name() << std::endl
-	// 	<< conf.get_base_evaluation_triggers() << std::endl
-	// 	<< conf.get_update_triggers() << std::endl
-	// 	<< conf.get_complete_triggers() << std::endl
-	// 	<< conf.get_number_target_triggers() << std::endl
-	// 	<< conf.get_number_interval_triggers() << std::endl;
-		
-	
-	// fs::path root;
-	// for (auto e: fs::current_path())
-	// {
-	// 	root /= e;
-	// 	if(fs::exists(root / config))
-	// 		std::cout << root/config << std::endl;
-	// }
-		
-	
+	bexperiment.set_independent_runs(10);
+	bexperiment.run();
 }
 
 

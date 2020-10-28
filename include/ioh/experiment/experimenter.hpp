@@ -50,7 +50,7 @@ namespace ioh
 
 			experimenter(std::shared_ptr<suite::base<ProblemType>> suite,
 			             std::shared_ptr<logger::csv<ProblemType>> csv_logger,
-			             algorithm_type* algorithm) : conf("")
+			             algorithm_type* algorithm) : conf()
 			{
 				configSuite = suite;
 				config_csv_logger = csv_logger;
@@ -108,11 +108,11 @@ namespace ioh
 					}
 
 					std::clock_t c_end = std::clock();
-					print_info("CPU Time" + std::to_string(1000.0 * (c_end - c_start) / CLOCKS_PER_SEC) + "ms\n");
+					print_info("CPU Time: " + std::to_string(1000.0 * (c_end - c_start) / CLOCKS_PER_SEC) + "ms\n");
 				}
 
 				std::clock_t c_end_overall = std::clock();
-				print_info("Total CPU Time" + std::to_string(
+				print_info("Total CPU Time: " + std::to_string(
 					1000.0 * (c_end_overall - c_start_overall) / CLOCKS_PER_SEC) + "ms\n");
 			}
 
