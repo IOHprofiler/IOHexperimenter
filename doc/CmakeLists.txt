@@ -1,5 +1,5 @@
 find_package(Doxygen REQUIRED)
-
+find_package(Sphinx REQUIRED)
 
 #This will be the main output of our command
 set(DOXYGEN_INPUT_DIR ${PROJECT_SOURCE_DIR}/include)
@@ -23,7 +23,6 @@ add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
 add_custom_target(Doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE}) 
  
 ## Sphinx
-find_package(Sphinx REQUIRED)
 set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/sphinx)
 set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
 set(SPHINX_INDEX_FILE ${SPHINX_BUILD}/index.html) 
