@@ -15,8 +15,6 @@ namespace fs = std::experimental::filesystem;
 namespace fs = std::filesystem;
 #endif
 
-namespace fs = std::filesystem;
-
 namespace ioh
 {
 	namespace logger
