@@ -13,8 +13,14 @@ namespace fs = std::filesystem;
 
 TEST(experiment, config)
 {
+	std::cout << 1 << std::endl;
+
 	fs::path config = fs::path("IOHexperimenter") / fs::path("example") / "conf.ini";
+	std::cout << 2 << std::endl;
+
 	fs::path root;
+	std::cout << 3 << std::endl;
+
 	for (const auto& e : fs::current_path())
 	{
 		root /= e;
@@ -24,8 +30,8 @@ TEST(experiment, config)
 			break;
 		}
 	}
+	std::cout << 4 << config << std::endl;
 
-	std::cout << "before" << std::endl;
 	ioh::experiment::configuration conf(config.generic_string());
 	std::cout << "before" << std::endl;
 	ASSERT_EQ(conf.get_suite_name(), "PBO");

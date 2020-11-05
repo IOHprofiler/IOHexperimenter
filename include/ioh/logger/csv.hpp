@@ -20,7 +20,7 @@ namespace ioh
 	namespace logger
 	{
 		/// \brief A class of logging csv files.
-		///
+		/// 
 		/// To activate logger functions as evaluating problems,  a 'logger' must be added to
 		/// problem by the statement 'problem.add_logger(logger)'.
 		template <class T>
