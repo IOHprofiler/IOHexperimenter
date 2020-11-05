@@ -78,7 +78,7 @@ TEST(problems, pbo)
 	// ASSERT_DOUBLE_EQ(test_eval(std::make_shared<Ising_Triangular>(1, 9)), 9.0000);
 }
 
-TEST(suite, bbob)
+TEST(problem_suite, bbob)
 {
 	ioh::common::log::log_level = ioh::common::log::level::warning;
 
