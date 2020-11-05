@@ -21,7 +21,7 @@ TEST(PBOfitness, dimension16) {
 
   ioh::suite::pbo pbo;
   std::shared_ptr<ioh::problem::pbo::pbo_base> problem;
-
+   
 
   ifstream infile(file_name.c_str());
     while( getline(infile,s) ) {

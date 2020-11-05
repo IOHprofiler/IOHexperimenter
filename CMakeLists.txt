@@ -8,6 +8,8 @@ project(ioh
 )
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
 option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python modules as if they were an IOH problem" OFF)
 
 if(MSVC)
@@ -125,6 +127,7 @@ export(PACKAGE ioh)
 
 # Add subdirectories to build.
 add_subdirectory(test)
+add_subdirectory(doc)
 add_subdirectory(example)
 
 

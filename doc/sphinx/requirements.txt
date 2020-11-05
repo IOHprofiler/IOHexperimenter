@@ -1,5 +1,1 @@
-## Python requirements for using Sphinx.
-##
-##   pip install --requirement=requirements.txt
-##
 Sphinx>=1.3
