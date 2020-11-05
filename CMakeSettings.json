@@ -1,5 +1,4 @@
 ﻿{
-  // See https://go.microsoft.com/fwlink/?linkid=834763 for more information about this file.
   "configurations": [
     {
       "name": "x64-Debug",
@@ -10,7 +9,19 @@
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
-      "ctestCommandArgs": ""
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "BUILD_DOC",
+          "value": "",
+          "type": "UNINITIALIZED"
+        },
+        {
+          "name": "BUILD_DOCS",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
     }
   ]
 }

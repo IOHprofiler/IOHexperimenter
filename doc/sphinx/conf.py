@@ -32,6 +32,31 @@ extensions = [
     "breathe",
     "exhale"
 ]
+import subprocess, os
+
+def configure_doxy_file(input_dir, output_dir):
+    with open('Doxyfile.in', 'r') as file :
+        filedata = file.read()
+
+    filedata = filedata.replace('@DOXYGEN_INPUT_DIR@', input_dir)
+    filedata = filedata.replace('@DOXYGEN_OUTPUT_DIR@', output_dir)
+
+    with open('Doxyfile', 'w') as file:
+        file.write(filedata)
+
+# Check if we're running on Read the Docs' servers
+read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
+
+breathe_projects = {}
+
+if read_the_docs_build:
+    input_dir = '../../include'
+    output_dir = 'build'
+    configure_doxy_file(input_dir, output_dir)
+    subprocess.call('doxygen', shell=True)
+    breathe_projects['ioh'] = output_dir + '/xml'
+
+
 
 breathe_default_project = "ioh"
 
@@ -133,7 +158,7 @@ todo_include_todos = False
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
