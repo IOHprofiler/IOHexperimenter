@@ -51,14 +51,13 @@ breathe_projects = {}
 
 if read_the_docs_build:
     input_dir = '../../include'
-    output_dir = 'build'
+    output_dir = 'build/doxygen'
     configure_doxy_file(input_dir, output_dir)
     subprocess.call('doxygen', shell=True)
     breathe_projects['ioh'] = output_dir + '/xml'
 
-
-
-breathe_default_project = "ioh"
+else:
+    breathe_default_project = "ioh"
 
 exhale_args = {
     # These arguments are required
