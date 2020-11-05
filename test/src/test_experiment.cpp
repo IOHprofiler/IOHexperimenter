@@ -9,7 +9,7 @@ namespace fs = std::filesystem;
 
 #include <gtest/gtest.h>
 #include "ioh.hpp"
- 
+#include <iostream>
 
 TEST(experiment, config)
 {
@@ -25,7 +25,9 @@ TEST(experiment, config)
 		}
 	}
 
+	std::cout << "before" << std::endl;
 	ioh::experiment::configuration conf(config.generic_string());
+	std::cout << "before" << std::endl;
 	ASSERT_EQ(conf.get_suite_name(), "PBO");
 	ASSERT_EQ(conf.get_problem_id(), std::vector<int>({ 1, 2, 3, 4, 5 }));
 	ASSERT_EQ(conf.get_instance_id(), std::vector<int>({ 1 }));
