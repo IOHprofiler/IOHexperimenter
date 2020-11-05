@@ -1,4 +1,5 @@
 recursive-include src/ *
+recursive-include IOHexperimenter/ *
 recursive-include IOHexperimenter/example *
-recursive-include IOHexperimenter/unittest *
-include IOHprofiler.i Makefile.in
+recursive-include tests/ *
+graft src/

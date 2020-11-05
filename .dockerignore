@@ -1,6 +1,13 @@
+.git
+/venv/
+/venv2/
+/dist/
+/build/
+
+
 *.o
 .*
-!.dockerignore
+
 *lib
 *.so*
 
@@ -10,8 +17,6 @@ build/
 *bk
 Makefile
 *.so
-
-!/.gitignore
 __pycache__
-Pipfile
 
+src/IOHprofiler_wrap.cpp

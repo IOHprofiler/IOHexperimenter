@@ -1,142 +1,54 @@
-import setuptools, sys, os, sysconfig, glob, subprocess, platform, re
-from pathlib import Path
-from shutil import move, copy
-from distutils.command.build import build
-from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
-from pdb import set_trace
-
-_platform = platform.system()
-
-def get_py_info():
-    py_version = sysconfig.get_config_var('py_version')
-    py_version2 = re.search('(\d\.\d).*', py_version).group(1)
-    py_version3 = py_version2 + 'm'
-    
-    if _platform == 'Windows':
-        prefix = sysconfig.get_config_var('prefix')
-        include_path = os.path.join(prefix, 'include')
-        lib_path = os.path.join(prefix, 'libs')
-        lib_file = [str(p) for p in Path(lib_path).rglob('python*' + '.lib')]
-        header = [str(p) for p in Path(include_path).rglob('Python.h')]
-    else: 
-        include_path = sysconfig.get_config_var('INCLUDEDIR')
-        header = []
-        for v in [py_version, py_version2, py_version3]:
-            header += [
-                str(p) for p in Path(include_path).rglob(
-                    'python' + v + '*/Python.h'
-                )
-            ] 
-            
-        lib_path = Path(sysconfig.get_config_var('LIBDIR'))
-        lib_file = []
-        for v in [py_version, py_version2]:
-            py_lib = 'libpython' + v + '*'
-            lib_file += [str(p) for p in lib_path.rglob(py_lib + '.so')] + \
-                [str(p) for p in lib_path.rglob(py_lib + '.dylib')] + \
-                [str(p) for p in lib_path.rglob(py_lib + '.a')]
-    
-    if len(header) != 0:
-        header = os.path.realpath(header[0])
-    else:
-        raise Exception('Python.h not found...')
-
-    if len(lib_file) != 0:
-        lib_file = os.path.realpath(lib_file[0])
-    else:
-        raise Exception('Python dynamic library not found...')
-
-    include_path = os.path.dirname(header)
-    if _platform == 'Windows':
-        lib_file = lib_file.replace("\\", "\\\\")
-        include_path = include_path.replace("\\", "\\\\")
-
-    return {
-        'version' : py_version,
-        'include' : include_path,
-        'header' : header,
-        'library' : lib_file
-    }
-
-def _compile(bdist_wheel=False):
-    # check the installation of `swig`
-    try:
-        subprocess.call(["swig", "-version"])
-    except OSError as e:
-        print('%s. Please check your SWIG installation.'%e)
-        return 
-
-    info = get_py_info()
-    lib_file = info['library']
-    include_path = info['include']
-    print(lib_file)
-    
-    if bdist_wheel:
-        if not os.path.exists('IOHexperimenter/lib'):
-            os.makedirs('IOHexperimenter/lib')
-
-        copy(lib_file, 'IOHexperimenter/lib')
-        lib_file = os.path.join(
-            './IOHexperimenter/lib',
-            os.path.basename(lib_file)
-        )
-
-    with open('Makefile.in') as f:
-        lines = f.readlines()
-        _lib = [(i, l) for i, l in enumerate(lines) if re.match(r'^py_lib=.*', l)]
-        for i, l in _lib:
-            lines[i] = re.sub('py_lib=.*', 'py_lib=%s'%lib_file, l)
-
-        _include = [(i, l) for i, l in enumerate(lines) if re.match(r'^py_include=.*', l)]
-        for i, l in _include:
-            lines[i] = re.sub('py_include=.*', 'py_include=-I%s'%include_path, l)
-
-    with open('Makefile', 'w') as f:
-        f.writelines(lines)
-
-    os.system('make')
-    move('_IOHprofiler.so', 'IOHexperimenter/_IOHprofiler.so')
-    move('IOHprofiler.py', 'IOHexperimenter/IOHprofiler.py')
-
-class bdist_wheel(_bdist_wheel):
-    def run(self):
-        _compile(bdist_wheel=True)
-        super(bdist_wheel, self).run()
-
-    def finalize_options(self):
-        _bdist_wheel.finalize_options(self)
-        self.root_is_pure = False
-
-class CustomBuild(build):
-    def run(self):
-        _compile()
-        super(CustomBuild, self).run()
-
+import os
+import platform
+from setuptools import setup, Extension, find_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-setuptools.setup(
-    cmdclass={
-        'build': CustomBuild,
-        'bdist_wheel': bdist_wheel
-    },
+
+if platform.system() == "Darwin":
+    os.environ["CC"] = "clang"
+    os.environ["CXX"] = "clang"
+    os.environ["ARCHFLAGS"] = "-std=c++14"
+
+extra_compile_args = None if platform.system() == 'Windows' else [
+    "-std=c++14"
+]
+
+has_wrap_file = os.path.isfile(os.path.join("src", "IOHprofiler_wrap.cpp"))
+sources = [
+     os.path.join("src", x)
+     for x in os.listdir("src") 
+     if x.endswith(".cpp") or (x.endswith(".i") and not has_wrap_file)
+]
+
+iohprofiler = Extension('IOHexperimenter._IOHprofiler', 
+    swig_opts=(None if has_wrap_file else 
+        ["-c++", "-outdir", "IOHexperimenter"]), 
+    sources=sources,
+    include_dirs=["src"],
+    extra_compile_args=extra_compile_args
+)
+
+
+setup(
     name="IOHexperimenter",
-    version="0.2.4",
+    version="0.2.8",
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
+    packages=find_packages(),
     description="The experimenter for Iterative Optimization Heuristic",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/IOHprofiler/IOHexperimenter",
-    packages=setuptools.find_packages(),
+    ext_modules = [iohprofiler],
     package_dir={'IOHexperimenter': 'IOHexperimenter'},
-    package_data={'IOHexperimenter': ['_IOHprofiler.so']},
-    include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)"
     ],
     python_requires='>=3.6',
-    zip_safe=False,  # if enabled, *.so files would be be compressed when buiding the .egg archive
+    install_requires=[ 
+        "numpy",        
+    ]
 )

@@ -1,6 +1,17 @@
-import pytest
+import os
+import shutil
+import uuid
+import unittest
 import numpy as np
-from IOHexperimenter import IOHexperimenter, IOH_function, custom_IOH_function
+
+
+class TmpdirTestCase(unittest.TestCase):    
+    def setUp(self):
+        self.tmpdir = os.path.join(os.getcwd(), str(uuid.uuid1()))
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir)
+
 
 class opt_alg:
     def __init__(self, budget):
@@ -21,10 +32,10 @@ class opt_alg:
     def param_rate(self):
         return np.random.randint(100)
     
-def test_initialization_PBO(tmpdir):
-    exp = IOHexperimenter()
-    exp.initialize_BBOB([1,2], [5], [5], 2, 1e-8)
-    exp.set_logger_location(tmpdir.dirname, "run")
-    a = opt_alg(1000)
-    exp([a])
+    @property
+    def static_param(self):
+        return 123
     
+    @property
+    def dynamic_prop(self):
+        return np.random.randint(10)

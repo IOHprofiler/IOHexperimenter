@@ -6,7 +6,6 @@ import pkg_resources, operator
 import numpy as np
 
 from pathlib import Path
-from packaging import version
 from functools import partial
 from itertools import product
 from collections.abc import Iterable
@@ -372,6 +371,9 @@ class custom_IOH_function(IOH_function):
         self.yopt = (self.maximization - 0.5) * -np.inf
         self.evals = 0
         self.xopt = None
+        if self.logger is not None:
+            self.logger.track_problem(self.fid, self.dim, self.iid, self.fname,
+                                        self.maximization, self.suite)
 
 class W_model_function(IOH_function):
     '''A wrapper around the W-model functions from the IOHexperimenter.
