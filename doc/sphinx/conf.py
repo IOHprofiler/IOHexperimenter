@@ -14,6 +14,18 @@
 import sys
 import os
 import shlex
+import subprocess
+
+def configure_doxy_file(input_dir, output_dir):
+    with open('../doxygen/Doxyfile.in', 'r') as file:
+        filedata = file.read()
+
+    filedata = filedata.replace('@DOXYGEN_INPUT_DIR@', input_dir)
+    filedata = filedata.replace('@DOXYGEN_OUTPUT_DIR@', output_dir)
+
+    with open('Doxyfile', 'w') as file:
+        file.write(filedata)
+
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -32,31 +44,8 @@ extensions = [
     "breathe",
     "exhale"
 ]
-import subprocess, os
-
-def configure_doxy_file(input_dir, output_dir):
-    with open('../doxygen/Doxyfile.in', 'r') as file :
-        filedata = file.read()
-
-    filedata = filedata.replace('@DOXYGEN_INPUT_DIR@', input_dir)
-    filedata = filedata.replace('@DOXYGEN_OUTPUT_DIR@', output_dir)
-
-    with open('Doxyfile', 'w') as file:
-        file.write(filedata)
-
-# Check if we're running on Read the Docs' servers
-read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
 breathe_projects = {}
-
-if read_the_docs_build:
-    input_dir = '../../include'
-    output_dir = 'build/doxygen'
-    configure_doxy_file(input_dir, output_dir)
-    subprocess.call('doxygen', shell=True)
-    breathe_projects['ioh'] = output_dir + '/xml'
-
-breathe_default_project = "ioh"
 
 exhale_args = {
     # These arguments are required
@@ -70,6 +59,17 @@ exhale_args = {
     # "treeViewIsBootstrap": True,
     "exhaleExecutesDoxygen": False,
 }
+
+
+# Check if we're running on Read the Docs' servers
+if os.environ.get('READTHEDOCS', None) == 'True':
+    output_dir = 'build'
+    configure_doxy_file("../../include", output_dir)
+    subprocess.call('doxygen', shell=True)
+    breathe_projects['ioh'] = output_dir + '/xml'
+
+breathe_default_project = "ioh"
+
 
 # Tell sphinx what the primary language being documented is.
 primary_domain = 'cpp'
