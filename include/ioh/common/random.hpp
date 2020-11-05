@@ -158,6 +158,13 @@ namespace ioh
 				std::bernoulli_distribution d(p);
 				return d(gen);
 			}
+			
+			/**
+			 * \brief This function returns a random uniform integer within the range [min, max]
+			 * \param min the minimal boundary
+			 * \param max the maximum boundary
+			 * \return a random uniform integer
+			 */
 			static int integer(const int min = std::numeric_limits<int>::min(), const int max = std::numeric_limits<int>::max())
 			{
 				static std::random_device rd;
@@ -165,6 +172,13 @@ namespace ioh
 				std::uniform_int_distribution<int> d(min, max);
 				return d(gen);
 			}
+			/**
+			 * \brief 
+			 * \param n 
+			 * \param min 
+			 * \param max 
+			 * \return 
+			 */
 			static std::vector<int> integers(const unsigned int n, const int min = std::numeric_limits<int>::min(), const int max = std::numeric_limits<int>::max())
 			{
 				std::vector<int> x;

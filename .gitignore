@@ -1,6 +1,7 @@
 # Ignore C++ build artifacts.
 
 build/
+out/
 *.a
 *.o
 *.so
@@ -28,3 +29,5 @@ nbproject/
 Thumbs.db
 
 .vs
+
+

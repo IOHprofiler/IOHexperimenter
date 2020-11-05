@@ -5,9 +5,8 @@
 #include "suite/bbob.hpp"
 
 
-// What is the use of these things?
-namespace ioh
+namespace ioh::suite
 {
-	static common::register_in_factory<suite::base<problem::pbo::pbo_base>, suite::pbo, std::vector<int>, std::vector<int>, std::vector<int>> pbo("PBO");
-	static common::register_in_factory<suite::base<problem::bbob::bbob_base>, suite::bbob, std::vector<int>, std::vector<int>, std::vector<int>> bbob("BBOB");
+	static common::register_in_factory<base<pbo::pbo_base>, pbo, std::vector<int>, std::vector<int>, std::vector<int>> reg_pbo("PBO");
+	static common::register_in_factory<base<bbob::bbob_base>, bbob, std::vector<int>, std::vector<int>, std::vector<int>> reg_bbob("BBOB");
 }

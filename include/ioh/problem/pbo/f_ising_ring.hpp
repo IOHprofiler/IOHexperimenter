@@ -14,6 +14,7 @@ namespace ioh
 	{
 		namespace pbo
 		{
+
 			class Ising_Ring : public pbo_base
 			{
 			public:
