@@ -1,6 +1,6 @@
 ## Build the ioh library.
 ##
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.10)
 
 project(ioh
     VERSION 0.0.0.1
@@ -16,9 +16,16 @@ if(MSVC)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 endif() 
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -lstdc++fs")
+
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
+        link_libraries(stdc++fs)
+        add_compile_definitions(FSEXPERIMENTAL)
+    endif()
+endif()
 
 # Define project targets.
-#file(GLOB SOURCES src/*.cpp src/*/*.cpp)
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
   
 # Exlude python problems if not enabled

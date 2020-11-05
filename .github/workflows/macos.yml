@@ -12,7 +12,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        compiler: [clang++, g++-9] 
+        compiler: [clang++, g++-9, g++-8] 
 
     steps:
     - uses: actions/checkout@v2

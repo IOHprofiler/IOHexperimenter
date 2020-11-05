@@ -8,11 +8,9 @@
 #include <cassert>
 #include <iostream>
 #include <random>
-#include <filesystem>
 
 #include "ioh/experiment/experimenter.hpp"
  
-namespace fs = std::filesystem;
 
 #include "ioh.hpp"
 

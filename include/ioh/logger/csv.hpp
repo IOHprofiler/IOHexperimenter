@@ -6,16 +6,21 @@
 
 #include "observer.hpp"
 #include <cstring>
-#include <filesystem>
 
+#ifdef FSEXPERIMENTAL
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#include <filesystem>
 namespace fs = std::filesystem;
+#endif
 
 namespace ioh
 {
 	namespace logger
 	{
 		/// \brief A class of logging csv files.
-		///
+		/// 
 		/// To activate logger functions as evaluating problems,  a 'logger' must be added to
 		/// problem by the statement 'problem.add_logger(logger)'.
 		template <class T>
