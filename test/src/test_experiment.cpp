@@ -13,7 +13,6 @@ namespace fs = std::filesystem;
 
 TEST(experiment, config)
 {
-	namespace fs = std::filesystem;
 	fs::path config = fs::path("IOHexperimenter") / fs::path("example") / "conf.ini";
 	fs::path root;
 	for (const auto& e : fs::current_path())
