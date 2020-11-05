@@ -1,4 +1,11 @@
+
+#ifdef FSEXPERIMENTAL
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
 #include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
 #include <gtest/gtest.h>
 #include "ioh.hpp"
