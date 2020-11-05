@@ -12,12 +12,15 @@ namespace ioh
 {
 	namespace problem
 	{
-		/** \brief A base class for defining problems.
-		 *  Basic structure for IOHExperimenter, which is used for generating benchmark problems.
-		 * To define a new problem, the `internal_evaluate` method must be defined, where the definition of the problem should locate.  
-		 * The problem sets as maximization by default. If the 'best_variables' are given, the optimal of the problem will be calculated with the 'best_variables';
-		 * or you can set the optimal by defining the 'customized_optimal' function; otherwise, the optimal is set as min()(max()) for maximization(minimization). 
-		 * If additional calculation is needed by `internal_evaluate`, you can configure it in `prepare_problem()`.
+		/** \brief A base class for IOH problems.
+		 * Basic structure for IOHexperimenter, which is used for generating benchmark problems.
+		 * To define a new problem, the `internal_evaluate` method must be defined, 
+		 * where the definition of the problem should locate.  The problem sets as maximization
+		 * by default. If the 'best_variables' are given, the optimal of the problem will be 
+		 * calculated with the 'best_variables'; or you can set the optimal by defining the 
+		 * 'customized_optimal' function; otherwise, the optimal is set as min()(max()) for 
+		 * maximization(minimization). If additional calculation is needed by `internal_evaluate`,
+		 * you can configure it in `prepare_problem()`.
 		 */
 		template <class InputType>
 		class base
