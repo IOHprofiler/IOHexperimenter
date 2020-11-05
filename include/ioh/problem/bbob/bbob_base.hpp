@@ -24,6 +24,15 @@ namespace ioh
 			public:
 				bbob_base() = default;
 
+				/**
+				 * @brief Construct a new bbob base object
+				 *
+				 * @param problem_id The problem indentifier in range [1..24]
+				 * @param problem_name The problem name which will set automatically in the derived classes
+				 * @param instance_id The instance number of a problem, which controls the random operation (e.g., translation and rotatio)
+				 * performed on the orginal function
+				 * @param dimension The dimensionality of the problem to create, 2 by default.
+				 */
 				bbob_base(const int problem_id, const std::string& problem_name,
 				          const int instance_id = IOH_DEFAULT_INSTANCE, const int dimension = IOH_DEFAULT_DIMENSION):
 					rseed_((problem_id == 4 || problem_id == 18 ? problem_id - 1 : problem_id) + 10000 * instance_id),
@@ -46,6 +55,15 @@ namespace ioh
 					set_as_minimization();
 				}
 
+				/**
+				 * @brief Shift the objective value by `this->fopt_`,
+				 * which is to ensure the global optimal of this problem is exactly `this->fopt_`.
+				 *
+				 * @param x do we need this parameter?
+				 * @param y
+				 * @param transformation_id do we need this parameter?
+				 * @param instance_id do we need this parameter?
+				 */
 				void objectives_transformation(const std::vector<double>& x, std::vector<double>& y,
 				                               const int transformation_id, const int instance_id) override
 				{

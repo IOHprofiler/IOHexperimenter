@@ -49,7 +49,7 @@
 #define IOH_DEFAULT_INSTANCE 1
 
 /// < Default dimension
-#define IOH_DEFAULT_DIMENSION 4
+#define IOH_DEFAULT_DIMENSION 2
 
 /// < Max buffer size
 #define IOH_MAX_BUFFER_SIZE 65534
@@ -57,7 +57,7 @@
 
 // Random
 /* Use polar transformation method */
-#define IOH_NORMAL_POLAR 
+#define IOH_NORMAL_POLAR
 
 #define IOH_PI 3.14159265358979323846
 #define IOH_DEFAULT_SEED 1000

@@ -17,6 +17,13 @@ namespace ioh
 			class Bent_Cigar : public bbob_base
 			{
 			public:
+				/**
+				 * @brief Construct a new Bent_Cigar object
+				 *
+				 * @param instance_id The instance number of a problem, which controls the random operation (e.g., translation and rotatio)
+				 * performed on the orginal function
+				 * @param dimension The dimensionality of the problem to create, 2 by default.
+				 */
 				Bent_Cigar(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(12, "Bent_Cigar", instance_id, dimension)
 				{
