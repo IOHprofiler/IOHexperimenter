@@ -18,8 +18,8 @@ jobs:
     - uses: actions/checkout@v2
 
     -name: Install dependencies
-     shell: bash
-     run: sudo apt install doxygen
+      shell: bash
+      run: sudo apt install doxygen
     
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
