@@ -19,7 +19,10 @@ else()
 endif() 
 
 
+message("${CMAKE_COMPILER_IS_GNUCC}")
+message("${CMAKE_CXX_COMPILER_VERSION}")
 if (CMAKE_COMPILER_IS_GNUCC AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0)
+    message("this is set?")
     add_compile_definitions(FSEXPERIMENTAL)
 endif()
 
