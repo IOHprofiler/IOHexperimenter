@@ -14,20 +14,18 @@ if(MSVC)
     set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windowss
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
-else()
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -lstdc++fs")
 endif() 
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -lstdc++fs")
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" 
-        AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 
-        AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0)
-    link_libraries(stdc++fs)
-    add_compile_definitions(FSEXPERIMENTAL)
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0)
+        link_libraries(stdc++fs)
+        add_compile_definitions(FSEXPERIMENTAL)
+    endif()
 endif()
 
 # Define project targets.
-#file(GLOB SOURCES src/*.cpp src/*/*.cpp)
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
   
 # Exlude python problems if not enabled
