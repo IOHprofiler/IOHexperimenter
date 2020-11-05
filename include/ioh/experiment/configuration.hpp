@@ -1,9 +1,15 @@
 #pragma once
 
+#ifdef FSEXPERIMENTAL
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
 #include <filesystem>
+namespace fs = std::filesystem;
+#endif
+
 #include "ioh/common.hpp"
 
-namespace fs = std::filesystem;
 
 namespace ioh
 {

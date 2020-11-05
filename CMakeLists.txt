@@ -1,6 +1,6 @@
 ## Build the ioh library.
 ##
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.10)
 
 project(ioh
     VERSION 0.0.0.1
@@ -14,8 +14,13 @@ if(MSVC)
     set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windowss
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+else()
+    SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++17 -lstdc++fs")
 endif() 
 
+if (CMAKE_COMPILER_IS_GNUCC AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0)
+    add_compile_definitions(FSEXPERIMENTAL)
+endif()
 
 # Define project targets.
 #file(GLOB SOURCES src/*.cpp src/*/*.cpp)

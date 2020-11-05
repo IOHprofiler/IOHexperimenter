@@ -6,7 +6,14 @@
 
 #include "observer.hpp"
 #include <cstring>
+
+#ifdef FSEXPERIMENTAL
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
 #include <filesystem>
+namespace fs = std::filesystem;
+#endif
 
 namespace fs = std::filesystem;
 
