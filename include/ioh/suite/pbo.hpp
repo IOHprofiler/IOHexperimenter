@@ -18,10 +18,10 @@ namespace ioh
 				if (problem_id.empty())
 				{
 					common::log::info("PBO: no problem id provided, applying all functions..");
-					problem_id.resize(23);
+					problem_id.resize(25);
 					std::iota(std::begin(problem_id), std::end(problem_id), 1);
 				}
-				check_parameter_bounds(problem_id, 0, 23);
+				check_parameter_bounds(problem_id, 0, 25);
 				check_parameter_bounds(instance_id, 0, 100);
 				check_parameter_bounds(dimension, 0, 20000);
 
@@ -59,6 +59,8 @@ namespace ioh
 				register_problem<pbo_base, Ising_Torus>("Ising_Torus", 20);
 				register_problem<pbo_base, Ising_Triangular>("Ising_Triangular", 21);
 				register_problem<pbo_base, NQueens>("NQueens", 23);
+				register_problem<pbo_base, Concatenated_Trap>("Concatenated_Trap", 24);
+				register_problem<pbo_base, NK_Landscapes>("NK_Landscapes", 25);
 			}
 
 			static pbo* create(std::vector<int> problem_id = vector<int>(0),
