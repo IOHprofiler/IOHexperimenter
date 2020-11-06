@@ -32,7 +32,7 @@ namespace ioh
 			std::string problem_name;
 			std::string problem_type; /// todo. make it as enum.
 
-			common::optimization_type maximization_minimization_flag;
+			common::OptimizationType maximization_minimization_flag;
 
 			int number_of_variables;
 			/// < evaluate function is validated with get and dimension. set default to avoid invalid class.
@@ -65,7 +65,7 @@ namespace ioh
 			base(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION) : 
 				problem_id(IOH_DEFAULT_PROBLEM_ID),
 				instance_id(instance_id),
-				maximization_minimization_flag(common::optimization_type::maximization),
+				maximization_minimization_flag(common::OptimizationType::maximization),
 				number_of_variables(dimension),
 				number_of_objectives(1),
 				lowerbound(std::vector<InputType>(number_of_variables)),
@@ -174,7 +174,7 @@ namespace ioh
 				if (x.size() != this->number_of_variables)
 				{
 					common::log::warning("The dimension of solution is incorrect.");
-					if (this->maximization_minimization_flag == common::optimization_type::maximization)
+					if (this->maximization_minimization_flag == common::OptimizationType::maximization)
 					{
 						this->raw_objectives[0] = std::numeric_limits<double>::lowest();
 						this->transformed_objectives[0] = std::numeric_limits<double>::lowest();
@@ -280,7 +280,7 @@ namespace ioh
 					this->optimal.clear();
 					for (std::size_t i = 0; i < this->number_of_objectives; ++i)
 					{
-						if (this->maximization_minimization_flag == common::optimization_type::maximization)
+						if (this->maximization_minimization_flag == common::OptimizationType::maximization)
 							this->optimal.push_back(std::numeric_limits<double>::max());
 						else
 							this->optimal.push_back(std::numeric_limits<double>::lowest());
@@ -309,7 +309,7 @@ namespace ioh
 				this->optimalFound = false;
 				for (size_t i = 0; i != this->number_of_objectives; ++i)
 				{
-					if (this->maximization_minimization_flag == common::optimization_type::maximization)
+					if (this->maximization_minimization_flag == common::OptimizationType::maximization)
 					{
 						this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::lowest();
 						this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::lowest();
@@ -604,7 +604,7 @@ namespace ioh
 				this->number_of_objectives = number_of_objectives;
 				this->raw_objectives = std::vector<double>(this->number_of_objectives);
 				this->transformed_objectives = std::vector<double>(this->number_of_objectives);
-				if (this->maximization_minimization_flag == common::optimization_type::maximization)
+				if (this->maximization_minimization_flag == common::OptimizationType::maximization)
 				{
 					this->best_so_far_raw_objectives = std::vector<double>(
 							this->number_of_objectives, std::numeric_limits<double>::lowest());
@@ -796,7 +796,7 @@ namespace ioh
 			/** common::optimization_type get_optimization_type()
 			 * \brief Return the optimization type: maximization or minimizations.
 			 */
-			common::optimization_type get_optimization_type() const
+			common::OptimizationType get_optimization_type() const
 			{
 				return this->maximization_minimization_flag;
 			}
@@ -806,7 +806,7 @@ namespace ioh
 			 */
 			void set_as_maximization()
 			{
-				this->maximization_minimization_flag = common::optimization_type::maximization;
+				this->maximization_minimization_flag = common::OptimizationType::maximization;
 				for (std::size_t i = 0; i != this->number_of_objectives; ++i)
 				{
 					this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::lowest();
@@ -819,7 +819,7 @@ namespace ioh
 			 */
 			void set_as_minimization()
 			{
-				this->maximization_minimization_flag = common::optimization_type::minimization;
+				this->maximization_minimization_flag = common::OptimizationType::minimization;
 				for (std::size_t i = 0; i != this->number_of_objectives; ++i)
 				{
 					this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::max();

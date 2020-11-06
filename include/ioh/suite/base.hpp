@@ -140,7 +140,7 @@ namespace ioh
 			template <typename P, typename T>
 			void register_problem(const std::string name, const int id)
 			{
-				common::register_in_factory<P, T, int, int> problem(name);
+				common::RegisterInFactory<P, T, int, int> problem(name);
 				this->mapIDTOName(id, name);
 			}
 
@@ -158,7 +158,7 @@ namespace ioh
 			/// without concerning the order of testing problems.
 			problem_ptr get_problem(std::string problem_name, int instance, int dimension)
 			{
-				problem_ptr p = common::factory<ProblemType, int, int>::get().create(problem_name, instance, dimension);
+				problem_ptr p = common::Factor<ProblemType, int, int>::get().create(problem_name, instance, dimension);
 				assert(p != nullptr);
 				p->set_problem_id(this->problem_name_id_map[problem_name]);
 				//TODO: check this, move stuff to the constructor

@@ -171,7 +171,7 @@ namespace ioh
 				int ins;
 				bool has_opt;
 				std::vector<double> opt;
-				common::optimization_type maxmin;
+				common::OptimizationType maxmin;
 			};
 
 			/** @} */
@@ -412,7 +412,7 @@ namespace ioh
 				size_t ibound = _range_error.size();
 				size_t jbound = _range_evals.size();
 
-				if (_current.has_opt || _current.maxmin == common::optimization_type::minimization)
+				if (_current.has_opt || _current.maxmin == common::OptimizationType::minimization)
 				{
 					for (size_t i = i_error; i < ibound; i++)
 					{
@@ -437,7 +437,7 @@ namespace ioh
 				}
 				else
 				{
-					assert(!_current.has_opt && _current.maxmin == common::optimization_type::maximization);
+					assert(!_current.has_opt && _current.maxmin == common::OptimizationType::maximization);
 					for (size_t i = i_error; i >= 1; i--)
 					{
 						// If we reach a 1 on first col of this row, no need to continue.

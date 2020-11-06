@@ -39,7 +39,7 @@ namespace ioh
 					std::vector<double> rand_vec;
 					for (auto i = 0; i != n; ++i)
 					{
-						common::random::uniform_rand(static_cast<size_t>(k), static_cast<long>(k * (i + 1)), rand_vec);
+						common::Random::uniform(static_cast<size_t>(k), static_cast<long>(k * (i + 1)), rand_vec);
 
 						std::vector<int> sampled_number;
 						std::vector<int> population;
@@ -69,8 +69,8 @@ namespace ioh
 					}
 					for (auto i = 0; i != n; ++i)
 					{
-						common::random::uniform_rand(static_cast<size_t>(pow(2, k + 1)),
-						                             static_cast<long>(k * (i + 1) * 2), rand_vec);
+						common::Random::uniform(static_cast<size_t>(pow(2, k + 1)),
+						                        static_cast<long>(k * (i + 1) * 2), rand_vec);
 						F.push_back(rand_vec);
 					}
 				}

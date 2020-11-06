@@ -4,17 +4,16 @@
 #include "ioh.hpp"
 
 
-
 double test_eval(std::shared_ptr<ioh::problem::bbob::bbob_base> f)
 {
-	const std::vector<double> x = ioh::common::random::gauss(4, 42);
-	return std::round(f->evaluate(x) *10000.0) / 10000.0;
+	const std::vector<double> x = ioh::common::Random::normal(4, 42);
+	return std::round(f->evaluate(x) * 10000.0) / 10000.0;
 }
 
 
 double test_eval(std::shared_ptr<ioh::problem::pbo::pbo_base> f)
 {
-	const std::vector<int> x = { 3,2,0,-1,0,0,0,1,2 };
+	const std::vector<int> x = {3, 2, 0, -1, 0, 0, 0, 1, 2};
 	return std::floor(f->evaluate(x) * 10000.0) / 10000.0;
 }
 
@@ -80,10 +79,10 @@ TEST(problems, pbo)
 
 TEST(problem_suite, bbob)
 {
-	ioh::common::log::log_level = ioh::common::log::level::warning;
+	ioh::common::log::log_level = ioh::common::log::Level::warning;
 
 	ioh::suite::bbob bbob;
-	std::shared_ptr<ioh::problem::bbob::bbob_base> problem;	
+	std::shared_ptr<ioh::problem::bbob::bbob_base> problem;
 	auto results = std::list<double>({
 		85.3339,
 		4670466.7111,
@@ -108,7 +107,7 @@ TEST(problem_suite, bbob)
 		100.6898,
 		-924.8833,
 		21.7005,
-		177.9893	
+		177.9893
 	});
 	while ((problem = bbob.get_next_problem()) != nullptr)
 	{

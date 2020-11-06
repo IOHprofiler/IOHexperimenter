@@ -32,7 +32,7 @@ namespace ioh
 					position.push_back(i);
 				}
 
-				common::random::uniform_rand(static_cast<size_t>(select_num), inseed, random_numbers);
+				common::Random::uniform(static_cast<size_t>(select_num), inseed, random_numbers);
 				for (auto i = 0; i < select_num; ++i)
 				{
 					random_index.

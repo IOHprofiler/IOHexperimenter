@@ -33,7 +33,7 @@ namespace ioh
 			// The information for logging.
 			std::string algorithm_name;
 			std::string algorithm_info;
-			common::optimization_type maximization_minimization_flag = common::optimization_type::maximization;
+			common::OptimizationType maximization_minimization_flag = common::OptimizationType::maximization;
 			std::map<std::string, std::string> attr_per_exp_name_value;
 			std::map<std::string, std::shared_ptr<double>> attr_per_run_name_value;
 
@@ -266,7 +266,7 @@ namespace ioh
 			/// To update info of current working problem, and to write headline in corresponding files.
 
 			void track_problem(int problem_id, int dimension, int instance,
-			                   std::string problem_name, common::optimization_type maximization_minimization_flag)
+			                   std::string problem_name, common::OptimizationType maximization_minimization_flag)
 			{
 				/// Handle info of the previous problem.
 				if (info_file.is_open())
@@ -281,7 +281,7 @@ namespace ioh
 				best_transformed_y.clear();
 				last_y.clear();
 				last_transformed_y.clear();
-				if (maximization_minimization_flag == common::optimization_type::maximization)
+				if (maximization_minimization_flag == common::OptimizationType::maximization)
 				{
 					best_y.push_back(-std::numeric_limits<double>::max());
 					best_transformed_y.push_back(-std::numeric_limits<double>::max());
@@ -333,7 +333,7 @@ namespace ioh
 				this->info_buffer = "";
 				std::string titleflag = "";
 				std::string optimization_type = maximization_minimization_flag ==
-				                                common::optimization_type::maximization
+				                                common::OptimizationType::maximization
 					                                ? "T"
 					                                : "F";
 

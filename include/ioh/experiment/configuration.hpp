@@ -15,7 +15,6 @@ namespace ioh
 {
 	namespace experiment
 	{
-		
 		/// A class of configuration files, to be used in experimenter.
 		class configuration
 		{
@@ -36,11 +35,11 @@ namespace ioh
 			int max_number_of_problem;
 			int max_dimension;
 
-			
-			common::container data;
+
+			common::Container data;
 		public:
 			configuration() = default;
-			
+
 			configuration(const std::string& filename) : config_file(filename)
 			{
 				readcfg(filename);
@@ -84,28 +83,28 @@ namespace ioh
 				std::ifstream file(filename.c_str());
 				if (!file.is_open())
 					common::log::error("Cannot open file " + filename);
-				return file;				
+				return file;
 			}
-			
+
 			void load(const std::string& filename)
 			{
 				std::string line;
 				std::ifstream fp = open_file(filename);
 
-				char key[IOH_MAX_KEYNUMBER];
-				char value[IOH_MAX_KEYNUMBER];
-				char section[IOH_MAX_KEYNUMBER];
-				
+				char key[IOH_MAX_KEY_NUMBER];
+				char value[IOH_MAX_KEY_NUMBER];
+				char section[IOH_MAX_KEY_NUMBER];
+
 				while (getline(fp, line))
 				{
-					line = common::strstrip(line);
+					line = common::strip(line);
 					if (line.empty() || line.front() == '#' || line.front() == ';')
 						continue;
 
 					if (line.front() == '[' && line.back() == ']')
 						sscanf(line.c_str(), "[%[^]]", section);
 					else if (
-						sscanf(line.c_str(), "%[^=] = \"%[^\"]", key, value) == 2 
+						sscanf(line.c_str(), "%[^=] = \"%[^\"]", key, value) == 2
 						|| sscanf(line.c_str(), "%[^=] = '%[^\']", key, value) == 2
 						|| sscanf(line.c_str(), "%[^=] = %[^;#]", key, value) == 2)
 						data.set(section, key, value);
@@ -113,7 +112,7 @@ namespace ioh
 						common::log::error("Error in parsing .ini file on line:\n" + line);
 				}
 			}
-			
+
 			std::string get_suite_name()
 			{
 				return this->suite_name;

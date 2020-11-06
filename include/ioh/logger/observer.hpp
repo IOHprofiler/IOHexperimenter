@@ -118,7 +118,7 @@ namespace ioh
 				return observer_update_flag;
 			}
 
-			bool update_trigger(const double fitness, const common::optimization_type optimization_type)
+			bool update_trigger(const double fitness, const common::OptimizationType optimization_type)
 			{
 				if (observer_update_flag && compare_objectives(fitness, current_best_fitness, optimization_type))
 				{
@@ -208,9 +208,9 @@ namespace ioh
 				return result;
 			}
 
-			void reset_observer(const common::optimization_type optimization_type)
+			void reset_observer(const common::OptimizationType optimization_type)
 			{
-				if (optimization_type == common::optimization_type::maximization)
+				if (optimization_type == common::OptimizationType::maximization)
 				{
 					current_best_fitness = std::numeric_limits<double>::lowest();
 				}

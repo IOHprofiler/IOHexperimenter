@@ -9,7 +9,7 @@ TEST(ecdf, example)
 {
 	using namespace ioh::problem;
 	using namespace ioh::logger;
-	ioh::common::log::log_level = ioh::common::log::level::warning;
+	ioh::common::log::log_level = ioh::common::log::Level::warning;
 	
 	size_t sample_size = 100;
 

@@ -15,7 +15,7 @@ namespace ioh
 		{
 		public:
 			typedef void algorithm_type(std::shared_ptr<ProblemType>, std::shared_ptr<logger::csv<ProblemType>>);
-			typedef common::factory<suite::base<ProblemType>,
+			typedef common::Factor<suite::base<ProblemType>,
 				std::vector<int>, std::vector<int>, std::vector<int>> suite_factory;
 
 			experimenter() = delete;

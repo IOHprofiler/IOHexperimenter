@@ -7,6 +7,6 @@
 
 namespace ioh::suite
 {
-	static common::register_in_factory<base<pbo::pbo_base>, pbo, std::vector<int>, std::vector<int>, std::vector<int>> reg_pbo("PBO");
-	static common::register_in_factory<base<bbob::bbob_base>, bbob, std::vector<int>, std::vector<int>, std::vector<int>> reg_bbob("BBOB");
+	static common::RegisterInFactory<base<pbo::pbo_base>, pbo, std::vector<int>, std::vector<int>, std::vector<int>> reg_pbo("PBO");
+	static common::RegisterInFactory<base<bbob::bbob_base>, bbob, std::vector<int>, std::vector<int>, std::vector<int>> reg_bbob("BBOB");
 }

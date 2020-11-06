@@ -6,11 +6,11 @@ TEST(common, test)
 {
 	using namespace ioh::common;
 
-	ASSERT_TRUE(compare_objectives(4, 2, optimization_type::maximization));
-	ASSERT_FALSE(compare_objectives(2, 2, optimization_type::maximization));
+	ASSERT_TRUE(compare_objectives(4, 2, OptimizationType::maximization));
+	ASSERT_FALSE(compare_objectives(2, 2, OptimizationType::maximization));
 
-	ASSERT_TRUE(compare_objectives(2, 5, optimization_type::minimization));
-	ASSERT_FALSE(compare_objectives(4, 2, optimization_type::minimization));
+	ASSERT_TRUE(compare_objectives(2, 5, OptimizationType::minimization));
+	ASSERT_FALSE(compare_objectives(4, 2, OptimizationType::minimization));
 }
 
 
@@ -38,7 +38,7 @@ TEST(common, class_generator)
 TEST(common, random)
 {
 	using namespace ioh;
-	common::random r(1);
-	ASSERT_DOUBLE_EQ(r.normal_rand(), -5.8762480600075353);
-	ASSERT_DOUBLE_EQ(r.uniform_rand(), 0.86453751611163321);
+	common::Random r(1);
+	ASSERT_DOUBLE_EQ(r.normal(), -5.8762480600075353);
+	ASSERT_DOUBLE_EQ(r.uniform(), 0.86453751611163321);
 }
