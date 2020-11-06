@@ -22,7 +22,7 @@ double test_eval(std::shared_ptr<ioh::problem::pbo::pbo_base> f)
 TEST(problems, bbob)
 {
 	using namespace ioh::problem::bbob;
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<Attractive_Sector>()), 38905.1446);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<AttractiveSector>()), 38905.1446);
 	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<Bent_Cigar>()), 43065603.7200);
 	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<Bueche_Rastrigin>()), -377.5170);
 	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<Different_Powers>()), -28.6647);

@@ -15,10 +15,10 @@ namespace ioh
 	{
 		namespace bbob
 		{
-			class Attractive_Sector : public bbob_base
+			class AttractiveSector : public bbob_base
 			{
 			public:
-				Attractive_Sector(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
+				AttractiveSector(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
 					: bbob_base(6, "Attractive_Sector", instance_id, dimension)
 				{
 					//TODO: This has to be called inside the child class need we to think of something here
@@ -74,10 +74,10 @@ namespace ioh
 					return result;
 				}
 
-				static Attractive_Sector* create(int instance_id = IOH_DEFAULT_INSTANCE,
+				static AttractiveSector* create(int instance_id = IOH_DEFAULT_INSTANCE,
 				                                 int dimension = IOH_DEFAULT_DIMENSION)
 				{
-					return new Attractive_Sector(instance_id, dimension);
+					return new AttractiveSector(instance_id, dimension);
 				}
 			};
 		}

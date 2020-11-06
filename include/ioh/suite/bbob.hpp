@@ -41,7 +41,7 @@ namespace ioh
 				register_problem<bbob_base, Rastrigin>("Rastrigin", 3);
 				register_problem<bbob_base, Bueche_Rastrigin>("Bueche_Rastrigin", 4);
 				register_problem<bbob_base, Linear_Slope>("Linear_Slope", 5);
-				register_problem<bbob_base, Attractive_Sector>("Attractive_Sector", 6);
+				register_problem<bbob_base, AttractiveSector>("Attractive_Sector", 6);
 				register_problem<bbob_base, Step_Ellipsoid>("Step_Ellipsoid", 7);
 				register_problem<bbob_base, Rosenbrock>("Rosenbrock", 8);
 				register_problem<bbob_base, Rosenbrock_Rotated>("Rosenbrock_Rotated", 9);

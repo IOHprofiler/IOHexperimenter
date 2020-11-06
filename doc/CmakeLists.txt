@@ -9,7 +9,7 @@ set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/doxygen/Doxyfile.in)
 set(DOXYFILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 
 #Replace variables inside @@ with the current values
-configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
+configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT}  @ONLY)
 
 file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR}) 
 add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
@@ -44,3 +44,6 @@ add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
 
 add_custom_target(Sphinx ALL DEPENDS ${SPHINX_INDEX_FILE})
 
+include(GNUInstallDirs)
+install(DIRECTORY ${SPHINX_BUILD}
+    DESTINATION ${CMAKE_INSTALL_DOCDIR})
