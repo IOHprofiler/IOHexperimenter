@@ -119,7 +119,7 @@ namespace ioh
 			{
 				static std::random_device rd;
 				static std::mt19937 gen(rd());
-				const std::bernoulli_distribution d(p);
+				std::bernoulli_distribution d(p);
 				return d(gen);
 			}
 
@@ -134,7 +134,7 @@ namespace ioh
 			{
 				static std::random_device rd;
 				static std::mt19937 gen(rd());
-				const std::uniform_int_distribution<int> d(min, max);
+				std::uniform_int_distribution<int> d(min, max);
 				return d(gen);
 			}
 
