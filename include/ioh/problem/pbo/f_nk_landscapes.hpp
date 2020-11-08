@@ -20,9 +20,15 @@ namespace ioh
 				std::vector<std::vector<double>> F;
 				std::vector<std::vector<int>> E;
 				int k = 1;
-
+			  /**
+				 * \brief Construct a new NK_Landscapes object. Definition refers to https://doi.org/10.1007/978-3-030-58115-2_49 
+				 * 
+				 * \param instance_id The instance number of a problem, which controls the transformation
+				 * performed on the original problem.
+				 * \param dimension The dimensionality of the problem to created, 4 by default.
+				 **/
 				NK_Landscapes(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
-					: pbo_base("NK_Landscapes", instance_id)
+					: pbo_base(25, "NK_Landscapes", instance_id)
 				{
 					set_number_of_variables(dimension);
 				}

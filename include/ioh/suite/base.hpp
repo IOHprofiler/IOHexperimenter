@@ -160,7 +160,6 @@ namespace ioh
 			{
 				problem_ptr p = common::factory<ProblemType, int, int>::get().create(problem_name, instance, dimension);
 				assert(p != nullptr);
-				p->set_problem_id(this->problem_name_id_map[problem_name]);
 				//TODO: check this, move stuff to the constructor
 				// p->reset_problem();
 				// p->set_instance_id(instance);

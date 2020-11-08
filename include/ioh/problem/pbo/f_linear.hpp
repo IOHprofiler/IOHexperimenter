@@ -19,8 +19,15 @@ namespace ioh
 			public:
 				std::vector<double> info;
 
+				/**
+				 * \brief Construct a new Linear object. Definition refers to https://doi.org/10.1016/j.asoc.2019.106027
+				 * 
+				 * \param instance_id The instance number of a problem, which controls the transformation
+				 * performed on the original problem.
+				 * \param dimension The dimensionality of the problem to created, 4 by default.
+				 **/
 				Linear(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
-					: pbo_base("Linear", instance_id)
+					: pbo_base(3, "Linear", instance_id)
 				{
 					set_best_variables(1);
 					set_number_of_variables(dimension);
