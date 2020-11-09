@@ -18,9 +18,15 @@ namespace ioh
 			{
 				int k = 5;
 			public:
-
+			  /**
+				 * \brief Construct a new Concatenated_Trap object. Definition refers to https://doi.org/10.1007/978-3-030-58115-2_49 
+				 * 
+				 * \param instance_id The instance number of a problem, which controls the transformation
+				 * performed on the original problem.
+				 * \param dimension The dimensionality of the problem to created, 4 by default.
+				 **/
 				Concatenated_Trap(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
-					: pbo_base("Concatenated_Trap", instance_id)
+					: pbo_base(24, "Concatenated_Trap", instance_id)
 				{
 					set_best_variables(1);
 					set_number_of_variables(dimension);

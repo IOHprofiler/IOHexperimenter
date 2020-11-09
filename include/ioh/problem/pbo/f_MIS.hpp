@@ -17,8 +17,15 @@ namespace ioh
 			class MIS : public pbo_base
 			{
 			public:
+			  /**
+				 * \brief Construct a new MIS object. Definition refers to https://doi.org/10.1016/j.asoc.2019.106027
+				 * 
+				 * \param instance_id The instance number of a problem, which controls the transformation
+				 * performed on the original problem.
+				 * \param dimension The dimensionality of the problem to created, 4 by default.
+				 **/
 				MIS(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
-					: pbo_base("MIS", instance_id)
+					: pbo_base(22, "MIS", instance_id)
 				{
 					set_number_of_variables(dimension);
 				}

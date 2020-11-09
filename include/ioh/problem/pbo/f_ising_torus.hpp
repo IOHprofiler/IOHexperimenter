@@ -17,8 +17,15 @@ namespace ioh
 			class Ising_Torus : public pbo_base
 			{
 			public:
+			  /**
+				 * \brief Construct a new Ising_Torus object. Definition refers to https://doi.org/10.1016/j.asoc.2019.106027
+				 * 
+				 * \param instance_id The instance number of a problem, which controls the transformation
+				 * performed on the original problem.
+				 * \param dimension The dimensionality of the problem to created, 4 by default.
+				 **/
 				Ising_Torus(int instance_id = IOH_DEFAULT_INSTANCE, int dimension = IOH_DEFAULT_DIMENSION)
-					: pbo_base("Ising_Torus", instance_id)
+					: pbo_base(20, "Ising_Torus", instance_id)
 				{
 					set_best_variables(1);
 					set_number_of_variables(dimension);

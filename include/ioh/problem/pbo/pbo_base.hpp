@@ -13,8 +13,9 @@ namespace ioh
 			public:
 				pbo_base() = default;
 
-				pbo_base(std::string problem_name, int instance_id = IOH_DEFAULT_INSTANCE)
+				pbo_base(int problem_id, std::string problem_name, int instance_id = IOH_DEFAULT_INSTANCE)
 				{
+					set_problem_id(problem_id);
 					set_instance_id(instance_id);
 					set_problem_name(problem_name);
 					set_problem_type("pseudo_Boolean_problem");
