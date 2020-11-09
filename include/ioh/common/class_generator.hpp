@@ -14,27 +14,27 @@ namespace ioh
 		 * \tparam Args Variadic arguments passed a static create method of the ChildType
 		 */
 		template <class ChildType, typename ...Args>
-		class Factor
+		class Factory
 		{
 			/**
 			 * \brief The registry containing the references to the constructed classes
 			 */
 			std::map<std::string, std::shared_ptr<ChildType>(*)(Args&&...)> registry_;
 		public:
-			Factor() = default;
-			~Factor() = default;
-			Factor(const Factor&) = delete;
-			Factor(const Factor&&) = delete;
-			Factor& operator=(const Factor&) = delete;
-			Factor& operator=(const Factor&&) = delete;
+			Factory() = default;
+			~Factory() = default;
+			Factory(const Factory&) = delete;
+			Factory(const Factory&&) = delete;
+			Factory& operator=(const Factory&) = delete;
+			Factory& operator=(const Factory&&) = delete;
 
 			/**
 			 * \brief Singleton access for factories of a specific template
 			 * \return The singleton instance
 			 */
-			static Factor<ChildType, Args...>& get()
+			static Factory<ChildType, Args...>& get()
 			{
-				static Factor instance; // NOLINT
+				static Factory instance; // NOLINT
 				return instance;
 			}
 
@@ -45,8 +45,8 @@ namespace ioh
 			 */
 			void register_class(std::string id, std::shared_ptr<ChildType> (*func)(Args&&...))
 			{
-				if (registry_.find(id) != registry_.end())
-					log::warning(id + " is already registered"); // TODO: this happens very often, find other way to instantiate this
+				// if (registry_.find(id) != registry_.end())
+					// log::warning(id + " is already registered"); // TODO: this happens very often, find other way to instantiate this
 				registry_[id] = func;
 			}
 
@@ -85,7 +85,7 @@ namespace ioh
 			 */
 			explicit RegisterInFactory(const std::string id)
 			{
-				Factor<ParentType, Args...>::get().register_class(id, create);
+				Factory<ParentType, Args...>::get().register_class(id, create);
 			}
 			/**
 			 * \brief Placeholder function, passed to \ref Factory::register_class by the constructor

@@ -1,19 +1,20 @@
 #include <cmath>
 #include <list>
+
 #include <gtest/gtest.h>
 #include "ioh.hpp"
 
 TEST(suite, pbo)
 {
-	std::vector<int> problem_id;
+	std::vector<int> problem_id; 
 	std::vector<int> instance_id;
 	std::vector<int> dimension = {16,64};
 
-	for (int i = 1; i != 26; ++i) {
+	for (auto i = 1; i != 26; ++i) {
 		problem_id.push_back(i);
 	}
 
-	for (int i = 1; i != 6; ++i) {
+	for (auto i = 1; i != 6; ++i) {
 		instance_id.push_back(i);
 	}
 	ioh::suite::pbo pbo(problem_id,instance_id,dimension);
@@ -23,9 +24,9 @@ TEST(suite, pbo)
 	ASSERT_EQ(pbo.get_number_of_dimensions(),2);
 	ASSERT_EQ(pbo.get_suite_name(),"PBO");
 
-	int tmp_p_index = 0;
-	int tmp_i_index = 0;
-	int tmp_d_index = 0;
+	auto tmp_p_index = 0;
+	auto tmp_i_index = 0;
+	auto tmp_d_index = 0;
 
 	std::shared_ptr<ioh::problem::pbo::pbo_base> problem;	
 	while ( (problem = pbo.get_next_problem()) != nullptr) {
@@ -56,11 +57,11 @@ TEST(suite, bbob)
 	std::vector<int> instance_id;
 	std::vector<int> dimension = {2,10};
 
-	for (int i = 1; i != 25; ++i) {
+	for (auto i = 1; i != 25; ++i) {
 		problem_id.push_back(i);
 	}
 
-	for (int i = 1; i != 6; ++i) {
+	for (auto i = 1; i != 6; ++i) {
 		instance_id.push_back(i);
 	}
 	ioh::suite::bbob bbob(problem_id,instance_id,dimension);
@@ -70,9 +71,9 @@ TEST(suite, bbob)
 	ASSERT_EQ(bbob.get_number_of_dimensions(),2);
 	ASSERT_EQ(bbob.get_suite_name(),"BBOB");
 
-	int tmp_p_index = 0;
-	int tmp_i_index = 0;
-	int tmp_d_index = 0;
+	auto tmp_p_index = 0;
+	auto tmp_i_index = 0;
+	auto tmp_d_index = 0;
 
 	std::shared_ptr<ioh::problem::bbob::bbob_base> problem;	
 	while( (problem = bbob.get_next_problem()) != nullptr) {

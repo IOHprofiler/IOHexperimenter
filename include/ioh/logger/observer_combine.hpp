@@ -38,7 +38,7 @@ namespace ioh
 		 * @note: Loggers are guaranteed to be called in the order they are added.
 		 */
 		template <class T>
-		class observer_combine : public observer<T>
+		class observer_combine : public Observer<T>
 		{
 		public:
 			using InputType = T;
@@ -46,7 +46,7 @@ namespace ioh
 			/** Takes at least one mandatory observer,
 			 * because an empty instance would be illogical.
 			 */
-			observer_combine(observer<T>& observer) : _observers(1, &observer)
+			observer_combine(Observer<T>& observer) : _observers(1, &observer)
 			{
 			}
 
@@ -57,7 +57,7 @@ namespace ioh
 			    observer_combine loggers({log_ecdf, log_csv});
 			 * @encode
 			 */
-			observer_combine(std::vector<observer<T>*> observers) :
+			observer_combine(std::vector<Observer<T>*> observers) :
 				_observers(observers)
 			{
 				assert(_observers.size() > 0);
@@ -65,7 +65,7 @@ namespace ioh
 
 			/** Add another observer to the list.
 			 */
-			void add(observer<T>& observer)
+			void add(Observer<T>& observer)
 			{
 				_observers.push_back(&observer);
 			}
@@ -93,7 +93,7 @@ namespace ioh
 
 		protected:
 			//! Store the managed observers.
-			std::vector<observer<T>*> _observers;
+			std::vector<Observer<T>*> _observers;
 		};
 	}
 }

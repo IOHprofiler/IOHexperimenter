@@ -10,10 +10,10 @@ TEST(common, test)
 	ASSERT_FALSE(compare_objectives(2, 2, OptimizationType::maximization));
 
 	ASSERT_TRUE(compare_objectives(2, 5, OptimizationType::minimization));
-	ASSERT_FALSE(compare_objectives(4, 2, OptimizationType::minimization));
+	ASSERT_FALSE(compare_objectives(4, 2, OptimizationType::minimization)); 
 }
 
-
+ 
 TEST(common, log)
 {
 	using namespace ioh::common::log;

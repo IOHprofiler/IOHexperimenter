@@ -43,7 +43,8 @@ namespace ioh
 
 
 			/**
-			 * \brief Linear congruential generator using a given seed
+			 * \brief Linear congruential generator using a given seed. Used to generate
+			 * uniform random numbers.
 			 * \param seed Random seed
 			 * \return A new seed
 			 */
@@ -72,8 +73,7 @@ namespace ioh
 			{
 				for (unsigned int i = 0; i < IOH_LONG_LAG; ++i)
 				{
-					this->x_[i] = static_cast<double>(seed) / static_cast<double>((static_cast<uint64_t>(1UL) << 32) - 1
-					);
+					this->x_[i] = static_cast<double>(seed) / static_cast<double>((static_cast<uint64_t>(1UL) << 32) - 1);
 					seed = static_cast<uint32_t>(1812433253UL) * (seed ^ seed >> 30) + (static_cast<uint32_t>(i) + 1);
 				}
 			}
@@ -148,7 +148,7 @@ namespace ioh
 			static std::vector<int> integers(const unsigned int n, const int min = std::numeric_limits<int>::min(),
 			                                 const int max = std::numeric_limits<int>::max())
 			{
-				std::vector<int> x(n);
+				std::vector<int> x;
 				for (unsigned int i = 0; i < n; i++)
 					x.emplace_back(integer(min, max));
 				return x;
@@ -162,7 +162,7 @@ namespace ioh
 			 */
 			static std::vector<int> bit_string(const unsigned int n, const double p = 0.5)
 			{
-				std::vector<int> x(n);
+				std::vector<int> x;
 				for (unsigned int i = 0; i < n; i++)
 					x.emplace_back(bit(p));
 				return x;
@@ -176,7 +176,7 @@ namespace ioh
 			 */
 			static void uniform(const size_t& n, long seed, std::vector<double>& rand_vec)
 			{
-				if (rand_vec.empty())
+				if (!rand_vec.empty())
 					std::vector<double>().swap(rand_vec);
 				rand_vec.reserve(n);
 

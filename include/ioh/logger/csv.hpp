@@ -1,19 +1,8 @@
-/// \file csv_logger.h
-/// \brief Header file for class csv_logger.
-///
-/// \author Furong Ye
 #pragma once
 
 #include "observer.hpp"
-#include <cstring>
-
-#ifdef FSEXPERIMENTAL
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
-#else
-#include <filesystem>
-namespace fs = std::filesystem;
-#endif
+#include "ioh/common.hpp"
+#include "ioh/experiment.hpp"
 
 namespace ioh
 {
@@ -24,7 +13,7 @@ namespace ioh
 		/// To activate logger functions as evaluating problems,  a 'logger' must be added to
 		/// problem by the statement 'problem.add_logger(logger)'.
 		template <class T>
-		class csv : public observer<T>
+		class Csv : public Observer<T>
 		{
 			// The information for directory.
 			std::string folder_name;
@@ -118,32 +107,29 @@ namespace ioh
 					for (auto const& e : logging_parameters)
 						dat_header += " \"" + e.first + "\"";
 				return dat_header;
-			}
+			}		
 
-			fs::path sub_directory() const
-			{
-				return output_directory / folder_name /
-					("data_f" + common::to_string(problem_id) + "_" + problem_name);
-			}
-
-			void recreate_handle(const bool execute, const std::string ext, std::fstream& handle, std::string& buffer)
+			
+			
+			void recreate_handle(const bool execute, const std::string& ext, std::fstream& handle,
+			                     std::string& buffer) const
 			{
 				if (execute)
 				{
-					fs::path file_path = sub_directory() /
-						("IOHprofiler_f" + common::to_string(problem_id) + "_DIM" + common::to_string(dimension) + ext);
+					const auto file_path = get_file_path(ext);
+						
 
 					if (handle.is_open())
 						handle.close();
 					handle.open(file_path.c_str(), std::ofstream::out | std::ofstream::app);
 					buffer = "";
-					auto header = dat_header();
-					
+					const auto header = dat_header();
+
 					write_in_buffer(header + "\n", buffer, handle);
 				}
 			}
 
-			void write_handle(std::fstream& handle, std::string& buffer)
+			static void write_handle(std::fstream& handle, std::string& buffer)
 			{
 				if (handle.is_open())
 				{
@@ -153,7 +139,7 @@ namespace ioh
 				}
 			}
 
-			void write_handle(std::fstream& handle, std::string& buffer, std::string& line)
+			void write_handle(std::fstream& handle, std::string& buffer, std::string& line) const
 			{
 				if (handle.is_open())
 				{
@@ -164,8 +150,8 @@ namespace ioh
 
 			void write_header()
 			{
-				auto sub_dir = sub_directory();
-				
+				const auto sub_dir = sub_directory();
+
 				if (!exists(sub_dir))
 					create_folder(sub_dir);
 
@@ -173,20 +159,18 @@ namespace ioh
 				recreate_handle(this->interval_status(), ".idat", idat, idat_buffer);
 				recreate_handle(this->update_status(), ".dat", dat, dat_buffer);
 				recreate_handle(this->time_points_status(), ".tdat", tdat, tdat_buffer);
-
-				
 			}
 
-			void write_stream(std::string buffer_string, std::fstream& dat_stream)
+			static void write_stream(std::string buffer_string, std::fstream& dat_stream)
 			{
 				dat_stream.write(buffer_string.c_str(), sizeof(char) * buffer_string.size());
 			}
 
-			void write_in_buffer(std::string add_string, std::string& buffer_string, std::fstream& dat_stream)
+			static void write_in_buffer(std::string add_string, std::string& buffer_string, std::fstream& dat_stream)
 			{
 				if (!dat_stream.is_open())
 					common::log::error("file is not open");
-				
+
 				if (buffer_string.size() + add_string.size() < IOH_MAX_BUFFER_SIZE)
 				{
 					buffer_string = buffer_string + add_string;
@@ -199,8 +183,9 @@ namespace ioh
 				}
 			}
 
-			void conditional_write_in_buffer(const bool write, std::string add_string, std::string& buffer_string,
-			                                 std::fstream& dat_stream)
+			static void conditional_write_in_buffer(const bool write, std::string add_string,
+			                                        std::string& buffer_string,
+			                                        std::fstream& dat_stream)
 			{
 				if (write)
 					write_in_buffer(add_string, buffer_string, dat_stream);
@@ -215,8 +200,9 @@ namespace ioh
 
 		public:
 
-			csv(const std::string output_directory = "./", const std::string folder_name = "IOHprofiler_test",
-			    const std::string algorithm_name = "algorithm", const std::string algorithm_info = "algorithm_info") :
+			explicit Csv(const std::string output_directory = "./", const std::string folder_name = "IOHprofiler_test",
+			             const std::string algorithm_name = "algorithm",
+			             const std::string algorithm_info = "algorithm_info") :
 				folder_name{folder_name},
 				output_directory{output_directory},
 				algorithm_name{algorithm_name},
@@ -225,10 +211,52 @@ namespace ioh
 				open_index();
 			}
 
-			~csv()
+			/**
+			 * \brief Used in experimenter, shorthand constructor for instantiating loggers from
+			 * configuration objects.
+			 * \param conf a \ref experiment::Configuration object
+			 */
+			explicit Csv(const experiment::Configuration& conf)
+				: Observer<T>( conf.get_complete_triggers(), conf.get_number_interval_triggers(),
+						   conf.get_base_evaluation_triggers(), conf.get_number_target_triggers(),
+						   conf.get_update_triggers()),
+				  folder_name{conf.get_result_folder()},
+				  output_directory{conf.get_output_directory()},
+				  algorithm_name{conf.get_algorithm_name()},
+				  algorithm_info{conf.get_algorithm_info()}
 			{
+				open_index();
 			}
 
+			~Csv() override
+			{
+				clear_logger();
+			}
+
+			fs::path experiment_directory() const
+			{
+				return fs::absolute(output_directory / folder_name);
+			}
+			
+			fs::path sub_directory() const
+			{
+				return experiment_directory() /
+					("data_f" + common::to_string(problem_id) + "_" + problem_name);
+			}
+
+			fs::path get_file_path(const std::string& ext) const
+			{
+				return sub_directory() /
+					("IOHprofiler_f" + common::to_string(problem_id)
+						+ "_DIM" + common::to_string(dimension) + ext);
+			}
+
+			fs::path get_info_file_path() const
+			{
+				return experiment_directory() /
+					("IOHprofiler_f" + common::to_string(problem_id) + "_" + problem_name + ".info");
+			}
+			
 			void clear_logger()
 			{
 				if (info_file.is_open())
@@ -307,6 +335,7 @@ namespace ioh
 				header_flag = false;
 			}
 
+
 			void track_problem(const T& problem) override
 			{
 				track_problem(
@@ -318,7 +347,7 @@ namespace ioh
 				);
 			}
 
-			void track_suite(std::string suite_name)
+			void track_suite(const std::string& suite_name)
 			{
 				this->suite_name = suite_name;
 			}
@@ -340,7 +369,7 @@ namespace ioh
 				if (problem_id != this->last_problem_id)
 				{
 					this->info_file.close();
-					fs::path infofile_path = output_directory / folder_name /
+					const auto infofile_path = output_directory / folder_name /
 						("IOHprofiler_f" + common::to_string(problem_id) + "_" + problem_name + ".info");
 
 
@@ -350,16 +379,16 @@ namespace ioh
 					this->info_file.open(infofile_path.c_str(), std::ofstream::out | std::ofstream::app);
 					this->info_buffer += titleflag;
 
-					this->info_buffer += ("suite = \"" + this->suite_name + "\", funcId = " +
+					this->info_buffer += "suite = \"" + this->suite_name + "\", funcId = " +
 						common::to_string(problem_id) + ", funcName = \"" + problem_name + "\", DIM = " +
 						common::to_string(dimension) + ", maximization = \"" + optimization_type + "\", algId = \"" +
-						this->algorithm_name + "\", algInfo = \"" + this->algorithm_info + "\"");
+						this->algorithm_name + "\", algInfo = \"" + this->algorithm_info + "\"";
 
 
 					if (this->attr_per_exp_name_value.size() != 0)
 					{
 						for (const auto& e : attr_per_exp_name_value)
-							this->info_buffer += (", " + e.first + " = \"" + e.second + "\"");
+							this->info_buffer += ", " + e.first + " = \"" + e.second + "\"";
 					}
 
 					if (this->attr_per_run_name_value.size() != 0)
@@ -368,18 +397,18 @@ namespace ioh
 						for (std::map<std::string, std::shared_ptr<double>>::iterator iter = this->
 							     attr_per_run_name_value.begin(); iter != this->attr_per_run_name_value.end();)
 						{
-							this->info_buffer += (iter->first);
+							this->info_buffer += iter->first;
 							if (++iter != this->attr_per_run_name_value.end())
 							{
-								this->info_buffer += ("|");
+								this->info_buffer += "|";
 							}
 						}
-						this->info_buffer += ("\"");
+						this->info_buffer += "\"";
 					}
-					this->info_buffer += ("\n%\n");
-					this->info_buffer += ("data_f" + common::to_string(problem_id) + "_" + problem_name +
+					this->info_buffer += "\n%\n";
+					this->info_buffer += "data_f" + common::to_string(problem_id) + "_" + problem_name +
 						"/IOHprofiler_f" + common::to_string(problem_id) + "_DIM" + common::to_string(dimension) +
-						".dat");
+						".dat";
 					this->write_stream(this->info_buffer, this->info_file);
 					this->info_buffer.clear();
 
@@ -388,34 +417,34 @@ namespace ioh
 				}
 				else if (dimension != this->last_dimension)
 				{
-					this->info_buffer += ("\nsuite = \"" + this->suite_name + "\", funcId = " +
+					this->info_buffer += "\nsuite = \"" + this->suite_name + "\", funcId = " +
 						common::to_string(problem_id) + ", funcName = \"" + problem_name + "\", DIM = " +
 						common::to_string(dimension) + ", maximization = \"" + optimization_type + "\", algId = \"" +
-						this->algorithm_name + "\", algInfo = \"" + this->algorithm_info + "\"");
+						this->algorithm_name + "\", algInfo = \"" + this->algorithm_info + "\"";
 					if (this->attr_per_exp_name_value.size() != 0)
 					{
 						for (const auto& [fst, snd] : attr_per_exp_name_value)
-							this->info_buffer += (", " + fst + " = \"" + snd + "\"");
+							this->info_buffer += ", " + fst + " = \"" + snd + "\"";
 					}
 
 					if (this->attr_per_run_name_value.size() != 0)
 					{
-						this->info_buffer += (", dynamicAttribute = \"");
+						this->info_buffer += ", dynamicAttribute = \"";
 						for (std::map<std::string, std::shared_ptr<double>>::iterator iter = this->
 							     attr_per_run_name_value.begin(); iter != this->attr_per_run_name_value.end();)
 						{
-							this->info_buffer += (iter->first);
+							this->info_buffer += iter->first;
 							if (++iter != this->attr_per_run_name_value.end())
 							{
-								this->info_buffer += ("|");
+								this->info_buffer += "|";
 							}
 						}
 						this->info_buffer += "\"";
 					}
 					this->info_buffer += "\n%\n";
-					this->info_buffer += ("data_f" + common::to_string(problem_id) + "_" + problem_name +
+					this->info_buffer += "data_f" + common::to_string(problem_id) + "_" + problem_name +
 						"/IOHprofiler_f" + common::to_string(problem_id) + "_DIM" + common::to_string(dimension) +
-						".dat");
+						".dat";
 					this->write_stream(this->info_buffer, this->info_file);
 					this->info_buffer.clear();
 					this->last_problem_id = problem_id;
@@ -431,18 +460,18 @@ namespace ioh
 					common::log::error("write_info(): writing info into unopened info_file");
 
 				this->info_buffer = "";
-				this->info_buffer += (", " + common::to_string(instance) + ":" + common::to_string(evaluations) + "|" +
-					common::to_string(best_y));
+				this->info_buffer += ", " + common::to_string(instance) + ":" + common::to_string(evaluations) + "|" +
+					common::to_string(best_y);
 				if (this->attr_per_run_name_value.size() != 0)
 				{
-					this->info_buffer += (";");
+					this->info_buffer += ";";
 					for (std::map<std::string, std::shared_ptr<double>>::iterator iter = this->attr_per_run_name_value.
 						     begin(); iter != this->attr_per_run_name_value.end();)
 					{
-						this->info_buffer += (common::to_string(*(iter->second)));
+						this->info_buffer += common::to_string(*iter->second);
 						if (++iter != this->attr_per_run_name_value.end())
 						{
-							this->info_buffer += ("|");
+							this->info_buffer += "|";
 						}
 					}
 				}
@@ -463,7 +492,7 @@ namespace ioh
 							     begin(); iter != this->logging_parameters.end(); ++iter)
 						{
 							written_line += " ";
-							written_line += common::to_string(*(iter->second));
+							written_line += common::to_string(*iter->second);
 						}
 					}
 
@@ -494,23 +523,23 @@ namespace ioh
 				this->last_y[0] = y;
 				this->last_transformed_y[0] = transformed_y;
 
-				bool cdat_flag = this->complete_trigger();
-				bool idat_flag = this->interval_trigger(evaluations);
-				bool dat_flag = this->update_trigger(transformed_y, maximization_minimization_flag);
-				bool tdat_flag = this->time_points_trigger(evaluations);
+				const bool cdat_flag = this->complete_trigger();
+				const bool idat_flag = this->interval_trigger(evaluations);
+				const bool dat_flag = this->update_trigger(transformed_y, maximization_minimization_flag);
+				const bool tdat_flag = this->time_points_trigger(evaluations);
 
-				bool need_write = cdat_flag || idat_flag || dat_flag || tdat_flag;
+				const auto need_write = cdat_flag || idat_flag || dat_flag || tdat_flag;
 
 				if (need_write)
 				{
-					std::string written_line = common::to_string(evaluations) + " " + common::to_string(y) + " "
+					auto written_line = common::to_string(evaluations) + " " + common::to_string(y) + " "
 						+ common::to_string(best_so_far_y) + " " + common::to_string(transformed_y) + " "
 						+ common::to_string(best_so_far_transformed_y);
 
 					if (this->logging_parameters.size() != 0)
 					{
 						for (auto const& e : logging_parameters)
-							written_line += (" " + common::to_string(*(e.second)));
+							written_line += " " + common::to_string(*e.second);
 					}
 
 					written_line += '\n';

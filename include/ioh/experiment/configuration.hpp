@@ -1,97 +1,176 @@
 #pragma once
 
-#ifdef FSEXPERIMENTAL
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
-#else
-#include <filesystem>
-namespace fs = std::filesystem;
-#endif
+#include <cstdio>
 
 #include "ioh/common.hpp"
-
 
 namespace ioh
 {
 	namespace experiment
 	{
 		/**
-		 * \brief A class to read configuration files. 
-		 */
+		 * \brief A class to read configuration files.
+		 * TODO: Correctly pluralize problem_id_ etc.
+		 */		
 		class Configuration
 		{
-			std::string config_file = "configuration.ini";
-			std::string suite_name;
-			std::vector<int> problem_id;
-			std::vector<int> instance_id;
-			std::vector<int> dimension;
-			std::string output_directory;
-			std::string result_folder;
-			std::string algorithm_info;
-			std::string algorithm_name;
-			bool complete_triggers;
-			bool update_triggers;
-			std::vector<int> base_evaluation_triggers;
-			int number_target_triggers;
-			int number_interval_triggers;
-			int max_number_of_problem;
-			int max_dimension;
+			/**
+			 * \brief The path of the configuration file. default: configuration.ini
+			 */
+			fs::path config_file_ = "configuration.ini";
+			
+			/**
+			 * \brief The name of the suite
+			 */
+			std::string suite_name_;
+			
+			/**
+			 * \brief A vector of problem id's to be included in the experiment
+			 */
+			std::vector<int> problem_id_;
+			
+			/**
+			 * \brief A vector of instance id's to be included in the experiment
+			 */
+			std::vector<int> instance_id_;
+			
+			/**
+			 * \brief A vector of dimensions on which to test the problems & instances
+			 */
+			std::vector<int> dimension_;
+			
+			/**
+			 * \brief The root folder of the output directory in where data is stored
+			 */
+			std::string output_directory_;
+			
+			/**
+			 * \brief The name of the subfolder in the output_directory where to store data
+			 */
+			std::string result_folder_;
+			
+			/**
+			 * \brief An addition info string, to include in logging algorithm specific data. 
+			 */
+			std::string algorithm_info_;
+			
+			/**
+			 * \brief The name of the algorithm
+			 */
+			std::string algorithm_name_;
+			
+			/**
+			 * \brief `complete_triggers_` is the switch of `.cdat` files, which will store evaluations of all iterations.
+			 * Set complete_triggers as true if you want to output `.cdat` files.
+			 */
+			bool complete_triggers_{};
+			
+			/**
+			 * \brief `update_triggers_` is the switch of `.dat` files, which will store evaluations if the best found
+			 * solution is updated. Set `update_triggers_` true if you want to output `.dat` files.
+			 */
+			bool update_triggers_{};
+			
+			/**
+			 * \brief `number_interval_triggers_` configures the `.idat` files. `.idat` files log evaluations in a fixed
+			 *  frequency. `number_interval_triggers_` sets the value of the frequency. If you do not want to generate
+			 *  `.idat` files, set  `number_interval_triggers_` as 0.
+			 */
+			int number_interval_triggers_{};
+			
+			/**
+			 * \brief `number_target_triggers_` is a value defines the number of evaluations to be logged between 10^i
+			 *  and 10^(i+1). If you do not want to generate `.tdat` files, set both \ref `number_target_triggers_`
+			 *  and \ref `base_evaluation_triggers_` as nullptr.
+			 */
+			int number_target_triggers_{};
+			
+			/**
+			 * \brief `base_evaluation_triggers_` defines the base evaluations used to produce an additional
+			 * evaluation-based logging. For example, if `base_evaluation_triggers_` = {1,2,5}, the logger will be
+			 * triggered by evaluations dim*1, dim*2, dim*5, 10*dim*1, 10*dim*2, 10*dim*5, 100*dim*1, 100*dim*2,
+			 * 100*dim*5, ... . If you do not want to generate `.tdat` files, set  `base_evaluation_triggers_` as nullptr.
+			 */
+			std::vector<int> base_evaluation_triggers_;
+			
+			/**
+			 * \brief The maximal number of problems to be included in the experiment
+			 */
+			int max_number_of_problem_{};
+			
+			/**
+			 * \brief The maximal dimension on which to execute the experiments
+			 */
+			int max_dimension_{};
 
 
-			common::Container data;
+			/**
+			 * \brief Used to hold experiment specific data in a convenient structure.
+			 */
+			common::Container data_;
 		public:
+			
+			/**
+			 * \brief Placeholder, used by experimenter when an experiment is not build from a
+			 * Configuration. 
+			 */
 			Configuration() = default;
 
-			Configuration(const std::string& filename) : config_file(filename)
+			/**
+			 * \brief Read a config file an constructs a Configuration instance
+			 * \param filename The path of the config file 
+			 */
+			explicit Configuration(fs::path& filename) 
+				: config_file_(filename)
 			{
-				readcfg(filename);
+				read_config();
 			}
 
-			void readcfg(const std::string& filename)
+			/**
+			 * \brief Reads a config file and sets the parameters required to construct an
+			 * experiment. 
+			 */
+			void read_config()
 			{
-				load(filename);
-				suite_name = data.get("suite", "suite_name");
-				if (suite_name == "BBOB")
+				load();
+				suite_name_ = data_.get("suite", "suite_name");
+				
+				// TODO: Make this meta data stuff nice in a struct somewhere
+				if (suite_name_ == "BBOB") 
 				{
-					max_number_of_problem = 24;
-					max_dimension = 100;
+					max_number_of_problem_ = 24;
+					max_dimension_ = 100;
 				}
-				else if (suite_name == "PBO")
+				else if (suite_name_ == "PBO")
 				{
-					max_dimension = 20000;
-					max_number_of_problem = 23;
+					max_dimension_ = 20000;
+					max_number_of_problem_ = 25;
 				}
-				problem_id = data.get_int_vector("suite", "problem_id", 1, max_number_of_problem);
-				instance_id = data.get_int_vector("suite", "instance_id", 1, 100);
-				dimension = data.get_int_vector("suite", "dimension", 1, max_dimension);
 
-				output_directory = data.get("logger", "output_directory");
-				result_folder = data.get("logger", "result_folder");
-				algorithm_info = data.get("logger", "algorithm_info");
-				algorithm_name = data.get("logger", "algorithm_name");
+				problem_id_ = data_.get_int_vector("suite", "problem_id", 1, max_number_of_problem_);
+				instance_id_ = data_.get_int_vector("suite", "instance_id", 1, 100);
+				dimension_ = data_.get_int_vector("suite", "dimension", 1, max_dimension_);
 
-				complete_triggers = data.get_bool("observer", "complete_triggers");
-				update_triggers = data.get_bool("observer", "update_triggers");
-				base_evaluation_triggers = data.get_int_vector("observer", "base_evaluation_triggers", 0, 10);
-				number_target_triggers = data.get_int("observer", "number_target_triggers");
-				number_interval_triggers = data.get_int("observer", "number_interval_triggers");
+				output_directory_ = data_.get("logger", "output_directory");
+				result_folder_ = data_.get("logger", "result_folder");
+				algorithm_info_ = data_.get("logger", "algorithm_info");
+				algorithm_name_ = data_.get("logger", "algorithm_name");
+
+				complete_triggers_ = data_.get_bool("observer", "complete_triggers");
+				update_triggers_ = data_.get_bool("observer", "update_triggers");
+				base_evaluation_triggers_ = data_.get_int_vector("observer", "base_evaluation_triggers", 0, 10);
+				number_target_triggers_ = data_.get_int("observer", "number_target_triggers");
+				number_interval_triggers_ = data_.get_int("observer", "number_interval_triggers");
 			}
+			
 
-			std::ifstream open_file(const std::string& filename) const
-			{
-				if (!fs::exists(filename))
-					common::log::error("Cannot find file " + filename);
-
-				std::ifstream file(filename.c_str());
-				if (!file.is_open())
-					common::log::error("Cannot open file " + filename);
-				return file;
-			}
-
-			void load(const std::string& filename)
+			/**
+			 * \brief Loads the data stored in the \ref config_file_ into \ref data_
+			 */
+			void load()
 			{
 				std::string line;
-				std::ifstream fp = open_file(filename);
+				auto fp = common::file::open_file(config_file_);
 
 				char key[IOH_MAX_KEY_NUMBER];
 				char value[IOH_MAX_KEY_NUMBER];
@@ -102,84 +181,135 @@ namespace ioh
 					line = common::strip(line);
 					if (line.empty() || line.front() == '#' || line.front() == ';')
 						continue;
-
+					// TODO: check why we cannot use sccanf_s here, as this throws an access violation exception
 					if (line.front() == '[' && line.back() == ']')
-						sscanf(line.c_str(), "[%[^]]", section);
+						sscanf(line.c_str(), "[%[^]]", section); 
 					else if (
 						sscanf(line.c_str(), "%[^=] = \"%[^\"]", key, value) == 2
 						|| sscanf(line.c_str(), "%[^=] = '%[^\']", key, value) == 2
 						|| sscanf(line.c_str(), "%[^=] = %[^;#]", key, value) == 2)
-						data.set(section, key, value);
+						data_.set(section, key, value);
 					else
 						common::log::error("Error in parsing .ini file on line:\n" + line);
 				}
 			}
 
-			std::string get_suite_name()
+			/**
+			 * \brief Get method for suite name
+			 * \return The private variable \ref suite_name_
+			 */
+			[[nodiscard]] std::string get_suite_name() const
 			{
-				return this->suite_name;
+				return this->suite_name_;
 			}
 
-			std::vector<int> get_problem_id()
+			/**
+			 * \brief Get method for the problem id's included in the experiment
+			 * \return The private variable \ref problem_id_
+			 */
+			[[nodiscard]] std::vector<int> get_problem_id() const 
 			{
-				return this->problem_id;
+				return this->problem_id_;
 			}
 
-			std::vector<int> get_instance_id()
+			/**
+			 * \brief Get method for the instance id's included in the experiment
+			 * \return The private variable \ref instance_id_
+			 */
+			[[nodiscard]] std::vector<int> get_instance_id() const 
 			{
-				return this->instance_id;
+				return this->instance_id_;
 			}
 
-			std::vector<int> get_dimension()
+			/**
+			 * \brief Get method for the dimensions tested in the experiment
+			 * \return The private variable \ref dimension_
+			*/
+			[[nodiscard]] std::vector<int> get_dimension() const 
 			{
-				return this->dimension;
+				return this->dimension_;
 			}
 
-			std::string get_output_directory()
+			/**
+			 * \brief Get method for the root directory of the experiment's output
+			 * \return The private variable \ref output_directory_
+			 */
+			[[nodiscard]] std::string get_output_directory() const 
 			{
-				return this->output_directory;
+				return this->output_directory_;
 			}
 
-			std::string get_result_folder()
+			/**
+			 * \brief Get method for the name of the result folder for the experiment
+			 * \return The private variable \ref result_folder_
+			 */
+			[[nodiscard]] std::string get_result_folder() const 
 			{
-				return this->result_folder;
+				return this->result_folder_;
 			}
 
-			std::string get_algorithm_info()
+			/**
+			 * \brief Get method for the optional algorithm information string
+			 * \return The private variable \ref algorithm_info_
+			 */
+			[[nodiscard]] std::string get_algorithm_info() const 
 			{
-				return this->algorithm_info;
+				return this->algorithm_info_;
 			}
 
-			std::string get_algorithm_name()
+			/**
+			 * \brief Get method for the name of the algorithm used in the experiment
+			 * \return The private variable \ref algorithm_name_
+			 */
+			[[nodiscard]] std::string get_algorithm_name() const
 			{
-				return this->algorithm_name;
+				return this->algorithm_name_;
 			}
 
-			bool get_complete_triggers()
+			/**
+			 * \brief Get method for complete_triggers_
+			 * \return The private variable \ref complete_triggers_
+			 */
+			[[nodiscard]] bool get_complete_triggers() const
 			{
-				return this->complete_triggers;
+				return this->complete_triggers_;
 			}
 
-			bool get_update_triggers()
+			/**
+			 * \brief Get method for update_triggers_
+			 * \return The private variable \ref update_triggers_
+			 */
+			[[nodiscard]] bool get_update_triggers() const 
 			{
-				return this->update_triggers;
+				return this->update_triggers_;
 			}
 
-			std::vector<int> get_base_evaluation_triggers()
+			/**
+			 * \brief Get method for base_evaluation_triggers_
+			 * \return The private variable \ref base_evaluation_triggers_
+			 */
+			[[nodiscard]] std::vector<int> get_base_evaluation_triggers() const 
 			{
-				return this->base_evaluation_triggers;
+				return this->base_evaluation_triggers_;
 			}
 
-			int get_number_target_triggers()
+			/**
+			 * \brief Get method for number_target_triggers_
+			 * \return The private variable \ref number_target_triggers_
+			 */
+			[[nodiscard]] int get_number_target_triggers() const
 			{
-				return this->number_target_triggers;
+				return this->number_target_triggers_;
 			}
 
-			int get_number_interval_triggers()
+			/**
+			 * \brief Get method for number_interval_triggers_
+			 * \return The private variable \ref number_interval_triggers_
+			 */
+			[[nodiscard]] int get_number_interval_triggers() const 
 			{
-				return this->number_interval_triggers;
+				return this->number_interval_triggers_;
 			}
 		};
-			
 	}
 }

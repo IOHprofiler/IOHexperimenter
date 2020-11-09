@@ -1,11 +1,6 @@
-/// \file observer.h
-/// \brief Header file for the class observer.
-///
-/// \author Furong Ye
 #pragma once
 
 #include "ioh/common.hpp"
-#include "ioh/problem.hpp"
 #include "ioh/suite.hpp"
 
 
@@ -21,7 +16,7 @@ namespace ioh
 		///   3. Recording evaluations as the best found solution is updated.
 		///   4. Recording evaluations at pre-defined points or/and with a static number for each exponential bucket.
 		template <typename ProblemType>
-		class observer
+		class Observer
 		{
 			int observer_interval; /// < variable for recording by a static interval.
 			bool observer_complete_flag; /// < variable for recording complete optimization process. 
@@ -56,7 +51,7 @@ namespace ioh
 			/** }@ */
 
 
-			observer() :
+			Observer() :
 				observer_interval(0),
 				observer_complete_flag(false),
 				observer_update_flag(true),
@@ -65,18 +60,41 @@ namespace ioh
 				time_points_index(0),
 				time_points_expi(0),
 				observer_time_points_exp_base1(10),
+				observer_number_of_evaluations(0),
 				evaluations_value2(1),
 				evaluations_expi(0),
 				observer_time_points_exp_base2(10)
 			{
 			}
 
-			virtual ~observer()
+			Observer(
+				const bool observer_complete_flag,
+				const int interval,
+				const std::vector<int>& time_points,
+				const int number_of_evaluations,
+				const bool update_flag
+			) :
+				observer_interval(interval),
+				observer_complete_flag(observer_complete_flag),
+				observer_update_flag(update_flag),
+				observer_time_points(time_points),
+				evaluations_value1(1),
+				time_points_index(0),
+				time_points_expi(0),
+				observer_time_points_exp_base1(10),
+				observer_number_of_evaluations(number_of_evaluations),
+				evaluations_value2(1),
+				evaluations_expi(0),
+				observer_time_points_exp_base2(10)
 			{
 			}
 
-			observer(const observer&) = delete;
-			observer& operator =(const observer&) = delete;
+			virtual ~Observer()
+			{
+			}
+
+			// Observer(const Observer&) = delete;
+			// Observer& operator =(const Observer&) = delete;
 
 			void set_complete_flag(const bool complete_flag)
 			{
@@ -212,11 +230,11 @@ namespace ioh
 			{
 				if (optimization_type == common::OptimizationType::maximization)
 				{
-					current_best_fitness = std::numeric_limits<double>::lowest();
+					current_best_fitness = -std::numeric_limits<double>::infinity();
 				}
 				else
 				{
-					current_best_fitness = std::numeric_limits<double>::max();
+					current_best_fitness = std::numeric_limits<double>::infinity();
 				}
 				evaluations_value1 = 1;
 				time_points_index = 0;

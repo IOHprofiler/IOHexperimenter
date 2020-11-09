@@ -4,6 +4,8 @@
 #include <string>
 #include <limits>
 #include <numeric>
+#include <ostream>
+
 
 #include "ioh/common.hpp"
 #include "transformation.hpp"
@@ -825,6 +827,15 @@ namespace ioh
 					this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::max();
 					this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::max();
 				}
+			}
+
+
+			friend std::ostream& operator<<(std::ostream& os, const base& obj)
+			{
+				return os << "f"
+					<< obj.get_problem_id() << "_d"
+					<< obj.get_number_of_variables() << "_i"
+					<< obj.get_instance_id();
 			}
 		};
 	} // namespace problem

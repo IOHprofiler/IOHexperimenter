@@ -1,12 +1,17 @@
 #pragma once
 
+
+#include <ctime>
 #include <algorithm>
-#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <unordered_map>
+#include <iterator>
+#include <utility>
 #include <vector>
+
+#include "log.hpp"
 
 namespace ioh
 {
@@ -20,69 +25,6 @@ namespace ioh
 			minimization,
 			maximization
 		};
-
-		namespace log
-		{
-			/**
-			 * \brief Enum containing log levels; info = 0, warning = 1, error = 2
-			 */
-			enum class Level
-			{
-				info,
-				warning,
-				error
-			};
-
-			/**
-			 * \brief Setting for the log level 
-			 */
-			inline Level log_level = Level::info;
-
-			/**
-			 * \brief Function for logging errors, causes a system exit
-			 * \param error_msg The error message
-			 */
-			inline void error(const std::string& error_msg)
-			{
-				if (log_level <= Level::error)
-				{
-					std::cerr << "IOH_ERROR_INFO : " << error_msg << std::endl;
-					exit(1);
-				}
-			}
-
-			/**
-			 * \brief Function for logging warnings
-			 * \param warning_msg The error message
-			 */
-			inline void warning(const std::string& warning_msg)
-			{
-				if (log_level <= Level::warning)
-					std::cout << "IOH_WARNING_INFO : " << warning_msg << std::endl;
-			}
-
-			/**
-			 * \brief Function for logging info messages
-			 * \param log_msg The info message
-			 */
-			inline void info(const std::string& log_msg)
-			{
-				if (log_level <= Level::info)
-					std::cout << "IOH_LOG_INFO : " << log_msg << std::endl;
-			}
-
-			/**
-			 * \brief Function for logging info messages to a stream
-			 * \param log_msg The info message
-			 * \param log_stream The stream to log the messages to 
-			 */
-			inline void info(const std::string& log_msg, std::ofstream& log_stream)
-			{
-				if (log_level >= Level::info)
-					log_stream << "IOH_LOG_INFO : " << log_msg << std::endl;
-			}
-		}
-
 
 		/**
 		 * \brief Helper function to copy a vector v1 into another vector v2
@@ -282,6 +224,24 @@ namespace ioh
 			return result;
 		}
 
+
+		/**
+		 * \brief Returns a string representation of a vector separated by whitespaces
+		 * \param v A vector
+		 * \return The string representation of the vector
+		 */
+		template<typename T>
+		static std::string vector_to_string(std::vector<T> v)
+		{
+			std::ostringstream oss;
+			std::copy(v.begin(), v.end(),
+				std::ostream_iterator<T>(oss, " "));
+			auto result = oss.str();
+			result.pop_back();
+			return result;
+;
+		}
+
 		/**
 		 * \brief A nested map container, consisting of two levels. 
 		 */
@@ -390,6 +350,40 @@ namespace ioh
 			                                const int max) const
 			{
 				return get_int_vector_parse_string(get(section, key), min, max);
+			}
+		};
+
+
+		/**
+		 * \brief A simple timer class, logging elapsed CPU time to stdout
+		 */
+		class CpuTimer
+		{
+			/**
+			 * \brief A info message to be printed to stdout when the timer completes
+			 */
+			std::string info_msg_;
+			/**
+			 * \brief The start time of the timer
+			 */
+			std::clock_t start_time_;
+		public:
+			/**
+			 * \brief Constructs a timer, sets start time
+			 * \param info_msg The value for \ref info_msg_ 
+			 */
+			explicit CpuTimer(std::string info_msg = "")
+				: info_msg_(std::move(info_msg)), start_time_(std::clock()) {}
+
+			/**
+			 * \brief Destructs a timer, prints time elapsed to stdout
+			 */
+			~CpuTimer()
+			{
+				const std::clock_t end_time = std::clock();
+				std::cout << info_msg_ << "CPU Time: "
+					<< std::to_string(1000.0 * (end_time - start_time_) / CLOCKS_PER_SEC)
+					<< "ms" << std::endl;
 			}
 		};
 	}

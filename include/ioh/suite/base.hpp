@@ -132,7 +132,8 @@ namespace ioh
 				if (this->get_problem_flag == false)
 					this->get_problem_flag = true;
 
-				this->current_problem = (*this)[this->problem_list_index];
+				// TODO: this may introduce unwanted behavior				
+				this->current_problem = (*this)[problem_list_index];
 				this->current_problem->reset_problem();
 				return this->current_problem;
 			}
@@ -158,12 +159,8 @@ namespace ioh
 			/// without concerning the order of testing problems.
 			problem_ptr get_problem(std::string problem_name, int instance, int dimension)
 			{
-				problem_ptr p = common::Factor<ProblemType, int, int>::get().create(problem_name, instance, dimension);
+				problem_ptr p = common::Factory<ProblemType, int, int>::get().create(problem_name, instance, dimension);
 				assert(p != nullptr);
-				//TODO: check this, move stuff to the constructor
-				// p->reset_problem();
-				// p->set_instance_id(instance);
-				// p->set_number_of_variables(dimension);
 				return p;
 			}
 

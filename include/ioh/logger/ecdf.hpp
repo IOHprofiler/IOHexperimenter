@@ -1,4 +1,5 @@
 /// \file ecdf.h
+/// \file ecdf.h
 /// \brief Header file for classes: ecdf, range*, ecdf_*.
 ///
 /// \author Johann Dreo
@@ -159,7 +160,7 @@ namespace ioh
 		 * @endcode
 		 */
 		template <class T>
-		class ecdf : public observer<T>
+		class ecdf : public Observer<T>
 		{
 		protected:
 			/** Internal types  @{ */
@@ -178,7 +179,7 @@ namespace ioh
 
 		public:
 			/** Scalar type of the solutions encoding the underlying (suite of) problems. */
-			using InputType = typename observer<T>::input_type;
+			using InputType = typename Observer<T>::input_type;
 
 		public:
 
