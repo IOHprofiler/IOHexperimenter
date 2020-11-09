@@ -16,28 +16,28 @@ namespace ioh
 		public:
 			typedef void algorithm_type(std::shared_ptr<ProblemType>, std::shared_ptr<logger::csv<ProblemType>>);
 			typedef common::Factor<suite::base<ProblemType>,
-				std::vector<int>, std::vector<int>, std::vector<int>> suite_factory;
+			                       std::vector<int>, std::vector<int>, std::vector<int>> suite_factory;
 
 			experimenter() = delete;
 			~experimenter() = default;
 
 			experimenter(std::string configFileName, algorithm_type* algorithm): conf(configFileName)
 			{
-				auto suite_name  = conf.get_suite_name();
+				auto suite_name = conf.get_suite_name();
 				auto problems = conf.get_problem_id();
 				auto instances = conf.get_instance_id();
 				auto dimensions = conf.get_dimension();
 
 				configSuite = suite_factory::get().create(suite_name, problems, instances, dimensions);
 				if (configSuite == nullptr)
-					common::log::error("Creating suite fails, please check your configuration");
-				
+					common::log::error("Creating suite fails, please check your Configuration");
+
 				auto logger = std::make_shared<logger::csv<ProblemType>>(
 					conf.get_output_directory(), conf.get_result_folder(), conf.get_algorithm_name(),
 					conf.get_algorithm_info());
 
 				if (logger == nullptr)
-					common::log::error("Creating logger fails, please check your configuration");
+					common::log::error("Creating logger fails, please check your Configuration");
 
 				logger->set_complete_flag(conf.get_complete_triggers());
 				logger->set_interval(conf.get_number_interval_triggers());
@@ -120,7 +120,7 @@ namespace ioh
 			void set_independent_runs(int n)
 			{
 				this->independent_runs = n;
-			};
+			}
 
 			void print_info(std::string info)
 			{
@@ -130,21 +130,16 @@ namespace ioh
 			std::string vectorToString(std::vector<int> v)
 			{
 				std::string s = "";
-				if (v.size() == 0)
-				{
+				if (v.empty())
 					return s;
-				}
 				s = std::to_string(v[0]);
 				for (int i = 1; i != v.size(); ++i)
-				{
 					s += " " + std::to_string(v[i]);
-				}
-
 				return s;
 			}
 
 		private:
-			configuration conf;
+			Configuration conf;
 			std::shared_ptr<suite::base<ProblemType>> configSuite;
 			std::shared_ptr<ProblemType> current_problem;
 			std::shared_ptr<logger::csv<ProblemType>> config_csv_logger;

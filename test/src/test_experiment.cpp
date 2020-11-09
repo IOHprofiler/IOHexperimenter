@@ -1,4 +1,3 @@
-
 #ifdef FSEXPERIMENTAL
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
@@ -13,20 +12,19 @@ namespace fs = std::filesystem;
 
 TEST(experiment, config)
 {
-
 	fs::path config = fs::path("IOHexperimenter") / fs::path("example") / "conf.ini";
 	fs::path root;
 
 	for (const auto& e : fs::current_path())
 	{
 		root /= e;
-		if (fs::exists(root / config))
+		if (exists(root / config))
 		{
 			config = root / config;
 			break;
 		}
 	}
-	ioh::experiment::configuration conf(config.generic_string());
+	ioh::experiment::Configuration conf(config.generic_string());
 	ASSERT_EQ(conf.get_suite_name(), "PBO");
 	ASSERT_EQ(conf.get_problem_id(), std::vector<int>({ 1, 2, 3, 4, 5 }));
 	ASSERT_EQ(conf.get_instance_id(), std::vector<int>({ 1 }));
@@ -41,7 +39,3 @@ TEST(experiment, config)
 	ASSERT_EQ(conf.get_number_target_triggers(), 0);
 	ASSERT_EQ(conf.get_number_interval_triggers(), 0);
 }
-
-	
-
-

@@ -15,8 +15,10 @@ namespace ioh
 {
 	namespace experiment
 	{
-		/// A class of configuration files, to be used in experimenter.
-		class configuration
+		/**
+		 * \brief A class to read configuration files. 
+		 */
+		class Configuration
 		{
 			std::string config_file = "configuration.ini";
 			std::string suite_name;
@@ -38,9 +40,9 @@ namespace ioh
 
 			common::Container data;
 		public:
-			configuration() = default;
+			Configuration() = default;
 
-			configuration(const std::string& filename) : config_file(filename)
+			Configuration(const std::string& filename) : config_file(filename)
 			{
 				readcfg(filename);
 			}
@@ -178,5 +180,6 @@ namespace ioh
 				return this->number_interval_triggers;
 			}
 		};
+			
 	}
 }

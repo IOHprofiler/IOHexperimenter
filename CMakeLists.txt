@@ -26,7 +26,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         link_libraries(stdc++fs)
         add_compile_definitions(FSEXPERIMENTAL)
     endif()
-endif()
+endif() 
 
 # Define project targets.
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 

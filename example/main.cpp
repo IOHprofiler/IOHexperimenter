@@ -29,7 +29,6 @@ void vprint(std::vector<T> v)
 	std::cout << " ]" << std::endl;
 }
 
-
 void algo(std::shared_ptr<ioh::problem::bbob::bbob_base> f,
           std::shared_ptr<ioh::logger::csv<ioh::problem::bbob::bbob_base>> l)
 {
@@ -50,7 +49,6 @@ void algo(std::shared_ptr<ioh::problem::bbob::bbob_base> f,
 		best_y = std::max(y, best_y);
 	}
 }
-
 
 std::vector<int> Initialization(int dimension)
 {
@@ -218,8 +216,7 @@ void combiner()
 	std::clog << "Done " << n << " function test" << std::endl;
 }
 
-
-int main()
+void pbo_config_experiment()
 {
 	std::string config = "C:\\Users\\Jacob\\Source\\Repos\\IOHprofiler\\IOHexperimenter\\example\\conf.ini";
 	ioh::experiment::experimenter<ioh::problem::pbo::pbo_base> pexperiment(config, pboalgo);
@@ -227,13 +224,35 @@ int main()
 	pexperiment.run();
 
 	using namespace ioh;
-	std::vector<int> pbs = {1, 2};
-	std::vector<int> ins = {1, 2};
-	std::vector<int> dims = {2, 10};
+	std::vector<int> pbs = { 1, 2 };
+	std::vector<int> ins = { 1, 2 };
+	std::vector<int> dims = { 2, 10 };
 	auto suite = std::make_shared<suite::bbob>(pbs, ins, dims);
 	auto logger = std::make_shared<logger::csv<problem::bbob::bbob_base>>();
 	auto bexperiment = experiment::experimenter<problem::bbob::bbob_base>(suite, logger, algo);
 
 	bexperiment.set_independent_runs(10);
 	bexperiment.run();
+}
+
+
+
+class Base
+{
+	
+};
+
+class A: public Base
+{
+public:
+	std::string name()
+	{ 
+		return typeid(this).name();
+	}
+};
+
+int main()
+{
+	A a;
+	std::cout << a.name() << std::endl;
 }
