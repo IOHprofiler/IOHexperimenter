@@ -26,10 +26,10 @@ int mutation(std::vector<int> &x, double mutation_rate) {
 }
 
 
-/// In this session, the algorithm will be tested on the OneMax with w-model
-/// Therefore we declare a W_Model_OneMax class, and get the fitness by the 
-/// statement w_model_om.evaluate(). Since W-model is instance based, before
-/// testing any instances, it must be configured by using set_w_setting(..).
+/// In this session, the algorithm will be tested on a OneMax based w-model.
+/// We declare a W_Model_OneMax class, and get fitness values via the function 
+/// w_model_om.evaluate(). Since W-model is instance based, before
+/// testing any instances, it must be configured by using set_w_setting().
 void _run_w_model() {
 
 
@@ -59,7 +59,7 @@ void _run_w_model() {
                                 w_model_suite_neutrality_para,w_model_suite_ruggedness_para);
   /// Set problem_name based on the configuration.
   w_model_om.IOHprofiler_set_problem_name(problem_name);
-  /// Set problem_id as 1
+  /// Set problem_id as 1.
   w_model_om.IOHprofiler_set_problem_id(1);
   /// Set dimension.
   w_model_om.IOHprofiler_set_number_of_variables(dimension);
@@ -67,16 +67,8 @@ void _run_w_model() {
   while (restart_flag < 10) {
     /// reset_problem must be called before testing the same problem class repeatedly.
     w_model_om.reset_problem();
-    logger.track_problem(w_model_om.IOHprofiler_get_problem_id(), 
-                        w_model_om.IOHprofiler_get_number_of_variables(), 
-                        w_model_om.IOHprofiler_get_instance_id(),
-                        w_model_om.IOHprofiler_get_problem_name(),
-                        w_model_om.IOHprofiler_get_optimization_type());
+    logger.track_problem(w_model_om);
   
-
-    /***
-    * Algorithm session
-    */
     
     std::vector<int> x;
     std::vector<int> x_star;
@@ -103,7 +95,6 @@ void _run_w_model() {
         x_star = x;
       }
     }
-
     restart_flag++;
   }
           
@@ -128,11 +119,6 @@ void _run_problem() {
   logger.set_interval(0);
   logger.set_time_points(time_points,10);
   logger.activate_logger();
-  // logger.track_problem(om.IOHprofiler_get_problem_id(), 
-  //                     om.IOHprofiler_get_number_of_variables(), 
-  //                     om.IOHprofiler_get_instance_id(),
-  //                     om.IOHprofiler_get_problem_name(),
-  //                     om.IOHprofiler_get_optimization_type());
   logger.track_problem(om);
   std::vector<int> x;
   std::vector<int> x_star;
@@ -143,15 +129,13 @@ void _run_problem() {
   x = Initialization(dimension);
   x_star = x;
   y = om.evaluate(x);
-  //logger.do_log(om.loggerInfo());
-  //logger.do_log();
+  logger.do_log(om.loggerInfo());
   best_value = y;
 
   while(!om.IOHprofiler_hit_optimal()) {
     x = x_star;
     if(mutation(x,mutation_rate)) {
       y = om.evaluate(x);
-      //logger.do_log();
       logger.do_log(om.loggerInfo());
     }
     if(y > best_value) {
@@ -163,6 +147,7 @@ void _run_problem() {
 
 int main(){
   _run_problem();
+  _run_w_model();
   return 0;
 }
 
