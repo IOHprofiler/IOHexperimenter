@@ -2,7 +2,7 @@
 
 W-model introduces different characteristic features such as redundancy, neutrality, epsitasis, and ruggedness into existing problems by adding layers. We provide OneMax and LeadingOnes based w-model problems, and our layer approaches are introduced. Practically, <i>redundancy</i>, <i>neutrality</i>, and <i>epistasis</i> layers are applied to transform the input bit string in order, after getting the fitness value `f` of the transformed bit string on OneMax (or LeadingOnes), a <i>ruggedness</i> layer is introduced on `f` and returns a transformed objective value. 
 
-Before testing OneMax and LeadingOnes based w-model problems, please set up w-model layers using the function below. Also, you can find an usage case in `_run_w_model()` [here](https://github.com/IOHprofiler/IOHexperimenter/blob/master/build/Cpp/IOHprofiler_run_problem.cpp) 
+Before testing OneMax and LeadingOnes based w-model problems, please set up w-model layers using the function below. Also, you can find an usage case in `_run_w_model()` of the [example](https://github.com/IOHprofiler/IOHexperimenter/blob/master/build/Cpp/IOHprofiler_run_problem.cpp) 
 ```cpp
 /// \fn void set_w_setting(const double dummy_para, const int epistasis_para, const int neutrality_para, const int ruggedness_para)
 /// \brief A function to configure w-model layers.
