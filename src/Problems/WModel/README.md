@@ -20,7 +20,7 @@ void set_w_setting(const double dummy_para, const int epistasis_para, const int 
 Redundancy is introduced by a redunction function mapping the original bit string into a substring. Substring bits are pairwise different randomly chosen from the original string. `dummy_para` sets the percentage of bits to be chosen.
 
 ## Neutrality
-Neutrality layer reduces the original bit string into a new string, by mapping sub strings of size $\mu$ to the value of majority. `neutrality_para` sets the block size ![](http://latex.codecogs.com/gif.latex?\\mu).
+Neutrality layer reduces the original bit string into a new string, by mapping sub strings of size ![](http://latex.codecogs.com/gif.latex?\\mu) to the value of majority. `neutrality_para` sets the block size ![](http://latex.codecogs.com/gif.latex?\\mu).
 
 ## Epistatis
 Epistasis layer introduces a bijective function to map sub strings of the orignal string to new strings. `epistasis_para` sets the size if sub strings ![](http://latex.codecogs.com/gif.latex?\\nu) on which the bijective function performs.
