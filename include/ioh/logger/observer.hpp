@@ -65,6 +65,7 @@ namespace ioh
 				time_points_index(0),
 				time_points_expi(0),
 				observer_time_points_exp_base1(10),
+				observer_number_of_evaluations(0),
 				evaluations_value2(1),
 				evaluations_expi(0),
 				observer_time_points_exp_base2(10)
