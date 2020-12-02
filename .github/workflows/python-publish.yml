@@ -9,9 +9,14 @@ jobs:
     publish:
         strategy:
           matrix:
-            architecture: ['x64', 'x86']
+            architecture: [x64, x86]
             python-version: ["3.6.x", "3.7.x", "3.8.x", "3.9.x"]
             os: [ubuntu-latest, macos-latest, windows-latest]
+            exclude:
+              - os: macos-latest
+                architecture: x86
+              - os: ubuntu-latest
+                architecture: x86
 
         runs-on: ${{matrix.os}}
         steps:
