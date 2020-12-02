@@ -61,7 +61,7 @@ jobs:
           run: |
             twine upload dist/*-manylinux*.whl
 
-      publish-source:
+    publish-source:
         runs-on: ubuntu-latest
         steps:
         - uses: actions/checkout@v2
