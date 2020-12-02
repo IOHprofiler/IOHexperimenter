@@ -23,7 +23,7 @@ jobs:
         - name: Autobump version
           run: |
             VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
-            PLACEHOLDER='^__version__ = "auto"$'
+            PLACEHOLDER='__version__ = \"auto\"'
             VERSION_FILE='setup.py'
             # ensure the placeholder is there. If grep doesn't find the placeholder
             # it exits with exit code 1 and github actions aborts the build. 
