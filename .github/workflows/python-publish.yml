@@ -54,8 +54,6 @@ jobs:
             pip install setuptools wheel twine
         - name: build manylinux
           uses: RalfG/python-wheels-manylinux-build@v0.3.3-manylinux2010_x86_64
-          with:
-            system-packages: 'libgcc libstdc++'
         - name: Build and publish
           env:
             TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
