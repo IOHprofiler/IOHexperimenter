@@ -30,10 +30,12 @@ iohprofiler = Extension('IOHexperimenter._IOHprofiler',
     extra_compile_args=extra_compile_args
 )
 
+__version__ = "auto"
+
 
 setup(
     name="IOHexperimenter",
-    version="0.2.8",
+    version=__version__,
     author="Furong Ye, Diederick Vermetten, and Hao Wang",
     author_email="f.ye@liacs.leidenuniv.nl",
     packages=find_packages(),
