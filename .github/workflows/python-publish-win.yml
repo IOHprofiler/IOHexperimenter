@@ -17,20 +17,23 @@ jobs:
           with:
             python-version: '3.x'
         - name: Install dependencies
+          shell: powershell
           run: |
             python -m pip install --upgrade pip
             pip install setuptools wheel twine
         - name: Autobump version
           run: |
-            $VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
-            $PLACEHOLDER='^__version__ = "auto"$'
+            $VERSION=(echo $GITHUB_REF | sed 's#.*/v##')
+            $PLACEHOLDER='__version__ = \"auto\"'
             $VERSION_FILE='setup.py'
             # ensure the placeholder is there. If grep doesn't find the placeholder
             # it exits with exit code 1 and github actions aborts the build. 
             echo $VERSION
             grep "$PLACEHOLDER" "$VERSION_FILE"
             sed -i "s/$PLACEHOLDER/__version__ = \"${VERSION}\"/g" "$VERSION_FILE"
+          shell: powershell
         - name: Build and publish
+          shell: powershell
           env:
             TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
             TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
