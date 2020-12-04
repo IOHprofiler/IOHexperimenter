@@ -118,7 +118,7 @@ namespace ioh {
             static int bit(const double p = 0.5) {
                 static std::random_device rd;
                 static std::mt19937 gen(rd());
-                const std::bernoulli_distribution d(p);
+                std::bernoulli_distribution d(p);
                 return d(gen);
             }
 
@@ -133,7 +133,7 @@ namespace ioh {
                                >::max()) {
                 static std::random_device rd;
                 static std::mt19937 gen(rd());
-                const std::uniform_int_distribution<int> d(min, max);
+                std::uniform_int_distribution<int> d(min, max);
                 return d(gen);
             }
 
