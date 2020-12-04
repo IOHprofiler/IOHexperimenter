@@ -1,99 +1,87 @@
-/// \file observer_combine.h
-/// \brief Header file for class observer_combine.
-///
-/// \author Johann Dreo
-
 #pragma once
 
-#include <vector>
 #include "observer.hpp"
+#include <utility>
+#include <vector>
 
 
-namespace ioh
-{
-	namespace logger
-	{
-		/** An observer that can hold several observers and call them all.
-		 *
-		 * Useful if one want to use several loggers without having to manage them
-		 * separately.
-		 *
-		 * Example:
-		 * @code
-			BBOB_suite bench({1},{2},{3});
-			using Input = BBOB_suite::Input_type;
+namespace ioh {
+    namespace logger {
+        /** An observer that can hold several observers and call them all.
+         *
+         * Useful if one want to use several loggers without having to manage them
+         * separately.
+         *
+         * Example:
+         * @code
+                BBOB_suite bench({1},{2},{3});
+                using Input = BBOB_suite::Input_type;
+        
+                ecdf_logger<Input> log_ecdf(0,6e7,20, 0,100,20);
+                csv_logger<Input> log_csv;
+        
+                // Combine them all
+                observer_combine<Input> loggers(log_ecdf);
+                loggers.add(log_csv);
+        
+                // Now you can single call.
+                loggers.target_suite(bench);
+                // etc.
+         * @endcode
+         *
+         * @note: Loggers are guaranteed to be called in the order they are added.
+         */
+        template <class T>
+        class ObserverCombine : public Observer<T> {
+        public:
+            using input_type = T;
 
-			ecdf_logger<Input> log_ecdf(0,6e7,20, 0,100,20);
-			csv_logger<Input> log_csv;
+            /** Takes at least one mandatory observer,
+             * because an empty instance would be illogical.
+             */
+            explicit ObserverCombine(Observer<T> &observer)
+                : observers_(1, &observer) {
+            }
 
-			// Combine them all
-			observer_combine<Input> loggers(log_ecdf);
-			loggers.add(log_csv);
+            /** Handle several loggers at once, but you have to pass pointers.
+             *
+             * @note: you can use initializer lists to instanciate the given std::vector:
+             * @code
+                observer_combine loggers({log_ecdf, log_csv});
+             * @encode
+             */
+            explicit ObserverCombine(std::vector<Observer<T> *> observers)
+                : observers_(std::move(observers)) {
+                assert(!observers_.empty());
+            }
 
-			// Now you can single call.
-			loggers.target_suite(bench);
-			// etc.
-		 * @endcode
-		 *
-		 * @note: Loggers are guaranteed to be called in the order they are added.
-		 */
-		template <class T>
-		class observer_combine : public Observer<T>
-		{
-		public:
-			using InputType = T;
+            /** Add another observer to the list.
+             */
+            void add(Observer<T> &observer) {
+                observers_.push_back(&observer);
+            }
 
-			/** Takes at least one mandatory observer,
-			 * because an empty instance would be illogical.
-			 */
-			observer_combine(Observer<T>& observer) : _observers(1, &observer)
-			{
-			}
+            /** Observer interface @{ */
+            void track_suite(const suite::base<T> &suite) override {
+                for (auto &p : observers_)
+                    p->track_suite(suite);
+            }
 
-			/** Handle several loggers at once, but you have to pass pointers.
-			 *
-			 * @note: you can use initializer lists to instanciate the given std::vector:
-			 * @code
-			    observer_combine loggers({log_ecdf, log_csv});
-			 * @encode
-			 */
-			observer_combine(std::vector<Observer<T>*> observers) :
-				_observers(observers)
-			{
-				assert(_observers.size() > 0);
-			}
+            void track_problem(const T &pb) override {
+                for (auto &p : observers_)
+                    p->track_problem(pb);
+            }
 
-			/** Add another observer to the list.
-			 */
-			void add(Observer<T>& observer)
-			{
-				_observers.push_back(&observer);
-			}
+            void do_log(const std::vector<double> &logger_info) override {
+                for (auto &p : observers_)
+                    p->do_log(logger_info);
+            }
 
-			/** Observer interface @{ */
-			void track_suite(const suite::base<T>& suite) override
-			{
-				for (auto& p : _observers)
-					p->track_suite(suite);
-			}
+            /** @} */
 
-			void track_problem(const T& pb) override
-			{
-				for (auto& p : _observers)
-					p->track_problem(pb);
-			}
-
-			void do_log(const std::vector<double>& logger_info) override
-			{
-				for (auto& p : _observers)
-					p->do_log(logger_info);
-			}
-
-			/** @} */
-
-		protected:
-			//! Store the managed observers.
-			std::vector<Observer<T>*> _observers;
-		};
-	}
+        protected:
+            //! Store the managed observers.
+            std::vector<Observer<T> *> observers_;
+        };
+    }
 }

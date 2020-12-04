@@ -102,7 +102,7 @@ void combiner()
 	logger::ecdf<bbob::bbob_base> log_ecdf(0, 6e7, 20, 0, sample_size, 20);
 	logger::Csv<bbob::bbob_base> log_csv; // Use default arguments.
 
-	logger::observer_combine<bbob::bbob_base> loggers({&log_ecdf, &log_csv});
+	logger::ObserverCombine<bbob::bbob_base> loggers({&log_ecdf, &log_csv});
 	//
 	loggers.track_suite(bench);
 

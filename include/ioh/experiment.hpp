@@ -1,4 +1,4 @@
 #pragma once
 
-#include "experiment/experimenter.hpp"
 #include "experiment/configuration.hpp"
+#include "experiment/experimenter.hpp"

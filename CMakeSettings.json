@@ -18,7 +18,7 @@
         },
         {
           "name": "BUILD_DOCS",
-          "value": "True",
+          "value": "False",
           "type": "BOOL"
         }
       ]

@@ -12,21 +12,19 @@ namespace fs = std::filesystem;
 
 #include "log.hpp"
 
-namespace ioh::common::file
-{
-	/**
-	 * \brief Opens a file
-	 * \param filename The path of the file to be opened
-	 * \return a stream handle to the opened file
-	 */
-	inline std::ifstream open_file(fs::path& filename)
-	{
-		if (!fs::exists(filename))
-			log::error("Cannot find file " + filename.generic_string());
+namespace ioh::common::file {
+    /**
+     * \brief Opens a file
+     * \param filename The path of the file to be opened
+     * \return a stream handle to the opened file
+     */
+    inline std::ifstream open_file(fs::path &filename) {
+        if (!exists(filename))
+            log::error("Cannot find file " + filename.generic_string());
 
-		std::ifstream file(filename);
-		if (!file.is_open())
-			log::error("Cannot open file " + filename.generic_string());
-		return file;
-	}
+        std::ifstream file(filename);
+        if (!file.is_open())
+            log::error("Cannot open file " + filename.generic_string());
+        return file;
+    }
 }
