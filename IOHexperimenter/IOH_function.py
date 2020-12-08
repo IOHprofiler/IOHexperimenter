@@ -120,7 +120,7 @@ class IOH_function():
         pre-defined precision (default 0)
         '''
         if self.f.IOHprofiler_get_problem_type() == "bbob":
-            return self.f.IOHprofiler_get_best_so_far_raw_objectives()[0] <= self.precision
+            return  self.best_so_far_precision <= self.precision
         else:
             return self.f.IOHprofiler_get_best_so_far_raw_objectives()[0] >= self.f.IOHprofiler_get_optimal()[
                 0] - self.precision
@@ -145,7 +145,9 @@ class IOH_function():
         ------
         The raw (precision in case of bbob, untransformed objective in case of PBO) objective value
         '''
-        return self.f.IOHprofiler_get_best_so_far_raw_objectives()[0]
+        if self.f.IOHprofiler_get_problem_type() == "PBO":
+            return self.f.IOHprofiler_get_best_so_far_raw_objectives()[0]
+        return self.yopt - self.get_target(True)
 
     @property
     def best_so_far_variables(self):
