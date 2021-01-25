@@ -66,6 +66,9 @@ public:
     Coco_Transformation_Data::M = M;
     Coco_Transformation_Data::b = b;
     Coco_Transformation_Data::penalty_factor = penalty_factor;
+
+    Coco_Transformation_Data::lower_bound = -5.0;
+    Coco_Transformation_Data::upper_bound = 5.0;
   }
 
   double internal_evaluate(const std::vector<double> &x) {
