@@ -30,7 +30,7 @@ iohprofiler = Extension('IOHexperimenter._IOHprofiler',
     extra_compile_args=extra_compile_args
 )
 
-__version__ = "0.2.9.1"
+__version__ = "0.2.9.2"
 gh_ref = os.environ.get("GITHUB_REF")
 if gh_ref:
     *_, tag = gh_ref.split("/")
