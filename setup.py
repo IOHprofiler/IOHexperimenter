@@ -36,7 +36,6 @@ if gh_ref:
     *_, tag = gh_ref.split("/")
     __version__ = tag.replace("v", "")
     
-assert __version__ != "auto"
 
 
 setup(
