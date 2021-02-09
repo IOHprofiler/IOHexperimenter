@@ -42,9 +42,8 @@ namespace ioh::logger {
                   algorithm_info_(std::move(algorithm_info)) {
             }
 
-            static char maximization_flag(common::OptimizationType optimization_type) {
-                constexpr auto types = std::array<char, 2>{'F', 'T'};
-                return types[static_cast<int>(optimization_type)];
+            static char maximization_flag(const common::OptimizationType optimization_type) {
+                return optimization_type == common::OptimizationType::maximization ? 'T' : 'F';
             }
 
             void update_run_info(ProblemType const *current_problem) {
