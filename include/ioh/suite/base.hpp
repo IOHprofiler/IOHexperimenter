@@ -39,8 +39,8 @@ namespace ioh {
 
             }
 
-            base(const base &) = delete;
-            base &operator =(const base &) = delete;
+            // base(const base &) = delete;
+            // base &operator =(const base &) = delete;
 
             /// \fn virtual void registerProblem()
             /// \brief A virtual function for registering problems.
@@ -121,7 +121,7 @@ namespace ioh {
 
                 if (this->get_problem_flag == false)
                     this->get_problem_flag = true;
-
+                 
                 // TODO: this may introduce unwanted behavior				
                 this->current_problem = (*this)[problem_list_index];
                 this->current_problem->reset_problem();

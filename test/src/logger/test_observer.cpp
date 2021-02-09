@@ -1,33 +1,21 @@
 #include <iostream>
 
 #include "ioh.hpp"
-#include <gtest/gtest.h>
+#include <gtest/gtest.h> 
 
 
-class BaseLogger final : public ioh::logger::Observer<ioh::problem::bbob::bbob_base> {
-public:
-    using Observer::Observer;
-
-    void track_problem(const ioh::problem::bbob::bbob_base &problem) override {
-    }
-
-    void track_suite(const ioh::suite::base<ioh::problem::bbob::bbob_base> &suite) override {
-    }
-
-    void do_log(const std::vector<double> &log_info) override {
-    }
-};
+using ioh::logger::Observer;
 
 TEST(observer, always) {
-    const auto o1 = BaseLogger(true);
+    const auto o1 = Observer(true);
     ASSERT_TRUE(o1.trigger_always());
-    const auto o2 = BaseLogger(false);
+    const auto o2 = Observer(false);
     ASSERT_FALSE(o2.trigger_always());
 }
 
 
 TEST(observer, improvement) {
-    auto observer = BaseLogger(false);
+    auto observer = Observer(false);
     ASSERT_TRUE(observer.improvement_trigger(100.0));
     ASSERT_FALSE(observer.improvement_trigger(100.0));
     ASSERT_FALSE(observer.improvement_trigger(101.0));
@@ -35,7 +23,7 @@ TEST(observer, improvement) {
 }
 
 TEST(observer, interval) {
-    const auto observer = BaseLogger(false, 3);
+    const auto observer = Observer(false, 3);
     ASSERT_TRUE(observer.interval_trigger(1));
     ASSERT_FALSE(observer.interval_trigger(2));
     ASSERT_TRUE(observer.interval_trigger(3));
@@ -47,7 +35,7 @@ TEST(observer, interval) {
 
 
 TEST(observer, time_points) {
-    auto observer = BaseLogger(false, 0, 0,
+    auto observer = Observer(false, 0, 0,
                                false, {1, 5}
         );
 
@@ -69,7 +57,7 @@ TEST(observer, time_points) {
     ASSERT_TRUE(observer.time_points_trigger(500));
     ASSERT_FALSE(observer.time_points_trigger(510));
 
-    auto observer_base5 = BaseLogger(false, 0, 0,
+    auto observer_base5 = Observer(false, 0, 0,
                                      false, {1, 3},
                                      ioh::common::OptimizationType::minimization, 5);
 
@@ -89,7 +77,7 @@ TEST(observer, time_points) {
 
 
 TEST(observer, time_range) {
-    auto observer = BaseLogger(false, 0, 
+    auto observer = Observer(false, 0, 
         5);
 
     ASSERT_TRUE(observer.time_range_trigger(1));

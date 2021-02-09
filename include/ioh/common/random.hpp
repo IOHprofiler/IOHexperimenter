@@ -33,7 +33,6 @@ namespace ioh {
                         t -= 1.0;
                     this->x_[i] = t;
                 }
-                this->seed_index_ = 0;
             }
 
 
@@ -84,8 +83,10 @@ namespace ioh {
              * \return A uniform random number
              */
             double uniform() {
-                if (this->seed_index_ >= IOH_LONG_LAG)
+                if (this->seed_index_ >= IOH_LONG_LAG) {
                     generate();
+                    this->seed_index_ = 0;
+                }                   
                 return this->x_[this->seed_index_++];
             }
 
@@ -108,6 +109,16 @@ namespace ioh {
 				normal -= 6.0;
 #endif
                 return normal;
+            }
+
+            static std::vector<double> uniform(const unsigned int n) {
+                static std::default_random_engine re;
+                std::uniform_real_distribution<double> d(0, 1);
+                
+                std::vector<double> x;
+                for (unsigned int i = 0; i < n; i++)
+                    x.emplace_back(d(re));
+                return x;
             }
 
             /**

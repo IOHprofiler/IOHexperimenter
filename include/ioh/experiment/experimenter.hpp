@@ -27,7 +27,7 @@ namespace ioh {
                                         >);
 
             /**
-             * \brief A shorthand for accessing the class factory (\ref ioh::common::Factory for suites.
+             * \brief A shorthand for accessing the class factory (\ref ioh::common::Factory) for suites.
              */
             typedef common::Factory<suite::base<ProblemType>,
                                     std::vector<int>, std::vector<int>,
@@ -55,19 +55,15 @@ namespace ioh {
                 auto instances = conf_.get_instance_id();
                 auto dimensions = conf_.get_dimension();
 
-                suite_ = suite_factory::get().create(
-                    suite_name, problems, instances,
-                    dimensions);
+                suite_ = suite_factory::get().create(suite_name, problems, instances, dimensions);
 
                 if (suite_ == nullptr)
-                    common::log::error(
-                        "Creating suite fails, please check your Configuration");
+                    common::log::error("Creating suite fails, please check your Configuration");
 
                 csv_logger_ = std::make_shared<logger::Csv<ProblemType>>(conf_);
 
                 if (csv_logger_ == nullptr)
-                    common::log::error(
-                        "Creating logger fails, please check your Configuration");
+                    common::log::error("Creating logger fails, please check your Configuration");
             }
 
             /**
@@ -130,8 +126,7 @@ namespace ioh {
              * \brief Get method for \ref suite_
              * \return Private \ref suite_
              */
-            [[nodiscard]] std::shared_ptr<suite::base<ProblemType>>
-            get_suite() const {
+            [[nodiscard]] std::shared_ptr<suite::base<ProblemType>> get_suite() const {
                 return suite_;
             }
 
@@ -139,7 +134,7 @@ namespace ioh {
              * \brief Get method for \ref current_problem_
              * \return Private \ref current_problem_
              */
-            std::shared_ptr<ProblemType> get_current_problem() const {
+            [[nodiscard]] std::shared_ptr<ProblemType> get_current_problem() const {
                 return current_problem_;
             }
 
@@ -147,7 +142,7 @@ namespace ioh {
              * \brief Get method for \ref csv_logger_
              * \return Private \ref csv_logger_
              */
-            std::shared_ptr<logger::Csv<ProblemType>> get_logger() const {
+            [[nodiscard]] std::shared_ptr<logger::Csv<ProblemType>> get_logger() const {
                 return csv_logger_;
             }
 
@@ -157,16 +152,12 @@ namespace ioh {
              * \param obj The Experimenter object
              * \return The output steam
              */
-            friend std::ostream &operator<<(std::ostream &os,
-                                            const Experimenter &obj) {
+            friend std::ostream &operator<<(std::ostream &os, const Experimenter &obj) {
                 return os << "Experiment"
                        << "\nSuite: " << obj.suite_->get_suite_name()
-                       << "\nProblem: " << common::vector_to_string(
-                           obj.suite_->get_problem_id())
-                       << "\nInstance: " << common::vector_to_string(
-                           obj.suite_->get_instance_id())
-                       << "\nDimension: " << common::vector_to_string(
-                           obj.suite_->get_dimension());
+                       << "\nProblem: " << common::vector_to_string(obj.suite_->get_problem_id())
+                       << "\nInstance: " << common::vector_to_string(obj.suite_->get_instance_id())
+                       << "\nDimension: " << common::vector_to_string(obj.suite_->get_dimension());
             }
 
         private:

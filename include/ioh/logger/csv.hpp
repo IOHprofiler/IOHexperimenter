@@ -1,16 +1,15 @@
 #pragma once
 
+#include "base.hpp"
 #include "observer.hpp"
 #include "ioh/common.hpp"
 
+#include <array>
+
 namespace ioh {
     namespace logger {
-        /// \brief A class of logging csv files.
-        /// 
-        /// To activate logger functions as evaluating problems,  a 'logger' must be added to
-        /// problem by the statement 'problem.add_logger(logger)'.
         template <class T>
-        class Csv : public Observer<T> {
+        class Csv : public Base<T>, public Observer {
             // The information for directory.
             std::string folder_name;
             fs::path output_directory;
@@ -18,11 +17,9 @@ namespace ioh {
             // The information for logging.
             std::string algorithm_name;
             std::string algorithm_info;
-            common::OptimizationType maximization_minimization_flag =
-                common::OptimizationType::maximization;
+            common::OptimizationType maximization_minimization_flag = common::OptimizationType::maximization;
             std::map<std::string, std::string> attr_per_exp_name_value;
-            std::map<std::string, std::shared_ptr<double>>
-            attr_per_run_name_value;
+            std::map<std::string, std::shared_ptr<double>> attr_per_run_name_value;
 
             std::string suite_name = "No suite";
 
@@ -77,8 +74,7 @@ namespace ioh {
                 auto index = 0;
                 while (exists(renamed_directory)) {
                     ++index;
-                    temp_folder_name = folder_name + '-' + common::to_string(
-                                           index);
+                    temp_folder_name = folder_name + '-' + common::to_string(index);
                     renamed_directory = output_directory / temp_folder_name;
                 }
                 folder_name = temp_folder_name;
@@ -97,6 +93,7 @@ namespace ioh {
             std::string dat_header() const {
                 std::string dat_header =
                     "\"function evaluation\" \"current f(x)\" \"best-so-far f(x)\" \"current af(x)+b\"  \"best af(x)+b\"";
+
                 if (logging_parameters.size() != 0)
                     for (auto const &e : logging_parameters)
                         dat_header += " \"" + e.first + "\"";
@@ -112,6 +109,7 @@ namespace ioh {
 
                     if (handle.is_open())
                         handle.close();
+
                     handle.open(file_path.c_str(),
                                 std::ofstream::out | std::ofstream::app);
                     buffer = "";
@@ -121,8 +119,7 @@ namespace ioh {
                 }
             }
 
-            static void
-            write_handle(std::fstream &handle, std::string &buffer) {
+            static void write_handle(std::fstream &handle, std::string &buffer) {
                 if (handle.is_open()) {
                     write_stream(buffer, handle);
                     handle.flush();
@@ -144,12 +141,9 @@ namespace ioh {
                 if (!exists(sub_dir))
                     create_folder(sub_dir);
 
-                recreate_handle(this->trigger_always(), ".cdat", cdat,
-                                cdat_buffer);
-                recreate_handle(this->trigger_at_interval(), ".idat", idat,
-                                idat_buffer);
-                recreate_handle(this->trigger_on_improvement(), ".dat", dat,
-                                dat_buffer);
+                recreate_handle(this->trigger_always(), ".cdat", cdat, cdat_buffer);
+                recreate_handle(this->trigger_at_interval(), ".idat", idat, idat_buffer);
+                recreate_handle(this->trigger_on_improvement(), ".dat", dat, dat_buffer);
                 recreate_handle(this->trigger_at_time_points() || this->trigger_at_time_range(), ".tdat", tdat,
                                 tdat_buffer);
             }
@@ -166,8 +160,7 @@ namespace ioh {
                 if (!dat_stream.is_open())
                     common::log::error("file is not open");
 
-                if (buffer_string.size() + add_string.size() <
-                    IOH_MAX_BUFFER_SIZE) {
+                if (buffer_string.size() + add_string.size() < IOH_MAX_BUFFER_SIZE) {
                     buffer_string = buffer_string + add_string;
                 } else {
                     write_stream(buffer_string, dat_stream);
@@ -209,11 +202,11 @@ namespace ioh {
              * \param conf a \ref experiment::Configuration object
              */
             explicit Csv(const experiment::Configuration &conf)
-                : Observer<T>(conf.get_complete_triggers(),
-                              conf.get_number_interval_triggers(),
-                              conf.get_number_target_triggers(),
-                              conf.get_update_triggers(),
-                              conf.get_base_evaluation_triggers()),
+                : Observer(conf.get_complete_triggers(),
+                           conf.get_number_interval_triggers(),
+                           conf.get_number_target_triggers(),
+                           conf.get_update_triggers(),
+                           conf.get_base_evaluation_triggers()),
                   folder_name{conf.get_result_folder()},
                   output_directory{conf.get_output_directory()},
                   algorithm_name{conf.get_algorithm_name()},
@@ -221,31 +214,28 @@ namespace ioh {
                 open_index();
             }
 
-            ~Csv() override {
+            ~Csv() {
                 clear_logger();
             }
 
-            fs::path experiment_directory() const {
+            [[nodiscard]] fs::path experiment_directory() const {
                 return absolute(output_directory / folder_name);
             }
 
-            fs::path sub_directory() const {
-                return experiment_directory() /
-                       ("data_f" + common::to_string(problem_id) + "_" +
-                        problem_name);
+            [[nodiscard]] fs::path sub_directory() const {
+                return experiment_directory() / ("data_f" + common::to_string(problem_id) + "_" + problem_name);
             }
 
-            fs::path get_file_path(const std::string &ext) const {
+            [[nodiscard]] fs::path get_file_path(const std::string &ext) const {
                 return sub_directory() /
                        ("IOHprofiler_f" + common::to_string(problem_id)
                         + "_DIM" + common::to_string(dimension) + ext);
             }
 
-            fs::path get_info_file_path() const {
+            [[nodiscard]] fs::path get_info_file_path() const {
                 return experiment_directory() /
                        ("IOHprofiler_f" + common::to_string(problem_id) + "_" +
-                        problem_name
-                        + ".info");
+                        problem_name + ".info");
             }
 
             void clear_logger() {
@@ -302,22 +292,16 @@ namespace ioh {
                 best_transformed_y.clear();
                 last_y.clear();
                 last_transformed_y.clear();
-                if (maximization_minimization_flag ==
-                    common::OptimizationType::maximization
-                ) {
+                if (maximization_minimization_flag == common::OptimizationType::maximization) {
                     best_y.push_back(-std::numeric_limits<double>::max());
-                    best_transformed_y.push_back(
-                        -std::numeric_limits<double>::max());
+                    best_transformed_y.push_back(-std::numeric_limits<double>::max());
                     last_y.push_back(-std::numeric_limits<double>::max());
-                    last_transformed_y.push_back(
-                        -std::numeric_limits<double>::max());
+                    last_transformed_y.push_back(-std::numeric_limits<double>::max());
                 } else {
                     best_y.push_back(std::numeric_limits<double>::max());
-                    best_transformed_y.push_back(
-                        std::numeric_limits<double>::max());
+                    best_transformed_y.push_back(std::numeric_limits<double>::max());
                     last_y.push_back(std::numeric_limits<double>::max());
-                    last_transformed_y.push_back(
-                        std::numeric_limits<double>::max());
+                    last_transformed_y.push_back(std::numeric_limits<double>::max());
                 }
 
                 this->reset(maximization_minimization_flag);
@@ -325,10 +309,9 @@ namespace ioh {
                 this->dimension = dimension;
                 this->instance = instance;
                 this->problem_name = problem_name;
-                this->maximization_minimization_flag =
-                    maximization_minimization_flag;
+                this->maximization_minimization_flag = maximization_minimization_flag;
 
-                open_info(problem_id, dimension, problem_name);
+                open_info();
                 header_flag = false;
             }
 
@@ -351,119 +334,57 @@ namespace ioh {
                 track_suite(suite.get_suite_name());
             }
 
-            void open_info(int problem_id, int dimension,
-                           std::string problem_name) {
-                this->info_buffer = "";
-                std::string titleflag = "";
-                std::string optimization_type = maximization_minimization_flag
-                                                ==
-                                                common::OptimizationType::maximization
-                                                    ? "T"
-                                                    : "F";
+            void open_info() {
+                const auto optimization_type = std::array<std::string, 2>{"T", "F"}[0];
 
-                if (problem_id != this->last_problem_id) {
+                if (problem_id != this->last_problem_id || dimension != this->last_dimension) {
+                    if (this->info_file.is_open())
+                        this->info_file << "\n";
+
                     this->info_file.close();
-                    const auto infofile_path = output_directory / folder_name /
-                                               ("IOHprofiler_f" +
-                                                common::to_string(problem_id) +
-                                                "_" +
-                                                problem_name + ".info");
-
-                    if (exists(infofile_path))
-                        titleflag = "\n";
+                    const auto infofile_path = output_directory / folder_name / common::string_format(
+                                                   "IOHprofiler_f%d_%s.info", problem_id, problem_name.c_str());
 
                     this->info_file.open(infofile_path.c_str(),
                                          std::ofstream::out |
                                          std::ofstream::app);
-                    this->info_buffer += titleflag;
 
-                    this->info_buffer += "suite = \"" + this->suite_name +
-                        "\", funcId = " +
-                        common::to_string(problem_id) + ", funcName = \"" +
-                        problem_name +
-                        "\", DIM = " +
-                        common::to_string(dimension) + ", maximization = \"" +
-                        optimization_type + "\", algId = \"" +
-                        this->algorithm_name + "\", algInfo = \"" + this->
-                        algorithm_info +
-                        "\"";
+                    this->info_file << common::string_format(
+                        R"(suite = "%s", funcId = %d, funcName = "%s", DIM = %d, maximization = "%s", algId = "%s", algInfo = "%s")",
+                        suite_name.c_str(),
+                        problem_id,
+                        problem_name.c_str(),
+                        dimension,
+                        optimization_type.c_str(),
+                        algorithm_name.c_str(),
+                        algorithm_info.c_str()
+                        );
 
-                    if (this->attr_per_exp_name_value.size() != 0) {
-                        for (const auto &e : attr_per_exp_name_value)
-                            this->info_buffer += ", " + e.first + " = \"" + e.
-                                second + "\"";
-                    }
+                    for (const auto &[fst, snd] : attr_per_exp_name_value)
+                        this->info_file << common::string_format(R"(, %s = "%s")", fst.c_str(), snd.c_str());
 
-                    if (this->attr_per_run_name_value.size() != 0) {
-                        this->info_buffer += ", dynamicAttribute = \"";
-                        for (std::map<
-                                 std::string, std::shared_ptr<double>>::iterator
-                             iter =
-                                 this->
-                                 attr_per_run_name_value.begin();
-                             iter != this->attr_per_run_name_value.end();) {
-                            this->info_buffer += iter->first;
+                    if (!this->attr_per_run_name_value.empty()) {
+                        this->info_file << ", dynamicAttribute = \"";
+
+                        for (auto iter = this->
+                                         attr_per_run_name_value.begin(); iter != this->attr_per_run_name_value.end();
+                        ) {
+                            this->info_file << iter->first;
                             if (++iter != this->attr_per_run_name_value.end()) {
-                                this->info_buffer += "|";
+                                this->info_file << "|";
                             }
                         }
-                        this->info_buffer += "\"";
-                    }
-                    this->info_buffer += "\n%\n";
-                    this->info_buffer += "data_f" + common::to_string(
-                            problem_id) + "_" +
-                        problem_name +
-                        "/IOHprofiler_f" + common::to_string(problem_id) +
-                        "_DIM" +
-                        common::to_string(dimension) +
-                        ".dat";
-                    this->write_stream(this->info_buffer, this->info_file);
-                    this->info_buffer.clear();
-
-                    this->last_problem_id = problem_id;
-                    this->last_dimension = dimension;
-                } else if (dimension != this->last_dimension) {
-                    this->info_buffer += "\nsuite = \"" + this->suite_name +
-                        "\", funcId = " +
-                        common::to_string(problem_id) + ", funcName = \"" +
-                        problem_name +
-                        "\", DIM = " +
-                        common::to_string(dimension) + ", maximization = \"" +
-                        optimization_type + "\", algId = \"" +
-                        this->algorithm_name + "\", algInfo = \"" + this->
-                        algorithm_info +
-                        "\"";
-                    if (this->attr_per_exp_name_value.size() != 0) {
-                        for (const auto &[fst, snd] : attr_per_exp_name_value)
-                            this->info_buffer += ", " + fst + " = \"" + snd +
-                                "\"";
+                        this->info_file << "\"";
                     }
 
-                    if (this->attr_per_run_name_value.size() != 0) {
-                        this->info_buffer += ", dynamicAttribute = \"";
-                        for (std::map<
-                                 std::string, std::shared_ptr<double>>::iterator
-                             iter =
-                                 this->
-                                 attr_per_run_name_value.begin();
-                             iter != this->attr_per_run_name_value.end();) {
-                            this->info_buffer += iter->first;
-                            if (++iter != this->attr_per_run_name_value.end()) {
-                                this->info_buffer += "|";
-                            }
-                        }
-                        this->info_buffer += "\"";
-                    }
-                    this->info_buffer += "\n%\n";
-                    this->info_buffer += "data_f" + common::to_string(
-                            problem_id) + "_" +
-                        problem_name +
-                        "/IOHprofiler_f" + common::to_string(problem_id) +
-                        "_DIM" +
-                        common::to_string(dimension) +
-                        ".dat";
-                    this->write_stream(this->info_buffer, this->info_file);
-                    this->info_buffer.clear();
+                    this->info_file << "\n%\n" + common::string_format(
+                        R"(data_f%d_%s/IOHprofiler_f%d_DIM%d.dat)",
+                        problem_id,
+                        problem_name.c_str(),
+                        problem_id,
+                        dimension
+                        );
+
                     this->last_problem_id = problem_id;
                     this->last_dimension = dimension;
                 }
@@ -479,49 +400,32 @@ namespace ioh {
                     common::log::error(
                         "write_info(): writing info into unopened info_file");
 
-                this->info_buffer = "";
-                this->info_buffer += ", " + common::to_string(instance) + ":" +
-                    common::to_string(evaluations) + "|" +
-                    common::to_string(best_y);
-                if (this->attr_per_run_name_value.size() != 0) {
-                    this->info_buffer += ";";
-                    for (std::map<
-                             std::string, std::shared_ptr<double>>::iterator
-                         iter = this
-                                ->attr_per_run_name_value.
-                                begin();
-                         iter != this->attr_per_run_name_value.end();) {
-                        this->info_buffer += common::to_string(*iter->second);
+                this->info_file << ", " + common::to_string(instance) + ":" +
+                    common::to_string(evaluations) + "|" + common::to_string(best_y);
+
+                common::string_format(", %d:%d|%f", instance, evaluations, best_y);
+
+                if (!this->attr_per_run_name_value.empty()) {
+                    this->info_file << ";";
+                    for (auto iter = this->attr_per_run_name_value.
+                                           begin(); iter != this->attr_per_run_name_value.end();) {
+                        this->info_file << common::to_string(*iter->second);
                         if (++iter != this->attr_per_run_name_value.end()) {
-                            this->info_buffer += "|";
+                            this->info_file << "|";
                         }
                     }
                 }
-                this->write_stream(this->info_buffer, this->info_file);
-                this->info_buffer.clear();
 
                 if (evaluations != last_evaluations) // need write
                 {
                     auto written_line =
-                        common::to_string(last_evaluations) + " " +
-                        common::to_string(last_y) +
-                        " "
-                        + common::to_string(best_y) + " " + common::to_string(
-                            last_transformed_y) + " "
+                        common::to_string(last_evaluations) + " " + common::to_string(last_y) +
+                        " " + common::to_string(best_y) + " " + common::to_string(last_transformed_y) + " "
                         + common::to_string(best_transformed_y);
 
-                    if (this->logging_parameters.size() != 0) {
-                        for (std::map<
-                                 std::string, std::shared_ptr<double>>::iterator
-                             iter =
-                                 this->logging_parameters.
-                                       begin();
-                             iter != this->logging_parameters.end(); ++iter
-                        ) {
-                            written_line += " ";
-                            written_line += common::to_string(*iter->second);
-                        }
-                    }
+                    for (auto iter = this->logging_parameters.begin();
+                         iter != this->logging_parameters.end(); ++iter)
+                        written_line += " " + common::to_string(*iter->second);
 
                     written_line += '\n';
                     this->write_handle(cdat, cdat_buffer, written_line);
@@ -587,10 +491,8 @@ namespace ioh {
                                                 tdat_buffer, tdat);
                 }
 
-                if (common::compare_objectives(transformed_y,
-                                               this->best_transformed_y[0],
-                                               this->
-                                               maximization_minimization_flag))
+                if (common::compare_objectives(transformed_y, this->best_transformed_y[0],
+                                               this->maximization_minimization_flag))
                     this->update_logger_info(evaluations, y, transformed_y);
             }
 
@@ -601,6 +503,7 @@ namespace ioh {
                 this->best_y[0] = y;
                 this->best_transformed_y[0] = transformed_y;
             }
+
 
             void set_parameters(
                 const std::vector<std::shared_ptr<double>> &parameters) {
@@ -673,9 +576,7 @@ namespace ioh {
                         "Attributes and their names are given with different size.");
 
                 for (size_t i = 0; i != attributes_name.size(); i++)
-                    this->attr_per_run_name_value[attributes_name[i]] =
-                        std::make_shared<
-                            double>(initial_attributes[i]);
+                    this->attr_per_run_name_value[attributes_name[i]] = std::make_shared<double>(initial_attributes[i]);
             }
 
             void set_dynamic_attributes(
@@ -687,38 +588,30 @@ namespace ioh {
 
                 for (size_t i = 0; i != attributes_name.size(); ++i)
                     if (this->attr_per_run_name_value.find(attributes_name[i])
-                        != this->
-                           attr_per_run_name_value.end())
-                        *this->attr_per_run_name_value[attributes_name[i]] =
-                            attributes[i];
+                        != this->attr_per_run_name_value.end())
+                        *this->attr_per_run_name_value[attributes_name[i]] = attributes[i];
                     else
                         common::log::error(
                             "Dynamic attributes " + attributes_name[i] +
                             " does not exist");
             }
 
-            void set_parameters_name(
-                const std::vector<std::string> &parameters_name) {
+            void set_parameters_name(const std::vector<std::string> &parameters_name) {
                 if (this->logging_parameters.size() != 0)
                     this->logging_parameters.clear();
 
                 //default value set as -9999.
                 for (size_t i = 0; i != parameters_name.size(); i++)
-                    this->logging_parameters[parameters_name[i]] =
-                        std::make_shared<double>(-9999);
+                    this->logging_parameters[parameters_name[i]] = std::make_shared<double>(-9999);
             }
 
-            void set_parameters_name(
-                const std::vector<std::string> &parameters_name,
-                const std::vector<double> &initial_parameters) {
+            void set_parameters_name(const std::vector<std::string> &parameters_name,
+                                     const std::vector<double> &initial_parameters) {
                 if (parameters_name.size() != initial_parameters.size())
-                    common::log::error(
-                        "Parameters and their names are given with different size.");
+                    common::log::error("Parameters and their names are given with different size.");
 
                 for (size_t i = 0; i != parameters_name.size(); i++)
-                    this->logging_parameters[parameters_name[i]] =
-                        std::make_shared<double>(
-                            initial_parameters[i]);
+                    this->logging_parameters[parameters_name[i]] = std::make_shared<double>(initial_parameters[i]);
             }
 
             void set_parameters(const std::vector<std::string> &parameters_name,
@@ -728,11 +621,8 @@ namespace ioh {
                         "Parameters and their names are given with different size.");
 
                 for (size_t i = 0; i != parameters_name.size(); ++i)
-                    if (this->logging_parameters.find(parameters_name[i]) !=
-                        this->
-                        logging_parameters.end())
-                        *this->logging_parameters[parameters_name[i]] =
-                            parameters[i];
+                    if (this->logging_parameters.find(parameters_name[i]) != this->logging_parameters.end())
+                        *this->logging_parameters[parameters_name[i]] = parameters[i];
                     else
                         common::log::error(
                             "Parameter " + parameters_name[i] +

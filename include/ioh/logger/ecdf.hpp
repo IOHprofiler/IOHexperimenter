@@ -1,6 +1,6 @@
 #pragma once
 
-#include "observer.hpp"
+#include "base.hpp"
 #include <iostream>
 
 
@@ -148,7 +148,7 @@ namespace ioh {
          * @endcode
          */
         template <class T>
-        class ecdf : public Observer<T> {
+        class ecdf : public Base<T> {
         protected:
             /** Internal types  @{ */
             /** Keep essential metadata about the problem. */
@@ -165,7 +165,7 @@ namespace ioh {
 
         public:
             /** Scalar type of the solutions encoding the underlying (suite of) problems. */
-            using InputType = typename Observer<T>::input_type;
+            using input_type = typename Base<T>::input_type;
 
         public:
 
@@ -204,7 +204,7 @@ namespace ioh {
             }
 
         public:
-            /** Observer interface  @{ */
+            /** Base interface  @{ */
 
             //! Not used, but part of the interface.
             static void activate_logger() {

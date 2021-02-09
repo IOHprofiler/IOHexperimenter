@@ -1,5 +1,8 @@
 #pragma once
 
+#include <utility>
+
+
 #include "ioh/common.hpp"
 #include "ioh/suite.hpp"
 
@@ -14,9 +17,7 @@ namespace ioh {
          *	3. Recording evaluations as the best found solution is updated.
          *	4. Recording evaluations at pre-defined points
          *	5. With a static number for each exponential bucket.
-         * \tparam ProblemType The type of the observed problem. 
          */
-        template <typename ProblemType>
         class Observer {
             /**
              * \brief variable for recording complete optimization process. i.e. every iteration is stored
@@ -52,8 +53,7 @@ namespace ioh {
             /**
              * \brief The current best fitness value observed
              */
-            double current_best_fitness_;
-
+            double current_best_fitness_{};
 
             /**
              * \brief computes log(x)/log(b) and rounds to integer
@@ -69,41 +69,25 @@ namespace ioh {
 
 
         public:
-            /** API for subclasses @{ */
-            using input_type = ProblemType;
-
-            virtual void track_problem(const ProblemType &problem) = 0;
-
-            virtual void track_suite(const suite::base<ProblemType> &suite) = 0;
-
-            virtual void do_log(const std::vector<double> &log_info) = 0;
-
-            virtual ~Observer() {
-            }
-
-            /** }@ */
-
             explicit Observer(
                 const bool trigger_always = false,
                 const int trigger_on_interval = 0,
                 const int triggers_per_time_range = 0,
                 const bool trigger_on_improvement = true,
-                const std::vector<int> &trigger_at_time_points = {0},
-                const common::OptimizationType optimization_type =
-                    common::OptimizationType::minimization,
+                std::vector<int> trigger_at_time_points = {0},
+                const common::OptimizationType optimization_type = common::OptimizationType::minimization,
                 const int trigger_at_time_points_exp_base = 10,
                 const int trigger_at_range_exp_base = 10
                 )
                 : trigger_always_(trigger_always),
                   trigger_on_improvement_(trigger_on_improvement),
                   trigger_at_interval_(trigger_on_interval),
-                  trigger_at_time_points_(trigger_at_time_points),
+                  trigger_at_time_points_(std::move(trigger_at_time_points)),
                   trigger_at_time_points_exp_base_(trigger_at_time_points_exp_base),
                   triggers_per_time_range_(triggers_per_time_range),
                   triggers_per_time_range_exp_base_(trigger_at_range_exp_base) {
                 reset(optimization_type);
             }
-
 
             /**
              * \brief resets \ref current_best_fitness_
@@ -164,7 +148,7 @@ namespace ioh {
              */
             [[nodiscard]] bool
             interval_trigger(const size_t evaluations) const {
-                return trigger_at_interval_ != 0 && (evaluations == 1 || evaluations % trigger_at_interval_ == 0);
+                return trigger_at_interval() && (evaluations == 1 || evaluations % trigger_at_interval_ == 0);
             }
 
             /**
@@ -180,8 +164,8 @@ namespace ioh {
 
                 const auto base = compute_base(evaluations, triggers_per_time_range_exp_base_);
 
-                const auto start = static_cast<int>(pow(triggers_per_time_range_exp_base_, base));
-                const auto stop = static_cast<int>(pow(triggers_per_time_range_exp_base_, base + 1));
+                const auto start = static_cast<int>(std::pow(triggers_per_time_range_exp_base_, base));
+                const auto stop = static_cast<int>(std::pow(triggers_per_time_range_exp_base_, base + 1));
                 const auto interval = static_cast<int>(stop / triggers_per_time_range_);
 
                 return  (evaluations - start) % interval == 0;
@@ -199,14 +183,13 @@ namespace ioh {
                 if (!trigger_at_time_points())
                     return false;
 
-                const auto factor = pow(trigger_at_time_points_exp_base_,
+                const auto factor = std::pow(trigger_at_time_points_exp_base_,
                                         compute_base(evaluations, trigger_at_time_points_exp_base_));
 
                 for (const auto &e : trigger_at_time_points_) {
-                    if (evaluations == e * factor)
+                    if (evaluations == (e * factor))
                         return true;
                 }
-
                 return false;
             }
 

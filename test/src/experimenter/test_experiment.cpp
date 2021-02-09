@@ -29,12 +29,12 @@ void bbob_random_search(std::shared_ptr<ioh::problem::bbob::bbob_base> problem,
 	std::vector<double> x(n);
 	auto count = 0;
 	auto best_y = -std::numeric_limits<double>::infinity();
-	const auto seed = 42;
 	while (count++ <= 50)
 	{
-		ioh::common::Random::uniform(n, seed, x);
+		ioh::common::Random::uniform(n, count, x);
 		best_y = std::max(problem->evaluate(x), best_y);
 		logger->do_log(problem->loggerCOCOInfo());
+
 	}
 }
 
@@ -96,7 +96,7 @@ TEST(experiment, pbo_from_config)
 	ASSERT_TRUE(fs::is_directory(experiment.get_logger()->sub_directory()));
 	ASSERT_TRUE(fs::is_regular_file(experiment.get_logger()->get_info_file_path()));
 	ASSERT_TRUE(fs::is_regular_file(experiment.get_logger()->get_file_path(".dat")));
-	
+	experiment.get_logger()->clear_logger();
 	try
 	{
 		fs::remove_all(experiment.get_logger()->experiment_directory()); // Cleanup	
@@ -130,7 +130,7 @@ TEST(experiment, bbob)
 	ASSERT_TRUE(fs::is_directory(experiment.get_logger()->sub_directory()));
 	ASSERT_TRUE(fs::is_regular_file(experiment.get_logger()->get_info_file_path()));
 	ASSERT_TRUE(fs::is_regular_file(experiment.get_logger()->get_file_path(".dat")));
-
+	experiment.get_logger()->clear_logger();
 	try
 	{
 		fs::remove_all(experiment.get_logger()->experiment_directory()); // Cleanup	

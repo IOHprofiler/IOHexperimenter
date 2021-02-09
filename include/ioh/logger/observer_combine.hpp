@@ -21,7 +21,7 @@ namespace ioh {
                 csv_logger<Input> log_csv;
         
                 // Combine them all
-                observer_combine<Input> loggers(log_ecdf);
+                LoggerCombine<Input> loggers(log_ecdf);
                 loggers.add(log_csv);
         
                 // Now you can single call.
@@ -32,48 +32,48 @@ namespace ioh {
          * @note: Loggers are guaranteed to be called in the order they are added.
          */
         template <class T>
-        class ObserverCombine : public Observer<T> {
+        class LoggerCombine final : public Base<T> {
         public:
             using input_type = T;
 
             /** Takes at least one mandatory observer,
              * because an empty instance would be illogical.
              */
-            explicit ObserverCombine(Observer<T> &observer)
-                : observers_(1, &observer) {
+            explicit LoggerCombine(Base<T> &logger)
+                : loggers_(1, &logger) {
             }
 
             /** Handle several loggers at once, but you have to pass pointers.
              *
              * @note: you can use initializer lists to instanciate the given std::vector:
              * @code
-                observer_combine loggers({log_ecdf, log_csv});
+                LoggerCombine loggers({log_ecdf, log_csv});
              * @encode
              */
-            explicit ObserverCombine(std::vector<Observer<T> *> observers)
-                : observers_(std::move(observers)) {
-                assert(!observers_.empty());
+            explicit LoggerCombine(std::vector<Base<T> *> loggers)
+                : loggers_(std::move(loggers)) {
+                assert(!loggers_.empty());
             }
 
             /** Add another observer to the list.
              */
-            void add(Observer<T> &observer) {
-                observers_.push_back(&observer);
+            void add(Base<T> &observer) {
+                loggers_.push_back(&observer);
             }
 
-            /** Observer interface @{ */
+            /** Base interface @{ */
             void track_suite(const suite::base<T> &suite) override {
-                for (auto &p : observers_)
+                for (auto &p : loggers_)
                     p->track_suite(suite);
             }
 
             void track_problem(const T &pb) override {
-                for (auto &p : observers_)
+                for (auto &p : loggers_)
                     p->track_problem(pb);
             }
 
             void do_log(const std::vector<double> &logger_info) override {
-                for (auto &p : observers_)
+                for (auto &p : loggers_)
                     p->do_log(logger_info);
             }
 
@@ -81,7 +81,7 @@ namespace ioh {
 
         protected:
             //! Store the managed observers.
-            std::vector<Observer<T> *> observers_;
+            std::vector<Base<T> *> loggers_;
         };
     }
 }

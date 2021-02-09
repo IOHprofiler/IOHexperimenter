@@ -1,11 +1,12 @@
 #pragma once
+#include <numeric>
 #include "base.hpp"
 #include "ioh/problem/bbob.hpp"
 
 
 namespace ioh {
     namespace suite {
-        class bbob : public base<problem::bbob::bbob_base> {
+        class bbob : public base<problem::bbob::bbob_base> { 
         public:
             using input_type = double;
 
@@ -18,7 +19,7 @@ namespace ioh {
                     common::log::info(
                         "BBOB: no problem id provided, applying all functions..");
                     problem_id.resize(24);
-                    std::iota(std::begin(problem_id), std::end(problem_id), 1);
+                    std::iota(std::begin(problem_id), std::end(problem_id), 1); 
                 }
                 check_parameter_bounds(problem_id, 0, 24);
                 check_parameter_bounds(instance_id, 0, 100);

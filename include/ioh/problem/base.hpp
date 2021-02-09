@@ -1,7 +1,6 @@
 #pragma once
 
 #include <limits>
-#include <numeric>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -69,6 +68,8 @@ namespace ioh {
             /// < to record optimization process.
 
         public:
+            double t{};
+
             base(int instance_id = IOH_DEFAULT_INSTANCE,
                  int dimension = IOH_DEFAULT_DIMENSION)
                 : problem_id(IOH_DEFAULT_PROBLEM_ID),
@@ -174,26 +175,20 @@ namespace ioh {
              */
             double evaluate(std::vector<InputType> x) {
                 assert(this->raw_objectives.size() >= 1);
-                assert(
-                    this->transformed_objectives.size() == this->raw_objectives.
-                    size());
+                assert(this->transformed_objectives.size() == this->raw_objectives. size());
+
+                t = static_cast<double>(this->evaluations);
 
                 ++this->evaluations;
 
                 if (x.size() != this->number_of_variables) {
-                    common::log::warning(
-                        "The dimension of solution is incorrect.");
-                    if (this->maximization_minimization_flag ==
-                        common::OptimizationType::maximization) {
-                        this->raw_objectives[0] = std::numeric_limits<double
-                        >::lowest();
-                        this->transformed_objectives[0] = std::numeric_limits<
-                            double>::lowest();
+                    common::log::warning("The dimension of solution is incorrect.");
+                    if (this->maximization_minimization_flag == common::OptimizationType::maximization) {
+                        this->raw_objectives[0] = std::numeric_limits<double>::lowest();
+                        this->transformed_objectives[0] = std::numeric_limits<double>::lowest();
                     } else {
-                        this->raw_objectives[0] = std::numeric_limits<double
-                        >::max();
-                        this->transformed_objectives[0] = std::numeric_limits<
-                            double>::max();
+                        this->raw_objectives[0] = std::numeric_limits<double>::max();
+                        this->transformed_objectives[0] = std::numeric_limits<double>::max();
                     }
                     return this->transformed_objectives[0];
                 }
@@ -206,16 +201,11 @@ namespace ioh {
                 objectives_transformation(x, transformed_objectives, problem_id,
                                           instance_id);
 
-                if (common::compare_objectives(this->transformed_objectives,
-                                               this->
-                                               best_so_far_transformed_objectives,
-                                               this->
-                                               maximization_minimization_flag)
+                if (common::compare_objectives(this->transformed_objectives, this->best_so_far_transformed_objectives,
+                                               this->maximization_minimization_flag)
                 ) {
-                    this->best_so_far_transformed_objectives = this->
-                        transformed_objectives;
-                    this->best_so_far_transformed_evaluations = this->
-                        evaluations;
+                    this->best_so_far_transformed_objectives = this->transformed_objectives;
+                    this->best_so_far_transformed_evaluations = this->evaluations;
                     this->best_so_far_raw_objectives = this->raw_objectives;
                     this->best_so_far_raw_evaluations = this->evaluations;
                 }
@@ -328,17 +318,12 @@ namespace ioh {
                 this->best_so_far_transformed_evaluations = 0;
                 this->optimalFound = false;
                 for (size_t i = 0; i != this->number_of_objectives; ++i) {
-                    if (this->maximization_minimization_flag ==
-                        common::OptimizationType::maximization) {
-                        this->best_so_far_raw_objectives[i] =
-                            std::numeric_limits<double>::lowest();
-                        this->best_so_far_transformed_objectives[i] =
-                            std::numeric_limits<double>::lowest();
+                    if (this->maximization_minimization_flag == common::OptimizationType::maximization) {
+                        this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::lowest();
+                        this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::lowest();
                     } else {
-                        this->best_so_far_raw_objectives[i] =
-                            std::numeric_limits<double>::max();
-                        this->best_so_far_transformed_objectives[i] =
-                            std::numeric_limits<double>::max();
+                        this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::max();
+                        this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::max();
                     }
                 }
                 this->prepare_problem();
@@ -357,11 +342,8 @@ namespace ioh {
             std::vector<double> loggerCOCOInfo() const {
                 std::vector<double> logger_info(5);
                 logger_info[0] = static_cast<double>(this->evaluations);
-                logger_info[1] =
-                    this->transformed_objectives[0] - this->optimal[0];
-                logger_info[2] =
-                    this->best_so_far_transformed_objectives[0] - this->optimal
-                    [0];
+                logger_info[1] = this->transformed_objectives[0] - this->optimal[0];
+                logger_info[2] = this->best_so_far_transformed_objectives[0] - this->optimal[0];
                 logger_info[3] = this->transformed_objectives[0];
                 logger_info[4] = this->best_so_far_transformed_objectives[0];
                 return logger_info;
@@ -598,27 +580,18 @@ namespace ioh {
              */
             void set_number_of_objectives(int number_of_objectives) {
                 this->number_of_objectives = number_of_objectives;
-                this->raw_objectives = std::vector<double>(
-                    this->number_of_objectives);
-                this->transformed_objectives = std::vector<double>(
-                    this->number_of_objectives);
-                if (this->maximization_minimization_flag ==
-                    common::OptimizationType::maximization) {
-                    this->best_so_far_raw_objectives = std::vector<double>(
-                        this->number_of_objectives,
-                        std::numeric_limits<double>::lowest());
-                    this->best_so_far_transformed_objectives = std::vector<
-                        double>(
-                        this->number_of_objectives,
-                        std::numeric_limits<double>::lowest());
+                this->raw_objectives = std::vector<double>(this->number_of_objectives);
+                this->transformed_objectives = std::vector<double>(this->number_of_objectives);
+                if (this->maximization_minimization_flag == common::OptimizationType::maximization) {
+                    this->best_so_far_raw_objectives = std::vector<double>(this->number_of_objectives,
+                                                                           std::numeric_limits<double>::lowest());
+                    this->best_so_far_transformed_objectives = std::vector<double>(
+                        this->number_of_objectives, std::numeric_limits<double>::lowest());
                 } else {
-                    this->best_so_far_raw_objectives = std::vector<double>(
-                        this->number_of_objectives,
-                        std::numeric_limits<double>::max());
-                    this->best_so_far_transformed_objectives = std::vector<
-                        double>(
-                        this->number_of_objectives,
-                        std::numeric_limits<double>::max());
+                    this->best_so_far_raw_objectives = std::vector<double>(this->number_of_objectives,
+                                                                           std::numeric_limits<double>::max());
+                    this->best_so_far_transformed_objectives = std::vector<double>(
+                        this->number_of_objectives, std::numeric_limits<double>::max());
                 }
                 this->optimal = std::vector<double>(this->number_of_objectives);
             }

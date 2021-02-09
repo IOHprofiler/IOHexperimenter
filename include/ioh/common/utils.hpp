@@ -3,9 +3,12 @@
 
 #include <algorithm>
 #include <ctime>
+#include <cmath>
 #include <iostream>
 #include <iterator>
+#include <memory>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -130,6 +133,18 @@ namespace ioh {
         }
 
         /**
+         * \brief Checks an checked of doubles for nan values
+         * \param x vector to be checked
+         * \return true if x contains a nan value
+         */
+        static bool has_nan(const std::vector<double> &x) {
+            for (const auto& e : x)
+                if (std::isnan(e))
+                    return true;
+            return false;
+        }
+
+        /**
          * \brief Retrieves an integer vector from a string
          * \param input a string in one the supported formats:
          *	'-m', [_min, m]
@@ -220,12 +235,32 @@ namespace ioh {
          */
         template <typename T>
         static std::string vector_to_string(std::vector<T> v) {
+            // NOLINT(clang-diagnostic-unused-template)
             std::ostringstream oss;
             std::copy(v.begin(), v.end(),
                       std::ostream_iterator<T>(oss, " "));
             auto result = oss.str();
             result.pop_back();
             return result;
+        }
+
+
+        /**
+         * \brief String formatting helper function. Leverages sprintf
+         * \tparam Args The arguments template
+         * \param format the string containing the format
+         * \param args the arguments for formatting
+         * \return formatted string
+         */
+        template <typename ... Args>
+        std::string string_format(const std::string &format, Args ... args) {
+            const size_t size = snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
+            if (size <= 0) {
+                throw std::runtime_error("Error during formatting.");
+            }
+            const std::unique_ptr<char[]> buf(new char[size]);
+            snprintf(buf.get(), size, format.c_str(), args ...);
+            return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
         }
 
         /**
@@ -337,6 +372,7 @@ namespace ioh {
                                             const int max) const {
                 return get_int_vector_parse_string(get(section, key), min, max);
             }
+
         };
 
 
