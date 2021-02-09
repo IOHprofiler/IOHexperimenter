@@ -24,10 +24,9 @@ namespace ioh {
                           const int instance_id = IOH_DEFAULT_INSTANCE,
                           const int dimension = IOH_DEFAULT_DIMENSION)
                     : rseed_(
-                          (problem_id == 4 || problem_id == 18
-                               ? problem_id - 1
-                               : problem_id) +
-                          10000 * instance_id),
+                      (problem_id == 4 || problem_id == 18
+                           ? problem_id - 1
+                           : problem_id) + 10000 * instance_id),
                       fopt_(
                           transformation::coco::bbob2009_compute_fopt(
                               problem_id, instance_id)),

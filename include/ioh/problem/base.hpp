@@ -161,7 +161,7 @@ namespace ioh {
             // }
 
             /** \fn double evaluate(std::vector<InputType> x)
-             *  \brife A common function for evaluating fitness of problems.
+             *  \brief A common function for evaluating fitness of problems.
              * 
              * Raw evaluate process, tranformation operations, and logging process are 
              * executed in this function.
@@ -169,8 +169,8 @@ namespace ioh {
              * \return A double vector of objectives.
              */
             double evaluate(std::vector<InputType> x) {
-                assert(this->raw_objectives.size() >= 1);
-                assert(this->transformed_objectives.size() == this->raw_objectives. size());
+                assert(!this->raw_objectives.empty());
+                assert(this->transformed_objectives.size() == this->raw_objectives.size());
 
                 t = static_cast<double>(this->evaluations);
 
@@ -269,8 +269,7 @@ namespace ioh {
                     /// Do not apply transformation on best_variables as calculating the optimum
                     if (this->number_of_objectives == 1)
 
-                        this->optimal[0] = internal_evaluate(
-                            this->best_variables);
+                        this->optimal[0] = internal_evaluate(this->best_variables);
                     else
                         common::log::error(
                             "Multi-objectives optimization is not supported now.");
