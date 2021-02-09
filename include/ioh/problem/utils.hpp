@@ -49,7 +49,7 @@ namespace ioh {
 
             static std::vector<int> neutrality(
                 const std::vector<int> &variables, int mu) {
-                const auto number_of_variables = variables.size();
+                const auto number_of_variables = static_cast<int>(variables.size());
                 const auto n = static_cast<int>(floor(
                     static_cast<double>(number_of_variables) / static_cast<
                         double>(mu)));
@@ -76,8 +76,7 @@ namespace ioh {
             static std::vector<int> epistasis(const std::vector<int> &variables,
                                               int v) {
                 int epistasis_result;
-                const auto number_of_variables = static_cast<int>(variables.
-                    size());
+                const auto number_of_variables = static_cast<int>(variables.size());
                 std::vector<int> new_variables;
                 new_variables.reserve(number_of_variables);
                 auto h = 0;
@@ -247,7 +246,7 @@ namespace ioh {
             static void epistasis_compute(const std::vector<int> &xIn,
                                           std::vector<int> &xOut,
                                           const int nu) {
-                const auto length = xIn.size();
+                const auto length = static_cast<int>(xIn.size());
                 const auto end = length - nu;
                 int i;
                 for (i = 0; i <= end; i += nu) {
@@ -277,7 +276,7 @@ namespace ioh {
                     start = 0;
                 } else {
                     start = q - 1 - static_cast<int>(0.5 + sqrt(
-                                0.25 + (max - gamma << 1)));
+                                0.25 + ((max - gamma) << 1)));
                 }
                 auto k = 0;
                 for (j = 1; j <= start; j++) {
@@ -316,14 +315,14 @@ namespace ioh {
                 }
                 const auto g = gamma;
                 const auto max = max_gamma(q);
-                const auto lastUpper = (q >> 1) * (q + 1 >> 1);
+                const auto lastUpper = (q >> 1) * ((q + 1) >> 1);
                 if (g <= lastUpper) {
                     j = abs(
                         static_cast<int>((q + 2) * 0.5 - sqrt(
                                              q * q * 0.25 + 1 - g)));
 
                     k = g - (q + 2) * j + j * j + q;
-                    return k + 1 + ((q + 2) * j - j * j - q - 1 << 1) - (j - 1);
+                    return k + 1 + (((q + 2) * j - j * j - q - 1) << 1) - (j - 1);
                 }
 
                 j = abs(static_cast<int>((q % 2 + 1) * 0.5
@@ -337,18 +336,17 @@ namespace ioh {
             }
 
 
-            static double
-            layer_compute_ruggedness(const double y, int dimension, int gamma) {
-                auto r = ruggedness_raw(ruggedness_translate(gamma, dimension),
-                                        dimension);
-                const double result = r[static_cast<int>(y)];
-
-                /*for(i=0;i<dimension+1;i++){fprintf(stderr,"%d ",r[i]);}fprintf(stderr,"\n");
-              
-                fprintf(stderr,"dim %d val %f, result %f\n",dimension,y,result);*/
-                assert(result <= static_cast<double>(dimension));
-                return result;
-            }
+            // static double layer_compute_ruggedness(const double y, int dimension, int gamma) {
+            //     auto r = ruggedness_raw(ruggedness_translate(gamma, dimension),
+            //                             dimension);
+            //     const double result = r[static_cast<int>(y)];
+            //
+            //     /*for(i=0;i<dimension+1;i++){fprintf(stderr,"%d ",r[i]);}fprintf(stderr,"\n");
+            //   
+            //     fprintf(stderr,"dim %d val %f, result %f\n",dimension,y,result);*/
+            //     assert(result <= static_cast<double>(dimension));
+            //     return result;
+            // }
         }
     }
 }

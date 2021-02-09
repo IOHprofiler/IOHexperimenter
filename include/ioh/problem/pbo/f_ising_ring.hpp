@@ -16,9 +16,10 @@ namespace ioh {
                        **/
                 Ising_Ring(int instance_id = IOH_DEFAULT_INSTANCE,
                            int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(19, "Ising_Ring", instance_id) {
+                    : pbo_base(19, "Ising_Ring", instance_id, dimension) {
                     set_best_variables(1);
                     set_number_of_variables(dimension);
+
                 }
 
                 static int modulo_ising_ring(int x, int N) {
@@ -26,12 +27,9 @@ namespace ioh {
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
-                    auto result = 0;
-                    const auto n = x.size();
-
-                    for (auto i = 0; i < n; ++i) {
-                        const auto neig = x[modulo_ising_ring(
-                            i - 1, static_cast<int>(n))];
+                    auto result = 0.0;
+                    for (auto i = 0; i < n_; ++i) {
+                        const auto neig = x[modulo_ising_ring(i - 1, n_)];
                         result += x[i] * neig + (1 - x[i]) * (1 - neig);
                     }
                     return static_cast<double>(result);

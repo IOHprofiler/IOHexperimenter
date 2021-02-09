@@ -6,11 +6,15 @@ namespace ioh {
     namespace problem {
         namespace pbo {
             class pbo_base : public base<int> {
+            protected:
+                int n_;
             public:
                 pbo_base() = default;
 
                 pbo_base(int problem_id, std::string problem_name,
-                         int instance_id = IOH_DEFAULT_INSTANCE) {
+                         int instance_id = IOH_DEFAULT_INSTANCE,
+                         int dimension = IOH_DEFAULT_DIMENSION
+                    ): n_(dimension) {
                     set_problem_id(problem_id);
                     set_instance_id(instance_id);
                     set_problem_name(problem_name);
@@ -18,6 +22,7 @@ namespace ioh {
                     set_number_of_objectives(1);
                     set_lowerbound(0);
                     set_upperbound(1);
+                    set_number_of_variables(dimension);
                 }
 
                 void objectives_transformation(const std::vector<int> &x,

@@ -46,7 +46,7 @@ namespace ioh {
                 double internal_evaluate(
                     const std::vector<double> &x) override {
                     auto result = 0.0;
-                    for (size_t i = 0; i < n_ - 1; ++i) {
+                    for (auto i = 0; i < n_ - 1; ++i) {
                         const auto tmp = x[i] * x[i] + x[i + 1] * x[i + 1];
                         if (std::isinf(tmp) && std::isnan(
                                 sin(50.0 * pow(tmp, 0.1))))

@@ -22,7 +22,7 @@ namespace ioh {
                     const std::vector<double> &x) override {
                     auto sum1 = 0.0, sum2 = 0.0;
 
-                    for (size_t i = 0; i < n_; ++i) {
+                    for (auto i = 0; i < n_; ++i) {
                         sum1 += cos(2.0 * transformation::coco::coco_pi * x[i]);
                         sum2 += x[i] * x[i];
                     }

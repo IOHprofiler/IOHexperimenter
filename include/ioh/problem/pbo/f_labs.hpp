@@ -15,7 +15,7 @@ namespace ioh {
                        **/
                 LABS(int instance_id = IOH_DEFAULT_INSTANCE,
                      int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(18, "LABS", instance_id) {
+                    : pbo_base(18, "LABS", instance_id, dimension) {
                     set_number_of_variables(dimension);
                 }
 
@@ -40,13 +40,12 @@ namespace ioh {
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
-                    const auto n = x.size();
                     auto result = 0.0;
-                    for (auto k = 1; k != n; ++k) {
-                        const auto cor = correlation(x, static_cast<int>(n), k);
+                    for (auto k = 1; k != n_; ++k) {
+                        const auto cor = correlation(x, n_, k);
                         result += cor * cor;
                     }
-                    result = static_cast<double>(n * n) / 2.0 / result;
+                    result = static_cast<double>(n_ * n_) / 2.0 / result;
                     return static_cast<double>(result);
                 }
 

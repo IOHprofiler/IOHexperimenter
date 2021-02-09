@@ -15,7 +15,7 @@ namespace ioh {
                        **/
                 Ising_Torus(int instance_id = IOH_DEFAULT_INSTANCE,
                             int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(20, "Ising_Torus", instance_id) {
+                    : pbo_base(20, "Ising_Torus", instance_id, dimension) {
                     set_best_variables(1);
                     set_number_of_variables(dimension);
                 }
@@ -25,36 +25,25 @@ namespace ioh {
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
-                    const auto n = x.size();
                     auto result = 0.0;
                     int neighbors[2];
-                    const auto lattice_size = static_cast<int>(sqrt(
-                        static_cast<double>(n)));
+                    const auto lattice_size = static_cast<int>(sqrt(static_cast<double>(n_)));
 
-                    if (floor(sqrt(static_cast<double>(n))) != sqrt(
-                            static_cast<double>(n))) {
+                    if (floor(sqrt(static_cast<double>(n_))) != sqrt(static_cast<double>(n_))) {
                         common::log::error(
                             "Number of parameters in the Ising square problem must be a square number");
                     }
 
                     for (auto i = 0; i < lattice_size; ++i) {
                         for (auto j = 0; j < lattice_size; ++j) {
-                            neighbors[0] = x[modulo_ising_torus(
-                                                 i + 1, lattice_size) *
-                                             lattice_size
-                                             + j];
-                            neighbors[1] = x[
-                                lattice_size * i + modulo_ising_torus(
-                                    j + 1, lattice_size)];
-                            for (auto neig = 0; neig < 2; neig++) {
-                                result += x[lattice_size * i + j] * neighbors[
-                                        neig] + (
-                                        1 - x[i * lattice_size + j]) *
-                                    (1 - neighbors[neig]);
+                            neighbors[0] = x[modulo_ising_torus(i + 1, lattice_size) * lattice_size + j];
+                            neighbors[1] = x[lattice_size * i + modulo_ising_torus(j + 1, lattice_size)];
+                            for (auto neighbor = 0; neighbor < 2; neighbor++) {
+                                result += x[lattice_size * i + j] * neighbors[neighbor] + (
+                                    1 - x[i * lattice_size + j]) * (1 - neighbors[neighbor]);
                             }
                         }
                     }
-
                     return result;
                 }
 

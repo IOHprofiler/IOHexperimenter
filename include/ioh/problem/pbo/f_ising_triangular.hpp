@@ -15,7 +15,7 @@ namespace ioh {
                        **/
                 Ising_Triangular(int instance_id = IOH_DEFAULT_INSTANCE,
                                  int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(21, "Ising_Triangular", instance_id) {
+                    : pbo_base(21, "Ising_Triangular", instance_id, dimension) {
                     set_best_variables(1);
                     set_number_of_variables(dimension);
                 }
@@ -25,11 +25,10 @@ namespace ioh {
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
-                    const auto n = x.size();
-                    auto result = 0;
+                    auto result = 0.0;
                     int neighbors[3];
                     const auto lattice_size = static_cast<int>(sqrt(
-                        static_cast<double>(n)));
+                        static_cast<double>(n_)));
 
                     for (auto i = 0; i < lattice_size; ++i) {
                         for (auto j = 0; j < lattice_size; ++j) {

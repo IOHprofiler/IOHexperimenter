@@ -88,11 +88,11 @@ namespace ioh {
                 double internal_evaluate(const std::vector<int> &x) override {
                     std::vector<int> w_model_x;
                     std::vector<int> tempX;
-                    size_t n;
+                    int n;
 
                     // Dummy Layer
                     if (this->dummy_para > 0) {
-                        n = this->dummy_info.size();
+                        n = static_cast<int>(this->dummy_info.size());
                         w_model_x.reserve(n);
                         for (auto i = 0; i != n; ++i) {
                             w_model_x.push_back(x[this->dummy_info[i]]);
@@ -116,7 +116,7 @@ namespace ioh {
                     }
 
                     // Base evaluate
-                    n = w_model_x.size();
+                    n = static_cast<int>(w_model_x.size());
                     auto result = 0;
                     for (auto i = 0; i != n; ++i) {
                         if (w_model_x[i] == 1) {

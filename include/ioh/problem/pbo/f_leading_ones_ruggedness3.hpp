@@ -17,7 +17,7 @@ namespace ioh {
                        **/
                 LeadingOnes_Ruggedness3(int instance_id = IOH_DEFAULT_INSTANCE,
                                         int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(17, "LeadingOnes_Ruggedness3", instance_id) {
+                    : pbo_base(17, "LeadingOnes_Ruggedness3", instance_id, dimension) {
                     set_best_variables(1);
                     set_number_of_variables(dimension);
                 }
@@ -28,8 +28,8 @@ namespace ioh {
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
-                    auto result = 0;
-                    for (auto i = 0; i != x.size(); ++i) {
+                    auto result = 0.0;
+                    for (auto i = 0; i != n_; ++i) {
                         if (x[i] == 1) {
                             result = i + 1;
                         } else {
@@ -46,6 +46,6 @@ namespace ioh {
                     return new LeadingOnes_Ruggedness3(instance_id, dimension);
                 }
             };
-        };
+        }
     }
 }

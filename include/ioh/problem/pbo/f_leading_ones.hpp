@@ -14,16 +14,16 @@ namespace ioh {
                  * \param dimension The dimensionality of the problem to created, 4 by default.
                  **/
                 LeadingOnes(int instance_id = IOH_DEFAULT_INSTANCE,
-                            int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(2, "LeadingOnes", instance_id) {
+                            int dimension = IOH_DEFAULT_DIMENSION
+                )
+                    : pbo_base(2, "LeadingOnes", instance_id, dimension) {
                     set_best_variables(1);
                     set_number_of_variables(dimension);
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
-                    const auto n = x.size();
-                    auto result = 0;
-                    for (auto i = 0; i != n; ++i) {
+                    auto result = 0.0;
+                    for (auto i = 0; i != n_; ++i) {
                         if (x[i] == 1)
                             result = i + 1;
                         else

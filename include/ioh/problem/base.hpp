@@ -176,7 +176,7 @@ namespace ioh {
 
                 ++this->evaluations;
 
-                if (x.size() != this->number_of_variables) {
+                if (static_cast<int>(x.size()) != this->number_of_variables) {
                     common::log::warning("The dimension of solution is incorrect.");
                     if (this->maximization_minimization_flag == common::OptimizationType::maximization) {
                         this->raw_objectives[0] = std::numeric_limits<double>::lowest();
@@ -264,7 +264,7 @@ namespace ioh {
              * It will be invoked after setting `number_of_variables` or `instance_id`.
              */
             void calc_optimal() {
-                if (this->best_variables.size() == this->number_of_variables) {
+                if (static_cast<int>(this->best_variables.size()) == this->number_of_variables) {
                     /// todo. Make Exception.
                     /// Do not apply transformation on best_variables as calculating the optimum
                     if (this->number_of_objectives == 1)
@@ -280,7 +280,7 @@ namespace ioh {
                                               this->instance_id);
                 } else {
                     this->optimal.clear();
-                    for (std::size_t i = 0; i < this->number_of_objectives; ++i
+                    for (auto i = 0; i < this->number_of_objectives; ++i
                     ) {
                         if (this->maximization_minimization_flag ==
                             common::OptimizationType::maximization)
@@ -311,7 +311,7 @@ namespace ioh {
                 this->best_so_far_raw_evaluations = 0;
                 this->best_so_far_transformed_evaluations = 0;
                 this->optimalFound = false;
-                for (size_t i = 0; i != this->number_of_objectives; ++i) {
+                for (auto i = 0; i != this->number_of_objectives; ++i) {
                     if (this->maximization_minimization_flag == common::OptimizationType::maximization) {
                         this->best_so_far_raw_objectives[i] = std::numeric_limits<double>::lowest();
                         this->best_so_far_transformed_objectives[i] = std::numeric_limits<double>::lowest();
@@ -455,7 +455,7 @@ namespace ioh {
             void set_lowerbound(InputType lowerbound) {
                 std::vector<InputType>().swap(this->lowerbound);
                 this->lowerbound.reserve(this->number_of_variables);
-                for (std::size_t i = 0; i < this->number_of_variables; ++i) {
+                for (auto i = 0; i < this->number_of_variables; ++i) {
                     this->lowerbound.push_back(lowerbound);
                 }
             }
@@ -485,7 +485,7 @@ namespace ioh {
             void set_upperbound(InputType upperbound) {
                 std::vector<InputType>().swap(this->upperbound);
                 this->upperbound.reserve(this->number_of_variables);
-                for (std::size_t i = 0; i < this->number_of_variables; ++i) {
+                for (auto i = 0; i < this->number_of_variables; ++i) {
                     this->upperbound.push_back(upperbound);
                 }
             }
@@ -543,7 +543,8 @@ namespace ioh {
              */
             void set_number_of_variables(int number_of_variables,
                                          const std::vector<InputType> &
-                                         best_variables) {
+                                         best_variables                                        
+                ) {
                 this->number_of_variables = number_of_variables;
                 this->best_variables = best_variables;
                 if (this->lowerbound.size() != 0) {
@@ -634,7 +635,7 @@ namespace ioh {
              */
             void set_best_variables(InputType best_variables) {
                 this->best_variables.clear();
-                for (std::size_t i = 0; i < this->number_of_variables; ++i) {
+                for (auto i = 0; i < this->number_of_variables; ++i) {
                     this->best_variables.push_back(best_variables);
                 }
             }
@@ -653,7 +654,7 @@ namespace ioh {
              * \brief Detect if optimum of the problem is assigned/known.
              */
             bool has_optimal() const {
-                return this->optimal.size() == this->get_number_of_objectives();
+                return static_cast<int>(this->optimal.size()) == this->get_number_of_objectives();
             }
 
             /** std::vector<double> get_optimal()
@@ -675,7 +676,7 @@ namespace ioh {
             void set_optimal(double optimal) {
                 std::vector<double>().swap(this->optimal);
                 this->optimal.reserve(this->number_of_objectives);
-                for (std::size_t i = 0; i < this->number_of_objectives; ++i) {
+                for (auto i = 0; i < this->number_of_objectives; ++i) {
                     this->optimal.push_back(optimal);
                 }
             }
@@ -770,7 +771,7 @@ namespace ioh {
             void set_as_minimization() {
                 this->maximization_minimization_flag =
                     common::OptimizationType::minimization;
-                for (std::size_t i = 0; i != this->number_of_objectives; ++i) {
+                for (auto i = 0; i != this->number_of_objectives; ++i) {
                     this->best_so_far_raw_objectives[i] = std::numeric_limits<
                         double>::max();
                     this->best_so_far_transformed_objectives[i] =

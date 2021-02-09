@@ -145,7 +145,7 @@ namespace ioh::logger {
              * \param triggers array of triggers, order=(.dat, .tdat, idat)
              */
             void update_triggers(const std::array<bool, 3> triggers) {
-                for (auto i = 0; i < triggers.size(); i++)
+                for (size_t i = 0; i < triggers.size(); i++)
                     files_[i].triggered = triggers[i];
             }
 
@@ -170,7 +170,7 @@ namespace ioh::logger {
 
             void write(const std::string &data, const bool all = false) {
                 for (auto &file : files_)
-                    if (!all && file.triggered || all && (file.active && !file.triggered))
+                    if ((!all && file.triggered) || (all && (file.active && !file.triggered)))
                         file.stream << data;
             }
 
@@ -376,7 +376,7 @@ namespace ioh::logger {
             if (!data_files_.logged_attributes_.empty())
                 data_files_.logged_attributes_.clear();
 
-            for (auto i = 0; i != attribute_names.size(); i++)
+            for (size_t i = 0; i != attribute_names.size(); i++)
                 data_files_.logged_attributes_[attribute_names[i]] = std::make_shared<double>(-9999);
         }
 

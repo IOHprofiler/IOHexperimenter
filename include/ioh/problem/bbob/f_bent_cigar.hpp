@@ -24,7 +24,7 @@ namespace ioh {
                     const std::vector<double> &x) override {
                     static const auto condition = 1.0e6;
                     auto result = x[0] * x[0];
-                    for (size_t i = 1; i < n_; ++i) {
+                    for (auto i = 1; i < n_; ++i) {
                         result += condition * x[i] * x[i];
                     }
                     return result;

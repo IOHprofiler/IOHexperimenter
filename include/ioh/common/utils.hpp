@@ -48,11 +48,11 @@ namespace ioh {
         template <typename T>
         bool compare_vector(const std::vector<T> &v1,
                             const std::vector<T> &v2) {
-            auto n = v1.size();
+            size_t n = v1.size();
             if (n != v2.size())
                 log::error("Two compared vectors must be with the same size\n");
 
-            for (auto i = 0; i != n; ++i)
+            for (size_t i = 0; i != n; ++i)
                 if (v1[i] != v2[i])
                     return false;
             return true;
@@ -95,7 +95,7 @@ namespace ioh {
                 log::error(
                     "Two compared objective vector must be with the same size\n");
 
-            for (auto i = 0; i != n; ++i)
+            for (size_t i = 0; i != n; ++i)
                 if (!compare_objectives<T>(v1[i], v2[i], optimization_type))
                     return false;
             return true;
@@ -138,12 +138,12 @@ namespace ioh {
          * \param x vector to be checked
          * \return true if x contains a nan value
          */
-        static bool has_nan(const std::vector<double> &x) {
-            for (const auto& e : x)
-                if (std::isnan(e))
-                    return true;
-            return false;
-        }
+        // static bool has_nan(const std::vector<double> &x) {
+        //     for (const auto& e : x)
+        //         if (std::isnan(e))
+        //             return true;
+        //     return false;
+        // }
 
         /**
          * \brief Retrieves an integer vector from a string

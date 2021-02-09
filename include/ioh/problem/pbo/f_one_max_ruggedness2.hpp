@@ -16,18 +16,17 @@ namespace ioh {
                        **/
                 OneMax_Ruggedness2(int instance_id = IOH_DEFAULT_INSTANCE,
                                    int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(9, "OneMax_Ruggedness2", instance_id) {
+                    : pbo_base(9, "OneMax_Ruggedness2", instance_id, dimension) {
                     set_best_variables(1);
                     set_number_of_variables(dimension);
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
-                    const auto n = x.size();
                     auto result = 0.0;
-                    for (auto i = 0; i != n; ++i) {
+                    for (auto i = 0; i != n_; ++i) {
                         result += x[i];
                     }
-                    return utils::ruggedness2(result, static_cast<int>(n));
+                    return utils::ruggedness2(result, n_);
                 }
 
 

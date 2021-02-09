@@ -16,13 +16,13 @@ namespace ioh {
                        **/
                 LeadingOnes_Epistasis(int instance_id = IOH_DEFAULT_INSTANCE,
                                       int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(14, "LeadingOnes_Epistasis", instance_id) {
+                    : pbo_base(14, "LeadingOnes_Epistasis", instance_id, dimension) {
                     set_number_of_variables(dimension);
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
                     auto new_variables = utils::epistasis(x, 4);
-                    const auto n = new_variables.size();
+                    const auto n = static_cast<int>(new_variables.size());
                     auto result = 0;
                     for (auto i = 0; i != n; ++i) {
                         if (new_variables[i] == 1) {

@@ -17,19 +17,17 @@ namespace ioh {
                  **/
                 Linear(int instance_id = IOH_DEFAULT_INSTANCE,
                        int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(3, "Linear", instance_id) {
+                    : pbo_base(3, "Linear", instance_id, dimension) {
                     set_best_variables(1);
                     set_number_of_variables(dimension);
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
-                    const auto n = x.size();
-                    double result = 0;
-                    for (auto i = 0; i < n; ++i) {
-                        result += static_cast<double>(x[i]) * static_cast<double
-                        >(i + 1);
+                    double result = 0.0;
+                    for (auto i = 0; i < n_; ++i) {
+                        result += static_cast<double>(x[i]) * static_cast<double>(i + 1);
                     }
-                    return static_cast<double>(result);
+                    return result;
                 }
 
                 static Linear *create(int instance_id = IOH_DEFAULT_INSTANCE,
@@ -37,6 +35,6 @@ namespace ioh {
                     return new Linear(instance_id, dimension);
                 }
             };
-        };
+        }
     }
 }

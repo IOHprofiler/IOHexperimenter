@@ -22,11 +22,11 @@ namespace ioh {
                 void prepare_problem() override {
                     transformation::coco::bbob2009_unif(
                         negative_offset_, n_, rseed_);
-                    for (size_t i = 0; i < n_; ++i)
+                    for (auto i = 0; i < n_; ++i)
                         xopt_[i] = (negative_offset_[i] < 0.5 ? -1 : 1) * 0.5 *
                                    4.2096874637;
 
-                    for (size_t i = 0; i < n_; ++i) {
+                    for (auto i = 0; i < n_; ++i) {
                         negative_offset_[i] = -2 * fabs(xopt_[i]);
                         positive_offset_[i] = 2 * fabs(xopt_[i]);
                     }
@@ -34,7 +34,7 @@ namespace ioh {
 
                 double internal_evaluate(
                     const std::vector<double> &x) override {
-                    size_t i = 0;
+                    int i = 0;
 
                     /* Boundary handling*/
                     auto penalty = 0.0;

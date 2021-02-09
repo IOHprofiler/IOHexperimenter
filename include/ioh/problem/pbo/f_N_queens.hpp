@@ -16,7 +16,7 @@ namespace ioh {
                        **/
                 NQueens(int instance_id = IOH_DEFAULT_INSTANCE,
                         int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(23, "NQueens", instance_id) {
+                    : pbo_base(23, "NQueens", instance_id, dimension) {
                     set_number_of_variables(dimension);
                 }
 
@@ -34,10 +34,9 @@ namespace ioh {
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
-                    const auto n = x.size();
                     int j, i;
                     const auto N_queens = static_cast<int>(
-                        sqrt(static_cast<double>(n)) + 0.5);
+                        sqrt(static_cast<double>(n_)) + 0.5);
                     auto number_of_queens_on_board = 0;
                     auto k_penalty = 0.0;
                     auto l_penalty = 0.0;
@@ -46,13 +45,13 @@ namespace ioh {
                     auto indx = 0;
                     const auto C = static_cast<float>(N_queens);
 
-                    if (floor(sqrt(static_cast<double>(n))) != sqrt(
-                            static_cast<double>(n))) {
+                    if (floor(sqrt(static_cast<double>(n_))) != sqrt(
+                            static_cast<double>(n_))) {
                         common::log::error(
                             "Number of parameters in the N Queen problem must be a square number");
                     }
 
-                    for (auto index = 0; index < n; index++) {
+                    for (auto index = 0; index < n_; index++) {
                         if (x[index] == 1) {
                             number_of_queens_on_board += 1;
                         }
@@ -113,6 +112,6 @@ namespace ioh {
                     return new NQueens(instance_id, dimension);
                 }
             };
-        };
+        }
     }
 }

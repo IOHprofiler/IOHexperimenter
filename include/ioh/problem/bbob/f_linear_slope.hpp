@@ -32,7 +32,7 @@ namespace ioh {
                     static const auto alpha = 100.0;
                     auto result = 0.0;
 
-                    for (size_t i = 0; i < n_; ++i) {
+                    for (auto i = 0; i < n_; ++i) {
                         double si;
 
                         const auto base = sqrt(alpha);

@@ -23,7 +23,7 @@ namespace ioh {
                     return 0;
                 }
 
-                const size_t number_of_peaks = 101;
+                const int number_of_peaks = 101;
                 std::vector<std::vector<double>> rotation;
                 std::vector<std::vector<double>> arr_scales;
                 std::vector<std::vector<double>> x_local;
@@ -39,7 +39,7 @@ namespace ioh {
 
 
                 void prepare_problem() override {
-                    size_t i, j;
+                    int i, j;
                     const auto maxcondition = 1000.;
                     /* maxcondition1 satisfies the old code and the doc but seems wrong in that it is, with very high
                     * probability, not the largest condition level!!! */
@@ -138,7 +138,7 @@ namespace ioh {
                         best_variables[i] = 0.8 * (b_ * random_numbers[i] - c);
                         for (j = 0; j < number_of_peaks; ++j) {
                             x_local[i][j] = 0.;
-                            for (size_t k = 0; k < n_; ++k) {
+                            for (auto k = 0; k < n_; ++k) {
                                 x_local[i][j] += rotation[i][k] * (
                                     b_ * random_numbers[j * n_ + k] - c
                                 );
@@ -154,7 +154,7 @@ namespace ioh {
 
                 double internal_evaluate(
                     const std::vector<double> &x) override {
-                    size_t i, j; /* Loop over dim */
+                    int i, j; /* Loop over dim */
                     std::vector<double> tmx(n_);
                     const auto a = 0.1;
                     double f = 0., tmp, f_pen = 0., f_true = 0.;

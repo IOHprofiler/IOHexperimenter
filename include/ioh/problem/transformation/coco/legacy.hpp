@@ -53,7 +53,7 @@ namespace ioh {
                             rgrand[i] = aktseed;
                     }
                     auto aktrand = rgrand[0];
-                    for (i = 0; i < N; i++) {
+                    for (i = 0; i < static_cast<long>(N); i++) {
                         tmp = static_cast<int>(floor(
                             static_cast<double>(aktseed) / static_cast<double>(
                                 127773)));

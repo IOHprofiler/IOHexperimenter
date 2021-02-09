@@ -63,8 +63,8 @@ namespace ioh {
                 double internal_evaluate(
                     const std::vector<double> &x) override {
                     auto result = 0.0;
-                    for (size_t i = 0; i < n_; ++i) {
-                        for (size_t j = 0; j < summands; ++j) {
+                    for (auto i = 0; i < n_; ++i) {
+                        for (auto j = 0; j < summands; ++j) {
                             result += cos(
                                     2 * transformation::coco::coco_pi * (
                                         x[i] + 0.5) * bk[j])

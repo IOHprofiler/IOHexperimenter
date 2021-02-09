@@ -85,7 +85,7 @@ namespace ioh {
             std::vector< // function evaluations
                 bool>>;  // occurence count
 
-        static std::ostream &operator<<(std::ostream &out,
+        inline std::ostream &operator<<(std::ostream &out,
                                         const attain_mat &mat) {
             size_t ndigits = 1;
             if (mat.back().back())

@@ -18,7 +18,7 @@ namespace ioh {
                  **/
                 OneMax_Dummy1(int instance_id = IOH_DEFAULT_INSTANCE,
                               int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(4, "OneMax_Dummy1", instance_id) {
+                    : pbo_base(4, "OneMax_Dummy1", instance_id, dimension) {
                     set_best_variables(1);
                     set_number_of_variables(dimension);
                 }
@@ -28,8 +28,8 @@ namespace ioh {
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
-                    const auto n = this->info.size();
                     auto result = 0.0;
+                    auto n = static_cast<int>(this->info.size());
                     for (auto i = 0; i != n; ++i) {
                         result += x[this->info[i]];
                     }

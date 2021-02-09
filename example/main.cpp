@@ -115,7 +115,7 @@ void combiner() {
             sol.reserve(d);
             std::generate_n(std::back_inserter(sol), d, [&dis, &gen]() { return dis(gen); });
 
-            auto f = pb->evaluate(sol);
+            pb->evaluate(sol);
             loggers.do_log(pb->loggerInfo());
         }
 

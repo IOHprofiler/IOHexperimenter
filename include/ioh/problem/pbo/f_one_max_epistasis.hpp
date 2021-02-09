@@ -16,7 +16,7 @@ namespace ioh {
                        **/
                 OneMax_Epistasis(int instance_id = IOH_DEFAULT_INSTANCE,
                                  int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(7, "OneMax_Epistasis", instance_id) {
+                    : pbo_base(7, "OneMax_Epistasis", instance_id, dimension) {
                     set_number_of_variables(dimension);
                 }
 
@@ -26,8 +26,8 @@ namespace ioh {
 
                 double internal_evaluate(const std::vector<int> &x) override {
                     auto new_variables = utils::epistasis(x, 4);
-                    const auto n = new_variables.size();
-                    auto result = 0;
+                    auto n = static_cast<int>(new_variables.size());
+                    auto result = 0.0;
                     for (auto i = 0; i != n; ++i) {
                         result += new_variables[i];
                     }

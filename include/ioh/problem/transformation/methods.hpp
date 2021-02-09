@@ -106,7 +106,7 @@ namespace ioh {
                     shift[0] = shift[0] * 1e4 / 1e4 * 2000 - 1000;
                     y = y + shift[0];
                 }
-            };
+            }
         }
     }
 }

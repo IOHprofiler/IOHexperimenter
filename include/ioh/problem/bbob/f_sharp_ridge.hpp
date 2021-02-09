@@ -42,14 +42,14 @@ namespace ioh {
                     static const auto alpha = 100.0;
                     const double vars_40 = 1;
                     /* generalized: number_of_variables <= 40 ? 1 : number_of_variables / 40.0; */
-                    size_t i = 0;
+                    auto i = 0;
 
                     auto result = 0.0;
-                    for (i = static_cast<size_t>(ceil(vars_40)); i < n_; ++i) {
+                    for (i = static_cast<int>(ceil(vars_40)); i < n_; ++i) {
                         result += x[i] * x[i];
                     }
                     result = alpha * sqrt(result / vars_40);
-                    for (i = 0; i < static_cast<size_t>(ceil(vars_40)); ++i) {
+                    for (i = 0; i < static_cast<int>(ceil(vars_40)); ++i) {
                         result += x[i] * x[i] / vars_40;
                     }
 

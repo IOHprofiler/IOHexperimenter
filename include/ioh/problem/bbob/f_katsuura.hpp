@@ -45,7 +45,7 @@ namespace ioh {
 
                     /* Computation core */
                     auto result = 1.0;
-                    for (size_t i = 0; i < n_; ++i) {
+                    for (auto i = 0; i < n_; ++i) {
                         double tmp = 0;
                         for (size_t j = 1; j < 33; ++j) {
                             const auto tmp2 = pow(2., static_cast<double>(j));

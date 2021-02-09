@@ -34,7 +34,7 @@ namespace ioh {
                     using namespace transformation::coco;
                     static const double condition = 100;
                     static const auto alpha = 10.0;
-                    size_t i, j;
+                    int i, j;
                     auto penalty = 0.0;
                     std::vector<double> result(1);
 

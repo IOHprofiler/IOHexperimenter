@@ -156,16 +156,16 @@ namespace ioh {
                     }
                 }
 
-                static void transform_vars_x_hat_generic_evaluate(
-                    std::vector<double> &x,
-                    const std::vector<double> &
-                    sign_vector) {
-                    const auto number_of_variables = x.size();
-
-                    for (size_t i = 0; i < number_of_variables; ++i) {
-                        x[i] = 2.0 * sign_vector[i] * x[i];
-                    }
-                }
+                // static void transform_vars_x_hat_generic_evaluate(
+                //     std::vector<double> &x,
+                //     const std::vector<double> &
+                //     sign_vector) {
+                //     const auto number_of_variables = x.size();
+                //
+                //     for (size_t i = 0; i < number_of_variables; ++i) {
+                //         x[i] = 2.0 * sign_vector[i] * x[i];
+                //     }
+                // }
 
                 static void transform_vars_z_hat_evaluate(
                     std::vector<double> &x,

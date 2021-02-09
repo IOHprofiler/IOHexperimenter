@@ -18,7 +18,7 @@ namespace ioh {
                        **/
                 NK_Landscapes(int instance_id = IOH_DEFAULT_INSTANCE,
                               int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(25, "NK_Landscapes", instance_id) {
+                    : pbo_base(25, "NK_Landscapes", instance_id, dimension) {
                     set_number_of_variables(dimension);
                 }
 
@@ -70,9 +70,8 @@ namespace ioh {
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
-                    const auto n = x.size();
-                    double result = 0;
-                    for (auto i = 0; i != n; ++i) {
+                    double result = 0.0;
+                    for (auto i = 0; i != n_; ++i) {
                         size_t index = x[i];
                         for (auto j = 0; j != k; ++j) {
                             index = index + static_cast<size_t>(
@@ -81,7 +80,7 @@ namespace ioh {
                         result += F[i][index];
                     }
 
-                    result = result / static_cast<double>(n);
+                    result = result / static_cast<double>(n_);
                     return -result;
                 }
 

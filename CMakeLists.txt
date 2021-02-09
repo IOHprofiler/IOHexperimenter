@@ -2,7 +2,7 @@
 ##
 cmake_minimum_required(VERSION 3.10)
 
-project(ioh
+project(ioh 
     VERSION 0.0.0.1
     LANGUAGES CXX 
 )
@@ -118,7 +118,7 @@ install(EXPORT ioh-targets
     NAMESPACE ioh::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ioh
 )
-
+ 
 
 # Export targets. If an external project adds this project to its build tree
 # via `add_subdirectory()`, then `find_package()` will work without
@@ -131,7 +131,7 @@ export(PACKAGE ioh)
 
 
 # Add subdirectories to build.
-if(BUILD_TESTS)
+if(BUILD_TESTS) 
     add_subdirectory(tests)
 endif()
 

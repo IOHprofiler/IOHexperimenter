@@ -15,11 +15,11 @@ namespace ioh {
                        **/
                 MIS(int instance_id = IOH_DEFAULT_INSTANCE,
                     int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(22, "MIS", instance_id) {
+                    : pbo_base(22, "MIS", instance_id, dimension) {
                     set_number_of_variables(dimension);
                 }
 
-                static int isEdge(int i, int j, size_t problem_size) {
+                static int is_edge(int i, int j, int problem_size) {
                     if (i != problem_size / 2 && j == i + 1) {
                         return 1;
                     }
@@ -40,19 +40,17 @@ namespace ioh {
 
 
                 double internal_evaluate(const std::vector<int> &x) override {
-                    const auto n = x.size();
-                    auto result = 0;
+                    auto result = 0.0;
                     auto num_of_ones = 0;
                     auto sum_edges_in_the_set = 0;
-                    auto number_of_variables_even = static_cast<int>(n);
+                    auto number_of_variables_even = n_;
                     std::vector<int> ones_array(number_of_variables_even + 1);
 
-                    if (n % 2 != 0) {
-                        number_of_variables_even = static_cast<int>(n) - 1;
+                    if (n_ % 2 != 0) {
+                        number_of_variables_even = n_ - 1;
                     }
 
-                    for (auto index = 0; index < number_of_variables_even; index
-                         ++) {
+                    for (auto index = 0; index < number_of_variables_even; index ++) {
                         if (x[index] == 1) {
                             ones_array[num_of_ones] = index;
                             num_of_ones += 1;
@@ -61,9 +59,7 @@ namespace ioh {
 
                     for (auto i = 0; i < num_of_ones; i++) {
                         for (auto j = i + 1; j < num_of_ones; j++) {
-                            if (isEdge(ones_array[i] + 1, ones_array[j] + 1,
-                                       static_cast<size_t>(
-                                           number_of_variables_even)) == 1) {
+                            if (is_edge(ones_array[i] + 1, ones_array[j] + 1, number_of_variables_even) == 1) {
                                 sum_edges_in_the_set += 1;
                             }
                         }
@@ -78,6 +74,6 @@ namespace ioh {
                     return new MIS(instance_id, dimension);
                 }
             };
-        };
+        }
     }
 }

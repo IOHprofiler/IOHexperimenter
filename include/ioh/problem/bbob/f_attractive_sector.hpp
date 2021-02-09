@@ -60,7 +60,7 @@ namespace ioh {
                 double internal_evaluate(
                     const std::vector<double> &x) override {
                     auto result = 0.0;
-                    for (size_t i = 0; i < n_; ++i) {
+                    for (auto i = 0; i < n_; ++i) {
                         if (xopt_[i] * x[i] > 0.0)
                             result += 100.0 * 100.0 * x[i] * x[i];
                         else

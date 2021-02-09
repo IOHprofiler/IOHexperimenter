@@ -35,7 +35,7 @@ namespace ioh {
                 double internal_evaluate(
                     const std::vector<double> &x) override {
                     auto sum = 0.0;
-                    for (size_t i = 0; i < n_; ++i) {
+                    for (auto i = 0; i < n_; ++i) {
                         const auto exponent =
                             2.0 + 4.0 * static_cast<double>(static_cast<long>(i)
                             ) / (static_cast<double>

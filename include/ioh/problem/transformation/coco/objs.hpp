@@ -10,13 +10,13 @@ namespace ioh {
 
         namespace transformation {
             namespace coco {
-                static void transform_obj_norm_by_dim_evaluate(
-                    const int dimension,
-                    std::vector<double> &y) {
-                    y[0] *= bbob2009_fmin(
-                        1, 40. / static_cast<double>(dimension));
-                    /* Wassim: might want to use a function (with no 40) here that we can put in a helpers file */
-                }
+                // static void transform_obj_norm_by_dim_evaluate(
+                //     const int dimension,
+                //     std::vector<double> &y) {
+                //     y[0] *= bbob2009_fmin(
+                //         1, 40. / static_cast<double>(dimension));
+                //     /* Wassim: might want to use a function (with no 40) here that we can put in a helpers file */
+                // }
 
                 static void transform_obj_oscillate_evaluate(
                     std::vector<double> &y) {
@@ -80,13 +80,13 @@ namespace ioh {
                     }
                 }
 
-                static void transform_obj_scale_evaluate_function(
-                    std::vector<double> &y, const double factor) {
-                    const auto number_of_objectives = y.size();
-
-                    for (size_t i = 0; i < number_of_objectives; i++)
-                        y[i] *= factor;
-                }
+                // static void transform_obj_scale_evaluate_function(
+                //     std::vector<double> &y, const double factor) {
+                //     const auto number_of_objectives = y.size();
+                //
+                //     for (size_t i = 0; i < number_of_objectives; i++)
+                //         y[i] *= factor;
+                // }
 
                 static void transform_obj_shift_evaluate_function(
                     std::vector<double> &y, const double offset) {

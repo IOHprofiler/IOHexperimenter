@@ -30,7 +30,7 @@ namespace ioh {
                 double internal_evaluate(
                     const std::vector<double> &x) override {
                     auto s1 = 0.0, s2 = 0.0;
-                    for (size_t i = 0; i < n_ - 1; ++i) {
+                    for (auto i = 0; i < n_ - 1; ++i) {
                         auto tmp = x[i] * x[i] - x[i + 1];
                         s1 += tmp * tmp;
                         tmp = x[i] - 1.0;

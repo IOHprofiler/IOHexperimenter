@@ -16,15 +16,15 @@ namespace ioh {
                  **/
                 LeadingOnes_Neutrality(int instance_id = IOH_DEFAULT_INSTANCE,
                                        int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(13, "LeadingOnes_Neutrality", instance_id) {
+                    : pbo_base(13, "LeadingOnes_Neutrality", instance_id, dimension) {
                     set_best_variables(1);
                     set_number_of_variables(dimension);
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
                     auto new_variables = utils::neutrality(x, 3);
-                    const auto n = new_variables.size();
-                    auto result = 0;
+                    auto result = 0.0;
+                    auto n = static_cast<int>(new_variables.size());
                     for (auto i = 0; i != n; ++i) {
                         if (new_variables[i] == 1) {
                             result = i + 1;

@@ -27,7 +27,7 @@ namespace ioh {
                 double internal_evaluate(
                     const std::vector<double> &x) override {
                     auto tmp = 0., tmp2 = 0.;
-                    for (size_t i = 0; i < n_; ++i) {
+                    for (auto i = 0; i < n_; ++i) {
                         tmp += cos(2 * transformation::coco::coco_pi * x[i]);
                         tmp2 += x[i] * x[i];
                     }

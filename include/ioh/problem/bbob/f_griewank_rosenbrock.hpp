@@ -35,12 +35,11 @@ namespace ioh {
 
                 double internal_evaluate(
                     const std::vector<double> &x) override {
-                    double tmp = 0;
                     auto result = 0.0;
-                    for (size_t i = 0; i < n_ - 1; ++i) {
+                    for (auto i = 0; i < n_ - 1; ++i) {
                         const auto c1 = x[i] * x[i] - x[i + 1];
                         const auto c2 = 1.0 - x[i];
-                        tmp = 100.0 * c1 * c1 + c2 * c2;
+                        const auto tmp = 100.0 * c1 * c1 + c2 * c2;
                         result += tmp / 4000. - cos(tmp);
                     }
                     return 10. + 10. * result / static_cast<double>(n_ - 1);

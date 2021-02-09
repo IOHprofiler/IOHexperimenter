@@ -17,7 +17,7 @@ namespace ioh {
                        **/
                 LeadingOnes_Dummy2(int instance_id = IOH_DEFAULT_INSTANCE,
                                    int dimension = IOH_DEFAULT_DIMENSION)
-                    : pbo_base(12, "LeadingOnes_Dummy2", instance_id) {
+                    : pbo_base(12, "LeadingOnes_Dummy2", instance_id, dimension) {
                     set_best_variables(1);
                     set_number_of_variables(dimension);
                     set_optimal(floor(static_cast<double>(dimension * 0.9)));
@@ -28,8 +28,8 @@ namespace ioh {
                 }
 
                 double internal_evaluate(const std::vector<int> &x) override {
-                    const auto n = this->info.size();
-                    auto result = 0;
+                    auto result = 0.0;
+                    auto n = static_cast<int>(this->info.size());
                     for (auto i = 0; i != n; ++i) {
                         if (x[this->info[i]] == 1) {
                             result = i + 1;

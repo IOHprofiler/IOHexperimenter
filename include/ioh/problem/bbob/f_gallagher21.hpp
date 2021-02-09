@@ -58,8 +58,8 @@ namespace ioh {
                         random_numbers, number_of_peaks - 1,
                         rseed_);
 
-                    for (size_t i = 0; i < number_of_peaks - 1; ++i)
-                        rperm[i] = {random_numbers[i], i};
+                    for (auto i = 0; i < number_of_peaks - 1; ++i)
+                        rperm[i] = {random_numbers[i], static_cast<size_t>(i)};
 
                     std::sort(rperm.begin(), rperm.end(),
                               f_gallagher_compare_doubles);
@@ -79,8 +79,8 @@ namespace ioh {
                     for (auto i = 0; i < number_of_peaks; ++i) {
                         transformation::coco::bbob2009_unif(random_numbers, n_,
                             rseed_ + static_cast<long>(1000 * i));
-                        for (size_t j = 0; j < n_; ++j)
-                            rperm[j] = {random_numbers[j], j};
+                        for (auto j = 0; j < n_; ++j)
+                            rperm[j] = {random_numbers[j], static_cast<size_t>(j)};
 
                         std::sort(rperm.begin(), rperm.end(),
                                   f_gallagher_compare_doubles);
