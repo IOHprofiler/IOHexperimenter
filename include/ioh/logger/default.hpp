@@ -49,8 +49,13 @@ namespace ioh::logger {
 
             void update_run_info(ProblemType const *current_problem) {
                 if (current_problem != nullptr) {
-                    stream_ << common::string_format(", %d:%d|%f", current_problem->get_instance_id(),
+                    stream_ << common::string_format(", %d:%d|%g", current_problem->get_instance_id(),
                                                      best_point_.evaluations, best_point_.y);
+
+                    for (auto& [key, value] : run_attributes_) {
+                        stream_ << common::string_format(";%g", *value);
+                    }
+                        
                 }
             }
 
@@ -85,7 +90,7 @@ namespace ioh::logger {
                     // extra attrs per run
                     if (!run_attributes_.empty()) {
                         stream_ << ", dynamicAttribute = \"";
-                        for (auto &i = run_attributes_.begin(); i != run_attributes_.end();)
+                        for (auto i = run_attributes_.begin(); i != run_attributes_.end();)
                             stream_ << i->first << (++i != run_attributes_.end() ? "|" : "");
                         stream_ << "\"";
                     }
@@ -241,7 +246,7 @@ namespace ioh::logger {
 
 
         ~Default() {
-            info_file_.update_run_info(problem_);
+            info_file_.update_run_info(problem_); // needs to call on close
             data_files_.write(last_logged_line_, true);
         }
 
@@ -278,6 +283,7 @@ namespace ioh::logger {
                 interval_trigger(evaluations)
             });
 
+            // We can do this with pointers, more efficient
             last_logged_line_ = common::string_format("%d %f %f %f %f", evaluations, y, y_best, transformed_y,  
                                                       transformed_y_best);
             for (const auto &e : data_files_.logged_attributes_)
@@ -297,7 +303,11 @@ namespace ioh::logger {
 
 
         /// Parameters ///
-
+        /// We have:
+        ///     experiment attributes -> only once per experiment (info file)
+        ///     run attributes -> (can) change per run (info file)
+        ///     logged attributes -> logged at every log-moment (data files)
+        /// TODO: standardize naming of the methods for accessing these
         template <typename V>
         void add_experiment_attribute(const std::string name, const V value) {
             info_file_.experiment_attributes_[name] = common::to_string(value);
