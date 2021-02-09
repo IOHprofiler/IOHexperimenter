@@ -44,6 +44,9 @@ class CMakeBuild(build_ext):
         cmake_args = [
             "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={}".format(extdir),
             "-DPYTHON_EXECUTABLE={}".format(sys.executable),
+            "-DBUILD_PYTHON_PACKAGE=ON",
+            "-DBUILD_TESTS=OFF",
+            "-DBUILD_EXAMPLE=OFF",
             "-DEXAMPLE_VERSION_INFO={}".format(self.distribution.get_version()),
             "-DCMAKE_BUILD_TYPE={}".format(cfg),  # not used on MSVC, but no harm
         ]
@@ -99,6 +102,7 @@ class CMakeBuild(build_ext):
         )
 
 
+
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 setup(
@@ -113,4 +117,5 @@ setup(
     ext_modules=[CMakeExtension("iohcpp")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
+    test_suite='tests.python',
 )
