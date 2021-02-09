@@ -23,8 +23,7 @@ namespace ioh {
              * as arguments.
              */
             typedef void algorithm_type(std::shared_ptr<ProblemType>,
-                                        std::shared_ptr<logger::Csv<ProblemType>
-                                        >);
+                                        std::shared_ptr<logger::Csv<ProblemType>>);
 
             /**
              * \brief A shorthand for accessing the class factory (\ref ioh::common::Factory) for suites.

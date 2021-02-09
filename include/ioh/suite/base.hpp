@@ -18,9 +18,14 @@ namespace ioh {
         /// recommond registering problem with string lable and creating a map of string problem_name and integer problem_id.
         template <typename ProblemType>
         class base
-            : public ProblemType,
-              public std::vector<std::shared_ptr<ProblemType>>,
-              public abstract_suite {
+            :
+            // : public ProblemType,
+            // public std::vector<std::shared_ptr<ProblemType>>,
+            public abstract_suite {
+
+            // std::vector<ProblemType> problems_;
+            std::vector<std::shared_ptr<ProblemType>> problems_;
+
         public:
             typedef std::shared_ptr<ProblemType> problem_ptr;
 
@@ -47,8 +52,7 @@ namespace ioh {
             ///
             /// This function implements interfaces of available problems of a suite. With those interface,
             /// user are able to request problem together with problem_id, instance_id, and dimension.
-            virtual void register_problems() {
-            }
+            virtual void register_problems() = 0;
 
 
             /// \fn loadProblems()
@@ -57,8 +61,8 @@ namespace ioh {
             /// Before acquiring a problem from the suite, this function must be invoked.
             /// Otherwise the list of problem is empty.
             void load_problem() {
-                if (this->size() != 0) {
-                    this->clear();
+                if (!this->problems_.empty()) {
+                    this->problems_.clear();
                 }
                 this->size_of_problem_list =
                     this->number_of_dimensions * this->number_of_instances *
@@ -73,11 +77,11 @@ namespace ioh {
                                 this->problem_id_name_map[this->problem_id[i]],
                                 this->instance_id[h],
                                 this->dimension[j]);
-                            this->push_back(p);
+                            this->problems_.push_back(p);
                         }
                     }
                 }
-                assert(this->size_of_problem_list == this->size());
+                assert(this->size_of_problem_list == this->problems_.size());
                 this->get_problem_flag = false;
                 this->load_problem_flag = true;
             }
@@ -105,7 +109,7 @@ namespace ioh {
                 else
                     ++this->problem_list_index;
 
-                this->current_problem = (*this)[problem_list_index];
+                this->current_problem = problems_.at(problem_list_index);
 
                 this->current_problem->reset_problem();
                 return this->current_problem;
@@ -121,9 +125,9 @@ namespace ioh {
 
                 if (this->get_problem_flag == false)
                     this->get_problem_flag = true;
-                 
+
                 // TODO: this may introduce unwanted behavior				
-                this->current_problem = (*this)[problem_list_index];
+                this->current_problem = problems_.at(problem_list_index);
                 this->current_problem->reset_problem();
                 return this->current_problem;
             }
@@ -173,6 +177,8 @@ namespace ioh {
             }
 
 
+
+
             int get_number_of_instances() const {
                 return this->number_of_instances;
             }
@@ -210,20 +216,17 @@ namespace ioh {
 
             void set_suite_problem_id(const std::vector<int> &problem_id) {
                 common::copy_vector(problem_id, this->problem_id);
-                this->number_of_problems = static_cast<int>(this->problem_id.
-                    size());
+                this->number_of_problems = static_cast<int>(this->problem_id.size());
             }
 
             void set_suite_instance_id(const std::vector<int> &instance_id) {
                 common::copy_vector(instance_id, this->instance_id);
-                this->number_of_instances = static_cast<int>(this->instance_id.
-                    size());
+                this->number_of_instances = static_cast<int>(this->instance_id.size());
             }
 
             void set_suite_dimension(const std::vector<int> &dimension) {
                 common::copy_vector(dimension, this->dimension);
-                this->number_of_dimensions = static_cast<int>(this->dimension.
-                    size());
+                this->number_of_dimensions = static_cast<int>(this->dimension.size());
             }
 
 
@@ -231,9 +234,14 @@ namespace ioh {
                 this->suite_name = suite_name;
             }
 
-            void mapIDTOName(int id, std::string name) {
+            void mapIDTOName(const int id, const std::string &name) {
                 problem_id_name_map[id] = name;
                 problem_name_id_map[name] = id;
+            }
+
+            [[nodiscard]]
+            std::vector<std::shared_ptr<ProblemType>> problems() const {
+                return problems_;
             }
 
         private:

@@ -10,10 +10,10 @@ namespace ioh {
         public:
             using input_type = double;
 
-            bbob(std::vector<int> problem_id = vector<int>(0),
-                 const std::vector<int> instance_id = vector<int>(
+            bbob(std::vector<int> problem_id = std::vector<int>(0),
+                 const std::vector<int> instance_id = std::vector<int>(
                      {IOH_DEFAULT_INSTANCE}),
-                 const std::vector<int> dimension = vector<int>(
+                 const std::vector<int> dimension = std::vector<int>(
                      {IOH_DEFAULT_DIMENSION})) {
                 if (problem_id.empty()) {
                     common::log::info(
@@ -71,10 +71,10 @@ namespace ioh {
             }
 
             static bbob *create(
-                const std::vector<int> problem_id = vector<int>(0),
-                const std::vector<int> instance_id = vector<int>(
+                const std::vector<int> problem_id = std::vector<int>(0),
+                const std::vector<int> instance_id = std::vector<int>(
                     {IOH_DEFAULT_INSTANCE}),
-                const std::vector<int> dimension = vector<int>(
+                const std::vector<int> dimension = std::vector<int>(
                     {IOH_DEFAULT_DIMENSION})) {
                 return new bbob(problem_id, instance_id, dimension);
             }

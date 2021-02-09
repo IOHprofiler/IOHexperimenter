@@ -9,10 +9,10 @@ namespace ioh {
         public:
             using input_type = int;
 
-            pbo(std::vector<int> problem_id = vector<int>(0),
-                const std::vector<int> instance_id = vector<int>(
+            pbo(std::vector<int> problem_id = std::vector<int>(0),
+                const std::vector<int> instance_id = std::vector<int>(
                     {IOH_DEFAULT_INSTANCE}),
-                const std::vector<int> dimension = vector<int>({100})) {
+                const std::vector<int> dimension =  std::vector<int>({100})) {
                 if (problem_id.empty()) {
                     common::log::info(
                         "PBO: no problem id provided, applying all functions..");
@@ -74,10 +74,10 @@ namespace ioh {
                 register_problem<pbo_base, NK_Landscapes>("NK_Landscapes", 25);
             }
 
-            static pbo *create(std::vector<int> problem_id = vector<int>(0),
-                               const std::vector<int> instance_id = vector<int>(
+            static pbo *create(std::vector<int> problem_id = std::vector<int>(0),
+                               const std::vector<int> instance_id = std::vector<int>(
                                    {IOH_DEFAULT_INSTANCE}),
-                               const std::vector<int> dimension = vector<int>(
+                               const std::vector<int> dimension = std::vector<int>(
                                    {100})) {
                 return new pbo(problem_id, instance_id, dimension);
             }

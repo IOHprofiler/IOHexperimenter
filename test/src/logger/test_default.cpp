@@ -52,15 +52,16 @@ TEST(logger, default) {
 
     const std::string test_info1 =
         R"(suite = "No suite", funcId = 1, funcName = "Sphere", DIM = 4, maximization = "F", algId = "algorithm_name", algInfo = "algorithm_info")"
-        "\n%\ndata_f1_Sphere/IOHprofiler_f1_DIM4.dat, 1:1|5.637287, 1:1|5.637287\n"
+        "\n%\ndata_f1_Sphere/IOHprofiler_f1_DIM4.dat, 1:1|5.63729, 1:1|5.63729\n"
         R"(suite = "No suite", funcId = 1, funcName = "Sphere", DIM = 2, maximization = "F", algId = "algorithm_name", algInfo = "algorithm_info")"
-        "\n%\ndata_f1_Sphere/IOHprofiler_f1_DIM2.dat, 1:1|1.402094, 1:1|1.402094";
+        "\n%\ndata_f1_Sphere/IOHprofiler_f1_DIM2.dat, 1:1|1.40209, 1:1|1.40209";
 
     const std::string test_info2 =
         R"(suite = "No suite", funcId = 6, funcName = "Attractive_Sector", DIM = 4, maximization = "F", algId = "algorithm_name", algInfo = "algorithm_info")"
-        "\n%\ndata_f6_Attractive_Sector/IOHprofiler_f6_DIM4.dat, 1:1|28268.397464, 1:1|28268.397464";
+        "\n%\ndata_f6_Attractive_Sector/IOHprofiler_f6_DIM4.dat, 1:1|28268.4, 1:1|28268.4";
 
     ASSERT_EQ(0, get_file_as_string(l_folder.path() / info_file_name1).compare(test_info1));
+   
     ASSERT_EQ(0, get_file_as_string(l_folder.path() / info_file_name2).compare(test_info2));
 
         

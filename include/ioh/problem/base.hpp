@@ -115,13 +115,9 @@ namespace ioh {
              * \brief A virtual internal evaluate function.
              * 
              * The internal_evaluate function is to be used in evaluate function.
-             * This function must be decalred in derived function of new problems.
+             * This function must be declared in derived function of new problems.
              */
-            virtual double internal_evaluate(const std::vector<InputType> &x) {
-                constexpr auto result = std::numeric_limits<double>::lowest();
-                common::log::warning("No evaluate function defined");
-                return result;
-            }
+            virtual double internal_evaluate(const std::vector<InputType>& x) = 0;
 
             /**
              * \fn virtual void prepare_problem()
@@ -130,8 +126,7 @@ namespace ioh {
              * Additional preparation, such as calculatng values of parameters based on
              * problem_id, dimension, instance id, etc., can be done in this function.
              */
-            virtual void prepare_problem() {
-            }
+            virtual void prepare_problem(){}
 
             /** \todo to support multi-objective optimization
              * \fn std::vector<double> evevaluate_multialuate(std::vector<InputType> x)
