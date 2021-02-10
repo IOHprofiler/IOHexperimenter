@@ -1,230 +1,214 @@
-/// \file observer.h
-/// \brief Header file for the class observer.
-///
-/// \author Furong Ye
 #pragma once
 
+#include <utility>
+
+
 #include "ioh/common.hpp"
-#include "ioh/problem.hpp"
 #include "ioh/suite.hpp"
 
 
-namespace ioh
-{
-	namespace logger
-	{
-		/// \brief A class of methods of setting triggers recording evaluations.
-		///
-		/// Four methods is introduced here:
-		///   1. Recording evaluations by a static interval.
-		///   2. Recording complete evaluations.
-		///   3. Recording evaluations as the best found solution is updated.
-		///   4. Recording evaluations at pre-defined points or/and with a static number for each exponential bucket.
-		template <typename ProblemType>
-		class observer
-		{
-			int observer_interval; /// < variable for recording by a static interval.
-			bool observer_complete_flag; /// < variable for recording complete optimization process. 
-			bool observer_update_flag; /// < variable for recording when a better solution is found.
+namespace ioh {
+    namespace logger {
+        /**
+         * \brief A observer class for \ref ioh::problem::base problems.
+         * It contains five types of triggers, which determine when to log a event:
+         *	1. Recording evaluations by a static interval.
+         *	2. Recording all evaluations.
+         *	3. Recording evaluations as the best found solution is updated.
+         *	4. Recording evaluations at pre-defined points
+         *	5. With a static number for each exponential bucket.
+         */
+        class Observer {
+            /**
+             * \brief variable for recording complete optimization process. i.e. every iteration is stored
+             */
+            bool trigger_always_;
+            /**
+             * \brief variable for recording when a better solution is found.
+             */
+            bool trigger_on_improvement_;
+            /**
+             * \brief variable for recording by a static interval.
+             */
+            int trigger_at_interval_;
+            /**
+             * \brief A vector of time points when to store data
+             */
+            std::vector<int> trigger_at_time_points_;
 
-			std::vector<int> observer_time_points; /// < variables for recording at pre-defined points.
-			size_t evaluations_value1; /// < intermediate variables for calculating points with 'observer_time_points'.
-			size_t time_points_index; /// < intermediate variables for calculating points with 'observer_time_points'.
-			int time_points_expi; /// < intermediate variables for calculating points with 'observer_time_points'.
-			int observer_time_points_exp_base1;
+            /**
+             * \brief The exponent used in conjunction with trigger_at_time_points_
+             */
+            int trigger_at_time_points_exp_base_;
 
-			int observer_number_of_evaluations;
-			/// < variables for recording with a pre-defined times in each exponential boxplot.
-			size_t evaluations_value2;
-			/// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
-			int evaluations_expi;
-			/// < intermediate variables for calculating points with 'observer_number_of_evaluations'.
-			int observer_time_points_exp_base2;
+            /**
+             * \brief The number of triggers per time range
+             */
+            int triggers_per_time_range_;
+            /**
+             * \brief The exponent used in conjunction with triggers_per_time_range_
+             */
+            int triggers_per_time_range_exp_base_;
 
-			/// \todo Currently this is only for single objective optimization.
-			double current_best_fitness;
+            /**
+             * \brief The current best fitness value observed
+             */
+            double current_best_fitness_{};
 
-		public:
-			/** API for subclasses @{ */
-			using input_type = ProblemType;
+            /**
+             * \brief computes log(x)/log(b) and rounds to integer
+             * \param evaluations the number of evaluations
+             * \param exp the exponent
+             * \return (int)log(x)/log(b)
+             */
+            [[nodiscard]] int compute_base(const size_t evaluations, const int exp) const {
+                return static_cast<int>(
+                    log(evaluations) / log(exp) + 1e-4 // add small const to help with rounding
+                );
+            }
 
-			virtual void track_problem(const ProblemType& problem) = 0;
 
-			virtual void track_suite(const suite::base<ProblemType>& suite) = 0;
+        public:
+            explicit Observer(
+                const bool trigger_always = false,
+                const int trigger_on_interval = 0,
+                const int triggers_per_time_range = 0,
+                const bool trigger_on_improvement = true,
+                std::vector<int> trigger_at_time_points = {0},
+                const common::OptimizationType optimization_type = common::OptimizationType::minimization,
+                const int trigger_at_time_points_exp_base = 10,
+                const int trigger_at_range_exp_base = 10
+                )
+                : trigger_always_(trigger_always),
+                  trigger_on_improvement_(trigger_on_improvement),
+                  trigger_at_interval_(trigger_on_interval),
+                  trigger_at_time_points_(std::move(trigger_at_time_points)),
+                  trigger_at_time_points_exp_base_(trigger_at_time_points_exp_base),
+                  triggers_per_time_range_(triggers_per_time_range),
+                  triggers_per_time_range_exp_base_(trigger_at_range_exp_base) {
+                reset(optimization_type);
+            }
 
-			virtual void do_log(const std::vector<double>& log_info) = 0;
-			/** }@ */
+            /**
+             * \brief resets \ref current_best_fitness_
+             * \param optimization_type Whether minimization or maximization is used
+             */
+            void reset(const common::OptimizationType optimization_type) {
+                current_best_fitness_ = optimization_type == common::OptimizationType::maximization
+                                            ? -std::numeric_limits<double>::infinity()
+                                            : std::numeric_limits<double>::infinity();
+            }
+
+            /**
+             * \brief returns true when trigger always is set to true
+             * \return \ref trigger_always_
+             */
+            [[nodiscard]] bool trigger_always() const {
+                return trigger_always_;
+            }
+
+            /**
+             * \brief return true when a trigger at a static interval is defined
+             * \return \ref trigger_at_interval_ != 0;
+             */
+            [[nodiscard]] bool trigger_at_interval() const {
+                return trigger_at_interval_ != 0;
+            }
+
+            /**
+             * \brief return true when a trigger on objective function improvement is defined
+             * \return \ref trigger_on_improvement_
+             */
+            [[nodiscard]] bool trigger_on_improvement() const {
+                return trigger_on_improvement_;
+            }
 
 
-			observer() :
-				observer_interval(0),
-				observer_complete_flag(false),
-				observer_update_flag(true),
-				observer_time_points({0}),
-				evaluations_value1(1),
-				time_points_index(0),
-				time_points_expi(0),
-				observer_time_points_exp_base1(10),
-				observer_number_of_evaluations(0),
-				evaluations_value2(1),
-				evaluations_expi(0),
-				observer_time_points_exp_base2(10)
-			{
-			}
+            /**
+             * \brief returns true when a trigger on specific time points is defined
+             * \return true when \ref trigger_at_time_points_ is not empty
+             */
+            [[nodiscard]] bool trigger_at_time_points() const {
+                return !trigger_at_time_points_.empty() && !(
+                           trigger_at_time_points_.size() == 1 && trigger_at_time_points_[0] == 0);
+            }
 
-			virtual ~observer()
-			{
-			}
+            /**
+             * \brief returns true when a trigger on a specific time range is defined
+             * \return \ref triggers_per_time_range_ > 0;
+             */
+            [[nodiscard]] bool trigger_at_time_range() const {
+                return triggers_per_time_range_ > 0;
+            }
 
-			observer(const observer&) = delete;
-			observer& operator =(const observer&) = delete;
+            /**
+             * \brief Checks whether the current number of evaluations is in the specified interval 
+             * \param evaluations the current number of evaluations
+             * \return true when the current number of evaluations is in the specified interval 
+             */
+            [[nodiscard]] bool
+            interval_trigger(const size_t evaluations) const {
+                return trigger_at_interval() && (evaluations == 1 || evaluations % trigger_at_interval_ == 0);
+            }
 
-			void set_complete_flag(const bool complete_flag)
-			{
-				observer_complete_flag = complete_flag;
-			}
+            /**
+             * \brief If \ref triggers_per_time_range_ is defined, It maintains that in each
+             * [\ref triggers_per_time_range_exp_base_^base, \ref triggers_per_time_range_exp_base_^(base+1)]
+             *  there will be \ref triggers_per_time_range_ triggers.
+             * \param evaluations the current number of evaluations
+             * \return true when the current evaluation should be logged
+             */
+            [[nodiscard]] bool time_range_trigger(const size_t evaluations) const {
+                if (!trigger_at_time_range())
+                    return false;
 
-			bool complete_status() const
-			{
-				return observer_complete_flag;
-			}
+                const auto base = compute_base(evaluations, triggers_per_time_range_exp_base_);
 
-			bool complete_trigger() const
-			{
-				return observer_complete_flag;
-			}
+                const auto start = static_cast<int>(std::pow(triggers_per_time_range_exp_base_, base));
+                const auto stop = static_cast<int>(std::pow(triggers_per_time_range_exp_base_, base + 1));
+                const auto interval = static_cast<int>(stop / triggers_per_time_range_);
 
-			void set_interval(const int interval)
-			{
-				observer_interval = interval;
-			}
+                return  (evaluations - start) % interval == 0;
+            }
 
-			bool interval_status() const
-			{
-				return observer_interval != 0;
-			}
+            /**
+             * \brief Check whether the current number of evaluations equals any defined in \ref trigger_at_time_points_
+             * or an power of trigger_at_time_points_exp_base_ multiplied with any element of \ref trigger_at_time_points_.
+             * For example, \ref trigger_at_time_points_ = {1,2,5} and \ref trigger_at_time_points_exp_base_ = 10;
+             * the trigger returns true at 1, 2, 5, 10*1, 10*2, 10*5, 100*1, 100*2, 100*5,...
+             * \param evaluations the current number of evaluations
+             * \return true when the current evaluation should be logged
+             */
+            [[nodiscard]] bool time_points_trigger(const size_t evaluations) const {
+                if (!trigger_at_time_points())
+                    return false;
 
-			bool interval_trigger(const size_t evaluations) const
-			{
-				return observer_interval != 0 && (evaluations == 1 || evaluations % observer_interval == 0);
-			}
+                const auto factor = std::pow(trigger_at_time_points_exp_base_,
+                                        compute_base(evaluations, trigger_at_time_points_exp_base_));
 
-			void set_update_flag(const bool update_flag)
-			{
-				observer_update_flag = update_flag;
-			}
+                for (const auto &e : trigger_at_time_points_) {
+                    if (evaluations == (e * factor))
+                        return true;
+                }
+                return false;
+            }
 
-			bool update_status() const
-			{
-				return observer_update_flag;
-			}
+            /**
+             * \brief Checks whether \ref fitness is an improvement on \ref current_best_fitness_ 
+             * \param fitness The current fitness
+             * \param optimization_type Whether minimization or maximization is used
+             * \return true when fitness is better than \ref current_best_fitness_
+             */
+            bool improvement_trigger(
+                const double fitness,
+                const common::OptimizationType optimization_type = common::OptimizationType::minimization) {
+                if (trigger_on_improvement_ && compare_objectives(fitness, current_best_fitness_, optimization_type)) {
+                    current_best_fitness_ = fitness;
+                    return true;
+                }
+                return false;
+            }
+        };
 
-			bool update_trigger(const double fitness, const common::optimization_type optimization_type)
-			{
-				if (observer_update_flag && compare_objectives(fitness, current_best_fitness, optimization_type))
-				{
-					current_best_fitness = fitness;
-					return true;
-				}
-				return false;
-			}
-
-			void set_time_points(const std::vector<int>& time_points, const int number_of_evaluations,
-			                     const int time_points_exp_base1 = 10, const int time_points_exp_base2 = 10)
-			{
-				observer_time_points = time_points;
-				observer_number_of_evaluations = number_of_evaluations;
-				observer_time_points_exp_base1 = time_points_exp_base1;
-				observer_time_points_exp_base2 = time_points_exp_base2;
-			}
-
-			bool time_points_status() const
-			{
-				return observer_time_points.size() > 0
-					&& !(observer_time_points.size() == 1 && observer_time_points[0] == 0)
-					|| observer_number_of_evaluations > 0;
-			}
-
-			bool time_points_trigger(const size_t evaluations)
-			{
-				if (!time_points_status())
-				{
-					return false;
-				}
-				auto result = false;
-
-				/// evaluations_values is to be set by 10^n * elements of observer_time_points.
-				/// For example, observer_time_points = {1,2,5}, the trigger returns true at 1, 2, 5, 10*1, 10*2, 10*5, 100*1, 100*2, 100*5,... 
-				if (evaluations == evaluations_value1)
-				{
-					result = true;
-					if (time_points_index < observer_time_points.size() - 1)
-					{
-						++time_points_index;
-					}
-					else
-					{
-						time_points_index = 0;
-						++time_points_expi;
-					}
-					this->evaluations_value1 = static_cast<size_t>(observer_time_points[time_points_index] *
-						pow(
-							static_cast<double>(observer_time_points_exp_base1),
-							static_cast<double>(time_points_expi)));
-					while (evaluations_value1 <= evaluations)
-					{
-						if (time_points_index < observer_time_points.size() - 1)
-						{
-							++time_points_index;
-						}
-						else
-						{
-							time_points_index = 0;
-							++time_points_expi;
-						}
-						evaluations_value1 = static_cast<size_t>(observer_time_points[
-							time_points_index] * pow(
-							static_cast<double>(observer_time_points_exp_base1),
-							static_cast<double>(time_points_expi)));
-					}
-				}
-
-				/// evaluations_value2 = floor(10^(i/n), n is observer_number_of_evaluations.
-				/// It maintains that in each [10^m, 10^(m+1)], there will be observer_number_of_evaluations evaluations are stored.
-				if (evaluations == this->evaluations_value2)
-				{
-					while (static_cast<size_t>(floor(pow(observer_time_points_exp_base2,
-					                                     static_cast<double>(evaluations_expi) / static_cast<
-						                                     double>(observer_number_of_evaluations)))) <=
-						evaluations_value2)
-					{
-						evaluations_expi++;
-					}
-					evaluations_value2 = static_cast<size_t>(floor(pow(observer_time_points_exp_base2,
-					                                                   static_cast<double>(evaluations_expi) /
-					                                                   static_cast<double>(
-						                                                   observer_number_of_evaluations))));
-					result = true;
-				}
-				return result;
-			}
-
-			void reset_observer(const common::optimization_type optimization_type)
-			{
-				if (optimization_type == common::optimization_type::maximization)
-				{
-					current_best_fitness = std::numeric_limits<double>::lowest();
-				}
-				else
-				{
-					current_best_fitness = std::numeric_limits<double>::max();
-				}
-				evaluations_value1 = 1;
-				time_points_index = 0;
-				time_points_expi = 0;
-				evaluations_value2 = 1;
-				evaluations_expi = 0;
-			}
-		};
-	}
+    }
 }

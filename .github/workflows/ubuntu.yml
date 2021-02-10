@@ -16,6 +16,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        sudo apt-get install doxygen python3-setuptools python3-dev python3-wheel -y 
+        pip3 install wheel
+        pip3 install -r ./doc/sphinx/requirements.txt
     
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
@@ -47,4 +56,4 @@ jobs:
     - name: Test
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: test/test_ioh
+      run: tests/test_ioh

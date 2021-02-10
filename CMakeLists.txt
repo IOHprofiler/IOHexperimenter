@@ -2,28 +2,35 @@
 ##
 cmake_minimum_required(VERSION 3.10)
 
-project(ioh
+project(ioh 
     VERSION 0.0.0.1
-    LANGUAGES CXX
+    LANGUAGES CXX 
 )
 set(CMAKE_CXX_STANDARD 17)
+set(EXTERNAL_DIR "${PROJECT_SOURCE_DIR}/external")
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
+option(BUILD_PYTHON_PACKAGE "Whether to build Python package" OFF)
+option(BUILD_TESTS "Whether to build test cases with gtest" ON)
+option(BUILD_EXAMPLE "Whether to build Python package" ON)
 
 option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python modules as if they were an IOH problem" OFF)
+option(BUILD_DOCS "Build docs" OFF)
 
 if(MSVC)
-    set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windowss
+    set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windows
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
-endif() 
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+endif()  
+ 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU") 
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -lstdc++fs")
 
     if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
         link_libraries(stdc++fs)
         add_compile_definitions(FSEXPERIMENTAL)
     endif()
-endif()
+endif() 
 
 # Define project targets.
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
@@ -31,7 +38,7 @@ file(GLOB_RECURSE HEADERS include/ioh *.hpp)
 # Exlude python problems if not enabled
 if(NOT ENABLE_PYTHON_PROBLEMS)
     list(FILTER HEADERS EXCLUDE REGEX "include/ioh/problem/python/*")
-endif()
+endif() 
 
 
 add_library(ioh INTERFACE)
@@ -111,7 +118,7 @@ install(EXPORT ioh-targets
     NAMESPACE ioh::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ioh
 )
-
+ 
 
 # Export targets. If an external project adds this project to its build tree
 # via `add_subdirectory()`, then `find_package()` will work without
@@ -124,9 +131,21 @@ export(PACKAGE ioh)
 
 
 # Add subdirectories to build.
-add_subdirectory(test)
-add_subdirectory(example)
+if(BUILD_TESTS) 
+    add_subdirectory(tests)
+endif()
 
+if(BUILD_EXAMPLE)
+    add_subdirectory(example)
+endif()
+
+if(BUILD_DOCS)
+    add_subdirectory(doc)
+endif()
+
+if(BUILD_PYTHON_PACKAGE)
+    add_subdirectory(ioh)
+endif()
 
 
 
