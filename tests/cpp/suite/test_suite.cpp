@@ -64,7 +64,7 @@ TEST(suite, factory) {
 
     auto problems = suite->problems();
 
-    for (auto i = 0; i < problems.size(); i++)
+    for (size_t i = 0; i < problems.size(); i++)
         ASSERT_EQ(problem_ids.at(i), problems.at(i)->get_problem_id());
 
  }

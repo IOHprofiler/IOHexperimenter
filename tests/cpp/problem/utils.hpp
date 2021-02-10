@@ -6,7 +6,7 @@
 
 using namespace std;
 
-static vector<string> split(const string &str, const string &pattern)
+inline vector<string> split(const string &str, const string &pattern)
 {
     vector<string> res;
     if(str.empty())
@@ -25,10 +25,10 @@ static vector<string> split(const string &str, const string &pattern)
     return res;
 }
  
-static vector<double> string_to_vector_double(string s) {
+inline vector<double> string_to_vector_double(string s) {
   vector<double> x;
   vector<string> tmp;
-  int i = 0;
+  size_t i = 0;
 
   tmp = split(s,",");
   while(i != tmp.size()) {
@@ -38,9 +38,9 @@ static vector<double> string_to_vector_double(string s) {
   return x;
 }
 
-static vector<int> string_to_vector_int(string s) {
+inline vector<int> string_to_vector_int(string s) {
     vector<int> x;
-    int i = 0;
+    size_t i = 0;
     while (i != s.size()) {
         x.push_back(s[i] - '0');
         i++;

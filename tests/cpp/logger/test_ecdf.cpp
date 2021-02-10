@@ -49,7 +49,7 @@ TEST(ecdf, example)
 			sol.reserve(d);
 			std::generate_n(std::back_inserter(sol), d, [&dis, &gen]() {return dis(gen); });
 
-			auto f = pb->evaluate(sol);
+			pb->evaluate(sol);
 			logger.do_log(pb->loggerInfo());
 		}
 		ecdf_sum sum;
