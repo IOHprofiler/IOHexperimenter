@@ -11,6 +11,56 @@
 
 namespace ioh {
     namespace problem {
+
+
+        class Problem {
+             /*
+             * What blocks has a problem?:
+             *  - MetaData:
+             *      - suite_related: id, suite_name -> we need an Wrapper for logger, to make a `Dummy Suite` (for info file)
+             *      - problem_related: instance, dim~number_of_variables, name, minmax, datatype, objectives -> call constructor)
+             *          class Solution(a good name) { -> get target?
+             *              x, y
+             *          }
+             *         (think of paralization in python)
+             *  - Constraints      
+             *  - State:`                                      (protected/private)              (public) 
+             *      - evaluations, optimalFound(method), current_best_internal (Solution), current_best (Solution) (this is transformed)
+             *      - Logger info:                                                      (this is return by evaluate)
+             *           R"#("function evaluation" "current f(x)" "best-so-far f(x)" "current af(x)+b" "best af(x)+b")#";
+             *                                      values that are the same across instances (iid independent: untransformed); transformed(iid dependent)
+             *                                           for BBOB these are also scaled with optimum (goes to zero, not for pbo)
+             *          Make a different implementation for current_best & current_best_transformed for COCO and PBO (default)
+             *  -
+             *
+             *  void calc_optimal()
+             *  reset
+                virtual void prepare() {}
+                
+                virtual void customize_optimal() -> child class
+                virtual void transform_variables() -> self
+                virtual void transform_objective() 
+                double evaluate -> operator overload ()
+                protected virtual double evaluate(const std::vector<InputType>& x) = 0;
+
+                accessor naming:
+                    named after the private variable
+                members:
+                    not: problem_name but: name
+                    
+             */
+
+        };
+
+     
+
+
+
+
+
+
+
+
         /** \brief A base class for IOH problems.
          * Basic structure for IOHexperimenter, which is used for generating benchmark problems.
          * To define a new problem, the `internal_evaluate` method must be defined, 
@@ -28,9 +78,9 @@ namespace ioh {
             /// < evaluate function is validated with get and dimension. set default to avoid invalid class.
 
             std::string problem_name;
-            std::string problem_type; /// todo. make it as enum.
+            std::string problem_type; /// todo. make it as enum. -> suite_name
 
-            common::OptimizationType maximization_minimization_flag;
+            common::OptimizationType maximization_minimization_flag; 
 
             int number_of_variables;
             /// < evaluate function is validated with get and dimension. set default to avoid invalid class.
@@ -40,7 +90,7 @@ namespace ioh {
             std::vector<InputType> upperbound;
 
             std::vector<InputType> best_variables; /// todo. comments, rename?
-            std::vector<InputType> best_transformed_variables;
+            std::vector<InputType> best_transformed_variables; 
             std::vector<double> optimal;
             /// todo. How to evluate distance to optima. In global optima case, which optimum to be recorded.
             bool optimalFound;
@@ -189,6 +239,7 @@ namespace ioh {
                 }
 
                 variables_transformation(x, problem_id, instance_id);
+                                             
 
                 this->raw_objectives[0] = this->internal_evaluate(x);
                 this->transformed_objectives[0] = this->raw_objectives[0];
@@ -321,7 +372,7 @@ namespace ioh {
                     }
                 }
                 this->prepare_problem();
-                this->calc_optimal();
+                this->calc_optimal(); // you already know this
             }
 
             /** \fn std::vector<std::variant<int,double,std::string>> loggerInfo()
@@ -336,7 +387,7 @@ namespace ioh {
             std::vector<double> loggerCOCOInfo() const {
                 std::vector<double> logger_info(5);
                 logger_info[0] = static_cast<double>(this->evaluations);
-                logger_info[1] = this->transformed_objectives[0] - this->optimal[0];
+                logger_info[1] = this->transformed_objectives[0] - this->optimal[0]; // fopt
                 logger_info[2] = this->best_so_far_transformed_objectives[0] - this->optimal[0];
                 logger_info[3] = this->transformed_objectives[0];
                 logger_info[4] = this->best_so_far_transformed_objectives[0];
