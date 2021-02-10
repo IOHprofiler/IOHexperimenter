@@ -39,4 +39,4 @@ jobs:
     - name: Test
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: test/Debug/test_ioh.exe
+      run: tests/Debug/test_ioh.exe
