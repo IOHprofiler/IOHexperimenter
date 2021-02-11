@@ -11,56 +11,6 @@
 
 namespace ioh {
     namespace problem {
-
-
-        class Problem {
-             /*
-             * What blocks has a problem?:
-             *  - MetaData:
-             *      - suite_related: id, suite_name -> we need an Wrapper for logger, to make a `Dummy Suite` (for info file)
-             *      - problem_related: instance, dim~number_of_variables, name, minmax, datatype, objectives -> call constructor)
-             *          class Solution(a good name) { -> get target?
-             *              x, y
-             *          }
-             *         (think of paralization in python)
-             *  - Constraints      
-             *  - State:`                                      (protected/private)              (public) 
-             *      - evaluations, optimalFound(method), current_best_internal (Solution), current_best (Solution) (this is transformed)
-             *      - Logger info:                                                      (this is return by evaluate)
-             *           R"#("function evaluation" "current f(x)" "best-so-far f(x)" "current af(x)+b" "best af(x)+b")#";
-             *                                      values that are the same across instances (iid independent: untransformed); transformed(iid dependent)
-             *                                           for BBOB these are also scaled with optimum (goes to zero, not for pbo)
-             *          Make a different implementation for current_best & current_best_transformed for COCO and PBO (default)
-             *  -
-             *
-             *  void calc_optimal()
-             *  reset
-                virtual void prepare() {}
-                
-                virtual void customize_optimal() -> child class
-                virtual void transform_variables() -> self
-                virtual void transform_objective() 
-                double evaluate -> operator overload ()
-                protected virtual double evaluate(const std::vector<InputType>& x) = 0;
-
-                accessor naming:
-                    named after the private variable
-                members:
-                    not: problem_name but: name
-                    
-             */
-
-        };
-
-     
-
-
-
-
-
-
-
-
         /** \brief A base class for IOH problems.
          * Basic structure for IOHexperimenter, which is used for generating benchmark problems.
          * To define a new problem, the `internal_evaluate` method must be defined, 
@@ -73,14 +23,14 @@ namespace ioh {
          */
         template <class InputType>
         class base {
-            int problem_id; /// < problem id
+            int problem_id_; /// < problem id
             int instance_id;
             /// < evaluate function is validated with get and dimension. set default to avoid invalid class.
 
             std::string problem_name;
             std::string problem_type; /// todo. make it as enum. -> suite_name
 
-            common::OptimizationType maximization_minimization_flag; 
+            common::OptimizationType maximization_minimization_flag;
 
             int number_of_variables;
             /// < evaluate function is validated with get and dimension. set default to avoid invalid class.
@@ -90,7 +40,7 @@ namespace ioh {
             std::vector<InputType> upperbound;
 
             std::vector<InputType> best_variables; /// todo. comments, rename?
-            std::vector<InputType> best_transformed_variables; 
+            std::vector<InputType> best_transformed_variables;
             std::vector<double> optimal;
             /// todo. How to evluate distance to optima. In global optima case, which optimum to be recorded.
             bool optimalFound;
@@ -122,7 +72,7 @@ namespace ioh {
 
             base(int instance_id = IOH_DEFAULT_INSTANCE,
                  int dimension = IOH_DEFAULT_DIMENSION)
-                : problem_id(IOH_DEFAULT_PROBLEM_ID),
+                : problem_id_(IOH_DEFAULT_PROBLEM_ID),
                   instance_id(instance_id),
                   maximization_minimization_flag(
                       common::OptimizationType::maximization),
@@ -167,7 +117,7 @@ namespace ioh {
              * The internal_evaluate function is to be used in evaluate function.
              * This function must be declared in derived function of new problems.
              */
-            virtual double internal_evaluate(const std::vector<InputType>& x) = 0;
+            virtual double internal_evaluate(const std::vector<InputType> &x) = 0;
 
             /**
              * \fn virtual void prepare_problem()
@@ -176,7 +126,8 @@ namespace ioh {
              * Additional preparation, such as calculatng values of parameters based on
              * problem_id, dimension, instance id, etc., can be done in this function.
              */
-            virtual void prepare_problem(){}
+            virtual void prepare_problem() {
+            }
 
             /** \todo to support multi-objective optimization
              * \fn std::vector<double> evevaluate_multialuate(std::vector<InputType> x)
@@ -238,13 +189,12 @@ namespace ioh {
                     return this->transformed_objectives[0];
                 }
 
-                variables_transformation(x, problem_id, instance_id);
-                                             
+                variables_transformation(x, problem_id_, instance_id);
 
                 this->raw_objectives[0] = this->internal_evaluate(x);
                 this->transformed_objectives[0] = this->raw_objectives[0];
 
-                objectives_transformation(x, transformed_objectives, problem_id,
+                objectives_transformation(x, transformed_objectives, problem_id_,
                                           instance_id);
 
                 if (common::compare_objectives(this->transformed_objectives, this->best_so_far_transformed_objectives,
@@ -320,14 +270,14 @@ namespace ioh {
                     /// Do not apply transformation on best_variables as calculating the optimum
                     if (this->number_of_objectives == 1)
 
-                        this->optimal[0] = internal_evaluate(this->best_variables);
+                        this->optimal[0] = internal_evaluate(this->best_variables); 
                     else
                         common::log::error(
                             "Multi-objectives optimization is not supported now.");
 
                     objectives_transformation(this->best_variables,
                                               this->optimal,
-                                              this->problem_id,
+                                              this->problem_id_,
                                               this->instance_id);
                 } else {
                     this->optimal.clear();
@@ -343,6 +293,8 @@ namespace ioh {
                     }
                     customize_optimal();
                 }
+
+
             }
 
             /** \todo  To support constrained optimization.
@@ -425,7 +377,7 @@ namespace ioh {
              * \brief Return problem id.
              */
             int get_problem_id() const {
-                return this->problem_id;
+                return this->problem_id_;
             }
 
             /** \fn void set_problem_id()
@@ -434,7 +386,7 @@ namespace ioh {
              * \param problem_id problem id
              */
             void set_problem_id(int problem_id) {
-                this->problem_id = problem_id;
+                this->problem_id_ = problem_id;
             }
 
             /** \fn int get_instance_id()
@@ -563,7 +515,7 @@ namespace ioh {
              * is updated, `bet_variables`, `lowerbound`, `upperbound`, and `optimal` 
              * need to be updated as well.
              *
-             * \param number_of_variables
+             * \param number_of_variables j
              */
             void set_number_of_variables(int number_of_variables) {
                 this->number_of_variables = number_of_variables;
@@ -594,7 +546,7 @@ namespace ioh {
              */
             void set_number_of_variables(int number_of_variables,
                                          const std::vector<InputType> &
-                                         best_variables                                        
+                                         best_variables
                 ) {
                 this->number_of_variables = number_of_variables;
                 this->best_variables = best_variables;

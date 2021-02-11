@@ -11,11 +11,11 @@ namespace ioh {
                        int dimension = IOH_DEFAULT_DIMENSION)
                     : bbob_base(1, "Sphere", instance_id, dimension) {
                     set_number_of_variables(dimension);
+
                 }
 
                 void prepare_problem() override {
-                    transformation::coco::bbob2009_compute_xopt(
-                        xopt_, rseed_, n_);
+                    transformation::coco::bbob2009_compute_xopt(xopt_, rseed_, n_);
                 }
 
                 double internal_evaluate(

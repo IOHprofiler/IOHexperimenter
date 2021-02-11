@@ -7,3 +7,5 @@
 #include "problem/python.hpp"
 #include "problem/transformation.hpp"
 #include "problem/wmodel.hpp"
+
+#include "problem/problem.hpp"

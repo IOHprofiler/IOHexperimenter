@@ -25,7 +25,9 @@ namespace ioh {
         enum class OptimizationType {
             minimization,
             maximization
+
         };
+
 
         /**
          * \brief Helper function to copy a vector v1 into another vector v2
@@ -134,16 +136,43 @@ namespace ioh {
         }
 
         /**
-         * \brief Checks an checked of doubles for nan values
+         * \brief Checks a vector of doubles for nan values
          * \param x vector to be checked
          * \return true if x contains a nan value
          */
-        // static bool has_nan(const std::vector<double> &x) {
-        //     for (const auto& e : x)
-        //         if (std::isnan(e))
-        //             return true;
-        //     return false;
-        // }
+        template<typename T>
+        static bool has_nan(const std::vector<T> &x) {
+            for (const auto &e : x)
+                if (std::isnan<T>(e))
+                    return true;
+            return false;
+        }
+
+        /**
+         * \brief Checks a vector of doubles for nan values
+         * \param x vector to be checked
+         * \return true if x contains a nan value
+         */
+        template<typename T>
+        static bool all_finite(const std::vector<T> &x) {
+            for (const auto &e : x)
+                if (!std::isfinite<T>(e))
+                    return false;
+            return true;
+        }
+
+        /**
+        * \brief Checks a vector of doubles for inf values
+        * \param x vector to be checked
+        * \return true if x contains a nan value
+        */
+        template<typename T>
+        static bool has_inf(const std::vector<T> &x) {
+            for (const auto &e : x)
+                if (std::isinf<T>(e))
+                    return true;
+            return false;
+        }
 
         /**
          * \brief Retrieves an integer vector from a string
@@ -241,7 +270,8 @@ namespace ioh {
             std::copy(v.begin(), v.end(),
                       std::ostream_iterator<T>(oss, " "));
             auto result = oss.str();
-            result.pop_back();
+            if (!result.empty())
+                result.pop_back();
             return result;
         }
 
