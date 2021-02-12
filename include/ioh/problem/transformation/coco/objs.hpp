@@ -82,9 +82,9 @@ namespace ioh {
 
                 // static void transform_obj_scale_evaluate_function(
                 //     std::vector<double> &y, const double factor) {
-                //     const auto number_of_objectives = y.size();
+                //     const auto n_objectives = y.size();
                 //
-                //     for (size_t i = 0; i < number_of_objectives; i++)
+                //     for (size_t i = 0; i < n_objectives; i++)
                 //         y[i] *= factor;
                 // }
 

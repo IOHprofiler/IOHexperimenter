@@ -176,9 +176,6 @@ namespace ioh {
                 return this->number_of_problems;
             }
 
-
-
-
             int get_number_of_instances() const {
                 return this->number_of_instances;
             }

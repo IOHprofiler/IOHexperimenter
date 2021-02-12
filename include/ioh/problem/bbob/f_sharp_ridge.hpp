@@ -41,7 +41,7 @@ namespace ioh {
                     const std::vector<double> &x) override {
                     static const auto alpha = 100.0;
                     const double vars_40 = 1;
-                    /* generalized: number_of_variables <= 40 ? 1 : number_of_variables / 40.0; */
+                    /* generalized: n_variables <= 40 ? 1 : n_variables / 40.0; */
                     auto i = 0;
 
                     auto result = 0.0;

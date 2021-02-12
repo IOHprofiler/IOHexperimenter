@@ -21,7 +21,7 @@ namespace ioh {
                     //int is_feasible;
                     auto temp_x = x;
                     for (size_t i = 0; i < number_of_variables; ++i) {
-                        /* data->M has problem->number_of_variables columns and inner_problem->number_of_variables rows. */
+                        /* data->M has problem->n_variables columns and inner_problem->n_variables rows. */
                         x[i] = b[i];
                         for (size_t j = 0; j < number_of_variables; ++j) {
                             x[i] += temp_x[j] * M[i][j];
@@ -160,9 +160,9 @@ namespace ioh {
                 //     std::vector<double> &x,
                 //     const std::vector<double> &
                 //     sign_vector) {
-                //     const auto number_of_variables = x.size();
+                //     const auto n_variables = x.size();
                 //
-                //     for (size_t i = 0; i < number_of_variables; ++i) {
+                //     for (size_t i = 0; i < n_variables; ++i) {
                 //         x[i] = 2.0 * sign_vector[i] * x[i];
                 //     }
                 // }

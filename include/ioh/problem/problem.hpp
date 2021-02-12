@@ -5,7 +5,8 @@
 #include <string>
 #include <utility>
 #include <vector>
-
+#include <type_traits>
+#include <functional>
 
 #include "transformation.hpp"
 #include "ioh/common.hpp"
@@ -18,7 +19,7 @@ namespace ioh {
         * What blocks has a problem?:
         *  - MetaData:
         *      - suite_related: id, suite_name -> we need an Wrapper for logger, to make a `Dummy Suite` (for info file)
-        *      - problem_related: instance, dim~number_of_variables, name, minmax, datatype, objectives -> call constructor)
+        *      - problem_related: instance, dim~n_variables, name, minmax, datatype, objectives -> call constructor)
         *
         *          class Solution(a good name) { -> get target?
         *              x, y
@@ -64,22 +65,21 @@ namespace ioh {
         };
 
         template <typename T>
-        struct Constraint {
+        struct BoxConstraint {
 
             std::vector<T> ub;
             std::vector<T> lb;
 
-            Constraint(const std::vector<T> upper, const std::vector<T> lower)
+            BoxConstraint(const std::vector<T> upper, const std::vector<T> lower)
                 : ub(upper), lb(lower) {
             }
 
-            explicit Constraint(const int size = 1,
-                                const T upper = std::numeric_limits<T>::infinity(),
-                                const T lower = -std::numeric_limits<T>::infinity()
+            explicit BoxConstraint(const int size = 1,
+                                   const T upper = std::numeric_limits<T>::max(),
+                                   const T lower = std::numeric_limits<T>::lowest()
                 )
-                : Constraint(std::vector<T>(size, upper), std::vector<T>(size, lower)) {
+                : BoxConstraint(std::vector<T>(size, upper), std::vector<T>(size, lower)) {
             }
-
 
             void check_size(const int s) {
                 if (ub.size() == lb.size() == size_t{1}) {
@@ -91,10 +91,20 @@ namespace ioh {
                     std::cout << "Bound dimension is wrong" << std::endl;
             }
 
-            friend std::ostream &operator<<(std::ostream &os, const Constraint &obj) {
-                return os
-                       << "ub: " << common::vector_to_string(obj.ub)
-                       << " lb: " << common::vector_to_string(obj.lb);
+            bool check(const std::vector<T> &x) {
+                for (auto i = 0; i < x.size(); i++)
+                    if (!(lb.at(i) >= x.at(i) <= lb.at(i)))
+                        return false;
+                return true;
+            }
+
+            friend std::ostream &operator<<(std::ostream &os, const BoxConstraint &obj) {
+                os << "[ ";
+                for (auto i = 0; i < obj.ub.size(); i++)
+                    os << i << ": (" << obj.lb.at(i) << ", " << obj.ub.at(i) << ") ";
+                os << "]";
+                return os;
+
             }
         };
 
@@ -104,9 +114,9 @@ namespace ioh {
             std::string name;
             common::OptimizationType optimization_type;
             Solution<T> objective;
-            int number_of_variables;
-            int number_of_objectives;
-            T initial_objective_value;
+            int n_variables;
+            int n_objectives;
+            double initial_objective_value;
 
             MetaData(const int instance, std::string name, const Solution<T> &objective,
                      const common::OptimizationType optimization_type = common::OptimizationType::minimization
@@ -115,13 +125,26 @@ namespace ioh {
                   name(std::move(name)),
                   optimization_type(optimization_type),
                   objective(objective),
-                  number_of_variables(static_cast<int>(objective.x.size())),
-                  number_of_objectives(static_cast<int>(objective.y.size())),
+                  n_variables(static_cast<int>(objective.x.size())),
+                  n_objectives(static_cast<int>(objective.y.size())),
                   initial_objective_value(optimization_type == common::OptimizationType::minimization
-                                              ? std::numeric_limits<T>::infinity()
-                                              : -std::numeric_limits<T>::infinity()) {
+                                              ? std::numeric_limits<double>::infinity()
+                                              : -std::numeric_limits<double>::infinity()) {
 
             }
+
+            MetaData(const int instance, const std::string &name, const int n_variables, const int n_objectives = 1,
+                     const common::OptimizationType optimization_type = common::OptimizationType::minimization
+                )
+                : MetaData(instance, name,
+                           Solution<T>{std::vector<T>(n_variables, std::numeric_limits<T>::signaling_NaN()),
+                                       std::vector<double>(n_objectives,
+                                                           (optimization_type == common::OptimizationType::minimization
+                                                                ? -std::numeric_limits<double>::infinity()
+                                                                : std::numeric_limits<double>::infinity()))
+                           }, optimization_type) {
+            }
+
 
             friend std::ostream &operator<<(std::ostream &os, const MetaData &obj) {
                 return os
@@ -130,8 +153,9 @@ namespace ioh {
                        << " optimization_type: " << (obj.optimization_type == common::OptimizationType::minimization
                                                          ? "minimization"
                                                          : "maximization")
-                       << " number_of_variables: " << obj.number_of_variables
-                       << " number_of_objectives: " << obj.number_of_objectives;
+                       << " n_variables: " << obj.n_variables
+                       << " n_objectives: " << obj.n_objectives
+                       << " objectives: " << common::vector_to_string(obj.objective.y);
             }
         };
 
@@ -147,7 +171,7 @@ namespace ioh {
 
             State() = default;
 
-            State(Solution<T> initial_solution)
+            explicit State(Solution<T> initial_solution)
                 : initial_solution(std::move(initial_solution)) {
                 reset();
             }
@@ -182,53 +206,94 @@ namespace ioh {
         template <typename T>
         class Problem {
 
-            bool check_input(const std::vector<T> &x) {
+            bool check_input_dimensions(const std::vector<T> &x) {
                 if (x.empty()) {
                     common::log::warning("The solution is empty.");
                     return false;
                 }
-                if (x.size() != meta_data_.number_of_variables) {
+                if (x.size() != meta_data_.n_variables) {
                     common::log::warning("The dimension of solution is incorrect.");
                     return false;
                 }
+                return true;
+            }
 
-                if (common::all_finite<T>(x))
+            template <typename Integer = T>
+            typename std::enable_if<std::is_integral<Integer>::value, bool>::type check_input(const std::vector<T> &x) {
+                std::cout << "Integer check" << std::endl;
+                return check_input_dimensions(x);
+            }
+
+            template <typename Floating = T>
+            typename std::enable_if<std::is_floating_point<Floating>::value, bool>::type check_input(
+                const std::vector<T> &x) {
+                std::cout << "Floating check" << std::endl;
+                if (!check_input_dimensions(x))
+                    return false;
+
+                if (common::all_finite(x))
                     return true;
 
-                if (common::has_nan<T>(x)) {
+                if (common::has_nan(x)) {
                     common::log::warning("The solution contains NaN.");
                     return false;
                 }
-                if (common::has_inf<T>(x)) {
+                if (common::has_inf(x)) {
                     common::log::warning("The solution contains Inf.");
                     return false;
                 }
-
                 common::log::warning("The solution contains invalid values.");
                 return false;
             }
 
+
         protected:
             MetaData<T> meta_data_;
-            Constraint<T> constraint_;
+            BoxConstraint<T> constraint_;
             State<T> state_;
 
             [[nodiscard]]
             virtual std::vector<double> evaluate(std::vector<T> &x) = 0;
 
         public:
+
+            explicit Problem(MetaData<T> meta_data, BoxConstraint<T> constraint = BoxConstraint<T>())
+                : meta_data_(std::move(meta_data)), constraint_(std::move(constraint)) {
+                state_ = {{
+                    std::vector<T>(meta_data_.n_variables, std::numeric_limits<T>::signaling_NaN()),
+                    std::vector<double>(meta_data_.n_objectives, meta_data_.initial_objective_value)
+                }};
+                constraint_.check_size(meta_data_.n_variables);
+            }
+
             Problem(const int instance, const std::string &name, Solution<T> objective,
                     const common::OptimizationType optimization_type = common::OptimizationType::minimization,
-                    Constraint<T> constraint = Constraint<T>()
+                    BoxConstraint<T> constraint = BoxConstraint<T>()
                 )
-                : meta_data_(instance, name, std::move(objective), optimization_type),
-                  constraint_(std::move(constraint)) {
-                state_ = {{
-                    std::vector<T>(meta_data_.number_of_variables, std::numeric_limits<T>::signaling_NaN()),
-                    std::vector<double>(meta_data_.number_of_objectives, meta_data_.initial_objective_value)
-                }};
-                constraint_.check_size(meta_data_.number_of_variables);
+                : Problem(MetaData<T>(instance, name, std::move(objective), optimization_type), std::move(constraint)) {
             }
+
+            Problem(const std::string &name, Solution<T> objective,
+                    const common::OptimizationType optimization_type = common::OptimizationType::minimization,
+                    BoxConstraint<T> constraint = BoxConstraint<T>()
+                )
+                : Problem(MetaData<T>(0, name, std::move(objective), optimization_type), std::move(constraint)) {
+            }
+
+            Problem(const int instance, const std::string &name, const int n_variables, const int n_objectives = 1,
+                    const common::OptimizationType optimization_type = common::OptimizationType::minimization,
+                    BoxConstraint<T> constraint = BoxConstraint<T>()
+                )
+                : Problem(MetaData<T>(instance, name, n_variables, n_objectives, optimization_type), constraint) {
+            }
+
+            Problem(const std::string &name, const int n_variables, const int n_objectives = 1,
+                    const common::OptimizationType optimization_type = common::OptimizationType::minimization,
+                    BoxConstraint<T> constraint = BoxConstraint<T>()
+                )
+                : Problem(MetaData<T>(0, name, n_variables, n_objectives, optimization_type), constraint) {
+            }
+
 
             virtual ~Problem() = default;
 
@@ -240,20 +305,19 @@ namespace ioh {
                 return x;
             }
 
-            virtual std::vector<T> transform_objectives(std::vector<double> y) {
+            virtual std::vector<double> transform_objectives(std::vector<double> y) {
                 return y;
             }
 
             std::vector<double> operator()(const std::vector<T> &x) {
                 if (!check_input(x)) {
-                    return std::vector<T>(meta_data_.number_of_objectives, std::numeric_limits<T>::signaling_NaN());
+                    return std::vector<T>(meta_data_.n_objectives, std::numeric_limits<T>::signaling_NaN());
                 }
                 auto x_internal = transform_variables(x);
                 auto y_internal = evaluate(x_internal);
                 auto y = transform_objectives(y_internal);
                 state_.update(x, x_internal, y, y_internal, meta_data_);
                 return y;
-
             }
 
             [[nodiscard]]
@@ -266,6 +330,11 @@ namespace ioh {
                 return state_;
             }
 
+            [[nodiscard]]
+            BoxConstraint<T> constraint() const {
+                return state_;
+            }
+
             friend std::ostream &operator<<(std::ostream &os, const Problem &obj) {
                 return os
                        << "Problem(\n\t" << obj.meta_data_
@@ -274,22 +343,87 @@ namespace ioh {
             }
         };
 
+        template <typename T>
+        using Function = std::function<std::vector<double>(std::vector<T> &)>;
 
-        class COCO : public Problem<double> {
-
+        template <typename T>
+        class WrappedProblem : public Problem<T> {
         protected:
-            long seed_;
+            Function<T> function_;
+
+            std::vector<double> evaluate(std::vector<T> &x) override {
+                return function_(x);
+            }
 
         public:
-            COCO(const int problem_id, const int instance, const std::string &name, Solution<double> objective,
-                 const common::OptimizationType optimization_type = common::OptimizationType::minimization)
-                : Problem(instance, name, std::move(objective), optimization_type),
-                  seed_((problem_id == 4 || problem_id == 18 ? problem_id - 1 : problem_id) + 10000 * instance) {
+            WrappedProblem(Function<T> f, const std::string &name, const int n_variables, const int n_objectives = 1,
+                           const common::OptimizationType optimization_type = common::OptimizationType::minimization)
+                : Problem(MetaData<T>(0, name, n_variables, n_objectives, optimization_type)), function_(f) {
+            }
 
+        };
+
+        template <typename T>
+        WrappedProblem<T> wrap_function(Function<T> f, const std::string &name, const int n_variables,
+                                        const int n_objectives = 1,
+                                        const common::OptimizationType optimization_type =
+                                            common::OptimizationType::minimization) {
+            return WrappedProblem<T>{f, name, n_variables, n_objectives, optimization_type};
+        }
+
+
+        class BBOB : public Problem<double> {
+
+        protected:
+            int problem_id_;
+
+            struct TransformationState {
+                long seed;
+                std::vector<std::vector<double>> m;
+                std::vector<double> b;
+                std::vector<std::vector<double>> rot1;
+                std::vector<std::vector<double>> rot2;
+
+                TransformationState(const long seed, const int n_variables)
+                    : seed(seed),
+                      m(n_variables, std::vector<double>(n_variables)),
+                      b(n_variables),
+                      rot1(n_variables, std::vector<double>(n_variables)),
+                      rot2(n_variables, std::vector<double>(n_variables)) {
+                }
+
+            } transformation_state_;
+
+        public:
+            BBOB(const int problem_id, const int instance, const int n_variables, const std::string &name)
+                : Problem(instance, name, n_variables, 1, common::OptimizationType::minimization,
+                          BoxConstraint<double>(n_variables, 5, -5)),
+                  problem_id_(problem_id),
+                  transformation_state_(
+                      (problem_id == 4 || problem_id == 18 ? problem_id - 1 : problem_id) + 10000 * instance,
+                      n_variables
+                      ) {
+                meta_data_.objective = calculate_objective();
+            }
+
+            [[nodiscard]]
+            Solution<double> calculate_objective() const {
+                using namespace transformation::coco;
+                std::vector<double> x(meta_data_.n_objectives, 0);
+                bbob2009_compute_xopt(x, transformation_state_.seed, meta_data_.n_objectives);
+                return Solution<double>{
+                    x, {bbob2009_compute_fopt(problem_id_, meta_data_.instance)}
+                };
+            }
+
+
+            std::vector<double> transform_objectives(std::vector<double> y) override {
+                transformation::coco::transform_obj_shift_evaluate_function(y, meta_data_.objective.y.at(0));
+                return y;
             }
         };
 
-        class Sphere : public COCO {
+        class Sphere : public BBOB {
 
         protected:
             std::vector<double> evaluate(std::vector<double> &x) override {
@@ -300,13 +434,8 @@ namespace ioh {
             }
 
         public:
-            Sphere(const int instance, const int dimension)
-                : COCO(1, instance, "Sphere", calculate_objective(dimension, instance)) {
-            }
-
-            std::vector<double> transform_objectives(std::vector<double> y) override {
-                transformation::coco::transform_obj_shift_evaluate_function(y, meta_data_.objective.y.at(0));
-                return y;
+            Sphere(const int instance, const int n_variables)
+                : BBOB(1, instance, n_variables, "Sphere") {
             }
 
             std::vector<double> transform_variables(std::vector<double> x) override {
@@ -314,14 +443,7 @@ namespace ioh {
                 return x;
             }
 
-            [[nodiscard]]
-            Solution<double> calculate_objective(const int dimension, const int instance) const {
-                std::vector<double> x(dimension, 0);
-                transformation::coco::bbob2009_compute_xopt(x, seed_, dimension);
-                return Solution<double>{
-                    x, {transformation::coco::bbob2009_compute_fopt(1, instance)}
-                };
-            }
+
         };
     }
 }

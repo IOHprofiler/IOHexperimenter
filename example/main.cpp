@@ -141,61 +141,98 @@ void pbo_config_experiment() {
     bexperiment.run();
 }
 
+void test_logger() {
+    using namespace ioh;
+    auto p = problem::bbob::Sphere(1, 3);
+    
+    std::vector<double> x = { std::numeric_limits<double>::quiet_NaN(),
+            std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()
+    };
+    std::cout << p.evaluate(x);
 
+    auto l = logger::Default<problem::bbob::bbob_base>("ioh_data", "algorithm_name", "algorithm_info", true, 10);
+    auto l2 = logger::Csv<problem::bbob::bbob_base>();
+    
+    std::cout << l.experiment_folder() << std::endl; 
+    l.add_experiment_attribute("T", 10);
+    l2.add_attribute("T", 10);
+    
+    l.create_run_attributes({ "run_id" });
+    l2.set_dynamic_attributes_name({ "run_id" });
+    
+    l.create_logged_attributes({ "x1"});
+    l2.set_parameters_name({ "x1" });
+    
+    logger::LoggerCombine<problem::bbob::bbob_base> loggers({&l, &l2});
+    
+    for (auto count = 0; 5 > count; ++count) {
+        loggers.track_problem(p);
+        l.set_run_attributes({"run_id"}, {static_cast<double>(count)});
+        l2.set_dynamic_attributes({"run_id"}, {static_cast<double>(count)});
+        p.reset_problem();
+    
+        for (auto i = 0; i < 50; i++) {
+            const auto x = common::Random::uniform(p.get_number_of_variables());
+    
+            l.set_logged_attributes({ "x1" }, { x[0] });
+            l2.set_parameters({ "x1" }, { x[0] });
+    
+            p.evaluate(x);
+            loggers.do_log(p.loggerCOCOInfo());
+        }
+    }
+}
+
+
+
+
+
+
+
+class IntegerProblem : public ioh::problem::Problem<int> {
+protected:
+    std::vector<double> evaluate(std::vector<int>& x) override {
+        return { 0.0 };
+    }
+
+public:
+    IntegerProblem(const int n_variables = 1)
+        : Problem("IntegerProblem", n_variables) {
+
+    }
+};
+
+std::vector<double> null_function(std::vector<double>& x) {
+    return { 0.0 };
+}
+
+ 
 int main() {
     using namespace ioh::problem;
-    // auto p = bbob::Sphere(1, 3);
+    
+    // auto f = wrap_function<double>(&null_function, "Nuller", 5);
+    //
+    // std::cout << f << std::endl;
+    //
+    // const auto x = std::vector<double>{ 1,2,3,4,6 };
+    // f(x);
+    //
+    // std::cout << f << std::endl;
+
+
     auto s = Sphere(1, 10);
     std::cout << s << std::endl;
+    //
+    // s(s.meta_data().objective.x);
+    //
+    // std::cout << s << std::endl;
 
-    // std::cout << s.state() << std::endl;
-    s(s.meta_data().objective.x);
+     
+    // auto integer_problem = IntegerProblem(4);
+    //
+    // std::cout << integer_problem << std::endl;
 
-    std::cout <<
-        s(std::vector<double>(s.meta_data().number_of_variables, std::numeric_limits<double>::infinity()))
-        << std::endl;
-    // std::cout << s.state() << std::endl;
 
-    std::cout << s << std::endl;
 
     std::cout << "done";
-    // auto p2 = bbob::Sphere(1, 3);
-    //
-    // std::vector<double> x = { std::numeric_limits<double>::quiet_NaN(),
-    //         std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()
-    // };
-    // std::cout << p.evaluate(x);
-
-    // auto l = logger::Default<problem::bbob::bbob_base>("ioh_data", "algorithm_name", "algorithm_info", true, 10);
-    // auto l2 = logger::Csv<problem::bbob::bbob_base>();
-    //
-    // std::cout << l.experiment_folder() << std::endl; 
-    // l.add_experiment_attribute("T", 10);
-    // l2.add_attribute("T", 10);
-    //
-    // l.create_run_attributes({ "run_id" });
-    // l2.set_dynamic_attributes_name({ "run_id" });
-    //
-    // l.create_logged_attributes({ "x1"});
-    // l2.set_parameters_name({ "x1" });
-    //
-    // logger::LoggerCombine<problem::bbob::bbob_base> loggers({&l, &l2});
-    //
-    // for (auto count = 0; 5 > count; ++count) {
-    //     loggers.track_problem(p);
-    //     l.set_run_attributes({"run_id"}, {static_cast<double>(count)});
-    //     l2.set_dynamic_attributes({"run_id"}, {static_cast<double>(count)});
-    //     p.reset_problem();
-    //
-    //     for (auto i = 0; i < 50; i++) {
-    //         const auto x = common::Random::uniform(p.get_number_of_variables());
-    //
-    //         l.set_logged_attributes({ "x1" }, { x[0] });
-    //         l2.set_parameters({ "x1" }, { x[0] });
-    //
-    //         p.evaluate(x);
-    //         loggers.do_log(p.loggerCOCOInfo());
-    //     }
-    // }
-
 }

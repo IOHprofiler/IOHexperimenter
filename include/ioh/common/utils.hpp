@@ -140,10 +140,9 @@ namespace ioh {
          * \param x vector to be checked
          * \return true if x contains a nan value
          */
-        template<typename T>
-        static bool has_nan(const std::vector<T> &x) {
+        static bool has_nan(const std::vector<double> &x) {
             for (const auto &e : x)
-                if (std::isnan<T>(e))
+                if (std::isnan(e))
                     return true;
             return false;
         }
@@ -153,10 +152,9 @@ namespace ioh {
          * \param x vector to be checked
          * \return true if x contains a nan value
          */
-        template<typename T>
-        static bool all_finite(const std::vector<T> &x) {
+        static bool all_finite(const std::vector<double>&x) {
             for (const auto &e : x)
-                if (!std::isfinite<T>(e))
+                if (!std::isfinite(e))
                     return false;
             return true;
         }
@@ -166,10 +164,9 @@ namespace ioh {
         * \param x vector to be checked
         * \return true if x contains a nan value
         */
-        template<typename T>
-        static bool has_inf(const std::vector<T> &x) {
+        static bool has_inf(const std::vector<double> &x) {
             for (const auto &e : x)
-                if (std::isinf<T>(e))
+                if (std::isinf(e))
                     return true;
             return false;
         }

@@ -262,7 +262,7 @@ namespace ioh {
             /** \fn void calc_optimal()
              *
              * A function to calculate the optimum of the problem.
-             * It will be invoked after setting `number_of_variables` or `instance_id`.
+             * It will be invoked after setting `n_variables` or `instance_id`.
              */
             void calc_optimal() {
                 if (static_cast<int>(this->best_variables.size()) == this->number_of_variables) {
@@ -511,7 +511,7 @@ namespace ioh {
 
             /** \fn set_number_of_variables(int number_of_variables)
              * 
-             * To set number_of_variables of the problem. When the number_of_variables
+             * To set n_variables of the problem. When the n_variables
              * is updated, `bet_variables`, `lowerbound`, `upperbound`, and `optimal` 
              * need to be updated as well.
              *
@@ -535,8 +535,8 @@ namespace ioh {
 
             /** \fn set_number_of_variables(int number_of_variables)
              * 
-             * Set dimension (`number_of_variables`) of the problem. When the 
-             * `number_of_variables` is updated, `best_variables`, `lowerbound`, 
+             * Set dimension (`n_variables`) of the problem. When the 
+             * `n_variables` is updated, `best_variables`, `lowerbound`, 
              * `upperbound`, and `optimal` need to be updated as well. In case 
              * the best value for each bit is not identical, another input 
              * 'best_variables' is provided.
@@ -567,7 +567,7 @@ namespace ioh {
                 return this->number_of_objectives;
             }
 
-            /** void set_number_of_objectives(int number_of_objectives)
+            /** void set_number_of_objectives(int n_objectives)
              * \brief Set the number of objectives of the problem.
              * 
              * After setting the number of objectives, `raw_objectives`, 
