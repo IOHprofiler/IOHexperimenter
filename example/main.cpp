@@ -222,6 +222,9 @@ int main() {
 
     auto s = Sphere(1, 10);
     std::cout << s << std::endl;
+
+    auto x = s.state();
+
     //
     // s(s.meta_data().objective.x);
     //
