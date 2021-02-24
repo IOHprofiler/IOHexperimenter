@@ -22,7 +22,7 @@ namespace ioh {
                     set_number_of_objectives(1);
                     set_lowerbound(0);
                     set_upperbound(1);
-                    set_number_of_variables(dimension);
+                    set_number_of_variables(dimension); 
                 }
 
                 void objectives_transformation(const std::vector<int> &x,

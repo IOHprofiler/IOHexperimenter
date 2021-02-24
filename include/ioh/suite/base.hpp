@@ -10,7 +10,6 @@ namespace ioh {
             abstract_suite() = default;
         };
 
-
         /// \brief A base class for construct a suite for sets of problem::bases.
         ///
         /// To specify available problems of a suite, registerProblem must be implemented in derived class.

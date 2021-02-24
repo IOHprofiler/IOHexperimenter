@@ -9,3 +9,4 @@
 #include "problem/wmodel.hpp"
 
 #include "problem/problem.hpp"
+#include "problem/registry.hpp"

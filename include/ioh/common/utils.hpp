@@ -15,6 +15,11 @@
 #include <vector>
 #include <array>
 
+#include <cstdlib>
+#if defined(__GNUC__) || defined(__GNUG__)
+#include <cxxabi.h>
+#endif
+
 #include "log.hpp"
 
 namespace ioh {
@@ -25,9 +30,40 @@ namespace ioh {
         enum class OptimizationType {
             minimization,
             maximization
-
         };
 
+        /**
+         * \brief Get the type name of a given template T
+         * \tparam T a type 
+         * \return the name of T
+         */
+        template<typename T>
+        std::string type_name()
+        {
+            int status;
+            std::string name = typeid(T).name();
+            #if defined(__GNUC__) || defined(__GNUG__)
+            auto demangled_name = abi::__cxa_demangle(name.c_str(), nullptr, nullptr, &status);
+            if (status == 0) {
+                name = demangled_name;
+                std::free(demangled_name);
+            }
+            #endif
+            return name;
+        }
+
+        /**
+         * \brief Get the type name of the problem
+         * \tparam T the template of the Problem
+         * \return the name of T
+         */
+        template<typename T>
+        std::string problem_name()
+        {
+            auto name = type_name<T>();
+            name = name.substr(name.find_last_of(' ') + 1);
+            return name.substr(name.find_last_of("::")+1);
+        }
 
         /**
          * \brief Helper function to copy a vector v1 into another vector v2

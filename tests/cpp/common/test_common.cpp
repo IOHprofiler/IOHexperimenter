@@ -27,6 +27,11 @@ TEST(common, log)
 	ASSERT_EQ(output, "IOH_WARNING_INFO : Warning\n");
 }
 
+TEST(common, typenames)
+{
+    ASSERT_EQ(ioh::common::problem_name<Sphere>(), "Sphere");
+}
+
 
 TEST(common, class_generator)
 {

@@ -25,6 +25,11 @@
           "name": "BUILD_TESTS",
           "value": "True",
           "type": "BOOL"
+        },
+        {
+          "name": "BUILD_WITH_EIGEN",
+          "value": "False",
+          "type": "BOOL"
         }
       ]
     },
@@ -44,6 +49,11 @@
       "variables": [
         {
           "name": "BUILD_TESTS",
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
+          "name": "BUILD_WITH_EIGEN",
           "value": "False",
           "type": "BOOL"
         }

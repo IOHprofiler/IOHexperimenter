@@ -3,13 +3,14 @@
 #include "base.hpp"
 #include "observer.hpp"
 #include "ioh/common.hpp"
+#include "ioh/experiment.hpp"
 
 #include <array>
 
 namespace ioh {
     namespace logger {
         template <class T>
-        class Csv : public Base<T>, public Observer {
+        class Csv: public Base<T>, public Observer {
             // The information for directory.
             std::string folder_name;
             fs::path output_directory;

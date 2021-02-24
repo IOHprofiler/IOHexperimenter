@@ -10,49 +10,13 @@
 
 #include "transformation.hpp"
 #include "ioh/common.hpp"
+#include "registry.hpp"
 
 
 namespace ioh
 {
     namespace problem
     {
-        /*
-        * What blocks has a problem?:
-        *  - MetaData:
-        *      - suite_related: id, suite_name -> we need an Wrapper for logger, to make a `Dummy Suite` (for info file)
-        *      - problem_related: instance, dim~n_variables, name, minmax, datatype, objectives -> call constructor)
-        *
-        *          class Solution(a good name) { -> get target?
-        *              x, y
-        *          }
-        *         (think of paralization in python)
-        *  - Constraints
-        *  - State:`                                      (protected/private)              (public)
-        *      - evaluations, optimalFound(method), current_best_internal (Solution), current_best (Solution) (this is transformed)
-        *      - Logger info:                                                      (this is return by evaluate)
-        *           R"#("function evaluation" "current f(x)" "best-so-far f(x)" "current af(x)+b" "best af(x)+b")#";
-        *                                      values that are the same across instances (iid independent: untransformed); transformed(iid dependent)
-        *                                           for BBOB these are also scaled with optimum (goes to zero, not for pbo)
-        *          Make a different implementation for current_best & current_best_transformed for COCO and PBO (default)
-        *  -
-        *
-        *  void calc_optimal()
-        *  reset
-           virtual void prepare() {}
-           virtual void customize_optimal() -> child class
-           virtual void transform_variables() -> self
-           virtual void transform_objective()
-           double evaluate -> operator overload ()
-           protected virtual double evaluate(const std::vector<InputType>& x) = 0;
-
-           accessor naming:
-               named after the private variable
-           members:
-               not: problem_name but: name
-
-        */
-
-
         template <typename T>
         struct Solution
         {
@@ -68,21 +32,21 @@ namespace ioh
         };
 
         template <typename T>
-        struct BoxConstraint
+        struct Constraint
         {
             std::vector<T> ub;
             std::vector<T> lb;
 
-            BoxConstraint(const std::vector<T> upper, const std::vector<T> lower) :
+            Constraint(const std::vector<T> upper, const std::vector<T> lower) :
                 ub(upper), lb(lower)
             {
             }
 
-            explicit BoxConstraint(const int size = 1,
-                                   const T upper = std::numeric_limits<T>::max(),
-                                   const T lower = std::numeric_limits<T>::lowest()
+            explicit Constraint(const int size = 1,
+                                const T upper = std::numeric_limits<T>::max(),
+                                const T lower = std::numeric_limits<T>::lowest()
                 ) :
-                BoxConstraint(std::vector<T>(size, upper), std::vector<T>(size, lower))
+                Constraint(std::vector<T>(size, upper), std::vector<T>(size, lower))
             {
             }
 
@@ -106,7 +70,7 @@ namespace ioh
                 return true;
             }
 
-            friend std::ostream &operator<<(std::ostream &os, const BoxConstraint &obj)
+            friend std::ostream &operator<<(std::ostream &os, const Constraint &obj)
             {
                 os << "[ ";
                 for (auto i = 0; i < obj.ub.size(); i++)
@@ -258,10 +222,10 @@ namespace ioh
                 return true;
             }
 
+            // TODO: make the check optional
             template <typename Integer = T>
             typename std::enable_if<std::is_integral<Integer>::value, bool>::type check_input(const std::vector<T> &x)
             {
-                std::cout << "Integer check" << std::endl;
                 return check_input_dimensions(x);
             }
 
@@ -269,7 +233,6 @@ namespace ioh
             typename std::enable_if<std::is_floating_point<Floating>::value, bool>::type check_input(
                 const std::vector<T> &x)
             {
-                std::cout << "Floating check" << std::endl;
                 if (!check_input_dimensions(x))
                     return false;
 
@@ -293,15 +256,30 @@ namespace ioh
 
         protected:
             MetaData<T> meta_data_;
-            BoxConstraint<T> constraint_;
+            Constraint<T> constraint_;
             State<T> state_;
 
             [[nodiscard]]
             virtual std::vector<double> evaluate(std::vector<T> &x) = 0;
 
-        public:
+            virtual void reset()
+            {
+                state_.reset();
+            }
 
-            explicit Problem(MetaData<T> meta_data, BoxConstraint<T> constraint = BoxConstraint<T>()) :
+            [[nodiscard]]
+            virtual std::vector<T> transform_variables(std::vector<T> x)
+            {
+                return x;
+            }
+            [[nodiscard]]
+            virtual std::vector<double> transform_objectives(std::vector<double> y)
+            {
+                return y;
+            }
+
+        public:
+            explicit Problem(MetaData<T> meta_data, Constraint<T> constraint = Constraint<T>()) :
                 meta_data_(std::move(meta_data)), constraint_(std::move(constraint))
             {
                 state_ = {{
@@ -313,27 +291,11 @@ namespace ioh
 
             virtual ~Problem() = default;
 
-            virtual void reset()
-            {
-                state_.reset();
-            }
-
-            virtual std::vector<T> transform_variables(std::vector<T> x)
-            {
-                return x;
-            }
-
-            virtual std::vector<double> transform_objectives(std::vector<double> y)
-            {
-                return y;
-            }
-
             std::vector<double> operator()(const std::vector<T> &x)
             {
-                if (!check_input(x))
-                {
+                if (!check_input(x)) //TODO: make this optional
                     return std::vector<T>(meta_data_.n_objectives, std::numeric_limits<T>::signaling_NaN());
-                }
+
                 auto x_internal = transform_variables(x);
                 auto y_internal = evaluate(x_internal);
                 auto y = transform_objectives(y_internal);
@@ -354,7 +316,7 @@ namespace ioh
             }
 
             [[nodiscard]]
-            BoxConstraint<T> constraint() const
+            Constraint<T> constraint() const
             {
                 return constraint_;
             }
@@ -372,7 +334,7 @@ namespace ioh
         using Function = std::function<std::vector<double>(std::vector<T> &)>;
 
         template <typename T>
-        class WrappedProblem final : public Problem<T>
+        class WrappedProblem final: public Problem<T>
         {
         protected:
             Function<T> function_;
@@ -385,9 +347,9 @@ namespace ioh
         public:
             WrappedProblem(Function<T> f, const std::string &name, const int n_variables, const int n_objectives = 1,
                            const common::OptimizationType optimization_type = common::OptimizationType::minimization,
-                           BoxConstraint<T> constraint = BoxConstraint<T>()
+                           Constraint<T> constraint = Constraint<T>()
                 ) :
-                Problem(MetaData<T>(0, name, n_variables, n_objectives, optimization_type), constraint), function_(f)
+                Problem<T>(MetaData<T>(0, name, n_variables, n_objectives, optimization_type), constraint), function_(f)
             {
             }
         };
@@ -397,84 +359,24 @@ namespace ioh
                                         const int n_objectives = 1,
                                         const common::OptimizationType optimization_type =
                                             common::OptimizationType::minimization,
-                                        BoxConstraint<T> constraint = BoxConstraint<T>())
+                                        Constraint<T> constraint = Constraint<T>())
         {
             return WrappedProblem<T>{f, name, n_variables, n_objectives, optimization_type, constraint};
         }
 
 
-        class BBOB: public Problem<double>
+        class RealProblem: public Problem<double>
         {
-        protected:
-            struct TransformationState
-            {
-                long seed;
-                std::vector<std::vector<double>> m;
-                std::vector<double> b;
-                std::vector<std::vector<double>> rot1;
-                std::vector<std::vector<double>> rot2;
-
-                TransformationState(const long problem_id, const int instance, const int n_variables) :
-                    seed((problem_id == 4 || problem_id == 18 ? problem_id - 1 : problem_id) + 10000 * instance),
-                    m(n_variables, std::vector<double>(n_variables)),
-                    b(n_variables),
-                    rot1(n_variables, std::vector<double>(n_variables)),
-                    rot2(n_variables, std::vector<double>(n_variables))
-                {
-                }
-            } transformation_state_;
-
         public:
-            BBOB(const int problem_id, const int instance, const int n_variables, const std::string &name) :
-                Problem(MetaData<double>(problem_id, instance, name, n_variables, 1,
-                                         common::OptimizationType::minimization),
-                        BoxConstraint<double>(n_variables, 5, -5)),
-                transformation_state_(problem_id, instance, n_variables)
-            {
-                meta_data_.objective = calculate_objective();
-            }
-
-            [[nodiscard]]
-            Solution<double> calculate_objective() const
-            {
-                using namespace transformation::coco;
-                std::vector<double> x(meta_data_.n_objectives, 0);
-                bbob2009_compute_xopt(x, transformation_state_.seed, meta_data_.n_objectives);
-                return Solution<double>{
-                    x, {bbob2009_compute_fopt(meta_data_.problem_id, meta_data_.instance)}
-                };
-            }
-
-
-            std::vector<double> transform_objectives(std::vector<double> y) override
-            {
-                transformation::coco::transform_obj_shift_evaluate_function(y, meta_data_.objective.y.at(0));
-                return y;
-            }
+            using Problem<double>::Problem;
         };
 
-        class Sphere : public BBOB
+
+        class IntegerProblem: public Problem<int>
         {
-        protected:
-            std::vector<double> evaluate(std::vector<double> &x) override
-            {
-                std::vector<double> result{0.0};
-                for (const auto i : x)
-                    result[0] += i * i;
-                return result;
-            }
-
         public:
-            Sphere(const int instance, const int n_variables) :
-                BBOB(1, instance, n_variables, "Sphere")
-            {
-            }
-
-            std::vector<double> transform_variables(std::vector<double> x) override
-            {
-                transformation::coco::transform_vars_shift_evaluate_function(x, meta_data_.objective.x);
-                return x;
-            }
+            using Problem<int>::Problem;
         };
+    
     }
 }
