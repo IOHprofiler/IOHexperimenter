@@ -14,7 +14,7 @@ namespace ioh {
         ///
         /// To specify available problems of a suite, registerProblem must be implemented in derived class.
         /// The default lable of problems are string type. Integer type are also optional, but we highly
-        /// recommond registering problem with string lable and creating a map of string problem_name and integer problem_id.
+        /// recommond registering problem with string lable and creating a map of string class_name and integer problem_id.
         template <typename ProblemType>
         class base
             :

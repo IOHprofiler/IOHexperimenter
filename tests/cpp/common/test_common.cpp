@@ -29,7 +29,7 @@ TEST(common, log)
 
 TEST(common, typenames)
 {
-    ASSERT_EQ(ioh::common::problem_name<Sphere>(), "Sphere");
+    ASSERT_EQ(ioh::common::class_name<Sphere>(), "Sphere");
 }
 
 

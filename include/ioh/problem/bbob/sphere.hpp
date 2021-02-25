@@ -4,7 +4,7 @@
 
 namespace ioh::problem::bbob
 {
-    class Sphere final: public BBOB, AutomaticFactoryRegistration<Sphere, RealProblem>
+    class Sphere final: public BBOB<Sphere>
     {
     protected:
         std::vector<double> evaluate(std::vector<double>& x) override

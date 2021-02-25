@@ -204,6 +204,11 @@ namespace ioh
             }
         };
 
+        class BaseProblem
+        {
+            
+        };
+
         template <typename T>
         class Problem
         {
@@ -363,15 +368,13 @@ namespace ioh
         {
             return WrappedProblem<T>{f, name, n_variables, n_objectives, optimization_type, constraint};
         }
-
-
+        
         class RealProblem: public Problem<double>
         {
         public:
             using Problem<double>::Problem;
         };
-
-
+        
         class IntegerProblem: public Problem<int>
         {
         public:

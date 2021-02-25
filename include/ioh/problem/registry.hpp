@@ -2,8 +2,10 @@
 
 #include <cassert>
 #include <functional>
-
+#include <any>
 #include "ioh/common.hpp"
+#include "ioh/problem/problem.hpp"
+
 
 
 namespace ioh::problem
@@ -46,26 +48,73 @@ namespace ioh::problem
         template <class T>
         static void include()
         {
-            Factory<Parent>::instance().include(common::problem_name<T>(), [](const int instance, const int n_variables)
+            Factory<Parent>::instance().include(common::class_name<T>(), 
+                [](const int instance, const int n_variables)
             {
                 return std::make_unique<T>(instance, n_variables);
             });
         }
+
+
+        template <class T>
+        static Factory<Parent> &instance()
+        {
+            return Factory<Parent>::instance();
+        }
     };
 
-    template <class T, class F>
+    struct FactoryRegistry
+    {
+        static FactoryRegistry& instance()
+        {
+            static FactoryRegistry f; //NOLINT
+            return f;
+        }
+        
+        void include(const std::string& id, std::any e)
+        {
+            map[id] = std::move(e);
+        }
+
+        std::vector<std::string> keys()
+        {
+            std::vector<std::string> keys;
+            for (const auto& [fst, snd] : map)
+                keys.push_back(fst);
+            return keys;
+        }
+
+        template<typename T>
+        Factory<T> get(const std::string id)
+        {
+            const auto entry = map.find(id);
+            assert(entry != std::end(map));
+            return std::any_cast<Factory<T>>(entry->second);
+        }
+
+    private:
+        std::unordered_map<std::string, std::any> map;
+        FactoryRegistry() = default;
+        FactoryRegistry(const FactoryRegistry&) = delete;
+    };
+
+
+    template <class Type, class Factory>
     struct InvokeApplyOnConstruction
     {
         InvokeApplyOnConstruction()
         {
-            F::template include<T>();
+            FactoryRegistry::instance().include(
+                common::class_name<Factory>(), &Factory::template instance<Type>());
+            Factory::template include<Type>();
         }
     };
 
-    template <class T, class F>
+    template <class Type, class Factory>
     struct RegistrationInvoker
     {
-        static inline const InvokeApplyOnConstruction<T, F> registration_invoker = InvokeApplyOnConstruction<T, F>();
+        static inline const InvokeApplyOnConstruction<Type, Factory>
+            registration_invoker = InvokeApplyOnConstruction<Type, Factory>();
     };
 
     template <class Derived, class Parent>

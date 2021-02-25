@@ -58,11 +58,12 @@ namespace ioh {
          * \return the name of T
          */
         template<typename T>
-        std::string problem_name()
+        std::string class_name()
         {
             auto name = type_name<T>();
             name = name.substr(name.find_last_of(' ') + 1);
-            return name.substr(name.find_last_of("::")+1);
+            name = name.substr(name.find_last_of("::") + 1);
+            return  name = name.substr(0, name.find_first_of(">"));
         }
 
         /**
