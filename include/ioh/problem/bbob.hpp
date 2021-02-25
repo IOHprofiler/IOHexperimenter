@@ -8,6 +8,9 @@
 #include "bbob/linear_slope.hpp"
 #include "bbob/attractive_sector.hpp"
 #include "bbob/step_ellipsoid.hpp"
+#include "bbob/rosenbrock.hpp"
+
+// #include "bbob/rosenbrock_rotated.hpp"
 
 // #include "bbob/bent_cigar.hpp"
 
