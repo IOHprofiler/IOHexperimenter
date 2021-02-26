@@ -11,54 +11,59 @@ namespace ioh::problem
         struct TransformationState
         {
             long seed;
-            std::vector<double> raw_x{};
             std::vector<double> exponents{};
             std::vector<double> conditions{};
-            std::vector<std::vector<double>> m{};
-            std::vector<double> b{};
-            std::vector<std::vector<double>> rot1{};
-            std::vector<std::vector<double>> rot2{};
+            std::vector<std::vector<double>> transformation_matrix{};
+            std::vector<double> transformation_base{};
+            std::vector<std::vector<double>> second_transformation_matrix{};
+            std::vector<double> second_transformation_base{};
+            std::vector<std::vector<double>> first_rotation{};
+            std::vector<std::vector<double>> second_rotation{};
 
-            TransformationState(const long problem_id, const int instance, const int n_variables) :
+            TransformationState(const long problem_id, const int instance, const int n_variables,
+                                const double condition = sqrt(10.0)) :
                 seed((problem_id == 4 || problem_id == 18 ? problem_id - 1 : problem_id) + 10000 * instance),
-                raw_x(n_variables),
                 exponents(n_variables),
                 conditions(n_variables),
-                m(n_variables, std::vector<double>(n_variables)),
-                b(n_variables),
-                rot1(n_variables, std::vector<double>(n_variables)),
-                rot2(n_variables, std::vector<double>(n_variables))
+                transformation_matrix(n_variables, std::vector<double>(n_variables)),
+                transformation_base(n_variables),
+                second_transformation_matrix(n_variables, std::vector<double>(n_variables)),
+                second_transformation_base(n_variables),
+                first_rotation(n_variables, std::vector<double>(n_variables)),
+                second_rotation(n_variables, std::vector<double>(n_variables))
             {
                 using namespace transformation::coco;
 
-                for (auto i = 0; i < n_variables; ++i) 
+                for (auto i = 0; i < n_variables; ++i)
                     exponents[i] = static_cast<double>(i) / (static_cast<double>(n_variables) - 1);
 
-                bbob2009_compute_rotation(rot1, seed + 1000000, n_variables);
-                bbob2009_compute_rotation(rot2, seed, n_variables);
+                bbob2009_compute_rotation(first_rotation, seed + 1000000, n_variables);
+                bbob2009_compute_rotation(second_rotation, seed, n_variables);
+                bbob2009_copy_rotation_matrix(first_rotation, transformation_matrix, transformation_base, n_variables);
+
+                for (auto i = 0; i < n_variables; ++i)
+                    for (auto j = 0; j < n_variables; ++j)
+                        for (auto k = 0; k < n_variables; ++k)
+                            second_transformation_matrix[i][j] += first_rotation.at(i).at(k)
+                                * pow(condition, exponents.at(k))
+                                * second_rotation.at(k).at(j);
             }
         } transformation_state_;
 
-        // void reset() override
-        // {
-        //     RealProblem::reset();
-        //     transformation_state_ = {
-        //         meta_data_.problem_id, meta_data_.instance, meta_data_.n_variables
-        //     };
-        // }
 
-        virtual std::vector<double> transform_objectives(std::vector<double> y) override
+        std::vector<double> transform_objectives(std::vector<double> y) override
         {
             transformation::coco::transform_obj_shift_evaluate_function(y, meta_data_.objective.y.at(0));
             return y;
         }
 
     public:
-        BBOBProblem(const int problem_id, const int instance, const int n_variables, const std::string &name):
+        BBOBProblem(const int problem_id, const int instance, const int n_variables, const std::string &name,
+                    const double condition = sqrt(10.0)):
             RealProblem(MetaData<double>(problem_id, instance, name, n_variables, 1,
                                          common::OptimizationType::minimization),
                         Constraint<double>(n_variables, 5, -5)),
-            transformation_state_(problem_id, instance, n_variables)
+            transformation_state_(problem_id, instance, n_variables, condition)
         {
             meta_data_.objective = calculate_objective();
         }

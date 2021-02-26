@@ -204,11 +204,7 @@ namespace ioh
             }
         };
 
-        class BaseProblem
-        {
-            
-        };
-
+    
         template <typename T>
         class Problem
         {

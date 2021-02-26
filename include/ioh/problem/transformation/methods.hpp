@@ -78,7 +78,7 @@ namespace ioh {
                 }
 
                 /// \fn void transform_obj_shift(std::vector<double> &y, const int seed)
-                /// \brief transformation 'f(x) + b'.
+                /// \brief transformation 'f(x) + rotation_base'.
                 inline void transform_obj_shift(std::vector<double> &y,
                                                 const int seed) {
                     std::vector<double> shift;
@@ -99,7 +99,7 @@ namespace ioh {
                 }
 
                 /// \fn void transform_obj_shift(std::vector<double> &y, const int seed)
-                /// \brief transformation 'f(x) + b'.
+                /// \brief transformation 'f(x) + rotation_base'.
                 inline void transform_obj_shift(double &y, const int seed) {
                     std::vector<double> shift;
                     common::Random::uniform(1, seed, shift);

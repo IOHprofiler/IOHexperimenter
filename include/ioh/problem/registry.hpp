@@ -13,12 +13,12 @@ namespace ioh::problem
     template <class AbstractProblem>
     struct Factory
     {
-        using Problem = std::unique_ptr<AbstractProblem>;
+        using Problem = std::shared_ptr<AbstractProblem>;
         using Creator = std::function<Problem(int, int)>; 
 
         static Factory &instance() 
         {
-            static Factory f; // NOLINT
+            static Factory f; // NOLINT 
             return f;
         }
 
@@ -26,6 +26,14 @@ namespace ioh::problem
         {
             assert(map.find(id) == std::end(map)); 
             map[id] = std::move(creator);
+        }
+
+        [[nodiscard]] std::vector<std::string> keys() const 
+        {
+            std::vector<std::string> keys;
+            for (const auto& [fst, snd] : map)
+                keys.push_back(fst);
+            return keys;
         }
 
         [[nodiscard]]

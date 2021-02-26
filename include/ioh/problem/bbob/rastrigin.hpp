@@ -4,12 +4,23 @@
 
 namespace ioh::problem::bbob
 {
-    class Rastrigin final: public BBOB<Rastrigin>
+    template<typename T>
+    class RastriginBase: public BBOB<T>
     {
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
         {
-            return {static_evaluate(x)};
+            auto sum1 = 0.0, sum2 = 0.0;
+
+            for (const auto xi : x)
+            {
+                sum1 += cos(2.0 * transformation::coco::coco_pi * xi);
+                sum2 += xi * xi;
+            }
+            if (std::isinf(sum2))
+                return { sum2 };
+
+            return { 10.0 * (static_cast<double>(x.size()) - sum1) + sum2 };
         }
 
         std::vector<double> transform_variables(std::vector<double> x) override
@@ -23,25 +34,20 @@ namespace ioh::problem::bbob
         }
 
     public:
-        Rastrigin(const int instance, const int n_variables) :
-            BBOB(3, instance, n_variables, "Rastrigin")
+        RastriginBase(const int problem_id, const int instance, const int n_variables,  const std::string& name ) :
+            BBOB(problem_id, instance, n_variables, name)
         {
         }
-
-        static double static_evaluate(std::vector<double>& x)
-        {
-            auto sum1 = 0.0, sum2 = 0.0;
-
-            for (const auto xi : x)
-            {
-                sum1 += cos(2.0 * transformation::coco::coco_pi * xi);
-                sum2 += xi * xi;
-            }
-            if (std::isinf(sum2))
-                return  sum2;
-
-            return  10.0 * (static_cast<double>(x.size()) - sum1) + sum2 ;
-        }
-
     };
+
+    class Rastrigin final: public RastriginBase<Rastrigin>
+    {
+    public:
+        Rastrigin(const int instance, const int n_variables) :
+            RastriginBase(3, instance, n_variables, "Rastrigin")
+        {
+        }
+    };
+
+
 }

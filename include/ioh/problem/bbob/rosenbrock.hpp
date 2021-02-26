@@ -4,12 +4,19 @@
 
 namespace ioh::problem::bbob
 {
-    class Rosenbrock final : public BBOB<Rosenbrock>
+    template<typename T>
+    class RosenbrockBase : public BBOB<T>
     {
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
         {
-            return { static_evaluate(x) };
+            auto sum1 = 0.0, sum2 = 0.0;
+
+            for (size_t i = 0; i < x.size() - 1; ++i) {
+                sum1 += pow(x.at(i) * x.at(i) - x.at(i + 1), 2.0);
+                sum2 += pow(x.at(i) - 1.0, 2.0);
+            }
+            return { 100.0 * sum1 + sum2 };
         }
 
         std::vector<double> transform_variables(std::vector<double> x) override
@@ -24,23 +31,22 @@ namespace ioh::problem::bbob
         }
 
     public:
-        Rosenbrock(const int instance, const int n_variables) :
-            BBOB(8, instance, n_variables, "Rosenbrock")
+        RosenbrockBase(const int problem_id, const int instance, const int n_variables, const std::string& name) :
+            BBOB(problem_id, instance, n_variables, name)
         {
-            for (auto &e : meta_data_.objective.x)
+        }
+    };
+
+    class Rosenbrock final: public RosenbrockBase<Rosenbrock>
+    {
+    public:
+        Rosenbrock(const int instance, const int n_variables) :
+            RosenbrockBase(8, instance, n_variables, "Rosenbrock")
+        {
+            for (auto& e : meta_data_.objective.x)
                 e *= 0.75;
         }
-
-        static double static_evaluate(std::vector<double>& x)
-        {
-            auto sum1 = 0.0, sum2 = 0.0;
-             
-            for (size_t i = 0; i < x.size() - 1; ++i) {
-                sum1 += pow(x.at(i) * x.at(i) - x.at(i+1), 2.0);
-                sum2 += pow(x.at(i) - 1.0, 2.0);
-            }
-            return 100.0 * sum1 + sum2;
-        }
-
     };
+
+  
 }

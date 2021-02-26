@@ -4,15 +4,16 @@
 
 namespace ioh::problem::bbob
 {
-    class Ellipsoid final: public BBOB<Ellipsoid>
+    template <typename T>
+    class EllipsoidBase : public BBOB<T>
     {
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
         {
-            std::vector<double> result = {x.at(0) * x.at(0)};
-            for (auto i = 1; i < meta_data_.n_variables; ++i)
-                result[0] = transformation_state_.conditions.at(i) * x.at(i) * x.at(i);
-            return result;
+            auto result = x.at(0) * x.at(0);
+            for (size_t i = 1; i < meta_data_.n_variables; ++i)
+                result += transformation_state_.conditions.at(i) * x.at(i) * x.at(i);
+            return {result};
         }
 
         std::vector<double> transform_variables(std::vector<double> x) override
@@ -24,12 +25,21 @@ namespace ioh::problem::bbob
         }
 
     public:
-        Ellipsoid(const int instance, const int n_variables) :
-            BBOB(2, instance, n_variables, "Ellipsoid")
+        EllipsoidBase(const int problem_id, const int instance, const int n_variables, const std::string &name) :
+            BBOB(problem_id, instance, n_variables, name)
         {
             static const auto condition = 1.0e6;
             for (auto i = 1; i < meta_data_.n_variables; ++i)
                 transformation_state_.conditions[i] = pow(condition, transformation_state_.exponents.at(i));
+        }
+    };
+
+    class Ellipsoid final : public EllipsoidBase<Ellipsoid>
+    {
+    public:
+        Ellipsoid(const int instance, const int n_variables) :
+            EllipsoidBase(2, instance, n_variables, "Ellipsoid")
+        {
         }
     };
 }

@@ -1,5 +1,8 @@
 #pragma once
+#include <vector>
+
 #include "bbob_base.hpp"
+#include "ioh/common.hpp"
 
 
 namespace ioh {

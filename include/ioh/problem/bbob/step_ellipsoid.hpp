@@ -15,17 +15,17 @@ namespace ioh::problem::bbob
             auto x0 = 0.0;
             for (auto i = 0; i < meta_data_.n_variables; ++i)
             {
-                transformation_state_.b[i] = 0.0;
+                transformation_state_.second_transformation_base[i] = 0.0;
                 for (auto j = 0; j < meta_data_.n_variables; ++j)
-                    transformation_state_.b[i] += transformation_state_.conditions.at(i)
-                    * transformation_state_.rot2.at(i).at(j)
+                    transformation_state_.second_transformation_base[i] += transformation_state_.conditions.at(i)
+                    * transformation_state_.second_rotation.at(i).at(j)
                     * (x.at(j) - meta_data_.objective.x.at(j));
 
-                x0 = transformation_state_.b.at(0);
+                x0 = transformation_state_.second_transformation_base.at(0);
 
-                transformation_state_.b[i] = fabs(transformation_state_.b.at(i)) > .5
-                    ? floor(transformation_state_.b.at(i) + .5)
-                    : floor(alpha * transformation_state_.b.at(i) + .5) / alpha;
+                transformation_state_.second_transformation_base[i] = fabs(transformation_state_.second_transformation_base.at(i)) > .5
+                    ? floor(transformation_state_.second_transformation_base.at(i) + .5)
+                    : floor(alpha * transformation_state_.second_transformation_base.at(i) + .5) / alpha;
             }
             return x0;
         }
@@ -46,7 +46,7 @@ namespace ioh::problem::bbob
 
                 auto projection_sum = 0.0;
                 for (auto j = 0; j < meta_data_.n_variables; ++j)
-                    projection_sum += transformation_state_.rot1[i][j] * transformation_state_.b[j];
+                    projection_sum += transformation_state_.first_rotation[i][j] * transformation_state_.second_transformation_base[j];
 
                 result[0] += pow(100., transformation_state_.exponents.at(i))
                     * projection_sum * projection_sum;

@@ -19,7 +19,7 @@ namespace ioh::problem::bbob
         {
             using namespace transformation::coco;
             transform_vars_shift_evaluate_function(x, meta_data_.objective.x);
-            transform_vars_affine_evaluate_function(x, transformation_state_.m, transformation_state_.b);
+            transform_vars_affine_evaluate_function(x, transformation_state_.second_transformation_matrix, transformation_state_.second_transformation_base);
             return x;
         }
 
@@ -36,12 +36,6 @@ namespace ioh::problem::bbob
         AttractiveSector(const int instance, const int n_variables) :
             BBOB(6, instance, n_variables, "AttractiveSector")
         {
-            for (auto i = 0; i < meta_data_.n_variables; ++i)
-                for (auto j = 0; j < meta_data_.n_variables; ++j)
-                    for (auto k = 0; k < meta_data_.n_variables; ++k)
-                        transformation_state_.m[i][j] += transformation_state_.rot1.at(i).at(k)
-                            * pow(sqrt(10.0), transformation_state_.exponents.at(k))
-                            * transformation_state_.rot2.at(k).at(j);
         }
     };
 }

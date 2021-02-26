@@ -60,7 +60,7 @@ PYBIND11_MODULE(iohcpp, m) {
 
 
 #ifdef VERSION_INFO
-    m.attr("__version__") = MACRO_STRINGIFY(VERSION_INFO);
+    rotation_matrix.attr("__version__") = MACRO_STRINGIFY(VERSION_INFO);
 #else
     m.attr("__version__") = "dev";
 #endif

@@ -1,18 +1,18 @@
 #pragma once
 
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "schaffers10.hpp"
 
 namespace ioh::problem::bbob
 {
-
-    class Schaffers1000 final: public BBOB, AutomaticFactoryRegistration<Schaffers1000, RealProblem>
-    
+    class Schaffers1000 final: public Schaffers<Schaffers1000>
+    {
+    public:
+        Schaffers1000(const int instance, const int n_variables) :
+            Schaffers(18, instance, n_variables,  "Schaffers1000", 1000.0)
         {
-         protected:
-             std::vector<double> evaluate(std::vector<double>& x) override {}
-         public:        
-             Schaffers1000(const int instance, const int n_variables) :                 
-                BBOB(18, instance, n_variables, "Schaffers1000") {}
-        
-        };
+        }
+    };
+
+
+
 }
