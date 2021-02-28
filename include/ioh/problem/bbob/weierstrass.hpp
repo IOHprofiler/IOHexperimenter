@@ -7,6 +7,7 @@ namespace ioh::problem::bbob
     class Weierstrass final : public BBOB<Weierstrass>
     {
         double f0_;
+        double penalty_factor_;
         std::vector<double> ak_;
         std::vector<double> bk_;
         std::vector<double> raw_x_;
@@ -35,24 +36,23 @@ namespace ioh::problem::bbob
                                                     transformation_state_.transformation_base);
             transform_vars_oscillate_evaluate_function(x);
             transform_vars_affine_evaluate_function(x, transformation_state_.second_transformation_matrix,
-                                                    transformation_state_.second_transformation_base);
+                                                    transformation_state_.transformation_base);
             return x;
         }
 
         std::vector<double> transform_objectives(std::vector<double> y) override
         {
             using namespace transformation::coco;
-            static const auto penalty_factor = 10.0 / meta_data_.n_variables;
             transform_obj_shift_evaluate_function(y, meta_data_.objective.y.at(0));
             transform_obj_penalize_evaluate(raw_x_, constraint_.lb.at(0),
-                                            constraint_.ub.at(0), penalty_factor, y);
+                                            constraint_.ub.at(0), penalty_factor_, y);
             return y;
         }
 
     public:
         Weierstrass(const int instance, const int n_variables) :
             BBOB(16, instance, n_variables, "Weierstrass", 1 / sqrt(100.0)),
-            f0_(0.0), ak_(10), bk_(10), raw_x_(n_variables)
+            f0_(0.0), ak_(10), bk_(10), raw_x_(n_variables), penalty_factor_(10.0/ n_variables)
         {
             for (size_t i = 0; i < ak_.size(); ++i)
             {

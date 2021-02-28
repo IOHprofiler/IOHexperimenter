@@ -16,7 +16,6 @@ namespace ioh::problem
             std::vector<std::vector<double>> transformation_matrix{};
             std::vector<double> transformation_base{};
             std::vector<std::vector<double>> second_transformation_matrix{};
-            std::vector<double> second_transformation_base{};
             std::vector<std::vector<double>> first_rotation{};
             std::vector<std::vector<double>> second_rotation{};
 
@@ -28,7 +27,6 @@ namespace ioh::problem
                 transformation_matrix(n_variables, std::vector<double>(n_variables)),
                 transformation_base(n_variables),
                 second_transformation_matrix(n_variables, std::vector<double>(n_variables)),
-                second_transformation_base(n_variables),
                 first_rotation(n_variables, std::vector<double>(n_variables)),
                 second_rotation(n_variables, std::vector<double>(n_variables))
             {

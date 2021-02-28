@@ -5,7 +5,7 @@
 namespace ioh::problem::bbob
 {
 
-    class Gallagher21 final: public BBOB, AutomaticFactoryRegistration<Gallagher21, RealProblem>
+    class Gallagher21 final: public BBOB<Gallagher21>
     
         {
          protected:

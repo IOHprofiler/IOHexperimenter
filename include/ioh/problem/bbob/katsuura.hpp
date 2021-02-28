@@ -8,14 +8,13 @@ namespace ioh::problem::bbob
 
     {
         std::vector<double> raw_x_;
+        double exponent_;
+        double factor_;
+
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
         {
-            static const auto double_n = static_cast<double>(meta_data_.n_variables);
-            static const auto exponent = 10. / pow(double_n, 1.2);
-            static const auto factor = 10. / double_n / double_n;
-
-            std::vector<double> result = { 1.0 };
+            std::vector<double> result = {1.0};
             for (auto i = 0; i < meta_data_.n_variables; ++i)
             {
                 double z = 0;
@@ -24,9 +23,9 @@ namespace ioh::problem::bbob
                             - floor(transformation_state_.exponents.at(j) * x.at(i) + 0.5))
                         / transformation_state_.exponents.at(j);
 
-                result[0] *= pow(1.0 + (static_cast<double>(i) + 1) * z, exponent);
+                result[0] *= pow(1.0 + (static_cast<double>(i) + 1) * z, exponent_);
             }
-            result[0] = factor * (-1. + result.at(0));
+            result[0] = factor_ * (-1. + result.at(0));
             return result;
         }
 
@@ -37,7 +36,7 @@ namespace ioh::problem::bbob
             transform_vars_shift_evaluate_function(x, meta_data_.objective.x);
             transform_vars_affine_evaluate_function(
                 x, transformation_state_.second_transformation_matrix,
-                transformation_state_.second_transformation_base);
+                transformation_state_.transformation_base);
             return x;
         }
 
@@ -54,7 +53,9 @@ namespace ioh::problem::bbob
     public:
         Katsuura(const int instance, const int n_variables) :
             BBOB(23, instance, n_variables, "Katsuura", sqrt(100.0)),
-            raw_x_(n_variables)
+            raw_x_(n_variables),
+            exponent_(10. / pow(static_cast<double>(meta_data_.n_variables), 1.2)),
+            factor_(10. / static_cast<double>(meta_data_.n_variables) / static_cast<double>(meta_data_.n_variables))
         {
             transformation_state_.exponents.resize(33);
             for (auto i = 1; i < 33; ++i)

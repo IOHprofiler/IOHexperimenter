@@ -16,7 +16,7 @@ namespace ioh::problem::bbob
             transform_vars_oscillate_evaluate_function(x);
             transform_vars_asymmetric_evaluate_function(x, 0.2);
             transform_vars_affine_evaluate_function(x, transformation_state_.second_transformation_matrix, 
-                transformation_state_.second_transformation_base);
+                transformation_state_.transformation_base);
             return x;
         }
     public:

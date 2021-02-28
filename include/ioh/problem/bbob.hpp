@@ -21,7 +21,7 @@
 #include "bbob/schaffers1000.hpp"
 #include "bbob/griewank_rosenbrock.hpp"
 #include "bbob/schwefel.hpp"
-// #include "bbob/gallagher101.hpp"
+#include "bbob/gallagher101.hpp"
 // #include "bbob/gallagher21.hpp"
 #include "bbob/katsuura.hpp"
 #include "bbob/lunacek_bi_rastrigin.hpp"

@@ -19,7 +19,7 @@ namespace ioh::problem::bbob
         {
             using namespace transformation::coco;
             transform_vars_shift_evaluate_function(x, meta_data_.objective.x);
-            transform_vars_affine_evaluate_function(x, transformation_state_.second_transformation_matrix, transformation_state_.second_transformation_base);
+            transform_vars_affine_evaluate_function(x, transformation_state_.second_transformation_matrix, transformation_state_.transformation_base);
             return x;
         }
 

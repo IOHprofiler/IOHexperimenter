@@ -12,7 +12,7 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             transformation::coco::transform_vars_affine_evaluate_function(x,
-                transformation_state_.second_transformation_matrix, transformation_state_.second_transformation_base);
+                transformation_state_.second_transformation_matrix, transformation_state_.transformation_base);
             return x;
         }
 
@@ -25,7 +25,7 @@ namespace ioh::problem::bbob
             {
                 for (auto j = 0; j < meta_data_.n_variables; ++j)
                     transformation_state_.second_transformation_matrix[i][j] = factor * transformation_state_.second_rotation.at(i).at(j);
-                transformation_state_.second_transformation_base[i] = 0.5;
+                transformation_state_.transformation_base[i] = 0.5;
             }
 
             // TODO figure out how to set xopt for this function

@@ -55,12 +55,14 @@ int main() {
          the_factory.create("Schaffers1000", 1, dimension),
          the_factory.create("GriewankRosenBrock", 1, dimension),
          the_factory.create("Schwefel", 1, dimension),
-         the_factory.create("Schwefel", 1, dimension),
-         the_factory.create("Schwefel", 1, dimension),
+         the_factory.create("Gallagher101", 1, dimension),
+         the_factory.create("Gallagher21", 1, dimension),
          the_factory.create("Katsuura", 1, dimension),
          the_factory.create("LunacekBiRastrigin", 1, dimension),
    }; 
 
+
+    // TODO: check weierstrass, xopt in: rosenbrock
     const std::vector<double> x0{ 0.1, 1., 2.,4., 5.4 };
 
     for (auto i = 0; i < items.size(); i++)
@@ -70,7 +72,7 @@ int main() {
         const auto y0 = (*item)(x0).at(0);
 
         const auto yopt = (*item)(item->meta_data().objective.x).at(0);
-        std::cout << i+1 << std::endl;
+        std::cout << i+1 << ": " << item->meta_data().name << std::endl;
         std::cout << item->meta_data().objective << " == " << yopt << " = " << std::boolalpha
                   << (item->meta_data().objective.y.at(0) == yopt) << std::endl;
         

@@ -40,7 +40,7 @@ namespace ioh::problem::bbob
                 transformation_state_.transformation_base);
             transform_vars_asymmetric_evaluate_function(x, 0.5);
             transform_vars_affine_evaluate_function(x, transformation_state_.second_transformation_matrix,
-                transformation_state_.second_transformation_base);
+                transformation_state_.transformation_base);
             return x;
         }
     public:
