@@ -5,7 +5,7 @@
 namespace ioh::problem::bbob
 {
     template<typename T>
-    class RastriginBase: public BBOBBase<T>
+    class RastriginBase: public BBOProblem<T>
     {
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
@@ -35,7 +35,7 @@ namespace ioh::problem::bbob
 
     public:
         RastriginBase(const int problem_id, const int instance, const int n_variables,  const std::string& name ) :
-            BBOBBase(problem_id, instance, n_variables, name)
+            BBOProblem(problem_id, instance, n_variables, name)
         {
         }
     };

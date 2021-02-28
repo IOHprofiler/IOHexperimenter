@@ -5,7 +5,7 @@
 
 namespace ioh::problem
 {
-    class PBOProblem : public IntegerProblem
+    class PBO : public IntegerProblem
     {
     protected:
         std::vector<int> transform_variables(std::vector<int> x) override
@@ -28,7 +28,7 @@ namespace ioh::problem
         }
 
     public:
-        PBOProblem(const int problem_id, const int instance, const int n_variables, const std::string &name) :
+        PBO(const int problem_id, const int instance, const int n_variables, const std::string &name) :
             IntegerProblem(MetaData<int>(problem_id, instance, name, n_variables, 1,
                                          common::OptimizationType::maximization))
         {
@@ -36,11 +36,11 @@ namespace ioh::problem
     };
 
     template <typename ProblemType>
-    class PBOBase : public PBOProblem,
-                AutomaticFactoryRegistration<ProblemType, PBOProblem>,
-                AutomaticFactoryRegistration<ProblemType, IntegerProblem>
+    class PBOProblem : public PBO,
+                    AutomaticFactoryRegistration<ProblemType, PBO>,
+                    AutomaticFactoryRegistration<ProblemType, IntegerProblem>
     {
     public:
-        using PBOProblem::PBOProblem;
+        using PBO::PBO;
     };
 }

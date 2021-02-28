@@ -4,7 +4,7 @@
 
 namespace ioh::problem::bbob
 {
-    class DifferentPowers final : public BBOBBase<DifferentPowers>
+    class DifferentPowers final : public BBOProblem<DifferentPowers>
 
     {
     protected:
@@ -26,7 +26,7 @@ namespace ioh::problem::bbob
 
     public:
         DifferentPowers(const int instance, const int n_variables) :
-            BBOBBase(14, instance, n_variables, "DifferentPowers")
+            BBOProblem(14, instance, n_variables, "DifferentPowers")
         {
             for (auto i = 0; i < meta_data_.n_variables; ++i)
                 transformation_state_.exponents[i] = 2.0 + 4.0 * transformation_state_.exponents.at(i);

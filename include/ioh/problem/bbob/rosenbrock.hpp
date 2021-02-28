@@ -5,7 +5,7 @@
 namespace ioh::problem::bbob
 {
     template<typename T>
-    class RosenbrockBase : public BBOBBase<T>
+    class RosenbrockBase : public BBOProblem<T>
     {
         double factor_;
         std::vector<double> negative_one_;
@@ -32,7 +32,7 @@ namespace ioh::problem::bbob
 
     public:
         RosenbrockBase(const int problem_id, const int instance, const int n_variables, const std::string& name) :
-            BBOBBase(problem_id, instance, n_variables, name),
+            BBOProblem(problem_id, instance, n_variables, name),
             factor_(std::max(1.0, std::sqrt(n_variables) / 8.0)), negative_one_(n_variables, -1)
         {
         }

@@ -5,7 +5,7 @@
 namespace ioh::problem::bbob
 {
     template<typename T>
-    class Schaffers: public BBOBBase<T>
+    class Schaffers: public BBOProblem<T>
     {
     protected:
         double condition_;
@@ -45,7 +45,7 @@ namespace ioh::problem::bbob
         }
     public:
         Schaffers(const int problem_id, const int instance, const int n_variables, const std::string& name, const double condition) :
-            BBOBBase(problem_id, instance, n_variables, name), raw_x_(n_variables), condition_(condition)
+            BBOProblem(problem_id, instance, n_variables, name), raw_x_(n_variables), condition_(condition)
         {
             for (auto i = 0; i < n_variables; ++i)
                 for (auto j = 0; j < n_variables; ++j)

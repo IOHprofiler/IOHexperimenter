@@ -4,7 +4,7 @@
 
 namespace ioh::problem::bbob
 {
-    class StepEllipsoid final : public BBOBBase<StepEllipsoid>
+    class StepEllipsoid final : public BBOProblem<StepEllipsoid>
 
     {
     protected:
@@ -63,7 +63,7 @@ namespace ioh::problem::bbob
 
     public:
         StepEllipsoid(const int instance, const int n_variables) :
-            BBOBBase(7, instance, n_variables, "StepEllipsoid")
+            BBOProblem(7, instance, n_variables, "StepEllipsoid")
         {
             static const auto condition = 100.;
             for (auto i = 0; i < meta_data_.n_variables; ++i)

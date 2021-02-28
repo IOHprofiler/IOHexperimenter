@@ -4,7 +4,7 @@
 
 namespace ioh::problem::bbob
 {
-    class LinearSlope final : public BBOBBase<LinearSlope>
+    class LinearSlope final : public BBOProblem<LinearSlope>
     {
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
@@ -20,7 +20,7 @@ namespace ioh::problem::bbob
 
     public:
         LinearSlope(const int instance, const int n_variables) :
-            BBOBBase(5, instance, n_variables, "LinearSlope")
+            BBOProblem(5, instance, n_variables, "LinearSlope")
         {
             static const auto base = sqrt(100.0);
             for (auto i = 0; i < meta_data_.n_variables; ++i)

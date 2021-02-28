@@ -4,7 +4,7 @@
 
 namespace ioh::problem::bbob
 {
-    class BentCigar final : public BBOBBase<BentCigar>
+    class BentCigar final : public BBOProblem<BentCigar>
 
     {
     protected:
@@ -29,7 +29,7 @@ namespace ioh::problem::bbob
 
     public:
         BentCigar(const int instance, const int n_variables) :
-            BBOBBase(12, instance, n_variables, "BentCigar")
+            BBOProblem(12, instance, n_variables, "BentCigar")
         {
             using namespace transformation::coco;
             meta_data_.objective.x.assign(meta_data_.n_variables, 0);

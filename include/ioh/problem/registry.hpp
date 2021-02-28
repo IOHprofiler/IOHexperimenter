@@ -1,12 +1,6 @@
 #pragma once
 
-#include <cassert>
-#include <functional>
-#include <any>
 #include "ioh/common.hpp"
-#include "ioh/problem/problem.hpp"
-
-
 
 namespace ioh::problem
 {
@@ -14,9 +8,9 @@ namespace ioh::problem
     struct Factory
     {
         using Problem = std::shared_ptr<AbstractProblem>;
-        using Creator = std::function<Problem(int, int)>; 
+        using Creator = std::function<Problem(int, int)>;
 
-        static Factory &instance() 
+        static Factory& instance()
         {
             static Factory f; // NOLINT 
             return f;
@@ -24,16 +18,24 @@ namespace ioh::problem
 
         void include(const std::string id, Creator creator)
         {
-            assert(map.find(id) == std::end(map)); 
+            assert(map.find(id) == std::end(map));
             map[id] = std::move(creator);
+            const int problem_id = map[id](1, 1)->meta_data().problem_id;
+            assert(id_map.find(problem_id) == std::end(id_map));
+            id_map[problem_id] = id;
         }
 
-        [[nodiscard]] std::vector<std::string> keys() const 
+        [[nodiscard]] std::vector<std::string> keys() const
         {
             std::vector<std::string> keys;
             for (const auto& [fst, snd] : map)
                 keys.push_back(fst);
             return keys;
+        }
+
+        [[nodiscard]] std::unordered_map<int, std::string> problem_id_map() const
+        {
+            return id_map; 
         }
 
         [[nodiscard]]
@@ -44,10 +46,18 @@ namespace ioh::problem
             return entry->second(instance, n_variables);
         }
 
+        Problem create(const int id, const int instance, const int n_variables) const
+        {
+            const auto entry = id_map.find(id);
+            assert(entry != std::end(id_map));
+            return create(entry->second, instance, n_variables);
+        }
+
     private:
         Factory() = default;
         Factory(const Factory&) = delete;
         std::unordered_map<std::string, Creator> map;
+        std::unordered_map<int, std::string> id_map;
     };
 
     template <class Parent>
@@ -63,7 +73,6 @@ namespace ioh::problem
             });
         }
 
-
         template <class T>
         static Factory<Parent> &instance()
         {
@@ -71,49 +80,11 @@ namespace ioh::problem
         }
     };
 
-    struct FactoryRegistry
-    {
-        static FactoryRegistry& instance()
-        {
-            static FactoryRegistry f; //NOLINT
-            return f;
-        }
-        
-        void include(const std::string& id, std::any e)
-        {
-            map[id] = std::move(e);
-        }
-
-        std::vector<std::string> keys()
-        {
-            std::vector<std::string> keys;
-            for (const auto& [fst, snd] : map)
-                keys.push_back(fst);
-            return keys;
-        }
-
-        template<typename T>
-        Factory<T> get(const std::string id)
-        {
-            const auto entry = map.find(id);
-            assert(entry != std::end(map));
-            return std::any_cast<Factory<T>>(entry->second);
-        }
-
-    private:
-        std::unordered_map<std::string, std::any> map;
-        FactoryRegistry() = default;
-        FactoryRegistry(const FactoryRegistry&) = delete;
-    };
-
-
     template <class Type, class Factory>
     struct InvokeApplyOnConstruction
     {
         InvokeApplyOnConstruction()
         {
-            FactoryRegistry::instance().include(
-                common::class_name<Factory>(), &Factory::template instance<Type>());
             Factory::template include<Type>();
         }
     };

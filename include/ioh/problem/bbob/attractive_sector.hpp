@@ -4,7 +4,7 @@
 
 namespace ioh::problem::bbob
 {
-    class AttractiveSector final : public BBOBBase<AttractiveSector>
+    class AttractiveSector final : public BBOProblem<AttractiveSector>
     {
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
@@ -34,7 +34,7 @@ namespace ioh::problem::bbob
 
     public:
         AttractiveSector(const int instance, const int n_variables) :
-            BBOBBase(6, instance, n_variables, "AttractiveSector")
+            BBOProblem(6, instance, n_variables, "AttractiveSector")
         {
         }
     };

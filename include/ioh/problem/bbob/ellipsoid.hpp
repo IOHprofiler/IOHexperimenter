@@ -5,7 +5,7 @@
 namespace ioh::problem::bbob
 {
     template <typename T>
-    class EllipsoidBase : public BBOBBase<T>
+    class EllipsoidBase : public BBOProblem<T>
     {
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
@@ -26,7 +26,7 @@ namespace ioh::problem::bbob
 
     public:
         EllipsoidBase(const int problem_id, const int instance, const int n_variables, const std::string &name) :
-            BBOBBase(problem_id, instance, n_variables, name)
+            BBOProblem(problem_id, instance, n_variables, name)
         {
             static const auto condition = 1.0e6;
             for (auto i = 1; i < meta_data_.n_variables; ++i)

@@ -16,7 +16,7 @@ namespace ioh
               * \param dimension The dimensionality of the problem to created, 4 by default.
               **/
 
-            class OneMax final: public PBOBase<OneMax>
+            class OneMax final: public PBOProblem<OneMax>
             {
             protected:
                 std::vector<double> evaluate(std::vector<int>& x) override
@@ -26,7 +26,7 @@ namespace ioh
 
             public:
                 OneMax(const int instance, const int n_variables) :
-                    PBOBase(1, instance, n_variables, "OneMax")
+                    PBOProblem(1, instance, n_variables, "OneMax")
                 {
                 }
             };

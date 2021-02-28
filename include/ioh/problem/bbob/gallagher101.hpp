@@ -5,7 +5,7 @@
 namespace ioh::problem::bbob
 {
     template <typename T>
-    class Gallagher : public BBOBBase<T>
+    class Gallagher : public BBOProblem<T>
     {
        
         struct Peak
@@ -64,7 +64,6 @@ namespace ioh::problem::bbob
             }
         };
 
-
         std::vector<std::vector<double>> x_transformation_;
         std::vector<Peak> peaks_;
         double factor_;
@@ -117,7 +116,7 @@ namespace ioh::problem::bbob
     public:
         Gallagher(const int problem_id, const int instance, const int n_variables, const std::string &name,
                   const int number_of_peaks, const double b = 10., const double c = 5.0) :
-            BBOBBase(problem_id, instance, n_variables, name),
+            BBOProblem(problem_id, instance, n_variables, name),
             x_transformation_(n_variables, std::vector<double>(number_of_peaks)),
             peaks_(Peak::get_peaks(number_of_peaks, n_variables, transformation_state_.seed)),
             factor_(-0.5 / static_cast<double>(n_variables))

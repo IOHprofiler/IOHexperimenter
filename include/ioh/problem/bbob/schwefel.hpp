@@ -4,7 +4,7 @@
 
 namespace ioh::problem::bbob
 {
-    class Schwefel final : public BBOBBase<Schwefel>
+    class Schwefel final : public BBOProblem<Schwefel>
 
     {
         std::vector<double> negative_offset_;
@@ -42,7 +42,7 @@ namespace ioh::problem::bbob
 
     public:
         Schwefel(const int instance, const int n_variables) :
-            BBOBBase(20, instance, n_variables, "Schwefel"),
+            BBOProblem(20, instance, n_variables, "Schwefel"),
             negative_offset_(n_variables),
             positive_offset_(n_variables)
         {

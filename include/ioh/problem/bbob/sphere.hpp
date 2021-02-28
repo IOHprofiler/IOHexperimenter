@@ -3,7 +3,7 @@
 
 namespace ioh::problem::bbob
 {
-    class Sphere final: public BBOBBase<Sphere>
+    class Sphere final: public BBOProblem<Sphere>
     {
     protected:
         std::vector<double> evaluate(std::vector<double>& x) override
@@ -21,7 +21,7 @@ namespace ioh::problem::bbob
         }
     public:
         Sphere(const int instance, const int n_variables) :
-            BBOBBase(1, instance, n_variables, "Sphere")
+            BBOProblem(1, instance, n_variables, "Sphere")
         {
         }
     };

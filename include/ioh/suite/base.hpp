@@ -4,7 +4,7 @@
 #include "ioh/problem/base.hpp"
 
 namespace ioh {
-    namespace suite {
+    namespace suite2 {
         class abstract_suite {
         public:
             abstract_suite() = default;
@@ -99,8 +99,7 @@ namespace ioh {
                 }
 
                 if (this->problem_list_index == this->size_of_problem_list - 1
-                    && this->
-                    get_problem_flag == true)
+                    && this->get_problem_flag == true)
                     return nullptr;
 
                 if (this->get_problem_flag == false)
@@ -141,8 +140,7 @@ namespace ioh {
                                         const int ub) {
                 for (const auto &e : ids)
                     if (e < lb || e > ub)
-                        common::log::error(
-                            "problem_id " + std::to_string(e) + " is not in " +
+                        common::log::error("problem_id " + std::to_string(e) + " is not in " +
                             get_suite_name());
             }
 
@@ -178,7 +176,6 @@ namespace ioh {
             int get_number_of_instances() const {
                 return this->number_of_instances;
             }
-
 
             int get_number_of_dimensions() const {
                 return this->number_of_dimensions;

@@ -1,6 +1,8 @@
 #include <iostream>
 #include "ioh/problem.hpp"
 
+#include "ioh/suite.hpp"
+
 bool float_eq(const double a, const double b)
 {
     return fabs(a - b) < 1e-8;
@@ -87,6 +89,19 @@ int main() {
             std::cout << result << " == " << y0 << " = " << std::boolalpha << float_eq(result, y0) << std::endl;
         }
     }
+
+
+    ioh::suite::BBOBSuite suite({1, 2}, {1, 2}, {5});
+
+    std::cout << suite.name() << std::endl;
+    for (const auto& p : suite)
+        std::cout << *p << std::endl;
+
+    ioh::suite::PBOSuite suite2({ 1 }, { 1, 2 }, { 5 });
+
+    std::cout << suite2.name() << std::endl;
+    for (const auto& p : suite2)
+        std::cout << *p << std::endl;
 
     std::cout << "done";
 }

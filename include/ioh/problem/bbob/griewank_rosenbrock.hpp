@@ -4,7 +4,7 @@
 
 namespace ioh::problem::bbob
 {
-    class GriewankRosenBrock final : public BBOBBase<GriewankRosenBrock>
+    class GriewankRosenBrock final : public BBOProblem<GriewankRosenBrock>
     {
         std::vector<double> x_shift_;
     protected:
@@ -31,7 +31,7 @@ namespace ioh::problem::bbob
     
     public:
         GriewankRosenBrock(const int instance, const int n_variables) :
-            BBOBBase(19, instance, n_variables, "GriewankRosenBrock"),
+            BBOProblem(19, instance, n_variables, "GriewankRosenBrock"),
             x_shift_(n_variables, -0.5)
         {
             const auto factor = std::max(1., sqrt(n_variables) / 8.);

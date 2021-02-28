@@ -5,7 +5,7 @@
 
 namespace ioh::problem
 {
-    class BBOBProblem : public RealProblem
+    class BBOB : public RealProblem
     {
     protected:
         struct TransformationState
@@ -56,7 +56,7 @@ namespace ioh::problem
         }
 
     public:
-        BBOBProblem(const int problem_id, const int instance, const int n_variables, const std::string &name,
+        BBOB(const int problem_id, const int instance, const int n_variables, const std::string &name,
                     const double condition = sqrt(10.0)):
             RealProblem(MetaData<double>(problem_id, instance, name, n_variables, 1,
                                          common::OptimizationType::minimization),
@@ -79,11 +79,11 @@ namespace ioh::problem
     };
 
     template <typename ProblemType>
-    class BBOBBase : public BBOBProblem,
-                 AutomaticFactoryRegistration<ProblemType, BBOBProblem>,
-                 AutomaticFactoryRegistration<ProblemType, RealProblem>
+    class BBOProblem : public BBOB,
+                     AutomaticFactoryRegistration<ProblemType, BBOB>,
+                     AutomaticFactoryRegistration<ProblemType, RealProblem>
     {
     public:
-        using BBOBProblem::BBOBProblem;
+        using BBOB::BBOB;
     };
 }

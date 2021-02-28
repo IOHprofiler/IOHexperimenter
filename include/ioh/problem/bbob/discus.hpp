@@ -4,7 +4,7 @@
 
 namespace ioh::problem::bbob
 {
-    class Discus final : public BBOBBase<Discus>
+    class Discus final : public BBOProblem<Discus>
     {
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
@@ -28,7 +28,7 @@ namespace ioh::problem::bbob
 
     public:
         Discus(const int instance, const int n_variables) :
-            BBOBBase(11, instance, n_variables, "Discus")
+            BBOProblem(11, instance, n_variables, "Discus")
         {
         }
     };

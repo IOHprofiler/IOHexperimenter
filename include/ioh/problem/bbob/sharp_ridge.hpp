@@ -4,7 +4,7 @@
 
 namespace ioh::problem::bbob
 {
-    class SharpRidge final : public BBOBBase<SharpRidge>
+    class SharpRidge final : public BBOProblem<SharpRidge>
 
     {
         int n_linear_dimensions_;
@@ -34,7 +34,7 @@ namespace ioh::problem::bbob
 
     public:
         SharpRidge(const int instance, const int n_variables) :
-            BBOBBase(13, instance, n_variables, "SharpRidge"),
+            BBOProblem(13, instance, n_variables, "SharpRidge"),
         n_linear_dimensions_(static_cast<int>(
             ceil(meta_data_.n_variables <= 40 ? 1 : meta_data_.n_variables / 40.0)))
         {
