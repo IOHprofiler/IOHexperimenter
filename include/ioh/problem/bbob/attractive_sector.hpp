@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {
-    class AttractiveSector final : public BBOB<AttractiveSector>
+    class AttractiveSector final : public BBOBBase<AttractiveSector>
     {
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
@@ -34,7 +34,7 @@ namespace ioh::problem::bbob
 
     public:
         AttractiveSector(const int instance, const int n_variables) :
-            BBOB(6, instance, n_variables, "AttractiveSector")
+            BBOBBase(6, instance, n_variables, "AttractiveSector")
         {
         }
     };

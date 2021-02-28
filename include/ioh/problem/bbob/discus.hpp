@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {
-    class Discus final : public BBOB<Discus>
+    class Discus final : public BBOBBase<Discus>
     {
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
@@ -28,7 +28,7 @@ namespace ioh::problem::bbob
 
     public:
         Discus(const int instance, const int n_variables) :
-            BBOB(11, instance, n_variables, "Discus")
+            BBOBBase(11, instance, n_variables, "Discus")
         {
         }
     };

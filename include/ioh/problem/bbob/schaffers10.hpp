@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {
     template<typename T>
-    class Schaffers: public BBOB<T>
+    class Schaffers: public BBOBBase<T>
     {
     protected:
         double condition_;
@@ -45,7 +45,7 @@ namespace ioh::problem::bbob
         }
     public:
         Schaffers(const int problem_id, const int instance, const int n_variables, const std::string& name, const double condition) :
-            BBOB(problem_id, instance, n_variables, name), raw_x_(n_variables), condition_(condition)
+            BBOBBase(problem_id, instance, n_variables, name), raw_x_(n_variables), condition_(condition)
         {
             for (auto i = 0; i < n_variables; ++i)
                 for (auto j = 0; j < n_variables; ++j)

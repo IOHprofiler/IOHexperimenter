@@ -1,4 +1,6 @@
 #pragma once
+
+#include "ioh/problem/utils.hpp"
 #include "ioh/problem/base.hpp"
 
 namespace ioh {

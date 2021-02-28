@@ -1,10 +1,9 @@
 #pragma once
-
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {
-    class Sphere final: public BBOB<Sphere>
+    class Sphere final: public BBOBBase<Sphere>
     {
     protected:
         std::vector<double> evaluate(std::vector<double>& x) override
@@ -22,7 +21,7 @@ namespace ioh::problem::bbob
         }
     public:
         Sphere(const int instance, const int n_variables) :
-            BBOB(1, instance, n_variables, "Sphere")
+            BBOBBase(1, instance, n_variables, "Sphere")
         {
         }
     };

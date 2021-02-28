@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ioh/problem/bbob/bbob_base.hpp"
 #include "rastrigin.hpp"
 
 namespace ioh::problem::bbob

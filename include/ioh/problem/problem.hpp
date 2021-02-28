@@ -1,14 +1,5 @@
 #pragma once
 
-#include <limits>
-#include <ostream>
-#include <string>
-#include <utility>
-#include <vector>
-#include <type_traits>
-#include <functional>
-
-#include "transformation.hpp"
 #include "ioh/common.hpp"
 #include "registry.hpp"
 
@@ -370,12 +361,14 @@ namespace ioh
         public:
             using Problem<double>::Problem;
         };
+
         
         class IntegerProblem: public Problem<int>
         {
         public:
             using Problem<int>::Problem;
         };
+
     
     }
 }

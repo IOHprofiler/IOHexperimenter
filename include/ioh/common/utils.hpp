@@ -14,8 +14,14 @@
 #include <utility>
 #include <vector>
 #include <array>
-
+#include <type_traits>
+#include <limits>
+#include <ostream>
+#include <functional>
+#include <numeric>
 #include <cstdlib>
+
+
 #if defined(__GNUC__) || defined(__GNUG__)
 #include <cxxabi.h>
 #endif

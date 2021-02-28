@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {
-    class GriewankRosenBrock final : public BBOB<GriewankRosenBrock>
+    class GriewankRosenBrock final : public BBOBBase<GriewankRosenBrock>
     {
         std::vector<double> x_shift_;
     protected:
@@ -31,7 +31,7 @@ namespace ioh::problem::bbob
     
     public:
         GriewankRosenBrock(const int instance, const int n_variables) :
-            BBOB(19, instance, n_variables, "GriewankRosenBrock"),
+            BBOBBase(19, instance, n_variables, "GriewankRosenBrock"),
             x_shift_(n_variables, -0.5)
         {
             const auto factor = std::max(1., sqrt(n_variables) / 8.);

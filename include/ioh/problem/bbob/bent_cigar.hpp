@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {
-    class BentCigar final : public BBOB<BentCigar>
+    class BentCigar final : public BBOBBase<BentCigar>
 
     {
     protected:
@@ -29,7 +29,7 @@ namespace ioh::problem::bbob
 
     public:
         BentCigar(const int instance, const int n_variables) :
-            BBOB(12, instance, n_variables, "BentCigar")
+            BBOBBase(12, instance, n_variables, "BentCigar")
         {
             using namespace transformation::coco;
             meta_data_.objective.x.assign(meta_data_.n_variables, 0);

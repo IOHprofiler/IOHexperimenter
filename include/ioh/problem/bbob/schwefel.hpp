@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {
-    class Schwefel final : public BBOB<Schwefel>
+    class Schwefel final : public BBOBBase<Schwefel>
 
     {
         std::vector<double> negative_offset_;
@@ -42,7 +42,7 @@ namespace ioh::problem::bbob
 
     public:
         Schwefel(const int instance, const int n_variables) :
-            BBOB(20, instance, n_variables, "Schwefel"),
+            BBOBBase(20, instance, n_variables, "Schwefel"),
             negative_offset_(n_variables),
             positive_offset_(n_variables)
         {

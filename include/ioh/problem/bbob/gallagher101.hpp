@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {
     template <typename T>
-    class Gallagher : public BBOB<T>
+    class Gallagher : public BBOBBase<T>
     {
        
         struct Peak
@@ -117,7 +117,7 @@ namespace ioh::problem::bbob
     public:
         Gallagher(const int problem_id, const int instance, const int n_variables, const std::string &name,
                   const int number_of_peaks, const double b = 10., const double c = 5.0) :
-            BBOB(problem_id, instance, n_variables, name),
+            BBOBBase(problem_id, instance, n_variables, name),
             x_transformation_(n_variables, std::vector<double>(number_of_peaks)),
             peaks_(Peak::get_peaks(number_of_peaks, n_variables, transformation_state_.seed)),
             factor_(-0.5 / static_cast<double>(n_variables))

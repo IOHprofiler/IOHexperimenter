@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {
-    class SharpRidge final : public BBOB<SharpRidge>
+    class SharpRidge final : public BBOBBase<SharpRidge>
 
     {
         int n_linear_dimensions_;
@@ -34,7 +34,7 @@ namespace ioh::problem::bbob
 
     public:
         SharpRidge(const int instance, const int n_variables) :
-            BBOB(13, instance, n_variables, "SharpRidge"),
+            BBOBBase(13, instance, n_variables, "SharpRidge"),
         n_linear_dimensions_(static_cast<int>(
             ceil(meta_data_.n_variables <= 40 ? 1 : meta_data_.n_variables / 40.0)))
         {

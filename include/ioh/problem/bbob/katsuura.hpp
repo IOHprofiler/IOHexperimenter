@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {
-    class Katsuura final : public BBOB<Katsuura>
+    class Katsuura final : public BBOBBase<Katsuura>
 
     {
         std::vector<double> raw_x_;
@@ -52,7 +52,7 @@ namespace ioh::problem::bbob
 
     public:
         Katsuura(const int instance, const int n_variables) :
-            BBOB(23, instance, n_variables, "Katsuura", sqrt(100.0)),
+            BBOBBase(23, instance, n_variables, "Katsuura", sqrt(100.0)),
             raw_x_(n_variables),
             exponent_(10. / pow(static_cast<double>(meta_data_.n_variables), 1.2)),
             factor_(10. / static_cast<double>(meta_data_.n_variables) / static_cast<double>(meta_data_.n_variables))

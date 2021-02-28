@@ -1,11 +1,10 @@
 #pragma once
 
-#include <numeric>
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {
-    class StepEllipsoid final : public BBOB<StepEllipsoid>
+    class StepEllipsoid final : public BBOBBase<StepEllipsoid>
 
     {
     protected:
@@ -64,7 +63,7 @@ namespace ioh::problem::bbob
 
     public:
         StepEllipsoid(const int instance, const int n_variables) :
-            BBOB(7, instance, n_variables, "StepEllipsoid")
+            BBOBBase(7, instance, n_variables, "StepEllipsoid")
         {
             static const auto condition = 100.;
             for (auto i = 0; i < meta_data_.n_variables; ++i)

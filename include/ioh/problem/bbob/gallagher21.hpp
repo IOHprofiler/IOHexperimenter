@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ioh/problem/bbob/gallagher101.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {

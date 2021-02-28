@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {
     template<typename T>
-    class RastriginBase: public BBOB<T>
+    class RastriginBase: public BBOBBase<T>
     {
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
@@ -35,7 +35,7 @@ namespace ioh::problem::bbob
 
     public:
         RastriginBase(const int problem_id, const int instance, const int n_variables,  const std::string& name ) :
-            BBOB(problem_id, instance, n_variables, name)
+            BBOBBase(problem_id, instance, n_variables, name)
         {
         }
     };

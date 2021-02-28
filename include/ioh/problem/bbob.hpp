@@ -1,6 +1,6 @@
 #pragma once
 
-#include "bbob/bbob_base.hpp"
+#include "bbob/bbob_problem.hpp"
 #include "bbob/sphere.hpp"
 #include "bbob/ellipsoid.hpp"
 #include "bbob/rastrigin.hpp"

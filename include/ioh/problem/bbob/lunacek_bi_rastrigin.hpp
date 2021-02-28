@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ioh/problem/bbob/bbob_base.hpp"
+#include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
 {
-    class LunacekBiRastrigin final : public BBOB<LunacekBiRastrigin>
+    class LunacekBiRastrigin final : public BBOBBase<LunacekBiRastrigin>
 
     {
     protected:
@@ -51,7 +51,7 @@ namespace ioh::problem::bbob
 
     public:
         LunacekBiRastrigin(const int instance, const int n_variables) :
-            BBOB(24, instance, n_variables, "LunacekBiRastrigin")
+            BBOBBase(24, instance, n_variables, "LunacekBiRastrigin")
         {
             std::vector<double> random_normal(n_variables);
             transformation::coco::bbob2009_gauss(random_normal, n_variables, transformation_state_.seed);
