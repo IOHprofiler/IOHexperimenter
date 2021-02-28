@@ -6,36 +6,36 @@ namespace ioh::problem::bbob
 {
     template <typename T>
     class Gallagher : public BBOB<T>
-
     {
-        struct Permutation
-        {
-            double value;
-            int index;
-
-            bool operator<(const Permutation &b) const
-            {
-                return value < b.value;
-            }
-
-            static std::vector<Permutation> sorted(const int n, const int seed)
-            {
-                std::vector<double> random_numbers(n);
-                std::vector<Permutation> permutations(n);
-                transformation::coco::bbob2009_unif(random_numbers, n, seed);
-
-                for (auto i = 0; i < n; ++i)
-                    permutations[i] = {random_numbers.at(i), i};
-
-                std::sort(permutations.begin(), permutations.end());
-                return permutations;
-            }
-        };
-
+       
         struct Peak
         {
             double value;
             std::vector<double> scales;
+
+            struct Permutation
+            {
+                double value;
+                int index;
+
+                bool operator<(const Permutation& b) const
+                {
+                    return value < b.value;
+                }
+
+                static std::vector<Permutation> sorted(const int n, const int seed)
+                {
+                    std::vector<double> random_numbers(n);
+                    std::vector<Permutation> permutations(n);
+                    transformation::coco::bbob2009_unif(random_numbers, n, seed);
+
+                    for (auto i = 0; i < n; ++i)
+                        permutations[i] = { random_numbers.at(i), i };
+
+                    std::sort(permutations.begin(), permutations.end());
+                    return permutations;
+                }
+            };
 
             Peak(const double value, const int seed, const int n_variables, const double condition) :
                 value(value), scales(n_variables)
@@ -68,7 +68,6 @@ namespace ioh::problem::bbob
         std::vector<std::vector<double>> x_transformation_;
         std::vector<Peak> peaks_;
         double factor_;
-
 
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
@@ -148,15 +147,6 @@ namespace ioh::problem::bbob
     public:
         Gallagher101(const int instance, const int n_variables):
             Gallagher(21, instance, n_variables, "Gallagher101", 101, 10., 5.0)
-        {
-        }
-    };
-
-    class Gallagher21 final : public Gallagher<Gallagher21>
-    {
-    public:
-        Gallagher21(const int instance, const int n_variables) :
-            Gallagher(22, instance, n_variables, "Gallagher21", 21, 9.8, 4.9)
         {
         }
     };

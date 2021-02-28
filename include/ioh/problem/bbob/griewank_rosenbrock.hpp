@@ -6,6 +6,7 @@ namespace ioh::problem::bbob
 {
     class GriewankRosenBrock final : public BBOB<GriewankRosenBrock>
     {
+        std::vector<double> x_shift_;
     protected:
         std::vector<double> evaluate(std::vector<double> &x) override
         {
@@ -22,30 +23,29 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::coco;
-            transform_vars_affine_evaluate_function(x, transformation_state_.transformation_matrix,
+            transform_vars_affine_evaluate_function(x, transformation_state_.second_rotation,
                                                     transformation_state_.transformation_base);
-            transform_vars_shift_evaluate_function(x, meta_data_.objective.x);
+            transform_vars_shift_evaluate_function(x, x_shift_);
             return x;
         }
     
     public:
         GriewankRosenBrock(const int instance, const int n_variables) :
-            BBOB(19, instance, n_variables, "GriewankRosenBrock")
+            BBOB(19, instance, n_variables, "GriewankRosenBrock"),
+            x_shift_(n_variables, -0.5)
         {
-            for (auto &e : meta_data_.objective.x)
-                e = -0.5;
-
-            //TODO how to correctly set xopt
-    
-            const auto scale = std::max(1., sqrt(n_variables) / 8.);
-
+            const auto factor = std::max(1., sqrt(n_variables) / 8.);
+            
             for (auto i = 0; i < n_variables; ++i)
+            {
+                auto sum = 0.0;
                 for (auto j = 0; j < n_variables; ++j)
-                    transformation_state_.second_rotation[i][j] *= scale;
-    
-            transformation::coco::bbob2009_copy_rotation_matrix(
-                transformation_state_.second_rotation, transformation_state_.transformation_matrix,
-                transformation_state_.transformation_base, n_variables);
+                {
+                    transformation_state_.second_rotation[i][j] *= factor;
+                    sum += transformation_state_.second_rotation.at(j).at(i);
+                }
+                meta_data_.objective.x[i] = sum / (2. * factor);
+            }
         }
     };
 }

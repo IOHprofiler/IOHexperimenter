@@ -1,6 +1,12 @@
 #include <iostream>
 #include "ioh/problem.hpp"
 
+bool float_eq(const double a, const double b)
+{
+    return fabs(a - b) < 1e-8;
+}
+
+
 int main() {
     const std::vector<double> expected{
         161.17445568,
@@ -31,7 +37,7 @@ int main() {
 
     const auto& the_factory = ioh::problem::Factory<ioh::problem::RealProblem>::instance();
 
-    const int dimension = 5;
+    const auto dimension = 5;
 
 
     const std::vector<std::shared_ptr<ioh::problem::RealProblem>> items = {
@@ -72,14 +78,15 @@ int main() {
         const auto y0 = (*item)(x0).at(0);
 
         const auto yopt = (*item)(item->meta_data().objective.x).at(0);
-        std::cout << i+1 << ": " << item->meta_data().name << std::endl;
-        std::cout << item->meta_data().objective << " == " << yopt << " = " << std::boolalpha
-                  << (item->meta_data().objective.y.at(0) == yopt) << std::endl;
-        
-        std::cout << result << " == " << y0 << " = " << std::boolalpha << (result == y0) << std::endl;
+        if (!float_eq(result, y0) || !float_eq(item->meta_data().objective.y.at(0), yopt))
+        {
+            std::cout << i + 1 << ": " << item->meta_data().name << std::endl;
+            std::cout << item->meta_data().objective << " == " << yopt << " = " << std::boolalpha
+                << float_eq(item->meta_data().objective.y.at(0), yopt) << std::endl;
+
+            std::cout << result << " == " << y0 << " = " << std::boolalpha << float_eq(result, y0) << std::endl;
+        }
     }
 
-
-    std::cout << the_factory.keys().size() << std::endl;
     std::cout << "done";
 }

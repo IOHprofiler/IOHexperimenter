@@ -52,7 +52,7 @@ namespace ioh::problem::bbob
     public:
         Weierstrass(const int instance, const int n_variables) :
             BBOB(16, instance, n_variables, "Weierstrass", 1 / sqrt(100.0)),
-            f0_(0.0), ak_(10), bk_(10), raw_x_(n_variables), penalty_factor_(10.0/ n_variables)
+            f0_(0.0), ak_(12), bk_(12), raw_x_(n_variables), penalty_factor_(10.0/ n_variables)
         {
             for (size_t i = 0; i < ak_.size(); ++i)
             {
