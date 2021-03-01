@@ -61,7 +61,20 @@ namespace ioh::problem
             transformation_state_(problem_id, instance, n_variables, condition)
         {
             objective_ = calculate_objective();
-        } 
+        }
+
+        [[nodiscard]]
+        logger::LogInfo log_info() const override
+        {
+            return {
+                static_cast<size_t>(state_.evaluations),
+                state_.current_internal.y.at(0) - objective_.y.at(0),
+                state_.current_best_internal.y.at(0) - objective_.y.at(0),
+                state_.current.y.at(0),
+                state_.current_best.y.at(0),
+                state_.current.x
+            };
+        }
 
         [[nodiscard]]
         Solution<double> calculate_objective() const

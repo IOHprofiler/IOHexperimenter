@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ioh/common.hpp"
+#include "ioh/logger/base.hpp"
+
 
 namespace ioh
 {
@@ -130,6 +132,9 @@ namespace ioh
             Solution<T> current_best_internal;
             Solution<T> current_best;
 
+            Solution<T> current_internal;
+            Solution<T> current;
+
             State() = default;
 
             State(Solution<T> initial_solution) :
@@ -146,16 +151,15 @@ namespace ioh
                 optimum_found = false;
             }
 
-            void update(const std::vector<T> &x, const std::vector<T> &x_internal, const std::vector<double> &y,
-                        const std::vector<double> &y_internal, const MetaData &meta_data, const Solution<T>& objective)
+            void update(const MetaData &meta_data, const Solution<T> &objective)
             {
                 ++evaluations;
-                if (common::compare_objectives(y, current_best.y, meta_data.optimization_type))
+                if (common::compare_objectives(current.y, current_best.y, meta_data.optimization_type))
                 {
-                    current_best_internal = {x_internal, y_internal};
-                    current_best = {x, y};
+                    current_best_internal = current_internal;
+                    current_best = current;
 
-                    if (common::compare_vector(objective.y, y))
+                    if (common::compare_vector(objective.y, current.y))
                         optimum_found = true;
                 }
             }
@@ -225,14 +229,11 @@ namespace ioh
             Constraint<T> constraint_;
             State<T> state_;
             Solution<T> objective_;
+            logger::Base *logger_{};
 
             [[nodiscard]]
             virtual std::vector<double> evaluate(std::vector<T> &x) = 0;
 
-            virtual void reset()
-            {
-                state_.reset();
-            }
 
             [[nodiscard]]
             virtual std::vector<T> transform_variables(std::vector<T> x)
@@ -269,16 +270,53 @@ namespace ioh
 
             virtual ~Problem() = default;
 
+            virtual void reset()
+            {
+                state_.reset();
+                logger_->track_problem(meta_data_);
+            }
+
+            [[nodiscard]]
+            virtual logger::LogInfo log_info() const
+            {
+                const std::vector<double> positions(state_.current_best.x.begin(), state_.current_best.x.end());
+                return {
+                    static_cast<size_t>(state_.evaluations),
+                    state_.current_internal.y.at(0),
+                    state_.current_best_internal.y.at(0),
+                    state_.current.y.at(0),
+                    state_.current_best.y.at(0),
+                    positions
+                };
+            }
+
+            void attach_logger(logger::Base& logger)
+            {
+                logger_ = &logger;
+                logger_->track_problem(meta_data_);
+
+            }
+
+            void detach_logger()
+            {
+                if (logger_ != nullptr)
+                    logger_->track_problem(meta_data_); 
+                logger_ = nullptr;
+            }
+
             std::vector<double> operator()(const std::vector<T> &x)
             {
                 if (!check_input(x)) //TODO: make this optional
                     return std::vector<T>(meta_data_.n_objectives, std::numeric_limits<T>::signaling_NaN());
 
-                auto x_internal = transform_variables(x);
-                auto y_internal = evaluate(x_internal);
-                auto y = transform_objectives(y_internal);
-                state_.update(x, x_internal, y, y_internal, meta_data_, objective_);
-                return y;
+                state_.current.x = x;
+                state_.current_internal.x = transform_variables(x);
+                state_.current_internal.y = evaluate(state_.current_internal.x);
+                state_.current.y = transform_objectives(state_.current_internal.y);
+                state_.update(meta_data_, objective_);
+                if (logger_ != nullptr)
+                    logger_->log(log_info());
+                return state_.current.y;
             }
 
             [[nodiscard]]

@@ -114,6 +114,26 @@ void test_problems()
 
 
 int main() {
-    test_problems();
+    const auto& the_factory = ioh::problem::ProblemRegistry<ioh::problem::RealProblem>::instance();
+
+    const auto problem = the_factory.create("Sphere", 1, 5);
+
+    auto logger1 = ioh::logger::Default(std::string("logger1"));
+    auto logger2 = ioh::logger::Default(std::string("logger2"));
+    auto logger = ioh::logger::LoggerCombine({ &logger1, &logger2 });
+     
+    problem->attach_logger(logger);
+
+    const std::vector<double> x0{ 0.1, 1., 2.,4., 5.4 };
+
+    for (auto i =0; i< 100; i++)
+    {
+        for (auto j = 0; j < 1000; j++)
+            (*problem)(x0);
+
+        problem->reset();
+    }
+        
+
     std::cout << "done";
 }
