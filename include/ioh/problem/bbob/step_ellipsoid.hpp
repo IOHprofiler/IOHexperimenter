@@ -18,7 +18,7 @@ namespace ioh::problem::bbob
                 for (auto j = 0; j < meta_data_.n_variables; ++j)
                     transformation_state_.transformation_base[i] += transformation_state_.conditions.at(i)
                     * transformation_state_.second_rotation.at(i).at(j)
-                    * (x.at(j) - meta_data_.objective.x.at(j));
+                    * (x.at(j) - objective_.x.at(j));
 
                 x0 = transformation_state_.transformation_base.at(0);
 
@@ -52,7 +52,7 @@ namespace ioh::problem::bbob
             }
 
             result[0] = 0.1 * (fabs(x0) * 1.0e-4 > result[0] ? fabs(x0) * 1.0e-4 : result[0]);
-            result[0] += penalty + meta_data_.objective.y.at(0);
+            result[0] += penalty + objective_.y.at(0);
             return result;
         }
 

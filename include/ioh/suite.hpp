@@ -1,26 +1,15 @@
 #pragma once
 
-#include <any>
-
 #include "ioh/problem.hpp"
 
 namespace ioh::suite
 {
-    struct SuiteBase
-    {
-        [[nodiscard]] virtual std::vector<int> problem_ids() const = 0;
-        [[nodiscard]] virtual std::vector<int> dimensions() const = 0;
-        [[nodiscard]] virtual std::vector<int> instances() const = 0;
-    };
-
-
     template <typename ProblemType>
-    class Suite : public SuiteBase
+    class Suite
     {
         using Problem = std::shared_ptr<ProblemType>;
 
         std::vector<Problem> problems_;
-
         std::vector<int> problem_ids_;
         std::vector<int> instances_;
         std::vector<int> dimensions_;
@@ -36,8 +25,8 @@ namespace ioh::suite
 
     public:
         Suite(const std::vector<int> &problem_ids, const std::vector<int> &instances,
-              const std::vector<int> &dimensions,
-              const int max_problem_id = 100, const int max_instance = 1000, const int max_dimension = 1000
+              const std::vector<int> &dimensions, const int max_problem_id = 100,
+              const int max_instance = 1000, const int max_dimension = 1000
             ) :
             problems_(), problem_ids_(problem_ids), instances_(instances), dimensions_(dimensions)
         {
@@ -76,19 +65,19 @@ namespace ioh::suite
         }
 
         [[nodiscard]]
-        std::vector<int> problem_ids() const override
+        std::vector<int> problem_ids() const
         {
             return problem_ids_;
         }
 
         [[nodiscard]]
-        std::vector<int> dimensions() const override
+        std::vector<int> dimensions() const
         {
             return dimensions_;
         }
 
         [[nodiscard]]
-        std::vector<int> instances() const override
+        std::vector<int> instances() const
         {
             return instances_;
         }
@@ -101,40 +90,54 @@ namespace ioh::suite
     };
 
 
-    template <class Derived>
+    template <class Derived, class Parent>
     struct AutomaticSuiteRegistration : common::RegistrationInvoker<
-            Derived, common::RegisterWithFactory<SuiteBase, std::vector<int>, std::vector<int>, std::vector<int>>>
+            Derived, common::RegisterWithFactory<Parent, std::vector<int>, std::vector<int>, std::vector<int>>>
     {
     };
 
-    struct SuiteRegistry : common::RegisterWithFactory<SuiteBase, std::vector<int>, std::vector<int>, std::vector<int>>
+    template <class Parent>
+    struct SuiteRegistry : common::RegisterWithFactory<Parent, std::vector<int>, std::vector<int>, std::vector<int>>
     {
     };
 
-    template <typename ProblemType>
-    class AbstractSuite : public Suite<ProblemType>, AutomaticSuiteRegistration<Suite<ProblemType>>
+    struct RealSuite : Suite<problem::RealProblem>
     {
-    public:
-        using Suite<ProblemType>::Suite;
+        using Suite<problem::RealProblem>::Suite;
+    };
+
+    struct IntegerSuite : Suite<problem::IntegerProblem>
+    {
+        using Suite<problem::IntegerProblem>::Suite;
     };
 
 
-    class BBOBSuite final : public AbstractSuite<problem::BBOB>
+    template <class Derived>
+    struct RealSuiteBase : RealSuite, AutomaticSuiteRegistration<Derived, RealSuite>
     {
-    public:
-        BBOBSuite(const std::vector<int> &problem_ids, const std::vector<int> &instances,
-                  const std::vector<int> &dimensions) :
-            AbstractSuite(problem_ids, instances, dimensions, 24, 100, 100)
+        using RealSuite::RealSuite;
+    };
+
+    template <class Derived>
+    struct IntegerSuiteBase : IntegerSuite, AutomaticSuiteRegistration<Derived, IntegerSuite>
+    {
+        using IntegerSuite::IntegerSuite;
+    };
+
+    struct BBOB final : RealSuiteBase<BBOB>
+    {
+        BBOB(const std::vector<int> &problem_ids, const std::vector<int> &instances,
+             const std::vector<int> &dimensions) :
+            RealSuiteBase(problem_ids, instances, dimensions, 24, 100, 100)
         {
         }
     };
 
-    class PBOSuite final : public AbstractSuite<problem::PBO>
+    struct PBO final : IntegerSuiteBase<PBO>
     {
-    public:
-        PBOSuite(const std::vector<int> &problem_ids, const std::vector<int> &instances,
-                 const std::vector<int> &dimensions) :
-            AbstractSuite(problem_ids, instances, dimensions, 25, 100, 20000)
+        PBO(const std::vector<int> &problem_ids, const std::vector<int> &instances,
+            const std::vector<int> &dimensions) :
+            IntegerSuiteBase(problem_ids, instances, dimensions, 25, 100, 20000)
         {
         }
     };

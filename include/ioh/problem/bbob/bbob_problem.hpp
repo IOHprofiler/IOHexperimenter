@@ -47,23 +47,21 @@ namespace ioh::problem
             }
         } transformation_state_;
 
-
         std::vector<double> transform_objectives(std::vector<double> y) override
         {
-            transformation::coco::transform_obj_shift_evaluate_function(y, meta_data_.objective.y.at(0));
+            transformation::coco::transform_obj_shift_evaluate_function(y, objective_.y.at(0));
             return y;
         }
 
     public:
         BBOB(const int problem_id, const int instance, const int n_variables, const std::string &name,
-                    const double condition = sqrt(10.0)):
-            RealProblem(MetaData<double>(problem_id, instance, name, n_variables, 1,
-                                         common::OptimizationType::minimization),
+             const double condition = sqrt(10.0)):
+            RealProblem(MetaData(problem_id, instance, name, n_variables, 1, common::OptimizationType::minimization),
                         Constraint<double>(n_variables, 5, -5)),
             transformation_state_(problem_id, instance, n_variables, condition)
         {
-            meta_data_.objective = calculate_objective();
-        }
+            objective_ = calculate_objective();
+        } 
 
         [[nodiscard]]
         Solution<double> calculate_objective() const
@@ -79,8 +77,8 @@ namespace ioh::problem
 
     template <typename ProblemType>
     class BBOProblem : public BBOB,
-                     AutomaticProblemRegistration<ProblemType, BBOB>,
-                     AutomaticProblemRegistration<ProblemType, RealProblem>
+                       AutomaticProblemRegistration<ProblemType, BBOB>,
+                       AutomaticProblemRegistration<ProblemType, RealProblem>
     {
     public:
         using BBOB::BBOB;

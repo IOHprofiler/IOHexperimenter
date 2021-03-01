@@ -24,7 +24,7 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::coco;
-            transform_vars_shift_evaluate_function(x, meta_data_.objective.x);
+            transform_vars_shift_evaluate_function(x, objective_.x);
             transform_vars_scale_evaluate(x, factor_);
             transform_vars_shift_evaluate_function(x, negative_one_);
             return x;
@@ -44,7 +44,7 @@ namespace ioh::problem::bbob
         Rosenbrock(const int instance, const int n_variables) :
             RosenbrockBase(8, instance, n_variables, "Rosenbrock")
         {
-            for (auto& e : meta_data_.objective.x)
+            for (auto& e : objective_.x)
                 e *= 0.75;
         }
     };

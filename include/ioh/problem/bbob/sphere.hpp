@@ -16,7 +16,7 @@ namespace ioh::problem::bbob
 
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            transformation::coco::transform_vars_shift_evaluate_function(x, meta_data_.objective.x);
+            transformation::coco::transform_vars_shift_evaluate_function(x, objective_.x);
             return x;
         }
     public:

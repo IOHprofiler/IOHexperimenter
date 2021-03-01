@@ -69,52 +69,29 @@ namespace ioh
             }
         };
 
-        template <typename T>
         struct MetaData
         {
             int instance{};
             int problem_id{};
             std::string name;
             common::OptimizationType optimization_type;
-            Solution<T> objective;
             int n_variables{};
             int n_objectives{};
             double initial_objective_value{};
 
-            MetaData(const int problem_id, const int instance, std::string name, const Solution<T> &objective,
+            MetaData(const int problem_id, const int instance, std::string name, const int n_variables,
+                     const int n_objectives,
                      const common::OptimizationType optimization_type = common::OptimizationType::minimization
                 ) :
                 instance(instance),
                 problem_id(problem_id),
                 name(std::move(name)),
                 optimization_type(optimization_type),
-                objective(objective),
-                n_variables(static_cast<int>(objective.x.size())),
-                n_objectives(static_cast<int>(objective.y.size())),
+                n_variables(n_variables),
+                n_objectives(n_objectives),
                 initial_objective_value(optimization_type == common::OptimizationType::minimization
                     ? std::numeric_limits<double>::infinity()
                     : -std::numeric_limits<double>::infinity())
-            {
-            }
-
-            MetaData(const int instance, const std::string &name, const Solution<T> &objective,
-                     const common::OptimizationType optimization_type = common::OptimizationType::minimization
-                ):
-                MetaData(0, instance, name, objective, optimization_type)
-            {
-            }
-
-            MetaData(const int problem_id, const int instance, const std::string &name, const int n_variables,
-                     const int n_objectives = 1,
-                     const common::OptimizationType optimization_type = common::OptimizationType::minimization
-                ) :
-                MetaData(problem_id, instance, name,
-                         Solution<T>{std::vector<T>(n_variables, std::numeric_limits<T>::signaling_NaN()),
-                                     std::vector<double>(n_objectives,
-                                                         (optimization_type == common::OptimizationType::minimization
-                                                             ? -std::numeric_limits<double>::infinity()
-                                                             : std::numeric_limits<double>::infinity()))
-                         }, optimization_type)
             {
             }
 
@@ -138,8 +115,7 @@ namespace ioh
                         ? "minimization"
                         : "maximization")
                     << " n_variables: " << obj.n_variables
-                    << " n_objectives: " << obj.n_objectives
-                    << " objectives: " << common::vector_to_string(obj.objective.y);
+                    << " n_objectives: " << obj.n_objectives;
             }
         };
 
@@ -171,7 +147,7 @@ namespace ioh
             }
 
             void update(const std::vector<T> &x, const std::vector<T> &x_internal, const std::vector<double> &y,
-                        const std::vector<double> &y_internal, const MetaData<T> &meta_data)
+                        const std::vector<double> &y_internal, const MetaData &meta_data, const Solution<T>& objective)
             {
                 ++evaluations;
                 if (common::compare_objectives(y, current_best.y, meta_data.optimization_type))
@@ -179,7 +155,7 @@ namespace ioh
                     current_best_internal = {x_internal, y_internal};
                     current_best = {x, y};
 
-                    if (common::compare_vector(meta_data.objective.y, y))
+                    if (common::compare_vector(objective.y, y))
                         optimum_found = true;
                 }
             }
@@ -193,7 +169,7 @@ namespace ioh
             }
         };
 
-    
+
         template <typename T>
         class Problem
         {
@@ -245,9 +221,10 @@ namespace ioh
 
 
         protected:
-            MetaData<T> meta_data_;
+            MetaData meta_data_;
             Constraint<T> constraint_;
             State<T> state_;
+            Solution<T> objective_;
 
             [[nodiscard]]
             virtual std::vector<double> evaluate(std::vector<T> &x) = 0;
@@ -262,6 +239,7 @@ namespace ioh
             {
                 return x;
             }
+
             [[nodiscard]]
             virtual std::vector<double> transform_objectives(std::vector<double> y)
             {
@@ -269,14 +247,24 @@ namespace ioh
             }
 
         public:
-            explicit Problem(MetaData<T> meta_data, Constraint<T> constraint = Constraint<T>()) :
-                meta_data_(std::move(meta_data)), constraint_(std::move(constraint))
+            explicit Problem(MetaData meta_data, Constraint<T> constraint, Solution<T> objective) :
+                meta_data_(std::move(meta_data)), constraint_(std::move(constraint)), objective_(std::move(objective))
             {
                 state_ = {{
                     std::vector<T>(meta_data_.n_variables, std::numeric_limits<T>::signaling_NaN()),
                     std::vector<double>(meta_data_.n_objectives, meta_data_.initial_objective_value)
                 }};
                 constraint_.check_size(meta_data_.n_variables);
+            }
+
+            explicit Problem(MetaData meta_data, Constraint<T> constraint = Constraint<T>()):
+                Problem(meta_data, constraint, {
+                            std::vector<T>(meta_data.n_variables, std::numeric_limits<T>::signaling_NaN()),
+                            std::vector<double>(meta_data.n_objectives,
+                                                (meta_data.optimization_type == common::OptimizationType::minimization
+                                                    ? -std::numeric_limits<double>::infinity()
+                                                    : std::numeric_limits<double>::infinity()))})
+            {
             }
 
             virtual ~Problem() = default;
@@ -289,14 +277,20 @@ namespace ioh
                 auto x_internal = transform_variables(x);
                 auto y_internal = evaluate(x_internal);
                 auto y = transform_objectives(y_internal);
-                state_.update(x, x_internal, y, y_internal, meta_data_);
+                state_.update(x, x_internal, y, y_internal, meta_data_, objective_);
                 return y;
             }
 
             [[nodiscard]]
-            MetaData<T> meta_data() const
+            MetaData meta_data() const
             {
                 return meta_data_;
+            }
+
+            [[nodiscard]]
+            Solution<T> objective() const
+            {
+                return objective_;
             }
 
             [[nodiscard]]
@@ -324,7 +318,8 @@ namespace ioh
         using Function = std::function<std::vector<double>(std::vector<T> &)>;
 
         template <typename T>
-        class WrappedProblem final: public Problem<T>
+        class WrappedProblem final : public Problem<T>
+            //TODO: make this class registerable
         {
         protected:
             Function<T> function_;
@@ -339,7 +334,8 @@ namespace ioh
                            const common::OptimizationType optimization_type = common::OptimizationType::minimization,
                            Constraint<T> constraint = Constraint<T>()
                 ) :
-                Problem<T>(MetaData<T>(0, name, n_variables, n_objectives, optimization_type), constraint), function_(f)
+                Problem<T>(MetaData(0, name, n_variables, n_objectives, optimization_type), constraint),
+                function_(f)
             {
             }
         };
@@ -353,26 +349,27 @@ namespace ioh
         {
             return WrappedProblem<T>{f, name, n_variables, n_objectives, optimization_type, constraint};
         }
-        
-        class RealProblem: public Problem<double>
+
+        class RealProblem : public Problem<double>
         {
         public:
             using Problem<double>::Problem;
         };
 
-        
-        class IntegerProblem: public Problem<int>
+
+        class IntegerProblem : public Problem<int>
         {
         public:
             using Problem<int>::Problem;
         };
 
-        
+
         template <class Derived, class Parent>
-        struct AutomaticProblemRegistration : common::RegistrationInvoker<Derived, common::RegisterWithFactory<Parent, int, int>>
+        struct AutomaticProblemRegistration : common::RegistrationInvoker<
+                Derived, common::RegisterWithFactory<Parent, int, int>>
         {
         };
-        
+
         template <class Parent>
         struct ProblemRegistry : common::RegisterWithFactory<Parent, int, int>
         {

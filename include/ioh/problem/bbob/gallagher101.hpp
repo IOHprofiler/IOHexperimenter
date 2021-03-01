@@ -127,7 +127,7 @@ namespace ioh::problem::bbob
 
             for (auto i = 0; i < meta_data_.n_variables; ++i)
             {
-                meta_data_.objective.x[i] = 0.8 * (b * random_numbers[i] - c);
+                objective_.x[i] = 0.8 * (b * random_numbers[i] - c);
                 for (auto j = 0; j < number_of_peaks; ++j)
                 {
                     for (auto k = 0; k < meta_data_.n_variables; ++k)

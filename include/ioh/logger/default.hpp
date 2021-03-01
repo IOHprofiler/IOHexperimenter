@@ -5,10 +5,6 @@
 #include "ioh/common.hpp"
 
 
-
-
-
-
 namespace ioh::logger {
 
     template <typename ProblemType>
@@ -16,6 +12,7 @@ namespace ioh::logger {
 
         common::file::UniqueFolder experiment_folder_;
         ProblemType const *problem_{};
+
         std::string last_logged_line_;
 
         class InfoFile {
@@ -70,6 +67,7 @@ namespace ioh::logger {
                 const int id = problem.get_problem_id();
                 const std::string name = problem.get_problem_name();
                 const int d = problem.get_number_of_variables();
+                // const int iid = problem.get_instance_id();
 
                 update_run_info(current_problem);
 
@@ -240,13 +238,13 @@ namespace ioh::logger {
                       t_on_improvement, t_at_time_points, optimization_type, trigger_at_time_points_exp_base,
                       trigger_at_range_exp_base) {
         }
-
-        explicit Default(const experiment::Configuration &conf)
-            : Default(conf.get_result_folder(), conf.get_output_directory(), conf.get_algorithm_name(),
-                      conf.get_algorithm_info(), conf.get_complete_triggers(), conf.get_number_interval_triggers(),
-                      conf.get_number_target_triggers(), conf.get_update_triggers(), conf.get_base_evaluation_triggers()
-                ) {
-        }
+        //
+        // explicit Default(const experiment::Configuration &conf)
+        //     : Default(conf.get_result_folder(), conf.get_output_directory(), conf.get_algorithm_name(),
+        //               conf.get_algorithm_info(), conf.get_complete_triggers(), conf.get_number_interval_triggers(),
+        //               conf.get_number_target_triggers(), conf.get_update_triggers(), conf.get_base_evaluation_triggers()
+        //         ) {
+        // }
 
 
         ~Default() {
@@ -262,14 +260,14 @@ namespace ioh::logger {
 
             problem_ = &problem;
             reset(problem.get_optimization_type());
-
+             
             if (problem.get_evaluations() != 0) // problem is not yet reset
                 const_cast<ProblemType &>(problem).reset_problem();
 
         }
 
-        void track_suite(const suite::base<ProblemType> &suite) override {
-            info_file_.suite_name_ = suite.get_suite_name();
+        void track_suite(const std::string& suite_name) override {
+            info_file_.suite_name_ = suite_name;
         }
 
         void do_log(const std::vector<double> &log_info) override {
