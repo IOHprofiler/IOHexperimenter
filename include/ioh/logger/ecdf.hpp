@@ -2,6 +2,7 @@
 
 #include "base.hpp"
 #include <iostream>
+#include <map>
 
 
 namespace ioh {
@@ -110,8 +111,7 @@ namespace ioh {
          * last dimension is the instance id.
          * Every item is an attain_mat.
          */
-        using attain_suite =
-        std::map<size_t,                   // problem
+        using attain_suite = std::map<size_t,                   // problem
                  std::map<size_t,          // dim
                           std::map<size_t, // instance
                                    attain_mat>>>;

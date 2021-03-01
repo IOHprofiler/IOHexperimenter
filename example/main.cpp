@@ -37,11 +37,12 @@ int main() {
         1782.2733296400438,
     };
 
-    const auto& the_factory = ioh::problem::Factory<ioh::problem::RealProblem>::instance();
 
     const auto dimension = 5;
+     
 
-
+    const auto& the_factory = ioh::problem::ProblemRegistry<ioh::problem::RealProblem>::instance();
+     
     const std::vector<std::shared_ptr<ioh::problem::RealProblem>> items = {
          the_factory.create("Sphere", 1, dimension),
          the_factory.create("Ellipsoid", 1, dimension),
@@ -68,40 +69,43 @@ int main() {
          the_factory.create("Katsuura", 1, dimension),
          the_factory.create("LunacekBiRastrigin", 1, dimension),
    }; 
-
-
+   
+   
     // TODO: check weierstrass, xopt in: rosenbrock
     const std::vector<double> x0{ 0.1, 1., 2.,4., 5.4 };
-
+   
     for (auto i = 0; i < items.size(); i++)
     {
         const auto item = items.at(i);
         const auto result = expected.at(i);
         const auto y0 = (*item)(x0).at(0);
-
+   
         const auto yopt = (*item)(item->meta_data().objective.x).at(0);
         if (!float_eq(result, y0) || !float_eq(item->meta_data().objective.y.at(0), yopt))
         {
             std::cout << i + 1 << ": " << item->meta_data().name << std::endl;
             std::cout << item->meta_data().objective << " == " << yopt << " = " << std::boolalpha
                 << float_eq(item->meta_data().objective.y.at(0), yopt) << std::endl;
-
+   
             std::cout << result << " == " << y0 << " = " << std::boolalpha << float_eq(result, y0) << std::endl;
         }
     }
 
 
     ioh::suite::BBOBSuite suite({1, 2}, {1, 2}, {5});
-
+    
     std::cout << suite.name() << std::endl;
     for (const auto& p : suite)
         std::cout << *p << std::endl;
-
+    
     ioh::suite::PBOSuite suite2({ 1 }, { 1, 2 }, { 5 });
-
+    
     std::cout << suite2.name() << std::endl;
     for (const auto& p : suite2)
         std::cout << *p << std::endl;
+    //
+    auto& suite_factory = ioh::suite::SuiteRegistry::instance();
+    auto f = suite_factory.create("BBOB", { 1 }, { 2 }, { 3 });
 
     std::cout << "done";
 }

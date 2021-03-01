@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ioh/problem/problem.hpp"
-#include "ioh/problem/registry.hpp"
 
 namespace ioh::problem
 {
@@ -80,8 +79,8 @@ namespace ioh::problem
 
     template <typename ProblemType>
     class BBOProblem : public BBOB,
-                     AutomaticFactoryRegistration<ProblemType, BBOB>,
-                     AutomaticFactoryRegistration<ProblemType, RealProblem>
+                     AutomaticProblemRegistration<ProblemType, BBOB>,
+                     AutomaticProblemRegistration<ProblemType, RealProblem>
     {
     public:
         using BBOB::BBOB;
