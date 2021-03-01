@@ -1,8 +1,6 @@
 #pragma once
 
 #include "ioh/common.hpp"
-#include "registry.hpp"
-
 
 namespace ioh
 {
@@ -370,6 +368,15 @@ namespace ioh
             using Problem<int>::Problem;
         };
 
-    
+        
+        template <class Derived, class Parent>
+        struct AutomaticProblemRegistration : common::RegistrationInvoker<Derived, common::RegisterWithFactory<Parent, int, int>>
+        {
+        };
+        
+        template <class Parent>
+        struct ProblemRegistry : common::RegisterWithFactory<Parent, int, int>
+        {
+        };
     }
 }
