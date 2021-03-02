@@ -65,20 +65,26 @@ namespace ioh::logger
         /** Base interface @{ */
         void track_suite(const std::string &suite_name) override
         {
-            for (auto &p : loggers_)
-                p->track_suite(suite_name);
+            for (auto &l : loggers_)
+                l->track_suite(suite_name);
         }
 
         void track_problem(const problem::MetaData &problem) override
         {
-            for (auto &p : loggers_)
-                p->track_problem(problem);
+            for (auto &l : loggers_)
+                l->track_problem(problem);
         }
 
         void log(const LogInfo &logger_info) override
         {
-            for (auto &p : loggers_)
-                p->log(logger_info);
+            for (auto &l : loggers_)
+                l->log(logger_info);
+        }
+
+        void flush() override
+        {
+            for (auto& l : loggers_)
+                l->flush();
         }
 
         /** @} */

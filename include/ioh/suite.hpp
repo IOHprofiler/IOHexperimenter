@@ -7,13 +7,82 @@ namespace ioh::suite
     template <typename ProblemType>
     class Suite
     {
+    public:
         using Problem = std::shared_ptr<ProblemType>;
 
+        struct Iterator
+        {
+            using ValueType = typename std::vector<Problem>::value_type;
+            using PointerType = ValueType *;
+            using ReferenceType = ValueType &;
+            Suite *suite;
+
+            explicit Iterator(PointerType p, Suite *s, const bool track_problems = true):
+                suite(s), ptr(p), begin(s->problems_.data()),
+                end(s->problems_.data() + s->problems_.size()),
+                track_problems(track_problems)
+            {
+                track_problem();
+            }
+
+            void track_problem() const
+            {
+                if (track_problems && ptr != end && suite->logger_ != nullptr)
+                    (*ptr)->attach_logger(*suite->logger_);
+            }
+
+            Iterator &operator++()
+            {
+                ++ptr;
+                track_problem();
+                return *this;
+            }
+
+            Iterator &operator++(int)
+            {
+                auto it = *this;
+                ++(*this);
+                return it;
+            }
+
+            ReferenceType operator[](int index)
+            {
+                return *(ptr + index);
+            }
+
+            PointerType operator->()
+            {
+                return ptr;
+            }
+
+            ReferenceType operator*()
+            {
+                return *ptr;
+            }
+
+            bool operator==(const Iterator &other)
+            {
+                return ptr == other.ptr;
+            }
+
+            bool operator!=(const Iterator &other)
+            {
+                return !(*this == other);
+            }
+
+        private:
+            PointerType ptr;
+            PointerType begin;
+            PointerType end;
+            bool track_problems;
+        };
+
+    private:
         std::vector<Problem> problems_;
         std::vector<int> problem_ids_;
         std::vector<int> instances_;
         std::vector<int> dimensions_;
-
+        logger::Base* logger_{};
 
         [[nodiscard]]
         int check_parameter(const int parameter, const int ub, const int lb = 1) const
@@ -42,26 +111,43 @@ namespace ioh::suite
                             ));
         }
 
+        virtual ~Suite()
+        {
+            if (logger_ != nullptr)
+                logger_->flush();
+        }
+
         void reset()
         {
+            if (logger_ != nullptr)
+                logger_->flush();
             for (auto &problem : problems_)
                 problem.reset();
         }
 
-        typename std::vector<Problem>::iterator begin()
+        void attach_logger(logger::Base& logger)
         {
-            return problems_.begin();
+            logger_ = &logger;
+            logger_->track_suite(name());
         }
 
-        typename std::vector<Problem>::iterator end()
+        void detach_logger()
         {
-            return problems_.end();
+            if (logger_ != nullptr)
+                logger_->flush();
+            logger_ = nullptr;
         }
 
         [[nodiscard]]
-        std::vector<Problem> problems() const
+        Iterator begin(const bool track_problems = true)
         {
-            return problems_;
+            return Iterator(problems_.data(), this, track_problems);
+        }
+
+        [[nodiscard]]
+        Iterator end()
+        {
+            return Iterator(problems_.data() + problems_.size(), this);
         }
 
         [[nodiscard]]

@@ -273,7 +273,8 @@ namespace ioh
             virtual void reset()
             {
                 state_.reset();
-                logger_->track_problem(meta_data_);
+                if (logger_ != nullptr)
+                    logger_->track_problem(meta_data_);
             }
 
             [[nodiscard]]
@@ -294,13 +295,12 @@ namespace ioh
             {
                 logger_ = &logger;
                 logger_->track_problem(meta_data_);
-
             }
 
             void detach_logger()
             {
                 if (logger_ != nullptr)
-                    logger_->track_problem(meta_data_); 
+                    logger_->flush();
                 logger_ = nullptr;
             }
 

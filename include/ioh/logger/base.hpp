@@ -24,6 +24,9 @@ namespace ioh {
             virtual void track_suite(const std::string& suite_name) = 0;
 
             virtual void log(const LogInfo& log_info) = 0;
+
+            virtual void flush() = 0;
+
         };
     }
 }
