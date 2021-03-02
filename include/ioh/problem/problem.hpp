@@ -401,9 +401,10 @@ namespace ioh
             using Problem<int>::Problem;
         };
 
+        
 
         template <class Derived, class Parent>
-        struct AutomaticProblemRegistration : common::RegistrationInvoker<
+        struct AutomaticProblemRegistration : common::AutomaticTypeRegistration<
                 Derived, common::RegisterWithFactory<Parent, int, int>>
         {
         };
@@ -411,6 +412,7 @@ namespace ioh
         template <class Parent>
         struct ProblemRegistry : common::RegisterWithFactory<Parent, int, int>
         {
+            
         };
     }
 }

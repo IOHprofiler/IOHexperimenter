@@ -1,8 +1,6 @@
 #pragma once
 
 #include "legacy.hpp"
-#include <vector>
-
 
 namespace ioh {
     namespace problem {

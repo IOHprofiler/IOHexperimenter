@@ -24,7 +24,7 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::coco;
-            transform_vars_shift_evaluate_function(x, objective_.x);
+            transform_vars_shift_evaluate_function(x, this->objective_.x);
             transform_vars_scale_evaluate(x, factor_);
             transform_vars_shift_evaluate_function(x, negative_one_);
             return x;
@@ -32,7 +32,7 @@ namespace ioh::problem::bbob
 
     public:
         RosenbrockBase(const int problem_id, const int instance, const int n_variables, const std::string& name) :
-            BBOProblem(problem_id, instance, n_variables, name),
+            BBOProblem<T>(problem_id, instance, n_variables, name),
             factor_(std::max(1.0, std::sqrt(n_variables) / 8.0)), negative_one_(n_variables, -1)
         {
         }

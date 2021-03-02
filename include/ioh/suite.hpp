@@ -177,7 +177,7 @@ namespace ioh::suite
 
 
     template <class Derived, class Parent>
-    struct AutomaticSuiteRegistration : common::RegistrationInvoker<
+    struct AutomaticSuiteRegistration : common::AutomaticTypeRegistration<
             Derived, common::RegisterWithFactory<Parent, std::vector<int>, std::vector<int>, std::vector<int>>>
     {
     };

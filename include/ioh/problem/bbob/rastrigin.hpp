@@ -26,7 +26,7 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::coco;
-            transform_vars_shift_evaluate_function(x, objective_.x);
+            transform_vars_shift_evaluate_function(x, this->objective_.x);
             transform_vars_oscillate_evaluate_function(x);
             transform_vars_asymmetric_evaluate_function(x, 0.2);
             transform_vars_conditioning_evaluate(x, 10.0);
@@ -35,7 +35,7 @@ namespace ioh::problem::bbob
 
     public:
         RastriginBase(const int problem_id, const int instance, const int n_variables,  const std::string& name ) :
-            BBOProblem(problem_id, instance, n_variables, name)
+            BBOProblem<T>(problem_id, instance, n_variables, name)
         {
         }
     };

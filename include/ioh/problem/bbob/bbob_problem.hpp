@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ioh/problem/problem.hpp"
+#include "ioh/problem/transformation.hpp"
 
 namespace ioh::problem
 {
@@ -94,6 +95,13 @@ namespace ioh::problem
                        AutomaticProblemRegistration<ProblemType, RealProblem>
     {
     public:
-        using BBOB::BBOB;
+        BBOProblem(const int problem_id, const int instance, const int n_variables, const std::string& name,
+            const double condition = sqrt(10.0)) :
+            BBOB(problem_id, instance, n_variables, name, condition)
+        {
+            
+            // auto ri1 = AutomaticProblemRegistration<ProblemType, BBOB>::registration_invoker;
+            // auto ri2 = AutomaticProblemRegistration<ProblemType, RealProblem>::registration_invoker;
+        }
     };
 }

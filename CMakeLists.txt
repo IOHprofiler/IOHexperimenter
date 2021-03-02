@@ -12,7 +12,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 option(BUILD_PYTHON_PACKAGE "Whether to build Python package" OFF)
 option(BUILD_TESTS "Whether to build test cases with gtest" ON)
-option(BUILD_EXAMPLE "Whether to build Python package" ON)
+option(BUILD_EXAMPLE "Whether to build Python package" ON) 
 option(BUILD_WITH_EIGEN "Whether to build with eigen package" OFF)
 
 option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python modules as if they were an IOH problem" OFF)
@@ -26,7 +26,7 @@ endif()
  
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU") 
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -lstdc++fs")
-
+    
     if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
         link_libraries(stdc++fs)
         add_compile_definitions(FSEXPERIMENTAL)
@@ -73,7 +73,6 @@ INTERFACE
     -Wall
     $<$<CXX_COMPILER_ID:GNU>:-pedantic>
 )
-
 
 # Generate package config files.
 include(CMakePackageConfigHelpers)

@@ -1,4 +1,6 @@
 #pragma once
+#include <cassert>
+
 #include "utils.hpp"
 
 namespace ioh::common
@@ -17,6 +19,7 @@ namespace ioh::common
 
         void include(const std::string name, const int id, Creator creator)
         {
+
             assert(map.find(name) == std::end(map));
             map[name] = std::move(creator);
             assert(id_map.find(id) == std::end(id_map));
@@ -128,7 +131,15 @@ namespace ioh::common
     template <class Type, class Factory>
     struct RegistrationInvoker
     {
-        static inline const InvokeApplyOnConstruction<Type, Factory>
-        registration_invoker = InvokeApplyOnConstruction<Type, Factory>();
+        static inline InvokeApplyOnConstruction<Type, Factory> registration_invoker = InvokeApplyOnConstruction<Type, Factory>();
     };
+
+
+    template <class Type, class Factory>
+    struct AutomaticTypeRegistration: RegistrationInvoker<Type, Factory> 
+    {
+        InvokeApplyOnConstruction<Type, Factory>& invoker =
+            RegistrationInvoker<Type, Factory>::registration_invoker;
+    };
+
 }
