@@ -401,7 +401,6 @@ namespace ioh
             using Problem<int>::Problem;
         };
 
-        
 
         template <class Derived, class Parent>
         struct AutomaticProblemRegistration : common::AutomaticTypeRegistration<

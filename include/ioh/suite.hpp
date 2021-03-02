@@ -27,6 +27,7 @@ namespace ioh::suite
 
             void track_problem() const
             {
+
                 if (track_problems && ptr != end && suite->logger_ != nullptr)
                     (*ptr)->attach_logger(*suite->logger_);
             }

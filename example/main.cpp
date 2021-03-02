@@ -91,7 +91,6 @@ void test_problems()
         }
     }
 
-
     ioh::suite::BBOB suite({ 1, 2 }, { 1, 2 }, { 5 });
 
     std::cout << suite.name() << std::endl;
@@ -114,56 +113,32 @@ void test_problems()
 
 
 int main() {
+    const auto& the_factory = ioh::problem::ProblemRegistry<ioh::problem::PBO>::instance();
 
-    using namespace ioh::common;
-    test_problems();
+    for (auto& name : the_factory.names())
+        std::cout << name << std::endl;
 
-    // const auto& the_factory = ioh::problem::ProblemRegistry<ioh::problem::PBO>::instance();
-    //
-    // for (auto& name : the_factory.names())
-    //     std::cout << name << std::endl;
-    //
-    // std::cout << the_factory.names().size();
-    //
-    // std::vector<double> x0{ 0.1, 1., 2.,4., 5.4 };
-    // // const auto problem = the_factory.create("Sphere", 1, 5);
-    //
-    // auto logger1 = ioh::logger::Default(std::string("logger1"));
-    // // auto logger2 = ioh::logger::Default(std::string("logger2"));
-    // // auto logger = ioh::logger::LoggerCombine({ &logger1, &logger2 });
-    //  
-    // // problem->attach_logger(logger1);
-    // //
-    //
-    // //
-    // // for (auto i =0; i < 10; i++)
-    // // {
-    // //     for (auto j = 0; j < 1000; j++)
-    // //         (*problem)(x0);
-    // //
-    // //     problem->reset();
-    // // }
-    //
-    // auto& suite_factory = ioh::suite::SuiteRegistry<ioh::suite::RealSuite>::instance();
-    // const auto suite = suite_factory.create("BBOB", { 1 }, { 1, 2 }, { 5 });
-    //
-    // suite->attach_logger(logger1);
-    //
-    // for (const auto& p : *suite)
-    // {
-    //     std::cout << *p << std::endl;
-    //
-    //     for (auto i = 0; i < 2; i++)
-    //     {
-    //          for (auto j = 0; j < 10; j++)
-    //          {
-    //              x0.at(0) += static_cast<double>(j);
-    //              (*p)(x0);
-    //          }
-    //          p->reset();
-    //     }
-    // }
-
+    std::vector<double> x0{ 0.1, 1., 2.,4., 5.4 };
+    auto logger1 = ioh::logger::Default(std::string("logger1"));
+    auto& suite_factory = ioh::suite::SuiteRegistry<ioh::suite::RealSuite>::instance();
+    const auto suite = suite_factory.create("BBOB", { 1 }, { 1, 2 }, { 5 });
+    
+    suite->attach_logger(logger1);
+    
+    for (const auto& p : *suite)
+    {
+        std::cout << *p << std::endl;
+    
+        for (auto i = 0; i < 3; i++)
+        {
+             for (auto j = 0; j < 10; j++)
+             {
+                 x0.at(i) -= static_cast<double>(j);
+                 (*p)(x0);
+             }
+             p->reset();
+        }
+    }
     std::cout << "done";
 }
 

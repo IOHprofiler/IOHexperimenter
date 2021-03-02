@@ -28,6 +28,8 @@ namespace ioh
                 OneMax(const int instance, const int n_variables) :
                     PBOProblem(1, instance, n_variables, "OneMax")
                 {
+                    // objective_.x = std::vector<int>();
+                    // objective_.y = std::vector<double>();
                 }
             };
         }

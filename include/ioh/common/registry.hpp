@@ -110,7 +110,6 @@ namespace ioh::common
                 return std::make_unique<T>(std::forward<Args>(params)...);
             });
         }
-
       
         static Factory<Parent, Args...> &instance()
         {
