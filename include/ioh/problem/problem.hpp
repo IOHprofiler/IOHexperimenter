@@ -291,7 +291,7 @@ namespace ioh
                 };
             }
 
-            void attach_logger(logger::Base& logger)
+            void attach_logger(logger::Base &logger)
             {
                 logger_ = &logger;
                 logger_->track_problem(meta_data_);
@@ -388,30 +388,32 @@ namespace ioh
             return WrappedProblem<T>{f, name, n_variables, n_objectives, optimization_type, constraint};
         }
 
-        class RealProblem : public Problem<double>
-        {
-        public:
-            using Problem<double>::Problem;
-        };
-
-
-        class IntegerProblem : public Problem<int>
-        {
-        public:
-            using Problem<int>::Problem;
-        };
-
+        template <typename ProblemType>
+        using ProblemFactoryType = common::RegisterWithFactory<ProblemType, int, int>;
 
         template <class Derived, class Parent>
-        struct AutomaticProblemRegistration : common::AutomaticTypeRegistration<
-                Derived, common::RegisterWithFactory<Parent, int, int>>
+        struct AutomaticProblemRegistration : common::AutomaticTypeRegistration<Derived, ProblemFactoryType<Parent>>
         {
         };
 
         template <class Parent>
-        struct ProblemRegistry : common::RegisterWithFactory<Parent, int, int>
+        struct ProblemRegistry : ProblemFactoryType<Parent>
         {
-            
+        };
+
+        using Real = Problem<double>;
+        using Integer = Problem<int>;
+
+        template<typename ProblemType>
+        struct RealProblem : Real, AutomaticProblemRegistration<ProblemType, Real>
+        {
+            using Real::Real;
+        };
+
+        template<typename ProblemType>
+        struct IntegerProblem : Integer, AutomaticProblemRegistration<ProblemType, Integer>
+        {
+            using Integer::Integer;
         };
     }
 }
