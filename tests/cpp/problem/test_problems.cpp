@@ -153,7 +153,7 @@ TEST(problems, bbob5d)
        423021.00682286796,
        278.3290201933729,
        4315.032550201522,
-       95168.253629631552,
+       95168.253629631741,
        969025.0451803299,
        20911310.769634742,
        187251637.66430587,
@@ -163,7 +163,7 @@ TEST(problems, bbob5d)
        273.87870697835791,
        35.410739487431208,
        107.64134358767826,
-       -40.269198936668907,
+       -40.269198932753994,
        49739.05388887795,
        116.29585727504872,
        -914.902473409051,
@@ -175,7 +175,7 @@ TEST(problems, bbob5d)
     for (const auto& name : the_factory.names())
     {
         const auto item = the_factory.create(name, 1, dimension);
-        ASSERT_DOUBLE_EQ(expected.at(item->meta_data().problem_id - 1), (*item)(x0).at(0)) << *item;
+        ASSERT_FLOAT_EQ(expected.at(item->meta_data().problem_id - 1), (*item)(x0).at(0)) << *item;
     }
 }
 
