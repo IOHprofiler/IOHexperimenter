@@ -11,7 +11,7 @@ namespace ioh::problem::bbob
         double factor_;
 
     protected:
-        std::vector<double> evaluate(std::vector<double> &x) override
+        std::vector<double> evaluate(const std::vector<double> &x) override
         {
             std::vector<double> result = {1.0};
             for (auto i = 0; i < meta_data_.n_variables; ++i)

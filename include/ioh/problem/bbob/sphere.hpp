@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
     class Sphere final: public BBOProblem<Sphere>
     {
     protected:
-        std::vector<double> evaluate(std::vector<double>& x) override
+        std::vector<double> evaluate(const std::vector<double>& x) override
         {
             std::vector<double> result{ 0.0 };
             for (const auto xi : x)

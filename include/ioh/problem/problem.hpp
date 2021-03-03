@@ -207,7 +207,9 @@ namespace ioh
             }
 
             [[nodiscard]]
-            virtual std::vector<double> evaluate(std::vector<T>& x) = 0;
+          
+            virtual std::vector<double> evaluate(const std::vector<T> &x) = 0;
+
 
 
             [[nodiscard]]
@@ -281,8 +283,9 @@ namespace ioh
 
             std::vector<double> operator()(const std::vector<T> &x)
             {
-                if (!check_input(x)) //TODO: make this optional
-                    return std::vector<T>(meta_data_.n_objectives, std::numeric_limits<T>::signaling_NaN());
+                // This causes errors for Integer problems
+                // if (!check_input(x)) //TODO: make this optional
+                //     return std::vector<T>(meta_data_.n_objectives, std::numeric_limits<T>::signaling_NaN());
 
                 state_.current.x = x;
                 state_.current_internal.x = transform_variables(x);

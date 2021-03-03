@@ -29,7 +29,7 @@ namespace ioh::problem::bbob
             return x0;
         }
 
-        std::vector<double> evaluate(std::vector<double> &x) override
+        std::vector<double> evaluate(const std::vector<double> &x) override
         {
             using namespace transformation::coco;
             

@@ -8,7 +8,7 @@ namespace ioh::problem::bbob
 
     {
     protected:
-        std::vector<double> evaluate(std::vector<double> &x) override
+        std::vector<double> evaluate(const std::vector<double> &x) override
         {
             auto sum = 0.0;
             for (auto i = 0; i < meta_data_.n_variables; ++i)

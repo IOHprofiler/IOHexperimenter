@@ -10,7 +10,7 @@ namespace ioh::problem::bbob
     protected:
         double condition_;
    
-        std::vector<double> evaluate(std::vector<double>& x) override
+        std::vector<double> evaluate(const std::vector<double>& x) override
         {
             auto result = 0.0;
             for (auto i = 0; i < this->meta_data_.n_variables - 1; ++i)

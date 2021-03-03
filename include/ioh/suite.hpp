@@ -152,19 +152,19 @@ namespace ioh::suite
         }
 
         [[nodiscard]]
-        std::vector<int> problem_ids() const
+        std::vector<int> problem_ids() const 
         {
             return problem_ids_;
         }
 
         [[nodiscard]]
-        std::vector<int> dimensions() const
+        std::vector<int> dimensions() const 
         {
             return dimensions_;
         }
 
         [[nodiscard]]
-        std::vector<int> instances() const
+        std::vector<int> instances() const 
         {
             return instances_;
         }

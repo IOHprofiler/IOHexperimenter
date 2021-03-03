@@ -9,7 +9,7 @@ namespace ioh::problem::bbob
     {
         int n_linear_dimensions_;
     protected:
-        std::vector<double> evaluate(std::vector<double> &x) override
+        std::vector<double> evaluate(const std::vector<double> &x) override
         {
             static const auto alpha = 100.0;
 
