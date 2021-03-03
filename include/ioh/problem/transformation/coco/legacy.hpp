@@ -1,6 +1,8 @@
 #pragma once
+
 #include <cassert>
 #include <vector>
+#include <cmath>
 
 namespace ioh {
     namespace problem {

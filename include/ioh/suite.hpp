@@ -1,30 +1,88 @@
 #pragma once
 
-#include <any>
-
 #include "ioh/problem.hpp"
 
 namespace ioh::suite
 {
-    struct SuiteBase
-    {
-        [[nodiscard]] virtual std::vector<int> problem_ids() const = 0;
-        [[nodiscard]] virtual std::vector<int> dimensions() const = 0;
-        [[nodiscard]] virtual std::vector<int> instances() const = 0;
-    };
-
-
     template <typename ProblemType>
-    class Suite : public SuiteBase
+    class Suite
     {
+    public:
         using Problem = std::shared_ptr<ProblemType>;
 
-        std::vector<Problem> problems_;
+        struct Iterator
+        {
+            using ValueType = typename std::vector<Problem>::value_type;
+            using PointerType = ValueType *;
+            using ReferenceType = ValueType &;
+            Suite *suite;
 
+            explicit Iterator(PointerType p, Suite *s, const bool track_problems = true):
+                suite(s), ptr(p), begin(s->problems_.data()),
+                end(s->problems_.data() + s->problems_.size()),
+                track_problems(track_problems)
+            {
+                track_problem();
+            }
+
+            void track_problem() const
+            {
+                if (track_problems && ptr != end && suite->logger_ != nullptr)
+                    (*ptr)->attach_logger(*suite->logger_);
+            }
+
+            Iterator &operator++()
+            {
+                ++ptr;
+                track_problem();
+                return *this;
+            }
+
+            Iterator &operator++(int)
+            {
+                auto it = *this;
+                ++(*this);
+                return it;
+            }
+
+            ReferenceType operator[](int index)
+            {
+                return *(ptr + index);
+            }
+
+            PointerType operator->()
+            {
+                return ptr;
+            }
+
+            ReferenceType operator*()
+            {
+                return *ptr;
+            }
+
+            bool operator==(const Iterator &other)
+            {
+                return ptr == other.ptr;
+            }
+
+            bool operator!=(const Iterator &other)
+            {
+                return !(*this == other);
+            }
+
+        private:
+            PointerType ptr;
+            PointerType begin;
+            PointerType end;
+            bool track_problems;
+        };
+
+    private:
+        std::vector<Problem> problems_;
         std::vector<int> problem_ids_;
         std::vector<int> instances_;
         std::vector<int> dimensions_;
-
+        logger::Base* logger_{};
 
         [[nodiscard]]
         int check_parameter(const int parameter, const int ub, const int lb = 1) const
@@ -36,8 +94,8 @@ namespace ioh::suite
 
     public:
         Suite(const std::vector<int> &problem_ids, const std::vector<int> &instances,
-              const std::vector<int> &dimensions,
-              const int max_problem_id = 100, const int max_instance = 1000, const int max_dimension = 1000
+              const std::vector<int> &dimensions, const int max_problem_id = 100,
+              const int max_instance = 1000, const int max_dimension = 1000
             ) :
             problems_(), problem_ids_(problem_ids), instances_(instances), dimensions_(dimensions)
         {
@@ -53,20 +111,43 @@ namespace ioh::suite
                             ));
         }
 
+        virtual ~Suite()
+        {
+            if (logger_ != nullptr)
+                logger_->flush();
+        }
+
         void reset()
         {
+            if (logger_ != nullptr)
+                logger_->flush();
             for (auto &problem : problems_)
                 problem.reset();
         }
 
-        typename std::vector<Problem>::iterator begin()
+        void attach_logger(logger::Base& logger)
         {
-            return problems_.begin();
+            logger_ = &logger;
+            logger_->track_suite(name());
         }
 
-        typename std::vector<Problem>::iterator end()
+        void detach_logger()
         {
-            return problems_.end();
+            if (logger_ != nullptr)
+                logger_->flush();
+            logger_ = nullptr;
+        }
+
+        [[nodiscard]]
+        Iterator begin(const bool track_problems = true)
+        {
+            return Iterator(problems_.data(), this, track_problems);
+        }
+
+        [[nodiscard]]
+        Iterator end()
+        {
+            return Iterator(problems_.data() + problems_.size(), this);
         }
 
         [[nodiscard]]
@@ -76,19 +157,19 @@ namespace ioh::suite
         }
 
         [[nodiscard]]
-        std::vector<int> problem_ids() const override
+        std::vector<int> problem_ids() const 
         {
             return problem_ids_;
         }
 
         [[nodiscard]]
-        std::vector<int> dimensions() const override
+        std::vector<int> dimensions() const 
         {
             return dimensions_;
         }
 
         [[nodiscard]]
-        std::vector<int> instances() const override
+        std::vector<int> instances() const 
         {
             return instances_;
         }
@@ -101,40 +182,54 @@ namespace ioh::suite
     };
 
 
+    template <class Derived, class Parent>
+    struct AutomaticSuiteRegistration : common::AutomaticTypeRegistration<
+            Derived, common::RegisterWithFactory<Parent, std::vector<int>, std::vector<int>, std::vector<int>>>
+    {
+    };
+
+    template <class Parent>
+    struct SuiteRegistry : common::RegisterWithFactory<Parent, std::vector<int>, std::vector<int>, std::vector<int>>
+    {
+    };
+
+    struct RealSuite : Suite<problem::RealProblem>
+    {
+        using Suite<problem::RealProblem>::Suite;
+    };
+
+    struct IntegerSuite : Suite<problem::IntegerProblem>
+    {
+        using Suite<problem::IntegerProblem>::Suite;
+    };
+
+
     template <class Derived>
-    struct AutomaticSuiteRegistration : common::RegistrationInvoker<
-            Derived, common::RegisterWithFactory<SuiteBase, std::vector<int>, std::vector<int>, std::vector<int>>>
+    struct RealSuiteBase : RealSuite, AutomaticSuiteRegistration<Derived, RealSuite>
     {
+        using RealSuite::RealSuite;
     };
 
-    struct SuiteRegistry : common::RegisterWithFactory<SuiteBase, std::vector<int>, std::vector<int>, std::vector<int>>
+    template <class Derived>
+    struct IntegerSuiteBase : IntegerSuite, AutomaticSuiteRegistration<Derived, IntegerSuite>
     {
+        using IntegerSuite::IntegerSuite;
     };
 
-    template <typename ProblemType>
-    class AbstractSuite : public Suite<ProblemType>, AutomaticSuiteRegistration<Suite<ProblemType>>
+    struct BBOB final : RealSuiteBase<BBOB>
     {
-    public:
-        using Suite<ProblemType>::Suite;
-    };
-
-
-    class BBOBSuite final : public AbstractSuite<problem::BBOB>
-    {
-    public:
-        BBOBSuite(const std::vector<int> &problem_ids, const std::vector<int> &instances,
-                  const std::vector<int> &dimensions) :
-            AbstractSuite(problem_ids, instances, dimensions, 24, 100, 100)
+        BBOB(const std::vector<int> &problem_ids, const std::vector<int> &instances,
+             const std::vector<int> &dimensions) :
+            RealSuiteBase(problem_ids, instances, dimensions, 24, 100, 100)
         {
         }
     };
 
-    class PBOSuite final : public AbstractSuite<problem::PBO>
+    struct PBO final : IntegerSuiteBase<PBO>
     {
-    public:
-        PBOSuite(const std::vector<int> &problem_ids, const std::vector<int> &instances,
-                 const std::vector<int> &dimensions) :
-            AbstractSuite(problem_ids, instances, dimensions, 25, 100, 20000)
+        PBO(const std::vector<int> &problem_ids, const std::vector<int> &instances,
+            const std::vector<int> &dimensions) :
+            IntegerSuiteBase(problem_ids, instances, dimensions, 25, 100, 20000)
         {
         }
     };

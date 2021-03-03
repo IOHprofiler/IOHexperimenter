@@ -32,7 +32,7 @@ namespace ioh::problem::bbob
             using namespace transformation::coco;
             transform_vars_x_hat_evaluate(x, transformation_state_.seed);
             transform_vars_scale_evaluate(x, 2);
-            transform_vars_z_hat_evaluate(x, meta_data_.objective.x);
+            transform_vars_z_hat_evaluate(x, objective_.x);
             transform_vars_shift_evaluate_function(x, positive_offset_);
             transform_vars_conditioning_evaluate(x, 10.0);
             transform_vars_shift_evaluate_function(x, negative_offset_);
@@ -49,12 +49,12 @@ namespace ioh::problem::bbob
             transformation::coco::bbob2009_unif(negative_offset_, n_variables, transformation_state_.seed);
 
             for (auto i = 0; i < n_variables; ++i)
-                meta_data_.objective.x[i] = (negative_offset_.at(i) < 0.5 ? -1 : 1) * 0.5 * 4.2096874637;
+                objective_.x[i] = (negative_offset_.at(i) < 0.5 ? -1 : 1) * 0.5 * 4.2096874637;
 
             for (auto i = 0; i < n_variables; ++i)
             {
-                negative_offset_[i] = -2 * fabs(meta_data_.objective.x.at(i));
-                positive_offset_[i] = 2 * fabs(meta_data_.objective.x.at(i));
+                negative_offset_[i] = -2 * fabs(objective_.x.at(i));
+                positive_offset_[i] = 2 * fabs(objective_.x.at(i));
             }
         }
     };

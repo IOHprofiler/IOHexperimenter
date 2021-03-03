@@ -72,17 +72,17 @@ namespace ioh::problem::bbob
         std::vector<double> evaluate(std::vector<double> &x) override
         {
             static const auto a = 0.1;
-            std::vector<double> x_transformed(meta_data_.n_variables);
+            std::vector<double> x_transformed(this->meta_data_.n_variables);
             auto penalty = 0.; 
 
-            for (auto i = 0; i < meta_data_.n_variables; i++)
+            for (auto i = 0; i < this->meta_data_.n_variables; i++)
             {
                 const auto out_of_bounds = fabs(x.at(i)) - 5.;
                 if (out_of_bounds > 0.)
                     penalty += out_of_bounds * out_of_bounds;
 
                 x_transformed[i] = std::inner_product(x.begin(), x.end(),
-                                                      transformation_state_.second_rotation.at(i).begin(), 0.0);
+                    this->transformation_state_.second_rotation.at(i).begin(), 0.0);
             }
 
             auto result = 10. - std::accumulate(
@@ -116,23 +116,23 @@ namespace ioh::problem::bbob
     public:
         Gallagher(const int problem_id, const int instance, const int n_variables, const std::string &name,
                   const int number_of_peaks, const double b = 10., const double c = 5.0) :
-            BBOProblem(problem_id, instance, n_variables, name),
+            BBOProblem<T>(problem_id, instance, n_variables, name),
             x_transformation_(n_variables, std::vector<double>(number_of_peaks)),
-            peaks_(Peak::get_peaks(number_of_peaks, n_variables, transformation_state_.seed)),
+            peaks_(Peak::get_peaks(number_of_peaks, n_variables, this->transformation_state_.seed)),
             factor_(-0.5 / static_cast<double>(n_variables))
         {
             std::vector<double> random_numbers;
-            transformation::coco::bbob2009_unif(random_numbers, meta_data_.n_variables * number_of_peaks,
-                                                transformation_state_.seed);
+            transformation::coco::bbob2009_unif(random_numbers, this->meta_data_.n_variables * number_of_peaks,
+                this->transformation_state_.seed);
 
-            for (auto i = 0; i < meta_data_.n_variables; ++i)
+            for (auto i = 0; i < this->meta_data_.n_variables; ++i)
             {
-                meta_data_.objective.x[i] = 0.8 * (b * random_numbers[i] - c);
+                this->objective_.x[i] = 0.8 * (b * random_numbers[i] - c);
                 for (auto j = 0; j < number_of_peaks; ++j)
                 {
-                    for (auto k = 0; k < meta_data_.n_variables; ++k)
-                        x_transformation_[i][j] += transformation_state_.second_rotation[i][k] * (
-                            b * random_numbers[j * meta_data_.n_variables + k] - c
+                    for (auto k = 0; k < this->meta_data_.n_variables; ++k)
+                        x_transformation_[i][j] += this->transformation_state_.second_rotation[i][k] * (
+                            b * random_numbers[j * this->meta_data_.n_variables + k] - c
                         );
                     if (j == 0)
                         x_transformation_[i][j] *= 0.8;

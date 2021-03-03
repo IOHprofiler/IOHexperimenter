@@ -7,7 +7,6 @@ namespace ioh::problem::bbob
     class Katsuura final : public BBOProblem<Katsuura>
 
     {
-        std::vector<double> raw_x_;
         double exponent_;
         double factor_;
 
@@ -32,8 +31,7 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::coco;
-            raw_x_ = x;
-            transform_vars_shift_evaluate_function(x, meta_data_.objective.x);
+            transform_vars_shift_evaluate_function(x, objective_.x);
             transform_vars_affine_evaluate_function(
                 x, transformation_state_.second_transformation_matrix,
                 transformation_state_.transformation_base);
@@ -44,8 +42,8 @@ namespace ioh::problem::bbob
         {
             using namespace transformation::coco;
             static const auto penalty_factor = 1.0;
-            transform_obj_shift_evaluate_function(y, meta_data_.objective.y.at(0));
-            transform_obj_penalize_evaluate(raw_x_, constraint_.lb.at(0),
+            transform_obj_shift_evaluate_function(y, objective_.y.at(0));
+            transform_obj_penalize_evaluate(state_.current.x, constraint_.lb.at(0),
                                             constraint_.ub.at(0), penalty_factor, y);
             return y;
         }
@@ -53,7 +51,6 @@ namespace ioh::problem::bbob
     public:
         Katsuura(const int instance, const int n_variables) :
             BBOProblem(23, instance, n_variables, "Katsuura", sqrt(100.0)),
-            raw_x_(n_variables),
             exponent_(10. / pow(static_cast<double>(meta_data_.n_variables), 1.2)),
             factor_(10. / static_cast<double>(meta_data_.n_variables) / static_cast<double>(meta_data_.n_variables))
         {

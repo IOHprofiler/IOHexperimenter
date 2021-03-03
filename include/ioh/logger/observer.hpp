@@ -2,9 +2,7 @@
 
 #include <utility>
 
-
 #include "ioh/common.hpp"
-#include "ioh/suite.hpp"
 
 
 namespace ioh {

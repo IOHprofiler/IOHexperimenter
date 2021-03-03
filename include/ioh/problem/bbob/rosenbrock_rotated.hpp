@@ -30,7 +30,7 @@ namespace ioh::problem::bbob
                     sum += transformation_state_.second_rotation.at(j).at(i);
                 }
                 transformation_state_.transformation_base[i] = 0.5;
-                meta_data_.objective.x[i] = sum / (2. * factor);
+                objective_.x[i] = sum / (2. * factor);
             }
         }
     };

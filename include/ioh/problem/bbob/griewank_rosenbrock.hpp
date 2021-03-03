@@ -44,7 +44,7 @@ namespace ioh::problem::bbob
                     transformation_state_.second_rotation[i][j] *= factor;
                     sum += transformation_state_.second_rotation.at(j).at(i);
                 }
-                meta_data_.objective.x[i] = sum / (2. * factor);
+                objective_.x[i] = sum / (2. * factor);
             }
         }
     };

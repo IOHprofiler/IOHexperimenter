@@ -1,9 +1,10 @@
 #pragma once
 
-#include "logger/base.hpp"
-#include "logger/csv.hpp"
-#include "logger/default.hpp"
-
-#include "logger/ecdf.hpp"
 #include "logger/observer.hpp"
-#include "logger/observer_combine.hpp"
+#include "logger/base.hpp"
+#include "logger/default.hpp"
+#include "logger/logger_combine.hpp"
+
+// #include "logger/csv.hpp"
+// #include "logger/ecdf.hpp"
+

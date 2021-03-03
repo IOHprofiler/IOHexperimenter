@@ -31,7 +31,7 @@ namespace ioh::problem::bbob
         {
             using namespace transformation::coco;
             raw_x_ = x;
-            transform_vars_shift_evaluate_function(x, meta_data_.objective.x);
+            transform_vars_shift_evaluate_function(x, objective_.x);
             transform_vars_affine_evaluate_function(x, transformation_state_.transformation_matrix,
                                                     transformation_state_.transformation_base);
             transform_vars_oscillate_evaluate_function(x);
@@ -43,7 +43,7 @@ namespace ioh::problem::bbob
         std::vector<double> transform_objectives(std::vector<double> y) override
         {
             using namespace transformation::coco;
-            transform_obj_shift_evaluate_function(y, meta_data_.objective.y.at(0));
+            transform_obj_shift_evaluate_function(y, objective_.y.at(0));
             transform_obj_penalize_evaluate(raw_x_, constraint_.lb.at(0),
                                             constraint_.ub.at(0), penalty_factor_, y);
             return y;
