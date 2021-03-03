@@ -12,18 +12,17 @@ TEST(ecdf, example)
 	ioh::common::log::log_level = ioh::common::log::Level::warning;
 	
 	size_t sample_size = 100;
-
+	size_t ecdf_width = 20;
 	std::vector<int> pbs = { 1,2 };
 	std::vector<int> ins = { 1,2 };
 	std::vector<int> dims = { 2,10 };
 
 
 	ioh::suite::bbob bench(pbs, ins, dims);
-	size_t ecdf_width = 20;
-	using Logger = ecdf<bbob::bbob_base>;
+	using Logger = ECDF<bbob::bbob_base>;
 
-	range_log<double> error(0, 6e7, ecdf_width);
-	range_log<size_t> evals(0, sample_size, ecdf_width);
+	LogRange<double> error(0, 6e7, ecdf_width);
+	LogRange<size_t> evals(0, sample_size, ecdf_width);
 	Logger logger(error, evals);
 
 	logger.activate_logger();
@@ -52,7 +51,7 @@ TEST(ecdf, example)
 			pb->evaluate(sol);
 			logger.do_log(pb->loggerInfo());
 		}
-		ecdf_sum sum;
+		ECDFSum sum;
 		size_t s = sum(logger.data());
 		ASSERT_EQ(s, attainments_sum.front());
 		attainments_sum.pop_front();

@@ -329,13 +329,14 @@ namespace ioh::logger
             });
             
             // We can do this with pointers, more efficient
-            last_logged_line_ = common::string_format("%d %f %f %f %f", log_info.evaluations, log_info.y, log_info.y_best, log_info.transformed_y,
+            last_logged_line_ = common::string_format("%d %f %f %f %f", log_info.evaluations, 
+                    log_info.current.y.at(0), log_info.y_best, log_info.transformed_y,
                 log_info.transformed_y_best);
             for (const auto &e : data_files_.logged_attributes_)
                 last_logged_line_ += common::string_format(" %f", *e.second);
 
             if (store_positions_)
-               for (const auto & xi: log_info.x)
+               for (const auto & xi: log_info.current.x)
                    last_logged_line_ += common::string_format(" %f", xi);
 
             last_logged_line_ += "\n";
@@ -343,13 +344,13 @@ namespace ioh::logger
             data_files_ << last_logged_line_;
             
             if (improvement_found)
-                info_file_.best_point_ = { log_info.y, log_info.transformed_y, log_info.evaluations};
-        }
+                info_file_.best_point_ = { log_info.current.y.at(0), log_info.transformed_y, log_info.evaluations};
+        } 
 
         [[nodiscard]] common::file::UniqueFolder &experiment_folder()
         {
             return experiment_folder_;
-        }
+        } 
 
 
         /// Parameters ///

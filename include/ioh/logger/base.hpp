@@ -1,21 +1,17 @@
 #pragma once
-#include "observer.hpp"
+
+#include "ioh/problem/utils.hpp"
 
 namespace ioh {
-    namespace problem
-    {
-        struct MetaData;
-    }
-    
     namespace logger {
         struct LogInfo
         {
             size_t evaluations;
-            double y;
             double y_best;
             double transformed_y;
             double transformed_y_best;
-            std::vector<double> x;
+            problem::Solution<double> current;
+            problem::Solution<double> objective;
         };
 
         struct Base {
@@ -26,7 +22,6 @@ namespace ioh {
             virtual void log(const LogInfo& log_info) = 0;
 
             virtual void flush() = 0;
-
         };
     }
 }
