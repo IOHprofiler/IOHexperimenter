@@ -9,12 +9,13 @@ namespace ioh::problem::bbob
     {
     protected:
         std::vector<double> evaluate(const std::vector<double> &x) override
+            //TODO: optimize static variable initialization
         {
             static const auto mu0 = 2.5;
             static const auto d = 1.;
-            static const auto double_n = static_cast<double>(meta_data_.n_variables);
-            static const auto s = 1. - 0.5 / (sqrt(double_n + 20) - 4.1);
-            static const auto mu1 = -sqrt((mu0 * mu0 - d) / s);
+            const auto double_n = static_cast<double>(meta_data_.n_variables);
+            const auto s = 1. - 0.5 / (sqrt(double_n + 20) - 4.1);
+            const auto mu1 = -sqrt((mu0 * mu0 - d) / s);
 
             auto sum1 = 0., sum2 = 0., sum3 = 0., penalty = 0.;
 
@@ -55,6 +56,7 @@ namespace ioh::problem::bbob
         {
             std::vector<double> random_normal(n_variables);
             transformation::coco::bbob2009_gauss(random_normal, n_variables, transformation_state_.seed);
+
             for (auto i = 0; i < n_variables; ++i)
             {
                 objective_.x[i] = random_normal.at(i) < 0.0 ? 0.5 * 2.5 * -1 : 0.5 * 2.5;

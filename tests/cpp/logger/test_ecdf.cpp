@@ -18,45 +18,38 @@ TEST(ecdf, example)
 	std::vector<int> dims = { 2,10 };
 
 
-	ioh::suite::bbob bench(pbs, ins, dims);
-	using Logger = ECDF<bbob::bbob_base>;
+	ioh::suite::BBOB bench(pbs, ins, dims);
 
 	LogRange<double> error(0, 6e7, ecdf_width);
 	LogRange<size_t> evals(0, sample_size, ecdf_width);
-	Logger logger(error, evals);
+	ECDF logger(error, evals);
 
-	logger.activate_logger();
-	logger.track_suite(bench);
+	bench.attach_logger(logger);
 
 
 	size_t seed = 5;
 	std::mt19937 gen(seed);
 	std::uniform_real_distribution<> dis(-5, 5);
-	ioh::suite::bbob::problem_ptr pb;
 
 
 	std::list<size_t> attainments_sum = { 324, 646, 917, 1181,
 		1302, 1487, 1580, 1653};
 	
 	size_t n = 0;
-	while ((pb = bench.get_next_problem())) {
-		logger.track_problem(*pb);
-
-		size_t d = pb->get_number_of_variables();
+	for (const auto& p : bench) {
+	    size_t d = p->meta_data().n_variables;
 		for (size_t s = 0; s < sample_size; ++s) {
 			std::vector<double> sol;
 			sol.reserve(d);
 			std::generate_n(std::back_inserter(sol), d, [&dis, &gen]() {return dis(gen); });
-
-			pb->evaluate(sol);
-			logger.do_log(pb->loggerInfo());
+			(*p)(sol);
 		}
 		ECDFSum sum;
 		size_t s = sum(logger.data());
 		ASSERT_EQ(s, attainments_sum.front());
 		attainments_sum.pop_front();
 		n++;
-	} // for name_id
+	} 
 
 	size_t i, j, k;
 	std::tie(i, j, k) = logger.size();

@@ -6,8 +6,8 @@ TEST(common, test)
 {
 	using namespace ioh::common;
 
-	ASSERT_TRUE(compare_objectives(4, 2, OptimizationType::maximization));
-	ASSERT_FALSE(compare_objectives(2, 2, OptimizationType::maximization));
+	ASSERT_TRUE(compare_objectives(4, 2, OptimizationType::Maximization));
+	ASSERT_FALSE(compare_objectives(2, 2, OptimizationType::Maximization));
 
 	ASSERT_TRUE(compare_objectives(2, 5, OptimizationType::Minimization));
 	ASSERT_FALSE(compare_objectives(4, 2, OptimizationType::Minimization)); 
@@ -29,15 +29,9 @@ TEST(common, log)
 
 TEST(common, typenames)
 {
-    ASSERT_EQ(ioh::common::class_name<Sphere>(), "Sphere");
+    ASSERT_EQ(ioh::common::class_name<ioh::problem::bbob::Sphere>(), "Sphere");
 }
 
-
-TEST(common, class_generator)
-{
-	using namespace ioh::common;
-	// std::cout << genericGenerator<int>::get() << std::endl;
-}
 
 TEST(common, random)
 {

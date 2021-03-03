@@ -69,10 +69,10 @@ namespace ioh::problem
         {
             return {
             static_cast<size_t>(state_.evaluations),
-            state_.current_best_internal.y.at(0) - objective_.y.at(0),
+            state_.current_best.y.at(0) - objective_.y.at(0),
             state_.current.y.at(0),
             state_.current_best.y.at(0),
-            {state_.current.x, {state_.current_internal.y.at(0) - objective_.y.at(0)}},
+            {state_.current.x, {state_.current.y.at(0) - objective_.y.at(0)}},
             {objective_.x, objective_.y}
             };         
         }
@@ -99,9 +99,6 @@ namespace ioh::problem
             const double condition = sqrt(10.0)) :
             BBOB(problem_id, instance, n_variables, name, condition)
         {
-            
-            // auto ri1 = AutomaticProblemRegistration<ProblemType, BBOB>::registration_invoker;
-            // auto ri2 = AutomaticProblemRegistration<ProblemType, Real>::registration_invoker;
         }
     };
 }

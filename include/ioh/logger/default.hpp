@@ -65,6 +65,11 @@ namespace ioh::logger
                 }
             }
 
+            void close()
+            {
+                stream_.close();
+            }
+
             void track_problem(const problem::MetaData &new_meta, problem::MetaData const *meta,
                                const fs::path &root_path, const bool can_write)
             {
@@ -207,6 +212,12 @@ namespace ioh::logger
                 }                   
             }
 
+            void close()
+            {
+                for (auto& file : files_)
+                    file.stream.close();
+            }
+
             DataFiles &operator<<(const std::string &data)
             {
                 write(data);
@@ -278,7 +289,7 @@ namespace ioh::logger
 
         
         explicit Default(const experiment::Configuration &conf)
-            : Default(conf.result_folder(), conf.output_directory(), conf.algorithm_name(),
+            : Default(conf.output_directory(), conf.result_folder(), conf.algorithm_name(),
                       conf.algorithm_info(), false, conf.complete_triggers(), conf.number_interval_triggers(),
                       conf.number_target_triggers(), conf.update_triggers(), conf.base_evaluation_triggers()
                 ) {
@@ -298,7 +309,8 @@ namespace ioh::logger
                 last_logged_line_.clear();
                 problem_meta_ = nullptr;
             }
-            
+            info_file_.close();
+            data_files_.close();
         }
         
         void track_problem(const problem::MetaData &meta) override

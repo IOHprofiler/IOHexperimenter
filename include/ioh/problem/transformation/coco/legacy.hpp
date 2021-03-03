@@ -32,8 +32,7 @@ namespace ioh {
                 /**
                  * @brief Generates N uniform random numbers using inseed as the seed and stores them in r.
                  */
-                static void bbob2009_unif(std::vector<double> &r, size_t N,
-                                          long inseed) {
+                static void bbob2009_unif(std::vector<double> &r, size_t N,                                          long inseed) {
                     long tmp;
                     long rgrand[32];
                     long i;
