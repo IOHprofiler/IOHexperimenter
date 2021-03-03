@@ -285,8 +285,9 @@ namespace ioh
 
             std::vector<double> operator()(const std::vector<T> &x)
             {
-                if (!check_input(x)) //TODO: make this optional
-                    return std::vector<T>(meta_data_.n_objectives, std::numeric_limits<T>::signaling_NaN());
+                // This causes errors for Integer problems
+                // if (!check_input(x)) //TODO: make this optional
+                //     return std::vector<T>(meta_data_.n_objectives, std::numeric_limits<T>::signaling_NaN());
 
                 auto x_internal = transform_variables(x);
                 auto y_internal = evaluate(x_internal);
