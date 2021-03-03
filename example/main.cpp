@@ -40,9 +40,9 @@ void test_problems()
 
     const auto dimension = 5;
 
-    const auto& the_factory = ioh::problem::ProblemRegistry<ioh::problem::RealProblem>::instance();
+    const auto& the_factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();
 
-    const std::vector<std::shared_ptr<ioh::problem::RealProblem>> items = {
+    const std::vector<std::shared_ptr<ioh::problem::Real>> items = {
          the_factory.create("Sphere", 1, dimension),
          the_factory.create("Ellipsoid", 1, dimension),
          the_factory.create("Rastrigin", 1, dimension),
@@ -90,7 +90,6 @@ void test_problems()
         }
     }
 
-
     ioh::suite::BBOB suite({ 1, 2 }, { 1, 2 }, { 5 });
 
     std::cout << suite.name() << std::endl;
@@ -105,66 +104,66 @@ void test_problems()
     for (const auto& p : suite2)
         std::cout << *p << std::endl;
     
-    auto& suite_factory = ioh::suite::SuiteRegistry<ioh::suite::RealSuite>::instance();
+    auto& suite_factory = ioh::suite::SuiteRegistry<ioh::problem::Real>::instance();
     auto f = suite_factory.create("BBOB", { 1 }, { 2 }, { 5 });
     
     for (const auto& p : *f)
         std::cout << (*p)(x0).at(0) << std::endl;
 }
 
+void show_registered_objects()
+{
+    {
+        const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();
+        const auto& suite_factory = ioh::suite::SuiteRegistry<ioh::problem::Real>::instance();
+
+        std::cout << "Registered Real Problems:\n";
+
+        for (auto& [id, name] : problem_factory.name_to_id())
+            std::cout << id << ", " << name << std::endl;
+
+        std::cout << "\nRegistered Real Suites:\n";
+        for (auto& [id, name] : suite_factory.name_to_id())
+            std::cout << id << ", " << name << std::endl;
+    }
+    {
+        const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::Integer>::instance();
+        const auto& suite_factory = ioh::suite::SuiteRegistry<ioh::problem::Integer>::instance();
+
+        std::cout << "\nRegistered Integer Problems:\n";
+
+        for (auto& [id, name] : problem_factory.name_to_id())
+            std::cout << id << ", " << name << std::endl;
+
+        std::cout << "\nRegistered Integer Suites:\n";
+        for (auto& [id, name] : suite_factory.name_to_id())
+            std::cout << id << ", " << name << std::endl;
+    }
+}
+
 
 
 int main() {
+    show_registered_objects();
 
-    using namespace ioh::common;
-    test_problems();
-
-    // const auto& the_factory = ioh::problem::ProblemRegistry<ioh::problem::PBO>::instance();
-    //
-    // for (auto& name : the_factory.names())
-    //     std::cout << name << std::endl;
-    //
-    // std::cout << the_factory.names().size();
-    //
+    const auto& suite_factory = ioh::suite::SuiteRegistry<ioh::problem::Real>::instance();
+    const auto suite = suite_factory.create("BBOB", { 1 }, { 1, 2 }, { 5 });
     // std::vector<double> x0{ 0.1, 1., 2.,4., 5.4 };
-    // // const auto problem = the_factory.create("Sphere", 1, 5);
-    //
     // auto logger1 = ioh::logger::Default(std::string("logger1"));
-    // // auto logger2 = ioh::logger::Default(std::string("logger2"));
-    // // auto logger = ioh::logger::LoggerCombine({ &logger1, &logger2 });
-    //  
-    // // problem->attach_logger(logger1);
-    // //
-    //
-    // //
-    // // for (auto i =0; i < 10; i++)
-    // // {
-    // //     for (auto j = 0; j < 1000; j++)
-    // //         (*problem)(x0);
-    // //
-    // //     problem->reset();
-    // // }
-    //
-    // auto& suite_factory = ioh::suite::SuiteRegistry<ioh::suite::RealSuite>::instance();
-    // const auto suite = suite_factory.create("BBOB", { 1 }, { 1, 2 }, { 5 });
-    //
     // suite->attach_logger(logger1);
     //
     // for (const auto& p : *suite)
     // {
-    //     std::cout << *p << std::endl;
-    //
-    //     for (auto i = 0; i < 2; i++)
+    //     for (auto i = 0; i < 3; i++)
     //     {
     //          for (auto j = 0; j < 10; j++)
     //          {
-    //              x0.at(0) += static_cast<double>(j);
+    //              x0.at(i) -= static_cast<double>(j);
     //              (*p)(x0);
     //          }
     //          p->reset();
     //     }
     // }
-
     std::cout << "done";
 }
 

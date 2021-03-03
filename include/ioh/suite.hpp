@@ -9,6 +9,7 @@ namespace ioh::suite
     {
     public:
         using Problem = std::shared_ptr<ProblemType>;
+        using Factory = problem::ProblemRegistry<ProblemType>;
 
         struct Iterator
         {
@@ -82,7 +83,7 @@ namespace ioh::suite
         std::vector<int> problem_ids_;
         std::vector<int> instances_;
         std::vector<int> dimensions_;
-        logger::Base* logger_{};
+        logger::Base *logger_{};
 
         [[nodiscard]]
         int check_parameter(const int parameter, const int ub, const int lb = 1) const
@@ -99,7 +100,7 @@ namespace ioh::suite
             ) :
             problems_(), problem_ids_(problem_ids), instances_(instances), dimensions_(dimensions)
         {
-            const auto &factory = problem::ProblemRegistry<ProblemType>::instance();
+            const auto &factory = Factory::instance();
 
             for (const auto &problem_id : problem_ids)
                 for (const auto &instance : instances)
@@ -125,7 +126,7 @@ namespace ioh::suite
                 problem.reset();
         }
 
-        void attach_logger(logger::Base& logger)
+        void attach_logger(logger::Base &logger)
         {
             logger_ = &logger;
             logger_->track_suite(name());
@@ -175,55 +176,45 @@ namespace ioh::suite
         }
     };
 
+    template <typename ProblemType>
+    using SuiteFactoryType = common::RegisterWithFactory<
+        Suite<ProblemType>, std::vector<int>, std::vector<int>, std::vector<int>>;
 
-    template <class Derived, class Parent>
-    struct AutomaticSuiteRegistration : common::AutomaticTypeRegistration<
-            Derived, common::RegisterWithFactory<Parent, std::vector<int>, std::vector<int>, std::vector<int>>>
-    {
-    };
 
-    template <class Parent>
-    struct SuiteRegistry : common::RegisterWithFactory<Parent, std::vector<int>, std::vector<int>, std::vector<int>>
-    {
-    };
+    template <class Derived, class ProblemType>
+    using AutomaticSuiteRegistration = common::AutomaticTypeRegistration<Derived, SuiteFactoryType<ProblemType>>;
 
-    struct RealSuite : Suite<problem::RealProblem>
-    {
-        using Suite<problem::RealProblem>::Suite;
-    };
+    template <class ProblemType>
+    using SuiteRegistry = SuiteFactoryType<ProblemType>;
 
-    struct IntegerSuite : Suite<problem::IntegerProblem>
+
+    template <class Derived>
+    struct RealSuite : Suite<problem::Real>, AutomaticSuiteRegistration<Derived, problem::Real>
     {
-        using Suite<problem::IntegerProblem>::Suite;
+        using Suite<problem::Real>::Suite;
     };
 
 
     template <class Derived>
-    struct RealSuiteBase : RealSuite, AutomaticSuiteRegistration<Derived, RealSuite>
+    struct IntegerSuite : Suite<problem::Integer>, AutomaticSuiteRegistration<Derived, problem::Integer>
     {
-        using RealSuite::RealSuite;
+        using Suite<problem::Integer>::Suite;
     };
 
-    template <class Derived>
-    struct IntegerSuiteBase : IntegerSuite, AutomaticSuiteRegistration<Derived, IntegerSuite>
-    {
-        using IntegerSuite::IntegerSuite;
-    };
-
-    struct BBOB final : RealSuiteBase<BBOB>
+    struct BBOB final : RealSuite<BBOB>
     {
         BBOB(const std::vector<int> &problem_ids, const std::vector<int> &instances,
              const std::vector<int> &dimensions) :
-            RealSuiteBase(problem_ids, instances, dimensions, 24, 100, 100)
+            RealSuite(problem_ids, instances, dimensions, 24, 100, 100)
         {
         }
     };
 
-    struct PBO final : IntegerSuiteBase<PBO>
+    struct PBO final : IntegerSuite<PBO>
     {
         PBO(const std::vector<int> &problem_ids, const std::vector<int> &instances,
             const std::vector<int> &dimensions) :
-            IntegerSuiteBase(problem_ids, instances, dimensions, 25, 100, 20000)
+            IntegerSuite(problem_ids, instances, dimensions, 25, 100, 20000)
         {
         }
     };

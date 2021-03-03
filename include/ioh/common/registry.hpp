@@ -41,6 +41,12 @@ namespace ioh::common
             return keys;
         }
 
+        [[nodiscard]]
+        std::unordered_map<int, std::string> name_to_id() const
+        {
+            return id_map;
+        }
+
         [[nodiscard]] std::unordered_map<int, std::string> numeric_id_map() const
         {
             return id_map;
@@ -70,26 +76,35 @@ namespace ioh::common
     };
 
 
+    static int get_next_id(const std::vector<int> &ids)
+    {
+        return ids.empty() ? 1 : (*std::max_element(ids.begin(), ids.end())) + 1;
+    }
+
     template <bool IsProblem>
-    struct IdGetter;
-    
-    template<>
+    struct IdGetter
+    {
+    };
+
+    template <>
     struct IdGetter<true>
     {
-        template<typename T>
-        static int get_id(const std::vector<int>& ids) 
+        template <typename T>
+        static int get_id(const std::vector<int> &ids)
         {
-            return T(1, 1).meta_data().problem_id;
+            const auto problem_id = T(1, 1).meta_data().problem_id;
+            const auto it = std::find(ids.begin(), ids.end(), problem_id);
+            return it == ids.end() ? problem_id : get_next_id(ids);
         }
     };
-    
-    template<>
+
+    template <>
     struct IdGetter<false>
     {
-        template<typename T>
-        static int get_id(const std::vector<int>& ids)
+        template <typename T>
+        static int get_id(const std::vector<int> &ids)
         {
-            return ids.empty() ? 1 : (*std::max_element(ids.begin(), ids.end())) + 1;
+            return get_next_id(ids);
         }
     };
 
@@ -100,17 +115,16 @@ namespace ioh::common
         template <class T>
         static void include()
         {
-            auto& factory = Factory<Parent, Args...>::instance();
+            auto &factory = Factory<Parent, Args...>::instance();
             const auto is_problem_type = std::conjunction<std::is_same<int, Args>...>::value;
             const int id = IdGetter<is_problem_type>::template get_id<T>(factory.ids());
-        
+
             factory.include(class_name<T>(), id, [](Args &&...params)
             {
                 return std::make_unique<T>(std::forward<Args>(params)...);
             });
         }
 
-      
         static Factory<Parent, Args...> &instance()
         {
             return Factory<Parent, Args...>::instance();
@@ -130,15 +144,15 @@ namespace ioh::common
     template <class Type, class Factory>
     struct RegistrationInvoker
     {
-        static inline InvokeApplyOnConstruction<Type, Factory> registration_invoker = InvokeApplyOnConstruction<Type, Factory>();
+        static inline InvokeApplyOnConstruction<Type, Factory> registration_invoker = InvokeApplyOnConstruction<
+            Type, Factory>();
     };
 
 
     template <class Type, class Factory>
-    struct AutomaticTypeRegistration: RegistrationInvoker<Type, Factory> 
+    struct AutomaticTypeRegistration : RegistrationInvoker<Type, Factory>
     {
-        InvokeApplyOnConstruction<Type, Factory>& invoker =
+        InvokeApplyOnConstruction<Type, Factory> &invoker =
             RegistrationInvoker<Type, Factory>::registration_invoker;
     };
-
 }

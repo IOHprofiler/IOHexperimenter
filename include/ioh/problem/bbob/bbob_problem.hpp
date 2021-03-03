@@ -5,7 +5,7 @@
 
 namespace ioh::problem
 {
-    class BBOB : public RealProblem
+    class BBOB : public Real
     {
     protected:
         struct TransformationState
@@ -57,7 +57,7 @@ namespace ioh::problem
     public:
         BBOB(const int problem_id, const int instance, const int n_variables, const std::string &name,
              const double condition = sqrt(10.0)):
-            RealProblem(MetaData(problem_id, instance, name, n_variables, 1, common::OptimizationType::minimization),
+            Real(MetaData(problem_id, instance, name, n_variables, 1, common::OptimizationType::minimization),
                         Constraint<double>(n_variables, 5, -5)),
             transformation_state_(problem_id, instance, n_variables, condition)
         {
@@ -90,9 +90,9 @@ namespace ioh::problem
     };
 
     template <typename ProblemType>
-    class BBOProblem : public BBOB,
+    class BBOProblem : public BBOB, 
                        AutomaticProblemRegistration<ProblemType, BBOB>,
-                       AutomaticProblemRegistration<ProblemType, RealProblem>
+                       AutomaticProblemRegistration<ProblemType, Real>
     {
     public:
         BBOProblem(const int problem_id, const int instance, const int n_variables, const std::string& name,
@@ -101,7 +101,7 @@ namespace ioh::problem
         {
             
             // auto ri1 = AutomaticProblemRegistration<ProblemType, BBOB>::registration_invoker;
-            // auto ri2 = AutomaticProblemRegistration<ProblemType, RealProblem>::registration_invoker;
+            // auto ri2 = AutomaticProblemRegistration<ProblemType, Real>::registration_invoker;
         }
     };
 }

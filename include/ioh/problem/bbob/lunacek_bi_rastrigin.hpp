@@ -26,7 +26,7 @@ namespace ioh::problem::bbob
             /* x_hat */
             for (auto i = 0; i < meta_data_.n_variables; ++i)
                 x_hat[i] = objective_.x.at(i) > 0. ? 2. * x.at(i) : 2. * x.at(i) * -1;
-
+             
             /* affine transformation */
             for (auto i = 0; i < meta_data_.n_variables; ++i)
                 for (auto j = 0; j < meta_data_.n_variables; ++j)

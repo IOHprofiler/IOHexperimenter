@@ -53,9 +53,9 @@ namespace ioh::logger
                 return optimization_type == common::OptimizationType::maximization ? 'T' : 'F';
             }
 
-            void update_run_info(problem::MetaData const *meta)
+            void update_run_info(problem::MetaData const *meta, const bool can_write = true)
             {
-                if (meta != nullptr)
+                if (meta != nullptr && can_write)
                 {
                     stream_ << common::string_format(", %d:%d|%g", meta->instance,
                                                      best_point_.evaluations, best_point_.y);
@@ -66,12 +66,12 @@ namespace ioh::logger
             }
 
             void track_problem(const problem::MetaData &new_meta, problem::MetaData const *meta,
-                               const fs::path &root_path)
+                               const fs::path &root_path, const bool can_write)
             {
                 using namespace common;
 
-                update_run_info(meta);
-
+                update_run_info(meta, can_write);
+                    
                 if (meta == nullptr || new_meta.problem_id != meta->problem_id)
                     stream_ = file::BufferedFileStream(
                         root_path, string_format("IOHprofiler_f%d_%s.info", new_meta.problem_id,
@@ -189,20 +189,22 @@ namespace ioh::logger
                         file.stream = common::file::BufferedFileStream(directory, filename);
 
                         cached_header_ = header(store_positions * meta.n_variables);
-                        
                     }
                 }
+
             }
 
             void write(const std::string &data, const bool all = false)
             {
-                for (auto &file : files_)
-                    if ((!all && file.triggered) || (all && (file.active && !file.triggered)))
-                        file.stream << cached_header_ << data;
+                if(!data.empty())
+                {
+                    for (auto& file : files_)
+                        if ((!all && file.triggered) || (all && (file.active && !file.triggered)))
+                            file.stream << cached_header_ << data;
 
-                if (!cached_header_.empty())
-                    cached_header_.clear();
-
+                    if (!cached_header_.empty())
+                        cached_header_.clear();
+                }                   
             }
 
             DataFiles &operator<<(const std::string &data)
@@ -294,20 +296,21 @@ namespace ioh::logger
                 info_file_.update_run_info(problem_meta_); // needs to call on close
                 data_files_.write(last_logged_line_, true);
                 last_logged_line_.clear();
+                problem_meta_ = nullptr;
             }
             
         }
         
         void track_problem(const problem::MetaData &meta) override
         {
+            const auto can_write = !last_logged_line_.empty();
             data_files_.write(last_logged_line_, true);
-            last_logged_line_.clear();
-            info_file_.track_problem(meta, problem_meta_, experiment_folder_.path());
+            info_file_.track_problem(meta, problem_meta_, experiment_folder_.path(), can_write);
             data_files_.track_problem(meta, experiment_folder_.path(), store_positions_);
 
             problem_meta_ = &meta;
-
             reset(meta.optimization_type);
+            last_logged_line_.clear();
         }
 
         void track_suite(const std::string &suite_name) override
