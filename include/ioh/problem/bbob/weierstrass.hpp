@@ -13,7 +13,7 @@ namespace ioh::problem::bbob
         std::vector<double> raw_x_;
 
     protected:
-        std::vector<double> evaluate(std::vector<double> &x) override
+        std::vector<double> evaluate(const std::vector<double> &x) override
         {
             using namespace transformation::coco;
             std::vector<double> result = {0.0};

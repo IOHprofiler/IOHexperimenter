@@ -10,7 +10,7 @@ namespace ioh::problem::bbob
         std::vector<double> negative_offset_;
         std::vector<double> positive_offset_;
     protected:
-        std::vector<double> evaluate(std::vector<double> &x) override
+        std::vector<double> evaluate(const std::vector<double> &x) override
         {
             static const auto correction = 418.9828872724339;
             std::vector<double> result = {0.0};

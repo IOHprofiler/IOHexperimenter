@@ -19,7 +19,7 @@ namespace ioh
             class OneMax final: public PBOProblem<OneMax>
             {
             protected:
-                std::vector<double> evaluate(std::vector<int>& x) override
+                std::vector<double> evaluate(const std::vector<int>& x) override
                 {
                     return { std::accumulate(x.begin(), x.end(), 0.0) };
                 }
@@ -28,6 +28,8 @@ namespace ioh
                 OneMax(const int instance, const int n_variables) :
                     PBOProblem(1, instance, n_variables, "OneMax")
                 {
+                    objective_.x = std::vector<int>(n_variables,1);
+                    objective_.y = evaluate(objective_.x);
                 }
             };
         }

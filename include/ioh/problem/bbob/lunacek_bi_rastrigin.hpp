@@ -8,7 +8,7 @@ namespace ioh::problem::bbob
 
     {
     protected:
-        std::vector<double> evaluate(std::vector<double> &x) override
+        std::vector<double> evaluate(const std::vector<double> &x) override
         {
             static const auto mu0 = 2.5;
             static const auto d = 1.;

@@ -39,8 +39,6 @@ void test_problems()
 
 
     const auto dimension = 5;
-     
-
 
     const auto& the_factory = ioh::problem::ProblemRegistry<ioh::problem::RealProblem>::instance();
 
@@ -99,7 +97,9 @@ void test_problems()
     for (const auto& p : suite)
         std::cout << *p << std::endl;
     
-    ioh::suite::PBO suite2({ 1 }, { 1, 2 }, { 5 });
+    std::vector<int> pbo_ids(10);
+    std::iota(pbo_ids.begin(), pbo_ids.end(), 1);
+    ioh::suite::PBO suite2(pbo_ids, { 1, 2 }, { 16 });
     
     std::cout << suite2.name() << std::endl;
     for (const auto& p : suite2)

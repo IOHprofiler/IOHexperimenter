@@ -232,7 +232,7 @@ namespace ioh
             logger::Base *logger_{};
 
             [[nodiscard]]
-            virtual std::vector<double> evaluate(std::vector<T> &x) = 0;
+            virtual std::vector<double> evaluate(const std::vector<T> &x) = 0;
 
 
             [[nodiscard]]
