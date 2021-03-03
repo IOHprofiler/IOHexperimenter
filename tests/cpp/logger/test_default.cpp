@@ -28,9 +28,9 @@ TEST(logger, default) {
     auto p2 = AttractiveSector();
     
     const auto info_file_name1 = string_format("IOHprofiler_f%d_%s.info",
-                                               p.get_problem_id(), p.get_problem_name().c_str());
+                                               p.get_problem_ids(), p.get_problem_name().c_str());
     const auto info_file_name2 = string_format("IOHprofiler_f%d_%s.info",
-                                               p2.get_problem_id(), p2.get_problem_name().c_str());
+                                               p2.get_problem_ids(), p2.get_problem_name().c_str());
     {
         auto l = Default<bbob_base>();
         l_folder = l.experiment_folder();

@@ -79,7 +79,7 @@ TEST(problems, pbo)
 
 TEST(problem_suite, bbob)
 {
-	ioh::common::log::log_level = ioh::common::log::Level::warning;
+	ioh::common::log::log_level = ioh::common::log::Level::Warning;
 
 	ioh::suite::bbob bbob;
 	std::shared_ptr<ioh::problem::bbob::bbob_base> problem;

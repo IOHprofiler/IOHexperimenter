@@ -9,7 +9,7 @@
 using namespace std;
 
 TEST(BBOBfitness, dimension5) {
-  ioh::common::log::log_level = ioh::common::log::Level::warning;
+  ioh::common::log::log_level = ioh::common::log::Level::Warning;
   string file_name = "./bbobfitness5.in";
   std::string s;
   vector<string> tmp;
@@ -38,7 +38,7 @@ TEST(BBOBfitness, dimension5) {
 }
 
 TEST(BBOBfitness, dimension20) {
-  ioh::common::log::log_level = ioh::common::log::Level::warning;
+  ioh::common::log::log_level = ioh::common::log::Level::Warning;
   string file_name = "./bbobfitness20.in";
   std::string s;
   vector<string> tmp;

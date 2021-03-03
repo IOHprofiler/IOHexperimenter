@@ -9,7 +9,7 @@ namespace ioh::suite
     {
     public:
         using Problem = std::shared_ptr<ProblemType>;
-        using Factory = problem::ProblemRegistry<ProblemType>;
+        using Factory = problem::ProblemRegistry<ProblemType>; // TODO: this shou
 
         struct Iterator
         {
@@ -79,6 +79,7 @@ namespace ioh::suite
         };
 
     private:
+        std::string name_;
         std::vector<Problem> problems_;
         std::vector<int> problem_ids_;
         std::vector<int> instances_;
@@ -95,16 +96,16 @@ namespace ioh::suite
 
     public:
         Suite(const std::vector<int> &problem_ids, const std::vector<int> &instances,
-              const std::vector<int> &dimensions, const int max_problem_id = 100,
+              const std::vector<int> &dimensions, const std::string &name, const int max_problem_id = 1000,
               const int max_instance = 1000, const int max_dimension = 1000
             ) :
-            problems_(), problem_ids_(problem_ids), instances_(instances), dimensions_(dimensions)
+            name_(name), problems_(), problem_ids_(problem_ids), instances_(instances), dimensions_(dimensions)
         {
             const auto &factory = Factory::instance();
 
             for (const auto &problem_id : problem_ids)
-                for (const auto &instance : instances)
-                    for (const auto &n_variables : dimensions)
+                for (const auto &n_variables : dimensions)
+                    for (const auto& instance : instances)
                         problems_.emplace_back(factory.create(
                             check_parameter(problem_id, max_problem_id),
                             check_parameter(instance, max_instance),
@@ -112,11 +113,7 @@ namespace ioh::suite
                             ));
         }
 
-        virtual ~Suite()
-        {
-            if (logger_ != nullptr)
-                logger_->flush();
-        }
+        virtual ~Suite() = default;
 
         void reset()
         {
@@ -152,19 +149,19 @@ namespace ioh::suite
         }
 
         [[nodiscard]]
-        std::vector<int> problem_ids() const 
+        std::vector<int> problem_ids() const
         {
             return problem_ids_;
         }
 
         [[nodiscard]]
-        std::vector<int> dimensions() const 
+        std::vector<int> dimensions() const
         {
             return dimensions_;
         }
 
         [[nodiscard]]
-        std::vector<int> instances() const 
+        std::vector<int> instances() const
         {
             return instances_;
         }
@@ -172,7 +169,7 @@ namespace ioh::suite
         [[nodiscard]]
         std::string name() const
         {
-            return common::class_name<ProblemType>();
+            return name_;
         }
     };
 
@@ -202,10 +199,11 @@ namespace ioh::suite
     };
 
     struct BBOB final : RealSuite<BBOB>
+        // TODO: fix that this somehow use BBOBProblem, instead of Realproblem
     {
         BBOB(const std::vector<int> &problem_ids, const std::vector<int> &instances,
              const std::vector<int> &dimensions) :
-            RealSuite(problem_ids, instances, dimensions, 24, 100, 100)
+            RealSuite(problem_ids, instances, dimensions, "BBOB", 24, 100, 100)
         {
         }
     };
@@ -214,7 +212,7 @@ namespace ioh::suite
     {
         PBO(const std::vector<int> &problem_ids, const std::vector<int> &instances,
             const std::vector<int> &dimensions) :
-            IntegerSuite(problem_ids, instances, dimensions, 25, 100, 20000)
+            IntegerSuite(problem_ids, instances, dimensions, "PBO", 25, 100, 20000)
         {
         }
     };

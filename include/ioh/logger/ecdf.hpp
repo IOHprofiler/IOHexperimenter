@@ -438,7 +438,7 @@ namespace ioh
                 auto jbound = _range_evals.size();
 
                 if (_current.has_opt || _current.max_min ==
-                    common::OptimizationType::minimization)
+                    common::OptimizationType::Minimization)
                 {
                     for (auto i = i_error; i < ibound; i++)
                     {
@@ -464,7 +464,7 @@ namespace ioh
                 else
                 {
                     assert(
-                        !_current.has_opt && _current.max_min == common:: OptimizationType:: maximization);
+                        !_current.has_opt && _current.max_min == common:: OptimizationType:: Maximization);
                     for (auto i = i_error; i >= 1; i--)
                     {
                         // If we reach a 1 on first col of this row, no need to continue.

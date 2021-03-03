@@ -3,7 +3,7 @@
 #include "base.hpp"
 #include "observer.hpp"
 #include "ioh/problem/problem.hpp"
-#include "ioh/common/file.hpp"
+#include "ioh/experiment/configuration.hpp"
 
 
 namespace ioh::logger
@@ -50,7 +50,7 @@ namespace ioh::logger
 
             static char maximization_flag(const common::OptimizationType optimization_type)
             {
-                return optimization_type == common::OptimizationType::maximization ? 'T' : 'F';
+                return optimization_type == common::OptimizationType::Maximization ? 'T' : 'F';
             }
 
             void update_run_info(problem::MetaData const *meta, const bool can_write = true)
@@ -226,7 +226,7 @@ namespace ioh::logger
                          const int t_per_time_range = 0,
                          const bool t_on_improvement = true,
                          const std::vector<int> &t_at_time_points = {0},
-                         const common::OptimizationType optimization_type = common::OptimizationType::minimization,
+                         const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
                          const int trigger_at_time_points_exp_base = 10,
                          const int trigger_at_range_exp_base = 10
             ) :
@@ -250,7 +250,7 @@ namespace ioh::logger
                          const int t_per_time_range = 0,
                          const bool t_on_improvement = true,
                          const std::vector<int> &t_at_time_points = {0},
-                         const common::OptimizationType optimization_type = common::OptimizationType::minimization,
+                         const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
                          const int trigger_at_time_points_exp_base = 10,
                          const int trigger_at_range_exp_base = 10
             ) :
@@ -266,7 +266,7 @@ namespace ioh::logger
                          const bool t_on_improvement = true,
                          const bool store_positions = false,
                          const std::vector<int> &t_at_time_points = {0},
-                         const common::OptimizationType optimization_type = common::OptimizationType::minimization,
+                         const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
                          const int trigger_at_time_points_exp_base = 10,
                          const int trigger_at_range_exp_base = 10
             ) :
@@ -276,13 +276,13 @@ namespace ioh::logger
         {
         }
 
-        //
-        // explicit Default(const experiment::Configuration &conf)
-        //     : Default(conf.get_result_folder(), conf.get_output_directory(), conf.get_algorithm_name(),
-        //               conf.get_algorithm_info(), conf.get_complete_triggers(), conf.get_number_interval_triggers(),
-        //               conf.get_number_target_triggers(), conf.get_update_triggers(), conf.get_base_evaluation_triggers()
-        //         ) {
-        // }
+        
+        explicit Default(const experiment::Configuration &conf)
+            : Default(conf.result_folder(), conf.output_directory(), conf.algorithm_name(),
+                      conf.algorithm_info(), false, conf.complete_triggers(), conf.number_interval_triggers(),
+                      conf.number_target_triggers(), conf.update_triggers(), conf.base_evaluation_triggers()
+                ) {
+        }
 
         ~Default()
         {

@@ -9,22 +9,22 @@ namespace ioh::common::log {
      * \brief Enum containing log levels; info = 0, warning = 1, error = 2
      */
     enum class Level {
-        info,
-        warning,
-        error
+        Info,
+        Warning,
+        Error
     };
 
     /**
      * \brief Setting for the log level
      */
-    inline Level log_level = Level::info;
+    inline Level log_level = Level::Info;
 
     /**
      * \brief Function for logging errors, causes a system exit
      * \param error_msg The error message
      */
     inline void error(const std::string &error_msg) {
-        if (log_level <= Level::error) {
+        if (log_level <= Level::Error) {
             std::cerr << "IOH_ERROR_INFO : " << error_msg << std::endl;
             std::flush(std::cerr);
             std::flush(std::cout);
@@ -37,7 +37,7 @@ namespace ioh::common::log {
      * \param warning_msg The error message
      */
     inline void warning(const std::string &warning_msg) {
-        if (log_level <= Level::warning)
+        if (log_level <= Level::Warning)
             std::cout << "IOH_WARNING_INFO : " << warning_msg << std::endl;
     }
 
@@ -46,7 +46,7 @@ namespace ioh::common::log {
      * \param log_msg The info message
      */
     inline void info(const std::string &log_msg) {
-        if (log_level <= Level::info)
+        if (log_level <= Level::Info)
             std::cout << "IOH_LOG_INFO : " << log_msg << std::endl;
     }
 
@@ -56,7 +56,7 @@ namespace ioh::common::log {
      * \param log_stream The stream to log the messages to
      */
     inline void info(const std::string &log_msg, std::ofstream &log_stream) {
-        if (log_level >= Level::info)
+        if (log_level >= Level::Info)
             log_stream << "IOH_LOG_INFO : " << log_msg << std::endl;
     }
 }

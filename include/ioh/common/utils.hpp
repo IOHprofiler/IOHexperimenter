@@ -21,6 +21,8 @@
 #include <functional>
 #include <numeric>
 #include <cstdlib>
+#include <utility>
+#include <cstdio>
 
 
 #if defined(__GNUC__) || defined(__GNUG__)
@@ -35,8 +37,8 @@ namespace ioh {
          * \brief Enum containing minimization = 0 and maximization = 1 flags
          */
         enum class OptimizationType {
-            minimization,
-            maximization
+            Minimization,
+            Maximization
         };
 
         /**
@@ -47,9 +49,9 @@ namespace ioh {
         template<typename T>
         std::string type_name()
         {
-            int status;
             std::string name = typeid(T).name();
             #if defined(__GNUC__) || defined(__GNUG__)
+            int status;
             auto demangled_name = abi::__cxa_demangle(name.c_str(), nullptr, nullptr, &status);
             if (status == 0) {
                 name = demangled_name;
@@ -117,7 +119,7 @@ namespace ioh {
         template <typename T>
         bool compare_objectives(const T v1, const T v2,
                                 const OptimizationType optimization_type) {
-            if (optimization_type == OptimizationType::maximization)
+            if (optimization_type == OptimizationType::Maximization)
                 return v1 > v2;
             return v1 < v2;
         }

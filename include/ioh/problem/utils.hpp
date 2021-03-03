@@ -80,7 +80,7 @@ namespace ioh {
 
             MetaData(const int problem_id, const int instance, std::string name, const int n_variables,
                 const int n_objectives,
-                const common::OptimizationType optimization_type = common::OptimizationType::minimization
+                const common::OptimizationType optimization_type = common::OptimizationType::Minimization
             ) :
                 instance(instance),
                 problem_id(problem_id),
@@ -88,14 +88,14 @@ namespace ioh {
                 optimization_type(optimization_type),
                 n_variables(n_variables),
                 n_objectives(n_objectives),
-                initial_objective_value(optimization_type == common::OptimizationType::minimization
+                initial_objective_value(optimization_type == common::OptimizationType::Minimization
                     ? std::numeric_limits<double>::infinity()
                     : -std::numeric_limits<double>::infinity())
             {
             }
 
             MetaData(const int instance, const std::string& name, const int n_variables, const int n_objectives = 1,
-                const common::OptimizationType optimization_type = common::OptimizationType::minimization
+                const common::OptimizationType optimization_type = common::OptimizationType::Minimization
             ) :
                 MetaData(0, instance, name, n_variables, n_objectives, optimization_type)
             {
@@ -110,7 +110,7 @@ namespace ioh {
                     os << " instance: " << obj.instance;
 
                 return os
-                    << " optimization_type: " << (obj.optimization_type == common::OptimizationType::minimization
+                    << " optimization_type: " << (obj.optimization_type == common::OptimizationType::Minimization
                         ? "minimization"
                         : "maximization")
                     << " n_variables: " << obj.n_variables

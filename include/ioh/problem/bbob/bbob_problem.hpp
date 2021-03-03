@@ -57,7 +57,7 @@ namespace ioh::problem
     public:
         BBOB(const int problem_id, const int instance, const int n_variables, const std::string &name,
              const double condition = sqrt(10.0)):
-            Real(MetaData(problem_id, instance, name, n_variables, 1, common::OptimizationType::minimization),
+            Real(MetaData(problem_id, instance, name, n_variables, 1, common::OptimizationType::Minimization),
                         Constraint<double>(n_variables, 5, -5)),
             transformation_state_(problem_id, instance, n_variables, condition)
         {

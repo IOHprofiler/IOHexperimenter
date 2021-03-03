@@ -59,7 +59,7 @@ TEST(observer, time_points) {
 
     auto observer_base5 = Observer(false, 0, 0,
                                      false, {1, 3},
-                                     ioh::common::OptimizationType::minimization, 5);
+                                     ioh::common::OptimizationType::Minimization, 5);
 
     ASSERT_TRUE(observer_base5.time_points_trigger(1));
     ASSERT_FALSE(observer_base5.time_points_trigger(2));

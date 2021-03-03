@@ -71,7 +71,7 @@ namespace ioh
                 Problem(meta_data, constraint, {
                             std::vector<T>(meta_data.n_variables, std::numeric_limits<T>::signaling_NaN()),
                             std::vector<double>(meta_data.n_objectives,
-                                                (meta_data.optimization_type == common::OptimizationType::minimization
+                                                (meta_data.optimization_type == common::OptimizationType::Minimization
                                                     ? -std::numeric_limits<double>::infinity()
                                                     : std::numeric_limits<double>::infinity()))})
             {
@@ -156,7 +156,8 @@ namespace ioh
                 return os
                     << "Problem(\n\t" << obj.meta_data_
                     << "\n\tconstraint: " << obj.constraint_
-                    << "\n\tstate: " << obj.state_ << "\n)";
+                    << "\n\tstate: " << obj.state_
+                    << "\n\tobjective: " << obj.objective_  << "\n)";
             }
         };
 
@@ -178,7 +179,7 @@ namespace ioh
 
         public:
             WrappedProblem(Function<T> f, const std::string &name, const int n_variables, const int n_objectives = 1,
-                           const common::OptimizationType optimization_type = common::OptimizationType::minimization,
+                           const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
                            Constraint<T> constraint = Constraint<T>()
                 ) :
                 Problem<T>(MetaData(0, name, n_variables, n_objectives, optimization_type), constraint),
@@ -191,7 +192,7 @@ namespace ioh
         WrappedProblem<T> wrap_function(Function<T> f, const std::string &name, const int n_variables,
                                         const int n_objectives = 1,
                                         const common::OptimizationType optimization_type =
-                                            common::OptimizationType::minimization,
+                                            common::OptimizationType::Minimization,
                                         Constraint<T> constraint = Constraint<T>())
         {
             return WrappedProblem<T>{f, name, n_variables, n_objectives, optimization_type, constraint};

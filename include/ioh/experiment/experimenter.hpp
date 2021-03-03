@@ -1,8 +1,5 @@
 #pragma once
 
-#include <ostream>
-#include <utility>
-
 #include "configuration.hpp"
 #include "ioh/common.hpp"
 #include "ioh/logger.hpp"
@@ -13,7 +10,7 @@ namespace ioh {
         /**
          * \brief A Class used for running experiments
          * \tparam ProblemType The type of the problems used in the experiments, needs to be a subclass of
-         * \ref `ioh::problem::base`.
+         * \ref `ioh::problem::Problem`.
          */
         template <typename ProblemType>
         class Experimenter {
@@ -22,17 +19,7 @@ namespace ioh {
              * \brief A typedef for an optimizer; a function which takes a \ref ioh::problem::base and ioh::logger::csv
              * as arguments.
              */
-            typedef void algorithm_type(std::shared_ptr<ProblemType>,
-                                        std::shared_ptr<logger::Csv<ProblemType>>);
-
-            /**
-             * \brief A shorthand for accessing the class factory (\ref ioh::common::Factory) for suites.
-             */
-            typedef common::Factory<suite::base<ProblemType>,
-                                    std::vector<int>, std::vector<int>,
-                                    std::vector<int>>
-            suite_factory;
-
+            using Algorithm = std::function<void(std::shared_ptr<ProblemType>)>;
 
             Experimenter() = delete;
             Experimenter(const Experimenter &) = delete;
@@ -41,44 +28,44 @@ namespace ioh {
             Experimenter &operator=(const Experimenter &&) = delete;
             ~Experimenter() = default;
 
-
             /**
              * \brief Constructs an Experimenter object, from a config file
              * \param config_file_name the path to the configuration file
              * \param algorithm a function pointer of type \ref algorithm_type
              */
-            Experimenter(fs::path &config_file_name, algorithm_type *algorithm)
+            Experimenter(fs::path &config_file_name, Algorithm algorithm)
                 : conf_(config_file_name), algorithm_(algorithm) {
-                auto suite_name = conf_.get_suite_name();
-                auto problems = conf_.get_problem_id();
-                auto instances = conf_.get_instance_id();
-                auto dimensions = conf_.get_dimension();
+                auto suite_name = conf_.suite_name();
+                auto problems = conf_.problem_ids();
+                auto instances = conf_.instances();
+                auto dimensions = conf_.dimensions();
 
-                suite_ = suite_factory::get().create(suite_name, problems, instances, dimensions);
-
+                suite_ = suite::SuiteRegistry<ProblemType>::instance().create(suite_name, problems, instances, dimensions);
+                    
                 if (suite_ == nullptr)
                     common::log::error("Creating suite fails, please check your Configuration");
 
-                csv_logger_ = std::make_shared<logger::Csv<ProblemType>>(conf_);
+                logger_ = std::make_shared<logger::Default>(conf_);
 
-                if (csv_logger_ == nullptr)
+                if (logger_ == nullptr)
                     common::log::error("Creating logger fails, please check your Configuration");
+
             }
 
             /**
              * \brief Constructs an Experimenter object from a Suite object and an Logger object
              * \param suite A suite object
-             * \param csv_logger A csv logger object
+             * \param logger A csv logger object
              * \param algorithm a function pointer of type \ref algorithm_type
              * \param independent_runs the number of repetitions default = 1
              */
-            Experimenter(std::shared_ptr<suite::base<ProblemType>> suite,
-                         std::shared_ptr<logger::Csv<ProblemType>> csv_logger,
-                         algorithm_type *algorithm,
+            Experimenter(std::shared_ptr<suite::Suite<ProblemType>> suite,
+                         std::shared_ptr<logger::Base> logger,
+                         Algorithm algorithm = nullptr,
                          const int independent_runs = 1
                 )
                 : suite_(std::move(suite)),
-                  csv_logger_(std::move(csv_logger)),
+                  logger_(std::move(logger)),
                   algorithm_(algorithm),
                   independent_runs_(independent_runs) {
             }
@@ -90,18 +77,17 @@ namespace ioh {
             void run() {
                 const auto t_timer = common::CpuTimer("Total ");
                 std::cout << *this << std::endl;
-                this->csv_logger_->track_suite(suite_->get_suite_name());
 
-                while ((current_problem_ = suite_->get_next_problem()) !=
-                       nullptr) {
+                suite_ ->attach_logger(*logger_);
+                for (const auto& p : *suite_)
+                {
                     const auto p_timer = common::CpuTimer();
-                    std::cout << *current_problem_;
-                    for (auto count = 0; independent_runs_ > count; ++count) {
-                        csv_logger_->track_problem(*current_problem_);
-                        algorithm_(current_problem_, csv_logger_);
+                    std::cout << *p << std::endl;
+                    for (auto count = 0; count < independent_runs_; ++count)
+                    {
+                        algorithm_(p);
+                        p->reset();
                         std::cout << "." << std::flush;
-                        current_problem_ = suite_->get_current_problem();
-                        // This resets problem
                     }
                 }
             }
@@ -110,14 +96,14 @@ namespace ioh {
              * \brief Set's the number of independent runs to be used in \ref run
              * \param n The number of runs
              */
-            void set_independent_runs(const int n) {
+            void independent_runs(const int n) {
                 this->independent_runs_ = n;
             }
 
             /**
              * \brief Get's the number of independent runs to be used in \ref run
              */
-            [[nodiscard]] int get_independent_runs() const {
+            [[nodiscard]] int independent_runs() const {
                 return this->independent_runs_;
             }
 
@@ -125,24 +111,16 @@ namespace ioh {
              * \brief Get method for \ref suite_
              * \return Private \ref suite_
              */
-            [[nodiscard]] std::shared_ptr<suite::base<ProblemType>> get_suite() const {
+            [[nodiscard]] std::shared_ptr<suite::Suite<ProblemType>> suite() const {
                 return suite_;
-            }
-
-            /**
-             * \brief Get method for \ref current_problem_
-             * \return Private \ref current_problem_
-             */
-            [[nodiscard]] std::shared_ptr<ProblemType> get_current_problem() const {
-                return current_problem_;
             }
 
             /**
              * \brief Get method for \ref csv_logger_
              * \return Private \ref csv_logger_
              */
-            [[nodiscard]] std::shared_ptr<logger::Csv<ProblemType>> get_logger() const {
-                return csv_logger_;
+            [[nodiscard]] std::shared_ptr<logger::Base> logger() const {
+                return logger_;
             }
 
             /**
@@ -153,10 +131,10 @@ namespace ioh {
              */
             friend std::ostream &operator<<(std::ostream &os, const Experimenter &obj) {
                 return os << "Experiment"
-                       << "\nSuite: " << obj.suite_->get_suite_name()
-                       << "\nProblem: " << common::vector_to_string(obj.suite_->get_problem_id())
-                       << "\nInstance: " << common::vector_to_string(obj.suite_->get_instance_id())
-                       << "\nDimension: " << common::vector_to_string(obj.suite_->get_dimension());
+                       << "\nSuite: " << obj.suite_->name()
+                       << "\nProblem: " << common::vector_to_string(obj.suite_->problem_ids())
+                       << "\nInstance: " << common::vector_to_string(obj.suite_->instances())
+                       << "\nDimension: " << common::vector_to_string(obj.suite_->dimensions());
             }
 
         private:
@@ -168,22 +146,17 @@ namespace ioh {
             /**
              * \brief The benchmark suite used in the Experiment
              */
-            std::shared_ptr<suite::base<ProblemType>> suite_;
-
-            /**
-             * \brief A pointer to the currently evaluated problem
-             */
-            std::shared_ptr<ProblemType> current_problem_;
+            std::shared_ptr<suite::Suite<ProblemType>> suite_;
 
             /**
              * \brief A pointer to the logger. 
              */
-            std::shared_ptr<logger::Csv<ProblemType>> csv_logger_;
+            std::shared_ptr<logger::Base> logger_;
 
             /**
              * \brief A function pointer of type \ref algorithm_type
              */
-            algorithm_type *algorithm_;
+            Algorithm algorithm_;
 
             /**
              * \brief The number of independent runs to be performed

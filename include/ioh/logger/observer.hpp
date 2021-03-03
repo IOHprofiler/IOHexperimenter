@@ -1,7 +1,5 @@
 #pragma once
 
-#include <utility>
-
 #include "ioh/common.hpp"
 
 
@@ -73,7 +71,7 @@ namespace ioh {
                 const int triggers_per_time_range = 0,
                 const bool trigger_on_improvement = true,
                 std::vector<int> trigger_at_time_points = {0},
-                const common::OptimizationType optimization_type = common::OptimizationType::minimization,
+                const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
                 const int trigger_at_time_points_exp_base = 10,
                 const int trigger_at_range_exp_base = 10
                 )
@@ -92,7 +90,7 @@ namespace ioh {
              * \param optimization_type Whether minimization or maximization is used
              */
             void reset(const common::OptimizationType optimization_type) {
-                current_best_fitness_ = optimization_type == common::OptimizationType::maximization
+                current_best_fitness_ = optimization_type == common::OptimizationType::Maximization
                                             ? -std::numeric_limits<double>::infinity()
                                             : std::numeric_limits<double>::infinity();
             }
@@ -199,7 +197,7 @@ namespace ioh {
              */
             bool improvement_trigger(
                 const double fitness,
-                const common::OptimizationType optimization_type = common::OptimizationType::minimization) {
+                const common::OptimizationType optimization_type = common::OptimizationType::Minimization) {
                 if (trigger_on_improvement_ && compare_objectives(fitness, current_best_fitness_, optimization_type)) {
                     current_best_fitness_ = fitness;
                     return true;

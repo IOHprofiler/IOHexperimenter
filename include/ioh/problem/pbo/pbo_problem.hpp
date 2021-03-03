@@ -29,7 +29,7 @@ namespace ioh::problem
     public:
         PBO(const int problem_id, const int instance, const int n_variables, const std::string &name) :
             Integer(MetaData(problem_id, instance, name, n_variables, 1,
-                                    common::OptimizationType::maximization))
+                                    common::OptimizationType::Maximization))
         {
         } 
     };
