@@ -151,12 +151,6 @@ namespace ioh::suite
         }
 
         [[nodiscard]]
-        std::vector<Problem> problems() const
-        {
-            return problems_;
-        }
-
-        [[nodiscard]]
         std::vector<int> problem_ids() const 
         {
             return problem_ids_;
