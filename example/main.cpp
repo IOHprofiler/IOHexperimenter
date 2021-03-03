@@ -110,30 +110,49 @@ void test_problems()
         std::cout << (*p)(x0).at(0) << std::endl;
 }
 
+void show_registered_objects()
+{
+    {
+        const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();
+        const auto& suite_factory = ioh::suite::SuiteRegistry<ioh::problem::Real>::instance();
+
+        std::cout << "Registered Real Problems:\n";
+
+        for (auto& [id, name] : problem_factory.name_to_id())
+            std::cout << id << ", " << name << std::endl;
+
+        std::cout << "\nRegistered Real Suites:\n";
+        for (auto& [id, name] : suite_factory.name_to_id())
+            std::cout << id << ", " << name << std::endl;
+    }
+    {
+        const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::Integer>::instance();
+        const auto& suite_factory = ioh::suite::SuiteRegistry<ioh::problem::Integer>::instance();
+
+        std::cout << "\nRegistered Integer Problems:\n";
+
+        for (auto& [id, name] : problem_factory.name_to_id())
+            std::cout << id << ", " << name << std::endl;
+
+        std::cout << "\nRegistered Integer Suites:\n";
+        for (auto& [id, name] : suite_factory.name_to_id())
+            std::cout << id << ", " << name << std::endl;
+    }
+}
+
 
 
 int main() {
-    const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();
-    auto& suite_factory = ioh::suite::SuiteRegistry<ioh::problem::Real>::instance();
+    show_registered_objects();
 
-    std::cout << "Registered Real Problems:\n";
-
-    for (auto& name : problem_factory.names())
-        std::cout << name << std::endl;
-
-    std::cout << "\nRegistered Real Suites:\n";
-    for (auto& name : suite_factory.names())
-        std::cout << name << std::endl;
-
-    // const auto suite = suite_factory.create("BBOB", { 1 }, { 1, 2 }, { 5 });
+    const auto& suite_factory = ioh::suite::SuiteRegistry<ioh::problem::Real>::instance();
+    const auto suite = suite_factory.create("BBOB", { 1 }, { 1, 2 }, { 5 });
     // std::vector<double> x0{ 0.1, 1., 2.,4., 5.4 };
     // auto logger1 = ioh::logger::Default(std::string("logger1"));
     // suite->attach_logger(logger1);
     //
     // for (const auto& p : *suite)
     // {
-    //     std::cout << *p << std::endl;
-    //
     //     for (auto i = 0; i < 3; i++)
     //     {
     //          for (auto j = 0; j < 10; j++)
@@ -144,6 +163,6 @@ int main() {
     //          p->reset();
     //     }
     // }
-    // std::cout << "done";
+    std::cout << "done";
 }
 

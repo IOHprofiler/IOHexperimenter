@@ -9,6 +9,7 @@ namespace ioh::suite
     {
     public:
         using Problem = std::shared_ptr<ProblemType>;
+        using Factory = problem::ProblemRegistry<ProblemType>;
 
         struct Iterator
         {
@@ -99,7 +100,7 @@ namespace ioh::suite
             ) :
             problems_(), problem_ids_(problem_ids), instances_(instances), dimensions_(dimensions)
         {
-            const auto &factory = problem::ProblemRegistry<ProblemType>::instance();
+            const auto &factory = Factory::instance();
 
             for (const auto &problem_id : problem_ids)
                 for (const auto &instance : instances)
@@ -181,14 +182,10 @@ namespace ioh::suite
 
 
     template <class Derived, class ProblemType>
-    struct AutomaticSuiteRegistration : common::AutomaticTypeRegistration<Derived, SuiteFactoryType<ProblemType>>
-    {
-    };
+    using AutomaticSuiteRegistration = common::AutomaticTypeRegistration<Derived, SuiteFactoryType<ProblemType>>;
 
     template <class ProblemType>
-    struct SuiteRegistry : SuiteFactoryType<ProblemType>
-    {
-    };
+    using SuiteRegistry = SuiteFactoryType<ProblemType>;
 
 
     template <class Derived>

@@ -177,7 +177,15 @@ namespace ioh
         template <typename T>
         class Problem
         {
-            bool check_input_dimensions(const std::vector<T> &x)
+        protected:
+            MetaData meta_data_; 
+            Constraint<T> constraint_;
+            State<T> state_;
+            Solution<T> objective_;
+            logger::Base *logger_{};
+
+            [[nodiscard]]
+            bool check_input_dimensions(const std::vector<T>& x)
             {
                 if (x.empty())
                 {
@@ -192,47 +200,14 @@ namespace ioh
                 return true;
             }
 
-            // TODO: make the check optional
-            template <typename Integer = T>
-            typename std::enable_if<std::is_integral<Integer>::value, bool>::type check_input(const std::vector<T> &x)
+            [[nodiscard]]
+            virtual bool check_input(const std::vector<T>& x)
             {
                 return check_input_dimensions(x);
             }
 
-            template <typename Floating = T>
-            typename std::enable_if<std::is_floating_point<Floating>::value, bool>::type check_input(
-                const std::vector<T> &x)
-            {
-                if (!check_input_dimensions(x))
-                    return false;
-
-                if (common::all_finite(x))
-                    return true;
-
-                if (common::has_nan(x))
-                {
-                    common::log::warning("The solution contains NaN.");
-                    return false;
-                }
-                if (common::has_inf(x))
-                {
-                    common::log::warning("The solution contains Inf.");
-                    return false;
-                }
-                common::log::warning("The solution contains invalid values.");
-                return false;
-            }
-
-
-        protected:
-            MetaData meta_data_;
-            Constraint<T> constraint_;
-            State<T> state_;
-            Solution<T> objective_;
-            logger::Base *logger_{};
-
             [[nodiscard]]
-            virtual std::vector<double> evaluate(std::vector<T> &x) = 0;
+            virtual std::vector<double> evaluate(std::vector<T>& x) = 0;
 
 
             [[nodiscard]]
@@ -352,6 +327,7 @@ namespace ioh
             }
         };
 
+
         template <typename T>
         using Function = std::function<std::vector<double>(std::vector<T> &)>;
 
@@ -392,21 +368,41 @@ namespace ioh
         using ProblemFactoryType = common::RegisterWithFactory<ProblemType, int, int>;
 
         template <class Derived, class Parent>
-        struct AutomaticProblemRegistration : common::AutomaticTypeRegistration<Derived, ProblemFactoryType<Parent>>
-        {
-        };
+        using AutomaticProblemRegistration = common::AutomaticTypeRegistration<Derived, ProblemFactoryType<Parent>>;
 
         template <class Parent>
-        struct ProblemRegistry : ProblemFactoryType<Parent>
-        {
-        };
-
+        using ProblemRegistry = ProblemFactoryType<Parent>;
+    
+        
         using Real = Problem<double>;
         using Integer = Problem<int>;
 
         template<typename ProblemType>
-        struct RealProblem : Real, AutomaticProblemRegistration<ProblemType, Real>
+        class RealProblem : public Real, AutomaticProblemRegistration<ProblemType, Real>
         {
+        protected:
+            bool check_input(const std::vector<double>& x) override
+            {
+                if (!check_input_dimensions(x))
+                    return false;
+                
+                if (common::all_finite(x))
+                    return true;
+                
+                if (common::has_nan(x))
+                {
+                    common::log::warning("The solution contains NaN.");
+                    return false;
+                }
+                if (common::has_inf(x))
+                {
+                    common::log::warning("The solution contains Inf.");
+                    return false;
+                }
+                common::log::warning("The solution contains invalid values.");
+                return false;
+            }
+        public:
             using Real::Real;
         };
 
