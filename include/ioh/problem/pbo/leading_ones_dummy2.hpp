@@ -8,42 +8,38 @@ namespace ioh
     {
         namespace pbo
         {
-            class LeadingOnes_Dummy2 : public PBOProblem<LeadingOnes_Dummy2>
+            class LeadingOnesDummy2 final: public PBOProblem<LeadingOnesDummy2>
             {
             protected:
-                std::vector<int> info;
-                /**
-                 * \brief Construct a new LeadingOnes_Dummy2 object. Definition refers to
-                 *https://doi.org/10.1016/j.asoc.2019.106027
-                 *
-                 * \param instance_id The instance number of a problem, which controls the transformation
-                 * performed on the original problem.
-                 * \param dimension The dimensionality of the problem to created, 4 by default.
-                 **/
+                std::vector<int> info_;
+              
 
                 std::vector<double> evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
-                    auto n = this->info.size();
-                    for (auto i = 0; i != n; ++i)
+                    for (auto i = 0; i != info_.size(); ++i)
                     {
-                        if (x[this->info[i]] == 1)
-                        {
+                        if (x[info_[i]] == 1)
                             result = i + 1;
-                        }
                         else
-                        {
                             break;
-                        }
                     }
                     return {static_cast<double>(result)};
                 }
 
             public:
-                LeadingOnes_Dummy2(const int instance, const int n_variables) :
-                    PBOProblem(12, instance, n_variables, "LeadingOnes_Dummy2")
+                /**
+               * \brief Construct a new LeadingOnes_Dummy2 object. Definition refers to
+               *https://doi.org/10.1016/j.asoc.2019.106027
+               *
+               * \param instance The instance number of a problem, which controls the transformation
+               * performed on the original problem.
+               * \param n_variables The dimensionality of the problem to created, 4 by default.
+               **/
+                LeadingOnesDummy2(const int instance, const int n_variables) :
+                    PBOProblem(12, instance, n_variables, "LeadingOnesDummy2")
                 {
-                    info = utils::dummy(n_variables, 0.9, 10000); 
+                    info_ = utils::dummy(n_variables, 0.9, 10000); 
                     objective_.x = std::vector<int>(n_variables,1);
                     objective_.y = evaluate(objective_.x);
                 }

@@ -7,39 +7,38 @@ namespace ioh
     {
         namespace pbo
         {
-            class Concatenated_Trap : public PBOProblem<Concatenated_Trap>
+            class ConcatenatedTrap final: public PBOProblem<ConcatenatedTrap>
             {
             protected:
-                int k = 5;
+                int k_ = 5;
 
                 std::vector<double> evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
                     double block_result;
-                    auto n_ = x.size();
-                    const auto m = n_ / k;
+                    const auto m = meta_data_.n_variables / k_;
                     for (auto i = 1; i <= m; ++i)
                     {
                         block_result = 0.0;
-                        for (auto j = i * k - k; j != i * k; ++j)
+                        for (auto j = i * k_ - k_; j != i * k_; ++j)
                         {
                             block_result += x[j];
                         }
-                        if (block_result == k)
+                        if (block_result == k_)
                         {
                             result += 1;
                         }
                         else
                         {
-                            result += (static_cast<double>(k - 1) - block_result) / static_cast<double>(k);
+                            result += (static_cast<double>(k_ - 1) - block_result) / static_cast<double>(k_);
                         }
                     }
-                    const auto remain_k = n_ - m * k;
+                    const auto remain_k = meta_data_.n_variables - m * k_;
                     if (remain_k != 0)
                     {
                         block_result = 0.0;
                         // TODO: check this, only with braces this works
-                        for (auto j = m * (k - 1); j != n_; ++j)
+                        for (auto j = m * (k_ - 1); j != meta_data_.n_variables; ++j)
                         {
                             block_result += x[j];
                         }
@@ -61,12 +60,12 @@ namespace ioh
                  * \brief Construct a new Concatenated_Trap object. Definition refers to
                  *https://doi.org/10.1007/978-3-030-58115-2_49
                  *
-                 * \param instance_id The instance number of a problem, which controls the transformation
+                 * \param instance The instance number of a problem, which controls the transformation
                  * performed on the original problem.
-                 * \param dimension The dimensionality of the problem to created, 4 by default.
+                 * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
-                Concatenated_Trap(const int instance, const int n_variables) :
-                    PBOProblem(24, instance, n_variables, "Concatenated_Trap")
+                ConcatenatedTrap(const int instance, const int n_variables) :
+                    PBOProblem(24, instance, n_variables, "ConcatenatedTrap")
                 {
                     objective_.x = std::vector<int> (n_variables,1);
                     objective_.y = evaluate(objective_.x);

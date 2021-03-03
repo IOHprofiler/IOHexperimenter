@@ -7,18 +7,18 @@ namespace ioh
     {
         namespace pbo
         {
-            class NK_Landscapes : public PBOProblem<NK_Landscapes>
+            class NKLandscapes final: public PBOProblem<NKLandscapes>
             {
             protected:
-                std::vector<std::vector<double>> F;
-                std::vector<std::vector<int>> E;
-                int k = 1;
+                std::vector<std::vector<double>> f_;
+                std::vector<std::vector<int>> e_;
+                int k_ = 1;
 
                 void set_n_k(const int n, const int k)
                 {
-                    E.clear();
-                    F.clear();
-                    this->k = k;
+                    e_.clear();
+                    f_.clear();
+                    k_ = k;
                     if (k > n)
                     {
                         common::log::error("NK_Landscapes, k > n");
@@ -37,10 +37,10 @@ namespace ioh
 
                         for (auto i = n - 1; i > 0; --i)
                         {
-                            const auto randPos = static_cast<int>(floor(rand_vec[n - 1 - i] * (i + 1)));
+                            const auto rand_pos = static_cast<int>(floor(rand_vec[n - 1 - i] * (i + 1)));
                             const auto temp = population[i];
-                            population[i] = population[randPos];
-                            population[randPos] = temp;
+                            population[i] = population[rand_pos];
+                            population[rand_pos] = temp;
                             sampled_number.push_back(population[i]);
                             if (n - i - 1 == k - 1)
                             {
@@ -51,31 +51,30 @@ namespace ioh
                         {
                             sampled_number.push_back(population[0]);
                         }
-                        E.push_back(sampled_number);
+                        e_.push_back(sampled_number);
                     }
                     for (auto i = 0; i != n; ++i)
                     {
                         common::Random::uniform(static_cast<size_t>(pow(2, k + 1)), static_cast<long>(k * (i + 1) * 2),
                                                 rand_vec);
-                        F.push_back(rand_vec);
+                        f_.push_back(rand_vec);
                     }
                 }
 
                 std::vector<double> evaluate(const std::vector<int> &x) override
                 {
-                    auto n_ = x.size();
                     double result = 0.0;
-                    for (auto i = 0; i != n_; ++i)
+                    for (auto i = 0; i != meta_data_.n_variables; ++i)
                     {
                         size_t index = x[i];
-                        for (auto j = 0; j != k; ++j)
+                        for (auto j = 0; j != k_; ++j)
                         {
-                            index = index + static_cast<size_t>(pow(2, j + 1) * x[E[i][j]]);
+                            index = index + static_cast<size_t>(pow(2, j + 1) * x[e_[i][j]]);
                         }
-                        result += F[i][index];
+                        result += f_[i][index];
                     }
 
-                    result = result / static_cast<double>(n_);
+                    result = result / static_cast<double>(meta_data_.n_variables);
                     return {-result};
                 }
 
@@ -84,14 +83,14 @@ namespace ioh
                  * \brief Construct a new NK_Landscapes object. Definition refers to
                  *https://doi.org/10.1007/978-3-030-58115-2_49
                  *
-                 * \param instance_id The instance number of a problem, which controls the transformation
+                 * \param instance The instance number of a problem, which controls the transformation
                  * performed on the original problem.
-                 * \param dimension The dimensionality of the problem to created, 4 by default.
+                 * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
-                NK_Landscapes(const int instance, const int n_variables) :
-                    PBOProblem(25, instance, n_variables, "NK_Landscapes")
+                NKLandscapes(const int instance, const int n_variables) :
+                    PBOProblem(25, instance, n_variables, "NKLandscapes")
                 {
-                    set_n_k(n_variables, k);
+                    set_n_k(n_variables, k_);
                 }
             };
         } // namespace pbo

@@ -89,26 +89,17 @@ void test_problems()
             std::cout << result << " == " << y0 << " = " << std::boolalpha << float_eq(result, y0) << std::endl;
         }
     }
-
-    ioh::suite::BBOB suite({ 1, 2 }, { 1, 2 }, { 5 });
-
-    std::cout << suite.name() << std::endl;
-    for (const auto& p : suite)
-        std::cout << *p << std::endl;
-    
-    std::vector<int> pbo_ids(10);
-    std::iota(pbo_ids.begin(), pbo_ids.end(), 1);
-    ioh::suite::PBO suite2(pbo_ids, { 1, 2 }, { 16 });
-    
-    std::cout << suite2.name() << std::endl;
-    for (const auto& p : suite2)
-        std::cout << *p << std::endl;
-    
-    auto& suite_factory = ioh::suite::SuiteRegistry<ioh::problem::Real>::instance();
-    auto f = suite_factory.create("BBOB", { 1 }, { 2 }, { 5 });
-    
-    for (const auto& p : *f)
-        std::cout << (*p)(x0).at(0) << std::endl;
+    const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::Integer>::instance();
+    for (const auto&  name : problem_factory.names())
+    {
+        auto problem = problem_factory.create(name, 1, 10);
+        const auto yopt = (*problem)(problem->objective().x).at(0);
+        if (!float_eq(problem->objective().y.at(0), yopt))
+            std::cout <<  name << std::endl
+                    << problem->objective() << " == " << yopt << " = " << std::boolalpha
+                    << float_eq(problem->objective().y.at(0), yopt) << std::endl;
+    }
+   
 }
 
 void show_registered_objects()
@@ -145,6 +136,7 @@ void show_registered_objects()
 
 int main() {
     show_registered_objects();
+    test_problems();
 
     const auto& suite_factory = ioh::suite::SuiteRegistry<ioh::problem::Real>::instance();
     const auto suite = suite_factory.create("BBOB", { 1 }, { 1, 2 }, { 5 });

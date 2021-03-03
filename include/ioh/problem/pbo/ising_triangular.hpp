@@ -7,17 +7,16 @@ namespace ioh
     {
         namespace pbo
         {
-            class Ising_Triangular : public PBOProblem<Ising_Triangular>
+            class IsingTriangular final: public PBOProblem<IsingTriangular>
             {
             protected:
-                static int modulo_ising_triangular(int x, int N) { return (x % N + N) % N; }
+                static int modulo_ising_triangular(const int x, const int n) { return (x % n + n) % n; }
 
                 std::vector<double> evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
-                    auto n_ = x.size();
                     int neighbors[3];
-                    const auto lattice_size = static_cast<int>(sqrt(static_cast<double>(n_)));
+                    const auto lattice_size = static_cast<int>(sqrt(static_cast<double>(meta_data_.n_variables)));
 
                     for (auto i = 0; i < lattice_size; ++i)
                     {
@@ -28,10 +27,10 @@ namespace ioh
                             neighbors[2] = x[modulo_ising_triangular(i + 1, lattice_size) * lattice_size +
                                              modulo_ising_triangular(j + 1, lattice_size)];
 
-                            for (auto neig = 0; neig < 3; neig++)
+                            for (auto neighbor : neighbors)
                             {
-                                result += x[i * lattice_size + j] * neighbors[neig] +
-                                    (1 - x[i * lattice_size + j]) * (1 - neighbors[neig]);
+                                result += x[i * lattice_size + j] * neighbor +
+                                    (1 - x[i * lattice_size + j]) * (1 - neighbor);
                             }
                         }
                     }
@@ -43,12 +42,12 @@ namespace ioh
                  * \brief Construct a new Ising_Triangular object. Definition refers to
                  *https://doi.org/10.1016/j.asoc.2019.106027
                  *
-                 * \param instance_id The instance number of a problem, which controls the transformation
+                 * \param instance The instance number of a problem, which controls the transformation
                  * performed on the original problem.
-                 * \param dimension The dimensionality of the problem to created, 4 by default.
+                 * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
-                Ising_Triangular(const int instance, const int n_variables) :
-                    PBOProblem(21, instance, n_variables, "Ising_Triangular")
+                IsingTriangular(const int instance, const int n_variables) :
+                    PBOProblem(21, instance, n_variables, "IsingTriangular")
                 {
                     objective_.x = std::vector<int>(n_variables,1);
                     objective_.y = evaluate(objective_.x);

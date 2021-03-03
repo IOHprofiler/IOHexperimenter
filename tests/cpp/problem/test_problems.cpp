@@ -51,21 +51,21 @@ TEST(problems, pbo)
 {
 	using namespace ioh::problem::pbo;
 	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMax>(1, 9)), 7.0000);
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMax_Dummy1>(1, 9)), 4.0000);
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMax_Dummy2>(1, 9)), 5.0000);
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMax_Epistasis>(1, 9)), 9.0000);
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMax_Neutrality>(1, 9)), 2.0000);
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMax_Ruggedness1>(1, 9)), 5.0000);
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMax_Ruggedness2>(1, 9)), 8.0000);
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMax_Ruggedness3>(1, 9)), 5.0000);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMaxDummy1>(1, 9)), 4.0000);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMaxDummy2>(1, 9)), 5.0000);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMaxEpistasis>(1, 9)), 9.0000);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMaxNeutrality>(1, 9)), 2.0000);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMaxRuggedness1>(1, 9)), 5.0000);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMaxRuggedness2>(1, 9)), 8.0000);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<OneMaxRuggedness3>(1, 9)), 5.0000);
 	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnes>(1, 9)), 0.0000);
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnes_Dummy1>(1, 9)), 0.0000);
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnes_Dummy2>(1, 9)), 0.0000);
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnes_Epistasis>(1, 9)), 6.0000);
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnes_Neutrality>(1, 9)), 1.0000);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnesDummy1>(1, 9)), 0.0000);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnesDummy2>(1, 9)), 0.0000);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnesEpistasis>(1, 9)), 6.0000);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnesNeutrality>(1, 9)), 1.0000);
 	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnes_Ruggedness1>(1, 9)), 1.0000);
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnes_Ruggedness2>(1, 9)), 0.0000);
-	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnes_Ruggedness3>(1, 9)), 3.0000);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnesRuggedness2>(1, 9)), 0.0000);
+	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LeadingOnesRuggedness3>(1, 9)), 3.0000);
 	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<Linear>(1, 9)), 29.0000);
 	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<MIS>(1, 9)), 1.0000);
 	ASSERT_DOUBLE_EQ(test_eval(std::make_shared<LABS>(1, 9)), 2.5312);
@@ -73,8 +73,8 @@ TEST(problems, pbo)
 
 	// These are different from master, might be because I took the dev version
 	// ASSERT_DOUBLE_EQ(test_eval(std::make_shared<Ising_Ring>(1, 9)), 23.0000);
-	// ASSERT_DOUBLE_EQ(test_eval(std::make_shared<Ising_Torus>(1, 9)), 4.0000);
-	// ASSERT_DOUBLE_EQ(test_eval(std::make_shared<Ising_Triangular>(1, 9)), 9.0000);
+	// ASSERT_DOUBLE_EQ(test_eval(std::make_shared<IsingTorus>(1, 9)), 4.0000);
+	// ASSERT_DOUBLE_EQ(test_eval(std::make_shared<IsingTriangular>(1, 9)), 9.0000);
 }
 
 TEST(problem_suite, bbob)

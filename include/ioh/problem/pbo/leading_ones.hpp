@@ -7,20 +7,18 @@ namespace ioh
     {
         namespace pbo
         {
-            class LeadingOnes : public PBOProblem<LeadingOnes>
+            class LeadingOnes final: public PBOProblem<LeadingOnes>
             {
             protected:
                 std::vector<double> evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
-                    auto n_ = x.size();
-                    for (auto i = 0; i != n_; ++i)
-                    {
+                    for (auto i = 0; i < meta_data_.n_variables; ++i)  
                         if (x[i] == 1)
                             result = i + 1;
                         else
                             break;
-                    }
+                    
                     return {static_cast<double>(result)};
                 }
 
@@ -29,9 +27,9 @@ namespace ioh
                  * \brief Construct a new LeadingOnes object. Definition refers to
                  *https://doi.org/10.1016/j.asoc.2019.106027
                  *
-                 * \param instance_id The instance number of a problem, which controls the transformation
+                 * \param instance The instance number of a problem, which controls the transformation
                  * performed on the original problem.
-                 * \param dimension The dimensionality of the problem to created, 4 by default.
+                 * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 LeadingOnes(const int instance, const int n_variables) :
                     PBOProblem(2, instance, n_variables, "LeadingOnes")

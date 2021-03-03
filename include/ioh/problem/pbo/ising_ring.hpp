@@ -7,20 +7,18 @@ namespace ioh
     {
         namespace pbo
         {
-
-            class Ising_Ring : public PBOProblem<Ising_Ring>
+            class IsingRing final: public PBOProblem<IsingRing>
             {
             protected:
-                static int modulo_ising_ring(int x, int N) { return (x % N + N) % N; }
+                static int modulo_ising_ring(const int x, const int n){ return (x % n + n) % n; }
 
                 std::vector<double> evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
-                    auto n_ = x.size();
-                    for (auto i = 0; i < n_; ++i)
+                    for (auto i = 0; i < meta_data_.n_variables; ++i)
                     {
-                        const auto neig = x[modulo_ising_ring(i - 1, n_)];
-                        result += x[i] * neig + (1 - x[i]) * (1 - neig);
+                        const auto neighbors = x[modulo_ising_ring(i - 1, meta_data_.n_variables)];
+                        result += x[i] * neighbors + (1 - x[i]) * (1 - neighbors);
                     }
                     return { static_cast<double>(result) };
                 }
@@ -30,12 +28,12 @@ namespace ioh
                  * \brief Construct a new Ising_Ring object. Definition refers to
                  *https://doi.org/10.1016/j.asoc.2019.106027
                  *
-                 * \param instance_id The instance number of a problem, which controls the transformation
+                 * \param instance The instance number of a problem, which controls the transformation
                  * performed on the original problem.
-                 * \param dimension The dimensionality of the problem to created, 4 by default.
+                 * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
-                Ising_Ring(const int instance, const int n_variables) :
-                    PBOProblem(19, instance, n_variables, "Ising_Ring")
+                IsingRing(const int instance, const int n_variables) :
+                    PBOProblem(19, instance, n_variables, "IsingRing")
                 {
                     objective_.x = std::vector<int>(n_variables,1);
                     objective_.y = evaluate(objective_.x);

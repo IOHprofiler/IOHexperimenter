@@ -8,18 +8,15 @@ namespace ioh
     {
         namespace pbo
         {
-            class OneMax_Ruggedness1 : public PBOProblem<OneMax_Ruggedness1>
+            class OneMaxRuggedness1 final: public PBOProblem<OneMaxRuggedness1>
             {
             protected:
                 std::vector<double> evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
-                    auto n_ = x.size();
-                    for (auto i = 0; i != n_; ++i)
-                    {
+                    for (auto i = 0; i != meta_data_.n_variables; ++i)
                         result += x[i];
-                    }
-                    return {utils::ruggedness1(result, n_)};
+                    return {utils::ruggedness1(result, meta_data_.n_variables)};
                 }
 
             public:
@@ -27,12 +24,12 @@ namespace ioh
                  * \brief Construct a new OneMax_Ruggedness1 object. Definition refers to
                  *https://doi.org/10.1016/j.asoc.2019.106027
                  *
-                 * \param instance_id The instance number of a problem, which controls the transformation
+                 * \param instance The instance number of a problem, which controls the transformation
                  * performed on the original problem.
-                 * \param dimension The dimensionality of the problem to created, 4 by default.
+                 * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
-                OneMax_Ruggedness1(const int instance, const int n_variables) :
-                    PBOProblem(8, instance, n_variables, "OneMax_Ruggedness1")
+                OneMaxRuggedness1(const int instance, const int n_variables) :
+                    PBOProblem(8, instance, n_variables, "OneMaxRuggedness1")
                 {
                     objective_.x = std::vector<int>(n_variables,1);
                     objective_.y = evaluate(objective_.x);

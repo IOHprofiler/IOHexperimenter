@@ -11,9 +11,9 @@ namespace ioh
             /**
               * \brief Construct a new OneMax object. Definition refers to https://doi.org/10.1016/j.asoc.2019.106027
               *
-              * \param instance_id The instance number of a problem, which controls the transformation
+              * \param instance The instance number of a problem, which controls the transformation
               * performed on the original problem.
-              * \param dimension The dimensionality of the problem to created, 4 by default.
+              * \param n_variables The dimensionality of the problem to created, 4 by default.
               **/
 
             class OneMax final: public PBOProblem<OneMax>
