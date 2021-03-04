@@ -163,11 +163,22 @@ namespace ioh
 
 
         template <typename T>
-        using Function = std::function<std::vector<double>(std::vector<T> &)>;
+        using Function = std::function<std::vector<double>(const std::vector<T> &)>;
+
+        template <typename ProblemType>
+        using ProblemRegistryType = common::RegisterWithFactory<ProblemType, int, int>;
+
+        template <typename ProblemType>
+        using ProblemFactoryType = common::Factory<ProblemType, int, int>;
+
+        template <class Derived, class Parent>
+        using AutomaticProblemRegistration = common::AutomaticTypeRegistration<Derived, ProblemRegistryType<Parent>>;
+
+        template <class Parent>
+        using ProblemRegistry = ProblemRegistryType<Parent>;
 
         template <typename T>
         class WrappedProblem final : public Problem<T>
-            //TODO: make this class registerable
         {
         protected:
             Function<T> function_;
@@ -195,20 +206,14 @@ namespace ioh
                                             common::OptimizationType::Minimization,
                                         Constraint<T> constraint = Constraint<T>())
         {
+            ProblemFactoryType<Problem<T>>::instance().include(name, 0, [=](const int instance, const int dimension)
+            {
+                return std::make_unique<WrappedProblem<T>>(f, name, dimension, n_objectives, optimization_type);
+            });
             return WrappedProblem<T>{f, name, n_variables, n_objectives, optimization_type, constraint};
         }
 
-        template <typename ProblemType>
-        using ProblemRegistryType = common::RegisterWithFactory<ProblemType, int, int>;
-
-        template <typename ProblemType>
-        using ProblemFactoryType = common::Factory<ProblemType, int, int>;
-
-        template <class Derived, class Parent>
-        using AutomaticProblemRegistration = common::AutomaticTypeRegistration<Derived, ProblemRegistryType<Parent>>;
-
-        template <class Parent>
-        using ProblemRegistry = ProblemRegistryType<Parent>;
+       
     
         
         using Real = Problem<double>;

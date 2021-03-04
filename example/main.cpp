@@ -100,21 +100,34 @@ public:
 };
 
 
+std::vector<double> f(const std::vector<double>& x)
+{
+    return { 0.0 };
+}
+
+
 int main()
 {
     // show_registered_objects();
     // test_logger();
     // test_ecdf();
     // test_experimenter();
-    // std::cout << "done";
-    //
-    // using RealFactory = ioh::problem::ProblemFactoryType < ioh::problem::Real>;
+    using RealFactory = ioh::problem::ProblemFactoryType <ioh::problem::Real>;
     // using BBOBFactory = ioh::problem::ProblemFactoryType < ioh::problem::BBOB>;
     //
-    // BBOBFactory& f = BBOBFactory::instance();
+    RealFactory& factory = RealFactory::instance();
     //
     // reinterpret_cast<RealFactory&>(f);
+    //
+    // ioh::suite::Real r({ 1 }, { 2 }, { 5 });
+    // ioh::suite::BBOB b({1}, {2}, {5});
 
-    ioh::suite::Real r({ 1 }, { 2 }, { 5 });
-    ioh::suite::BBOB b({1}, {2}, {5});
+    auto p = ioh::problem::wrap_function<double>(f, "f", 10);
+
+
+    auto p2 = factory.create("f", 5, 1);
+
+
+
+    std::cout << " done";
 }
