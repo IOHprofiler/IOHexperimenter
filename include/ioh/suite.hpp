@@ -9,7 +9,7 @@ namespace ioh::suite
     {
     public:
         using Problem = std::shared_ptr<ProblemType>;
-        using Factory = problem::ProblemRegistry<ProblemType>; // TODO: this shou
+        using Factory = problem::ProblemFactoryType<ProblemType>;
 
         struct Iterator
         {
@@ -96,18 +96,20 @@ namespace ioh::suite
 
     public:
         Suite(const std::vector<int> &problem_ids, const std::vector<int> &instances,
-              const std::vector<int> &dimensions, const std::string &name, const int max_problem_id = 1000,
-              const int max_instance = 1000, const int max_dimension = 1000
+              const std::vector<int> &dimensions, const std::string &name,
+              const int max_instance = 1000, const int max_dimension = 1000, Factory &factory = Factory::instance()
             ) :
             name_(name), problems_(), problem_ids_(problem_ids), instances_(instances), dimensions_(dimensions)
         {
-            const auto &factory = Factory::instance();
+            const auto available_ids = factory.ids();
+            const int max_problem_id = *std::max_element(available_ids.begin(), available_ids.end());
+            const int min_problem_id = *std::min_element(available_ids.begin(), available_ids.end());
 
             for (const auto &problem_id : problem_ids)
                 for (const auto &n_variables : dimensions)
-                    for (const auto& instance : instances)
+                    for (const auto &instance : instances)
                         problems_.emplace_back(factory.create(
-                            check_parameter(problem_id, max_problem_id),
+                            check_parameter(problem_id, max_problem_id, min_problem_id),
                             check_parameter(instance, max_instance),
                             check_parameter(n_variables, max_dimension)
                             ));
@@ -174,15 +176,20 @@ namespace ioh::suite
     };
 
     template <typename ProblemType>
-    using SuiteFactoryType = common::RegisterWithFactory<
+    using SuiteRegistryType = common::RegisterWithFactory<
+        Suite<ProblemType>, std::vector<int>, std::vector<int>, std::vector<int>>;
+
+
+    template <typename ProblemType>
+    using SuiteFactoryType = common::Factory<
         Suite<ProblemType>, std::vector<int>, std::vector<int>, std::vector<int>>;
 
 
     template <class Derived, class ProblemType>
-    using AutomaticSuiteRegistration = common::AutomaticTypeRegistration<Derived, SuiteFactoryType<ProblemType>>;
+    using AutomaticSuiteRegistration = common::AutomaticTypeRegistration<Derived, SuiteRegistryType<ProblemType>>;
 
     template <class ProblemType>
-    using SuiteRegistry = SuiteFactoryType<ProblemType>;
+    using SuiteRegistry = SuiteRegistryType<ProblemType>;
 
 
     template <class Derived>
@@ -198,12 +205,32 @@ namespace ioh::suite
         using Suite<problem::Integer>::Suite;
     };
 
+    ////////////////////// Available Suites //////////////////////
+    struct Real final : RealSuite<Real>
+    {
+        Real(const std::vector<int> &problem_ids, const std::vector<int> &instances,
+             const std::vector<int> &dimensions) :
+            RealSuite(problem_ids, instances, dimensions, "Real")
+        {
+        }
+    };
+
+    struct Integer final : IntegerSuite<Integer>
+    {
+        Integer(const std::vector<int> &problem_ids, const std::vector<int> &instances,
+                const std::vector<int> &dimensions) :
+            IntegerSuite(problem_ids, instances, dimensions, "Integer")
+        {
+        }
+    };
+
     struct BBOB final : RealSuite<BBOB>
-        // TODO: fix that this somehow use BBOBProblem, instead of Realproblem
     {
         BBOB(const std::vector<int> &problem_ids, const std::vector<int> &instances,
              const std::vector<int> &dimensions) :
-            RealSuite(problem_ids, instances, dimensions, "BBOB", 24, 100, 100)
+            RealSuite(problem_ids, instances, dimensions, "BBOB", 100, 100,
+                      reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::BBOB>::instance())
+                )
         {
         }
     };
@@ -212,7 +239,8 @@ namespace ioh::suite
     {
         PBO(const std::vector<int> &problem_ids, const std::vector<int> &instances,
             const std::vector<int> &dimensions) :
-            IntegerSuite(problem_ids, instances, dimensions, "PBO", 25, 100, 20000)
+            IntegerSuite(problem_ids, instances, dimensions, "PBO", 100, 20000,
+                         reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::PBO>::instance()))
         {
         }
     };

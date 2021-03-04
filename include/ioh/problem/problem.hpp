@@ -199,13 +199,16 @@ namespace ioh
         }
 
         template <typename ProblemType>
-        using ProblemFactoryType = common::RegisterWithFactory<ProblemType, int, int>;
+        using ProblemRegistryType = common::RegisterWithFactory<ProblemType, int, int>;
+
+        template <typename ProblemType>
+        using ProblemFactoryType = common::Factory<ProblemType, int, int>;
 
         template <class Derived, class Parent>
-        using AutomaticProblemRegistration = common::AutomaticTypeRegistration<Derived, ProblemFactoryType<Parent>>;
+        using AutomaticProblemRegistration = common::AutomaticTypeRegistration<Derived, ProblemRegistryType<Parent>>;
 
         template <class Parent>
-        using ProblemRegistry = ProblemFactoryType<Parent>;
+        using ProblemRegistry = ProblemRegistryType<Parent>;
     
         
         using Real = Problem<double>;
