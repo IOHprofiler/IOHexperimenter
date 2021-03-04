@@ -90,7 +90,6 @@ namespace ioh::common::file {
     public:
         explicit BufferedFileStream(fs::path root, const std::string &name)
             : FileSystemItem(std::move(root), name),
-              buffer_(""),
               stream_(path_, std::ios_base::app) {
         }
 
@@ -113,8 +112,7 @@ namespace ioh::common::file {
             return *this;
         }
 
-        explicit BufferedFileStream(): buffer_("") { }
-
+        explicit BufferedFileStream() = default;
 
         void open(const fs::path &path) {
             this->close();
@@ -165,6 +163,10 @@ namespace ioh::common::file {
             write(data);
             return *(this);
         }
+
+        BufferedFileStream(const BufferedFileStream &other) = delete;
+        BufferedFileStream(BufferedFileStream &&other) noexcept = delete;
+        BufferedFileStream & operator=(const BufferedFileStream &other) = delete;
     };
 
 

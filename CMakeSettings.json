@@ -27,8 +27,8 @@
           "type": "BOOL"
         },
         {
-          "name": "BUILD_WITH_EIGEN",
-          "value": "False",
+          "name": "BUILD_PYTHON_PACKAGE",
+          "value": "True",
           "type": "BOOL"
         }
       ]
@@ -51,12 +51,7 @@
           "name": "BUILD_TESTS",
           "value": "False",
           "type": "BOOL"
-        },
-        {
-          "name": "BUILD_WITH_EIGEN",
-          "value": "False",
-          "type": "BOOL"
-        }
+        }        
       ]
     },
     {

@@ -84,11 +84,7 @@ TEST(experiment, pbo_from_config)
 	experiment.run();
 	const auto output = testing::internal::GetCapturedStdout();
 	ASSERT_EQ(count_newlines(output), 41);
-	// ASSERT_TRUE(fs::is_directory(experiment.logger()->experiment_directory()));
-	// ASSERT_TRUE(fs::is_directory(experiment.logger()->sub_directory()));
-	// ASSERT_TRUE(fs::is_regular_file(experiment.logger()->get_info_file_path()));
-	// ASSERT_TRUE(fs::is_regular_file(experiment.logger()->get_file_path(".dat")));
-	// logger()->clear_logger();
+	// TODO: check that files are generated properly
 	experiment.logger()->flush();
 	try
 	{
@@ -110,7 +106,8 @@ TEST(experiment, bbob)
 	std::vector<int> ins = {1, 2};
 	std::vector<int> dims = {2, 10};
 	const auto suite = std::make_shared<suite::BBOB>(pbs, ins, dims);
-	const auto logger = std::make_shared<logger::Default>(std::string("logger-experimenter"));
+	const auto logger = std::make_shared<logger::Default>(
+		std::string("logger-experimenter"), "random-search", "10iterations", true);
 	auto experiment = experiment::Experimenter<problem::Real>(
 		suite, logger, bbob_random_search, 10);
 
@@ -119,11 +116,7 @@ TEST(experiment, bbob)
 	experiment.run();
 	const auto output = testing::internal::GetCapturedStdout();
 	ASSERT_EQ(count_newlines(output), 62);
-	// ASSERT_TRUE(fs::is_directory(experiment.get_logger()->experiment_directory()));
-	// ASSERT_TRUE(fs::is_directory(experiment.get_logger()->sub_directory()));
-	// ASSERT_TRUE(fs::is_regular_file(experiment.get_logger()->get_info_file_path()));
-	// ASSERT_TRUE(fs::is_regular_file(experiment.get_logger()->get_file_path(".dat")));
-	// experiment.get_logger()->clear_logger();
+	// TODO: check that files are generated properly
 	experiment.logger()->flush();
 	try
 	{

@@ -5,7 +5,8 @@
 #if defined(_WIN32) || defined(_WIN64) || defined(__MINGW64__) || defined(__CYGWIN__)
 #define NOMINMAX
 #include <io.h>
-#include <Windows.h>
+
+// #include <Windows.h>
 #elif defined(__gnu_linux__)
 	#include <linux/limits.h>
 	#include <sys/stat.h>

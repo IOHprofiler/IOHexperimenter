@@ -100,7 +100,7 @@ public:
 };
 
 
-std::vector<double> f(const std::vector<double>& x)
+std::vector<double> f(const std::vector<double>&)
 {
     return { 0.0 };
 }
@@ -112,22 +112,22 @@ int main()
     // test_logger();
     // test_ecdf();
     // test_experimenter();
-    using RealFactory = ioh::problem::ProblemFactoryType <ioh::problem::Real>;
-    // using BBOBFactory = ioh::problem::ProblemFactoryType < ioh::problem::BBOB>;
-    //
+
+    using RealFactory = ioh::problem::ProblemFactoryType<ioh::problem::Real>;
     RealFactory& factory = RealFactory::instance();
-    //
-    // reinterpret_cast<RealFactory&>(f);
-    //
-    // ioh::suite::Real r({ 1 }, { 2 }, { 5 });
-    // ioh::suite::BBOB b({1}, {2}, {5});
 
-    auto p = ioh::problem::wrap_function<double>(f, "f", 10);
+    const std::vector<double> x0{ 0.1, 1., 2., 4., 5.4 };
+    const std::vector<double> x1{ 0.1, 1., 2., 4., std::numeric_limits<double>::signaling_NaN()};
+    ioh::problem::wrap_function<double>(f, "f");
 
+    const auto p1 = factory.create("f", 1, 5);
+    const auto p2 = factory.create("f", 1, 15);
 
-    auto p2 = factory.create("f", 5, 1);
+    auto l = ioh::logger::Default(std::string("data"), "a", "info", true);
+    p1->attach_logger(l);
 
-
-
+    std::cout << (*p1)(x0).at(0) << std::endl;
+    std::cout << (*p2)(x0).at(0) << std::endl;
+    std::cout << (*p1)(x1).at(0) << std::endl;
     std::cout << " done";
 }

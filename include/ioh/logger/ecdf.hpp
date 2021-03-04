@@ -222,7 +222,7 @@ namespace ioh
         public:
             /** Base interface  @{ */
             //! Not used, but part of the interface.
-            void track_suite(const std::string &name) override
+            void track_suite(const std::string&) override
             {
                 clear();
             }
@@ -306,7 +306,7 @@ namespace ioh
 
                 assert(
                     _range_evals.min() <= log_info.evaluations && log_info.evaluations <= _range_evals.max());
-                const auto j_evals = _range_evals.index(log_info.evaluations);
+                const auto j_evals = _range_evals.index(static_cast<double>(log_info.evaluations));
 
                 // Fill up the dominated quadrant of the attainment matrix with ones
                 // (either the upper/upper || lower/lower, depending on if it's

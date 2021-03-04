@@ -2,7 +2,7 @@
 
 
 #include <algorithm>
-#include <ctime>
+#include <chrono>
 #include <cmath>
 #include <iostream>
 #include <iterator>
@@ -247,12 +247,12 @@ namespace ioh {
 
             auto n = static_cast<int>(s.size());
             for (auto i = 0; i < n; ++i) {
-                if (s[i][0] == '-') {
+                if (s.at(i).at(0) == '-') {
                     /// The condition beginning with "-m"
                     if (i != 0)
                         log::error("Format error in configuration.");
                     else {
-                        tmp = s[i].substr(1);
+                        tmp = s.at(i).substr(1);
                         if (tmp.find('-') != std::string::npos)
                             log::error("Format error in configuration.");
 
@@ -264,7 +264,7 @@ namespace ioh {
                         for (auto value = min; value <= tmp_value; ++value)
                             result.push_back(value);
                     }
-                } else if (s[i][s[i].length() - 1] == '-') {
+                } else if (s.at(i).at(s.at(i).length() - 1) == '-') {
                     /// The condition endding with "n-"
 
                     if (i != n - 1)
@@ -328,7 +328,7 @@ namespace ioh {
          */
         template <typename ... Args>
         std::string string_format(const std::string &format, Args ... args) {
-            const size_t size = snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
+            const size_t size = snprintf(nullptr, size_t{ 0 }, format.c_str(), args ...) + 1; // Extra space for '\0'
             if (size <= 0) {
                 throw std::runtime_error("Error during formatting.");
             }
@@ -425,7 +425,7 @@ namespace ioh {
              * \return The value stored in the container
              */
             [[nodiscard]]
-            int get_bool(const std::string &section,
+            bool get_bool(const std::string &section,
                          const std::string &key) const {
                 return nice(get(section, key)) == "true";
             }
@@ -461,25 +461,26 @@ namespace ioh {
             /**
              * \brief The start time of the timer
              */
-            std::clock_t start_time_;
+            using Clock = std::chrono::high_resolution_clock;
+
+            Clock::time_point start_time_;
+            
         public:
             /**
              * \brief Constructs a timer, sets start time
              * \param info_msg The value for \ref info_msg_ 
              */
             explicit CpuTimer(std::string info_msg = "")
-                : info_msg_(std::move(info_msg)), start_time_(std::clock()) {
+                : info_msg_(std::move(info_msg)), start_time_(Clock::now()) {
             }
 
             /**
              * \brief Destructs a timer, prints time elapsed to stdout
              */
             ~CpuTimer() {
-                const auto end_time = std::clock();
-                std::cout << info_msg_ << "CPU Time: "
-                    << std::to_string(
-                        1000.0 * (end_time - start_time_) / CLOCKS_PER_SEC)
-                    << "ms" << std::endl;
+                std::cout << info_msg_ << "CPU Time: " << 
+                    std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - start_time_).count()
+                    << "ms" << std::endl; 
             }
         };
     }

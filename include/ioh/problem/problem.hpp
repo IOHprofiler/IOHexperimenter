@@ -34,10 +34,34 @@ namespace ioh
                 return true;
             }
 
-            [[nodiscard]]
-            virtual bool check_input(const std::vector<T>& x)
+            template <typename Integer = T>
+            typename std::enable_if<std::is_integral<Integer>::value, bool>::type check_input(const std::vector<T>& x)
             {
                 return check_input_dimensions(x);
+            }
+
+            template <typename Floating = T>
+            typename std::enable_if<std::is_floating_point<Floating>::value, bool>::type check_input(
+                const std::vector<T>& x)
+            {
+                if (!check_input_dimensions(x))
+                    return false;
+
+                if (common::all_finite(x))
+                    return true;
+
+                if (common::has_nan(x))
+                {
+                    common::log::warning("The solution contains NaN.");
+                    return false;
+                }
+                if (common::has_inf(x))
+                {
+                    common::log::warning("The solution contains Inf.");
+                    return false;
+                }
+                common::log::warning("The solution contains invalid values.");
+                return false;
             }
 
             [[nodiscard]]
@@ -161,7 +185,6 @@ namespace ioh
             }
         };
 
-
         template <typename T>
         using Function = std::function<std::vector<double>(const std::vector<T> &)>;
 
@@ -200,50 +223,25 @@ namespace ioh
         };
 
         template <typename T>
-        WrappedProblem<T> wrap_function(Function<T> f, const std::string &name, const int n_variables,
+        WrappedProblem<T> wrap_function(Function<T> f, const std::string &name, const int n_variables = 5,
                                         const int n_objectives = 1,
                                         const common::OptimizationType optimization_type =
                                             common::OptimizationType::Minimization,
                                         Constraint<T> constraint = Constraint<T>())
         {
-            ProblemFactoryType<Problem<T>>::instance().include(name, 0, [=](const int instance, const int dimension)
+            ProblemFactoryType<Problem<T>>::instance().include(name, 0, [=](const int, const int dimension)
             {
                 return std::make_unique<WrappedProblem<T>>(f, name, dimension, n_objectives, optimization_type);
             });
             return WrappedProblem<T>{f, name, n_variables, n_objectives, optimization_type, constraint};
         }
 
-       
-    
-        
         using Real = Problem<double>;
         using Integer = Problem<int>;
 
         template<typename ProblemType>
         class RealProblem : public Real, AutomaticProblemRegistration<ProblemType, Real>
         {
-        protected:
-            bool check_input(const std::vector<double>& x) override
-            {
-                if (!check_input_dimensions(x))
-                    return false;
-                
-                if (common::all_finite(x))
-                    return true;
-                
-                if (common::has_nan(x))
-                {
-                    common::log::warning("The solution contains NaN.");
-                    return false;
-                }
-                if (common::has_inf(x))
-                {
-                    common::log::warning("The solution contains Inf.");
-                    return false;
-                }
-                common::log::warning("The solution contains invalid values.");
-                return false;
-            }
         public:
             using Real::Real;
         };

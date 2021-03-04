@@ -246,7 +246,7 @@ namespace ioh::logger
             store_positions_(store_positions),
             experiment_folder_(std::move(output_directory), folder_name),
             info_file_(std::move(algorithm_name), std::move(algorithm_info)),
-            data_files_(trigger_on_improvement(), trigger_always(),
+            data_files_(trigger_on_improvement(), trigger_always() || store_positions,
                         trigger_at_time_points() || trigger_at_time_range(),
                         trigger_at_interval())
         {

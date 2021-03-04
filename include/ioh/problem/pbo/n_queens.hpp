@@ -26,7 +26,7 @@ namespace ioh
                     if (floor(sqrt(static_cast<double>(meta_data_.n_variables))) != sqrt(static_cast<double>(meta_data_.n_variables)))
                         common::log::error("Number of parameters in the N Queen problem must be a square number");
 
-                    for (auto index = 0; index < meta_data_.n_variables; index++)
+                    for (; index < meta_data_.n_variables; index++)
                     {
                         if (x[index] == 1)
                         {

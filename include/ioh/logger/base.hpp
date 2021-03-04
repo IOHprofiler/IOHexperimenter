@@ -22,6 +22,8 @@ namespace ioh {
             virtual void log(const LogInfo& log_info) = 0;
 
             virtual void flush() = 0;
+
+            virtual ~Base() = default;
         };
     }
 }

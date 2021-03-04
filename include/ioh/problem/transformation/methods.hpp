@@ -20,7 +20,7 @@ namespace ioh {
                 inline void transform_vars_xor(std::vector<int> &x,
                                                const int seed) {
                     std::vector<double> random_x;
-                    const int n = x.size();
+                    const auto n = static_cast<int>(x.size());
                     common::Random::uniform(n, seed, random_x);
 
                     for (auto i = 0; i < n; ++i) {
@@ -42,23 +42,23 @@ namespace ioh {
                     std::vector<int> &x, const int seed) {
                     std::vector<int> index;
                     std::vector<double> random_x;
-                    const int N = x.size();
+                    const auto n = static_cast<int>(x.size());
 
                     const auto copy_x = x;
 
-                    index.reserve(N);
-                    for (auto i = 0; i != N; ++i) {
+                    index.reserve(n);
+                    for (auto i = 0; i != n; ++i) {
                         index.push_back(i);
                     }
 
-                    common::Random::uniform(N, seed, random_x);
-                    for (auto i = 0; i != N; ++i) {
-                        const auto t = static_cast<int>(floor(random_x[i] * N));
+                    common::Random::uniform(n, seed, random_x);
+                    for (auto i = 0; i != n; ++i) {
+                        const auto t = static_cast<int>(floor(random_x[i] * n));
                         const auto temp = index[0];
                         index[0] = index[t];
                         index[t] = temp;
                     }
-                    for (auto i = 0; i < N; ++i) {
+                    for (auto i = 0; i < n; ++i) {
                         x[i] = sigma_compute(copy_x, index[i]);
                     }
                 }

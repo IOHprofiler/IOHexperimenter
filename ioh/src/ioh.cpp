@@ -1,67 +1,31 @@
-#include <pybind11/pybind11.h>
-#include "ioh.hpp"
-
-
-#define STRINGIFY(x) #x
-#define MACRO_STRINGIFY(x) STRINGIFY(x)
-
-int add(int i, int j) {
-    return i + j;
-}
+#include <pybind11/pybind11.h> 
 
 namespace py = pybind11;
 
-struct Pet {
-    Pet(const std::string &name) : name(name) { }
-    std::string name;
-};
+void init_problem(py::module& m);
+void init_suite(py::module& m);
+void init_logger(py::module& m);
+void init_experimenter(py::module& m);
 
-struct Dog : Pet {
-    Dog(const std::string &name) : Pet(name) { }
-    std::string bark() const { return "woof!"; }
-};
+PYBIND11_MAKE_OPAQUE(std::vector<double>);
+PYBIND11_MAKE_OPAQUE(std::vector<float>);
+PYBIND11_MAKE_OPAQUE(std::vector<int>);
 
 PYBIND11_MODULE(iohcpp, m) {
     m.doc() = R"pbdoc(
-        Pybind11 example plugin
-        -----------------------
-
-        .. currentmodule:: cmake_example
-
-        .. autosummary::
-           :toctree: _generate
-
-           add
-           subtract
+        IOHExperimenter Python Interface
     )pbdoc";
 
-    m.def("add", &add, R"pbdoc(
-        Add two numbers
+    auto m_problem = m.def_submodule("problem", "IOHExperimenter problems");
+    auto m_suite = m.def_submodule("suite", "IOHExperimenter suites");
+    auto m_logger = m.def_submodule("logger", "IOHExperimenter logger");
+    auto m_experimenter = m.def_submodule("experimenter", "IOHExperimenter experimenter");
 
-        Some other explanation about the add function.
-    )pbdoc");
+    init_logger(m_logger);
+    init_problem(m_problem);
+    init_suite(m_suite);
+    
+    init_experimenter(m_experimenter);
 
-    m.def("subtract", [](int i, int j) { return i - j; }, R"pbdoc(
-        Subtract two numbers
-
-        Some other explanation about the subtract function.
-    )pbdoc");
-
-    m.def("to_lower", &ioh::common::to_lower, "make a string to lowercase");
-
-    py::class_<Pet>(m, "Pet")
-        .def(py::init<const std::string &>())
-        .def_readwrite("name", &Pet::name);
-
-    // Method 1: template parameter:
-    py::class_<Dog, Pet /* <- specify C++ parent type */>(m, "Dog")
-        .def(py::init<const std::string &>())
-        .def("bark", &Dog::bark);
-
-
-#ifdef VERSION_INFO
-    rotation_matrix.attr("__version__") = MACRO_STRINGIFY(VERSION_INFO);
-#else
     m.attr("__version__") = "dev";
-#endif
 }

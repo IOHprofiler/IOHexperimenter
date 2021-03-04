@@ -30,19 +30,19 @@ namespace ioh
 
                         std::vector<int> sampled_number;
                         std::vector<int> population;
-                        for (auto i = 0; i < n; ++i)
+                        for (auto j = 0; j < n; ++j)
                         {
-                            population.push_back(i);
+                            population.push_back(j);
                         }
 
-                        for (auto i = n - 1; i > 0; --i)
+                        for (auto i1 = n - 1; i1 > 0; --i1)
                         {
-                            const auto rand_pos = static_cast<int>(floor(rand_vec[n - 1 - i] * (i + 1)));
-                            const auto temp = population[i];
-                            population[i] = population[rand_pos];
+                            const auto rand_pos = static_cast<int>(floor(rand_vec[n - 1 - i1] * (i1 + 1)));
+                            const auto temp = population[i1];
+                            population[i1] = population[rand_pos];
                             population[rand_pos] = temp;
-                            sampled_number.push_back(population[i]);
-                            if (n - i - 1 == k - 1)
+                            sampled_number.push_back(population[i1]);
+                            if (n - i1 - 1 == k - 1)
                             {
                                 break;
                             }

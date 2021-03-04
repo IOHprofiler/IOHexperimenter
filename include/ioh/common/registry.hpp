@@ -5,6 +5,11 @@
 
 namespace ioh::common
 {
+    static int get_next_id(const std::vector<int>& ids)
+    {
+        return ids.empty() ? 1 : (*std::max_element(ids.begin(), ids.end())) + 1;
+    }
+
     template <class AbstractType, typename ...Args>
     struct Factory
     {
@@ -17,11 +22,13 @@ namespace ioh::common
             return f;
         }
 
-        void include(const std::string name, const int id, Creator creator)
+        void include(const std::string name, int id, Creator creator)
         {
             assert(map.find(name) == std::end(map));
             map[name] = std::move(creator);
-            assert(id_map.find(id) == std::end(id_map));
+            const auto known_ids = ids();
+            const auto it = std::find(known_ids.begin(), known_ids.end(), id);
+            id = it == known_ids.end() ? id : get_next_id(known_ids);
             id_map[id] = name;
         }
 
@@ -41,13 +48,7 @@ namespace ioh::common
             return keys;
         }
 
-        [[nodiscard]]
-        std::unordered_map<int, std::string> name_to_id() const
-        {
-            return id_map;
-        }
-
-        [[nodiscard]] std::unordered_map<int, std::string> numeric_id_map() const
+        [[nodiscard]] std::unordered_map<int, std::string> name_to_id() const
         {
             return id_map;
         }
@@ -59,7 +60,7 @@ namespace ioh::common
             assert(entry != std::end(map));
             return entry->second(std::forward<Args>(params)...);
         }
-
+        
         [[nodiscard]]
         Type create(const int id, Args ... params) const
         {
@@ -76,10 +77,7 @@ namespace ioh::common
     };
 
 
-    static int get_next_id(const std::vector<int> &ids)
-    {
-        return ids.empty() ? 1 : (*std::max_element(ids.begin(), ids.end())) + 1;
-    }
+   
 
     template <bool IsProblem>
     struct IdGetter
@@ -90,11 +88,9 @@ namespace ioh::common
     struct IdGetter<true>
     {
         template <typename T>
-        static int get_id(const std::vector<int> &ids)
+        static int get_id(const std::vector<int>&)
         {
-            const auto problem_id = T(1, 1).meta_data().problem_id;
-            const auto it = std::find(ids.begin(), ids.end(), problem_id);
-            return it == ids.end() ? problem_id : get_next_id(ids);
+            return T(1, 1).meta_data().problem_id;
         }
     };
 
@@ -102,7 +98,7 @@ namespace ioh::common
     struct IdGetter<false>
     {
         template <typename T>
-        static int get_id(const std::vector<int> &ids)
+        static int get_id(const std::vector<int>& ids)
         {
             return get_next_id(ids);
         }

@@ -2,16 +2,17 @@
 
 #include "ioh/common.hpp"
 
-namespace ioh {
-    namespace problem {
-
+namespace ioh
+{
+    namespace problem
+    {
         template <typename T>
         struct Solution
         {
             std::vector<T> x;
             std::vector<double> y;
 
-            friend std::ostream& operator<<(std::ostream& os, const Solution& obj)
+            friend std::ostream &operator<<(std::ostream &os, const Solution &obj)
             {
                 return os
                     << "x: " << common::vector_to_string(obj.x)
@@ -31,16 +32,16 @@ namespace ioh {
             }
 
             explicit Constraint(const int size = 1,
-                const T upper = std::numeric_limits<T>::max(),
-                const T lower = std::numeric_limits<T>::lowest()
-            ) :
+                                const T upper = std::numeric_limits<T>::max(),
+                                const T lower = std::numeric_limits<T>::lowest()
+                ) :
                 Constraint(std::vector<T>(size, upper), std::vector<T>(size, lower))
             {
             }
 
             void check_size(const int s)
             {
-                if (ub.size() == lb.size() == size_t{ 1 })
+                if (ub.size() == lb.size() == size_t{1})
                 {
                     ub = std::vector<T>(s, ub.at(0));
                     lb = std::vector<T>(s, lb.at(0));
@@ -50,15 +51,15 @@ namespace ioh {
                     std::cout << "Bound dimension is wrong" << std::endl;
             }
 
-            bool check(const std::vector<T>& x)
+            bool check(const std::vector<T> &x)
             {
                 for (auto i = 0; i < x.size(); i++)
-                    if (!(lb.at(i) >= x.at(i) <= lb.at(i)))
+                    if (!(lb.at(i) >= x.at(i) && x.at(i) <= lb.at(i)))
                         return false;
                 return true;
             }
 
-            friend std::ostream& operator<<(std::ostream& os, const Constraint& obj)
+            friend std::ostream &operator<<(std::ostream &os, const Constraint &obj)
             {
                 os << "[ ";
                 for (auto i = 0; i < obj.ub.size(); i++)
@@ -79,9 +80,9 @@ namespace ioh {
             double initial_objective_value{};
 
             MetaData(const int problem_id, const int instance, std::string name, const int n_variables,
-                const int n_objectives,
-                const common::OptimizationType optimization_type = common::OptimizationType::Minimization
-            ) :
+                     const int n_objectives,
+                     const common::OptimizationType optimization_type = common::OptimizationType::Minimization
+                ) :
                 instance(instance),
                 problem_id(problem_id),
                 name(std::move(name)),
@@ -94,14 +95,14 @@ namespace ioh {
             {
             }
 
-            MetaData(const int instance, const std::string& name, const int n_variables, const int n_objectives = 1,
-                const common::OptimizationType optimization_type = common::OptimizationType::Minimization
-            ) :
+            MetaData(const int instance, const std::string &name, const int n_variables, const int n_objectives = 1,
+                     const common::OptimizationType optimization_type = common::OptimizationType::Minimization
+                ) :
                 MetaData(0, instance, name, n_variables, n_objectives, optimization_type)
             {
             }
 
-            friend std::ostream& operator<<(std::ostream& os, const MetaData& obj)
+            friend std::ostream &operator<<(std::ostream &os, const MetaData &obj)
             {
                 os << obj.name;
                 if (obj.problem_id != 0)
@@ -148,7 +149,7 @@ namespace ioh {
                 optimum_found = false;
             }
 
-            void update(const MetaData& meta_data, const Solution<T>& objective)
+            void update(const MetaData &meta_data, const Solution<T> &objective)
             {
                 ++evaluations;
                 if (common::compare_objectives(current.y, current_best.y, meta_data.optimization_type))
@@ -161,7 +162,7 @@ namespace ioh {
                 }
             }
 
-            friend std::ostream& operator<<(std::ostream& os, const State& obj)
+            friend std::ostream &operator<<(std::ostream &os, const State &obj)
             {
                 return os
                     << "evaluations: " << obj.evaluations
@@ -170,10 +171,13 @@ namespace ioh {
             }
         };
 
-        namespace utils {
+
+        namespace utils
+        {
             static std::vector<int> dummy(int number_of_variables,
                                           double select_rate,
-                                          long inseed) {
+                                          long inseed)
+            {
                 std::vector<int> position;
                 std::vector<int> random_index;
                 std::vector<double> random_numbers;
@@ -181,20 +185,23 @@ namespace ioh {
                     static_cast<double>(number_of_variables * select_rate)));
 
                 position.reserve(number_of_variables);
-                for (auto i = 0; i != number_of_variables; ++i) {
+                for (auto i = 0; i != number_of_variables; ++i)
+                {
                     position.push_back(i);
                 }
 
                 common::Random::uniform(static_cast<size_t>(select_num), inseed,
                                         random_numbers);
-                for (auto i = 0; i < select_num; ++i) {
+                for (auto i = 0; i < select_num; ++i)
+                {
                     random_index.
                         push_back(
                             static_cast<int>(floor(
                                 random_numbers[i] * 1e4 / 1e4 *
                                 number_of_variables)));
                 }
-                for (auto i = 0; i != select_num; ++i) {
+                for (auto i = 0; i != select_num; ++i)
+                {
                     const auto temp = position[i];
                     position[i] = position[random_index[i]];
                     position[random_index[i]] = temp;
@@ -204,14 +211,16 @@ namespace ioh {
                 sort(position.begin(), position.begin() + select_num);
 
                 random_index.clear();
-                for (auto i = 0; i != select_num; ++i) {
+                for (auto i = 0; i != select_num; ++i)
+                {
                     random_index.push_back(position[i]);
                 }
                 return random_index;
             }
 
             static std::vector<int> neutrality(
-                const std::vector<int> &variables, int mu) {
+                const std::vector<int> &variables, int mu)
+            {
                 const auto number_of_variables = static_cast<int>(variables.size());
                 const auto n = static_cast<int>(floor(
                     static_cast<double>(number_of_variables) / static_cast<
@@ -220,12 +229,17 @@ namespace ioh {
 
                 new_variables.reserve(n);
                 auto i = 0, temp = 0;
-                while (i != number_of_variables) {
+                while (i != number_of_variables)
+                {
                     temp += variables[i];
-                    if ((i + 1) % mu == 0 && i != 0) {
-                        if (temp >= mu / 2.0) {
+                    if ((i + 1) % mu == 0 && i != 0)
+                    {
+                        if (temp >= mu / 2.0)
+                        {
                             new_variables.push_back(1);
-                        } else {
+                        }
+                        else
+                        {
                             new_variables.push_back(0);
                         }
                         temp = 0;
@@ -237,21 +251,29 @@ namespace ioh {
             }
 
             static std::vector<int> epistasis(const std::vector<int> &variables,
-                                              int v) {
+                                              int v)
+            {
                 int epistasis_result;
                 const auto number_of_variables = static_cast<int>(variables.size());
                 std::vector<int> new_variables;
                 new_variables.reserve(number_of_variables);
                 auto h = 0;
-                while (h + v - 1 < number_of_variables) {
+                while (h + v - 1 < number_of_variables)
+                {
                     auto i = 0;
-                    while (i < v) {
+                    while (i < v)
+                    {
                         epistasis_result = -1;
-                        for (auto j = 0; j < v; ++j) {
-                            if (v - j - 1 != (v - i - 1 - 1) % 4) {
-                                if (epistasis_result == -1) {
+                        for (auto j = 0; j < v; ++j)
+                        {
+                            if (v - j - 1 != (v - i - 1 - 1) % 4)
+                            {
+                                if (epistasis_result == -1)
+                                {
                                     epistasis_result = variables[j + h];
-                                } else {
+                                }
+                                else
+                                {
                                     epistasis_result =
                                         epistasis_result != variables[j + h];
                                 }
@@ -262,16 +284,23 @@ namespace ioh {
                     }
                     h += v;
                 }
-                if (number_of_variables - h > 0) {
+                if (number_of_variables - h > 0)
+                {
                     v = static_cast<int>(number_of_variables) - h;
                     auto i = 0;
-                    while (i < v) {
+                    while (i < v)
+                    {
                         epistasis_result = -1;
-                        for (auto j = 0; j < v; ++j) {
-                            if (v - j - 1 != (v - i - 1 - 1) % 4) {
-                                if (epistasis_result == -1) {
+                        for (auto j = 0; j < v; ++j)
+                        {
+                            if (v - j - 1 != (v - i - 1 - 1) % 4)
+                            {
+                                if (epistasis_result == -1)
+                                {
                                     epistasis_result = variables[h + j];
-                                } else {
+                                }
+                                else
+                                {
                                     epistasis_result =
                                         epistasis_result != variables[h + j];
                                 }
@@ -285,52 +314,75 @@ namespace ioh {
                 return new_variables;
             }
 
-            static double ruggedness1(double y, int number_of_variables) {
+            static double ruggedness1(double y, int number_of_variables)
+            {
                 double ruggedness_y;
                 const auto s = static_cast<double>(number_of_variables);
-                if (y == s) {
+                if (y == s)
+                {
                     ruggedness_y = ceil(y / 2.0) + 1.0;
-                } else if (y < s && number_of_variables % 2 == 0) {
+                }
+                else if (y < s && number_of_variables % 2 == 0)
+                {
                     ruggedness_y = floor(y / 2.0) + 1.0;
-                } else if (y < s && number_of_variables % 2 != 0) {
+                }
+                else if (y < s && number_of_variables % 2 != 0)
+                {
                     ruggedness_y = ceil(y / 2.0) + 1.0;
-                } else {
+                }
+                else
+                {
                     ruggedness_y = y;
                     assert(y <= s);
                 }
                 return ruggedness_y;
             }
 
-            static double ruggedness2(double y, int number_of_variables) {
+            static double ruggedness2(double y, int number_of_variables)
+            {
                 double ruggedness_y;
                 const auto tempy = static_cast<int>(y + 0.5);
-                if (tempy == number_of_variables) {
+                if (tempy == number_of_variables)
+                {
                     ruggedness_y = y;
-                } else if (tempy < number_of_variables && tempy % 2 == 0 &&
-                           number_of_variables % 2 == 0) {
+                }
+                else if (tempy < number_of_variables && tempy % 2 == 0 &&
+                    number_of_variables % 2 == 0)
+                {
                     ruggedness_y = y + 1.0;
-                } else if (tempy < number_of_variables && tempy % 2 == 0 &&
-                           number_of_variables % 2 != 0) {
+                }
+                else if (tempy < number_of_variables && tempy % 2 == 0 &&
+                    number_of_variables % 2 != 0)
+                {
                     ruggedness_y = y - 1.0 > 0 ? y - 1.0 : 0;
-                } else if (tempy < number_of_variables && tempy % 2 != 0 &&
-                           number_of_variables % 2 == 0) {
+                }
+                else if (tempy < number_of_variables && tempy % 2 != 0 &&
+                    number_of_variables % 2 == 0)
+                {
                     ruggedness_y = y - 1.0 > 0 ? y - 1.0 : 0;
-                } else if (tempy < number_of_variables && tempy % 2 != 0 &&
-                           number_of_variables % 2 != 0) {
+                }
+                else if (tempy < number_of_variables && tempy % 2 != 0 &&
+                    number_of_variables % 2 != 0)
+                {
                     ruggedness_y = y + 1.0;
-                } else {
+                }
+                else
+                {
                     ruggedness_y = y;
                     assert(tempy <= number_of_variables);
                 }
                 return ruggedness_y;
             }
 
-            static std::vector<double> ruggedness3(int number_of_variables) {
+            static std::vector<double> ruggedness3(int number_of_variables)
+            {
                 std::vector<double> ruggedness_fitness(
                     number_of_variables + 1, 0.0);
 
-                for (auto j = 1; j <= number_of_variables / 5; ++j) {
-                    for (auto k = 0; k < 5; ++k) {
+                for (auto j = 1; j <= number_of_variables / 5; ++j)
+                {
+                    for (auto k = 0; k < 5; ++k)
+                    {
                         ruggedness_fitness[number_of_variables - 5 * j + k] =
                             static_cast<double>(
                                 number_of_variables -
@@ -340,7 +392,8 @@ namespace ioh {
                 }
                 for (auto k = 0;
                      k < number_of_variables - number_of_variables / 5 * 5; ++k
-                ) {
+                )
+                {
                     ruggedness_fitness[k] = static_cast<double>(
                         number_of_variables - number_of_variables / 5 * 5 - 1 -
                         k);
@@ -349,9 +402,8 @@ namespace ioh {
                     number_of_variables);
                 return ruggedness_fitness;
             }
-
-            /// Following is the w-model soure code from Raphael's work, which refer the source code of Thomas Weise.
-
+#if 0
+            // Following is the w-model soure code from Raphael's work, which refer the source code of Thomas Weise.
             static void layer_neutrality_compute(const std::vector<int> &xIn,
                                                  std::vector<int> &xOut,
                                                  const int mu) {
@@ -419,7 +471,7 @@ namespace ioh {
                     base_epistasis(xIn, i, static_cast<int>(length - i), xOut);
                 }
             }
-
+            
             static void layer_epistasis_compute(const std::vector<int> &x,
                                                 std::vector<int> &epistasis_x,
                                                 const int block_size) {
@@ -457,22 +509,22 @@ namespace ioh {
                 j--;
                 for (i = 1; i <= upper; i++) {
                     j = j - 1;
-
+            
                     if (j > 0) {
                         const auto t = r[j];
                         r[j] = r[q];
                         r[q] = t;
                     }
                 }
-
+            
                 std::vector<int> r2(1 + q, 0);
                 for (i = 0; i <= q; i++) { r2[i] = q - r[q - i]; }
                 return r2;
             }
-
+            
             static int ruggedness_translate(int gamma, int q) {
                 int j, k;
-
+            
                 if (gamma <= 0) {
                     return 0;
                 }
@@ -483,33 +535,34 @@ namespace ioh {
                     j = abs(
                         static_cast<int>((q + 2) * 0.5 - sqrt(
                                              q * q * 0.25 + 1 - g)));
-
+            
                     k = g - (q + 2) * j + j * j + q;
                     return k + 1 + (((q + 2) * j - j * j - q - 1) << 1) - (j - 1);
                 }
-
+            
                 j = abs(static_cast<int>((q % 2 + 1) * 0.5
                                          + sqrt(
                                              (1 - q % 2) * 0.25 + g - 1 -
                                              lastUpper)));
-
+            
                 k = g - ((j - q % 2) * (j - 1) + 1 + lastUpper);
-
+            
                 return max - k - (2 * j * j - j) - q % 2 * (-2 * j + 1);
             }
 
 
-            // static double layer_compute_ruggedness(const double y, int dimension, int gamma) {
-            //     auto r = ruggedness_raw(ruggedness_translate(gamma, dimension),
-            //                             dimension);
-            //     const double result = r[static_cast<int>(y)];
-            //
-            //     /*for(i=0;i<dimension+1;i++){fprintf(stderr,"%d ",r[i]);}fprintf(stderr,"\n");
-            //   
-            //     fprintf(stderr,"dim %d val %f, result %f\n",dimension,y,result);*/
-            //     assert(result <= static_cast<double>(dimension));
-            //     return result;
-            // }
+            static double layer_compute_ruggedness(const double y, int dimension, int gamma) {
+                auto r = ruggedness_raw(ruggedness_translate(gamma, dimension),
+                                        dimension);
+                const double result = r[static_cast<int>(y)];
+            
+                /*for(i=0;i<dimension+1;i++){fprintf(stderr,"%d ",r[i]);}fprintf(stderr,"\n");
+              
+                fprintf(stderr,"dim %d val %f, result %f\n",dimension,y,result);*/
+                assert(result <= static_cast<double>(dimension));
+                return result;
+            }
+#endif
         }
     }
 }
