@@ -3,8 +3,6 @@
 #include "ioh.hpp"
 
 
-
-
 TEST(ecdf, example)
 {
 	using namespace ioh::problem;

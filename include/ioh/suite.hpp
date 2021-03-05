@@ -173,6 +173,12 @@ namespace ioh::suite
         {
             return name_;
         }
+
+        [[nodiscard]]
+        size_t size() const
+        {
+            return problem_ids_.size() * instances_.size() * dimensions_.size();
+        }
     };
 
     template <typename ProblemType>

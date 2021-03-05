@@ -139,7 +139,7 @@ namespace ioh
             std::vector<double> operator()(const std::vector<T> &x)
             {
                 if (!check_input(x)) 
-                    return std::vector<double>(meta_data_.n_objectives, std::numeric_limits<T>::signaling_NaN());
+                    return std::vector<double>(meta_data_.n_objectives, std::numeric_limits<double>::signaling_NaN());
 
                 state_.current.x = x;
                 state_.current_internal.x = transform_variables(x);
