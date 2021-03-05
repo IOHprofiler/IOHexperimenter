@@ -257,14 +257,14 @@ namespace ioh
                     _current.has_opt = !log_info.objective.y.empty();
                     if(_current.has_opt)
                     {
-                        common::log::info(
-                            "Problem has known optimal, will compute the ECDF of the error.");
+                        // common::log::info(
+                        //     "Problem has known optimal, will compute the ECDF of the error.");
                         _current.opt = log_info.objective.y;
                     }
                     else
                     {
-                        common::log::info(
-                            "Problem has no known optimal, will compute the absolute ECDF.");
+                        // common::log::info(
+                            // "Problem has no known optimal, will compute the absolute ECDF.");
                     }
                     // mono-objective only
                     assert(_current.opt.size() == 1);

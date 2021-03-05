@@ -15,11 +15,11 @@ void show_registered_objects()
 
         std::cout << "Registered Real Problems:\n";
 
-        for (auto &[id, name] : problem_factory.name_to_id())
+        for (auto &[id, name] : problem_factory.map())
             std::cout << id << ", " << name << std::endl;
 
         std::cout << "\nRegistered Real Suites:\n";
-        for (auto &[id, name] : suite_factory.name_to_id())
+        for (auto &[id, name] : suite_factory.map())
             std::cout << id << ", " << name << std::endl;
     }
     {
@@ -28,11 +28,11 @@ void show_registered_objects()
 
         std::cout << "\nRegistered Integer Problems:\n";
 
-        for (auto &[id, name] : problem_factory.name_to_id())
+        for (auto &[id, name] : problem_factory.map())
             std::cout << id << ", " << name << std::endl;
 
         std::cout << "\nRegistered Integer Suites:\n";
-        for (auto &[id, name] : suite_factory.name_to_id())
+        for (auto &[id, name] : suite_factory.map())
             std::cout << id << ", " << name << std::endl;
     }
 }

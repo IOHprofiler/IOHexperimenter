@@ -75,21 +75,22 @@ namespace ioh {
              * for N = independent_runs_ repeated runs.
              */
             void run() {
-                const auto t_timer = common::CpuTimer("Total ");
-                std::cout << *this << std::endl;
+                // const auto t_timer = common::CpuTimer("Total ");
+                // std::cout << *this << std::endl;
 
                 suite_ ->attach_logger(*logger_);
                 for (const auto& p : *suite_)
                 {
                     const auto p_timer = common::CpuTimer();
-                    std::cout << *p << std::endl;
+                    // std::cout << *p << std::endl;
                     for (auto count = 0; count < independent_runs_; ++count)
                     {
                         algorithm_(p);
                         p->reset();
-                        std::cout << "." << std::flush;
+                        // std::cout << "." << std::flush;
                     }
                 }
+                logger_->flush();
             }
 
             /**

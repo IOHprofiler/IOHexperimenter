@@ -24,18 +24,23 @@ namespace ioh::common
 
         void include(const std::string name, int id, Creator creator)
         {
-            assert(map.find(name) == std::end(map));
-            map[name] = std::move(creator);
-            const auto known_ids = ids();
-            const auto it = std::find(known_ids.begin(), known_ids.end(), id);
-            id = it == known_ids.end() ? id : get_next_id(known_ids);
-            id_map[id] = name;
+            const auto already_defined = name_map.find(name) != std::end(name_map);
+            assert(!already_defined);
+            name_map[name] = std::move(creator);
+            if(!already_defined)
+            {
+                const auto known_ids = ids();
+                const auto it = std::find(known_ids.begin(), known_ids.end(), id);
+                id = it == known_ids.end() ? id : get_next_id(known_ids);
+                id_map[id] = name;
+            }
+            
         }
 
         [[nodiscard]] std::vector<std::string> names() const
         {
             std::vector<std::string> keys;
-            for (const auto &[fst, snd] : map)
+            for (const auto &[fst, snd] : name_map)
                 keys.push_back(fst);
             return keys;
         }
@@ -48,7 +53,7 @@ namespace ioh::common
             return keys;
         }
 
-        [[nodiscard]] std::unordered_map<int, std::string> name_to_id() const
+        [[nodiscard]] std::unordered_map<int, std::string> map() const
         {
             return id_map;
         }
@@ -56,8 +61,8 @@ namespace ioh::common
         [[nodiscard]]
         Type create(const std::string id, Args ... params) const
         {
-            const auto entry = map.find(id);
-            assert(entry != std::end(map));
+            const auto entry = name_map.find(id);
+            assert(entry != std::end(name_map));
             return entry->second(std::forward<Args>(params)...);
         }
         
@@ -72,7 +77,7 @@ namespace ioh::common
     private:
         Factory() = default;
         Factory(const Factory &) = delete;
-        std::unordered_map<std::string, Creator> map;
+        std::unordered_map<std::string, Creator> name_map;
         std::unordered_map<int, std::string> id_map;
     };
 

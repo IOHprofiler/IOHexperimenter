@@ -49,7 +49,7 @@ void define_factory(py::module &m, const std::string &name)
     py::class_<Factory>(m, name.c_str(), py::buffer_protocol())
         .def("names", &Factory::names)
         .def("ids", &Factory::ids)
-        .def("name_to_id", &Factory::name_to_id)
+        .def("map", &Factory::map)
         .def("create", py::overload_cast<const int, int, int>(&Factory::create, py::const_),
              py::return_value_policy::reference)
         .def("create", py::overload_cast<const std::string, int, int>(&Factory::create, py::const_),
@@ -133,10 +133,10 @@ void define_base_class(py::module &m, const std::string &name)
         .def("__call__", &ProblemType::operator())
         .def_static("factory", &Factory::instance, py::return_value_policy::reference)
         .def_property_readonly("log_info", &ProblemType::log_info)
-        .def_property_readonly("state", &ProblemType::meta_data)
+        .def_property_readonly("state", &ProblemType::state)
         .def_property_readonly("meta_data", &ProblemType::meta_data)
         .def_property_readonly("objective", &ProblemType::objective)
-        .def_property_readonly("constraint", &ProblemType::state)
+        .def_property_readonly("constraint", &ProblemType::constraint)
         .def("__repr__", [=](const ProblemType &p)
         {
             using namespace ioh::common;
@@ -150,15 +150,16 @@ template <typename T>
 void define_wrapper_functions(py::module &m, const std::string &class_name, const std::string &function_name)
 {
     using WrappedProblem = WrappedProblem<T>;
-    py::class_<WrappedProblem, Problem<T>, std::shared_ptr<WrappedProblem>>(
-        m, class_name.c_str(), py::buffer_protocol());
-    m.def(function_name.c_str(), &wrap_function<double>,
+    py::class_<WrappedProblem, Problem<T>, std::shared_ptr<WrappedProblem>>(m, class_name.c_str(), py::buffer_protocol());
+    m.def(function_name.c_str(), &wrap_function<T>,
           py::arg("f"),
           py::arg("name"),
           py::arg("n_variables") = 5,
           py::arg("n_objectives") = 1,
           py::arg("optimization_type") = ioh::common::OptimizationType::Minimization,
-          py::arg("constraint") = Constraint<T>(5));
+          py::arg("constraint") = Constraint<T>(5),
+          py::return_value_policy::reference
+        );
 }
 
 void define_helper_classes(py::module &m)
@@ -198,7 +199,11 @@ void define_helper_classes(py::module &m)
 
 void define_pbo_problems(py::module& m)
 {
-    py::class_<PBO, Integer, std::shared_ptr<PBO>>(m, "PBO");
+
+    define_factory<PBO>(m, "PBOFactory");
+    py::class_<PBO, Integer, std::shared_ptr<PBO>>(m, "PBO")
+        .def_static("factory", &ioh::common::Factory<PBO, int, int>::instance, py::return_value_policy::reference)
+    ;
     py::class_<pbo::OneMax, Integer, std::shared_ptr<pbo::OneMax>>(m, "OneMax", py::is_final())
         .def(py::init<int, int>());
     py::class_<pbo::LeadingOnes, Integer, std::shared_ptr<pbo::LeadingOnes>>(m, "LeadingOnes", py::is_final())
@@ -251,7 +256,10 @@ void define_pbo_problems(py::module& m)
 
 void define_bbob_problems(py::module& m)
 {
-    py::class_<BBOB, Real, std::shared_ptr<BBOB>>(m, "BBOB");
+    define_factory<BBOB>(m, "BBOBFactory");
+    py::class_<BBOB, Real, std::shared_ptr<BBOB>>(m, "BBOB")
+        .def_static("factory", &ioh::common::Factory<BBOB, int, int>::instance, py::return_value_policy::reference)
+    ;
     py::class_<bbob::Sphere, Real, std::shared_ptr<bbob::Sphere>>(m, "Sphere", py::is_final())
         .def(py::init<int, int>());
     py::class_<bbob::Ellipsoid, Real, std::shared_ptr<bbob::Ellipsoid>>(m, "Ellipsoid", py::is_final())
