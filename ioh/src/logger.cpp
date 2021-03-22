@@ -14,10 +14,10 @@ void define_logger(py::module &m)
     py::implicitly_convertible<std::string, fs::path>();
 
     py::class_<Base, std::shared_ptr<Base>>(m, "Base")
-        .def("track_problem", &Base::track_problem)
-        .def("track_suite", &Base::track_suite)
-        .def("log", &Base::log)
-        .def("flush", &Base::flush);
+        .def("track_problem", &Base::track_problem, "Track a specific problem with this logger.")
+        .def("track_suite", &Base::track_suite, "Track a specific suite with this logger")
+        .def("log", &Base::log, "Log the specified data.")
+        .def("flush", &Base::flush, "Flush the logger (finishes all open file-writing actions).");
     
     py::class_<LoggerCombine, Base, std::shared_ptr<LoggerCombine>>(m, "LoggerCombine")
         .def(py::init<Base&>())

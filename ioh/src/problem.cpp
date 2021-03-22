@@ -12,8 +12,8 @@ void define_solution(py::module &m, const std::string &name)
     using Class = Solution<T>;
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<std::vector<T>, std::vector<double>>())
-        .def_readonly("x", &Class::x)
-        .def_readonly("y", &Class::y);
+        .def_readonly("x", &Class::x, "The coordinates in the searchspace.")
+        .def_readonly("y", &Class::y, "The fitness value.");
 }
 
 template <typename T>
@@ -23,12 +23,12 @@ void define_state(py::module &m, const std::string &name)
     using Class2 = Solution<T>;
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<Class2>())
-        .def_readonly("evaluations", &Class::evaluations)
-        .def_readonly("optimum_found", &Class::optimum_found)
-        .def_readonly("current_best_internal", &Class::current_best_internal)
-        .def_readonly("current_best", &Class::current_best)
-        .def_readonly("current_internal", &Class::current_internal)
-        .def_readonly("current", &Class::current);
+        .def_readonly("evaluations", &Class::evaluations, "The number of times the problem has been evaluated so far.")
+        .def_readonly("optimum_found", &Class::optimum_found, "Boolean indicating whether or not the optimum has been found.")
+        .def_readonly("current_best_internal", &Class::current_best_internal, "The internal representation of the best so far solution.")
+        .def_readonly("current_best", &Class::current_best, "The current best-so-far solution.")
+        .def_readonly("current_internal", &Class::current_internal, "The internal representation of the last-evaluated solution.")
+        .def_readonly("current", &Class::current, "The last-evaluated solution.");
 }
 
 template <typename T>
@@ -37,9 +37,9 @@ void define_constraint(py::module &m, const std::string &name)
     using Class = Constraint<T>;
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<std::vector<T>, std::vector<T>>())
-        .def_readonly("ub", &Class::ub)
-        .def_readonly("lb", &Class::lb)
-        .def("check", &Class::check);
+        .def_readonly("ub", &Class::ub, "The upper bound (boxconstraint)")
+        .def_readonly("lb", &Class::lb, "The lower bound (boxconstraint)")
+        .def("check", &Class::check, "Check if a point is inside the bounds or not.");
 }
 
 template <typename T>
@@ -127,16 +127,16 @@ void define_base_class(py::module &m, const std::string &name)
              py::arg("instance") = 1,
              py::arg("is_minimization") = true,
              py::arg("constraint") = Constraint<T>(5))
-        .def("reset", &ProblemType::reset)
-        .def("attach_logger", &ProblemType::attach_logger)
-        .def("detach_logger", &ProblemType::detach_logger)
-        .def("__call__", &ProblemType::operator())
-        .def_static("factory", &Factory::instance, py::return_value_policy::reference)
-        .def_property_readonly("log_info", &ProblemType::log_info)
-        .def_property_readonly("state", &ProblemType::state)
-        .def_property_readonly("meta_data", &ProblemType::meta_data)
-        .def_property_readonly("objective", &ProblemType::objective)
-        .def_property_readonly("constraint", &ProblemType::constraint)
+        .def("reset", &ProblemType::reset, "Reset all state-variables of the problem.")
+        .def("attach_logger", &ProblemType::attach_logger, "Attach a logger to the problem to allow performance tracking.")
+        .def("detach_logger", &ProblemType::detach_logger, "Remove the specified logger from the problem.")
+        .def("__call__", &ProblemType::operator(), "Evaluate the problem.")
+        .def_static("factory", &Factory::instance, py::return_value_policy::reference, "A factory method to get the relevant problem. Recommended is to use the 'get_problem'-function instead.")
+        .def_property_readonly("log_info", &ProblemType::log_info, "Check what data is being sent to the logger.")
+        .def_property_readonly("state", &ProblemType::state, "The current state of the problem: all variables which change during the optimization procedure.")
+        .def_property_readonly("meta_data", &ProblemType::meta_data, "The meta-data of the problem: these variables are static during the lifetime of the problem.")
+        .def_property_readonly("objective", &ProblemType::objective, "The optimal point and value for the current instanciation of the problem.")
+        .def_property_readonly("constraint", &ProblemType::constraint, "The constraints (bounds) of the problem.")
         .def("__repr__", [=](const ProblemType &p)
         {
             using namespace ioh::common;
