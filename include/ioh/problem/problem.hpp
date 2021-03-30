@@ -17,6 +17,7 @@ namespace ioh
             State<T> state_;
             Solution<T> objective_;
             logger::Base *logger_{};
+            logger::LogInfo log_info_;
 
             [[nodiscard]]
             bool check_input_dimensions(const std::vector<T>& x)
@@ -26,7 +27,7 @@ namespace ioh
                     common::log::warning("The solution is empty.");
                     return false;
                 }
-                if (x.size() != meta_data_.n_variables)
+                if (x.size() != static_cast<size_t>(meta_data_.n_variables))
                 {
                     common::log::warning("The dimension of solution is incorrect.");
                     return false;
@@ -82,13 +83,17 @@ namespace ioh
 
         public:
             explicit Problem(MetaData meta_data, Constraint<T> constraint, Solution<T> objective) :
-                meta_data_(std::move(meta_data)), constraint_(std::move(constraint)), objective_(std::move(objective))
+                meta_data_(std::move(meta_data)), constraint_(std::move(constraint)),
+                objective_(std::move(objective))
             {
                 state_ = {{
                     std::vector<T>(meta_data_.n_variables, std::numeric_limits<T>::signaling_NaN()),
                     std::vector<double>(meta_data_.n_objectives, meta_data_.initial_objective_value)
                 }};
                 constraint_.check_size(meta_data_.n_variables);
+
+                log_info_.objective = objective_.as_double();
+                log_info_.current = state_.current.as_double();
             }
 
             explicit Problem(MetaData meta_data, Constraint<T> constraint = Constraint<T>()):
@@ -110,17 +115,22 @@ namespace ioh
                     logger_->track_problem(meta_data_);
             }
 
-            [[nodiscard]]
-            virtual logger::LogInfo log_info() const
+            /**
+             * \brief Update the current log info
+             */
+            virtual void update_log_info()
             {
-                return {
-                    static_cast<size_t>(state_.evaluations),
-                    state_.current_best_internal.y.at(0),
-                    state_.current.y.at(0),
-                    state_.current_best.y.at(0),
-                    {std::vector<double>(state_.current.x.begin(), state_.current.x.end()), state_.current.y},
-                    {std::vector<double>(objective_.x.begin(), objective_.x.end()), objective_.y}
-                };
+                log_info_.evaluations = static_cast<size_t>(state_.evaluations);
+                log_info_.y_best = state_.current_best_internal.y.at(0);
+                log_info_.transformed_y = state_.current.y.at(0);
+                log_info_.transformed_y_best = state_.current_best.y.at(0);
+                log_info_.current = state_.current.as_double();
+            }
+
+            [[nodiscard]]
+            logger::LogInfo& log_info()
+            {
+                return log_info_;
             }
 
             void attach_logger(logger::Base &logger)
@@ -147,7 +157,10 @@ namespace ioh
                 state_.current.y = transform_objectives(state_.current_internal.y);
                 state_.update(meta_data_, objective_);
                 if (logger_ != nullptr)
+                {
+                    update_log_info();
                     logger_->log(log_info());
+                }                    
                 return state_.current.y;
             }
 

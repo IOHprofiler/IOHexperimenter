@@ -18,6 +18,11 @@ namespace ioh
                     << "x: " << common::vector_to_string(obj.x)
                     << " y: " << common::vector_to_string(obj.y);
             }
+
+            Solution<double> as_double() const 
+            {
+                return { std::vector<double>(x.begin(), x.end()), y };
+            }
         };
 
         template <typename T>
