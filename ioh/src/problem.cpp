@@ -10,8 +10,18 @@ template <typename T>
 void define_solution(py::module &m, const std::string &name)
 {
     using Class = Solution<T>;
+    
+    py::options options;
+    options.disable_function_signatures();
+    
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<std::vector<T>, std::vector<double>>())
+        .def(py::init<std::vector<T>, std::vector<double>>(), R"pbdoc(
+            Initialize a Solution object using its coordinates and fitness.
+            
+            Parameters:
+                x: the coordinates in the searchspace
+                y: the coordinates in the objective space (fitness value)
+        )pbdoc")
         .def_readonly("x", &Class::x, "The coordinates in the searchspace.")
         .def_readonly("y", &Class::y, "The fitness value.");
 }
@@ -35,11 +45,20 @@ template <typename T>
 void define_constraint(py::module &m, const std::string &name)
 {
     using Class = Constraint<T>;
+    
+    py::options options;
+    options.disable_function_signatures();
+    
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<std::vector<T>, std::vector<T>>())
         .def_readonly("ub", &Class::ub, "The upper bound (boxconstraint)")
         .def_readonly("lb", &Class::lb, "The lower bound (boxconstraint)")
-        .def("check", &Class::check, "Check if a point is inside the bounds or not.");
+        .def("check", &Class::check, R"pbdoc(
+            Check if a point is inside the bounds or not.
+            
+            Parameters:
+                x: The point for which to check the boundary conditions
+        )pbdoc");
 }
 
 template <typename T>
@@ -118,7 +137,10 @@ void define_base_class(py::module &m, const std::string &name)
     using PyProblem = PyProblem<ProblemType, T>;
     using Factory = ioh::common::Factory<ProblemType, int, int>;
     define_factory<ProblemType>(m, name + "Factory");
-
+    
+    py::options options;
+    options.disable_function_signatures();
+    
     py::class_<ProblemType, PyProblem, std::shared_ptr<ProblemType>>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<const std::string, int, int, int, bool, Constraint<T>>(),
              py::arg("name"),
@@ -127,10 +149,27 @@ void define_base_class(py::module &m, const std::string &name)
              py::arg("instance") = 1,
              py::arg("is_minimization") = true,
              py::arg("constraint") = Constraint<T>(5))
-        .def("reset", &ProblemType::reset, "Reset all state-variables of the problem.")
-        .def("attach_logger", &ProblemType::attach_logger, "Attach a logger to the problem to allow performance tracking.")
-        .def("detach_logger", &ProblemType::detach_logger, "Remove the specified logger from the problem.")
-        .def("__call__", &ProblemType::operator(), "Evaluate the problem.")
+        .def("reset", &ProblemType::reset, R"pbdoc(
+            Reset all state-variables of the problem.
+        )pbdoc")
+        .def("attach_logger", &ProblemType::attach_logger, R"pbdoc(
+            Attach a logger to the problem to allow performance tracking.
+            
+            Parameters:
+                logger: A logger-object from the IOHexperimenter 'logger' module.
+        )pbdoc")
+        .def("detach_logger", &ProblemType::detach_logger, R"pbdoc(
+            Remove the specified logger from the problem.
+            
+            Parameters:
+                logger: A logger-object from the IOHexperimenter 'logger' module.
+        )pbdoc")
+        .def("__call__", &ProblemType::operator(), R"pbdoc(
+            Evaluate the problem.
+            
+            Parameters:
+                x: a 1-dimensional array / list of size equal to the dimension of this problem
+        )pbdoc")
         .def_static("factory", &Factory::instance, py::return_value_policy::reference, "A factory method to get the relevant problem. Recommended is to use the 'get_problem'-function instead.")
         .def_property_readonly("log_info", &ProblemType::log_info, "Check what data is being sent to the logger.")
         .def_property_readonly("state", &ProblemType::state, "The current state of the problem: all variables which change during the optimization procedure.")
@@ -179,22 +218,22 @@ void define_helper_classes(py::module &m)
 
     py::class_<MetaData>(m, "MetaData")
         .def(py::init<int, int, std::string, int, int, ioh::common::OptimizationType>())
-        .def_readonly("instance", &MetaData::instance)
-        .def_readonly("problem_id", &MetaData::problem_id)
-        .def_readonly("name", &MetaData::name)
-        .def_readonly("optimization_type", &MetaData::optimization_type)
-        .def_readonly("n_variables", &MetaData::n_variables)
-        .def_readonly("n_objectives", &MetaData::n_objectives)
-        .def_readonly("initial_objective_value", &MetaData::initial_objective_value);
+        .def_readonly("instance", &MetaData::instance, "The instance number of the current problem")
+        .def_readonly("problem_id", &MetaData::problem_id, "The id of the problem within its suite")
+        .def_readonly("name", &MetaData::name, "The name of the current problem")
+        .def_readonly("optimization_type", &MetaData::optimization_type, "The type of problem (maximization or minimization)")
+        .def_readonly("n_variables", &MetaData::n_variables, "The number of variables (dimension) of the current problem")
+        .def_readonly("n_objectives", &MetaData::n_objectives, "The number of objectives of the current problem")
+        .def_readonly("initial_objective_value", &MetaData::initial_objective_value); //  What does this variable mean?
 
     py::class_<ioh::logger::LogInfo>(m, "LogInfo")
         .def(py::init<size_t, double, double, double, Solution<double>, Solution<double>>())
-        .def_readonly("evaluations", &ioh::logger::LogInfo::evaluations)
-        .def_readonly("y_best", &ioh::logger::LogInfo::y_best)
-        .def_readonly("transformed_y", &ioh::logger::LogInfo::transformed_y)
-        .def_readonly("transformed_y_best", &ioh::logger::LogInfo::transformed_y_best)
-        .def_readonly("current", &ioh::logger::LogInfo::current)
-        .def_readonly("objective", &ioh::logger::LogInfo::objective);
+        .def_readonly("evaluations", &ioh::logger::LogInfo::evaluations, "The number of evaluations performed on the current problem so far")
+        .def_readonly("y_best", &ioh::logger::LogInfo::y_best, "The best fitness value found so far")
+        .def_readonly("transformed_y", &ioh::logger::LogInfo::transformed_y, "The internal representation of the current fitness value")
+        .def_readonly("transformed_y_best", &ioh::logger::LogInfo::transformed_y_best, "The internal representation of the best-so-far fitness")
+        .def_readonly("current", &ioh::logger::LogInfo::current, "The fitness of the last evaluated solution")
+        .def_readonly("objective", &ioh::logger::LogInfo::objective, "The best possible fitness value");
 }
 
 void define_pbo_problems(py::module& m)

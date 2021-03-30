@@ -14,9 +14,26 @@ void define_logger(py::module &m)
     py::implicitly_convertible<std::string, fs::path>();
 
     py::class_<Base, std::shared_ptr<Base>>(m, "Base")
-        .def("track_problem", &Base::track_problem, "Track a specific problem with this logger.")
-        .def("track_suite", &Base::track_suite, "Track a specific suite with this logger")
-        .def("log", &Base::log, "Log the specified data.")
+        .def("track_problem", &Base::track_problem, R"pbdoc(
+            Track a specific problem with this logger.
+            
+            Parameters:
+                problem: An IOHexperimenter problem object 
+        )pbdoc")
+        .def("track_suite", &Base::track_suite, R"pbdoc(
+            Track a specific suite with this logger.
+            
+            Parameters:
+                problem: An IOHexperimenter suite object 
+        )pbdoc")
+        .def("log", &Base::log, R"pbdoc(
+            Log the specified data.
+            
+            Parameters:
+                logInfo: The loginfo object, structured as (number of evalutions, 
+                transformed_fitness, best_so_far_transformed_fitness, last evaluated solution,
+                objective solution)
+        )pbdoc")
         .def("flush", &Base::flush, "Flush the logger (finishes all open file-writing actions).");
     
     py::class_<LoggerCombine, Base, std::shared_ptr<LoggerCombine>>(m, "LoggerCombine")
