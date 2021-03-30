@@ -10,14 +10,14 @@ template <typename T>
 void define_solution(py::module &m, const std::string &name)
 {
     using Class = Solution<T>;
-    
+
     py::options options;
     options.disable_function_signatures();
-    
+
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<std::vector<T>, std::vector<double>>(), R"pbdoc(
             Initialize a Solution object using its coordinates and fitness.
-            
+
             Parameters:
                 x: the coordinates in the searchspace
                 y: the coordinates in the objective space (fitness value)
@@ -45,18 +45,19 @@ template <typename T>
 void define_constraint(py::module &m, const std::string &name)
 {
     using Class = Constraint<T>;
-    
+
     py::options options;
     options.disable_function_signatures();
-    
+
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<std::vector<T>, std::vector<T>>())
-        .def_readonly("ub", &Class::ub, "The upper bound (boxconstraint)")
-        .def_readonly("lb", &Class::lb, "The lower bound (boxconstraint)")
+        .def_readonly("ub", &Class::ub, "The upper bound (box constraint)")
+        .def_readonly("lb", &Class::lb, "The lower bound (box constraint)")
         .def("check", &Class::check, R"pbdoc(
             Check if a point is inside the bounds or not.
-            
-            Parameters:
+
+            Parameters
+            ----------
                 x: The point for which to check the boundary conditions
         )pbdoc");
 }
@@ -137,10 +138,10 @@ void define_base_class(py::module &m, const std::string &name)
     using PyProblem = PyProblem<ProblemType, T>;
     using Factory = ioh::common::Factory<ProblemType, int, int>;
     define_factory<ProblemType>(m, name + "Factory");
-    
+
     py::options options;
     options.disable_function_signatures();
-    
+
     py::class_<ProblemType, PyProblem, std::shared_ptr<ProblemType>>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<const std::string, int, int, int, bool, Constraint<T>>(),
              py::arg("name"),
@@ -154,20 +155,23 @@ void define_base_class(py::module &m, const std::string &name)
         )pbdoc")
         .def("attach_logger", &ProblemType::attach_logger, R"pbdoc(
             Attach a logger to the problem to allow performance tracking.
-            
-            Parameters:
+
+            Parameters
+            ----------
                 logger: A logger-object from the IOHexperimenter 'logger' module.
         )pbdoc")
         .def("detach_logger", &ProblemType::detach_logger, R"pbdoc(
             Remove the specified logger from the problem.
-            
-            Parameters:
+
+            Parameters
+            ----------
                 logger: A logger-object from the IOHexperimenter 'logger' module.
         )pbdoc")
         .def("__call__", &ProblemType::operator(), R"pbdoc(
             Evaluate the problem.
-            
-            Parameters:
+
+            Parameters
+            ----------
                 x: a 1-dimensional array / list of size equal to the dimension of this problem
         )pbdoc")
         .def_static("factory", &Factory::instance, py::return_value_policy::reference, "A factory method to get the relevant problem. Recommended is to use the 'get_problem'-function instead.")
@@ -238,16 +242,53 @@ void define_helper_classes(py::module &m)
 
 void define_pbo_problems(py::module& m)
 {
-
     define_factory<PBO>(m, "PBOFactory");
-    py::class_<PBO, Integer, std::shared_ptr<PBO>>(m, "PBO")
+    py::class_<PBO, Integer, std::shared_ptr<PBO>>(
+        m, "PBO",
+        R"pbdoc(
+            Pseudo-Boolean Optimization (PBO) problem set, which contains 25 test functions taking
+            their domain on {0, 1}^n, where n is the length of bitstrings.
+
+            In PBO, we cover some theory-motivated function, e.g., OneMax and LeadingOnes
+            as well as others with more practical relevance, e.g., the NK Landscape [DoerrYHWSB20].
+            We also utilized the so-called W-model for generating/enriching the problem set [WeiseW18].
+
+            Reference
+            ---------
+            [DoerrYHWSB20] Carola Doerr, Furong Ye, Naama Horesh, Hao Wang, Ofer M. Shir, and Thomas Bäck.
+            "Benchmarking discrete optimization heuristics with IOHprofiler." Applied Soft Computing 88 (2020): 106027.
+
+            [WeiseW18] Thomas Weise and Zijun Wu. "Difficult features of combinatorial optimization problems and
+            the tunable w-model benchmark problem for simulating them." In Proceedings of the Genetic
+            and Evolutionary Computation Conference Companion, pp. 1769-1776. 2018.
+
+        )pbdoc"
+    )
         .def_static("factory", &ioh::common::Factory<PBO, int, int>::instance, py::return_value_policy::reference)
     ;
-    py::class_<pbo::OneMax, Integer, std::shared_ptr<pbo::OneMax>>(m, "OneMax", py::is_final())
+    py::class_<pbo::OneMax, Integer, std::shared_ptr<pbo::OneMax>>(
+        m, "OneMax", py::is_final(),
+        R"pbdoc(
+            OneMax:
+            {0,1}^n → [0..n], x ↦ ∑_{i=1}^n x_i.
+
+        )pbdoc")
         .def(py::init<int, int>());
-    py::class_<pbo::LeadingOnes, Integer, std::shared_ptr<pbo::LeadingOnes>>(m, "LeadingOnes", py::is_final())
+    py::class_<pbo::LeadingOnes, Integer, std::shared_ptr<pbo::LeadingOnes>>(
+        m, "LeadingOnes", py::is_final(),
+        R"pbdoc(
+            LeadingOnes:
+            {0,1}^n → [0..n], x ↦ max{i∈[0..n] ∣ ∀j≤i: x_j=1}
+
+        )pbdoc")
         .def(py::init<int, int>());
-    py::class_<pbo::Linear, Integer, std::shared_ptr<pbo::Linear>>(m, "Linear", py::is_final())
+    py::class_<pbo::Linear, Integer, std::shared_ptr<pbo::Linear>>(
+        m, "Linear", py::is_final(),
+        R"pbdoc(
+            A Linear Function with Harmonic Weights:
+            {0,1}^n → ℝ, x ↦ ∑_i i * x_i
+
+        )pbdoc")
         .def(py::init<int, int>());
     py::class_<pbo::OneMaxDummy1, Integer, std::shared_ptr<pbo::OneMaxDummy1>>(m, "OneMaxDummy1", py::is_final())
         .def(py::init<int, int>());
@@ -277,7 +318,14 @@ void define_pbo_problems(py::module& m)
         .def(py::init<int, int>());
     py::class_<pbo::LeadingOnesRuggedness3, Integer, std::shared_ptr<pbo::LeadingOnesRuggedness3>>(m, "LeadingOnesRuggedness3", py::is_final())
         .def(py::init<int, int>());
-    py::class_<pbo::LABS, Integer, std::shared_ptr<pbo::LABS>>(m, "LABS", py::is_final())
+    py::class_<pbo::LABS, Integer, std::shared_ptr<pbo::LABS>>(
+        m, "LABS", py::is_final(),
+        R"pbdoc(
+            Low Autocorrelation Binary Sequences (LABS):
+            x ↦ n^2 / 2∑_{k=1}^{n-1}(∑_{i=1}^{n−k}s_is_{i+k})^2, where s_i = 2x_i − 1
+
+        )pbdoc"
+    )
         .def(py::init<int, int>());
     py::class_<pbo::IsingRing, Integer, std::shared_ptr<pbo::IsingRing>>(m, "IsingRing", py::is_final())
         .def(py::init<int, int>());
@@ -296,7 +344,35 @@ void define_pbo_problems(py::module& m)
 void define_bbob_problems(py::module& m)
 {
     define_factory<BBOB>(m, "BBOBFactory");
-    py::class_<BBOB, Real, std::shared_ptr<BBOB>>(m, "BBOB")
+    py::class_<BBOB, Real, std::shared_ptr<BBOB>>(
+        m, "BBOB",
+        R"pbdoc(
+            Black-Box Optimization Benchmarking (BBOB) problem set, which contains 24 noiseless
+            real-valued test functions supported on [-5, 5]^n, where n is the dimensionality.
+
+            This problem was orginally proposed by Hansen et. al. in [FinckHRA10] and was implemented
+            as the core component of the COmparing Continous Optimizer (COCO) platform [HansenARMTB20].
+
+            We took the implementation of those 24 functions in
+            https://github.com/numbbo/coco/tree/master/code-experiments/src (v2.2)
+            and adopted those to our framework.
+
+            We have acknowledged and specified in our license file
+            https://github.com/IOHprofiler/IOHexperimenter/blob/master/LICENSE.md
+            the usage and modification to the COCO/BBOB sources.
+
+            Reference
+            ---------
+            [HansenARMTB20] Nikolaus Hansen, Anne Auger, Dimo Brockhoff, Raymond Ros, Olaf Mersmann,
+            Tea Tusar, and Dimo Brockhoff. "COCO: A platform for comparing continuous optimizers in
+            a black-box setting." Optimization Methods and Software (2020): 1-31.
+
+            [FinckHRA10] Steffen Finck, Nikolaus Hansen, Raymond Ros, and Anne Auger.
+            "Real-parameter black-box optimization benchmarking 2009: Presentation of the noiseless functions."
+            Technical Report 2009/20, Research Center PPE, 2009. Updated February, 2010.
+
+        )pbdoc"
+    )
         .def_static("factory", &ioh::common::Factory<BBOB, int, int>::instance, py::return_value_policy::reference)
     ;
     py::class_<bbob::Sphere, Real, std::shared_ptr<bbob::Sphere>>(m, "Sphere", py::is_final())
