@@ -20,8 +20,8 @@ option(BUILD_DOCS "Build docs" OFF)
 if(MSVC)
     set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windows
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT") 
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd ")
 endif()  
  
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU") 
@@ -44,6 +44,11 @@ endif()
 
 add_library(ioh INTERFACE)
 add_library(ioh::ioh ALIAS ioh)
+
+#Include external formatting lib
+add_subdirectory(${EXTERNAL_DIR}/fmt)
+target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
+
 
 
 # Add Python Library
@@ -81,7 +86,7 @@ configure_package_config_file(
     ${CMAKE_CURRENT_BINARY_DIR}/ioh-config.cmake
 INSTALL_DESTINATION
     ${CMAKE_INSTALL_LIBDIR}/cmake/ioh
-)
+) 
 
 write_basic_package_version_file(
     ${CMAKE_CURRENT_BINARY_DIR}/ioh-config-version.cmake
@@ -93,7 +98,7 @@ write_basic_package_version_file(
 # Define installation rules.
 include(GNUInstallDirs)
 
-install(TARGETS ioh
+install(TARGETS ioh fmt-header-only
     EXPORT ioh-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -145,4 +150,6 @@ endif()
 if(BUILD_PYTHON_PACKAGE)
     add_subdirectory(ioh)
 endif()
+
+
 

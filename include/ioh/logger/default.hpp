@@ -1,5 +1,8 @@
 #pragma once
 
+#include <fmt/format.h>
+#include <fmt/compile.h>
+
 #include "base.hpp"
 #include "observer.hpp"
 #include "ioh/problem/problem.hpp"
@@ -333,30 +336,31 @@ namespace ioh::logger
         void log(const LogInfo& log_info) override 
         {
             const auto improvement_found = improvement_trigger(log_info.transformed_y, problem_meta_->optimization_type);
-            
+
             data_files_.update_triggers({
                 improvement_found,
                 time_points_trigger(log_info.evaluations) || time_range_trigger(log_info.evaluations),
                 interval_trigger(log_info.evaluations)
-            });
-            
+                });
+
             // We can do this with pointers, more efficient
-            last_logged_line_ = common::string_format("%d %f %f %f %f", log_info.evaluations, 
-                    log_info.current.y.at(0), log_info.y_best, log_info.transformed_y,
+            last_logged_line_ = fmt::format(FMT_COMPILE("{} {:f} {:f} {:f} {:f}"), log_info.evaluations,
+                log_info.current.y.at(0), log_info.y_best, log_info.transformed_y,
                 log_info.transformed_y_best);
-            for (const auto &e : data_files_.logged_attributes_)
-                last_logged_line_ += common::string_format(" %f", *e.second);
+
+
+            for (const auto& e : data_files_.logged_attributes_)
+                last_logged_line_ += fmt::format(FMT_COMPILE(" {:f}"), *e.second);
 
             if (store_positions_)
-               for (const auto & xi: log_info.current.x)
-                   last_logged_line_ += common::string_format(" %f", xi);
+                last_logged_line_ += fmt::format(FMT_COMPILE(" {}"), fmt::join(log_info.current.x, " "));
 
             last_logged_line_ += "\n";
-            
+
             data_files_ << last_logged_line_;
-            
+
             if (improvement_found)
-                info_file_.best_point_ = { log_info.current.y.at(0), log_info.transformed_y, log_info.evaluations};
+                info_file_.best_point_ = { log_info.current.y.at(0), log_info.transformed_y, log_info.evaluations };
         } 
 
         [[nodiscard]] common::file::UniqueFolder &experiment_folder()

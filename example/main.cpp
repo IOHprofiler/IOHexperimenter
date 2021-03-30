@@ -108,6 +108,7 @@ std::vector<double> f(const std::vector<double>&)
 
 int main()
 {
+    ioh::common::CpuTimer t;
     // show_registered_objects();
     // test_logger();
     // test_ecdf();
@@ -115,19 +116,25 @@ int main()
 
     using RealFactory = ioh::problem::ProblemFactoryType<ioh::problem::Real>;
     RealFactory& factory = RealFactory::instance();
+    //
+    std::vector<double> x0{ 0.1, 1., 2., 4., 5.4 };
+    // const std::vector<double> x1{ 0.1, 1., 2., 4., std::numeric_limits<double>::signaling_NaN()};
+    // ioh::problem::wrap_function<double>(f, "f");
 
-    const std::vector<double> x0{ 0.1, 1., 2., 4., 5.4 };
-    const std::vector<double> x1{ 0.1, 1., 2., 4., std::numeric_limits<double>::signaling_NaN()};
-    ioh::problem::wrap_function<double>(f, "f");
+    const auto p1 = factory.create("Sphere", 1, 5);
+    // const auto p2 = factory.create("f", 1, 15);
 
-    const auto p1 = factory.create("f", 1, 5);
-    const auto p2 = factory.create("f", 1, 15);
-
-    auto l = ioh::logger::Default(std::string("data"), "a", "info", true);
+    auto l = ioh::logger::Default(std::string("data"), "a", "info");
     p1->attach_logger(l);
+    
+    for(auto i = 1 ; i < 100000; i++)
+    {
+        x0[4] /= i;
+        (*p1)(x0).at(0);
+    }
+        
 
-    std::cout << (*p1)(x0).at(0) << std::endl;
-    std::cout << (*p2)(x0).at(0) << std::endl;
-    std::cout << (*p1)(x1).at(0) << std::endl;
-    std::cout << " done";
+    std::cout << l.experiment_folder();
+    std::cout << " done\n";
+
 }

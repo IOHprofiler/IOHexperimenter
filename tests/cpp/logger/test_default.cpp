@@ -69,8 +69,10 @@ TEST(logger, default) {
     cases[1] = { header + "\n1 5.637287 5.637287 85.117287 85.117287\n", get_dat_path(l_folder.path(),  p) };
     cases[2] = { header + "\n1 28268.397464 28268.397464 28304.297464 28304.297464\n", get_dat_path(l_folder.path(),  p2) };
 
-    for (const auto&[data, path]: cases) 
-        ASSERT_EQ(0, get_file_as_string(path).compare(data + data));
+    for (const auto&[data, path]: cases)
+        ASSERT_EQ(0, get_file_as_string(path).compare(data + data)) << "EXPECTED:\n" <<
+            data + data << "\nGOT:\n" << get_file_as_string(path);
+        
     //
     l_folder.remove();
     ASSERT_TRUE(!fs::exists(l_folder.path()));
