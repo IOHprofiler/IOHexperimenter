@@ -3,11 +3,12 @@ try:
 
 from itertools import product
 from functools import partial
-from multiprocessing import cpu_count
+from multiprocessing import cpu_count, Pool
 import numpy as np
        
 def get_problem(fid, iid, dim, suite = "BBOB"):
-    '''Instansiate a problem based on its function ID, dimension, instance and suite
+    '''Instantiate a problem based on its function ID, dimension, instance and suite
+    
     Parameters
     ----------
     fid:
@@ -31,43 +32,6 @@ def get_problem(fid, iid, dim, suite = "BBOB"):
     else:
         raise Exception("This suite is not yet supported")    
 
-def runParallelFunction(runFunction, arguments, parallel_config = None):
-    """
-        Return the output of runFunction for each set of arguments,
-        making use of as much parallelization as possible on this system
-        :param runFunction: The function that can be executed in parallel
-        :param arguments:   List of tuples, where each tuple are the arguments
-                            to pass to the function
-        :param force_single:Force the run to be single-threaded, ignoring all settings from IOH_config
-        :param timeout:     How many seconds each execution get before being stopped. 
-                            Only used when running in parallel without mpi.
-        :return:
-    """
-    if parallel_config is None:
-        return runSingleThreaded(runFunction, arguments)    
-
-    if parallel_config['evaluate_parallel']:
-        if parallel_config['use_MPI']:
-            return runMPI(runFunction, arguments)
-        elif parallel_config['use_pebble']:
-            return runPebblePool(
-                runFunction, arguments, 
-                timeout = parallel_config['timeout'], 
-                num_threads = parallel_config['num_threads']
-            )
-        elif parallel_config['use_joblib']:
-            return runJoblib(
-                runFunction, arguments, 
-                num_threads = parallel_config['num_threads']
-            )
-        else:
-            return runPool(
-                runFunction, arguments, 
-                num_threads = parallel_config['num_threads']
-            )
-    else:
-        return runSingleThreaded(runFunction, arguments)
-
 # Inline function definition to allow the passing of multiple arguments to 'runFunction' through 'Pool.map'
 def func_star(a_b, func):
     """Convert `f([1,2])` to `f(1,2)` call."""
@@ -84,52 +48,12 @@ def runPool(runFunction, arguments, num_threads = None):
         num_threads = cpu_count()
     arguments = list(arguments)
     print(f"Running pool with {min(num_threads, len(arguments))} threads")
-    from multiprocessing import Pool
     p = Pool(min(num_threads, len(arguments)))
 
     local_func = partial(func_star, func=runFunction)
     results = p.map(local_func, arguments)
     p.close()
     return results
-
-def runPebblePool(runfunction, arguments, timeout = 30, num_threads = None):
-    from pebble import ProcessPool
-    from concurrent.futures import TimeoutError
-    
-    if num_threads is None:
-        num_threads = cpu_count()
-    
-    arguments = list(arguments)
-    
-    print(f"Running pebble pool with {min(num_threads, len(arguments))} threads")
-
-    
-    def task_done(future):
-        try:
-            future.result()  # blocks until results are ready
-        except TimeoutError as error:
-            print("Function took longer than %d seconds" % error.args[1])
-        except Exception as error:
-            print("Function raised %s" % error)
-            print(error)  # traceback of the function
-            
-    with ProcessPool(max_workers = min(num_threads, len(arguments)), max_tasks = len(arguments)) as pool:
-        for x in arguments:
-            if type(x) is not list and type(x) is not tuple:
-                x = [x]
-            future = pool.schedule(runfunction, args=x, timeout=timeout)
-            future.add_done_callback(task_done)
-
-def runJoblib(runFunction, arguments, num_threads = None):
-    from joblib import delayed, Parallel
-    
-    if num_threads is None:
-        num_threads = cpu_count()
-#     arguments = list(arguments)
-#     print(f"Running joblib with {min(num_threads, len(arguments))} threads")
-    local_func = partial(func_star, func=runFunction)
-
-    return Parallel(n_jobs = num_threads)(delayed(local_func)(arg) for arg in arguments)
 
 def runSingleThreaded(runFunction, arguments):
     """
@@ -142,13 +66,6 @@ def runSingleThreaded(runFunction, arguments):
     print("Running single-threaded")
     for arg in arguments:
         results.append(runFunction(*arg))
-    return results
-
-def runMPI(runFunction, arguments):
-    from schwimmbad import MPIPool
-    print("Running using MPI")
-    with MPIPool() as pool:
-        results = pool.map(runFunction, arguments)
     return results
         
 def _run_default(alg, fid, dim, iid, precision, suite, repetitions, observing,
@@ -304,30 +221,18 @@ class IOHexperimenter():
         self.foldername = foldername
         self.observing = True
         
-    def set_parallel(self, parallel, version = "joblib", timeout = 30, num_threads = None):
+    def set_parallel(self, parallel, n_threads = None):
         '''Set the parallellization options for the experiments
         
         Parameters
         ----------
         parallel:
             Boolean. Whether or not to use parallell execution
-        version:
-            Which parallellization library to use. Options are:
-                - 'multiprocessing'
-                - 'MPI' (using the schwimmbad library)
-                - 'joblib' (recommended) 
-                - 'pebble' (can timeout functions which take too long)
-        num_threads:
+        n_threads:
             How many threads to use. Defaults to all available ones from 'cpu_count'
-        timeout:
-            If using pebble, this sets the timeout in seconds after which to cancel the execution
         '''
-        self.parallel_settings = {
-            "evaluate_parallel" : parallel, "use_MPI" : version == "MPI", 
-            "use_pebble" : version == "pebble", "timeout" : timeout, 
-            "use_joblib" : version == "joblib",
-            "num_threads" : num_threads if num_threads is not None else cpu_count()
-        }
+        self.parallel = parallel
+        self.num_threads = num_threads if num_threads is not None else cpu_count()
         
     def set_logger_options(self, dat = True, cdat = False, idat = 0, tdat_base = [0], tdat_exp = 0):
         '''Set which datafiles should be stored by the logger
@@ -416,5 +321,8 @@ class IOHexperimenter():
                       tdat_exp = self.tdat_exp, parameters = self.parameters,
                       dynamic_attrs = self.dynamic_attrs, static_attrs = self.static_attrs)
             
-        results = runParallelFunction(partial_run, arguments, self.parallel_settings)   
+        if self.parallel:
+            results = runPool(partial_run, arguments, self.num_threads)
+        else:
+            results = runSingleThreaded(partial_run, arguments)
         return results

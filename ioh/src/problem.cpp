@@ -18,7 +18,8 @@ void define_solution(py::module &m, const std::string &name)
         .def(py::init<std::vector<T>, std::vector<double>>(), R"pbdoc(
             Initialize a Solution object using its coordinates and fitness.
 
-            Parameters:
+            Parameters
+            ----------
                 x: the coordinates in the searchspace
                 y: the coordinates in the objective space (fitness value)
         )pbdoc")
@@ -363,7 +364,7 @@ void define_bbob_problems(py::module& m)
 
             Reference
             ---------
-            [HansenARMTB20] Nikolaus Hansen, Anne Auger, Dimo Brockhoff, Raymond Ros, Olaf Mersmann,
+            [HansenARMTB20] Nikolaus Hansen, Anne Auger, Raymond Ros, Olaf Mersmann,
             Tea Tusar, and Dimo Brockhoff. "COCO: A platform for comparing continuous optimizers in
             a black-box setting." Optimization Methods and Software (2020): 1-31.
 
