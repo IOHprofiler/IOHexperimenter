@@ -363,7 +363,7 @@ void define_bbob_problems(py::module& m)
 
             Reference
             ---------
-            [HansenARMTB20] Nikolaus Hansen, Anne Auger, Dimo Brockhoff, Raymond Ros, Olaf Mersmann,
+            [HansenARMTB20] Nikolaus Hansen, Anne Auger, Raymond Ros, Olaf Mersmann,
             Tea Tusar, and Dimo Brockhoff. "COCO: A platform for comparing continuous optimizers in
             a black-box setting." Optimization Methods and Software (2020): 1-31.
 
