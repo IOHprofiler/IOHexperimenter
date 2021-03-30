@@ -14,11 +14,31 @@ void define_logger(py::module &m)
     py::implicitly_convertible<std::string, fs::path>();
 
     py::class_<Base, std::shared_ptr<Base>>(m, "Base")
-        .def("track_problem", &Base::track_problem)
-        .def("track_suite", &Base::track_suite)
-        .def("log", &Base::log)
-        .def("flush", &Base::flush);
-    
+        .def(
+            "track_problem", &Base::track_problem,
+            R"pbdoc(
+                Track a specific problem with this logger.
+            )pbdoc"
+        )
+        .def(
+            "track_suite", &Base::track_suite,
+            R"pbdoc(
+                Track a specific suite with this logger
+            )pbdoc"
+        )
+        .def(
+            "log", &Base::log,
+            R"pbdoc(
+                Log the specified data.
+            )pbdoc"
+        )
+        .def(
+            "flush", &Base::flush,
+            R"pbdoc(
+                Flush the logger (finishes all open file-writing actions).
+            )pbdoc"
+        );
+
     py::class_<LoggerCombine, Base, std::shared_ptr<LoggerCombine>>(m, "LoggerCombine")
         .def(py::init<Base&>())
         .def(py::init<std::vector<Base*>>())
@@ -26,7 +46,8 @@ void define_logger(py::module &m)
         ;
 
     py::class_<Default, Base, std::shared_ptr<Default>>(m, "Default")
-        .def(py::init<fs::path, std::string, std::string, std::string, bool, bool, int, int, bool,
+        .def(
+            py::init<fs::path, std::string, std::string, std::string, bool, bool, int, int, bool,
             std::vector<int>, ioh::common::OptimizationType, int, int>(),
             py::arg("output_directory") = "./",
             py::arg("folder_name") = "ioh_data",
