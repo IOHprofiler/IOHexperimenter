@@ -11,13 +11,13 @@ template <typename SuiteType>
 void define_base_class(py::module &m, const std::string &name)
 {
     py::class_<SuiteType, std::shared_ptr<SuiteType>>(m, name.c_str(), py::buffer_protocol())
-        .def("reset", &SuiteType::reset)
-        .def("attach_logger", &SuiteType::attach_logger)
-        .def("detach_logger", &SuiteType::detach_logger)
-        .def_property_readonly("problem_ids", &SuiteType::problem_ids)
-        .def_property_readonly("dimensions", &SuiteType::dimensions)
-        .def_property_readonly("instances", &SuiteType::problem_ids)
-        .def_property_readonly("name", &SuiteType::problem_ids)
+        .def("reset", &SuiteType::reset, "Reset the state variables of the current problem.")
+        .def("attach_logger", &SuiteType::attach_logger, "Attach a logger to the problem to allow performance tracking.")
+        .def("detach_logger", &SuiteType::detach_logger, "Remove the specified logger from the problem.")
+        .def_property_readonly("problem_ids", &SuiteType::problem_ids, "The list of all problems ids contained in the current suite.")
+        .def_property_readonly("dimensions", &SuiteType::dimensions, "The list of all problems ids contained in the current suite.")
+        .def_property_readonly("instances", &SuiteType::problem_ids, "The list of all instance ids contained in the current suite.") //Should this be &SuiteType::instance_ids?
+        .def_property_readonly("name", &SuiteType::problem_ids, "The list of all problems names contained in the current suite.")
         .def("__len__", &SuiteType::size)
         .def("__iter__", [](SuiteType &s)
              {
