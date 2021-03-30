@@ -7,7 +7,7 @@ from multiprocessing import cpu_count
 import numpy as np
        
 def get_problem(fid, iid, dim, suite = "BBOB"):
-    '''Instansiate a problem based on its function ID, dimension, instance and suite
+    '''Instantiate a problem based on its function ID, dimension, instance and suite
     Parameters
     ----------
     fid:
@@ -31,7 +31,7 @@ def get_problem(fid, iid, dim, suite = "BBOB"):
     else:
         raise Exception("This suite is not yet supported")    
 
-def runParallelFunction(runFunction, arguments, parallel_config = None):
+def _run_parallel_function(run_function, arguments, parallel_config = None):
     """
         Return the output of runFunction for each set of arguments,
         making use of as much parallelization as possible on this system
@@ -44,29 +44,29 @@ def runParallelFunction(runFunction, arguments, parallel_config = None):
         :return:
     """
     if parallel_config is None:
-        return runSingleThreaded(runFunction, arguments)    
+        return runSingleThreaded(run_function, arguments)    
 
     if parallel_config['evaluate_parallel']:
         if parallel_config['use_MPI']:
-            return runMPI(runFunction, arguments)
+            return runMPI(run_function, arguments)
         elif parallel_config['use_pebble']:
             return runPebblePool(
-                runFunction, arguments, 
+                run_function, arguments, 
                 timeout = parallel_config['timeout'], 
                 num_threads = parallel_config['num_threads']
             )
         elif parallel_config['use_joblib']:
             return runJoblib(
-                runFunction, arguments, 
+                run_function, arguments, 
                 num_threads = parallel_config['num_threads']
             )
         else:
             return runPool(
-                runFunction, arguments, 
+                run_function, arguments, 
                 num_threads = parallel_config['num_threads']
             )
     else:
-        return runSingleThreaded(runFunction, arguments)
+        return runSingleThreaded(run_function, arguments)
 
 # Inline function definition to allow the passing of multiple arguments to 'runFunction' through 'Pool.map'
 def func_star(a_b, func):
@@ -416,5 +416,5 @@ class IOHexperimenter():
                       tdat_exp = self.tdat_exp, parameters = self.parameters,
                       dynamic_attrs = self.dynamic_attrs, static_attrs = self.static_attrs)
             
-        results = runParallelFunction(partial_run, arguments, self.parallel_settings)   
+        results = _run_parallel_function(partial_run, arguments, self.parallel_settings)   
         return results
