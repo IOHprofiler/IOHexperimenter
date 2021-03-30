@@ -20,7 +20,7 @@ option(BUILD_DOCS "Build docs" OFF)
 if(MSVC)
     set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windows
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT") 
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd ")
 endif()  
  
@@ -49,9 +49,6 @@ add_library(ioh::ioh ALIAS ioh)
 add_subdirectory(${EXTERNAL_DIR}/fmt)
 target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
 
-if(MSVC) 
-    target_link_options(ioh INTERFACE /PROFILE)
-endif()
 
 
 # Add Python Library

@@ -127,7 +127,7 @@ int main()
     auto l = ioh::logger::Default(std::string("data"), "a", "info");
     p1->attach_logger(l);
     
-    for(auto i = 1 ; i < 10000; i++)
+    for(auto i = 1 ; i < 100000; i++)
     {
         x0[4] /= i;
         (*p1)(x0).at(0);
