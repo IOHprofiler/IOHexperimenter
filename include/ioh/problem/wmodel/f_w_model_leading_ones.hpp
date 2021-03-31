@@ -7,7 +7,7 @@ namespace ioh
   {
     namespace wmodel
     {
-      class W_Model_LeadingOnes : public WModelProblem<W_Model_LeadingOnes>
+      class WModelLeadingOnes : public WModelProblem<WModelLeadingOnes>
       {
       protected:
         std::vector<double> evaluate(const std::vector<int> &x) override
@@ -68,16 +68,19 @@ namespace ioh
         }
         
       public:
-        W_Model_LeadingOnes(const int instance, const int n_variables) :
-        WModelProblem(2, instance, n_variables, "W_Model_LeadingOnes", 0, 0, 0, 0)
+        WModelLeadingOnes(const int instance, const int n_variables) :
+        WModelProblem(2, instance, n_variables, "WModelLeadingOnes", 0, 0, 0, 0)
         {
         }
         
-        W_Model_LeadingOnes(const int instance, const int n_variables,
+        WModelLeadingOnes(const int instance, const int n_variables,
                             const double dummy_para, const int epistasis_para, const int neutrality_para, const double ruggedness_para) :
-        WModelProblem(2, instance, n_variables, "W_Model_LeadingOnes", dummy_para, epistasis_para, neutrality_para, ruggedness_para)
+        WModelProblem(2, instance, n_variables, "WModelLeadingOnes", dummy_para, epistasis_para, neutrality_para, ruggedness_para)
         {
-          objective_.x = this->epistasis_para == 0 ? std::vector<int>(n_variables,1) : std::vector<int>(0);
+            if (this->epistasis_para == 0)
+            {
+                std::vector<int>(n_variables,1);
+            }
           objective_.y = {static_cast<double> (n_variables * (this->dummy_para == 0 ? 1 : this->dummy_para) / ( this->neutrality_para == 0 ? 1 : this->neutrality_para) )};
         }
       };

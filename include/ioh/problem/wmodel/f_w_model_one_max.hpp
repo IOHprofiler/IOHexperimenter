@@ -7,7 +7,7 @@ namespace ioh
   {
     namespace wmodel
     {
-      class W_Model_OneMax : public WModelProblem<W_Model_OneMax>
+      class WModelOneMax : public WModelProblem<WModelOneMax>
       {
       protected:
         std::vector<double> evaluate(const std::vector<int> &x) override
@@ -58,16 +58,18 @@ namespace ioh
         }
         
       public:
-        W_Model_OneMax(const int instance, const int n_variables) :
-        WModelProblem(1, instance, n_variables, "W_Model_OneMax", 0, 0, 0, 0)
+        WModelOneMax(const int instance, const int n_variables) :
+        WModelProblem(1, instance, n_variables, "WModelOneMax", 0, 0, 0, 0)
         {
         }
         
-        W_Model_OneMax(const int instance, const int n_variables,
+        WModelOneMax(const int instance, const int n_variables,
                             const double dummy_para, const int epistasis_para, const int neutrality_para, const double ruggedness_para) :
-        WModelProblem(1, instance, n_variables, "W_Model_OneMax", dummy_para, epistasis_para, neutrality_para, ruggedness_para)
+        WModelProblem(1, instance, n_variables, "WModelOneMax", dummy_para, epistasis_para, neutrality_para, ruggedness_para)
         {
-          objective_.x = this->epistasis_para == 0 ? std::vector<int>(n_variables,1) : std::vector<int>(0);
+            if(this->epistasis_para == 0){
+                objective_.x = std::vector<int>(n_variables,1);
+            }
           objective_.y = {static_cast<double> (n_variables * (this->dummy_para == 0 ? 1 : this->dummy_para) / ( this->neutrality_para == 0 ? 1 : this->neutrality_para) )};
         }
       };
