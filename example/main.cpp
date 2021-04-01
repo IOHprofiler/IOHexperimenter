@@ -130,7 +130,7 @@ void profile_logger()
     for(auto i = 1 ; i < 100000; i++)
     {
         x0[4] /= i;
-        (*p1)(x0).at(0);
+        auto y = (*p1)(x0).at(0);
     }
         
 

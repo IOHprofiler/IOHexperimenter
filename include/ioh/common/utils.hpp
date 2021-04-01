@@ -328,11 +328,14 @@ namespace ioh {
          */
         template <typename ... Args>
         std::string string_format(const std::string &format, Args ... args) {
+            #if defined(__GNUC__)
             #pragma GCC diagnostic push
             #pragma GCC diagnostic ignored "-Wformat-truncation"
+            #endif
             const size_t size = snprintf(nullptr, size_t{ 0 }, format.c_str(), args ...) + 1; // Extra space for '\0'
+            #if defined(__GNUC__)
             #pragma GCC diagnostic pop
-
+            #endif
             if (size <= 0) {
                 throw std::runtime_error("Error during formatting.");
             }

@@ -112,10 +112,14 @@ public:
                    ? ioh::common::OptimizationType::Minimization
                    : ioh::common::OptimizationType::Maximization), constraint)
     {
+        #if defined(__GNUC__)
         #pragma GCC diagnostic push
         #pragma GCC diagnostic ignored "-Wunused-variable"
+        #endif
         static auto registered = perform_registration();
+        #if defined(__GNUC__)
         #pragma GCC diagnostic pop
+        #endif
     }
 
     std::vector<double> evaluate(const std::vector<T> &x) override
