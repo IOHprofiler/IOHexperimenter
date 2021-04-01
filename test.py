@@ -86,7 +86,7 @@ a = A()
 
 p = problem.Real.factory().create(1, 5, 5)
 
-"""" 
+""" 
     TODO: IOH_function wrapper maken
         def get_problem(suite_name, *args, **kwargs):
             return getattr(problem, suite_name).factory().create(*args, **kwargs)
@@ -97,7 +97,7 @@ p = problem.Real.factory().create(1, 5, 5)
     TODO: bounds aanpasses voor wrappedproblem
     TODO: check wat er gebeurt met naam initializatie van wrapped problem
     TODO: check wat er op de exit gebeurt met de exit
-""""
+"""
 
 
 # def f(x, functie_object):

@@ -106,7 +106,7 @@ std::vector<double> f(const std::vector<double>&)
 }
 
 
-int main()
+void profile_logger()
 {
     ioh::common::CpuTimer t;
     // show_registered_objects();
@@ -137,4 +137,9 @@ int main()
     std::cout << l.experiment_folder();
     std::cout << " done\n";
 
+}
+int main()
+{
+    const bool x = 0;
+    std::cout << x + 2 << std::endl;
 }

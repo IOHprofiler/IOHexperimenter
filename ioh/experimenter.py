@@ -8,7 +8,7 @@ import numpy as np
        
 def get_problem(fid, iid, dim, suite = "BBOB"):
     '''Instantiate a problem based on its function ID, dimension, instance and suite
-    
+
     Parameters
     ----------
     fid:
@@ -29,8 +29,7 @@ def get_problem(fid, iid, dim, suite = "BBOB"):
             if not np.sqrt(dim).is_integer():
                 raise Exception("For this function, the dimension needs to be a perfect square!")
         return problem.Integer.factory().create(fid, iid, dim)
-    else:
-        raise Exception("This suite is not yet supported")    
+    raise Exception("This suite is not yet supported")    
 
 # Inline function definition to allow the passing of multiple arguments to 'runFunction' through 'Pool.map'
 def func_star(a_b, func):
@@ -101,7 +100,7 @@ def _run_custom(alg, function, fname, dim, suite, repetitions, observing,
     '''A helper function for parallellization of the IOHexperimter.
     '''
     name = alg.__class__.__name__
-    info = "Run using the IOHexperimenter in python, version 1" 
+    info = "Run using the IOHexperimenter in python, version " + __version__ 
     f = wrap_real_problem(function, fname, dim)
 
     if observing:

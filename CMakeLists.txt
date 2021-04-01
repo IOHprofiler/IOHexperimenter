@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(ioh   
     VERSION 0.0.0.1
-    LANGUAGES CXX 
+    LANGUAGES CXX  
 ) 
 set(CMAKE_CXX_STANDARD 17)
 set(EXTERNAL_DIR "${PROJECT_SOURCE_DIR}/external")
@@ -12,10 +12,10 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 option(BUILD_PYTHON_PACKAGE "Whether to build Python package" OFF)
 option(BUILD_TESTS "Whether to build test cases with gtest" ON)
-option(BUILD_EXAMPLE "Whether to build Python package" ON) 
+option(BUILD_EXAMPLE "Whether to build Python package" ON)  
 
 option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python modules as if they were an IOH problem" OFF)
-option(BUILD_DOCS "Build docs" OFF)
+option(BUILD_DOCS "Build docs" OFF) 
 
 if(MSVC)
     set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windows

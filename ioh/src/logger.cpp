@@ -71,4 +71,4 @@ void define_logger(py::module &m)
         .def("error_range", &ECDF::error_range)
         .def("eval_range", &ECDF::eval_range)
         ;
-};
+}

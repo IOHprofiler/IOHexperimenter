@@ -40,7 +40,6 @@ namespace ioh::problem::bbob
             Peak(const double value, const int seed, const int n_variables, const double condition) :
                 value(value), scales(n_variables)
             {
-                static const auto f0 = 1.1, f1 = 9.1;
                 auto permutations = Permutation::sorted(n_variables, seed);
                 for (auto i = 0; i < n_variables; ++i)
                     scales[i] = pow(condition,
@@ -84,7 +83,8 @@ namespace ioh::problem::bbob
                 x_transformed[i] = std::inner_product(x.begin(), x.end(),
                     this->transformation_state_.second_rotation.at(i).begin(), 0.0);
             }
-
+            #pragma GCC diagnostic push
+            #pragma GCC diagnostic ignored "-Wsequence-point"
             auto result = 10. - std::accumulate(
                 peaks_.begin(), peaks_.end(), 0.0,
                 [&, i = 0](const double sum, const Peak &peak) mutable
@@ -98,6 +98,7 @@ namespace ioh::problem::bbob
                     i++;
                     return std::max(sum, peak.value * exp(factor_ * z));
                 });
+            #pragma GCC diagnostic pop
 
             if (result > 0)
             {
