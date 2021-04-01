@@ -31,7 +31,10 @@ jobs:
       # We'll use this as our working directory for all subsequent commands
       env:
         CXX: ${{ matrix.compiler }}
-      run: cmake -E make_directory ${{runner.workspace}}/build
+      run: |
+        sudo apt-get update
+        sudo apt install ${{ matrix.compiler }} -y
+        cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
