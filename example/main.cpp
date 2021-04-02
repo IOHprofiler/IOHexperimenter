@@ -8,5 +8,4 @@ int main() {
     logger_example();
     problem_example();
     experiment_example();
-    return 0;
 }

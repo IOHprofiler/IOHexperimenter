@@ -14,8 +14,8 @@ namespace ioh
                 std::vector<double> evaluate(const std::vector<int> &x) override
                 {
                     auto new_variables = utils::neutrality(x, 3);
-                    auto result = 0.0;
-                    for (auto i = 0; i < new_variables.size(); ++i)
+                    size_t result = 0;
+                    for (size_t i = 0; i < new_variables.size(); ++i)
                         if (new_variables[i] == 1)
                             result = i + 1;
                         else

@@ -11,7 +11,7 @@ namespace ioh::problem::bbob
         std::vector<double> evaluate(const std::vector<double> &x) override
         {
             auto result = x.at(0) * x.at(0);
-            for (size_t i = 1; i < this->meta_data_.n_variables; ++i)
+            for (auto i = 1; i < this->meta_data_.n_variables; ++i)
                 result += this->transformation_state_.conditions.at(i) * x.at(i) * x.at(i);
             return {result};
         }

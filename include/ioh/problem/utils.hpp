@@ -18,6 +18,11 @@ namespace ioh
                     << "x: " << common::vector_to_string(obj.x)
                     << " y: " << common::vector_to_string(obj.y);
             }
+
+            Solution<double> as_double() const 
+            {
+                return { std::vector<double>(x.begin(), x.end()), y };
+            }
         };
 
         template <typename T>
@@ -41,7 +46,7 @@ namespace ioh
 
             void check_size(const int s)
             {
-                if (ub.size() == lb.size() == size_t{1})
+                if (ub.size() == lb.size() && lb.size() == size_t{1})
                 {
                     ub = std::vector<T>(s, ub.at(0));
                     lb = std::vector<T>(s, lb.at(0));
@@ -53,7 +58,7 @@ namespace ioh
 
             bool check(const std::vector<T> &x)
             {
-                for (auto i = 0; i < x.size(); i++)
+                for (size_t i = 0; i < x.size(); i++)
                     if (!(lb.at(i) >= x.at(i) && x.at(i) <= lb.at(i)))
                         return false;
                 return true;
@@ -62,7 +67,7 @@ namespace ioh
             friend std::ostream &operator<<(std::ostream &os, const Constraint &obj)
             {
                 os << "[ ";
-                for (auto i = 0; i < obj.ub.size(); i++)
+                for (size_t i = 0; i < obj.ub.size(); i++)
                     os << i << ": (" << obj.lb.at(i) << ", " << obj.ub.at(i) << ") ";
                 os << "]";
                 return os;

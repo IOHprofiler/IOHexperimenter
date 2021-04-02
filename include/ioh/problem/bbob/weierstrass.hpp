@@ -10,7 +10,6 @@ namespace ioh::problem::bbob
         double penalty_factor_;
         std::vector<double> ak_;
         std::vector<double> bk_;
-        std::vector<double> raw_x_;
 
     protected:
         std::vector<double> evaluate(const std::vector<double> &x) override
@@ -30,7 +29,6 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::coco;
-            raw_x_ = x;
             transform_vars_shift_evaluate_function(x, objective_.x);
             transform_vars_affine_evaluate_function(x, transformation_state_.transformation_matrix,
                                                     transformation_state_.transformation_base);
@@ -44,7 +42,7 @@ namespace ioh::problem::bbob
         {
             using namespace transformation::coco;
             transform_obj_shift_evaluate_function(y, objective_.y.at(0));
-            transform_obj_penalize_evaluate(raw_x_, constraint_.lb.at(0),
+            transform_obj_penalize_evaluate(state_.current.x, constraint_.lb.at(0),
                                             constraint_.ub.at(0), penalty_factor_, y);
             return y;
         }
@@ -52,7 +50,7 @@ namespace ioh::problem::bbob
     public:
         Weierstrass(const int instance, const int n_variables) :
             BBOProblem(16, instance, n_variables, "Weierstrass", 1 / sqrt(100.0)),
-            f0_(0.0), ak_(12), bk_(12), raw_x_(n_variables), penalty_factor_(10.0/ n_variables)
+            f0_(0.0), penalty_factor_(10.0/ n_variables), ak_(12), bk_(12)
         {
             for (size_t i = 0; i < ak_.size(); ++i)
             {
