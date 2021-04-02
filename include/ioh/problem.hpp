@@ -8,4 +8,4 @@
 #include "problem/pbo.hpp"
 
 // #include "problem/python.hpp"
-// #include "problem/wmodel.hpp"
+#include "problem/wmodel.hpp"

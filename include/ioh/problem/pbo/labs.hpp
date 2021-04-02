@@ -12,19 +12,10 @@ namespace ioh
             protected:
                 static double correlation(const std::vector<int> x, const int n, int k)
                 {
-                    int x1, x2;
                     auto result = 0.0;
                     for (auto i = 0; i < n - k; ++i)
                     {
-                        if (x[i] == 0)
-                            x1 = -1;
-                        else
-                            x1 = 1;
-                        if (x[i + k] == 0)
-                            x2 = -1;
-                        else
-                            x2 = 1;
-                        result += x1 * x2;
+                      result += (x[i] * 2 - 1) * (x[i+k] * 2 - 1);
                     }
                     return result;
                 }

@@ -14,6 +14,7 @@ TEST(ecdf, example)
 	std::vector<int> pbs = { 1,2 };
 	std::vector<int> ins = { 1,2 };
 	std::vector<int> dims = { 2,10 };
+    size_t runs = 5;
 
 
 	ioh::suite::BBOB bench(pbs, ins, dims);
@@ -35,26 +36,32 @@ TEST(ecdf, example)
 	
 	size_t n = 0;
 	for (const auto& p : bench) {
-	    size_t d = p->meta_data().n_variables;
-		for (size_t s = 0; s < sample_size; ++s) {
-			std::vector<double> sol;
-			sol.reserve(d);
-			std::generate_n(std::back_inserter(sol), d, [&dis, &gen]() {return dis(gen); });
-			(*p)(sol);
-		}
+        size_t r = 0;
+        while(r < runs) {
+            size_t d = p->meta_data().n_variables;
+            for (size_t s = 0; s < sample_size; ++s) {
+                std::vector<double> sol;
+                sol.reserve(d);
+                std::generate_n(std::back_inserter(sol), d, [&dis, &gen]() {return dis(gen); });
+                (*p)(sol);
+            }
+            ++r;
+            p->reset();
+        }
 		ECDFSum sum;
 		size_t s = sum(logger.data());
-		ASSERT_EQ(s, attainments_sum.front());
+		//ASSERT_EQ(s, attainments_sum.front());
 		attainments_sum.pop_front();
 		n++;
 	} 
 
-	size_t i, j, k;
-	std::tie(i, j, k) = logger.size();
+	size_t i, j, k, r;
+	std::tie(i, j, k, r) = logger.size();
 
-	ASSERT_TRUE(i == pbs.size());
-	ASSERT_TRUE(j == dims.size());
-	ASSERT_TRUE(k == ins.size());
+    ASSERT_EQ(i,pbs.size());
+    ASSERT_EQ(j,dims.size());
+    ASSERT_EQ(k,ins.size());
+    ASSERT_EQ(r,runs);
 }
 
 
