@@ -37,8 +37,7 @@ TEST(ecdf, example)
 	for (const auto& p : bench) {
 	    size_t d = p->meta_data().n_variables;
 		for (size_t s = 0; s < sample_size; ++s) {
-			std::vector<double> sol;
-			sol.reserve(d);
+			std::vector<double> sol(d);
 			std::generate_n(std::back_inserter(sol), d, [&dis, &gen]() {return dis(gen); });
 			(*p)(sol);
 		}
