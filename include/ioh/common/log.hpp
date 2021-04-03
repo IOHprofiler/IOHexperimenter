@@ -1,6 +1,6 @@
 #pragma once
 
-#include <fstream>
+#include <ostream>
 #include <iostream>
 #include <string>
 
@@ -22,10 +22,14 @@ namespace ioh::common::log {
     /**
      * \brief Function for logging errors, causes a system exit
      * \param error_msg The error message
+     * \param os The stream to log the messages to
      */
-    inline void error(const std::string &error_msg) {
+    inline void error(const std::string &error_msg, std::ostream &os = std::cerr)
+    {
+        // TODO: Raise Exception
         if (log_level <= Level::Error) {
-            std::cerr << "IOH_ERROR_INFO : " << error_msg << std::endl;
+            os << "IOH_ERROR_INFO : " << error_msg << "\n";
+            std::flush(os);
             std::flush(std::cerr);
             std::flush(std::cout);
             exit(1);
@@ -35,28 +39,21 @@ namespace ioh::common::log {
     /**
      * \brief Function for logging warnings
      * \param warning_msg The error message
+     * \param os The stream to log the messages to
      */
-    inline void warning(const std::string &warning_msg) {
+    inline void warning(const std::string &warning_msg, std::ostream &os = std::cout)
+    {
         if (log_level <= Level::Warning)
-            std::cout << "IOH_WARNING_INFO : " << warning_msg << std::endl;
-    }
-
-    /**
-     * \brief Function for logging info messages
-     * \param log_msg The info message
-     */
-    inline void info(const std::string &log_msg) {
-        if (log_level <= Level::Info)
-            std::cout << "IOH_LOG_INFO : " << log_msg << std::endl;
+            os << "IOH_WARNING_INFO : " << warning_msg << "\n";
     }
 
     /**
      * \brief Function for logging info messages to a stream
      * \param log_msg The info message
-     * \param log_stream The stream to log the messages to
+     * \param os The stream to log the messages to
      */
-    inline void info(const std::string &log_msg, std::ofstream &log_stream) {
+    inline void info(const std::string &log_msg, std::ostream &os = std::cout) {
         if (log_level >= Level::Info)
-            log_stream << "IOH_LOG_INFO : " << log_msg << std::endl;
+            os << "IOH_LOG_INFO : " << log_msg << "\n";
     }
 }

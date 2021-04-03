@@ -1,46 +1,53 @@
-#include <iostream>
-#include <random>
-#include <algorithm>
-#include <vector>
+#pragma once
 
 #include "ioh.hpp"
 
+/// Declare a bbob suite of problem {1,2}, instance {1, 2} and dimension {5,10}.
+/// We can use either factory construction, or direct object construction.
+inline std::shared_ptr<ioh::suite::Suite<ioh::problem::Real>> create_suite(const bool using_factory = true)
+{
+    const std::vector<int> problems{1, 2};
+    const std::vector<int> instances{1, 2};
+    const std::vector<int> dimensions{1, 2};
+
+    if (using_factory)
+        return ioh::suite::SuiteRegistry<ioh::problem::Real>::instance()
+            .create("BBOB", problems, instances, dimensions);
+    return std::make_shared<ioh::suite::BBOB>(problems, instances, dimensions);
+}
+
+
 /// An example of using a suite class of problems.
-void suite_example() {
-    
-    /// To declare a bbob suite of problem {1,2}, intance {1, 2} and dimension {5,10}.
-    const auto &suite_factory = ioh::suite::SuiteRegistry<ioh::problem::Real>::instance();
-    const auto bbob = suite_factory.create("BBOB", {1, 2}, {1, 2}, {5, 10});
-    
+inline void suite_example()
+{
+    const auto bbob = create_suite();
+
     std::cout << "==========\nAn example of using bbob suite\n==========" << std::endl;
 
-    /// To access problems of the suite.
-    for (const auto &problem : *bbob) {
-        
-        int runs = 1;
-        while(runs-- > 0) {
+    /// We can directly loop over a suite: This loop automatically
+    /// resets each problem after every iteration.
+    for (const auto &problem : *bbob)
+    {
+        for (auto runs = 0; runs < 1; runs ++)
+        {
             /// To output information of the current problem.
-            std::cout<< problem->meta_data() <<std::endl;
-            int budget = 100;
-            auto n = problem->meta_data().n_variables;
-            
+            std::cout << problem->meta_data() << std::endl;
+
             /// Random search on the problem with the given budget 100.
-            std::vector<double> x(n);
+            std::vector<double> x(problem->meta_data().n_variables);
             auto best_y = std::numeric_limits<double>::infinity();
-            while(budget > 0) {
-                budget--;
-                for (int i = 0; i != n; i++) {
-                    ioh::common::Random::uniform(n, budget * runs, x);
-                    x[i] = x[i] * 10 - 5;
-                }
-                
+            for (auto budget = 100; budget > 0; budget--)
+            {
+                ioh::common::Random::uniform(x.size(), budget * runs, x);
+                for (auto &xi : x)
+                    xi = xi * 10 - 5;
+
                 /// To evalute the fitness of 'x' for the problem by using '(*problem)(x)' function.
                 best_y = std::min((*problem)(x).at(0), best_y);
             }
+                
             /// To reset evaluation information as default before the next independent run.
             std::cout << "result: " << best_y << std::endl;
         }
     }
 }
-
-

@@ -343,11 +343,10 @@ namespace ioh::logger
                 interval_trigger(log_info.evaluations)
                 });
 
-            // We can do this with pointers, more efficient
+
             last_logged_line_ = fmt::format(FMT_COMPILE("{} {:f} {:f} {:f} {:f}"), log_info.evaluations,
                 log_info.current.y.at(0), log_info.y_best, log_info.transformed_y,
                 log_info.transformed_y_best);
-
 
             for (const auto& e : data_files_.logged_attributes_)
                 last_logged_line_ += fmt::format(FMT_COMPILE(" {:f}"), *e.second);

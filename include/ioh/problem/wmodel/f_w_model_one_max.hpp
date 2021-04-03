@@ -70,7 +70,7 @@ namespace ioh
             if(this->epistasis_para == 0){
                 objective_.x = std::vector<int>(n_variables,1);
             }
-          objective_.y = {static_cast<double> (n_variables * (this->dummy_para == 0 ? 1 : this->dummy_para) / ( this->neutrality_para == 0 ? 1 : this->neutrality_para) )};
+            objective_.y = {static_cast<double> (n_variables * (this->dummy_para == 0 ? 1 : this->dummy_para) / ( this->neutrality_para == 0 ? 1 : this->neutrality_para) )};
         }
       };
     }
