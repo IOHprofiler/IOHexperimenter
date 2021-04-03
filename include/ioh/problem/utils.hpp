@@ -407,9 +407,8 @@ namespace ioh
                     number_of_variables);
                 return ruggedness_fitness;
             }
-#if 1
             // Following is the w-model soure code from Raphael's work, which refer the source code of Thomas Weise.
-            static void layer_neutrality_compute(const std::vector<int> &xIn,
+            static void layer_neutrality_compute(const std::vector<int> xIn,
                                                  std::vector<int> &xOut,
                                                  const int mu) {
                 const auto thresholdFor1 = (mu >> 1) + (mu & 1);
@@ -567,7 +566,6 @@ namespace ioh
                 assert(result <= static_cast<double>(dimension));
                 return result;
             }
-#endif
         }
     }
 }

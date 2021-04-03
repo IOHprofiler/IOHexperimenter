@@ -92,9 +92,9 @@ namespace ioh
          * instead of the (supposedly) faster vector of char.
          */
         using AttainmentMatrix =
-        std::vector< // error targets
-            std::vector< // function evaluations
-                bool>>; // occurence count
+            std::vector< // error targets
+                std::vector< // function evaluations
+                    bool>>; // occurence count
 
         inline std::ostream &operator<<(std::ostream &out,
                                         const AttainmentMatrix &mat)
@@ -171,7 +171,7 @@ namespace ioh
                 int pb;
                 int dim;
                 int ins;
-                int runs;
+                int run;
                 bool has_opt;
                 bool is_tracked;
                 std::vector<double> opt;
@@ -238,6 +238,7 @@ namespace ioh
                 _current.ins = problem.instance;
                 _current.max_min = problem.optimization_type;
                 _current.is_tracked = false;
+                _current.run = 1 + _ecdf_suite[_current.pb][_current.dim][_current.ins].size();
             }
 
             /** Actually store information about the last evaluation.
@@ -247,31 +248,23 @@ namespace ioh
              */
             void log(const LogInfo &log_info) override
             {
-                /* loggerInfo:
-                 *   evaluations,
-                 *   raw_objectives,
-                 *   best_so_far_raw_objectives
-                 *   transformed_objective
-                 *   best_so_far_transformed_objectives
-                 */
                 if (!_current.is_tracked)
                 {
                     _current.is_tracked = true;
                     _current.has_opt = !log_info.objective.y.empty();
                     if(_current.has_opt)
                     {
-                        // common::log::info(
-                        //     "Problem has known optimal, will compute the ECDF of the error.");
+                        common::log::info(
+                            "Problem has known optimal, will compute the ECDF of the error.");
                         _current.opt = log_info.objective.y;
                     }
                     else
                     {
-                        // common::log::info(
-                            // "Problem has no known optimal, will compute the absolute ECDF.");
+                        common::log::info(
+                            "Problem has no known optimal, will compute the absolute ECDF.");
                     }
                     // mono-objective only
                     assert(_current.opt.size() == 1);
-                    _current.runs = _ecdf_suite[_current.pb][_current.dim][_current.ins].size() + 1;
                     init_ecdf(_current);
                 }
                 
@@ -424,10 +417,10 @@ namespace ioh
                     _ecdf_suite[cur.pb][cur.dim][cur.ins] = std::map<
                                                                 size_t, AttainmentMatrix>();
                 }
-                _ecdf_suite[cur.pb][cur.dim][cur.ins][cur.runs] = _empty;
+                _ecdf_suite[cur.pb][cur.dim][cur.ins][cur.run] = _empty;
 
                 assert(
-                    _ecdf_suite.at(cur.pb).at(cur.dim).at(cur.ins).at(cur.runs).at(0).at(0)
+                    _ecdf_suite.at(cur.pb).at(cur.dim).at(cur.ins).at(cur.run).at(0).at(0)
                     == 0);
             }
 
@@ -440,9 +433,9 @@ namespace ioh
                     _ecdf_suite[_current.pb][_current.dim].count(_current.ins)
                     != 0);
                 assert(
-                    _ecdf_suite[_current.pb][_current.dim][_current.ins].count(_current.runs)
+                    _ecdf_suite[_current.pb][_current.dim][_current.ins].count(_current.run)
                     != 0);
-                return _ecdf_suite[_current.pb][_current.dim][_current.ins][_current.runs];
+                return _ecdf_suite[_current.pb][_current.dim][_current.ins][_current.run];
             }
 
             /** Fill up the upper/upper quadrant of the attainment matrix with ones.

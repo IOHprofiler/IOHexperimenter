@@ -1,18 +1,12 @@
-#include <vector>
-#include <fstream>
-#include <string>
-
 #include <gtest/gtest.h>
+
 #include "ioh.hpp"
-#include "utils.hpp"
 
-
-using namespace std;
 
 TEST(WModel, Dummy)
 {
-    std::vector<int> x1(16,1);
-    std::vector<int> x0(16,0);
+    const std::vector<int> x1(16,1);
+    const std::vector<int> x0(16,0);
 
     auto problem_om1 = ioh::problem::wmodel::WModelOneMax(1,16,0,0,0,0);
     EXPECT_DOUBLE_EQ(problem_om1(x1).at(0),16.0);

@@ -53,7 +53,7 @@ namespace ioh::common::log {
      * \param os The stream to log the messages to
      */
     inline void info(const std::string &log_msg, std::ostream &os = std::cout) {
-        if (log_level >= Level::Info)
+        if (log_level <= Level::Info)
             os << "IOH_LOG_INFO : " << log_msg << "\n";
     }
 }

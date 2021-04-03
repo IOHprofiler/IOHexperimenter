@@ -9,54 +9,39 @@ TEST(ecdf, example)
 	using namespace ioh::logger;
 	ioh::common::log::log_level = ioh::common::log::Level::Warning;
 	
-	size_t sample_size = 100;
-	size_t ecdf_width = 20;
-	std::vector<int> pbs = { 1,2 };
-	std::vector<int> ins = { 1,2 };
-	std::vector<int> dims = { 2,10 };
-    size_t runs = 5;
+	auto sample_size = 100;
 
+	ioh::suite::BBOB suite({1, 2}, {1, 2}, {2, 10});
+    ECDF logger(
+        0, 6e7, 20, 
+        0, sample_size, 20
+    );
 
-	ioh::suite::BBOB bench(pbs, ins, dims);
+	suite.attach_logger(logger);
 
-	LogRange<double> error(0, 6e7, ecdf_width);
-	LogRange<size_t> evals(0, sample_size, ecdf_width);
-	ECDF logger(error, evals);
-
-	bench.attach_logger(logger);
-
-
-	size_t seed = 5;
-	std::mt19937 gen(seed);
-	std::uniform_real_distribution<> dis(-5, 5);
-
-
-	std::list<size_t> attainments_sum = { 324, 646, 917, 1181,
-		1302, 1487, 1580, 1653};
+	// TODO: Check if these values are correct
+	std::list<size_t> attainments_sum = {
+	    334, 662, 951, 1240, 1528, 1816, 2071, 2326,
+	    2535, 2771, 2834, 2901, 2966, 3033, 3128, 3223
+	};
 	
-	size_t n = 0;
-	for (const auto& p : bench) {
-	    size_t d = p->meta_data().n_variables;
-		for (size_t s = 0; s < sample_size; ++s) {
-			std::vector<double> sol;
-			sol.reserve(d);
-			std::generate_n(std::back_inserter(sol), d, [&dis, &gen]() {return dis(gen); });
-			(*p)(sol);
-		}
-		ECDFSum sum;
-		size_t s = sum(logger.data());
-		//ASSERT_EQ(s, attainments_sum.front());
-		attainments_sum.pop_front();
-		n++;
+	for (const auto& p : suite) {
+        for (auto r = 0; r < 2; r++)
+        {
+            for (auto s = 0; s < sample_size; ++s)
+                (*p)(ioh::common::Random::uniform(p->meta_data().n_variables));
+            
+            ASSERT_EQ(ECDFSum()(logger.data()), attainments_sum.front());
+            p->reset();
+            attainments_sum.pop_front();
+        }
 	} 
+    auto [i, j, k, r] = logger.size();
 
-	size_t i, j, k, r;
-	std::tie(i, j, k, r) = logger.size();
-
-    ASSERT_EQ(i,pbs.size());
-    ASSERT_EQ(j,dims.size());
-    ASSERT_EQ(k,ins.size());
-    ASSERT_EQ(r,runs);
+    ASSERT_EQ(i, 2);
+    ASSERT_EQ(j, 2);
+    ASSERT_EQ(k, 2);
+    ASSERT_EQ(r, 2);
 }
 
 

@@ -12,12 +12,12 @@ namespace ioh
             protected:
                 static double correlation(const std::vector<int> x, const int n, int k)
                 {
-                    auto result = 0.0;
+                    auto result = 0;
                     for (auto i = 0; i < n - k; ++i)
                     {
                       result += (x[i] * 2 - 1) * (x[i+k] * 2 - 1);
                     }
-                    return result;
+                    return static_cast<double>(result);
                 }
 
                 std::vector<double> evaluate(const std::vector<int> &x) override
