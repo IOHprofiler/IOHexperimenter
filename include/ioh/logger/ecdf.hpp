@@ -119,13 +119,15 @@ namespace ioh
          *
          * First dimension is the problem id,
          * second dimension is the dimension id,
-         * last dimension is the instance id.
+         * third dimension is the instance id.
+         * last dimension is the run id.
          * Every item is an attain_mat.
          */
         using AttainmentSuite = std::map<size_t, // problem
                                          std::map<size_t, // dim
                                                   std::map<size_t, // instance
-                                                           AttainmentMatrix>>>;
+                                                           std::map<size_t, // runs
+                                                                    AttainmentMatrix>>>>;
 
 
         /** An observer which stores bi-dimensional error/evaluations discretized attainment matrices.
@@ -169,6 +171,7 @@ namespace ioh
                 int pb;
                 int dim;
                 int ins;
+                int runs;
                 bool has_opt;
                 bool is_tracked;
                 std::vector<double> opt;
@@ -268,9 +271,10 @@ namespace ioh
                     }
                     // mono-objective only
                     assert(_current.opt.size() == 1);
+                    _current.runs = _ecdf_suite[_current.pb][_current.dim][_current.ins].size() + 1;
                     init_ecdf(_current);
                 }
-                   
+                
                 double err;
                 if (_current.has_opt)
                 {
@@ -338,17 +342,21 @@ namespace ioh
              * First index: problem id,
              * second index: instance id,
              * third index: dimension id.
+             * last index: run id.
              */
             [[nodiscard]]
             const AttainmentMatrix &at(size_t problem_id, size_t instance_id,
-                                       size_t dim_id) const
+                                       size_t dim_id, size_t runs) const
             {
                 assert(_ecdf_suite.count(problem_id) != 0);
                 assert(_ecdf_suite.at(problem_id).count(dim_id) != 0);
                 assert(
                     _ecdf_suite.at(problem_id).at(dim_id).count(instance_id) !=
                     0);
-                return _ecdf_suite.at(problem_id).at(dim_id).at(instance_id);
+                assert(
+                    _ecdf_suite.at(problem_id).at(dim_id).at(instance_id).count(runs) !=
+                    0);
+                return _ecdf_suite.at(problem_id).at(dim_id).at(instance_id).at(runs);
             }
 
             /** Returns the size of the computed data, in its internal order.
@@ -358,14 +366,16 @@ namespace ioh
              * First index: number of problems,
              * second index: number of dimensions,
              * third index: number of instances.
+             * last index: number of runs.
              */
-            std::tuple<size_t, size_t, size_t> size()
+            std::tuple<size_t, size_t, size_t, size_t> size()
             {
                 return std::make_tuple(
                     _ecdf_suite.size(), // problems
                     _ecdf_suite.begin()->second.size(), // dimensions
-                    _ecdf_suite.begin()->second.begin()->second.size()
+                    _ecdf_suite.begin()->second.begin()->second.size(),
                     // instances
+                    _ecdf_suite.begin()->second.begin()->second.begin()->second.size() // runs
                     );
             }
 
@@ -400,19 +410,24 @@ namespace ioh
                 if (_ecdf_suite.count(cur.pb) == 0)
                 {
                     _ecdf_suite[cur.pb] = std::map<
-                        size_t, std::map<size_t, AttainmentMatrix>>();
+                                            size_t, std::map<
+                                                size_t, std::map<size_t, AttainmentMatrix>>>();
                 }
                 if (_ecdf_suite[cur.pb].count(cur.dim) == 0)
                 {
                     _ecdf_suite[cur.pb][cur.dim] = std::map<
-                        size_t, AttainmentMatrix>();
+                                                    size_t, std::map<
+                                                        size_t, AttainmentMatrix>>();
                 }
                 if (_ecdf_suite[cur.pb][cur.dim].count(cur.ins) == 0)
                 {
-                    _ecdf_suite[cur.pb][cur.dim][cur.ins] = _empty;
+                    _ecdf_suite[cur.pb][cur.dim][cur.ins] = std::map<
+                                                                size_t, AttainmentMatrix>();
                 }
+                _ecdf_suite[cur.pb][cur.dim][cur.ins][cur.runs] = _empty;
+
                 assert(
-                    _ecdf_suite.at(cur.pb).at(cur.dim).at(cur.ins).at(0).at(0)
+                    _ecdf_suite.at(cur.pb).at(cur.dim).at(cur.ins).at(cur.runs).at(0).at(0)
                     == 0);
             }
 
@@ -424,7 +439,10 @@ namespace ioh
                 assert(
                     _ecdf_suite[_current.pb][_current.dim].count(_current.ins)
                     != 0);
-                return _ecdf_suite[_current.pb][_current.dim][_current.ins];
+                assert(
+                    _ecdf_suite[_current.pb][_current.dim][_current.ins].count(_current.runs)
+                    != 0);
+                return _ecdf_suite[_current.pb][_current.dim][_current.ins][_current.runs];
             }
 
             /** Fill up the upper/upper quadrant of the attainment matrix with ones.
@@ -547,13 +565,14 @@ namespace ioh
                 for (const auto &pbid_dimmap : attainment)
                     for (const auto &dimid_insmap : pbid_dimmap.second)
                         for (const auto &insid_mat : dimid_insmap.second)
-                        {
-                            const auto &mat = insid_mat.second;
-                            for (const auto &row : mat)
-                                for (const auto &item : row)
-                                    sum += item;
-                        }
-                return sum;
+                            for (const auto &runsid_mat : insid_mat.second)
+                            {
+                                const auto &mat = runsid_mat.second;
+                                for (const auto &row : mat)
+                                    for (const auto &item : row)
+                                        sum += item;
+                            }
+                    return sum;
             }
         };
     }
