@@ -120,7 +120,7 @@ namespace ioh {
                     std::vector<double> gvect(2000);
                     long k; /* Loop over pairs of column vectors. */
 
-                    bbob2009_gauss(gvect, DIM * DIM, seed);
+                    bbob2009_gauss(gvect, (DIM * DIM), seed);
                     bbob2009_reshape(B, gvect, DIM, DIM);
                     /*1st coordinate is row, 2nd is column.*/
 

@@ -168,14 +168,14 @@ namespace ioh
             /** Keep essential metadata about the problem. */
             struct Problem
             {
-                int pb;
-                int dim;
-                int ins;
-                int run;
-                bool has_opt;
-                bool is_tracked;
+                int pb{};
+                int dim{};
+                int ins{};
+                int run{};
+                bool has_opt{};
+                bool is_tracked{};
                 std::vector<double> opt;
-                common::OptimizationType max_min;
+                common::OptimizationType max_min{};
             };
 
             /** @} */
@@ -238,7 +238,7 @@ namespace ioh
                 _current.ins = problem.instance;
                 _current.max_min = problem.optimization_type;
                 _current.is_tracked = false;
-                _current.run = 1 + _ecdf_suite[_current.pb][_current.dim][_current.ins].size();
+                _current.run = 1 + static_cast<int>(_ecdf_suite[static_cast<int>(_current.pb)][static_cast<int>(_current.dim)][static_cast<int>(_current.ins)].size());
             }
 
             /** Actually store information about the last evaluation.

@@ -42,7 +42,7 @@ namespace ioh::logger
             {
                 double y, transformed_y;
                 size_t evaluations;
-            } best_point_;
+            } best_point_{};
 
         public:
             InfoFile(std::string algorithm_name, std::string algorithm_info) :

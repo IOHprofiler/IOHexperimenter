@@ -6,10 +6,10 @@ namespace ioh {
     namespace logger {
         struct LogInfo
         {
-            size_t evaluations;
-            double y_best;
-            double transformed_y;
-            double transformed_y_best;
+            size_t evaluations{};
+            double y_best{};
+            double transformed_y{};
+            double transformed_y_best{};
             problem::Solution<double> current;
             problem::Solution<double> objective;
         };

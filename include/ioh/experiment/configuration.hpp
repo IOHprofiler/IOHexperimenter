@@ -184,19 +184,15 @@ namespace ioh
                 while (getline(fp, line))
                 {
                     line = common::strip(line);
-                    if (line.empty() || line.front() == '#' || line.front() ==
-                        ';')
+                    if (line.empty() || line.front() == '#' || line.front() == ';')
                         continue;
-                    // TODO: check why we cannot use sccanf_s here, as this throws an access violation exception
+                    // TODO: check why we cannot use sccanf_s here, as this throws an access violation warning
                     if (line.front() == '[' && line.back() == ']')
                         sscanf(line.c_str(), "[%[^]]", section);
                     else if (
-                        sscanf(line.c_str(), "%[^=] = \"%[^\"]", key,
-                               value) == 2
-                        || sscanf(line.c_str(), "%[^=] = '%[^\']", key,
-                                  value) == 2
-                        || sscanf(line.c_str(), "%[^=] = %[^;#]", key,
-                                  value) == 2)
+                        sscanf(line.c_str(), "%[^=] = \"%[^\"]", key, value) == 2
+                        || sscanf(line.c_str(), "%[^=] = '%[^\']", key, value) == 2
+                        || sscanf(line.c_str(), "%[^=] = %[^;#]", key, value) == 2)
                         data_.set(section, key, value);
                     else
                         common::log::error(

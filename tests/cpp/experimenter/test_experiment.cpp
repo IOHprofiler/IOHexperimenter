@@ -48,8 +48,8 @@ void pbo_random_search(const std::shared_ptr<ioh::problem::Integer> p)
 
 int count_newlines(const std::string& s)
 {
-	return std::count_if(s.begin(), s.end(),
-	                     [](const char& ch) { return ch == '\n'; });
+	return static_cast<int>(std::count_if(s.begin(), s.end(),
+	                     [](const char& ch) { return ch == '\n'; }));
 }
 
 TEST(experiment, config)

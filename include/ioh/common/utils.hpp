@@ -191,7 +191,10 @@ namespace ioh
             std::transform(s.begin(), s.end(), s.begin(), tolower);
             return s;
         }
-
+        #ifdef _MSC_VER 
+        #pragma warning(push)
+        #pragma warning(disable : 4505)
+        #endif
         /**
          * \brief Checks a vector of doubles for nan values
          * \param x vector to be checked
@@ -230,7 +233,9 @@ namespace ioh
                     return true;
             return false;
         }
-
+        #ifdef _MSC_VER
+        #pragma warning(pop)
+        #endif
         /**
          * \brief Retrieves an integer vector from a string
          * \param input a string in one the supported formats:
