@@ -146,9 +146,7 @@ namespace ioh {
                     for (size_t i = 0; i < number_of_variables; ++i) {
                         if (tmp_x[i] < 0.5) {
                             x[i] = -x[i];
-                        } else {
-                            x[i] = x[i];
-                        }
+                        } 
                     }
                 }
 

@@ -19,8 +19,8 @@ namespace ioh {
                 PyObject *module;
 
                 ExternPythonHelper(
-                    std::string module_name,
-                    std::string instance_name
+                    const std::string& module_name,
+                    const std::string& instance_name
                     )
                     : _api_module(module_name),
                       _api_instance(instance_name) {

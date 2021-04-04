@@ -59,9 +59,9 @@ namespace ioh::common
         }
 
         [[nodiscard]]
-        Type create(const std::string id, Args ... params) const
+        Type create(const std::string& name, Args ... params) const
         {
-            const auto entry = name_map.find(id);
+            const auto entry = name_map.find(name);
             assert(entry != std::end(name_map));
             return entry->second(std::forward<Args>(params)...);
         }
