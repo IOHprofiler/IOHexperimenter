@@ -11,7 +11,7 @@
 
 namespace ioh::logger
 {
-    class Default final: public Base, Observer
+    class Default final : public Base, Observer
     {
         bool store_positions_;
         common::file::UniqueFolder experiment_folder_;
@@ -79,17 +79,15 @@ namespace ioh::logger
                 using namespace common;
 
                 update_run_info(meta, can_write);
-                    
+
                 if (meta == nullptr || new_meta.problem_id != meta->problem_id)
                     stream_ = file::BufferedFileStream(
                         root_path, string_format("IOHprofiler_f%d_%s.info", new_meta.problem_id,
-                            new_meta.name.c_str()));
+                                                 new_meta.name.c_str()));
 
                 if (meta == nullptr || new_meta.n_variables != meta->n_variables || new_meta.problem_id != meta->
                     problem_id)
                 {
-                  
-
                     stream_.write(
                         string_format(
                             R"(suite = "%s", funcId = %d, funcName = "%s", DIM = %d, maximization = "%c", algId = "%s", algInfo = "%s")",
@@ -165,8 +163,8 @@ namespace ioh::logger
         public:
             DataFiles(const bool d_active, const bool c_active, const bool t_active, const bool i_active) :
                 files_{File(d_active, ""), File(t_active, "t"),
-                    File(i_active, "i"), File(c_active, "c", c_active)}
-                
+                       File(i_active, "i"), File(c_active, "c", c_active)}
+
             {
             }
 
@@ -199,25 +197,24 @@ namespace ioh::logger
                         cached_header_ = header(store_positions * meta.n_variables);
                     }
                 }
-
             }
 
             void write(const std::string &data, const bool all = false)
             {
-                if(!data.empty())
+                if (!data.empty())
                 {
-                    for (auto& file : files_)
+                    for (auto &file : files_)
                         if ((!all && file.triggered) || (all && (file.active && !file.triggered)))
                             file.stream << cached_header_ << data;
 
                     if (!cached_header_.empty())
                         cached_header_.clear();
-                }                   
+                }
             }
 
             void close()
             {
-                for (auto& file : files_)
+                for (auto &file : files_)
                     file.stream.close();
             }
 
@@ -230,72 +227,30 @@ namespace ioh::logger
 
 
     public:
-        Default(const fs::path& output_directory,
-                const std::string& folder_name = "ioh_data",
-                const std::string& algorithm_name = "algorithm_name",
-                const std::string& algorithm_info = "algorithm_info",
-                const bool store_positions = false, 
-                const bool t_always = false,
-                const int t_on_interval = 0,
-                const int t_per_time_range = 0,
-                const bool t_on_improvement = true,
-                const std::vector<int> &t_at_time_points = {0},
-                const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
-                const int trigger_at_time_points_exp_base = 10,
-                const int trigger_at_range_exp_base = 10
-            ) :
+        explicit Default(fs::path output_directory = fs::current_path(), const std::string &folder_name = "ioh_data",
+                         std::string algorithm_name = "algorithm_name", std::string algorithm_info = "algorithm_info",
+                         const common::OptimizationType optimization_type = common::OptimizationType::Minimization,             
+                         const bool store_positions = false, const bool t_always = false, const int t_on_interval = 0,
+                         const int t_per_time_range = 0, const bool t_on_improvement = true,
+                         const std::vector<int> &t_at_time_points = {0},
+                        
+                         const int trigger_at_time_points_exp_base = 10, const int trigger_at_range_exp_base = 10) :
             Observer(t_always, t_on_interval, t_per_time_range, t_on_improvement, t_at_time_points, optimization_type,
                      trigger_at_time_points_exp_base, trigger_at_range_exp_base),
-            store_positions_(store_positions),
-            experiment_folder_(output_directory, folder_name),
-            info_file_(algorithm_name, algorithm_info),
+            store_positions_(store_positions), experiment_folder_(std::move(output_directory), folder_name),
+            info_file_(std::move(algorithm_name), std::move(algorithm_info)),
             data_files_(trigger_on_improvement(), trigger_always() || store_positions,
-                        trigger_at_time_points() || trigger_at_time_range(),
-                        trigger_at_interval())
+                        trigger_at_time_points() || trigger_at_time_range(), trigger_at_interval())
         {
         }
 
-        Default(const std::string &folder_name = "ioh_data",
-                const std::string &algorithm_name = "algorithm_name",
-                const std::string &algorithm_info = "algorithm_info",
-                const bool store_positions = false,
-                const bool t_always = false,
-                const int t_on_interval = 0,
-                const int t_per_time_range = 0,
-                const bool t_on_improvement = true,
-                const std::vector<int> &t_at_time_points = {0},
-                const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
-                const int trigger_at_time_points_exp_base = 10,
-                const int trigger_at_range_exp_base = 10
-            ) :
-            Default(fs::current_path(), folder_name, algorithm_name, algorithm_info, store_positions,
-                    t_always, t_on_interval, t_per_time_range, t_on_improvement, t_at_time_points,
-                    optimization_type, trigger_at_time_points_exp_base, trigger_at_range_exp_base)
-        {
-        }
 
-        Default(const bool t_always,
-                const int t_on_interval = 0,
-                const int t_per_time_range = 0,
-                const bool t_on_improvement = true,
-                const bool store_positions = false,
-                const std::vector<int> &t_at_time_points = {0},
-                const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
-                const int trigger_at_time_points_exp_base = 10,
-                const int trigger_at_range_exp_base = 10
-            ) :
-            Default("ioh_data", "algorithm_name", "algorithm_info", store_positions, t_always, t_on_interval, t_per_time_range,
-                    t_on_improvement, t_at_time_points, optimization_type, trigger_at_time_points_exp_base,
-                    trigger_at_range_exp_base)
+        explicit Default(const experiment::Configuration &conf) :
+            Default(conf.output_directory(), conf.result_folder(), conf.algorithm_name(), conf.algorithm_info(),
+                    common::OptimizationType::Minimization, false,
+                    conf.complete_triggers(), conf.number_interval_triggers(), conf.number_target_triggers(),
+                    conf.update_triggers(), conf.base_evaluation_triggers())
         {
-        }
-
-        
-        explicit Default(const experiment::Configuration &conf)
-            : Default(conf.output_directory(), conf.result_folder(), conf.algorithm_name(),
-                      conf.algorithm_info(), false, conf.complete_triggers(), conf.number_interval_triggers(),
-                      conf.number_target_triggers(), conf.update_triggers(), conf.base_evaluation_triggers()
-                ) {
         }
 
         ~Default()
@@ -305,7 +260,7 @@ namespace ioh::logger
 
         void flush() override
         {
-            if(!last_logged_line_.empty())
+            if (!last_logged_line_.empty())
             {
                 info_file_.update_run_info(problem_meta_); // needs to call on close
                 data_files_.write(last_logged_line_, true);
@@ -315,7 +270,7 @@ namespace ioh::logger
             info_file_.close();
             data_files_.close();
         }
-        
+
         void track_problem(const problem::MetaData &meta) override
         {
             const auto can_write = !last_logged_line_.empty();
@@ -331,41 +286,42 @@ namespace ioh::logger
         void track_suite(const std::string &suite_name) override
         {
             info_file_.suite_name_ = suite_name;
-        } 
+        }
 
-        void log(const LogInfo& log_info) override 
+        void log(const LogInfo &log_info) override
         {
-            const auto improvement_found = improvement_trigger(log_info.transformed_y, problem_meta_->optimization_type);
+            const auto improvement_found =
+                improvement_trigger(log_info.transformed_y, problem_meta_->optimization_type);
 
             data_files_.update_triggers({
                 improvement_found,
                 time_points_trigger(log_info.evaluations) || time_range_trigger(log_info.evaluations),
                 interval_trigger(log_info.evaluations)
-                });
+            });
 
 
             last_logged_line_ = fmt::format(FMT_COMPILE("{} {:f} {:f} {:f} {:f}"), log_info.evaluations,
-                log_info.current.y.at(0), log_info.y_best, log_info.transformed_y,
-                log_info.transformed_y_best);
+                                            log_info.current.y.at(0), log_info.y_best, log_info.transformed_y,
+                                            log_info.transformed_y_best);
 
-            for (const auto& e : data_files_.logged_attributes_)
+            for (const auto &e : data_files_.logged_attributes_)
                 last_logged_line_ += fmt::format(FMT_COMPILE(" {:f}"), *e.second);
 
             if (store_positions_)
-                last_logged_line_ += fmt::format(FMT_COMPILE(" {}"), fmt::join(log_info.current.x, " "));
+                last_logged_line_ += format(FMT_COMPILE(" {}"), fmt::join(log_info.current.x, " "));
 
             last_logged_line_ += "\n";
 
             data_files_ << last_logged_line_;
 
             if (improvement_found)
-                info_file_.best_point_ = { log_info.current.y.at(0), log_info.transformed_y, log_info.evaluations };
-        } 
+                info_file_.best_point_ = {log_info.current.y.at(0), log_info.transformed_y, log_info.evaluations};
+        }
 
         [[nodiscard]] common::file::UniqueFolder &experiment_folder()
         {
             return experiment_folder_;
-        } 
+        }
 
 
         /// Parameters ///
@@ -380,7 +336,7 @@ namespace ioh::logger
             info_file_.experiment_attributes_[name] = common::to_string(value);
         }
 
-        void delete_experiment_attribute(const std::string& name)
+        void delete_experiment_attribute(const std::string &name)
         {
             info_file_.experiment_attributes_.erase(name);
         }

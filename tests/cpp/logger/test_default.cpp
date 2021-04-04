@@ -32,7 +32,7 @@ TEST(logger, default) {
     const auto info_file_name2 = string_format("IOHprofiler_f%d_%s.info",
                     p2.meta_data().problem_id, p2.meta_data().name.c_str());
     {
-        auto l = Default();
+        auto l = Default();   
         l_folder = l.experiment_folder();
 
         ASSERT_TRUE(fs::exists(l_folder.path()));

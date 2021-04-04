@@ -106,8 +106,8 @@ TEST(experiment, bbob)
 	std::vector<int> ins = {1, 2};
 	std::vector<int> dims = {2, 10};
 	const auto suite = std::make_shared<suite::BBOB>(pbs, ins, dims);
-	const auto logger = std::make_shared<logger::Default>(
-		std::string("logger-experimenter"), "random-search", "10iterations", true);
+	const auto logger = std::make_shared<logger::Default>(fs::current_path(),
+		std::string("logger-experimenter"), "random-search", "10iterations", common::OptimizationType::Minimization, true);
 	auto experiment = experiment::Experimenter<problem::Real>(
 		suite, logger, bbob_random_search, 10);
 

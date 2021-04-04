@@ -22,6 +22,7 @@ inline ioh::logger::Default get_logger_with_positions()
         "logger_w_positions", /* folder_name : "logger_example" */
         "random_search", /* algorithm_name : "random search'*/
         "a random search", /* algorithm_info : "a random search for testing the bbob suite" */
+        ioh::common::OptimizationType::Minimization,
         true /* store_positions: true*/
         );
 }
