@@ -230,19 +230,19 @@ namespace ioh::logger
 
 
     public:
-        explicit Default(const fs::path& output_directory,
-                         const std::string& folder_name = "ioh_data",
-                         const std::string& algorithm_name = "algorithm_name",
-                         const std::string& algorithm_info = "algorithm_info",
-                         const bool store_positions = false, 
-                         const bool t_always = false,
-                         const int t_on_interval = 0,
-                         const int t_per_time_range = 0,
-                         const bool t_on_improvement = true,
-                         const std::vector<int> &t_at_time_points = {0},
-                         const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
-                         const int trigger_at_time_points_exp_base = 10,
-                         const int trigger_at_range_exp_base = 10
+        Default(const fs::path& output_directory,
+                const std::string& folder_name = "ioh_data",
+                const std::string& algorithm_name = "algorithm_name",
+                const std::string& algorithm_info = "algorithm_info",
+                const bool store_positions = false, 
+                const bool t_always = false,
+                const int t_on_interval = 0,
+                const int t_per_time_range = 0,
+                const bool t_on_improvement = true,
+                const std::vector<int> &t_at_time_points = {0},
+                const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
+                const int trigger_at_time_points_exp_base = 10,
+                const int trigger_at_range_exp_base = 10
             ) :
             Observer(t_always, t_on_interval, t_per_time_range, t_on_improvement, t_at_time_points, optimization_type,
                      trigger_at_time_points_exp_base, trigger_at_range_exp_base),
@@ -255,18 +255,18 @@ namespace ioh::logger
         {
         }
 
-        explicit Default(const std::string &folder_name = "ioh_data",
-                         const std::string &algorithm_name = "algorithm_name",
-                         const std::string &algorithm_info = "algorithm_info",
-                         const bool store_positions = false,
-                         const bool t_always = false,
-                         const int t_on_interval = 0,
-                         const int t_per_time_range = 0,
-                         const bool t_on_improvement = true,
-                         const std::vector<int> &t_at_time_points = {0},
-                         const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
-                         const int trigger_at_time_points_exp_base = 10,
-                         const int trigger_at_range_exp_base = 10
+        Default(const std::string &folder_name = "ioh_data",
+                const std::string &algorithm_name = "algorithm_name",
+                const std::string &algorithm_info = "algorithm_info",
+                const bool store_positions = false,
+                const bool t_always = false,
+                const int t_on_interval = 0,
+                const int t_per_time_range = 0,
+                const bool t_on_improvement = true,
+                const std::vector<int> &t_at_time_points = {0},
+                const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
+                const int trigger_at_time_points_exp_base = 10,
+                const int trigger_at_range_exp_base = 10
             ) :
             Default(fs::current_path(), folder_name, algorithm_name, algorithm_info, store_positions,
                     t_always, t_on_interval, t_per_time_range, t_on_improvement, t_at_time_points,
@@ -274,15 +274,15 @@ namespace ioh::logger
         {
         }
 
-        explicit Default(const bool t_always,
-                         const int t_on_interval = 0,
-                         const int t_per_time_range = 0,
-                         const bool t_on_improvement = true,
-                         const bool store_positions = false,
-                         const std::vector<int> &t_at_time_points = {0},
-                         const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
-                         const int trigger_at_time_points_exp_base = 10,
-                         const int trigger_at_range_exp_base = 10
+        Default(const bool t_always,
+                const int t_on_interval = 0,
+                const int t_per_time_range = 0,
+                const bool t_on_improvement = true,
+                const bool store_positions = false,
+                const std::vector<int> &t_at_time_points = {0},
+                const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
+                const int trigger_at_time_points_exp_base = 10,
+                const int trigger_at_range_exp_base = 10
             ) :
             Default("ioh_data", "algorithm_name", "algorithm_info", store_positions, t_always, t_on_interval, t_per_time_range,
                     t_on_improvement, t_at_time_points, optimization_type, trigger_at_time_points_exp_base,

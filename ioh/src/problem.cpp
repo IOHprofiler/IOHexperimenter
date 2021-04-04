@@ -73,7 +73,7 @@ void define_factory(py::module &m, const std::string &name)
         .def("map", &Factory::map)
         .def("create", py::overload_cast<const int, int, int>(&Factory::create, py::const_),
              py::return_value_policy::reference)
-        .def("create", py::overload_cast<const std::string, int, int>(&Factory::create, py::const_),
+        .def("create", py::overload_cast<const std::string&, int, int>(&Factory::create, py::const_),
              py::return_value_policy::reference);
 }
 

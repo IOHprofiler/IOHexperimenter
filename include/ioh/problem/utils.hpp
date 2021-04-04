@@ -140,7 +140,7 @@ namespace ioh
 
             State() = default;
 
-            State(Solution<T> initial) 
+            State(Solution<T> initial) :
                 initial_solution(std::move(initial))
             {
                 reset();
