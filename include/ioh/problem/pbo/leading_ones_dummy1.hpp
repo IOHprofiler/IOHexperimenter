@@ -34,9 +34,9 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 LeadingOnesDummy1(const int instance, const int n_variables) :
-                    PBOProblem(11, instance, n_variables, "LeadingOnesDummy1")
+                    PBOProblem(11, instance, n_variables, "LeadingOnesDummy1"),
+                    info_(utils::dummy(n_variables, 0.5, 10000))
                 {
-                    info_ = utils::dummy(n_variables, 0.5, 10000);
                     objective_.x = std::vector<int>(n_variables,1);
                     objective_.y = evaluate(objective_.x);
                 }

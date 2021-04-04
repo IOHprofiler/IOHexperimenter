@@ -42,9 +42,7 @@ namespace ioh {
                                                           )) - 1.0) *
                                                   sqrt(x[i]);
                             x[i] = pow(x[i], exponent);
-                        } else {
-                            x[i] = x[i];
-                        }
+                        } 
                     }
                 }
 

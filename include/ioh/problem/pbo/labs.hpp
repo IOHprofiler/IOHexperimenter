@@ -10,13 +10,12 @@ namespace ioh
             class LABS final : public PBOProblem<LABS>
             {
             protected:
-                static double correlation(const std::vector<int> x, const int n, int k)
+                static double correlation(const std::vector<int>& x, const int n, int k)
                 {
                     auto result = 0;
                     for (auto i = 0; i < n - k; ++i)
-                    {
                       result += (x[i] * 2 - 1) * (x[i+k] * 2 - 1);
-                    }
+                      
                     return static_cast<double>(result);
                 }
 
@@ -29,7 +28,7 @@ namespace ioh
                         result += cor * cor;
                     }
                     result = static_cast<double>(meta_data_.n_variables * meta_data_.n_variables) / 2.0 / result;
-                    return { static_cast<double>(result) };
+                    return { result };
                 }
 
             public:

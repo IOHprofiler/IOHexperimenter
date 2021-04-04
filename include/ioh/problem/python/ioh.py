@@ -44,7 +44,6 @@ class Problem(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_type(self):
         raise NotImplementedError('Classes inheriting from ioh.Problem must define `get_type(self)`')
-        return "Test_benchmark"
 
     @abc.abstractmethod
     def get_number_of_objectives(self):

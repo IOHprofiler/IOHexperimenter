@@ -32,9 +32,9 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 OneMaxDummy2(const int instance, const int n_variables) :
-                    PBOProblem(5, instance, n_variables, "OneMaxDummy2")
+                    PBOProblem(5, instance, n_variables, "OneMaxDummy2"),
+                    info_(utils::dummy(n_variables, 0.9, 10000))
                 {
-                    info_ = utils::dummy(n_variables, 0.9, 10000);
                     objective_.x = std::vector<int>(n_variables,1);
                     objective_.y = evaluate(objective_.x);
                 }

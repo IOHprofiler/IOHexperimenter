@@ -19,18 +19,18 @@ namespace ioh {
                  * can actually be called.
                  */
                 ExternPythonProblem(
-                    std::string module_name,
-                    std::string instance_name,
-                    std::string objective_function_api = "call",
-                    std::string instance_api_get = "get_instance",
-                    std::string dimension_api_get = "get_number_of_variables",
-                    std::string problem_id_api_get = "get_problem_id",
-                    std::string lowerbound_api = "get_lowerbound",
-                    std::string upperbound_api = "get_upperbound",
-                    std::string minimization_api = "get_minimization",
-                    std::string name_api = "get_name",
-                    std::string type_api = "get_type",
-                    std::string number_of_objectives_api =
+                    const std::string& module_name,
+                    const std::string& instance_name,
+                    const std::string& objective_function_api = "call",
+                    const std::string& instance_api_get = "get_instance",
+                    const std::string& dimension_api_get = "get_number_of_variables",
+                    const std::string& problem_id_api_get = "get_problem_id",
+                    const std::string& lowerbound_api = "get_lowerbound",
+                    const std::string& upperbound_api = "get_upperbound",
+                    const std::string& minimization_api = "get_minimization",
+                    const std::string& name_api = "get_name",
+                    const std::string& type_api = "get_type",
+                    const std::string& number_of_objectives_api =
                         "get_number_of_objectives"
                     )
                     : base<InputType>(), // Default instance and dimension

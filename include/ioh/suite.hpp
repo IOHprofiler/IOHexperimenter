@@ -41,7 +41,7 @@ namespace ioh::suite
 
             Iterator &operator++(int)
             {
-                auto it = *this;
+                Iterator it(*this);
                 ++(*this);
                 return it;
             }

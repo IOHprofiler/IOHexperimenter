@@ -366,10 +366,9 @@ namespace ioh
 #if defined(__GNUC__)
             #pragma GCC diagnostic pop
 #endif
-            if (size <= 0)
-            {
+            if (size == 0)
                 throw std::runtime_error("Error during formatting.");
-            }
+                
             const std::unique_ptr<char[]> buf(new char[size]);
             snprintf(buf.get(), size, format.c_str(), args ...);
             return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside

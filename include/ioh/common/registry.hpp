@@ -22,7 +22,7 @@ namespace ioh::common
             return f;
         }
 
-        void include(const std::string name, int id, Creator creator)
+        void include(const std::string& name, int id, Creator creator)
         {
             const auto already_defined = name_map.find(name) != std::end(name_map);
             assert(!already_defined);

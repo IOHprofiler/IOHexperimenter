@@ -31,7 +31,7 @@ namespace ioh
             std::vector<T> ub;
             std::vector<T> lb;
 
-            Constraint(const std::vector<T> upper, const std::vector<T> lower) :
+            Constraint(const std::vector<T>& upper, const std::vector<T>& lower) :
                 ub(upper), lb(lower)
             {
             }
@@ -140,7 +140,7 @@ namespace ioh
 
             State() = default;
 
-            State(Solution<T> initial_solution) :
+            explicit State(Solution<T> initial_solution) 
                 initial_solution(std::move(initial_solution))
             {
                 reset();
@@ -314,7 +314,6 @@ namespace ioh
                         new_variables.push_back(epistasis_result);
                         ++i;
                     }
-                    h += v;
                 }
                 return new_variables;
             }

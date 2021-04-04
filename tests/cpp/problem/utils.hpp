@@ -25,7 +25,7 @@ inline vector<string> split(const string &str, const string &pattern)
     return res;
 }
  
-inline vector<double> string_to_vector_double(string s) {
+inline vector<double> string_to_vector_double(const string& s) {
   vector<double> x;
   vector<string> tmp;
   size_t i = 0;
@@ -38,7 +38,7 @@ inline vector<double> string_to_vector_double(string s) {
   return x;
 }
 
-inline vector<int> string_to_vector_int(string s) {
+inline vector<int> string_to_vector_int(const string& s) {
     vector<int> x;
     size_t i = 0;
     while (i != s.size()) {

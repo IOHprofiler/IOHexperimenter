@@ -31,9 +31,9 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 OneMaxRuggedness3(const int instance, const int n_variables) :
-                    PBOProblem(10, instance, n_variables, "OneMaxRuggedness3")
+                    PBOProblem(10, instance, n_variables, "OneMaxRuggedness3"),
+                    info_(utils::ruggedness3(n_variables))
                 {
-                    info_ = utils::ruggedness3(n_variables);
                     objective_.x = std::vector<int>(n_variables,1);
                     objective_.y = evaluate(objective_.x);
                 }
