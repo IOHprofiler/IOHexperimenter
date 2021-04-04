@@ -553,19 +553,6 @@ namespace ioh
             
                 return max - k - (2 * j * j - j) - q % 2 * (-2 * j + 1);
             }
-
-
-            static double layer_compute_ruggedness(const double y, int dimension, int gamma) {
-                auto r = ruggedness_raw(ruggedness_translate(gamma, dimension),
-                                        dimension);
-                const double result = r[static_cast<int>(y)];
-            
-                /*for(i=0;i<dimension+1;i++){fprintf(stderr,"%d ",r[i]);}fprintf(stderr,"\n");
-              
-                fprintf(stderr,"dim %d val %f, result %f\n",dimension,y,result);*/
-                assert(result <= static_cast<double>(dimension));
-                return result;
-            }
         }
     }
 }

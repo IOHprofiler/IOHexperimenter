@@ -565,7 +565,7 @@ namespace ioh
                                     for (const auto &item : row)
                                         sum += item;
                             }
-                    return sum;
+                return sum;
             }
         };
     }
