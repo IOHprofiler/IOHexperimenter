@@ -230,10 +230,10 @@ namespace ioh::logger
 
 
     public:
-        explicit Default(fs::path output_directory,
-                         const std::string &folder_name = "ioh_data",
-                         std::string algorithm_name = "algorithm_name",
-                         std::string algorithm_info = "algorithm_info",
+        explicit Default(const fs::path& output_directory,
+                         const std::string& folder_name = "ioh_data",
+                         const std::string& algorithm_name = "algorithm_name",
+                         const std::string& algorithm_info = "algorithm_info",
                          const bool store_positions = false, 
                          const bool t_always = false,
                          const int t_on_interval = 0,
@@ -247,8 +247,8 @@ namespace ioh::logger
             Observer(t_always, t_on_interval, t_per_time_range, t_on_improvement, t_at_time_points, optimization_type,
                      trigger_at_time_points_exp_base, trigger_at_range_exp_base),
             store_positions_(store_positions),
-            experiment_folder_(std::move(output_directory), folder_name),
-            info_file_(std::move(algorithm_name), std::move(algorithm_info)),
+            experiment_folder_(output_directory, folder_name),
+            info_file_(algorithm_name, algorithm_info),
             data_files_(trigger_on_improvement(), trigger_always() || store_positions,
                         trigger_at_time_points() || trigger_at_time_range(),
                         trigger_at_interval())
