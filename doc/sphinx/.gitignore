@@ -1,0 +1,7 @@
+# Ignore Sphinx build artifacts.
+
+_build/
+_static/
+_templates/
+
+api/*

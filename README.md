@@ -1,4 +1,8 @@
-# IOHprofiler: IOHexperimenter
+# IOHprofiler: IOHexperimenter 
+![Ubuntu g++-{10, 9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/Ubuntu/badge.svg)
+![MacOS clang++, g++-{9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/MacOS/badge.svg)
+![Windows MVSC-2019](https://github.com/IOHprofiler/IOHexperimenter/workflows/Windows/badge.svg)
+
 
 This is the __benchmarking platform__ for <b>I</b>terative <b>O</b>ptimization <b>H</b>euristics (IOHs).
 
@@ -10,13 +14,8 @@ This is the __benchmarking platform__ for <b>I</b>terative <b>O</b>ptimization <
 <b>IOHexperimenter</b> <i>provides</i>:
 
 * A framework for straightforward benchmarking of any iterative optimization heuristic
-* A suite consisting of 23 pre-made Pseudo-Boolean benchmarking function, with easily accessible methods for adding custom functions and suites 
+* A suite consisting of 25 pre-made Pseudo-Boolean benchmarking function, with easily accessible methods for adding custom functions and suites 
 * Logging methods to effortlesly store benchmarking data in a format compatible with __IOHanalyzer__, with future support for additional data logging options
-* (__Soon to come__:) A framework which significantly simplifies algorithm design
-
-<b>IOHexperimenter</b> is <i>built on</i>:
-
-* `C++`
 
 <b>IOHexperimenter</b> is available for:
 
@@ -24,35 +23,43 @@ This is the __benchmarking platform__ for <b>I</b>terative <b>O</b>ptimization <
 * `R` on [this GitHub branch](https://github.com/IOHprofiler/IOHexperimenter/tree/R) or as a [CRAN package](https://cran.r-project.org/package=IOHexperimenter); [Wiki Page](https://iohprofiler.github.io/IOHexp/R/).
 * `Python` on [this GitHub branch](https://github.com/IOHprofiler/IOHexperimenter/tree/python-interface) or as a [pip package](https://pypi.org/project/IOHexperimenter/); [Wiki Page](https://iohprofiler.github.io/IOHexp/python/).
 
-## Using IOHexperimenter
+### Using IOHexperimenter in C++
 
-### Running Experiments
+<b>IOHexperimenter</b> is <i>built natively in</i> `C++`. To use this version of the <b>IOHexperimenter</b>, the following dependencies are needed:
 
-The __IOHexperimenter__ has been built on `C++`.
+* A `C++` compiler. The minimum compiler version is g++ 7 or equivalent, but we recommend g++ 9 or equivalent.
+* [Cmake](https://cmake.org), version 3.10 or higher
 
-#### Using IOHexperimenter in C++
-
-[Cmake](https://cmake.org) is used to build this project, please make sure you have it installed.
-
-If you are using the tool for the first time, please download or clone this branch, and run `cmake .`; `make install` at the directory where the project locates.
+If you are using the tool for the first time, please download or clone this branch, go to the directory where the project root is located and run the following: 
+```
+cmake .
+make install
+```
 * If you want to set up the install directory, please run `cmake -DCMAKE_INSTALL_PREFIX=your/path .` before installation.
 * three exectuable files will be generated in `build/Cpp` for test.
 
-After installation, you can compile your project as follow (with linking IOH library):
-```
-g++ $CMPL_FLAGS -o IOHprofiler_run_experiment IOHprofiler_run_experiment.cpp -lIOH
-```
+Note: If you want to set up the install directory, replace the first command with `cmake -DCMAKE_INSTALL_PREFIX=your/path .` where 'your/path' is the required installation directory
 
-For more details of how to use the `C++` version, please visit [this page](/build/Cpp).
+After installation, three exectuable files will be generated in the `example` folder. These can be used for testing the IOHexperimenter, and their source provides an easy starting point for running the IOHexperimenter in the three most common ways:
+__NOTE: THESE LINKS STILL HAVE TO BE UPDATED TO THE NEW STRUCTURE__
+* Running an algorithm on a [single function](https://iohprofiler.github.io/IOHexp/Cpp/#using-individual-problems)
+* Running an algorithm on a [suite of functions](https://iohprofiler.github.io/IOHexp/Cpp/#using-suites)
+* Using the [IOHexperimenter class to benchmark based on a configuration file](https://iohprofiler.github.io/IOHexp/Cpp/#using-conf)
 
-#### Using IOHexperimenter in R
+For more details of how to use the `C++` version, please visit [our wiki on this subject](/build/Cpp).
+
+For the detailed documentation of all available functionality in the __IOHexperimenter__, please visit [this page](https://iohexperimenter.readthedocs.io/en/restru/index.html)
+
+### Using IOHexperimenter in R
 To use the IOHexperimenter within `R`, please visit the [R branch](https://github.com/IOHprofiler/IOHexperimenter/tree/R) of this repository.
 
-### Creating test problems
+### Using IOHexperimeter in Python
+To use the IOHexperimenter in `Python`, please visit the [python branch](https://github.com/IOHprofiler/IOHexperimenter/tree/python-interface) of this repository.
+
+### Expanding the IOHexperimenter 
 
 Benchmarking problems in __IOHexperimenter__ are easy to create yourself. We provide support for any input type and any number of real-valued objectives. For a more detailed guidline of how to define a benchmarking problem within IOHexperimenter, please visit [this page](/src/Problems).
 
-### Configuring test suites
 Suites are collections of benchmarking problems. By including problems into a suite, it is easier for users to maintain their experiments. If you create a set of similar problems, it is recommended to create a suite to collect them together, which can be done effortlesly within the IOHexperimenter. For detailed steps of creating and using suites, please visit [this page](/src/Suites).
 
 ## Contact
@@ -62,6 +69,7 @@ If you have any questions, comments or suggestions, please don't hesitate contac
 ## Our team
 
 * [Furong Ye](https://www.universiteitleiden.nl/en/staffmembers/furong-ye#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
+* [Jacob de Nobel](https://www.universiteitleiden.nl/en/staffmembers/jacob-de-nobel), <i>Leiden Institute of Advanced Computer Science</i>,
 * [Diederick Vermetten](https://www.universiteitleiden.nl/en/staffmembers/diederick-vermetten#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
 * [Hao Wang](https://www.universiteitleiden.nl/en/staffmembers/hao-wang#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
 * [Carola Doerr](http://www-desir.lip6.fr/~doerr/), <i>CNRS and Sorbonne University</i>, 
