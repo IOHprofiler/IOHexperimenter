@@ -177,3 +177,6 @@ dmypy.json
 cython_debug/
 
 data/
+
+test.py
+CMakeSettings.json
