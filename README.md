@@ -87,7 +87,42 @@ auto &factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();
 auto new_problem_f = factory.create("test_problem", 1, 10);
 ```
 
-Please check [this example](https://github.com/IOHprofiler/IOHexperimenter/blob/759750759331fff1243ef9e121209cde450b9726/example/problem_example.h#L51) out if you aim to create the new problem by subclassing the abstract problem class in IOHexperimenter.
+Alternatively, one might wish to create the new problem by subclassing the abstract problem class in IOHexperimenter.
+This can be done by inheriting the corresponding problem registration class, which is `ioh::problem::IntegerProblem`
+for pseudo-Boolean problems and `ioh::problem::RealProblem` for continuous problems. In the below example, we show
+how to do this for pseudo-Boolean problems.
+
+```C++
+class NewBooleanProblem final : public ioh::problem::IntegerProblem<NewBooleanProblem>
+{
+protected:
+    // The evaluate method is required, in this case the value of x0 is return as objective value
+    std::vector<int> evaluate(const std::vector<int> &x) override
+    {
+        // the function body
+    }
+
+public:
+    /// This constructor is required(i.e. (int, int), even if the newly create problem does not have a way to handle different
+    /// instances/dimensions.
+    NewBooleanProblem(const int instance, const int n_variables) :
+        IntegerProblem(
+          ioh::problem::MetaData(
+            1,                     // problem id, which will be overwritten when registering this class in all pseudo-Boolean problems
+            instance,              // the instance id
+            "NewBooleanProblem",   // problem name
+            n_variables,           // search dimensionality
+            1,                     // number of objectives, only support 1 for now
+            ioh::common::OptimizationType::Minimization
+            )
+          )
+    {
+    }
+};
+
+```
+
+Please check [this example](https://github.com/IOHprofiler/IOHexperimenter/blob/759750759331fff1243ef9e121209cde450b9726/example/problem_example.h#L51) for adding continuous problems in this manner.
 
 <!-- ### Using IOHexperimenter in R
 To use the IOHexperimenter within `R`, please visit the [R branch](https://github.com/IOHprofiler/IOHexperimenter/tree/R) of this repository. -->
