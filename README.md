@@ -94,7 +94,7 @@ To use the IOHexperimenter within `R`, please visit the [R branch](https://githu
 
 ## Python Interface
 
-To use the IOHexperimenter in `Python`, please visit the [python branch](https://github.com/IOHprofiler/IOHexperimenter/tree/python-interface) of this repository.
+The Python interface is still under construction at this momement. Please see [here](https://github.com/IOHprofiler/IOHexperimenter/tree/master/ioh) for the functionality it provides for now and some example use cases.
 
 ## Contact
 
