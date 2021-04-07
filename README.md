@@ -50,7 +50,30 @@ which installs all header files to `/usr/local/include/ioh` by default. If you w
 
 ### Examples
 
-We provide some simple examples to demonstrate the basic usage:
+To obtain a built-in problem, you could create a problem instance by passing the
+*istance id* and the *search dimension* to the constructor of the intended problem class, e.g.,
+
+```C++
+#include "ioh.hpp"
+const auto om = std::make_shared<ioh::problem::pbo::OneMax>(1, 10); // PBO problem: instance 1, dim 10
+const auto sp = std::make_shared<ioh::problem::bbob::Sphere>(1, 5); // BBOB problem: instance 1, dim 5
+```
+
+The instance id is intended to generalize a certain problem by some transformations, where
+it serves as the random seed for randomizing the transformations, e.g., affine
+transforms for BBOB problems and scaling of objective values for PBO problems. Please see
+
+* [PBO transformations](https://iohprofiler.github.io/IOHproblem/)
+* [BBOB/COCO transformations](https://coco.gforge.inria.fr/downloads/download16.00/bbobdocfunctions.pdf)
+
+We also provide problem factories for this purpose:
+
+```C++
+const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::Integer>::instance();
+const auto om = problem_factory.create("OneMax", 1, 10);
+```
+
+Also, we include some simple examples to demonstrate the basic usage:
 
 * Using [a single problem](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/problem_example.h)
 * Using a pre-defined [problem suite/set](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/suite_example.h)
@@ -82,31 +105,53 @@ auto new_problem = ioh::problem::wrap_function<double>(
 std::cout << const_z_problem.meta_data() << std::endl;
 ```
 
-After wrapping, we could also create this `test_problem` from the problem factory:
+After wrapping, we could also create this `test_problem` from the problem factory. Note that,
+the instance id is ineffective in this approach since we haven't implemented it for the wrapped problem.
 
 ```c++
 auto &factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();
-auto new_problem_f = factory.create("test_problem", 1, 10);
+auto new_problem_f = factory.create(
+  "test_problem",  // create by name
+  1,               // instance id
+  10               // number of search variables
+);
 ```
 
-Alternatively, one might wish to create the new problem by subclassing the abstract problem class in IOHexperimenter.
-This can be done by inheriting the corresponding problem registration class, which is `ioh::problem::IntegerProblem`
-for pseudo-Boolean problems and `ioh::problem::RealProblem` for continuous problems. In the below example, we show
-how to do this for pseudo-Boolean problems.
+Alternatively, one might wish to create the new problem by subclassing the abstract problem class
+in IOHexperimenter, taking benefits of implementing more details, e.g., aforementioned transformations.
+This can be done by inheriting the corresponding problem registration class, which is
+
+* `ioh::problem::IntegerProblem` for pseudo-Boolean problems, and
+* `ioh::problem::RealProblem` for continuous problems.
+
+In the below example, we show how to do this for pseudo-Boolean problems.
 
 ```C++
 class NewBooleanProblem final : public ioh::problem::IntegerProblem<NewBooleanProblem>
 {
 protected:
-    // The evaluate method is required, in this case the value of x0 is return as objective value
+    // [mandatory] The evaluate method is mandatory to implement
     std::vector<int> evaluate(const std::vector<int> &x) override
     {
-        // the function body
+        // the function body goes here
+    }
+
+    // [optional] If one wish to implement transformations on objective values
+    std::vector<double> transform_objectives(std::vector<double> y) override
+    {
+
+    }
+
+    // [optional] If one wish to implement transformations on search variables
+    std::vector<double> transform_objectives(std::vector<double> y) override
+    {
+
     }
 
 public:
-    /// This constructor is required(i.e. (int, int), even if the newly create problem does not have a way to handle different
-    /// instances/dimensions.
+    /// [mandatory] This constructor always take `instance` as input even
+    /// if it is ineffective by default. `instance` would be effective if and only if
+    /// at least one of `transform_objectives` and `transform_objectives` is implemented
     NewBooleanProblem(const int instance, const int n_variables) :
         IntegerProblem(
           ioh::problem::MetaData(
@@ -121,7 +166,6 @@ public:
     {
     }
 };
-
 ```
 
 Please check [this example](https://github.com/IOHprofiler/IOHexperimenter/blob/759750759331fff1243ef9e121209cde450b9726/example/problem_example.h#L51) for adding continuous problems in this manner.
