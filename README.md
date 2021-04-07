@@ -1,78 +1,112 @@
-# IOHprofiler: IOHexperimenter 
+# IOHprofiler: IOHexperimenter
 ![Ubuntu g++-{10, 9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/Ubuntu/badge.svg)
 ![MacOS clang++, g++-{9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/MacOS/badge.svg)
 ![Windows MVSC-2019](https://github.com/IOHprofiler/IOHexperimenter/workflows/Windows/badge.svg)
 
 
-This is the __benchmarking platform__ for <b>I</b>terative <b>O</b>ptimization <b>H</b>euristics (IOHs).
+__Experimenter__ for <b>I</b>terative <b>O</b>ptimization <b>H</b>euristics (IOHs), built natively in</i> `C++`.
 
 * __Documentation__: [https://arxiv.org/abs/1810.05281](https://arxiv.org/abs/1810.05281)
 * __Wiki page__: [https://iohprofiler.github.io](https://iohprofiler.github.io/)
 * __General Contact__: [iohprofiler@liacs.leidenuniv.nl](iohprofiler@liacs.leidenuniv.nl)
-* __Mailing List__: [https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler](https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler)
+<!-- * __Mailing List__: [https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler](https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler) -->
 
 <b>IOHexperimenter</b> <i>provides</i>:
 
-* A framework for straightforward benchmarking of any iterative optimization heuristic
-* A suite consisting of 25 pre-made Pseudo-Boolean benchmarking function, with easily accessible methods for adding custom functions and suites 
-* Logging methods to effortlesly store benchmarking data in a format compatible with __IOHanalyzer__, with future support for additional data logging options
+* A framework to ease the benchmarking of any iterative optimization heuristic
+* Continuous and discrete benchmarking problems
+* [Pseudo-Boolean Optimization (PBO)](https://iohprofiler.github.io/IOHproblem/) problem set (25 pseudo-Boolean problems)
+* Integration of the well-known [Black-black Optimization Benchmarking (BBOB)](https://github.com/numbbo/coco) problem set (24 continuous problems)
+* Interface for adding new problems and suite/problem set
+* Advanced logging module that takes care of registering the data in a seamless manner
+* Data format is compatible with [IOHanalyzer](https://github.com/IOHprofiler/IOHanalyzer)
 
 <b>IOHexperimenter</b> is available for:
 
-* `C++` on the current GitHub branch; [Wiki Page](https://iohprofiler.github.io/IOHexp/Cpp/).
-* `R` on [this GitHub branch](https://github.com/IOHprofiler/IOHexperimenter/tree/R) or as a [CRAN package](https://cran.r-project.org/package=IOHexperimenter); [Wiki Page](https://iohprofiler.github.io/IOHexp/R/).
-* `Python` on [this GitHub branch](https://github.com/IOHprofiler/IOHexperimenter/tree/python-interface) or as a [pip package](https://pypi.org/project/IOHexperimenter/); [Wiki Page](https://iohprofiler.github.io/IOHexp/python/).
+* `C++` manual can be found [here](https://iohprofiler.github.io/IOHexp/Cpp/)
+* `Python`: please see [here](https://github.com/IOHprofiler/IOHexperimenter/tree/master/ioh) for details user manual
+<!-- * or as a [pip package](https://pypi.org/project/IOHexperimenter/); [Wiki Page](https://iohprofiler.github.io/IOHexp/python/). -->
 
-### Using IOHexperimenter in C++
+## C++ Interface
 
-<b>IOHexperimenter</b> is <i>built natively in</i> `C++`. To use this version of the <b>IOHexperimenter</b>, the following dependencies are needed:
+### Installation
+
+The following toolkits are needed for compiling IOHexperimenter:
 
 * A `C++` compiler. The minimum compiler version is g++ 7 or equivalent, but we recommend g++ 9 or equivalent.
-* [Cmake](https://cmake.org), version 3.10 or higher
+* [CMake](https://cmake.org), version 3.10 or higher
 
-If you are using the tool for the first time, please download or clone this branch, go to the directory where the project root is located and run the following: 
+Please use the following commands to download, compile, and install this package:
+
+```sh
+> git clone https://github.com/IOHprofiler/IOHexperimenter.git
+> cd IOHexperimenter
+> cmake . && make install
 ```
-cmake .
-make install
+
+which installs all header files to `/usr/local/include/ioh` by default. If you want to change this directory, please use the following flag `cmake -DCMAKE_INSTALL_PREFIX=your/path .`
+
+### Examples
+
+We provide some simple examples to demonstrate the basic usage:
+
+* Using [a single problem](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/problem_example.h)
+* Using a pre-defined [problem suite/set](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/suite_example.h)
+* Using the [logging ability](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/logger_example.h) for storing benchmark data
+
+For the detailed documentation of all available functionality in the __IOHexperimenter__, please check our [this page](https://iohexperimenter.readthedocs.io/en/restru/index.html) __[under construction]__.
+
+### Add new problems
+
+We offer a very simple and convenient interface for integrating new benchmark problems/functions. First, you could define a new `test_problem` as you like. Note that the `<vector>` header is already imported in "ioh.hpp".
+
+```C++
+#include "ioh.hpp"
+
+std::vector<double> test_problem(const std::vector<double> &)
+{
+    // the actual function body start here
+    // ...
+}
 ```
-* If you want to set up the install directory, please run `cmake -DCMAKE_INSTALL_PREFIX=your/path .` before installation.
-* three exectuable files will be generated in `build/Cpp` for test.
 
-Note: If you want to set up the install directory, replace the first command with `cmake -DCMAKE_INSTALL_PREFIX=your/path .` where 'your/path' is the required installation directory
+Then, you only need to "wrap" this new function as follows:
 
-After installation, three exectuable files will be generated in the `example` folder. These can be used for testing the IOHexperimenter, and their source provides an easy starting point for running the IOHexperimenter in the three most common ways:
-__NOTE: THESE LINKS STILL HAVE TO BE UPDATED TO THE NEW STRUCTURE__
-* Running an algorithm on a [single function](https://iohprofiler.github.io/IOHexp/Cpp/#using-individual-problems)
-* Running an algorithm on a [suite of functions](https://iohprofiler.github.io/IOHexp/Cpp/#using-suites)
-* Using the [IOHexperimenter class to benchmark based on a configuration file](https://iohprofiler.github.io/IOHexp/Cpp/#using-conf)
+```c++
+auto new_problem = ioh::problem::wrap_function<double>(
+  &test_problem,
+  "test_problem" // name for the new function
+);
+std::cout << const_z_problem.meta_data() << std::endl;
+```
 
-For more details of how to use the `C++` version, please visit [our wiki on this subject](/build/Cpp).
+After wrapping, we could also create this `test_problem` from the problem factory:
 
-For the detailed documentation of all available functionality in the __IOHexperimenter__, please visit [this page](https://iohexperimenter.readthedocs.io/en/restru/index.html)
+```c++
+auto &factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();
+auto new_problem_f = factory.create("test_problem", 1, 10);
+```
 
-### Using IOHexperimenter in R
-To use the IOHexperimenter within `R`, please visit the [R branch](https://github.com/IOHprofiler/IOHexperimenter/tree/R) of this repository.
+Please check [this example](https://github.com/IOHprofiler/IOHexperimenter/blob/759750759331fff1243ef9e121209cde450b9726/example/problem_example.h#L51) out if you aim to create the new problem by subclassing the abstract problem class in IOHexperimenter.
 
-### Using IOHexperimeter in Python
+<!-- ### Using IOHexperimenter in R
+To use the IOHexperimenter within `R`, please visit the [R branch](https://github.com/IOHprofiler/IOHexperimenter/tree/R) of this repository. -->
+
+## Python Interface
+
 To use the IOHexperimenter in `Python`, please visit the [python branch](https://github.com/IOHprofiler/IOHexperimenter/tree/python-interface) of this repository.
-
-### Expanding the IOHexperimenter 
-
-Benchmarking problems in __IOHexperimenter__ are easy to create yourself. We provide support for any input type and any number of real-valued objectives. For a more detailed guidline of how to define a benchmarking problem within IOHexperimenter, please visit [this page](/src/Problems).
-
-Suites are collections of benchmarking problems. By including problems into a suite, it is easier for users to maintain their experiments. If you create a set of similar problems, it is recommended to create a suite to collect them together, which can be done effortlesly within the IOHexperimenter. For detailed steps of creating and using suites, please visit [this page](/src/Suites).
 
 ## Contact
 
-If you have any questions, comments or suggestions, please don't hesitate contacting us <IOHprofiler@liacs.leidenuniv.nl>!
+If you have any questions, comments or suggestions, please don't hesitate contacting us <IOHprofiler@liacs.leidenuniv.nl>.
 
 ## Our team
 
-* [Furong Ye](https://www.universiteitleiden.nl/en/staffmembers/furong-ye#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
 * [Jacob de Nobel](https://www.universiteitleiden.nl/en/staffmembers/jacob-de-nobel), <i>Leiden Institute of Advanced Computer Science</i>,
+* [Furong Ye](https://www.universiteitleiden.nl/en/staffmembers/furong-ye#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
 * [Diederick Vermetten](https://www.universiteitleiden.nl/en/staffmembers/diederick-vermetten#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
 * [Hao Wang](https://www.universiteitleiden.nl/en/staffmembers/hao-wang#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
-* [Carola Doerr](http://www-desir.lip6.fr/~doerr/), <i>CNRS and Sorbonne University</i>, 
+* [Carola Doerr](http://www-desir.lip6.fr/~doerr/), <i>CNRS and Sorbonne University</i>,
 * [Thomas Bäck](https://www.universiteitleiden.nl/en/staffmembers/thomas-back#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
 
 When using IOHprofiler and parts thereof, please kindly cite this work as
