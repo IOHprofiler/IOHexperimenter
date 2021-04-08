@@ -1,0 +1,3 @@
+suite = "No suite", funcId = 1, funcName = "Sphere", DIM = 5, maximization = "F", algId = "algorithm_name", algInfo = "algorithm_info", a = "1", dynamicAttribute = "x"
+%
+data_f1_Sphere/IOHprofiler_f1_DIM5.dat, 1:7897|10.4553;10

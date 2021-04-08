@@ -204,7 +204,7 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
     py::class_<WrappedProblem, Problem<T>, std::shared_ptr<WrappedProblem>>(m, class_name.c_str(), py::buffer_protocol());
     m.def(function_name.c_str(), &wrap_function<T>,
           py::arg("f"),
-          py::arg("name"),
+          py::arg(" "),
           py::arg("n_variables") = 5,
           py::arg("n_objectives") = 1,
           py::arg("optimization_type") = ioh::common::OptimizationType::Minimization,

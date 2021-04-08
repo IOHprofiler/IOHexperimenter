@@ -77,7 +77,7 @@ void define_logger(py::module &m)
 
 
     py::class_<ECDF, Base, std::shared_ptr<ECDF>>(m, "ECDF")
-        .def(py::init<double, double, size_t, size_t, size_t, size_t>())
+        .def(py::init<double, double, size_t, size_t, size_t,  size_t>())
         .def("data", &ECDF::data)
         .def("at", &ECDF::at)
         .def("error_range", &ECDF::error_range)
