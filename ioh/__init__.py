@@ -1,22 +1,14 @@
 '''Python specific functions for IOH package
 
-TODO:
-    ~ fix logger for online parameters -> set params stuff
-    ~ check experimenter class Jacob
-    ~ check convience functions 
-
-    ~ Final check if everythiing in the old package is now also possible in 
-    the new one (Diederick)
-
-    ~ make unittests in python -> incrementally
-
-    ~ Setup github actions -> unittest + make package 
-    ~ Make a package on pypi            (Hao)
-    ~ Ensure we can install from pip
-
-    version 0.0.1
+TODO: fix logger for online parameters -> set params stuff
+TODO: best far precision
+TODO: tracking of out-of bounds
+TODO: Check quadratic function, min dimension bbob=2
+TODO: Rename Integer -> Discrete
+TODO: Check what happens on exit -> probably factory objects need to be destroyed
 '''
 
+import os
 import math
 import itertools
 import multiprocessing
@@ -24,12 +16,16 @@ import functools
 import warnings
 import typing
 
+import atexit
+
 try:
     from .iohcpp import *
 except ModuleNotFoundError:
     raise ModuleNotFoundError("No module named ioh")
 
-       
+
+atexit.register(functools.partial(os._exit, 0))
+
 def get_problem(fid: int, iid: int, dim: int, problem_type: str = "Real"):
     '''Instantiate a problem based on its function ID, dimension, instance and suite
 
@@ -44,7 +40,7 @@ def get_problem(fid: int, iid: int, dim: int, problem_type: str = "Real"):
     problem_type: str
         Which suite the problem is from. Either 'BBOB' or 'PBO' or 'Real' or 'Integer'
         Only used if fid is an int.
-        
+
     '''
     if isinstance(fid, str):
         try:

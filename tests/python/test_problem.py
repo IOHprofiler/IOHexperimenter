@@ -1,5 +1,6 @@
 import random
 import unittest
+import shutil
 
 import ioh
 
@@ -28,14 +29,14 @@ class TestProblem(unittest.TestCase):
         algorithm = Algorithm()
         exp = ioh.Experiment(
             [1, 2], [1], [5],
-            njobs = 2,
+            njobs = -1,
             experiment_attributes = [("a", 1)],
             run_attributes = ['x'],
             logged_attributes = ['y']
         )
         exp.add_custom_problem(a_problem, "Name")
         exp(algorithm)
-        self.assertIsInstance(ioh.get_problem("OneMax", 1, 2), ioh.problem.OneMax)
+        shutil.rmtree("ioh_data")
         
     def test_evaluation_bbob_problems(self):
         for fid in range(1,25):
