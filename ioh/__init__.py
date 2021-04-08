@@ -2,12 +2,19 @@
 
 TODO:
     ~ fix logger for online parameters -> set params stuff
-    ~ check experimenter class
-    ~ check convience functions
-    ~ make unittests in python
-    ~ Setup github actions -> unittest + make package
-    ~ Make a package on pypi
+    ~ check experimenter class Jacob
+    ~ check convience functions 
+
+    ~ Final check if everythiing in the old package is now also possible in 
+    the new one (Diederick)
+
+    ~ make unittests in python -> incrementally
+
+    ~ Setup github actions -> unittest + make package 
+    ~ Make a package on pypi            (Hao)
     ~ Ensure we can install from pip
+
+    version 0.0.1
 '''
 
 import math
@@ -21,7 +28,7 @@ except ModuleNotFoundError:
     raise ModuleNotFoundError("No module named ioh")
 
        
-def get_problem(fid, iid, dim, suite = "BBOB"):
+def get_problem(fid, iid, dim, problem_type = "BBOB"):
     '''Instantiate a problem based on its function ID, dimension, instance and suite
 
     Parameters
@@ -32,57 +39,34 @@ def get_problem(fid, iid, dim, suite = "BBOB"):
         The dimension (number of variables) of the problem
     iid:
         The instance ID of the problem
-    target_precision:
-        Optional, how close to the optimum the problem is considered 'solved'
-    suite:
+    problem_type:
         Which suite the problem is from. Either 'BBOB' or 'PBO'. Only used if fid is an integer
     '''
-    if suite == "BBOB":
-        return problem.BBOB.factory().create(fid, iid, dim)
-    elif suite == "PBO":
+    if isinstance(fid, str):
+        try:
+            return getattr(problem, fid)(iid, dim)
+        except:
+            raise ValueError(f"Unkown problem {fid} is given")
+
+    if problem_type in ("BBOB", "Real",):
+        return getattr(problem, suite).factory().create(fid, iid, dim)
+    elif problem_type in ("PBO", "Integer",):
         if fid in [21, 23]:
             if not math.sqrt(dim).is_integer():
                 raise ValueError("For this function, the dimension needs to be a perfect square!")
-        return problem.PBO.factory().create(fid, iid, dim)
+        return getattr(problem, suite).factory().create(fid, iid, dim)
 
     raise ValueError(f"Suite {suite} is not yet supported")    
 
-# Inline function definition to allow the passing of multiple arguments to 'runFunction' through 'Pool.map'
-def func_star(a_b, func):
-    """Convert `f([1,2])` to `f(1,2)` call."""
-    return func(*a_b)
+# fs::path output_directory = fs::current_path(), const std::string &folder_name = "ioh_data",
+#     std::string algorithm_name = "algorithm_name", 
+#     std::string algorithm_info = "algorithm_info",
+#     const common::OptimizationType optimization_type = common::OptimizationType::Minimization,             
+#     const bool store_positions = false, const bool t_always = false, const int t_on_interval = 0,
+#     const int t_per_time_range = 0, const bool t_on_improvement = true,
+#     const std::vector<int> &t_at_time_points = {0}
 
-def runPool(runFunction, arguments, num_threads = None):
-    """
-        Small overhead-function to handle multi-processing using Python's built-in multiprocessing.Pool
-        :param runFunction: The (``partial``) function to run in parallel, accepting ``arguments``
-        :param arguments:   The arguments to passed distributedly to ``runFunction``
-        :return:            List of any results produced by ``runFunction``
-    """
-    if num_threads is None:
-        num_threads = cpu_count()
-    arguments = list(arguments)
-    print(f"Running pool with {min(num_threads, len(arguments))} threads")
-    p = Pool(min(num_threads, len(arguments)))
 
-    local_func = partial(func_star, func=runFunction)
-    results = p.map(local_func, arguments)
-    p.close()
-    return results
-
-def runSingleThreaded(runFunction, arguments):
-    """
-        Small overhead-function to iteratively run a function with a pre-determined input arguments
-        :param runFunction: The (``partial``) function to run, accepting ``arguments``
-        :param arguments:   The arguments to passed to ``runFunction``, one run at a time
-        :return:            List of any results produced by ``runFunction``
-    """
-    results = []
-    print("Running single-threaded")
-    for arg in arguments:
-        results.append(runFunction(*arg))
-    return results
-        
 def _run_default(alg, fid, dim, iid, precision, suite, repetitions, observing,
         location, foldername, dat, cdat, idat, tdat_base, tdat_exp,
         parameters, dynamic_attrs, static_attrs):
@@ -92,7 +76,11 @@ def _run_default(alg, fid, dim, iid, precision, suite, repetitions, observing,
     info = "Run using the IOHexperimenter in python, version 1"
     f = get_problem(fid, iid, dim, suite)
     if observing:
-        logger = logger(location, foldername, name, info)
+        # check optimization type
+        # OptimizationType::Maximization
+
+        logger = logger(location, foldername, name, info, )
+
         logger.set_tracking_options(dat, cdat, idat, tdat_base, tdat_exp)
         if parameters is not None:
             logger.track_parameters(alg, parameters)
@@ -335,8 +323,10 @@ class IOHexperimenter:
                       dynamic_attrs = self.dynamic_attrs, static_attrs = self.static_attrs)
             
         if self.parallel:
-            results = runPool(partial_run, arguments, self.num_threads)
+            num_threads = num_threads or cpu_count()
+            with Pool(min(num_threads, len(arguments))) as p:
+                results = p.star_map(function, arguments)
         else:
-            results = runSingleThreaded(partial_run, arguments)
+            results = list(map(partial_run, arguments)
         return results
     

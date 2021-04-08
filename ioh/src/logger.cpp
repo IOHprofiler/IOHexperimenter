@@ -47,19 +47,19 @@ void define_logger(py::module &m)
 
     py::class_<Default, Base, std::shared_ptr<Default>>(m, "Default")
         .def(
-            py::init<fs::path, std::string, std::string, std::string, bool, bool, int, int, bool,
-            std::vector<int>, ioh::common::OptimizationType, int, int>(),
+            py::init<fs::path, std::string, std::string, std::string, ioh::common::OptimizationType, 
+                     bool, bool, int, int, bool, std::vector<int>,  int, int>(),
             py::arg("output_directory") = "./",
             py::arg("folder_name") = "ioh_data",
             py::arg("algorithm_name") = "algorithm_name",
             py::arg("algorithm_info") = "algorithm_info",
+            py::arg("optimization_type") = ioh::common::OptimizationType::Minimization,
             py::arg("store_positions") = false,
             py::arg("t_always") = false,
             py::arg("t_on_interval") = 0,
             py::arg("t_per_time_range") = 0,
             py::arg("t_on_improvement") = true,
             py::arg("t_at_time_points") = std::vector<int>{0},
-            py::arg("optimization_type") = ioh::common::OptimizationType::Minimization,
             py::arg("trigger_at_time_points_exp_base") = 10,
             py::arg("trigger_at_range_exp_base") = 10
         );
