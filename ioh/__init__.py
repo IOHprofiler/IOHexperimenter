@@ -1,8 +1,13 @@
 '''Python specific functions for IOH package
 
 TODO:
-    ~ fix logger for online parameters
-    ~ 
+    ~ fix logger for online parameters -> set params stuff
+    ~ check experimenter class
+    ~ check convience functions
+    ~ make unittests in python
+    ~ Setup github actions -> unittest + make package
+    ~ Make a package on pypi
+    ~ Ensure we can install from pip
 '''
 
 import math
