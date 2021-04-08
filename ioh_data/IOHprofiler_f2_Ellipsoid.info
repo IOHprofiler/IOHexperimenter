@@ -1,3 +1,0 @@
-suite = "No suite", funcId = 2, funcName = "Ellipsoid", DIM = 5, maximization = "F", algId = "algorithm_name", algInfo = "algorithm_info", a = "1", dynamicAttribute = "x"
-%
-data_f2_Ellipsoid/IOHprofiler_f2_DIM5.dat, 1:9540|610190;10
