@@ -62,7 +62,19 @@ void define_logger(py::module &m)
             py::arg("t_at_time_points") = std::vector<int>{0},
             py::arg("trigger_at_time_points_exp_base") = 10,
             py::arg("trigger_at_range_exp_base") = 10
-        );
+        )
+        .def("add_experiment_attribute", &Default::add_experiment_attribute<double>)
+        .def("delete_experiment_attribute", &Default::delete_experiment_attribute)
+        .def("create_run_attributes", py::overload_cast<const std::vector<std::string>&>(
+            &Default::create_run_attributes
+        ))
+        .def("set_run_attributes", &Default::set_run_attributes)
+        .def("create_logged_attributes", py::overload_cast<const std::vector<std::string>&>(
+             &Default::create_logged_attributes
+        ))
+        .def("set_logged_attributes", &Default::set_logged_attributes)
+        ;
+
 
     py::class_<ECDF, Base, std::shared_ptr<ECDF>>(m, "ECDF")
         .def(py::init<double, double, size_t, size_t, size_t, size_t>())
