@@ -47,17 +47,19 @@ namespace ioh::problem::bbob
                                     0.5);
             }
 
-            static std::vector<Peak> get_peaks(const int n, const int n_variables, const int seed)
+            static std::vector<Peak> get_peaks(const int n, const int n_variables, const int seed, double max_condition)
             {
-                static const auto f0 = 1.1, f1 = 9.1, max_condition = 1000.;
+                static const auto f0 = 1.1, f1 = 9.1;
                 static const auto divisor = static_cast<double>(n - 2);
+                static const auto maxcondition_1 = 1000.;
                 auto permutations = Permutation::sorted(n - 1, seed);
 
-                std::vector<Peak> peaks(1, {10.0, seed, n_variables, sqrt(max_condition)});
+                //std::vector<Peak> peaks(1, {10.0, seed, n_variables, sqrt(max_condition)});
+                std::vector<Peak> peaks(1, {10.0, seed, n_variables, max_condition});
                 for (auto i = 1; i < n; ++i)
                     peaks.emplace_back(static_cast<double>(i - 1) / divisor * (f1 - f0) + f0, seed + (1000 * i),
                                        n_variables,
-                                       pow(max_condition, static_cast<double>(permutations[i - 1].index) / divisor));
+                                       pow(maxcondition_1, static_cast<double>(permutations[i - 1].index) / divisor));
 
                 return peaks;
             }
@@ -66,6 +68,7 @@ namespace ioh::problem::bbob
         std::vector<std::vector<double>> x_transformation_;
         std::vector<Peak> peaks_;
         double factor_;
+        double max_condition_;
 
     protected:
         std::vector<double> evaluate(const std::vector<double> &x) override
@@ -120,10 +123,10 @@ namespace ioh::problem::bbob
 
     public:
         Gallagher(const int problem_id, const int instance, const int n_variables, const std::string &name,
-                  const int number_of_peaks, const double b = 10., const double c = 5.0) :
+                  const int number_of_peaks, const double b = 10., const double c = 5.0, double max_condition = sqrt(1000.)) :
             BBOProblem<T>(problem_id, instance, n_variables, name),
             x_transformation_(n_variables, std::vector<double>(number_of_peaks)),
-            peaks_(Peak::get_peaks(number_of_peaks, n_variables, this->transformation_state_.seed)),
+            peaks_(Peak::get_peaks(number_of_peaks, n_variables, this->transformation_state_.seed, max_condition)),
             factor_(-0.5 / static_cast<double>(n_variables))
         {
             std::vector<double> random_numbers;
@@ -150,7 +153,7 @@ namespace ioh::problem::bbob
     {
     public:
         Gallagher101(const int instance, const int n_variables):
-            Gallagher(21, instance, n_variables, "Gallagher101", 101, 10., 5.0)
+            Gallagher(21, instance, n_variables, "Gallagher101", 101, 10., 5.0, sqrt(1000.))
         {
         }
     };

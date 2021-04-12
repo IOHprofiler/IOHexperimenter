@@ -39,7 +39,7 @@ class TestProblem(unittest.TestCase):
 #        exp.add_custom_problem(a_problem, "Name")
 #        exp(algorithm)
 #        shutil.rmtree("ioh_data")
-        
+#        
         
     def test_evaluation_bbob_problems(self):
         for fid in range(1,25):
@@ -142,4 +142,34 @@ class TestProblem(unittest.TestCase):
             eval(p,x,float(y))
             line = f.readline()
             
-            
+    def test_bbob_suite_5D(self):
+        def eval(p,x,y) :
+            assert math.isclose(p(x)[0] , y,abs_tol = 0.01)
+        filename = "tests/python/bbobfitness5.in"
+        f = open(filename,'r')
+        line = f.readline()
+        while line:
+            f_id,ins_id,x_str,y = line.split()
+            x_str = x_str.split(',')
+            x = []
+            for i in x_str :
+                x.append(float(i))
+            p = ioh.get_problem(int(f_id), int(ins_id), 5, "BBOB")
+            eval(p,x,float(y))
+            line = f.readline()
+
+    def test_bbob_suite_20D(self):
+        def eval(p,x,y) :
+            assert math.isclose(p(x)[0] , y,abs_tol = 0.01)
+        filename = "tests/python/bbobfitness20.in"
+        f = open(filename,'r')
+        line = f.readline()
+        while line  :
+            f_id,ins_id,x_str,y = line.split()
+            x_str = x_str.split(',')
+            x = []
+            for i in x_str :
+                x.append(float(i))
+            p = ioh.get_problem(int(f_id), int(ins_id), 20, "BBOB")
+            eval(p,x,float(y))
+            line = f.readline()
