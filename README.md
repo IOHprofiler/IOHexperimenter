@@ -34,7 +34,7 @@ __Experimenter__ for <b>I</b>terative <b>O</b>ptimization <b>H</b>euristics (IOH
 The following toolkits are needed for compiling IOHexperimenter:
 
 * A `C++` compiler. The minimum compiler version is g++ 7 or equivalent, but we recommend g++ 9 or equivalent.
-* [CMake](https://cmake.org), version 3.10 or higher
+* [CMake](https://cmake.org), version 3.12 or higher
 
 Please use the following commands to download, compile, and install this package:
 
