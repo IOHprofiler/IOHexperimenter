@@ -39,14 +39,17 @@ The following toolkits are needed for compiling IOHexperimenter:
 Please use the following commands to download, compile, and install this package:
 
 ```sh
-> git clone https://github.com/IOHprofiler/IOHexperimenter.git
+> git clone --recursive https://github.com/IOHprofiler/IOHexperimenter.git
 > cd IOHexperimenter
 > mkdir build
 > cd build
 > cmake .. && make install
 ```
 
-which installs all header files to `/usr/local/include/ioh` by default. If you want to change this directory, please use the following flag `cmake -DCMAKE_INSTALL_PREFIX=your/path .`
+which installs all header files to `/usr/local/include/ioh` by default.
+If you want to change this directory, please use the following flag `cmake -DCMAKE_INSTALL_PREFIX=your/path ..`
+
+If you want to change build options, check the output of `cmake -L` or use `cmake-gui` or `ccmake`.
 
 ### Examples
 
