@@ -20,7 +20,7 @@ class Algorithm:
 
 
 DATA_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "data")
+    os.path.dirname(os.path.dirname(__file__)), "static")
 
 class TestProblem(unittest.TestCase):
     def test_get_problem(self):

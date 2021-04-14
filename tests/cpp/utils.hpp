@@ -5,7 +5,7 @@
 inline fs::path find_test_file(const std::string &filename)
 {
     auto file = fs::path("IOHexperimenter") / fs::path("tests")
-        / fs::path("data") / filename;
+        / fs::path("static") / filename;
 
     fs::path root;
     for (const auto &e : fs::current_path())
