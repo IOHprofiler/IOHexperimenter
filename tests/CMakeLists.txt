@@ -4,7 +4,7 @@
 ##
 add_subdirectory(${EXTERNAL_DIR}/googletest EXCLUDE_FROM_ALL build)
 
-file(GLOB_RECURSE SOURCES cpp *.cpp)  
+file(GLOB_RECURSE SOURCES cpp *.cpp *.hpp)  
 
 add_executable(test_${PROJECT_NAME} ${SOURCES})
 

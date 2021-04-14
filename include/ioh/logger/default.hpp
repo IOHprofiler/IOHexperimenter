@@ -11,7 +11,7 @@
 
 namespace ioh::logger
 {
-    class Default final : public Base, Observer
+    class Default : public Base, Observer
     {
         bool store_positions_;
         common::file::UniqueFolder experiment_folder_;

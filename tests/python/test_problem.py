@@ -1,3 +1,4 @@
+import os
 import random
 import unittest
 import shutil
@@ -6,18 +7,20 @@ import math
 import ioh
 
 class Algorithm:
-    x = 10
-    y = 1
-
+    def __init__(self):
+        self.x = 10
+        self.y = 1
+    
     def __call__(self, p: ioh.problem.Real):
         for i in range(10000):
             x = list(map(lambda x: random.random(), range(p.meta_data.n_variables)))    
             p(x)
-            y = i
+            self.y = i
 
-def a_problem(x):
-    return [0]
 
+
+DATA_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "data")
 
 class TestProblem(unittest.TestCase):
     def test_get_problem(self):
@@ -27,20 +30,43 @@ class TestProblem(unittest.TestCase):
         self.assertIsInstance(ioh.get_problem(1, 1, 2, "PBO"), ioh.problem.OneMax)
         self.assertIsInstance(ioh.get_problem("OneMax", 1, 2, "PBO"), ioh.problem.OneMax)
 
-#    def test_experimenter(self):
-#        algorithm = Algorithm()
-#        exp = ioh.Experiment(
-#            [1, 2], [1], [5],
-#            njobs = -1,
-#            experiment_attributes = [("a", 1)],
-#            run_attributes = ['x'],
-#            logged_attributes = ['y']
-#        )
-#        exp.add_custom_problem(a_problem, "Name")
-#        exp(algorithm)
-#        shutil.rmtree("ioh_data")
-#        
-        
+    def test_experimenter(self):
+        exp = ioh.Experiment(
+            Algorithm(),
+            [1], [1], [5],
+            njobs = -1,
+            experiment_attributes = [("a", 1)],
+            run_attributes = ['x'],
+            logged_attributes = ['y']
+        )
+
+        def a_problem(x):
+            return [0]
+            
+        exp.add_custom_problem(a_problem, "Name")
+        exp()
+
+        info_files = {'IOHprofiler_f0_Name.info', 'IOHprofiler_f1_Sphere.info'}
+        data_files = {'IOHprofiler_f0_DIM5.dat', 'IOHprofiler_f1_DIM5.dat'}
+
+        for item in os.listdir('ioh_data'):
+            path = os.path.join('ioh_data', item)
+            if os.path.isfile(path) and item in info_files:
+                self.assertNotEqual(os.path.getsize(path), 0)
+                info_files.remove(item)
+            elif os.path.isdir(path):
+                for f in os.listdir(path):
+                    if f in data_files:
+                        self.assertNotEqual(os.path.getsize(
+                            os.path.join(path, f)), 0)
+                        data_files.remove(f)
+
+        self.assertSetEqual(info_files, set())
+        self.assertSetEqual(data_files, set())
+
+
+        shutil.rmtree("ioh_data")
+           
     def test_evaluation_bbob_problems(self):
         for fid in range(1,25):
             f = ioh.get_problem(fid, 1 ,5, "BBOB")
@@ -51,7 +77,7 @@ class TestProblem(unittest.TestCase):
             f = ioh.get_problem(fid, 1 ,4, "PBO")
             self.assertGreater(f([0,0,0,0])[0], -1000) 
 
-    def test_real_fid_tests(self):
+    def test_bbob_problems_first_instance(self):
         expected = [
             161.17445568,
             12653420.412225708,
@@ -78,98 +104,65 @@ class TestProblem(unittest.TestCase):
             18.635078550302751,
             1782.2733296400438,
         ]
-        f1 = ioh.problem.BBOB.factory()
-        for i in sorted(f1.ids()):
-            p = f1.create(i, 1, 5)
-            assert math.isclose(p([0.1, 1., 2., 4., 5.4])[0], expected[i-1])
+        factory = ioh.problem.BBOB.factory()
+        for i in sorted(factory.ids()):
+            p = factory.create(i, 1, 5)
+            self.assertTrue(
+                math.isclose(p([0.1, 1., 2., 4., 5.4])[0], expected[i-1])
+            )
    
-    
-    def test_integer_problems(self):
-        def eval(p,x,y) :
-            assert math.isclose(p(x)[0] , y,abs_tol = 0.000099)
-        x = [1, 1, 0, 1, 0, 0, 0, 1, 1]
-        eval(ioh.problem.OneMax(1, 9), x, 5.0000)
-        eval(ioh.problem.OneMaxDummy1(1, 9), x, 3.0000)
-        eval(ioh.problem.OneMaxDummy2(1, 9), x, 4.0000)
-        eval(ioh.problem.OneMaxEpistasis(1, 9), x, 6.0000)
-        eval(ioh.problem.OneMaxNeutrality(1, 9), x, 2.0000)
-        eval(ioh.problem.OneMaxRuggedness1(1, 9), x, 4.0000)
-        eval(ioh.problem.OneMaxRuggedness2(1, 9), x, 6.0000)
-        eval(ioh.problem.OneMaxRuggedness3(1, 9), x, 7.0000)
-        eval(ioh.problem.LeadingOnes(1, 9), x, 2.0000)
-        eval(ioh.problem.LeadingOnesDummy1(1, 9), x, 3.0000)
-        eval(ioh.problem.LeadingOnesDummy2(1, 9), x, 2.0000)
-        eval(ioh.problem.LeadingOnesEpistasis(1, 9), x, 0.0000)
-        eval(ioh.problem.LeadingOnesNeutrality(1, 9), x, 1.0000)
-        eval(ioh.problem.LeadingOnesRuggedness1(1, 9), x, 2.0000)
-        eval(ioh.problem.LeadingOnesRuggedness2(1, 9), x, 1.0000)
-        eval(ioh.problem.LeadingOnesRuggedness3(1, 9), x, 1.0000)
-        eval(ioh.problem.Linear(1, 9), x, 24.0000)
-        eval(ioh.problem.MIS(1, 9), x, -4.0000)
-        eval(ioh.problem.LABS(1, 9), x, 2.5312)
-        eval(ioh.problem.NQueens(1, 9), x, -16.0000)
-        eval(ioh.problem.IsingRing(1, 9), x, 5.0000)
-        eval(ioh.problem.IsingTorus(1, 9), x, 6.0000)
-        eval(ioh.problem.IsingTriangular(1, 9), x, 9.0000)
+    def test_pbo_problems_first_instance(self):
+        expected = [
+            5.0000,
+            2.0000,
+            24.0000,
+            3.0000,
+            4.0000,
+            2.0000,
+            6.0000,
+            4.0000,
+            6.0000,
+            7.0000,
+            3.0000,
+            2.0000,
+            1.0000,
+            0.0000,
+            2.0000,
+            1.0000,
+            1.0000,
+            2.5312,
+            5.0000,
+            6.0000,
+            9.0000,
+            -4.0000,
+            -16.0000,
+            0.45,
+            -0.70717,
+        ]
+        factory = ioh.problem.PBO.factory()
+        for i in sorted(factory.ids()):
+            p = factory.create(i, 1, 9)
+            y, *_ = p([1, 1, 0, 1, 0, 0, 0, 1, 1])
+            self.assertTrue(math.isclose(y, expected[i-1], abs_tol = 0.000099),
+                msg=f"{p} expected: {expected[i-1]} got: {y}"
+            )
+   
+    def test_file_comparisons(self):
+        for test_file in  ("pbofitness16.in", "pbofitness100.in",
+                           "bbobfitness5.in", "bbobfitness20.in", ):
+            with self.subTest(test_file=test_file):
+                suite, dim = test_file.split("fitness")
+                dim = int(dim[:-3])
+                dtype = float if suite == 'bbob' else int
+                tol = .01 if suite == 'bbob' else 0.000099
 
-    def test_pbo_suite_100D(self):
-        def eval(p,x,y) :
-            assert math.isclose(p(x)[0] , y,abs_tol = 0.000099)
-        filename = "tests/python/pbofitness100.in"
-        f = open(filename,'r')
-        line = f.readline()
-        while line  :
-            f_id,ins_id,x_str,y = line.split()
-            x = []
-            for i in range(len(x_str)) :
-                x.append(int(x_str[i]))
-            p = ioh.get_problem(int(f_id), int(ins_id), 100, "PBO")
-            eval(p,x,float(y))
-            line = f.readline()
-    
-    def test_pbo_suite_16D(self):
-        def eval(p,x,y) :
-            assert math.isclose(p(x)[0] , y,abs_tol = 0.000099)
-        filename = "tests/python/pbofitness16.in"
-        f = open(filename,'r')
-        line = f.readline()
-        while line  :
-            f_id,ins_id,x_str,y = line.split()
-            x = []
-            for i in range(len(x_str)) :
-                x.append(int(x_str[i]))
-            p = ioh.get_problem(int(f_id), int(ins_id), 16, "PBO")
-            eval(p,x,float(y))
-            line = f.readline()
-            
-    def test_bbob_suite_5D(self):
-        def eval(p,x,y) :
-            assert math.isclose(p(x)[0] , y,abs_tol = 0.01)
-        filename = "tests/python/bbobfitness5.in"
-        f = open(filename,'r')
-        line = f.readline()
-        while line:
-            f_id,ins_id,x_str,y = line.split()
-            x_str = x_str.split(',')
-            x = []
-            for i in x_str :
-                x.append(float(i))
-            p = ioh.get_problem(int(f_id), int(ins_id), 5, "BBOB")
-            eval(p,x,float(y))
-            line = f.readline()
+                with open(os.path.join(DATA_DIR, test_file)) as f:
+                    for line in f:
+                        fid, iid, x, y = line.split()
+                        if "," in x:
+                            x = x.split(",")
+                        x = list(map(dtype, x))
+                        p = ioh.get_problem(int(fid), int(iid), dim, suite.upper())
 
-    def test_bbob_suite_20D(self):
-        def eval(p,x,y) :
-            assert math.isclose(p(x)[0] , y,abs_tol = 0.01)
-        filename = "tests/python/bbobfitness20.in"
-        f = open(filename,'r')
-        line = f.readline()
-        while line  :
-            f_id,ins_id,x_str,y = line.split()
-            x_str = x_str.split(',')
-            x = []
-            for i in x_str :
-                x.append(float(i))
-            p = ioh.get_problem(int(f_id), int(ins_id), 20, "BBOB")
-            eval(p,x,float(y))
-            line = f.readline()
+                        self.assertTrue(math.isclose(p(x)[0], float(y), abs_tol = tol))
+

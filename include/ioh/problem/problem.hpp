@@ -106,7 +106,11 @@ namespace ioh
             {
             }
 
-            virtual ~Problem() = default;
+            virtual ~Problem()
+            {
+                if (logger_ != nullptr)
+                    logger_->flush();
+            }
 
             virtual void reset()
             {

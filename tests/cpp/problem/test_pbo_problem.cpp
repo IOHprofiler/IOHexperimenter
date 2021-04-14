@@ -4,10 +4,9 @@
 
 #include <gtest/gtest.h>
 #include "ioh.hpp"
-#include "utils.hpp"
 
+#include "../utils.hpp" 
 
-using namespace std;
 
 TEST(PBOfitness, dimension16)
 {
@@ -17,7 +16,7 @@ TEST(PBOfitness, dimension16)
     std::string s;
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::PBO>::instance();
 
-    ifstream infile(file_name.c_str());
+    std::ifstream infile(file_name.c_str());
     ASSERT_TRUE(infile.is_open());
     while (getline(infile, s))
     {
@@ -40,7 +39,7 @@ TEST(PBOfitness, dimension100)
     const auto file_name = find_test_file("pbofitness100.in");
     std::string s;
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::PBO>::instance();
-    ifstream infile(file_name.c_str());
+    std::ifstream infile(file_name.c_str());
     ASSERT_TRUE(infile.is_open());
     while (getline(infile, s))
     {

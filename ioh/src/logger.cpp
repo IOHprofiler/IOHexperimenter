@@ -7,6 +7,61 @@ namespace py = pybind11;
 using namespace ioh::logger;
 
 
+class PyLogger final: public Default
+{
+    py::object attribute_container_{};
+    std::vector<std::string> logged_attribute_names_{};
+    std::vector<std::string> run_attribute_names_{};
+
+
+    std::vector<double> get_attributes(const std::vector<std::string>& names) const 
+    {
+        std::vector<double> attributes;
+        for (const auto &n : names)
+            attributes.emplace_back(
+                PyFloat_AsDouble(attribute_container_.attr(n.c_str()).ptr())
+            );
+        return attributes;
+    }
+
+public:
+    using Default::Default;
+
+    void declare_logged_attributes(py::object &obj, const std::vector<std::string> &names)
+    {
+        attribute_container_ = obj;
+        logged_attribute_names_ = names;
+        create_logged_attributes(logged_attribute_names_);
+    }
+
+    void declare_run_attributes(py::object &obj, const std::vector<std::string> &names)
+    {
+        attribute_container_ = obj;
+        run_attribute_names_ = names;
+        create_run_attributes(run_attribute_names_);
+    } 
+
+    void declare_experiment_attributes(const std::vector<std::string> &names, const std::vector<double> &values)
+    {
+        for (size_t i = 0; i < names.size(); i++)
+            add_experiment_attribute(names.at(i), values.at(i));
+    }
+
+    void track_problem(const ioh::problem::MetaData &problem) override
+    {
+        set_run_attributes(run_attribute_names_, get_attributes(run_attribute_names_));
+        Default::track_problem(problem);
+    }
+
+    void log(const LogInfo& log_info) override
+    {
+        set_logged_attributes(logged_attribute_names_, get_attributes(logged_attribute_names_));
+        Default::log(log_info);
+    }
+};
+        
+        
+
 void define_logger(py::module &m)
 {
     py::class_<fs::path>(m, "Path")
@@ -45,35 +100,22 @@ void define_logger(py::module &m)
         .def("add", &LoggerCombine::add)
         ;
 
-    py::class_<Default, Base, std::shared_ptr<Default>>(m, "Default")
-        .def(
-            py::init<fs::path, std::string, std::string, std::string, ioh::common::OptimizationType, 
-                     bool, bool, int, int, bool, std::vector<int>,  int, int>(),
-            py::arg("output_directory") = "./",
-            py::arg("folder_name") = "ioh_data",
-            py::arg("algorithm_name") = "algorithm_name",
-            py::arg("algorithm_info") = "algorithm_info",
-            py::arg("optimization_type") = ioh::common::OptimizationType::Minimization,
-            py::arg("store_positions") = false,
-            py::arg("t_always") = false,
-            py::arg("t_on_interval") = 0,
-            py::arg("t_per_time_range") = 0,
-            py::arg("t_on_improvement") = true,
-            py::arg("t_at_time_points") = std::vector<int>{0},
-            py::arg("trigger_at_time_points_exp_base") = 10,
-            py::arg("trigger_at_range_exp_base") = 10
-        )
-        .def("add_experiment_attribute", &Default::add_experiment_attribute<double>)
-        .def("delete_experiment_attribute", &Default::delete_experiment_attribute)
-        .def("create_run_attributes", py::overload_cast<const std::vector<std::string>&>(
-            &Default::create_run_attributes
-        ))
-        .def("set_run_attributes", &Default::set_run_attributes)
-        .def("create_logged_attributes", py::overload_cast<const std::vector<std::string>&>(
-             &Default::create_logged_attributes
-        ))
-        .def("set_logged_attributes", &Default::set_logged_attributes)
+    py::class_<PyLogger, Base, std::shared_ptr<PyLogger>>(m, "Default")
+        .def(py::init<fs::path, std::string, std::string, std::string, ioh::common::OptimizationType, bool, bool, int,
+                      int, bool, std::vector<int>, int, int>(),
+             py::arg("output_directory") = "./", py::arg("folder_name") = "ioh_data",
+             py::arg("algorithm_name") = "algorithm_name", py::arg("algorithm_info") = "algorithm_info",
+             py::arg("optimization_type") = ioh::common::OptimizationType::Minimization,
+             py::arg("store_positions") = false, py::arg("t_always") = false, py::arg("t_on_interval") = 0,
+             py::arg("t_per_time_range") = 0, py::arg("t_on_improvement") = true,
+             py::arg("t_at_time_points") = std::vector<int>{0}, py::arg("trigger_at_time_points_exp_base") = 10,
+             py::arg("trigger_at_range_exp_base") = 10)
+        .def("declare_experiment_attributes", &PyLogger::declare_experiment_attributes)
+        .def("declare_run_attributes", &PyLogger::declare_run_attributes)
+        .def("declare_logged_attributes", &PyLogger::declare_logged_attributes)
         ;
+
+      
 
 
     py::class_<ECDF, Base, std::shared_ptr<ECDF>>(m, "ECDF")

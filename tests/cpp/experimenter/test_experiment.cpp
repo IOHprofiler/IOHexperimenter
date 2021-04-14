@@ -4,25 +4,10 @@
 
 #include "ioh.hpp"
 
-
-fs::path find_config_file()
-{
-	auto config = fs::path("IOHexperimenter") / fs::path("example") / "conf.ini";
-	fs::path root;
-	for (const auto& e : fs::current_path())
-	{
-		root /= e;
-		if (exists(root / config))
-		{
-			config = root / config;
-			break;
-		}
-	}
-	return config;
-}
+#include "../utils.hpp" 
 
 
-void bbob_random_search(const std::shared_ptr<ioh::problem::Real> p)
+void bbob_random_search(const std::shared_ptr<ioh::problem::Real>& p)
 {
 	using namespace ioh::common;
 	std::vector<double> x(p->meta_data().n_variables);
@@ -34,7 +19,7 @@ void bbob_random_search(const std::shared_ptr<ioh::problem::Real> p)
 	}
 }
 
-void pbo_random_search(const std::shared_ptr<ioh::problem::Integer> p)
+void pbo_random_search(const std::shared_ptr<ioh::problem::Integer>& p)
 {
 	using namespace ioh::common;
 	auto count = 0;
@@ -54,7 +39,7 @@ int count_newlines(const std::string& s)
 
 TEST(experiment, config)
 {
-	auto config_file = find_config_file();
+    auto config_file = find_test_file("conf.ini");
 	const ioh::experiment::Configuration conf(config_file);
 	EXPECT_EQ(conf.suite_name(), "PBO");
 	EXPECT_EQ(conf.problem_ids(), std::vector<int>({ 1, 2, 3, 4, 5 }));
@@ -75,7 +60,7 @@ TEST(experiment, config)
 TEST(experiment, pbo_from_config)
 {
 	using namespace ioh;
-	auto config_file = find_config_file();
+    auto config_file = find_test_file("conf.ini");
 	experiment::Experimenter<problem::Integer> experiment(config_file, pbo_random_search);
 	EXPECT_EQ(experiment.independent_runs(), 1);
 	experiment.independent_runs(10);

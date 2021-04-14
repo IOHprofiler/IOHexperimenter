@@ -4,9 +4,9 @@
 #include "ioh.hpp"
 #include <gtest/gtest.h>
 
-#include "utils.hpp"
+#include "../utils.hpp"
 
-using namespace std;
+
 
 TEST(BBOBfitness, dimension5)
 {
@@ -16,7 +16,7 @@ TEST(BBOBfitness, dimension5)
 
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::BBOB>::instance();
 
-    ifstream infile(file_name.c_str());
+    std::ifstream infile(file_name.c_str());
     ASSERT_TRUE(infile.is_open());
     while (getline(infile, s))
     {
@@ -40,7 +40,7 @@ TEST(BBOBfitness, dimension20)
 
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::BBOB>::instance();
 
-    ifstream infile(file_name.c_str());
+    std::ifstream infile(file_name.c_str());
     ASSERT_TRUE(infile.is_open());
     while (getline(infile, s))
     {

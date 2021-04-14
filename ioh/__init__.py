@@ -1,6 +1,6 @@
 '''Python specific functions for IOH package
 
-TODO: fix logger for online parameters -> set params stuff
+TODO: check correct handling of object destructors
 TODO: best far precision
 TODO: tracking of out-of bounds
 TODO: Check quadratic function, min dimension bbob=2
@@ -13,9 +13,8 @@ import math
 import itertools
 import multiprocessing
 import functools
-import warnings
 import typing
-
+import copy
 import atexit
 
 try:
@@ -60,6 +59,7 @@ def get_problem(fid: int, iid: int, dim: int, problem_type: str = "Real"):
 
 class Experiment:
     def __init__(self, 
+        algorithm: typing.Any,
         fids: typing.List[int], 
         iids: typing.List[int], 
         dims: typing.List[int], 
@@ -99,6 +99,7 @@ class Experiment:
             trigger_at_time_points_exp_base = trigger_at_time_points_exp_base,
             trigger_at_range_exp_base = trigger_at_range_exp_base,
         )
+        self.algorithm = algorithm
         self.fids = fids
         self.iids = iids 
         self.dims = dims 
@@ -109,20 +110,22 @@ class Experiment:
         self.experiment_attributes = experiment_attributes
         self.run_attributes = run_attributes
         self.logged_attributes = logged_attributes
+        
+        for attr in itertools.chain(self.run_attributes, self.logged_attributes):
+            if not hasattr(self.algorithm, attr):
+                raise TypeError(
+                    f"Attribute {attr} is a member of algorithm {self.algorithm}"
+                )
 
-        if any(logged_attributes):
-            warnings.warn(
-                "Logged attributes are not yet supported in this version", 
-                UserWarning
-            )
 
-    def evaluate(self, algorithm: typing.Any, fid: int, iid: int, dim: int):
-        '''Evaluate a single function using an algoritm.
+    def evaluate(self, fid: int, iid: int, dim: int):
+        '''Evaluate a single function using self.algoritm.
+
+        Note that this functions makes a copy of the algorithm for each new problem
+        instantiation.
         
         Parameters
         ----------
-        algorithm: object
-            An object with a __call__ method, which takes a problem.
         fid: int
             The problem id
         iid: int
@@ -131,23 +134,20 @@ class Experiment:
             The problem dimension
         '''
 
+        algorithm = copy.deepcopy(self.algorithm)
         p = get_problem(fid, iid, dim, self.problem_type)
         if self.logged:
             l = logger.Default(**self.logger_params)
-            for k, v in self.experiment_attributes:
-                l.add_experiment_attribute(k, v)
-            
-            l.create_run_attributes(self.run_attributes)
-            l.create_logged_attributes(self.logged_attributes)
+
+            l.declare_experiment_attributes(*zip(*self.experiment_attributes))
+            l.declare_run_attributes(algorithm, self.run_attributes)
+            l.declare_logged_attributes(algorithm, self.logged_attributes)
             p.attach_logger(l)
             
         for i in range(self.reps):
-            if self.logged:
-                l.set_run_attributes(self.run_attributes, list(map(
-                    lambda x: getattr(algorithm, x), self.run_attributes
-                )))
             algorithm(p) 
             p.reset()
+        
         
     def add_custom_problem(self, p: typing.Callable, name: str = None):
         '''Add a custom problem to the list of functions to be evaluated.
@@ -170,20 +170,14 @@ class Experiment:
 
         self.fids.append(p.meta_data.problem_id)
 
-    def __call__(self, algorithm: typing.Any):
-        '''Run the experiment with a given algorithm.
-        
-        Parameters
-        ----------
-        algorithm: object
-            An object with a __call__ method, which takes a problem.
-        '''
+    def __call__(self):
+        '''Run the experiment'''
 
         iterator = itertools.product(self.fids, self.iids, self.dims)
         if self.njobs != 1:
             with multiprocessing.Pool(self.njobs) as p:
-                p.starmap(functools.partial(self.evaluate, algorithm), iterator)
+                p.starmap(self.evaluate, iterator)
         else:
             for fid, iid, dim in iterator:
-                self.evaluate(algorithm, fid, iid, dim)
+                self.evaluate(fid, iid, dim)
 
