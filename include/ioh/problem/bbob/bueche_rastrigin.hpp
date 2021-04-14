@@ -30,8 +30,9 @@ namespace ioh::problem::bbob
         BuecheRastrigin(const int instance, const int n_variables) :
             RastriginBase(4,  instance, n_variables, "BuecheRastrigin")
         {
-            for (auto &e : objective_.x)
-                e = fabs(e);
+            for (auto i = 0; i < objective_.x.size(); i += 2) {
+                objective_.x[i] = fabs(objective_.x[i]);
+            }
         }
     };
 }
