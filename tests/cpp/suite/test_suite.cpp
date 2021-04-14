@@ -15,7 +15,7 @@ TEST(suite, factory) {
     auto problems = suite->problem_ids();
 
     for (size_t i = 0; i < problems.size(); i++)
-        ASSERT_EQ(problem_ids.at(i), problems.at(i));
+        EXPECT_EQ(problem_ids.at(i), problems.at(i));
 
 }
 
@@ -34,10 +34,10 @@ TEST(suite, pbo) {
     }
     ioh::suite::PBO pbo(problem_id, instance_id, dimension);
 
-    ASSERT_EQ(pbo.problem_ids().size(), 25);
-    ASSERT_EQ(pbo.instances().size(), 5);
-    ASSERT_EQ(pbo.dimensions().size(), 2);
-    ASSERT_EQ(pbo.name(), "PBO");
+    EXPECT_EQ(pbo.problem_ids().size(), 25);
+    EXPECT_EQ(pbo.instances().size(), 5);
+    EXPECT_EQ(pbo.dimensions().size(), 2);
+    EXPECT_EQ(pbo.name(), "PBO");
 
     auto tmp_p_index = 0;
     auto tmp_i_index = 0;
@@ -45,10 +45,10 @@ TEST(suite, pbo) {
 
     for (const auto &problem: pbo)
     {
-        ASSERT_LT(tmp_p_index, 25);
-        ASSERT_EQ(problem->meta_data().problem_id, problem_id[tmp_p_index]);
-        ASSERT_EQ(problem->meta_data().instance, instance_id[tmp_i_index]);
-        ASSERT_EQ(problem->meta_data().n_variables, dimension[tmp_d_index]);
+        EXPECT_LT(tmp_p_index, 25);
+        EXPECT_EQ(problem->meta_data().problem_id, problem_id[tmp_p_index]);
+        EXPECT_EQ(problem->meta_data().instance, instance_id[tmp_i_index]);
+        EXPECT_EQ(problem->meta_data().n_variables, dimension[tmp_d_index]);
 
         tmp_i_index++;
         if (tmp_i_index == 5) {
@@ -79,10 +79,10 @@ TEST(suite, bbob) {
     }
     ioh::suite::BBOB bbob(problem_id, instance_id, dimension);
 
-    ASSERT_EQ(bbob.problem_ids().size(), 24);
-    ASSERT_EQ(bbob.instances().size(), 5);
-    ASSERT_EQ(bbob.dimensions().size(), 2);
-    ASSERT_EQ(bbob.name(), "BBOB");
+    EXPECT_EQ(bbob.problem_ids().size(), 24);
+    EXPECT_EQ(bbob.instances().size(), 5);
+    EXPECT_EQ(bbob.dimensions().size(), 2);
+    EXPECT_EQ(bbob.name(), "BBOB");
 
     auto tmp_p_index = 0;
     auto tmp_i_index = 0;
@@ -90,10 +90,10 @@ TEST(suite, bbob) {
 
     for (const auto& problem : bbob)
     {
-        ASSERT_LT(tmp_p_index, 25);
-        ASSERT_EQ(problem->meta_data().problem_id, problem_id[tmp_p_index]);
-        ASSERT_EQ(problem->meta_data().instance, instance_id[tmp_i_index]);
-        ASSERT_EQ(problem->meta_data().n_variables, dimension[tmp_d_index]);
+        EXPECT_LT(tmp_p_index, 25);
+        EXPECT_EQ(problem->meta_data().problem_id, problem_id[tmp_p_index]);
+        EXPECT_EQ(problem->meta_data().instance, instance_id[tmp_i_index]);
+        EXPECT_EQ(problem->meta_data().n_variables, dimension[tmp_d_index]);
 
         tmp_i_index++;
         if (tmp_i_index == 5) {

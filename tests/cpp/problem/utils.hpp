@@ -1,50 +1,66 @@
 #pragma once
 
-#include <vector>
-#include <fstream>
-#include <string>
+#include "ioh.hpp"
 
-using namespace std;
-
-inline vector<string> split(const string &str, const string &pattern)
+inline fs::path find_test_file(const std::string &filename)
 {
-    vector<string> res;
-    if(str.empty())
+    auto file = fs::path("IOHexperimenter") / fs::path("tests")
+        / fs::path("cpp") / fs::path("problem") / filename;
+
+    fs::path root;
+    for (const auto &e : fs::current_path())
+    {
+        root /= e;
+        if (exists(root / file))
+        {
+            file = root / file;
+            break;
+        }
+    }
+    return file;
+}
+
+
+inline std::vector<std::string> split(const std::string &str, const std::string &pattern)
+{
+    std::vector<std::string> res;
+    if (str.empty())
         return res;
 
-    string strs = str + pattern;
-    size_t pos = strs.find(pattern);
+    auto search_string = str + pattern;
+    auto pos = search_string.find(pattern);
 
-    while(pos != strs.npos)
+    while (pos != search_string.npos)
     {
-        string temp = strs.substr(0, pos);
-        res.push_back(temp);
-        strs = strs.substr(pos+1, strs.size());
-        pos = strs.find(pattern);
+        res.push_back(search_string.substr(0, pos));
+        search_string = search_string.substr(pos + 1, search_string.size());
+        pos = search_string.find(pattern);
     }
     return res;
 }
- 
-inline vector<double> string_to_vector_double(const string& s) {
-  vector<double> x;
-  vector<string> tmp;
-  size_t i = 0;
 
-  tmp = split(s,",");
-  while(i != tmp.size()) {
-    x.push_back( stod(tmp[i]) );
-    i++;
-  }
-  return x;
-}
-
-inline vector<int> string_to_vector_int(const string& s) {
-    vector<int> x;
+inline std::vector<double> string_to_vector_double(const std::string &s)
+{
+    std::vector<double> x;
     size_t i = 0;
-    while (i != s.size()) {
-        x.push_back(s[i] - '0');
+
+    auto tmp = split(s, ",");
+    while (i != tmp.size())
+    {
+        x.push_back(stod(tmp[i]));
         i++;
     }
     return x;
 }
 
+inline std::vector<int> string_to_vector_int(const std::string &s)
+{
+    std::vector<int> x;
+    size_t i = 0;
+    while (i != s.size())
+    {
+        x.push_back(s[i] - '0');
+        i++;
+    }
+    return x;
+}

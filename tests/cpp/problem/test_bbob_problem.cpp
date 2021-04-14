@@ -11,12 +11,13 @@ using namespace std;
 TEST(BBOBfitness, dimension5)
 {
     ioh::common::log::log_level = ioh::common::log::Level::Warning;
-    const string file_name = "cpp/problem/bbobfitness5.in";
+    const auto file_name = find_test_file("bbobfitness5.in");
     std::string s;
 
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::BBOB>::instance();
 
     ifstream infile(file_name.c_str());
+    ASSERT_TRUE(infile.is_open());
     while (getline(infile, s))
     {
         auto tmp = split(s, " ");
@@ -34,12 +35,13 @@ TEST(BBOBfitness, dimension5)
 TEST(BBOBfitness, dimension20)
 {
     ioh::common::log::log_level = ioh::common::log::Level::Warning;
-    const string file_name = "cpp/problem/bbobfitness20.in";
+    const auto file_name = find_test_file("bbobfitness20.in");
     std::string s;
 
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::BBOB>::instance();
 
     ifstream infile(file_name.c_str());
+    ASSERT_TRUE(infile.is_open());
     while (getline(infile, s))
     {
         auto tmp = split(s, " ");
