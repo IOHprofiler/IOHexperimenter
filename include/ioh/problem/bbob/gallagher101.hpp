@@ -83,7 +83,7 @@ namespace ioh::problem::bbob
                 x_transformed[i] = std::inner_product(x.begin(), x.end(),
                     this->transformation_state_.second_rotation.at(i).begin(), 0.0);
             }
-            #if defined(__GNUC__)
+            #if defined(__GNUC__) 
             #pragma GCC diagnostic push
             #pragma GCC diagnostic ignored "-Wsequence-point"
             #endif

@@ -113,7 +113,7 @@ public:
                    : ioh::common::OptimizationType::Maximization), constraint)
     {
         #if defined(__GNUC__)
-        #pragma GCC diagnostic push
+        #pragma GCC diagnostic push 
         #pragma GCC diagnostic ignored "-Wunused-variable"
         #endif
         static auto registered = perform_registration();
