@@ -13,13 +13,12 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 option(BUILD_PYTHON_PACKAGE "Whether to build Python package" OFF)
 option(BUILD_TESTS "Whether to build test cases with gtest" ON)
 option(BUILD_EXAMPLE "Whether to build Python package" ON)  
-
-option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python modules as if they were an IOH problem" OFF)
 option(BUILD_DOCS "Build docs" OFF) 
+option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python modules as if they were an IOH problem" OFF)
 
 if(MSVC)
     set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windows
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT /02") 
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd ")
 endif()  
@@ -32,7 +31,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         add_compile_definitions(FSEXPERIMENTAL)
     endif()
 endif() 
-
+ 
 # Define project targets.
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
   
@@ -41,7 +40,7 @@ if(NOT ENABLE_PYTHON_PROBLEMS)
     list(FILTER HEADERS EXCLUDE REGEX "include/ioh/problem/python/*")
 endif() 
 
-
+ 
 add_library(ioh INTERFACE)
 add_library(ioh::ioh ALIAS ioh)
 
@@ -62,8 +61,7 @@ endif()
 
 target_include_directories(ioh
 INTERFACE
-    # Interface paths are relative to the installation path, not the current
-    # directory.
+    # Interface paths are relative to the installation path, not the current directory.
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
@@ -71,11 +69,6 @@ INTERFACE
 target_compile_features(ioh
 INTERFACE
     cxx_std_17
-)
-
-target_compile_options(ioh
-INTERFACE
-    #$<$<CXX_COMPILER_ID:GNU>:-Wall -pedantic,-W4>
 )
 
 # Generate package config files.

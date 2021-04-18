@@ -6,11 +6,11 @@ TEST(common, test)
 {
 	using namespace ioh::common;
 
-	ASSERT_TRUE(compare_objectives(4, 2, OptimizationType::Maximization));
-	ASSERT_FALSE(compare_objectives(2, 2, OptimizationType::Maximization));
+	EXPECT_TRUE(compare_objectives(4, 2, OptimizationType::Maximization));
+	EXPECT_FALSE(compare_objectives(2, 2, OptimizationType::Maximization));
 
-	ASSERT_TRUE(compare_objectives(2, 5, OptimizationType::Minimization));
-	ASSERT_FALSE(compare_objectives(4, 2, OptimizationType::Minimization)); 
+	EXPECT_TRUE(compare_objectives(2, 5, OptimizationType::Minimization));
+	EXPECT_FALSE(compare_objectives(4, 2, OptimizationType::Minimization)); 
 }
 
  
@@ -19,17 +19,17 @@ TEST(common, log)
 	using namespace ioh::common::log;
 	testing::internal::CaptureStdout();
 	info("Hello");
-	std::string output = testing::internal::GetCapturedStdout();
-	ASSERT_EQ(output, "IOH_LOG_INFO : Hello\n");
+	auto output = testing::internal::GetCapturedStdout();
+	EXPECT_EQ(output, "IOH_LOG_INFO : Hello\n");
 	testing::internal::CaptureStdout();
 	warning("Warning");
 	output = testing::internal::GetCapturedStdout();
-	ASSERT_EQ(output, "IOH_WARNING_INFO : Warning\n");
+	EXPECT_EQ(output, "IOH_WARNING_INFO : Warning\n");
 }
 
 TEST(common, typenames)
 {
-    ASSERT_EQ(ioh::common::class_name<ioh::problem::bbob::Sphere>(), "Sphere");
+    EXPECT_EQ(ioh::common::class_name<ioh::problem::bbob::Sphere>(), "Sphere");
 }
 
 
@@ -48,18 +48,18 @@ TEST(common, unique_folder) {
     remove_all(fs::current_path() / f_name);
 
     const auto f = UniqueFolder(f_name);
-    ASSERT_TRUE(fs::exists(f.path()));
-    ASSERT_EQ(f.name(), f_name);
+    EXPECT_TRUE(fs::exists(f.path()));
+    EXPECT_EQ(f.name(), f_name);
 
     const auto f2 = UniqueFolder(f_name);
-    ASSERT_TRUE(fs::exists(f2.path()));
-    ASSERT_EQ(f2.name(), "TEST_FOLDER-1");
+    EXPECT_TRUE(fs::exists(f2.path()));
+    EXPECT_EQ(f2.name(), "TEST_FOLDER-1");
 
     f.remove();
-    ASSERT_FALSE(fs::exists(f.path()));
+    EXPECT_FALSE(fs::exists(f.path()));
 
     f2.remove();
-    ASSERT_FALSE(fs::exists(f2.path()));
+    EXPECT_FALSE(fs::exists(f2.path()));
 }
 
 
@@ -81,14 +81,14 @@ TEST(common, buffered_file) {
     using namespace ioh::common::file;
     const std::string f_name = "TEST_FILE";
     auto f = BufferedFileStream(f_name);
-    ASSERT_TRUE(fs::exists(f.path()));
-    ASSERT_EQ(get_contents(f.path()), "");
+    EXPECT_TRUE(fs::exists(f.path()));
+    EXPECT_EQ(get_contents(f.path()), "");
     f.write("Hallo");
-    ASSERT_EQ(f.buffer(), "Hallo");
-    ASSERT_EQ(get_contents(f.path()), "");
+    EXPECT_EQ(f.buffer(), "Hallo");
+    EXPECT_EQ(get_contents(f.path()), "");
     f.flush();
-    ASSERT_EQ(get_contents(f.path()), "Hallo");
-    ASSERT_EQ(f.buffer(), "");
+    EXPECT_EQ(get_contents(f.path()), "Hallo");
+    EXPECT_EQ(f.buffer(), "");
     f.remove();
-    ASSERT_FALSE(fs::exists(f.path()));
+    EXPECT_FALSE(fs::exists(f.path()));
 }

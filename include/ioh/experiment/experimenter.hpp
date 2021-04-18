@@ -78,7 +78,7 @@ namespace ioh {
                 // const auto t_timer = common::CpuTimer("Total ");
                 // std::cout << *this << std::endl;
 
-                suite_ ->attach_logger(*logger_);
+                suite_ ->attach_logger(*logger_); 
                 for (const auto& p : *suite_)
                 {
                     const auto p_timer = common::CpuTimer();

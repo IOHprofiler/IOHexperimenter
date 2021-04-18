@@ -35,7 +35,7 @@ TEST(logger, default) {
         auto l = Default();   
         l_folder = l.experiment_folder();
 
-        ASSERT_TRUE(fs::exists(l_folder.path()));
+        EXPECT_TRUE(fs::exists(l_folder.path()));
 
         for (auto *problem: std::array<ioh::problem::BBOB*, 3>({&p, &p1, &p2})) {
             const auto x = std::vector<double>(problem->meta_data().n_variables, 0);
@@ -46,8 +46,8 @@ TEST(logger, default) {
             }
         }
             
-        ASSERT_TRUE(fs::exists(l_folder.path() / info_file_name1));
-        ASSERT_TRUE(fs::exists(l_folder.path() / info_file_name2));
+        EXPECT_TRUE(fs::exists(l_folder.path() / info_file_name1));
+        EXPECT_TRUE(fs::exists(l_folder.path() / info_file_name2));
     } // force destructor of logger to be called, flushes to files
 
     const std::string test_info1 =
@@ -60,8 +60,8 @@ TEST(logger, default) {
         R"(suite = "No suite", funcId = 6, funcName = "AttractiveSector", DIM = 4, maximization = "F", algId = "algorithm_name", algInfo = "algorithm_info")"
         "\n%\ndata_f6_AttractiveSector/IOHprofiler_f6_DIM4.dat, 1:1|28268.4, 1:1|28268.4";
 
-    ASSERT_EQ(0, get_file_as_string(l_folder.path() / info_file_name1).compare(test_info1));
-    ASSERT_EQ(0, get_file_as_string(l_folder.path() / info_file_name2).compare(test_info2));
+    EXPECT_EQ(0, get_file_as_string(l_folder.path() / info_file_name1).compare(test_info1));
+    EXPECT_EQ(0, get_file_as_string(l_folder.path() / info_file_name2).compare(test_info2));
         
     const std::string header = R"#("function evaluation" "current f(x)" "best-so-far f(x)" "current af(x)+b" "best af(x)+b")#";
     std::array<std::pair<std::string, fs::path>, 3> cases;
@@ -70,10 +70,10 @@ TEST(logger, default) {
     cases[2] = { header + "\n1 28268.397464 28268.397464 28304.297464 28304.297464\n", get_dat_path(l_folder.path(),  p2) };
 
     for (const auto&[data, path]: cases)
-        ASSERT_EQ(0, get_file_as_string(path).compare(data + data)) << "EXPECTED:\n" <<
+        EXPECT_EQ(0, get_file_as_string(path).compare(data + data)) << "EXPECTED:\n" <<
             data + data << "\nGOT:\n" << get_file_as_string(path);
         
     //
     l_folder.remove();
-    ASSERT_TRUE(!fs::exists(l_folder.path()));
+    EXPECT_TRUE(!fs::exists(l_folder.path()));
 }

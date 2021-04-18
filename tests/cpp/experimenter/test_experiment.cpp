@@ -4,25 +4,10 @@
 
 #include "ioh.hpp"
 
-
-fs::path find_config_file()
-{
-	auto config = fs::path("IOHexperimenter") / fs::path("example") / "conf.ini";
-	fs::path root;
-	for (const auto& e : fs::current_path())
-	{
-		root /= e;
-		if (exists(root / config))
-		{
-			config = root / config;
-			break;
-		}
-	}
-	return config;
-}
+#include "../utils.hpp" 
 
 
-void bbob_random_search(const std::shared_ptr<ioh::problem::Real> p)
+void bbob_random_search(const std::shared_ptr<ioh::problem::Real>& p)
 {
 	using namespace ioh::common;
 	std::vector<double> x(p->meta_data().n_variables);
@@ -34,7 +19,7 @@ void bbob_random_search(const std::shared_ptr<ioh::problem::Real> p)
 	}
 }
 
-void pbo_random_search(const std::shared_ptr<ioh::problem::Integer> p)
+void pbo_random_search(const std::shared_ptr<ioh::problem::Integer>& p)
 {
 	using namespace ioh::common;
 	auto count = 0;
@@ -54,36 +39,36 @@ int count_newlines(const std::string& s)
 
 TEST(experiment, config)
 {
-	auto config_file = find_config_file();
+    auto config_file = find_test_file("conf.ini");
 	const ioh::experiment::Configuration conf(config_file);
-	ASSERT_EQ(conf.suite_name(), "PBO");
-	ASSERT_EQ(conf.problem_ids(), std::vector<int>({ 1, 2, 3, 4, 5 }));
-	ASSERT_EQ(conf.instances(), std::vector<int>({ 1 }));
-	ASSERT_EQ(conf.dimensions(), std::vector<int>({ 16 }));
-	ASSERT_EQ(conf.output_directory(), "./");
-	ASSERT_EQ(conf.result_folder(), "Experiment");
-	ASSERT_EQ(conf.algorithm_info(), "An_EA_algorithm");
-	ASSERT_EQ(conf.algorithm_name(), "(1+1)_EA");
-	ASSERT_EQ(conf.base_evaluation_triggers(), std::vector<int>({ 1 }));
-	ASSERT_EQ(conf.update_triggers(), true);
-	ASSERT_EQ(conf.complete_triggers(), false);
-	ASSERT_EQ(conf.number_target_triggers(), 0);
-	ASSERT_EQ(conf.number_interval_triggers(), 0);
+	EXPECT_EQ(conf.suite_name(), "PBO");
+	EXPECT_EQ(conf.problem_ids(), std::vector<int>({ 1, 2, 3, 4, 5 }));
+	EXPECT_EQ(conf.instances(), std::vector<int>({ 1 }));
+	EXPECT_EQ(conf.dimensions(), std::vector<int>({ 16 }));
+	EXPECT_EQ(conf.output_directory(), "./");
+	EXPECT_EQ(conf.result_folder(), "Experiment");
+	EXPECT_EQ(conf.algorithm_info(), "An_EA_algorithm");
+	EXPECT_EQ(conf.algorithm_name(), "(1+1)_EA");
+	EXPECT_EQ(conf.base_evaluation_triggers(), std::vector<int>({ 1 }));
+	EXPECT_EQ(conf.update_triggers(), true);
+	EXPECT_EQ(conf.complete_triggers(), false);
+	EXPECT_EQ(conf.number_target_triggers(), 0);
+	EXPECT_EQ(conf.number_interval_triggers(), 0);
 }
 
 
 TEST(experiment, pbo_from_config)
 {
 	using namespace ioh;
-	auto config_file = find_config_file();
+    auto config_file = find_test_file("conf.ini");
 	experiment::Experimenter<problem::Integer> experiment(config_file, pbo_random_search);
-	ASSERT_EQ(experiment.independent_runs(), 1);
+	EXPECT_EQ(experiment.independent_runs(), 1);
 	experiment.independent_runs(10);
-	ASSERT_EQ(experiment.independent_runs(), 10);
+	EXPECT_EQ(experiment.independent_runs(), 10);
 	testing::internal::CaptureStdout();
 	experiment.run();
 	const auto output = testing::internal::GetCapturedStdout();
-	ASSERT_GE(count_newlines(output), 5);
+	EXPECT_GE(count_newlines(output), 5);
 	// TODO: check that files are generated properly
 	experiment.logger()->flush();
 	try
@@ -111,11 +96,11 @@ TEST(experiment, bbob)
 	auto experiment = experiment::Experimenter<problem::Real>(
 		suite, logger, bbob_random_search, 10);
 
-	ASSERT_EQ(experiment.independent_runs(), 10);
+	EXPECT_EQ(experiment.independent_runs(), 10);
 	testing::internal::CaptureStdout();
 	experiment.run();
 	const auto output = testing::internal::GetCapturedStdout();
-	ASSERT_GE(count_newlines(output), 8);
+	EXPECT_GE(count_newlines(output), 8);
 	// TODO: check that files are generated properly
 	experiment.logger()->flush();
 	try
