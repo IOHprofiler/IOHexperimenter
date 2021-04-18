@@ -161,6 +161,7 @@ class Experiment:
         name: str
             An optional name of the the newly added function.    
         '''
+        
         if self.problem_type in ("PBO", "Integer"):
             p = problem.wrap_integer_problem(p, name or "CustomProblem")
             self.problem_type = "Integer"
