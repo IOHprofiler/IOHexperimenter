@@ -1,6 +1,0 @@
-suite = "No suite", funcId = 1, funcName = "Sphere", DIM = 5, maximization = "F", algId = "<tests.python.test_problem.Algorithm object at 0x7f1d5cecd0a0>", algInfo = "algorithm_info", a = "1", dynamicAttribute = "x"
-%
-data_f1_Sphere/IOHprofiler_f1_DIM5.dat, 1:6976|10.4961;10, 1:1987|10.2543;10
-suite = "No suite", funcId = 1, funcName = "Sphere", DIM = 5, maximization = "F", algId = "<tests.python.test_problem.Algorithm object at 0x7f1d5cecd0a0>", algInfo = "algorithm_info", a = "1", dynamicAttribute = "x"
-%
-data_f1_Sphere/IOHprofiler_f1_DIM5.dat, 2:2087|48.2667;10, 2:9035|48.7675;10

@@ -1,6 +1,0 @@
-suite = "No suite", funcId = 0, funcName = "Name", DIM = 5, maximization = "F", algId = "<tests.python.test_problem.Algorithm object at 0x7f1d5cecd0a0>", algInfo = "algorithm_info", a = "1", dynamicAttribute = "x"
-%
-data_f0_Name/IOHprofiler_f0_DIM5.dat, 0:1|0;10, 0:1|0;10
-suite = "No suite", funcId = 0, funcName = "Name", DIM = 5, maximization = "F", algId = "<tests.python.test_problem.Algorithm object at 0x7f1d5cecd0a0>", algInfo = "algorithm_info", a = "1", dynamicAttribute = "x"
-%
-data_f0_Name/IOHprofiler_f0_DIM5.dat, 0:1|0;10, 0:1|0;10

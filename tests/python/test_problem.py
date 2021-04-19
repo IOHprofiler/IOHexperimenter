@@ -63,8 +63,10 @@ class TestProblem(unittest.TestCase):
         self.assertSetEqual(info_files, set())
         self.assertSetEqual(data_files, set())
 
+        self.assertTrue(os.path.isfile("ioh_data.zip"))
 
-        # shutil.rmtree("ioh_data")
+        shutil.rmtree("ioh_data")
+        os.remove("ioh_data.zip")
            
     def test_evaluation_bbob_problems(self):
         for fid in range(1,25):
