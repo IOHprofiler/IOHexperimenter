@@ -4,14 +4,14 @@
 ![Windows MVSC-2019](https://github.com/IOHprofiler/IOHexperimenter/workflows/Windows/badge.svg)
 
 
-__Experimenter__ for <b>I</b>terative <b>O</b>ptimization <b>H</b>euristics (IOHs), built natively in</i> `C++`.
+__Experimenter__ for **I**terative **O**ptimization **H**euristics (IOHs), built natively in* `C++`.
 
 * __Documentation__: [https://arxiv.org/abs/1810.05281](https://arxiv.org/abs/1810.05281)
 * __Wiki page__: [https://iohprofiler.github.io](https://iohprofiler.github.io/)
 * __General Contact__: [iohprofiler@liacs.leidenuniv.nl](iohprofiler@liacs.leidenuniv.nl)
 <!-- * __Mailing List__: [https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler](https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler) -->
 
-<b>IOHexperimenter</b> <i>provides</i>:
+**IOHexperimenter** *provides*:
 
 * A framework to ease the benchmarking of any iterative optimization heuristic
 * Continuous and discrete benchmarking problems
@@ -21,7 +21,7 @@ __Experimenter__ for <b>I</b>terative <b>O</b>ptimization <b>H</b>euristics (IOH
 * Advanced logging module that takes care of registering the data in a seamless manner
 * Data format is compatible with [IOHanalyzer](https://github.com/IOHprofiler/IOHanalyzer)
 
-<b>IOHexperimenter</b> is available for:
+**IOHexperimenter** is available for:
 
 * `C++` manual can be found [here](https://iohprofiler.github.io/IOHexp/Cpp/)
 * `Python`: please see [here](https://github.com/IOHprofiler/IOHexperimenter/tree/master/ioh) for details user manual
@@ -186,16 +186,16 @@ If you have any questions, comments or suggestions, please don't hesitate contac
 
 ## Our team
 
-* [Jacob de Nobel](https://www.universiteitleiden.nl/en/staffmembers/jacob-de-nobel), <i>Leiden Institute of Advanced Computer Science</i>,
-* [Furong Ye](https://www.universiteitleiden.nl/en/staffmembers/furong-ye#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
-* [Diederick Vermetten](https://www.universiteitleiden.nl/en/staffmembers/diederick-vermetten#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
-* [Hao Wang](https://www.universiteitleiden.nl/en/staffmembers/hao-wang#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
-* [Carola Doerr](http://www-desir.lip6.fr/~doerr/), <i>CNRS and Sorbonne University</i>,
-* [Thomas Bäck](https://www.universiteitleiden.nl/en/staffmembers/thomas-back#tab-1), <i>Leiden Institute of Advanced Computer Science</i>,
+* [Jacob de Nobel](https://www.universiteitleiden.nl/en/staffmembers/jacob-de-nobel), *Leiden Institute of Advanced Computer Science*,
+* [Furong Ye](https://www.universiteitleiden.nl/en/staffmembers/furong-ye#tab-1), *Leiden Institute of Advanced Computer Science*,
+* [Diederick Vermetten](https://www.universiteitleiden.nl/en/staffmembers/diederick-vermetten#tab-1), *Leiden Institute of Advanced Computer Science*,
+* [Hao Wang](https://www.universiteitleiden.nl/en/staffmembers/hao-wang#tab-1), *Leiden Institute of Advanced Computer Science*,
+* [Carola Doerr](http://www-desir.lip6.fr/~doerr/), *CNRS and Sorbonne University*,
+* [Thomas Bäck](https://www.universiteitleiden.nl/en/staffmembers/thomas-back#tab-1), *Leiden Institute of Advanced Computer Science*,
 
 When using IOHprofiler and parts thereof, please kindly cite this work as
 
-Carola Doerr, Hao Wang, Furong Ye, Sander van Rijn, Thomas Bäck: <i>IOHprofiler: A Benchmarking and Profiling Tool for Iterative Optimization Heuristics</i>, arXiv e-prints:1810.05281, 2018.
+Carola Doerr, Hao Wang, Furong Ye, Sander van Rijn, Thomas Bäck: *IOHprofiler: A Benchmarking and Profiling Tool for Iterative Optimization Heuristics*, arXiv e-prints:1810.05281, 2018.
 
 ```bibtex
 @ARTICLE{IOHprofiler,

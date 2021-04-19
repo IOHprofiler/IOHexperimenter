@@ -128,6 +128,7 @@ setup(
     author_email="iohprofiler@liacs.leidenuniv.nl",
     description="The experimenter for Iterative Optimization Heuristics",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     packages=find_packages('ioh'),
     package_dir={'':'ioh'},
     ext_modules=[CMakeExtension("iohcpp")],
