@@ -67,7 +67,7 @@ jobs:
       matrix:
         python-version: ["3.6.x", "3.7.x", "3.8.x", "3.9.x"]
         compiler: [g++-10]
-        architecture: [x64, x86]
+        architecture: [x64]
     steps:
     - uses: actions/checkout@v2
       with:
