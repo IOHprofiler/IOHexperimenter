@@ -136,5 +136,5 @@ setup(
     zip_safe=False,
     test_suite='tests.python',
     python_requires='>=3.6',
-    install_requires=['cmake', 'ninja']
+    install_requires=['cmake', 'ninja', 'pybind11']
 )
