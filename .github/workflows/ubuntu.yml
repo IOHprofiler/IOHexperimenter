@@ -66,7 +66,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.6.x", "3.7.x", "3.8.x", "3.9.x"]
-        compiler: [g++-10, g++-9, g++-8, g++-7]
+        compiler: [g++-10]
         architecture: [x64, x86]
 
     steps:
