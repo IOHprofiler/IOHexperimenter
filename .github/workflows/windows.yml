@@ -8,7 +8,7 @@ env:
 
 
 jobs:
-  build:
+  build-test-cpp:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
