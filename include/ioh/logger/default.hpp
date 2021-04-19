@@ -233,7 +233,6 @@ namespace ioh::logger
                          const bool store_positions = false, const bool t_always = false, const int t_on_interval = 0,
                          const int t_per_time_range = 0, const bool t_on_improvement = true,
                          const std::vector<int> &t_at_time_points = {0},
-                        
                          const int trigger_at_time_points_exp_base = 10, const int trigger_at_range_exp_base = 10) :
             Observer(t_always, t_on_interval, t_per_time_range, t_on_improvement, t_at_time_points, optimization_type,
                      trigger_at_time_points_exp_base, trigger_at_range_exp_base),

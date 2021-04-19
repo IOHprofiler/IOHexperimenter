@@ -8,7 +8,7 @@ env:
 
 
 jobs:
-  build:
+  build-test-cpp:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -60,3 +60,30 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: tests/test_ioh
+
+  build-test-python:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.6.x", "3.7.x", "3.8.x", "3.9.x"]
+        compiler: [g++-10]
+        architecture: [x64]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      env:
+        CXX: ${{ matrix.compiler }}
+      with:
+        python-version: ${{matrix.python-version}}
+        architecture: ${{matrix.architecture}}
+    - name: Install library
+      run: |
+        sudo apt update -y
+        sudo apt install ninja-build -y
+        python -m pip install --upgrade pip
+        python setup.py develop
+    - name: Run unit tests
+      run: python -m unittest -v

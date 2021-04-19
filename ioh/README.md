@@ -133,6 +133,14 @@ To ensure all data is written, we should flush the logger after running our expe
 l.flush()
 ```
 
+The prefered way of using a logger is by using a context manager, which avoides the need
+for calling the flush() method explicitly.
+```python
+with logger.Default("temp2") as l2:
+    f.attach_logger(l2)
+    random_search(f)
+```
+
 ### Tracking parameters
 
 If we want to track parameters of the algorithm, we need to slightly restructure it by turning it into a class, where the variables we want to track are properties

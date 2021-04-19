@@ -149,7 +149,6 @@ namespace ioh::common::file {
           stream_.flush();
         }
 
-
         [[nodiscard]] std::string buffer() const {
             return buffer_;
         }
