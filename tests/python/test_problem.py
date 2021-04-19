@@ -9,15 +9,13 @@ import ioh
 class Algorithm:
     def __init__(self):
         self.x = 10
-        self.y = 1
+        self.i = 1
     
     def __call__(self, p: ioh.problem.Real):
         for i in range(10000):
             x = list(map(lambda x: random.random(), range(p.meta_data.n_variables)))    
             p(x)
-            self.y = i
-
-
+            self.i = i
 
 DATA_DIR = os.path.join(
     os.path.dirname(os.path.dirname(__file__)), "static")
@@ -33,11 +31,12 @@ class TestProblem(unittest.TestCase):
     def test_experimenter(self):
         exp = ioh.Experiment(
             Algorithm(),
-            [1], [1], [5],
-            njobs = -1,
+            [1], [1, 2], [5],
+            njobs = 1,
+            reps = 2,
             experiment_attributes = [("a", 1)],
             run_attributes = ['x'],
-            logged_attributes = ['y']
+            logged_attributes = ['i']
         )
 
         def a_problem(x):
@@ -65,7 +64,7 @@ class TestProblem(unittest.TestCase):
         self.assertSetEqual(data_files, set())
 
 
-        shutil.rmtree("ioh_data")
+        # shutil.rmtree("ioh_data")
            
     def test_evaluation_bbob_problems(self):
         for fid in range(1,25):

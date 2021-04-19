@@ -86,4 +86,4 @@ jobs:
         python -m pip install --upgrade pip
         python setup.py develop
     - name: Run unit tests
-      run: python -m unittest
+      run: python -m unittest -v
