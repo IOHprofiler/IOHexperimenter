@@ -132,7 +132,7 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(),
     package_dir={'IOHexperimenter':'ioh'},
-    ext_modules=[CMakeExtension("iohcpp")],
+    ext_modules=[CMakeExtension("ioh.iohcpp")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     test_suite='tests.python',
