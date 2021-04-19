@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import platform
 import subprocess
 
 from setuptools import setup, Extension, find_packages
@@ -13,6 +14,11 @@ PLAT_TO_CMAKE = {
     "win-arm32": "ARM",
     "win-arm64": "ARM64",
 }
+
+if platform.system() == "Darwin":
+    os.environ["CC"] = "clang"
+    os.environ["CXX"] = "clang"
+    os.environ["ARCHFLAGS"] = "-std=c++14"
 
 
 # A CMakeExtension needs a sourcedir instead of a file list.
