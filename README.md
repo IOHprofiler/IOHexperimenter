@@ -25,7 +25,7 @@ __Experimenter__ for **I**terative **O**ptimization **H**euristics (IOHs), built
 
 * `C++` manual can be found [here](https://iohprofiler.github.io/IOHexp/Cpp/)
 * `Python`: please see [here](https://github.com/IOHprofiler/IOHexperimenter/tree/master/ioh) for details user manual
-<!-- * or as a [pip package](https://pypi.org/project/IOHexperimenter/); [Wiki Page](https://iohprofiler.github.io/IOHexp/python/). -->
+* or as a [pip package](https://pypi.org/project/ioh); [Wiki Page](https://iohprofiler.github.io/IOHexp/python/).
 
 ## C++ Interface
 

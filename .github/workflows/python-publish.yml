@@ -25,6 +25,9 @@ jobs:
           with:
             python-version: ${{matrix.python-version}}
             architecture: ${{matrix.architecture}}
+        - name: Install Ninja
+          run: brew install ninja
+          if: ${{matrix.os == macos-latest }}
         - name: Install dependencies
           run: |
             python -m pip install --upgrade pip
@@ -49,8 +52,10 @@ jobs:
             python-version: "3.x"
         - name: Install dependencies
           run: |
+            sudo apt update -y
+            sudo apt install ninja-build -y
             python -m pip install --upgrade pip
-            pip install setuptools wheel twine ninja
+            pip install setuptools wheel twine
         - name: build manylinux
           uses: RalfG/python-wheels-manylinux-build@v0.3.3-manylinux2010_x86_64
         - name: Publish manylinux
@@ -72,6 +77,8 @@ jobs:
             python-version: "3.x"
         - name: Install dependencies
           run: |
+            sudo apt update -y
+            sudo apt install ninja-build -y
             python -m pip install --upgrade pip
             pip install setuptools wheel twine
         - name: Build and publish
