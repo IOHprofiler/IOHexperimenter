@@ -11,7 +11,7 @@
 
 namespace ioh::logger
 {
-    class Default final : public Base, Observer
+    class Default : public Base, Observer
     {
         bool store_positions_;
         common::file::UniqueFolder experiment_folder_;
@@ -427,7 +427,7 @@ namespace ioh::logger
         {
             if (attribute_names.size() != attributes.size())
                 common::log::error("Attributes and their names are given with different size.");
-
+ 
             for (size_t i = 0; i != attribute_names.size(); i++)
                 data_files_.logged_attributes_[attribute_names[i]] = std::make_shared<double>(attributes[i]);
         }

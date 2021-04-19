@@ -8,7 +8,7 @@ namespace ioh::problem::bbob
     {
     public:
         Gallagher21(const int instance, const int n_variables) :
-            Gallagher(22, instance, n_variables, "Gallagher21", 21, 9.8, 4.9)
+            Gallagher(22, instance, n_variables, "Gallagher21", 21, 9.8, 4.9, 1000.)
         {
         }
     };

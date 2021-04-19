@@ -174,7 +174,10 @@ TEST(problems, bbob5d)
     for (const auto& name : the_factory.names())
     {
         const auto item = the_factory.create(name, 1, dimension);
-        ASSERT_FLOAT_EQ(expected.at(item->meta_data().problem_id - 1), (*item)(x0).at(0)) << *item;
+        EXPECT_FLOAT_EQ(
+            static_cast<float>(expected.at(item->meta_data().problem_id - 1)), 
+            static_cast<float>((*item)(x0).at(0)))
+        << *item;
     }
 }
 
