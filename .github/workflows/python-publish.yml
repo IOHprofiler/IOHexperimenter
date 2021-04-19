@@ -27,7 +27,8 @@ jobs:
             architecture: ${{matrix.architecture}}
         - name: Install Ninja
           if: startsWith(matrix.os, 'macOS')
-            run: brew install ninja
+          run: |
+            brew install ninja
         - name: Install dependencies
           run: |
             python -m pip install --upgrade pip
