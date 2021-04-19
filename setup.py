@@ -106,18 +106,28 @@ class CMakeBuild(build_ext):
 
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
+__version__ = "0.0.0.1"
+gh_ref = os.environ.get("GITHUB_REF")
+if gh_ref:
+    *_, tag = gh_ref.split("/")
+    __version__ = tag.replace("v", "")
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name="ioh",
-    version="0.0.1",
-    author="Dean Moldovan",
-    author_email="dean0x7d@gmail.com",
-    description="A test project using pybind11 and CMake",
-    long_description="",
+    version=__version__,
+    author="Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck",
+    author_email="iohprofiler@liacs.leidenuniv.nl",
+    description="The experimenter for Iterative Optimization Heuristics",
+    long_description=long_description,
     packages=find_packages('ioh'),
     package_dir={'':'ioh'},
     ext_modules=[CMakeExtension("iohcpp")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     test_suite='tests.python',
+    python_requires='>=3.6',
     install_requires=['cmake']
 )
