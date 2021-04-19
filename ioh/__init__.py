@@ -147,8 +147,7 @@ class Experiment:
         for i in range(self.reps):
             algorithm(p) 
             p.reset()
-        
-        
+         
     def add_custom_problem(self, p: typing.Callable, name: str = None):
         '''Add a custom problem to the list of functions to be evaluated.
 

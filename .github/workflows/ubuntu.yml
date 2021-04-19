@@ -68,12 +68,10 @@ jobs:
         python-version: ["3.6.x", "3.7.x", "3.8.x", "3.9.x"]
         compiler: [g++-10]
         architecture: [x64, x86]
-
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: true    
-
     - name: Set up Python
       uses: actions/setup-python@v2
       env:
@@ -83,6 +81,8 @@ jobs:
         architecture: ${{matrix.architecture}}
     - name: Install library
       run: |
+        sudo apt update -y
+        sudo apt install ninja-build -y
         python -m pip install --upgrade pip
         python setup.py develop
     - name: Run unit tests
