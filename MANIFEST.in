@@ -1,3 +1,0 @@
-recursive-include ioh/ *
-recursive-include tests/ *
-recursive-include include/ *

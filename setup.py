@@ -113,6 +113,7 @@ class CMakeBuild(build_ext):
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 __version__ = "2.0.0.0"
+__version__ = "0.2.9.9"
 gh_ref = os.environ.get("GITHUB_REF")
 if gh_ref:
     *_, tag = gh_ref.split("/")
@@ -129,12 +130,12 @@ setup(
     description="The experimenter for Iterative Optimization Heuristics",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=find_packages('ioh'),
-    package_dir={'':'ioh'},
+    packages=find_packages(),
+    package_dir={'IOHexperimenter':'ioh'},
     ext_modules=[CMakeExtension("iohcpp")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     test_suite='tests.python',
     python_requires='>=3.6',
-    install_requires=['cmake', 'ninja', 'pybind11']
+    setup_requires=['cmake', 'ninja', 'pybind11']
 )
