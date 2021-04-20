@@ -105,7 +105,7 @@ auto new_problem = ioh::problem::wrap_function<double>(
   &test_problem,
   "test_problem" // name for the new function
 );
-std::cout << const_z_problem.meta_data() << std::endl;
+std::cout << new_problem.meta_data() << std::endl;
 ```
 
 After wrapping, we could also create this `test_problem` from the problem factory. Note that,
