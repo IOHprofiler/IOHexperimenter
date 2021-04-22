@@ -3,6 +3,8 @@
 #include "base.hpp"
 #include <iostream>
 #include <map>
+#include <cmath>
+#include <vector>
 
 namespace ioh {
 namespace logger {
@@ -12,29 +14,51 @@ namespace logger {
 
         /** Interface for classes that computes indices from ranges.
          *
-         * The idea is to input [min,max] && the discretization size
-         * && to compute the position in [0,size] of any value in [min,max].
+         * The idea is to input [min,max] and the discretization size
+         * and to compute the position in [0,size-1] of any value in [min,max].
+         * 
+         * You can think of it as a way to compute discrete histograms' bucket indices.
+         * Or as a morphism between any 1D "origin" space to another 1D strictly positive integer "indexed" space.
+         * 
+         * @warning Contrary to what is common in computer science,
+         *          this uses a closed [min,max] interval for the "origin" values.
+         *          So that any value at `max` will be assigned to the `size-1`th bucket..
          *
-         * Used in ecdf.
+         * Used in ECDF.
          */
         template <class R>
         class Range {
         public:
+
             Range(R amin, R amax, size_t asize)
                 : _min(amin)
                 , _max(amax)
                 , _size(asize)
             {
+                assert(_min < _max);
+                assert(0 < _size);
             }
 
+            /** Minimum value on the axis. */
             R min() const { return _min; }
+            
+            /** Maximum value on the axis. */
             R max() const { return _max; }
-            size_t size() const { return _size; }
-            R length() const { return _max - _min; }
-            R step() const { return length() / _size; }
 
-            //! Main interface.
-            virtual size_t index(double x) = 0;
+            /** Number of buckets. */
+            size_t size() const { return _size; }
+
+            /** Span of the axis. */
+            R length() const { return _max - _min; }
+
+            //! Interface: from value to index.
+            virtual size_t index(double x) const = 0;
+
+            /** Type returned by the bounds method. */
+            using BoundsType = std::pair<R,R>;
+
+            //! Interface: from index to value.
+            virtual BoundsType bounds(size_t i) const = 0;
 
         protected:
             R _min;
@@ -51,11 +75,30 @@ namespace logger {
             {
             }
 
-            size_t index(double x) override
+            size_t index(double x) const override
             {
-                return std::floor(
-                    (x - this->min()) / this->length() * this->size());
+                assert(this->_min <= x);
+                assert(x <= this->_max); // FIXME do we want that?
+                if(x >= this->max()) {
+                    return this->size() - 1;
+                } else {
+                    return std::floor(
+                        (x - this->min()) / this->length() * this->size());
+                }
             }
+
+            using BoundsType = typename Range<R>::BoundsType;
+
+            BoundsType bounds(size_t i) const override
+            {
+                assert(i < this->size());
+                const R w = this->step();
+                const R m = static_cast<double>(i) / this->size() * this->length() + this->min();
+                assert(m < m+w);
+                return std::make_pair(m, m + w);
+            }
+
+            R step() const { return this->length() / this->_size; }
         };
 
         /** Logarithmic (base 10) range. **/
@@ -67,11 +110,33 @@ namespace logger {
             {
             }
 
-            size_t index(double x) override
+            size_t index(double x) const override
             {
-                return static_cast<size_t>(
-                    std::floor(
-                        std::log10(1 + (x - this->min())) / std::log10(1 + this->length()) * this->size()));
+                assert(this->_min <= x);
+                assert(x <= this->max()); // FIXME do we want that?
+                if(x >= this->max()) {
+                    return this->size() - 1;
+                } else {
+                    return static_cast<size_t>(
+                        std::floor(
+                              std::log10(1 + (x - this->min()))
+                            / std::log10(1 + this->length())
+                            * this->size()));
+                }
+            }
+
+            using BoundsType = typename Range<R>::BoundsType;
+            
+            BoundsType bounds(size_t i) const override
+            {
+                // FIXME this renders indices at more than 4 ULPs for doubles, find a more robust computation.
+                assert(i < this->size());
+                const R m = std::pow(10.0, static_cast<double>(i)        * std::log10(1.0 + this->length()) / this->size()) - 1.0 + this->min();
+                const R M = std::pow(10.0,(static_cast<double>(i) + 1.0) * std::log10(1.0 + this->length()) / this->size()) - 1.0 + this->min();
+                assert(m < M);
+                assert(0 < M-m);
+                assert(M-m <= this->length());
+                return std::make_pair(m, M);
             }
         };
 
@@ -81,9 +146,9 @@ namespace logger {
          * second dimension function evaluations targets.
          *
          * @note One expect to have a lot of those matrix in a real-life setting,
-         * && the more general case is to have objective-function bounded computation times.
+         * and the more general case is to have objective-function bounded computation times.
          * It is thus chosen to reduce the memory footprint, using the infamous bool vector specialization
-         * instead of the (supposedly) faster vector of char.
+         * instead of the (supposedly) faster vector of char. FIXME maybe double check speed loss.
          */
         using AttainmentMatrix = std::vector< // error targets
             std::vector< // function evaluations
@@ -131,7 +196,7 @@ namespace logger {
      * The whole set of matrices can be accessed by the `get` accessor.
      * A single one can be accessed by the `at` accessor.
      * Ranges can be get back by `*_range` accessors,
-     * which give access to the corresponding `min` && `max` functions (@see range).
+     * which give access to the corresponding `min` and `max` functions (@see range).
      *
      * Example: FIXME update the example below
      * @code
@@ -284,7 +349,7 @@ namespace logger {
 
             // Fill up the dominated quadrant of the attainment matrix with ones
             // (either the upper/upper || lower/lower, depending on if it's
-            // a min || max problem && on if the optimum is known).
+            // a min || max problem and on if the optimum is known).
             fill_up(i_error, j_evals);
         }
 
@@ -367,7 +432,7 @@ namespace logger {
             _ecdf_suite.clear();
         }
 
-        //! Create maps && matrix for this problem.
+        //! Create maps and matrix for this problem.
         void init_ecdf(const Problem& cur)
         {
             if (_ecdf_suite.count(cur.pb) == 0) {
@@ -526,7 +591,7 @@ namespace logger {
                     T res = _init;
                     for (const auto& pb_dim : attainment) {
                         assert(pb_dim.second.size() > 0);
-                         for (const auto& dim_ins : pb_dim.second) {
+                        for (const auto& dim_ins : pb_dim.second) {
                             assert(dim_ins.second.size() > 0);
                             for (const auto& ins_run : dim_ins.second) {
                                 assert(ins_run.second.size() > 0);
@@ -542,7 +607,7 @@ namespace logger {
                                     } // row
                                 } // run_att
                             } // ins_run
-                         } // dim_nis
+                        } // dim_nis
                     } // pb_dim
                     return res;
                 }
@@ -576,15 +641,25 @@ namespace logger {
              * @endcode
              */
             class Histogram : public Stat<std::vector<std::vector<size_t>>> {
+            protected:
+                bool _has_computed;
+                size_t _nb_att;
+                    
             public:
+                /** The type used to store the histogram matrix. */
                 using Mat = std::vector<std::vector<size_t>>;
+
+                Histogram()
+                : _has_computed(false)
+                , _nb_att(0)
+                { }
 
                 /** Computes the histogram on the logger's data.
                  * 
                  * @param attainment The data structure computed by a logger::ECDF.
                  * @returns a (<nb of targets buckets> * <nb of evaluations buckets>) matrix of positive integers.
                  */
-                Mat operator()(const ecdf::AttainmentSuite& attainment)
+                Mat operator()(const ecdf::AttainmentSuite& attainment) override
                 {
                     assert(attainment.size() > 0);
                     const auto& a_pb0 = std::begin(attainment)->second;
@@ -599,6 +674,7 @@ namespace logger {
                     // Infer size from the first item.
                     Mat agg(a_run0.size(), std::vector<size_t>(a_run0.at(0).size(), 0));
 
+                    _nb_att = 0;
                     for (const auto& pb_dim : attainment) { // problem -> dimension map
                         assert(pb_dim.second.size() > 0);
                         for (const auto& dim_ins : pb_dim.second) { // dimension -> instance map
@@ -610,6 +686,7 @@ namespace logger {
                                     const ecdf::AttainmentMatrix& mat = run_att.second;
                                     assert(mat.size() > 0);
                                     assert(mat[0].size() > 0);
+                                    _nb_att++;
 
                                     assert(mat.size() == agg.size());
                                     assert(mat[0].size() == agg[0].size());
@@ -622,7 +699,87 @@ namespace logger {
                             } // ins_run
                         } // dim_ins
                     } // pb_dim
+
+                    _has_computed = true;
                     return agg;
+                }
+
+                /** Returns the number of attainment matrices encountered during main computations.
+                 * 
+                 * @warning Will fail on assert if operator() has not been called at least once before.
+                 * 
+                 * @note Will not fail if several computations are called and you inadvertantly called it on the previous one.
+                 */
+                size_t nb_attainments() const
+                {
+                    assert(_has_computed);
+                    return _nb_att;
+                }
+            };
+
+            /**
+             *
+             * @note The volume is computed on normalized dimensions (i.e. error, evals and probas),
+             *       so as to avoid a scale bias in favor of one (or the other) dimension.
+             */
+            template <class BinaryOperation>
+            class AccumulateUnderCurve : public Stat<double> {
+            protected:
+                const ecdf::Range<double>& _range_error;
+                const ecdf::Range<size_t>& _range_evals;
+                const double _init;
+                BinaryOperation _op;
+                
+           protected:
+                Histogram _histo;
+
+            public:
+                AccumulateUnderCurve(const ECDF& logger, const double init, BinaryOperation op)
+                    : _range_error(logger.error_range())
+                    , _range_evals(logger.eval_range())
+                    , _init(init)
+                    , _op(op)
+                {
+                }
+
+                AccumulateUnderCurve(const ecdf::Range<double>& range_error, const ecdf::Range<size_t>& range_evals,
+                    const double init, BinaryOperation op)
+                    : _range_error(range_error)
+                    , _range_evals(range_evals)
+                    , _init(init)
+                    , _op(op)
+                {
+                }
+
+                double operator()(const ecdf::AttainmentSuite& attainment)
+                {
+                    double res = _init;
+                    Histogram::Mat mat = _histo(attainment);
+                    assert(_histo.nb_attainments() > 0);
+                    
+                    for (size_t i = 0; i < mat.size(); ++i) {
+                        for (size_t j = 0; j < mat[0].size(); ++j) {
+                            double w_proba =  mat[i][j] / _histo.nb_attainments();
+                            assert(0 <= w_proba and w_proba <= 1);
+                            // Withn the loop because widths of buckets vary for log ranges.
+                            // TODO use template specializations to speed-up computations for linear ranges by putting them out of loops.
+                            double w_error = (_range_error.bounds(i).second - _range_error.bounds(i).first) / _range_error.length();
+                            assert(0 <= w_error and w_error <= 1);
+                            double w_evals = (_range_evals.bounds(j).second - _range_evals.bounds(j).first) / _range_evals.length();
+                            assert(0 <= w_evals and w_evals <= 1);
+                            // TODO allow to multiply by a weight each axis?
+                            res = _op(res, w_proba * w_error * w_evals);
+                        } // j
+                    } // i
+                    return res;
+                }
+            };
+
+            class VolumeUnderCurve : public AccumulateUnderCurve<std::plus<double>> {
+            public:
+                VolumeUnderCurve(const ECDF& logger)
+                    : AccumulateUnderCurve<std::plus<double>>(logger, 0.0, std::plus<double>())
+                {
                 }
             };
 
