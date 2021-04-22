@@ -3,7 +3,7 @@
 #include "ioh.hpp"
 
 
-TEST(ecdf, example)
+TEST(ecdf, bbob)
 {
     using namespace ioh::problem;
     using namespace ioh::logger;
@@ -12,7 +12,7 @@ TEST(ecdf, example)
     auto sample_size = 100;
 
     ioh::suite::BBOB suite({1, 2}, {1, 2}, {2, 10});
-    ECDF logger(0, 6e7, 20, 0, sample_size, 20);
+    ioh::logger::ECDF logger(0, 6e7, 20, 0, sample_size, 20);
 
     suite.attach_logger(logger);
 
@@ -29,8 +29,7 @@ TEST(ecdf, example)
             for (auto s = 0; s < sample_size; ++s)
                 (*p)(ioh::common::Random::uniform(p->meta_data().n_variables));
 
-
-            EXPECT_EQ(ECDFSum()(logger.data()), attainments_sum.front());
+            EXPECT_EQ(ioh::logger::ecdf::stat::Sum()(logger.data()), attainments_sum.front());
             p->reset();
             attainments_sum.pop_front();
         }
@@ -42,3 +41,4 @@ TEST(ecdf, example)
     EXPECT_EQ(k, 2);
     EXPECT_EQ(r, 2);
 }
+
