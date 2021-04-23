@@ -51,13 +51,26 @@ namespace logger {
             /** Span of the axis. */
             R length() const { return _max - _min; }
 
-            //! Interface: from value to index.
+            /** Interface: from value to index.
+             * 
+             * @param x The targeted real value.
+             * @returns The corresponding index.
+             */
             virtual size_t index(double x) const = 0;
 
-            /** Type returned by the bounds method. */
-            using BoundsType = std::pair<R,R>;
+            /** Type returned by the bounds method.
+             * 
+             * @note This is a pair of double, whatever the type of the Range,
+             *       because one can ask for non-integer buckets limits
+             *       (e.g. when size > max-min).
+             */
+            using BoundsType = std::pair<double,double>;
 
-            //! Interface: from index to value.
+            /** Interface: from index to bounds values.
+             * 
+             * @param i Targeted index.
+             * @returns The {min,max} pair of the bounds of the corresponding bucket.
+             */
             virtual BoundsType bounds(size_t i) const = 0;
 
         protected:
@@ -92,8 +105,8 @@ namespace logger {
             BoundsType bounds(size_t i) const override
             {
                 assert(i < this->size());
-                const R w = this->step();
-                const R m = static_cast<double>(i) / this->size() * this->length() + this->min();
+                const double w = this->step();
+                const double m = static_cast<double>(i) / this->size() * this->length() + this->min();
                 assert(m < m+w);
                 return std::make_pair(m, m + w);
             }
@@ -108,6 +121,7 @@ namespace logger {
             LogRange(R min, R max, size_t size)
                 : Range<R>(min, max, size)
             {
+                // FIXME check size against max-min ?
             }
 
             size_t index(double x) const override
@@ -131,8 +145,8 @@ namespace logger {
             {
                 // FIXME this renders indices at more than 4 ULPs for doubles, find a more robust computation.
                 assert(i < this->size());
-                const R m = std::pow(10.0, static_cast<double>(i)        * std::log10(1.0 + this->length()) / this->size()) - 1.0 + this->min();
-                const R M = std::pow(10.0,(static_cast<double>(i) + 1.0) * std::log10(1.0 + this->length()) / this->size()) - 1.0 + this->min();
+                const double m = std::pow(10.0, static_cast<double>(i)        * std::log10(1.0 + static_cast<double>(this->length())) / static_cast<double>(this->size())) - 1.0 + static_cast<double>(this->min());
+                const double M = std::pow(10.0,(static_cast<double>(i) + 1.0) * std::log10(1.0 + static_cast<double>(this->length())) / static_cast<double>(this->size())) - 1.0 + static_cast<double>(this->min());
                 assert(m < M);
                 assert(0 < M-m);
                 assert(M-m <= this->length());
@@ -546,98 +560,84 @@ namespace logger {
         /** @} */
     };
 
-    /** An interface for classes that computes statistics
-     * over the AttainmentSuite computed by an ecdf::ECDF logger.
-     *
-     * The template indicates the return type of the functor interface.
-     */
-    template <class T>
-    class Stat {
-    public:
-        using Type = T;
-        virtual T operator()(const ecdf::AttainmentSuite& attainment) = 0;
-    };
 
     namespace ecdf {
+
+        /** An interface for classes that computes statistics
+         * over the AttainmentSuite computed by an ecdf::ECDF logger.
+         *
+         * The template indicates the return type of the functor interface.
+         */
+        template <class T>
+        class Stat {
+        public:
+            using Type = T;
+
+            /** Call interface. */
+            virtual T operator()(const ECDF& logger) = 0;
+        };
 
         /** Various statistics which can be readily applied on the data gathered by a logger::ECDF. */
         namespace stat {
 
             /** Generic functor for accumulated statistics.
              * 
-             * Most probably subclassed for defaulting to basic operation, like stat::Sum,
-             * or used as a function to compute something else.
+             * Most probably called from a function defaulting the basic operation, like stat::sum,
+             * or used in a function which compute something else.
              */
-            template <class T, class BinaryOperation>
-            class Accumulate : public Stat<T> {
-            protected:
-                const T _init;
-                BinaryOperation _op;
+            template<class T, class BinaryOperation>
+            T accumulate(const ECDF& logger, const T init, const BinaryOperation& op)
+            {
+                const AttainmentSuite& attainment = logger.data();
+                assert(attainment.size() > 0);
 
-            public:
-                /** Constructor
-                 * @param init The initial value of the accumulation.
-                 * @param op The binary operator to apply for each item.
-                 * @returns The application of the binary operator to each pair of (result,item), starting with result=init.
-                 */
-                Accumulate(T init, BinaryOperation op)
-                    : _init(init)
-                    , _op(op)
-                {
-                }
-
-                T operator()(const ecdf::AttainmentSuite& attainment) override
-                {
-                    T res = _init;
-                    for (const auto& pb_dim : attainment) {
-                        assert(pb_dim.second.size() > 0);
-                        for (const auto& dim_ins : pb_dim.second) {
-                            assert(dim_ins.second.size() > 0);
-                            for (const auto& ins_run : dim_ins.second) {
-                                assert(ins_run.second.size() > 0);
-                                for (const auto& run_att : ins_run.second) {
-                                    const auto& mat = run_att.second;
-                                    assert(mat.size() > 0);
-                                    assert(mat[0].size() > 0);
-                                    for (const auto& row : mat) {
-                                        assert(row.size() > 0);
-                                        for (const auto& item : row) {
-                                            res = _op(res, item);
-                                        } // item
-                                    } // row
-                                } // run_att
-                            } // ins_run
-                        } // dim_nis
-                    } // pb_dim
-                    return res;
-                }
-            };
+                T res = init;
+                for (const auto& pb_dim : attainment) {
+                    assert(pb_dim.second.size() > 0);
+                    for (const auto& dim_ins : pb_dim.second) {
+                        assert(dim_ins.second.size() > 0);
+                        for (const auto& ins_run : dim_ins.second) {
+                            assert(ins_run.second.size() > 0);
+                            for (const auto& run_att : ins_run.second) {
+                                const auto& mat = run_att.second;
+                                assert(mat.size() > 0);
+                                assert(mat[0].size() > 0);
+                                for (const auto& row : mat) {
+                                    assert(row.size() > 0);
+                                    for (const auto& item : row) {
+                                        res = op(res, item);
+                                    } // item
+                                } // row
+                            } // run_att
+                        } // ins_run
+                    } // dim_nis
+                } // pb_dim
+                return res;
+            }
 
             /** Computes the sum of all elements of an AttainmentSuite data structure.
              *
              * @code
-                    ioh::logger::ecdf::stat::Sum sum;
-                    size_t s = sum(logger.data());
+                    using namespace ioh::logger;
+                    size_t s = ecdf::stat::sum(logger);
              * @endcode
              */
-            class Sum : public Accumulate<size_t, std::plus<size_t>> {
-            public:
-                Sum()
-                    : Accumulate<size_t, std::plus<size_t>>(0, std::plus<size_t>())
-                {
-                }
-            };
+            size_t sum(const ECDF& logger)
+            {
+                return accumulate<size_t>(logger, 0, std::plus<size_t>());
+            }
 
             /** Computes the matrix that is the sum of all matrices in an AttainmentSuite.
              *  Across problems, dimensions and instances.
              * 
-             * That is, a (<nb of targets buckets> * <nb of evaluations buckets>) matrix of positive integers.
-             * 
-             * Useful if you want to display the related histogram, for instance.
+             * @note This functor holds the number of attainment matrix it hase encountered during its computation.
+             *       If you just need the histogram, see the stat::histogram function.
              *
              * @code
-                ioh::logger::ecdf::stat::Histogram agg;
-                ioh::logger::ecdf::stat::Histogram::Mat a = agg(logger.data());
+                using namespcae ioh::logger;
+                ecdf::stat::Histogram h;
+                ecdf::stat::Histogram::Mat a = h(logger);
+                size_t n = h.nb_attainments();
              * @endcode
              */
             class Histogram : public Stat<std::vector<std::vector<size_t>>> {
@@ -659,9 +659,11 @@ namespace logger {
                  * @param attainment The data structure computed by a logger::ECDF.
                  * @returns a (<nb of targets buckets> * <nb of evaluations buckets>) matrix of positive integers.
                  */
-                Mat operator()(const ecdf::AttainmentSuite& attainment) override
+                Mat operator()(const ECDF& logger) override
                 {
+                    const ecdf::AttainmentSuite& attainment = logger.data();
                     assert(attainment.size() > 0);
+                    
                     const auto& a_pb0 = std::begin(attainment)->second;
                     assert(a_pb0.size() > 0);
                     const auto& a_dim0 = std::begin(a_pb0)->second;
@@ -706,7 +708,7 @@ namespace logger {
 
                 /** Returns the number of attainment matrices encountered during main computations.
                  * 
-                 * @warning Will fail on assert if operator() has not been called at least once before.
+                 * @warning Will fail on a Debug assert if operator() has not been called at least once before.
                  * 
                  * @note Will not fail if several computations are called and you inadvertantly called it on the previous one.
                  */
@@ -717,72 +719,91 @@ namespace logger {
                 }
             };
 
-            /**
-             *
-             * @note The volume is computed on normalized dimensions (i.e. error, evals and probas),
-             *       so as to avoid a scale bias in favor of one (or the other) dimension.
+            /** Computes the matrix that is the sum of all matrices in an AttainmentSuite.
+             *  Across problems, dimensions and instances.
+             * 
+             * That is, a (<nb of targets buckets> * <nb of evaluations buckets>) matrix of positive integers.
+             * 
+             * Useful if you want to display the related histogram, for instance.
+             * 
+             * @note You can get the return type from Histogram::mat
+             *       (normally a simple vector<vector<size_t>>).
+             * @code
+                    using namespace ioh::logger;
+                    ecdf::stat::Histogram::Mat m = ecdf::stat::histogram(logger);
+             * @endcode
              */
-            template <class BinaryOperation>
-            class AccumulateUnderCurve : public Stat<double> {
-            protected:
-                const ecdf::Range<double>& _range_error;
-                const ecdf::Range<size_t>& _range_evals;
-                const double _init;
-                BinaryOperation _op;
-                
-           protected:
-                Histogram _histo;
+            Histogram::Mat histogram(const ECDF& logger)
+            {
+                Histogram h;
+                return h(logger);
+            }
 
-            public:
-                AccumulateUnderCurve(const ECDF& logger, const double init, BinaryOperation op)
-                    : _range_error(logger.error_range())
-                    , _range_evals(logger.eval_range())
-                    , _init(init)
-                    , _op(op)
-                {
-                }
+            /** Statistics over the normalized attainment space. */
+            namespace under_curve {
 
-                AccumulateUnderCurve(const ecdf::Range<double>& range_error, const ecdf::Range<size_t>& range_evals,
-                    const double init, BinaryOperation op)
-                    : _range_error(range_error)
-                    , _range_evals(range_evals)
-                    , _init(init)
-                    , _op(op)
+                /** Generic function for accumulated statistics over the normalized attainment space.
+                 * 
+                 * Most probably used from a function defaulting the basic operation, like under_curve::volume,
+                 * or used as a function to compute something else.
+                 *
+                 * @note The operation is computed on normalized dimensions (i.e. error, evals and probas),
+                 *       so as to avoid a scale bias in favor of one (or the other) dimension.
+                 * 
+                 * You most probably only need the simplified interface:
+                 * @code
+                        using namespace ioh::logger;
+                        ECDF logger(0,1,2,3,4,5); // Whatever
+                        // This is the definition of under_curve::volume, for instance:
+                        double v = ecdf::stat::under_curve::accumulate(logger, 0.0, std::plus<double>());
+                 * @endcode
+                 */
+                template<class BinaryOperation>
+                double accumulate(const ECDF& logger, double init, BinaryOperation op)
                 {
-                }
+                    const ecdf::AttainmentSuite& attainment = logger.data();
+                    assert(attainment.size() > 0);
 
-                double operator()(const ecdf::AttainmentSuite& attainment)
-                {
-                    double res = _init;
-                    Histogram::Mat mat = _histo(attainment);
-                    assert(_histo.nb_attainments() > 0);
+                    Histogram histo;
+                    Histogram::Mat mat = histo(logger);
+                    assert(histo.nb_attainments() > 0);
                     
+                   const ecdf::Range<double>& range_error = logger.error_range();
+                   const ecdf::Range<size_t>& range_evals = logger.eval_range();
+
+                    double res = init;
                     for (size_t i = 0; i < mat.size(); ++i) {
                         for (size_t j = 0; j < mat[0].size(); ++j) {
-                            double w_proba =  mat[i][j] / _histo.nb_attainments();
+                            double w_proba =  mat[i][j] / histo.nb_attainments();
                             assert(0 <= w_proba and w_proba <= 1);
-                            // Withn the loop because widths of buckets vary for log ranges.
-                            // TODO use template specializations to speed-up computations for linear ranges by putting them out of loops.
-                            double w_error = (_range_error.bounds(i).second - _range_error.bounds(i).first) / _range_error.length();
+                            // Within the loop because widths of buckets vary for log ranges.
+                            const double w_error = (range_error.bounds(i).second - range_error.bounds(i).first) / range_error.length();
                             assert(0 <= w_error and w_error <= 1);
-                            double w_evals = (_range_evals.bounds(j).second - _range_evals.bounds(j).first) / _range_evals.length();
+                            const double w_evals = (range_evals.bounds(j).second - range_evals.bounds(j).first) / range_evals.length();
                             assert(0 <= w_evals and w_evals <= 1);
                             // TODO allow to multiply by a weight each axis?
-                            res = _op(res, w_proba * w_error * w_evals);
+                            res = op(res, w_proba * w_error * w_evals);
                         } // j
                     } // i
                     return res;
                 }
-            };
 
-            class VolumeUnderCurve : public AccumulateUnderCurve<std::plus<double>> {
-            public:
-                VolumeUnderCurve(const ECDF& logger)
-                    : AccumulateUnderCurve<std::plus<double>>(logger, 0.0, std::plus<double>())
+                /** Computes the normalized volume under the curve of the logger::ECDF's data structure.
+                 *
+                 * @code
+                        using namespace iof::logger;
+                        double v = ecdf::stat::under_curve::volume(logger);
+                 * @endcode
+                 *
+                 * @note This is just a proxy to the stat::under_curve::accumulate function,
+                 *       which provides a more detailled interface.
+                 */
+                double volume(const ECDF& logger)
                 {
+                    return accumulate(logger, 0.0, std::plus<double>());
                 }
-            };
 
+            } // under_curve
         } // stat
     } // ecdf
 } // logger

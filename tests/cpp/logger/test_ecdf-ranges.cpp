@@ -32,6 +32,12 @@ TEST(ecdf, ranges)
     EXPECT_EQ(logr_small.index(1e2),2);
     EXPECT_EQ(logr_small.index(999),2);
     EXPECT_EQ(logr_small.index(1e3),2);
+
+    // Tiny log range
+    ecdf::LogRange<double> logr_tiny(0,100,10);
+
+    EXPECT_EQ(logr_tiny.index(  0),0);
+    EXPECT_EQ(logr_tiny.index(100),9);
     
     // Log range
     ecdf::LogRange<double> logr_large(0,6e7,10);
