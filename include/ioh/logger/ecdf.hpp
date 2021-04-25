@@ -1,10 +1,11 @@
 #pragma once
 
-#include "base.hpp"
 #include <iostream>
 #include <map>
 #include <cmath>
 #include <vector>
+
+#include "base.hpp"
 
 namespace ioh {
 namespace logger {
@@ -656,7 +657,7 @@ namespace logger {
 
                 /** Computes the histogram on the logger's data.
                  * 
-                 * @param attainment The data structure computed by a logger::ECDF.
+                 * @param logger The logger::ECDF.
                  * @returns a (<nb of targets buckets> * <nb of evaluations buckets>) matrix of positive integers.
                  */
                 Mat operator()(const ECDF& logger) override
@@ -726,7 +727,7 @@ namespace logger {
              * 
              * Useful if you want to display the related histogram, for instance.
              * 
-             * @note You can get the return type from Histogram::mat
+             * @note You can get the return type from Histogram::Mat
              *       (normally a simple vector<vector<size_t>>).
              * @code
                     using namespace ioh::logger;
@@ -737,6 +738,44 @@ namespace logger {
             {
                 Histogram h;
                 return h(logger);
+            }
+
+            namespace Distribtution { // Naming scheme consistent with Histogram.
+                /** The type used to store the distribution matrix. */
+                using Mat = std::vector<std::vector<double>>;
+            }
+
+            /** Computes the matrix that is joint empirical cumulative distribution function of all attainments in a logger.
+             *  Across problems, dimensions and instances.
+             * 
+             * That is, a (<nb of targets buckets> * <nb of evaluations buckets>) matrix of probabilities.
+             * 
+             * This is actually the Histogram / nb_attaiments.
+             * 
+             * @note You can get the return type from Distribution::Mat
+             *       (normally a simple vector<vector<double>>).
+             * @code
+                    using namespace ioh::logger;
+                    ecdf::stat::Distribution::Mat m = ecdf::stat::distribution(logger);
+             * @endcode
+             */
+            std::vector<std::vector<size_t>> distribution(const ECDF& logger) override
+            {
+                Histogram histo;
+                Histogram::Mat h = histo(logger);
+                const size_t n = histo.nb_attainments();
+
+                Mat res; res.reserve(h.size());
+                
+                for(const auto& hl : h) {
+                    std::vector<double> rl; rl.reserve(hl.size());
+                    for(const auto& i : line) {
+                        rl.push_back(i/n);
+                    }
+                    res.push_back(rl);
+                }
+
+                return res;
             }
 
             /** Statistics over the normalized attainment space. */

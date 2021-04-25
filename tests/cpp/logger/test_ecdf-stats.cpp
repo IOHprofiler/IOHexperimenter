@@ -9,6 +9,8 @@ TEST(ecdf, stats)
     size_t sample_size = 100;
     size_t buckets = 10;
 
+    size_t pb_start = 2;
+    size_t pb_end = 10;
     ioh::suite::BBOB suite({ 1, 2 }, { 1, 2 }, { 2, 10 });
     ioh::logger::ECDF ecdf(0, 6e7, buckets, 0, sample_size, buckets);
     suite.attach_logger(ecdf);
@@ -26,9 +28,10 @@ TEST(ecdf, stats)
 
     EXPECT_GT(ioh::logger::ecdf::stat::sum(ecdf), 0);
 
+    // Histogram
     ioh::logger::ecdf::stat::Histogram histo;
     ioh::logger::ecdf::stat::Histogram::Mat m = histo(ecdf);
-    EXPECT_EQ(histo.nb_attainments(), runs * sample_size);
+    EXPECT_EQ(histo.nb_attainments(), runs * (pb_end - pb_start));
     
     // buckets * buckets matrix
     EXPECT_EQ(m.size(), buckets);
@@ -36,6 +39,19 @@ TEST(ecdf, stats)
         EXPECT_EQ(row.size(), buckets);
     }
 
+    EXPECT_EQ(ioh::logger::ecdf::stat::histogram(ecdf), m);
+    
+    // Distribution
+    ioh::logger::ecdf::stat::Distribution distrib;
+    ioh::logger::ecdf::stat::Distribution::Mat m = distribution(ecdf);
+    
+    // buckets * buckets matrix
+    EXPECT_EQ(m.size(), buckets);
+    for (const auto& row : m) {
+        EXPECT_EQ(row.size(), buckets);
+    }
+
+    // Volume under curve
     EXPECT_GE(ioh::logger::ecdf::stat::under_curve::volume(ecdf), 0);
     EXPECT_LE(ioh::logger::ecdf::stat::under_curve::volume(ecdf), 1);
 }

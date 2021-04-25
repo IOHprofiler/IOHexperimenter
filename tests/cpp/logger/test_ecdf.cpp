@@ -29,7 +29,7 @@ TEST(ecdf, bbob)
             for (auto s = 0; s < sample_size; ++s)
                 (*p)(ioh::common::Random::uniform(p->meta_data().n_variables));
 
-            EXPECT_EQ(ioh::logger::ecdf::stat::Sum()(logger.data()), attainments_sum.front());
+            EXPECT_EQ(ioh::logger::ecdf::stat::sum(logger), attainments_sum.front());
             p->reset();
             attainments_sum.pop_front();
         }
