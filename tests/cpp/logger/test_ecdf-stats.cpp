@@ -3,6 +3,8 @@
 
 TEST(ecdf, stats)
 {
+    using namespace ioh::logger;
+
     ioh::common::log::log_level = ioh::common::log::Level::Warning;
 
     size_t runs = 10;
@@ -12,7 +14,7 @@ TEST(ecdf, stats)
     size_t pb_start = 2;
     size_t pb_end = 10;
     ioh::suite::BBOB suite({ 1, 2 }, { 1, 2 }, { 2, 10 });
-    ioh::logger::ECDF ecdf(0, 6e7, buckets, 0, sample_size, buckets);
+    ECDF ecdf(0, 6e7, buckets, 0, sample_size, buckets);
     suite.attach_logger(ecdf);
 
     for (const auto& pb : suite) {
@@ -26,11 +28,11 @@ TEST(ecdf, stats)
         } // run
     } // pb
 
-    EXPECT_GT(ioh::logger::ecdf::stat::sum(ecdf), 0);
+    EXPECT_GT(ecdf::stat::sum(ecdf), 0);
 
     // Histogram
-    ioh::logger::ecdf::stat::Histogram histo;
-    ioh::logger::ecdf::stat::Histogram::Mat m = histo(ecdf);
+    ecdf::stat::Histogram histo;
+    ecdf::stat::Histogram::Mat m = histo(ecdf);
     EXPECT_EQ(histo.nb_attainments(), runs * (pb_end - pb_start));
     
     // buckets * buckets matrix
@@ -39,19 +41,18 @@ TEST(ecdf, stats)
         EXPECT_EQ(row.size(), buckets);
     }
 
-    EXPECT_EQ(ioh::logger::ecdf::stat::histogram(ecdf), m);
+    EXPECT_EQ(ecdf::stat::histogram(ecdf), m);
     
     // Distribution
-    ioh::logger::ecdf::stat::Distribution distrib;
-    ioh::logger::ecdf::stat::Distribution::Mat m = distribution(ecdf);
+    ecdf::stat::Distribution::Mat d = ecdf::stat::distribution(ecdf);
     
     // buckets * buckets matrix
-    EXPECT_EQ(m.size(), buckets);
-    for (const auto& row : m) {
+    EXPECT_EQ(d.size(), buckets);
+    for (const auto& row : d) {
         EXPECT_EQ(row.size(), buckets);
     }
 
     // Volume under curve
-    EXPECT_GE(ioh::logger::ecdf::stat::under_curve::volume(ecdf), 0);
-    EXPECT_LE(ioh::logger::ecdf::stat::under_curve::volume(ecdf), 1);
+    EXPECT_GE(ecdf::stat::under_curve::volume(ecdf), 0);
+    EXPECT_LE(ecdf::stat::under_curve::volume(ecdf), 1);
 }

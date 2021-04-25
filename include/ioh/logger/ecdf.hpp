@@ -647,7 +647,12 @@ namespace logger {
                 size_t _nb_att;
                     
             public:
-                /** The type used to store the histogram matrix. */
+                /** The type used to store the histogram matrix.
+                 * 
+                 * @note Dimensions follow the AttainmentMatrix convention,
+                 *       with errors as first dimension, and evaluations as
+                 *       second dimension.
+                */
                 using Mat = std::vector<std::vector<size_t>>;
 
                 Histogram()
@@ -740,8 +745,13 @@ namespace logger {
                 return h(logger);
             }
 
-            namespace Distribtution { // Naming scheme consistent with Histogram.
-                /** The type used to store the distribution matrix. */
+            namespace Distribution { // Naming scheme consistent with Histogram.
+                /** The type used to store the distribution matrix.
+                 * 
+                 * @note Dimensions follow the AttainmentMatrix convention,
+                 *       with errors as first dimension, and evaluations as
+                 *       second dimension.
+                 */
                 using Mat = std::vector<std::vector<double>>;
             }
 
@@ -759,18 +769,18 @@ namespace logger {
                     ecdf::stat::Distribution::Mat m = ecdf::stat::distribution(logger);
              * @endcode
              */
-            std::vector<std::vector<size_t>> distribution(const ECDF& logger) override
+            std::vector<std::vector<double>> distribution(const ECDF& logger)
             {
                 Histogram histo;
                 Histogram::Mat h = histo(logger);
-                const size_t n = histo.nb_attainments();
+                const double n = histo.nb_attainments();
 
-                Mat res; res.reserve(h.size());
+                Distribution::Mat res; res.reserve(h.size());
                 
                 for(const auto& hl : h) {
                     std::vector<double> rl; rl.reserve(hl.size());
-                    for(const auto& i : line) {
-                        rl.push_back(i/n);
+                    for(const auto& i : hl) {
+                        rl.push_back(static_cast<double>(i)/n);
                     }
                     res.push_back(rl);
                 }
@@ -844,6 +854,144 @@ namespace logger {
 
             } // under_curve
         } // stat
+
+
+        /** Print a 2D colormap as a 256-color ASCII-art.
+         * 
+         * Convenience function to print the 2D vector arrays outputed by histogram or distribution.
+         * 
+         * Useful to rapidely check or debug the core data structure of the ECDF logger.
+         * 
+         * By default, just display the colormap.
+         * If ranges are passed, display axis legends with values.
+         * 
+         * @note The y-axis lowver buckets values are printed as vertical numbers.
+         *       The x-axis legend show both min and max of buckets.
+         * 
+         * @param data A 2D vector array.
+         * @param ranges The pair of Range used for the computation of data. If given, will add axis legends.
+         * @param values If true, will display one 2-digits value over two within the colored pixels. Numbers with more than 2 digits are rendered as "++".
+          */
+        template<class T>
+        std::string colormap(const std::vector<std::vector<T>>& data,
+                            std::pair<const ioh::logger::ecdf::Range<double> *, const ioh::logger::ecdf::Range<size_t> *> ranges = {nullptr,nullptr},
+                            bool values = false)
+        {
+            size_t fg_shift = 128;
+
+            // Optional axis legends.
+            const ioh::logger::ecdf::Range<double> * range_error;
+            const ioh::logger::ecdf::Range<size_t> * range_evals;
+            std::tie(range_error, range_evals) = ranges;
+            bool has_ranges = (range_error and range_evals);
+            
+            size_t height = data.size();
+            assert(height>0);
+            size_t width = data.at(0).size();
+            assert(width>0);
+
+            // Min/max of values.
+            double vmin = std::numeric_limits<T>::max();
+            double vmax = std::numeric_limits<T>::min();
+            for(std::size_t i=0; i < 0+height; ++i) {
+                for(std::size_t j=0; j < 0+width; ++j) {
+                    double val = data[i][j];
+                    if( not std::isnan(val) and not std::isinf(val) ) {
+                        vmin = std::min(val, vmin);
+                        vmax = std::max(val, vmax);
+                    }
+                }
+            }
+
+            const double nb_colors = 255;
+            std::ostringstream out;
+
+            // Colormap legend
+            if(has_ranges) {
+                std::ostringstream legend;
+                legend << "[" << vmin << "";
+                for(size_t i = 0; i < 2*height; ++i) {
+                    size_t color = static_cast<size_t>(std::floor( static_cast<double>(i) / static_cast<double>(2*height) * nb_colors-1 ));
+                    legend << "\033[48;2;" << color << ";" << color << ";" << color << "m" << " ";
+                }
+                legend << "\033[0m"; // Reset.
+                legend << "" << vmax << "]";
+                out << legend.str() << std::endl;
+                out << std::string(2*width, ' ') << " Errors:" << std::endl;
+            }
+
+            // Pixel map
+            std::string nan = "╳╳";
+            for(size_t i=0; i < height; ++i) {
+                for(size_t j=0; j < width; ++j) {
+                    double val = data[i][j];
+                    if( std::isnan(val) or std::isinf(val) ) {
+                        out << nan;
+                    } else {
+                        size_t color = std::floor((val-vmin)/(vmax-vmin)*(nb_colors-1));
+
+                        if(color >= nb_colors) color = nb_colors-1;
+
+                        if( vmin <= val and val <= vmax ) {
+                            // Value as background, white or black as foreground.
+                            out << "\033[48;2;" << color << ";" << color << ";" << color;
+                            size_t fg = (color-fg_shift) % static_cast<size_t>(nb_colors);
+                            out << ";38;2;" << fg << ";" << fg << ";" << fg;
+                            out << "m";
+
+                            // Print one value over two, if asked.
+                            if(values and j%2 == 0) {
+                                std::ostringstream fmt;
+                                fmt << val;
+                                if(fmt.str().size() == 1) {
+                                    out << " " << fmt.str();
+                                } else if(fmt.str().size() == 2) {
+                                    out << fmt.str();
+                                } else {
+                                    out << "++";
+                                }
+                            } else {
+                                out << "  "; // Two spaces for a squared display.
+                            }
+                            
+                            out << "\033[0m"; // Colors reset.
+                        } else {
+                            out << nan;
+                        }
+                    } // if nan or inf
+                } // j
+                if(has_ranges) out << " [" << range_error->bounds(i).first << " .. " << range_error->bounds(i).second << "]";
+                out << std::endl;
+            } // i
+
+            if(has_ranges) {
+                out << "Evaluations:" << std::endl;
+                size_t max_size = 0;
+                std::vector<std::string> evals; evals.reserve(width);
+                for(size_t j=0; j < width; ++j) {
+                    std::ostringstream fmt;
+                    fmt << range_evals->bounds(j).first;
+                    max_size = std::max(max_size, fmt.str().size());
+                    evals.push_back(fmt.str());
+                }
+                // Last bound
+                std::ostringstream fmt;
+                fmt << range_evals->bounds(width-1).second;
+                max_size = std::max(max_size, fmt.str().size());
+                evals.push_back(fmt.str());
+
+                for(size_t i=0; i < max_size; ++i) { 
+                    for(size_t j=0; j < width+1; ++j) {
+                        if(i<evals[j].size()) out << evals[j][i] << " ";
+                        else out << "  ";
+                    }
+                    out << std::endl;
+                }
+            }
+
+            return out.str();
+        }
+        
     } // ecdf
 } // logger
 } // ioh
