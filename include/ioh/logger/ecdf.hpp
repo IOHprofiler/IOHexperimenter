@@ -23,15 +23,16 @@ namespace logger {
          * 
          * @warning Contrary to what is common in computer science,
          *          this uses a closed [min,max] interval for the "origin" values.
-         *          So that any value at `max` will be assigned to the `size-1`th bucket..
+         *          So that any value at `max` will be assigned to the `size-1`th bucket.
          *
          * Used in ECDF.
          */
+         // Why a closed interval? Because it's more natural for the user to indicates the number of evaluations that way.
         template <class R>
         class Range {
         public:
 
-            Range(R amin, R amax, size_t asize)
+            Range(const R amin, const R amax, const size_t asize)
                 : _min(amin)
                 , _max(amax)
                 , _size(asize)
@@ -57,7 +58,7 @@ namespace logger {
              * @param x The targeted real value.
              * @returns The corresponding index.
              */
-            virtual size_t index(double x) const = 0;
+            virtual size_t index(const double x) const = 0;
 
             /** Type returned by the bounds method.
              * 
@@ -72,7 +73,7 @@ namespace logger {
              * @param i Targeted index.
              * @returns The {min,max} pair of the bounds of the corresponding bucket.
              */
-            virtual BoundsType bounds(size_t i) const = 0;
+            virtual BoundsType bounds(const size_t i) const = 0;
 
         protected:
             R _min;
@@ -84,12 +85,12 @@ namespace logger {
         template <class R>
         class LinearRange : public Range<R> {
         public:
-            LinearRange(R min, R max, size_t size)
+            LinearRange(const R min, const R max, const size_t size)
                 : Range<R>(min, max, size)
             {
             }
 
-            size_t index(double x) const override
+            size_t index(const double x) const override
             {
                 assert(this->_min <= x);
                 assert(x <= this->_max); // FIXME do we want that?
@@ -103,7 +104,7 @@ namespace logger {
 
             using BoundsType = typename Range<R>::BoundsType;
 
-            BoundsType bounds(size_t i) const override
+            BoundsType bounds(const size_t i) const override
             {
                 assert(i < this->size());
                 const double w = this->step();
@@ -115,17 +116,31 @@ namespace logger {
             R step() const { return this->length() / this->_size; }
         };
 
-        /** Logarithmic (base 10) range. **/
-        template <class R>
-        class LogRange : public Range<R> {
+        /** Logarithmic (base 2) range. 
+         * 
+         * @warning This implementation is not very robust to rounding errors
+         *          especially if you use the bounds method with large lengths.
+         */
+        template<class R>
+        class Log2Range : public Range<R> {
+        protected:
+            const double _m;
+            const double _l;
+            const double _s;
+            const double _k;
+
         public:
-            LogRange(R min, R max, size_t size)
-                : Range<R>(min, max, size)
+            Log2Range(const R min, const R max, const size_t size, const size_t base = 2)
+                : Range<R>(min, max, size),
+                _m(min),
+                _l(max-min),
+                _s(size),
+                _k( std::log2(1+max-min) )
             {
                 // FIXME check size against max-min ?
             }
 
-            size_t index(double x) const override
+            size_t index(const double x) const override
             {
                 assert(this->_min <= x);
                 assert(x <= this->max()); // FIXME do we want that?
@@ -133,21 +148,70 @@ namespace logger {
                     return this->size() - 1;
                 } else {
                     return static_cast<size_t>(
-                        std::floor(
-                              std::log10(1 + (x - this->min()))
-                            / std::log10(1 + this->length())
-                            * this->size()));
+                        std::floor( std::log2(1 + (x - _m)) / _k * _s )
+                    );
                 }
             }
 
             using BoundsType = typename Range<R>::BoundsType;
             
-            BoundsType bounds(size_t i) const override
+            BoundsType bounds(const size_t i) const override
             {
-                // FIXME this renders indices at more than 4 ULPs for doubles, find a more robust computation.
-                assert(i < this->size());
-                const double m = std::pow(10.0, static_cast<double>(i)        * std::log10(1.0 + static_cast<double>(this->length())) / static_cast<double>(this->size())) - 1.0 + static_cast<double>(this->min());
-                const double M = std::pow(10.0,(static_cast<double>(i) + 1.0) * std::log10(1.0 + static_cast<double>(this->length())) / static_cast<double>(this->size())) - 1.0 + static_cast<double>(this->min());
+                assert(i < _s);
+                const double m = std::pow(2,  static_cast<double>(i)        * std::log2(1.0 + _l) / _s) - 1.0 + _m;
+                const double M = std::pow(2, (static_cast<double>(i) + 1.0) * std::log2(1.0 + _l) / _s) - 1.0 + _m;
+                assert(m < M);
+                assert(0 < M-m);
+                assert(M-m <= _l);
+                return std::make_pair(m, M);
+            }
+        };
+
+        /** Logarithmic (base 10) range. 
+         * 
+         * @warning This implementation is not very robust to rounding errors
+         *          especially if you use the bounds method with large lengths.
+         */
+        template <class R>
+        class Log10Range : public Range<R> {
+        protected:
+            const double _m;
+            const double _l;
+            const double _s;
+            const double _k;
+                
+        public:
+            Log10Range(const R min, const R max, const size_t size)
+                : Range<R>(min, max, size),
+                _m(min),
+                _l(max-min),
+                _s(size),
+                _k( std::log10(1+max-min) )
+            {
+                // FIXME check size against max-min ?
+            }
+
+            size_t index(const double x) const override
+            {
+                assert(this->_min <= x);
+                assert(x <= this->max()); // FIXME do we want that?
+                if(x >= this->max()) {
+                    return this->size() - 1;
+                } else {
+                    return static_cast<size_t>(
+                        std::floor( std::log10(1 + (x - _m)) / _k * _s )
+                    );
+                }
+            }
+
+            using BoundsType = typename Range<R>::BoundsType;
+            
+            BoundsType bounds(const size_t i) const override
+            {
+                // FIXME this renders indices at more than 4 ULPs for doubles, find a more robust computation?
+                assert(i < _s);
+                const double m = std::pow(10.0, static_cast<double>(i)        * std::log10(1.0 + _l) / _s) - 1.0 + _m;
+                const double M = std::pow(10.0,(static_cast<double>(i) + 1.0) * std::log10(1.0 + _l) / _s) - 1.0 + _m;
                 assert(m < M);
                 assert(0 < M-m);
                 assert(M-m <= this->length());
@@ -274,7 +338,7 @@ namespace logger {
         {
         }
 
-        /** Complete constructor, with which you can define linear || semi-log scale.
+        /** Complete constructor, with which you can define linear or semi-log scale.
          *
          * @see RangeLinear
          */
@@ -535,10 +599,10 @@ namespace logger {
 
     private:
         //! Default range for errors is logarithmic.
-        ecdf::LogRange<double> _default_range_error;
+        ecdf::Log10Range<double> _default_range_error;
 
         //! Default range for evaluations is logarithmic.
-        ecdf::LogRange<size_t> _default_range_evals;
+        ecdf::Log10Range<size_t> _default_range_evals;
 
     protected:
         /** Internal members  @{ */
