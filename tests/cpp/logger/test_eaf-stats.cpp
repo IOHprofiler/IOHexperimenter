@@ -1,7 +1,7 @@
 #include "ioh.hpp"
 #include <gtest/gtest.h>
 
-TEST(ecdf, stats)
+TEST(eaf, stats)
 {
     using namespace ioh::logger;
 
@@ -14,13 +14,13 @@ TEST(ecdf, stats)
     size_t pb_start = 2;
     size_t pb_end = 10;
     ioh::suite::BBOB suite({ 1, 2 }, { 1, 2 }, { 2, 10 });
-    ECDF ecdf(0, 6e7, buckets, 0, sample_size, buckets);
-    suite.attach_logger(ecdf);
+    EAF eaf(0, 6e7, buckets, 0, sample_size, buckets);
+    suite.attach_logger(eaf);
 
     for (const auto& pb : suite) {
         for (size_t run = 0; run < runs; ++run) {
             // FIXME how to indicate different runs to the logger?
-            // ecdf.update_run_info(pb->meta_data());
+            // eaf.update_run_info(pb->meta_data());
             for (auto s = 0; s < sample_size; ++s) {
                 (*pb)(ioh::common::Random::uniform(pb->meta_data().n_variables));
             } // s
@@ -28,11 +28,11 @@ TEST(ecdf, stats)
         } // run
     } // pb
 
-    EXPECT_GT(ecdf::stat::sum(ecdf), 0);
+    EXPECT_GT(eaf::stat::sum(eaf), 0);
 
     // Histogram
-    ecdf::stat::Histogram histo;
-    ecdf::stat::Histogram::Mat m = histo(ecdf);
+    eaf::stat::Histogram histo;
+    eaf::stat::Histogram::Mat m = histo(eaf);
     EXPECT_EQ(histo.nb_attainments(), runs * (pb_end - pb_start));
     
     // buckets * buckets matrix
@@ -41,10 +41,10 @@ TEST(ecdf, stats)
         EXPECT_EQ(row.size(), buckets);
     }
 
-    EXPECT_EQ(ecdf::stat::histogram(ecdf), m);
+    EXPECT_EQ(eaf::stat::histogram(eaf), m);
     
     // Distribution
-    ecdf::stat::Distribution::Mat d = ecdf::stat::distribution(ecdf);
+    eaf::stat::Distribution::Mat d = eaf::stat::distribution(eaf);
     
     // buckets * buckets matrix
     EXPECT_EQ(d.size(), buckets);
@@ -53,6 +53,6 @@ TEST(ecdf, stats)
     }
 
     // Volume under curve
-    EXPECT_GE(ecdf::stat::under_curve::volume(ecdf), 0);
-    EXPECT_LE(ecdf::stat::under_curve::volume(ecdf), 1);
+    EXPECT_GE(eaf::stat::under_curve::volume(eaf), 0);
+    EXPECT_LE(eaf::stat::under_curve::volume(eaf), 1);
 }

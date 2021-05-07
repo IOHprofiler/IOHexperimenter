@@ -10,8 +10,8 @@
 namespace ioh {
 namespace logger {
 
-    /** Implementation details of the logger::ECDF class. */
-    namespace ecdf {
+    /** Implementation details of the logger::EAF class. */
+    namespace eaf {
 
         /** Interface for classes that computes indices from ranges.
          *
@@ -25,14 +25,14 @@ namespace logger {
          *          this uses a closed [min,max] interval for the "origin" values.
          *          So that any value at `max` will be assigned to the `size-1`th bucket.
          *
-         * Used in ECDF.
+         * Used in EAF.
          */
          // Why a closed interval? Because it's more natural for the user to indicates the number of evaluations that way.
         template <class R>
-        class Range {
+        class Scale {
         public:
 
-            Range(const R amin, const R amax, const size_t asize)
+            Scale(const R amin, const R amax, const size_t asize)
                 : _min(amin)
                 , _max(amax)
                 , _size(asize)
@@ -62,7 +62,7 @@ namespace logger {
 
             /** Type returned by the bounds method.
              * 
-             * @note This is a pair of double, whatever the type of the Range,
+             * @note This is a pair of double, whatever the type of the Scale,
              *       because one can ask for non-integer buckets limits
              *       (e.g. when size > max-min).
              */
@@ -83,10 +83,10 @@ namespace logger {
 
         /** Linear range. */
         template <class R>
-        class LinearRange : public Range<R> {
+        class LinearScale : public Scale<R> {
         public:
-            LinearRange(const R min, const R max, const size_t size)
-                : Range<R>(min, max, size)
+            LinearScale(const R min, const R max, const size_t size)
+                : Scale<R>(min, max, size)
             {
             }
 
@@ -102,7 +102,7 @@ namespace logger {
                 }
             }
 
-            using BoundsType = typename Range<R>::BoundsType;
+            using BoundsType = typename Scale<R>::BoundsType;
 
             BoundsType bounds(const size_t i) const override
             {
@@ -122,7 +122,7 @@ namespace logger {
          *          especially if you use the bounds method with large lengths.
          */
         template<class R>
-        class Log2Range : public Range<R> {
+        class Log2Scale : public Scale<R> {
         protected:
             const double _m;
             const double _l;
@@ -130,8 +130,8 @@ namespace logger {
             const double _k;
 
         public:
-            Log2Range(const R min, const R max, const size_t size, const size_t base = 2)
-                : Range<R>(min, max, size),
+            Log2Scale(const R min, const R max, const size_t size, const size_t base = 2)
+                : Scale<R>(min, max, size),
                 _m(min),
                 _l(max-min),
                 _s(size),
@@ -153,7 +153,7 @@ namespace logger {
                 }
             }
 
-            using BoundsType = typename Range<R>::BoundsType;
+            using BoundsType = typename Scale<R>::BoundsType;
             
             BoundsType bounds(const size_t i) const override
             {
@@ -173,7 +173,7 @@ namespace logger {
          *          especially if you use the bounds method with large lengths.
          */
         template <class R>
-        class Log10Range : public Range<R> {
+        class Log10Scale : public Scale<R> {
         protected:
             const double _m;
             const double _l;
@@ -181,8 +181,8 @@ namespace logger {
             const double _k;
                 
         public:
-            Log10Range(const R min, const R max, const size_t size)
-                : Range<R>(min, max, size),
+            Log10Scale(const R min, const R max, const size_t size)
+                : Scale<R>(min, max, size),
                 _m(min),
                 _l(max-min),
                 _s(size),
@@ -204,7 +204,7 @@ namespace logger {
                 }
             }
 
-            using BoundsType = typename Range<R>::BoundsType;
+            using BoundsType = typename Scale<R>::BoundsType;
             
             BoundsType bounds(const size_t i) const override
             {
@@ -263,7 +263,7 @@ namespace logger {
                     std::map<size_t, // runs
                         AttainmentMatrix>>>>;
 
-    } // ecdf
+    } // eaf
 
     /** An observer which stores bi-dimensional error/evaluations discretized attainment matrices.
      *
@@ -274,32 +274,33 @@ namespace logger {
      *
      * The whole set of matrices can be accessed by the `get` accessor.
      * A single one can be accessed by the `at` accessor.
-     * Ranges can be get back by `*_range` accessors,
+     * Scales can be get back by `*_range` accessors,
      * which give access to the corresponding `min` and `max` functions (@see range).
      *
      * Example: FIXME update the example below
      * @code
-            using Logger = ecdf<BBOB_suite::Input_type>;
-            BBOB_suite bench({1,2},{1,2},{2,10});
-            Logger logger(0,4e7,0, 0,100,20);
-    
-            BBOB_suite::Problem_ptr pb;
-            while(pb = bench.get_next_problem()) {
-                    logger.target_problem(*pb);
-                    // Make a `sol`
-                    for(size_t i=0; i<100; ++i) { // 100 evaluations
-                            double f = pb->evaluate(sol);
-                            logger.write_line(pb->loggerInfo());
-                    }
-            }
-            std::clog << logger.at(1,2,2) << std::endl;
+        using namespace ioh::problem;
+        using namespace ioh::logger;
+        unsigned int sample_size = 100;
+        unsigned int buckets = 20;
+        ioh::suite::BBOB suite({1, 2}, {1, 2}, {2, 10});
+        ioh::logger::EAF logger(0, 6e7, buckets, 0, sample_size, buckets);
+        suite.attach_logger(logger);
+        for (const auto &p : suite) {
+            for (auto r = 0; r < 2; r++) {
+                for (auto s = 0; s < sample_size; ++s) {
+                    (*p)(ioh::common::Random::uniform(p->meta_data().n_variables));
+                } // s in sample_size
+                p->reset(); // New run
+            } // r in runs
+        } // p in suite
      * @endcode
      *
      * @note If you use as many buckets as there is evaluations of the objective function,
-     *       you will essentially computes as many ERT-ECDF as there is targets.
+     *       you will essentially computes as many ERT-EAF as there is targets.
      */
     // template <class T>
-    class ECDF : public Base {
+    class EAF : public Base {
     protected:
         /** Internal types  @{ */
         /** Keep essential metadata about the problem. */
@@ -323,7 +324,7 @@ namespace logger {
     public:
         /** Simple constructor that defaults to log-log scale.
          */
-        ECDF(
+        EAF(
             const double error_min, const double error_max,
             const size_t error_buckets,
             const size_t evals_min, const size_t evals_max,
@@ -340,11 +341,11 @@ namespace logger {
 
         /** Complete constructor, with which you can define linear or semi-log scale.
          *
-         * @see RangeLinear
+         * @see ScaleLinear
          */
-        ECDF(
-            ecdf::Range<double>& error_buckets,
-            ecdf::Range<size_t>& evals_buckets)
+        EAF(
+            eaf::Scale<double>& error_buckets,
+            eaf::Scale<size_t>& evals_buckets)
             : _default_range_error(0, 1, 1)
             , _default_range_evals(0, 1, 1)
             , _range_error(error_buckets)
@@ -371,7 +372,7 @@ namespace logger {
             _current.ins = problem.instance;
             _current.max_min = problem.optimization_type;
             _current.is_tracked = false;
-            _current.run = 1 + static_cast<int>(_ecdf_suite[static_cast<int>(_current.pb)][static_cast<int>(_current.dim)][static_cast<int>(_current.ins)].size());
+            _current.run = 1 + static_cast<int>(_eaf_suite[static_cast<int>(_current.pb)][static_cast<int>(_current.dim)][static_cast<int>(_current.ins)].size());
         }
 
         /** Actually store information about the last evaluation.
@@ -386,15 +387,15 @@ namespace logger {
                 _current.has_opt = !log_info.objective.y.empty();
                 if (_current.has_opt) {
                     common::log::info(
-                        "Problem has known optimal, will compute the ECDF of the error.");
+                        "Problem has known optimal, will compute the EAF of the error.");
                     _current.opt = log_info.objective.y;
                 } else {
                     common::log::info(
-                        "Problem has no known optimal, will compute the absolute ECDF.");
+                        "Problem has no known optimal, will compute the absolute EAF.");
                 }
                 // mono-objective only
                 assert(_current.opt.size() == 1);
-                init_ecdf(_current);
+                init_eaf(_current);
             }
 
             double err;
@@ -442,9 +443,9 @@ namespace logger {
         /** Accessors @{ */
 
         /** Access all the data computed by this observer. */
-        [[nodiscard]] const ecdf::AttainmentSuite& data() const
+        [[nodiscard]] const eaf::AttainmentSuite& data() const
         {
-            return _ecdf_suite;
+            return _eaf_suite;
         }
 
         /** Access a single attainment matrix.
@@ -456,16 +457,16 @@ namespace logger {
          * third index: dimension id.
          * last index: run id.
          */
-        [[nodiscard]] const ecdf::AttainmentMatrix& at(size_t problem_id, size_t instance_id,
+        [[nodiscard]] const eaf::AttainmentMatrix& at(size_t problem_id, size_t instance_id,
             size_t dim_id, size_t runs) const
         {
-            assert(_ecdf_suite.count(problem_id) != 0);
-            assert(_ecdf_suite.at(problem_id).count(dim_id) != 0);
+            assert(_eaf_suite.count(problem_id) != 0);
+            assert(_eaf_suite.at(problem_id).count(dim_id) != 0);
             assert(
-                _ecdf_suite.at(problem_id).at(dim_id).count(instance_id) != 0);
+                _eaf_suite.at(problem_id).at(dim_id).count(instance_id) != 0);
             assert(
-                _ecdf_suite.at(problem_id).at(dim_id).at(instance_id).count(runs) != 0);
-            return _ecdf_suite.at(problem_id).at(dim_id).at(instance_id).at(runs);
+                _eaf_suite.at(problem_id).at(dim_id).at(instance_id).count(runs) != 0);
+            return _eaf_suite.at(problem_id).at(dim_id).at(instance_id).at(runs);
         }
 
         /** Returns the size of the computed data, in its internal order.
@@ -480,22 +481,22 @@ namespace logger {
         std::tuple<size_t, size_t, size_t, size_t> size()
         {
             return std::make_tuple(
-                _ecdf_suite.size(), // problems
-                _ecdf_suite.begin()->second.size(), // dimensions
-                _ecdf_suite.begin()->second.begin()->second.size(),
+                _eaf_suite.size(), // problems
+                _eaf_suite.begin()->second.size(), // dimensions
+                _eaf_suite.begin()->second.begin()->second.size(),
                 // instances
-                _ecdf_suite.begin()->second.begin()->second.begin()->second.size() // runs
+                _eaf_suite.begin()->second.begin()->second.begin()->second.size() // runs
             );
         }
 
         /** Accessor to the range used for error targets in this logger instance. */
-        [[nodiscard]] ecdf::Range<double>& error_range() const
+        [[nodiscard]] eaf::Scale<double>& error_range() const
         {
             return _range_error;
         }
 
         /** Accessor to the range used for evaluations targets in this logger instance. */
-        [[nodiscard]] ecdf::Range<size_t>& eval_range() const
+        [[nodiscard]] eaf::Scale<size_t>& eval_range() const
         {
             return _range_evals;
         }
@@ -508,43 +509,43 @@ namespace logger {
         //! Clear all previously computed data structure.
         void clear()
         {
-            _ecdf_suite.clear();
+            _eaf_suite.clear();
         }
 
         //! Create maps and matrix for this problem.
-        void init_ecdf(const Problem& cur)
+        void init_eaf(const Problem& cur)
         {
-            if (_ecdf_suite.count(cur.pb) == 0) {
-                _ecdf_suite[cur.pb] = std::map<
-                    size_t, std::map<size_t, std::map<size_t, ecdf::AttainmentMatrix>>>();
+            if (_eaf_suite.count(cur.pb) == 0) {
+                _eaf_suite[cur.pb] = std::map<
+                    size_t, std::map<size_t, std::map<size_t, eaf::AttainmentMatrix>>>();
             }
-            if (_ecdf_suite[cur.pb].count(cur.dim) == 0) {
-                _ecdf_suite[cur.pb][cur.dim] = std::map<
-                    size_t, std::map<size_t, ecdf::AttainmentMatrix>>();
+            if (_eaf_suite[cur.pb].count(cur.dim) == 0) {
+                _eaf_suite[cur.pb][cur.dim] = std::map<
+                    size_t, std::map<size_t, eaf::AttainmentMatrix>>();
             }
-            if (_ecdf_suite[cur.pb][cur.dim].count(cur.ins) == 0) {
-                _ecdf_suite[cur.pb][cur.dim][cur.ins] = std::map<
-                    size_t, ecdf::AttainmentMatrix>();
+            if (_eaf_suite[cur.pb][cur.dim].count(cur.ins) == 0) {
+                _eaf_suite[cur.pb][cur.dim][cur.ins] = std::map<
+                    size_t, eaf::AttainmentMatrix>();
             }
-            _ecdf_suite[cur.pb][cur.dim][cur.ins][cur.run] = _empty;
+            _eaf_suite[cur.pb][cur.dim][cur.ins][cur.run] = _empty;
 
             assert(
-                _ecdf_suite.at(cur.pb).at(cur.dim).at(cur.ins).at(cur.run).at(0).at(0)
+                _eaf_suite.at(cur.pb).at(cur.dim).at(cur.ins).at(cur.run).at(0).at(0)
                 == 0);
         }
 
         //! Returns the current attainment matrix.
-        ecdf::AttainmentMatrix& current_ecdf()
+        eaf::AttainmentMatrix& current_eaf()
         {
-            assert(_ecdf_suite.count(_current.pb) != 0);
-            assert(_ecdf_suite[_current.pb].count(_current.dim) != 0);
+            assert(_eaf_suite.count(_current.pb) != 0);
+            assert(_eaf_suite[_current.pb].count(_current.dim) != 0);
             assert(
-                _ecdf_suite[_current.pb][_current.dim].count(_current.ins)
+                _eaf_suite[_current.pb][_current.dim].count(_current.ins)
                 != 0);
             assert(
-                _ecdf_suite[_current.pb][_current.dim][_current.ins].count(_current.run)
+                _eaf_suite[_current.pb][_current.dim][_current.ins].count(_current.run)
                 != 0);
-            return _ecdf_suite[_current.pb][_current.dim][_current.ins][_current.run];
+            return _eaf_suite[_current.pb][_current.dim][_current.ins][_current.run];
         }
 
         /** Fill up the upper/upper quadrant of the attainment matrix with ones.
@@ -553,7 +554,7 @@ namespace logger {
          */
         void fill_up(size_t i_error, size_t j_evals)
         {
-            auto& mat = current_ecdf();
+            auto& mat = current_eaf();
             const auto ibound = _range_error.size();
             auto jbound = _range_evals.size();
 
@@ -599,37 +600,37 @@ namespace logger {
 
     private:
         //! Default range for errors is logarithmic.
-        ecdf::Log10Range<double> _default_range_error;
+        eaf::Log10Scale<double> _default_range_error;
 
         //! Default range for evaluations is logarithmic.
-        ecdf::Log10Range<size_t> _default_range_evals;
+        eaf::Log10Scale<size_t> _default_range_evals;
 
     protected:
         /** Internal members  @{ */
 
-        //! Range for the errors axis.
-        ecdf::Range<double>& _range_error;
+        //! Scale for the errors axis.
+        eaf::Scale<double>& _range_error;
 
-        //! Range for the evaluations axis.
-        ecdf::Range<size_t>& _range_evals;
+        //! Scale for the evaluations axis.
+        eaf::Scale<size_t>& _range_evals;
 
         //! Currently targeted problem metadata.
         Problem _current;
 
         //! An attainment matrix filled with zeros, copied for each new problem/instance/dim.
-        ecdf::AttainmentMatrix _empty;
+        eaf::AttainmentMatrix _empty;
 
         //! The whole main data structure.
-        ecdf::AttainmentSuite _ecdf_suite;
+        eaf::AttainmentSuite _eaf_suite;
 
         /** @} */
     };
 
 
-    namespace ecdf {
+    namespace eaf {
 
         /** An interface for classes that computes statistics
-         * over the AttainmentSuite computed by an ecdf::ECDF logger.
+         * over the AttainmentSuite computed by an eaf::EAF logger.
          *
          * The template indicates the return type of the functor interface.
          */
@@ -639,10 +640,10 @@ namespace logger {
             using Type = T;
 
             /** Call interface. */
-            virtual T operator()(const ECDF& logger) = 0;
+            virtual T operator()(const EAF& logger) = 0;
         };
 
-        /** Various statistics which can be readily applied on the data gathered by a logger::ECDF. */
+        /** Various statistics which can be readily applied on the data gathered by a logger::EAF. */
         namespace stat {
 
             /** Generic functor for accumulated statistics.
@@ -651,7 +652,7 @@ namespace logger {
              * or used in a function which compute something else.
              */
             template<class T, class BinaryOperation>
-            T accumulate(const ECDF& logger, const T init, const BinaryOperation& op)
+            T accumulate(const EAF& logger, const T init, const BinaryOperation& op)
             {
                 const AttainmentSuite& attainment = logger.data();
                 assert(attainment.size() > 0);
@@ -684,10 +685,10 @@ namespace logger {
              *
              * @code
                     using namespace ioh::logger;
-                    size_t s = ecdf::stat::sum(logger);
+                    size_t s = eaf::stat::sum(logger);
              * @endcode
              */
-            size_t sum(const ECDF& logger)
+            size_t sum(const EAF& logger)
             {
                 return accumulate<size_t>(logger, 0, std::plus<size_t>());
             }
@@ -700,8 +701,8 @@ namespace logger {
              *
              * @code
                 using namespcae ioh::logger;
-                ecdf::stat::Histogram h;
-                ecdf::stat::Histogram::Mat a = h(logger);
+                eaf::stat::Histogram h;
+                eaf::stat::Histogram::Mat a = h(logger);
                 size_t n = h.nb_attainments();
              * @endcode
              */
@@ -726,12 +727,12 @@ namespace logger {
 
                 /** Computes the histogram on the logger's data.
                  * 
-                 * @param logger The logger::ECDF.
+                 * @param logger The logger::EAF.
                  * @returns a (<nb of targets buckets> * <nb of evaluations buckets>) matrix of positive integers.
                  */
-                Mat operator()(const ECDF& logger) override
+                Mat operator()(const EAF& logger) override
                 {
-                    const ecdf::AttainmentSuite& attainment = logger.data();
+                    const eaf::AttainmentSuite& attainment = logger.data();
                     assert(attainment.size() > 0);
                     
                     const auto& a_pb0 = std::begin(attainment)->second;
@@ -755,7 +756,7 @@ namespace logger {
                                 assert(ins_run.second.size() > 0);
                                 for (const auto& run_att : ins_run.second) { // run -> attainment map
 
-                                    const ecdf::AttainmentMatrix& mat = run_att.second;
+                                    const eaf::AttainmentMatrix& mat = run_att.second;
                                     assert(mat.size() > 0);
                                     assert(mat[0].size() > 0);
                                     _nb_att++;
@@ -800,10 +801,10 @@ namespace logger {
              *       (normally a simple vector<vector<size_t>>).
              * @code
                     using namespace ioh::logger;
-                    ecdf::stat::Histogram::Mat m = ecdf::stat::histogram(logger);
+                    eaf::stat::Histogram::Mat m = eaf::stat::histogram(logger);
              * @endcode
              */
-            Histogram::Mat histogram(const ECDF& logger)
+            Histogram::Mat histogram(const EAF& logger)
             {
                 Histogram h;
                 return h(logger);
@@ -830,10 +831,10 @@ namespace logger {
              *       (normally a simple vector<vector<double>>).
              * @code
                     using namespace ioh::logger;
-                    ecdf::stat::Distribution::Mat m = ecdf::stat::distribution(logger);
+                    eaf::stat::Distribution::Mat m = eaf::stat::distribution(logger);
              * @endcode
              */
-            std::vector<std::vector<double>> distribution(const ECDF& logger)
+            std::vector<std::vector<double>> distribution(const EAF& logger)
             {
                 Histogram histo;
                 Histogram::Mat h = histo(logger);
@@ -866,23 +867,23 @@ namespace logger {
                  * You most probably only need the simplified interface:
                  * @code
                         using namespace ioh::logger;
-                        ECDF logger(0,1,2,3,4,5); // Whatever
+                        EAF logger(0,1,2,3,4,5); // Whatever
                         // This is the definition of under_curve::volume, for instance:
-                        double v = ecdf::stat::under_curve::accumulate(logger, 0.0, std::plus<double>());
+                        double v = eaf::stat::under_curve::accumulate(logger, 0.0, std::plus<double>());
                  * @endcode
                  */
                 template<class BinaryOperation>
-                double accumulate(const ECDF& logger, double init, BinaryOperation op)
+                double accumulate(const EAF& logger, double init, BinaryOperation op)
                 {
-                    const ecdf::AttainmentSuite& attainment = logger.data();
+                    const eaf::AttainmentSuite& attainment = logger.data();
                     assert(attainment.size() > 0);
 
                     Histogram histo;
                     Histogram::Mat mat = histo(logger);
                     assert(histo.nb_attainments() > 0);
                     
-                   const ecdf::Range<double>& range_error = logger.error_range();
-                   const ecdf::Range<size_t>& range_evals = logger.eval_range();
+                   const eaf::Scale<double>& range_error = logger.error_range();
+                   const eaf::Scale<size_t>& range_evals = logger.eval_range();
 
                     double res = init;
                     for (size_t i = 0; i < mat.size(); ++i) {
@@ -901,17 +902,17 @@ namespace logger {
                     return res;
                 }
 
-                /** Computes the normalized volume under the curve of the logger::ECDF's data structure.
+                /** Computes the normalized volume under the curve of the logger::EAF's data structure.
                  *
                  * @code
                         using namespace iof::logger;
-                        double v = ecdf::stat::under_curve::volume(logger);
+                        double v = eaf::stat::under_curve::volume(logger);
                  * @endcode
                  *
                  * @note This is just a proxy to the stat::under_curve::accumulate function,
                  *       which provides a more detailled interface.
                  */
-                double volume(const ECDF& logger)
+                double volume(const EAF& logger)
                 {
                     return accumulate(logger, 0.0, std::plus<double>());
                 }
@@ -924,7 +925,7 @@ namespace logger {
          * 
          * Convenience function to print the 2D vector arrays outputed by histogram or distribution.
          * 
-         * Useful to rapidely check or debug the core data structure of the ECDF logger.
+         * Useful to rapidely check or debug the core data structure of the EAF logger.
          * 
          * By default, just display the colormap.
          * If ranges are passed, display axis legends with values.
@@ -933,19 +934,19 @@ namespace logger {
          *       The x-axis legend show both min and max of buckets.
          * 
          * @param data A 2D vector array.
-         * @param ranges The pair of Range used for the computation of data. If given, will add axis legends.
+         * @param ranges The pair of Scale used for the computation of data. If given, will add axis legends.
          * @param values If true, will display one 2-digits value over two within the colored pixels. Numbers with more than 2 digits are rendered as "++".
           */
         template<class T>
         std::string colormap(const std::vector<std::vector<T>>& data,
-                            std::pair<const ioh::logger::ecdf::Range<double> *, const ioh::logger::ecdf::Range<size_t> *> ranges = {nullptr,nullptr},
+                            std::pair<const ioh::logger::eaf::Scale<double> *, const ioh::logger::eaf::Scale<size_t> *> ranges = {nullptr,nullptr},
                             bool values = false)
         {
             size_t fg_shift = 128;
 
             // Optional axis legends.
-            const ioh::logger::ecdf::Range<double> * range_error;
-            const ioh::logger::ecdf::Range<size_t> * range_evals;
+            const ioh::logger::eaf::Scale<double> * range_error;
+            const ioh::logger::eaf::Scale<size_t> * range_evals;
             std::tie(range_error, range_evals) = ranges;
             bool has_ranges = (range_error and range_evals);
             
@@ -1056,6 +1057,6 @@ namespace logger {
             return out.str();
         }
         
-    } // ecdf
+    } // eaf
 } // logger
 } // ioh

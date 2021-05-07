@@ -17,13 +17,13 @@ void do_test()
     RR r_error(0,6e7,buckets);
     RV r_evals(0,sample_size,buckets);
     
-    ECDF ecdf(r_error, r_evals);
-    suite.attach_logger(ecdf);
+    EAF eaf(r_error, r_evals);
+    suite.attach_logger(eaf);
 
     for (const auto& pb : suite) {
         for (size_t run = 0; run < runs; ++run) {
             // FIXME how to indicate different runs to the logger?
-             // ecdf.update_run_info(pb->meta_data());
+             // eaf.update_run_info(pb->meta_data());
             for (auto s = 0; s < sample_size; ++s) {
                 (*pb)(ioh::common::Random::uniform(pb->meta_data().n_variables));
             } // s
@@ -31,27 +31,27 @@ void do_test()
         } // run
     } // pb
 
-    auto d = ecdf::stat::distribution(ecdf);
+    auto d = eaf::stat::distribution(eaf);
     std::clog << "Log-log joint cumulative distribution for errors and evaluations:" << std::endl;
-    std::clog << ecdf::colormap(d, {&r_error, &r_evals}, true) << std::endl;
-    // std::clog << ecdf::colormap(d, {&r_error, &r_evals}) << std::endl;
-    // std::clog << ecdf::colormap(d) << std::endl;
+    std::clog << eaf::colormap(d, {&r_error, &r_evals}, true) << std::endl;
+    // std::clog << eaf::colormap(d, {&r_error, &r_evals}) << std::endl;
+    // std::clog << eaf::colormap(d) << std::endl;
     // 
-    auto h = ecdf::stat::histogram(ecdf);
+    auto h = eaf::stat::histogram(eaf);
     std::clog << "Log-log joint cumulative histogram for errors and evaluations:" << std::endl;
-    std::clog << ecdf::colormap(h, {&r_error, &r_evals}, true) << std::endl;
-    // std::clog << ecdf::colormap(h, {&r_error, &r_evals}) << std::endl;
-    // std::clog << ecdf::colormap(h) << std::endl;
+    std::clog << eaf::colormap(h, {&r_error, &r_evals}, true) << std::endl;
+    // std::clog << eaf::colormap(h, {&r_error, &r_evals}) << std::endl;
+    // std::clog << eaf::colormap(h) << std::endl;
 }
 
-TEST(ecdf, stats)
+TEST(eaf, stats)
 {
-    using namespace ioh::logger::ecdf;
+    using namespace ioh::logger::eaf;
 
     ioh::common::log::log_level = ioh::common::log::Level::Warning;
 
-    do_test<LinearRange<double>, LinearRange<size_t>>();
-    do_test<   LogRange<double>, LinearRange<size_t>>();
-    do_test<LinearRange<double>,    LogRange<size_t>>();
-    do_test<   LogRange<double>,    LogRange<size_t>>();
+    do_test<LinearScale<double>, LinearScale<size_t>>();
+    do_test<  Log2Scale<double>, LinearScale<size_t>>();
+    do_test<LinearScale<double>,   Log2Scale<size_t>>();
+    do_test<  Log2Scale<double>,   Log2Scale<size_t>>();
 }
