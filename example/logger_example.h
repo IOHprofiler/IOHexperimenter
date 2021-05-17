@@ -96,6 +96,8 @@ inline void logger_with_custom_parameters_example()
 
     // Initialize parameters unique for each evaluation.
     logger.create_logged_attributes({"x1"});
+    
+    problem.attach_logger(logger);
 
     // Run a simple experiment
     for (auto run_id = 1; run_id < 2; run_id++)
