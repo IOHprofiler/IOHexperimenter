@@ -330,7 +330,7 @@ namespace ioh::logger
         ///     logged attributes -> logged at every log-moment (data files)
         /// TODO: standardize naming of the methods for accessing these
         template <typename V>
-        void add_experiment_attribute(const std::string name, const V value)
+        void add_experiment_attribute(const std::string& name, const V value)
         {
             info_file_.experiment_attributes_[name] = common::to_string(value);
         }

@@ -13,7 +13,7 @@ class PyLogger final: public Default
     std::vector<std::string> logged_attribute_names_{};
     std::vector<std::string> run_attribute_names_{};
 
-
+    [[nodiscard]]
     std::vector<double> get_attributes(const std::vector<std::string>& names) const 
     {
         std::vector<double> attributes;
