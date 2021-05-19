@@ -102,7 +102,7 @@ namespace ioh {
                     bbob2009_unif(uniftmp, 2 * N, seed);
 
                     for (size_t i = 0; i < N; i++) {
-                        g[i] = sqrt(-2 * log(uniftmp[i])) * cos(
+                        g[i] = sqrt(-2 * std::log(uniftmp[i])) * cos(
                                    2 * coco_pi * uniftmp[N + i]);
                         if (g[i] == 0.)
                             g[i] = 1e-99;

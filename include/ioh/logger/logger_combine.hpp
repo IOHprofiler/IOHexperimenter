@@ -1,7 +1,8 @@
 #pragma once
 
 #include <cassert>
-#include "base.hpp"
+
+#include "api.hpp"
 
 
 namespace ioh::logger

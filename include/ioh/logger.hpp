@@ -1,8 +1,8 @@
 #pragma once
 
-#include "logger/observer.hpp"
-#include "logger/base.hpp"
-#include "logger/default.hpp"
-#include "logger/logger_combine.hpp"
-#include "logger/eaf.hpp"
+#include "logger/api.hpp"
+#include "logger/properties.hpp"
+#include "logger/watchers.hpp"
+//#include "logger/logger_combine.hpp"
+#include "logger/triggers.hpp"
 

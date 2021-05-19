@@ -62,13 +62,13 @@ namespace ioh::problem
             transformation_state_(problem_id, instance, n_variables, condition)
         {
             objective_ = calculate_objective();
-            log_info_.objective = objective_;
+            log_info_.optimum = objective_;
         }
 
         void update_log_info() override
         {
             log_info_.evaluations = static_cast<size_t>(state_.evaluations);
-            log_info_.y_best = state_.current_best.y.at(0) - objective_.y.at(0);
+            log_info_.raw_y_best = state_.current_best.y.at(0) - objective_.y.at(0);
             log_info_.transformed_y = state_.current.y.at(0);
             log_info_.transformed_y_best = state_.current_best.y.at(0);
             log_info_.current = state_.current;

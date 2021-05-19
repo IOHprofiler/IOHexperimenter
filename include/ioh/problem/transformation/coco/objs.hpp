@@ -24,7 +24,7 @@ namespace ioh {
 
                     for (size_t i = 0; i < number_of_objectives; i++) {
                         if (y[i] != 0) {
-                            const auto log_y = log(fabs(y[i])) / factor;
+                            const auto log_y = std::log(fabs(y[i])) / factor;
                             if (y[i] > 0) {
                                 y[i] = pow(
                                     exp(log_y + 0.49 * (sin(log_y) + sin(

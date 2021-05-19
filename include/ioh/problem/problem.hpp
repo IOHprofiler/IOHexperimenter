@@ -1,7 +1,8 @@
 #pragma once
 
 #include "utils.hpp"
-#include "ioh/logger/base.hpp"
+//#include "ioh/logger/base.hpp"
+#include "ioh/logger/api.hpp"
 
 namespace ioh
 {
@@ -16,8 +17,8 @@ namespace ioh
             Constraint<T> constraint_;
             State<T> state_;
             Solution<T> objective_;
-            logger::Base *logger_{};
-            logger::LogInfo log_info_;
+            Logger *logger_{};
+            log::Info log_info_;
 
             [[nodiscard]]
             bool check_input_dimensions(const std::vector<T>& x)
@@ -92,7 +93,7 @@ namespace ioh
                 }};
                 constraint_.check_size(meta_data_.n_variables);
 
-                log_info_.objective = objective_.as_double();
+                log_info_.optimum = objective_.as_double();
                 log_info_.current = state_.current.as_double();
             }
 
@@ -113,7 +114,7 @@ namespace ioh
             {
                 state_.reset();
                 if (logger_ != nullptr)
-                    logger_->track_problem(meta_data_);
+                    logger_->attach_problem(meta_data_);
             }
 
             /**
@@ -122,28 +123,28 @@ namespace ioh
             virtual void update_log_info()
             {
                 log_info_.evaluations = static_cast<size_t>(state_.evaluations);
-                log_info_.y_best = state_.current_best_internal.y.at(0);
+                log_info_.raw_y_best = state_.current_best_internal.y.at(0);
                 log_info_.transformed_y = state_.current.y.at(0);
                 log_info_.transformed_y_best = state_.current_best.y.at(0);
                 log_info_.current = state_.current.as_double();
             }
 
             [[nodiscard]]
-            logger::LogInfo& log_info()
+            log::Info& log_info()
             {
                 return log_info_;
             }
 
-            void attach_logger(logger::Base &logger)
+            void attach_logger(Logger &logger)
             {
                 logger_ = &logger;
-                logger_->track_problem(meta_data_);
+                logger_->attach_problem(meta_data_);
             }
 
             void detach_logger()
             {
                 if (logger_ != nullptr)
-                    logger_->flush();
+                    logger_->reset();
                 logger_ = nullptr;
             }
 

@@ -76,6 +76,7 @@ namespace ioh
 
         struct MetaData
         {
+            // Most of fields here are `int` and not `unsigned long` (or `size_t`) because of interoperability with some problem suites.
             int instance{};
             int problem_id{};
             std::string name;

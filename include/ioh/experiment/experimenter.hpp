@@ -60,7 +60,7 @@ namespace ioh {
              * \param independent_runs the number of repetitions default = 1
              */
             Experimenter(std::shared_ptr<suite::Suite<ProblemType>> suite,
-                         std::shared_ptr<logger::Base> logger,
+                         std::shared_ptr<Logger> logger,
                          Algorithm algorithm = nullptr,
                          const int independent_runs = 1
                 )
@@ -90,7 +90,7 @@ namespace ioh {
                         // std::cout << "." << std::flush;
                     }
                 }
-                logger_->flush();
+                //logger_->flush();
             }
 
             /**
@@ -120,7 +120,7 @@ namespace ioh {
              * \brief Get method for \ref csv_logger_
              * \return Private \ref csv_logger_
              */
-            [[nodiscard]] std::shared_ptr<logger::Base> logger() const {
+            [[nodiscard]] std::shared_ptr<Logger> logger() const {
                 return logger_;
             }
 
@@ -152,7 +152,7 @@ namespace ioh {
             /**
              * \brief A pointer to the logger. 
              */
-            std::shared_ptr<logger::Base> logger_;
+            std::shared_ptr<Logger> logger_;
 
             /**
              * \brief A function pointer of type \ref algorithm_type

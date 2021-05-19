@@ -97,12 +97,12 @@ namespace ioh {
 
                     for (size_t i = 0; i < number_of_variables; ++i) {
                         if (x[i] > 0.0) {
-                            tmp = log(x[i]) / alpha;
+                            tmp = std::log(x[i]) / alpha;
                             base = exp(
                                 tmp + 0.49 * (sin(tmp) + sin(0.79 * tmp)));
                             x[i] = pow(base, alpha);
                         } else if (x[i] < 0.0) {
-                            tmp = log(-x[i]) / alpha;
+                            tmp = std::log(-x[i]) / alpha;
                             base = exp(
                                 tmp + 0.49 * (sin(0.55 * tmp) + sin(0.31 * tmp)
                                 ));
