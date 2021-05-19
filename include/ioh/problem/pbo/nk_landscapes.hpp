@@ -61,9 +61,9 @@ namespace ioh
                     }
                 }
 
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
-                    double result = 0.0;
+                    auto result = 0.0;
                     for (auto i = 0; i != meta_data_.n_variables; ++i)
                     {
                         size_t index = x[i];
@@ -75,7 +75,7 @@ namespace ioh
                     }
 
                     result = result / static_cast<double>(meta_data_.n_variables);
-                    return {-result};
+                    return -result;
                 }
 
             public:

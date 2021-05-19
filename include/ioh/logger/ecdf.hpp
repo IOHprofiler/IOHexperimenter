@@ -174,7 +174,7 @@ namespace ioh
                 int run{};
                 bool has_opt{};
                 bool is_tracked{};
-                std::vector<double> opt;
+                double opt;
                 common::OptimizationType max_min{};
             };
 
@@ -251,7 +251,7 @@ namespace ioh
                 if (!_current.is_tracked)
                 {
                     _current.is_tracked = true;
-                    _current.has_opt = !log_info.objective.y.empty();
+                    _current.has_opt = log_info.objective.y != std::numeric_limits<double>::signaling_NaN();
                     if(_current.has_opt)
                     {
                         common::log::info(
@@ -264,14 +264,13 @@ namespace ioh
                             "Problem has no known optimal, will compute the absolute ECDF.");
                     }
                     // mono-objective only
-                    assert(_current.opt.size() == 1);
                     init_ecdf(_current);
                 }
                 
                 double err;
                 if (_current.has_opt)
                 {
-                    err = std::abs(_current.opt[0] - log_info.transformed_y_best);
+                    err = std::abs(_current.opt - log_info.transformed_y_best);
                 }
                 else
                 {
@@ -453,7 +452,7 @@ namespace ioh
                 {
                     for (auto i = i_error; i < ibound; i++)
                     {
-                        // If we reach a 1 on first col of this row, no need to continue.
+                        // If we reach a 1 on first co of this row, no need to continue.
                         // TODO: check this, out of bound error for mscv
                         if (mat[i][std::min(j_evals, jbound - 1)] == 1)
                         {

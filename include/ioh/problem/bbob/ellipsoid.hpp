@@ -8,12 +8,12 @@ namespace ioh::problem::bbob
     class EllipsoidBase : public BBOProblem<T>
     {
     protected:
-        std::vector<double> evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &x) override
         {
             auto result = x.at(0) * x.at(0);
             for (auto i = 1; i < this->meta_data_.n_variables; ++i)
                 result += this->transformation_state_.conditions.at(i) * x.at(i) * x.at(i);
-            return {result};
+            return result;
         }
 
         std::vector<double> transform_variables(std::vector<double> x) override

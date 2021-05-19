@@ -8,7 +8,7 @@ namespace ioh::problem::bbob
     class RastriginBase: public BBOProblem<T>
     {
     protected:
-        std::vector<double> evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &x) override
         {
             auto sum1 = 0.0, sum2 = 0.0;
 
@@ -20,7 +20,7 @@ namespace ioh::problem::bbob
             if (std::isinf(sum2))
                 return { sum2 };
 
-            return { 10.0 * (static_cast<double>(x.size()) - sum1) + sum2 };
+            return 10.0 * (static_cast<double>(x.size()) - sum1) + sum2;
         }
 
         std::vector<double> transform_variables(std::vector<double> x) override

@@ -19,7 +19,7 @@ namespace ioh
                     return static_cast<double>(result);
                 }
 
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
                     for (auto k = 1; k != meta_data_.n_variables; ++k)
@@ -28,7 +28,7 @@ namespace ioh
                         result += cor * cor;
                     }
                     result = static_cast<double>(meta_data_.n_variables * meta_data_.n_variables) / 2.0 / result;
-                    return { result };
+                    return result;
                 }
 
             public:

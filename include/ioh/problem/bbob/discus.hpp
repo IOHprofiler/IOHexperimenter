@@ -7,12 +7,12 @@ namespace ioh::problem::bbob
     class Discus final : public BBOProblem<Discus>
     {
     protected:
-        std::vector<double> evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &x) override
         {
             static const auto condition = 1.0e6;
-            std::vector<double> result = {condition * x.at(0) * x.at(0)};
+            auto result = condition * x.at(0) * x.at(0);
             for (auto i = 1; i < meta_data_.n_variables; ++i)
-                result[0] += x.at(i) * x.at(i);
+                result += x.at(i) * x.at(i);
             return result;
         }
 

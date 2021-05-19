@@ -19,9 +19,9 @@ namespace ioh
             class OneMax final: public PBOProblem<OneMax>
             {
             protected:
-                std::vector<double> evaluate(const std::vector<int>& x) override
+                double evaluate(const std::vector<int>& x) override
                 {
-                    return { std::accumulate(x.begin(), x.end(), 0.0) };
+                    return std::accumulate(x.begin(), x.end(), 0.0);
                 }
 
             public:

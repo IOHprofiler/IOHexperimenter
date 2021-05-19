@@ -8,8 +8,7 @@ namespace ioh::problem::bbob
 
     {
     protected:
-        std::vector<double> evaluate(const std::vector<double> &x) override
-            //TODO: optimize static variable initialization
+        double evaluate(const std::vector<double> &x) override
         {
             static const auto mu0 = 2.5;
             static const auto d = 1.;
@@ -47,7 +46,7 @@ namespace ioh::problem::bbob
                 sum2 += (x_hat[i] - mu1) * (x_hat[i] - mu1);
                 sum3 += cos(2 * transformation::coco::coco_pi * z[i]);
             }
-            return {std::min(sum1, d * double_n + s * sum2) + 10. * (double_n - sum3) + 1e4 * penalty};
+            return std::min(sum1, d * double_n + s * sum2) + 10. * (double_n - sum3) + 1e4 * penalty;
         }
 
     public:

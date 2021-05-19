@@ -7,11 +7,11 @@ namespace ioh::problem::bbob
     class AttractiveSector final : public BBOProblem<AttractiveSector>
     {
     protected:
-        std::vector<double> evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &x) override
         {
-            std::vector<double> result{ 0.0 };
+            auto result =  0.0 ;
             for (auto i = 0; i < meta_data_.n_variables; ++i)
-                result[0] += x.at(i) * x.at(i) * (1. + 9999.0 * (objective_.x.at(i) * x.at(i) > 0.0));
+                result += x.at(i) * x.at(i) * (1. + 9999.0 * (objective_.x.at(i) * x.at(i) > 0.0));
             return result;
         }
 
@@ -23,13 +23,10 @@ namespace ioh::problem::bbob
             return x;
         }
 
-        std::vector<double> transform_objectives(std::vector<double> y) override
+        double transform_objectives(const double y) override
         {
-            using namespace transformation::coco;
-            transform_obj_oscillate_evaluate(y);
-            transform_obj_power_evaluate(y, 0.9);
-            transform_obj_shift_evaluate_function(y, objective_.y.at(0));
-            return y;
+            using namespace transformation::objective;
+            return shift(power(oscillate(y), .9), objective_.y);
         }
 
     public:

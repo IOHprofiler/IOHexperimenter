@@ -12,7 +12,7 @@ namespace ioh
             protected:
                 static int modulo_ising_ring(const int x, const int n){ return (x % n + n) % n; }
 
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
                     for (auto i = 0; i < meta_data_.n_variables; ++i)
@@ -20,7 +20,7 @@ namespace ioh
                         const auto neighbors = x[modulo_ising_ring(i - 1, meta_data_.n_variables)];
                         result += x[i] * neighbors + (1 - x[i]) * (1 - neighbors);
                     }
-                    return { static_cast<double>(result) };
+                    return result;
                 }
 
             public:

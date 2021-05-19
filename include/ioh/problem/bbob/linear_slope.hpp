@@ -7,7 +7,7 @@ namespace ioh::problem::bbob
     class LinearSlope final : public BBOProblem<LinearSlope>
     {
     protected:
-        std::vector<double> evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &x) override
         {
             auto result = 0.0;
             for (auto i = 0; i < meta_data_.n_variables; ++i)
@@ -15,7 +15,7 @@ namespace ioh::problem::bbob
                 (
                     x.at(i) * objective_.x.at(i) < 25.0 ? x.at(i) : objective_.x.at(i)
                 );
-            return {result};
+            return result;
         }
 
     public:

@@ -68,7 +68,7 @@ namespace ioh::problem::bbob
         double factor_;
 
     protected:
-        std::vector<double> evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &x) override
         {
             static const auto a = 0.1;
             std::vector<double> x_transformed(this->meta_data_.n_variables);
@@ -115,7 +115,7 @@ namespace ioh::problem::bbob
                 result = -pow(exp(result + 0.49 * (sin(0.55 * result) + sin(0.31 * result))), a);
             }
 
-            return {result * result + penalty};
+            return result * result + penalty;
         }
 
     public:

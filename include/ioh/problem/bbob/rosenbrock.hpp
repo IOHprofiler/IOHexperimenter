@@ -10,7 +10,7 @@ namespace ioh::problem::bbob
         double factor_;
         std::vector<double> negative_one_;
     protected:
-        std::vector<double> evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &x) override
         {
             auto sum1 = 0.0, sum2 = 0.0;
 
@@ -18,7 +18,7 @@ namespace ioh::problem::bbob
                 sum1 += pow(x.at(i) * x.at(i) - x.at(i + 1), 2.0);
                 sum2 += pow(x.at(i) - 1.0, 2.0);
             }
-            return { 100.0 * sum1 + sum2 };
+            return 100.0 * sum1 + sum2 ;
         }
 
         std::vector<double> transform_variables(std::vector<double> x) override

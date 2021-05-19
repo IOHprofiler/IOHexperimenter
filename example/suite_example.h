@@ -43,7 +43,7 @@ inline void suite_example()
                     xi = xi * 10 - 5;
 
                 /// To evalute the fitness of 'x' for the problem by using '(*problem)(x)' function.
-                best_y = std::min((*problem)(x).at(0), best_y);
+                best_y = std::min((*problem)(x), best_y);
             }
                 
             /// To reset evaluation information as default before the next independent run.

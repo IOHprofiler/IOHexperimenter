@@ -16,28 +16,26 @@ namespace ioh::problem
             return x;
         }
 
-        std::vector<double> transform_objectives(std::vector<double> y) override
+        double transform_objectives(const double y) override
         {
+            using namespace transformation::objective;
             if (meta_data_.instance > 1)
-            {
-                transformation::methods::transform_obj_scale(y, meta_data_.instance);
-                transformation::methods::transform_obj_shift(y, meta_data_.instance);
-            }
+                return uniform(shift, uniform(scale, y, meta_data_.instance, -0.2, 4.8), meta_data_.instance, 1e3, 2e3);
             return y;
         }
 
     public:
         PBO(const int problem_id, const int instance, const int n_variables, const std::string &name) :
-            Integer(MetaData(problem_id, instance, name, n_variables, 1,
-                                    common::OptimizationType::Maximization))
+            Integer(MetaData(problem_id, instance, name, n_variables,
+                             common::OptimizationType::Maximization))
         {
-        } 
+        }
     };
 
     template <typename ProblemType>
     class PBOProblem : public PBO,
-               AutomaticProblemRegistration<ProblemType, PBO>,
-               AutomaticProblemRegistration<ProblemType, Integer>
+                       AutomaticProblemRegistration<ProblemType, PBO>,
+                       AutomaticProblemRegistration<ProblemType, Integer>
     {
     public:
         using PBO::PBO;

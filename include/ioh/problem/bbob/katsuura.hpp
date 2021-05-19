@@ -11,9 +11,9 @@ namespace ioh::problem::bbob
         double factor_;
 
     protected:
-        std::vector<double> evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &x) override
         {
-            std::vector<double> result = {1.0};
+            auto result = 1.0;
             for (auto i = 0; i < meta_data_.n_variables; ++i)
             {
                 double z = 0;
@@ -22,9 +22,9 @@ namespace ioh::problem::bbob
                             - floor(transformation_state_.exponents.at(j) * x.at(i) + 0.5))
                         / transformation_state_.exponents.at(j);
 
-                result[0] *= pow(1.0 + (static_cast<double>(i) + 1) * z, exponent_);
+                result *= pow(1.0 + (static_cast<double>(i) + 1) * z, exponent_);
             }
-            result[0] = factor_ * (-1. + result.at(0));
+            result = factor_ * (-1. + result);
             return result;
         }
 
@@ -38,14 +38,11 @@ namespace ioh::problem::bbob
             return x;
         }
 
-        std::vector<double> transform_objectives(std::vector<double> y) override
+        double transform_objectives(const double y) override
         {
-            using namespace transformation::coco;
+            using namespace transformation::objective;
             static const auto penalty_factor = 1.0;
-            transform_obj_shift_evaluate_function(y, objective_.y.at(0));
-            transform_obj_penalize_evaluate(state_.current.x, constraint_.lb.at(0),
-                                            constraint_.ub.at(0), penalty_factor, y);
-            return y;
+            return penalize(state_.current.x, constraint_, penalty_factor, shift(y, objective_.y));
         }
 
     public:

@@ -48,16 +48,15 @@ namespace ioh::problem
             }
         } transformation_state_;
 
-        std::vector<double> transform_objectives(std::vector<double> y) override
+        double transform_objectives(const double y) override
         {
-            transformation::coco::transform_obj_shift_evaluate_function(y, objective_.y.at(0));
-            return y;
+            return transformation::objective::shift(y, objective_.y);
         }
 
     public:
         BBOB(const int problem_id, const int instance, const int n_variables, const std::string &name,
              const double condition = sqrt(10.0)):
-            Real(MetaData(problem_id, instance, name, n_variables, 1, common::OptimizationType::Minimization),
+            Real(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::Minimization),
                         Constraint<double>(n_variables, 5, -5)),
             transformation_state_(problem_id, instance, n_variables, condition)
         {
@@ -68,11 +67,11 @@ namespace ioh::problem
         void update_log_info() override
         {
             log_info_.evaluations = static_cast<size_t>(state_.evaluations);
-            log_info_.y_best = state_.current_best.y.at(0) - objective_.y.at(0);
-            log_info_.transformed_y = state_.current.y.at(0);
-            log_info_.transformed_y_best = state_.current_best.y.at(0);
+            log_info_.y_best = state_.current_best.y - objective_.y;
+            log_info_.transformed_y = state_.current.y;
+            log_info_.transformed_y_best = state_.current_best.y;
             log_info_.current = state_.current;
-            log_info_.current.y.at(0) = log_info_.current.y.at(0) - objective_.y.at(0);
+            log_info_.current.y = log_info_.current.y - objective_.y;
         }
 
         [[nodiscard]]
@@ -82,7 +81,7 @@ namespace ioh::problem
             std::vector<double> x(meta_data_.n_variables, 0);
             bbob2009_compute_xopt(x, transformation_state_.seed, meta_data_.n_variables);
             return Solution<double>{
-                x, {bbob2009_compute_fopt(meta_data_.problem_id, meta_data_.instance)}
+                x, bbob2009_compute_fopt(meta_data_.problem_id, meta_data_.instance)
             };
         }
     };

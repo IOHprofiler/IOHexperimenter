@@ -10,10 +10,11 @@ namespace ioh::problem::bbob
         std::vector<double> negative_offset_;
         std::vector<double> positive_offset_;
     protected:
-        std::vector<double> evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &x) override
         {
             static const auto correction = 418.9828872724339;
-            std::vector<double> result = {0.0};
+            auto result = 0.0;
+
             auto penalty = 0.0;
             for (const auto &xi : x)
             {
@@ -21,9 +22,9 @@ namespace ioh::problem::bbob
                 if (out_of_bounds > 0.0)
                     penalty += out_of_bounds * out_of_bounds;
 
-                result[0] += xi * sin(sqrt(fabs(xi)));
+                result += xi * sin(sqrt(fabs(xi)));
             }
-            result[0] = 0.01 * (penalty + correction - result.at(0) / static_cast<double>(meta_data_.n_variables));
+            result = 0.01 * (penalty + correction - result / static_cast<double>(meta_data_.n_variables));
             return result;
         }
 

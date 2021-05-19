@@ -145,6 +145,7 @@ namespace ioh
 
                 std::uniform_real_distribution<double> d(min, max);
 
+
                 std::vector<double> x;
                 for (unsigned int i = 0; i < n; i++)
                     x.emplace_back(d(re));
@@ -239,9 +240,7 @@ namespace ioh
                 for (unsigned int i = 0; i < n; ++i)
                 {
                     const auto rand_value = lcg_rand(seed);
-                    const auto seed_index = static_cast<int>(std::floor(
-                        static_cast<double>(seed) / static_cast<double>(67108865
-                        )));
+                    const auto seed_index = static_cast<int>(std::floor(static_cast<double>(seed) / static_cast<double>(67108865)));
 
                     seed = rand_seed[seed_index];
                     rand_seed[seed_index] = rand_value;

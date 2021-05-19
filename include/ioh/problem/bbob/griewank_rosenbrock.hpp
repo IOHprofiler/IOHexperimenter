@@ -8,7 +8,7 @@ namespace ioh::problem::bbob
     {
         std::vector<double> x_shift_;
     protected:
-        std::vector<double> evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &x) override
         {
             auto result = 0.0;
             for (auto i = 0; i < meta_data_.n_variables - 1; ++i) {
@@ -17,7 +17,7 @@ namespace ioh::problem::bbob
                 const auto z =  c1 + c2;
                 result += z / 4000. - cos(z);
             }
-            return { 10. + 10. * result / static_cast<double>(meta_data_.n_variables - 1) };
+            return 10. + 10. * result / static_cast<double>(meta_data_.n_variables - 1);
         }
     
         std::vector<double> transform_variables(std::vector<double> x) override

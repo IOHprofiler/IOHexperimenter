@@ -7,12 +7,11 @@ namespace ioh
 {
     namespace problem
     {
-     
         template <typename T>
         class Problem
         {
         protected:
-            MetaData meta_data_; 
+            MetaData meta_data_;
             Constraint<T> constraint_;
             State<T> state_;
             Solution<T> objective_;
@@ -20,7 +19,7 @@ namespace ioh
             logger::LogInfo log_info_;
 
             [[nodiscard]]
-            bool check_input_dimensions(const std::vector<T>& x)
+            bool check_input_dimensions(const std::vector<T> &x)
             {
                 if (x.empty())
                 {
@@ -36,14 +35,14 @@ namespace ioh
             }
 
             template <typename Integer = T>
-            typename std::enable_if<std::is_integral<Integer>::value, bool>::type check_input(const std::vector<T>& x)
+            typename std::enable_if<std::is_integral<Integer>::value, bool>::type check_input(const std::vector<T> &x)
             {
                 return check_input_dimensions(x);
             }
 
             template <typename Floating = T>
             typename std::enable_if<std::is_floating_point<Floating>::value, bool>::type check_input(
-                const std::vector<T>& x)
+                const std::vector<T> &x)
             {
                 if (!check_input_dimensions(x))
                     return false;
@@ -66,7 +65,7 @@ namespace ioh
             }
 
             [[nodiscard]]
-            virtual std::vector<double> evaluate(const std::vector<T> &x) = 0;
+            virtual double evaluate(const std::vector<T> &x) = 0;
 
 
             [[nodiscard]]
@@ -76,7 +75,7 @@ namespace ioh
             }
 
             [[nodiscard]]
-            virtual std::vector<double> transform_objectives(std::vector<double> y)
+            virtual double transform_objectives(const double y)
             {
                 return y;
             }
@@ -86,10 +85,9 @@ namespace ioh
                 meta_data_(std::move(meta_data)), constraint_(std::move(constraint)),
                 objective_(std::move(objective))
             {
-                state_ = {{
-                    std::vector<T>(meta_data_.n_variables, std::numeric_limits<T>::signaling_NaN()),
-                    std::vector<double>(meta_data_.n_objectives, meta_data_.initial_objective_value)
-                }};
+                state_ = State<T>({std::vector<T>(meta_data_.n_variables, std::numeric_limits<T>::signaling_NaN()),
+                                meta_data_.initial_objective_value});
+
                 constraint_.check_size(meta_data_.n_variables);
 
                 log_info_.objective = objective_.as_double();
@@ -99,15 +97,15 @@ namespace ioh
             explicit Problem(MetaData meta_data, Constraint<T> constraint = Constraint<T>()):
                 Problem(meta_data, constraint, {
                             std::vector<T>(meta_data.n_variables, std::numeric_limits<T>::signaling_NaN()),
-                            std::vector<double>(meta_data.n_objectives,
-                                                (meta_data.optimization_type == common::OptimizationType::Minimization
-                                                    ? -std::numeric_limits<double>::infinity()
-                                                    : std::numeric_limits<double>::infinity()))})
+                            meta_data.optimization_type == common::OptimizationType::Minimization
+                            ? -std::numeric_limits<double>::infinity()
+                            : std::numeric_limits<double>::infinity()
+                        })
             {
             }
 
             virtual ~Problem() = default;
-            
+
 
             virtual void reset()
             {
@@ -122,14 +120,14 @@ namespace ioh
             virtual void update_log_info()
             {
                 log_info_.evaluations = static_cast<size_t>(state_.evaluations);
-                log_info_.y_best = state_.current_best_internal.y.at(0);
-                log_info_.transformed_y = state_.current.y.at(0);
-                log_info_.transformed_y_best = state_.current_best.y.at(0);
+                log_info_.y_best = state_.current_best_internal.y;
+                log_info_.transformed_y = state_.current.y;
+                log_info_.transformed_y_best = state_.current_best.y;
                 log_info_.current = state_.current.as_double();
             }
 
             [[nodiscard]]
-            logger::LogInfo& log_info()
+            logger::LogInfo &log_info()
             {
                 return log_info_;
             }
@@ -147,10 +145,10 @@ namespace ioh
                 logger_ = nullptr;
             }
 
-            std::vector<double> operator()(const std::vector<T> &x)
+            double operator()(const std::vector<T> &x)
             {
-                if (!check_input(x)) 
-                    return std::vector<double>(meta_data_.n_objectives, std::numeric_limits<double>::signaling_NaN());
+                if (!check_input(x))
+                    return std::numeric_limits<double>::signaling_NaN();
 
                 state_.current.x = x;
                 state_.current_internal.x = transform_variables(x);
@@ -161,7 +159,7 @@ namespace ioh
                 {
                     update_log_info();
                     logger_->log(log_info());
-                }                    
+                }
                 return state_.current.y;
             }
 
@@ -195,12 +193,12 @@ namespace ioh
                     << "Problem(\n\t" << obj.meta_data_
                     << "\n\tconstraint: " << obj.constraint_
                     << "\n\tstate: " << obj.state_
-                    << "\n\tobjective: " << obj.objective_  << "\n)";
+                    << "\n\tobjective: " << obj.objective_ << "\n)";
             }
         };
 
         template <typename T>
-        using Function = std::function<std::vector<double>(const std::vector<T> &)>;
+        using Function = std::function<double(const std::vector<T> &)>;
 
         template <typename ProblemType>
         using ProblemRegistryType = common::RegisterWithFactory<ProblemType, int, int>;
@@ -220,17 +218,17 @@ namespace ioh
         protected:
             Function<T> function_;
 
-            std::vector<double> evaluate(const std::vector<T> &x) override
+            double evaluate(const std::vector<T> &x) override
             {
                 return function_(x);
             }
 
         public:
-            WrappedProblem(Function<T> f, const std::string &name, const int n_variables, const int n_objectives = 1,
+            WrappedProblem(Function<T> f, const std::string &name, const int n_variables,
                            const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
                            Constraint<T> constraint = Constraint<T>()
                 ) :
-                Problem<T>(MetaData(0, name, n_variables, n_objectives, optimization_type), constraint),
+                Problem<T>(MetaData(0, name, n_variables, optimization_type), constraint),
                 function_(f)
             {
             }
@@ -238,29 +236,28 @@ namespace ioh
 
         template <typename T>
         WrappedProblem<T> wrap_function(Function<T> f, const std::string &name, const int n_variables = 5,
-                                        const int n_objectives = 1,
                                         const common::OptimizationType optimization_type =
                                             common::OptimizationType::Minimization,
                                         Constraint<T> constraint = Constraint<T>())
         {
             ProblemFactoryType<Problem<T>>::instance().include(name, 0, [=](const int, const int dimension)
             {
-                return std::make_unique<WrappedProblem<T>>(f, name, dimension, n_objectives, optimization_type);
+                return std::make_unique<WrappedProblem<T>>(f, name, dimension, optimization_type);
             });
-            return WrappedProblem<T>{f, name, n_variables, n_objectives, optimization_type, constraint};
+            return WrappedProblem<T>{f, name, n_variables, optimization_type, constraint};
         }
 
         using Real = Problem<double>;
         using Integer = Problem<int>;
 
-        template<typename ProblemType>
+        template <typename ProblemType>
         class RealProblem : public Real, AutomaticProblemRegistration<ProblemType, Real>
         {
         public:
             using Real::Real;
         };
 
-        template<typename ProblemType>
+        template <typename ProblemType>
         struct IntegerProblem : Integer, AutomaticProblemRegistration<ProblemType, Integer>
         {
             using Integer::Integer;

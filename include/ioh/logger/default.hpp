@@ -300,7 +300,7 @@ namespace ioh::logger
 
 
             last_logged_line_ = fmt::format(FMT_COMPILE("{} {:f} {:f} {:f} {:f}"), log_info.evaluations,
-                                            log_info.current.y.at(0), log_info.y_best, log_info.transformed_y,
+                                            log_info.current.y, log_info.y_best, log_info.transformed_y,
                                             log_info.transformed_y_best);
 
             for (const auto &e : data_files_.logged_attributes_)
@@ -314,7 +314,7 @@ namespace ioh::logger
             data_files_ << last_logged_line_;
 
             if (improvement_found)
-                info_file_.best_point_ = {log_info.current.y.at(0), log_info.transformed_y, log_info.evaluations};
+                info_file_.best_point_ = {log_info.current.y, log_info.transformed_y, log_info.evaluations};
         }
 
         [[nodiscard]] common::file::UniqueFolder &experiment_folder()

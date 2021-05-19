@@ -63,47 +63,47 @@ namespace ioh {
                     }
                 }
 
-                /// \fn void transform_obj_scale(std::vector<double> &y, const int seed)
-                /// \brief transformation 'a * f(x)'.
-                inline void transform_obj_scale(std::vector<double> &y,
-                                                const int seed) {
-                    std::vector<double> scale;
-                    common::Random::uniform(1, seed, scale);
-                    scale[0] = scale[0] * 1e4 / 1e4 * 4.8 + 0.2;
-                    for (size_t i = 0; i < y.size(); ++i) {
-                        y[i] = y[i] * scale[0];
-                    }
-                }
+                // /// \fn void transform_obj_scale(std::vector<double> &y, const int seed)
+                // /// \brief transformation 'a * f(x)'.
+                // inline void transform_obj_scale(std::vector<double> &y,
+                //                                 const int seed) {
+                //     std::vector<double> scale;
+                //     common::Random::uniform(1, seed, scale);
+                //     scale[0] = scale[0] * 1e4 / 1e4 * 4.8 + 0.2;
+                //     for (size_t i = 0; i < y.size(); ++i) {
+                //         y[i] = y[i] * scale[0];
+                //     }
+                // }
+                //
+                // /// \fn void transform_obj_shift(std::vector<double> &y, const int seed)
+                // /// \brief transformation 'f(x) + rotation_base'.
+                // inline void transform_obj_shift(std::vector<double> &y,
+                //                                 const int seed) {
+                //     std::vector<double> shift;
+                //     common::Random::uniform(1, seed, shift);
+                //     shift[0] = shift[0] * 1e4 / 1e4 * 2000 - 1000;
+                //     for (size_t i = 0; i < y.size(); ++i) {
+                //         y[i] = y[i] + shift[0];
+                //     }
+                // }
 
-                /// \fn void transform_obj_shift(std::vector<double> &y, const int seed)
-                /// \brief transformation 'f(x) + rotation_base'.
-                inline void transform_obj_shift(std::vector<double> &y,
-                                                const int seed) {
-                    std::vector<double> shift;
-                    common::Random::uniform(1, seed, shift);
-                    shift[0] = shift[0] * 1e4 / 1e4 * 2000 - 1000;
-                    for (size_t i = 0; i < y.size(); ++i) {
-                        y[i] = y[i] + shift[0];
-                    }
-                }
-
-                /// \fn void transform_obj_scale(std::vector<double> &y, const int seed)
-                /// \brief transformation 'a * f(x)'.
-                inline void transform_obj_scale(double &y, const int seed) {
-                    std::vector<double> scale;
-                    common::Random::uniform(1, seed, scale);
-                    scale[0] = scale[0] * 1e4 / 1e4 * 4.8 + 0.2;
-                    y = y * scale[0];
-                }
-
-                /// \fn void transform_obj_shift(std::vector<double> &y, const int seed)
-                /// \brief transformation 'f(x) + rotation_base'.
-                inline void transform_obj_shift(double &y, const int seed) {
-                    std::vector<double> shift;
-                    common::Random::uniform(1, seed, shift);
-                    shift[0] = shift[0] * 1e4 / 1e4 * 2000 - 1000;
-                    y = y + shift[0];
-                }
+                // /// \fn void transform_obj_scale(std::vector<double> &y, const int seed)
+                // /// \brief transformation 'a * f(x)'.
+                // inline void transform_obj_scale(double &y, const int seed) {
+                //     std::vector<double> scale;
+                //     common::Random::uniform(1, seed, scale);
+                //     scale[0] = scale[0] * 1e4 / 1e4 * 4.8 + 0.2;
+                //     y = y * scale[0];
+                // }
+                //
+                // /// \fn void transform_obj_shift(std::vector<double> &y, const int seed)
+                // /// \brief transformation 'f(x) + rotation_base'.
+                // inline void transform_obj_shift(double &y, const int seed) {
+                //     std::vector<double> shift;
+                //     common::Random::uniform(1, seed, shift);
+                //     shift[0] = shift[0] * 1e4 / 1e4 * 2000 - 1000;
+                //     y = y + shift[0];
+                // }
             }
         }
     }

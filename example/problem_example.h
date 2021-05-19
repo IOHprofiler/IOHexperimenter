@@ -38,7 +38,7 @@ inline void simple_problem_example()
                     /// Generate a random vector of integers of size n_variables and evaluate problem
                     (*om)(ioh::common::Random::integers(om->meta_data().n_variables, 0, 1));
 
-                std::cout << "result: " << om->state().current_best.y.at(0) << std::endl;
+                std::cout << "result: " << om->state().current_best.y << std::endl;
             }
         }
     }
@@ -52,24 +52,24 @@ class AnotherRealProblem final : public ioh::problem::RealProblem<AnotherRealPro
 {
 protected:
     // The evaluate method is required, in this case the value of x0 is return as objective value
-    std::vector<double> evaluate(const std::vector<double> &x) override
+    double evaluate(const std::vector<double> &x) override
     {
-        return {x.at(0)};
+        return x.at(0);
     }
 
 public:
     /// This constructor is required(i.e. (int, int), even if the newly create problem does not have a way to handle different
     /// instances/dimensions.
     AnotherRealProblem(const int instance, const int n_variables) :
-        RealProblem(ioh::problem::MetaData(1, instance, "AnotherRealProblem", n_variables, 1,
+        RealProblem(ioh::problem::MetaData(1, instance, "AnotherRealProblem", n_variables,
                                            ioh::common::OptimizationType::Minimization))
     {
     }
 };
 
-inline std::vector<double> constant_zero(const std::vector<double> &)
+inline double constant_zero(const std::vector<double> &)
 {
-    return {0.0};
+    return 0.0;
 }
 
 inline void extending_problems_example()
