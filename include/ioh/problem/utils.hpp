@@ -192,7 +192,7 @@ namespace ioh
                     position.push_back(i);
                 }
 
-                common::Random::uniform(static_cast<size_t>(select_num), inseed,
+                common::random::uniform(static_cast<size_t>(select_num), inseed,
                                         random_numbers);
                 for (auto i = 0; i < select_num; ++i)
                 {

@@ -15,7 +15,7 @@ void define_solution(py::module &m, const std::string &name)
     options.disable_function_signatures();
 
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<std::vector<T>, std::vector<double>>(),
+        .def(py::init<std::vector<T>, double>(),
              R"pbdoc(
             Initialize a Solution object using its coordinates and fitness.
 
@@ -155,7 +155,7 @@ void define_base_class(py::module &m, const std::string &name)
     options.disable_function_signatures();
 
     py::class_<ProblemType, PyProblem, std::shared_ptr<ProblemType>>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<const std::string, int, int, int, bool, Constraint<T>>(),
+        .def(py::init<const std::string, int, int, bool, Constraint<T>>(),
              py::arg("name"),
              py::arg("n_variables") = 5,
              py::arg("instance") = 1,
@@ -204,7 +204,7 @@ void define_base_class(py::module &m, const std::string &name)
             using namespace ioh::common;
             const auto meta_data = p.meta_data();
             return "<" + name + string_format("Problem %d. ", meta_data.problem_id) +
-                meta_data.name + string_format(" (%d %d)>", meta_data.instance, meta_data.n_variables);
+                meta_data.name + string_format(" (iid=%d dim=%d)>", meta_data.instance, meta_data.n_variables);
         });
 }
 
@@ -240,15 +240,14 @@ void define_helper_classes(py::module &m)
 
 
     py::class_<MetaData>(m, "MetaData")
-        .def(py::init<int, int, std::string, int, int, ioh::common::OptimizationType>())
+        .def(py::init<int, int, std::string, int, ioh::common::OptimizationType>())
         .def_readonly("instance", &MetaData::instance, "The instance number of the current problem")
         .def_readonly("problem_id", &MetaData::problem_id, "The id of the problem within its suite")
         .def_readonly("name", &MetaData::name, "The name of the current problem")
         .def_readonly("optimization_type", &MetaData::optimization_type,
                       "The type of problem (maximization or minimization)")
         .def_readonly("n_variables", &MetaData::n_variables,
-                      "The number of variables (dimension) of the current problem")
-        .def_readonly("initial_objective_value", &MetaData::initial_objective_value); //  What does this variable mean?
+                      "The number of variables (dimension) of the current problem");
 
     py::class_<ioh::logger::LogInfo>(m, "LogInfo")
         .def(py::init<size_t, double, double, double, Solution<double>, Solution<double>>())

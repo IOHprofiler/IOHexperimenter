@@ -21,7 +21,7 @@ namespace ioh {
                                                const int seed) {
                     std::vector<double> random_x;
                     const auto n = static_cast<int>(x.size());
-                    common::Random::uniform(n, seed, random_x);
+                    common::random::uniform(n, seed, random_x);
 
                     for (auto i = 0; i < n; ++i) {
                         const auto xor_value = static_cast<int>(
@@ -51,7 +51,7 @@ namespace ioh {
                         index.push_back(i);
                     }
 
-                    common::Random::uniform(n, seed, random_x);
+                    common::random::uniform(n, seed, random_x);
                     for (auto i = 0; i != n; ++i) {
                         const auto t = static_cast<int>(floor(random_x[i] * n));
                         const auto temp = index[0];

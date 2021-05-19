@@ -59,10 +59,8 @@ namespace ioh::problem::transformation::objective
      */
     inline double uniform(const Transformation &t, const double y, const int seed, const double lb, const double ub)
     {
-        auto scalar = std::vector<double>(1);
-        common::Random::uniform(1, seed, scalar);
-        scalar.at(0) = scalar.at(0) * 1e4 / 1e4 * ub - lb;
-        return t(y, scalar.at(0));
+        const auto scalar = common::random::uniform(1, lb, ub, seed).at(0);
+        return t(y, scalar);
     }
 
     /**

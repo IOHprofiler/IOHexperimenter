@@ -20,7 +20,7 @@ namespace ioh::problem
         {
             using namespace transformation::objective;
             if (meta_data_.instance > 1)
-                return uniform(shift, uniform(scale, y, meta_data_.instance, -0.2, 4.8), meta_data_.instance, 1e3, 2e3);
+                return uniform(shift, uniform(scale, y, meta_data_.instance, 0.2, 5.0), meta_data_.instance, -1e3, 1e3);
             return y;
         }
 

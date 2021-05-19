@@ -10,7 +10,7 @@ inline void solver(const std::shared_ptr<ioh::problem::Real> p)
     auto count = 0;
     while (count++ < 100)
     {
-        Random::uniform(p->meta_data().n_variables, Random::integer(), x);
+        random::uniform(p->meta_data().n_variables, random::integer(), x);
         (*p)(x);
     }
 }

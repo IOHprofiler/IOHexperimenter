@@ -38,7 +38,7 @@ inline void suite_example()
             auto best_y = std::numeric_limits<double>::infinity();
             for (auto budget = 100; budget > 0; budget--)
             {
-                ioh::common::Random::uniform(x.size(), budget * runs, x);
+                ioh::common::random::uniform(x.size(), budget * runs, x);
                 for (auto &xi : x)
                     xi = xi * 10 - 5;
 

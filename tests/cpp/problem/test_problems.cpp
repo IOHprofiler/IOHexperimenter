@@ -6,7 +6,7 @@
 
 double test_eval(const std::shared_ptr<ioh::problem::Real> &f)
 {
-    const auto x = ioh::common::Random::normal(4, 42);
+    const auto x = ioh::common::random::normal(4, 42);
     return std::round((*f)(x) * 10000.0) / 10000.0;
 }
 

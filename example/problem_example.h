@@ -36,7 +36,7 @@ inline void simple_problem_example()
                 /// Random search on the problem with the given budget 100.
                 for (auto budget = 100; budget > 0; budget--)
                     /// Generate a random vector of integers of size n_variables and evaluate problem
-                    (*om)(ioh::common::Random::integers(om->meta_data().n_variables, 0, 1));
+                    (*om)(ioh::common::random::integers(om->meta_data().n_variables, 0, 1));
 
                 std::cout << "result: " << om->state().current_best.y << std::endl;
             }

@@ -14,7 +14,7 @@ void bbob_random_search(const std::shared_ptr<ioh::problem::Real>& p)
 	auto count = 0;
 	while (count++ < 10)
 	{
-		Random::uniform(p->meta_data().n_variables, Random::integer(), x);
+		random::uniform(p->meta_data().n_variables, random::integer(), x);
 		(*p)(x);
 	}
 }
@@ -25,7 +25,7 @@ void pbo_random_search(const std::shared_ptr<ioh::problem::Integer>& p)
 	auto count = 0;
 	while (count++ < 10)
 	{
-		const auto x = Random::integers(p->meta_data().n_variables, 0, 5);
+		const auto x = random::integers(p->meta_data().n_variables, 0, 5);
 		(*p)(x);
 	}
 }
