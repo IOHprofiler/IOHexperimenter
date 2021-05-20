@@ -16,9 +16,9 @@ namespace ioh
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0;
-                    for (auto i = 0; i != meta_data_.n_variables; ++i)
+                    for (size_t i = 0; i != meta_data_.n_variables; ++i)
                         if (x[i] == 1)
-                            result = i + 1;
+                            result = static_cast<double>(i) + 1.;
                         else
                             break;
                     return info_[static_cast<int>(result + 0.5)];

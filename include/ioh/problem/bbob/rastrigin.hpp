@@ -18,7 +18,7 @@ namespace ioh::problem::bbob
                 sum2 += xi * xi;
             }
             if (std::isinf(sum2))
-                return { sum2 };
+                return sum2 ;
 
             return 10.0 * (static_cast<double>(x.size()) - sum1) + sum2;
         }

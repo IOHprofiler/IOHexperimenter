@@ -12,7 +12,7 @@ namespace ioh::problem::transformation
          * \param x2 second operand
          * \return the result of xor
          */
-        inline int xor(const int x1, const int x2) { return static_cast<int>(x1 != x2);}
+        inline int exclusive_or(const int x1, const int x2) { return static_cast<int>(x1 != x2);}
 
         /**
          * \brief Shift a double y with a given offset
@@ -120,7 +120,7 @@ namespace ioh::problem::transformation
             const auto rx = common::random::uniform(n, seed);
 
             for (auto i = 0; i < n; ++i)
-                x[i] = objective::xor(x.at(i), static_cast<int>(2.0 * floor(1e4 * rx.at(i)) / 1e4));
+                x[i] = objective::exclusive_or(x.at(i), static_cast<int>(2.0 * floor(1e4 * rx.at(i)) / 1e4));
         }
 
         /**
@@ -137,7 +137,7 @@ namespace ioh::problem::transformation
             const auto rx = common::random::uniform(n, seed);
             const auto copy_x = x;
 
-            for (auto i = 0; i != n; ++i)
+            for (size_t i = 0; i != n; ++i)
             {
                 const auto t = static_cast<int>(floor(rx.at(i) * n));
                 const auto temp = index[0];
@@ -159,7 +159,7 @@ namespace ioh::problem::transformation
                            const std::vector<double> &b)
         {
             auto temp_x = x;
-            for (auto i = 0; i < x.size(); ++i)
+            for (size_t i = 0; i < x.size(); ++i)
             {
                 x[i] = b[i];
                 for (auto j = 0; j < x.size(); ++j)
