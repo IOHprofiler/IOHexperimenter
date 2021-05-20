@@ -26,7 +26,7 @@ TEST(ecdf, example)
         for (auto r = 0; r < 2; r++)
         {
             for (auto s = 0; s < sample_size; ++s)
-                (*p)(ioh::common::random::uniform(p->meta_data().n_variables));
+                (*p)(ioh::common::random::uniform(p->meta_data().n_variables, 0));
 
 
             EXPECT_EQ(ECDFSum()(logger.data()), attainments_sum.front());

@@ -182,7 +182,6 @@ namespace ioh
             {
                 std::vector<int> position;
                 std::vector<int> random_index;
-                std::vector<double> random_numbers;
                 const auto select_num = static_cast<int>(floor(
                     static_cast<double>(number_of_variables * select_rate)));
 
@@ -192,8 +191,7 @@ namespace ioh
                     position.push_back(i);
                 }
 
-                common::random::uniform(static_cast<size_t>(select_num), inseed,
-                                        random_numbers);
+                auto random_numbers = common::random::uniform(static_cast<size_t>(select_num), inseed);
                 for (auto i = 0; i < select_num; ++i)
                 {
                     random_index.

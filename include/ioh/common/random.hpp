@@ -10,71 +10,11 @@
 
 namespace ioh::common::random
 {
-    namespace bbob2009
-    {
-        inline int update_seed(const int seed)
-        {
-            const auto shift = static_cast<int>(floor(seed / 127773.0));
-            auto new_seed = static_cast<int>(16807 * (seed - shift * 127773.0) - 2836 * shift);
-            if (new_seed < 0)
-                new_seed += std::numeric_limits<int>::max();
-            return new_seed;
-        }
-
-        inline std::vector<double> uniform(const size_t n, const int initial_seed)
-        {
-            auto generators = std::array<int, 32>();
-            auto seed = std::max(1, abs(initial_seed));
-            
-            // Initialize the seed and generator
-            for (auto i = 39; i >= 0; i--)
-            {
-                seed = update_seed(seed);
-                if (i < 32)
-                    generators[i] = seed;
-            }
-            
-            
-            auto x = std::vector<double>(n);
-            auto random_number = generators.front();
-            
-            for (size_t i = 0; i < n; i++)
-            {
-                const auto index = static_cast<int>(floor(random_number / 67108865.0));
-            
-                seed = update_seed(seed);
-                random_number = generators[index];
-                generators[index] = seed;
-            
-                x.at(i) = random_number / 2.147483647e9;
-                if (x.at(i) == 0.)
-                    x.at(i) = 1e-99;
-            }
-            return x;
-        }
-
-        inline std::vector<double> normal(const size_t n, const long seed)
-        {
-            assert(2 * n < 6000);
-            const auto uniform_random = uniform(2 * n, seed);
-
-            std::vector<double> x(n);
-
-            for (size_t i = 0; i < n; i++)
-            {
-                x[i] = sqrt(-2 * std::log(uniform_random[i])) * cos(2 * IOH_PI * uniform_random[n + i]);
-                if (x[i] == 0.)
-                    x[i] = 1e-99;
-            }
-            return x;
-        } // namespace random
-    }
-
     /**
-     * \brief Linear congruential generator using a given seed. Used to generate uniform random numbers.
-     * \param seed Random seed
-     * \return A new seed
-     */
+      * \brief Linear congruential generator using a given seed. Used to generate uniform random numbers.
+      * \param seed Random seed
+      * \return A new seed
+      */
     inline long lcg_rand(long seed)
     {
         static auto double_mod_div = static_cast<double>(IOH_RND_MODULUS_DIV);
@@ -155,15 +95,12 @@ namespace ioh::common::random
      * \brief Fills a rand_vec with n uniform random numbers, generated using in_seed
      * \param n The size of rand_vec
      * \param seed The random seed
-     * \param rand_vec The vector in which to place the random numbers
+     * \param lb lower bound for the random numbers
+     * \param ub upper bound for the random numbers
      */
-    static void uniform(const size_t &n, long seed,
-                        std::vector<double> &rand_vec)
+    static std::vector<double> uniform(const size_t &n, long seed, const double lb = 0, const double ub = 1)
     {
-        if (!rand_vec.empty())
-            std::vector<double>().swap(rand_vec);
-        rand_vec.reserve(n);
-
+        auto rand_vec = std::vector<double>(n);
         long rand_seed[32];
 
         for (auto i = 39; i >= 0; --i)
@@ -173,41 +110,24 @@ namespace ioh::common::random
                 rand_seed[i] = seed;
         }
 
-        seed = rand_seed[0];
         for (unsigned int i = 0; i < n; ++i)
         {
             const auto rand_value = lcg_rand(seed);
             const auto seed_index = static_cast<int>(std::floor(
-                static_cast<double>(seed) / static_cast<double>(67108865)));
+                static_cast<double>(seed) / static_cast<double>(67108865))); 
 
             seed = rand_seed[seed_index];
             rand_seed[seed_index] = rand_value;
 
-            rand_vec.emplace_back(
-                static_cast<double>(seed) / 2.147483647e9);
+            rand_vec[i] =  static_cast<double>(seed) / 2.147483647e9;
             if (rand_vec[i] == 0.)
                 rand_vec[i] = 1e-99;
+
+            rand_vec[i] = rand_vec[i] * (ub - lb) + lb;
         }
-    }
 
-    /**
-     * \brief Generate a vector of n uniform doubles, with a given seed
-     * \param n the size of the vector
-     * \param lb lower bound for the random numbers
-     * \param ub upper bound for the random numbers
-     * \param seed the seed passed to the random number generator
-     * \return a vector of uniform random numbers
-     */
-    inline std::vector<double> uniform(const unsigned int n, const double lb = 0, const double ub = 1,
-                                       const int seed = 0)
-    {
-        std::vector<double> numbers;
-        uniform(n, seed, numbers);
-        for (auto &xi : numbers)
-            xi = xi * (ub - lb) + lb;
-        return numbers;
+        return rand_vec;
     }
-
 
     /**
      * \brief Generates a vector of size n, containing random gaussian numbers
@@ -219,11 +139,9 @@ namespace ioh::common::random
      */
     inline std::vector<double> normal(const size_t n, const long seed, const double lb = 0, const double ub = 1)
     {
+        const auto uniform_rand_vec = uniform(2 * n, std::max(1L, std::abs(seed)));
         std::vector<double> rand_vec;
-        std::vector<double> uniform_rand_vec;
         rand_vec.reserve(n);
-
-        uniform(2 * n, std::max(1L, std::abs(seed)), uniform_rand_vec);
 
         for (unsigned int i = 0; i < n; i++)
         {
@@ -236,4 +154,59 @@ namespace ioh::common::random
         }
         return rand_vec;
     }
+
+    namespace bbob2009
+    {
+        inline std::vector<double> uniform(const size_t n, const int initial_seed, const double lb = 0,
+                                           const double ub = 1)
+        {
+            auto generators = std::array<int, 32>();
+            auto seed = std::max(1, abs(initial_seed));
+
+            // Initialize the seed and generator
+            for (auto i = 39; i >= 0; i--)
+            {
+                seed = lcg_rand(seed);
+                if (i < 32)
+                    generators[i] = seed;
+            }
+
+
+            auto x = std::vector<double>(n);
+            auto random_number = generators.front();
+
+            for (size_t i = 0; i < n; i++)
+            {
+                const auto index = static_cast<int>(floor(random_number / 67108865.0));
+
+                seed = lcg_rand(seed);
+                random_number = generators[index];
+                generators[index] = seed;
+
+                x.at(i) = random_number / 2.147483647e9;
+                if (x.at(i) == 0.)
+                    x.at(i) = 1e-99;
+
+                x.at(i) = x.at(i) * (ub - lb) + lb;
+            }
+            return x;
+        }
+
+        inline std::vector<double> normal(const size_t n, const long seed, const double lb = 0, const double ub = 1)
+        {
+            assert(2 * n < 6000);
+            const auto uniform_random = uniform(2 * n, seed);
+
+            std::vector<double> x(n);
+
+            for (size_t i = 0; i < n; i++)
+            {
+                x.at(i) = sqrt(-2 * std::log(uniform_random[i])) * cos(2 * IOH_PI * uniform_random[n + i]);
+                if (x.at(i) == 0.)
+                    x.at(i) = 1e-99;
+                x.at(i) = x.at(i) * (ub - lb) + lb;
+            }
+            return x;
+        } // namespace random
+    } // namespace bbob2009
 };

@@ -54,15 +54,10 @@ inline void single_logger_example()
         std::cout << problem->meta_data() << std::endl;
 
         /// Random search on the problem with the given budget 100.
-        std::vector<double> x(problem->meta_data().n_variables);
         for (auto budget = 100; budget > 0; budget--)
         {
-            ioh::common::random::uniform(x.size(), budget, x);
-            for (auto &xi : x)
-                xi = xi * 10 - 5;
-
             /// Evaluate the fitness of 'x' for the problem by using '(*problem)(x)' function.
-            (*problem)(x);
+            (*problem)(ioh::common::random::uniform(problem->meta_data().n_variables, budget, -5, 5));
         }
         std::cout << "result: " << problem->state() << std::endl;
     }
@@ -106,7 +101,7 @@ inline void logger_with_custom_parameters_example()
         logger.set_run_attributes({"run_id"}, {static_cast<double>(run_id)});
         for (auto i = 0; i < 10; i ++)
         {
-            const auto x = ioh::common::random::uniform(problem.meta_data().n_variables);
+            const auto x = ioh::common::random::uniform(problem.meta_data().n_variables, 0);
             // Update the variable for the evaluation specific parameter
             logger.set_logged_attributes({"x1"}, {x.at(1)});
             problem(x);
