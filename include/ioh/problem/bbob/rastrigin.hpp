@@ -14,7 +14,7 @@ namespace ioh::problem::bbob
 
             for (const auto xi : x)
             {
-                sum1 += cos(2.0 * transformation::coco::coco_pi * xi);
+                sum1 += cos(2.0 * IOH_PI * xi);
                 sum2 += xi * xi;
             }
             if (std::isinf(sum2))
@@ -25,11 +25,11 @@ namespace ioh::problem::bbob
 
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            using namespace transformation::coco;
-            transform_vars_shift_evaluate_function(x, this->objective_.x);
-            transform_vars_oscillate_evaluate_function(x);
-            transform_vars_asymmetric_evaluate_function(x, 0.2);
-            transform_vars_conditioning_evaluate(x, 10.0);
+            using namespace transformation::variables;
+            subtract(x, this->objective_.x);
+            oscillate(x);
+            asymmetric(x, 0.2);
+            conditioning(x, 10.0);
             return x;
         }
 

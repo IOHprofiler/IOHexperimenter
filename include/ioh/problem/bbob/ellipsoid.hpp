@@ -18,9 +18,9 @@ namespace ioh::problem::bbob
 
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            using namespace transformation::coco;
-            transform_vars_shift_evaluate_function(x, this->objective_.x);
-            transform_vars_oscillate_evaluate_function(x);
+            using namespace transformation::variables;
+            subtract(x, this->objective_.x);
+            oscillate(x);
             return x;
         }
 

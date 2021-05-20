@@ -30,25 +30,22 @@ namespace ioh::problem::bbob
 
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            using namespace transformation::coco;
-            transform_vars_x_hat_evaluate(x, transformation_state_.seed);
-            transform_vars_scale_evaluate(x, 2);
-            transform_vars_z_hat_evaluate(x, objective_.x);
-            transform_vars_shift_evaluate_function(x, positive_offset_);
-            transform_vars_conditioning_evaluate(x, 10.0);
-            transform_vars_shift_evaluate_function(x, negative_offset_);
-            transform_vars_scale_evaluate(x, 100);
+            transformation::variables::random_sign_flip(x, transformation_state_.seed);
+            transformation::variables::scale(x, 2);
+            transformation::variables::z_hat(x, objective_.x);
+            transformation::variables::subtract(x, positive_offset_);
+            transformation::variables::conditioning(x, 10.0);
+            transformation::variables::subtract(x, negative_offset_);
+            transformation::variables::scale(x, 100);
             return x;
         }
 
     public:
         Schwefel(const int instance, const int n_variables) :
             BBOProblem(20, instance, n_variables, "Schwefel"),
-            negative_offset_(n_variables),
+            negative_offset_(common::random::bbob2009::uniform(n_variables, transformation_state_.seed)),
             positive_offset_(n_variables)
         {
-            transformation::coco::bbob2009_unif(negative_offset_, n_variables, transformation_state_.seed);
-
             for (auto i = 0; i < n_variables; ++i)
                 objective_.x[i] = (negative_offset_.at(i) < 0.5 ? -1 : 1) * 0.5 * 4.2096874637;
 

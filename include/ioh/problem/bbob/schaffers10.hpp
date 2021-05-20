@@ -31,13 +31,13 @@ namespace ioh::problem::bbob
 
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            using namespace transformation::coco;
-            transform_vars_shift_evaluate_function(x, this->objective_.x);
-            transform_vars_affine_evaluate_function(x, this->transformation_state_.transformation_matrix,
-                                                    this->transformation_state_.transformation_base);
-            transform_vars_asymmetric_evaluate_function(x, 0.5);
-            transform_vars_affine_evaluate_function(x, this->transformation_state_.second_transformation_matrix,
-                                                    this->transformation_state_.transformation_base);
+            using namespace transformation::variables;
+            subtract(x, this->objective_.x);
+            affine(x, this->transformation_state_.transformation_matrix,
+                   this->transformation_state_.transformation_base);
+            asymmetric(x, 0.5);
+            affine(x, this->transformation_state_.second_transformation_matrix,
+                   this->transformation_state_.transformation_base);
             return x;
         }
 

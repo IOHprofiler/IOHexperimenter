@@ -31,8 +31,6 @@ namespace ioh::problem::bbob
 
         double evaluate(const std::vector<double> &x) override
         {
-            using namespace transformation::coco;
-            
             auto result = 0.0;
             auto penalty = 0.0;
             const auto x0 = compute_projection(x);

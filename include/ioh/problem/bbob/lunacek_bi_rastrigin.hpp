@@ -44,7 +44,7 @@ namespace ioh::problem::bbob
 
                 sum1 += (x_hat[i] - mu0) * (x_hat[i] - mu0);
                 sum2 += (x_hat[i] - mu1) * (x_hat[i] - mu1);
-                sum3 += cos(2 * transformation::coco::coco_pi * z[i]);
+                sum3 += cos(2 * IOH_PI * z[i]);
             }
             return std::min(sum1, d * double_n + s * sum2) + 10. * (double_n - sum3) + 1e4 * penalty;
         }
@@ -53,9 +53,7 @@ namespace ioh::problem::bbob
         LunacekBiRastrigin(const int instance, const int n_variables) :
             BBOProblem(24, instance, n_variables, "LunacekBiRastrigin")
         {
-            std::vector<double> random_normal(n_variables);
-            transformation::coco::bbob2009_gauss(random_normal, n_variables, transformation_state_.seed);
-
+            const auto random_normal = common::random::bbob2009::normal(n_variables, transformation_state_.seed);
             for (auto i = 0; i < n_variables; ++i)
             {
                 objective_.x[i] = random_normal.at(i) < 0.0 ? 0.5 * 2.5 * -1 : 0.5 * 2.5;

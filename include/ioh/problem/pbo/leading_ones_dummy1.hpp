@@ -16,7 +16,7 @@ namespace ioh
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
-                    for (size_t i = 0; i < info_.size(); ++i)
+                    for (auto i = 0; i < info_.size(); ++i)
                         if (x[info_[i]] == 1)
                             result = i + 1;
                         else

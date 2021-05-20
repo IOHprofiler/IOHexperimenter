@@ -11,10 +11,10 @@ namespace ioh::problem::bbob
     protected:
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            using namespace transformation::coco;
-            transform_vars_shift_evaluate_function(x, objective_.x);
-            transform_vars_oscillate_evaluate_function(x);
-            transform_vars_brs_evaluate(x);
+            using namespace transformation::variables;
+            subtract(x, objective_.x);
+            oscillate(x);
+            brs(x);
             return x;
         }
 

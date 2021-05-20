@@ -18,9 +18,9 @@ namespace ioh::problem
         std::vector<int> transform_variables(std::vector<int> x) override
         {
             if (meta_data_.instance > 1 && meta_data_.instance <= 50)
-                transformation::methods::transform_vars_xor(x, meta_data_.instance);
+                transformation::variables::random_flip(x, meta_data_.instance);
             else if (meta_data_.instance > 50 && meta_data_.instance <= 100)
-                transformation::methods::transform_vars_sigma(x, meta_data_.instance);
+                transformation::variables::random_reorder(x, meta_data_.instance);
             return x;
         }
 

@@ -19,11 +19,11 @@ namespace ioh::problem::bbob
 
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            using namespace transformation::coco;
-            transform_vars_shift_evaluate_function(x, objective_.x);
-            transform_vars_affine_evaluate_function(x, transformation_state_.transformation_matrix, transformation_state_.transformation_base);
-            transform_vars_asymmetric_evaluate_function(x, 0.5);
-            transform_vars_affine_evaluate_function(x, transformation_state_.transformation_matrix, transformation_state_.transformation_base);
+            using namespace transformation::variables;
+            subtract(x, objective_.x);
+            affine(x, transformation_state_.transformation_matrix, transformation_state_.transformation_base);
+            asymmetric(x, 0.5);
+            affine(x, transformation_state_.transformation_matrix, transformation_state_.transformation_base);
             return x;
         }
 
@@ -31,11 +31,6 @@ namespace ioh::problem::bbob
         BentCigar(const int instance, const int n_variables) :
             BBOProblem(12, instance, n_variables, "BentCigar")
         {
-            using namespace transformation::coco;
-            objective_.x.assign(meta_data_.n_variables, 0);
-            bbob2009_compute_xopt(objective_.x,
-                                  transformation_state_.seed + 1000000, meta_data_.n_variables);
-    
         }
     };
 }

@@ -3,12 +3,73 @@
 #include <cmath>
 #include <random>
 #include <vector>
+#include <cassert>
 
 #include "config.hpp"
 
 
 namespace ioh::common::random
 {
+    namespace bbob2009
+    {
+        inline int update_seed(const int seed)
+        {
+            const auto shift = static_cast<int>(floor(seed / 127773.0));
+            auto new_seed = static_cast<int>(16807 * (seed - shift * 127773.0) - 2836 * shift);
+            if (new_seed < 0)
+                new_seed += std::numeric_limits<int>::max();
+            return new_seed;
+        }
+
+        inline std::vector<double> uniform(const size_t n, const int initial_seed)
+        {
+            auto generators = std::array<int, 32>();
+            auto seed = std::max(1, abs(initial_seed));
+            
+            // Initialize the seed and generator
+            for (auto i = 39; i >= 0; i--)
+            {
+                seed = update_seed(seed);
+                if (i < 32)
+                    generators[i] = seed;
+            }
+            
+            
+            auto x = std::vector<double>(n);
+            auto random_number = generators.front();
+            
+            for (size_t i = 0; i < n; i++)
+            {
+                const auto index = static_cast<int>(floor(random_number / 67108865.0));
+            
+                seed = update_seed(seed);
+                random_number = generators[index];
+                generators[index] = seed;
+            
+                x.at(i) = random_number / 2.147483647e9;
+                if (x.at(i) == 0.)
+                    x.at(i) = 1e-99;
+            }
+            return x;
+        }
+
+        inline std::vector<double> normal(const size_t n, const long seed)
+        {
+            assert(2 * n < 6000);
+            const auto uniform_random = uniform(2 * n, seed);
+
+            std::vector<double> x(n);
+
+            for (size_t i = 0; i < n; i++)
+            {
+                x[i] = sqrt(-2 * std::log(uniform_random[i])) * cos(2 * IOH_PI * uniform_random[n + i]);
+                if (x[i] == 0.)
+                    x[i] = 1e-99;
+            }
+            return x;
+        } // namespace random
+    }
+
     /**
      * \brief Linear congruential generator using a given seed. Used to generate uniform random numbers.
      * \param seed Random seed
@@ -16,8 +77,9 @@ namespace ioh::common::random
      */
     inline long lcg_rand(long seed)
     {
+        static auto double_mod_div = static_cast<double>(IOH_RND_MODULUS_DIV);
         const auto double_seed = static_cast<double>(seed);
-        const auto double_mod_div = static_cast<double>(IOH_RND_MODULUS_DIV);
+
         const auto seed_mod = static_cast<long>(std::floor(double_seed / double_mod_div));
 
         seed = static_cast<long>(IOH_RND_MULTIPLIER * (seed - seed_mod * IOH_RND_MODULUS_DIV) - IOH_RND_MOD_MULTIPLIER *
@@ -27,7 +89,7 @@ namespace ioh::common::random
             seed = seed + IOH_RND_MODULUS;
         return seed;
     }
-    
+
     /**
      * \brief Returns a random integer [0, 1], sampled from a bernoulli distribution.
      * \param p The mean of the distribution

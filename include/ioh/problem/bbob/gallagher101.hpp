@@ -24,9 +24,8 @@ namespace ioh::problem::bbob
 
                 static std::vector<Permutation> sorted(const int n, const int seed)
                 {
-                    std::vector<double> random_numbers(n);
+                    const auto random_numbers = common::random::bbob2009::uniform(n, seed);
                     std::vector<Permutation> permutations(n);
-                    transformation::coco::bbob2009_unif(random_numbers, n, seed);
 
                     for (auto i = 0; i < n; ++i)
                         permutations[i] = {random_numbers.at(i), i};
@@ -127,9 +126,9 @@ namespace ioh::problem::bbob
             peaks_(Peak::get_peaks(number_of_peaks, n_variables, this->transformation_state_.seed, max_condition)),
             factor_(-0.5 / static_cast<double>(n_variables))
         {
-            std::vector<double> random_numbers;
-            transformation::coco::bbob2009_unif(random_numbers, this->meta_data_.n_variables * number_of_peaks,
-                                                this->transformation_state_.seed);
+            const auto random_numbers = common::random::bbob2009::uniform(
+                this->meta_data_.n_variables * number_of_peaks, this->transformation_state_.seed);
+
 
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
             {

@@ -23,10 +23,10 @@ namespace ioh::problem::bbob
 
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            using namespace transformation::coco;
-            transform_vars_shift_evaluate_function(x, this->objective_.x);
-            transform_vars_scale_evaluate(x, factor_);
-            transform_vars_shift_evaluate_function(x, negative_one_);
+            using namespace transformation::variables;
+            subtract(x, this->objective_.x);
+            scale(x, factor_);
+            subtract(x, negative_one_);
             return x;
         }
 
