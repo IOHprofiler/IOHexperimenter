@@ -35,7 +35,7 @@ namespace ioh::common::random
      * \param p The mean of the distribution
      * \return A random bit
      */
-    static int bit(const double p = 0.5)
+    inline int bit(const double p = 0.5)
     {
         static std::random_device rd;
         static std::mt19937 gen(rd());
@@ -49,7 +49,7 @@ namespace ioh::common::random
      * \param max the maximum boundary
      * \return a random uniform integer
      */
-    static int integer(const int min = std::numeric_limits<int>::min(),
+    inline int integer(const int min = std::numeric_limits<int>::min(),
                        const int max = std::numeric_limits<int>::max())
     {
         static std::random_device rd;
@@ -65,7 +65,7 @@ namespace ioh::common::random
      * \param max The maximum boundary
      * \return A vector of uniform random integers
      */
-    static std::vector<int> integers(const unsigned int n,
+    inline std::vector<int> integers(const unsigned int n,
                                      const int min = std::numeric_limits
                                          <int>::min(),
                                      const int max = std::numeric_limits
@@ -83,7 +83,7 @@ namespace ioh::common::random
      * \param p The mean of the distribution
      * \return A vector of random bits
      */
-    static std::vector<int> bit_string(const unsigned int n, const double p = 0.5)
+    inline std::vector<int> bit_string(const unsigned int n, const double p = 0.5)
     {
         std::vector<int> x;
         for (unsigned int i = 0; i < n; i++)
@@ -98,7 +98,7 @@ namespace ioh::common::random
      * \param lb lower bound for the random numbers
      * \param ub upper bound for the random numbers
      */
-    static std::vector<double> uniform(const size_t &n, long seed, const double lb = 0, const double ub = 1)
+    inline std::vector<double> uniform(const size_t &n, long seed, const double lb = 0, const double ub = 1)
     {
         auto rand_vec = std::vector<double>(n);
         long rand_seed[32];
