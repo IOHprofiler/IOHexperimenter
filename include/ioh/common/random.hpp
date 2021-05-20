@@ -58,38 +58,38 @@ namespace ioh::common::random
         return d(gen);
     }
 
-    // /**
-    //  * \brief This function returns a vector of random uniform integer within the range [min, max] of size n
-    //  * \param n The size of the vector
-    //  * \param min The minimal boundary
-    //  * \param max The maximum boundary
-    //  * \return A vector of uniform random integers
-    //  */
-    // static std::vector<int> integers(const unsigned int n,
-    //                                  const int min = std::numeric_limits
-    //                                      <int>::min(),
-    //                                  const int max = std::numeric_limits
-    //                                      <int>::max())
-    // {
-    //     std::vector<int> x;
-    //     for (unsigned int i = 0; i < n; i++)
-    //         x.emplace_back(integer(min, max));
-    //     return x;
-    // }
-    //
-    // /**
-    //  * \brief Returns a vector of random integers [0, 1], sampled from a bernoulli distribution, of size 
-    //  * \param n The size of the vector
-    //  * \param p The mean of the distribution
-    //  * \return A vector of random bits
-    //  */
-    // static std::vector<int> bit_string(const unsigned int n, const double p = 0.5)
-    // {
-    //     std::vector<int> x;
-    //     for (unsigned int i = 0; i < n; i++)
-    //         x.emplace_back(bit(p));
-    //     return x;
-    // }
+    /**
+     * \brief This function returns a vector of random uniform integer within the range [min, max] of size n
+     * \param n The size of the vector
+     * \param min The minimal boundary
+     * \param max The maximum boundary
+     * \return A vector of uniform random integers
+     */
+    static std::vector<int> integers(const unsigned int n,
+                                     const int min = std::numeric_limits
+                                         <int>::min(),
+                                     const int max = std::numeric_limits
+                                         <int>::max())
+    {
+        std::vector<int> x;
+        for (unsigned int i = 0; i < n; i++)
+            x.emplace_back(integer(min, max));
+        return x;
+    }
+    
+    /**
+     * \brief Returns a vector of random integers [0, 1], sampled from a bernoulli distribution, of size 
+     * \param n The size of the vector
+     * \param p The mean of the distribution
+     * \return A vector of random bits
+     */
+    static std::vector<int> bit_string(const unsigned int n, const double p = 0.5)
+    {
+        std::vector<int> x;
+        for (unsigned int i = 0; i < n; i++)
+            x.emplace_back(bit(p));
+        return x;
+    }
 
     /**
      * \brief Fills a rand_vec with n uniform random numbers, generated using in_seed

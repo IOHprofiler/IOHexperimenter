@@ -137,7 +137,7 @@ namespace ioh::problem::transformation
             const auto rx = common::random::uniform(n, seed);
             const auto copy_x = x;
 
-            for (size_t i = 0; i != n; ++i)
+            for (auto i = 0; i != n; ++i)
             {
                 const auto t = static_cast<int>(floor(rx.at(i) * n));
                 const auto temp = index[0];
@@ -162,7 +162,7 @@ namespace ioh::problem::transformation
             for (size_t i = 0; i < x.size(); ++i)
             {
                 x[i] = b[i];
-                for (auto j = 0; j < x.size(); ++j)
+                for (size_t j = 0; j < x.size(); ++j)
                     x[i] += temp_x[j] * m[i][j];
             }
         }
