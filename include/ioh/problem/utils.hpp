@@ -176,77 +176,56 @@ namespace ioh
 
         namespace utils
         {
-            static std::vector<int> dummy(int number_of_variables,
-                                          double select_rate,
-                                          long inseed)
+            /**
+             * \brief Returns a set of indices selected randomly from the range [0, n_variables].
+             * Selects floor(n_variables * select_rate) indices with replacement. 
+             * \param n_variables The range of the index
+             * \param select_rate The probability of selection for any given index.
+             * \param seed The random seed for the random number generator
+             * \return A list of selected indices, in ascending order. 
+             */
+            inline std::vector<int> dummy(const int n_variables, const double select_rate, const long seed)
             {
-                std::vector<int> position;
-                std::vector<int> random_index;
-                const auto select_num = static_cast<int>(floor(
-                    static_cast<double>(number_of_variables * select_rate)));
+                const auto select_num = static_cast<int>(floor(n_variables * select_rate));
+                const auto random_numbers = common::random::uniform(static_cast<size_t>(select_num), seed);
 
-                position.reserve(number_of_variables);
-                for (auto i = 0; i != number_of_variables; ++i)
-                {
-                    position.push_back(i);
-                }
+                std::vector<int> position(n_variables);
+                std::iota(position.begin(), position.end(), 0);
 
-                auto random_numbers = common::random::uniform(static_cast<size_t>(select_num), inseed);
-                for (auto i = 0; i < select_num; ++i)
-                {
-                    random_index.
-                        push_back(
-                            static_cast<int>(floor(
-                                random_numbers[i] * 1e4 / 1e4 *
-                                number_of_variables)));
-                }
                 for (auto i = 0; i != select_num; ++i)
                 {
-                    const auto temp = position[i];
-                    position[i] = position[random_index[i]];
-                    position[random_index[i]] = temp;
+                    const auto random_index = static_cast<int>(floor(random_numbers[i] * 1e4 / 1e4 * n_variables));
+                    const auto current_value = position[i];
+                    position[i] = position[random_index];
+                    position[random_index] = current_value;
                 }
 
-                /// This is a stl algorithm.
-                sort(position.begin(), position.begin() + select_num);
-
-                random_index.clear();
-                for (auto i = 0; i != select_num; ++i)
-                {
-                    random_index.push_back(position[i]);
-                }
-                return random_index;
+                std::sort(position.begin(), position.begin() + select_num);
+                return {position.begin(), position.begin() + select_num};
             }
 
-            static std::vector<int> neutrality(
-                const std::vector<int> &variables, int mu)
+            static std::vector<int> neutrality(const std::vector<int> &x, const int mu)
             {
-                const auto number_of_variables = static_cast<int>(variables.size());
-                const auto n = static_cast<int>(floor(
-                    static_cast<double>(number_of_variables) / static_cast<
-                        double>(mu)));
+                const auto n_variables = static_cast<int>(x.size());
+                const auto n = static_cast<int>(floor(static_cast<double>(n_variables) / static_cast<double>(mu)));
+                
                 std::vector<int> new_variables;
-
                 new_variables.reserve(n);
-                auto i = 0, temp = 0;
-                while (i != number_of_variables)
+                
+                auto cum_sum = 0;
+                
+                for (auto i = 0; i < n_variables; i++)
                 {
-                    temp += variables[i];
+                    cum_sum += x.at(i);
                     if ((i + 1) % mu == 0 && i != 0)
                     {
-                        if (temp >= mu / 2.0)
-                        {
+                        if (cum_sum >= mu / 2.0)
                             new_variables.push_back(1);
-                        }
                         else
-                        {
                             new_variables.push_back(0);
-                        }
-                        temp = 0;
+                        cum_sum = 0;
                     }
-                    i++;
                 }
-
                 return new_variables;
             }
 
