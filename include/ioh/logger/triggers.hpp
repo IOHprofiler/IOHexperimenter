@@ -40,7 +40,7 @@ namespace ioh {
                 // Empty constructor are needed (at least for the "_any" default member of Logger).
                 Set(){}
 
-                Set( std::initializer_list<std::reference_wrapper<logger::Trigger>> triggers)
+                Set( std::vector<std::reference_wrapper<logger::Trigger>> triggers)
                 : _triggers(triggers)
                 { }
 
@@ -66,7 +66,7 @@ namespace ioh {
 
             Any():Set(){}
 
-            Any( std::initializer_list<std::reference_wrapper<logger::Trigger>> triggers)
+            Any( std::vector<std::reference_wrapper<logger::Trigger>> triggers)
             : Set(triggers)
             { }
 
@@ -88,7 +88,7 @@ namespace ioh {
 
             All():Set(){}
 
-            All( std::initializer_list<std::reference_wrapper<logger::Trigger>> triggers)
+            All( std::vector<std::reference_wrapper<logger::Trigger>> triggers)
             : Set(triggers)
             { }
 

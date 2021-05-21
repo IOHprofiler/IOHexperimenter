@@ -21,25 +21,54 @@ namespace ioh {
      * 
      * By default, the Logger calls a log event if any of the triggers are fired,
      * but you can use your own way to combine triggers if necessary.
+     * 
+     * If you need to handle any property, consider sub-classing logger::Watcher.
+     * 
+     * If not, the design enforces your subclass to declare which property it needs.
+     * Then, you can easily access them by their name through `_properties.at("name")`.
      */
     class Logger {
     protected:
         trigger::Any _any; // Default combination of triggers instance.
-        trigger::Set& _triggers; // High-level interface.
+        trigger::Set& _triggers; // Lower-level interface.
         const problem::MetaData* _problem;
-        std::vector<std::reference_wrapper<logger::Property>> _properties;
+
+        /** Map property names to property references.
+         * 
+         * If your logger is handling any property, you can just iterate over them,
+         * if you need specific ones, you can call them by their name.
+         * 
+         * This holds reference to optionals, so to get the actual value of a property, you should:
+         *   -# use `at(…)` and not `operator[]`,
+         *   -# use `get()` on the returned element,
+         *   -# ensure that there actually is a valid value,
+         *   -# use `value()` to get it.
+         * @code
+         * // With its name:
+         * _properties.at("name").get().value()
+         * // If your iterating over the map:
+         * for(auto& p : _properties) { p.second.get().value();}
+         * @endcode
+         * 
+         * You can directly test if the property actually has a valid value:
+         * @code
+         * if(_properties.at("name").get()) {...}
+         * @endcode
+         */
+        std::map<std::string,std::reference_wrapper<logger::Property>> _properties;
 
 #ifndef NDEBUG
+        //! Check that there is no duplicated properties (only in Debug builds).
         bool consistent_properties()
         {
             if(_properties.size() <= 0) {return false;}
-            // Check that there is no duplicates.
+
             for(auto iw = std::begin(_properties); iw != std::end(_properties); iw++) {
                 auto inext = iw; inext++;
                 if(inext == std::end(_properties)) { break; }
-                // Search only in toward the end. 
+                // Search only in toward the end, to avoid useless double checks.
                 if(std::find_if(inext,std::end(_properties),
-                                [iw](const auto& rwp){return iw->get().name() == rwp.get().name();}
+                                [iw](const auto& rwp){return iw->second.get().name() == rwp.second.get().name();}
                                ) != std::end(_properties)) {
                     return false;
                 }
@@ -47,16 +76,27 @@ namespace ioh {
             return true;
         }
 #endif
+
+        //! Convert a vector of properties in a map of {name => property}.
+        void map_properties(std::vector<std::reference_wrapper<logger::Property>>& properties)
+        {
+            for(auto& p : properties) {
+                // operator[] of an std::map<K,T> requires that T be default-constructible.
+                // But reference_wrapper is not.
+                // Thus, we must directly forward the reference.
+                _properties.insert_or_assign(p.get().name(), std::ref(p.get()));
+            }
+        }
         
     public:
         /** Use this constructor if you just need to trigger a log event if ANY of the triggers are fired. */
-        Logger(std::initializer_list<std::reference_wrapper<logger::Trigger >> triggers,
-               std::initializer_list<std::reference_wrapper<logger::Property>> properties)
+        Logger(std::vector<std::reference_wrapper<logger::Trigger >> triggers,
+               std::vector<std::reference_wrapper<logger::Property>> properties)
         : _any(triggers)
         , _triggers(_any)
         , _problem(nullptr)
-        , _properties(properties)
         {
+            map_properties(properties);
             assert(consistent_properties());
         }
 
@@ -67,14 +107,20 @@ namespace ioh {
          * are fired at once.
          */
         Logger(trigger::Set& triggers,
-               std::initializer_list<std::reference_wrapper<logger::Property>> properties               )
+               std::vector<std::reference_wrapper<logger::Property>> properties               )
         : _any()
         , _triggers(triggers)
         , _problem(nullptr)
-        , _properties(properties)
         {
+            map_properties(properties);
             assert(consistent_properties());
         }
+
+        /** Use this constructor if you just need the interface without triggers or properties.
+         *
+         * Used by logger::Combine, for instance.
+         */
+        Logger() : _any(), _triggers(_any), _problem(nullptr), _properties() {}
 
         /** Add the given trigger to the list. */
         void trigger(logger::Trigger when)
@@ -135,8 +181,8 @@ namespace ioh {
         class Watcher: public Logger {
         public:
             /** Use this constructor if you just need to trigger a log event if ANY of the triggers are fired. */
-            Watcher(std::initializer_list<std::reference_wrapper<logger::Trigger >> when,
-                   std::initializer_list<std::reference_wrapper<logger::Property>> what)
+            Watcher(std::vector<std::reference_wrapper<logger::Trigger >> when,
+                   std::vector<std::reference_wrapper<logger::Property>> what)
             : Logger(when,what)
             { }
 
@@ -147,7 +193,7 @@ namespace ioh {
              * are fired at once.
              */
             Watcher(trigger::Set& when,
-                   std::initializer_list<std::reference_wrapper<logger::Property>> what)
+                   std::vector<std::reference_wrapper<logger::Property>> what)
             : Logger(when,what)
             { }
 
@@ -156,9 +202,9 @@ namespace ioh {
             {
                 // Assert that the Property is not already tracked.
                 assert(std::find_if(std::begin(_properties),std::end(_properties),
-                                    [&property](const auto rwp){return property.name() == rwp.get().name();}
+                                    [&property](const auto rwp){return property.name() == rwp.second.get().name();}
                                    ) == std::end(_properties));
-                _properties.push_back(property);
+                _properties.insert_or_assign(property.name(), property);
                 assert(consistent_properties()); // Double check duplicates, in case the code above would be changed.
             }
 

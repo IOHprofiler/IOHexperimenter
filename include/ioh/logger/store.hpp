@@ -3,7 +3,7 @@
 #include <map>
 #include <optional>
 
-#include "api.hpp"
+#include "loggers.hpp"
 
 namespace ioh::logger {
     
@@ -135,10 +135,13 @@ namespace ioh::logger {
             /** Atomic log action. */
             virtual void call(const log::Info& log_info) override
             {
+                // Get the properties list at the current cursor.
                 Properties& att = current_properties();
+                // Save the corresponding values.
                 for(const auto& rwp : this->_properties) {
-                    att[rwp.get().name()] = rwp.get()(log_info);
+                    att[rwp.first] = rwp.second.get()(log_info);
                 }
+                // Jump to next cursor.
                 _current.evaluation++;
             }
     };

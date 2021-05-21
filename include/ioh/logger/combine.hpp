@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "api.hpp"
+#include "loggers.hpp"
 
 
 namespace ioh::logger
@@ -13,7 +13,7 @@ namespace ioh::logger
      * separately.
      *
      * Example:
-     * @code
+     * @code FIXME update this example
             BBOB_suite bench({1},{2},{3});
             using Input = BBOB_suite::Input_type;
     
@@ -31,17 +31,21 @@ namespace ioh::logger
      *
      * @note: Loggers are guaranteed to be called in the order they are added.
      */
-    class LoggerCombine final : public Base
+    class Combine final : public Logger
     {
+    protected:
+        //! Store the managed loggers.
+        std::vector<std::reference_wrapper<Logger>> _loggers;
+
     public:
 
         /** Takes at least one mandatory logger,
          * because an empty instance would be illogical.
          */
-        explicit LoggerCombine(Base &logger) :
-            loggers_(1, &logger)
-        {
-        }
+        explicit Combine(Logger& logger)
+         : Logger()
+         , _loggers(1, logger)
+        { }
 
         /** Handle several loggers at once, but you have to pass pointers.
          *
@@ -50,48 +54,51 @@ namespace ioh::logger
             LoggerCombine loggers({log_ecdf, log_csv});
          * @encode
          */
-        explicit LoggerCombine(std::vector<Base*> loggers) :
-            loggers_(std::move(loggers))
+        explicit Combine(std::vector<std::reference_wrapper<Logger>> loggers)
+        : Logger()
+        , _loggers(std::move(loggers))
         {
-            assert(!loggers_.empty());
+            assert(not _loggers.empty());
         }
 
         /** Add another logger to the list.
          */
-        void add(Base &logger)
+        void append(Logger& logger)
         {
-            loggers_.push_back(&logger);
+            _loggers.push_back(logger);
         }
 
-        /** Base interface @{ */
-        void track_suite(const std::string &suite_name) override
+        /** Logger interface @{ */
+        void attach_suite(const std::string& suite_name) override
         {
-            for (auto &l : loggers_)
-                l->track_suite(suite_name);
+            for(auto& logger : _loggers) {
+                logger.get().attach_suite(suite_name);
+            }
         }
 
-        void track_problem(const problem::MetaData &problem) override
+        void attach_problem(const problem::MetaData& problem) override
         {
-            for (auto &l : loggers_)
-                l->track_problem(problem);
+            Logger::attach_problem(problem);
+            for(auto& logger : _loggers) {
+                logger.get().attach_problem(problem);
+            }
         }
 
-        void log(const LogInfo &logger_info) override
+        void call(const log::Info &logger_info) override
         {
-            for (auto &l : loggers_)
-                l->log(logger_info);
+            for(auto &logger : _loggers) {
+                logger.get().log(logger_info);
+            }
         }
 
-        void flush() override
+        void reset() override
         {
-            for (auto& l : loggers_)
-                l->flush();
+            Logger::reset();
+            for(auto& logger : _loggers) {
+                logger.get().reset();
+            }
         }
 
         /** @} */
-
-    protected:
-        //! Store the managed loggers.
-        std::vector<Base *> loggers_;
     };
 }

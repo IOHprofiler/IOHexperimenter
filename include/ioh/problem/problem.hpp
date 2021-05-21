@@ -1,8 +1,7 @@
 #pragma once
 
 #include "utils.hpp"
-//#include "ioh/logger/base.hpp"
-#include "ioh/logger/api.hpp"
+#include "ioh/logger.hpp"
 
 namespace ioh
 {

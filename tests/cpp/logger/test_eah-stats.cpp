@@ -1,7 +1,7 @@
 #include "ioh.hpp"
 #include <gtest/gtest.h>
 
-TEST(eaf, stats)
+TEST(eah, stats)
 {
     using namespace ioh::logger;
 
@@ -14,13 +14,13 @@ TEST(eaf, stats)
     size_t pb_start = 2;
     size_t pb_end = 10;
     ioh::suite::BBOB suite({ 1, 2 }, { 1, 2 }, { 2, 10 });
-    EAF eaf(0, 6e7, buckets, 0, sample_size, buckets);
-    suite.attach_logger(eaf);
+    EAH eah(0, 6e7, buckets, 0, sample_size, buckets);
+    suite.attach_logger(eah);
 
     for (const auto& pb : suite) {
         for (size_t run = 0; run < runs; ++run) {
             // FIXME how to indicate different runs to the logger?
-            // eaf.update_run_info(pb->meta_data());
+            // eah.update_run_info(pb->meta_data());
             for (auto s = 0; s < sample_size; ++s) {
                 (*pb)(ioh::common::Random::uniform(pb->meta_data().n_variables));
             } // s
@@ -28,11 +28,11 @@ TEST(eaf, stats)
         } // run
     } // pb
 
-    EXPECT_GT(eaf::stat::sum(eaf), 0);
+    EXPECT_GT(eah::stat::sum(eah), 0);
 
     // Histogram
-    eaf::stat::Histogram histo;
-    eaf::stat::Histogram::Mat m = histo(eaf);
+    eah::stat::Histogram histo;
+    eah::stat::Histogram::Mat m = histo(eah);
     EXPECT_EQ(histo.nb_attainments(), runs * (pb_end - pb_start));
     
     // buckets * buckets matrix
@@ -41,10 +41,10 @@ TEST(eaf, stats)
         EXPECT_EQ(row.size(), buckets);
     }
 
-    EXPECT_EQ(eaf::stat::histogram(eaf), m);
+    EXPECT_EQ(eah::stat::histogram(eah), m);
     
     // Distribution
-    eaf::stat::Distribution::Mat d = eaf::stat::distribution(eaf);
+    eah::stat::Distribution::Mat d = eah::stat::distribution(eah);
     
     // buckets * buckets matrix
     EXPECT_EQ(d.size(), buckets);
@@ -53,6 +53,6 @@ TEST(eaf, stats)
     }
 
     // Volume under curve
-    EXPECT_GE(eaf::stat::under_curve::volume(eaf), 0);
-    EXPECT_LE(eaf::stat::under_curve::volume(eaf), 1);
+    EXPECT_GE(eah::stat::under_curve::volume(eah), 0);
+    EXPECT_LE(eah::stat::under_curve::volume(eah), 1);
 }

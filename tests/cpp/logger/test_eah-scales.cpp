@@ -5,12 +5,12 @@
 using namespace ioh;
 using namespace ioh::logger;
 
-TEST(eaf, ranges)
+TEST(eah, ranges)
 {
     common::log::log_level = common::log::Level::Warning;
 
     // Linear range
-    eaf::LinearScale<double> linr(0,100, 10);
+    eah::LinearScale<double> linr(0,100, 10);
 
     EXPECT_EQ(linr.index(  0),0);
     EXPECT_EQ(linr.index(  9),0);
@@ -18,15 +18,15 @@ TEST(eaf, ranges)
     EXPECT_EQ(linr.index( 99),9);
     EXPECT_EQ(linr.index(100),9);
 
-    eaf::LinearScale<double>::BoundsType p_0_10 = {0,10};
+    eah::LinearScale<double>::BoundsType p_0_10 = {0,10};
     EXPECT_EQ(linr.bounds(0),p_0_10);
     
-    eaf::LinearScale<double>::BoundsType p_90_100 = {90,100};
+    eah::LinearScale<double>::BoundsType p_90_100 = {90,100};
     EXPECT_EQ(linr.bounds(9),p_90_100);
 
 
     // Default log range
-    eaf::Log2Scale<double> logr_small(0,8,5);
+    eah::Log2Scale<double> logr_small(0,8,5);
 
     EXPECT_EQ(logr_small.index(0),0);
     EXPECT_EQ(logr_small.index(1),1);
@@ -39,13 +39,13 @@ TEST(eaf, ranges)
     // LOG BASE 2
 
     // Tiny log range
-    eaf::Log2Scale<double> log2r_tiny(0,100,10);
+    eah::Log2Scale<double> log2r_tiny(0,100,10);
 
     EXPECT_EQ(log2r_tiny.index(  0),0);
     EXPECT_EQ(log2r_tiny.index(100),9);
     
     // Log range
-    eaf::Log2Scale<double> log2r_large(0,6e7,10);
+    eah::Log2Scale<double> log2r_large(0,6e7,10);
 
     EXPECT_EQ(log2r_large.index(  0),0);
     EXPECT_EQ(log2r_large.index(6e7),9);
@@ -62,13 +62,13 @@ TEST(eaf, ranges)
     // LOG BASE 10
 
     // Tiny log range
-    eaf::Log10Scale<double> log10r_tiny(0,100,10);
+    eah::Log10Scale<double> log10r_tiny(0,100,10);
 
     EXPECT_EQ(log10r_tiny.index(  0),0);
     EXPECT_EQ(log10r_tiny.index(100),9);
     
     // Log range
-    eaf::Log10Scale<double> log10r_large(0,6e7,10);
+    eah::Log10Scale<double> log10r_large(0,6e7,10);
 
     EXPECT_EQ(log10r_large.index(  0),0);
     EXPECT_EQ(log10r_large.index(6e7),9);
@@ -82,12 +82,12 @@ TEST(eaf, ranges)
     // EXPECT_DOUBLE_EQ(log10r_large.bounds(9).second, 6e7);
 }
 
-TEST(eaf, ranges_death)
+TEST(eah, ranges_death)
 {
     common::log::log_level = common::log::Level::Warning;
 
     // Linear
-    eaf::LinearScale<double> linr(0,100, 10);
+    eah::LinearScale<double> linr(0,100, 10);
 
     EXPECT_DEBUG_DEATH(linr.index( -1) , "");
     EXPECT_DEBUG_DEATH(linr.index(100.01) , "");
@@ -95,7 +95,7 @@ TEST(eaf, ranges_death)
     EXPECT_DEBUG_DEATH(linr.bounds(10) , "");
 
     // Log
-    eaf::Log10Scale<double> logr_small(0,100, 10);
+    eah::Log10Scale<double> logr_small(0,100, 10);
 
     EXPECT_DEBUG_DEATH(logr_small.index( -1), "");
     EXPECT_DEBUG_DEATH(logr_small.index(100.01) , "");
