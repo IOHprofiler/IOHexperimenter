@@ -114,9 +114,10 @@ namespace ioh {
          * 
          * @ingroup Triggers
          */
-        Any any( std::vector<std::reference_wrapper<logger::Trigger>> triggers )
+        Any& any( std::vector<std::reference_wrapper<logger::Trigger>> triggers )
         {
-            return Any(triggers);
+            auto t = std::make_shared<Any>(triggers);
+            return *t;
         }
         
         /** Combine several triggers in a single one with a logical "and".
@@ -147,9 +148,10 @@ namespace ioh {
          *
          * @ingroup Triggers
          */
-        All all( std::vector<std::reference_wrapper<logger::Trigger>> triggers )
+        All& all( std::vector<std::reference_wrapper<logger::Trigger>> triggers )
         {
-            return Any(triggers);
+            auto t = std::make_shared<All>(triggers);
+            return *t;
         }
 
         /** A trigger that always returns `true`.
@@ -175,7 +177,7 @@ namespace ioh {
         class OnImprovement : public logger::Trigger {
         protected:
             double _best;
-            const common::OptimizationType _type;
+            common::OptimizationType _type;
 
             // State management flag, avoids being dependent on a problem at construction, 
             // to the expense of a test at each call.
@@ -183,7 +185,7 @@ namespace ioh {
 
         public:
             OnImprovement()
-            : _has_type(false);
+            : _has_type(false)
             {
                 reset();
             }
@@ -203,6 +205,7 @@ namespace ioh {
                 // because all fields of log::Info are updated before the trigger see them.
                 // That would force to test for equality to trigger on improvement,
                 // and we only want to trigger on strict inequality.
+                assert(_has_type);
                 if(common::compare_objectives(log_info.transformed_y, _best, _type)) {
                     _best = log_info.transformed_y;
                     return true;

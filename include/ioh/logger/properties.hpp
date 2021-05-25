@@ -182,9 +182,10 @@ namespace ioh {
          * @ingroup Properties
          */
          template<class T>
-         Reference<T> reference(const std::string name, const T& variable)
+         Reference<T>& reference(const std::string name, const T& variable)
          {
-            return Reference<T>(name,variable);
+            auto p = std::make_shared<Reference<T>>(name,variable);
+            return *p;
          }
 
         /** A property that access a variable through a pointer.
@@ -216,9 +217,10 @@ namespace ioh {
          * @ingroup Properties
          */
          template<class T>
-         Pointer<T> address(const std::string name, const T* const variable)
+         Pointer<T>& address(const std::string name, const T* const variable)
          {
-            return Pointer<T>(name,variable);
+            auto p = std::make_shared<Pointer<T>>(name,variable);
+            return *p;
          }
 
         /** A property that access the variable of a variable through a referente to a pointer.
@@ -266,9 +268,10 @@ namespace ioh {
          * @ingroup Properties
          */
          template<class T>
-         PointerReference<T> pointer(const std::string name, const T* const & variable)
+         PointerReference<T>& pointer(const std::string name, const T* const & variable)
          {
-            return PointerReference<T>(name,variable);
+            auto p = std::make_shared<PointerReference<T>>(name,variable);
+            return *p;
          }
 
     } // watch
