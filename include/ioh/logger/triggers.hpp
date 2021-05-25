@@ -17,7 +17,9 @@ namespace ioh {
          * 
          * Examples:
          * @code
-            ioh::logger::Store store_all_bests({ioh::trigger::always},{ioh::watch::transformed_y_best});
+            // Fire log events only when the best transformed objective function value found so far has improved.
+            ioh::logger::Store store_all_bests({ioh::trigger::on_improvement},{ioh::watch::transformed_y_best});
+
          * @endcode
          * 
          * @ingroup Loggers
@@ -174,15 +176,29 @@ namespace ioh {
         protected:
             double _best;
             const common::OptimizationType _type;
+
+            // State management flag, avoids being dependent on a problem at construction, 
+            // to the expense of a test at each call.
+            bool _has_type;
+
         public:
-            OnImprovement(const problem::MetaData& pb_info) // FIXME there should be a way to get rid of the instantiation dependency.
-            : _type(pb_info.optimization_type)
+            OnImprovement()
+            : _has_type(false);
             {
                 reset();
             }
             
             bool operator()(const log::Info& log_info, const problem::MetaData& pb_info) override
             {
+                if(not _has_type) {
+                    _type = pb_info.optimization_type;
+                    if(_type == common::OptimizationType::Minimization) {
+                        _best =  std::numeric_limits<double>::infinity();
+                    } else {
+                        _best = -std::numeric_limits<double>::infinity();
+                    }
+                    _has_type = true;
+                }
                 // We do not use log::Info::transformed_y_best below,
                 // because all fields of log::Info are updated before the trigger see them.
                 // That would force to test for equality to trigger on improvement,
@@ -196,13 +212,14 @@ namespace ioh {
 
             void reset() override
             {
-                if(_type == common::OptimizationType::Minimization) {
-                    _best =  std::numeric_limits<double>::infinity();
-                } else {
-                    _best = -std::numeric_limits<double>::infinity();
-                }
+                _has_type = false;
             }
         };
+        /** Log only if the transformed best objective function value found so far has strictly improved.
+         * 
+         * @ingroup Triggers
+         */
+         OnImprovement on_improvement;
 
 
         // TODO HERE: AtInterval AtTimePoints PerTimeRange
