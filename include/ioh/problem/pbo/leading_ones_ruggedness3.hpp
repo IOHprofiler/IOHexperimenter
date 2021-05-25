@@ -13,7 +13,7 @@ namespace ioh
             protected:
                 std::vector<double> info_;
 
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0;
                     for (auto i = 0; i != meta_data_.n_variables; ++i)
@@ -21,7 +21,7 @@ namespace ioh
                             result = i + 1;
                         else
                             break;
-                    return {info_[static_cast<int>(result + 0.5)]};
+                    return info_[static_cast<int>(result + 0.5)];
                 }
 
             public:

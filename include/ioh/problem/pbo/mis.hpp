@@ -25,7 +25,7 @@ namespace ioh
                 }
 
 
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
                     auto num_of_ones = 0;
                     auto sum_edges_in_the_set = 0;
@@ -47,7 +47,7 @@ namespace ioh
                             if (is_edge(ones_array[i] + 1, ones_array[j] + 1, number_of_variables_even) == 1)
                                 sum_edges_in_the_set += 1;
 
-                    return {static_cast<double>(num_of_ones - number_of_variables_even * sum_edges_in_the_set)};
+                    return static_cast<double>(num_of_ones - number_of_variables_even * sum_edges_in_the_set);
                 }
 
             public:
@@ -62,7 +62,7 @@ namespace ioh
                     PBOProblem(22, instance, n_variables, "MIS"),
                     number_of_variables_even_(n_variables % 2 != 0 ? n_variables - 1 : n_variables)
                 {
-                    objective_.y.at(0) = number_of_variables_even_ % 4 == 0
+                    objective_.y = number_of_variables_even_ % 4 == 0
                         ? (number_of_variables_even_ / 2)
                         : (number_of_variables_even_ / 2 + 1);
                 }

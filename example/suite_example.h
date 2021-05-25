@@ -34,16 +34,13 @@ inline void suite_example()
             std::cout << problem->meta_data() << std::endl;
 
             /// Random search on the problem with the given budget 100.
-            std::vector<double> x(problem->meta_data().n_variables);
             auto best_y = std::numeric_limits<double>::infinity();
             for (auto budget = 100; budget > 0; budget--)
             {
-                ioh::common::Random::uniform(x.size(), budget * runs, x);
-                for (auto &xi : x)
-                    xi = xi * 10 - 5;
-
                 /// To evalute the fitness of 'x' for the problem by using '(*problem)(x)' function.
-                best_y = std::min((*problem)(x).at(0), best_y);
+                best_y = std::min(
+                    (*problem)(ioh::common::random::uniform(problem->meta_data().n_variables, budget * runs, -5, 5)),
+                    best_y);
             }
                 
             /// To reset evaluation information as default before the next independent run.

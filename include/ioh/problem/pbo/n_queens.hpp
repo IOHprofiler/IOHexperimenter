@@ -11,7 +11,7 @@ namespace ioh
             class NQueens final: public PBOProblem<NQueens>
             {
             protected:
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
                     int j, i;
                     const auto n_queens = static_cast<int>(sqrt(static_cast<double>(meta_data_.n_variables)) + 0.5);
@@ -86,7 +86,7 @@ namespace ioh
                     }
                     const auto result = static_cast<double>(number_of_queens_on_board - c * rows_penalty -
                                                             c * columns_penalty - c * k_penalty - c * l_penalty);
-                    return {static_cast<double>(result)};
+                    return static_cast<double>(result);
                 }
 
             public:
