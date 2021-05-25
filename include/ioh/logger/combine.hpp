@@ -30,6 +30,8 @@ namespace ioh::logger
      * @endcode
      *
      * @note: Loggers are guaranteed to be called in the order they are added.
+     *
+     * @ingroup Loggers
      */
     class Combine final : public Logger
     {

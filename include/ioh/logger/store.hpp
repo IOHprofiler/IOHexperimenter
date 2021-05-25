@@ -7,7 +7,7 @@
 
 namespace ioh::logger {
     
-    /** A Logger/Watcher that stores all the possible information in-memory, in nested maps.
+    /** A logger that stores all the possible information in-memory, in nested maps.
      * 
      * The order of the entry keys is:
      *  suite_name > problem_id > n_variables > instance > run_id > evaluation > property_name > property_value
@@ -34,9 +34,15 @@ namespace ioh::logger {
      * @endcode
      * 
      * @note If track_suite has never been called, the default suite name is Store::default_suite ("None");
+     *
+     * @ingroup Loggers
      */
     class Store : public Watcher {
         public:
+            /** @name Data structure types
+             * Convenience naming for the underlying nested data structure.
+             *
+             * @{ */
             using Value      = std::optional<double>;
             using Properties = std::map<std::string,Value     >; // name        => value
             using Run        = std::map<size_t     ,Properties>; // evaluations => properties
@@ -45,11 +51,15 @@ namespace ioh::logger {
             using Dimension  = std::map<int        ,Instances >; // nb of dim   => instances
             using Problems   = std::map<int        ,Dimension >; // pb id       => dimension
             using Suite      = std::map<std::string,Problems  >; // suite name  => problems
+            /** @} */
 
+            /** When attached directly to a Problem (out of a Suite), use the following key for the Suite map. */
             inline static const std::string default_suite = "None";
 
+            /** Direct accessor to the data structure. */
             Suite data() {return _data;}
-            
+
+            /** A set of keys leading to a set of property values within the data structure. */
             struct Cursor {
                 std::string suite;
                 int pb;
@@ -72,25 +82,32 @@ namespace ioh::logger {
                 { }
             };
 
+            /** Access a map of property values with a Cursor. */
             Properties data(const Cursor current)
             {
                 return _data.at(current.suite).at(current.pb).at(current.dim).at(current.instance).at(current.run).at(current.evaluation);
             }
 
+            /** Access a property value with a Cursor and the property name. */
             Value at(const Cursor current, const std::string property_name)
             {
                 return data(current).at(property_name);
             }
 
+            /** Access a property value with a Cursor and the Property itself. */
             Value at(const Cursor current, const Property& property)
             {
                 return data(current).at(property.name());
             }
             
         protected:
+            /** The main data structure in which log events are stored. */
             Suite _data;
+
+            /** The current Cursor. */
             Cursor _current;
 
+            /** Accessor to the current properties map. */
             Properties& current_properties()
             {
                 return _data[_current.suite][_current.pb][_current.dim][_current.instance][_current.run][_current.evaluation];
@@ -146,7 +163,10 @@ namespace ioh::logger {
             }
     };
 
-    /** Default logger is the in-memory one. */
+    /** Default logger is the in-memory one.
+     *
+     * @ingroup Logging
+     */
     using Default = Store;
 
 } // ioh::logger

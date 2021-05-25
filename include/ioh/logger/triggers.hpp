@@ -5,8 +5,28 @@
 
 namespace ioh {
     namespace logger {
+
+        /** @defgroup Triggering Triggering
+         * Everything related to the triggering API.
+         *
+         * @ingroup API
+         */
+
+        /** @defgroup Triggers Triggers
+         * Events determining when to do a log event.
+         * 
+         * Examples:
+         * @code
+            ioh::logger::Store store_all_bests({ioh::trigger::always},{ioh::watch::transformed_y_best});
+         * @endcode
+         * 
+         * @ingroup Loggers
+         */
         
-        /** Triggering a log event. */
+        /** Interface for classes triggering a log event.
+         *
+         * @ingroup Triggering
+         */
         struct Trigger {
 
             /** @returns true if a log event is to be triggered given the passed state. */
@@ -23,14 +43,17 @@ namespace ioh {
         
     } // logger
 
+    /** Everything related to triggering a logger event. */
     namespace trigger {
 
-        /** oInterface to combine several triggers in a single one.
+        /** Interface to combine several triggers in a single one.
          * 
          * By default, the Logger class manage combine several triggers with a logical "or" (see trigger::Any),
          * but you may want to do differently, in which case you can inherit
          * from this class to enjoy the triggers list management,
          * and just do what you want with `operator()`.
+         * 
+         * @ingroup Triggering
          */
         class Set : public logger::Trigger {
             protected:
@@ -61,6 +84,10 @@ namespace ioh {
         };
 
         /** Combine several triggers in a single one with a logical "or".
+         * 
+         * @note This is use as the default combination when you pass several triggers to a logger.
+         * 
+         * @ingroup Triggering
          */
         struct Any: public Set {
 
@@ -81,8 +108,18 @@ namespace ioh {
                 return false;
             }
         };
-
+        /** Do log if ANY of the given triggers is fired.
+         * 
+         * @ingroup Triggers
+         */
+        Any any( std::vector<std::reference_wrapper<logger::Trigger>> triggers )
+        {
+            return Any(triggers);
+        }
+        
         /** Combine several triggers in a single one with a logical "and".
+         * 
+         * @ingroup Triggering
          */
         struct All: public Set {
 
@@ -104,20 +141,41 @@ namespace ioh {
             }
 
         };
+        /** Do log if ALL the given triggers are fired.
+         *
+         * @ingroup Triggers
+         */
+        All all( std::vector<std::reference_wrapper<logger::Trigger>> triggers )
+        {
+            return Any(triggers);
+        }
 
+        /** A trigger that always returns `true`.
+         * 
+         * @ingroup Triggering
+         */
         struct Always : public logger::Trigger {
             bool operator()(const log::Info& log_info, const problem::MetaData& pb_info) override
             {
                 return true;
             }
-        } always;
+        };
+        /** Log at every call of the objective function.
+         *
+         * @ingroup Triggers
+         */
+        Always always;
 
+        /** A trigger that react to a strict improvement of the best transformed value.
+         * 
+         * @ingroup Triggering
+         */
         class OnImprovement : public logger::Trigger {
         protected:
             double _best;
             const common::OptimizationType _type;
         public:
-            OnImprovement(const problem::MetaData& pb_info)
+            OnImprovement(const problem::MetaData& pb_info) // FIXME there should be a way to get rid of the instantiation dependency.
             : _type(pb_info.optimization_type)
             {
                 reset();
@@ -145,6 +203,7 @@ namespace ioh {
                 }
             }
         };
+
 
         // TODO HERE: AtInterval AtTimePoints PerTimeRange
     } // trigger

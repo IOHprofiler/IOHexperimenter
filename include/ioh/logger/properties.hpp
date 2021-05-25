@@ -7,11 +7,47 @@
 namespace ioh {
     namespace logger {
 
+        /** @defgroup Properties Properties
+         * Accessors to values that are to be logged.
+         * 
+         * You can directly pass the "variables" to a logger to make it track their values.
+         * 
+         * Some properties needs to be instantiated with parameters before being passed to a logger,
+         * you can use the related free functions to do so easily.
+         * 
+         * @note Only some loggers are able to track user-defined properties
+         *       (those inheriting from the Watcher interface).
+         * 
+         * @note The loggers only watch variables that may be casted to `double`.
+         *       The functions are templated so that you don't need to do the casting by yourself,
+         *       but it is nonetheless mandatory.
+         * 
+         * For example:
+         * @code
+                double my_algo_parameter = 42;
+
+                // Track the number of evaluations and the best value of the objective function
+                // (at each calls with the Store logger):
+                ioh::logger::Store my_store( // Log everything in-memory.
+                    {ioh::trigger::always},                                     // Trigger the logger at each call.
+                    {                                                           // Do log:
+                        ioh::watch::evaluations,                                // - evaluations,
+                        ioh::watch::transformed_y_best,                         // - best values,
+                        ioh::watch::reference("my_parameter",my_algo_parameter) // - any change to my extern variable.
+                    }
+                );
+         * @endcode
+         * 
+         * @ingroup Loggers
+         */
+
         /** Interface for callbacks toward variable to be logged.
          * 
          * A class that inherit this interface
          * should be able to indicate if the managed variable
          * is not available at the time of the current logger's call.
+         * 
+         * @ingroup Logging
          */
         class Property{
         protected:
@@ -47,44 +83,83 @@ namespace ioh {
 
     } // logger
 
+    /** Properties that can be watched by loggers. */
     namespace watch {
 
+        /** A property that access the number of evaluations so far.
+         * 
+         * @ingroup Logging
+         */
         struct Evaluations : public logger::Property {
-            Evaluations() : logger::Property("evaluations") {}
+            Evaluations(const std::string name = "evaluations") : logger::Property(name) {}
             std::optional<double> operator()(const log::Info& log_info) const
             {
                 // This should always be accessible, so the optional will always contain the variable.
                 return std::make_optional(static_cast<double>(log_info.evaluations));
             }
-        } evaluations;
-
-        struct YBest: public logger::Property {
-            YBest() : logger::Property("raw_y_best") {}
+        };
+        /** Number of evaluations of the objective function called by the solver.
+         * 
+         * @ingroup Properties
+         */
+        Evaluations evaluations;
+        
+        /** A property that access the best value so far, without transformation.
+         *
+         * @ingroup Logging
+         */
+        struct RawYBest: public logger::Property {
+            RawYBest(const std::string name = "raw_y_best") : logger::Property(name) {}
             std::optional<double> operator()(const log::Info& log_info) const
             {
                 return std::make_optional(log_info.raw_y_best);
             }
-        } raw_y_best;
+        };
+        /** Best objective function value found so far, without transformation.
+         * 
+         * @ingroup Properties
+         */
+         RawYBest raw_y_best;
 
+        /** A property that access the current value so far, with transformation.
+         *
+         * @ingroup Logging
+         */
         struct TransformedY: public logger::Property {
-            TransformedY() : logger::Property("transformed_y") {}
+            TransformedY(const std::string name = "transformed_y") : logger::Property(name) {}
             std::optional<double> operator()(const log::Info& log_info) const
             {
                 return std::make_optional(log_info.transformed_y);
             }
-        } transformed_y;
+        };
+        /** Objective function value for this call, with transformation.
+         * 
+         * @ingroup Properties
+         */
+        TransformedY transformed_y;
 
+        /** A property that access the best value found so far, with transformation.
+         *
+         * @ingroup Logging
+         */
         struct TransformedYBest: public logger::Property {
-            TransformedYBest() : logger::Property("transformed_y_best") {}
+            TransformedYBest(const std::string name = "transformed_y_best") : logger::Property(name) {}
             std::optional<double> operator()(const log::Info& log_info) const
             {
                 return std::make_optional(log_info.transformed_y_best);
             }
-        } transformed_y_best;
+        };
+        /** Best objective function value found so far, with transformation. 
+         * 
+         * @ingroup Properties
+         */
+        TransformedYBest transformed_y_best;
 
         /** A property that access a referenced variable.
          *
          * @note The variable must be castable to a double.
+         * 
+         * @ingroup Logging
          */
         template<class T>
         class Reference: public logger::Property {
@@ -102,10 +177,21 @@ namespace ioh {
                     return std::make_optional(static_cast<double>(_variable));
                 }
         };
+        /** The value of an extern variable (captured by reference).
+         *
+         * @ingroup Properties
+         */
+         template<class T>
+         Reference<T> reference(const std::string name, const T& variable)
+         {
+            return Reference<T>(name,variable);
+         }
 
         /** A property that access a variable through a pointer.
          *
          * @note The pointed variable must be castable to a double.
+         *
+         * @ingroup Logging
          */
         template<class T>
         class Pointer: public logger::Property {
@@ -125,6 +211,15 @@ namespace ioh {
                     return std::make_optional(static_cast<double>(*_variable));
                 }
         };
+        /** The value of an extern variable (captured by address).
+         *
+         * @ingroup Properties
+         */
+         template<class T>
+         Pointer<T> address(const std::string name, const T* const variable)
+         {
+            return Pointer<T>(name,variable);
+         }
 
         /** A property that access the variable of a variable through a referente to a pointer.
          *
@@ -133,6 +228,8 @@ namespace ioh {
          * @warning It is your responsability to ensure that the referenced pointer is a nullptr if the variable is out of the logged scope.
          * 
          * @note The pointed variable must be castable to a double.
+         *
+         * @ingroup Logging
          */
         template<class T>
         class PointerReference: public logger::Property {
@@ -154,6 +251,25 @@ namespace ioh {
                     }
                 }
         };
+        /** The value of an extern variable, which may not exists.
+         * 
+         * Useful for variables that doesn't exists at some point during the solver run.
+         * In that case, if the referenced pointer is a `std::nullptr`,
+         * the value will be indicated as invalid in the logs.
+         *
+         * To do so, this captures a reference to a pointer toward your variable.
+         * If you update the value of the pointed variables, it will change in the logs.
+         * If you need to invalidate the variable, you can set the referenced pointer itself to `nullptr`.
+         * 
+         * @warning It is your responsability to ensure that the referenced pointer is a nullptr if the variable is out of the logged scope.
+         * 
+         * @ingroup Properties
+         */
+         template<class T>
+         PointerReference<T> pointer(const std::string name, const T* const & variable)
+         {
+            return PointerReference<T>(name,variable);
+         }
 
     } // watch
 } // ioh

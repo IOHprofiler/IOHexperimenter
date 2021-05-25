@@ -10,6 +10,7 @@
 
 namespace ioh {
 
+
     // This is out of the logger namespace, to avoid name repetition.
     /** Interface of loggers.
      * 
@@ -26,6 +27,8 @@ namespace ioh {
      * 
      * If not, the design enforces your subclass to declare which property it needs.
      * Then, you can easily access them by their name through `_properties.at("name")`.
+     * 
+     * @ingroup Logging
      */
     class Logger {
     protected:
@@ -174,9 +177,12 @@ namespace ioh {
         virtual ~Logger() = default;
     };
 
+    /** Everything related to loggers. */
     namespace logger {
 
-        /** A Logger to which the user can add properties to be watched.
+        /** Interface for a Logger to which the user can add properties to be watched.
+         * 
+         * @ingroup Logging
          */
         class Watcher: public Logger {
         public:
@@ -216,4 +222,5 @@ namespace ioh {
         };
         
     } // logger
+
 }

@@ -5,6 +5,8 @@
 #include "../problem/utils.hpp"
 
 namespace ioh {
+
+    /** Shared structure related to loggers. */
     namespace log {
 
         /** Information about the current log.
@@ -15,6 +17,8 @@ namespace ioh {
          *       which is specific to the currently configured problem _instance_.
          * 
          * @note If there is an improvement, then fields holding "best" values will have the same value than the others.
+         * 
+         * @ingroup Logging
         */
         struct Info
         {

@@ -13,6 +13,18 @@ namespace logger {
     /** Implementation details of the logger::EAH class. */
     namespace eah {
 
+        /** @defgroup EAH Empirical Attainment Histogram
+         * Features related to the EAH logger.
+         * 
+         * @ingroup Loggers
+         */
+
+        /** @defgroup EAH_API EAH API
+         * API related to the EAH logger.
+         * 
+         * @ingroup Logging
+         */
+
         /** Interface for classes that computes indices from ranges.
          *
          * The idea is to input [min,max] and the discretization size
@@ -26,6 +38,8 @@ namespace logger {
          *          So that any value at `max` will be assigned to the `size-1`th bucket.
          *
          * Used in EAH.
+         * 
+         * @ingroup EAH_API
          */
          // Why a closed interval? Because it's more natural for the user to indicates the number of evaluations that way.
         template <class R>
@@ -81,7 +95,9 @@ namespace logger {
             size_t _size;
         };
 
-        /** Linear range. */
+        /** Linear scale.
+         * @ingroup EAH
+         */
         template <class R>
         class LinearScale : public Scale<R> {
         public:
@@ -116,10 +132,12 @@ namespace logger {
             R step() const { return this->length() / this->_size; }
         };
 
-        /** Logarithmic (base 2) range. 
+        /** Logarithmic (base 2) scale. 
          * 
          * @warning This implementation is not very robust to rounding errors
          *          especially if you use the bounds method with large lengths.
+         * 
+         * @ingroup EAH
          */
         template<class R>
         class Log2Scale : public Scale<R> {
@@ -167,10 +185,12 @@ namespace logger {
             }
         };
 
-        /** Logarithmic (base 10) range. 
+        /** Logarithmic (base 10) scale. 
          * 
          * @warning This implementation is not very robust to rounding errors
          *          especially if you use the bounds method with large lengths.
+         * 
+         * @ingroup EAH
          */
         template <class R>
         class Log10Scale : public Scale<R> {
@@ -227,12 +247,19 @@ namespace logger {
          * @note One expect to have a lot of those matrix in a real-life setting,
          * and the more general case is to have objective-function bounded computation times.
          * It is thus chosen to reduce the memory footprint, using the infamous bool vector specialization
-         * instead of the (supposedly) faster vector of char. FIXME maybe double check speed loss.
+         * instead of the faster vector of char.
+         * During our tests, using char was 1.02 times faster, while consuming 1.4 more memory.
+         * 
+         * @ingroup EAH_API
          */
         using AttainmentMatrix = std::vector< // error targets
             std::vector< // function evaluations
                 bool>>; // occurence count
 
+        /** Pretty print an AttainmentMatrix.
+         *
+         * @ingroup EAH
+         */
         inline std::ostream& operator<<(std::ostream& out,
             const AttainmentMatrix& mat)
         {
@@ -256,6 +283,8 @@ namespace logger {
          * third  dimension is the instance id.
          * fourth dimension is the run id.
          * Every item is an AttainmentMatrix.
+         * 
+         * @ingroup EAH_API
          */
         using AttainmentSuite = std::map<size_t, // problem
             std::map<size_t, // dim
@@ -265,7 +294,7 @@ namespace logger {
 
     } // eah
 
-    /** An observer which stores bi-dimensional error/evaluations discretized attainment matrices.
+    /** A logger that stores bi-dimensional error/evaluations discretized attainment matrices.
      *
      * A matrix is stored for each triplet (problem,dimension,instance),
      * everything being identified by its index.
@@ -297,6 +326,9 @@ namespace logger {
      *
      * @note If you use as many buckets as there is evaluations of the objective function,
      *       you will essentially computes as many ERT-EAH as there is targets.
+     * 
+     * @ingroup Loggers
+     * @ingroup EAH
      */
     class EAH : public Logger {
     protected:
@@ -626,6 +658,8 @@ namespace logger {
          * over the AttainmentSuite computed by an eah::EAH logger.
          *
          * The template indicates the return type of the functor interface.
+         * 
+         * @ingroup EAH_API
          */
         template <class T>
         class Stat {
@@ -643,6 +677,8 @@ namespace logger {
              * 
              * Most probably called from a function defaulting the basic operation, like stat::sum,
              * or used in a function which compute something else.
+             * 
+             * @ingroup EAH_API
              */
             template<class T, class BinaryOperation>
             T accumulate(const EAH& logger, const T init, const BinaryOperation& op)
@@ -680,6 +716,8 @@ namespace logger {
                     using namespace ioh::logger;
                     size_t s = eah::stat::sum(logger);
              * @endcode
+             *
+             * @ingroup EAH
              */
             size_t sum(const EAH& logger)
             {
@@ -698,6 +736,8 @@ namespace logger {
                 eah::stat::Histogram::Mat a = h(logger);
                 size_t n = h.nb_attainments();
              * @endcode
+             *
+             * @ingroup EAH
              */
             class Histogram : public Stat<std::vector<std::vector<size_t>>> {
             protected:
@@ -796,6 +836,8 @@ namespace logger {
                     using namespace ioh::logger;
                     eah::stat::Histogram::Mat m = eah::stat::histogram(logger);
              * @endcode
+             *
+             * @ingroup EAH
              */
             Histogram::Mat histogram(const EAH& logger)
             {
@@ -826,6 +868,8 @@ namespace logger {
                     using namespace ioh::logger;
                     eah::stat::Distribution::Mat m = eah::stat::distribution(logger);
              * @endcode
+             *
+             * @ingroup EAH
              */
             std::vector<std::vector<double>> distribution(const EAH& logger)
             {
@@ -864,6 +908,8 @@ namespace logger {
                         // This is the definition of under_curve::volume, for instance:
                         double v = eah::stat::under_curve::accumulate(logger, 0.0, std::plus<double>());
                  * @endcode
+                 *
+                 * @ingroup EAH_API
                  */
                 template<class BinaryOperation>
                 double accumulate(const EAH& logger, double init, BinaryOperation op)
@@ -925,6 +971,8 @@ namespace logger {
          * 
          * @note The y-axis lowver buckets values are printed as vertical numbers.
          *       The x-axis legend show both min and max of buckets.
+         * 
+         * @ingroup EAH
          * 
          * @param data A 2D vector array.
          * @param ranges The pair of Scale used for the computation of data. If given, will add axis legends.
