@@ -14,17 +14,17 @@ namespace ioh
                 std::vector<int> info_;
               
 
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
-                    size_t result = 0;
+                    auto result = 0.0;
                     for (size_t i = 0; i != info_.size(); ++i)
                     {
                         if (x[info_[i]] == 1)
-                            result = i + 1;
+                            result = static_cast<double>(i) + 1.;
                         else
                             break;
                     }
-                    return {static_cast<double>(result)};
+                    return result;
                 }
 
             public:

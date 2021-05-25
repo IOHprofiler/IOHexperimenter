@@ -176,7 +176,7 @@ namespace ioh
          * \param s a string to be stripped
          * \return the string without whitespace
          */
-        static std::string strip(std::string s)
+        inline std::string strip(std::string s)
         {
             if (s.empty())
                 return s;
@@ -186,7 +186,7 @@ namespace ioh
             return s;
         }
 
-        static std::string to_lower(std::string s)
+        inline std::string to_lower(std::string s)
         {
             std::transform(s.begin(), s.end(), s.begin(), tolower);
             return s;
@@ -200,7 +200,7 @@ namespace ioh
          * \param x vector to be checked
          * \return true if x contains a nan value
          */
-        static bool has_nan(const std::vector<double> &x)
+        inline bool has_nan(const std::vector<double> &x)
         {
             for (const auto &e : x)
                 if (std::isnan(e))
@@ -213,7 +213,7 @@ namespace ioh
          * \param x vector to be checked
          * \return true if x contains a nan value
          */
-        static bool all_finite(const std::vector<double> &x)
+        inline bool all_finite(const std::vector<double> &x)
         {
             for (const auto &e : x)
                 if (!std::isfinite(e))
@@ -226,7 +226,7 @@ namespace ioh
         * \param x vector to be checked
         * \return true if x contains a nan value
         */
-        static bool has_inf(const std::vector<double> &x)
+        inline bool has_inf(const std::vector<double> &x)
         {
             for (const auto &e : x)
                 if (std::isinf(e))
@@ -247,7 +247,7 @@ namespace ioh
          * \param max The minimum value of each element
          * \return an integer vector
          */
-        static std::vector<int> get_int_vector_parse_string(
+        inline std::vector<int> get_int_vector_parse_string(
             std::string input, const int min, const int max)
         {
             std::vector<std::string> s;
@@ -335,7 +335,7 @@ namespace ioh
          * \return The string representation of the vector
          */
         template <typename T>
-        static std::string vector_to_string(std::vector<T> v)
+        inline std::string vector_to_string(std::vector<T> v)
         {
             // NOLINT(clang-diagnostic-unused-template)
             std::ostringstream oss;

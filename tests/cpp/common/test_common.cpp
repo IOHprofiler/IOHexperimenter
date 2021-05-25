@@ -33,14 +33,6 @@ TEST(common, typenames)
 }
 
 
-TEST(common, random)
-{
-	using namespace ioh;
-	common::Random r(1);
-	EXPECT_DOUBLE_EQ(r.normal(), -5.8762480600075353);
-	EXPECT_DOUBLE_EQ(r.uniform(), 0.86453751611163321);
-}
-
 
 TEST(common, unique_folder) {
     using namespace ioh::common::file;

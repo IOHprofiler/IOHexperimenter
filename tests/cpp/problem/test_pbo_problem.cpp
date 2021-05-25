@@ -27,7 +27,7 @@ TEST(PBOfitness, dimension16)
         auto f = stod(tmp[3]);
 
         auto problem = problem_factory.create(func_id, ins_id, 16);
-        auto y = (*problem)(x).at(0);
+        auto y = (*problem)(x);
 
         EXPECT_LE(abs(f - y), 0.0001) << "The fitness of function " << func_id << "( ins " << ins_id << " ) is " << f <<
  " ( not " << y << ").";
@@ -50,7 +50,7 @@ TEST(PBOfitness, dimension100)
         auto f = stod(tmp[3]);
 
         auto problem = problem_factory.create(func_id, ins_id, 100);
-        auto y = (*problem)(x).at(0);
+        auto y = (*problem)(x);
         EXPECT_LE(abs(f - y), 0.0001) << "The fitness of function " << func_id << "( ins " << ins_id << " ) is " << f <<
  " ( not " << y << ").";
     }

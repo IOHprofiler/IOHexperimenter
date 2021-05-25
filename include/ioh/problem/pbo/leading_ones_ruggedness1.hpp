@@ -12,7 +12,7 @@ namespace ioh
             {
 
             protected:
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0;
                     for (auto i = 0; i != meta_data_.n_variables; ++i)
@@ -20,7 +20,7 @@ namespace ioh
                             result = i + 1;
                         else
                             break;
-                    return {utils::ruggedness1(result, meta_data_.n_variables)};
+                    return utils::ruggedness1(result, meta_data_.n_variables);
                 }
 
             public:

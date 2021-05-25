@@ -11,7 +11,7 @@ namespace ioh::problem::bbob
     protected:
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            transformation::coco::transform_vars_affine_evaluate_function(x,
+            transformation::variables::affine(x,
                 transformation_state_.second_transformation_matrix, transformation_state_.transformation_base);
             return x;
         }

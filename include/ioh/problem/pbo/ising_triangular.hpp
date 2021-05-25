@@ -12,7 +12,7 @@ namespace ioh
             protected:
                 static int modulo_ising_triangular(const int x, const int n) { return (x % n + n) % n; }
 
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
                     int neighbors[3];
@@ -34,7 +34,7 @@ namespace ioh
                             }
                         }
                     }
-                    return { static_cast<double>(result) };
+                    return static_cast<double>(result);
                 }
 
             public:
