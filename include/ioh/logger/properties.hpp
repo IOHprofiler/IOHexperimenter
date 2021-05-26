@@ -12,9 +12,6 @@ namespace ioh {
          * 
          * You can directly pass the "variables" to a logger to make it track their values.
          * 
-         * Some properties needs to be instantiated with parameters before being passed to a logger,
-         * you can use the related free functions to do so easily.
-         * 
          * @note Only some loggers are able to track user-defined properties
          *       (those inheriting from the Watcher interface).
          * 
@@ -37,6 +34,18 @@ namespace ioh {
                     }
                 );
          * @endcode
+         * 
+         * Some properties need to be instantiated with parameters before being passed to a logger,
+         * you can use the related free functions (lower-case names) to do so on the heap.
+         * 
+         * @warning Those free functions do allocates on the heap, so you're responsible of freeing memory after them if necessary.
+         *
+         * For example:
+             @code
+                auto& p = watch::reference("my", some_variable);
+                // [Use p...]
+                delete &p;
+             @endocde
          * 
          * @ingroup Loggers
          */
@@ -184,7 +193,7 @@ namespace ioh {
          template<class T>
          Reference<T>& reference(const std::string name, const T& variable)
          {
-            auto p = std::make_shared<Reference<T>>(name,variable);
+            auto p = new Reference<T>(name,variable);
             return *p;
          }
 
@@ -219,7 +228,7 @@ namespace ioh {
          template<class T>
          Pointer<T>& address(const std::string name, const T* const variable)
          {
-            auto p = std::make_shared<Pointer<T>>(name,variable);
+            auto p = new Pointer<T>(name,variable);
             return *p;
          }
 
@@ -270,7 +279,7 @@ namespace ioh {
          template<class T>
          PointerReference<T>& pointer(const std::string name, const T* const & variable)
          {
-            auto p = std::make_shared<PointerReference<T>>(name,variable);
+            auto p = new PointerReference<T>(name,variable);
             return *p;
          }
 

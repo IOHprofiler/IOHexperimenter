@@ -1,5 +1,7 @@
 #pragma once
 
+#include <set>
+
 // #include "api.hpp"
 #include "../problem/utils.hpp"
 
@@ -35,6 +37,23 @@ namespace ioh {
                     ioh::trigger::during({{0,10},{90,100}})       // at the beginning or end.
                 }, {ioh::watch::transformed_y_best});
          * @endcode
+         *
+         * @warning Convenience instances are global variables provided for their ease of use.
+         *          However, some of them manage a state (like trigger::on_improvement).
+         *          Thus, think twice before using them in several loggers!
+         *          In some rare cases, you may want to have two copies, to avoid side effects.
+         *
+         * Some triggers need to be instantiated with parameters before being passed to a logger,
+         * you can use the related free functions (lower-case name) to do so on the heap.
+         * 
+         * @warning Those free functions do allocate on the heap, so you're responsible of freeing memory after them if necessary.
+         *
+         * For example:
+             @code
+                auto t& = trigger:at({1,10,100});
+                // [Use t...]
+                delete &t;
+             @endcode
          * 
          * @ingroup Loggers
          */
@@ -130,7 +149,7 @@ namespace ioh {
          */
         Any& any( std::vector<std::reference_wrapper<logger::Trigger>> triggers )
         {
-            auto t = std::make_shared<Any>(triggers);
+            auto t = new Any(triggers);
             return *t;
         }
         
@@ -164,7 +183,7 @@ namespace ioh {
          */
         All& all( std::vector<std::reference_wrapper<logger::Trigger>> triggers )
         {
-            auto t = std::make_shared<All>(triggers);
+            auto t = new All(triggers);
             return *t;
         }
 
@@ -242,13 +261,13 @@ namespace ioh {
          * 
          * @ingroup Triggering
          */
-        class AtInterval : public logger::Trigger {
+        class Each : public logger::Trigger {
         protected:
             const size_t _interval;
             const size_t _starting_at;
 
         public:
-            AtInterval(const size_t interval, const size_t starting_at = 0)
+            Each(const size_t interval, const size_t starting_at = 0)
             : _interval(interval)
             , _starting_at(starting_at)
             { }
@@ -268,9 +287,9 @@ namespace ioh {
          * 
          * @ingroup Triggers
          */
-        AtInterval& each(const size_t interval, const size_t starting_at = 0)
+        Each& each(const size_t interval, const size_t starting_at = 0)
         {
-           auto t = std::make_shared<AtInterval>(interval, starting_at);
+           auto t = new Each(interval, starting_at);
            return *t;
         }
 
@@ -278,22 +297,20 @@ namespace ioh {
          *
          * @ingroup Triggering
          */
-        class AtTimePoints : public logger::Trigger {
+        class At : public logger::Trigger {
         protected:
             const std::set<size_t> _time_points;
 
             bool matches(const size_t evals)
             {
-                return std::find( std::begin(_time_points), std::end(_time_points), evals)
+                return _time_points.find(evals)
                        != std::end(_time_points);
             }
 
         public:
-            AtTimePoints(const std::set<size_t> time_points)
+            At(const std::set<size_t> time_points)
             : _time_points(time_points)
-            {
-                assert(not time_points.empty());
-            }
+            { }
 
             bool operator()(const log::Info& log_info, const problem::MetaData& pb_info) override
             {
@@ -308,9 +325,9 @@ namespace ioh {
          * 
          * @ingroup Triggers
          */
-        AtTimePoints& at(const std::set<size_t> time_points)
+        At& at(const std::set<size_t> time_points)
         {
-            auto t = std::make_shared<AtTimePoints>(time_points);
+            auto t = new At(time_points);
             return *t;
         }
 
@@ -321,12 +338,13 @@ namespace ioh {
          * 
          * @ingroup Triggering
          */
-        class PerTimeRange : logger::Trigger {
+        class During : logger::Trigger {
         protected:
             const std::set<std::pair<size_t,size_t>> _time_ranges;
 
             bool matches(const size_t evals)
             {
+                // TODO Use binary search to speed-up ranges tests.
                 for(const auto& r : _time_ranges) {
                     assert(r.first <= r.second);
                     if(r.first <= evals and evals <= r.second) {
@@ -337,11 +355,11 @@ namespace ioh {
             }
 
         public:
-            PerTimeRange( std::set<std::pair<size_t,size_t>> time_ranges )
+            During( std::set<std::pair<size_t,size_t>> time_ranges )
             : _time_ranges(time_ranges)
             {
-                assert(not _time_ranges.empty());
 #ifndef NDEBUG
+                assert(not _time_ranges.empty());
                 for(const auto& r : _time_ranges) {
                     assert(r.first <= r.second); // less or equal, because it can be a single time point.
                 }
@@ -365,9 +383,9 @@ namespace ioh {
          * 
          * @ingroup Triggers
          */
-        PerTimeRange& during(const std::set<std::pair<size_t,size_t>> time_ranges)
+        During& during(const std::set<std::pair<size_t,size_t>> time_ranges)
         {
-            auto t = std::make_shared<PerTimeRange>(time_ranges);
+            auto t = new During(time_ranges);
             return *t;
         }
 
