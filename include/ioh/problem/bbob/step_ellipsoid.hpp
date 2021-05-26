@@ -29,11 +29,9 @@ namespace ioh::problem::bbob
             return x0;
         }
 
-        std::vector<double> evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &x) override
         {
-            using namespace transformation::coco;
-            
-            std::vector<double> result{0.0};
+            auto result = 0.0;
             auto penalty = 0.0;
             const auto x0 = compute_projection(x);
 
@@ -47,16 +45,16 @@ namespace ioh::problem::bbob
                 for (auto j = 0; j < meta_data_.n_variables; ++j)
                     projection_sum += transformation_state_.first_rotation[i][j] * transformation_state_.transformation_base[j];
 
-                result[0] += pow(100., transformation_state_.exponents.at(i))
+                result += pow(100., transformation_state_.exponents.at(i))
                     * projection_sum * projection_sum;
             }
 
-            result[0] = 0.1 * (fabs(x0) * 1.0e-4 > result[0] ? fabs(x0) * 1.0e-4 : result[0]);
-            result[0] += penalty + objective_.y.at(0);
+            result = 0.1 * (fabs(x0) * 1.0e-4 > result ? fabs(x0) * 1.0e-4 : result);
+            result += penalty + objective_.y;
             return result;
         }
 
-        std::vector<double> transform_objectives(std::vector<double> y) override
+        double transform_objectives(const double y) override
         {
             return y;
         }

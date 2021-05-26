@@ -23,10 +23,9 @@ namespace ioh
                     {
                         common::log::error("NK_Landscapes, k > n");
                     }
-                    std::vector<double> rand_vec;
                     for (auto i = 0; i != n; ++i)
                     {
-                        common::Random::uniform(static_cast<size_t>(k), static_cast<long>(k * (i + 1)), rand_vec);
+                        const auto rand_vec = common::random::uniform(static_cast<size_t>(k), static_cast<long>(k * (i + 1)));
 
                         std::vector<int> sampled_number;
                         std::vector<int> population;
@@ -55,15 +54,14 @@ namespace ioh
                     }
                     for (auto i = 0; i != n; ++i)
                     {
-                        common::Random::uniform(static_cast<size_t>(pow(2, k + 1)), static_cast<long>(k * (i + 1) * 2),
-                                                rand_vec);
-                        f_.push_back(rand_vec);
+                        f_.emplace_back(common::random::uniform(static_cast<size_t>(pow(2, k + 1)),
+                                                             static_cast<long>(k * (i + 1) * 2)));
                     }
                 }
 
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
-                    double result = 0.0;
+                    auto result = 0.0;
                     for (auto i = 0; i != meta_data_.n_variables; ++i)
                     {
                         size_t index = x[i];
@@ -75,7 +73,7 @@ namespace ioh
                     }
 
                     result = result / static_cast<double>(meta_data_.n_variables);
-                    return {-result};
+                    return -result;
                 }
 
             public:

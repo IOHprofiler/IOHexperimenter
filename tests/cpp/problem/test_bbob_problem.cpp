@@ -26,7 +26,7 @@ TEST(BBOBfitness, dimension5)
         auto x = string_to_vector_double(tmp[2]);
         auto f = stod(tmp[3]);
         auto problem = problem_factory.create(func_id, ins_id, 5);
-        auto y = (*problem)(x).at(0);
+        auto y = (*problem)(x);
         EXPECT_LE(abs(y - f) / f, 1.0/pow(10,6-log(10))) << "The fitness of function " << func_id << "( ins " << ins_id
  << " ) is " << f << " ( not " << y << ").";
     }
@@ -51,7 +51,7 @@ TEST(BBOBfitness, dimension20)
         auto f = stod(tmp[3]);
 
         auto problem = problem_factory.create(func_id, ins_id, 20);
-        auto y = (*problem)(x).at(0);
+        auto y = (*problem)(x);
         EXPECT_LE(abs(y - f) / f, 1.0 / pow(10, 6 - log(10))) << "The fitness of function " << func_id << "( ins " <<
  ins_id << " ) is " << f << " ( not " << y << ").";
     }

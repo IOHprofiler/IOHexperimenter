@@ -11,12 +11,12 @@ namespace ioh
             class OneMaxRuggedness2 final: public PBOProblem<OneMaxRuggedness2>
             {
             protected:
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
                     for (auto i = 0; i != meta_data_.n_variables; ++i)
                         result += x[i];
-                    return {utils::ruggedness2(result, meta_data_.n_variables)};
+                    return utils::ruggedness2(result, meta_data_.n_variables);
                 }
 
             public:

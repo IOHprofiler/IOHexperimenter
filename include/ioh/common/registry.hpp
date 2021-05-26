@@ -5,7 +5,7 @@
 
 namespace ioh::common
 {
-    static int get_next_id(const std::vector<int>& ids)
+    inline int get_next_id(const std::vector<int> &ids)
     {
         return ids.empty() ? 1 : (*std::max_element(ids.begin(), ids.end())) + 1;
     }
@@ -80,9 +80,6 @@ namespace ioh::common
         std::unordered_map<std::string, Creator> name_map;
         std::unordered_map<int, std::string> id_map;
     };
-
-
-   
 
     template <bool IsProblem>
     struct IdGetter

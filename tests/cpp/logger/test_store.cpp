@@ -21,7 +21,7 @@ TEST(store, data_consistency)
     for (const auto &pb : suite) {
         for (auto r = 0; r < nb_runs; r++) {
             for (auto s = 0; s < sample_size; ++s) {
-                (*pb)(common::Random::uniform(pb->meta_data().n_variables));
+                (*pb)(common::random::uniform(pb->meta_data().n_variables, 0));
             }
             pb->reset();
         }
@@ -64,7 +64,7 @@ TEST(store, properties)
     for (const auto &pb : suite) {
         for (auto r = 0; r < nb_runs; r++) {
             for (auto s = 0; s < sample_size; ++s) {
-                (*pb)(common::Random::uniform(pb->meta_data().n_variables));
+                (*pb)(common::random::uniform(pb->meta_data().n_variables, 0));
                 my_attribute++;
                 if(s > sample_size/2) {
                     p_transient_att = & my_attribute;

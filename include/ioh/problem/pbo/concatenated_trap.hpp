@@ -12,7 +12,7 @@ namespace ioh
             protected:
                 int k_ = 5;
 
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
                     double block_result;
@@ -52,7 +52,7 @@ namespace ioh
                         }
                     }
 
-                    return {result};
+                    return result;
                 }
 
             public:

@@ -17,14 +17,13 @@ TEST(eaf, bbob)
     suite.attach_logger(logger);
 
     std::list<size_t> attainments_sum = {
-        323, 646, 935, 1224, 1512, 1798, 2053, 2312,
-        2554, 2785, 2850, 2915, 2982, 3046, 3148, 3242
+        340, 680, 969, 1258, 1547, 1836, 2091, 2346, 2465, 2584, 2635, 2686, 2737, 2788, 2856, 2924,
     };
 
     for (const auto &p : suite) {
         for (auto r = 0; r < 2; r++) {
             for (auto s = 0; s < sample_size; ++s)
-                (*p)(ioh::common::Random::uniform(p->meta_data().n_variables));
+                (*p)(ioh::common::random::uniform(p->meta_data().n_variables, 0));
 
             EXPECT_EQ(ioh::logger::eah::stat::sum(logger), attainments_sum.front());
             p->reset();
@@ -38,5 +37,4 @@ TEST(eaf, bbob)
     EXPECT_EQ(k, 2);
     EXPECT_EQ(r, 2);
 }
-
 

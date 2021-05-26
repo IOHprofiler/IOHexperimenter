@@ -7,7 +7,7 @@
 namespace ioh {
 
     /** Shared structure related to loggers. */
-    namespace log {
+    namespace logger {
 
         /** Information about the current log.
          * 

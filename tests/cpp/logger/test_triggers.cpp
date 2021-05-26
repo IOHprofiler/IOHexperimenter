@@ -8,10 +8,10 @@ using namespace ioh;
 
 TEST(trigger, always) {
 
-    problem::MetaData pb(0,0,"fake",1,2);
-    log::Info e0;     e0.evaluations = 0;
-    log::Info e10;   e10.evaluations = 10;
-    log::Info e100; e100.evaluations = 100;
+    problem::MetaData pb(0,0,"fake",2);
+    logger::Info e0;     e0.evaluations = 0;
+    logger::Info e10;   e10.evaluations = 10;
+    logger::Info e100; e100.evaluations = 100;
 
     EXPECT_TRUE(trigger::always(e0,pb));
     EXPECT_TRUE(trigger::always(e10,pb));
@@ -21,8 +21,8 @@ TEST(trigger, always) {
 
 TEST(trigger, on_improvement) {
 
-    problem::MetaData pb(0,0,"fake",1,2); // Minimization
-    log::Info i;
+    problem::MetaData pb(0,0,"fake",2); // Minimization
+    logger::Info i;
     i.transformed_y = 9999;
 
     auto t = trigger::on_improvement;
@@ -56,13 +56,13 @@ TEST(trigger, on_improvement) {
 }
 
 TEST(trigger, at) {
-    problem::MetaData pb(0,0,"fake",1,2);
-    log::Info e0;     e0.evaluations = 0;
-    log::Info e10;   e10.evaluations = 10;
-    log::Info e11;   e11.evaluations = 11;
-    log::Info e99;   e99.evaluations = 99;
-    log::Info e100; e100.evaluations = 100;
-    log::Info e101; e101.evaluations = 101;
+    problem::MetaData pb(0,0,"fake",2);
+    logger::Info e0;     e0.evaluations = 0;
+    logger::Info e10;   e10.evaluations = 10;
+    logger::Info e11;   e11.evaluations = 11;
+    logger::Info e99;   e99.evaluations = 99;
+    logger::Info e100; e100.evaluations = 100;
+    logger::Info e101; e101.evaluations = 101;
 
     // auto t = trigger::At( {999,1,100,10} ); // Classical stack instantiation.
     auto& t = trigger::at( {999,1,10,100} ); // On-the-fly heap instantiation.
@@ -76,15 +76,15 @@ TEST(trigger, at) {
 }
 
 TEST(trigger, each) {
-    problem::MetaData pb(0,0,"fake",1,2);
-    log::Info e0;     e0.evaluations = 0;
-    log::Info e10;   e10.evaluations = 10;
-    log::Info e11;   e11.evaluations = 11;
-    log::Info e19;   e19.evaluations = 19;
-    log::Info e20;   e20.evaluations = 20;
-    log::Info e21;   e21.evaluations = 21;
-    log::Info e100; e100.evaluations = 100;
-    log::Info e101; e101.evaluations = 101;
+    problem::MetaData pb(0,0,"fake",2);
+    logger::Info e0;     e0.evaluations = 0;
+    logger::Info e10;   e10.evaluations = 10;
+    logger::Info e11;   e11.evaluations = 11;
+    logger::Info e19;   e19.evaluations = 19;
+    logger::Info e20;   e20.evaluations = 20;
+    logger::Info e21;   e21.evaluations = 21;
+    logger::Info e100; e100.evaluations = 100;
+    logger::Info e101; e101.evaluations = 101;
 
     auto t0 = trigger::Each(10,0);
     EXPECT_TRUE (t0(e0,pb));
@@ -109,14 +109,14 @@ TEST(trigger, each) {
 
 
 TEST(trigger, during) {
-    problem::MetaData pb(0,0,"fake",1,2);
-    log::Info e0;     e0.evaluations = 0;
-    log::Info e10;   e10.evaluations = 10;
-    log::Info e18;   e18.evaluations = 18;
-    log::Info e19;   e19.evaluations = 19;
-    log::Info e100; e100.evaluations = 100;
-    log::Info e101; e101.evaluations = 101;
-    log::Info e102; e102.evaluations = 102;
+    problem::MetaData pb(0,0,"fake",2);
+    logger::Info e0;     e0.evaluations = 0;
+    logger::Info e10;   e10.evaluations = 10;
+    logger::Info e18;   e18.evaluations = 18;
+    logger::Info e19;   e19.evaluations = 19;
+    logger::Info e100; e100.evaluations = 100;
+    logger::Info e101; e101.evaluations = 101;
+    logger::Info e102; e102.evaluations = 102;
 
     auto t = trigger::During({ {10,18}, {101,101} });
     EXPECT_FALSE(t(e0,pb));

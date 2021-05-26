@@ -12,7 +12,7 @@ namespace ioh
             protected:
                 static int modulo_ising_torus(const int x, const int n) { return (x % n + n) % n; }
 
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
                     int neighbors[2];
@@ -35,7 +35,7 @@ namespace ioh
                                     (1 - x[i * lattice_size + j]) * (1 - neighbor);
                         }
                     }
-                    return { result };
+                    return result;
                 }
 
             public:

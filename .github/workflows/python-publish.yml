@@ -1,0 +1,92 @@
+name: Upload Python Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+    publish-mac-windows:
+        strategy:
+          matrix:
+            architecture: [x64, x86]
+            python-version: ["3.6.x", "3.7.x", "3.8.x", "3.9.x"]
+            os: [macos-latest, windows-latest]
+            exclude:
+              - os: macos-latest
+                architecture: x86
+
+        runs-on: ${{matrix.os}}
+        steps:
+        - uses: actions/checkout@v2
+          with:
+            submodules: true
+        - name: Set up Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: ${{matrix.python-version}}
+            architecture: ${{matrix.architecture}}
+        - name: Install Ninja
+          if: startsWith(matrix.os, 'macOS')
+          run: |
+            brew install ninja
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install setuptools wheel twine ninja
+        - name: Build and publish
+          env:
+            TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+            TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+          run: |
+            python setup.py bdist_wheel
+            twine upload dist/*
+
+    publish-unix:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v2
+          with:
+            submodules: true
+        - name: Set up Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: "3.x"
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install setuptools wheel twine
+        - name: build manylinux
+          uses: RalfG/python-wheels-manylinux-build@v0.3.3-manylinux2010_x86_64
+          with: 
+            system-packages: 'ninja-build'
+        - name: Publish manylinux
+          env:
+            TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+            TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+          run: |
+            twine upload dist/*-manylinux*.whl
+
+    publish-source:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v2
+          with:
+            submodules: true
+        - name: Set up Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: "3.x"
+        - name: Install dependencies
+          run: |
+            sudo apt update -y
+            sudo apt install ninja-build -y
+            python -m pip install --upgrade pip
+            pip install setuptools wheel twine
+        - name: Build and publish
+          env:
+            TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+            TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+          run: |
+            python setup.py sdist
+            twine upload dist/*.tar.gz
+            

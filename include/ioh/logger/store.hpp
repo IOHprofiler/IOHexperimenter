@@ -150,7 +150,7 @@ namespace ioh::logger {
             }
 
             /** Atomic log action. */
-            virtual void call(const log::Info& log_info) override
+            virtual void call(const logger::Info& log_info) override
             {
                 // Get the properties list at the current cursor.
                 Properties& att = current_properties();

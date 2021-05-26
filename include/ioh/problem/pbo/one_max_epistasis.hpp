@@ -12,13 +12,13 @@ namespace ioh
             {
             protected:
 
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
                     auto new_variables = utils::epistasis(x, 4);
                     auto result = 0.0;
                     for (size_t i = 0; i != new_variables.size(); ++i)
                         result += new_variables[i];
-                    return {static_cast<double>(result)};
+                    return static_cast<double>(result);
                 }
 
             public:

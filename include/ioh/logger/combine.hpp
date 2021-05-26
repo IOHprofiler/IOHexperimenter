@@ -86,7 +86,7 @@ namespace ioh::logger
             }
         }
 
-        void call(const log::Info &logger_info) override
+        void call(const logger::Info &logger_info) override
         {
             for(auto &logger : _loggers) {
                 logger.get().log(logger_info);

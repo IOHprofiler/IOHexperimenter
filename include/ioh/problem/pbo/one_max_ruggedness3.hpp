@@ -13,12 +13,12 @@ namespace ioh
             protected:
                 std::vector<double> info_;
 
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
                     for (const auto& xi : x)
                         result += xi;
-                    return {info_[static_cast<int>(result + 0.5)]};
+                    return info_[static_cast<int>(result + 0.5)];
                 }
 
             public:

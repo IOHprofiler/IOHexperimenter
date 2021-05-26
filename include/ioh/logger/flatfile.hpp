@@ -233,7 +233,6 @@ namespace ioh::logger
                          const bool store_positions = false, const bool t_always = false, const int t_on_interval = 0,
                          const int t_per_time_range = 0, const bool t_on_improvement = true,
                          const std::vector<int> &t_at_time_points = {0},
-                        
                          const int trigger_at_time_points_exp_base = 10, const int trigger_at_range_exp_base = 10) :
             Observer(t_always, t_on_interval, t_per_time_range, t_on_improvement, t_at_time_points, optimization_type,
                      trigger_at_time_points_exp_base, trigger_at_range_exp_base),
@@ -301,7 +300,7 @@ namespace ioh::logger
 
 
             last_logged_line_ = fmt::format(FMT_COMPILE("{} {:f} {:f} {:f} {:f}"), log_info.evaluations,
-                                            log_info.current.y.at(0), log_info.y_best, log_info.transformed_y,
+                                            log_info.current.y, log_info.y_best, log_info.transformed_y,
                                             log_info.transformed_y_best);
 
             for (const auto &e : data_files_.logged_attributes_)
@@ -315,7 +314,7 @@ namespace ioh::logger
             data_files_ << last_logged_line_;
 
             if (improvement_found)
-                info_file_.best_point_ = {log_info.current.y.at(0), log_info.transformed_y, log_info.evaluations};
+                info_file_.best_point_ = {log_info.current.y, log_info.transformed_y, log_info.evaluations};
         }
 
         [[nodiscard]] common::file::UniqueFolder &experiment_folder()
@@ -331,7 +330,7 @@ namespace ioh::logger
         ///     logged attributes -> logged at every log-moment (data files)
         /// TODO: standardize naming of the methods for accessing these
         template <typename V>
-        void add_experiment_attribute(const std::string name, const V value)
+        void add_experiment_attribute(const std::string& name, const V value)
         {
             info_file_.experiment_attributes_[name] = common::to_string(value);
         }

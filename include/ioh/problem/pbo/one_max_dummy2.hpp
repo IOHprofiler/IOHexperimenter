@@ -13,13 +13,13 @@ namespace ioh
             protected:
                 std::vector<int> info_;
 
-                std::vector<double> evaluate(const std::vector<int> &x) override
+                double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
                     for (size_t i = 0; i != info_.size(); ++i)
                         result += x[info_[i]];
 
-                    return {result};
+                    return result;
                 }
 
             public:

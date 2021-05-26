@@ -80,12 +80,12 @@ namespace ioh {
              * @param log_info The current problem state data.
              * @returns An optional that holds a `double` if the variable is available, `std::nullopt` else.
              */
-            virtual std::optional<double> operator()(const log::Info& log_info) const = 0;
+            virtual std::optional<double> operator()(const logger::Info& log_info) const = 0;
 
             std::string name() const { return _name; }
         };
 
-        // /** A callback toward something that is not within log::Info. */
+        // /** A callback toward something that is not within logger::Info. */
         // struct Attribute : public Property{
         //     Attribute(const std::string name) : Property(name) { }
         // };
@@ -101,7 +101,7 @@ namespace ioh {
          */
         struct Evaluations : public logger::Property {
             Evaluations(const std::string name = "evaluations") : logger::Property(name) {}
-            std::optional<double> operator()(const log::Info& log_info) const
+            std::optional<double> operator()(const logger::Info& log_info) const
             {
                 // This should always be accessible, so the optional will always contain the variable.
                 return std::make_optional(static_cast<double>(log_info.evaluations));
@@ -119,7 +119,7 @@ namespace ioh {
          */
         struct RawYBest: public logger::Property {
             RawYBest(const std::string name = "raw_y_best") : logger::Property(name) {}
-            std::optional<double> operator()(const log::Info& log_info) const
+            std::optional<double> operator()(const logger::Info& log_info) const
             {
                 return std::make_optional(log_info.raw_y_best);
             }
@@ -136,7 +136,7 @@ namespace ioh {
          */
         struct TransformedY: public logger::Property {
             TransformedY(const std::string name = "transformed_y") : logger::Property(name) {}
-            std::optional<double> operator()(const log::Info& log_info) const
+            std::optional<double> operator()(const logger::Info& log_info) const
             {
                 return std::make_optional(log_info.transformed_y);
             }
@@ -153,7 +153,7 @@ namespace ioh {
          */
         struct TransformedYBest: public logger::Property {
             TransformedYBest(const std::string name = "transformed_y_best") : logger::Property(name) {}
-            std::optional<double> operator()(const log::Info& log_info) const
+            std::optional<double> operator()(const logger::Info& log_info) const
             {
                 return std::make_optional(log_info.transformed_y_best);
             }
@@ -181,7 +181,7 @@ namespace ioh {
                 _variable(variable)
                 { }
 
-                std::optional<double> operator()(const log::Info& log_info) const
+                std::optional<double> operator()(const logger::Info& log_info) const
                 {
                     return std::make_optional(static_cast<double>(_variable));
                 }
@@ -216,7 +216,7 @@ namespace ioh {
                     assert(variable != nullptr);
                 }
                 
-                std::optional<double> operator()(const log::Info& log_info) const
+                std::optional<double> operator()(const logger::Info& log_info) const
                 {
                     return std::make_optional(static_cast<double>(*_variable));
                 }
@@ -253,7 +253,7 @@ namespace ioh {
                 _variable(variable)
                 { }
                 
-                std::optional<double> operator()(const log::Info& log_info) const
+                std::optional<double> operator()(const logger::Info& log_info) const
                 {
                     if(_variable != nullptr) {
                         return std::make_optional(static_cast<double>(*_variable));

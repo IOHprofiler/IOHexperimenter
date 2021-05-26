@@ -6,15 +6,15 @@
 
 double test_eval(const std::shared_ptr<ioh::problem::Real> &f)
 {
-    const auto x = ioh::common::Random::normal(4, 42);
-    return std::round((*f)(x).at(0) * 10000.0) / 10000.0;
+    const auto x = ioh::common::random::normal(4, 42);
+    return std::round((*f)(x) * 10000.0) / 10000.0;
 }
 
 
 double test_eval(const std::shared_ptr<ioh::problem::Integer> &f)
 {
     const std::vector<int> x = {1, 1, 0, 1, 0, 0, 0, 1, 1};
-    return std::floor((*f)(x).at(0) * 10000.0) / 10000.0;
+    return std::floor((*f)(x) * 10000.0) / 10000.0;
 }
 
 
@@ -125,7 +125,7 @@ TEST(xopt_equals_yopt, pbo)
         if (name != "LABS" && name != "NQueens" && name != "LeadingOnesEpistasis" && name != "MIS" && name != "NKLandscapes")
         {
             auto problem = problem_factory.create(name, 1, 16);
-            EXPECT_DOUBLE_EQ(problem->objective().y.at(0), (*problem)(problem->objective().x).at(0)) << *problem;
+            EXPECT_DOUBLE_EQ(problem->objective().y, (*problem)(problem->objective().x)) << *problem;
         }
     }
 }
@@ -136,7 +136,7 @@ TEST(xopt_equals_yopt, real)
     for (const auto& name : problem_factory.names())
     {
         auto problem = problem_factory.create(name, 1, 16);
-        EXPECT_DOUBLE_EQ(problem->objective().y.at(0), (*problem)(problem->objective().x).at(0)) << *problem;
+        EXPECT_DOUBLE_EQ(problem->objective().y, (*problem)(problem->objective().x)) << *problem;
     }
 }
 
@@ -176,7 +176,7 @@ TEST(problems, bbob5d)
         const auto item = the_factory.create(name, 1, dimension);
         EXPECT_FLOAT_EQ(
             static_cast<float>(expected.at(item->meta_data().problem_id - 1)), 
-            static_cast<float>((*item)(x0).at(0)))
+            static_cast<float>((*item)(x0)))
         << *item;
     }
 }

@@ -132,7 +132,7 @@ namespace ioh {
         }
 
         /** Check if the logger should be triggered and if so, call `call(log_info)`. */
-        void log(const log::Info& log_info)
+        void log(const logger::Info& log_info)
         {
             assert(_problem != nullptr); // For Debug builds.
             if(not _problem) { // For Release builds.
@@ -161,7 +161,7 @@ namespace ioh {
         virtual void attach_suite(const std::string& suite_name) = 0;
 
         //! Main entry point, called everytime a Trigger is true.
-        virtual void call(const log::Info& log_info) = 0;
+        virtual void call(const logger::Info& log_info) = 0;
 
         /** Optional actions when the logger is detached from a suite/problem or the problem is reset.
          *
@@ -217,7 +217,7 @@ namespace ioh {
             /* Interface from Logger to be implemented:
             virtual void track_problem(const problem::MetaData& problem) = 0;
             virtual void track_suite(const std::string& suite_name) = 0;
-            virtual void log(const log::Info& log_info) = 0;
+            virtual void log(const logger::Info& log_info) = 0;
             */
         };
         

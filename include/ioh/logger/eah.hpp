@@ -341,7 +341,7 @@ namespace logger {
             int run {};
             bool has_opt {};
             bool is_tracked {};
-            std::vector<double> opt;
+            double opt;
             common::OptimizationType max_min {};
         };
 
@@ -404,11 +404,11 @@ namespace logger {
 
         /** Actually store information about the last evaluation.
          */
-        void call(const log::Info& log_info) override
+        void call(const logger::Info& log_info) override
         {
             if (!_current.is_tracked) {
                 _current.is_tracked = true;
-                _current.has_opt = !log_info.optimum.y.empty();
+                _current.has_opt = (log_info.optimum.y != std::numeric_limits<double>::infinity() and log_info.optimum.y != -std::numeric_limits<double>::infinity());
                 if (_current.has_opt) {
                     common::log::info(
                         "Problem has known optimum, will compute the EAH of the error.");
@@ -417,8 +417,6 @@ namespace logger {
                     common::log::info(
                         "Problem has no known optimum, will compute the absolute EAH.");
                 }
-                // mono-objective only
-                assert(_current.opt.size() == 1);
                 init_eah(_current);
             }
 
@@ -429,7 +427,7 @@ namespace logger {
 
             double err;
             if (_current.has_opt) {
-                err = std::abs(_current.opt[0] - transformed_y_best.value());
+                err = std::abs(_current.opt - transformed_y_best.value());
             } else {
                 err = transformed_y_best.value();
             }

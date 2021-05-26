@@ -65,7 +65,7 @@ namespace ioh {
         struct Trigger {
 
             /** @returns true if a log event is to be triggered given the passed state. */
-            virtual bool operator()(const log::Info& log_info, const problem::MetaData& pb_info) = 0;
+            virtual bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) = 0;
 
             /** Reset any internal state.
              * 
@@ -102,7 +102,7 @@ namespace ioh {
                 : _triggers(triggers)
                 { }
 
-                // virtual bool operator()(const log::Info& log_info, const problem::MetaData& pb_info) = 0;
+                // virtual bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) = 0;
             
                 /** Propagate the reset event to all managed triggers. */
                 virtual void reset() override
@@ -133,7 +133,7 @@ namespace ioh {
             { }
 
             /** Triggered if ANY the managed triggers are triggered. */
-            virtual bool operator()(const log::Info& log_info, const problem::MetaData& pb_info) override
+            virtual bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
             {
                 for(auto& trigger : _triggers) {
                     if(trigger(log_info, pb_info)) {
@@ -166,7 +166,7 @@ namespace ioh {
             { }
 
             /** Triggered if ALL the managed triggers are triggered. */
-            virtual bool operator()(const log::Info& log_info, const problem::MetaData& pb_info) override
+            virtual bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
             {
                 for(auto& trigger : _triggers) {
                     if(not trigger(log_info, pb_info)) {
@@ -192,7 +192,7 @@ namespace ioh {
          * @ingroup Triggering
          */
         struct Always : public logger::Trigger {
-            bool operator()(const log::Info& log_info, const problem::MetaData& pb_info) override
+            bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
             {
                 return true;
             }
@@ -223,7 +223,7 @@ namespace ioh {
                 reset();
             }
             
-            bool operator()(const log::Info& log_info, const problem::MetaData& pb_info) override
+            bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
             {
                 if(not _has_type) {
                     _type = pb_info.optimization_type;
@@ -234,8 +234,8 @@ namespace ioh {
                     }
                     _has_type = true;
                 }
-                // We do not use log::Info::transformed_y_best below,
-                // because all fields of log::Info are updated before the trigger see them.
+                // We do not use logger::Info::transformed_y_best below,
+                // because all fields of logger::Info are updated before the trigger see them.
                 // That would force to test for equality to trigger on improvement,
                 // and we only want to trigger on strict inequality.
                 assert(_has_type);
@@ -272,7 +272,7 @@ namespace ioh {
             , _starting_at(starting_at)
             { }
 
-            bool operator()(const log::Info& log_info, const problem::MetaData& pb_info) override
+            bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
             {
                 if((log_info.evaluations-_starting_at) % _interval == 0) {
                     return true;
@@ -312,7 +312,7 @@ namespace ioh {
             : _time_points(time_points)
             { }
 
-            bool operator()(const log::Info& log_info, const problem::MetaData& pb_info) override
+            bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
             {
                 if(matches(log_info.evaluations)) {
                     return true;
@@ -366,7 +366,7 @@ namespace ioh {
 #endif
             }
 
-            bool operator()(const log::Info& log_info, const problem::MetaData& pb_info) override
+            bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
             {
                if(matches(log_info.evaluations)) {
                    return true;
