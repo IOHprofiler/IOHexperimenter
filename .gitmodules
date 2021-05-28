@@ -9,3 +9,6 @@
 [submodule "external/fmt"]
 	path = external/fmt
 	url = git@github.com:fmtlib/fmt
+[submodule "external/clutchlog"]
+	path = external/clutchlog
+	url = https://github.com/nojhan/clutchlog.git

@@ -31,24 +31,24 @@ void do_test(std::string scale_errors, std::string scale_evals)
         } // run
     } // pb
 
-    auto d = eah::stat::distribution(eah);
-    std::clog << scale_errors << "-" << scale_evals << " joint cumulative attainment distribution for errors and evaluations:" << std::endl;
-    std::clog << eah::colormap(d, {&r_error, &r_evals}, true) << std::endl;
-    // std::clog << eah::colormap(d, {&r_error, &r_evals}) << std::endl;
-    // std::clog << eah::colormap(d) << std::endl;
-    // 
-    auto h = eah::stat::histogram(eah);
-    std::clog << scale_errors << "-" << scale_evals << " joint cumulative attainment histogram for errors and evaluations:" << std::endl;
-    std::clog << eah::colormap(h, {&r_error, &r_evals}, true) << std::endl;
-    // std::clog << eah::colormap(h, {&r_error, &r_evals}) << std::endl;
-    // std::clog << eah::colormap(h) << std::endl;
+    CLUTCHCODE(info,
+        auto d = eah::stat::distribution(eah);
+        std::clog << scale_errors << "-" << scale_evals << " joint cumulative attainment distribution for errors and evaluations:" << std::endl;
+        std::clog << eah::colormap(d, {&r_error, &r_evals}, true) << std::endl;
+        // std::clog << eah::colormap(d, {&r_error, &r_evals}) << std::endl;
+        // std::clog << eah::colormap(d) << std::endl;
+        // 
+        auto h = eah::stat::histogram(eah);
+        std::clog << scale_errors << "-" << scale_evals << " joint cumulative attainment histogram for errors and evaluations:" << std::endl;
+        std::clog << eah::colormap(h, {&r_error, &r_evals}, true) << std::endl;
+        // std::clog << eah::colormap(h, {&r_error, &r_evals}) << std::endl;
+        // std::clog << eah::colormap(h) << std::endl;
+    );
 }
 
-TEST(eah, stats)
+TEST(eah, plots)
 {
     using namespace ioh::logger::eah;
-
-    ioh::common::log::log_level = ioh::common::log::Level::Warning;
 
     do_test<LinearScale<double>, LinearScale<size_t>>("linear","linear");
     do_test<  Log2Scale<double>, LinearScale<size_t>>("log2"  ,"linear");

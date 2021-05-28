@@ -89,8 +89,10 @@ namespace ioh::suite
         [[nodiscard]]
         int check_parameter(const int parameter, const int ub, const int lb = 1) const
         {
-            if (parameter < lb || parameter > ub)
-                common::log::error("Parameter value " + std::to_string(parameter) + " is out of bounds");
+            if (parameter < lb || parameter > ub) {
+                IOH_DBG(error,"Parameter value " << parameter << " is out of bounds");
+                assert(lb <= parameter and parameter <= ub);
+            }
             return parameter;
         }
 

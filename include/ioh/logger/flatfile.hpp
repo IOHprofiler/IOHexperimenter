@@ -3,445 +3,160 @@
 #include <fmt/format.h>
 #include <fmt/compile.h>
 
-#include "base.hpp"
-#include "observer.hpp"
 #include "ioh/problem/problem.hpp"
 #include "ioh/experiment/configuration.hpp"
 
-
 namespace ioh::logger
 {
-    class Default : public Base, Observer
-    {
-        bool store_positions_;
-        common::file::UniqueFolder experiment_folder_;
-        problem::MetaData const *problem_meta_{};
+    /** A logger that stores some information in a single, tabular-like, file.
+     * 
+     * Each line displays the problem metadata and the watched properties.
+     * This format displays a lot of redundant information, but is very easy to parse.
+     * 
+     * @code
+        logger::FlatFile(
+            {trigger::always},
+            {watch::evaluations, watch::transformed_y},
+            "my_experiment.dat",
+            "./today/"
+        );
+     * @endcode
+     *
+     * @ingroup Loggers
+     */
+    class FlatFile : public Watcher {
+    protected:
+            const std::string _sep;
+            const std::string _com;
+            const std::string _eol;
+            const std::string _nan;
+            const std::array<const std::string,7> _heads;
+            const bool _repeat_header;
+            bool _has_header;
 
-        std::string last_logged_line_;
+            const fs::path _expe_dir;
+            const std::string _filename;
+            
+            std::ofstream _out;
 
-        class InfoFile
-        {
-            friend class Default;
-
-            std::string algorithm_name_;
-            std::string algorithm_info_;
-            std::string suite_name_ = "No suite";
-            common::file::BufferedFileStream stream_;
-
-            /**
-            * \brief List of attributes constant per experiment
-            */
-            std::map<std::string, std::string> experiment_attributes_;
-
-            /**
-             * \brief List of parameters constant per run
-             */
-            std::map<std::string, std::shared_ptr<double>> run_attributes_;
-
-            struct
-            {
-                double y, transformed_y;
-                size_t evaluations;
-            } best_point_{};
-
-        public:
-            InfoFile(std::string algorithm_name, std::string algorithm_info) :
-                algorithm_name_(std::move(algorithm_name)),
-                algorithm_info_(std::move(algorithm_info))
-            {
-            }
-
-            static char maximization_flag(const common::OptimizationType optimization_type)
-            {
-                return optimization_type == common::OptimizationType::Maximization ? 'T' : 'F';
-            }
-
-            void update_run_info(problem::MetaData const *meta, const bool can_write = true)
-            {
-                if (meta != nullptr && can_write)
-                {
-                    stream_ << common::string_format(", %d:%d|%g", meta->instance,
-                                                     best_point_.evaluations, best_point_.y);
-
-                    for (auto &[key, value] : run_attributes_)
-                        stream_ << common::string_format(";%g", *value);
-                }
-            }
-
-            void close()
-            {
-                stream_.close();
-            }
-
-            void track_problem(const problem::MetaData &new_meta, problem::MetaData const *meta,
-                               const fs::path &root_path, const bool can_write)
-            {
-                using namespace common;
-
-                update_run_info(meta, can_write);
-
-                if (meta == nullptr || new_meta.problem_id != meta->problem_id)
-                    stream_ = file::BufferedFileStream(
-                        root_path, string_format("IOHprofiler_f%d_%s.info", new_meta.problem_id,
-                                                 new_meta.name.c_str()));
-
-                if (meta == nullptr || new_meta.n_variables != meta->n_variables || new_meta.problem_id != meta->
-                    problem_id)
-                {
-                    stream_.write(
-                        string_format(
-                            R"(suite = "%s", funcId = %d, funcName = "%s", DIM = %d, maximization = "%c", algId = "%s", algInfo = "%s")",
-                            suite_name_.c_str(), new_meta.problem_id, new_meta.name.c_str(), new_meta.n_variables,
-                            maximization_flag(new_meta.optimization_type),
-                            algorithm_name_.c_str(), algorithm_info_.c_str()),
-                        true);
-
-                    // extra attrs const per experiment
-                    for (const auto &[fst, snd] : experiment_attributes_)
-                        stream_ << string_format(R"(, %s = "%s")", fst.c_str(), snd.c_str());
-
-                    // extra attrs per run
-                    if (!run_attributes_.empty())
-                    {
-                        stream_ << ", dynamicAttribute = \"";
-                        for (auto i = run_attributes_.begin(); i != run_attributes_.end();)
-                            stream_ << i->first << (++i != run_attributes_.end() ? "|" : "");
-                        stream_ << "\"";
-                    }
-
-                    stream_ << "\n%\n" << string_format(
-                        "data_f%d_%s/IOHprofiler_f%d_DIM%d.dat", new_meta.problem_id, new_meta.name.c_str(),
-                        new_meta.problem_id, new_meta.n_variables);
-                }
-            }
-        } info_file_;
-
-        class DataFiles
-        {
-            friend class Default;
-
-            struct File
-            {
-                bool active = false;
-                bool triggered = false;
-                common::file::BufferedFileStream stream;
-                std::string extension;
-
-                File(const bool act, std::string ext, const bool trig = false) :
-                    active(act), triggered(trig), extension(std::move(ext))
-                {
-                }
-
-                ~File()
-                {
-                    stream.close();
-                }
-            };
-
-            std::array<File, 4> files_;
-
-            /**
-              * \brief List of additional parameters to be logged at each trigger
-              */
-            std::map<std::string, std::shared_ptr<double>> logged_attributes_;
-
-            [[nodiscard]] std::string header(const int n_variables)
-            {
-                std::string header =
-                    R"#("function evaluation" "current f(x)" "best-so-far f(x)" "current af(x)+b" "best af(x)+b")#";
-                for (const auto &[fst, snd] : logged_attributes_)
-                    header += common::string_format(R"( "%s")", fst.c_str());
-
-                for (auto i = 0; i < n_variables; i++)
-                    header += common::string_format(R"( "x%d")", i);
-
-                return header + "\n";
-            }
-
-            std::string cached_header_{};
-
-        public:
-            DataFiles(const bool d_active, const bool c_active, const bool t_active, const bool i_active) :
-                files_{File(d_active, ""), File(t_active, "t"),
-                       File(i_active, "i"), File(c_active, "c", c_active)}
-
-            {
-            }
-
-            /**
-             * \brief Sets the values for the triggers
-             * \param triggers array of triggers, order=(.dat, .tdat, idat)
-             */
-            void update_triggers(const std::array<bool, 3> triggers)
-            {
-                for (size_t i = 0; i < triggers.size(); i++)
-                    files_[i].triggered = triggers[i];
-            }
-
-            void track_problem(const problem::MetaData &meta, const fs::path &root, const bool store_positions)
-            {
-                const auto directory = root / common::string_format("data_f%d_%s",
-                                                                    meta.problem_id, meta.name.c_str());
-
-                for (auto &file : files_)
-                {
-                    if (file.active)
-                    {
-                        if (!exists(directory))
-                            create_directory(directory);
-                        auto filename = common::string_format("IOHprofiler_f%d_DIM%d.%sdat",
-                                                              meta.problem_id, meta.n_variables,
-                                                              file.extension.c_str());
-                        file.stream = common::file::BufferedFileStream(directory, filename);
-
-                        cached_header_ = header(store_positions * meta.n_variables);
-                    }
-                }
-            }
-
-            void write(const std::string &data, const bool all = false)
-            {
-                if (!data.empty())
-                {
-                    for (auto &file : files_)
-                        if ((!all && file.triggered) || (all && (file.active && !file.triggered)))
-                            file.stream << cached_header_ << data;
-
-                    if (!cached_header_.empty())
-                        cached_header_.clear();
-                }
-            }
-
-            void close()
-            {
-                for (auto &file : files_)
-                    file.stream.close();
-            }
-
-            DataFiles &operator<<(const std::string &data)
-            {
-                write(data);
-                return *this;
-            }
-        } data_files_;
-
+            std::string _current_suite;
+            size_t _current_run;
 
     public:
-        explicit Default(fs::path output_directory = fs::current_path(), const std::string &folder_name = "ioh_data",
-                         std::string algorithm_name = "algorithm_name", std::string algorithm_info = "algorithm_info",
-                         const common::OptimizationType optimization_type = common::OptimizationType::Minimization,             
-                         const bool store_positions = false, const bool t_always = false, const int t_on_interval = 0,
-                         const int t_per_time_range = 0, const bool t_on_improvement = true,
-                         const std::vector<int> &t_at_time_points = {0},
-                         const int trigger_at_time_points_exp_base = 10, const int trigger_at_range_exp_base = 10) :
-            Observer(t_always, t_on_interval, t_per_time_range, t_on_improvement, t_at_time_points, optimization_type,
-                     trigger_at_time_points_exp_base, trigger_at_range_exp_base),
-            store_positions_(store_positions), experiment_folder_(std::move(output_directory), folder_name),
-            info_file_(std::move(algorithm_name), std::move(algorithm_info)),
-            data_files_(trigger_on_improvement(), trigger_always() || store_positions,
-                        trigger_at_time_points() || trigger_at_time_range(), trigger_at_interval())
+        /** The logger should at least track one logger::Property, or else it makes no sense to use it.
+         *
+         * @param triggers When to fire a log event.
+         * @param properties What to log.
+         * @param filename File name in which to write the logged properties.
+         * @param output_directory Directory in which to put the data file.
+         * @param separator The string separating fields.
+         * @param comment The string indicating a comment.
+         * @param no_value The string indicating that a watched property does not exists in this context.
+         * @param end_of_line The string to use when all fields have been written.
+         * @param common_header_titles Seven strings to print in the header for the common problem meta data (property names are automatically printed after).
+         * @param repeat_header If true, the commented header is printed for each new run.
+         */
+        FlatFile(std::initializer_list<std::reference_wrapper<logger::Trigger >> triggers,
+              std::initializer_list<std::reference_wrapper<logger::Property>> properties,
+              const std::string filename = "IOH.dat",
+              const fs::path output_directory = fs::current_path(),
+              const std::string separator = "\t",
+              const std::string comment = "# ",
+              const std::string no_value = "None",
+              const std::string end_of_line = "\n",
+              const std::array<const std::string,7> common_header_titles
+                  = {"suite_name", "problem_name", "problem_id", "problem_instance", "optimization_type", "dimension","run"},
+              const bool repeat_header = false
+        )
+        : Watcher(triggers, properties)
+        , _expe_dir(output_directory)
+        , _filename(filename)
+        , _sep(separator)
+        , _com(comment)
+        , _eol(end_of_line)
+        , _nan(no_value)
+        , _heads(common_header_titles)
+        , _current_suite("unknown_suite")
+        , _current_run(0)
+        , _repeat_header(repeat_header)
+        , _has_header(false)
         {
-        }
-
-
-        explicit Default(const experiment::Configuration &conf) :
-            Default(conf.output_directory(), conf.result_folder(), conf.algorithm_name(), conf.algorithm_info(),
-                    common::OptimizationType::Minimization, false,
-                    conf.complete_triggers(), conf.number_interval_triggers(), conf.number_target_triggers(),
-                    conf.update_triggers(), conf.base_evaluation_triggers())
-        {
-        }
-
-        ~Default()
-        {
-            Default::flush();
-        }
-
-        void flush() override
-        {
-            if (!last_logged_line_.empty())
-            {
-                info_file_.update_run_info(problem_meta_); // needs to call on close
-                data_files_.write(last_logged_line_, true);
-                last_logged_line_.clear();
-                problem_meta_ = nullptr;
+            // Data file
+            if(not exists(_expe_dir)) {
+                IOH_DBG(debug,"some directories do not exist in " << _expe_dir << ", try to create them");
+                create_directories(_expe_dir);
             }
-            info_file_.close();
-            data_files_.close();
+            IOH_DBG(debug,"will output data in " << _expe_dir/_filename);
+            _out = std::ofstream(_expe_dir/_filename);
         }
 
-        void track_problem(const problem::MetaData &meta) override
+
+        virtual void attach_suite(const std::string& suite_name)  override
         {
-            const auto can_write = !last_logged_line_.empty();
-            data_files_.write(last_logged_line_, true);
-            info_file_.track_problem(meta, problem_meta_, experiment_folder_.path(), can_write);
-            data_files_.track_problem(meta, experiment_folder_.path(), store_positions_);
-
-            problem_meta_ = &meta;
-            reset(meta.optimization_type);
-            last_logged_line_.clear();
+            _current_suite = suite_name;
         }
 
-        void track_suite(const std::string &suite_name) override
+        virtual void attach_problem(const problem::MetaData& problem) override
         {
-            info_file_.suite_name_ = suite_name;
+            // If this is a new problem.
+            if(_problem == nullptr or *_problem != problem) {
+                IOH_DBG(xdebug,"reset run counter");
+                _current_run = 0; // Then reset the run counter.
+            } else {
+                IOH_DBG(xdebug,"increment run counter");
+                _current_run++; // Then it's a new run.
+            }
+
+            Logger::attach_problem(problem); // update _problem
+
+            if(_repeat_header or not _has_header) {
+                IOH_DBG(xdebug,"print header");
+                _out << _com;
+                for(const std::string head : _heads) {
+                    _out << _sep << head;
+                }
+                for(const auto& [name,p_ref] : _properties) {
+                    _out << _sep << name;
+                }
+                _out << _eol;
+                _out.flush();
+                _has_header = true;
+            }
         }
 
-        void log(const LogInfo &log_info) override
+        virtual void call(const logger::Info& log_info) override
         {
-            const auto improvement_found =
-                improvement_trigger(log_info.transformed_y, problem_meta_->optimization_type);
+            // Common static values
+            // FIXME this should be cached as a string in attach_problem.
+            IOH_DBG(xdebug,"print problem meta data");
+            _out /* no sep */ << _current_suite;
+            _out  <<   _sep   << _problem->name;
+            _out  <<   _sep   << _problem->problem_id;
+            _out  <<   _sep   << _problem->instance;
+            _out  <<   _sep   << (_problem->optimization_type == common::OptimizationType::Minimization ? "min" : "max");
+            _out  <<   _sep   << _problem->n_variables;
+            _out  <<   _sep   << _current_run;
 
-            data_files_.update_triggers({
-                improvement_found,
-                time_points_trigger(log_info.evaluations) || time_range_trigger(log_info.evaluations),
-                interval_trigger(log_info.evaluations)
-            });
-
-
-            last_logged_line_ = fmt::format(FMT_COMPILE("{} {:f} {:f} {:f} {:f}"), log_info.evaluations,
-                                            log_info.current.y, log_info.y_best, log_info.transformed_y,
-                                            log_info.transformed_y_best);
-
-            for (const auto &e : data_files_.logged_attributes_)
-                last_logged_line_ += fmt::format(FMT_COMPILE(" {:f}"), *e.second);
-
-            if (store_positions_)
-                last_logged_line_ += format(FMT_COMPILE(" {}"), fmt::join(log_info.current.x, " "));
-
-            last_logged_line_ += "\n";
-
-            data_files_ << last_logged_line_;
-
-            if (improvement_found)
-                info_file_.best_point_ = {log_info.current.y, log_info.transformed_y, log_info.evaluations};
+            IOH_DBG(xdebug,"print watched properties");
+            for(const auto& [name, p_ref] : _properties) {
+                auto property = p_ref.get()(log_info);
+                if(property) {
+                    _out << _sep << fmt::format(FMT_COMPILE("{:f}"), property.value());
+                } else {
+                    _out << _sep << _nan;
+                }
+            }
+            _out << _eol;
+            _out.flush();
         }
 
-        [[nodiscard]] common::file::UniqueFolder &experiment_folder()
+        ~FlatFile()
         {
-            return experiment_folder_;
+            IOH_DBG(debug, "close data file");
+            _out.close();
         }
 
-
-        /// Parameters ///
-        /// We have:
-        ///     experiment attributes -> only once per experiment (info file)
-        ///     run attributes -> (can) change per run (info file)
-        ///     logged attributes -> logged at every log-moment (data files)
-        /// TODO: standardize naming of the methods for accessing these
-        template <typename V>
-        void add_experiment_attribute(const std::string& name, const V value)
-        {
-            info_file_.experiment_attributes_[name] = common::to_string(value);
-        }
-
-        void delete_experiment_attribute(const std::string &name)
-        {
-            info_file_.experiment_attributes_.erase(name);
-        }
-
-        void create_run_attributes(const std::vector<std::shared_ptr<double>> &attributes,
-                                   const std::vector<std::string> &attribute_names,
-                                   const bool clear = true)
-        {
-            if (attribute_names.size() != attributes.size())
-                common::log::error("Attributes and their names are given with different size.");
-
-            if (clear && !info_file_.run_attributes_.empty())
-                info_file_.run_attributes_.clear();
-
-            for (size_t i = 0; i != attributes.size(); i++)
-                info_file_.run_attributes_[attribute_names[i]] = attributes[i];
-        }
-
-        void create_run_attributes(const std::vector<std::shared_ptr<double>> &attributes)
-        {
-            std::vector<std::string> names(attributes.size());
-            std::generate(names.begin(), names.end(), [n = 1]() mutable
-            {
-                return common::string_format("attr%d", n++);
-            });
-
-            create_run_attributes(attributes, names);
-        }
-
-        void create_run_attributes(const std::vector<std::string> &attribute_names)
-        {
-            std::vector<std::shared_ptr<double>> attributes(attribute_names.size());
-            std::generate(attributes.begin(), attributes.end(), []()
-            {
-                return std::make_shared<double>(-9999);
-            });
-            create_run_attributes(attributes, attribute_names);
-        }
-
-
-        void add_run_attributes(const std::vector<std::string> &attributes_name,
-                                const std::vector<double> &attributes)
-        {
-            std::vector<std::shared_ptr<double>> ptr_attributes(attributes.size());
-            std::generate(ptr_attributes.begin(), ptr_attributes.end(), [n=0, attributes]() mutable
-            {
-                return std::make_shared<double>(attributes[n++]);
-            });
-            create_run_attributes(ptr_attributes, attributes_name, false);
-        }
-
-        void set_run_attributes(const std::vector<std::string> &attribute_names,
-                                const std::vector<double> &attributes)
-        {
-            if (attribute_names.size() != attributes.size())
-                common::log::error("Attributes and their names are given with different size.");
-
-            for (size_t i = 0; i != attribute_names.size(); ++i)
-                if (info_file_.run_attributes_.find(attribute_names[i]) != info_file_.run_attributes_.end())
-                    *info_file_.run_attributes_[attribute_names[i]] = attributes[i];
-                else
-                    common::log::error("Dynamic attribute " + attribute_names[i] + " does not exist");
-        }
-
-
-        void create_logged_attributes(const std::vector<std::string> &attribute_names)
-        {
-            if (!data_files_.logged_attributes_.empty())
-                data_files_.logged_attributes_.clear();
-
-            for (size_t i = 0; i != attribute_names.size(); i++)
-                data_files_.logged_attributes_[attribute_names[i]] = std::make_shared<double>(-9999);
-        }
-
-        void create_logged_attributes(const std::vector<std::string> &attribute_names,
-                                      const std::vector<std::shared_ptr<double>> &attributes)
-        {
-            if (attribute_names.size() != attributes.size())
-                common::log::error("Attributes and their names are given with different size.");
-
-            for (size_t i = 0; i != attribute_names.size(); i++)
-                data_files_.logged_attributes_[attribute_names[i]] = attributes[i];
-        }
-
-
-        void create_logged_attributes(const std::vector<std::string> &attribute_names,
-                                      const std::vector<double> &attributes)
-        {
-            if (attribute_names.size() != attributes.size())
-                common::log::error("Attributes and their names are given with different size.");
- 
-            for (size_t i = 0; i != attribute_names.size(); i++)
-                data_files_.logged_attributes_[attribute_names[i]] = std::make_shared<double>(attributes[i]);
-        }
-
-        void set_logged_attributes(const std::vector<std::string> &attribute_names,
-                                   const std::vector<double> &attributes)
-        {
-            if (attribute_names.size() != attributes.size())
-                common::log::error("Attributes and their names are given with different size.");
-
-            for (size_t i = 0; i != attribute_names.size(); ++i)
-                if (data_files_.logged_attributes_.find(attribute_names[i]) != data_files_.logged_attributes_.end())
-                    *data_files_.logged_attributes_[attribute_names[i]] = attributes[i];
-                else
-                    common::log::error("Attribute " + attribute_names[i] + " does not exist");
-        }
     };
+    
+
 }

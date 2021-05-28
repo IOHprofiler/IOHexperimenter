@@ -5,8 +5,10 @@
 #include "logger/triggers.hpp"
 #include "logger/loggers.hpp"
 #include "logger/store.hpp"
+#include "logger/flatfile.hpp"
 #include "logger/combine.hpp"
 #include "logger/eah.hpp"
+#include "logger/eaf.hpp"
 
 /** @defgroup Loggers Loggers
  * Objects that track the calls to the objective function.

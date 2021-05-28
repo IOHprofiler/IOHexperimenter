@@ -41,11 +41,11 @@ namespace ioh {
          * @warning Those free functions do allocates on the heap, so you're responsible of freeing memory after them if necessary.
          *
          * For example:
-             @code
+         * @code
                 auto& p = watch::reference("my", some_variable);
                 // [Use p...]
                 delete &p;
-             @endocde
+         * @endcode
          * 
          * @ingroup Loggers
          */
@@ -60,8 +60,10 @@ namespace ioh {
          */
         class Property{
         protected:
+            //! Unique name for the logged property.
             const std::string _name;
         public:
+            //! Constructor.
             Property(const std::string name)
             : _name(name)
             {
@@ -82,13 +84,9 @@ namespace ioh {
              */
             virtual std::optional<double> operator()(const logger::Info& log_info) const = 0;
 
+            //! Configured name accessor.
             std::string name() const { return _name; }
         };
-
-        // /** A callback toward something that is not within logger::Info. */
-        // struct Attribute : public Property{
-        //     Attribute(const std::string name) : Property(name) { }
-        // };
 
     } // logger
 
@@ -100,7 +98,9 @@ namespace ioh {
          * @ingroup Logging
          */
         struct Evaluations : public logger::Property {
+            //! Constructor.
             Evaluations(const std::string name = "evaluations") : logger::Property(name) {}
+            //! Main call interface.
             std::optional<double> operator()(const logger::Info& log_info) const
             {
                 // This should always be accessible, so the optional will always contain the variable.
@@ -111,14 +111,16 @@ namespace ioh {
          * 
          * @ingroup Properties
          */
-        Evaluations evaluations;
+        // extern Evaluations evaluations; // Uncomment if one want a library.
         
         /** A property that access the best value so far, without transformation.
          *
          * @ingroup Logging
          */
         struct RawYBest: public logger::Property {
+            //! Constructor.
             RawYBest(const std::string name = "raw_y_best") : logger::Property(name) {}
+            //! Main call interface.
             std::optional<double> operator()(const logger::Info& log_info) const
             {
                 return std::make_optional(log_info.raw_y_best);
@@ -128,13 +130,15 @@ namespace ioh {
          * 
          * @ingroup Properties
          */
-         RawYBest raw_y_best;
+         // extern RawYBest raw_y_best; // Uncomment if one want a library.
 
         /** A property that access the current value so far, with transformation.
          *
          * @ingroup Logging
          */
         struct TransformedY: public logger::Property {
+            //! Constructor.
+            //! Main call interface.
             TransformedY(const std::string name = "transformed_y") : logger::Property(name) {}
             std::optional<double> operator()(const logger::Info& log_info) const
             {
@@ -145,14 +149,16 @@ namespace ioh {
          * 
          * @ingroup Properties
          */
-        TransformedY transformed_y;
+        // extern TransformedY transformed_y; // Uncomment if one want a library.
 
         /** A property that access the best value found so far, with transformation.
          *
          * @ingroup Logging
          */
         struct TransformedYBest: public logger::Property {
+            //! Constructor.
             TransformedYBest(const std::string name = "transformed_y_best") : logger::Property(name) {}
+            //! Main call interface.
             std::optional<double> operator()(const logger::Info& log_info) const
             {
                 return std::make_optional(log_info.transformed_y_best);
@@ -162,7 +168,7 @@ namespace ioh {
          * 
          * @ingroup Properties
          */
-        TransformedYBest transformed_y_best;
+        // extern TransformedYBest transformed_y_best; // Uncomment if one want a library.
 
         /** A property that access a referenced variable.
          *
@@ -173,20 +179,30 @@ namespace ioh {
         template<class T>
         class Reference: public logger::Property {
             protected:
+                //! The managed reference.
                 const T& _variable;
                 
             public:
+                /** Constructor.
+                 *
+                 * @param name the name of the property.
+                 * @param variable a reference to the logged variable.
+                 */
                 Reference(const std::string name, const T& variable)
                 : logger::Property(name),
                 _variable(variable)
                 { }
 
+                //! Main call interface.
                 std::optional<double> operator()(const logger::Info& log_info) const
                 {
                     return std::make_optional(static_cast<double>(_variable));
                 }
         };
         /** The value of an extern variable (captured by reference).
+         *
+         * @param name the name of the property.
+         * @param variable a reference to the logged variable.
          *
          * @ingroup Properties
          */
@@ -206,9 +222,15 @@ namespace ioh {
         template<class T>
         class Pointer: public logger::Property {
             protected:
+                //! The managed variable.
                 const T* const _variable;
                 
             public:
+                /** Constructor.
+                 * 
+                 * @param name the name of the property.
+                 * @param variable a pointer to the logged variable.
+                 */
                 Pointer(const std::string name, const T* const variable)
                 : logger::Property(name),
                 _variable(variable)
@@ -216,6 +238,7 @@ namespace ioh {
                     assert(variable != nullptr);
                 }
                 
+                //! Main call interface.
                 std::optional<double> operator()(const logger::Info& log_info) const
                 {
                     return std::make_optional(static_cast<double>(*_variable));
@@ -223,6 +246,9 @@ namespace ioh {
         };
         /** The value of an extern variable (captured by address).
          *
+         * @param name the name of the property.
+         * @param variable a pointer to the logged variable.
+         * 
          * @ingroup Properties
          */
          template<class T>
@@ -245,14 +271,22 @@ namespace ioh {
         template<class T>
         class PointerReference: public logger::Property {
             protected:
+                //! The managed reference to a pointer.
                 const T* const & _variable;
                 
             public:
+
+                /** Constructor.
+                 * 
+                 * @param name the name of the property.
+                 * @param variable a reference to a pointer to the logged variable.
+                 */
                 PointerReference(const std::string name, const T* const & variable)
                 : logger::Property(name),
                 _variable(variable)
                 { }
                 
+                //! Main call interface.
                 std::optional<double> operator()(const logger::Info& log_info) const
                 {
                     if(_variable != nullptr) {
@@ -273,6 +307,9 @@ namespace ioh {
          * If you need to invalidate the variable, you can set the referenced pointer itself to `nullptr`.
          * 
          * @warning It is your responsability to ensure that the referenced pointer is a nullptr if the variable is out of the logged scope.
+         * 
+         * @param name the name of the property.
+         * @param variable a reference to a pointer to the logged variable.
          * 
          * @ingroup Properties
          */

@@ -13,9 +13,10 @@ TEST(trigger, always) {
     logger::Info e10;   e10.evaluations = 10;
     logger::Info e100; e100.evaluations = 100;
 
-    EXPECT_TRUE(trigger::always(e0,pb));
-    EXPECT_TRUE(trigger::always(e10,pb));
-    EXPECT_TRUE(trigger::always(e100,pb));
+    trigger::Always always;
+    EXPECT_TRUE(always(e0,pb));
+    EXPECT_TRUE(always(e10,pb));
+    EXPECT_TRUE(always(e100,pb));
 }
 
 
@@ -25,7 +26,7 @@ TEST(trigger, on_improvement) {
     logger::Info i;
     i.transformed_y = 9999;
 
-    auto t = trigger::on_improvement;
+    trigger::OnImprovement t;
 
     // First call.
     EXPECT_TRUE(t(i,pb)); // Better than infinity.

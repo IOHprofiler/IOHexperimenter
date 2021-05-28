@@ -48,16 +48,16 @@ namespace ioh::logger {
             using Run        = std::map<size_t     ,Properties>; // evaluations => properties
             using Runs       = std::map<size_t     ,Run       >; // run id      => Run
             using Instances  = std::map<int        ,Runs      >; // instance id => runs
-            using Dimension  = std::map<int        ,Instances >; // nb of dim   => instances
-            using Problems   = std::map<int        ,Dimension >; // pb id       => dimension
-            using Suite      = std::map<std::string,Problems  >; // suite name  => problems
+            using Dimensions = std::map<int        ,Instances >; // nb of dim   => instances
+            using Problems   = std::map<int        ,Dimensions>; // pb id       => dimension
+            using Suites     = std::map<std::string,Problems  >; // suite name  => problems
             /** @} */
 
-            /** When attached directly to a Problem (out of a Suite), use the following key for the Suite map. */
+            /** When attached directly to a Problem (out of a Suites), use the following key for the Suites map. */
             inline static const std::string default_suite = "None";
 
             /** Direct accessor to the data structure. */
-            Suite data() {return _data;}
+            Suites data() {return _data;}
 
             /** A set of keys leading to a set of property values within the data structure. */
             struct Cursor {
@@ -102,7 +102,7 @@ namespace ioh::logger {
             
         protected:
             /** The main data structure in which log events are stored. */
-            Suite _data;
+            Suites _data;
 
             /** The current Cursor. */
             Cursor _current;

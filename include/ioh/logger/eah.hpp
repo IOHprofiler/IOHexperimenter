@@ -46,6 +46,12 @@ namespace logger {
         class Scale {
         public:
 
+            /** Constructor.
+             * 
+             * @param amin the minimum of the scale domain.
+             * @param amax the maximum of the scale domain.
+             * @param asize the number of buckets in the scale.
+             */
             Scale(const R amin, const R amax, const size_t asize)
                 : _min(amin)
                 , _max(amax)
@@ -90,8 +96,11 @@ namespace logger {
             virtual BoundsType bounds(const size_t i) const = 0;
 
         protected:
+            //! Minimum.
             R _min;
+            //! Maximum.
             R _max;
+            //! Number of buckets.
             size_t _size;
         };
 
@@ -101,11 +110,22 @@ namespace logger {
         template <class R>
         class LinearScale : public Scale<R> {
         public:
+            /** Constructor.
+             * 
+             * @param min the minimum of the scale domain.
+             * @param max the maximum of the scale domain.
+             * @param size the number of buckets in the scale.
+             */
             LinearScale(const R min, const R max, const size_t size)
                 : Scale<R>(min, max, size)
             {
             }
 
+            /** Returns the index of the bucket in which a value falls.
+             *
+             * @param x the value on the scale.
+             * @returns the corresponding bucket index.
+             */
             size_t index(const double x) const override
             {
                 assert(this->_min <= x);
@@ -118,8 +138,14 @@ namespace logger {
                 }
             }
 
+            //! The type in which bounds are stored by the `bounds` method.
             using BoundsType = typename Scale<R>::BoundsType;
 
+            /** Returns the bounds of the corresponding bucket index.
+             *
+             * @param i the index of the bucket.
+             * @returns [min,max[ of the bucket i.
+             */
             BoundsType bounds(const size_t i) const override
             {
                 assert(i < this->size());
@@ -129,6 +155,7 @@ namespace logger {
                 return std::make_pair(m, m + w);
             }
 
+            /** Returns the width of a bucket. */
             R step() const { return this->length() / this->_size; }
         };
 
@@ -142,13 +169,23 @@ namespace logger {
         template<class R>
         class Log2Scale : public Scale<R> {
         protected:
+            //! The minimum.
             const double _m;
+            //! Max - min.
             const double _l;
+            //! The number of buckets.
             const double _s;
+            //! The `log(1+max-min)` constant.
             const double _k;
 
         public:
-            Log2Scale(const R min, const R max, const size_t size, const size_t base = 2)
+            /** Constructor.
+             * 
+             * @param min the minimum of the scale domain.
+             * @param max the maximum of the scale domain.
+             * @param size the number of buckets in the scale.
+             */
+            Log2Scale(const R min, const R max, const size_t size)
                 : Scale<R>(min, max, size),
                 _m(min),
                 _l(max-min),
@@ -158,6 +195,11 @@ namespace logger {
                 // FIXME check size against max-min ?
             }
 
+            /** Returns the index of the bucket in which a value falls.
+             *
+             * @param x the value on the scale.
+             * @returns the corresponding bucket index.
+             */
             size_t index(const double x) const override
             {
                 assert(this->_min <= x);
@@ -171,8 +213,14 @@ namespace logger {
                 }
             }
 
+            //! The type in which bounds are stored by the `bounds` method.
             using BoundsType = typename Scale<R>::BoundsType;
 
+            /** Returns the bounds of the corresponding bucket index.
+             *
+             * @param i the index of the bucket.
+             * @returns [min,max[ of the bucket i.
+             */
             BoundsType bounds(const size_t i) const override
             {
                 assert(i < _s);
@@ -195,12 +243,22 @@ namespace logger {
         template <class R>
         class Log10Scale : public Scale<R> {
         protected:
+            //! The minimum.
             const double _m;
+            //! Max - min.
             const double _l;
+            //! The number of buckets.
             const double _s;
+            //! The `log(1+max-min)` constant.
             const double _k;
 
         public:
+            /** Constructor.
+             * 
+             * @param min the minimum of the scale domain.
+             * @param max the maximum of the scale domain.
+             * @param size the number of buckets in the scale.
+             */
             Log10Scale(const R min, const R max, const size_t size)
                 : Scale<R>(min, max, size),
                 _m(min),
@@ -211,6 +269,11 @@ namespace logger {
                 // FIXME check size against max-min ?
             }
 
+            /** Returns the index of the bucket in which a value falls.
+             *
+             * @param x the value on the scale.
+             * @returns the corresponding bucket index.
+             */
             size_t index(const double x) const override
             {
                 assert(this->_min <= x);
@@ -224,8 +287,14 @@ namespace logger {
                 }
             }
 
+            //! The type in which bounds are stored by the `bounds` method.
             using BoundsType = typename Scale<R>::BoundsType;
 
+            /** Returns the bounds of the corresponding bucket index.
+             *
+             * @param i the index of the bucket.
+             * @returns [min,max[ of the bucket i.
+             */
             BoundsType bounds(const size_t i) const override
             {
                 // FIXME this renders indices at more than 4 ULPs for doubles, find a more robust computation?
@@ -286,7 +355,7 @@ namespace logger {
          * 
          * @ingroup EAH_API
          */
-        using AttainmentSuite = std::map<size_t, // problem
+        using AttainmentSuite = std::map<size_t, // problem // FIXME add a Suite level.
             std::map<size_t, // dim
                 std::map<size_t, // instance
                     std::map<size_t, // runs
@@ -334,7 +403,7 @@ namespace logger {
     protected:
         /** Internal types  @{ */
         /** Keep essential metadata about the problem. */
-        struct Problem {
+        struct Problem { // FIXME add the suite
             int pb {};
             int dim {};
             int ins {};
@@ -355,7 +424,7 @@ namespace logger {
             const size_t error_buckets,
             const size_t evals_min, const size_t evals_max,
             const size_t evals_buckets)
-            : Logger({trigger::always},{watch::transformed_y_best, watch::evaluations})
+            : Logger()
             , _default_range_error(error_min, error_max, error_buckets)
             , _default_range_evals(evals_min, evals_max, evals_buckets)
             , _range_error(_default_range_error)
@@ -363,7 +432,12 @@ namespace logger {
             , _empty(error_buckets,
                   std::vector<bool>(evals_buckets,
                       false))
-        { }
+        {
+            // Insert references after members are instantiated.
+            _triggers.insert(std::ref(_on_improvement));
+            _properties.insert_or_assign(_transformed_y_best.name(), std::ref(_transformed_y_best));
+            _properties.insert_or_assign(_evaluations.name(), std::ref(_evaluations));
+        }
 
         /** Complete constructor, with which you can define linear or semi-log scale.
          *
@@ -372,7 +446,7 @@ namespace logger {
         EAH(
             eah::Scale<double>& error_buckets,
             eah::Scale<size_t>& evals_buckets)
-            : Logger({trigger::always},{watch::transformed_y_best, watch::evaluations})
+            : Logger()
             , _default_range_error(0, 1, 1)
             , _default_range_evals(0, 1, 1)
             , _range_error(error_buckets)
@@ -380,12 +454,17 @@ namespace logger {
             , _empty(error_buckets.size(),
                   std::vector<bool>(evals_buckets.size(),
                       false))
-        { }
+        {
+            // Insert references after members are instantiated.
+            _triggers.insert(std::ref(_on_improvement));
+            _properties.insert_or_assign(_transformed_y_best.name(), std::ref(_transformed_y_best));
+            _properties.insert_or_assign(_evaluations.name(), std::ref(_evaluations));
+        }
 
     public:
         /** Logger interface  @{ */
         //! Not used, but part of the interface.
-        void attach_suite(const std::string&) override
+        void attach_suite(const std::string&) override // FIXME this should ADD a Suite, not reset.
         {
             clear();
         }
@@ -410,18 +489,17 @@ namespace logger {
                 _current.is_tracked = true;
                 _current.has_opt = (log_info.optimum.y != std::numeric_limits<double>::infinity() and log_info.optimum.y != -std::numeric_limits<double>::infinity());
                 if (_current.has_opt) {
-                    common::log::info(
-                        "Problem has known optimum, will compute the EAH of the error.");
+                    IOH_DBG(info, "Problem has known optimum, will compute the EAH of the error.");
                     _current.opt = log_info.optimum.y;
                 } else {
-                    common::log::info(
-                        "Problem has no known optimum, will compute the absolute EAH.");
+                    IOH_DBG(info, "Problem has no known optimum, will compute the absolute EAH.");
                 }
                 init_eah(_current);
             }
 
+            // Access the properties that were instantiated in the constructor.
             const std::optional<double> transformed_y_best = _properties.at("transformed_y_best").get()(log_info);
-            assert(transformed_y_best);
+            assert(transformed_y_best); // Assert that the optional holds a value, which should be the case here.
             const std::optional<double> evaluations        = _properties.at("evaluations").get()(log_info);
             assert(evaluations);
 
@@ -455,8 +533,8 @@ namespace logger {
             const auto j_evals = _range_evals.index(static_cast<double>(evaluations.value()));
 
             // Fill up the dominated quadrant of the attainment matrix with ones
-            // (either the upper/upper || lower/lower, depending on if it's
-            // a min || max problem and on if the optimum is known).
+            // (either the upper/upper or lower/lower, depending on if it's
+            // a min or max problem and on if the optimum is known).
             fill_up(i_error, j_evals);
         }
 
@@ -646,6 +724,18 @@ namespace logger {
         //! The whole main data structure.
         eah::AttainmentSuite _eah_suite;
 
+        /** Default trigger is on every improvement.
+        *
+        * Because it fits the algorithmics.
+        */
+        trigger::OnImprovement _on_improvement;
+
+        //! Property watching the number of evaluations.
+        watch::Evaluations _evaluations;
+
+        //! Property watching the objective function value.
+        watch::TransformedYBest _transformed_y_best;
+
         /** @} */
     };
 
@@ -662,6 +752,7 @@ namespace logger {
         template <class T>
         class Stat {
         public:
+            //! Type of the computed statistic.
             using Type = T;
 
             /** Call interface. */
@@ -717,7 +808,7 @@ namespace logger {
              *
              * @ingroup EAH
              */
-            size_t sum(const EAH& logger)
+            inline size_t sum(const EAH& logger)
             {
                 return accumulate<size_t>(logger, 0, std::plus<size_t>());
             }
@@ -739,7 +830,9 @@ namespace logger {
              */
             class Histogram : public Stat<std::vector<std::vector<size_t>>> {
             protected:
+                //! State check flag.
                 bool _has_computed;
+                //! Number of encountered attainment matrices.
                 size_t _nb_att;
 
             public:
@@ -751,6 +844,7 @@ namespace logger {
                 */
                 using Mat = std::vector<std::vector<size_t>>;
 
+                //! Constructor.
                 Histogram()
                 : _has_computed(false)
                 , _nb_att(0)
@@ -759,7 +853,7 @@ namespace logger {
                 /** Computes the histogram on the logger's data.
                  * 
                  * @param logger The logger::EAH.
-                 * @returns a (<nb of targets buckets> * <nb of evaluations buckets>) matrix of positive integers.
+                 * @returns a (\<nb of targets buckets\> * \<nb of evaluations buckets\>) matrix of positive integers.
                  */
                 Mat operator()(const EAH& logger) override
                 {
@@ -824,7 +918,7 @@ namespace logger {
             /** Computes the matrix that is the sum of all matrices in an AttainmentSuite.
              *  Across problems, dimensions and instances.
              * 
-             * That is, a (<nb of targets buckets> * <nb of evaluations buckets>) matrix of positive integers.
+             * That is, a (\<nb of targets buckets\> * \<nb of evaluations buckets\>) matrix of positive integers.
              * 
              * Useful if you want to display the related histogram, for instance.
              * 
@@ -837,7 +931,7 @@ namespace logger {
              *
              * @ingroup EAH
              */
-            Histogram::Mat histogram(const EAH& logger)
+            inline Histogram::Mat histogram(const EAH& logger)
             {
                 Histogram h;
                 return h(logger);
@@ -856,7 +950,7 @@ namespace logger {
             /** Computes the matrix that is joint empirical cumulative distribution function of all attainments in a logger.
              *  Across problems, dimensions and instances.
              * 
-             * That is, a (<nb of targets buckets> * <nb of evaluations buckets>) matrix of probabilities.
+             * That is, a (\<nb of targets buckets\> * \<nb of evaluations buckets\>) matrix of probabilities.
              * 
              * This is actually the Histogram / nb_attaiments.
              * 
@@ -869,7 +963,7 @@ namespace logger {
              *
              * @ingroup EAH
              */
-            std::vector<std::vector<double>> distribution(const EAH& logger)
+            inline std::vector<std::vector<double>> distribution(const EAH& logger)
             {
                 Histogram histo;
                 Histogram::Mat h = histo(logger);
@@ -949,7 +1043,7 @@ namespace logger {
                  * @note This is just a proxy to the stat::under_curve::accumulate function,
                  *       which provides a more detailled interface.
                  */
-                double volume(const EAH& logger)
+                inline double volume(const EAH& logger)
                 {
                     return accumulate(logger, 0.0, std::plus<double>());
                 }

@@ -51,10 +51,11 @@ namespace ioh::logger
 
         /** Handle several loggers at once, but you have to pass pointers.
          *
-         * @note: you can use initializer lists to instantiate the given std::vector:
+         * @note you can use initializer lists to instantiate the given std::vector:
+         * 
          * @code
             LoggerCombine loggers({log_ecdf, log_csv});
-         * @encode
+         * @endcode
          */
         explicit Combine(std::vector<std::reference_wrapper<Logger>> loggers)
         : Logger()
@@ -70,7 +71,8 @@ namespace ioh::logger
             _loggers.push_back(logger);
         }
 
-        /** Logger interface @{ */
+        /** Logger interface */
+        /** @{ */
         void attach_suite(const std::string& suite_name) override
         {
             for(auto& logger : _loggers) {

@@ -5,10 +5,8 @@
 using namespace ioh;
 using namespace ioh::logger;
 
-TEST(eah, ranges)
+TEST(eah, scales)
 {
-    common::log::log_level = common::log::Level::Warning;
-
     // Linear range
     eah::LinearScale<double> linr(0,100, 10);
 
@@ -82,10 +80,8 @@ TEST(eah, ranges)
     // EXPECT_DOUBLE_EQ(log10r_large.bounds(9).second, 6e7);
 }
 
-TEST(eah, ranges_death)
+TEST(eah, scales_death)
 {
-    common::log::log_level = common::log::Level::Warning;
-
     // Linear
     eah::LinearScale<double> linr(0,100, 10);
 

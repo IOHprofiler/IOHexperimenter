@@ -3,12 +3,11 @@
 #include "ioh.hpp"
 
 
-TEST(eaf, bbob)
+TEST(eah, bbob)
 {
     using namespace ioh::problem;
     using namespace ioh::logger;
-    ioh::common::log::log_level = ioh::common::log::Level::Warning;
-     
+
     auto sample_size = 100;
 
     ioh::suite::BBOB suite({1, 2}, {1, 2}, {2, 10});
@@ -17,7 +16,7 @@ TEST(eaf, bbob)
     suite.attach_logger(logger);
 
     std::list<size_t> attainments_sum = {
-        340, 680, 969, 1258, 1547, 1836, 2091, 2346, 2465, 2584, 2635, 2686, 2737, 2788, 2856, 2924,
+        340, 680, 969, 1258, 1547, 1836, 2091, 2346, 2465, 2584, 2635, 2686, 2737, 2788, 2856, 2924
     };
 
     for (const auto &p : suite) {

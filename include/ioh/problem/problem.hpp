@@ -23,12 +23,12 @@ namespace ioh
             {
                 if (x.empty())
                 {
-                    common::log::warning("The solution is empty.");
+                    IOH_DBG(warning,"The solution is empty.");
                     return false;
                 }
                 if (x.size() != static_cast<size_t>(meta_data_.n_variables))
                 {
-                    common::log::warning("The dimension of solution is incorrect.");
+                    IOH_DBG(warning,"The dimension of solution is incorrect.");
                     return false;
                 }
                 return true;
@@ -52,15 +52,15 @@ namespace ioh
 
                 if (common::has_nan(x))
                 {
-                    common::log::warning("The solution contains NaN.");
+                    IOH_DBG(warning,"The solution contains NaN.");
                     return false;
                 }
                 if (common::has_inf(x))
                 {
-                    common::log::warning("The solution contains Inf.");
+                    IOH_DBG(warning,"The solution contains Inf.");
                     return false;
                 }
-                common::log::warning("The solution contains invalid values.");
+                IOH_DBG(warning,"The solution contains invalid values.");
                 return false;
             }
 
@@ -110,8 +110,10 @@ namespace ioh
             virtual void reset()
             {
                 state_.reset();
-                if (logger_ != nullptr)
+                if (logger_ != nullptr) {
+                    logger_->reset();
                     logger_->attach_problem(meta_data_);
+                }
             }
 
             /**

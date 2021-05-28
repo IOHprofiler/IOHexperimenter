@@ -5,8 +5,7 @@
 TEST(store, data_consistency)
 {
     using namespace ioh;
-    common::log::log_level = common::log::Level::Warning;
-     
+
     auto sample_size = 10;
     auto nb_runs = 2;
 
@@ -14,7 +13,9 @@ TEST(store, data_consistency)
     // auto what = ioh::watch::TransformedY();
     // auto when = trigger::Always();
     // ioh::logger::Store logger({when},{what});
-    logger::Store logger({trigger::always},{watch::transformed_y});
+    trigger::Always always;
+    watch::TransformedY transformed_y;
+    logger::Store logger({always},{transformed_y});
 
     suite.attach_logger(logger);
 
@@ -33,15 +34,14 @@ TEST(store, data_consistency)
     EXPECT_EQ(logger.data().at(suite.name()).at(/*pb*/1).at(/*dim*/10).at(/*ins*/2).size(), nb_runs);
     EXPECT_EQ(logger.data().at(suite.name()).at(/*pb*/1).at(/*dim*/10).at(/*ins*/2).at(/*run*/0).size(), sample_size);
     EXPECT_EQ(logger.data().at(suite.name()).at(/*pb*/1).at(/*dim*/10).at(/*ins*/2).at(/*run*/0).at(/*eval*/0).size(), 1); // 1 property watched
-    EXPECT_GT(logger.data().at(suite.name()).at(/*pb*/1).at(/*dim*/10).at(/*ins*/2).at(/*run*/0).at(/*eval*/0).at(watch::transformed_y.name()), 0);
+    EXPECT_GT(logger.data().at(suite.name()).at(/*pb*/1).at(/*dim*/10).at(/*ins*/2).at(/*run*/0).at(/*eval*/0).at(transformed_y.name()), 0);
 
 }
 
 TEST(store, properties)
 {
     using namespace ioh;
-    common::log::log_level = common::log::Level::Warning;
-     
+
     auto sample_size = 4;
     auto nb_runs = 2;
 
@@ -57,7 +57,12 @@ TEST(store, properties)
     double* p_transient_att = nullptr;
     watch::PointerReference attpr("Att_PtrRef", p_transient_att);
     
-    logger::Store logger({trigger::always},{watch::evaluations, watch::raw_y_best, watch::transformed_y, watch::transformed_y_best, attr, attp, attpr});
+    trigger::Always always;
+    watch::Evaluations evaluations;
+    watch::RawYBest raw_y_best;
+    watch::TransformedY transformed_y;
+    watch::TransformedYBest transformed_y_best;
+    logger::Store logger({always},{evaluations, raw_y_best, transformed_y, transformed_y_best, attr, attp, attpr});
 
     suite.attach_logger(logger);
 
@@ -77,7 +82,7 @@ TEST(store, properties)
     }
 
     logger::Store::Cursor first_eval(suite.name(), /*pb*/1, /*dim*/3, /*ins*/1, /*run*/0, /*eval*/0);
-    auto evals = logger.at(first_eval, watch::evaluations);
+    auto evals = logger.at(first_eval, evaluations);
     ASSERT_NE(evals, std::nullopt);
     EXPECT_GT(evals, 0);
 

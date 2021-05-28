@@ -5,8 +5,6 @@ TEST(eah, stats)
 {
     using namespace ioh::logger;
 
-    ioh::common::log::log_level = ioh::common::log::Level::Warning;
-
     size_t runs = 10;
     size_t sample_size = 100;
     size_t buckets = 10;

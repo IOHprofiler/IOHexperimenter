@@ -32,8 +32,13 @@ namespace ioh {
      */
     class Logger {
     protected:
-        trigger::Any _any; // Default combination of triggers instance.
-        trigger::Set& _triggers; // Lower-level interface.
+        //! Default combination of triggers instance.
+        trigger::Any _any;
+        
+        //! Lower-level interface.
+        trigger::Set& _triggers;
+
+        //! Access to the problem.
         const problem::MetaData* _problem;
 
         /** Map property names to property references.
@@ -58,6 +63,8 @@ namespace ioh {
          * if(_properties.at("name").get()) {...}
          * @endcode
          */
+        // We need references because we have container of instances of various classes.
+        // As all share a common interface, we can have a container of references of this base class.
         std::map<std::string,std::reference_wrapper<logger::Property>> _properties;
 
 #ifndef NDEBUG
@@ -92,7 +99,14 @@ namespace ioh {
         }
         
     public:
-        /** Use this constructor if you just need to trigger a log event if ANY of the triggers are fired. */
+        /** Use this constructor if you just need to trigger a log event if ANY of the triggers are fired.
+         *
+         * @warning Do not pass references to members of your derived class,
+         *          as this would pass a reference to an unitiliazed member,
+         *          the base class constructor being always called first.
+         *          Instead, use the empty `Logger()` constructor and then
+         *          add the triggers manually in your own constructor.
+         */
         Logger(std::vector<std::reference_wrapper<logger::Trigger >> triggers,
                std::vector<std::reference_wrapper<logger::Property>> properties)
         : _any(triggers)
@@ -119,8 +133,13 @@ namespace ioh {
             assert(consistent_properties());
         }
 
-        /** Use this constructor if you just need the interface without triggers or properties.
-         *
+        /** Use this constructor if you just need the interface without triggers or properties,
+         * for instance if you define default triggers/properties in your constructor.
+         * 
+         * @note If you manage your own default triggers/properties,
+         *       use `_properties.insert_or_assign(name, std::ref(tp));`
+         *       instead of classical access operators.
+         * 
          * Used by logger::Combine, for instance.
          */
         Logger() : _any(), _triggers(_any), _problem(nullptr), _properties() {}
@@ -134,6 +153,7 @@ namespace ioh {
         /** Check if the logger should be triggered and if so, call `call(log_info)`. */
         void log(const logger::Info& log_info)
         {
+            IOH_DBG(debug,"log " << log_info.raw_y_best << " => " << log_info.transformed_y << " / " << log_info.transformed_y_best);
             assert(_problem != nullptr); // For Debug builds.
             if(not _problem) { // For Release builds.
                 throw std::runtime_error("Logger has not been attached to a problem.");
@@ -141,6 +161,7 @@ namespace ioh {
 
             assert(_triggers.size() > 0);
             if(_triggers(log_info, *_problem)) {
+                IOH_DBG(debug,"logger triggered")
                 call(log_info);
             }
         }
@@ -154,6 +175,7 @@ namespace ioh {
          */
         virtual void attach_problem(const problem::MetaData& problem)
         {
+            IOH_DBG(xdebug,"attach problem " << problem.problem_id);
             _problem = &problem;
         }
 
@@ -171,10 +193,14 @@ namespace ioh {
          */
         virtual void reset()
         {
+            IOH_DBG(debug,"reset");
             _triggers.reset();
         }
 
         virtual ~Logger() = default;
+
+        /** Access the attached problem's metadata. */
+        problem::MetaData problem() const { return *_problem; }
     };
 
     /** Everything related to loggers. */
@@ -186,9 +212,16 @@ namespace ioh {
          */
         class Watcher: public Logger {
         public:
-            /** Use this constructor if you just need to trigger a log event if ANY of the triggers are fired. */
+            /** Use this constructor if you just need to trigger a log event if ANY of the triggers are fired.
+             *
+             * @warning Do not pass references to members of your derived class,
+             *          as this would pass a reference to an unitiliazed member,
+             *          the base class constructor being always called first.
+             *          Instead, use the empty `Watcher()` constructor and then
+             *          add the properties manually in your own constructor.
+             */
             Watcher(std::vector<std::reference_wrapper<logger::Trigger >> when,
-                   std::vector<std::reference_wrapper<logger::Property>> what)
+                    std::vector<std::reference_wrapper<logger::Property>> what)
             : Logger(when,what)
             { }
 
@@ -203,9 +236,20 @@ namespace ioh {
             : Logger(when,what)
             { }
 
+            /** Use this constructor if you just need the interface without triggers or properties,
+             * for instance if you define default triggers/properties in your own constructor.
+             * 
+             * @note If you manage your own default triggers/properties,
+             *       use `_properties.insert_or_assign(name, std::ref(tp));`
+             *       instead of classical access operators.
+             */
+             Watcher() : Logger() { }
+
+            //! Adds a property to be logged.
             // This essentially just expose _properties.push_back with some checks.
             void watch(logger::Property& property)
             {
+                IOH_DBG(debug,"watch property " << property.name());
                 // Assert that the Property is not already tracked.
                 assert(std::find_if(std::begin(_properties),std::end(_properties),
                                     [&property](const auto rwp){return property.name() == rwp.second.get().name();}
