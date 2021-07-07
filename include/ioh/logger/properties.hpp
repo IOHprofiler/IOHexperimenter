@@ -194,7 +194,7 @@ namespace ioh {
                 { }
 
                 //! Main call interface.
-                std::optional<double> operator()(const logger::Info& log_info) const
+                std::optional<double> operator()(const logger::Info&) const
                 {
                     return std::make_optional(static_cast<double>(_variable));
                 }
@@ -239,7 +239,7 @@ namespace ioh {
                 }
                 
                 //! Main call interface.
-                std::optional<double> operator()(const logger::Info& log_info) const
+                std::optional<double> operator()(const logger::Info&) const
                 {
                     return std::make_optional(static_cast<double>(*_variable));
                 }
@@ -287,7 +287,7 @@ namespace ioh {
                 { }
                 
                 //! Main call interface.
-                std::optional<double> operator()(const logger::Info& log_info) const
+                std::optional<double> operator()(const logger::Info&) const
                 {
                     if(_variable != nullptr) {
                         return std::make_optional(static_cast<double>(*_variable));

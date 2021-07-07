@@ -56,8 +56,9 @@ namespace ioh::logger
          * @param common_header_titles Seven strings to print in the header for the common problem meta data (property names are automatically printed after).
          * @param repeat_header If true, the commented header is printed for each new run.
          */
-        FlatFile(std::initializer_list<std::reference_wrapper<logger::Trigger >> triggers,
-              std::initializer_list<std::reference_wrapper<logger::Property>> properties,
+        FlatFile(
+              std::vector<std::reference_wrapper<logger::Trigger >> triggers,
+              std::vector<std::reference_wrapper<logger::Property>> properties,
               const std::string filename = "IOH.dat",
               const fs::path output_directory = fs::current_path(),
               const std::string separator = "\t",
@@ -69,17 +70,17 @@ namespace ioh::logger
               const bool repeat_header = false
         )
         : Watcher(triggers, properties)
-        , _expe_dir(output_directory)
-        , _filename(filename)
         , _sep(separator)
         , _com(comment)
         , _eol(end_of_line)
         , _nan(no_value)
         , _heads(common_header_titles)
-        , _current_suite("unknown_suite")
-        , _current_run(0)
         , _repeat_header(repeat_header)
         , _has_header(false)
+        , _expe_dir(output_directory)
+        , _filename(filename)
+        , _current_suite("unknown_suite")
+        , _current_run(0)
         {
             // Data file
             if(not exists(_expe_dir)) {

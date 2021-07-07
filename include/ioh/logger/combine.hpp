@@ -88,11 +88,22 @@ namespace ioh::logger
             }
         }
 
-        void call(const logger::Info &logger_info) override
+        // We override the high-level interface because a Combine has no properties or triggers.
+        // Hence, we cannot use the Logger's implementation, which check for existing ones.
+        // So here, we just proxy to sub-loggers' `log` method to do it.
+        void log(const logger::Info &logger_info) override
         {
+            IOH_DBG(debug,"call sub-loggers");
             for(auto &logger : _loggers) {
                 logger.get().log(logger_info);
             }
+        }
+
+        // Given that we override `log`, this should never be called.
+        void call(const logger::Info &logger_info) override
+        {
+            IOH_DBG(error,"this interface should not be called from here");
+            throw std::runtime_error("logger::Combine::call should not be called directly.");
         }
 
         void reset() override

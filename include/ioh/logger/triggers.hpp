@@ -123,10 +123,10 @@ namespace ioh {
                 }
 
                 //! Add a trigger to the set.
-                void push_back(logger::Trigger& trigger) { _triggers.push_back(trigger); }
+                void push_back(logger::Trigger& trigger) { _triggers.push_back(std::ref(trigger)); }
 
                 //! Add a trigger to the set.
-                void insert(logger::Trigger& trigger) { _triggers.push_back(trigger); }
+                void insert(logger::Trigger& trigger) { _triggers.push_back(std::ref(trigger)); }
 
                 //! Get the number of managed triggers.
                 size_t size() { return _triggers.size(); }
@@ -158,6 +158,7 @@ namespace ioh {
             /** Triggered if ANY the managed triggers are triggered. */
             virtual bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
             {
+                assert(_triggers.size() > 0);
                 for(auto& trigger : _triggers) {
                     if(trigger(log_info, pb_info)) {
                         IOH_DBG(debug,"any triggered");
@@ -201,6 +202,7 @@ namespace ioh {
             /** Triggered if ALL the managed triggers are triggered. */
             virtual bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
             {
+                assert(_triggers.size() > 0);
                 for(auto& trigger : _triggers) {
                     if(not trigger(log_info, pb_info)) {
                         IOH_DBG(xdebug,"not all triggered");
@@ -227,7 +229,7 @@ namespace ioh {
          * @ingroup Triggering
          */
         struct Always : public logger::Trigger {
-            bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
+            bool operator()(const logger::Info&, const problem::MetaData&) override
             {
                 IOH_DBG(debug,"always triggered");
                 return true;
@@ -326,7 +328,7 @@ namespace ioh {
             { }
 
             //! Main call interface.
-            bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
+            bool operator()(const logger::Info& log_info, const problem::MetaData&) override
             {
                 if((log_info.evaluations-_starting_at) % _interval == 0) {
                     IOH_DBG(debug,"each triggered " << log_info.evaluations);
@@ -375,7 +377,7 @@ namespace ioh {
             { }
 
             //! Main call interface.
-            bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
+            bool operator()(const logger::Info& log_info, const problem::MetaData&) override
             {
                 if(matches(log_info.evaluations)) {
                     IOH_DBG(debug,"triggered at " << log_info.evaluations);
@@ -438,7 +440,7 @@ namespace ioh {
             }
 
             //! Main call interface.
-            bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
+            bool operator()(const logger::Info& log_info, const problem::MetaData&) override
             {
                if(matches(log_info.evaluations)) {
                    IOH_DBG(debug,"triggered during " << log_info.evaluations);

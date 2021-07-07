@@ -142,6 +142,8 @@ namespace ioh {
          * 
          * Used by logger::Combine, for instance.
          */
+        // _triggers needs to be a reference, because it's an interface.
+        // thus we initialize it with an (empty) _any.
         Logger() : _any(), _triggers(_any), _problem(nullptr), _properties() {}
 
         /** Add the given trigger to the list. */
@@ -151,7 +153,8 @@ namespace ioh {
         }
 
         /** Check if the logger should be triggered and if so, call `call(log_info)`. */
-        void log(const logger::Info& log_info)
+        // This is virtual because logger::Combine needs to bypass the default behaviour.
+        virtual void log(const logger::Info& log_info)
         {
             IOH_DBG(debug,"log " << log_info.raw_y_best << " => " << log_info.transformed_y << " / " << log_info.transformed_y_best);
             assert(_problem != nullptr); // For Debug builds.
@@ -159,6 +162,7 @@ namespace ioh {
                 throw std::runtime_error("Logger has not been attached to a problem.");
             }
 
+            assert(_properties.size() > 0);
             assert(_triggers.size() > 0);
             if(_triggers(log_info, *_problem)) {
                 IOH_DBG(debug,"logger triggered")

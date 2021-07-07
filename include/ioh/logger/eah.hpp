@@ -435,8 +435,10 @@ namespace logger {
         {
             // Insert references after members are instantiated.
             _triggers.insert(std::ref(_on_improvement));
+            assert(_triggers.size() > 0);
             _properties.insert_or_assign(_transformed_y_best.name(), std::ref(_transformed_y_best));
             _properties.insert_or_assign(_evaluations.name(), std::ref(_evaluations));
+            assert(consistent_properties());
         }
 
         /** Complete constructor, with which you can define linear or semi-log scale.
@@ -457,8 +459,10 @@ namespace logger {
         {
             // Insert references after members are instantiated.
             _triggers.insert(std::ref(_on_improvement));
+            assert(_triggers.size() > 0);
             _properties.insert_or_assign(_transformed_y_best.name(), std::ref(_transformed_y_best));
             _properties.insert_or_assign(_evaluations.name(), std::ref(_evaluations));
+            assert(consistent_properties());
         }
 
     public:
@@ -1042,6 +1046,8 @@ namespace logger {
                  *
                  * @note This is just a proxy to the stat::under_curve::accumulate function,
                  *       which provides a more detailled interface.
+                 *
+                 * @ingroup EAH
                  */
                 inline double volume(const EAH& logger)
                 {
