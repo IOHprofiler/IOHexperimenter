@@ -100,7 +100,7 @@ namespace ioh::logger
         }
 
         // Given that we override `log`, this should never be called.
-        void call(const logger::Info &logger_info) override
+        void call(const logger::Info &/*logger_info*/) override
         {
             IOH_DBG(error,"this interface should not be called from here");
             throw std::runtime_error("logger::Combine::call should not be called directly.");

@@ -112,7 +112,7 @@ namespace ioh
             }
 #endif
 
-            for (size_t i = 0; i != n; ++i)
+            for (size_t i = 0; i != v1.size(); ++i)
                 if (v1[i] != v2[i])
                     return false;
             return true;
@@ -159,7 +159,7 @@ namespace ioh
                 assert(n == v2.size());
             }
 #endif
-            for (size_t i = 0; i != n; ++i)
+            for (size_t i = 0; i != v1.size(); ++i)
                 if (!compare_objectives<T>(v1[i], v2[i], optimization_type))
                     return false;
             return true;

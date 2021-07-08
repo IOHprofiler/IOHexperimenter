@@ -204,7 +204,7 @@ namespace logger {
 
             return _data.at(cur.suite).at(cur.pb).at(cur.dim).at(cur.ins).at(cur.run);
 #else
-            return _data[cur.suite][cur.pb][cur.dim][cur.ins][cur.run];
+            return _data.at(cur.suite).at(cur.pb).at(cur.dim).at(cur.ins).at(cur.run);
 #endif
         }
 
