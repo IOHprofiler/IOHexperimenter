@@ -436,8 +436,8 @@ namespace logger {
             // Insert references after members are instantiated.
             _triggers.insert(std::ref(_on_improvement));
             assert(_triggers.size() > 0);
-            _properties.insert_or_assign(_transformed_y_best.name(), std::ref(_transformed_y_best));
-            _properties.insert_or_assign(_evaluations.name(), std::ref(_evaluations));
+            _properties.insert_or_assign(_transformed_y_best.name(), _transformed_y_best);
+            _properties.insert_or_assign(_evaluations.name(), _evaluations);
             assert(consistent_properties());
         }
 
@@ -460,8 +460,8 @@ namespace logger {
             // Insert references after members are instantiated.
             _triggers.insert(std::ref(_on_improvement));
             assert(_triggers.size() > 0);
-            _properties.insert_or_assign(_transformed_y_best.name(), std::ref(_transformed_y_best));
-            _properties.insert_or_assign(_evaluations.name(), std::ref(_evaluations));
+            _properties.insert_or_assign(_transformed_y_best.name(), _transformed_y_best);
+            _properties.insert_or_assign(_evaluations.name(), _evaluations);
             assert(consistent_properties());
         }
 
