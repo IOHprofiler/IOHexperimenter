@@ -215,8 +215,8 @@ namespace logger {
             // /!\ needed by the algorithm, do not change unless you know what you're doing.
             _triggers.insert(std::ref(_on_improvement));
             // /!\ needed by the related eaf::stat::* classes.
-            _properties.insert_or_assign(_transformed_y_best.name(), std::ref(_transformed_y_best));
-            _properties.insert_or_assign(       _evaluations.name(), std::ref(_evaluations));
+            _properties.insert_or_assign(_transformed_y_best.name(), _transformed_y_best);
+            _properties.insert_or_assign(       _evaluations.name(), _evaluations);
         }
 
         /** Set the current suite name.
