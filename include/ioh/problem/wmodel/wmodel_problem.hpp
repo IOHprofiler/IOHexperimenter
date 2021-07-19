@@ -15,7 +15,17 @@ namespace ioh::problem
         int ruggedness_gamma_ = 0;
         std::vector<int> ruggedness_info_;
 
-        std::vector<int> transform_variables(std::vector<int> x) override
+        /** Apply a random transformation to the solution itself.
+         * 
+         * Transformations are seeded on the instance ID (passed to the constructor).
+         * If the `instance` is in ]1, 50], it's random flips.
+         * If the `instance` is in ]50,100], it's random reorder.
+         * If `instance` is anything else, no transformation is applied.
+         * 
+         * You may disable this transformation by subclassing and returning `x`
+         * instead of calling this function.
+         */
+        virtual std::vector<int> transform_variables(std::vector<int> x) override
         {
             if (meta_data_.instance > 1 && meta_data_.instance <= 50)
                 transformation::variables::random_flip(x, meta_data_.instance);
@@ -24,7 +34,16 @@ namespace ioh::problem
             return x;
         }
 
-        double transform_objectives(const double y) override
+        /** Apply a random shift and a scaling to the objective function's value.
+         * 
+         * The transformation is seeded on the instance ID (passed to the constructor).
+         * The shift adds a random number in [-0.2, 4.8] and
+         * the scale multiplies by a random number in [1e3, 2e3].]
+         * 
+         * You may disable this transformation by subclassing and returning `y`
+         * instead of calling this function.
+         */
+        virtual double transform_objectives(const double y) override
         {
             using namespace transformation::objective;
             if (meta_data_.instance > 1)

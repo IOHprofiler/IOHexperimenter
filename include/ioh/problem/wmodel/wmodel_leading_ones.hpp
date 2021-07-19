@@ -3,7 +3,7 @@
 
 namespace ioh::problem::wmodel
 {
-    class WModelLeadingOnes final : public WModel
+    class WModelLeadingOnes : public WModel
     {
     protected:
         int wmodel_evaluate(const std::vector<int> &x) override
