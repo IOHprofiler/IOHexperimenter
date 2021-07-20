@@ -209,7 +209,7 @@ namespace logger {
         }
 
     public:
-        EAF() : Logger()
+        EAF() : Logger(), _has_problem_type(false)
         {
             // Do not use the Logger's constructor, to avoid passing references to uninitialized members.
             // /!\ needed by the algorithm, do not change unless you know what you're doing.
@@ -241,9 +241,15 @@ namespace logger {
                 _current.run      = runs.size(); // De facto next run id.
 
 
-#ifndef NDEBUG
                 IOH_DBG(note, "Attach to: pb=" << _current.pb << ", dim=" << _current.dim << ", ins=" << _current.ins << ", run=" << _current.run);
+#ifndef NDEBUG
+                if(_has_problem_type and _current_problem_type != problem.optimization_type) {
+                    IOH_DBG(warning, "different types of problems are mixed, you will not be able to compute levels");
+                }
+#endif
                 _current_problem_type = problem.optimization_type;
+                _has_problem_type = true;
+#ifndef NDEBUG
                 if(problem.optimization_type == common::OptimizationType::Minimization) {
                     _current_best =  std::numeric_limits<double>::infinity();
                 } else {
@@ -282,13 +288,20 @@ namespace logger {
             IOH_DBG(note, "reset");
         }
 
+        common::OptimizationType optimization_type() const
+        {
+            assert(_has_problem_type);
+            return _current_problem_type;
+        }
+
     protected:
 #ifndef NDEBUG
         // Use to double check that trigger::on_improvement do its job.
         // It should not be necessary otherwise.
         double _current_best;
-        common::OptimizationType _current_problem_type;
 #endif
+        bool _has_problem_type;
+        common::OptimizationType _current_problem_type;
 
         /** The main data structure in which log events are stored. */
         Suites _data;
@@ -769,7 +782,7 @@ namespace logger {
                         std::sort(std::begin(front), std::end(front), eaf::descending_qual);
                         for(const auto& p : front) {
                             surface +=   std::fabs(n_qual - p.qual) 
-                                       * std::labs(static_cast<long>(_nadir.time) - static_cast<long>(p.time)); // because time are unsigned
+                                       * std::labs(static_cast<long>(_nadir.time) - static_cast<long>(p.time)); // cast because time are unsigned
                             n_qual = p.qual;
                         }
                         return surface;
@@ -827,9 +840,9 @@ namespace logger {
                     /** Constructor with a nadir reference point. */
                     Volume(const common::OptimizationType optim_type, eaf::Point nadir) : NadirStat(optim_type, nadir) { }
 
-            }; // class LevelsVolume
+            }; // class Volume
 
-            /** Computes the "hypervolume" of the whole empirical attainement function.
+            /** Computes the absolute "hypervolume" of the whole empirical attainement function.
              *
              * @warning The nadir reference point is computed automatically as the extremum of all the levels.
              *          Thus, if you call this function several times on different levels,
@@ -842,6 +855,37 @@ namespace logger {
             {
                 Volume volume_of(optim_type);
                 return volume_of(levels);
+            }
+
+            /** Computes the normalized "hypervolume" of the whole empirical attainment function.
+             * 
+             * If you don't pass the number of runs, it will be guessed by looking at
+             * the number of runs in the very first logs.
+             * 
+             * @ingroup EAF
+             */
+            inline double volume(const EAF& logger, double error_min, double error_max, size_t evals_min, size_t evals_max, size_t nb_runs = 0)
+            {
+                assert(error_max > error_min);
+                assert(evals_max > evals_min);
+
+                // Prepare the instance with the Nadir point.
+                Volume volume_of(logger.optimization_type(), Point(error_max, evals_max));
+
+                // Computes all levels.
+                auto v = volume_of(levels(logger.optimization_type(), logger, {}));
+
+                // Get the number of runs from the first instance.
+                // WARNING: this assume that all instances have the same number of runs,
+                // an assumption that is not enforced in the logger.
+                if(nb_runs == 0) {
+                    nb_runs = logger.data().at(0).at(0).at(0).at(0).size();
+#ifndef NDEBUG
+                    // FIXME double check that all instances have that many runs
+#endif
+                }
+                assert(nb_runs > 0);
+                return v / (nb_runs * (error_max-error_min) * (evals_max-evals_min));
             }
             
         } // stat
