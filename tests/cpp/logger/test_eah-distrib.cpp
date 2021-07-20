@@ -1,5 +1,4 @@
-#include "ioh.hpp"
-#include <gtest/gtest.h>
+#include "../utils.hpp"
 
 template<class RR, class RV>
 void do_test(std::string scale_errors, std::string scale_evals)
@@ -31,7 +30,7 @@ void do_test(std::string scale_errors, std::string scale_evals)
         } // run
     } // pb
 
-    CLUTCHCODE(info,
+    CLUTCHCODE(progress,
         auto d = eah::stat::distribution(eah);
         std::clog << scale_errors << "-" << scale_evals << " joint cumulative attainment distribution for errors and evaluations:" << std::endl;
         std::clog << eah::colormap(d, {&r_error, &r_evals}, true) << std::endl;
@@ -46,7 +45,7 @@ void do_test(std::string scale_errors, std::string scale_evals)
     );
 }
 
-TEST(eah, plots)
+TEST_F(BaseTest, DISABLED_eah_plots)
 {
     using namespace ioh::logger::eah;
 

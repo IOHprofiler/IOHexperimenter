@@ -249,17 +249,17 @@ void define_helper_classes(py::module &m)
         .def_readonly("n_variables", &MetaData::n_variables,
                       "The number of variables (dimension) of the current problem");
 
-    py::class_<ioh::logger::LogInfo>(m, "LogInfo")
+    py::class_<ioh::logger::Info>(m, "LogInfo") 
         .def(py::init<size_t, double, double, double, Solution<double>, Solution<double>>())
-        .def_readonly("evaluations", &ioh::logger::LogInfo::evaluations,
+        .def_readonly("evaluations", &ioh::logger::Info::evaluations,
                       "The number of evaluations performed on the current problem so far")
-        .def_readonly("y_best", &ioh::logger::LogInfo::y_best, "The best fitness value found so far")
-        .def_readonly("transformed_y", &ioh::logger::LogInfo::transformed_y,
+        .def_readonly("y_best", &ioh::logger::Info::raw_y_best, "The best fitness value found so far")
+        .def_readonly("transformed_y", &ioh::logger::Info::transformed_y,
                       "The internal representation of the current fitness value")
-        .def_readonly("transformed_y_best", &ioh::logger::LogInfo::transformed_y_best,
+        .def_readonly("transformed_y_best", &ioh::logger::Info::transformed_y_best,
                       "The internal representation of the best-so-far fitness")
-        .def_readonly("current", &ioh::logger::LogInfo::current, "The fitness of the last evaluated solution")
-        .def_readonly("objective", &ioh::logger::LogInfo::objective, "The best possible fitness value");
+        .def_readonly("current", &ioh::logger::Info::current, "The fitness of the last evaluated solution")
+        .def_readonly("objective", &ioh::logger::Info::optimum, "The best possible fitness value");
 }
 
 void define_pbo_problems(py::module &m)

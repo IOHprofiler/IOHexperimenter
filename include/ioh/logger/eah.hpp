@@ -493,10 +493,10 @@ namespace logger {
                 _current.is_tracked = true;
                 _current.has_opt = (log_info.optimum.y != std::numeric_limits<double>::infinity() and log_info.optimum.y != -std::numeric_limits<double>::infinity());
                 if (_current.has_opt) {
-                    IOH_DBG(info, "Problem has known optimum, will compute the EAH of the error.");
+                    IOH_DBG(debug, "Problem has known optimum, will compute the EAH of the error.");
                     _current.opt = log_info.optimum.y;
                 } else {
-                    IOH_DBG(info, "Problem has no known optimum, will compute the absolute EAH.");
+                    IOH_DBG(debug, "Problem has no known optimum, will compute the absolute EAH.");
                 }
                 init_eah(_current);
             }

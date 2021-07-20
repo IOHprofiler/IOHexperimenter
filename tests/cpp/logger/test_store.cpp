@@ -1,8 +1,6 @@
-#include <list>
-#include <gtest/gtest.h>
-#include "ioh.hpp"
+#include "../utils.hpp"
 
-TEST(store, data_consistency)
+TEST_F(BaseTest, store_data_consistency)
 {
     using namespace ioh;
 
@@ -38,7 +36,7 @@ TEST(store, data_consistency)
 
 }
 
-TEST(store, properties)
+TEST_F(BaseTest, store_properties)
 {
     using namespace ioh;
 

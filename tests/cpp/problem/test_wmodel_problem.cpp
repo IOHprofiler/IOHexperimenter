@@ -1,9 +1,7 @@
-#include <gtest/gtest.h>
-
-#include "ioh.hpp"
+#include "../utils.hpp"
 
 
-TEST(WModel, Dummy)
+TEST_F(BaseTest, WModel_Dummy)
 {
     const std::vector<int> x1(16, 1);
     const std::vector<int> x0(16, 0);

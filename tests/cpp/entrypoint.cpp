@@ -1,22 +1,32 @@
-#include <gtest/gtest.h>
+#include "utils.hpp"
 
-#include <clutchlog/clutchlog.h>
+void BaseTest::SetUp()
+{
+    auto &log = clutchlog::logger();
+    log.threshold(log_level_);
+
+    if (log_file_.has_value())
+        log.file(log_file_.value());
+
+#if CLUTCHLOG_HAVE_UNIX_SYSINFO == 1
+    if (log_depth_.has_value())
+        log.depth(log_depth_.value());
+#endif
+}   
 
 int main(int argc, char** argv) {	
 	::testing::InitGoogleTest(&argc, argv);
 
     // Allows to adjust the debugging log parameters for all tests.
     // Binaries will expect the log level, then the depth level, then the file scope regexp.
-    auto& dbglog = clutchlog::logger();
     if(argc > 1) {
-        // After GoogleTest has removed its arguments.
-        dbglog.threshold( dbglog.level_of(argv[1]) );
+        BaseTest::log_level_ = clutchlog::logger().level_of(argv[1]);
         if(argc > 2) {
             // TODO we could also handle function and/or line regexp.
             // Maybe it's useless for tests, so it's not handled for the moment.
-            dbglog.file( argv[2] );
+            BaseTest::log_file_ = argv[2];
             if(argc > 3) {
-                dbglog.depth( std::atoi(argv[3]) );
+                BaseTest::log_depth_ = std::atoi(argv[3]);
                 if(argc > 4) {
                     std::cerr << "WARNING: Tests do not handle more than 3 arguments, but you passed " << argc-1 << " arguments." << std::endl;
                     std::cerr << "Usage: <test> [--gtest* options] [level [scope [depth]]" << std::endl;
@@ -27,9 +37,6 @@ int main(int argc, char** argv) {
                 }
             } // Clutchlog's default already on INTMAX.
         } // Clutchlog's default already on any file.
-    } else {
-        dbglog.threshold( clutchlog::level::xdebug );
-    }
-     
-	return  RUN_ALL_TESTS();
+    } 
+	return RUN_ALL_TESTS();
 }

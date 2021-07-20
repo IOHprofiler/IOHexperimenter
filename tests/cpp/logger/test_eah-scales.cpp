@@ -1,11 +1,9 @@
-#include <utility>
-#include <gtest/gtest.h>
-#include "ioh.hpp"
+#include "../utils.hpp"
 
 using namespace ioh;
 using namespace ioh::logger;
 
-TEST(eah, scales)
+TEST_F(BaseTest, eah_scales)
 {
     // Linear range
     eah::LinearScale<double> linr(0,100, 10);
@@ -80,7 +78,7 @@ TEST(eah, scales)
     // EXPECT_DOUBLE_EQ(log10r_large.bounds(9).second, 6e7);
 }
 
-TEST(eah, scales_death)
+TEST_F(BaseTest, eah_scales_death)
 {
     // Linear
     eah::LinearScale<double> linr(0,100, 10);

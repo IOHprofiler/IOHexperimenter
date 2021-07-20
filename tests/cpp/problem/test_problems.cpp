@@ -1,8 +1,4 @@
-#include <cmath>
-#include <list>
-#include <gtest/gtest.h>
-#include "ioh.hpp"
-
+#include "../utils.hpp"
 
 double test_eval(const std::shared_ptr<ioh::problem::Real> &f)
 {
@@ -18,7 +14,7 @@ double test_eval(const std::shared_ptr<ioh::problem::Integer> &f)
 }
 
 
-TEST(problems, bbob)
+TEST_F(BaseTest, problems_bbob)
 {
     using namespace ioh::problem::bbob;
     EXPECT_DOUBLE_EQ(test_eval(std::make_shared<AttractiveSector>(1, 4)), 38905.1446);
@@ -47,7 +43,7 @@ TEST(problems, bbob)
     EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Weierstrass>(1, 4)), 192.2602);
 }
 
-TEST(problems, pbo)
+TEST_F(BaseTest, problems_pbo)
 {
     using namespace ioh::problem::pbo;
     EXPECT_DOUBLE_EQ(test_eval(std::make_shared<OneMax>(1, 9)), 5.0000);
@@ -76,7 +72,7 @@ TEST(problems, pbo)
     EXPECT_DOUBLE_EQ(test_eval(std::make_shared<IsingTriangular>(1, 9)), 9.0000);
 }
 
-TEST(problem_suite, bbob)
+TEST_F(BaseTest, problem_suite_bbob)
 {
     auto& ioh_dbg = clutchlog::logger();
     ioh_dbg.threshold(clutchlog::level::xdebug);
@@ -119,7 +115,7 @@ TEST(problem_suite, bbob)
 }
 
 
-TEST(xopt_equals_yopt, pbo)
+TEST_F(BaseTest, xopt_equals_yopt_pbo)
 {
     const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::PBO>::instance();
     for (const auto& name : problem_factory.names())
@@ -132,7 +128,7 @@ TEST(xopt_equals_yopt, pbo)
     }
 }
 
-TEST(xopt_equals_yopt, real)
+TEST_F(BaseTest, xopt_equals_yopt_real)
 {
     const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();
     for (const auto& name : problem_factory.names())
@@ -142,7 +138,7 @@ TEST(xopt_equals_yopt, real)
     }
 }
 
-TEST(problems, bbob5d)
+TEST_F(BaseTest, problems_bbob5d)
 {
     const auto& the_factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();
     const std::vector<double> expected{

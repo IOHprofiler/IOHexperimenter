@@ -147,7 +147,7 @@ namespace ioh {
         Logger() : _any(), _triggers(_any), _problem(nullptr), _properties() {}
 
         /** Add the given trigger to the list. */
-        void trigger(logger::Trigger when)
+        void trigger(logger::Trigger& when)
         {
             _triggers.push_back(when);
         }
@@ -156,7 +156,7 @@ namespace ioh {
         // This is virtual because logger::Combine needs to bypass the default behaviour.
         virtual void log(const logger::Info& log_info)
         {
-            IOH_DBG(debug,"log " << log_info.raw_y_best << " => " << log_info.transformed_y << " / " << log_info.transformed_y_best);
+            IOH_DBG(debug,"log " << log_info.raw_y_best << " => " << log_info.transformed_y << " / " << log_info.transformed_y_best)
             assert(_problem != nullptr); // For Debug builds.
             if(not _problem) { // For Release builds.
                 throw std::runtime_error("Logger has not been attached to a problem.");
@@ -179,7 +179,7 @@ namespace ioh {
          */
         virtual void attach_problem(const problem::MetaData& problem)
         {
-            IOH_DBG(xdebug,"attach problem " << problem.problem_id);
+            IOH_DBG(xdebug,"attach problem " << problem.problem_id)
             _problem = &problem;
         }
 
@@ -197,7 +197,7 @@ namespace ioh {
          */
         virtual void reset()
         {
-            IOH_DBG(debug,"reset");
+            IOH_DBG(debug,"reset")
             _triggers.reset();
         }
 

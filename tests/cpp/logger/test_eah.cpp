@@ -1,9 +1,6 @@
-#include <list>
-#include <gtest/gtest.h>
-#include "ioh.hpp"
+#include "../utils.hpp"
 
-
-TEST(eah, bbob)
+TEST_F(BaseTest, eah_bbob)
 {
     using namespace ioh::problem;
     using namespace ioh::logger;

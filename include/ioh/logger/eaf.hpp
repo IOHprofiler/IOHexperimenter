@@ -231,30 +231,30 @@ namespace logger {
         /** Attach to a problem. */
         void attach_problem(const problem::MetaData& problem) override
         {
-                Logger::attach_problem(problem);
+            Logger::attach_problem(problem);
 
-                _current.pb  = problem.problem_id;
-                _current.dim = problem.n_variables;
-                _current.ins = problem.instance;
-                
-                const Runs& runs  = _data[_current.suite][_current.pb][_current.dim][_current.ins];
-                _current.run      = runs.size(); // De facto next run id.
+            _current.pb  = problem.problem_id;
+            _current.dim = problem.n_variables;
+            _current.ins = problem.instance;
+            
+            const Runs& runs  = _data[_current.suite][_current.pb][_current.dim][_current.ins];
+            _current.run      = runs.size(); // De facto next run id.
 
 
-                IOH_DBG(note, "Attach to: pb=" << _current.pb << ", dim=" << _current.dim << ", ins=" << _current.ins << ", run=" << _current.run);
+            IOH_DBG(note, "Attach to: pb=" << _current.pb << ", dim=" << _current.dim << ", ins=" << _current.ins << ", run=" << _current.run);
 #ifndef NDEBUG
-                if(_has_problem_type and _current_problem_type != problem.optimization_type) {
-                    IOH_DBG(warning, "different types of problems are mixed, you will not be able to compute levels");
-                }
+            if(_has_problem_type and _current_problem_type != problem.optimization_type) {
+                IOH_DBG(warning, "different types of problems are mixed, you will not be able to compute levels");
+            }
 #endif
-                _current_problem_type = problem.optimization_type;
-                _has_problem_type = true;
+            _current_problem_type = problem.optimization_type;
+            _has_problem_type = true;
 #ifndef NDEBUG
-                if(problem.optimization_type == common::OptimizationType::Minimization) {
-                    _current_best =  std::numeric_limits<double>::infinity();
-                } else {
-                    _current_best = -std::numeric_limits<double>::infinity();
-                }
+            if(problem.optimization_type == common::OptimizationType::Minimization) {
+                _current_best =  std::numeric_limits<double>::infinity();
+            } else {
+                _current_best = -std::numeric_limits<double>::infinity();
+            }
 #endif
         }
 

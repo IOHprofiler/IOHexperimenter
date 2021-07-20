@@ -1,14 +1,6 @@
-#include <vector>
-#include <fstream>
-#include <string>
-#include "ioh.hpp"
-#include <gtest/gtest.h>
-
 #include "../utils.hpp"
 
-
-
-TEST(BBOBfitness, dimension5)
+TEST_F(BaseTest, BBOBfitness_dimension5)
 {
     auto& ioh_dbg = clutchlog::logger();
     ioh_dbg.threshold(clutchlog::level::xdebug);
@@ -34,7 +26,7 @@ TEST(BBOBfitness, dimension5)
     }
 }
 
-TEST(BBOBfitness, dimension20)
+TEST_F(BaseTest, BBOBfitness_dimension20)
 {
     auto& ioh_dbg = clutchlog::logger();
     ioh_dbg.threshold(clutchlog::level::xdebug);

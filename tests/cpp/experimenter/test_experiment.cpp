@@ -1,10 +1,4 @@
-#include <algorithm>
-#include <iostream>
-#include <gtest/gtest.h>
-
-#include "ioh.hpp"
-
-// #include "../utils.hpp" 
+#include "../utils.hpp" 
 
 
 // void bbob_random_search(const std::shared_ptr<ioh::problem::Real>& p)
@@ -36,7 +30,7 @@
 // 	                     [](const char& ch) { return ch == '\n'; }));
 // }
 
-TEST(experiment, config)
+TEST_F(BaseTest, experiment_config)
 {
  //    auto config_file = find_test_file("conf.ini");
 	// const ioh::experiment::Configuration conf(config_file);
@@ -56,7 +50,7 @@ TEST(experiment, config)
 }
 
 
-TEST(experiment, pbo_from_config)
+TEST_F(BaseTest, experiment_pbo_from_config)
 {
 	// using namespace ioh;
  //    auto config_file = find_test_file("conf.ini");
@@ -82,7 +76,7 @@ TEST(experiment, pbo_from_config)
 }
 
 
-TEST(experiment, bbob)
+TEST_F(BaseTest, experiment_bbob)
 {
 	// using namespace ioh;
 

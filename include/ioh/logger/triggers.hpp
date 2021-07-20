@@ -161,11 +161,11 @@ namespace ioh {
                 assert(_triggers.size() > 0);
                 for(auto& trigger : _triggers) {
                     if(trigger(log_info, pb_info)) {
-                        IOH_DBG(debug,"any triggered");
+                        IOH_DBG(debug,"any triggered")
                         return true;
                     }
                 }
-                IOH_DBG(xdebug,"not any triggered");
+                IOH_DBG(xdebug,"not any triggered")
                 return false;
             }
         };
@@ -205,11 +205,11 @@ namespace ioh {
                 assert(_triggers.size() > 0);
                 for(auto& trigger : _triggers) {
                     if(not trigger(log_info, pb_info)) {
-                        IOH_DBG(xdebug,"not all triggered");
+                        IOH_DBG(xdebug,"not all triggered")
                         return false;
                     }
                 }
-                IOH_DBG(debug,"all triggered");
+                IOH_DBG(debug,"all triggered")
                 return true;
             }
 
@@ -231,7 +231,7 @@ namespace ioh {
         struct Always : public logger::Trigger {
             bool operator()(const logger::Info&, const problem::MetaData&) override
             {
-                IOH_DBG(debug,"always triggered");
+                IOH_DBG(debug,"always triggered")
                 return true;
             }
         };

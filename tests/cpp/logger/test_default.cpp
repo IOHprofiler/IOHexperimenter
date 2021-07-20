@@ -1,7 +1,4 @@
-#include <fstream>
-#include <gtest/gtest.h>
-
-#include "ioh.hpp"
+#include "../utils.hpp"
 
 
 // fs::path get_dat_path(const fs::path& root, const ioh::problem::Real& p) {
@@ -18,7 +15,8 @@
 //     return str;
 // }
 
-TEST(logger, default) {
+TEST_F(BaseTest, logger_default)
+{
     // using namespace ioh::logger;
     // using namespace ioh::common;
     // using namespace ioh::problem::bbob;

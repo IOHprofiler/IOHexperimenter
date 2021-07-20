@@ -1,9 +1,7 @@
-#include <gtest/gtest.h>
-
-#include "ioh.hpp"
+#include "../utils.hpp"
 
 
-TEST(common, test)
+TEST_F(BaseTest, common_test)
 {
 	using namespace ioh::common;
 
@@ -15,7 +13,7 @@ TEST(common, test)
 }
 
  
-TEST(common, log)
+TEST_F(BaseTest, common_log)
 {
     auto& ioh_dbg = clutchlog::logger();
     ioh_dbg.threshold(clutchlog::level::xdebug);
@@ -27,14 +25,14 @@ TEST(common, log)
     EXPECT_EQ(output, "Hello\x1B[0m"); // Hello + color reset ANSI code
 }
 
-TEST(common, typenames)
+TEST_F(BaseTest, common_typenames)
 {
     EXPECT_EQ(ioh::common::class_name<ioh::problem::bbob::Sphere>(), "Sphere");
 }
 
 
 
-TEST(common, unique_folder) {
+TEST_F(BaseTest, common_unique_folder) {
     using namespace ioh::common::file;
     const std::string f_name = "TEST_FOLDER";
     remove_all(fs::current_path() / f_name);
@@ -69,7 +67,7 @@ std::string get_contents(const fs::path& file) {
 }
 
 
-TEST(common, buffered_file) {
+TEST_F(BaseTest, common_buffered_file) {
     using namespace ioh::common::file;
     const std::string f_name = "TEST_FILE";
     auto f = BufferedFileStream(f_name);

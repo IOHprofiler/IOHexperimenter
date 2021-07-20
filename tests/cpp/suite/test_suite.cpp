@@ -1,10 +1,7 @@
-#include <cmath>
-#include <list>
+#include "../utils.hpp"
 
-#include <gtest/gtest.h>
-#include "ioh.hpp"
-
-TEST(suite, factory) {
+TEST_F(BaseTest, suite_factory)
+{
     using namespace ioh;
 
     std::vector<int> problem_ids(24);
@@ -20,7 +17,8 @@ TEST(suite, factory) {
 }
 
 
-TEST(suite, pbo) {
+TEST_F(BaseTest, suite_pbo)
+{
     std::vector<int> problem_id;
     std::vector<int> instance_id;
     std::vector<int> dimension = {16, 64};
@@ -65,7 +63,8 @@ TEST(suite, pbo) {
 
 
 
-TEST(suite, bbob) {
+TEST_F(BaseTest, suite_bbob)
+{
     std::vector<int> problem_id;
     std::vector<int> instance_id;
     std::vector<int> dimension = {2, 10};

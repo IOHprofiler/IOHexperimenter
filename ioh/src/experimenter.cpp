@@ -16,7 +16,7 @@ void define_experimenter(py::module &m, const std::string &name)
     
     py::class_<Experimenter>(m, name.c_str(), py::buffer_protocol())
         .def(
-            py::init<Suite, std::shared_ptr<ioh::logger::Base>,
+            py::init<Suite, std::shared_ptr<ioh::Logger>,
             typename Experimenter::Algorithm, int>(),
             R"pbdoc(
                 Initialize an experimentator object based on the provided suite, logger and algorithm.

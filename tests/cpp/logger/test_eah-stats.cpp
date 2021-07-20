@@ -1,7 +1,6 @@
-#include "ioh.hpp"
-#include <gtest/gtest.h>
+#include "../utils.hpp"
 
-TEST(eah, stats)
+TEST_F(BaseTest, eah_stats)
 {
     using namespace ioh::logger;
 

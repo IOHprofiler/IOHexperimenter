@@ -1,7 +1,4 @@
-#include <fstream>
-#include <gtest/gtest.h>
-
-#include "ioh.hpp"
+#include "../utils.hpp"
 
 using namespace ioh;
 
@@ -13,7 +10,7 @@ std::string get_file_as_string(const fs::path& path) {
     return str;
 }
 
-TEST(logger, flatfile)
+TEST_F(BaseTest, logger_flatfile)
 {
     auto p0 = problem::bbob::Sphere(1, 2);
     auto p1 = problem::bbob::Sphere(1, 4);
@@ -25,7 +22,7 @@ TEST(logger, flatfile)
 
     const int runs = 3;
     const int samples = 3;
-
+    
     for(auto pb : std::array<problem::BBOB*,3>({&p0,&p1,&p2})) {
         pb->attach_logger(logger);
         for(auto r = 0; r < runs; ++r) {
