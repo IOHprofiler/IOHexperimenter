@@ -130,7 +130,7 @@ namespace ioh
             void read_config()
             {
                 load();
-                suite_name_ = data_.get("suite", "suite_name");
+                suite_name_ = data_.get("suite", "suite_name").value_or("UNDEFINED");
 
                 // TODO: Make this meta data stuff nice in a struct somewhere
                 if (suite_name_ == "BBOB")
@@ -151,10 +151,10 @@ namespace ioh
                 dimensions_ = data_.get_int_vector(
                     "suite", "dimension", 1, max_dimension_);
 
-                output_directory_ = data_.get("logger", "output_directory");
-                result_folder_ = data_.get("logger", "result_folder");
-                algorithm_info_ = data_.get("logger", "algorithm_info");
-                algorithm_name_ = data_.get("logger", "algorithm_name");
+                output_directory_ = data_.get("logger", "output_directory").value_or("UNDEFINED");
+                result_folder_ = data_.get("logger", "result_folder").value_or("UNDEFINED");
+                algorithm_info_ = data_.get("logger", "algorithm_info").value_or("UNDEFINED");
+                algorithm_name_ = data_.get("logger", "algorithm_name").value_or("UNDEFINED");
 
                 complete_triggers_ = data_.get_bool(
                     "observer", "complete_triggers");
@@ -195,7 +195,7 @@ namespace ioh
                         || sscanf(line.c_str(), "%[^=] = %[^;#]", key, value) == 2)
                         data_.set(section, key, value);
                     else {
-                        IOH_DBG(error, "Error in parsing .ini file on line: " << line);
+                        IOH_DBG(error, "Error in parsing .ini file on line: " << line)
                         assert(false);
                     }
                 }

@@ -261,20 +261,11 @@ namespace ioh
                     {
                         epistasis_result = -1;
                         for (auto j = 0; j < v; ++j)
-                        {
                             if (v - j - 1 != (v - i - 1 - 1) % 4)
-                            {
                                 if (epistasis_result == -1)
-                                {
-                                    epistasis_result = variables[j + h];
-                                }
+                                    epistasis_result = variables[static_cast<size_t>(j) + h];
                                 else
-                                {
-                                    epistasis_result =
-                                        epistasis_result != variables[j + h];
-                                }
-                            }
-                        }
+                                    epistasis_result = epistasis_result != variables[static_cast<size_t>(j) + h];
                         new_variables.push_back(epistasis_result);
                         ++i;
                     }
@@ -283,27 +274,15 @@ namespace ioh
                 if (number_of_variables - h > 0)
                 {
                     v = static_cast<int>(number_of_variables) - h;
-                    auto i = 0;
-                    while (i < v)
+                    for (auto i = 0; i < v; i++)
                     {
                         epistasis_result = -1;
                         for (auto j = 0; j < v; ++j)
-                        {
                             if (v - j - 1 != (v - i - 1 - 1) % 4)
-                            {
-                                if (epistasis_result == -1)
-                                {
-                                    epistasis_result = variables[h + j];
-                                }
-                                else
-                                {
-                                    epistasis_result =
-                                        epistasis_result != variables[h + j];
-                                }
-                            }
-                        }
+                                epistasis_result = epistasis_result == -1
+                                    ? variables.at(static_cast<size_t>(h) + j)
+                                    : epistasis_result != variables.at(static_cast<size_t>(h) + j);
                         new_variables.push_back(epistasis_result);
-                        ++i;
                     }
                 }
                 return new_variables;

@@ -24,7 +24,7 @@ void run(L& logger, const size_t samples, const size_t runs)
         for(size_t r = 0; r < runs; ++r) {
             IOH_DBG(progress, "> run:" << r);
             for(size_t s = 0; s < samples; ++s) {
-                (*pb)(common::random::uniform(pb->meta_data().n_variables, s));
+                (*pb)(common::random::uniform(static_cast<size_t>(pb->meta_data().n_variables), static_cast<long>(s)));
             }
             pb->reset();
         }
@@ -32,7 +32,7 @@ void run(L& logger, const size_t samples, const size_t runs)
 }
 
 
-void fail(Error error, std::string msg = "")
+void fail(const Error error, const std::string& msg = "")
 {
     std::cerr << "ERROR: " << msg << std::endl;
     std::cerr << "Usage: eafh <samples> <runs> <type> [buckets scale]" << std::endl;

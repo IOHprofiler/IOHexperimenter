@@ -20,7 +20,7 @@ TEST_F(BaseTest, common_log)
 
 	testing::internal::CaptureStderr();
 	ioh_dbg.format("{msg}");
-	IOH_DBG(info,"Hello");
+	IOH_DBG(info,"Hello")
 	auto output = testing::internal::GetCapturedStderr();
     EXPECT_EQ(output, "Hello\x1B[0m"); // Hello + color reset ANSI code
 }

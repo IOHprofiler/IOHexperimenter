@@ -21,7 +21,7 @@ namespace ioh
                     k_ = k;
                     if (k > n)
                     {
-                        IOH_DBG(error,"NK_Landscapes, k > n");
+                        IOH_DBG(error,"NK_Landscapes, k > n")
                         assert(k<=n);
                     }
                     for (auto i = 0; i != n; ++i)
@@ -37,7 +37,7 @@ namespace ioh
 
                         for (auto i1 = n - 1; i1 > 0; --i1)
                         {
-                            const auto rand_pos = static_cast<int>(floor(rand_vec[n - 1 - i1] * (i1 + 1)));
+                            const auto rand_pos = static_cast<int>(floor(rand_vec[static_cast<size_t>(n) - 1 - i1] * (static_cast<double>(i1) + 1)));
                             const auto temp = population[i1];
                             population[i1] = population[rand_pos];
                             population[rand_pos] = temp;

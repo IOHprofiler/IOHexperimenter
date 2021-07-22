@@ -241,10 +241,10 @@ namespace logger {
             _current.run      = runs.size(); // De facto next run id.
 
 
-            IOH_DBG(note, "Attach to: pb=" << _current.pb << ", dim=" << _current.dim << ", ins=" << _current.ins << ", run=" << _current.run);
+            IOH_DBG(note, "Attach to: pb=" << _current.pb << ", dim=" << _current.dim << ", ins=" << _current.ins << ", run=" << _current.run)
 #ifndef NDEBUG
             if(_has_problem_type and _current_problem_type != problem.optimization_type) {
-                IOH_DBG(warning, "different types of problems are mixed, you will not be able to compute levels");
+                IOH_DBG(warning, "different types of problems are mixed, you will not be able to compute levels")
             }
 #endif
             _current_problem_type = problem.optimization_type;
@@ -261,7 +261,7 @@ namespace logger {
         /** Process a log event. */
         void call(const logger::Info& log_info) override
         {
-            IOH_DBG(debug, "EAF called after improvement");
+            IOH_DBG(debug, "EAF called after improvement")
             // Access the properties that were instantiated in the constructor.
             const std::optional<double> transformed_y_best = _properties.at("transformed_y_best").get()(log_info);
             const std::optional<double> evaluations        = _properties.at("evaluations").get()(log_info);
@@ -285,7 +285,7 @@ namespace logger {
         void reset() override
         {
             Logger::reset();
-            IOH_DBG(note, "reset");
+            IOH_DBG(note, "reset")
         }
 
         common::OptimizationType optimization_type() const
@@ -480,7 +480,7 @@ namespace logger {
                     } } } } }
                     
                     const size_t nb_runs = fronts.size();
-                    IOH_DBG(note, nb_runs << " runs in the EAF logger");
+                    IOH_DBG(note, nb_runs << " runs in the EAF logger")
                     assert(nb_runs > 0);
 
                     // Copy and sort data.
@@ -498,7 +498,7 @@ namespace logger {
                             data_qual.push_back(eaf::RunPoint(p.time, p.qual, run));
                         } 
                     }
-                    IOH_DBG(note, total_nb_points << " front points in the EAF logger");
+                    IOH_DBG(note, total_nb_points << " front points in the EAF logger")
 
                     // Sort the two sets of data.
                     std::sort(std::begin(data_time),std::end(data_time),  ascending_time); // Time always ascend.
@@ -520,7 +520,7 @@ namespace logger {
 
                     // The algorithm.
                     for(const size_t level : _attlevels) {
-                        IOH_DBG(debug, "Parse level " << level);
+                        IOH_DBG(debug, "Parse level " << level)
                         eaf::Front eaf;
                         size_t it = 0; // current time index
                         size_t iq = 0; // current qual index
@@ -540,7 +540,7 @@ namespace logger {
                         eaf::Front level_front;
 
                         do { // while it < total and iq < total
-                            IOH_DBG(debug, "> Parse ascending time from " << it << " (time=" << data_time[it].time << ")" );
+                            IOH_DBG(debug, "> Parse ascending time from " << it << " (time=" << data_time[it].time << ")" )
 
                             // Until the desired attainment level is reached.
                             while(it < total_nb_points-1 and
@@ -555,12 +555,12 @@ namespace logger {
                                     attained[run]++;
                                 } // it.qual <= iq.qual
                             } // while it < total_nb_points
-                            IOH_DBG(debug, "> Reached level at " << it);
+                            IOH_DBG(debug, "> Reached level at " << it)
                             // IOH_DBG_DUMP(xdebug, attained, "attained_right_{n}.dat");
 
                             if(nb_attained >= level) {
-                                IOH_DBG(debug, ">> Level is to be saved");
-                                IOH_DBG(debug, ">> Parse descending qual from " << iq << " (qual=" << data_qual[iq].qual << ")");
+                                IOH_DBG(debug, ">> Level is to be saved")
+                                IOH_DBG(debug, ">> Parse descending qual from " << iq << " (qual=" << data_qual[iq].qual << ")")
                                 // Until the desired attainment level is no longer reached.
                                 do { // while nb_attained >= level and iq < total
 
@@ -584,11 +584,11 @@ namespace logger {
                                         assert(iq-1 < total_nb_points);
                                     } while(iq < total_nb_points and data_qual[iq].qual == data_qual[iq-1].qual);
                                 } while(nb_attained >= level and iq < total_nb_points);
-                                IOH_DBG(debug, ">> Reached level at " << iq);
+                                IOH_DBG(debug, ">> Reached level at " << iq)
                                 // assert(nb_attained < level);
                                 assert(it < total_nb_points);
                                 assert(iq-1 < total_nb_points);
-                                IOH_DBG(debug, ">> Front level point: (" << data_time[it].time << "," << data_qual[iq-1].qual << ")");
+                                IOH_DBG(debug, ">> Front level point: (" << data_time[it].time << "," << data_qual[iq-1].qual << ")")
                                 level_front.push_back( eaf::RunPoint(
                                         data_time[it].time,
                                         data_qual[iq-1].qual,
@@ -599,23 +599,23 @@ namespace logger {
                         } while(it < total_nb_points-1 and iq < total_nb_points);
 
                         // Save this level.
-                        IOH_DBG(note, "> Level " << level << " has " << level_front.size() << " points");
+                        IOH_DBG(note, "> Level " << level << " has " << level_front.size() << " points")
                         assert(level_front.size() > 0);
                         assert(levels.find(level) == std::end(levels));
                         levels[level] = level_front;
                         #ifndef NDEBUG
-                            IOH_DBG(xdebug,">> Involved runs:");
-                            IOH_DBG(xdebug,">>> " << level_front[0].run);
+                            IOH_DBG(xdebug,">> Involved runs:")
+                            IOH_DBG(xdebug,">>> " << level_front[0].run)
                             for(size_t i = 1; i < level_front.size(); ++i) {
                                 if(level_front[i].run != level_front[i-1].run) {
-                                    IOH_DBG(xdebug,">>> " << level_front[i].run);
+                                    IOH_DBG(xdebug,">>> " << level_front[i].run)
                                 }
                                 assert(level_front[i].run == level_front[i-1].run);
                             }
                         #endif
                     } // l in levels
 
-                    IOH_DBG(note, "Ended with " << levels.size() << " levels");
+                    IOH_DBG(note, "Ended with " << levels.size() << " levels")
                     assert(levels.size() > 0);
                     assert(levels.size() <= nb_runs);
                     return levels;
@@ -682,7 +682,7 @@ namespace logger {
                     size_t worst_time;
                     double worst_qual;
                     if(_optim_type == common::OptimizationType::Minimization) {
-                        worst_time = -std::numeric_limits<size_t>::infinity();
+                        worst_time =  std::numeric_limits<size_t>::lowest();
                         worst_qual = -std::numeric_limits<double>::infinity();
                     } else {
                         worst_time =  std::numeric_limits<size_t>::infinity();
@@ -718,7 +718,7 @@ namespace logger {
                         size_t worst_time;
                         double worst_qual;
                         if(_optim_type == common::OptimizationType::Minimization) {
-                            worst_time = -std::numeric_limits<size_t>::infinity();
+                            worst_time =  std::numeric_limits<size_t>::lowest();
                             worst_qual = -std::numeric_limits<double>::infinity();
                         } else {
                             worst_time =  std::numeric_limits<size_t>::infinity();
@@ -826,10 +826,10 @@ namespace logger {
                         // Do not compute surfaces right here to avoid two loops on levels instead of one.
 
                         double volume = 0;
-                        int prev_level = -1;
+                        auto prev_level = -1;
                         for(const auto& [level,front] : levels) {
-                            volume += s.surface(front) * (level - prev_level);
-                            prev_level = level;
+                            volume += s.surface(front) * (static_cast<double>(level) - prev_level);
+                            prev_level = static_cast<int>(level);
                         }
                         return volume;
                     }

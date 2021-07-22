@@ -22,19 +22,20 @@ namespace ioh::common
             return f;
         }
 
-        void include(const std::string& name, int id, Creator creator)
+        void include(const std::string& name, const int id, Creator creator)
         {
             const auto already_defined = name_map.find(name) != std::end(name_map);
             assert(!already_defined);
             name_map[name] = std::move(creator);
             if(!already_defined)
-            {
-                const auto known_ids = ids();
-                const auto it = std::find(known_ids.begin(), known_ids.end(), id);
-                id = it == known_ids.end() ? id : get_next_id(known_ids);
-                id_map[id] = name;
-            }
-            
+                id_map[check_or_get_next_available(id)] = name;
+        }
+
+        [[nodiscard]] int check_or_get_next_available(const int id) const 
+        {
+            const auto known_ids = ids();
+            const auto it = std::find(known_ids.begin(), known_ids.end(), id);
+            return it == known_ids.end() ? id : get_next_id(known_ids);
         }
 
         [[nodiscard]] std::vector<std::string> names() const

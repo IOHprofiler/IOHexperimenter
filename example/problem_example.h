@@ -72,6 +72,9 @@ inline double constant_zero(const std::vector<double> &)
     return 0.0;
 }
 
+
+inline double constant_zero2(const std::vector<double> &) { return 0.0; }
+
 inline void extending_problems_example()
 {
     /// Note that problems which extend RealProblem are automatically avaible in the corresponsing Factory:
@@ -93,6 +96,11 @@ inline void extending_problems_example()
 
 inline void problem_example()
 {
-    simple_problem_example();
-    extending_problems_example();
+    // simple_problem_example();
+    // extending_problems_example();
+
+    auto const_z_problem = ioh::problem::wrap_function<double>(&constant_zero, "ConstantZero");
+    auto const_z_problem2 = ioh::problem::wrap_function<double>(&constant_zero2, "ConstantZero2");
+    std::cout << const_z_problem.meta_data() << std::endl;
+    std::cout << const_z_problem2.meta_data() << std::endl;
 }

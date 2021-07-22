@@ -3,7 +3,6 @@
 #include <list>
 #include <optional>
 
-#include <ciso646>
 #include <clutchlog/clutchlog.h>
 #include <gtest/gtest.h>
 

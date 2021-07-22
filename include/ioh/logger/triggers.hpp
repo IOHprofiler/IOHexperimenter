@@ -116,7 +116,7 @@ namespace ioh {
                 /** Propagate the reset event to all managed triggers. */
                 virtual void reset() override
                 {
-                    IOH_DBG(debug,"reset triggers");
+                    IOH_DBG(debug,"reset triggers")
                     for(auto& trigger : _triggers) {
                         trigger.get().reset();
                     }
@@ -271,10 +271,10 @@ namespace ioh {
                 if(not _has_type) {
                     _type = pb_info.optimization_type;
                     if(_type == common::OptimizationType::Minimization) {
-                        IOH_DBG(debug,"reconfigure problem type as minimization");
+                        IOH_DBG(debug,"reconfigure problem type as minimization")
                         _best =  std::numeric_limits<double>::infinity();
                     } else {
-                        IOH_DBG(debug,"reconfigure problem type as maximization");
+                        IOH_DBG(debug,"reconfigure problem type as maximization")
                         _best = -std::numeric_limits<double>::infinity();
                     }
                     _has_type = true;
@@ -286,10 +286,10 @@ namespace ioh {
                 assert(_has_type);
                 if(common::compare_objectives(log_info.transformed_y, _best, _type)) {
                     _best = log_info.transformed_y;
-                    IOH_DBG(debug,"triggered on improvement by " << log_info.transformed_y << " / " << _best);
+                    IOH_DBG(debug,"triggered on improvement by " << log_info.transformed_y << " / " << _best)
                     return true;
                 }
-                IOH_DBG(xdebug,"not triggered on improvement by " << log_info.transformed_y << " / " << _best);
+                IOH_DBG(xdebug,"not triggered on improvement by " << log_info.transformed_y << " / " << _best)
                 return false;
             }
 
@@ -331,10 +331,10 @@ namespace ioh {
             bool operator()(const logger::Info& log_info, const problem::MetaData&) override
             {
                 if((log_info.evaluations-_starting_at) % _interval == 0) {
-                    IOH_DBG(debug,"each triggered " << log_info.evaluations);
+                    IOH_DBG(debug,"each triggered " << log_info.evaluations)
                     return true;
                 } else {
-                    IOH_DBG(xdebug,"each not triggered " << log_info.evaluations);
+                    IOH_DBG(xdebug,"each not triggered " << log_info.evaluations)
                     return false;
                 }
             }
@@ -380,10 +380,10 @@ namespace ioh {
             bool operator()(const logger::Info& log_info, const problem::MetaData&) override
             {
                 if(matches(log_info.evaluations)) {
-                    IOH_DBG(debug,"triggered at " << log_info.evaluations);
+                    IOH_DBG(debug,"triggered at " << log_info.evaluations)
                     return true;
                 } else {
-                    IOH_DBG(xdebug,"not triggered at " << log_info.evaluations);
+                    IOH_DBG(xdebug,"not triggered at " << log_info.evaluations)
                     return false;
                 }
             }
@@ -443,10 +443,10 @@ namespace ioh {
             bool operator()(const logger::Info& log_info, const problem::MetaData&) override
             {
                if(matches(log_info.evaluations)) {
-                   IOH_DBG(debug,"triggered during " << log_info.evaluations);
+                   IOH_DBG(debug,"triggered during " << log_info.evaluations)
                    return true;
                } else {
-                   IOH_DBG(xdebug,"not triggered during " << log_info.evaluations);
+                   IOH_DBG(xdebug,"not triggered during " << log_info.evaluations)
                    return false;
                }
             }

@@ -11,5 +11,5 @@
 	url = https://github.com/fmtlib/fmt
 [submodule "external/clutchlog"]
 	path = external/clutchlog
-	url = https://github.com/nojhan/clutchlog
+	url = https://github.com/jacobdenobel/clutchlog.git
 

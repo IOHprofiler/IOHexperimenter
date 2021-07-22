@@ -14,7 +14,7 @@ namespace ioh
                 {
                     auto result = 0;
                     for (auto i = 0; i < n - k; ++i)
-                      result += (x[i] * 2 - 1) * (x[i+k] * 2 - 1);
+                      result += (x[i] * 2 - 1) * (x[static_cast<size_t>(i) + k] * 2 - 1);
                       
                     return static_cast<double>(result);
                 }
@@ -27,7 +27,7 @@ namespace ioh
                         const auto cor = correlation(x, meta_data_.n_variables, k);
                         result += cor * cor;
                     }
-                    result = static_cast<double>(meta_data_.n_variables * meta_data_.n_variables) / 2.0 / result;
+                    result = (static_cast<double>(meta_data_.n_variables) * meta_data_.n_variables) / 2.0 / result;
                     return result;
                 }
 

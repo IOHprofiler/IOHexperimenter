@@ -101,7 +101,7 @@ namespace ioh::common::random
     inline std::vector<double> uniform(const size_t &n, long seed, const double lb = 0, const double ub = 1)
     {
         auto rand_vec = std::vector<double>(n);
-        long rand_seed[32];
+        long rand_seed[32] = {};
 
         for (auto i = 39; i >= 0; --i)
         {

@@ -43,14 +43,14 @@ namespace ioh {
                 suite_ = suite::SuiteRegistry<ProblemType>::instance().create(suite_name, problems, instances, dimensions);
                     
                 if (suite_ == nullptr) {
-                    IOH_DBG(error,"Creating suite fails, please check your Configuration");
+                    IOH_DBG(error,"Creating suite fails, please check your Configuration")
                     assert(suite_ != nullptr);
                 }
 
                 logger_ = std::make_shared<logger::Default>(conf_);
 
                 if (logger_ == nullptr) {
-                    IOH_DBG(error,"Creating logger fails, please check your Configuration");
+                    IOH_DBG(error,"Creating logger fails, please check your Configuration")
                     assert(logger_ != nullptr);
                 }
 

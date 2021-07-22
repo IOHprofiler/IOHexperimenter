@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -23,6 +22,7 @@
 #include <cstdlib>
 #include <utility>
 #include <cstdio>
+#include <optional>
 
 #include "fmt/format.h"
 
@@ -107,7 +107,7 @@ namespace ioh
 #ifndef NDEBUG
             size_t n = v1.size();
             if (n != v2.size()) {
-                IOH_DBG(error,"Two compared vectors must have the same size: " << n << " != " << v2.size());
+                IOH_DBG(error,"Two compared vectors must have the same size: " << n << " != " << v2.size())
                 assert(n == v2.size());
             }
 #endif
@@ -155,7 +155,7 @@ namespace ioh
 #ifndef NDEBUG
             auto n = v1.size();
             if (n != v2.size()) {
-                IOH_DBG(error, "Two compared objective vector must have the same size: " << n << " != " << v2.size());
+                IOH_DBG(error, "Two compared objective vector must have the same size: " << n << " != " << v2.size())
                 assert(n == v2.size());
             }
 #endif
@@ -266,7 +266,7 @@ namespace ioh
             input = strip(input);
             for (auto &e : input)
                 if (e != ',' && e != '-' && !isdigit(e)) {
-                    IOH_DBG(error, "The configuration consists of invalid characters: " << e);
+                    IOH_DBG(error, "The configuration consists of invalid characters: " << e)
                     assert(e == ',' or e == '-' or isdigit(e));
                 }
 
@@ -281,21 +281,21 @@ namespace ioh
                 {
                     /// The condition beginning with "-m"
                     if (i != 0) {
-                        IOH_DBG(error,"Format error in configuration: " << i);
+                        IOH_DBG(error,"Format error in configuration: " << i)
                         assert(i==0);
                     }
                     else
                     {
                         tmp = s.at(i).substr(1);
                         if (tmp.find('-') != std::string::npos) {
-                            IOH_DBG(error, "Format error in configuration, '-' not found.");
+                            IOH_DBG(error, "Format error in configuration, '-' not found.")
                             assert(tmp.find('-') == std::string::npos);
                         }
 
                         tmp_value = std::stoi(tmp);
 
                         if (tmp_value < min) {
-                            IOH_DBG(error,"Input value: " << tmp_value << " exceeds lower bound: " << min);
+                            IOH_DBG(error,"Input value: " << tmp_value << " exceeds lower bound: " << min)
                             assert(tmp_value >= min);
                         }
 
@@ -308,18 +308,18 @@ namespace ioh
                     /// The condition endding with "n-"
 
                     if (i != n - 1) {
-                        IOH_DBG(error,"Format error in configuration.");
+                        IOH_DBG(error,"Format error in configuration.")
                         assert( i == n-1);
                     }
                     else
                     {
                         tmp = s[i].substr(0, s[i].length() - 1);
                         if (tmp.find('-') != std::string::npos) {
-                            IOH_DBG(error,"Format error in configuration, '-' not found.");
+                            IOH_DBG(error,"Format error in configuration, '-' not found.")
                         }
                         tmp_value = std::stoi(tmp);
                         if (tmp_value > max) {
-                            IOH_DBG(error,"Input value: " << tmp_value << " exceeds upper bound: " << max);
+                            IOH_DBG(error,"Input value: " << tmp_value << " exceeds upper bound: " << max)
                             assert(tmp_value <= max);
                         }
                         for (auto value = max; value <= tmp_value; --value)
@@ -336,15 +336,15 @@ namespace ioh
                     tmp_value = std::stoi(tmp_vector[0]);
                     tmp_value2 = std::stoi(tmp_vector[tmp_vector.size() - 1]);
                     if (tmp_value > tmp_value2) {
-                        IOH_DBG(error,"Format error in configuration.");
+                        IOH_DBG(error,"Format error in configuration.")
                         assert(tmp_value <= tmp_value2);
                     }
                     if (tmp_value < min) {
-                        IOH_DBG(error,"Input value exceeds lower bound.");
+                        IOH_DBG(error,"Input value exceeds lower bound.")
                         assert(tmp_value >= min);
                     }
                     if (tmp_value2 > max) {
-                        IOH_DBG(error,"Input value exceeds upper bound.");
+                        IOH_DBG(error,"Input value exceeds upper bound.")
                         assert(tmp_value2 <= max);
                     }
                     for (auto value = tmp_value; value <= tmp_value2; ++value)
@@ -448,7 +448,7 @@ namespace ioh
                 const auto iterate = data_.find(nice(section));
                 if (iterate != data_.end())
                     return iterate->second;
-                IOH_DBG(warning,"Cannot find section: " << section);
+                IOH_DBG(warning,"Cannot find section: " << section)
                 return std::unordered_map<std::string, std::string>();
             }
 
@@ -460,7 +460,7 @@ namespace ioh
              * \return The value stored in the container
              */
             [[nodiscard]]
-            std::string get(const std::string &section,
+            std::optional<std::string> get(const std::string &section,
                             const std::string &key) const
             {
                 auto map = get(section);
@@ -468,8 +468,8 @@ namespace ioh
                 if (iterate != map.end())
                     return iterate->second;
 
-                IOH_DBG(error, "Cannot find key: " << section);
-                return nullptr;
+                IOH_DBG(error, "Cannot find key: " << section)
+                return {};
             }
 
             /**
@@ -483,7 +483,7 @@ namespace ioh
             int get_int(const std::string &section,
                         const std::string &key) const
             {
-                return std::stoi(get(section, key));
+                return std::stoi(get(section, key).value_or(""));
             }
 
             /**
@@ -497,7 +497,7 @@ namespace ioh
             bool get_bool(const std::string &section,
                           const std::string &key) const
             {
-                return nice(get(section, key)) == "true";
+                return nice(get(section, key).value_or("")) == "true";
             }
 
             /**
@@ -515,7 +515,7 @@ namespace ioh
                                             const int min,
                                             const int max) const
             {
-                return get_int_vector_parse_string(get(section, key), min, max);
+                return get_int_vector_parse_string(get(section, key).value_or(""), min, max);
             }
         };
 

@@ -84,10 +84,10 @@ namespace ioh::logger
         {
             // Data file
             if(not exists(_expe_dir)) {
-                IOH_DBG(debug,"some directories do not exist in " << _expe_dir << ", try to create them");
+                IOH_DBG(debug,"some directories do not exist in " << _expe_dir << ", try to create them")
                 create_directories(_expe_dir);
             }
-            IOH_DBG(debug,"will output data in " << _expe_dir/_filename);
+            IOH_DBG(debug,"will output data in " << _expe_dir/_filename)
             _out = std::ofstream(_expe_dir/_filename);
         }
 
@@ -101,17 +101,17 @@ namespace ioh::logger
         {
             // If this is a new problem.
             if(_problem == nullptr or *_problem != problem) {
-                IOH_DBG(xdebug,"reset run counter");
+                IOH_DBG(xdebug,"reset run counter")
                 _current_run = 0; // Then reset the run counter.
             } else {
-                IOH_DBG(xdebug,"increment run counter");
+                IOH_DBG(xdebug,"increment run counter")
                 _current_run++; // Then it's a new run.
             }
 
             Logger::attach_problem(problem); // update _problem
 
             if(_repeat_header or not _has_header) {
-                IOH_DBG(xdebug,"print header");
+                IOH_DBG(xdebug,"print header")
                 _out << _com;
                 for(const std::string head : _heads) {
                     _out << _sep << head;
@@ -129,7 +129,7 @@ namespace ioh::logger
         {
             // Common static values
             // FIXME this should be cached as a string in attach_problem.
-            IOH_DBG(xdebug,"print problem meta data");
+            IOH_DBG(xdebug,"print problem meta data")
             _out /* no sep */ << _current_suite;
             _out  <<   _sep   << _problem->name;
             _out  <<   _sep   << _problem->problem_id;
@@ -138,7 +138,7 @@ namespace ioh::logger
             _out  <<   _sep   << _problem->n_variables;
             _out  <<   _sep   << _current_run;
 
-            IOH_DBG(xdebug,"print watched properties");
+            IOH_DBG(xdebug,"print watched properties")
             for(const auto& [name, p_ref] : _properties) {
                 auto property = p_ref.get()(log_info);
                 if(property) {
@@ -153,7 +153,7 @@ namespace ioh::logger
 
         ~FlatFile()
         {
-            IOH_DBG(debug, "close data file");
+            IOH_DBG(debug, "close data file")
             _out.close();
         }
 
