@@ -74,6 +74,8 @@ namespace ioh {
              * Useful if, for instance, the trigger maintain its own "best value so far" (@see logger::OnImprovement).
              */
             virtual void reset() { }
+
+            virtual ~Trigger() = default;
         };
         
     } // logger
