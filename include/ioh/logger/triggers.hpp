@@ -74,10 +74,15 @@ namespace ioh {
              * Useful if, for instance, the trigger maintain its own "best value so far" (@see logger::OnImprovement).
              */
             virtual void reset() { }
-
+            
             virtual ~Trigger() = default;
         };
-        
+
+        /**
+          * \brief convenience typedef for a vector of triggers
+          */
+         using Triggers = std::vector<std::reference_wrapper<Trigger>>;
+
     } // logger
 
     /** Everything related to triggering a logger event. */
@@ -95,7 +100,7 @@ namespace ioh {
         class Set : public logger::Trigger {
             protected:
                 //! Managed triggers.
-                std::vector<std::reference_wrapper<logger::Trigger>> _triggers;
+                logger::Triggers triggers_;
 
             public:
                 /** Empty constructor
@@ -109,8 +114,8 @@ namespace ioh {
                  * 
                  * @param triggers the managed triggers.
                  */
-                Set( std::vector<std::reference_wrapper<logger::Trigger>> triggers)
-                : _triggers(triggers)
+                Set( logger::Triggers triggers)
+                : triggers_(triggers)
                 { }
 
                 // virtual bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) = 0;
@@ -119,19 +124,22 @@ namespace ioh {
                 virtual void reset() override
                 {
                     IOH_DBG(debug,"reset triggers")
-                    for(auto& trigger : _triggers) {
+                    for(auto& trigger : triggers_) {
                         trigger.get().reset();
                     }
                 }
 
                 //! Add a trigger to the set.
-                void push_back(logger::Trigger& trigger) { _triggers.push_back(std::ref(trigger)); }
+                void push_back(logger::Trigger& trigger) { triggers_.push_back(std::ref(trigger)); }
 
                 //! Add a trigger to the set.
-                void insert(logger::Trigger& trigger) { _triggers.push_back(std::ref(trigger)); }
+                void insert(logger::Trigger& trigger) { triggers_.push_back(std::ref(trigger)); }
 
                 //! Get the number of managed triggers.
-                size_t size() { return _triggers.size(); }
+                size_t size() { return triggers_.size(); }
+
+                //! Get a copy of the triggers 
+                [[nodiscard]] logger::Triggers triggers() const { return triggers_;}
 
         };
 
@@ -153,15 +161,15 @@ namespace ioh {
              * 
              * @param triggers the managed triggers.
              */
-            Any( std::vector<std::reference_wrapper<logger::Trigger>> triggers)
+            Any( logger::Triggers triggers)
             : Set(triggers)
             { }
 
             /** Triggered if ANY the managed triggers are triggered. */
             virtual bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
             {
-                assert(_triggers.size() > 0);
-                for(auto& trigger : _triggers) {
+                assert(!triggers_.empty());
+                for(auto& trigger : triggers_) {
                     if(trigger(log_info, pb_info)) {
                         IOH_DBG(debug,"any triggered")
                         return true;
@@ -175,7 +183,7 @@ namespace ioh {
          * 
          * @ingroup Triggers
          */
-        inline Any& any( std::vector<std::reference_wrapper<logger::Trigger>> triggers )
+        inline Any& any( logger::Triggers triggers )
         {
             auto t = new Any(triggers);
             return *t;
@@ -197,15 +205,15 @@ namespace ioh {
              * 
              * @param triggers the set of Trigger to manage.
              */
-            All( std::vector<std::reference_wrapper<logger::Trigger>> triggers)
+            All( logger::Triggers triggers)
             : Set(triggers)
             { }
 
             /** Triggered if ALL the managed triggers are triggered. */
             virtual bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) override
             {
-                assert(_triggers.size() > 0);
-                for(auto& trigger : _triggers) {
+                assert(triggers_.size() > 0);
+                for(auto& trigger : triggers_) {
                     if(not trigger(log_info, pb_info)) {
                         IOH_DBG(xdebug,"not all triggered")
                         return false;
@@ -220,7 +228,7 @@ namespace ioh {
          *
          * @ingroup Triggers
          */
-        inline All& all( std::vector<std::reference_wrapper<logger::Trigger>> triggers )
+        inline All& all( logger::Triggers triggers )
         {
             auto t = new All(triggers);
             return *t;
@@ -241,7 +249,7 @@ namespace ioh {
          *
          * @ingroup Triggers
          */
-        // extern Always always; // Uncomment if one want a library.
+        inline Always always; // Uncomment if one want a library.
 
         /** A trigger that react to a strict improvement of the best transformed value.
          * 
@@ -305,7 +313,7 @@ namespace ioh {
          * 
          * @ingroup Triggers
          */
-        // extern OnImprovement on_improvement; // Uncomment if one want a library.
+        inline OnImprovement on_improvement; // Uncomment if one want a library.
 
         /** A trigger that fire at a regular interval.
          * 

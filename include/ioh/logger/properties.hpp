@@ -1,6 +1,10 @@
 #pragma once
 
 #include <optional>
+#include <ostream>
+
+#include <fmt/format.h>
+#include <fmt/compile.h>
 
 #include "loginfo.hpp"
 
@@ -61,13 +65,13 @@ namespace ioh {
         class Property{
         protected:
             //! Unique name for the logged property.
-            const std::string _name;
+            const std::string name_;
         public:
             //! Constructor.
-            Property(const std::string name)
-            : _name(name)
+            Property(const std::string& name)
+            : name_(name)
             {
-                assert(_name.size() > 0);
+                assert(!name_.empty());
             }
 
             /** Returns the current value of the managed variable
@@ -85,8 +89,26 @@ namespace ioh {
             virtual std::optional<double> operator()(const logger::Info& log_info) const = 0;
 
             //! Configured name accessor.
-            std::string name() const { return _name; }
+            std::string name() const { return name_; }
+
+            //! Destructor.
+            virtual ~Property() = default;
+
+            // /**
+            //  * \brief Method to parse the log data into a string
+            //  * \param log_info The current problem state data.
+            //  * \return a string representation of the properties' data
+            //  */
+            // [[nodiscard]] virtual std::string call_to_string(const logger::Info &log_info) const
+            // {
+            //     return fmt::format(FMT_COMPILE("{:f}"), (*this)(log_info).value());   
+            // } 
         };
+        
+        /**
+         * \brief convenience typedef for a vector of properties
+         */
+        using Properties = std::vector<std::reference_wrapper<Property>>;
 
     } // logger
 
@@ -101,7 +123,7 @@ namespace ioh {
             //! Constructor.
             Evaluations(const std::string name = "evaluations") : logger::Property(name) {}
             //! Main call interface.
-            std::optional<double> operator()(const logger::Info& log_info) const
+            std::optional<double> operator()(const logger::Info& log_info) const override
             {
                 // This should always be accessible, so the optional will always contain the variable.
                 return std::make_optional(static_cast<double>(log_info.evaluations));
@@ -111,7 +133,7 @@ namespace ioh {
          * 
          * @ingroup Properties
          */
-        // extern Evaluations evaluations; // Uncomment if one want a library.
+        inline Evaluations evaluations; // Uncomment if one want a library.
         
         /** A property that access the best value so far, without transformation.
          *
@@ -121,7 +143,7 @@ namespace ioh {
             //! Constructor.
             RawYBest(const std::string name = "raw_y_best") : logger::Property(name) {}
             //! Main call interface.
-            std::optional<double> operator()(const logger::Info& log_info) const
+            std::optional<double> operator()(const logger::Info &log_info) const override
             {
                 return std::make_optional(log_info.raw_y_best);
             }
@@ -130,7 +152,27 @@ namespace ioh {
          * 
          * @ingroup Properties
          */
-         // extern RawYBest raw_y_best; // Uncomment if one want a library.
+         inline RawYBest raw_y_best; // Uncomment if one want a library.
+
+        /** A property that access the current value so far, without transformation.
+         *
+         * @ingroup Logging
+         */
+        struct CurrentY : public logger::Property
+        {
+            //! Constructor.
+            //! Main call interface.
+            CurrentY(const std::string name = "current_y") : logger::Property(name) {}
+            std::optional<double> operator()(const logger::Info &log_info) const override
+            {
+                return std::make_optional(log_info.current.y);
+            }
+        };
+        /** Objective function value for this call, without transformation.
+         *
+         * @ingroup Properties
+         */
+        inline CurrentY current_y; // Uncomment if one want a library.
 
         /** A property that access the current value so far, with transformation.
          *
@@ -140,8 +182,8 @@ namespace ioh {
             //! Constructor.
             //! Main call interface.
             TransformedY(const std::string name = "transformed_y") : logger::Property(name) {}
-            std::optional<double> operator()(const logger::Info& log_info) const
-            {
+            std::optional<double> operator()(const logger::Info &log_info) const override
+            { 
                 return std::make_optional(log_info.transformed_y);
             }
         };
@@ -149,7 +191,7 @@ namespace ioh {
          * 
          * @ingroup Properties
          */
-        // extern TransformedY transformed_y; // Uncomment if one want a library.
+        // inline TransformedY transformed_y; // Uncomment if one want a library.
 
         /** A property that access the best value found so far, with transformation.
          *
@@ -159,7 +201,7 @@ namespace ioh {
             //! Constructor.
             TransformedYBest(const std::string name = "transformed_y_best") : logger::Property(name) {}
             //! Main call interface.
-            std::optional<double> operator()(const logger::Info& log_info) const
+            std::optional<double> operator()(const logger::Info &log_info) const override
             {
                 return std::make_optional(log_info.transformed_y_best);
             }
@@ -168,7 +210,7 @@ namespace ioh {
          * 
          * @ingroup Properties
          */
-        // extern TransformedYBest transformed_y_best; // Uncomment if one want a library.
+        inline TransformedYBest transformed_y_best; // Uncomment if one want a library.
 
         /** A property that access a referenced variable.
          *
@@ -194,7 +236,7 @@ namespace ioh {
                 { }
 
                 //! Main call interface.
-                std::optional<double> operator()(const logger::Info&) const
+                std::optional<double> operator()(const logger::Info &) const override
                 {
                     return std::make_optional(static_cast<double>(_variable));
                 }
@@ -239,7 +281,7 @@ namespace ioh {
                 }
                 
                 //! Main call interface.
-                std::optional<double> operator()(const logger::Info&) const
+                std::optional<double> operator()(const logger::Info &) const override
                 {
                     return std::make_optional(static_cast<double>(*_variable));
                 }
@@ -258,7 +300,7 @@ namespace ioh {
             return *p;
          }
 
-        /** A property that access the variable of a variable through a referente to a pointer.
+        /** A property that access the variable of a variable through a reference to a pointer.
          *
          * Use this if the variable does not always exists in the logged scope.
          * 
@@ -287,13 +329,12 @@ namespace ioh {
                 { }
                 
                 //! Main call interface.
-                std::optional<double> operator()(const logger::Info&) const
+                std::optional<double> operator()(const logger::Info &) const override
                 {
                     if(_variable != nullptr) {
                         return std::make_optional(static_cast<double>(*_variable));
-                    } else {
-                        return std::nullopt;
-                    }
+                    } 
+                    return {};
                 }
         };
         /** The value of an extern variable, which may not exists.
@@ -320,5 +361,7 @@ namespace ioh {
             return *p;
          }
 
+
+        
     } // watch
 } // ioh

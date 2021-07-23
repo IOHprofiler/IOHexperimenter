@@ -213,10 +213,10 @@ namespace logger {
         {
             // Do not use the Logger's constructor, to avoid passing references to uninitialized members.
             // /!\ needed by the algorithm, do not change unless you know what you're doing.
-            _triggers.insert(std::ref(_on_improvement));
+            triggers_.insert(std::ref(_on_improvement));
             // /!\ needed by the related eaf::stat::* classes.
-            _properties.insert_or_assign(_transformed_y_best.name(), _transformed_y_best);
-            _properties.insert_or_assign(       _evaluations.name(), _evaluations);
+            properties_.insert_or_assign(_transformed_y_best.name(), _transformed_y_best);
+            properties_.insert_or_assign(       _evaluations.name(), _evaluations);
         }
 
         /** Set the current suite name.
@@ -263,8 +263,8 @@ namespace logger {
         {
             IOH_DBG(debug, "EAF called after improvement")
             // Access the properties that were instantiated in the constructor.
-            const std::optional<double> transformed_y_best = _properties.at("transformed_y_best").get()(log_info);
-            const std::optional<double> evaluations        = _properties.at("evaluations").get()(log_info);
+            const std::optional<double> transformed_y_best = properties_.at("transformed_y_best").get()(log_info);
+            const std::optional<double> evaluations        = properties_.at("evaluations").get()(log_info);
 #ifndef NDEBUG
             assert(transformed_y_best); // Assert that the optional holds a value, which should be the case here.
             assert(evaluations);

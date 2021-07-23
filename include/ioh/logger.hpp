@@ -9,6 +9,7 @@
 #include "logger/combine.hpp"
 #include "logger/eah.hpp"
 #include "logger/eaf.hpp"
+#include "logger/analyzer.hpp"
 
 /** @defgroup Loggers Loggers
  * Objects that track the calls to the objective function.

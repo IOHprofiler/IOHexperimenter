@@ -155,7 +155,7 @@ namespace ioh::logger {
                 // Get the properties list at the current cursor.
                 Properties& att = current_properties();
                 // Save the corresponding values.
-                for(const auto& rwp : this->_properties) {
+                for(const auto& rwp : this->properties_) {
                     att[rwp.first] = rwp.second.get()(log_info);
                 }
                 // Jump to next cursor.

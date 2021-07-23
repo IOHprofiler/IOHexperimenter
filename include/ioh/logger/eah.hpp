@@ -443,10 +443,10 @@ namespace ioh
                                            false))
             {
                 // Insert references after members are instantiated.
-                _triggers.insert(std::ref(_on_improvement));
-                assert(_triggers.size() > 0);
-                _properties.insert_or_assign(_transformed_y_best.name(), _transformed_y_best);
-                _properties.insert_or_assign(_evaluations.name(), _evaluations);
+                triggers_.insert(std::ref(_on_improvement));
+                assert(triggers_.size() > 0);
+                properties_.insert_or_assign(_transformed_y_best.name(), _transformed_y_best);
+                properties_.insert_or_assign(_evaluations.name(), _evaluations);
                 assert(consistent_properties());
             }
 
@@ -467,10 +467,10 @@ namespace ioh
                                            false))
             {
                 // Insert references after members are instantiated.
-                _triggers.insert(std::ref(_on_improvement));
-                assert(_triggers.size() > 0);
-                _properties.insert_or_assign(_transformed_y_best.name(), _transformed_y_best);
-                _properties.insert_or_assign(_evaluations.name(), _evaluations);
+                triggers_.insert(std::ref(_on_improvement));
+                assert(triggers_.size() > 0);
+                properties_.insert_or_assign(_transformed_y_best.name(), _transformed_y_best);
+                properties_.insert_or_assign(_evaluations.name(), _evaluations);
                 assert(consistent_properties());
             }
 
@@ -517,9 +517,9 @@ namespace ioh
                 }
 
                 // Access the properties that were instantiated in the constructor.
-                const std::optional<double> transformed_y_best = _properties.at("transformed_y_best").get()(log_info);
+                const std::optional<double> transformed_y_best = properties_.at("transformed_y_best").get()(log_info);
                 assert(transformed_y_best); // Assert that the optional holds a value, which should be the case here.
-                const std::optional<double> evaluations = _properties.at("evaluations").get()(log_info);
+                const std::optional<double> evaluations = properties_.at("evaluations").get()(log_info);
                 assert(evaluations);
 
                 double err;

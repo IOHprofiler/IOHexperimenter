@@ -106,7 +106,6 @@ namespace ioh
 
             virtual ~Problem() = default;
 
-
             virtual void reset()
             {
                 state_.reset();
