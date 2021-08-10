@@ -56,7 +56,17 @@ namespace ioh::common::file {
 
         friend std::ostream& operator<<(std::ostream& os, const FileSystemItem& obj) {
             return os << "FileSystemItem: " << obj.path_;
-        }              
+        }
+
+        fs::path operator/(const std::string& p) const
+        {
+            return path() / p;
+        }
+
+        fs::path operator/(const fs::path &p) const
+        {
+            return path() / p;
+        }
     };
 
     class UniqueFolder : public FileSystemItem {
@@ -135,7 +145,7 @@ namespace ioh::common::file {
             if(stream_.is_open()) {
                 if (on_newline && (stream_.tellp() != 0 || !buffer_.empty())) {
                     buffer_ += "\n" + data;
-                }else {
+                } else {
                     buffer_ += data;
                 }
                 if (buffer_.size() > IOH_MAX_BUFFER_SIZE)

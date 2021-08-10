@@ -20,15 +20,6 @@ namespace ioh::logger
      */
     class Analyzer : public FlatFile
     {
-        /*   fs::path output_directory = fs::current_path(), const std::string &folder_name = "ioh_data",
-             std::string algorithm_name = "algorithm_name", std::string algorithm_info = "algorithm_info",
-             const common::OptimizationType optimization_type = common::OptimizationType::Minimization,             
-             const bool store_positions = false, const bool t_always = false, const int t_on_interval = 0,
-             const int t_per_time_range = 0, const bool t_on_improvement = true,
-             const std::vector<int> &t_at_time_points = {0},
-             const int trigger_at_time_points_exp_base = 10, const int trigger_at_range_exp_base = 10
-         */
-
         static inline watch::Evaluations evaluations_{R"#("function evaluation")#"};
         static inline watch::CurrentY current_y_{R"#("current f(x)")#"};
         static inline watch::RawYBest y_best_{R"#("best-so-far f(x)")#"};
@@ -37,28 +28,87 @@ namespace ioh::logger
         static inline Properties default_properties_{evaluations_, current_y_, y_best_, transformed_y_,
                                                      transformed_y_best_};
 
-        fs::path root_;
+        const common::file::UniqueFolder path_;
+        const std::string algorithm_name_;
+        const std::string algorithm_info_;
+        std::ofstream info_stream_;
+        struct
+        {
+            double y;
+            size_t evaluations;
+        } best_point_{};
+
+        void update_info_file(const problem::MetaData& problem, const std::string& dat_path)
+        {
+            const auto info_filename = fmt::format("IOHprofiler_f{:d}_{}.info", problem.problem_id, problem.name);
+
+            if (problem_ != nullptr)
+            {
+                info_stream_ << common::string_format(", %d:%d|%g", problem_->instance, 
+                    best_point_.evaluations, best_point_.y);    
+            }
+
+            if (problem_ == nullptr || problem_->problem_id != problem.problem_id)
+            {
+                if (info_stream_.is_open())
+                    info_stream_.close();
+                info_stream_ = std::ofstream(path_ / info_filename);
+            }
+
+            if (problem_ == nullptr || problem.n_variables != problem_->n_variables ||
+                problem.problem_id != problem_->problem_id)
+            {
+                if (info_stream_.tellp() != 0)
+                    info_stream_ << "\n";
+
+                info_stream_ << "suite = \"" << current_suite_ << "\", funcId = " << problem.problem_id
+                             << ", funcName = \"" << problem.name << "\", DIM = " << problem.n_variables
+                             << ", maximization = "
+                             << (problem.optimization_type == common::OptimizationType::Maximization ? 'T' : 'F')
+                             << ", algId = \"" << algorithm_name_ << "\", algInfo = \"" << algorithm_info_ << '"';
+
+                // TODO: experiment & run attributes
+                info_stream_ << "\n%\n" << dat_path;
+            }
+        }
+        
     public:
-        Analyzer(const Triggers &triggers, const Properties &properties, const fs::path &root = fs::current_path()) :
-            FlatFile(triggers, default_properties_, "IOH.dat", fs::current_path(), "\t", "", "None", "\n", true, false),
-            root_(root)
+        Analyzer(const Triggers& triggers, const Properties& properties, 
+                 const fs::path& root = fs::current_path(),
+                 const std::string& folder_name = "ioh_data",
+                 const std::string& algorithm_name = "algorithm_name", 
+                 const std::string& algorithm_info = "algorithm_info", 
+                 const bool store_positions = true 
+        ) :
+            FlatFile(triggers, common::concatenate(default_properties_, properties), "", {}, "\t", "", "None", "\n", true, store_positions, {}),
+            path_(root, folder_name),
+            algorithm_name_(algorithm_name),
+            algorithm_info_(algorithm_info)            
         {
-            for (const auto &p : properties)
-                watch(p);
         }
 
-        void attach_problem(const problem::MetaData &problem) override
+        virtual ~Analyzer()
         {
-            // Determine file name
-            const auto directory =
-                root_ / common::string_format("data_f%d_%s", problem.problem_id, problem.name.c_str());
-            const auto filename = common::string_format("IOHprofiler_f%d_DIM%d.dat", problem.problem_id,
-                                                        problem.n_variables);
+            IOH_DBG(debug, "close info file")
+            info_stream_.close();
+        }
 
-            open_stream(filename, directory);
+        void attach_problem(const problem::MetaData& problem) override
+        {
+            const auto dat_directory = fmt::format("data_f{:d}_{}", problem.problem_id, problem.name);
+            const auto dat_filename = fmt::format("IOHprofiler_f{:d}_DIM{:d}.dat", problem.problem_id, problem.n_variables);
+            
+            update_info_file(problem, fmt::format("{}/{}", dat_directory, dat_filename));
+            open_stream(dat_filename, path_ / dat_directory); 
             FlatFile::attach_problem(problem);
-
-            std::cout << "attach an\n";
+            best_point_ = { problem.initial_objective_value, 0};
         }
+
+        void call(const Info& log_info) override
+        {
+            FlatFile::call(log_info);
+            if (compare_objectives(log_info.current.y, best_point_.y, problem_->optimization_type))
+                best_point_ = {log_info.current.y, log_info.evaluations};
+        }   
     };
 }

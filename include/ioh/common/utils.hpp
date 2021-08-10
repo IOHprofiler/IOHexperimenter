@@ -92,6 +92,20 @@ namespace ioh
         {
             v2.assign(v1.begin(), v1.end());
         }
+        
+        /**
+         * \brief concatenates two vectors
+         * \tparam T the type of the vectors
+         * \param a the first vector
+         * \param b the second vector
+         * \return the resulting vector, containing the elements of both a and b
+         */
+        template <typename T>
+        std::vector<T> concatenate(std::vector<T> a, const std::vector<T> &b)
+        {
+            a.insert(a.end(), b.begin(), b.end());
+            return a;
+        }
 
         /**
          * \brief Compares two vectors, returns true if all elements are equal

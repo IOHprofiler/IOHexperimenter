@@ -152,7 +152,7 @@ namespace ioh {
          * 
          * @ingroup Properties
          */
-         inline RawYBest raw_y_best; // Uncomment if one want a library.
+        inline RawYBest raw_y_best; // Uncomment if one want a library.
 
         /** A property that access the current value so far, without transformation.
          *

@@ -4,6 +4,16 @@
 
 using namespace ioh;
 
+template <typename T>
+std::vector<T> print(const std::vector<T>& x)
+{
+    for (const auto &e : x)
+        std::cout << e << " ";
+    std::cout << std::endl;
+    return x;
+}
+
+
 int main()
 {
     // clutchlog::logger().threshold(clutchlog::debug);
@@ -16,12 +26,11 @@ int main()
 
     for (auto *pb : std::vector<problem::BBOB *>({&p0}))
     {
-        std::cout << "call attach\n";
         pb->attach_logger(logger);
         for (auto r = 0; r < 3; ++r)
         {
-            for (auto s = 0; s < 3; ++s)
-                (*pb)(common::random::uniform(pb->meta_data().n_variables, s));
+            for (auto s = 1; s < 4; ++s)
+                (*pb)(print(common::random::uniform(pb->meta_data().n_variables, s)));
             pb->reset();
         }
     }
