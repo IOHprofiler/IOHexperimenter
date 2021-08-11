@@ -203,8 +203,8 @@ void define_base_class(py::module &m, const std::string &name)
         {
             using namespace ioh::common;
             const auto meta_data = p.meta_data();
-            return "<" + name + string_format("Problem %d. ", meta_data.problem_id) +
-                meta_data.name + string_format(" (iid=%d dim=%d)>", meta_data.instance, meta_data.n_variables);
+            return "<" + name + fmt::format("Problem {:d}. ", meta_data.problem_id) +
+                meta_data.name + fmt::format(" (iid={:d} dim={:d})>", meta_data.instance, meta_data.n_variables);
         });
 }
 

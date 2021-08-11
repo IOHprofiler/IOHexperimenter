@@ -61,7 +61,6 @@ TEST_F(BaseTest, store_properties)
     watch::TransformedY transformed_y;
     watch::TransformedYBest transformed_y_best;
     logger::Store logger({always},{evaluations, raw_y_best, transformed_y, transformed_y_best, attr, attp, attpr});
-
     suite.attach_logger(logger);
 
     for (const auto &pb : suite) {

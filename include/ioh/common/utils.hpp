@@ -387,32 +387,18 @@ namespace ioh
             return result;
         }
 
-
         /**
-         * \brief String formatting helper function. Leverages sprintf
-         * \tparam Args The arguments template
-         * \param format the string containing the format
-         * \param args the arguments for formatting
-         * \return formatted string
+         * \brief Returns a range of integers
+         * \param start start of the range
+         * \param stop end of the range
+         * \param step stepsize of the range
+         * \return a vector filled with numbers 
          */
-        template <typename ... Args>
-        std::string string_format(const std::string &format, Args ... args)
-        {
-#if defined(__GNUC__) && !defined(__clang__)
-            #pragma GCC diagnostic push
-            #pragma GCC diagnostic ignored "-Wformat-truncation"
-#endif
-            const size_t size = snprintf(nullptr, size_t{0}, format.c_str(), args ...) + 1; // Extra space for '\0'
-#if defined(__GNUC__) && !defined(__clang__)
-            #pragma GCC diagnostic pop
-#endif
-            if (size == 0)
-                throw std::runtime_error("Error during formatting.");
-                
-            const std::unique_ptr<char[]> buf(new char[size]);
-            snprintf(buf.get(), size, format.c_str(), args ...);
-            return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
-        }
+        inline std::vector<int> range(const int start, const int stop, const int step = 1){
+            std::vector<int> v((stop - start) / step);
+            std::generate(v.begin(), v.end(), [=, c=start - step] () mutable { c += step; return c; });
+            return v;
+        }       
 
         /**
          * \brief A nested map container, consisting of two levels. 

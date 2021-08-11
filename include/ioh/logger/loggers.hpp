@@ -66,7 +66,8 @@ namespace ioh {
         // We need references because we have container of instances of various classes.
         // As all share a common interface, we can have a container of references of this base class.
         std::map<std::string,std::reference_wrapper<logger::Property>> properties_;
-        logger::Properties properties_vector_{};
+        logger::Properties properties_vector_{}; 
+        // TODO: check why we use a map here, and not a vector, with a map we cannot control order        
 
 #ifndef NDEBUG
         //! Check that there is no duplicated properties (only in Debug builds).
@@ -253,7 +254,7 @@ namespace ioh {
 
             //! Adds a property to be logged.
             // This essentially just expose _properties.push_back with some checks.
-            void watch(logger::Property& property)
+            virtual void watch(logger::Property& property)
             {
                 IOH_DBG(debug,"watch property " << property.name())
                 // Assert that the Property is not already tracked.

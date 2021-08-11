@@ -16,7 +16,6 @@ struct fmt::formatter<std::reference_wrapper<ioh::logger::Property>> : formatter
     }
 };
 
-
 namespace ioh::logger
 {
     /** A logger that stores some information in a single, tabular-like, file.
@@ -169,7 +168,7 @@ namespace ioh::logger
                     for (size_t i = 0; i < log_info.current.x.size(); i++)
                         out_ << sep_ << "x" << i;
                 out_ << eol_;
-                requires_header_ = true;
+                requires_header_ = false;
             }
 
             IOH_DBG(xdebug, "print problem meta data")
