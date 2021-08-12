@@ -116,6 +116,10 @@ namespace ioh {
         , triggers_(any_)
         , problem_(nullptr)
         {
+            //  auto ref = properties_.at("Att_PtrRef");
+            //     std::cout << "ref addr " << &ref.get() << std::endl;
+            //     std::cout << ref.get()(log_info).value_or(-1) << std::endl;
+            
             store_properties(properties);
             assert(consistent_properties());
         }

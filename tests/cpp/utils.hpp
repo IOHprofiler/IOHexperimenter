@@ -70,13 +70,19 @@ inline std::vector<int> string_to_vector_int(const std::string &s)
     return x;
 }
 
+inline std::string get_file_as_string(const fs::path& path) {
+    std::ifstream t(path);
+    std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+    t.close();
+    return str;
+}
+
 class BaseTest: public ::testing::Test
 {
 public:
     inline static clutchlog::level log_level_ = clutchlog::level::warning;
     inline static std::optional<int> log_depth_ = std::nullopt;
     inline static std::optional<std::string> log_file_ = std::nullopt;
-
 protected:
     void SetUp() override;    
 };

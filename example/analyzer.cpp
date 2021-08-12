@@ -21,6 +21,7 @@ void test_single_function(){
 
     double r = 0;
     logger.add_run_attribute("runid", &r);
+    logger.add_run_attribute("runid2", &r);
 
     for (auto *pb : std::vector<problem::BBOB *>({&p0}))
     {
@@ -34,13 +35,7 @@ void test_single_function(){
     }
 }
 
-int main()
-{
-    clutchlog::logger().threshold(clutchlog::warning);
-
-    if(fs::exists(fs::current_path() / "ioh_data"))
-        fs::remove_all(fs::current_path() / "ioh_data");
-
+void test_suite(){
     suite::BBOB suite(common::range(1, 25), common::range(1, 6), common::range(2, 6));
 
     logger::Analyzer logger({trigger::on_improvement}, {});
@@ -54,4 +49,15 @@ int main()
             pb->reset();
         }
     }
+}
+
+
+int main()
+{
+    clutchlog::logger().threshold(clutchlog::warning);
+
+    if(fs::exists(fs::current_path() / "ioh_data"))
+        fs::remove_all(fs::current_path() / "ioh_data");
+
+    test_single_function();
 }   

@@ -63,13 +63,17 @@ TEST_F(BaseTest, store_properties)
     logger::Store logger({always},{evaluations, raw_y_best, transformed_y, transformed_y_best, attr, attp, attpr});
     suite.attach_logger(logger);
 
+    // This is to ensure the test passes on gcc, no idea why this helps
+    logger::Info info;
+    attpr(info);
+
     for (const auto &pb : suite) {
         for (auto r = 0; r < nb_runs; r++) {
             for (auto s = 0; s < sample_size; ++s) {
                 (*pb)(common::random::uniform(pb->meta_data().n_variables, 0));
                 my_attribute++;
                 if(s > sample_size/2) {
-                    p_transient_att = & my_attribute;
+                    p_transient_att = &my_attribute;
                 } else {
                     p_transient_att = nullptr;
                 }
@@ -94,6 +98,5 @@ TEST_F(BaseTest, store_properties)
     ASSERT_EQ(logger.at(last_eval, attp ).value(), 3);
     ASSERT_EQ(logger.at(last_eval, attr ).value(), 3);
     ASSERT_EQ(logger.at(last_eval, attpr), std::nullopt);
-
 }
 

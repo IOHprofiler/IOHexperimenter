@@ -1,28 +1,17 @@
 #pragma once
 
-#include <fmt/format.h>
 #include <fmt/compile.h>
+#include <fmt/format.h>
 
 #include "ioh/problem/problem.hpp"
-
-
-template <>
-struct fmt::formatter<std::reference_wrapper<ioh::logger::Property>> : formatter<std::string>
-{
-    template <typename FormatContext>
-    auto format(const std::reference_wrapper<ioh::logger::Property> &a, FormatContext &ctx)
-    {
-        return formatter<std::string>::format(a.get().name(), ctx);
-    }
-};
 
 namespace ioh::logger
 {
     /** A logger that stores some information in a single, tabular-like, file.
-     * 
+     *
      * Each line displays the problem metadata and the watched properties.
      * This format displays a lot of redundant information, but is very easy to parse.
-     * 
+     *
      * @code
         logger::FlatFile(
             {trigger::always},
@@ -47,7 +36,7 @@ namespace ioh::logger
         bool requires_header_;
         const bool log_meta_data_;
 
-        fs::path exp_dir_;
+        fs::path output_directory_;
         std::string filename_;
 
         std::ofstream out_;
@@ -68,41 +57,26 @@ namespace ioh::logger
          * @param end_of_line The string to use when all fields have been written.
          * @param repeat_header If true, the commented header is printed for each new run.
          * @param store_positions Whether to store x positions in the logged data
-         * @param common_header_titles Seven strings to print in the header for the common problem meta data (property names are automatically printed after).
+         * @param common_header_titles Seven strings to print in the header for the common problem meta data (property
+         * names are automatically printed after).
          */
         FlatFile(std::vector<std::reference_wrapper<Trigger>> triggers,
-                 std::vector<std::reference_wrapper<Property>> properties,
-                 const std::string &filename = "IOH.dat", const fs::path &output_directory = fs::current_path(),
-                 const std::string &separator = "\t", const std::string &comment = "# ",
-                 const std::string &no_value = "None", const std::string &end_of_line = "\n", 
-                 const bool repeat_header = false, const bool store_positions = false,
-                 const std::vector<std::string> &common_header_titles = {
-                    "suite_name", "problem_name",
-                    "problem_id", "problem_instance",
-                    "optimization_type", "dimension",
-                    "run"
-                 }                 
-            ) :
-            Watcher(triggers, properties)
-            , sep_(separator)
-            , com_(comment)
-            , eol_(end_of_line)
-            , nan_(no_value)
-            , header_(
-                com_ 
-                + format("{}", fmt::join(common_header_titles.begin(), common_header_titles.end(), sep_)) 
-                + (common_header_titles.empty() ? "" : sep_) 
-                + format("{}", fmt::join(properties.begin(), properties.end(), sep_))
-            )
-            , repeat_header_(repeat_header)
-            , store_positions_(store_positions)
-            , requires_header_(true)
-            , log_meta_data_(!common_header_titles.empty())
-            , exp_dir_(output_directory)
-            , filename_(filename)
-            , current_suite_("unknown_suite")
-            , current_run_(0)
-            , current_meta_data_{}
+                 std::vector<std::reference_wrapper<Property>> properties, const std::string &filename = "IOH.dat",
+                 const fs::path &output_directory = fs::current_path(), const std::string &separator = "\t",
+                 const std::string &comment = "# ", const std::string &no_value = "None",
+                 const std::string &end_of_line = "\n", const bool repeat_header = false,
+                 const bool store_positions = false,
+                 const std::vector<std::string> &common_header_titles = {"suite_name", "problem_name", "problem_id",
+                                                                         "problem_instance", "optimization_type",
+                                                                         "dimension", "run"}) :
+            Watcher(triggers, properties),
+            sep_(separator), com_(comment), eol_(end_of_line), nan_(no_value),
+            header_(com_ + format("{}", fmt::join(common_header_titles.begin(), common_header_titles.end(), sep_)) +
+                    (common_header_titles.empty() ? "" : sep_) +
+                    format("{}", fmt::join(properties.begin(), properties.end(), sep_))),
+            repeat_header_(repeat_header), store_positions_(store_positions), requires_header_(true),
+            log_meta_data_(!common_header_titles.empty()), output_directory_(output_directory), filename_(filename),
+            current_suite_("unknown_suite"), current_run_(0), current_meta_data_{}
         {
             assert(common_header_titles.empty() || common_header_titles.size() == 7);
         }
@@ -114,28 +88,25 @@ namespace ioh::logger
                 filename_ = filename;
                 out_.close();
             }
-            if (exp_dir_ != output_directory)
+            if (output_directory_ != output_directory)
             {
-                exp_dir_ = output_directory;
-                if (not exists(exp_dir_))
+                output_directory_ = output_directory;
+                if (not exists(output_directory_))
                 {
-                    IOH_DBG(debug, "some directories do not exist in " << exp_dir_ << ", try to create them")
-                    create_directories(exp_dir_);
+                    IOH_DBG(debug, "some directories do not exist in " << output_directory_ << ", try to create them")
+                    create_directories(output_directory_);
                 }
                 out_.close();
             }
             if (!out_.is_open())
             {
-                IOH_DBG(debug, "will output data in " << exp_dir_ / filename_)
-                out_ = std::ofstream(exp_dir_ / filename_);
+                IOH_DBG(debug, "will output data in " << output_directory_ / filename_)
+                out_ = std::ofstream(output_directory_ / filename_);
                 requires_header_ = true;
-            }              
+            }
         }
 
-        void attach_suite(const std::string &suite_name) override
-        {
-            current_suite_ = suite_name;
-        }
+        void attach_suite(const std::string &suite_name) override { current_suite_ = suite_name; }
 
         void attach_problem(const problem::MetaData &problem) override
         {
@@ -151,8 +122,8 @@ namespace ioh::logger
                 current_run_++; // Then it's a new run.
             }
 
-            Logger::attach_problem(problem); 
-            open_stream(filename_, exp_dir_);
+            Logger::attach_problem(problem);
+            open_stream(filename_, output_directory_);
 
             requires_header_ = requires_header_ or repeat_header_;
             cache_meta_data();
@@ -175,24 +146,21 @@ namespace ioh::logger
             out_ << current_meta_data_;
 
             IOH_DBG(xdebug, "print watched properties")
-            for (size_t i = 0; i < properties_vector_.size(); i++)
-            {
-                auto property = properties_vector_.at(i).get()(log_info);
-                if (property)
-                    out_ << fmt::format(FMT_COMPILE("{:g}"), property.value());
-                else
-                    out_ << nan_;
-
-                if (i != (properties_vector_.size() - 1))
-                    out_ << sep_;
-            }
+            for (auto p = properties_vector_.begin(); p != properties_vector_.end();)
+                out_ << p->get().call_to_string(log_info, nan_) << (++p != properties_vector_.end() ? sep_ : "");
 
             if (store_positions_)
-                out_ << sep_ << format("{:g}", fmt::join(log_info.current.x, sep_));
+                out_ << sep_ << format("{:f}", fmt::join(log_info.current.x, sep_));
 
             out_ << eol_;
             out_.flush();
         }
+
+        //! Accessor for output directory
+        virtual fs::path output_directory() const { return output_directory_; }
+
+        //! Accessor for filename
+        std::string filename() const { return filename_; }
 
         virtual ~FlatFile()
         {
@@ -222,4 +190,4 @@ namespace ioh::logger
             }
         }
     };
-}
+} // namespace ioh::logger

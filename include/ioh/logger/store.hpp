@@ -44,8 +44,8 @@ namespace ioh::logger {
              *
              * @{ */
             using Value      = std::optional<double>;
-            using Properties = std::map<std::string,Value     >; // name        => value
-            using Run        = std::map<size_t     ,Properties>; // evaluations => properties
+            using Attributes = std::map<std::string,Value     >; // name        => value
+            using Run        = std::map<size_t     ,Attributes>; // evaluations => Attributes
             using Runs       = std::map<size_t     ,Run       >; // run id      => Run
             using Instances  = std::map<int        ,Runs      >; // instance id => runs
             using Dimensions = std::map<int        ,Instances >; // nb of dim   => instances
@@ -83,7 +83,7 @@ namespace ioh::logger {
             };
 
             /** Access a map of property values with a Cursor. */
-            Properties data(const Cursor current)
+            Attributes data(const Cursor current)
             {
                 return _data.at(current.suite).at(current.pb).at(current.dim).at(current.instance).at(current.run).at(current.evaluation);
             }
@@ -107,8 +107,8 @@ namespace ioh::logger {
             /** The current Cursor. */
             Cursor _current;
 
-            /** Accessor to the current properties map. */
-            Properties& current_properties()
+            /** Accessor to the current attributes map. */
+            Attributes& current_attributes()
             {
                 return _data[_current.suite][_current.pb][_current.dim][_current.instance][_current.run][_current.evaluation];
             }
@@ -116,8 +116,8 @@ namespace ioh::logger {
         public:
             /** The logger::Store should at least track one logger::Property, or else it makes no sense to use it. */
             Store(std::initializer_list<std::reference_wrapper<logger::Trigger >> triggers,
-                  std::initializer_list<std::reference_wrapper<logger::Property>> properties)
-            : Watcher(triggers, properties)
+                  std::initializer_list<std::reference_wrapper<logger::Property>> Attributes)
+            : Watcher(triggers, Attributes)
             { }
 
             /** Track a problem/instance/dimension and/or create a new run.
@@ -152,8 +152,8 @@ namespace ioh::logger {
             /** Atomic log action. */
             virtual void call(const logger::Info& log_info) override
             {
-                // Get the properties list at the current cursor.
-                Properties& att = current_properties();
+                // Get the Attributes list at the current cursor.
+                Attributes& att = current_attributes();
                 // Save the corresponding values.
                 for(const auto& rwp : this->properties_) {
                     att[rwp.first] = rwp.second.get()(log_info);

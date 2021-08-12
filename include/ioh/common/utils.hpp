@@ -387,6 +387,24 @@ namespace ioh
             return result;
         }
 
+        //! Retrieve the keys from a map
+        template<typename K, typename V>
+        inline std::vector<K> keys(const std::map<K,V>& m){
+            std::vector<K> keys;
+            for (const auto &[first, _]: m)
+                keys.push_back(first);
+            return keys;
+        }
+
+        //! Retrieve the values from a map
+        template<typename K, typename V>
+        inline std::vector<V> values(const std::map<K,V>& m){
+            std::vector<V> values;
+            for (const auto &[_, second]: m)
+                values.push_back(second);
+            return values;
+        }
+
         /**
          * \brief Returns a range of integers
          * \param start start of the range
