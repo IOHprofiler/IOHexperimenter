@@ -2,14 +2,6 @@
 
 using namespace ioh;
 
-std::string get_file_as_string(const fs::path& path) {
-    std::ifstream t(path);
-    std::string str((std::istreambuf_iterator<char>(t)),
-        std::istreambuf_iterator<char>());
-    t.close();
-    return str;
-}
-
 TEST_F(BaseTest, logger_flatfile)
 {
     auto p0 = problem::bbob::Sphere(1, 2);
