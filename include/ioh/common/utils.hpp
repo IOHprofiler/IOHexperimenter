@@ -405,6 +405,24 @@ namespace ioh
             return values;
         }
 
+        //! Return a vector of key-value pairs for a given map
+        template<typename K, typename V, typename P = std::pair<K,V>>
+        inline std::vector<P> as_vector(const std::map<K,V>& m){
+            std::vector<P> values;
+            for (const auto &[first, second]: m)
+                values.emplace_back(first, second);
+            return values;
+        }
+
+        //! Return a vector of key-value pairs for a given map
+        template<typename K, typename V, typename P = std::pair<K,V>>
+        inline std::vector<P> as_vector(const std::map<K,V*>& m){
+            std::vector<P> values;
+            for (const auto &[first, second]: m)
+                values.emplace_back(first, *second);
+            return values;
+        }
+
         /**
          * \brief Returns a range of integers
          * \param start start of the range
@@ -574,5 +592,33 @@ namespace ioh
                     std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - start_time_).count()));
             }
         };
+
+
+        /**
+         * @brief Interface which defines a repr method
+         */
+        struct HasRepr {
+            //! Representation of the object
+            virtual std::string repr() const = 0;
+
+            //! Default string stream method
+            friend std::ostream &operator<<(std::ostream &os, const HasRepr &obj) {
+                return os << obj.repr();
+            }
+        };
     }
 }
+
+/**
+ * @brief Formatter for classes with repr method
+ */
+template <typename T>
+struct fmt::formatter<T, std::enable_if_t<std::is_base_of<ioh::common::HasRepr, T>::value, char>> :
+    fmt::formatter<std::string> {
+    template <typename FormatContext>
+    auto format(const ioh::common::HasRepr &a, FormatContext &ctx)
+    {
+        return formatter<std::string>::format(a.repr(), ctx);
+    }
+};
+
