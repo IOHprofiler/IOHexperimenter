@@ -14,18 +14,20 @@ TEST_F(BaseTest, logger_flatfile)
 
     trigger::Always always;
     watch::TransformedY transformed_y;
-    auto logger = logger::FlatFile( {always}, {transformed_y}, "IOH.dat", "." );
+    {
+        auto logger = logger::FlatFile( {always}, {transformed_y}, "IOH.dat", "." );
 
-    const int runs = 3;
-    const int samples = 3;
-    
-    for(auto pb : std::array<problem::BBOB*,3>({&p0,&p1,&p2})) {
-        pb->attach_logger(logger);
-        for(auto r = 0; r < runs; ++r) {
-            for(auto s = 0; s < samples; ++s) {
-                (*pb)(common::random::uniform(pb->meta_data().n_variables, s));
+        const int runs = 3;
+        const int samples = 3;
+        
+        for(auto pb : std::array<problem::BBOB*,3>({&p0,&p1,&p2})) {
+            pb->attach_logger(logger);
+            for(auto r = 0; r < runs; ++r) {
+                for(auto s = 0; s < samples; ++s) {
+                    (*pb)(common::random::uniform(pb->meta_data().n_variables, s));
+                }
+                pb->reset();
             }
-            pb->reset();
         }
     }
     EXPECT_TRUE(fs::exists("./IOH.dat"));
