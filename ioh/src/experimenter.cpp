@@ -4,12 +4,11 @@
 #include "ioh.hpp"
 
 namespace py = pybind11;
-using namespace ioh::experiment;
 
 template <typename ProblemType>
 void define_experimenter(py::module &m, const std::string &name)
 {
-    using Experimenter = Experimenter<ProblemType>;
+    using Experimenter = ioh::Experimenter<ProblemType>;
     using Suite = std::shared_ptr<ioh::suite::Suite<ProblemType>>;
     py::options options;
     options.disable_function_signatures();

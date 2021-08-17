@@ -2,7 +2,7 @@
 
 #include <list>
 #include <optional>
-
+#include <numeric>
 #include <clutchlog/clutchlog.h>
 #include <gtest/gtest.h>
 

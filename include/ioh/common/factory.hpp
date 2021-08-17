@@ -90,16 +90,16 @@ namespace ioh::common
         [[nodiscard]] std::vector<std::string> names() const
         {
             std::vector<std::string> keys;
-            for (const auto &[fst, snd] : name_map)
-                keys.push_back(fst);
+            for (const auto &p : name_map)
+                keys.push_back(p.first);
             return keys;
         }
 
         [[nodiscard]] std::vector<int> ids() const
         {
             std::vector<int> keys;
-            for (const auto &[fst, snd] : id_map)
-                keys.push_back(fst);
+            for (const auto &p : id_map)
+                keys.push_back(p.first);
             return keys;
         }
 

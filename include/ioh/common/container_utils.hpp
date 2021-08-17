@@ -67,8 +67,8 @@ namespace ioh
         template<typename K, typename V>
         inline std::vector<K> keys(const std::map<K,V>& m){
             std::vector<K> keys;
-            for (const auto &[first, _]: m)
-                keys.push_back(first);
+            for (const auto &p: m)
+                keys.push_back(p.first);
             return keys;
         }
 
@@ -76,8 +76,8 @@ namespace ioh
         template<typename K, typename V>
         inline std::vector<V> values(const std::map<K,V>& m){
             std::vector<V> values;
-            for (const auto &[_, second]: m)
-                values.push_back(second);
+            for (const auto &p: m)
+                values.push_back(p.second);
             return values;
         }
 
