@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ioh/logger/flatfile.hpp"
-
+#include "ioh/common/file.hpp"
 
 namespace ioh::logger
 {
@@ -44,7 +44,7 @@ namespace ioh::logger
                 size_t evals;
                 problem::Solution<double> point;
 
-                BestPoint(const size_t evals, const problem::Solution<double> &point) : evals(evals), point(point) {}
+                BestPoint(const size_t evals = 0, const problem::Solution<double> &point = {}) : evals(evals), point(point) {}
 
                 std::string repr() const override
                 {
@@ -88,13 +88,13 @@ namespace ioh::logger
                 }
             };
 
-            struct DimensionInfo : common::HasRepr
+            struct ScenarioInfo : common::HasRepr
             {
                 const size_t dimension;
                 const std::string data_file;
                 std::vector<RunInfo> runs;
 
-                DimensionInfo(const size_t dimension, const std::string &data_file,
+                ScenarioInfo(const size_t dimension, const std::string &data_file,
                               const std::vector<RunInfo> runs = {}) :
                     dimension(dimension),
                     data_file(data_file), runs(runs)
@@ -117,14 +117,14 @@ namespace ioh::logger
                 const std::vector<Attribute<std::string>> attributes;
                 const std::vector<std::string> run_attribute_names;
                 const std::vector<std::string> extra_attribute_names;
-                std::vector<DimensionInfo> dims;
+                std::vector<ScenarioInfo> dims;
 
                 ExperimentInfo(const std::string &suite, const problem::MetaData &problem,
                                const AlgorithmInfo &algorithm,
                                const std::vector<Attribute<std::string>> &attributes = {},
                                const std::vector<std::string> &run_attribute_names = {},
                                const std::vector<std::string> &extra_attribute_names = {},
-                               const std::vector<DimensionInfo> &dims = {}) :
+                               const std::vector<ScenarioInfo> &dims = {}) :
                     suite(suite),
                     problem(problem), algorithm(algorithm), attributes(attributes),
                     run_attribute_names(run_attribute_names), extra_attribute_names(extra_attribute_names), dims(dims)
@@ -136,7 +136,7 @@ namespace ioh::logger
                     return fmt::format(
                         "{{\n\t\"suite\": \"{}\", \n\t\"function_id\": {}, \n\t\"function_name\": \"{}\", "
                         "\n\t\"maximization\": "
-                        "{}, \n\t\"algorithm\": {{{}}},{}{}{}\n\t\"dimensions\": [\n\t\t{{{}}}\n\t]\n}}\n",
+                        "{}, \n\t\"algorithm\": {{{}}},{}{}{}\n\t\"scenarios\": [\n\t\t{{{}}}\n\t]\n}}\n",
                         suite, problem.problem_id, problem.name,
                         (problem.optimization_type == common::OptimizationType::Maximization), algorithm,
                         !attributes.empty() ? fmt::format("\n\t{},", fmt::join(attributes, ",\n\t")) : "",
@@ -269,7 +269,7 @@ namespace ioh::logger
                          const structures::Attributes &attributes = {}) :
                     FlatFile(triggers, common::concatenate(default_properties_, properties), "", {}, " ", "", "None",
                              "\n", true, store_positions, {}),
-                    path_(root, folder_name), algorithm_(algorithm_name, algorithm_info), best_point_{0, {{}}},
+                    path_(root, folder_name), algorithm_(algorithm_name, algorithm_info), best_point_{},
                     attributes_(attributes), has_started_(false)
                 {
                 }

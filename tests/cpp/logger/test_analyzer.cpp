@@ -1,16 +1,14 @@
 #include "../utils.hpp"
+ 
+#include "ioh/logger/analyzer.hpp"
+#include "ioh/problem/bbob/sphere.hpp"
+#include "ioh/problem/bbob/attractive_sector.hpp"
 
 fs::path get_dat_path(const fs::path& root, const ioh::problem::Real& p) {
     return root 
         / fmt::format("data_f{:d}_{}", p.meta_data().problem_id, p.meta_data().name) 
         / fmt::format("IOHprofiler_f{:d}_DIM{:d}.dat", p.meta_data().problem_id, p.meta_data().n_variables);
 }
-
-void compare_file_with_string(const fs::path& path, const std::string& expected){
-    const std::string got = get_file_as_string(path);
-    EXPECT_EQ(0, got.compare(expected)) << "EXPECTED:\n" << expected << "\nGOT:\n" << got;
-}
-
 
 TEST_F(BaseTest, logger_default)
 {

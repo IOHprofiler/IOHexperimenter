@@ -1,5 +1,8 @@
 #include "../utils.hpp"
 
+#include "ioh/logger/store.hpp"
+#include "ioh/suite.hpp"
+
 TEST_F(BaseTest, store_data_consistency)
 {
     using namespace ioh;

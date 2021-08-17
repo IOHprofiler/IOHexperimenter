@@ -2,6 +2,7 @@
 
 #include "ioh/problem/problem.hpp"
 #include "ioh/problem/utils.hpp"
+#include "ioh/problem/transformation.hpp"
 
 namespace ioh::problem
 {

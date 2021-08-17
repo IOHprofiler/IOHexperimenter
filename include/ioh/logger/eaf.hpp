@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <numeric>
 
 #include "loggers.hpp"
 

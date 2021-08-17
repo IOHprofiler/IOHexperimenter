@@ -1,5 +1,9 @@
 #include "../utils.hpp"
 
+#include "ioh/logger/flatfile.hpp"
+#include "ioh/problem/bbob/sphere.hpp"
+#include "ioh/problem/bbob/attractive_sector.hpp"
+
 using namespace ioh;
 
 TEST_F(BaseTest, logger_flatfile)
@@ -24,7 +28,8 @@ TEST_F(BaseTest, logger_flatfile)
             pb->reset();
         }
     }
-
     EXPECT_TRUE(fs::exists("./IOH.dat"));
     EXPECT_GT(get_file_as_string("./IOH.dat").size(),0);
+    fs::remove("./IOH.dat");
+    EXPECT_TRUE(!fs::exists("./IOH.dat"));
 }

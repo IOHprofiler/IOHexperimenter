@@ -1,10 +1,6 @@
 #pragma once
 
 #include <optional>
-#include <ostream>
-
-#include <fmt/compile.h>
-#include <fmt/format.h>
 
 #include "loginfo.hpp"
 

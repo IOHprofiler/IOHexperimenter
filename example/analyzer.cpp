@@ -91,8 +91,8 @@ void test_new(){
 
     std::vector<RunInfo> runs{r1, r1};
 
-    DimensionInfo d5 = {5, "/tmp/txt.csv", runs}; 
-    std::vector<DimensionInfo> ds {d5, d5, d5};
+    ScenarioInfo d5 = {5, "/tmp/txt.csv", runs}; 
+    std::vector<ScenarioInfo> ds {d5, d5, d5};
 
     ExperimentInfo e1{"suite", problem.meta_data(), algorithm, rx, {"r1", "r1"}, {}, ds};
 
@@ -107,5 +107,5 @@ int main()
     if(fs::exists(fs::current_path() / "ioh_data"))
         fs::remove_all(fs::current_path() / "ioh_data");
 
-    test_single_function_new();
+    test_single_function();
 }   

@@ -1,7 +1,9 @@
 #pragma once
 
-#include "utils.hpp"
-#include "ioh/logger.hpp"
+#include "ioh/common/factory.hpp"
+#include "ioh/common/container_utils.hpp"
+#include "ioh/problem/structures.hpp"
+#include "ioh/logger/loggers.hpp"
 
 namespace ioh
 {
@@ -47,15 +49,15 @@ namespace ioh
                 if (!check_input_dimensions(x))
                     return false;
 
-                if (utils::all_finite(x))
+                if (common::all_finite(x))
                     return true;
 
-                if (utils::has_nan(x))
+                if (common::has_nan(x))
                 {
                     IOH_DBG(warning,"The solution contains NaN.")
                     return false;
                 }
-                if (utils::has_inf(x))
+                if (common::has_inf(x))
                 {
                     IOH_DBG(warning,"The solution contains Inf.")
                     return false;

@@ -1,5 +1,8 @@
 #include "../utils.hpp"
 
+#include "ioh/logger/eah.hpp"
+#include "ioh/suite.hpp"
+
 template<class RR, class RV>
 void do_test(std::string scale_errors, std::string scale_evals)
 {

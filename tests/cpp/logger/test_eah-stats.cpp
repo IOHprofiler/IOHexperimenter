@@ -1,5 +1,8 @@
 #include "../utils.hpp"
 
+#include "ioh/logger/eah.hpp"
+#include "ioh/suite.hpp"
+
 TEST_F(BaseTest, eah_stats)
 {
     using namespace ioh::logger;

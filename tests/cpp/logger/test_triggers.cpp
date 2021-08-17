@@ -1,5 +1,7 @@
 #include "../utils.hpp"
 
+#include "ioh/logger/triggers.hpp"
+
 using namespace ioh;
 
 TEST_F(BaseTest, trigger_always) {

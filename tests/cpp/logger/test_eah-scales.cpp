@@ -1,5 +1,7 @@
 #include "../utils.hpp"
 
+#include "ioh/logger/eah.hpp"
+
 using namespace ioh;
 using namespace ioh::logger;
 

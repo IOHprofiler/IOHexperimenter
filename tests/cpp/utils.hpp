@@ -6,7 +6,6 @@
 #include <clutchlog/clutchlog.h>
 #include <gtest/gtest.h>
 
-#include "ioh.hpp"
 
 inline fs::path find_test_file(const std::string &filename)
 {
@@ -75,6 +74,11 @@ inline std::string get_file_as_string(const fs::path& path) {
     std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
     t.close();
     return str;
+}
+
+inline void compare_file_with_string(const fs::path& path, const std::string& expected){
+    const std::string got = get_file_as_string(path);
+    EXPECT_EQ(0, got.compare(expected)) << "EXPECTED:\n" << expected << "\nGOT:\n" << got;
 }
 
 class BaseTest: public ::testing::Test

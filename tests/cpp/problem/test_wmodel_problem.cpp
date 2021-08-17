@@ -1,5 +1,6 @@
 #include "../utils.hpp"
 
+#include "ioh/problem/wmodel.hpp"
 
 TEST_F(BaseTest, WModel_Dummy)
 {
