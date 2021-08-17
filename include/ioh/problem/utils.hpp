@@ -158,7 +158,7 @@ namespace ioh
 
             inline std::vector<double> ruggedness3(const int number_of_variables)
             {
-                std::vector<double> ruggedness_fitness(1.0 + static_cast<double>(number_of_variables), 0.0);
+                std::vector<double> ruggedness_fitness(static_cast<size_t>(1 + number_of_variables), 0.0);
 
                 for (auto j = 1; j <= number_of_variables / 5; ++j)
                 {
