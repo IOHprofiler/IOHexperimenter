@@ -167,6 +167,46 @@ namespace ioh
         namespace utils
         {
             /**
+             * \brief Checks a vector of doubles for nan values
+             * \param x vector to be checked
+             * \return true if x contains a nan value
+             */
+            inline bool has_nan(const std::vector<double> &x)
+            {
+                for (const auto &e : x)
+                    if (std::isnan(e))
+                        return true;
+                return false;
+            }
+
+            /**
+             * \brief Checks a vector of doubles for nan values
+             * \param x vector to be checked
+             * \return true if x contains a nan value
+             */
+            inline bool all_finite(const std::vector<double> &x)
+            {
+                for (const auto &e : x)
+                    if (!std::isfinite(e))
+                        return false;
+                return true;
+            }
+
+            /**
+             * \brief Checks a vector of doubles for inf values
+             * \param x vector to be checked
+             * \return true if x contains a nan value
+             */
+            inline bool has_inf(const std::vector<double> &x)
+            {
+                for (const auto &e : x)
+                    if (std::isinf(e))
+                        return true;
+                return false;
+            }
+
+
+            /**
              * \brief Returns a set of indices selected randomly from the range [0, n_variables].
              * Selects floor(n_variables * select_rate) indices with replacement.
              * \param n_variables The range of the index

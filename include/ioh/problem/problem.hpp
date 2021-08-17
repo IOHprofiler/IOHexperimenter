@@ -47,15 +47,15 @@ namespace ioh
                 if (!check_input_dimensions(x))
                     return false;
 
-                if (common::all_finite(x))
+                if (utils::all_finite(x))
                     return true;
 
-                if (common::has_nan(x))
+                if (utils::has_nan(x))
                 {
                     IOH_DBG(warning,"The solution contains NaN.")
                     return false;
                 }
-                if (common::has_inf(x))
+                if (utils::has_inf(x))
                 {
                     IOH_DBG(warning,"The solution contains Inf.")
                     return false;

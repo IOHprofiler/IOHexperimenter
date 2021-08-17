@@ -82,18 +82,6 @@ namespace ioh
         }
 
         /**
-         * \brief Helper function to copy a vector v1 into another vector v2
-         * \tparam T The type of the vectors
-         * \param v1 The vector to copy
-         * \param v2 The vector which receives the values from v2.
-         */
-        template <typename T>
-        void copy_vector(const std::vector<T> v1, std::vector<T> &v2)
-        {
-            v2.assign(v1.begin(), v1.end());
-        }
-        
-        /**
          * \brief concatenates two vectors
          * \tparam T the type of the vectors
          * \param a the first vector
@@ -105,31 +93,6 @@ namespace ioh
         {
             a.insert(a.end(), b.begin(), b.end());
             return a;
-        }
-
-        /**
-         * \brief Compares two vectors, returns true if all elements are equal
-         * \tparam T The type of the vectors
-         * \param v1 The first vector
-         * \param v2 The second vector
-         * \return true if all elements of v1 and v2 are equal
-         */
-        template <typename T>
-        bool compare_vector(const std::vector<T> &v1,
-                            const std::vector<T> &v2)
-        {
-#ifndef NDEBUG
-            size_t n = v1.size();
-            if (n != v2.size()) {
-                IOH_DBG(error,"Two compared vectors must have the same size: " << n << " != " << v2.size())
-                assert(n == v2.size());
-            }
-#endif
-
-            for (size_t i = 0; i != v1.size(); ++i)
-                if (v1[i] != v2[i])
-                    return false;
-            return true;
         }
 
         /**
@@ -149,48 +112,6 @@ namespace ioh
             if (optimization_type == OptimizationType::Maximization)
                 return v1 > v2;
             return v1 < v2;
-        }
-
-        /**
-         * \brief Compares two vectors v1 and v2, and checks if v1 is better than v2. 
-         * \tparam T The type of the vectors
-         * \param v1 The first vector
-         * \param v2 The second vector
-         * \param optimization_type Used to determine which vector is better,
-         * when optimization_type == \ref common::OptimizationType::Minimization lower elements are better,
-         * otherwise higher elements are better.
-         * \return Return true all of v1's elements are better than v2's.
-         */
-        template <typename T>
-        bool compare_objectives(const std::vector<T> &v1,
-                                const std::vector<T> &v2,
-                                const OptimizationType optimization_type)
-        {
-#ifndef NDEBUG
-            auto n = v1.size();
-            if (n != v2.size()) {
-                IOH_DBG(error, "Two compared objective vector must have the same size: " << n << " != " << v2.size())
-                assert(n == v2.size());
-            }
-#endif
-            for (size_t i = 0; i != v1.size(); ++i)
-                if (!compare_objectives<T>(v1[i], v2[i], optimization_type))
-                    return false;
-            return true;
-        }
-
-        /**
-         * \brief Converts a value v to a string 
-         * \tparam T The type of v
-         * \param v a value
-         * \return the string representation of v
-         */
-        template <typename T>
-        std::string to_string(const T v)
-        {
-            std::ostringstream ss;
-            ss << v;
-            return ss.str();
         }
 
         /**
@@ -217,44 +138,7 @@ namespace ioh
         #pragma warning(push)
         #pragma warning(disable : 4505)
         #endif
-        /**
-         * \brief Checks a vector of doubles for nan values
-         * \param x vector to be checked
-         * \return true if x contains a nan value
-         */
-        inline bool has_nan(const std::vector<double> &x)
-        {
-            for (const auto &e : x)
-                if (std::isnan(e))
-                    return true;
-            return false;
-        }
-
-        /**
-         * \brief Checks a vector of doubles for nan values
-         * \param x vector to be checked
-         * \return true if x contains a nan value
-         */
-        inline bool all_finite(const std::vector<double> &x)
-        {
-            for (const auto &e : x)
-                if (!std::isfinite(e))
-                    return false;
-            return true;
-        }
-
-        /**
-        * \brief Checks a vector of doubles for inf values
-        * \param x vector to be checked
-        * \return true if x contains a nan value
-        */
-        inline bool has_inf(const std::vector<double> &x)
-        {
-            for (const auto &e : x)
-                if (std::isinf(e))
-                    return true;
-            return false;
-        }
+        
         #ifdef _MSC_VER
         #pragma warning(pop)
         #endif

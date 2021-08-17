@@ -80,7 +80,7 @@ namespace ioh::common::file {
             auto index = 0;
             while (exists(path_)) {
                 ++index;
-                name_ = name + '-' + to_string(index);
+                name_ = fmt::format("{}-{}", name, index);
                 path_ = root_ / name_;
             }
             create_directories(path_);

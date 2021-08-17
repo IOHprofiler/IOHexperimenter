@@ -21,7 +21,7 @@ namespace ioh::logger
             };
 
             template <>
-            std::string Attribute<std::string>::repr() const
+            inline std::string Attribute<std::string>::repr() const
             {
                 return fmt::format("\"{}\": \"{}\"", name, value);
             }
