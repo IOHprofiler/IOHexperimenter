@@ -195,8 +195,8 @@ namespace ioh::logger
                 {
                     info_stream_ << fmt::format(", {:d}:{:d}|{:g}", problem_->instance, best_point_.evals,
                                                 best_point_.point.y);
-                    for (auto &[key, value] : attributes_.run)
-                        info_stream_ << fmt::format(";{:g}", *value);
+                    for (auto &p : attributes_.run)
+                        info_stream_ << fmt::format(";{:g}", *p.second);
 
                     if (log_info_.evaluations != 0)
                         FlatFile::call(log_info_);
