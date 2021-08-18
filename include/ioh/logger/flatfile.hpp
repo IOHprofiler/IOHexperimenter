@@ -30,7 +30,7 @@ namespace ioh::logger
         const std::string com_;
         const std::string eol_;
         const std::string nan_;
-        const std::string header_;
+        const std::string common_header_;
         const bool repeat_header_;
         const bool store_positions_;
         bool requires_header_;
@@ -71,9 +71,8 @@ namespace ioh::logger
                                                                          "dimension", "run"}) :
             Watcher(triggers, properties),
             sep_(separator), com_(comment), eol_(end_of_line), nan_(no_value),
-            header_(com_ + format("{}", fmt::join(common_header_titles.begin(), common_header_titles.end(), sep_)) +
-                    (common_header_titles.empty() ? "" : sep_) +
-                    format("{}", fmt::join(properties.begin(), properties.end(), sep_))),
+            common_header_(format("{}", fmt::join(common_header_titles.begin(), common_header_titles.end(), sep_)) +
+                    (common_header_titles.empty() ? "" : sep_)),
             repeat_header_(repeat_header), store_positions_(store_positions), requires_header_(true),
             log_meta_data_(!common_header_titles.empty()), output_directory_(output_directory), filename_(filename),
             current_suite_("unknown_suite"), current_run_(0), current_meta_data_{}
@@ -134,7 +133,8 @@ namespace ioh::logger
             if (requires_header_)
             {
                 IOH_DBG(xdebug, "print header")
-                out_ << header_;
+                out_ << com_ + common_header_ +
+                    format("{}", fmt::join(properties_vector_, sep_));
                 if (store_positions_)
                     for (size_t i = 0; i < log_info.current.x.size(); i++)
                         out_ << sep_ << "x" << i;

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ioh/logger/flatfile.hpp"
 #include "ioh/common/file.hpp"
+#include "ioh/logger/flatfile.hpp"
 
 namespace ioh::logger
 {
@@ -44,7 +44,10 @@ namespace ioh::logger
                 size_t evals;
                 problem::Solution<double> point;
 
-                BestPoint(const size_t evals = 0, const problem::Solution<double> &point = {}) : evals(evals), point(point) {}
+                BestPoint(const size_t evals = 0, const problem::Solution<double> &point = {}) :
+                    evals(evals), point(point)
+                {
+                }
 
                 std::string repr() const override
                 {
@@ -95,7 +98,7 @@ namespace ioh::logger
                 std::vector<RunInfo> runs;
 
                 ScenarioInfo(const size_t dimension, const std::string &data_file,
-                              const std::vector<RunInfo> runs = {}) :
+                             const std::vector<RunInfo> runs = {}) :
                     dimension(dimension),
                     data_file(data_file), runs(runs)
                 {
@@ -193,13 +196,16 @@ namespace ioh::logger
                 //! Gets called after the last evaluation of a run
                 virtual void handle_last_eval()
                 {
-                    info_stream_ << fmt::format(", {:d}:{:d}|{:g}", problem_->instance, best_point_.evals,
-                                                best_point_.point.y);
-                    for (auto &p : attributes_.run)
-                        info_stream_ << fmt::format(";{:g}", *p.second);
+                    if (best_point_.evals != 0)
+                    {
+                        info_stream_ << fmt::format(", {:d}:{:d}|{:g}", problem_->instance, best_point_.evals,
+                                                    best_point_.point.y);
+                        for (auto &p : attributes_.run)
+                            info_stream_ << fmt::format(";{:g}", *p.second);
 
-                    if (log_info_.evaluations != 0)
-                        FlatFile::call(log_info_);
+                        if (log_info_.evaluations != 0)
+                            FlatFile::call(log_info_);
+                    }
                 }
 
                 //! Gets called when the current problem changes dimension
@@ -229,7 +235,7 @@ namespace ioh::logger
             private:
                 void update_info_file(const problem::MetaData &problem, const std::string &dat_path)
                 {
-                    if (problem_ != nullptr && best_point_.evals != 0)
+                    if (problem_ != nullptr)
                         handle_last_eval();
 
                     if (problem_ == nullptr || problem_->problem_id != problem.problem_id)
@@ -262,13 +268,14 @@ namespace ioh::logger
                  * @param store_positions Whether to store x positions in the logged data
                  * @param attributes See: analyzer::Attributes.
                  */
-                Analyzer(const Triggers &triggers = {trigger::on_improvement}, const Properties &properties = {},
-                         const fs::path &root = fs::current_path(), const std::string &folder_name = "ioh_data",
+                Analyzer(const Triggers &triggers = {trigger::on_improvement},
+                         const Properties &additional_properties = {}, const fs::path &root = fs::current_path(),
+                         const std::string &folder_name = "ioh_data",
                          const std::string &algorithm_name = "algorithm_name",
                          const std::string &algorithm_info = "algorithm_info", const bool store_positions = false,
                          const structures::Attributes &attributes = {}) :
-                    FlatFile(triggers, common::concatenate(default_properties_, properties), "", {}, " ", "", "None",
-                             "\n", true, store_positions, {}),
+                    FlatFile(triggers, common::concatenate(default_properties_, additional_properties), "", {}, " ", "",
+                             "None", "\n", true, store_positions, {}),
                     path_(root, folder_name), algorithm_(algorithm_name, algorithm_info), best_point_{},
                     attributes_(attributes), has_started_(false)
                 {
@@ -276,6 +283,7 @@ namespace ioh::logger
 
                 virtual ~Analyzer()
                 {
+                    handle_last_eval();
                     IOH_DBG(debug, "close info file")
                     info_stream_.close();
                 }
@@ -412,13 +420,16 @@ namespace ioh::logger
                 //! Gets called when the current problem changes dimension
                 virtual void handle_last_eval()
                 {
-                    experiments_.at(current_filename_)
-                        .dims.back()
-                        .runs.emplace_back(
-                            static_cast<size_t>(problem_->instance), evals_, best_point_,
-                            common::as_vector<std::string, double, structures::Attribute<double>>(attributes_.run));
-                    if (log_info_.evaluations != 0)
-                        FlatFile::call(log_info_);
+                    if (best_point_.evals != 0)
+                    {
+                        experiments_.at(current_filename_)
+                            .dims.back()
+                            .runs.emplace_back(
+                                static_cast<size_t>(problem_->instance), evals_, best_point_,
+                                common::as_vector<std::string, double, structures::Attribute<double>>(attributes_.run));
+                        if (log_info_.evaluations != 0)
+                            FlatFile::call(log_info_);
+                    }
                 }
 
                 //! Writes all data to the info file

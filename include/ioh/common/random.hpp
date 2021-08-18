@@ -52,6 +52,20 @@ namespace ioh::common::random
     }
 
     /**
+     * \brief This function returns a random uniform double within the range [min, max]
+     * \param min the minimal boundary
+     * \param max the maximum boundary
+     * \return a random double integer
+     */
+    inline double real(const double min = 0.0, const double max = 1.0)
+    {
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+        std::uniform_real_distribution<double> d(min, max);
+        return d(gen);
+    }
+
+    /**
      * \brief This function returns a vector of random uniform integer within the range [min, max] of size n
      * \param n The size of the vector
      * \param min The minimal boundary

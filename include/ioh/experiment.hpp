@@ -73,6 +73,7 @@ namespace ioh
          */
         void run()
         {
+            suite_ ->attach_logger(*logger_); 
             for (const auto &p : *suite_)
             {
                 const auto p_timer = common::CpuTimer();
