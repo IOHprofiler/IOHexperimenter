@@ -31,7 +31,7 @@ TEST_F(BaseTest, problem_suite_bbob)
 
     for (const auto &problem : bbob)
     {
-        EXPECT_DOUBLE_EQ(std::round((*problem)(ioh::common::random::normal(4, 42)) * 10000.0) / 10000.0,
+        EXPECT_DOUBLE_EQ(std::round((*problem)(ioh::common::random::pbo::normal(4, 42)) * 10000.0) / 10000.0,
                          results.front());
         results.pop_front();
     }

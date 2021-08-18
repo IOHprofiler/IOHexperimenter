@@ -4,7 +4,7 @@
 
 double test_eval(const std::shared_ptr<ioh::problem::Real> &f)
 {
-    return std::round((*f)(ioh::common::random::normal(4, 42)) * 10000.0) / 10000.0;
+    return std::round((*f)(ioh::common::random::pbo::normal(4, 42)) * 10000.0) / 10000.0;
 }
 
 TEST_F(BaseTest, BBOBfitness_dimension5)
