@@ -26,7 +26,7 @@ namespace ioh
                     }
                     for (auto i = 0; i != n; ++i)
                     {
-                        const auto rand_vec = common::random::uniform(static_cast<size_t>(k), static_cast<long>(k * (i + 1)));
+                        const auto rand_vec = common::random::pbo::uniform(static_cast<size_t>(k), static_cast<long>(k * (i + 1)));
 
                         std::vector<int> sampled_number;
                         std::vector<int> population;
@@ -55,7 +55,7 @@ namespace ioh
                     }
                     for (auto i = 0; i != n; ++i)
                     {
-                        f_.emplace_back(common::random::uniform(static_cast<size_t>(pow(2, k + 1)),
+                        f_.emplace_back(common::random::pbo::uniform(static_cast<size_t>(pow(2, k + 1)),
                                                              static_cast<long>(k * (i + 1) * 2)));
                     }
                 }

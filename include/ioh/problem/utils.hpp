@@ -20,7 +20,7 @@ namespace ioh
             inline std::vector<int> dummy(const int n_variables, const double select_rate, const long seed)
             {
                 const auto select_num = static_cast<int>(floor(n_variables * select_rate));
-                const auto random_numbers = common::random::uniform(static_cast<size_t>(select_num), seed);
+                const auto random_numbers = common::random::pbo::uniform(static_cast<size_t>(select_num), seed);
 
                 std::vector<int> position(n_variables);
                 std::iota(position.begin(), position.end(), 0);

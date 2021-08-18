@@ -116,7 +116,7 @@ TEST_F(BaseTest, logger_v2)
             for (r = 0; r < 3; ++r)
             {
                 for (auto s = 1; s < 11; ++s)
-                    (*pb)(common::random::uniform(pb->meta_data().n_variables, s));
+                    (*pb)(common::random::pbo::uniform(pb->meta_data().n_variables, s));
                 pb->reset();
             }
         }

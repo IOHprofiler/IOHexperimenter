@@ -8,7 +8,7 @@
 // 	auto count = 0;
 // 	while (count++ < 10)
 // 	{
-//         (*p)(random::uniform(p->meta_data().n_variables, random::integer()));
+//         (*p)(random::pbo::uniform(p->meta_data().n_variables, random::integer()));
 // 	}
 // }
 

@@ -22,7 +22,7 @@ TEST_F(BaseTest, eah_stats)
             // FIXME how to indicate different runs to the logger?
             // eah.update_run_info(pb->meta_data());
             for (size_t s = 0; s < sample_size; ++s) {
-                (*pb)(ioh::common::random::uniform(pb->meta_data().n_variables, 0));
+                (*pb)(ioh::common::random::pbo::uniform(pb->meta_data().n_variables, 0));
             } // s
             pb->reset();
         } // run

@@ -22,7 +22,7 @@ TEST_F(BaseTest, eah_bbob)
     for (const auto &p : suite) {
         for (auto r = 0; r < 2; r++) {
             for (auto s = 0; s < sample_size; ++s)
-                (*p)(ioh::common::random::uniform(p->meta_data().n_variables, 0));
+                (*p)(ioh::common::random::pbo::uniform(p->meta_data().n_variables, 0));
 
             EXPECT_EQ(ioh::logger::eah::stat::sum(logger), attainments_sum.front());
             p->reset();

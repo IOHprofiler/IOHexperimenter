@@ -21,7 +21,7 @@ TEST_F(BaseTest, eaf_logger)
         for(size_t r = 0; r < nb_runs; ++r) {
             IOH_DBG(info, "> run:" << r)
             for(size_t s = 0; s < sample_size; ++s) {
-                (*pb)(common::random::uniform(static_cast<size_t>(pb->meta_data().n_variables), static_cast<long>(s)));
+                (*pb)(common::random::pbo::uniform(static_cast<size_t>(pb->meta_data().n_variables), static_cast<long>(s)));
             }
             pb->reset();
         }
@@ -72,7 +72,7 @@ TEST_F(BaseTest, eaf_all_levels)
     for(const auto& pb : suite) {
         for(size_t r = 0; r < nb_runs; ++r) {
             for(size_t s = 0; s < sample_size; ++s) {
-                (*pb)(common::random::uniform(static_cast<size_t>(pb->meta_data().n_variables), static_cast<long>(s)));
+                (*pb)(common::random::pbo::uniform(static_cast<size_t>(pb->meta_data().n_variables), static_cast<long>(s)));
             }
             pb->reset();
         }
@@ -130,7 +130,7 @@ TEST_F(BaseTest, eaf_some_levels)
     for(const auto& pb : suite) {
         for(size_t r = 0; r < nb_runs; ++r) {
             for(size_t s = 0; s < sample_size; ++s) {
-                (*pb)(common::random::uniform(static_cast<size_t>(pb->meta_data().n_variables), static_cast<long>(s)));
+                (*pb)(common::random::pbo::uniform(static_cast<size_t>(pb->meta_data().n_variables), static_cast<long>(s)));
             }
             pb->reset();
         }
@@ -155,7 +155,7 @@ TEST_F(BaseTest, eaf_levels_volume)
     for(const auto& pb : suite) {
         for(size_t r = 0; r < nb_runs; ++r) {
             for(size_t s = 0; s < sample_size; ++s) {
-                (*pb)(common::random::uniform(static_cast<size_t>(pb->meta_data().n_variables), static_cast<long>(s)));
+                (*pb)(common::random::pbo::uniform(static_cast<size_t>(pb->meta_data().n_variables), static_cast<long>(s)));
             }
             pb->reset();
         }

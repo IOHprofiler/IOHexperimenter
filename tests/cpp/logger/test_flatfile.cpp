@@ -24,7 +24,7 @@ TEST_F(BaseTest, logger_flatfile)
             pb->attach_logger(logger);
             for(auto r = 0; r < runs; ++r) {
                 for(auto s = 0; s < samples; ++s) {
-                    (*pb)(common::random::uniform(pb->meta_data().n_variables, s));
+                    (*pb)(common::random::pbo::uniform(pb->meta_data().n_variables, s));
                 }
                 pb->reset();
             }

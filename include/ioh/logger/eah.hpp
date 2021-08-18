@@ -390,7 +390,7 @@ namespace ioh
             for (const auto &p : suite) {
                 for (auto r = 0; r < 2; r++) {
                     for (auto s = 0; s < sample_size; ++s) {
-                        (*p)(ioh::common::Random::uniform(p->meta_data().n_variables));
+                        (*p)(ioh::common::random::real(p->meta_data().n_variables));
                     } // s in sample_size
                     p->reset(); // New run
                 } // r in runs

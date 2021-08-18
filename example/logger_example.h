@@ -47,7 +47,7 @@ inline void single_logger_example()
         for (auto budget = 100; budget > 0; budget--)
         {
             /// Evaluate the fitness of 'x' for the problem by using '(*problem)(x)' function.
-            (*problem)(ioh::common::random::uniform(problem->meta_data().n_variables, budget, -5, 5));
+            (*problem)(ioh::common::random::doubles(problem->meta_data().n_variables, -5, 5));
         }
         std::cout << "result: " << problem->state() << std::endl;
     }
@@ -64,7 +64,7 @@ inline void logger_combiner_example()
     auto problem = ioh::problem::pbo::OneMax(1, 10);
     // We can use a LoggerCombine object as a 'normal' logger object
     problem.attach_logger(logger);
-    problem(ioh::common::random::integers(10, 0, 1));
+    problem(ioh::common::random::integer(10, 0, 1));
 }
 
 
