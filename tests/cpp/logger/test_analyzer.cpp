@@ -91,7 +91,9 @@ TEST_F(BaseTest, structures)
     ScenarioInfo d5 = {5, "/tmp/txt.csv", {r1}};
     EXPECT_EQ("\"dimension\": 5,\n\t\t\"path\": \"/tmp/txt.csv\",\n\t\t\"runs\": [\n\t\t\t{" + r1.repr() + "}\n\t\t]",
               d5.repr());
-}
+
+    ExperimentInfo e1{"suite", problem.meta_data(), algorithm, rx, {"r1", "r1"}, {"x1"}, {d5}};
+} 
 
 TEST_F(BaseTest, logger_v2)
 {

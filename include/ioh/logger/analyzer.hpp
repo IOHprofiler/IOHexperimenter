@@ -142,7 +142,9 @@ namespace ioh::logger
                         "{}, \n\t\"algorithm\": {{{}}},{}{}{}\n\t\"scenarios\": [\n\t\t{{{}}}\n\t]\n}}\n",
                         suite, problem.problem_id, problem.name,
                         (problem.optimization_type == common::OptimizationType::Maximization), algorithm,
-                        !attributes.empty() ? fmt::format("\n\t{},", fmt::join(attributes, ",\n\t")) : "",
+                        !attributes.empty()
+                            ? fmt::format("\n\t\"experiment_attributes\": [{{{}}}],", fmt::join(attributes, "}, {"))
+                            : "",
                         !run_attribute_names.empty()
                             ? fmt::format("\n\t\"run_attributes\": [\"{}\"],", fmt::join(run_attribute_names, "\", \""))
                             : "",
