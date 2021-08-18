@@ -419,8 +419,6 @@ namespace ioh::logger
                             common::as_vector<std::string, double, structures::Attribute<double>>(attributes_.run));
                     if (log_info_.evaluations != 0)
                         FlatFile::call(log_info_);
-
-                    fmt::print("{}", experiments_.at(current_filename_));
                 }
 
                 //! Writes all data to the info file

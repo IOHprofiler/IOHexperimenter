@@ -37,12 +37,10 @@ void show_registered_objects()
 
 int main()
 {
-    // show_registered_objects();
+    show_registered_objects();
     // suite_example();
     // logger_example();
     // logger_combiner_example();
-    problem_example();
+    // problem_example();
     // experiment_example();
-
-
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ioh.hpp"
+#include "ioh.hpp" 
 
 /// Create a OneMax problem. We can use either factory construction, or direct object construction.
 inline std::shared_ptr<ioh::problem::Integer> create_one_max_problem(const int instance, const int dimension,
@@ -67,13 +67,12 @@ public:
     }
 };
 
+//! Simple function which always returns zero
 inline double constant_zero(const std::vector<double> &)
 {
     return 0.0;
 }
 
-
-inline double constant_zero2(const std::vector<double> &) { return 0.0; }
 
 inline void extending_problems_example()
 {
@@ -91,16 +90,11 @@ inline void extending_problems_example()
     std::cout << const_z_problem_f->meta_data() << std::endl;
     
 }
+
+
 ///////////////////// Extending Problems //////////////////
-
-
 inline void problem_example()
 {
-    // simple_problem_example();
-    // extending_problems_example();
-
-    auto const_z_problem = ioh::problem::wrap_function<double>(&constant_zero, "ConstantZero");
-    auto const_z_problem2 = ioh::problem::wrap_function<double>(&constant_zero2, "ConstantZero2");
-    std::cout << const_z_problem.meta_data() << std::endl;
-    std::cout << const_z_problem2.meta_data() << std::endl;
+    simple_problem_example();
+    extending_problems_example();
 }

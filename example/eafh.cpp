@@ -6,7 +6,6 @@
  * Empirical Attainment loggers.
  * Namely the true function VS the histogram, with varying parameters.
  *****************************************************************************/
-
 using namespace ioh;
 
 enum Error {not_enough_args, wrong_number_of_args, type_not_supported, scale_not_supported};
@@ -30,7 +29,6 @@ void run(L& logger, const size_t samples, const size_t runs)
         }
     }
 }
-
 
 void fail(const Error error, const std::string& msg = "")
 {
