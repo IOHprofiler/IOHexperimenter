@@ -360,7 +360,7 @@ namespace ioh::logger
                 }
 
                 //! Accessor for output directory
-                virtual fs::path output_directory() const { return path_.path(); }
+                virtual fs::path output_directory() const override { return path_.path(); }
 
             private:
                 static inline watch::Evaluations evaluations_{R"#("function evaluation")#"};
