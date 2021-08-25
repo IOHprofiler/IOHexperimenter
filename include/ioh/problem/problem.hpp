@@ -1,7 +1,9 @@
 #pragma once
 
-#include "utils.hpp"
-#include "ioh/logger.hpp"
+#include "ioh/common/factory.hpp"
+#include "ioh/common/container_utils.hpp"
+#include "ioh/problem/structures.hpp"
+#include "ioh/logger/loggers.hpp"
 
 namespace ioh
 {
@@ -23,12 +25,12 @@ namespace ioh
             {
                 if (x.empty())
                 {
-                    IOH_DBG(warning,"The solution is empty.");
+                    IOH_DBG(warning,"The solution is empty.")
                     return false;
                 }
                 if (x.size() != static_cast<size_t>(meta_data_.n_variables))
                 {
-                    IOH_DBG(warning,"The dimension of solution is incorrect.");
+                    IOH_DBG(warning,"The dimension of solution is incorrect.")
                     return false;
                 }
                 return true;
@@ -52,15 +54,15 @@ namespace ioh
 
                 if (common::has_nan(x))
                 {
-                    IOH_DBG(warning,"The solution contains NaN.");
+                    IOH_DBG(warning,"The solution contains NaN.")
                     return false;
                 }
                 if (common::has_inf(x))
                 {
-                    IOH_DBG(warning,"The solution contains Inf.");
+                    IOH_DBG(warning,"The solution contains Inf.")
                     return false;
                 }
-                IOH_DBG(warning,"The solution contains invalid values.");
+                IOH_DBG(warning,"The solution contains invalid values.")
                 return false;
             }
 
@@ -105,7 +107,6 @@ namespace ioh
             }
 
             virtual ~Problem() = default;
-
 
             virtual void reset()
             {
@@ -227,12 +228,14 @@ namespace ioh
 
         public:
             WrappedProblem(Function<T> f, const std::string &name, const int n_variables,
+                           const int problem_id = 0,
                            const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
                            Constraint<T> constraint = Constraint<T>()
                 ) :
-                Problem<T>(MetaData(0, name, n_variables, optimization_type), constraint),
+                Problem<T>(MetaData(problem_id, 0, name, n_variables, optimization_type), constraint),
                 function_(f)
             {
+
             }
         };
 
@@ -242,11 +245,14 @@ namespace ioh
                                             common::OptimizationType::Minimization,
                                         Constraint<T> constraint = Constraint<T>())
         {
-            ProblemFactoryType<Problem<T>>::instance().include(name, 0, [=](const int, const int dimension)
+            auto &factory = ProblemFactoryType<Problem<T>>::instance();
+            int id = factory.check_or_get_next_available(1);
+
+            factory.include(name, id, [=](const int, const int dimension)
             {
-                return std::make_unique<WrappedProblem<T>>(f, name, dimension, optimization_type);
+                return std::make_unique<WrappedProblem<T>>(f, name, dimension, id,  optimization_type);
             });
-            return WrappedProblem<T>{f, name, n_variables, optimization_type, constraint};
+            return WrappedProblem<T>{f, name, n_variables, id, optimization_type, constraint};
         }
 
         using Real = Problem<double>;

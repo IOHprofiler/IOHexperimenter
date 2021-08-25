@@ -9,10 +9,6 @@ void define_suite(py::module& m);
 void define_logger(py::module& m);
 void define_experimenter(py::module& m);
 
-PYBIND11_MAKE_OPAQUE(std::vector<double>)
-PYBIND11_MAKE_OPAQUE(std::vector<float>)
-PYBIND11_MAKE_OPAQUE(std::vector<int>)
-
 PYBIND11_MODULE(iohcpp, m) {
     m.doc() = R"pbdoc(
         Python Interface to IOHexperimenter, which provides
@@ -27,15 +23,6 @@ PYBIND11_MODULE(iohcpp, m) {
         Examples
         --------
         ```
-        > from IOHexperimenter import IOH_function, IOH_logger
-        > f = IOH_function(fid = fid, dim = 16, iid = 1, suite = 'BBOB')
-        > logger = IOH_logger(
-        >     location = "./data", foldername = "data",
-        >     name = "some algorithm to test",
-        >     info = "test of IOHexperimenter in python"
-        > )
-        > f.add_logger(logger)
-        > f([1, 2, 3])
         ```
 
         Contact us
@@ -62,7 +49,7 @@ PYBIND11_MODULE(iohcpp, m) {
     auto m_suite = m.def_submodule("suite", "IOHExperimenter suites");
     auto m_logger = m.def_submodule("logger", "IOHExperimenter logger");
     auto m_experimenter = m.def_submodule("experimenter", "IOHExperimenter experimenter");
-
+    
     define_helper_classes(m);
     define_logger(m_logger);
     define_problem(m_problem);

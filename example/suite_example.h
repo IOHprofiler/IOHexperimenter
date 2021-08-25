@@ -39,7 +39,7 @@ inline void suite_example()
             {
                 /// To evalute the fitness of 'x' for the problem by using '(*problem)(x)' function.
                 best_y = std::min(
-                    (*problem)(ioh::common::random::uniform(problem->meta_data().n_variables, budget * runs, -5, 5)),
+                    (*problem)(ioh::common::random::doubles(problem->meta_data().n_variables, -5, 5)),
                     best_y);
             }
                 

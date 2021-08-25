@@ -16,7 +16,7 @@ namespace ioh
                 {
                     auto result = 0.0;
                     for (auto i = 0; i < meta_data_.n_variables; ++i)
-                        result += static_cast<double>(x[i]) * static_cast<double>(i + 1);
+                        result += static_cast<double>(x[i]) * (static_cast<double>(i) + 1.0);
                     return result;
                 }
 

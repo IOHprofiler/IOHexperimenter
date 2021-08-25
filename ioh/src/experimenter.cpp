@@ -4,19 +4,18 @@
 #include "ioh.hpp"
 
 namespace py = pybind11;
-using namespace ioh::experiment;
 
 template <typename ProblemType>
 void define_experimenter(py::module &m, const std::string &name)
 {
-    using Experimenter = Experimenter<ProblemType>;
+    using Experimenter = ioh::Experimenter<ProblemType>;
     using Suite = std::shared_ptr<ioh::suite::Suite<ProblemType>>;
     py::options options;
     options.disable_function_signatures();
     
     py::class_<Experimenter>(m, name.c_str(), py::buffer_protocol())
         .def(
-            py::init<Suite, std::shared_ptr<ioh::logger::Base>,
+            py::init<Suite, std::shared_ptr<ioh::Logger>,
             typename Experimenter::Algorithm, int>(),
             R"pbdoc(
                 Initialize an experimentator object based on the provided suite, logger and algorithm.
@@ -26,7 +25,6 @@ void define_experimenter(py::module &m, const std::string &name)
                 Set up parallellization by calling 'set_parallell'
             )pbdoc"
         )
-        // .def(py::init<fs::path, typename Experimenter::Algorithm>())
         .def(
             "run", &Experimenter::run,
             R"pbdoc(

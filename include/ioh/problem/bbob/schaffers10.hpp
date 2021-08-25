@@ -13,7 +13,7 @@ namespace ioh::problem::bbob
         double evaluate(const std::vector<double> &x) override
         {
             auto result = 0.0;
-            for (auto i = 0; i < this->meta_data_.n_variables - 1; ++i)
+            for (size_t i = 0; i < static_cast<size_t>(this->meta_data_.n_variables) - 1; ++i)
             {
                 const auto z = pow(x.at(i), 2.0) + pow(x.at(i + 1), 2.0);
                 result += pow(z, 0.25) * (1.0 + pow(sin(50.0 * pow(z, 0.1)), 2.0));

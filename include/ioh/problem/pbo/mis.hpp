@@ -30,7 +30,7 @@ namespace ioh
                     auto num_of_ones = 0;
                     auto sum_edges_in_the_set = 0;
                     auto number_of_variables_even = meta_data_.n_variables;
-                    std::vector<int> ones_array(number_of_variables_even + 1);
+                    std::vector<int> ones_array(static_cast<size_t>(number_of_variables_even) + 1);
 
                     if (number_of_variables_even % 2 != 0)
                         --number_of_variables_even;
@@ -47,7 +47,7 @@ namespace ioh
                             if (is_edge(ones_array[i] + 1, ones_array[j] + 1, number_of_variables_even) == 1)
                                 sum_edges_in_the_set += 1;
 
-                    return static_cast<double>(num_of_ones - number_of_variables_even * sum_edges_in_the_set);
+                    return static_cast<double>(num_of_ones) - static_cast<double>(number_of_variables_even) * sum_edges_in_the_set;
                 }
 
             public:

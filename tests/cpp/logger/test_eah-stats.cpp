@@ -1,7 +1,9 @@
-#include "ioh.hpp"
-#include <gtest/gtest.h>
+#include "../utils.hpp"
 
-TEST(eah, stats)
+#include "ioh/logger/eah.hpp"
+#include "ioh/suite.hpp"
+
+TEST_F(BaseTest, eah_stats)
 {
     using namespace ioh::logger;
 
@@ -19,8 +21,8 @@ TEST(eah, stats)
         for (size_t run = 0; run < runs; ++run) {
             // FIXME how to indicate different runs to the logger?
             // eah.update_run_info(pb->meta_data());
-            for (auto s = 0; s < sample_size; ++s) {
-                (*pb)(ioh::common::random::uniform(pb->meta_data().n_variables, 0));
+            for (size_t s = 0; s < sample_size; ++s) {
+                (*pb)(ioh::common::random::pbo::uniform(pb->meta_data().n_variables, 0));
             } // s
             pb->reset();
         } // run

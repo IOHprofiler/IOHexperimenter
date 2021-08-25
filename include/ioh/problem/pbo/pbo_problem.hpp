@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ioh/problem/problem.hpp"
+#include "ioh/problem/transformation.hpp"
 
 namespace ioh::problem
 {

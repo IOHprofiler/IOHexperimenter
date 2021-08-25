@@ -21,12 +21,12 @@ namespace ioh
                     k_ = k;
                     if (k > n)
                     {
-                        IOH_DBG(error,"NK_Landscapes, k > n");
+                        IOH_DBG(error,"NK_Landscapes, k > n")
                         assert(k<=n);
                     }
                     for (auto i = 0; i != n; ++i)
                     {
-                        const auto rand_vec = common::random::uniform(static_cast<size_t>(k), static_cast<long>(k * (i + 1)));
+                        const auto rand_vec = common::random::pbo::uniform(static_cast<size_t>(k), static_cast<long>(k * (i + 1)));
 
                         std::vector<int> sampled_number;
                         std::vector<int> population;
@@ -37,7 +37,7 @@ namespace ioh
 
                         for (auto i1 = n - 1; i1 > 0; --i1)
                         {
-                            const auto rand_pos = static_cast<int>(floor(rand_vec[n - 1 - i1] * (i1 + 1)));
+                            const auto rand_pos = static_cast<int>(floor(rand_vec[static_cast<size_t>(n) - 1 - i1] * (static_cast<double>(i1) + 1)));
                             const auto temp = population[i1];
                             population[i1] = population[rand_pos];
                             population[rand_pos] = temp;
@@ -55,7 +55,7 @@ namespace ioh
                     }
                     for (auto i = 0; i != n; ++i)
                     {
-                        f_.emplace_back(common::random::uniform(static_cast<size_t>(pow(2, k + 1)),
+                        f_.emplace_back(common::random::pbo::uniform(static_cast<size_t>(pow(2, k + 1)),
                                                              static_cast<long>(k * (i + 1) * 2)));
                     }
                 }

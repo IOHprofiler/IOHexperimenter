@@ -24,7 +24,7 @@ namespace ioh
                     const auto c = static_cast<float>(n_queens);
 
                     if (floor(sqrt(static_cast<double>(meta_data_.n_variables))) != sqrt(static_cast<double>(meta_data_.n_variables))) {
-                        IOH_DBG(error,"Number of parameters in the N Queen problem must be a square number");
+                        IOH_DBG(error,"Number of parameters in the N Queen problem must be a square number")
                         assert(floor(sqrt(static_cast<double>(meta_data_.n_variables))) == sqrt(static_cast<double>(meta_data_.n_variables)));
                     }
 

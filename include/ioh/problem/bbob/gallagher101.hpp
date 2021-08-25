@@ -53,8 +53,8 @@ namespace ioh::problem::bbob
                 auto permutations = Permutation::sorted(n - 1, seed);
 
                 std::vector<Peak> peaks(1, {10.0, seed, n_variables, max_condition});
-                for (auto i = 1; i < n; ++i)
-                    peaks.emplace_back(static_cast<double>(i - 1) / divisor * (f1 - f0) + f0, seed + (1000 * i),
+                for (size_t i = 1; i < static_cast<size_t>(n); ++i)
+                    peaks.emplace_back((static_cast<double>(i) - 1.) / divisor * (f1 - f0) + f0, seed + (1000 * i),
                                        n_variables,
                                        pow(mc, static_cast<double>(permutations[i - 1].index) / divisor));
 
@@ -127,7 +127,7 @@ namespace ioh::problem::bbob
             factor_(-0.5 / static_cast<double>(n_variables))
         {
             const auto random_numbers = common::random::bbob2009::uniform(
-                this->meta_data_.n_variables * number_of_peaks, this->transformation_state_.seed);
+                static_cast<size_t>(this->meta_data_.n_variables) * number_of_peaks, this->transformation_state_.seed);
 
 
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
@@ -137,7 +137,7 @@ namespace ioh::problem::bbob
                 {
                     for (auto k = 0; k < this->meta_data_.n_variables; ++k)
                         x_transformation_[i][j] += this->transformation_state_.second_rotation[i][k] * (
-                            b * random_numbers.at(j * this->meta_data_.n_variables + k) - c
+                            b * random_numbers.at(static_cast<size_t>(j) * this->meta_data_.n_variables + k) - c
                         );
                     if (j == 0)
                         x_transformation_[i][j] *= 0.8;

@@ -46,13 +46,13 @@ namespace ioh::problem
             [[nodiscard]]
             std::vector<std::vector<double>> compute_rotation(const long rotation_seed, const int n_variables) const
             {
-                const auto random_vector = common::random::bbob2009::normal(n_variables * n_variables, rotation_seed);
+                const auto random_vector = common::random::bbob2009::normal(static_cast<size_t>(n_variables) * n_variables, rotation_seed);
                 auto matrix = std::vector<std::vector<double>>(n_variables, std::vector<double>(n_variables));
 
                 // reshape
                 for (auto i = 0; i < n_variables; i++)
                     for (auto j = 0; j < n_variables; j++)
-                        matrix[i][j] = random_vector[j * n_variables + i];
+                        matrix[i][j] = random_vector.at(static_cast<size_t>(j) * n_variables + i);
 
 
                 /*1st coordinate is row, 2nd is column.*/

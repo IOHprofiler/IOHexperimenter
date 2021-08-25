@@ -1,5 +1,7 @@
-#include "ioh.hpp"
-#include <gtest/gtest.h>
+#include "../utils.hpp"
+
+#include "ioh/logger/eah.hpp"
+#include "ioh/suite.hpp"
 
 template<class RR, class RV>
 void do_test(std::string scale_errors, std::string scale_evals)
@@ -10,8 +12,6 @@ void do_test(std::string scale_errors, std::string scale_evals)
     size_t sample_size = 1000;
     size_t buckets = 100;
 
-    size_t pb_start = 2;
-    size_t pb_end = 10;
     ioh::suite::BBOB suite({ 1, 2 }, { 1, 2 }, { 2, 10 });
 
     RR r_error(0,6e7,buckets);
@@ -24,14 +24,14 @@ void do_test(std::string scale_errors, std::string scale_evals)
         for (size_t run = 0; run < runs; ++run) {
             // FIXME how to indicate different runs to the logger?
              // eah.update_run_info(pb->meta_data());
-            for (auto s = 0; s < sample_size; ++s) {
-                (*pb)(ioh::common::random::uniform(pb->meta_data().n_variables, 0));
+            for (size_t s = 0; s < sample_size; ++s) {
+                (*pb)(ioh::common::random::pbo::uniform(pb->meta_data().n_variables, 0));
             } // s
             pb->reset();
         } // run
     } // pb
 
-    CLUTCHCODE(info,
+    CLUTCHCODE(progress,
         auto d = eah::stat::distribution(eah);
         std::clog << scale_errors << "-" << scale_evals << " joint cumulative attainment distribution for errors and evaluations:" << std::endl;
         std::clog << eah::colormap(d, {&r_error, &r_evals}, true) << std::endl;
@@ -46,7 +46,7 @@ void do_test(std::string scale_errors, std::string scale_evals)
     );
 }
 
-TEST(eah, plots)
+TEST_F(BaseTest, DISABLED_eah_plots)
 {
     using namespace ioh::logger::eah;
 

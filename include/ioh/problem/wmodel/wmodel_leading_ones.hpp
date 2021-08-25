@@ -1,5 +1,6 @@
 #pragma once
 #include "wmodel_problem.hpp"
+#include <algorithm>
 
 namespace ioh::problem::wmodel
 {
