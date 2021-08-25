@@ -44,6 +44,32 @@ namespace ioh::logger
         size_t current_run_;
         std::string current_meta_data_;
 
+        void open_stream(const std::string &filename, const fs::path &output_directory)
+        {
+            if (filename != filename_)
+            {
+                filename_ = filename;
+                out_.close();
+            }
+            std::cout << "opening " << filename << std::endl;
+            if (output_directory_ != output_directory)
+            {
+                output_directory_ = output_directory;
+                if (not exists(output_directory_))
+                {
+                    IOH_DBG(debug, "some directories do not exist in " << output_directory_ << ", try to create them")
+                    create_directories(output_directory_);
+                }
+                out_.close();
+            }
+            if (!out_.is_open())
+            {
+                IOH_DBG(debug, "will output data in " << output_directory_ / filename_)
+                out_ = std::ofstream(output_directory_ / filename_);
+                requires_header_ = true;
+            }
+        }
+
     public:
         /** The logger should at least track one logger::Property, or else it makes no sense to use it.
          *
@@ -72,37 +98,12 @@ namespace ioh::logger
             Watcher(triggers, properties),
             sep_(separator), com_(comment), eol_(end_of_line), nan_(no_value),
             common_header_(format("{}", fmt::join(common_header_titles.begin(), common_header_titles.end(), sep_)) +
-                    (common_header_titles.empty() ? "" : sep_)),
+                           (common_header_titles.empty() ? "" : sep_)),
             repeat_header_(repeat_header), store_positions_(store_positions), requires_header_(true),
             log_meta_data_(!common_header_titles.empty()), output_directory_(output_directory), filename_(filename),
             current_suite_("unknown_suite"), current_run_(0), current_meta_data_{}
         {
             assert(common_header_titles.empty() || common_header_titles.size() == 7);
-        }
-
-        void open_stream(const std::string &filename, const fs::path &output_directory)
-        {
-            if (filename != filename_)
-            {
-                filename_ = filename;
-                out_.close();
-            }
-            if (output_directory_ != output_directory)
-            {
-                output_directory_ = output_directory;
-                if (not exists(output_directory_))
-                {
-                    IOH_DBG(debug, "some directories do not exist in " << output_directory_ << ", try to create them")
-                    create_directories(output_directory_);
-                }
-                out_.close();
-            }
-            if (!out_.is_open())
-            {
-                IOH_DBG(debug, "will output data in " << output_directory_ / filename_)
-                out_ = std::ofstream(output_directory_ / filename_);
-                requires_header_ = true;
-            }
         }
 
         void attach_suite(const std::string &suite_name) override { current_suite_ = suite_name; }
@@ -133,8 +134,7 @@ namespace ioh::logger
             if (requires_header_)
             {
                 IOH_DBG(xdebug, "print header")
-                out_ << com_ + common_header_ +
-                    format("{}", fmt::join(properties_vector_, sep_));
+                out_ << com_ + common_header_ + format("{}", fmt::join(properties_vector_, sep_));
                 if (store_positions_)
                     for (size_t i = 0; i < log_info.current.x.size(); i++)
                         out_ << sep_ << "x" << i;

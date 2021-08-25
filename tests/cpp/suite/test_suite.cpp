@@ -37,7 +37,6 @@ TEST_F(BaseTest, problem_suite_bbob)
     }
 }
 
-
 TEST_F(BaseTest, suite_pbo)
 {
     std::vector<int> problem_id;
@@ -84,7 +83,6 @@ TEST_F(BaseTest, suite_pbo)
         }
     }
 }
-
 
 TEST_F(BaseTest, suite_bbob)
 {

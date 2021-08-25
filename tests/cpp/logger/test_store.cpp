@@ -67,8 +67,8 @@ TEST_F(BaseTest, store_properties)
     suite.attach_logger(logger);
 
     // This is to ensure the test passes on gcc, no idea why this helps
-    logger::Info info;
-    attpr(info);
+    // logger::Info info;
+    // attpr(info);
 
     for (const auto &pb : suite) {
         for (auto r = 0; r < nb_runs; r++) {

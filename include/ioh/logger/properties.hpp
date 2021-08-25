@@ -218,8 +218,7 @@ namespace ioh
          *
          * @ingroup Properties
          */
-        // inline TransformedY transformed_y; // Uncomment if one want a library.
-
+        inline TransformedY transformed_y; // Uncomment if one want a library.
         /** A property that access the best value found so far, with transformation.
          *
          * @ingroup Logging

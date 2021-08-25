@@ -25,7 +25,6 @@ void define_experimenter(py::module &m, const std::string &name)
                 Set up parallellization by calling 'set_parallell'
             )pbdoc"
         )
-        // .def(py::init<fs::path, typename Experimenter::Algorithm>())
         .def(
             "run", &Experimenter::run,
             R"pbdoc(

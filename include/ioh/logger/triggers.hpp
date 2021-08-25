@@ -415,7 +415,7 @@ namespace ioh {
          * 
          * @ingroup Triggering
          */
-        class During : logger::Trigger {
+        class During : public logger::Trigger {
         protected:
             //! Time ranges during which events are triggered.
             const std::set<std::pair<size_t,size_t>> _time_ranges;
