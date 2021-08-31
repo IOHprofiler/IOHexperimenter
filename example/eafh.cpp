@@ -23,7 +23,7 @@ void run(L& logger, const size_t samples, const size_t runs)
         for(size_t r = 0; r < runs; ++r) {
             IOH_DBG(progress, "> run:" << r);
             for(size_t s = 0; s < samples; ++s) {
-                (*pb)(common::random::doubles(pb->meta_data().n_variables);
+                (*pb)(common::random::doubles(pb->meta_data().n_variables));
             }
             pb->reset();
         }
