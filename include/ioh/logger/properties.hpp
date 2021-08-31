@@ -345,36 +345,52 @@ namespace ioh
         template <class T>
         class PointerReference : public logger::Property
         {
+        public:
+            using PtrType = T*;
+            using ConstPtrType = PtrType const;
+            using RefType = ConstPtrType &;
+            using ConstRefType = const RefType; // clang++-9 issues a warning for the const having no effect.
+
+            // using Type = const T *const &;
+            // We failed to make the above direct declaration work under g++-8 and clang++-9.
+            // It would silently generate a code that fails to have the correct behaviour.
+            
         protected:
             //! The managed reference to a pointer.
-            const T *const &_variable;
+            ConstRefType _ref_ptr_var;
 
+#ifndef NDEBUG
+        public:
+            ConstPtrType ref_ptr_var() const {return _ref_ptr_var;} // g++-8 issues a warning for the const having no effect.           
+#endif
         public:
             /** Constructor.
              *
              * @param name the name of the property.
-             * @param variable a reference to a pointer to the logged variable.
+             * @param ref_ptr_var a reference to a pointer to the logged variable.
              */
-            PointerReference(const std::string name, const T *const &variable, const std::string &format = "{:f}") :
-                logger::Property(name, format), _variable(variable)
+            PointerReference(const std::string name, ConstRefType ref_ptr_var, const std::string &format = "{:f}") :
+                logger::Property(name, format), _ref_ptr_var(ref_ptr_var)
             {
-                // std::cout << "constructor" << std::endl;
-                // std::cout << this << std::endl;
-                // std::cout << _variable << std::endl;
+                if (_ref_ptr_var != nullptr)
+                {
+                    IOH_DBG(debug, "PointerReference " << name << " @ " << ref_ptr_var << " == " << static_cast<double>(*ref_ptr_var));
+                }
+                IOH_DBG(debug, "PointerReference " << name << " @ " << ref_ptr_var << " == nullptr");
             }
+
             //! Main call interface.
             std::optional<double> operator()(const logger::Info &) const override
             {
-                // std::cout << "get" << std::endl;
-                // std::cout << this << std::endl;
-                // std::cout << _variable << std::endl;
-
-                if (_variable != nullptr)
+                if (_ref_ptr_var != nullptr)
                 {
-                    return std::make_optional(static_cast<double>(*_variable));
+                    IOH_DBG(debug, "PointerReference " << name() << " @ " << _ref_ptr_var << " == " << static_cast<double>(*_ref_ptr_var));
+                    return std::make_optional(static_cast<double>(*_ref_ptr_var));
                 }
+                IOH_DBG(debug, "PointerReference " << name() << " @ " << _ref_ptr_var << " == nullopt");
                 return std::nullopt;
             }
+
         };
         /** The value of an extern variable, which may not exists.
          *
