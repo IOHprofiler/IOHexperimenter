@@ -4,7 +4,6 @@
 ##
 add_subdirectory(${EXTERNAL_DIR}/googletest EXCLUDE_FROM_ALL build)
 include(GoogleTest)
-enable_testing()
 
 function(register_test test_name test_sources)
     add_executable(${test_name} ${test_sources} cpp/utils.hpp cpp/entrypoint.cpp)
