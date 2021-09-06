@@ -60,7 +60,7 @@ namespace ioh
             bool check(const std::vector<T> &x)
             {
                 for (size_t i = 0; i < x.size(); i++)
-                    if (!(lb.at(i) >= x.at(i) && x.at(i) <= lb.at(i)))
+                    if (!(ub.at(i) >= x.at(i) && x.at(i) <= lb.at(i)))
                         return false;
                 return true;
             }
