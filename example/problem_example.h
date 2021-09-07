@@ -32,6 +32,7 @@ inline void simple_problem_example()
             {
                 /// To output information of the current problem.
                 std::cout << om->meta_data() << std::endl;
+                std::cout << "bounds of variables :  " << om->constraint() << std::endl;
 
                 /// Random search on the problem with the given budget 100.
                 for (auto budget = 100; budget > 0; budget--)

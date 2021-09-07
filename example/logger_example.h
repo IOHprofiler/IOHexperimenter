@@ -90,22 +90,24 @@ inline void logger_with_custom_parameters_example()
     logger.create_run_attributes({"run_id"});
 
     // Initialize parameters unique for each evaluation.
-    logger.create_logged_attributes({"x1"});
+    logger.create_logged_attributes({"iteration"});
     
     problem.attach_logger(logger);
 
     // Run a simple experiment
-    for (auto run_id = 1; run_id < 2; run_id++)
+    for (auto run_id = 1; run_id <= 2; run_id++)
     {
         // Update the variable for the run specific parameter
         logger.set_run_attributes({"run_id"}, {static_cast<double>(run_id)});
-        for (auto i = 0; i < 10; i ++)
+        for (auto i = 0; i < 100; i++)
         {
-            const auto x = ioh::common::random::uniform(problem.meta_data().n_variables, 0);
-            // Update the variable for the evaluation specific parameter
-            logger.set_logged_attributes({"x1"}, {x.at(1)});
+            // Generate a random string using seed (i+1)*run_id.
+            const auto x = ioh::common::random::uniform(problem.meta_data().n_variables, (i+1)*run_id);
+            // Update the variable for the evaluation specific parameter.
+            logger.set_logged_attributes({"iteration"}, {i+1});
             problem(x);
         }
+        problem.reset();
     }
 }
 
