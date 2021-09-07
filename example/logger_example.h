@@ -104,7 +104,7 @@ inline void logger_with_custom_parameters_example()
             // Generate a random string using seed (i+1)*run_id.
             const auto x = ioh::common::random::uniform(problem.meta_data().n_variables, (i+1)*run_id);
             // Update the variable for the evaluation specific parameter.
-            logger.set_logged_attributes({"iteration"}, {i+1});
+            logger.set_logged_attributes({"iteration"}, {static_cast<double>(i+1)});
             problem(x);
         }
         problem.reset();
