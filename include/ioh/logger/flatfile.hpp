@@ -51,7 +51,6 @@ namespace ioh::logger
                 filename_ = filename;
                 out_.close();
             }
-            std::cout << "opening " << filename << std::endl;
             if (output_directory_ != output_directory)
             {
                 output_directory_ = output_directory;

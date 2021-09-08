@@ -11,12 +11,7 @@ TEST_F(BaseTest, store_data_consistency)
     auto nb_runs = 2;
 
     suite::BBOB suite({1, 2}, {1, 2}, {3, 10}); // problems, instances, dimensions
-    // auto what = ioh::watch::TransformedY();
-    // auto when = trigger::Always();
-    // ioh::logger::Store logger({when},{what});
-    trigger::Always always;
-    watch::TransformedY transformed_y;
-    logger::Store logger({always},{transformed_y});
+    logger::Store logger({trigger::always},{watch::transformed_y});
 
     suite.attach_logger(logger);
 
@@ -35,7 +30,7 @@ TEST_F(BaseTest, store_data_consistency)
     EXPECT_EQ(logger.data().at(suite.name()).at(/*pb*/1).at(/*dim*/10).at(/*ins*/2).size(), nb_runs);
     EXPECT_EQ(logger.data().at(suite.name()).at(/*pb*/1).at(/*dim*/10).at(/*ins*/2).at(/*run*/0).size(), sample_size);
     EXPECT_EQ(logger.data().at(suite.name()).at(/*pb*/1).at(/*dim*/10).at(/*ins*/2).at(/*run*/0).at(/*eval*/0).size(), 1); // 1 property watched
-    EXPECT_GT(logger.data().at(suite.name()).at(/*pb*/1).at(/*dim*/10).at(/*ins*/2).at(/*run*/0).at(/*eval*/0).at(transformed_y.name()), 0);
+    EXPECT_GT(logger.data().at(suite.name()).at(/*pb*/1).at(/*dim*/10).at(/*ins*/2).at(/*run*/0).at(/*eval*/0).at(watch::transformed_y.name()), 0);
 
 }
 

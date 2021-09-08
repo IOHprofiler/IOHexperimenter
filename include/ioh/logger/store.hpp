@@ -115,8 +115,8 @@ namespace ioh::logger {
             
         public:
             /** The logger::Store should at least track one logger::Property, or else it makes no sense to use it. */
-            Store(std::initializer_list<std::reference_wrapper<logger::Trigger >> triggers,
-                  std::initializer_list<std::reference_wrapper<logger::Property>> Attributes)
+            Store(std::vector<std::reference_wrapper<logger::Trigger >> triggers,
+                  std::vector<std::reference_wrapper<logger::Property>> Attributes)
             : Watcher(triggers, Attributes)
             { }
 

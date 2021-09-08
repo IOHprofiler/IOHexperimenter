@@ -1,57 +1,52 @@
 #include "../utils.hpp" 
 
+#include "ioh.hpp"
 
-// void bbob_random_search(const std::shared_ptr<ioh::problem::Real>& p)
-// {
-// 	using namespace ioh::common;
-// 	std::vector<double> x(p->meta_data().n_variables);
-// 	auto count = 0;
-// 	while (count++ < 10)
-// 	{
-//         (*p)(random::pbo::uniform(p->meta_data().n_variables, random::integer()));
-// 	}
-// }
+void real_random_search(const std::shared_ptr<ioh::problem::Real>& p)
+{
+	for (int i = 0; i < 10; i++)
+		(*p)(ioh::common::random::doubles(p->meta_data().n_variables));
+}
 
-// void pbo_random_search(const std::shared_ptr<ioh::problem::Integer>& p)
-// {
-// 	using namespace ioh::common;
-// 	auto count = 0;
-// 	while (count++ < 10)
-// 	{
-// 		const auto x = random::integers(p->meta_data().n_variables, 0, 5);
-// 		(*p)(x);
-// 	}
-// }
-
+void integer_random_search(const std::shared_ptr<ioh::problem::Integer>& p)
+{
+	for (int i = 0; i < 10; i++)
+		(*p)(ioh::common::random::integers(p->meta_data().n_variables));
+}
 
 
 TEST_F(BaseTest, experiment_bbob)
 {
-	// using namespace ioh;
+	using namespace ioh;
 
-	// std::vector<int> pbs = {1, 2};
-	// std::vector<int> ins = {1, 2};
-	// std::vector<int> dims = {2, 10};
-	// const auto suite = std::make_shared<suite::BBOB>(pbs, ins, dims);
-	// const auto logger = std::make_shared<logger::Default>(fs::current_path(),
-	// 	std::string("logger-experimenter"), "random-search", "10iterations", common::OptimizationType::Minimization, true);
-	// auto experiment = Experimenter<problem::Real>(
-	// 	suite, logger, bbob_random_search, 10);
+	const std::vector<int> pbs = {1, 2};
+	const std::vector<int> ins = {1, 2};
+	const std::vector<int> dims = {2, 10};
+	
+	const auto suite  = std::make_shared<suite::BBOB>(pbs, ins, dims);
+	const auto logger = std::make_shared<logger::Store>(
+		logger::Triggers{trigger::always}, logger::Properties{watch::raw_y_best});
+	auto experiment   = Experimenter<problem::Real>(suite, logger, real_random_search, 10);
 
-	// EXPECT_EQ(experiment.independent_runs(), 10);
-	// testing::internal::CaptureStdout();
-	// experiment.run();
-	// const auto output = testing::internal::GetCapturedStdout();
-	// EXPECT_GE(count_newlines(output), 8);
-	// // TODO: check that files are generated properly
-	// experiment.logger()->flush();
-	// try
-	// {
-	// 	fs::remove_all(dynamic_cast<logger::Default*>(&*experiment.logger())->experiment_folder().path()); // Cleanup	
-	// }
-	// catch (const std::exception& e)
-	// {
-	// 	IOH_DBG(warning,"Cannot remove directory: "
-	// 		<< static_cast<std::string>(e.what()));
-	// }
+	EXPECT_EQ(experiment.independent_runs(), 10);
+	experiment.run();
+
+	auto data = logger->data();
+	std::set<int> pr;
+	std::set<int> di;
+	std::set<int> ii;
+
+	for (const auto& [problem, dimensions]: data.at("BBOB")){
+		pr.insert(problem);
+		for (const auto& [dimension, instances]: dimensions){
+			di.insert(dimension);
+			for (const auto& [instance, runs]: instances){
+				ii.insert(instance);
+				EXPECT_EQ(runs.size(), 10);
+			}
+		}
+	}
+	EXPECT_EQ(pr, (std::set<int>{1, 2}));
+	EXPECT_EQ(ii, (std::set<int>{1, 2}));
+	EXPECT_EQ(di, (std::set<int>{2, 10}));
 }

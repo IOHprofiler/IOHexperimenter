@@ -361,7 +361,7 @@ namespace ioh
 
 #ifndef NDEBUG
         public:
-            ConstPtrType ref_ptr_var() const {return _ref_ptr_var;} // g++-8 issues a warning for the const having no effect.           
+            RefType ref_ptr_var() const {return const_cast<RefType>(_ref_ptr_var);} // g++-8 issues a warning for the const having no effect.           
 #endif
         public:
             /** Constructor.

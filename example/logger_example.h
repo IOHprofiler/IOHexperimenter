@@ -64,7 +64,7 @@ inline void logger_combiner_example()
     auto problem = ioh::problem::pbo::OneMax(1, 10);
     // We can use a LoggerCombine object as a 'normal' logger object
     problem.attach_logger(logger);
-    problem(ioh::common::random::integer(10, 0, 1));
+    problem(ioh::common::random::integers(10, 0, 1));
 }
 
 

@@ -15,7 +15,6 @@ public:
 
     void watch(logger::Property &property) override
     {
-
         std::cout << "cannot call this yet" << property.name() << std::endl;
     }
 
@@ -114,7 +113,7 @@ void define_loggers(py::module &m)
 
     const std::vector<std::string> common_headers = {
         "suite_name", "problem_name", "problem_id", "problem_instance", "optimization_type", "dimension", "run"};
-
+    
     py::class_<PyLogger<FlatFile>, Watcher, std::shared_ptr<PyLogger<FlatFile>>>(m, "FlatFile")
         .def(py::init<Trigs, Props, std::string, fs::path, std::string, std::string, std::string, std::string, bool,
                       bool, std::vector<std::string>>(),
@@ -129,17 +128,23 @@ void define_loggers(py::module &m)
         .def("__repr__", [](const PyLogger<FlatFile> &f) {
             return fmt::format("<FlatFile {}>", (f.output_directory() / f.filename()).generic_string());
         });
-    
+
+
     py::class_<Store::Cursor>(m, "Cursor").def(py::init<std::string, int, int, int, size_t, size_t>());
 
-    py::class_<PyLogger<Store>, Watcher, std::shared_ptr<PyLogger<Store>>>(m, "Store")
-        .def(py::init<std::initializer_list<std::reference_wrapper<logger::Trigger>>
-                          std::initializer_list<std::reference_wrapper<logger::Property>>>(),
-             py::arg("triggers"), py::arg("properties"))
-        .def("data", &PyLogger<Store>::data)
-        // .def("at", py::overload_cast<const Store::Cursor, const std::string>(&PyLogger<Store>::data))
-             ;
-}
+    using PyStore = PyLogger<Store>;
+
+    py::class_<PyStore, Watcher, std::shared_ptr<PyStore>>(m, "Store")
+        .def(py::init<Trigs, Props>())
+        .def("data", py::overload_cast<>(&PyStore::data))
+        .def("at", [](PyStore &f, std::string suite_name, int pb, int dim, int inst, size_t run, size_t evaluation) { 
+                    const auto cursor = Store::Cursor(suite_name, pb, dim, inst, run, evaluation); 
+                    return f.data(cursor);
+                })
+        .def("__repr__", [](PyStore &f) {
+            return fmt::format("<Store ({},)>", fmt::join(ioh::common::keys(f.data()), ","));
+        });
+} 
 
 void define_logger(py::module &m)
 {
