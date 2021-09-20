@@ -185,3 +185,4 @@ compile_commands.json
 debug
 release
 ioh_data
+# *.pyi

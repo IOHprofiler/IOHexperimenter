@@ -6,6 +6,8 @@ TODO: tracking of out-of bounds
 TODO: Check quadratic function, min dimension bbob=2
 TODO: Rename Integer -> Discrete
 TODO: Check what happens on exit -> probably factory objects need to be destroyed
+
+
 '''
 
 import os
@@ -20,7 +22,20 @@ import copy
 import atexit
 
 try:
-    from .iohcpp import *
+    from .iohcpp import (
+        problem, 
+        suite, 
+        logger,
+        OptimizationType,
+        RealSolution,
+        IntegerSolution, 
+        IntegerConstraint,
+        RealConstraint,
+        RealState,
+        IntegerState,
+        MetaData,
+        LogInfo
+    )
 except ModuleNotFoundError:
     raise ModuleNotFoundError("No module named ioh")
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import shutil
 import platform
 import subprocess
 
@@ -29,8 +30,28 @@ class CMakeExtension(Extension):
         Extension.__init__(self, name, sources=[])
         self.sourcedir = os.path.abspath(sourcedir)
 
-
 class CMakeBuild(build_ext):
+    def run(self):
+        super().run()
+        ext, *_ = self.extensions
+
+        if os.path.isfile(os.path.join(ext.sourcedir, "ioh/__init__.pyi")):
+            os.remove(os.path.join(ext.sourcedir, "ioh/__init__.pyi"))
+        
+        if os.path.isdir(os.path.join(ext.sourcedir, "ioh/iohcpp")):
+            shutil.rmtree(os.path.join(ext.sourcedir, "ioh/iohcpp"))
+
+        # generate stub files
+        command = """stubgen -m ioh -m ioh.iohcpp \
+                -m ioh.iohcpp.problem \
+                -m ioh.iohcpp.logger \
+                -m ioh.iohcpp.suite \
+                -m ioh.iohcpp.logger.trigger \
+                -m ioh.iohcpp.logger.property \
+                -o ./"""
+        subprocess.check_call(command, cwd=ext.sourcedir, shell=True)
+        
+
     def build_extension(self, ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
 
@@ -109,7 +130,6 @@ class CMakeBuild(build_ext):
         )
 
 
-
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 __version__ = "2.0.0.0"
@@ -137,5 +157,5 @@ setup(
     zip_safe=False,
     test_suite='tests.python',
     python_requires='>=3.6',
-    setup_requires=['cmake', 'ninja', 'pybind11']
+    setup_requires=['cmake', 'ninja', 'pybind11', 'mypy']
 )

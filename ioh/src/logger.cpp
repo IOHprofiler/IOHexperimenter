@@ -142,7 +142,7 @@ void define_loggers(py::module &m)
                     return f.data(cursor);
                 })
         .def("__repr__", [](PyStore &f) {
-            return fmt::format("<Store ({},)>", fmt::join(ioh::common::keys(f.data()), ","));
+            return fmt::format("<Store (suites: ({}),)>", fmt::join(ioh::common::keys(f.data()), ","));
         });
 } 
 
