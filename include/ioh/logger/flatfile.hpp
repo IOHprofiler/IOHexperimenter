@@ -143,10 +143,11 @@ namespace ioh::logger
 
             IOH_DBG(xdebug, "print problem meta data")
             out_ << current_meta_data_;
-
+            
             IOH_DBG(xdebug, "print watched properties")
-            for (auto p = properties_vector_.begin(); p != properties_vector_.end();)
+            for (auto p = properties_vector_.begin(); p != properties_vector_.end();){
                 out_ << p->get().call_to_string(log_info, nan_) << (++p != properties_vector_.end() ? sep_ : "");
+            }
 
             if (store_positions_)
                 out_ << sep_ << format("{:f}", fmt::join(log_info.current.x, sep_));

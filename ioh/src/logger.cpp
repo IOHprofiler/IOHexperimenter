@@ -1,52 +1,78 @@
-#include <utility>
 #include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <utility>
 #include "ioh.hpp"
 
 
 namespace py = pybind11;
 using namespace ioh;
 
-
-template <typename LoggerType>
-class PyLogger : public LoggerType
+class PyProperty : public logger::Property
 {
-    bool deleted = false;
+    const py::object container_;
+    const std::string attribute_;
+
 public:
-    template<typename... Args>
-    PyLogger(Args&&... args): LoggerType(std::forward<Args>(args)...) {
-        py::module::import("atexit").attr("register")(
-            py::cpp_function{
-                [self=this]() -> void {
-                    if (!self->deleted)
-                        delete self;
-                }
-            });
+    PyProperty(const py::object &container, const std::string &attribute) :
+        Property(attribute), container_(container), attribute_(attribute)
+    {
     }
 
-    virtual ~PyLogger() {
-        deleted = true;
+    std::optional<double> operator()(const logger::Info &) const override
+    {
+        if (py::hasattr(container_, attribute_.c_str()))
+            return std::make_optional<double>(PyFloat_AsDouble(container_.attr(attribute_.c_str()).ptr()));
+        return {};
+    }
+};
+
+
+template <typename WatcherType>
+class PyWatcher : public WatcherType
+{
+    bool deleted = false;
+    std::vector<PyProperty*> property_ptrs_;
+public:
+    template <typename... Args>
+    PyWatcher(Args &&...args) : WatcherType(std::forward<Args>(args)...)
+    {
+        py::module::import("atexit").attr("register")(py::cpp_function{[self = this]() -> void {
+            PyWatcher *ptr = dynamic_cast<PyWatcher *>(self);
+            if (ptr != NULL && !self->deleted)
+                delete self;
+        }});
+    }
+
+    virtual ~PyWatcher() { 
+        deleted = true; 
+        for (auto ptr: property_ptrs_) delete ptr;
     }
 
     void watch(logger::Property &property) override
     {
-        std::cout << "cannot call this yet" << property.name() << std::endl;
+        PYBIND11_OVERRIDE(void, WatcherType, watch, property);
     }
 
-    void log(const logger::Info &log_info) override { PYBIND11_OVERRIDE(void, LoggerType, log, log_info); }
+    void watch(const py::object &container, const std::string &attribute) {
+        auto* p = new PyProperty(container, attribute);
+        watch(*p);
+        property_ptrs_.push_back(p);
+    }
+
+    void log(const logger::Info &log_info) override { PYBIND11_OVERRIDE(void, WatcherType, log, log_info); }
 
     void attach_problem(const problem::MetaData &problem) override
     {
-        PYBIND11_OVERRIDE(void, LoggerType, attach_problem, problem);
+        PYBIND11_OVERRIDE(void, WatcherType, attach_problem, problem);
     }
 
     void attach_suite(const std::string &suite_name) override
     {
-        PYBIND11_OVERRIDE(void, LoggerType, attach_suite, suite_name);
+        PYBIND11_OVERRIDE(void, WatcherType, attach_suite, suite_name);
     }
 
-    void call(const logger::Info &log_info) override { PYBIND11_OVERRIDE(void, LoggerType, call, log_info); }
+    void call(const logger::Info &log_info) override { PYBIND11_OVERRIDE(void, WatcherType, call, log_info); }
 };
 
 void define_triggers(py::module &m)
@@ -72,11 +98,13 @@ void define_properties(py::module &m)
 {
     py::module t = m.def_submodule("property");
 
-    py::class_<logger::Property, std::shared_ptr<logger::Property>>(t, "Property")
-
+    py::class_<logger::Property, std::shared_ptr<logger::Property>>(t, "AbstractProperty")
         .def("__call__", &logger::Property::operator())
         .def("name", &logger::Property::name)
         .def("call_to_string", &logger::Property::call_to_string);
+
+    py::class_<PyProperty, logger::Property, std::shared_ptr<PyProperty>>(t, "Property")
+        .def(py::init<py::object, std::string>(), py::arg("container"), py::arg("attribute"));
 
     py::class_<watch::Evaluations, logger::Property, std::shared_ptr<watch::Evaluations>>(t, "Evaluations")
         .def(py::init<std::string, std::string>());
@@ -110,10 +138,10 @@ void define_bases(py::module &m)
         .def("call", &Logger::call)
         .def("reset", &Logger::reset)
         .def_property_readonly("problem", &Logger::problem);
-
+    
     using namespace logger;
-
-    py::class_<Watcher, Logger, std::shared_ptr<Watcher>>(m, "Watcher").def("watch", &Watcher::watch);
+    py::class_<Watcher, Logger, std::shared_ptr<Watcher>>(m, "AbstractWatcher")
+        .def("watch", &Watcher::watch);
 }
 
 void define_loggers(py::module &m)
@@ -129,8 +157,8 @@ void define_loggers(py::module &m)
 
     const std::vector<std::string> common_headers = {
         "suite_name", "problem_name", "problem_id", "problem_instance", "optimization_type", "dimension", "run"};
-    
-    py::class_<PyLogger<FlatFile>, Watcher, std::shared_ptr<PyLogger<FlatFile>>>(m, "FlatFile")
+        
+    py::class_<PyWatcher<FlatFile>, Watcher, std::shared_ptr<PyWatcher<FlatFile>>>(m, "FlatFile")
         .def(py::init<Trigs, Props, std::string, fs::path, std::string, std::string, std::string, std::string, bool,
                       bool, std::vector<std::string>>(),
              py::arg("triggers"), py::arg("properties"), py::arg("filename") = "IOH.dat",
@@ -140,53 +168,54 @@ void define_loggers(py::module &m)
         .def_property_readonly("filename", &FlatFile::filename)
         .def_property_readonly(
             "output_directory",
-            [](PyLogger<FlatFile> &f) { return std::filesystem::absolute(f.output_directory()).generic_string(); })
-        .def("__repr__", [](const PyLogger<FlatFile> &f) {
+            [](PyWatcher<FlatFile> &f) { return std::filesystem::absolute(f.output_directory()).generic_string(); })
+        .def("watch", py::overload_cast<Property&>(&PyWatcher<FlatFile>::watch))
+        .def("watch", py::overload_cast<const py::object &, const std::string &>(&PyWatcher<FlatFile>::watch))
+        .def("__repr__", [](const PyWatcher<FlatFile> &f) {
             return fmt::format("<FlatFile {}>", (f.output_directory() / f.filename()).generic_string());
         });
 
 
     py::class_<Store::Cursor>(m, "Cursor").def(py::init<std::string, int, int, int, size_t, size_t>());
 
-    using PyStore = PyLogger<Store>;
+    using PyStore = PyWatcher<Store>;
 
     py::class_<PyStore, Watcher, std::shared_ptr<PyStore>>(m, "Store")
         .def(py::init<Trigs, Props>())
         .def("data", py::overload_cast<>(&PyStore::data))
-        .def("at", [](PyStore &f, std::string suite_name, int pb, int dim, int inst, size_t run, size_t evaluation) { 
-                    const auto cursor = Store::Cursor(suite_name, pb, dim, inst, run, evaluation); 
-                    return f.data(cursor);
-                })
+        .def("at",
+             [](PyStore &f, std::string suite_name, int pb, int dim, int inst, size_t run, size_t evaluation) {
+                 const auto cursor = Store::Cursor(suite_name, pb, dim, inst, run, evaluation);
+                 return f.data(cursor);
+             })
+        .def("watch", py::overload_cast<Property&>(&PyStore::watch))
+        .def("watch", py::overload_cast<const py::object &, const std::string &>(&PyStore::watch))
         .def("__repr__", [](PyStore &f) {
             return fmt::format("<Store (suites: ({}),)>", fmt::join(ioh::common::keys(f.data()), ","));
         });
 
 
-    using PyAnalyzer = PyLogger<Analyzer>;
+    using PyAnalyzer = PyWatcher<Analyzer>;
     Trigs def_trigs{trigger::on_improvement};
     Props def_props{};
 
     py::class_<PyAnalyzer, Watcher, std::shared_ptr<PyAnalyzer>>(m, "Analyzer")
-          .def(
-              py::init<Trigs, Props, fs::path, std::string, std::string, std::string, bool>(),
-              py::arg("triggers") = def_trigs, 
-              py::arg("additional_properties") = def_props, 
-              py::arg("root") = fs::current_path(),
-              py::arg("folder_name") = "ioh_data", 
-              py::arg("algorithm_name") = "algorithm_name", 
-              py::arg("algorithm_info") = "algorithm_info",
-              py::arg("store_positions") = true
-          )
-          .def("add_experiment_attribute", &PyAnalyzer::add_experiment_attribute)
-          .def("set_experiment_attributes", &PyAnalyzer::set_experiment_attributes)
-          .def("add_run_attribute", &PyAnalyzer::add_run_attribute)
-          .def("set_run_attributes", &PyAnalyzer::set_run_attributes)
-          .def("set_run_attribute", &PyAnalyzer::set_run_attribute)
-          .def_property_readonly("output_directory", &PyAnalyzer::output_directory)
-          .def("__repr__", [](const PyAnalyzer &f) {return fmt::format("<Analyzer {}>", f.output_directory().generic_string());})
-        ;
-
-} 
+        .def(py::init<Trigs, Props, fs::path, std::string, std::string, std::string, bool>(),
+             py::arg("triggers") = def_trigs, py::arg("additional_properties") = def_props,
+             py::arg("root") = fs::current_path(), py::arg("folder_name") = "ioh_data",
+             py::arg("algorithm_name") = "algorithm_name", py::arg("algorithm_info") = "algorithm_info",
+             py::arg("store_positions") = false)
+        .def("add_experiment_attribute", &PyAnalyzer::add_experiment_attribute)
+        .def("set_experiment_attributes", &PyAnalyzer::set_experiment_attributes)
+        .def("add_run_attribute", &PyAnalyzer::add_run_attribute)
+        .def("set_run_attributes", &PyAnalyzer::set_run_attributes)
+        .def("set_run_attribute", &PyAnalyzer::set_run_attribute)
+        .def_property_readonly("output_directory", &PyAnalyzer::output_directory)
+        .def("watch", py::overload_cast<Property&>(&PyAnalyzer::watch))
+        .def("watch", py::overload_cast<const py::object &, const std::string &>(&PyAnalyzer::watch))
+        .def("__repr__",
+             [](const PyAnalyzer &f) { return fmt::format("<Analyzer {}>", f.output_directory().generic_string()); });
+}
 
 void define_logger(py::module &m)
 {
@@ -199,25 +228,6 @@ void define_logger(py::module &m)
     define_loggers(m);
 
 
-    // py::class_<PyLogger, Base, std::shared_ptr<PyLogger>>(m, "Default")
-    //     .def(py::init<fs::path, std::string, std::string, std::string, ioh::common::OptimizationType, bool, bool,
-    //     int,
-    //                   int, bool, std::vector<int>, int, int>(),
-    //          py::arg("output_directory") = "./", py::arg("folder_name") = "ioh_data",
-    //          py::arg("algorithm_name") = "algorithm_name", py::arg("algorithm_info") = "algorithm_info",
-    //          py::arg("optimization_type") = ioh::common::OptimizationType::Minimization,
-    //          py::arg("store_positions") = false, py::arg("t_always") = false, py::arg("t_on_interval") = 0,
-    //          py::arg("t_per_time_range") = 0, py::arg("t_on_improvement") = true,
-    //          py::arg("t_at_time_points") = std::vector<int>{0}, py::arg("trigger_at_time_points_exp_base") = 10,
-    //          py::arg("trigger_at_range_exp_base") = 10)
-    //     .def("declare_experiment_attributes", &PyLogger::declare_experiment_attributes)
-    //     .def("declare_run_attributes", &PyLogger::declare_run_attributes)
-    //     .def("declare_logged_attributes", &PyLogger::declare_logged_attributes)
-    //     
-    //     .def("__repr__", [=](PyLogger &p){
-    //         return "<DefaultLogger: '" + p.experiment_folder().path().generic_string() + "'>";
-    //     })
-    //     ;
     // py::class_<ECDF, Base, std::shared_ptr<ECDF>>(m, "ECDF")
     //     .def(py::init<double, double, size_t, size_t, size_t,  size_t>())
     //     .def("data", &ECDF::data)

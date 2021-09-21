@@ -255,6 +255,7 @@ namespace ioh {
             // This essentially just expose _properties.push_back with some checks.
             virtual void watch(logger::Property& property)
             {
+                std::cout << property.name() << std::endl;
                 IOH_DBG(debug,"watch property " << property.name())
                 // Assert that the Property is not already tracked.
                 assert(std::find_if(std::begin(properties_),std::end(properties_),
