@@ -164,7 +164,8 @@ namespace ioh::logger
         virtual ~FlatFile()
         {
             IOH_DBG(debug, "close data file")
-            out_.close();
+            if (out_.is_open())
+                out_.close();
         }
 
     private:

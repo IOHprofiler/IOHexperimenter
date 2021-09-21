@@ -1,7 +1,9 @@
+#include <utility>
 #include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include "ioh.hpp"
+
 
 namespace py = pybind11;
 using namespace ioh;
@@ -10,8 +12,22 @@ using namespace ioh;
 template <typename LoggerType>
 class PyLogger : public LoggerType
 {
+    bool deleted = false;
 public:
-    using LoggerType::LoggerType;
+    template<typename... Args>
+    PyLogger(Args&&... args): LoggerType(std::forward<Args>(args)...) {
+        py::module::import("atexit").attr("register")(
+            py::cpp_function{
+                [self=this]() -> void {
+                    if (!self->deleted)
+                        delete self;
+                }
+            });
+    }
+
+    virtual ~PyLogger() {
+        deleted = true;
+    }
 
     void watch(logger::Property &property) override
     {

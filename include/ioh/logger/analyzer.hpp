@@ -285,9 +285,11 @@ namespace ioh::logger
 
                 virtual ~Analyzer()
                 {
-                    handle_last_eval();
-                    IOH_DBG(debug, "close info file")
-                    info_stream_.close();
+                    if (info_stream_.is_open()){
+                        handle_last_eval();
+                        IOH_DBG(debug, "close info file")
+                        info_stream_.close();
+                    }
                     if (!has_started_)
                         fs::remove(output_directory());
                 }

@@ -14,7 +14,7 @@ import math
 import warnings
 import itertools
 import multiprocessing
-import functools
+import gc
 import typing
 import shutil
 import copy
@@ -38,8 +38,21 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError("No module named ioh")
 
+def exit_handler(*args, **kwargs):
+    '''Forces exit and calls descructor of any non descructed objects.'''
+    # gc.collect()
 
-atexit.register(functools.partial(os._exit, 0))
+    # objs = list(filter(
+    #     lambda x:type(x).__module__ in ("ioh", "iohcpp"), 
+    #     gc.get_objects())
+    # )
+
+    # print(objs)
+    # breakpoint()
+    # gc.collect
+    os._exit(0)
+
+atexit.register(exit_handler)
 
 ProblemType = typing.Union[problem.Real, problem.Integer]
 
