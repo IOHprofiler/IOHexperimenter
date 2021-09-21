@@ -47,7 +47,7 @@ class CMakeBuild(build_ext):
                 shutil.rmtree(os.path.join(ext.sourcedir, "ioh", subdir))
 
         # generate stub files
-        command = """stubgen -m ioh -m ioh.iohcpp \
+        command = """python -m mypy.stubgen -m ioh -m ioh.iohcpp \
                 -m ioh.iohcpp.problem \
                 -m ioh.iohcpp.logger \
                 -m ioh.iohcpp.suite \

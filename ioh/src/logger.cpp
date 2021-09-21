@@ -197,10 +197,7 @@ void define_logger(py::module &m)
     //     .def("declare_experiment_attributes", &PyLogger::declare_experiment_attributes)
     //     .def("declare_run_attributes", &PyLogger::declare_run_attributes)
     //     .def("declare_logged_attributes", &PyLogger::declare_logged_attributes)
-    //     .def("__enter__", [=](const PyLogger &self) {return &self;})
-    //     .def("__exit__", [=](PyLogger& self, const py::object &, const py::object &, const py::object &){
-    //         self.flush();
-    //     })
+    //     
     //     .def("__repr__", [=](PyLogger &p){
     //         return "<DefaultLogger: '" + p.experiment_folder().path().generic_string() + "'>";
     //     })

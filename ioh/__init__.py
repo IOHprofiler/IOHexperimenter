@@ -7,7 +7,6 @@ TODO: Check quadratic function, min dimension bbob=2
 TODO: Rename Integer -> Discrete
 TODO: Check what happens on exit -> probably factory objects need to be destroyed
 
-
 '''
 
 import os
