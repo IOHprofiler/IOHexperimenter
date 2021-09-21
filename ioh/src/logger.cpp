@@ -120,7 +120,7 @@ void define_loggers(py::module &m)
              py::arg("triggers"), py::arg("properties"), py::arg("filename") = "IOH.dat",
              py::arg("output_directory") = "./", py::arg("separator") = "\t", py::arg("comment") = "#",
              py::arg("no_value") = "None", py::arg("end_of_line") = "\n", py::arg("repeat_header") = false,
-             py::arg("store_positions") = true, py::arg("common_header_titles") = common_headers)
+             py::arg("store_positions") = false, py::arg("common_header_titles") = common_headers)
         .def_property_readonly("filename", &FlatFile::filename)
         .def_property_readonly(
             "output_directory",
@@ -144,6 +144,32 @@ void define_loggers(py::module &m)
         .def("__repr__", [](PyStore &f) {
             return fmt::format("<Store (suites: ({}),)>", fmt::join(ioh::common::keys(f.data()), ","));
         });
+
+
+    using PyAnalyzer = PyLogger<Analyzer>;
+    Trigs def_trigs{trigger::on_improvement};
+    Props def_props{};
+
+    py::class_<PyAnalyzer, Watcher, std::shared_ptr<PyAnalyzer>>(m, "Analyzer")
+          .def(
+              py::init<Trigs, Props, fs::path, std::string, std::string, std::string, bool>(),
+              py::arg("triggers") = def_trigs, 
+              py::arg("additional_properties") = def_props, 
+              py::arg("root") = fs::current_path(),
+              py::arg("folder_name") = "ioh_data", 
+              py::arg("algorithm_name") = "algorithm_name", 
+              py::arg("algorithm_info") = "algorithm_info",
+              py::arg("store_positions") = true
+          )
+          .def("add_experiment_attribute", &PyAnalyzer::add_experiment_attribute)
+          .def("set_experiment_attributes", &PyAnalyzer::set_experiment_attributes)
+          .def("add_run_attribute", &PyAnalyzer::add_run_attribute)
+          .def("set_run_attributes", &PyAnalyzer::set_run_attributes)
+          .def("set_run_attribute", &PyAnalyzer::set_run_attribute)
+          .def_property_readonly("output_directory", &PyAnalyzer::output_directory)
+          .def("__repr__", [](const PyAnalyzer &f) {return fmt::format("<Analyzer {}>", f.output_directory().generic_string());})
+        ;
+
 } 
 
 void define_logger(py::module &m)
@@ -156,12 +182,6 @@ void define_logger(py::module &m)
     define_bases(m);
     define_loggers(m);
 
-
-    // py::class_<LoggerCombine, Base, std::shared_ptr<LoggerCombine>>(m, "LoggerCombine")
-    //     .def(py::init<Base&>())
-    //     .def(py::init<std::vector<Base*>>())
-    //     .def("add", &LoggerCombine::add)
-    //     ;
 
     // py::class_<PyLogger, Base, std::shared_ptr<PyLogger>>(m, "Default")
     //     .def(py::init<fs::path, std::string, std::string, std::string, ioh::common::OptimizationType, bool, bool,

@@ -4,6 +4,7 @@ import sys
 import shutil
 import platform
 import subprocess
+from glob import glob
 
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
@@ -35,11 +36,15 @@ class CMakeBuild(build_ext):
         super().run()
         ext, *_ = self.extensions
 
-        if os.path.isfile(os.path.join(ext.sourcedir, "ioh/__init__.pyi")):
-            os.remove(os.path.join(ext.sourcedir, "ioh/__init__.pyi"))
+        # remove any existing stubs
+        for stubfile in os.listdir(os.path.join(ext.sourcedir, "ioh")):
+            stubfile = os.path.join(ext.sourcedir, "ioh", stubfile)
+            if stubfile.endswith(".pyi"):
+                os.remove(stubfile)
         
-        if os.path.isdir(os.path.join(ext.sourcedir, "ioh/iohcpp")):
-            shutil.rmtree(os.path.join(ext.sourcedir, "ioh/iohcpp"))
+        for subdir in ("iohcpp", "logger"):
+            if os.path.isdir(os.path.join(ext.sourcedir, "ioh", subdir)):
+                shutil.rmtree(os.path.join(ext.sourcedir, "ioh", subdir))
 
         # generate stub files
         command = """stubgen -m ioh -m ioh.iohcpp \
@@ -50,7 +55,6 @@ class CMakeBuild(build_ext):
                 -m ioh.iohcpp.logger.property \
                 -o ./"""
         subprocess.check_call(command, cwd=ext.sourcedir, shell=True)
-        
 
     def build_extension(self, ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
@@ -142,6 +146,8 @@ if gh_ref:
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+iohcpp = CMakeExtension("ioh.iohcpp")
+
 setup(
     name="ioh",
     version=__version__,
@@ -152,7 +158,8 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(),
     package_dir={'IOHexperimenter':'ioh'},
-    ext_modules=[CMakeExtension("ioh.iohcpp")],
+    package_data={"ioh": glob(f"{iohcpp.sourcedir}/ioh/**/*.pyi", recursive=True)},
+    ext_modules=[iohcpp],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     test_suite='tests.python',

@@ -42,7 +42,9 @@ except ModuleNotFoundError:
 
 atexit.register(functools.partial(os._exit, 0))
 
-def get_problem(fid: int, iid: int, dim: int, problem_type: str = "Real"):
+ProblemType = typing.Union[problem.Real, problem.Integer]
+
+def get_problem(fid: int, iid: int, dim: int, problem_type: str = "Real") -> ProblemType:
     '''Instantiate a problem based on its function ID, dimension, instance and suite
 
     Parameters
@@ -255,7 +257,7 @@ class Experiment:
             self.apply(algorithm, p)
             
 
-    def apply(self, algorithm: any, problem: typing.Callable):
+    def apply(self, algorithm: any, problem: ProblemType):
         '''Apply a given algorithm to a problem'''
         
         for i in range(self.reps):
@@ -264,7 +266,7 @@ class Experiment:
         
         
  
-    def add_custom_problem(self, p: typing.Callable, name: str = None):
+    def add_custom_problem(self, p: ProblemType, name: str = None):
         '''Add a custom problem to the list of functions to be evaluated.
 
         Parameters
@@ -352,3 +354,4 @@ class Experiment:
         
         if self.remove_data:
             shutil.rmtree(self.logger_root)
+

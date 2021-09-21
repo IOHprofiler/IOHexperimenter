@@ -288,6 +288,8 @@ namespace ioh::logger
                     handle_last_eval();
                     IOH_DBG(debug, "close info file")
                     info_stream_.close();
+                    if (!has_started_)
+                        fs::remove(output_directory());
                 }
 
                 //! Part of public interface. Updates info file.

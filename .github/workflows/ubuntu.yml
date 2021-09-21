@@ -84,6 +84,6 @@ jobs:
         sudo apt update -y
         sudo apt install ninja-build -y
         python -m pip install --upgrade pip
-        python setup.py develop
+        pip install -e . -v
     - name: Run unit tests
       run: python -m unittest -v
