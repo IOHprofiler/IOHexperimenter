@@ -31,33 +31,38 @@ public:
 template <typename WatcherType>
 class PyWatcher : public WatcherType
 {
-    bool deleted = false;
-    std::vector<PyProperty*> property_ptrs_;
+    bool alive = true;
+    std::vector<PyProperty *> property_ptrs_;
+
 public:
     template <typename... Args>
     PyWatcher(Args &&...args) : WatcherType(std::forward<Args>(args)...)
     {
         py::module::import("atexit").attr("register")(py::cpp_function{[self = this]() -> void {
-            PyWatcher *ptr = dynamic_cast<PyWatcher *>(self);
-            if (ptr != NULL && !self->deleted)
-                delete self;
+            // type-pun alive bool in order to check if is still a boolean 1, if so, delete.
+            if ((int)(*(char*)(&self->alive)) == 1) delete self;
         }});
     }
 
-    virtual ~PyWatcher() { 
-        deleted = true; 
-        for (auto ptr: property_ptrs_) delete ptr;
-    }
-
-    void watch(logger::Property &property) override
+    virtual ~PyWatcher()
     {
-        PYBIND11_OVERRIDE(void, WatcherType, watch, property);
+        alive = false;
+        for (auto ptr : property_ptrs_)
+            delete ptr;
+        property_ptrs_.clear();
     }
 
-    void watch(const py::object &container, const std::string &attribute) {
-        auto* p = new PyProperty(container, attribute);
+    void watch(logger::Property &property) override { PYBIND11_OVERRIDE(void, WatcherType, watch, property); }
+
+    void watch(const py::object &container, const std::string &attribute)
+    {
+        auto *p = new PyProperty(container, attribute);
         watch(*p);
         property_ptrs_.push_back(p);
+    }
+
+    void watch(const py::object &container, const std::vector<std::string> &attributes){
+        for (const auto& attr: attributes) watch(container, attr);
     }
 
     void log(const logger::Info &log_info) override { PYBIND11_OVERRIDE(void, WatcherType, log, log_info); }
@@ -73,6 +78,65 @@ public:
     }
 
     void call(const logger::Info &log_info) override { PYBIND11_OVERRIDE(void, WatcherType, call, log_info); }
+};
+
+class PyAnalyzer : public PyWatcher<logger::Analyzer>
+{
+    std::vector<double *> double_ptrs_;
+    std::vector<PyProperty *> prop_ptrs_;
+
+public:
+    using Analyzer = PyWatcher<logger::Analyzer>;
+    using Analyzer::Analyzer;
+
+    virtual ~PyAnalyzer()
+    {
+        clear_ptrs();
+    }
+
+    void add_run_attribute_python(const py::object &container, const std::string &name){
+        auto *p = new PyProperty(container, name);
+        add_run_attribute_python(name, (*p)(logger::Info{}).value());
+        prop_ptrs_.push_back(p);
+    }   
+    
+    void add_run_attributes_python(const py::object &container, const std::vector<std::string> &attributes){
+        for (const auto& attr: attributes) add_run_attribute_python(container, attr);
+    }
+
+    void add_run_attribute_python(const std::string &name, double value)
+    {
+        double *ptr = new double(value);
+        Analyzer::add_run_attribute(name, ptr);
+        double_ptrs_.push_back(ptr);
+    }
+    
+    void set_run_attribute_python(const std::string &name, double value) { 
+        *(attributes_.run.at(name)) = value; 
+    }
+
+    void set_run_attributes_python(const std::map<std::string, double> &attributes)
+    {
+        clear_ptrs();
+        for (auto &[key, value] : attributes)
+            add_run_attribute_python(key, value);
+    }
+
+    void clear_ptrs(){
+        for (auto ptr : double_ptrs_)
+            delete ptr;
+
+        for (auto ptr : prop_ptrs_)
+            delete ptr;
+        double_ptrs_.clear();
+        prop_ptrs_.clear();
+    }
+
+    void attach_problem(const problem::MetaData &problem) override {
+        for (auto ptr : prop_ptrs_) set_run_attribute_python(ptr->name(), (*ptr)(logger::Info{}).value());
+        Analyzer::attach_problem(problem);
+    }
+
 };
 
 void define_triggers(py::module &m)
@@ -104,7 +168,8 @@ void define_properties(py::module &m)
         .def("call_to_string", &logger::Property::call_to_string);
 
     py::class_<PyProperty, logger::Property, std::shared_ptr<PyProperty>>(t, "Property")
-        .def(py::init<py::object, std::string>(), py::arg("container"), py::arg("attribute"));
+        .def(py::init<py::object, std::string>(), py::arg("container"), py::arg("attribute"))
+    ;
 
     py::class_<watch::Evaluations, logger::Property, std::shared_ptr<watch::Evaluations>>(t, "Evaluations")
         .def(py::init<std::string, std::string>());
@@ -138,10 +203,9 @@ void define_bases(py::module &m)
         .def("call", &Logger::call)
         .def("reset", &Logger::reset)
         .def_property_readonly("problem", &Logger::problem);
-    
+
     using namespace logger;
-    py::class_<Watcher, Logger, std::shared_ptr<Watcher>>(m, "AbstractWatcher")
-        .def("watch", &Watcher::watch);
+    py::class_<Watcher, Logger, std::shared_ptr<Watcher>>(m, "AbstractWatcher").def("watch", &Watcher::watch);
 }
 
 void define_loggers(py::module &m)
@@ -157,7 +221,7 @@ void define_loggers(py::module &m)
 
     const std::vector<std::string> common_headers = {
         "suite_name", "problem_name", "problem_id", "problem_instance", "optimization_type", "dimension", "run"};
-        
+
     py::class_<PyWatcher<FlatFile>, Watcher, std::shared_ptr<PyWatcher<FlatFile>>>(m, "FlatFile")
         .def(py::init<Trigs, Props, std::string, fs::path, std::string, std::string, std::string, std::string, bool,
                       bool, std::vector<std::string>>(),
@@ -169,8 +233,9 @@ void define_loggers(py::module &m)
         .def_property_readonly(
             "output_directory",
             [](PyWatcher<FlatFile> &f) { return std::filesystem::absolute(f.output_directory()).generic_string(); })
-        .def("watch", py::overload_cast<Property&>(&PyWatcher<FlatFile>::watch))
+        .def("watch", py::overload_cast<Property &>(&PyWatcher<FlatFile>::watch))
         .def("watch", py::overload_cast<const py::object &, const std::string &>(&PyWatcher<FlatFile>::watch))
+        .def("watch", py::overload_cast<const py::object &, const std::vector<std::string> &>(&PyWatcher<FlatFile>::watch))
         .def("__repr__", [](const PyWatcher<FlatFile> &f) {
             return fmt::format("<FlatFile {}>", (f.output_directory() / f.filename()).generic_string());
         });
@@ -188,17 +253,16 @@ void define_loggers(py::module &m)
                  const auto cursor = Store::Cursor(suite_name, pb, dim, inst, run, evaluation);
                  return f.data(cursor);
              })
-        .def("watch", py::overload_cast<Property&>(&PyStore::watch))
+        .def("watch", py::overload_cast<Property &>(&PyStore::watch))
         .def("watch", py::overload_cast<const py::object &, const std::string &>(&PyStore::watch))
+        .def("watch", py::overload_cast<const py::object &, const std::vector<std::string> &>(&PyStore::watch))
         .def("__repr__", [](PyStore &f) {
             return fmt::format("<Store (suites: ({}),)>", fmt::join(ioh::common::keys(f.data()), ","));
         });
 
 
-    using PyAnalyzer = PyWatcher<Analyzer>;
     Trigs def_trigs{trigger::on_improvement};
     Props def_props{};
-
     py::class_<PyAnalyzer, Watcher, std::shared_ptr<PyAnalyzer>>(m, "Analyzer")
         .def(py::init<Trigs, Props, fs::path, std::string, std::string, std::string, bool>(),
              py::arg("triggers") = def_trigs, py::arg("additional_properties") = def_props,
@@ -207,12 +271,15 @@ void define_loggers(py::module &m)
              py::arg("store_positions") = false)
         .def("add_experiment_attribute", &PyAnalyzer::add_experiment_attribute)
         .def("set_experiment_attributes", &PyAnalyzer::set_experiment_attributes)
-        .def("add_run_attribute", &PyAnalyzer::add_run_attribute)
-        .def("set_run_attributes", &PyAnalyzer::set_run_attributes)
-        .def("set_run_attribute", &PyAnalyzer::set_run_attribute)
+        .def("add_run_attribute", py::overload_cast<const std::string&, double>(&PyAnalyzer::add_run_attribute_python))
+        .def("add_run_attribute", py::overload_cast<const py::object &, const std::string &>(&PyAnalyzer::add_run_attribute_python))
+        .def("add_run_attributes", py::overload_cast<const py::object &, const std::vector<std::string> &>(&PyAnalyzer::add_run_attributes_python))
+        .def("set_run_attributes", &PyAnalyzer::set_run_attributes_python)
+        .def("set_run_attribute", &PyAnalyzer::set_run_attribute_python)
         .def_property_readonly("output_directory", &PyAnalyzer::output_directory)
-        .def("watch", py::overload_cast<Property&>(&PyAnalyzer::watch))
+        .def("watch", py::overload_cast<Property &>(&PyAnalyzer::watch))
         .def("watch", py::overload_cast<const py::object &, const std::string &>(&PyAnalyzer::watch))
+        .def("watch", py::overload_cast<const py::object &, const std::vector<std::string> &>(&PyAnalyzer::watch))
         .def("__repr__",
              [](const PyAnalyzer &f) { return fmt::format("<Analyzer {}>", f.output_directory().generic_string()); });
 }

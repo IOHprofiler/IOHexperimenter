@@ -1,17 +1,48 @@
-# import unittest
-# import ioh
+import unittest
+import ioh
+import os
+import shutil
 
-# class TestLogger(unittest.TestCase):
-#     def test_initiate_logger(self):
-#         log = ioh.logger.Default("temp/")
-#         f = ioh.problem.OneMax(1,16)
-#         log.track_problem(f)
-#         f.evaluate(16*[0])
-#         log.log(f.logger_info())
-#         f.evaluate(16*[1])
-#         log.log(f.logger_info())
-#         log2 = ioh.BBOB_Logger("temp2/")
+
+class TestLogger(unittest.TestCase):
+    def test_flatfile(self):
+        pr = ioh.get_problem("Sphere", 1, 5) 
+        p = [ioh.logger.property.CURRENT_Y_BEST]
+        t = [ioh.logger.trigger.ON_IMPROVEMENT]
+        l = ioh.logger.FlatFile(t, p, separator=" ")
+        pr.attach_logger(l)
+        self.assertEqual(os.path.realpath("./"), os.path.realpath(l.output_directory))
+        pr([0] * 5)
+        self.assertTrue(os.path.isfile("IOH.dat"))
+        os.remove("IOH.dat")
+
+    def test_analyzer(self):
+        pr = ioh.get_problem("Sphere", 1, 5) 
         
+        class Container:
+            def __init__(self):
+                self.xy = 0
+                self.xv = 10
 
-# if __name__ == "__main__":
-#     unittest.main()
+        c = Container()
+        l = ioh.logger.Analyzer([ioh.logger.trigger.ALWAYS])    
+        l.set_experiment_attributes({"x":"1"})
+        l.watch(c, ["xv", "xy"])
+        l.add_run_attribute(c, "xv")
+        pr.attach_logger(l)
+
+        for c.xv in range(4):
+            for i in range(5):
+                c.xy = i*10
+                pr([i] * 5)
+            pr.reset()
+
+        self.assertTrue(os.path.isdir("ioh_data"))
+        shutil.rmtree("ioh_data")
+
+
+        
+                    
+
+if __name__ == "__main__":
+    unittest.main()

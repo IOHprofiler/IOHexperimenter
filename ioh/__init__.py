@@ -14,11 +14,11 @@ import math
 import warnings
 import itertools
 import multiprocessing
-import gc
 import typing
 import shutil
 import copy
 import atexit
+import functools
 
 try:
     from .iohcpp import (
@@ -38,21 +38,11 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError("No module named ioh")
 
-def exit_handler(*args, **kwargs):
-    '''Forces exit and calls descructor of any non descructed objects.'''
-    # gc.collect()
 
-    # objs = list(filter(
-    #     lambda x:type(x).__module__ in ("ioh", "iohcpp"), 
-    #     gc.get_objects())
-    # )
-
-    # print(objs)
-    # breakpoint()
-    # gc.collect
+def handler():
     os._exit(0)
 
-atexit.register(exit_handler)
+atexit.register(handler)
 
 ProblemType = typing.Union[problem.Real, problem.Integer]
 
@@ -72,16 +62,10 @@ def get_problem(fid: int, iid: int, dim: int, problem_type: str = "Real") -> Pro
         Only used if fid is an int.
 
     '''
-    if isinstance(fid, str):
-        try:
-            return getattr(problem, fid)(iid, dim)
-        except:
-            raise ValueError(f"Unkown problem {fid} is given")
-
     if problem_type in ("BBOB", "Real",):
         return getattr(problem, problem_type).factory().create(fid, iid, dim)
     elif problem_type in ("PBO", "Integer",):
-        if fid in [21, 23]:
+        if fid in [21, 23, "IsingTriangular", "NQueens"]:
             if not math.sqrt(dim).is_integer():
                 raise ValueError("For this function, the dimension needs to be a perfect square!")
         return getattr(problem, problem_type).factory().create(fid, iid, dim)
@@ -98,20 +82,16 @@ class Experiment:
         problem_type: str = "BBOB", 
         njobs: int = 1, 
         logged: bool = True,
+        logger_triggers: typing.List[logger.trigger.Trigger] = [
+            logger.trigger.ON_IMPROVEMENT
+        ],
+        logger_additional_properties: typing.List[logger.property.AbstractProperty] = [],
         output_directory: str = "./",
         folder_name: str = "ioh_data",
         algorithm_name: str = None,
         algorithm_info: str = "algorithm_info",
-        optimization_type: OptimizationType = OptimizationType.Minimization,
         store_positions: bool = False,
-        t_always: bool = False,
-        t_on_interval: int = 0,
-        t_per_time_range: int = 0,
-        t_on_improvement: bool = True,
-        t_at_time_points: typing.List[int] = [],
-        trigger_at_time_points_exp_base: int = 10,
-        trigger_at_range_exp_base: int = 10,
-        experiment_attributes: typing.List[typing.Tuple[str, float]] = [],
+        experiment_attributes: typing.Dict[str, str] = {},
         run_attributes: typing.List[str] = [],
         logged_attributes: typing.List[str] = [],
         merge_output: bool = True,
@@ -141,6 +121,12 @@ class Experiment:
                 The number of parallel jobs, -1 assigns all available cpu's,
             logged: bool = True
                 Whether or not the experiment uses a logger
+            logger_triggers: typing.List[logger.trigger.Trigger] 
+                A list of trigger instances, used to determine when to trigger
+            logger_additional_properties: typing.List[logger.property.AbstractProperty]
+                A list of additional properties to be logged. If the properties to be logged are 
+                members of `algorithm`, you can also provide a list of attribute names to 
+                `logged_attributes`. 
             output_directory: str = "./"
                 The root output directory for the logger
             folder_name: str = "ioh_data"
@@ -153,21 +139,7 @@ class Experiment:
                 The type of optimization
             store_positions: bool = False
                 Whether to store the x-positions in the data-files
-            t_always: bool = False
-                Option to store data at each function invocation
-            t_on_interval: int = 0
-                Option to store data at every n-th interval
-            t_per_time_range: int = 0
-                Option to store data at every n-th range
-            t_on_improvement: bool = True
-                Option to store data when improvement is found
-            t_at_time_points: typing.List[int] = []
-                Option to store data a specific time points
-            trigger_at_time_points_exp_base: int = 10
-                Option to store data a specific interval with base
-            trigger_at_range_exp_base: int = 10
-                Option to store data a specific range with base
-            experiment_attributes: typing.List[typing.Tuple[str, float]] = []
+            experiment_attributes: typing.Dict[str, str] = []
                 Attributes additionally stored per experiment. These are static 
                 throughout the experiment and stored in the .info files.
             run_attributes: typing.List[str] = []
@@ -197,20 +169,15 @@ class Experiment:
         
         self.algorithm = algorithm
         self.logger_root = os.path.join(output_directory, folder_name)
+
         self.logger_params = dict(
-            output_directory = output_directory,
+            triggers = logger_triggers,
+            additional_properties = logger_additional_properties,
+            root = output_directory,
             folder_name = folder_name,
             algorithm_name = algorithm_name or str(algorithm),
             algorithm_info = algorithm_info,
-            optimization_type = optimization_type,
             store_positions = store_positions,
-            t_always = t_always,
-            t_on_interval = t_on_interval,
-            t_per_time_range = t_per_time_range,
-            t_on_improvement = t_on_improvement,
-            t_at_time_points = t_at_time_points,
-            trigger_at_time_points_exp_base = trigger_at_time_points_exp_base,
-            trigger_at_range_exp_base = trigger_at_range_exp_base,
         )
         self.fids = fids
         self.iids = iids 
@@ -220,8 +187,8 @@ class Experiment:
         self.problem_type = problem_type
         self.njobs = njobs if njobs != -1 else multiprocessing.cpu_count()
         self.experiment_attributes = experiment_attributes
-        self.run_attributes = run_attributes
         self.logged_attributes = logged_attributes
+        self.run_attributes = run_attributes
         self.merge_output = merge_output
         self.zip_output = zip_output
         self.remove_data = remove_data
@@ -259,12 +226,13 @@ class Experiment:
         algorithm = copy.deepcopy(self.algorithm)
         p = get_problem(fid, iid, dim, self.problem_type)
         if self.logged:
-            with logger.Default(**self.logger_params) as l: 
-                l.declare_experiment_attributes(*zip(*self.experiment_attributes))
-                l.declare_run_attributes(algorithm, self.run_attributes)
-                l.declare_logged_attributes(algorithm, self.logged_attributes)
-                p.attach_logger(l)
-                self.apply(algorithm, p)
+            l = logger.Analyzer(**self.logger_params)
+            l.set_experiment_attributes(self.experiment_attributes)
+            l.add_run_attributes(self.algorithm, self.run_attributes)
+            l.watch(self.algorithm, self.logged_attributes)
+
+            p.attach_logger(l)
+            self.apply(algorithm, p)
         else:
             self.apply(algorithm, p)
             
@@ -274,9 +242,7 @@ class Experiment:
         
         for i in range(self.reps):
             algorithm(problem) 
-            problem.reset()
-        
-        
+            problem.reset()       
  
     def add_custom_problem(self, p: ProblemType, name: str = None):
         '''Add a custom problem to the list of functions to be evaluated.
@@ -299,7 +265,6 @@ class Experiment:
             self.problem_type = "Real"
 
         self.fids.append(p.meta_data.problem_id)
-
 
     def merge_output_to_single_folder(self):
         """Merges all ioh data folders into a single folder, having the same 
@@ -347,6 +312,11 @@ class Experiment:
                         os.remove(source_dat_file)
                     os.removedirs(source_dat_folder)
 
+    def run(self):
+        """Alias for __call__"""
+
+        return self()
+
     def __call__(self):
         '''Run the experiment'''
 
@@ -366,4 +336,6 @@ class Experiment:
         
         if self.remove_data:
             shutil.rmtree(self.logger_root)
+    
+        return self
 
