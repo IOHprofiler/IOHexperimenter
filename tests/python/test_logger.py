@@ -14,7 +14,6 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(os.path.realpath("./"), os.path.realpath(l.output_directory))
         pr([0] * 5)
         self.assertTrue(os.path.isfile("IOH.dat"))
-        os.remove("IOH.dat")
 
     def test_analyzer(self):
         pr = ioh.get_problem("Sphere", 1, 5) 
@@ -38,7 +37,13 @@ class TestLogger(unittest.TestCase):
             pr.reset()
 
         self.assertTrue(os.path.isdir("ioh_data"))
-        shutil.rmtree("ioh_data")
+
+    def tearDown(self) -> None:
+        if os.path.isdir("ioh_data"):
+            shutil.rmtree("ioh_data")
+        if os.path.isfile("IOH.dat"):
+            os.remove("IOH.dat")
+        return super().tearDown()
 
 
         
