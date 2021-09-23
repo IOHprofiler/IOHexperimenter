@@ -4,7 +4,6 @@ import sys
 import shutil
 import platform
 import subprocess
-from glob import glob
 
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
@@ -158,7 +157,15 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(),
     package_dir={'IOHexperimenter':'ioh'},
-    package_data={"ioh": glob(f"{iohcpp.sourcedir}/ioh/**/*.pyi", recursive=True)},
+    package_data={"ioh": [
+        "ioh/__init__.pyi",
+        "ioh/iohcpp/__init__.pyi",
+        "ioh/iohcpp/problem.pyi",
+        "ioh/iohcpp/suite.pyi",
+        "ioh/iohcpp/logger/__init__.pyi",
+        "ioh/iohcpp/logger/property.pyi",
+        "ioh/iohcpp/logger/trigger.pyi"
+    ]},
     ext_modules=[iohcpp],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,

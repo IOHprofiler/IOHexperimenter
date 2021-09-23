@@ -18,7 +18,6 @@ import typing
 import shutil
 import copy
 import atexit
-import functools
 
 try:
     from .iohcpp import (
@@ -40,6 +39,8 @@ except ModuleNotFoundError:
 
 
 def handler():
+    '''Sometimes the library hangs on python exit. This forces a successfull exit.'''
+
     os._exit(0)
 
 atexit.register(handler)
@@ -165,7 +166,6 @@ class Experiment:
                 Whether to remove all the produced data, except for the .zip file
                 (when produced). 
         """
-        
         
         self.algorithm = algorithm
         self.logger_root = os.path.join(output_directory, folder_name)

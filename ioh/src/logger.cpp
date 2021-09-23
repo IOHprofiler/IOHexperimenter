@@ -40,6 +40,7 @@ public:
     {
         py::module::import("atexit").attr("register")(py::cpp_function{[self = this]() -> void {
             // type-pun alive bool in order to check if is still a boolean 1, if so, delete.
+            // in some cases this might cause a segfault, only happens in a very small prob. (1/sizeof(int))
             if ((int)(*(char*)(&self->alive)) == 1) delete self;
         }});
     }
