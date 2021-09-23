@@ -27,7 +27,7 @@ class TestLogger(unittest.TestCase):
         l = ioh.logger.Analyzer([ioh.logger.trigger.ALWAYS])    
         l.set_experiment_attributes({"x":"1"})
         l.watch(c, ["xv", "xy"])
-        l.add_run_attribute(c, "xv")
+        l.add_run_attributes(c, "xv")
         pr.attach_logger(l)
 
         for c.xv in range(4):

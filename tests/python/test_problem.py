@@ -28,6 +28,17 @@ class TestProblem(unittest.TestCase):
         self.assertIsInstance(ioh.get_problem(1, 1, 2, "PBO"), ioh.problem.OneMax)
         self.assertIsInstance(ioh.get_problem("OneMax", 1, 2, "PBO"), ioh.problem.OneMax)
 
+    def test_wmodel(self):
+        class wmodel(ioh.problem.AbstractWModel):
+            def __init__(self, instance, dim):
+                super().__init__(100, instance, dim, "wmodel")
+
+            def wmodel_evaluate(self, x) -> int:
+                return x.count(1)
+
+        for p in map(lambda x: x(1, 10), (wmodel, ioh.problem.WModelLeadingOnes, ioh.problem.WModelOneMax)):
+            self.assertEqual(p([1] * 10), 10)
+
     def test_experimenter(self):
         exp = ioh.Experiment(
             Algorithm(),
@@ -105,9 +116,8 @@ class TestProblem(unittest.TestCase):
             18.635078550302751,
             1782.2733296400438,
         ]
-        factory = ioh.problem.BBOB.factory()
-        for i in sorted(factory.ids()):
-            p = factory.create(i, 1, 5)
+        for i in sorted(ioh.problem.BBOB.problems.keys()):
+            p = ioh.problem.BBOB.create(i, 1, 5)
             self.assertTrue(
                 math.isclose(p([0.1, 1., 2., 4., 5.4]), expected[i-1])
             )
@@ -140,9 +150,8 @@ class TestProblem(unittest.TestCase):
             0.45,
             -0.70717,
         ]
-        factory = ioh.problem.PBO.factory()
-        for i in sorted(factory.ids()):
-            p = factory.create(i, 1, 9)
+        for i in sorted(ioh.problem.PBO.problems.keys()):
+            p = ioh.problem.PBO.create(i, 1, 9)
             y = p([1, 1, 0, 1, 0, 0, 0, 1, 1])
             self.assertTrue(math.isclose(y, expected[i-1], abs_tol = 0.000099),
                 msg=f"{p} expected: {expected[i-1]} got: {y}"

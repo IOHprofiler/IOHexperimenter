@@ -53,12 +53,12 @@ def get_problem(fid: int, iid: int, dim: int, problem_type: str = "Real") -> Pro
 
     '''
     if problem_type in ("BBOB", "Real",):
-        return getattr(problem, problem_type).factory().create(fid, iid, dim)
+        return getattr(problem, problem_type).create(fid, iid, dim)
     elif problem_type in ("PBO", "Integer",):
         if fid in [21, 23, "IsingTriangular", "NQueens"]:
             if not math.sqrt(dim).is_integer():
                 raise ValueError("For this function, the dimension needs to be a perfect square!")
-        return getattr(problem, problem_type).factory().create(fid, iid, dim)
+        return getattr(problem, problem_type).create(fid, iid, dim)
 
     raise ValueError(f"Suite {problem_type} is not yet supported")    
 

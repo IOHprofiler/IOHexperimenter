@@ -227,8 +227,6 @@ void define_bases(py::module &m)
 void define_loggers(py::module &m)
 {
     using namespace logger;
-    using Trigs = std::vector<std::reference_wrapper<Trigger>>;
-    using Props = std::vector<std::reference_wrapper<Property>>;
 
     py::class_<Combine, Logger, std::shared_ptr<Combine>>(m, "Combine")
         .def(py::init<std::vector<std::reference_wrapper<Logger>>>(), py::arg("loggers"))
@@ -239,7 +237,7 @@ void define_loggers(py::module &m)
         "suite_name", "problem_name", "problem_id", "problem_instance", "optimization_type", "dimension", "run"};
 
     py::class_<PyWatcher<FlatFile>, Watcher, std::shared_ptr<PyWatcher<FlatFile>>>(m, "FlatFile")
-        .def(py::init<Trigs, Props, std::string, fs::path, std::string, std::string, std::string, std::string, bool,
+        .def(py::init<Triggers, Properties, std::string, fs::path, std::string, std::string, std::string, std::string, bool,
                       bool, std::vector<std::string>>(),
              py::arg("triggers"), py::arg("properties"), py::arg("filename") = "IOH.dat",
              py::arg("output_directory") = "./", py::arg("separator") = "\t", py::arg("comment") = "#",
@@ -262,7 +260,7 @@ void define_loggers(py::module &m)
     using PyStore = PyWatcher<Store>;
 
     py::class_<PyStore, Watcher, std::shared_ptr<PyStore>>(m, "Store")
-        .def(py::init<Trigs, Props>())
+        .def(py::init<Triggers, Properties>())
         .def("data", py::overload_cast<>(&PyStore::data))
         .def("at",
              [](PyStore &f, std::string suite_name, int pb, int dim, int inst, size_t run, size_t evaluation) {
@@ -277,10 +275,10 @@ void define_loggers(py::module &m)
         });
 
 
-    Trigs def_trigs{trigger::on_improvement};
-    Props def_props{};
+    Triggers def_trigs{trigger::on_improvement};
+    Properties def_props{};
     py::class_<PyAnalyzer, Watcher, std::shared_ptr<PyAnalyzer>>(m, "Analyzer")
-        .def(py::init<Trigs, Props, fs::path, std::string, std::string, std::string, bool>(),
+        .def(py::init<Triggers, Properties, fs::path, std::string, std::string, std::string, bool>(),
              py::arg("triggers") = def_trigs, py::arg("additional_properties") = def_props,
              py::arg("root") = fs::current_path(), py::arg("folder_name") = "ioh_data",
              py::arg("algorithm_name") = "algorithm_name", py::arg("algorithm_info") = "algorithm_info",
@@ -321,55 +319,3 @@ void define_logger(py::module &m)
 }
 
 
-// class PyLogger final: public Analyzer
-// {
-//     py::object attribute_container_{};
-//     std::vector<std::string> logged_attribute_names_{};
-//     std::vector<std::string> run_attribute_names_{};
-
-//     [[nodiscard]]
-//     std::vector<double> get_attributes(const std::vector<std::string>& names) const
-//     {
-//         std::vector<double> attributes;
-//         for (const auto &n : names)
-//             attributes.emplace_back(
-//                 PyFloat_AsDouble(attribute_container_.attr(n.c_str()).ptr())
-//             );
-//         return attributes;
-//     }
-
-// public:
-//     using Analyzer::Analyzer;
-
-//     void declare_logged_attributes(py::object &obj, const std::vector<std::string> &names)
-//     {
-//         attribute_container_ = obj;
-//         logged_attribute_names_ = names;
-//         create_logged_attributes(logged_attribute_names_);
-//     }
-
-//     void declare_run_attributes(py::object &obj, const std::vector<std::string> &names)
-//     {
-//         attribute_container_ = obj;
-//         run_attribute_names_ = names;
-//         create_run_attributes(run_attribute_names_);
-//     }
-
-//     void declare_experiment_attributes(const std::vector<std::string> &names, const std::vector<double> &values)
-//     {
-//         for (size_t i = 0; i < names.size(); i++)
-//             add_experiment_attribute(names.at(i), values.at(i));
-//     }
-
-//     void track_problem(const ioh::problem::MetaData &problem) override
-//     {
-//         set_run_attributes(run_attribute_names_, get_attributes(run_attribute_names_));
-//         Default::track_problem(problem);
-//     }
-
-//     void log(const LogInfo& log_info) override
-//     {
-//         set_logged_attributes(logged_attribute_names_, get_attributes(logged_attribute_names_));
-//         Default::log(log_info);
-//     }
-// };
