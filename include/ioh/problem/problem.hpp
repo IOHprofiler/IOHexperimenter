@@ -235,7 +235,6 @@ namespace ioh
                 Problem<T>(MetaData(problem_id, 0, name, n_variables, optimization_type), constraint),
                 function_(f)
             {
-
             }
         };
 
@@ -250,7 +249,7 @@ namespace ioh
 
             factory.include(name, id, [=](const int, const int dimension)
             {
-                return std::make_unique<WrappedProblem<T>>(f, name, dimension, id,  optimization_type);
+                return std::make_unique<WrappedProblem<T>>(f, name, dimension, id, optimization_type);
             });
             return WrappedProblem<T>{f, name, n_variables, id, optimization_type, constraint};
         }

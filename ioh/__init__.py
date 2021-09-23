@@ -1,12 +1,9 @@
 '''Python specific functions for IOH package
 
-TODO: check correct handling of object destructors
 TODO: best far precision
 TODO: tracking of out-of bounds
 TODO: Check quadratic function, min dimension bbob=2
 TODO: Rename Integer -> Discrete
-TODO: Check what happens on exit -> probably factory objects need to be destroyed
-
 '''
 
 import os
@@ -17,7 +14,6 @@ import multiprocessing
 import typing
 import shutil
 import copy
-import atexit
 
 try:
     from .iohcpp import (
@@ -37,13 +33,6 @@ try:
 except ModuleNotFoundError:
     raise ModuleNotFoundError("No module named ioh")
 
-
-def handler():
-    '''Sometimes the library hangs on python exit. This forces a successfull exit.'''
-
-    os._exit(0)
-
-atexit.register(handler)
 
 ProblemType = typing.Union[problem.Real, problem.Integer]
 

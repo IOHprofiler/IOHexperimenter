@@ -2,8 +2,6 @@ import typing
 from .iohcpp import IntegerConstraint as IntegerConstraint, IntegerSolution as IntegerSolution, IntegerState as IntegerState, LogInfo as LogInfo, MetaData as MetaData, OptimizationType as OptimizationType, RealConstraint as RealConstraint, RealSolution as RealSolution, RealState as RealState, logger, suite as suite
 from typing import Any
 
-def handler() -> None: ...
-
 ProblemType: Any
 
 def get_problem(fid: int, iid: int, dim: int, problem_type: str = ...) -> ProblemType: ...

@@ -68,20 +68,6 @@ void define_constraint(py::module &m, const std::string &name)
         )pbdoc");
 }
 
-template <typename T>
-void define_factory(py::module &m, const std::string &name)
-{
-    using Factory = ioh::common::Factory<T, int, int>;
-    py::class_<Factory>(m, name.c_str(), py::buffer_protocol())
-        .def("names", &Factory::names)
-        .def("ids", &Factory::ids)
-        .def("map", &Factory::map)
-        .def("create", py::overload_cast<const int, int, int>(&Factory::create, py::const_),
-             py::return_value_policy::reference)
-        .def("create", py::overload_cast<const std::string &, int, int>(&Factory::create, py::const_),
-             py::return_value_policy::reference);
-}
-
 template <typename P, typename T>
 class PyProblem : public P
 {
@@ -149,8 +135,7 @@ void define_base_class(py::module &m, const std::string &name)
 {
     using PyProblem = PyProblem<ProblemType, T>;
     using Factory = ioh::common::Factory<ProblemType, int, int>;
-    define_factory<ProblemType>(m, name + "Factory");
-
+    
     py::options options;
     options.disable_function_signatures();
 
@@ -189,11 +174,15 @@ void define_base_class(py::module &m, const std::string &name)
             ----------
                 x: a 1-dimensional array / list of size equal to the dimension of this problem
         )pbdoc")
-        .def_static("factory", &Factory::instance, py::return_value_policy::reference,
-                    "A factory method to get the relevant problem. Recommended is to use the 'get_problem'-function instead.")
+        .def_static("create", [](const std::string& name, int iid, int dim){
+            return Factory::instance().create(name, iid, dim);
+        }, py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),"Create a problem instance")
+        .def_static("create", [](int id, int iid, int dim){return Factory::instance().create(id, iid, dim);},
+            py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),"Create a problem instance")
+        .def_property_readonly_static("problems", [](py::object) {return Factory::instance().map();}, "All registered problems")        
         .def_property_readonly("log_info", &ProblemType::log_info, "Check what data is being sent to the logger.")
         .def_property_readonly("state", &ProblemType::state,
-                               "The current state of the problem: all variables which change during the optimization procedure.")
+                               "The current state of the problem all variables which change during the optimization procedure.")
         .def_property_readonly("meta_data", &ProblemType::meta_data,
                                "The meta-data of the problem: these variables are static during the lifetime of the problem.")
         .def_property_readonly("objective", &ProblemType::objective,
@@ -214,13 +203,19 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
     using WrappedProblem = WrappedProblem<T>;
     py::class_<WrappedProblem, Problem<T>, std::shared_ptr<WrappedProblem>>(
         m, class_name.c_str(), py::buffer_protocol());
-    m.def(function_name.c_str(), &wrap_function<T>,
+    
+    m.def(function_name.c_str(), [](py::function f, const std::string& name, int d, ioh::common::OptimizationType t, Constraint<T>& c)
+        { 
+            f.dec_ref();
+            return wrap_function<T>([f](const std::vector<T>& x){
+                return PyFloat_AsDouble(f(x).ptr());
+            }, name, d, t, c);
+        },
           py::arg("f"),
-          py::arg(" "),
+          py::arg("name"),
           py::arg("n_variables") = 5,
           py::arg("optimization_type") = ioh::common::OptimizationType::Minimization,
-          py::arg("constraint") = Constraint<T>(5),
-          py::return_value_policy::reference
+          py::arg("constraint") = Constraint<T>(5)
         );
 }
 
@@ -264,7 +259,6 @@ void define_helper_classes(py::module &m)
 
 void define_pbo_problems(py::module &m)
 {
-    define_factory<PBO>(m, "PBOFactory");
     py::class_<PBO, Integer, std::shared_ptr<PBO>>(
             m, "PBO",
             R"pbdoc(
@@ -285,8 +279,8 @@ void define_pbo_problems(py::module &m)
             and Evolutionary Computation Conference Companion, pp. 1769-1776. 2018.
 
         )pbdoc"
-            )
-        .def_static("factory", &ioh::common::Factory<PBO, int, int>::instance, py::return_value_policy::reference);
+            );
+
     py::class_<pbo::OneMax, Integer, std::shared_ptr<pbo::OneMax>>(
             m, "OneMax", py::is_final(),
             R"pbdoc(
@@ -378,7 +372,6 @@ void define_pbo_problems(py::module &m)
 
 void define_bbob_problems(py::module &m)
 {
-    define_factory<BBOB>(m, "BBOBFactory");
     py::class_<BBOB, Real, std::shared_ptr<BBOB>>(
             m, "BBOB",
             R"pbdoc(
@@ -408,7 +401,7 @@ void define_bbob_problems(py::module &m)
 
         )pbdoc"
             )
-        .def_static("factory", &ioh::common::Factory<BBOB, int, int>::instance, py::return_value_policy::reference);
+    ;
     py::class_<bbob::Sphere, Real, std::shared_ptr<bbob::Sphere>>(m, "Sphere", py::is_final())
         .def(py::init<int, int>());
     py::class_<bbob::Ellipsoid, Real, std::shared_ptr<bbob::Ellipsoid>>(m, "Ellipsoid", py::is_final())
