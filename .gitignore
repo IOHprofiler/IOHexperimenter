@@ -178,7 +178,6 @@ cython_debug/
 
 data/
 
-test.py
 CMakeSettings.json
 .clangd
 compile_commands.json
