@@ -31,8 +31,7 @@ class CMakeExtension(Extension):
         self.sourcedir = os.path.abspath(sourcedir)
 
 class CMakeBuild(build_ext):
-    def run(self):
-        super().run()
+    def generate_stubs(self):
         ext, *_ = self.extensions
 
         # remove any existing stubs
@@ -54,6 +53,13 @@ class CMakeBuild(build_ext):
                 -m ioh.iohcpp.logger.property \
                 -o ./"""
         subprocess.check_call(command, cwd=ext.sourcedir, shell=True)
+
+    def run(self):
+        super().run()
+        try:
+            self.generate_stubs()
+        except subprocess.CalledProcessError: 
+            pass
 
     def build_extension(self, ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))

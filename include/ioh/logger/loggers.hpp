@@ -203,6 +203,9 @@ namespace ioh {
             triggers_.reset();
         }
 
+        //! Shutdown behaviour
+        virtual void close() { }       
+
         virtual ~Logger() = default;
 
         /** Access the attached problem's metadata. */

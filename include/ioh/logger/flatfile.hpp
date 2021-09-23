@@ -162,11 +162,17 @@ namespace ioh::logger
         //! Accessor for filename
         std::string filename() const { return filename_; }
 
+        //! close data file
+        virtual void close() override {
+            if (out_.is_open()){
+                IOH_DBG(debug, "close data file")
+                out_.close();
+            }
+        }
+        
         virtual ~FlatFile()
         {
-            IOH_DBG(debug, "close data file")
-            if (out_.is_open())
-                out_.close();
+            close();
         }
 
     private:

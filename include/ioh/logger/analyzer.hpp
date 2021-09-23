@@ -261,7 +261,7 @@ namespace ioh::logger
                 /** Logger formatting data in a format supported by iohprofiler.
                  *
                  * @param triggers When to fire a log event.
-                 * @param properties What to log.
+                 * @param additional_properties What to log.
                  * @param root Path in which to store the data.
                  * @param folder_name Name of folder in which to store data. Will be created as a subdirectory of
                  * `root`.
@@ -283,8 +283,8 @@ namespace ioh::logger
                 {
                 }
 
-                virtual ~Analyzer()
-                {
+                 //! close data file
+                virtual void close() override {
                     if (info_stream_.is_open()){
                         handle_last_eval();
                         IOH_DBG(debug, "close info file")
@@ -292,6 +292,13 @@ namespace ioh::logger
                     }
                     if (!has_started_)
                         fs::remove(output_directory());
+
+                    FlatFile::close();
+                }
+
+                virtual ~Analyzer()
+                {
+                    close();
                 }
 
                 //! Part of public interface. Updates info file.
