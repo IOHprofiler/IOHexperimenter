@@ -31,6 +31,7 @@ public:
 template <typename WatcherType>
 class PyWatcher : public WatcherType
 {
+protected:
     bool alive = true;
     std::vector<PyProperty *> property_ptrs_;
 
@@ -41,16 +42,23 @@ public:
         py::module::import("atexit").attr("register")(py::cpp_function{[self = this]() -> void {
             // type-pun alive bool in order to check if is still a boolean 1, if so, delete.
             // in some cases this might cause a segfault, only happens in a very small prob. (1/sizeof(int))
-            if ((int)(*(char*)(&self->alive)) == 1) delete self;
+            if ((int)(*(char*)(&self->alive)) == 1) self->close();
         }});
     }
 
+    void close() override {
+        if (alive){
+            alive = false;
+            for (auto ptr : property_ptrs_)
+                delete ptr;
+            property_ptrs_.clear();
+            WatcherType::close();
+        }
+    }
+
     virtual ~PyWatcher()
-    {
-        alive = false;
-        for (auto ptr : property_ptrs_)
-            delete ptr;
-        property_ptrs_.clear();
+    {   
+        close();
     }
 
     void watch(logger::Property &property) override { PYBIND11_OVERRIDE(void, WatcherType, watch, property); }
@@ -90,9 +98,16 @@ public:
     using Analyzer = PyWatcher<logger::Analyzer>;
     using Analyzer::Analyzer;
 
+    virtual void close() override {
+        if(alive){
+            clear_ptrs();
+            Analyzer::close();
+        }
+    }
+    
     virtual ~PyAnalyzer()
     {
-        clear_ptrs();
+        close();
     }
 
     void add_run_attribute_python(const py::object &container, const std::string &name){
