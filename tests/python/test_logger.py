@@ -75,6 +75,6 @@ class TestLogger(unittest.TestCase):
 
         self.assertEqual(list(l.data.keys()), [1])
                     
-
+                    
 if __name__ == "__main__":
     unittest.main()

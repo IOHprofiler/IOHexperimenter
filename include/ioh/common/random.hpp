@@ -13,11 +13,14 @@
 #define IOH_RND_MOD_MULTIPLIER 2836 // NOLINT
 #define IOH_PI 3.14159265358979323846 // NOLINT
 
-
+/** Random utilities. */
 namespace ioh::common::random
 {
     
+    //! Global random device
     inline std::random_device rd;
+    
+    //! Global random generator
     inline std::mt19937 gen(rd());
 
     /**

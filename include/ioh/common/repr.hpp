@@ -30,6 +30,7 @@ namespace ioh
 template <typename T>
 struct fmt::formatter<T, std::enable_if_t<std::is_base_of<ioh::common::HasRepr, T>::value, char>> :
     fmt::formatter<std::string> {
+    //! format call interface
     template <typename FormatContext>
     auto format(const ioh::common::HasRepr &a, FormatContext &ctx)
     {

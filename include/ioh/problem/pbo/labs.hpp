@@ -7,9 +7,9 @@ namespace ioh
     {
         namespace pbo
         {
+            //! LABS
             class LABS final : public PBOProblem<LABS>
             {
-            protected:
                 static double correlation(const std::vector<int>& x, const int n, int k)
                 {
                     auto result = 0;
@@ -18,7 +18,9 @@ namespace ioh
                       
                     return static_cast<double>(result);
                 }
-
+            protected:
+            
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;

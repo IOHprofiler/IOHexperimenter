@@ -278,10 +278,18 @@ namespace ioh
             //! Constructor.
             OnImprovement() : _has_type(false) { reset(); }
 
+            /**
+             * @brief Construct a new On Improvement object
+             * 
+             * @param best Local memory of the best value.
+             * @param type Current problem type.
+             */
             OnImprovement(double best, common::OptimizationType type) : _best(best), _type(type), _has_type(true) {}
 
+            //! Accessor for _best
             double best() const { return _best; }
 
+            //! Accessor for _type
             common::OptimizationType type() const { return _type; }
 
 
@@ -348,8 +356,10 @@ namespace ioh
             Each(const size_t interval, const size_t starting_at = 0) : _interval(interval), _starting_at(starting_at)
             {
             }
-
+            //! Accessor for _interval
             size_t interval() const { return _interval; }
+            
+            //! Accessor for _starting_at
             size_t starting_at() const { return _starting_at; }
 
             //! Main call interface.
@@ -471,7 +481,7 @@ namespace ioh
                 }
 #endif
             }
-
+            //! Accessor for _time_ranges
             std::set<std::pair<size_t, size_t>> time_ranges() const {return _time_ranges;}
 
             //! Main call interface.

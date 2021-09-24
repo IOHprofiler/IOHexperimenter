@@ -8,10 +8,11 @@ namespace ioh
     {
         namespace pbo
         {
+            //! OneMaxEpistasis problem id 7
             class OneMaxEpistasis final: public PBOProblem<OneMaxEpistasis>
             {
             protected:
-
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto new_variables = utils::epistasis(x, 4);

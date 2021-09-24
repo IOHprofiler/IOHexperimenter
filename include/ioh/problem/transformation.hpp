@@ -3,6 +3,7 @@
 #include "ioh/problem/utils.hpp"
 #include "ioh/problem/structures.hpp"
 
+/* Transformation namespace */
 namespace ioh::problem::transformation
 {
     namespace objective

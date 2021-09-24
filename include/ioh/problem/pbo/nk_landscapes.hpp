@@ -7,13 +7,12 @@ namespace ioh
     {
         namespace pbo
         {
+            //! NKLandscapes problem id 25
             class NKLandscapes final: public PBOProblem<NKLandscapes>
             {
-            protected:
                 std::vector<std::vector<double>> f_;
                 std::vector<std::vector<int>> e_;
                 int k_ = 1;
-
                 void set_n_k(const int n, const int k)
                 {
                     e_.clear();
@@ -59,7 +58,9 @@ namespace ioh
                                                              static_cast<long>(k * (i + 1) * 2)));
                     }
                 }
-
+            
+            protected:
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;

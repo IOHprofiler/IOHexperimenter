@@ -4,24 +4,36 @@
 
 namespace ioh::problem::bbob
 {
+    /**
+     * @brief CTRP base class for Gallagher problems
+     * 
+     * @tparam T type of the gallagher problem
+     */
     template <typename T>
     class Gallagher : public BBOProblem<T>
     {
+        //! Peak struct
         struct Peak
         {
             double value;
             std::vector<double> scales;
 
+            //! Permutation struct
             struct Permutation
             {
+                //! value
                 double value;
+
+                //! index
                 int index;
 
+                //! sort operator
                 bool operator<(const Permutation &b) const
                 {
                     return value < b.value;
                 }
 
+                //! sort a set of random permutations
                 static std::vector<Permutation> sorted(const int n, const int seed)
                 {
                     const auto random_numbers = common::random::bbob2009::uniform(n, seed);
@@ -67,6 +79,8 @@ namespace ioh::problem::bbob
         double factor_;
 
     protected:
+        
+        //! Evaluation method
         double evaluate(const std::vector<double> &x) override
         {
             static const auto a = 0.1;
@@ -118,6 +132,18 @@ namespace ioh::problem::bbob
         }
 
     public:
+        /**
+         * @brief Construct a new Gallagher object
+         * 
+         * @param problem_id the id of the problem
+         * @param instance the instance of the problem
+         * @param n_variables the dimension of the problem
+         * @param name the name of the problem
+         * @param number_of_peaks the number of peaks of the problem
+         * @param b gallagher variables
+         * @param c gallagher variables
+         * @param max_condition the maximum conditioning of the problem
+         */
         Gallagher(const int problem_id, const int instance, const int n_variables, const std::string &name,
                   const int number_of_peaks, const double b = 10., const double c = 5.0,
                   double max_condition = sqrt(1000.)) :
@@ -146,9 +172,16 @@ namespace ioh::problem::bbob
         }
     };
 
+    //! Gallaher 101 problem id 21
     class Gallagher101 final : public Gallagher<Gallagher101>
     {
     public:
+        /**
+         * @brief Construct a new Gallagher 1 0 1 object
+         * 
+         * @param instance instance id
+         * @param n_variables the dimension of the problem
+         */
         Gallagher101(const int instance, const int n_variables):
             Gallagher(21, instance, n_variables, "Gallagher101", 101, 10., 5.0)
         {

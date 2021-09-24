@@ -5,16 +5,28 @@
 
 namespace ioh::logger
 {
+    /* Anything related to Analyzer logger */
     namespace analyzer
     {
+        /* Structures related to Analyzer logger */
         namespace structures
         {
+            //! Attribute
             template <typename T>
             struct Attribute : common::HasRepr
             {
+                
+                //! Name of the attribute
                 std::string name;
+                //! Value of the attribue
                 T value;
 
+                /**
+                 * @brief Construct a new Attribute object
+                 * 
+                 * @param name name of the attribute
+                 * @param value Value of the attribue
+                 */
                 Attribute(const std::string &name, const T &value) : name(name), value(value) {}
 
                 std::string repr() const override { return fmt::format("\"{}\": {}", name, value); }
@@ -39,11 +51,20 @@ namespace ioh::logger
                 dPtrMap run;
             };
 
+            //! Current best point conatiner
             struct BestPoint : common::HasRepr
             {
+                //! At what eval was the point recorded
                 size_t evals;
+                //! Value of the point
                 problem::Solution<double> point;
 
+                /**
+                 * @brief Construct a new Best Point object
+                 * 
+                 * @param evals At what eval was the point recorded
+                 * @param point Value of the point
+                 */
                 BestPoint(const size_t evals = 0, const problem::Solution<double> &point = {}) :
                     evals(evals), point(point)
                 {
@@ -56,11 +77,22 @@ namespace ioh::logger
                 }
             };
 
+            //! Algorithm meta data
             struct AlgorithmInfo : common::HasRepr
             {
+                
+                //! Name of the algorithm
                 const std::string name;
+
+                //! Extra string of algoritm information
                 const std::string info;
 
+                /**
+                 * @brief Construct a new Algorithm Info object
+                 * 
+                 * @param name Name of the algorithm
+                 * @param info Extra string of algoritm information
+                 */
                 AlgorithmInfo(const std::string &name, const std::string &info) : name(name), info(info) {}
 
                 std::string repr() const override
@@ -69,13 +101,26 @@ namespace ioh::logger
                 }
             };
 
+            //! Run information data
             struct RunInfo : common::HasRepr
             {
+                //! Instance id
                 const size_t instance;
+                //! N evals
                 const size_t evals;
+                //! best point
                 const BestPoint best_point;
+                //! Attributes
                 const std::vector<Attribute<double>> attributes;
 
+                /**
+                 * @brief Construct a new Run Info object
+                 * 
+                 * @param instance  Instance id
+                 * @param evals N evals
+                 * @param bp best point
+                 * @param ra Attributes
+                 */
                 RunInfo(const size_t instance, const size_t evals, const BestPoint &bp,
                         const std::vector<Attribute<double>> &ra = {}) :
                     instance(instance),
@@ -90,13 +135,24 @@ namespace ioh::logger
                                        (attributes.empty() ? "" : fmt::format(", {}", fmt::join(attributes, ", "))));
                 }
             };
-
+            
+            //! Scenario meta data
             struct ScenarioInfo : common::HasRepr
             {
+                //! Dimension
                 const size_t dimension;
+                //! Data file
                 const std::string data_file;
+                //! Runs
                 std::vector<RunInfo> runs;
 
+                /**
+                 * @brief Construct a new Scenario Info object
+                 * 
+                 * @param dimension Dimension
+                 * @param data_file Data file
+                 * @param runs Runs
+                 */
                 ScenarioInfo(const size_t dimension, const std::string &data_file,
                              const std::vector<RunInfo> runs = {}) :
                     dimension(dimension),
@@ -112,16 +168,36 @@ namespace ioh::logger
                 }
             };
 
+            //! Experiment information
             struct ExperimentInfo : common::HasRepr
             {
+                //! Suite name
                 const std::string suite;
+                //! problem 
                 const problem::MetaData problem;
+                //! Algoritm meta data
                 const AlgorithmInfo algorithm;
+                //! Attributes
                 const std::vector<Attribute<std::string>> attributes;
+                //! Run attributes
                 const std::vector<std::string> run_attribute_names;
+                //! Extra attributes
                 const std::vector<std::string> extra_attribute_names;
+
+                //! Scenarios
                 std::vector<ScenarioInfo> dims;
 
+                /**
+                 * @brief Construct a new Experiment Info object
+                 * 
+                 * @param suite suite name
+                 * @param problem problem 
+                 * @param algorithm Algoritm meta data
+                 * @param attributes Attributes
+                 * @param run_attribute_names Run attributes
+                 * @param extra_attribute_names Extra attributes
+                 * @param dims Scenarios
+                 */
                 ExperimentInfo(const std::string &suite, const problem::MetaData &problem,
                                const AlgorithmInfo &algorithm,
                                const std::vector<Attribute<std::string>> &attributes = {},
@@ -157,6 +233,7 @@ namespace ioh::logger
 
         } // namespace structures
 
+        /* Version 1 */
         namespace v1
         {
             /** A logger that stores information in a format supported by the IOHAnalyzer platform.
@@ -177,13 +254,28 @@ namespace ioh::logger
             class Analyzer : public FlatFile
             {
             protected:
+                //! output path
                 const common::file::UniqueFolder path_;
+                
+                //! Algorithm meta data
                 const structures::AlgorithmInfo algorithm_;
+                
+                //! info file stream
                 std::ofstream info_stream_;
+
+                //! Best point
                 structures::BestPoint best_point_;
+
+                //! Run/Experiment attribues
                 structures::Attributes attributes_;
+
+                //! Has started logging?
                 bool has_started_;
+
+                //! Current log info
                 logger::Info log_info_{};
+
+                //! Evals
                 size_t evals_;
 
                 //! Gets called when a new problem is attached
@@ -383,7 +475,8 @@ namespace ioh::logger
                                                              transformed_y_best_};
             };
         } // namespace v1
-
+        
+        /* Version 1 */
         namespace v2
         {
             /**
@@ -464,5 +557,7 @@ namespace ioh::logger
         } // namespace v2
     } // namespace analyzer
 
+
+    //! Default version of the logger
     using Analyzer = analyzer::v1::Analyzer;
 } // namespace ioh::logger

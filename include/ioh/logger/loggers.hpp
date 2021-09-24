@@ -61,6 +61,8 @@ namespace ioh {
         // We need references because we have container of instances of various classes.
         // As all share a common interface, we can have a container of references of this base class.
         std::map<std::string,std::reference_wrapper<logger::Property>> properties_;
+        
+        //! A vector with all the properties
         logger::Properties properties_vector_{}; 
         // TODO: check why we use a map here, and not a vector, with a map we cannot control order        
 

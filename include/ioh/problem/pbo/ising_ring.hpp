@@ -7,11 +7,13 @@ namespace ioh
     {
         namespace pbo
         {
+            //! IsingRing problem id 19
             class IsingRing final: public PBOProblem<IsingRing>
             {
-            protected:
                 static int modulo_ising_ring(const int x, const int n){ return (x % n + n) % n; }
-
+            protected:
+            
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;

@@ -5,13 +5,15 @@ namespace ioh
 {
     namespace problem
     {
+        //! PBO namespace
         namespace pbo
         {
+            //! IsingTriangular problem id 21
             class IsingTriangular final: public PBOProblem<IsingTriangular>
             {
-            protected:
                 static size_t modulo_ising_triangular(const size_t x, const size_t n) { return (x % n + n) % n; }
-
+            protected:
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;

@@ -2,6 +2,7 @@
 
 namespace ioh
 {
+    /** Common utilities. */
     namespace common
     {
         /**
@@ -21,7 +22,7 @@ namespace ioh
          * \param v1 The first value
          * \param v2 The second value
          * \param optimization_type Used to determine which value is better,
-         * when optimization_type == \ref common::OptimizationType::Minimization lower elements are better,
+         * when optimization_type == OptimizationType::Minimization lower elements are better,
          * otherwise higher elements are better.
          * \return true if v1 is better than v2
          */
