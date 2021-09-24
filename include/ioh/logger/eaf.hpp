@@ -202,11 +202,9 @@ namespace logger {
             assert(   _data.at(cur.suite)   .at(cur.pb).count(cur.dim) > 0);
             assert(   _data.at(cur.suite)   .at(cur.pb)   .at(cur.dim).count(cur.ins) > 0);
             assert(   _data.at(cur.suite)   .at(cur.pb)   .at(cur.dim)   .at(cur.ins).count(cur.run) > 0);
-
-            return _data.at(cur.suite).at(cur.pb).at(cur.dim).at(cur.ins).at(cur.run);
-#else
-            return _data.at(cur.suite).at(cur.pb).at(cur.dim).at(cur.ins).at(cur.run);
 #endif
+            return _data.at(cur.suite).at(cur.pb).at(cur.dim).at(cur.ins).at(cur.run);
+
         }
 
     public:

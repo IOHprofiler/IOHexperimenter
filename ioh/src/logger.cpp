@@ -1,3 +1,4 @@
+#include <fmt/ranges.h>
 #include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -18,6 +19,8 @@ public:
         Property(attribute), container_(container), attribute_(attribute)
     {
     }
+
+    py::object container() const { return container_; }
 
     std::optional<double> operator()(const logger::Info &) const override
     {
@@ -205,28 +208,53 @@ void define_properties(py::module &m)
         .def("name", &logger::Property::name)
         .def("call_to_string", &logger::Property::call_to_string);
 
+
     py::class_<PyProperty, logger::Property, std::shared_ptr<PyProperty>>(t, "Property")
-        .def(py::init<py::object, std::string>(), py::arg("container"), py::arg("attribute"));
+        .def(py::init<py::object, std::string>(), py::arg("container"), py::arg("attribute"))
+        .def(py::pickle([](const PyProperty &t) { return py::make_tuple(t.container(), t.name()); },
+                        [](py::tuple t) {
+                            return PyProperty{t[0].cast<py::object>(), t[1].cast<std::string>()};
+                        }));
 
     py::class_<watch::Evaluations, logger::Property, std::shared_ptr<watch::Evaluations>>(t, "Evaluations")
-        .def(py::init<std::string, std::string>());
+        .def(py::init<std::string, std::string>())
+        .def(py::pickle([](const watch::Evaluations &t) { return py::make_tuple(t.name(), t.format()); },
+                        [](py::tuple t) {
+                            return watch::Evaluations{t[0].cast<std::string>(), t[1].cast<std::string>()};
+                        }));
     t.attr("EVALUATIONS") = py::cast(watch::evaluations);
 
     py::class_<watch::RawYBest, logger::Property, std::shared_ptr<watch::RawYBest>>(t, "RawYBest")
-        .def(py::init<std::string, std::string>());
+        .def(py::init<std::string, std::string>())
+        .def(py::pickle([](const watch::RawYBest &t) { return py::make_tuple(t.name(), t.format()); },
+                        [](py::tuple t) {
+                            return watch::RawYBest{t[0].cast<std::string>(), t[1].cast<std::string>()};
+                        }));
     t.attr("RAW_Y_BEST") = py::cast(watch::raw_y_best);
 
     py::class_<watch::CurrentY, logger::Property, std::shared_ptr<watch::CurrentY>>(t, "CurrentY")
-        .def(py::init<std::string, std::string>());
+        .def(py::init<std::string, std::string>())
+        .def(py::pickle([](const watch::CurrentY &t) { return py::make_tuple(t.name(), t.format()); },
+                        [](py::tuple t) {
+                            return watch::CurrentY{t[0].cast<std::string>(), t[1].cast<std::string>()};
+                        }));
     t.attr("CURRENT_Y_BEST") = py::cast(watch::current_y);
 
     py::class_<watch::TransformedY, logger::Property, std::shared_ptr<watch::TransformedY>>(t, "TransformedY")
-        .def(py::init<std::string, std::string>());
+        .def(py::init<std::string, std::string>())
+        .def(py::pickle([](const watch::TransformedY &t) { return py::make_tuple(t.name(), t.format()); },
+                        [](py::tuple t) {
+                            return watch::TransformedY{t[0].cast<std::string>(), t[1].cast<std::string>()};
+                        }));
     t.attr("TRANSFORMED_Y") = py::cast(watch::transformed_y);
 
     py::class_<watch::TransformedYBest, logger::Property, std::shared_ptr<watch::TransformedYBest>>(t,
                                                                                                     "TransformedYBest")
-        .def(py::init<std::string, std::string>());
+        .def(py::init<std::string, std::string>())
+        .def(py::pickle([](const watch::TransformedYBest &t) { return py::make_tuple(t.name(), t.format()); },
+                        [](py::tuple t) {
+                            return watch::TransformedYBest{t[0].cast<std::string>(), t[1].cast<std::string>()};
+                        }));
     t.attr("TRANSFORMED_Y_BEST") = py::cast(watch::transformed_y_best);
 }
 
@@ -245,15 +273,11 @@ void define_bases(py::module &m)
     py::class_<Watcher, Logger, std::shared_ptr<Watcher>>(m, "AbstractWatcher").def("watch", &Watcher::watch);
 }
 
-void define_loggers(py::module &m)
-{
+
+
+
+void define_flatfile(py::module &m){
     using namespace logger;
-
-    py::class_<Combine, Logger, std::shared_ptr<Combine>>(m, "Combine")
-        .def(py::init<std::vector<std::reference_wrapper<Logger>>>(), py::arg("loggers"))
-        .def(py::init<std::reference_wrapper<Logger>>(), py::arg("logger"))
-        .def("append", &Combine::append);
-
     const std::vector<std::string> common_headers = {
         "suite_name", "problem_name", "problem_id", "problem_instance", "optimization_type", "dimension", "run"};
 
@@ -275,12 +299,12 @@ void define_loggers(py::module &m)
         .def("__repr__", [](const PyWatcher<FlatFile> &f) {
             return fmt::format("<FlatFile {}>", (f.output_directory() / f.filename()).generic_string());
         });
+}
 
-
-    py::class_<Store::Cursor>(m, "Cursor").def(py::init<std::string, int, int, int, size_t, size_t>());
+void define_store(py::module& m){
+    using namespace logger;
 
     using PyStore = PyWatcher<Store>;
-
     py::class_<PyStore, Watcher, std::shared_ptr<PyStore>>(m, "Store")
         .def(py::init<Triggers, Properties>())
         .def("data", py::overload_cast<>(&PyStore::data))
@@ -295,8 +319,10 @@ void define_loggers(py::module &m)
         .def("__repr__", [](PyStore &f) {
             return fmt::format("<Store (suites: ({}),)>", fmt::join(ioh::common::keys(f.data()), ","));
         });
+}
 
-
+void define_analyzer(py::module& m){
+    using namespace logger;
     Triggers def_trigs{trigger::on_improvement};
     Properties def_props{};
     py::class_<PyAnalyzer, Watcher, std::shared_ptr<PyAnalyzer>>(m, "Analyzer")
@@ -324,6 +350,96 @@ void define_loggers(py::module &m)
              [](const PyAnalyzer &f) { return fmt::format("<Analyzer {}>", f.output_directory().generic_string()); });
 }
 
+template <typename T>
+void define_eah_scale(py::module &m, const std::string &name)
+{
+    using namespace logger::eah;
+
+    py::class_<Scale<T>, std::shared_ptr<Scale<T>>>(m, name.c_str())
+        .def_property_readonly("min", &Scale<T>::min)
+        .def_property_readonly("max", &Scale<T>::max)
+        .def_property_readonly("size", &Scale<T>::size)
+        .def_property_readonly("length", &Scale<T>::length)
+        .def("index", &Scale<T>::index)
+        .def("bounds", &Scale<T>::bounds)
+        .def("__repr__", [name](const Scale<T> &s) {
+            return fmt::format("<{} (({}, {}), {})>", name, s.min(), s.max(), s.size());
+        });
+
+    py::class_<LinearScale<T>, Scale<T>, std::shared_ptr<LinearScale<T>>>(m, ("Linear" + name).c_str())
+        .def(py::init<T, T, size_t>())
+        .def("step", &LinearScale<T>::step);
+    py::class_<Log2Scale<T>, Scale<T>, std::shared_ptr<Log2Scale<T>>>(m, ("Log2" + name).c_str())
+        .def(py::init<T, T, size_t>());
+
+    py::class_<Log10Scale<T>, Scale<T>, std::shared_ptr<Log10Scale<T>>>(m, ("Log10" + name).c_str())
+        .def(py::init<T, T, size_t>());
+}
+void define_eah(py::module &m){
+    using namespace logger;
+    auto eah = m.def_submodule("eah");
+    define_eah_scale<double>(eah, "RealScale");
+    define_eah_scale<size_t>(eah, "IntegerScale");
+
+    py::class_<EAH, Logger, std::shared_ptr<EAH>>(m, "EAH")
+        .def(py::init<double, double, size_t, size_t, size_t, size_t>(), py::arg("error_min"), py::arg("error_max"),
+             py::arg("error_buckets"), py::arg("evals_min"), py::arg("evals_max"), py::arg("evals_buckets"))
+        .def(py::init<eah::LinearScale<double>&, eah::LinearScale<size_t>&>(), py::arg("error_scale"),
+             py::arg("eval_scale"))
+        .def(py::init<eah::Log2Scale<double>&, eah::Log2Scale<size_t>&>(), py::arg("error_scale"), py::arg("eval_scale"))
+        .def(py::init<eah::Log10Scale<double>&, eah::Log10Scale<size_t>&>(), py::arg("error_scale"),
+             py::arg("eval_scale"))
+        .def("at", &logger::EAH::at)
+        .def_property_readonly("data", &logger::EAH::data)
+        .def_property_readonly("size", &logger::EAH::size)
+        .def_property_readonly("error_range", &logger::EAH::error_range, py::return_value_policy::reference)
+        .def_property_readonly("eval_range", &logger::EAH::eval_range, py::return_value_policy::reference)
+        .def("__repr__", [](const logger::EAH &l) { return fmt::format("<EAH {}>", l.size()); });
+}
+
+void define_eaf(py::module &m){
+    using namespace logger;
+
+    auto eaf = m.def_submodule("eaf");
+    py::class_<eaf::Point, std::shared_ptr<eaf::Point>>(eaf, "Point")
+        .def(py::init<double, size_t>())
+        .def("__repr__", [](const eaf::Point& p){return fmt::format("<Point {} {}>", p.qual, p.time);})
+    ;
+
+    py::class_<eaf::RunPoint, eaf::Point, std::shared_ptr<eaf::RunPoint>>(eaf, "RunPoint")
+        .def(py::init<double, size_t, size_t>())
+        .def("__repr__", [](const eaf::RunPoint& p){return fmt::format("<RunPoint {} {} {}>", p.qual, p.time, p.run);})
+    ;
+
+    py::class_<EAF, Logger, std::shared_ptr<EAF>>(m, "EAF")
+        .def(py::init<>())
+        .def_property_readonly("data", py::overload_cast<>(&EAF::data, py::const_))
+        .def("at",
+             [](EAF &f, std::string suite_name, int pb, int dim, int inst, size_t run) {
+                 const auto cursor = EAF::Cursor(suite_name, pb, dim, inst, run);
+                 return f.data(cursor);
+             })
+    ;
+}
+
+
+
+void define_loggers(py::module &m)
+{
+    using namespace logger;
+    py::class_<Combine, Logger, std::shared_ptr<Combine>>(m, "Combine")
+        .def(py::init<std::vector<std::reference_wrapper<Logger>>>(), py::arg("loggers"))
+        .def(py::init<std::reference_wrapper<Logger>>(), py::arg("logger"))
+        .def("append", &Combine::append);
+
+    define_flatfile(m);
+    define_store(m);
+    define_analyzer(m);
+    define_eah(m);
+    define_eaf(m);
+}
+
+
 void define_logger(py::module &m)
 {
     py::class_<fs::path>(m, "Path").def(py::init<std::string>());
@@ -333,13 +449,4 @@ void define_logger(py::module &m)
     define_properties(m);
     define_bases(m);
     define_loggers(m);
-
-
-    // py::class_<ECDF, Base, std::shared_ptr<ECDF>>(m, "ECDF")
-    //     .def(py::init<double, double, size_t, size_t, size_t,  size_t>())
-    //     .def("data", &ECDF::data)
-    //     .def("at", &ECDF::at)
-    //     .def("error_range", &ECDF::error_range)
-    //     .def("eval_range", &ECDF::eval_range)
-    //     ;
 }

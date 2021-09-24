@@ -601,7 +601,7 @@ namespace ioh
              * third index: number of instances.
              * last index: number of runs.
              */
-            std::tuple<size_t, size_t, size_t, size_t> size()
+            std::tuple<size_t, size_t, size_t, size_t> size() const
             {
                 return std::make_tuple(
                     _eah_suite.size(), // problems
