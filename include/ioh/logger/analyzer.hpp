@@ -384,7 +384,6 @@ namespace ioh::logger
                     }
                     if (!has_started_)
                         fs::remove(output_directory());
-
                     FlatFile::close();
                 }
 
