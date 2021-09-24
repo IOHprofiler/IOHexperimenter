@@ -2,18 +2,20 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cstdlib>
 #include <functional>
 #include <memory>
 #include <string>
 #include <type_traits>
-#include <unordered_map>
+#include <map>
 #include <utility>
 #include <vector>
-#include <cstdlib>
 
 #if defined(__GNUC__) || defined(__GNUG__)
 #include <cxxabi.h>
 #endif
+
+#include "container_utils.hpp"
 
 namespace ioh::common
 {
@@ -58,19 +60,29 @@ namespace ioh::common
         return name = name.substr(0, name.find_first_of(">"));
     }
 
-
+    /**
+     * @brief Class for generating classes for a given abtract type
+     *
+     * @tparam AbstractType the parent type of the classes to be generator
+     * @tparam Args the arguments of the common constructor for children of AbtractType
+     */
     template <class AbstractType, typename... Args>
     struct Factory
     {
+        //! A shared ptr to AbstractType
         using Type = std::shared_ptr<AbstractType>;
+
+        //! Creator method for instances of Type
         using Creator = std::function<Type(Args &&...)>;
 
+        //! Accessor to static instance
         static Factory &instance()
         {
             static Factory f; // NOLINT
             return f;
         }
 
+        //! Include a new element to the factory
         void include(const std::string &name, const int id, Creator creator)
         {
             const auto already_defined = name_map.find(name) != std::end(name_map);
@@ -80,6 +92,7 @@ namespace ioh::common
                 id_map[check_or_get_next_available(id)] = name;
         }
 
+        //! Get the next available id
         [[nodiscard]] int check_or_get_next_available(const int id) const
         {
             const auto known_ids = ids();
@@ -87,24 +100,17 @@ namespace ioh::common
             return it == known_ids.end() ? id : get_next_id(known_ids);
         }
 
-        [[nodiscard]] std::vector<std::string> names() const
-        {
-            std::vector<std::string> keys;
-            for (const auto &p : name_map)
-                keys.push_back(p.first);
-            return keys;
-        }
+        //! Accessor for the list of registered names
+        [[nodiscard]] std::vector<std::string> names() const { return common::keys(name_map); }
 
-        [[nodiscard]] std::vector<int> ids() const
-        {
-            std::vector<int> keys;
-            for (const auto &p : id_map)
-                keys.push_back(p.first);
-            return keys;
-        }
+        //! Accessor for the list of registered ids
+        [[nodiscard]] std::vector<int> ids() const { return common::keys(id_map); }
 
-        [[nodiscard]] std::unordered_map<int, std::string> map() const { return id_map; }
+        //! Accessor for the map from id to name
+        [[nodiscard]] std::map<int, std::string> map() const { return id_map; }
 
+
+        //! Create a new instance of Type using the Creator registered
         [[nodiscard]] Type create(const std::string &name, Args... params) const
         {
             const auto entry = name_map.find(name);
@@ -112,6 +118,7 @@ namespace ioh::common
             return entry->second(std::forward<Args>(params)...);
         }
 
+        //! Create a new instance of Type using the Creator registered
         [[nodiscard]] Type create(const int id, Args... params) const
         {
             const auto entry = id_map.find(id);
@@ -122,18 +129,21 @@ namespace ioh::common
     private:
         Factory() = default;
         Factory(const Factory &) = delete;
-        std::unordered_map<std::string, Creator> name_map;
-        std::unordered_map<int, std::string> id_map;
+        std::map<std::string, Creator> name_map;
+        std::map<int, std::string> id_map;
     };
 
+    //! Helper to get a new ID for a given class
     template <bool IsProblem>
     struct IdGetter
     {
     };
 
+    //! Helper to get a new ID for a problem class
     template <>
     struct IdGetter<true>
     {
+        //! Gets an from the class meta_data
         template <typename T>
         static int get_id(const std::vector<int> &)
         {
@@ -141,9 +151,11 @@ namespace ioh::common
         }
     };
 
+    //! Helper to get a new ID for a non problem class
     template <>
     struct IdGetter<false>
     {
+        //! Gets an id
         template <typename T>
         static int get_id(const std::vector<int> &ids)
         {
@@ -151,10 +163,16 @@ namespace ioh::common
         }
     };
 
-
+    /**
+     * @brief Base factory registry
+     *
+     * @tparam Parent Abstract type
+     * @tparam Args Parent constructor args
+     */
     template <typename Parent, typename... Args>
     struct RegisterWithFactory
     {
+        //! Include Parent in the factory
         template <class T>
         static void include()
         {
@@ -166,27 +184,32 @@ namespace ioh::common
                             [](Args &&...params) { return std::make_unique<T>(std::forward<Args>(params)...); });
         }
 
+        //! Accessor to static instance
         static Factory<Parent, Args...> &instance() { return Factory<Parent, Args...>::instance(); }
     };
 
 
+    //! Helper for factory system
     template <class Type, class Factory>
     struct InvokeApplyOnConstruction
     {
         InvokeApplyOnConstruction() { Factory::template include<Type>(); }
     };
 
+    //! Helper for factory system
     template <class Type, class Factory>
     struct RegistrationInvoker
     {
+        //! Forces creation of `registration_invoker`
         static inline InvokeApplyOnConstruction<Type, Factory> registration_invoker =
             InvokeApplyOnConstruction<Type, Factory>();
     };
 
-
+    //! Helper for factory system
     template <class Type, class Factory>
     struct AutomaticTypeRegistration : RegistrationInvoker<Type, Factory>
     {
+        //! Forces creation of `invoker`
         InvokeApplyOnConstruction<Type, Factory> &invoker = RegistrationInvoker<Type, Factory>::registration_invoker;
     };
 } // namespace ioh::common

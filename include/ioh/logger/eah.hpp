@@ -410,14 +410,28 @@ namespace ioh
             /** Keep essential metadata about the problem. */
             struct Problem
             {
-                // FIXME add the suite
+                //! Problem id
                 int pb{};
+                
+                //! Problem dim
                 int dim{};
+
+                //! Problem instance
                 int ins{};
+
+                //! run id
                 int run{};
+
+                //! has_opt?
                 bool has_opt{};
+
+                //! is tracked?
                 bool is_tracked{};
+
+                //! Optimum
                 double opt{};
+
+                //! Optimization type
                 common::OptimizationType max_min{};
             };
 

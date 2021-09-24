@@ -8,9 +8,11 @@ namespace ioh
     {
         namespace pbo
         {
+            //! LeadingOnesNeutrality problem id 13
             class LeadingOnesNeutrality final: public PBOProblem<LeadingOnesNeutrality>
             {
             protected:
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto new_variables = utils::neutrality(x, 3);

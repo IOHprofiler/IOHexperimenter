@@ -7,21 +7,46 @@
 
 namespace ioh
 {
+    //! Problem namespace
     namespace problem
     {
+        /**
+         * @brief Problem Base class
+         * 
+         * @tparam T type of the problem
+         */
         template <typename T>
         class Problem
         {
         protected:
+
+            //! Problem meta data
             MetaData meta_data_;
+            
+            //! The Constraint
             Constraint<T> constraint_;
+
+            //! The Problem state
             State<T> state_;
+        
+            //! The solution to the problem
             Solution<T> objective_;
+
+            //! A pointer to the attached logger
             Logger *logger_{};
+
+            //! The current log info
             logger::Info log_info_;
 
-            [[nodiscard]]
-            bool check_input_dimensions(const std::vector<T> &x)
+            
+            /**
+             * @brief Method for checking the input given to the problem has the correct dimension
+             * 
+             * @param x the input vector
+             * @return true input is correct
+             * @return false input is incorrect
+             */
+            [[nodiscard]] bool check_input_dimensions(const std::vector<T> &x)
             {
                 if (x.empty())
                 {
@@ -36,12 +61,26 @@ namespace ioh
                 return true;
             }
 
+            /**
+             * @brief Check input given to problem for Integer types
+             * 
+             * @tparam Integer integer type
+             * @param x the input
+             * @return true if correct
+             */
             template <typename Integer = T>
             typename std::enable_if<std::is_integral<Integer>::value, bool>::type check_input(const std::vector<T> &x)
             {
                 return check_input_dimensions(x);
             }
 
+            /**
+             * @brief Check input given to problem for Floating point types
+             * 
+             * @tparam Floating floating type
+             * @param x the input
+             * @return true if correct
+             */
             template <typename Floating = T>
             typename std::enable_if<std::is_floating_point<Floating>::value, bool>::type check_input(
                 const std::vector<T> &x)
@@ -65,17 +104,19 @@ namespace ioh
                 IOH_DBG(warning,"The solution contains invalid values.")
                 return false;
             }
+            
+            //! Evaluation function
+            [[nodiscard]] virtual double evaluate(const std::vector<T> &x) = 0;
 
-            [[nodiscard]]
-            virtual double evaluate(const std::vector<T> &x) = 0;
 
-
+            //! Variables transformation function
             [[nodiscard]]
             virtual std::vector<T> transform_variables(std::vector<T> x)
             {
                 return x;
             }
 
+            //! Objectives transformation function
             [[nodiscard]]
             virtual double transform_objectives(const double y)
             {
@@ -83,6 +124,13 @@ namespace ioh
             }
 
         public:
+            /**
+             * @brief Construct a new Problem object
+             * 
+             * @param meta_data meta data for the problem
+             * @param constraint a constraint for the problem
+             * @param objective the solution to the problem
+             */
             explicit Problem(MetaData meta_data, Constraint<T> constraint, Solution<T> objective) :
                 meta_data_(std::move(meta_data)), constraint_(std::move(constraint)),
                 objective_(std::move(objective))
@@ -95,7 +143,13 @@ namespace ioh
                 log_info_.optimum = objective_.as_double();
                 log_info_.current = state_.current.as_double();
             }
-
+            
+            /**
+             * @brief Construct a new Problem object with an unkown solution
+             * 
+             * @param meta_data meta data for the problem
+             * @param constraint a constraint for the problem
+             */
             explicit Problem(MetaData meta_data, Constraint<T> constraint = Constraint<T>()):
                 Problem(meta_data, constraint, {
                             std::vector<T>(meta_data.n_variables, std::numeric_limits<T>::signaling_NaN()),
@@ -106,8 +160,10 @@ namespace ioh
             {
             }
 
+            //! destructor
             virtual ~Problem() = default;
 
+            //! Reset method, resets problem state and logger if attached
             virtual void reset()
             {
                 state_.reset();
@@ -117,9 +173,7 @@ namespace ioh
                 }
             }
 
-            /**
-             * \brief Update the current log info
-             */
+            //! Update the current log info
             virtual void update_log_info()
             {
                 log_info_.evaluations = static_cast<size_t>(state_.evaluations);
@@ -129,18 +183,20 @@ namespace ioh
                 log_info_.current = state_.current.as_double();
             }
 
-            [[nodiscard]]
-            logger::Info &log_info()
+            //! Accessor for current log info
+            [[nodiscard]] logger::Info &log_info()
             {
                 return log_info_;
             }
 
+            //! Attach a logger
             void attach_logger(Logger &logger)
             {
                 logger_ = &logger;
                 logger_->attach_problem(meta_data_);
             }
 
+            //! Dettach a logger
             void detach_logger()
             {
                 if (logger_ != nullptr)
@@ -148,6 +204,7 @@ namespace ioh
                 logger_ = nullptr;
             }
 
+            //! Main call interface
             double operator()(const std::vector<T> &x)
             {
                 if (!check_input(x))
@@ -166,30 +223,35 @@ namespace ioh
                 return state_.current.y;
             }
 
+            //! Accessor for `meta_data_`
             [[nodiscard]]
             MetaData meta_data() const
             {
                 return meta_data_;
             }
 
+            //! Accessor for `objective_`
             [[nodiscard]]
             Solution<T> objective() const
             {
                 return objective_;
             }
 
+            //! Accessor for `state_`
             [[nodiscard]]
             State<T> state() const
             {
                 return state_;
             }
 
+            //! Accessor for `constraint_`
             [[nodiscard]]
             Constraint<T> constraint() const
             {
                 return constraint_;
             }
 
+            //! Stream operator
             friend std::ostream &operator<<(std::ostream &os, const Problem &obj)
             {
                 return os
@@ -200,25 +262,59 @@ namespace ioh
             }
         };
 
+        /**
+         * @brief typedef for functions which can be wrapped in \ref WrappedProblem
+         * 
+         * @tparam T type of the problem
+         */
         template <typename T>
         using Function = std::function<double(const std::vector<T> &)>;
 
+        /**
+         * @brief Registry type def
+         * 
+         * @tparam ProblemType type of the problem
+         */
         template <typename ProblemType>
         using ProblemRegistryType = common::RegisterWithFactory<ProblemType, int, int>;
 
+        /**
+         * @brief Factory type def
+         * 
+         * @tparam ProblemType type of the problem
+         */
         template <typename ProblemType>
         using ProblemFactoryType = common::Factory<ProblemType, int, int>;
 
+        
+        /**
+         * @brief Automatic Factory registration type def. 
+         * 
+         * @tparam Derived type of the problem
+         * @tparam Parent type of the problem
+         */
         template <class Derived, class Parent>
         using AutomaticProblemRegistration = common::AutomaticTypeRegistration<Derived, ProblemRegistryType<Parent>>;
 
+        
+        /**
+         * @brief Registry type def. 
+         * 
+         * @tparam Parent type of the problem
+         */
         template <class Parent>
         using ProblemRegistry = ProblemRegistryType<Parent>;
 
+        /**
+         * @brief 
+         * 
+         * @tparam T 
+         */
         template <typename T>
         class WrappedProblem final : public Problem<T>
         {
         protected:
+            //! Wrapped function
             Function<T> function_;
 
             double evaluate(const std::vector<T> &x) override
@@ -227,6 +323,16 @@ namespace ioh
             }
 
         public:
+            /**
+             * @brief Construct a new Wrapped Problem object
+             * 
+             * @param f a function to be wrapped
+             * @param name the name for the new function in the registry
+             * @param n_variables the dimension of the problem
+             * @param problem_id the problem id
+             * @param optimization_type the type of optimization
+             * @param constraint the contraint for the problem
+             */
             WrappedProblem(Function<T> f, const std::string &name, const int n_variables,
                            const int problem_id = 0,
                            const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
@@ -238,6 +344,17 @@ namespace ioh
             }
         };
 
+        /**
+         * @brief Shorthand for wrapping function in a problem 
+         * 
+         * @tparam T type of the problem
+         * @param f a function to be wrapped
+         * @param name the name for the new function in the registry
+         * @param n_variables the dimension of the problem
+         * @param optimization_type the type of optimization
+         * @param constraint the contraint for the problem
+         * @return WrappedProblem<T> A wrapped problem instance
+         */
         template <typename T>
         WrappedProblem<T> wrap_function(Function<T> f, const std::string &name, const int n_variables = 5,
                                         const common::OptimizationType optimization_type =
@@ -254,9 +371,17 @@ namespace ioh
             return WrappedProblem<T>{f, name, n_variables, id, optimization_type, constraint};
         }
 
+        //! Type def for Real problems
         using Real = Problem<double>;
+
+        //! Type def for Integer problems
         using Integer = Problem<int>;
 
+        /**
+         * @brief CRTP class for automatically registering problems in the apropriate factory.
+         * you should inherit from this class when defining new real problems.
+         * @tparam ProblemType The new problem type
+         */
         template <typename ProblemType>
         class RealProblem : public Real, AutomaticProblemRegistration<ProblemType, Real>
         {
@@ -264,6 +389,11 @@ namespace ioh
             using Real::Real;
         };
 
+        /**
+         * @brief CRTP class for automatically registering problems in the apropriate factory.
+         * you should inherit from this class when defining new integer problems.
+         * @tparam ProblemType The new problem type
+         */
         template <typename ProblemType>
         struct IntegerProblem : Integer, AutomaticProblemRegistration<ProblemType, Integer>
         {

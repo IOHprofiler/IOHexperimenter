@@ -26,24 +26,52 @@ namespace ioh::logger
     class FlatFile : public Watcher
     {
     protected:
+        //! Seperator
         const std::string sep_;
+        
+        //! Comment character
         const std::string com_;
+        
+        //! EOL character
         const std::string eol_;
+        
+        //! NAN string
         const std::string nan_;
+        
+        //! Common header
         const std::string common_header_;
+
+        //! Repeat header for every run?
         const bool repeat_header_;
+
+        //! Store x positions?
         const bool store_positions_;
+
+        //! Requires header?
         bool requires_header_;
+
+        //! Log meta data?
         const bool log_meta_data_;
-
+        
+        //! Output directory
         fs::path output_directory_;
-        std::string filename_;
 
+        //! Filename
+        std::string filename_;
+    
+        //! Output stream
         std::ofstream out_;
+
+        //! Current suite
         std::string current_suite_;
+        
+        //! Current run
         size_t current_run_;
+
+        //! Current meta data
         std::string current_meta_data_;
 
+        //! Open a file
         void open_stream(const std::string &filename, const fs::path &output_directory)
         {
             if (filename != filename_)

@@ -43,14 +43,23 @@ namespace ioh::logger {
              * Convenience naming for the underlying nested data structure.
              *
              * @{ */
+
+            //! value
             using Value      = std::optional<double>;
-            using Attributes = std::map<std::string,Value     >; // name        => value
-            using Run        = std::map<size_t     ,Attributes>; // evaluations => Attributes
-            using Runs       = std::map<size_t     ,Run       >; // run id      => Run
-            using Instances  = std::map<int        ,Runs      >; // instance id => runs
-            using Dimensions = std::map<int        ,Instances >; // nb of dim   => instances
-            using Problems   = std::map<int        ,Dimensions>; // pb id       => dimension
-            using Suites     = std::map<std::string,Problems  >; // suite name  => problems
+            //!  name        => value
+            using Attributes = std::map<std::string,Value     >; 
+            //!  evaluations => Attributes
+            using Run        = std::map<size_t     ,Attributes>; 
+            //!  run id      => Run
+            using Runs       = std::map<size_t     ,Run       >; 
+            //!  instance id => runs
+            using Instances  = std::map<int        ,Runs      >; 
+            //! nb of dim   => instances
+            using Dimensions = std::map<int        ,Instances >; 
+            //! pb id       => dimension
+            using Problems   = std::map<int        ,Dimensions>; 
+            //! suite name  => problems
+            using Suites     = std::map<std::string,Problems  >; 
             /** @} */
 
             /** When attached directly to a Problem (out of a Suites), use the following key for the Suites map. */
@@ -61,12 +70,28 @@ namespace ioh::logger {
 
             /** A set of keys leading to a set of property values within the data structure. */
             struct Cursor {
+                //! Suite name
                 std::string suite;
+                //! problem id
                 int pb;
+                //! Dimension
                 int dim;
+                //! Problem instance
                 int instance;
+                //! run id
                 size_t run;
+                //! evaluation number
                 size_t evaluation;
+                /**
+                 * @brief Construct a new Cursor object
+                 * 
+                 * @param suite_name Suite name
+                 * @param problem_id problem id
+                 * @param dimension Dimension
+                 * @param instance_id Problem instance
+                 * @param run_id run id
+                 * @param evaluation_id evaluation number
+                 */
                 Cursor(std::string suite_name = default_suite,
                         int problem_id = 0,
                         int dimension = 0,

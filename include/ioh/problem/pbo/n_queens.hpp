@@ -8,9 +8,11 @@ namespace ioh
     {
         namespace pbo
         {
+            //! NQueens problem id 23
             class NQueens final: public PBOProblem<NQueens>
             {
             protected:
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     int j, i;

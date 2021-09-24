@@ -4,13 +4,15 @@
 
 namespace ioh::problem::bbob
 {
+    //! Katsuura problem id 23
     class Katsuura final : public BBOProblem<Katsuura>
-
     {
         double exponent_;
         double factor_;
 
     protected:
+
+        //! Evaluation method
         double evaluate(const std::vector<double> &x) override
         {
             auto result = 1.0;
@@ -28,6 +30,7 @@ namespace ioh::problem::bbob
             return result;
         }
 
+        //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
@@ -36,6 +39,7 @@ namespace ioh::problem::bbob
             return x;
         }
 
+        //! Objectives transformation method
         double transform_objectives(const double y) override
         {
             using namespace transformation::objective;
@@ -44,6 +48,12 @@ namespace ioh::problem::bbob
         }
 
     public:
+        /**
+         * @brief Construct a new Katsuura object
+         * 
+         * @param instance instance id
+         * @param n_variables the dimension of the problem
+         */
         Katsuura(const int instance, const int n_variables) :
             BBOProblem(23, instance, n_variables, "Katsuura", sqrt(100.0)),
             exponent_(10. / pow(static_cast<double>(meta_data_.n_variables), 1.2)),

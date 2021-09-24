@@ -260,6 +260,7 @@ namespace ioh
              *
              * @param name the name of the property.
              * @param variable a reference to the logged variable.
+             * @param format a fmt::format specification
              */
             Reference(const std::string name, const T &variable, const std::string &format = "{:f}") :
                 logger::Property(name, format), _variable(variable)
@@ -276,6 +277,7 @@ namespace ioh
          *
          * @param name the name of the property.
          * @param variable a reference to the logged variable.
+         * @param format a fmt::format specification
          *
          * @ingroup Properties
          */
@@ -304,6 +306,7 @@ namespace ioh
              *
              * @param name the name of the property.
              * @param variable a pointer to the logged variable.
+             * @param format a fmt::format specification
              */
             Pointer(const std::string name, const T *const variable, const std::string &format = "{:f}") :
                 logger::Property(name, format), _variable(variable)
@@ -346,9 +349,13 @@ namespace ioh
         class PointerReference : public logger::Property
         {
         public:
+            //! Typedef for the ptr
             using PtrType = T*;
+            //! Typedef for the const ptr
             using ConstPtrType = PtrType const;
+            //! Typedef for the const ptr ref
             using RefType = ConstPtrType &;
+            //! Typedef for the const const ptr ref
             using ConstRefType = const RefType; // clang++-9 issues a warning for the const having no effect.
 
             // using Type = const T *const &;
@@ -361,6 +368,7 @@ namespace ioh
 
 #ifndef NDEBUG
         public:
+            //! Accessor for the internal ptr
             RefType ref_ptr_var() const {return const_cast<RefType>(_ref_ptr_var);} // g++-8 issues a warning for the const having no effect.           
 #endif
         public:
@@ -368,6 +376,7 @@ namespace ioh
              *
              * @param name the name of the property.
              * @param ref_ptr_var a reference to a pointer to the logged variable.
+             * @param format a fmt::format specification
              */
             PointerReference(const std::string name, ConstRefType ref_ptr_var, const std::string &format = "{:f}") :
                 logger::Property(name, format), _ref_ptr_var(ref_ptr_var)
@@ -407,6 +416,7 @@ namespace ioh
          *
          * @param name the name of the property.
          * @param variable a reference to a pointer to the logged variable.
+         * @param format a fmt::format specification
          *
          * @ingroup Properties
          */
@@ -421,10 +431,12 @@ namespace ioh
 } // namespace ioh
 
 
+//! formatter for properties
 template <>
 struct fmt::formatter<std::reference_wrapper<ioh::logger::Property>> : formatter<std::string>
 {
     template <typename FormatContext>
+    //! Format call interface
     auto format(const std::reference_wrapper<ioh::logger::Property> &a, FormatContext &ctx)
     {
         return formatter<std::string>::format(a.get().name(), ctx);

@@ -7,11 +7,13 @@ namespace ioh
     {
         namespace pbo
         {
+            //! Linear problem id 3
             class Linear final: public PBOProblem<Linear>
             {
-            protected:
                 std::vector<double> info_;
-
+            protected:
+            
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;

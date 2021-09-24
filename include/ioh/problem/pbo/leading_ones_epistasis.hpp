@@ -8,9 +8,11 @@ namespace ioh
     {
         namespace pbo
         {
+            //! LeadingOnesEpistasis problem id 14
             class LeadingOnesEpistasis final: public PBOProblem<LeadingOnesEpistasis>
             {
             protected:
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto new_variables = utils::epistasis(x, 4);

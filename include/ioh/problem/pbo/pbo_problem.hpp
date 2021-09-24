@@ -5,9 +5,11 @@
 
 namespace ioh::problem
 {
+    //! PBO base class
     class PBO : public Integer
     {
     protected:
+        //! Variables transformation method
         std::vector<int> transform_variables(std::vector<int> x) override
         {
             if (meta_data_.instance > 1 && meta_data_.instance <= 50)
@@ -16,7 +18,7 @@ namespace ioh::problem
                 transformation::variables::random_reorder(x, meta_data_.instance);
             return x;
         }
-
+        //! Objectives transformation method
         double transform_objectives(const double y) override
         {
             using namespace transformation::objective;
@@ -26,6 +28,14 @@ namespace ioh::problem
         }
 
     public:
+        /**
+         * @brief Construct a new PBO object
+         * 
+         * @param problem_id The id of the problem
+         * @param instance The instance of the problem
+         * @param n_variables the dimension of the problem
+         * @param name the name of the problem
+         */
         PBO(const int problem_id, const int instance, const int n_variables, const std::string &name) :
             Integer(MetaData(problem_id, instance, name, n_variables,
                              common::OptimizationType::Maximization))
@@ -33,6 +43,11 @@ namespace ioh::problem
         }
     };
 
+    /**
+     * @brief CRTP class for PBO problems. Inherit from this class when defining new PBO problems
+     * 
+     * @tparam ProblemType The New PBO problem class
+     */
     template <typename ProblemType>
     class PBOProblem : public PBO,
                        AutomaticProblemRegistration<ProblemType, PBO>,

@@ -8,11 +8,13 @@ namespace ioh
     {
         namespace pbo
         {
+            //! LeadingOnesRuggedness3 problem id 17
             class LeadingOnesRuggedness3 final: public PBOProblem<LeadingOnesRuggedness3>
             {
-            protected:
                 std::vector<double> info_;
-
+            protected:
+            
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0;

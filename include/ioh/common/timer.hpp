@@ -30,7 +30,7 @@ namespace ioh
         public:
             /**
              * \brief Constructs a timer, sets start time
-             * \param info_msg The value for \ref info_msg_
+             * \param info_msg The value for info_msg_
              */
             explicit CpuTimer(std::string info_msg = "") : info_msg_(std::move(info_msg)), start_time_(Clock::now()) {}
 

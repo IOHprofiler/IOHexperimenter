@@ -5,13 +5,15 @@ namespace ioh
 {
     namespace problem
     {
+        //! PBO namepsace
         namespace pbo
         {
+            //! ConcatenatedTrap problem id 24
             class ConcatenatedTrap final: public PBOProblem<ConcatenatedTrap>
             {
-            protected:
                 int k_ = 5;
-
+            protected:
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;

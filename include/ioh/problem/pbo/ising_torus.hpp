@@ -7,14 +7,16 @@ namespace ioh
     {
         namespace pbo
         {
+            //! IsingTorus problem id 20
             class IsingTorus final : public PBOProblem<IsingTorus>
             {
-            protected:
                 static size_t modulo_ising_torus(const size_t x, const size_t n)
                 {
                     return (x % n + n) % n;
                 }
+            protected:
 
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;

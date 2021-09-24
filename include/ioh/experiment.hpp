@@ -12,21 +12,20 @@ namespace ioh
     /**
      * \brief A Class used for running experiments
      * \tparam ProblemType The type of the problems used in the experiments, needs to be a subclass of
-     * \ref `ioh::problem::Problem`.
+     * \ref ioh::problem::Problem.
      */
     template <typename ProblemType>
     class Experimenter
     {
     public:
         /**
-         * \brief A typedef for an optimizer; a function which takes a \ref ioh::problem::base and ioh::logger::csv
-         * as arguments.
+         * \brief A typedef for an optimizer; a function which takes a \ref ioh::problem::Problem
          */
         using Algorithm = std::function<void(std::shared_ptr<ProblemType>)>;
 
     private:
         /**
-         * \brief The benchmark suite used in the Experiment
+         * \brief The benchmark suite used in the Experiment 
          */
         std::shared_ptr<suite::Suite<ProblemType>> suite_;
 
@@ -57,7 +56,7 @@ namespace ioh
          * \brief Constructs an Experimenter object from a Suite object and an Logger object
          * \param suite A suite object
          * \param logger A csv logger object
-         * \param algorithm a function pointer of type \ref algorithm_type
+         * \param algorithm a function pointer of type \ref Algorithm
          * \param independent_runs the number of repetitions default = 1
          */
         Experimenter(std::shared_ptr<suite::Suite<ProblemType>> suite, std::shared_ptr<Logger> logger,
@@ -68,7 +67,7 @@ namespace ioh
         }
 
         /**
-         * \brief Runs the experiment; Evaluates \ref algorithm_ on all problems X instances X dimensions,
+         * \brief Runs the experiment; Evaluates `algorithm_` on all problems X instances X dimensions,
          * for N = independent_runs_ repeated runs.
          */
         void run()
@@ -97,14 +96,14 @@ namespace ioh
         [[nodiscard]] int independent_runs() const { return this->independent_runs_; }
 
         /**
-         * \brief Get method for \ref suite_
-         * \return Private \ref suite_
+         * \brief Get method for `suite_`
+         * \return Private `suite_`
          */
         [[nodiscard]] std::shared_ptr<suite::Suite<ProblemType>> suite() const { return suite_; }
 
         /**
-         * \brief Get method for \ref csv_logger_
-         * \return Private \ref csv_logger_
+         * \brief Get method for
+         * \return Private 
          */
         [[nodiscard]] std::shared_ptr<Logger> logger() const { return logger_; }
 

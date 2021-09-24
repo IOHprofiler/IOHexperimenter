@@ -7,9 +7,11 @@ namespace ioh
     {
         namespace pbo
         {
+            //! LeadingOnes problem id 2
             class LeadingOnes final: public PBOProblem<LeadingOnes>
             {
             protected:
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0;

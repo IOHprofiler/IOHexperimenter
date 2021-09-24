@@ -7,11 +7,11 @@ namespace ioh
     {
         namespace pbo
         {
+            //! MIS problem id 22
             class MIS final : public PBOProblem<MIS>
             {
                 int number_of_variables_even_;
 
-            protected:
                 static int is_edge(const int i, const int j, const int problem_size)
                 {
                     if (i != problem_size / 2 && j == i + 1)
@@ -23,8 +23,8 @@ namespace ioh
                         return 1;
                     return 0;
                 }
-
-
+            protected:
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto num_of_ones = 0;

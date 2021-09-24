@@ -5,10 +5,11 @@
 
 namespace ioh::problem::bbob
 {
+    //! Rotated Rosenbrock function 9
     class RosenbrockRotated final : public RosenbrockBase<RosenbrockRotated>
-
     {
     protected:
+        //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             transformation::variables::affine(x,
@@ -17,6 +18,12 @@ namespace ioh::problem::bbob
         }
 
     public:
+        /**
+         * @brief Construct a new Rosenbrock Rotated object
+         * 
+         * @param instance instance id
+         * @param n_variables the dimension of the problem
+         */
         RosenbrockRotated(const int instance, const int n_variables) :
             RosenbrockBase(9, instance, n_variables, "RosenbrockRotated")
         {

@@ -4,12 +4,19 @@
 
 namespace ioh::problem::bbob
 {
+    /**
+     * @brief CRTP base class for Schaffers Problem variants
+     * 
+     * @tparam T type of the new Schaffers class
+     */
     template <typename T>
     class Schaffers : public BBOProblem<T>
     {
     protected:
+        //! Condition of the problem
         double condition_;
 
+        //! Evaluation method
         double evaluate(const std::vector<double> &x) override
         {
             auto result = 0.0;
@@ -21,6 +28,7 @@ namespace ioh::problem::bbob
             return pow(result / (static_cast<double>(this->meta_data_.n_variables) - 1.0), 2.0);
         }
 
+        //! Objectives transformation method
         double transform_objectives(const double y) override
         {
             using namespace transformation::objective;
@@ -28,7 +36,7 @@ namespace ioh::problem::bbob
             return penalize<double>(this->state_.current.x, this->constraint_, penalty_factor,
                                     shift(y, this->objective_.y));
         }
-
+        //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
@@ -42,6 +50,15 @@ namespace ioh::problem::bbob
         }
 
     public:
+        /**
+         * @brief Construct a new Schaffers object
+         * 
+         * @param problem_id the problem id
+         * @param instance the problem instance
+         * @param n_variables the problem dimension
+         * @param name the name of the problem
+         * @param condition condition of the problem
+         */
         Schaffers(const int problem_id, const int instance, const int n_variables, const std::string &name,
                   const double condition) :
             BBOProblem<T>(problem_id, instance, n_variables, name), condition_(condition)
@@ -54,9 +71,16 @@ namespace ioh::problem::bbob
         }
     };
 
+    //! Shaffers 10 problem id 17
     class Schaffers10 final : public Schaffers<Schaffers10>
     {
     public:
+        /**
+         * @brief Construct a new Schaffers 1 0 object
+         * 
+         * @param instance instance id
+         * @param n_variables the dimension of the problem 
+         */
         Schaffers10(const int instance, const int n_variables) :
             Schaffers(17, instance, n_variables, "Schaffers10", 10.0)
         {

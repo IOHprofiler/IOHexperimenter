@@ -4,10 +4,12 @@
 
 namespace ioh::problem::bbob
 {
+    //! GriewankRosenBrock problem id 19
     class GriewankRosenBrock final : public BBOProblem<GriewankRosenBrock>
     {
         std::vector<double> x_shift_;
     protected:
+        //! Evaluation method
         double evaluate(const std::vector<double> &x) override
         {
             auto result = 0.0;
@@ -19,7 +21,8 @@ namespace ioh::problem::bbob
             }
             return 10. + 10. * result / (static_cast<double>(meta_data_.n_variables) - 1.);
         }
-    
+
+        //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
@@ -30,6 +33,12 @@ namespace ioh::problem::bbob
         }
     
     public:
+        /**
+         * @brief Construct a new Griewank Rosen Brock object
+         * 
+         * @param instance instance id
+         * @param n_variables the dimension of the problem
+         */
         GriewankRosenBrock(const int instance, const int n_variables) :
             BBOProblem(19, instance, n_variables, "GriewankRosenBrock"),
             x_shift_(n_variables, -0.5)
