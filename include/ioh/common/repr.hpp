@@ -4,6 +4,7 @@
 #include <ostream>
 #include <type_traits>
 #include <fmt/format.h> 
+#include <fmt/ranges.h> 
 
 namespace ioh
 {

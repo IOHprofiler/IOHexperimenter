@@ -16,7 +16,7 @@ namespace ioh
         struct Solution : common::HasRepr
         {
             //! variables
-            std::vector<T> x;
+            std::vector<T> x{};
 
             //! objective value
             double y = std::numeric_limits<double>::signaling_NaN();
@@ -32,7 +32,7 @@ namespace ioh
             Solution() = default;
 
             std::string repr() const override {
-                return fmt::format("x: {} y: {}", fmt::join(x, ", "), y);
+                return fmt::format("<Solution x: {} y: {}>", x, y);
             }
 
             //! Cast solution to double type
@@ -94,7 +94,7 @@ namespace ioh
             }
 
             std::string repr() const override {
-                return fmt::format("lb: [{}] ub: [{}]", fmt::join(lb, ", "), fmt::join(ub, ", "));
+                return fmt::format("<Constraint lb: [{}] ub: [{}]>", lb, ub);
             }
         };
         
@@ -170,7 +170,7 @@ namespace ioh
             bool operator!=(const MetaData &other) const { return not(*this == other); }
 
             std::string repr() const override {
-                return fmt::format("name: {} id: {} iid: {} dim: {}", name, problem_id, instance, n_variables);
+                return fmt::format("<MetaData: {} id: {} iid: {} dim: {}>", name, problem_id, instance, n_variables);
             }
         };
 
@@ -190,16 +190,16 @@ namespace ioh
             bool optimum_found = false;
 
             //! Current best w.o. transformations
-            Solution<T> current_best_internal;
+            Solution<T> current_best_internal{};
 
             //! Current best w. transformations
-            Solution<T> current_best;
+            Solution<T> current_best{};
 
             //! Current w.o. transformations
-            Solution<T> current_internal;
+            Solution<T> current_internal{};
 
             //! Current w. transformations
-            Solution<T> current;
+            Solution<T> current{};
 
             State() = default;
 
@@ -234,7 +234,7 @@ namespace ioh
             }
 
             std::string repr() const override {
-                return fmt::format("evaluations: {} optimum_found: {} current_best: {}", evaluations, optimum_found, current_best);
+                return fmt::format("<State evaluations: {} optimum_found: {} current_best: {}>", evaluations, optimum_found, current_best);
             }
         };
     } // namespace problem
