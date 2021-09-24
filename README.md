@@ -1,4 +1,6 @@
-# IOHprofiler: IOHexperimenter
+IOHprofiler: IOHexperimenter {#mainpage}
+=========
+
 ![Ubuntu g++-{10, 9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/Ubuntu/badge.svg)
 ![MacOS clang++, g++-{9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/MacOS/badge.svg)
 ![Windows MVSC-2019](https://github.com/IOHprofiler/IOHexperimenter/workflows/Windows/badge.svg)

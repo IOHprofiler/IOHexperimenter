@@ -3,11 +3,12 @@
 #include "bbob_problem.hpp"
 
 namespace ioh::problem::bbob
-{
+{   
+    //! Step ellipsiod problem id 7
     class StepEllipsoid final : public BBOProblem<StepEllipsoid>
-
     {
     protected:
+        //! compute project of x
         double compute_projection(const std::vector<double>& x)
         {
             static const auto alpha = 10.0;
@@ -29,6 +30,7 @@ namespace ioh::problem::bbob
             return x0;
         }
 
+        //! Evaluation method
         double evaluate(const std::vector<double> &x) override
         {
             auto result = 0.0;
@@ -54,12 +56,19 @@ namespace ioh::problem::bbob
             return result;
         }
 
+        //! Objectives transformation method
         double transform_objectives(const double y) override
         {
             return y;
         }
 
     public:
+        /**
+         * @brief Construct a new Step Ellipsoid object
+         * 
+         * @param instance instance id
+         * @param n_variables the dimension of the problem
+         */
         StepEllipsoid(const int instance, const int n_variables) :
             BBOProblem(7, instance, n_variables, "StepEllipsoid")
         {

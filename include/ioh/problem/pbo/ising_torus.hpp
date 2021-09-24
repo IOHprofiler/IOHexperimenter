@@ -7,32 +7,38 @@ namespace ioh
     {
         namespace pbo
         {
+            //! IsingTorus problem id 20
             class IsingTorus final : public PBOProblem<IsingTorus>
             {
+                static size_t modulo_ising_torus(const size_t x, const size_t n)
+                {
+                    return (x % n + n) % n;
+                }
             protected:
-                static int modulo_ising_torus(const int x, const int n) { return (x % n + n) % n; }
 
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
                     int neighbors[2];
                     const auto double_n = static_cast<double>(meta_data_.n_variables);
-                    const auto lattice_size = static_cast<int>(sqrt(double_n));
+                    const auto lattice_size = static_cast<size_t>(sqrt(double_n));
 
                     if (floor(sqrt(double_n)) != sqrt(double_n))
                     {
-                        common::log::error("Number of parameters in the Ising square problem must be a square number");
+                        IOH_DBG(error,"Number of parameters in the Ising square problem must be a square number")
+                        assert(floor(sqrt(double_n)) == sqrt(double_n));
                     }
 
-                    for (auto i = 0; i < lattice_size; ++i)
+                    for (size_t i = 0; i < lattice_size; ++i)
                     {
-                        for (auto j = 0; j < lattice_size; ++j)
+                        for (size_t j = 0; j < lattice_size; ++j)
                         {
                             neighbors[0] = x[modulo_ising_torus(i + 1, lattice_size) * lattice_size + j];
                             neighbors[1] = x[lattice_size * i + modulo_ising_torus(j + 1, lattice_size)];
                             for (const auto neighbor : neighbors)
-                                result += x[lattice_size * i + j] * neighbor +
-                                    (1 - x[i * lattice_size + j]) * (1 - neighbor);
+                                result += static_cast<double>(x.at(lattice_size * i + j)) * neighbor +
+                                    (1.0 - x.at(i * lattice_size + j)) * (1.0 - neighbor);
                         }
                     }
                     return result;

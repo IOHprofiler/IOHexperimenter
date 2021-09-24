@@ -4,9 +4,11 @@
 
 namespace ioh::problem::bbob
 {
+    //! Rotated Rastrigin problem id 15
     class RastriginRotated final : public RastriginBase<RastriginRotated>
     {
     protected:
+        //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
@@ -19,6 +21,12 @@ namespace ioh::problem::bbob
         }
 
     public:
+        /**
+         * @brief Construct a new Rastrigin Rotated object
+         * 
+        * @param instance instance id
+         * @param n_variables the dimension of the problem
+         */
         RastriginRotated(const int instance, const int n_variables) :
             RastriginBase(15, instance, n_variables, "RastriginRotated")
         {

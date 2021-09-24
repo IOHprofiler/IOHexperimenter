@@ -8,11 +8,12 @@ namespace ioh
     {
         namespace pbo
         {
+            //! LeadingOnesDummy1 problem id 11
             class LeadingOnesDummy1 final: public PBOProblem<LeadingOnesDummy1>
             {
-            protected:
                 std::vector<int> info_;
-
+            protected:
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;

@@ -1,6 +1,6 @@
 ## Build the ioh library.
 ##
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.12) 
 
 project(ioh   
     VERSION 0.0.0.1
@@ -23,14 +23,14 @@ if(MSVC)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd ")
 endif()  
  
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU") 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")  
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++17 -lstdc++fs")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ffast-math")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
         link_libraries(stdc++fs)
         add_compile_definitions(FSEXPERIMENTAL)
     endif()
-endif() 
+endif()   
  
 # Define project targets.
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
@@ -48,7 +48,8 @@ add_library(ioh::ioh ALIAS ioh)
 add_subdirectory(${EXTERNAL_DIR}/fmt)
 target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
 
-
+# Include external clutchlog lib
+include_directories(${EXTERNAL_DIR}/clutchlog)
 
 # Add Python Library
 if(ENABLE_PYTHON_PROBLEMS)
