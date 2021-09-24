@@ -1,12 +1,10 @@
-#include <iostream>
+#include "../utils.hpp"
 
-#include "ioh.hpp"
-#include <gtest/gtest.h> 
-
+#include "ioh/logger/triggers.hpp"
 
 using namespace ioh;
 
-TEST(trigger, always) {
+TEST_F(BaseTest, trigger_always) {
 
     problem::MetaData pb(0,0,"fake",2);
     logger::Info e0;     e0.evaluations = 0;
@@ -20,7 +18,8 @@ TEST(trigger, always) {
 }
 
 
-TEST(trigger, on_improvement) {
+TEST_F(BaseTest, trigger_on_improvement)
+{
 
     problem::MetaData pb(0,0,"fake",2); // Minimization
     logger::Info i;
@@ -56,7 +55,8 @@ TEST(trigger, on_improvement) {
     EXPECT_TRUE(t(i,pb)); // Better than infinity.
 }
 
-TEST(trigger, at) {
+TEST_F(BaseTest, trigger_at)
+{
     problem::MetaData pb(0,0,"fake",2);
     logger::Info e0;     e0.evaluations = 0;
     logger::Info e10;   e10.evaluations = 10;
@@ -76,7 +76,8 @@ TEST(trigger, at) {
     delete &t; // Having saved the reference, you can delete its address, as `triggers::at` allocated on the heap.
 }
 
-TEST(trigger, each) {
+TEST_F(BaseTest, trigger_each)
+{
     problem::MetaData pb(0,0,"fake",2);
     logger::Info e0;     e0.evaluations = 0;
     logger::Info e10;   e10.evaluations = 10;
@@ -109,7 +110,8 @@ TEST(trigger, each) {
 }
 
 
-TEST(trigger, during) {
+TEST_F(BaseTest, trigger_during)
+{
     problem::MetaData pb(0,0,"fake",2);
     logger::Info e0;     e0.evaluations = 0;
     logger::Info e10;   e10.evaluations = 10;

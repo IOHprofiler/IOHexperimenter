@@ -1,9 +1,11 @@
-#include <gtest/gtest.h>
-#include "ioh.hpp"
+#include "../utils.hpp"
+
+#include "ioh/logger/eaf.hpp"
+#include "ioh/suite.hpp"
 
 using namespace ioh;
 
-TEST(eaf, logger)
+TEST_F(BaseTest, eaf_logger)
 {
     size_t sample_size = 100;
     size_t nb_runs = 2;
@@ -11,15 +13,15 @@ TEST(eaf, logger)
     suite::BBOB suite({1, 2}, {1, 2}, {10, 30});
     logger::EAF logger;
 
-    IOH_DBG(debug,"Attach suite " << suite.name() << " to logger");
+    IOH_DBG(debug,"Attach suite " << suite.name() << " to logger")
     suite.attach_logger(logger);
 
     for(const auto& pb : suite) {
-        IOH_DBG(progress, "pb:" << pb->meta_data().problem_id << ", dim:" << pb->meta_data().n_variables << ", ins:" << pb->meta_data().instance);
+        IOH_DBG(info, "pb:" << pb->meta_data().problem_id << ", dim:" << pb->meta_data().n_variables << ", ins:" << pb->meta_data().instance)
         for(size_t r = 0; r < nb_runs; ++r) {
-            IOH_DBG(progress, "> run:" << r);
+            IOH_DBG(info, "> run:" << r)
             for(size_t s = 0; s < sample_size; ++s) {
-                (*pb)(common::random::uniform(pb->meta_data().n_variables, s));
+                (*pb)(common::random::pbo::uniform(static_cast<size_t>(pb->meta_data().n_variables), static_cast<long>(s)));
             }
             pb->reset();
         }
@@ -29,7 +31,7 @@ TEST(eaf, logger)
     EXPECT_EQ(data.size(), 1); // One suite
     EXPECT_EQ(data.at(suite.name()).size(),2); // 2 problems
 
-    IOH_DBG(progress, "Result fronts:");
+    IOH_DBG(info, "Result fronts:")
     size_t nb_fronts = 0;
     for(int pb : {1,2}) {
         EXPECT_EQ(data.at(suite.name()).at(pb).size(), 2); // 2 dimensions
@@ -40,7 +42,7 @@ TEST(eaf, logger)
                 for(size_t run=0; run<nb_runs; ++run) {
                     logger::EAF::Cursor here(suite.name(), pb, dim, ins, run);
                     auto front = logger.data(here);
-                    IOH_DBG(progress,"> Front size=" << front.size());
+                    IOH_DBG(info, "> Front size=" << front.size())
                     EXPECT_GT(front.size(), 0);
                     EXPECT_LE(front.size(), sample_size);
                     nb_fronts++;
@@ -57,7 +59,7 @@ TEST(eaf, logger)
 
 }
 
-TEST(eaf, all_levels)
+TEST_F(BaseTest, eaf_all_levels)
 {
     size_t sample_size = 100;
     size_t nb_runs = 10;
@@ -70,7 +72,7 @@ TEST(eaf, all_levels)
     for(const auto& pb : suite) {
         for(size_t r = 0; r < nb_runs; ++r) {
             for(size_t s = 0; s < sample_size; ++s) {
-                (*pb)(common::random::uniform(pb->meta_data().n_variables, s));
+                (*pb)(common::random::pbo::uniform(static_cast<size_t>(pb->meta_data().n_variables), static_cast<long>(s)));
             }
             pb->reset();
         }
@@ -79,11 +81,11 @@ TEST(eaf, all_levels)
     logger::eaf::Levels all_levels_of(common::OptimizationType::Minimization);
     auto levels = all_levels_of(logger);
 
-    IOH_DBG(progress, levels.size() << " resulting attainment levels:");
+    IOH_DBG(info, levels.size() << " resulting attainment levels:")
     EXPECT_GT(levels.size(),0);
     std::set<size_t> evals;
     for(auto [level,front] : levels) {
-        IOH_DBG(progress, "> Level " << level << " size=" << front.size());
+        IOH_DBG(info, "> Level " << level << " size=" << front.size())
         EXPECT_GT(front.size(), 0);
         EXPECT_LE(front.size(), sample_size);
 
@@ -100,7 +102,7 @@ TEST(eaf, all_levels)
     } // level_front in levels
     EXPECT_EQ(levels.size(), 2*2*2*nb_runs);
     
-    IOH_DBG(debug, "Write the levels in `eaf.csv`");
+    IOH_DBG(debug, "Write the levels in `eaf.csv`")
     CLUTCHCODE(debug,
         std::ofstream out("eaf.csv");
         const std::string sep = "\t";
@@ -115,7 +117,7 @@ TEST(eaf, all_levels)
 
 }
 
-TEST(eaf, some_levels)
+TEST_F(BaseTest, eaf_some_levels)
 {
     size_t sample_size = 10;
     size_t nb_runs = 10;
@@ -128,7 +130,7 @@ TEST(eaf, some_levels)
     for(const auto& pb : suite) {
         for(size_t r = 0; r < nb_runs; ++r) {
             for(size_t s = 0; s < sample_size; ++s) {
-                (*pb)(common::random::uniform(pb->meta_data().n_variables, s));
+                (*pb)(common::random::pbo::uniform(static_cast<size_t>(pb->meta_data().n_variables), static_cast<long>(s)));
             }
             pb->reset();
         }
@@ -140,7 +142,7 @@ TEST(eaf, some_levels)
 }
 
 
-TEST(eaf, levels_volume)
+TEST_F(BaseTest, eaf_levels_volume)
 {
     size_t sample_size = 10;
     size_t nb_runs = 10;
@@ -153,7 +155,7 @@ TEST(eaf, levels_volume)
     for(const auto& pb : suite) {
         for(size_t r = 0; r < nb_runs; ++r) {
             for(size_t s = 0; s < sample_size; ++s) {
-                (*pb)(common::random::uniform(pb->meta_data().n_variables, s));
+                (*pb)(common::random::pbo::uniform(static_cast<size_t>(pb->meta_data().n_variables), static_cast<long>(s)));
             }
             pb->reset();
         }
@@ -162,7 +164,7 @@ TEST(eaf, levels_volume)
     auto levels = logger::eaf::levels(common::OptimizationType::Minimization, logger);
 
     double volume = logger::eaf::stat::volume(common::OptimizationType::Minimization, levels);
-    IOH_DBG(progress, "EAF volume: " << volume);
+    IOH_DBG(info, "EAF volume: " << volume)
     EXPECT_GT(volume, 0);
     // EXPECT_LT(volume, nb_runs * sample_size * FIXME );
 }

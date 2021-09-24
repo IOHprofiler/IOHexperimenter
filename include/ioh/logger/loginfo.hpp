@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-#include "../problem/utils.hpp"
+#include "ioh/problem/structures.hpp"
 
 namespace ioh {
 

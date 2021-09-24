@@ -4,9 +4,11 @@
 
 namespace ioh::problem::bbob
 {
+    //! Linear Slope problem id 5
     class LinearSlope final : public BBOProblem<LinearSlope>
     {
     protected:
+        //! Evaluation method
         double evaluate(const std::vector<double> &x) override
         {
             auto result = 0.0;
@@ -19,6 +21,12 @@ namespace ioh::problem::bbob
         }
 
     public:
+        /**
+         * @brief Construct a new Linear Slope object
+         * 
+         * @param instance instance id
+         * @param n_variables the dimension of the problem
+         */
         LinearSlope(const int instance, const int n_variables) :
             BBOProblem(5, instance, n_variables, "LinearSlope")
         {

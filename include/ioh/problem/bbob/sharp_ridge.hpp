@@ -2,13 +2,15 @@
 
 #include "bbob_problem.hpp"
 
+//! BBOB namespace
 namespace ioh::problem::bbob
 {
+    //! Sharp ridge function problem id 13
     class SharpRidge final : public BBOProblem<SharpRidge>
-
     {
         int n_linear_dimensions_;
     protected:
+        //! Evaluation method
         double evaluate(const std::vector<double> &x) override
         {
             static const auto alpha = 100.0;
@@ -23,7 +25,7 @@ namespace ioh::problem::bbob
 
             return result;
         }
-
+        //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
@@ -33,6 +35,12 @@ namespace ioh::problem::bbob
         }
 
     public:
+        /**
+         * @brief Construct a new Sharp Ridge object
+         * 
+         * @param instance instance id
+         * @param n_variables the dimension of the problem 
+         */
         SharpRidge(const int instance, const int n_variables) :
             BBOProblem(13, instance, n_variables, "SharpRidge"),
         n_linear_dimensions_(static_cast<int>(

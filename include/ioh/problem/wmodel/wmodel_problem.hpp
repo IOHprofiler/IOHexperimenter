@@ -2,17 +2,31 @@
 
 #include "ioh/problem/problem.hpp"
 #include "ioh/problem/utils.hpp"
+#include "ioh/problem/transformation.hpp"
 
 namespace ioh::problem
 {
+    
+    //! Base class for WModel problems
     class WModel : public Integer
     {
     protected:
+        //! Dummy variables
         std::vector<int> dummy_info_;
+
+        //! select rate
         double dummy_select_rate_ = 0;
+
+        //! block size
         int epistasis_block_size_ = 0;
+
+        //! Neutrality parameter
         int neutrality_mu_ = 0;
+
+        //! Ruggedness parameter
         int ruggedness_gamma_ = 0;
+
+        //! Ruggedness dummy parameter
         std::vector<int> ruggedness_info_;
 
         /** Apply a random transformation to the solution itself.
@@ -51,6 +65,7 @@ namespace ioh::problem
             return y;
         }
 
+        //! Evaluation method
         double evaluate(const std::vector<int> &x) override
         {
             std::vector<int> wmodel_x;
@@ -79,9 +94,22 @@ namespace ioh::problem
             return static_cast<double>(result);
         }
 
+        //! Evaluation method for WModel functions
         virtual int wmodel_evaluate(const std::vector<int> &x) = 0;
 
     public:
+        /**
+         * @brief Construct a new WModel object
+         * 
+         * @param problem_id the problem id 
+         * @param name the name of the problem
+         * @param instance instance id
+         * @param n_variables the dimension of the problem
+         * @param dummy_select_rate select rate
+         * @param epistasis_block_size block size
+         * @param neutrality_mu neutrality parameter
+         * @param ruggedness_gamma ruggedness parameter
+         */
         WModel(const int problem_id, const int instance, const int n_variables, const std::string &name,
                const double dummy_select_rate, const int epistasis_block_size, const int neutrality_mu,
                const int ruggedness_gamma) :

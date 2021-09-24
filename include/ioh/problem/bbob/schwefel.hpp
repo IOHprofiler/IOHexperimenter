@@ -4,12 +4,14 @@
 
 namespace ioh::problem::bbob
 {
+    //! Schefel problem id 20
     class Schwefel final : public BBOProblem<Schwefel>
 
     {
         std::vector<double> negative_offset_;
         std::vector<double> positive_offset_;
     protected:
+        //! Evaluation method
         double evaluate(const std::vector<double> &x) override
         {
             static const auto correction = 418.9828872724339;
@@ -27,7 +29,8 @@ namespace ioh::problem::bbob
             result = 0.01 * (penalty + correction - result / static_cast<double>(meta_data_.n_variables));
             return result;
         }
-
+        
+        //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             transformation::variables::random_sign_flip(x, transformation_state_.seed);
@@ -41,6 +44,12 @@ namespace ioh::problem::bbob
         }
 
     public:
+        /**
+         * @brief Construct a new Schwefel object
+         * 
+         * @param instance instance id
+         * @param n_variables the dimension of the problem
+         */
         Schwefel(const int instance, const int n_variables) :
             BBOProblem(20, instance, n_variables, "Schwefel"),
             negative_offset_(common::random::bbob2009::uniform(n_variables, transformation_state_.seed)),

@@ -1,0 +1,42 @@
+
+FROM ubuntu
+
+# Dependencies
+RUN apt -y update
+RUN apt -y install software-properties-common
+RUN add-apt-repository universe
+RUN apt -y update
+RUN apt -y dist-upgrade
+RUN apt -y install git g++-8 cmake make
+RUN apt clean
+RUN update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-8 80
+RUN update-alternatives --set c++ /usr/bin/g++-8
+
+# Temporary directory where we are going to build everything.
+RUN tmpdir=$(mktemp -d)
+RUN mkdir -p ${tmpdir}/ioh/
+WORKDIR ${tmpdir}/ioh/
+
+# Build IOH
+RUN git clone --branch analyzer-logger --single-branch --recurse-submodules https://github.com/jdreo/IOHexperimenter.git
+WORKDIR ${tmpdir}/ioh/IOHexperimenter
+RUN mkdir -p debug
+WORKDIR ${tmpdir}/ioh/IOHexperimenter/debug
+RUN cmake -D CMAKE_BUILD_TYPE=Debug -D BUILD_TESTS=ON -D BUILD_EXAMPLE=ON -D BUILD_GMOCK=ON ..
+RUN make
+
+# Install
+RUN mkdir -p /usr/local/opt/ioh
+RUN cp tests/test_* /usr/local/opt/ioh/
+
+# Clean-up
+RUN rm -rf ${tmpdir}
+
+# keep cmake to run ctest
+RUN apt -y purge software-properties-common git g++-8 make
+RUN apt -y --purge autoremove
+RUN apt -y autoclean
+RUN apt clean
+
+WORKDIR /usr/local/opt/ioh/
+CMD ['/usr/local/opt/ioh/test_store']

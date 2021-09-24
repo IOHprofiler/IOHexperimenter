@@ -43,14 +43,23 @@ namespace ioh::logger {
              * Convenience naming for the underlying nested data structure.
              *
              * @{ */
+
+            //! value
             using Value      = std::optional<double>;
-            using Properties = std::map<std::string,Value     >; // name        => value
-            using Run        = std::map<size_t     ,Properties>; // evaluations => properties
-            using Runs       = std::map<size_t     ,Run       >; // run id      => Run
-            using Instances  = std::map<int        ,Runs      >; // instance id => runs
-            using Dimensions = std::map<int        ,Instances >; // nb of dim   => instances
-            using Problems   = std::map<int        ,Dimensions>; // pb id       => dimension
-            using Suites     = std::map<std::string,Problems  >; // suite name  => problems
+            //!  name        => value
+            using Attributes = std::map<std::string,Value     >; 
+            //!  evaluations => Attributes
+            using Run        = std::map<size_t     ,Attributes>; 
+            //!  run id      => Run
+            using Runs       = std::map<size_t     ,Run       >; 
+            //!  instance id => runs
+            using Instances  = std::map<int        ,Runs      >; 
+            //! nb of dim   => instances
+            using Dimensions = std::map<int        ,Instances >; 
+            //! pb id       => dimension
+            using Problems   = std::map<int        ,Dimensions>; 
+            //! suite name  => problems
+            using Suites     = std::map<std::string,Problems  >; 
             /** @} */
 
             /** When attached directly to a Problem (out of a Suites), use the following key for the Suites map. */
@@ -61,12 +70,28 @@ namespace ioh::logger {
 
             /** A set of keys leading to a set of property values within the data structure. */
             struct Cursor {
+                //! Suite name
                 std::string suite;
+                //! problem id
                 int pb;
+                //! Dimension
                 int dim;
+                //! Problem instance
                 int instance;
+                //! run id
                 size_t run;
+                //! evaluation number
                 size_t evaluation;
+                /**
+                 * @brief Construct a new Cursor object
+                 * 
+                 * @param suite_name Suite name
+                 * @param problem_id problem id
+                 * @param dimension Dimension
+                 * @param instance_id Problem instance
+                 * @param run_id run id
+                 * @param evaluation_id evaluation number
+                 */
                 Cursor(std::string suite_name = default_suite,
                         int problem_id = 0,
                         int dimension = 0,
@@ -83,7 +108,7 @@ namespace ioh::logger {
             };
 
             /** Access a map of property values with a Cursor. */
-            Properties data(const Cursor current)
+            Attributes data(const Cursor current)
             {
                 return _data.at(current.suite).at(current.pb).at(current.dim).at(current.instance).at(current.run).at(current.evaluation);
             }
@@ -107,17 +132,17 @@ namespace ioh::logger {
             /** The current Cursor. */
             Cursor _current;
 
-            /** Accessor to the current properties map. */
-            Properties& current_properties()
+            /** Accessor to the current attributes map. */
+            Attributes& current_attributes()
             {
                 return _data[_current.suite][_current.pb][_current.dim][_current.instance][_current.run][_current.evaluation];
             }
             
         public:
             /** The logger::Store should at least track one logger::Property, or else it makes no sense to use it. */
-            Store(std::initializer_list<std::reference_wrapper<logger::Trigger >> triggers,
-                  std::initializer_list<std::reference_wrapper<logger::Property>> properties)
-            : Watcher(triggers, properties)
+            Store(std::vector<std::reference_wrapper<logger::Trigger >> triggers,
+                  std::vector<std::reference_wrapper<logger::Property>> Attributes)
+            : Watcher(triggers, Attributes)
             { }
 
             /** Track a problem/instance/dimension and/or create a new run.
@@ -152,10 +177,10 @@ namespace ioh::logger {
             /** Atomic log action. */
             virtual void call(const logger::Info& log_info) override
             {
-                // Get the properties list at the current cursor.
-                Properties& att = current_properties();
+                // Get the Attributes list at the current cursor.
+                Attributes& att = current_attributes();
                 // Save the corresponding values.
-                for(const auto& rwp : this->_properties) {
+                for(const auto& rwp : this->properties_) {
                     att[rwp.first] = rwp.second.get()(log_info);
                 }
                 // Jump to next cursor.

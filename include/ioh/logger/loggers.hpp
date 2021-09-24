@@ -1,10 +1,5 @@
 #pragma once
 
-#include <stdexcept>
-
-#include "../problem/utils.hpp"
-
-#include "loginfo.hpp"
 #include "triggers.hpp"
 #include "properties.hpp"
 
@@ -33,13 +28,13 @@ namespace ioh {
     class Logger {
     protected:
         //! Default combination of triggers instance.
-        trigger::Any _any;
+        trigger::Any any_;
         
         //! Lower-level interface.
-        trigger::Set& _triggers;
+        trigger::Set& triggers_;
 
         //! Access to the problem.
-        const problem::MetaData* _problem;
+        const problem::MetaData* problem_;
 
         /** Map property names to property references.
          * 
@@ -65,21 +60,25 @@ namespace ioh {
          */
         // We need references because we have container of instances of various classes.
         // As all share a common interface, we can have a container of references of this base class.
-        std::map<std::string,std::reference_wrapper<logger::Property>> _properties;
+        std::map<std::string,std::reference_wrapper<logger::Property>> properties_;
+        
+        //! A vector with all the properties
+        logger::Properties properties_vector_{}; 
+        // TODO: check why we use a map here, and not a vector, with a map we cannot control order        
 
 #ifndef NDEBUG
         //! Check that there is no duplicated properties (only in Debug builds).
         bool consistent_properties()
         {
-            if(_properties.size() <= 0) {return false;}
+            if(properties_.size() <= 0) {return false;}
 
-            for(auto iw = std::begin(_properties); iw != std::end(_properties); iw++) {
+            for(auto iw = std::begin(properties_); iw != std::end(properties_); iw++) {
                 auto inext = iw; inext++;
-                if(inext == std::end(_properties)) { break; }
+                if(inext == std::end(properties_)) { break; }
                 // Search only in toward the end, to avoid useless double checks.
-                if(std::find_if(inext,std::end(_properties),
+                if(std::find_if(inext,std::end(properties_),
                                 [iw](const auto& rwp){return iw->second.get().name() == rwp.second.get().name();}
-                               ) != std::end(_properties)) {
+                               ) != std::end(properties_)) {
                     return false;
                 }
             }
@@ -88,13 +87,14 @@ namespace ioh {
 #endif
 
         //! Convert a vector of properties in a map of {name => property}.
-        void map_properties(std::vector<std::reference_wrapper<logger::Property>>& properties)
+        void store_properties(std::vector<std::reference_wrapper<logger::Property>>& properties)
         {
             for(auto& p : properties) {
                 // operator[] of an std::map<K,T> requires that T be default-constructible.
                 // But reference_wrapper is not.
                 // Thus, we must directly forward the reference.
-                _properties.insert_or_assign(p.get().name(), std::ref(p.get()));
+                properties_.insert_or_assign(p.get().name(), std::ref(p.get()));
+                properties_vector_.push_back(p);
             }
         }
         
@@ -109,11 +109,15 @@ namespace ioh {
          */
         Logger(std::vector<std::reference_wrapper<logger::Trigger >> triggers,
                std::vector<std::reference_wrapper<logger::Property>> properties)
-        : _any(triggers)
-        , _triggers(_any)
-        , _problem(nullptr)
+        : any_(triggers)
+        , triggers_(any_)
+        , problem_(nullptr)
         {
-            map_properties(properties);
+            //  auto ref = properties_.at("Att_PtrRef");
+            //     std::cout << "ref addr " << &ref.get() << std::endl;
+            //     std::cout << ref.get()(log_info).value_or(-1) << std::endl;
+            
+            store_properties(properties);
             assert(consistent_properties());
         }
 
@@ -125,11 +129,11 @@ namespace ioh {
          */
         Logger(trigger::Set& triggers,
                std::vector<std::reference_wrapper<logger::Property>> properties               )
-        : _any()
-        , _triggers(triggers)
-        , _problem(nullptr)
+        : any_()
+        , triggers_(triggers)
+        , problem_(nullptr)
         {
-            map_properties(properties);
+            store_properties(properties);
             assert(consistent_properties());
         }
 
@@ -144,27 +148,27 @@ namespace ioh {
          */
         // _triggers needs to be a reference, because it's an interface.
         // thus we initialize it with an (empty) _any.
-        Logger() : _any(), _triggers(_any), _problem(nullptr), _properties() {}
+        Logger() : any_(), triggers_(any_), problem_(nullptr), properties_() {}
 
         /** Add the given trigger to the list. */
-        void trigger(logger::Trigger when)
+        void trigger(logger::Trigger& when)
         {
-            _triggers.push_back(when);
+            triggers_.push_back(when);
         }
 
         /** Check if the logger should be triggered and if so, call `call(log_info)`. */
         // This is virtual because logger::Combine needs to bypass the default behaviour.
         virtual void log(const logger::Info& log_info)
         {
-            IOH_DBG(debug,"log " << log_info.raw_y_best << " => " << log_info.transformed_y << " / " << log_info.transformed_y_best);
-            assert(_problem != nullptr); // For Debug builds.
-            if(not _problem) { // For Release builds.
+            IOH_DBG(debug,"log " << log_info.raw_y_best << " => " << log_info.transformed_y << " / " << log_info.transformed_y_best)
+            assert(problem_ != nullptr); // For Debug builds.
+            if(not problem_) { // For Release builds.
                 throw std::runtime_error("Logger has not been attached to a problem.");
             }
 
-            assert(_properties.size() > 0);
-            assert(_triggers.size() > 0);
-            if(_triggers(log_info, *_problem)) {
+            assert(properties_.size() > 0);
+            assert(triggers_.size() > 0);
+            if(triggers_(log_info, *problem_)) {
                 IOH_DBG(debug,"logger triggered")
                 call(log_info);
             }
@@ -179,8 +183,8 @@ namespace ioh {
          */
         virtual void attach_problem(const problem::MetaData& problem)
         {
-            IOH_DBG(xdebug,"attach problem " << problem.problem_id);
-            _problem = &problem;
+            IOH_DBG(xdebug,"attach problem " << problem.problem_id)
+            problem_ = &problem;
         }
 
         //! Starts a new session for the given Suite name.
@@ -197,14 +201,17 @@ namespace ioh {
          */
         virtual void reset()
         {
-            IOH_DBG(debug,"reset");
-            _triggers.reset();
+            IOH_DBG(debug,"reset")
+            triggers_.reset();
         }
+
+        //! Shutdown behaviour
+        virtual void close() { }       
 
         virtual ~Logger() = default;
 
         /** Access the attached problem's metadata. */
-        problem::MetaData problem() const { return *_problem; }
+        [[nodiscard]] problem::MetaData problem() const { return *problem_; }
     };
 
     /** Everything related to loggers. */
@@ -251,14 +258,15 @@ namespace ioh {
 
             //! Adds a property to be logged.
             // This essentially just expose _properties.push_back with some checks.
-            void watch(logger::Property& property)
+            virtual void watch(logger::Property& property)
             {
-                IOH_DBG(debug,"watch property " << property.name());
+                IOH_DBG(debug,"watch property " << property.name())
                 // Assert that the Property is not already tracked.
-                assert(std::find_if(std::begin(_properties),std::end(_properties),
+                assert(std::find_if(std::begin(properties_),std::end(properties_),
                                     [&property](const auto rwp){return property.name() == rwp.second.get().name();}
-                                   ) == std::end(_properties));
-                _properties.insert_or_assign(property.name(), property);
+                                   ) == std::end(properties_));
+                properties_.insert_or_assign(property.name(), property);
+                properties_vector_.push_back(property);
                 assert(consistent_properties()); // Double check duplicates, in case the code above would be changed.
             }
 

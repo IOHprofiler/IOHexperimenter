@@ -81,7 +81,7 @@ jobs:
             sudo apt update -y
             sudo apt install ninja-build -y
             python -m pip install --upgrade pip
-            pip install setuptools wheel twine
+            pip install setuptools wheel twine mypy
         - name: Build and publish
           env:
             TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}

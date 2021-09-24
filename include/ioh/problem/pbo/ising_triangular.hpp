@@ -5,22 +5,24 @@ namespace ioh
 {
     namespace problem
     {
+        //! PBO namespace
         namespace pbo
         {
+            //! IsingTriangular problem id 21
             class IsingTriangular final: public PBOProblem<IsingTriangular>
             {
+                static size_t modulo_ising_triangular(const size_t x, const size_t n) { return (x % n + n) % n; }
             protected:
-                static int modulo_ising_triangular(const int x, const int n) { return (x % n + n) % n; }
-
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
                     int neighbors[3];
-                    const auto lattice_size = static_cast<int>(sqrt(static_cast<double>(meta_data_.n_variables)));
+                    const auto lattice_size = static_cast<size_t>(sqrt(static_cast<double>(meta_data_.n_variables)));
 
-                    for (auto i = 0; i < lattice_size; ++i)
+                    for (size_t i = 0; i < lattice_size; ++i)
                     {
-                        for (auto j = 0; j < lattice_size; ++j)
+                        for (size_t j = 0; j < lattice_size; ++j)
                         {
                             neighbors[0] = x[modulo_ising_triangular(i + 1, lattice_size) * lattice_size + j];
                             neighbors[1] = x[i * lattice_size + modulo_ising_triangular(j + 1, lattice_size)];
@@ -29,8 +31,8 @@ namespace ioh
 
                             for (auto neighbor : neighbors)
                             {
-                                result += x[i * lattice_size + j] * neighbor +
-                                    (1 - x[i * lattice_size + j]) * (1 - neighbor);
+                                result += x.at(i * lattice_size + j) * neighbor +
+                                    (1 - x.at(i * lattice_size + j)) * (1 - neighbor);
                             }
                         }
                     }

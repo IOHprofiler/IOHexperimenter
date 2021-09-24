@@ -1,114 +1,52 @@
-#include <algorithm>
-#include <iostream>
-#include <gtest/gtest.h>
+#include "../utils.hpp" 
 
 #include "ioh.hpp"
 
-// #include "../utils.hpp" 
-
-
-// void bbob_random_search(const std::shared_ptr<ioh::problem::Real>& p)
-// {
-// 	using namespace ioh::common;
-// 	std::vector<double> x(p->meta_data().n_variables);
-// 	auto count = 0;
-// 	while (count++ < 10)
-// 	{
-//         (*p)(random::uniform(p->meta_data().n_variables, random::integer()));
-// 	}
-// }
-
-// void pbo_random_search(const std::shared_ptr<ioh::problem::Integer>& p)
-// {
-// 	using namespace ioh::common;
-// 	auto count = 0;
-// 	while (count++ < 10)
-// 	{
-// 		const auto x = random::integers(p->meta_data().n_variables, 0, 5);
-// 		(*p)(x);
-// 	}
-// }
-
-
-// int count_newlines(const std::string& s)
-// {
-// 	return static_cast<int>(std::count_if(s.begin(), s.end(),
-// 	                     [](const char& ch) { return ch == '\n'; }));
-// }
-
-TEST(experiment, config)
+void real_random_search(const std::shared_ptr<ioh::problem::Real>& p)
 {
- //    auto config_file = find_test_file("conf.ini");
-	// const ioh::experiment::Configuration conf(config_file);
-	// EXPECT_EQ(conf.suite_name(), "PBO");
-	// EXPECT_EQ(conf.problem_ids(), std::vector<int>({ 1, 2, 3, 4, 5 }));
-	// EXPECT_EQ(conf.instances(), std::vector<int>({ 1 }));
-	// EXPECT_EQ(conf.dimensions(), std::vector<int>({ 16 }));
-	// EXPECT_EQ(conf.output_directory(), "./");
-	// EXPECT_EQ(conf.result_folder(), "Experiment");
-	// EXPECT_EQ(conf.algorithm_info(), "An_EA_algorithm");
-	// EXPECT_EQ(conf.algorithm_name(), "(1+1)_EA");
-	// EXPECT_EQ(conf.base_evaluation_triggers(), std::vector<int>({ 1 }));
-	// EXPECT_EQ(conf.update_triggers(), true);
-	// EXPECT_EQ(conf.complete_triggers(), false);
-	// EXPECT_EQ(conf.number_target_triggers(), 0);
-	// EXPECT_EQ(conf.number_interval_triggers(), 0);
+	for (int i = 0; i < 10; i++)
+		(*p)(ioh::common::random::doubles(p->meta_data().n_variables));
+}
+
+void integer_random_search(const std::shared_ptr<ioh::problem::Integer>& p)
+{
+	for (int i = 0; i < 10; i++)
+		(*p)(ioh::common::random::integers(p->meta_data().n_variables));
 }
 
 
-TEST(experiment, pbo_from_config)
+TEST_F(BaseTest, experiment_bbob)
 {
-	// using namespace ioh;
- //    auto config_file = find_test_file("conf.ini");
-	// experiment::Experimenter<problem::Integer> experiment(config_file, pbo_random_search);
-	// EXPECT_EQ(experiment.independent_runs(), 1);
-	// experiment.independent_runs(10);
-	// EXPECT_EQ(experiment.independent_runs(), 10);
-	// testing::internal::CaptureStdout();
-	// experiment.run();
-	// const auto output = testing::internal::GetCapturedStdout();
-	// EXPECT_GE(count_newlines(output), 5);
-	// // TODO: check that files are generated properly
-	// experiment.logger()->flush();
-	// try
-	// {
-	// 	fs::remove_all(dynamic_cast<logger::Default*>(&*experiment.logger())->experiment_folder().path()); // Cleanup	
-	// }
-	// catch (const std::exception& e)
-	// {
-	// 	IOH_DBG(warning,"Cannot remove directory: " 
-	// 			<< static_cast<std::string>(e.what()));
-	// }
-}
+	using namespace ioh;
 
+	const std::vector<int> pbs = {1, 2};
+	const std::vector<int> ins = {1, 2};
+	const std::vector<int> dims = {2, 10};
+	
+	const auto suite  = std::make_shared<suite::BBOB>(pbs, ins, dims);
+	const auto logger = std::make_shared<logger::Store>(
+		logger::Triggers{trigger::always}, logger::Properties{watch::raw_y_best});
+	auto experiment   = Experimenter<problem::Real>(suite, logger, real_random_search, 10);
 
-TEST(experiment, bbob)
-{
-	// using namespace ioh;
+	EXPECT_EQ(experiment.independent_runs(), 10);
+	experiment.run();
 
-	// std::vector<int> pbs = {1, 2};
-	// std::vector<int> ins = {1, 2};
-	// std::vector<int> dims = {2, 10};
-	// const auto suite = std::make_shared<suite::BBOB>(pbs, ins, dims);
-	// const auto logger = std::make_shared<logger::Default>(fs::current_path(),
-	// 	std::string("logger-experimenter"), "random-search", "10iterations", common::OptimizationType::Minimization, true);
-	// auto experiment = experiment::Experimenter<problem::Real>(
-	// 	suite, logger, bbob_random_search, 10);
+	auto data = logger->data();
+	std::set<int> pr;
+	std::set<int> di;
+	std::set<int> ii;
 
-	// EXPECT_EQ(experiment.independent_runs(), 10);
-	// testing::internal::CaptureStdout();
-	// experiment.run();
-	// const auto output = testing::internal::GetCapturedStdout();
-	// EXPECT_GE(count_newlines(output), 8);
-	// // TODO: check that files are generated properly
-	// experiment.logger()->flush();
-	// try
-	// {
-	// 	fs::remove_all(dynamic_cast<logger::Default*>(&*experiment.logger())->experiment_folder().path()); // Cleanup	
-	// }
-	// catch (const std::exception& e)
-	// {
-	// 	IOH_DBG(warning,"Cannot remove directory: "
-	// 		<< static_cast<std::string>(e.what()));
-	// }
+	for (const auto& [problem, dimensions]: data.at("BBOB")){
+		pr.insert(problem);
+		for (const auto& [dimension, instances]: dimensions){
+			di.insert(dimension);
+			for (const auto& [instance, runs]: instances){
+				ii.insert(instance);
+				EXPECT_EQ(runs.size(), 10);
+			}
+		}
+	}
+	EXPECT_EQ(pr, (std::set<int>{1, 2}));
+	EXPECT_EQ(ii, (std::set<int>{1, 2}));
+	EXPECT_EQ(di, (std::set<int>{2, 10}));
 }
