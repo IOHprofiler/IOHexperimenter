@@ -293,7 +293,7 @@ void define_flatfile(py::module &m){
         .def_property_readonly("filename", &FlatFile::filename)
         .def_property_readonly(
             "output_directory",
-            [](PyWatcher<FlatFile> &f) { return std::filesystem::absolute(f.output_directory()).generic_string(); })
+            [](PyWatcher<FlatFile> &f) { return fs::absolute(f.output_directory()).generic_string(); })
         .def("watch", py::overload_cast<Property &>(&PyWatcher<FlatFile>::watch))
         .def("watch", py::overload_cast<const py::object &, const std::string &>(&PyWatcher<FlatFile>::watch))
         .def("watch",
