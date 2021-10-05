@@ -8,8 +8,14 @@ enable_testing()
 
 function(register_test test_name test_sources)
     add_executable(${test_name} ${test_sources} cpp/utils.hpp cpp/entrypoint.cpp)
-    target_include_directories(${test_name} PRIVATE cpp)
-    target_link_libraries(${test_name} PRIVATE ${PROJECT_NAME} gtest)
+    target_include_directories(${test_name} PRIVATE cpp)  
+    if((${test_name}  MATCHES test_mklandscape_problem) OR (${test_name}  MATCHES test_ioh) )
+        link_directories(${EXTERNAL_DIR}/mklandscape/target/debug)
+        #ToDo: Updating when problem_generator project is updated.
+        target_link_libraries(${test_name} PRIVATE ${PROJECT_NAME} gtest ${EXTERNAL_DIR}/mklandscape/target/debug/libproblem_generator.so)
+    else()
+        target_link_libraries(${test_name} PRIVATE ${PROJECT_NAME} gtest)
+    endif()
     gtest_discover_tests(${test_name})
 endfunction()
 

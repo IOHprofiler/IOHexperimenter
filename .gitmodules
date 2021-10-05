@@ -9,3 +9,7 @@
 [submodule "external/fmt"]
 	path = external/fmt
 	url = git@github.com:fmtlib/fmt
+[submodule "external/MkLandscape"]
+	path = external/MkLandscape
+	url = https://github.com/tobiasvandriessel/problem-generator.git
+	branch = cpp_integration
