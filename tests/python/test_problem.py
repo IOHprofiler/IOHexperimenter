@@ -17,6 +17,15 @@ class Algorithm:
             p(x)
             self.i = i
 
+class wmodel(ioh.problem.AbstractWModel):
+    def __init__(self, instance, dim):
+        super().__init__(100, instance, dim, "wmodel")
+
+    def wmodel_evaluate(self, x) -> int:
+        return x.count(1)
+
+
+
 DATA_DIR = os.path.join(
     os.path.dirname(os.path.dirname(__file__)), "static")
 
@@ -29,13 +38,6 @@ class TestProblem(unittest.TestCase):
         self.assertIsInstance(ioh.get_problem("OneMax", 1, 2, "PBO"), ioh.problem.OneMax)
 
     def test_wmodel(self):
-        class wmodel(ioh.problem.AbstractWModel):
-            def __init__(self, instance, dim):
-                super().__init__(100, instance, dim, "wmodel")
-
-            def wmodel_evaluate(self, x) -> int:
-                return x.count(1)
-
         for p in map(lambda x: x(1, 10), (wmodel, ioh.problem.WModelLeadingOnes, ioh.problem.WModelOneMax)):
             self.assertEqual(p([1] * 10), 10)
 
