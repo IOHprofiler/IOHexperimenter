@@ -2,36 +2,59 @@
 
 #include "ioh/problem.hpp"
 
+
+//! Suite namespace
 namespace ioh::suite
 {
+    //! Suite for ProblemType problems
     template <typename ProblemType>
     class Suite
     {
     public:
+        //! Typedef to ProblemType ptr
         using Problem = std::shared_ptr<ProblemType>;
+
+        //! //! Typedef to ProblemType Factory
         using Factory = problem::ProblemFactoryType<ProblemType>;
 
+        //! Iterator for problems
         struct Iterator
         {
+            //! Problem type
             using ValueType = typename std::vector<Problem>::value_type;
+
+            //! Problem type *
             using PointerType = ValueType *;
+
+            //! Problem type &
             using ReferenceType = ValueType &;
+
+            //! Suite ptr
             Suite *suite;
 
-            explicit Iterator(PointerType p, Suite *s, const bool track_problems = true):
-                suite(s), ptr(p), begin(s->problems_.data()),
-                end(s->problems_.data() + s->problems_.size()),
+            /**
+             * @brief Construct a new Iterator object
+             *
+             * @param p current ptr
+             * @param s suite ptr
+             * @param track_problems whether or not to track problems
+             */
+            explicit Iterator(PointerType p, Suite *s, const bool track_problems = true) :
+                suite(s), ptr(p), begin(s->problems_.data()), end(s->problems_.data() + s->problems_.size()),
                 track_problems(track_problems)
             {
                 track_problem();
             }
 
+
+            //! Track the next problem
             void track_problem() const
             {
                 if (track_problems && ptr != end && suite->logger_ != nullptr)
                     (*ptr)->attach_logger(*suite->logger_);
             }
 
+            //! Advance the iterator
             Iterator &operator++()
             {
                 ++ptr;
@@ -39,6 +62,7 @@ namespace ioh::suite
                 return *this;
             }
 
+            //! Advance the iterator
             Iterator &operator++(int)
             {
                 Iterator it(*this);
@@ -46,30 +70,20 @@ namespace ioh::suite
                 return it;
             }
 
-            ReferenceType operator[](int index)
-            {
-                return *(ptr + index);
-            }
+            //! Index
+            ReferenceType operator[](int index) { return *(ptr + index); }
 
-            PointerType operator->()
-            {
-                return ptr;
-            }
+            //! call
+            PointerType operator->() { return ptr; }
 
-            ReferenceType operator*()
-            {
-                return *ptr;
-            }
+            //! call
+            ReferenceType operator*() { return *ptr; }
 
-            bool operator==(const Iterator &other)
-            {
-                return ptr == other.ptr;
-            }
+            //! Comparison operator
+            bool operator==(const Iterator &other) { return ptr == other.ptr; }
 
-            bool operator!=(const Iterator &other)
-            {
-                return !(*this == other);
-            }
+            //! Comparison operator
+            bool operator!=(const Iterator &other) { return !(*this == other); }
 
         private:
             PointerType ptr;
@@ -79,27 +93,52 @@ namespace ioh::suite
         };
 
     private:
+        //! Name of the suite
         std::string name_;
-        std::vector<Problem> problems_;
-        std::vector<int> problem_ids_;
-        std::vector<int> instances_;
-        std::vector<int> dimensions_;
-        logger::Base *logger_{};
 
-        [[nodiscard]]
-        int check_parameter(const int parameter, const int ub, const int lb = 1) const
+        //! List of problems
+        std::vector<Problem> problems_;
+
+        //! List of problem ids
+        std::vector<int> problem_ids_;
+
+        //! List of problem instances
+        std::vector<int> instances_;
+
+        //! List of problem dimensions
+        std::vector<int> dimensions_;
+
+        //! Attached logger
+        Logger *logger_{};
+
+        //! Check if parameter is within bounds
+        [[nodiscard]] int check_parameter(const int parameter, const int ub, const int lb = 1) const
         {
             if (parameter < lb || parameter > ub)
-                common::log::error("Parameter value " + std::to_string(parameter) + " is out of bounds");
+            {
+                IOH_DBG(error, "Parameter value " << parameter << " is out of bounds")
+                assert(lb <= parameter and parameter <= ub);
+            }
             return parameter;
         }
 
     public:
+        /**
+         * @brief Construct a new Suite object
+         *
+         * @param problem_ids List of problem ids
+         * @param instances List of problem ids
+         * @param dimensions List of problem instances
+         * @param name The name of the suite
+         * @param max_instance the maximum instance
+         * @param max_dimension the maximum dimension
+         * @param factory factory instance
+         */
         Suite(const std::vector<int> &problem_ids, const std::vector<int> &instances,
-              const std::vector<int> &dimensions, const std::string &name,
-              const int max_instance = 1000, const int max_dimension = 1000, Factory &factory = Factory::instance()
-            ) :
-            name_(name), problems_(), problem_ids_(problem_ids), instances_(instances), dimensions_(dimensions)
+              const std::vector<int> &dimensions, const std::string &name, const int max_instance = 1000,
+              const int max_dimension = 1000, Factory &factory = Factory::instance()) :
+            name_(name),
+            problems_(), problem_ids_(problem_ids), instances_(instances), dimensions_(dimensions)
         {
             const auto available_ids = factory.ids();
             const int max_problem_id = *std::max_element(available_ids.begin(), available_ids.end());
@@ -110,119 +149,125 @@ namespace ioh::suite
                     for (const auto &instance : instances)
                         problems_.emplace_back(factory.create(
                             check_parameter(problem_id, max_problem_id, min_problem_id),
-                            check_parameter(instance, max_instance),
-                            check_parameter(n_variables, max_dimension)
-                            ));
+                            check_parameter(instance, max_instance), check_parameter(n_variables, max_dimension)));
         }
 
         virtual ~Suite() = default;
 
+
+        //! reset all problems in the suite
         void reset()
         {
             if (logger_ != nullptr)
-                logger_->flush();
+                logger_->reset();
             for (auto &problem : problems_)
                 problem.reset();
         }
 
-        void attach_logger(logger::Base &logger)
+        //! Attach a logger
+        void attach_logger(Logger &logger)
         {
             logger_ = &logger;
-            logger_->track_suite(name());
+            logger_->attach_suite(name());
         }
 
+
+        //! Detach a logger
         void detach_logger()
         {
             if (logger_ != nullptr)
-                logger_->flush();
+                logger_->reset();
             logger_ = nullptr;
         }
 
-        [[nodiscard]]
-        Iterator begin(const bool track_problems = true)
+        //! start iteration
+        [[nodiscard]] Iterator begin(const bool track_problems = true)
         {
             return Iterator(problems_.data(), this, track_problems);
         }
 
-        [[nodiscard]]
-        Iterator end()
-        {
-            return Iterator(problems_.data() + problems_.size(), this);
-        }
+        //! end iteration
+        [[nodiscard]] Iterator end() { return Iterator(problems_.data() + problems_.size(), this); }
 
-        [[nodiscard]]
-        std::vector<int> problem_ids() const
-        {
-            return problem_ids_;
-        }
+        //! Accessor for problem_ids_
+        [[nodiscard]] std::vector<int> problem_ids() const { return problem_ids_; }
 
-        [[nodiscard]]
-        std::vector<int> dimensions() const
-        {
-            return dimensions_;
-        }
+        //! Accessor for dimensions_
+        [[nodiscard]] std::vector<int> dimensions() const { return dimensions_; }
 
-        [[nodiscard]]
-        std::vector<int> instances() const
-        {
-            return instances_;
-        }
+        //! Accessor for instances_
+        [[nodiscard]] std::vector<int> instances() const { return instances_; }
 
-        [[nodiscard]]
-        std::string name() const
-        {
-            return name_;
-        }
+        //! Accessor for name_
+        [[nodiscard]] std::string name() const { return name_; }
 
-        [[nodiscard]]
-        size_t size() const
-        {
-            return problem_ids_.size() * instances_.size() * dimensions_.size();
-        }
+        //! Accessor for size
+        [[nodiscard]] size_t size() const { return problem_ids_.size() * instances_.size() * dimensions_.size(); }
     };
 
+    
+    //! Typedef for Suite registry type
     template <typename ProblemType>
-    using SuiteRegistryType = common::RegisterWithFactory<
-        Suite<ProblemType>, std::vector<int>, std::vector<int>, std::vector<int>>;
+    using SuiteRegistryType =
+        common::RegisterWithFactory<Suite<ProblemType>, std::vector<int>, std::vector<int>, std::vector<int>>;
 
 
+    //! Typedef for Suite factory type
     template <typename ProblemType>
-    using SuiteFactoryType = common::Factory<
-        Suite<ProblemType>, std::vector<int>, std::vector<int>, std::vector<int>>;
+    using SuiteFactoryType = common::Factory<Suite<ProblemType>, std::vector<int>, std::vector<int>, std::vector<int>>;
 
 
+    //! Typedef for Suite Registration helper
     template <class Derived, class ProblemType>
     using AutomaticSuiteRegistration = common::AutomaticTypeRegistration<Derived, SuiteRegistryType<ProblemType>>;
 
+    //! Typedef for Suite factory 
     template <class ProblemType>
     using SuiteRegistry = SuiteRegistryType<ProblemType>;
 
 
+    //! Base class for Real suites
     template <class Derived>
     struct RealSuite : Suite<problem::Real>, AutomaticSuiteRegistration<Derived, problem::Real>
     {
         using Suite<problem::Real>::Suite;
     };
 
-
+    //! Base class for Integer suites
     template <class Derived>
     struct IntegerSuite : Suite<problem::Integer>, AutomaticSuiteRegistration<Derived, problem::Integer>
     {
         using Suite<problem::Integer>::Suite;
     };
 
-    ////////////////////// Available Suites //////////////////////
+    //! Real suite
     struct Real final : RealSuite<Real>
     {
+        /**
+         * @brief Construct a new Real object
+         * 
+         * @param problem_ids List of problem ids
+         * @param instances List of problem instances
+         * @param dimensions List of problem dimensions
+         */
         Real(const std::vector<int> &problem_ids, const std::vector<int> &instances,
              const std::vector<int> &dimensions) :
             RealSuite(problem_ids, instances, dimensions, "Real")
         {
         }
-    };
-
+    };  
+    
+    
+    //! Integer suite
     struct Integer final : IntegerSuite<Integer>
     {
+        /**
+         * @brief Construct a new Integer object
+         * 
+         * @param problem_ids List of problem ids
+         * @param instances List of problem instances
+         * @param dimensions List of problem dimensions
+         */
         Integer(const std::vector<int> &problem_ids, const std::vector<int> &instances,
                 const std::vector<int> &dimensions) :
             IntegerSuite(problem_ids, instances, dimensions, "Integer")
@@ -230,19 +275,34 @@ namespace ioh::suite
         }
     };
 
+    //! BBOB suite
     struct BBOB final : RealSuite<BBOB>
     {
+        /**
+         * @brief Construct a new BBOB object
+         * 
+         * @param problem_ids List of problem ids
+         * @param instances List of problem instances
+         * @param dimensions List of problem dimensions
+         */
         BBOB(const std::vector<int> &problem_ids, const std::vector<int> &instances,
              const std::vector<int> &dimensions) :
             RealSuite(problem_ids, instances, dimensions, "BBOB", 100, 100,
-                      reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::BBOB>::instance())
-                )
+                      reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::BBOB>::instance()))
         {
         }
     };
 
+    //! PBO suite
     struct PBO final : IntegerSuite<PBO>
     {
+        /**
+         * @brief Construct a new PBO object
+         * 
+         * @param problem_ids List of problem ids
+         * @param instances List of problem instances
+         * @param dimensions List of problem dimensions
+         */
         PBO(const std::vector<int> &problem_ids, const std::vector<int> &instances,
             const std::vector<int> &dimensions) :
             IntegerSuite(problem_ids, instances, dimensions, "PBO", 100, 20000,
@@ -250,4 +310,4 @@ namespace ioh::suite
         {
         }
     };
-}
+} // namespace ioh::suite

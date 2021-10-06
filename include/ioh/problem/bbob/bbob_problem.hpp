@@ -5,20 +5,48 @@
 
 namespace ioh::problem
 {
+    //! BBOB base class
     class BBOB : public Real
     {
     protected:
+        /**
+         * @brief Container for BBOB transformation data
+         * 
+         */
         struct TransformationState
         {
+            //! The seed
             long seed;
+
+            //! A vector with exponents
             std::vector<double> exponents{};
+
+            //! A vector with conditions
             std::vector<double> conditions{};
+            
+            //! Main transformation matrix
             std::vector<std::vector<double>> transformation_matrix{};
+            
+            //! Main transformation vector
             std::vector<double> transformation_base{};
+
+            //! Second transformation matrix
             std::vector<std::vector<double>> second_transformation_matrix{};
+
+            //! First rotation matrix
             std::vector<std::vector<double>> first_rotation{};
+
+            //! Second rotation matrix
             std::vector<std::vector<double>> second_rotation{};
 
+            /**
+             * @brief Construct a new Transformation State object
+             * 
+             * @param problem_id the id of the problem
+             * @param instance the instance of the problem
+             * @param n_variables the dimension of the problem
+             * @param condition the conditioning of the problem
+             */
             TransformationState(const long problem_id, const int instance, const int n_variables,
                                 const double condition = sqrt(10.0)) :
                 seed((problem_id == 4 || problem_id == 18 ? problem_id - 1 : problem_id) + 10000 * instance),
@@ -43,16 +71,23 @@ namespace ioh::problem
                                 * second_rotation.at(k).at(j);
             }
 
+            /**
+             * @brief Compute a rotation for a problem
+             * 
+             * @param rotation_seed the seed of the rotation
+             * @param n_variables the dimension of the problem
+             * @return std::vector<std::vector<double>> the rotation
+             */
             [[nodiscard]]
             std::vector<std::vector<double>> compute_rotation(const long rotation_seed, const int n_variables) const
             {
-                const auto random_vector = common::random::bbob2009::normal(n_variables * n_variables, rotation_seed);
+                const auto random_vector = common::random::bbob2009::normal(static_cast<size_t>(n_variables) * n_variables, rotation_seed);
                 auto matrix = std::vector<std::vector<double>>(n_variables, std::vector<double>(n_variables));
 
                 // reshape
                 for (auto i = 0; i < n_variables; i++)
                     for (auto j = 0; j < n_variables; j++)
-                        matrix[i][j] = random_vector[j * n_variables + i];
+                        matrix[i][j] = random_vector.at(static_cast<size_t>(j) * n_variables + i);
 
 
                 /*1st coordinate is row, 2nd is column.*/
@@ -76,14 +111,26 @@ namespace ioh::problem
                 }
                 return matrix;
             }
-        } transformation_state_;
+        } 
+        //! The current transformation state
+        transformation_state_;
 
+        //! Default objective transform for BBOB
         double transform_objectives(const double y) override
         {
             return transformation::objective::shift(y, objective_.y);
         }
 
     public:
+        /**
+         * @brief Construct a new BBOB object
+         * 
+         * @param problem_id The id of the problem
+         * @param instance The instance of the problem
+         * @param n_variables the dimension of the problem
+         * @param name the name of the problem
+         * @param condition the conditioning of the problem
+         */
         BBOB(const int problem_id, const int instance, const int n_variables, const std::string &name,
              const double condition = sqrt(10.0)):
             Real(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::Minimization),
@@ -91,19 +138,21 @@ namespace ioh::problem
             transformation_state_(problem_id, instance, n_variables, condition)
         {
             objective_ = calculate_objective();
-            log_info_.objective = objective_;
+            log_info_.optimum = objective_;
         }
 
+        //! Update the log info
         void update_log_info() override
         {
             log_info_.evaluations = static_cast<size_t>(state_.evaluations);
-            log_info_.y_best = state_.current_best.y - objective_.y;
+            log_info_.raw_y_best = state_.current_best.y - objective_.y;
             log_info_.transformed_y = state_.current.y;
             log_info_.transformed_y_best = state_.current_best.y;
             log_info_.current = state_.current;
             log_info_.current.y = log_info_.current.y - objective_.y;
         }
 
+        //! Calculate the solution to the problem
         [[nodiscard]]
         Solution<double> calculate_objective() const
         {
@@ -125,13 +174,27 @@ namespace ioh::problem
             return {x, std::min(1000., std::max(-1000., floor((100. * 100. * r1 / r2) + 0.5) / 100.))};
         }
     };
-
+    
+    /**
+     * @brief CRTP class for BBOB problems. Inherit from this class when defining new BBOB problems
+     * 
+     * @tparam ProblemType The New BBOB problem class
+     */
     template <typename ProblemType>
     class BBOProblem : public BBOB,
                        AutomaticProblemRegistration<ProblemType, BBOB>,
                        AutomaticProblemRegistration<ProblemType, Real>
     {
     public:
+        /**
+         * @brief Construct a new BBOProblem object
+         * 
+         * @param problem_id The id of the problem
+         * @param instance The instance of the problem
+         * @param n_variables the dimension of the problem
+         * @param name the name of the problem
+         * @param condition the conditioning of the problem
+         */
         BBOProblem(const int problem_id, const int instance, const int n_variables, const std::string &name,
                    const double condition = sqrt(10.0)) :
             BBOB(problem_id, instance, n_variables, name, condition)

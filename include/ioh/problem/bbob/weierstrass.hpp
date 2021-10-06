@@ -4,6 +4,7 @@
 
 namespace ioh::problem::bbob
 {
+    //! Weierstrass problem id 16
     class Weierstrass final : public BBOProblem<Weierstrass>
     {
         double f0_;
@@ -12,6 +13,7 @@ namespace ioh::problem::bbob
         std::vector<double> bk_;
 
     protected:
+        //! Evaluation method
         double evaluate(const std::vector<double> &x) override
         {
             auto result = 0.0;
@@ -24,6 +26,7 @@ namespace ioh::problem::bbob
             return result;
         }
 
+        //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
@@ -34,6 +37,7 @@ namespace ioh::problem::bbob
             return x;
         }
 
+        //! Objectives transformation method
         double transform_objectives(const double y) override
         {
             using namespace transformation::objective;
@@ -41,6 +45,12 @@ namespace ioh::problem::bbob
         }
 
     public:
+        /**
+         * @brief Construct a new Weierstrass object
+         * 
+         * @param instance instance id
+         * @param n_variables the dimension of the problem
+         */
         Weierstrass(const int instance, const int n_variables) :
             BBOProblem(16, instance, n_variables, "Weierstrass", 1 / sqrt(100.0)),
             f0_(0.0), penalty_factor_(10.0 / n_variables), ak_(12), bk_(12)

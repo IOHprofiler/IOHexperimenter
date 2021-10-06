@@ -7,7 +7,8 @@ namespace ioh
     namespace problem
     {
         namespace pbo
-        {
+        {   
+            //! LeadingOnesRuggedness2 problem id 16
             class LeadingOnesRuggedness2 final: public PBOProblem<LeadingOnesRuggedness2>
             {
                 double evaluate(const std::vector<int> &x) override

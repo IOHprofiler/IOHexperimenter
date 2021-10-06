@@ -1,7 +1,9 @@
 #pragma once
 
 #include "ioh/problem/utils.hpp"
+#include "ioh/problem/structures.hpp"
 
+/* Transformation namespace */
 namespace ioh::problem::transformation
 {
     namespace objective
@@ -61,7 +63,7 @@ namespace ioh::problem::transformation
          */
         inline double uniform(const Transformation &t, const double y, const int seed, const double lb, const double ub)
         {
-            const auto scalar = common::random::uniform(1, seed, lb, ub).at(0);
+            const auto scalar = common::random::pbo::uniform(1, seed, lb, ub).at(0);
             return t(y, scalar);
         }
 
@@ -117,7 +119,7 @@ namespace ioh::problem::transformation
         inline void random_flip(std::vector<int> &x, const int seed)
         {
             const auto n = static_cast<int>(x.size());
-            const auto rx = common::random::uniform(n, seed);
+            const auto rx = common::random::pbo::uniform(n, seed);
 
             for (auto i = 0; i < n; ++i)
                 x[i] = objective::exclusive_or(x.at(i), static_cast<int>(2.0 * floor(1e4 * rx.at(i)) / 1e4));
@@ -134,7 +136,7 @@ namespace ioh::problem::transformation
             std::iota(index.begin(), index.end(), 0);
 
             const auto n = static_cast<int>(x.size());
-            const auto rx = common::random::uniform(n, seed);
+            const auto rx = common::random::pbo::uniform(n, seed);
             const auto copy_x = x;
 
             for (auto i = 0; i != n; ++i)

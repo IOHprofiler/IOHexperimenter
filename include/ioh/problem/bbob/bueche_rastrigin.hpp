@@ -4,11 +4,13 @@
 
 namespace ioh::problem::bbob
 {
+    //! BuecheRastrigin problem id 4
     class BuecheRastrigin final : public RastriginBase<BuecheRastrigin>
     {
         const double penalty_factor_ = 100.0;
 
     protected:
+        //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
@@ -17,7 +19,8 @@ namespace ioh::problem::bbob
             brs(x);
             return x;
         }
-
+        
+        //! Objectives transformation method
         double transform_objectives(const double y) override
         {
             using namespace transformation::objective;
@@ -25,6 +28,12 @@ namespace ioh::problem::bbob
         }
 
     public:
+        /**
+         * @brief Construct a new Bueche Rastrigin object
+         * 
+         * @param instance instance id
+         * @param n_variables the dimension of the problem
+         */
         BuecheRastrigin(const int instance, const int n_variables) :
             RastriginBase(4, instance, n_variables, "BuecheRastrigin")
         {

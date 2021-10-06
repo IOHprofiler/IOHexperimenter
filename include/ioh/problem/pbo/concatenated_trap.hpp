@@ -5,13 +5,15 @@ namespace ioh
 {
     namespace problem
     {
+        //! PBO namepsace
         namespace pbo
         {
+            //! ConcatenatedTrap problem id 24
             class ConcatenatedTrap final: public PBOProblem<ConcatenatedTrap>
             {
-            protected:
                 int k_ = 5;
-
+            protected:
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
@@ -30,7 +32,7 @@ namespace ioh
                         }
                         else
                         {
-                            result += (static_cast<double>(k_ - 1) - block_result) / static_cast<double>(k_);
+                            result += ((static_cast<double>(k_) - 1.0) - block_result) / static_cast<double>(k_);
                         }
                     }
                     const auto remain_k = meta_data_.n_variables - m * k_;
@@ -48,7 +50,7 @@ namespace ioh
                         }
                         else
                         {
-                            result += static_cast<double>(remain_k - 1 - block_result) / static_cast<double>(remain_k);
+                            result += (static_cast<double>(remain_k) - 1.0 - block_result) / static_cast<double>(remain_k);
                         }
                     }
 

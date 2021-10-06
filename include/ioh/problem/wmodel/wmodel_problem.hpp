@@ -2,20 +2,44 @@
 
 #include "ioh/problem/problem.hpp"
 #include "ioh/problem/utils.hpp"
+#include "ioh/problem/transformation.hpp"
 
 namespace ioh::problem
 {
+    
+    //! Base class for WModel problems
     class WModel : public Integer
     {
     protected:
+        //! Dummy variables
         std::vector<int> dummy_info_;
+
+        //! select rate
         double dummy_select_rate_ = 0;
+
+        //! block size
         int epistasis_block_size_ = 0;
+
+        //! Neutrality parameter
         int neutrality_mu_ = 0;
+
+        //! Ruggedness parameter
         int ruggedness_gamma_ = 0;
+
+        //! Ruggedness dummy parameter
         std::vector<int> ruggedness_info_;
 
-        std::vector<int> transform_variables(std::vector<int> x) override
+        /** Apply a random transformation to the solution itself.
+         * 
+         * Transformations are seeded on the instance ID (passed to the constructor).
+         * If the `instance` is in ]1, 50], it's random flips.
+         * If the `instance` is in ]50,100], it's random reorder.
+         * If `instance` is anything else, no transformation is applied.
+         * 
+         * You may disable this transformation by subclassing and returning `x`
+         * instead of calling this function.
+         */
+        virtual std::vector<int> transform_variables(std::vector<int> x) override
         {
             if (meta_data_.instance > 1 && meta_data_.instance <= 50)
                 transformation::variables::random_flip(x, meta_data_.instance);
@@ -24,7 +48,16 @@ namespace ioh::problem
             return x;
         }
 
-        double transform_objectives(const double y) override
+        /** Apply a random shift and a scaling to the objective function's value.
+         * 
+         * The transformation is seeded on the instance ID (passed to the constructor).
+         * The shift adds a random number in [-0.2, 4.8] and
+         * the scale multiplies by a random number in [1e3, 2e3].]
+         * 
+         * You may disable this transformation by subclassing and returning `y`
+         * instead of calling this function.
+         */
+        virtual double transform_objectives(const double y) override
         {
             using namespace transformation::objective;
             if (meta_data_.instance > 1)
@@ -32,6 +65,7 @@ namespace ioh::problem
             return y;
         }
 
+        //! Evaluation method
         double evaluate(const std::vector<int> &x) override
         {
             std::vector<int> wmodel_x;
@@ -60,9 +94,22 @@ namespace ioh::problem
             return static_cast<double>(result);
         }
 
+        //! Evaluation method for WModel functions
         virtual int wmodel_evaluate(const std::vector<int> &x) = 0;
 
     public:
+        /**
+         * @brief Construct a new WModel object
+         * 
+         * @param problem_id the problem id 
+         * @param name the name of the problem
+         * @param instance instance id
+         * @param n_variables the dimension of the problem
+         * @param dummy_select_rate select rate
+         * @param epistasis_block_size block size
+         * @param neutrality_mu neutrality parameter
+         * @param ruggedness_gamma ruggedness parameter
+         */
         WModel(const int problem_id, const int instance, const int n_variables, const std::string &name,
                const double dummy_select_rate, const int epistasis_block_size, const int neutrality_mu,
                const int ruggedness_gamma) :

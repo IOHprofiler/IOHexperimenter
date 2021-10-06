@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import shutil
 import platform
 import subprocess
 
@@ -29,8 +30,37 @@ class CMakeExtension(Extension):
         Extension.__init__(self, name, sources=[])
         self.sourcedir = os.path.abspath(sourcedir)
 
-
 class CMakeBuild(build_ext):
+    def generate_stubs(self):
+        ext, *_ = self.extensions
+
+        # remove any existing stubs
+        for stubfile in os.listdir(os.path.join(ext.sourcedir, "ioh")):
+            stubfile = os.path.join(ext.sourcedir, "ioh", stubfile)
+            if stubfile.endswith(".pyi"):
+                os.remove(stubfile)
+        
+        for subdir in ("iohcpp", "logger"):
+            if os.path.isdir(os.path.join(ext.sourcedir, "ioh", subdir)):
+                shutil.rmtree(os.path.join(ext.sourcedir, "ioh", subdir))
+
+        # generate stub files
+        command = """stubgen -m ioh -m ioh.iohcpp \
+                -m ioh.iohcpp.problem \
+                -m ioh.iohcpp.logger \
+                -m ioh.iohcpp.suite \
+                -m ioh.iohcpp.logger.trigger \
+                -m ioh.iohcpp.logger.property \
+                -o ./"""
+        subprocess.check_call(command, cwd=ext.sourcedir, shell=True)
+
+    def run(self):
+        super().run()
+        try:
+            self.generate_stubs()
+        except subprocess.CalledProcessError: 
+            pass
+
     def build_extension(self, ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
 
@@ -109,11 +139,10 @@ class CMakeBuild(build_ext):
         )
 
 
-
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
-__version__ = "2.0.0.0"
-__version__ = "0.2.9.9"
+
+__version__ = "0.3.2.2"
 gh_ref = os.environ.get("GITHUB_REF")
 if gh_ref:
     *_, tag = gh_ref.split("/")
@@ -121,6 +150,8 @@ if gh_ref:
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
+
+iohcpp = CMakeExtension("ioh.iohcpp")
 
 setup(
     name="ioh",
@@ -132,10 +163,19 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(),
     package_dir={'IOHexperimenter':'ioh'},
-    ext_modules=[CMakeExtension("ioh.iohcpp")],
+    package_data={"ioh": [
+        "ioh/__init__.pyi",
+        "ioh/iohcpp/__init__.pyi",
+        "ioh/iohcpp/problem.pyi",
+        "ioh/iohcpp/suite.pyi",
+        "ioh/iohcpp/logger/__init__.pyi",
+        "ioh/iohcpp/logger/property.pyi",
+        "ioh/iohcpp/logger/trigger.pyi"
+    ]},
+    ext_modules=[iohcpp],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     test_suite='tests.python',
     python_requires='>=3.6',
-    setup_requires=['cmake', 'ninja', 'pybind11']
+    setup_requires=['cmake', 'ninja', 'pybind11', 'mypy']
 )

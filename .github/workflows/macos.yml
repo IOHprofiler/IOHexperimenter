@@ -73,6 +73,7 @@ jobs:
       run: |
         brew install ninja
         python -m pip install --upgrade pip
-        python setup.py develop
+        pip install mypy
+        pip install -e . -v
     - name: Run unit tests
       run: python -m unittest -v

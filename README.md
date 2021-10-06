@@ -1,4 +1,6 @@
-# IOHprofiler: IOHexperimenter
+IOHprofiler: IOHexperimenter {#mainpage}
+=========
+
 ![Ubuntu g++-{10, 9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/Ubuntu/badge.svg)
 ![MacOS clang++, g++-{9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/MacOS/badge.svg)
 ![Windows MVSC-2019](https://github.com/IOHprofiler/IOHexperimenter/workflows/Windows/badge.svg)
@@ -6,7 +8,8 @@
 
 __Experimenter__ for **I**terative **O**ptimization **H**euristics (IOHs), built natively in* `C++`.
 
-* __Documentation__: [https://arxiv.org/abs/1810.05281](https://arxiv.org/abs/1810.05281)
+* __Documentation__: [https://iohprofiler.github.io/IOHexperimenter](https://iohprofiler.github.io/IOHexperimenter)
+* __Publication__: [https://arxiv.org/abs/1810.05281](https://arxiv.org/abs/1810.05281)
 * __Wiki page__: [https://iohprofiler.github.io](https://iohprofiler.github.io/)
 * __General Contact__: [iohprofiler@liacs.leidenuniv.nl](iohprofiler@liacs.leidenuniv.nl)
 <!-- * __Mailing List__: [https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler](https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler) -->

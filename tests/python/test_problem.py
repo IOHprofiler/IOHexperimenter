@@ -28,25 +28,36 @@ class TestProblem(unittest.TestCase):
         self.assertIsInstance(ioh.get_problem(1, 1, 2, "PBO"), ioh.problem.OneMax)
         self.assertIsInstance(ioh.get_problem("OneMax", 1, 2, "PBO"), ioh.problem.OneMax)
 
+    def test_wmodel(self):
+        class wmodel(ioh.problem.AbstractWModel):
+            def __init__(self, instance, dim):
+                super().__init__(100, instance, dim, "wmodel")
+
+            def wmodel_evaluate(self, x) -> int:
+                return x.count(1)
+
+        for p in map(lambda x: x(1, 10), (wmodel, ioh.problem.WModelLeadingOnes, ioh.problem.WModelOneMax)):
+            self.assertEqual(p([1] * 10), 10)
+
     def test_experimenter(self):
         exp = ioh.Experiment(
             Algorithm(),
             [1], [1, 2], [5],
             njobs = 1,
             reps = 2,
-            experiment_attributes = [("a", 1)],
+            experiment_attributes = {"a": "1"},
             run_attributes = ['x'],
             logged_attributes = ['i']
         )
 
         def a_problem(x):
-            return [0]
+            return 0.0
             
         exp.add_custom_problem(a_problem, "Name")
         exp()
 
-        info_files = {'IOHprofiler_f0_Name.info', 'IOHprofiler_f1_Sphere.info'}
-        data_files = {'IOHprofiler_f0_DIM5.dat', 'IOHprofiler_f1_DIM5.dat'}
+        info_files = {'IOHprofiler_f25_Name.info', 'IOHprofiler_f1_Sphere.info'}
+        data_files = {'IOHprofiler_f25_DIM5.dat', 'IOHprofiler_f1_DIM5.dat'}
 
         for item in os.listdir('ioh_data'):
             path = os.path.join('ioh_data', item)
@@ -71,12 +82,12 @@ class TestProblem(unittest.TestCase):
     def test_evaluation_bbob_problems(self):
         for fid in range(1,25):
             f = ioh.get_problem(fid, 1 ,5, "BBOB")
-            self.assertGreater(f([0,0,0,0,0])[0], -1000)
+            self.assertGreater(f([0,0,0,0,0]), -1000)
 
     def test_evaluation_pbo_problems(self):
         for fid in range(1,26):
             f = ioh.get_problem(fid, 1 ,4, "PBO")
-            self.assertGreater(f([0,0,0,0])[0], -1000) 
+            self.assertGreater(f([0,0,0,0]), -1000) 
 
     def test_bbob_problems_first_instance(self):
         expected = [
@@ -105,11 +116,10 @@ class TestProblem(unittest.TestCase):
             18.635078550302751,
             1782.2733296400438,
         ]
-        factory = ioh.problem.BBOB.factory()
-        for i in sorted(factory.ids()):
-            p = factory.create(i, 1, 5)
+        for i in sorted(ioh.problem.BBOB.problems.keys()):
+            p = ioh.problem.BBOB.create(i, 1, 5)
             self.assertTrue(
-                math.isclose(p([0.1, 1., 2., 4., 5.4])[0], expected[i-1])
+                math.isclose(p([0.1, 1., 2., 4., 5.4]), expected[i-1])
             )
    
     def test_pbo_problems_first_instance(self):
@@ -140,10 +150,9 @@ class TestProblem(unittest.TestCase):
             0.45,
             -0.70717,
         ]
-        factory = ioh.problem.PBO.factory()
-        for i in sorted(factory.ids()):
-            p = factory.create(i, 1, 9)
-            y, *_ = p([1, 1, 0, 1, 0, 0, 0, 1, 1])
+        for i in sorted(ioh.problem.PBO.problems.keys()):
+            p = ioh.problem.PBO.create(i, 1, 9)
+            y = p([1, 1, 0, 1, 0, 0, 0, 1, 1])
             self.assertTrue(math.isclose(y, expected[i-1], abs_tol = 0.000099),
                 msg=f"{p} expected: {expected[i-1]} got: {y}"
             )
@@ -164,6 +173,8 @@ class TestProblem(unittest.TestCase):
                             x = x.split(",")
                         x = list(map(dtype, x))
                         p = ioh.get_problem(int(fid), int(iid), dim, suite.upper())
+                        self.assertTrue(math.isclose(p(x), float(y), abs_tol = tol))
 
-                        self.assertTrue(math.isclose(p(x)[0], float(y), abs_tol = tol))
 
+if __name__ == "__main__":
+    unittest.main()

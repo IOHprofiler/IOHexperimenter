@@ -1,0 +1,2 @@
+recursive-include cmake include external/fmt external/clutchlog
+include CMakeLists.txt *.md
