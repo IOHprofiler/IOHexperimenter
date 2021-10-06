@@ -217,8 +217,8 @@ class Experiment:
         if self.logged:
             l = logger.Analyzer(**self.logger_params)
             l.set_experiment_attributes(self.experiment_attributes)
-            l.add_run_attributes(self.algorithm, self.run_attributes)
-            l.watch(self.algorithm, self.logged_attributes)
+            l.add_run_attributes(algorithm, self.run_attributes)
+            l.watch(algorithm, self.logged_attributes)
 
             p.attach_logger(l)
             self.apply(algorithm, p)
