@@ -8,7 +8,8 @@ IOHprofiler: IOHexperimenter {#mainpage}
 
 __Experimenter__ for **I**terative **O**ptimization **H**euristics (IOHs), built natively in* `C++`.
 
-* __Documentation__: [https://arxiv.org/abs/1810.05281](https://arxiv.org/abs/1810.05281)
+* __Documentation__: [https://iohprofiler.github.io/IOHexperimenter](https://iohprofiler.github.io/IOHexperimenter)
+* __Publication__: [https://arxiv.org/abs/1810.05281](https://arxiv.org/abs/1810.05281)
 * __Wiki page__: [https://iohprofiler.github.io](https://iohprofiler.github.io/)
 * __General Contact__: [iohprofiler@liacs.leidenuniv.nl](iohprofiler@liacs.leidenuniv.nl)
 <!-- * __Mailing List__: [https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler](https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler) -->
