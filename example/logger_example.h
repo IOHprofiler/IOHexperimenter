@@ -84,6 +84,7 @@ inline void logger_with_custom_parameters_example()
     logger.add_experiment_attribute("meta_data_x", "69");
     logger.add_experiment_attribute("meta_data_y", "69");
 
+
     // Declare parameters unique for each run. 
     logger.add_run_attribute("run_id", &run_id);
     
@@ -101,6 +102,7 @@ inline void logger_with_custom_parameters_example()
             std::generate(x.begin(), x.end(), [](){return ioh::common::random::real(-1, 1);});
             problem(x);
         }
+        problem.reset();
     }
 }
 
