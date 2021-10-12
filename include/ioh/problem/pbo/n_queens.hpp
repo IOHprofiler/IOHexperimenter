@@ -107,6 +107,7 @@ namespace ioh
                 {
                     assert(sqrt(n_variables) - floor(sqrt(n_variables)) == 0);
                     objective_.y = {sqrt(n_variables)};
+                    objective_.y = transform_objectives(objective_.y);
                 }
             };
         } // namespace pbo

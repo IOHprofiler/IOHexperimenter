@@ -27,6 +27,16 @@ namespace ioh::problem
             return y;
         }
 
+        //! Optimum before transformation
+        std::vector<int> reset_transform_variables(std::vector<int> x)
+        {
+            if (meta_data_.instance > 1 && meta_data_.instance <= 50)
+                transformation::variables::random_flip(x, meta_data_.instance);
+            else if (meta_data_.instance > 50 && meta_data_.instance <= 100)
+                x = transformation::variables::random_reorder_reset(x, meta_data_.instance);
+            return x;
+        }
+
     public:
         /**
          * @brief Construct a new PBO object
