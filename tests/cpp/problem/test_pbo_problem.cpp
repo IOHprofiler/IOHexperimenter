@@ -95,10 +95,88 @@ TEST_F(BaseTest, xopt_equals_yopt_pbo)
     const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::PBO>::instance();
     for (const auto& name : problem_factory.names())
     {
-        if (name != "LABS" && name != "NQueens" && name != "LeadingOnesEpistasis" && name != "MIS" && name != "NKLandscapes")
+        if (name != "LABS" && name != "NQueens" && name != "LeadingOnesEpistasis"  && name != "OneMaxEpistasis"&& name != "MIS" && name != "NKLandscapes")
         {
-            auto problem = problem_factory.create(name, 1, 16);
-            EXPECT_DOUBLE_EQ(problem->objective().y, (*problem)(problem->objective().x)) << *problem;
+            for (const int i: std::vector<int>({1, 2, 3, 4, 51, 52, 53, 54})){
+                auto problem = problem_factory.create(name, i, 16);
+                EXPECT_DOUBLE_EQ(problem->objective().y, (*problem)(problem->objective().x)) << *problem;
+            }
         }
+    }
+}
+
+TEST_F(BaseTest, origin_x) 
+{
+    std::vector<int> x = {0,1,1,1,0,1,1};
+    std::vector<int> xt = x; 
+    ioh::problem::transformation::variables::random_flip(xt,2);
+    ioh::problem::transformation::variables::random_flip(xt,2);
+    EXPECT_EQ(x.size(),xt.size());
+    for(size_t i = 0; i!= x.size(); ++i) {
+        EXPECT_EQ(x.at(i), xt.at(i));
+    }
+
+    std::vector<int> x1 = {0,0,0,0,0,0,0,0,0};
+    xt = x1; 
+    ioh::problem::transformation::variables::random_flip(xt,2);
+    ioh::problem::transformation::variables::random_flip(xt,2);
+    EXPECT_EQ(x1.size(),xt.size());
+    for(size_t i = 0; i!= x1.size(); ++i) {
+        EXPECT_EQ(x1.at(i), xt.at(i));
+    }
+
+
+    std::vector<int> x2 = {1,1,1,1,1,1,1,1,1};
+    xt = x2; 
+    ioh::problem::transformation::variables::random_flip(xt,2);
+    ioh::problem::transformation::variables::random_flip(xt,2);
+    EXPECT_EQ(x2.size(),xt.size());
+    for(size_t i = 0; i!= x2.size(); ++i) {
+        EXPECT_EQ(x2.at(i), xt.at(i));
+    }
+
+    std::vector<int> x3 = {1,1,0,1,0,1,0,0,0};
+    xt = x3; 
+    ioh::problem::transformation::variables::random_flip(xt,2);
+    ioh::problem::transformation::variables::random_flip(xt,2);
+    EXPECT_EQ(x3.size(),xt.size());
+    for(size_t i = 0; i!= x3.size(); ++i) {
+        EXPECT_EQ(x3.at(i), xt.at(i));
+    }
+
+    std::vector<int> x4 = {0,1,1,1,0,1,1};
+    xt = x4;
+    xt = ioh::problem::transformation::variables::random_reorder_reset(xt, 51);
+    ioh::problem::transformation::variables::random_reorder(xt, 51);
+    EXPECT_EQ(x4.size(),xt.size());
+    for(size_t i = 0; i!= x4.size(); ++i) {
+        EXPECT_EQ(x4.at(i), xt.at(i));
+    }
+
+    std::vector<int> x5 = {0,1,0,1,0,1,0,0,1};
+    xt = x5;
+    xt = ioh::problem::transformation::variables::random_reorder_reset(xt, 51);
+    ioh::problem::transformation::variables::random_reorder(xt, 51);
+    EXPECT_EQ(x5.size(),xt.size());
+    for(size_t i = 0; i!= x5.size(); ++i) {
+        EXPECT_EQ(x5.at(i), xt.at(i));
+    }
+
+    std::vector<int> x6 = {1,0,1,0,1,0,1,1,1};
+    xt = x6;
+    xt = ioh::problem::transformation::variables::random_reorder_reset(xt, 51);
+    ioh::problem::transformation::variables::random_reorder(xt, 51);
+    EXPECT_EQ(x6.size(),xt.size());
+    for(size_t i = 0; i!= x6.size(); ++i) {
+        EXPECT_EQ(x6.at(i), xt.at(i));
+    }
+
+    std::vector<int> x7 = {0,1,1,1,0,1,1};
+    xt = x7;
+    xt = ioh::problem::transformation::variables::random_reorder_reset(xt, 51);
+    ioh::problem::transformation::variables::random_reorder(xt, 51);
+    EXPECT_EQ(x7.size(),xt.size());
+    for(size_t i = 0; i!= x7.size(); ++i) {
+        EXPECT_EQ(x7.at(i), xt.at(i));
     }
 }

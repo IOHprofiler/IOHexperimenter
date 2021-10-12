@@ -36,6 +36,8 @@ namespace ioh
                 {
                     objective_.x = std::vector<int>(n_variables,1);
                     objective_.y = evaluate(objective_.x);
+                    objective_.x = reset_transform_variables(objective_.x);
+                    objective_.y = transform_objectives(objective_.y);
                 }
             };
         } // namespace pbo

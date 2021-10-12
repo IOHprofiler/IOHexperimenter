@@ -152,6 +152,32 @@ namespace ioh::problem::transformation
 
 
         /**
+         * \brief reset x from x_1 whose elements were randomly reordered from x
+         * \param x_1 the reordered variables
+         * \param seed seed for the random flip
+         */
+        inline std::vector<int> random_reorder_reset(const std::vector<int> x_1, const int seed)
+        {
+            std::vector<int> x(x_1.size());
+            std::vector<int> index(x_1.size());
+            std::iota(index.begin(), index.end(), 0);
+
+            const auto n = static_cast<int>(x_1.size());
+            const auto rx = common::random::pbo::uniform(n, seed);
+
+            for (auto i = 0; i != n; ++i)
+            {
+                const auto t = static_cast<int>(floor(rx.at(i) * n));
+                const auto temp = index[0];
+                index[0] = index[t];
+                index[t] = temp;
+            }
+            for (auto i = 0; i < n; ++i)
+                x[index[i]] = x_1.at(i);
+            return x;
+        }
+
+        /**
          * \brief Affine transformation for x using matrix M and vector B
          * \param x raw variables
          * \param m transformation matrix

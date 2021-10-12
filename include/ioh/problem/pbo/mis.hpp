@@ -65,6 +65,8 @@ namespace ioh
                     objective_.y = number_of_variables_even_ % 4 == 0
                         ? (number_of_variables_even_ / 2)
                         : (number_of_variables_even_ / 2 + 1);
+                    objective_.y = transform_objectives(objective_.y);
+                    objective_.y = transform_objectives(objective_.y);
                 }
             };
         } // namespace pbo
