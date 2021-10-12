@@ -156,7 +156,7 @@ namespace ioh::problem::transformation
          * \param x_1 the reordered variables
          * \param seed seed for the random flip
          */
-        inline std::vector<int> random_reorder_reset(const std::vector<int> x_1, const int seed)
+        inline std::vector<int> random_reorder_reset(const std::vector<int> &x_1, const int seed)
         {
             std::vector<int> x(x_1.size());
             std::vector<int> index(x_1.size());
