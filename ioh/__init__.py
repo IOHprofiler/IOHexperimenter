@@ -192,7 +192,7 @@ class Experiment:
         for attr in itertools.chain(self.run_attributes, self.logged_attributes):
             if not hasattr(self.algorithm, attr):
                 raise TypeError(
-                    f"Attribute {attr} is a member of algorithm {self.algorithm}"
+                    f"Attribute {attr} is not a member of algorithm {self.algorithm}"
                 )
 
 

@@ -25,13 +25,13 @@ endif()
  
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")  
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++17 -lstdc++fs")
-    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ffast-math")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
         link_libraries(stdc++fs)
         add_compile_definitions(FSEXPERIMENTAL)
     endif()
 endif()   
- 
+
 # Define project targets.
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
   
