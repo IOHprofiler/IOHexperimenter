@@ -100,6 +100,15 @@ namespace ioh::common
             return it == known_ids.end() ? id : get_next_id(known_ids);
         }
 
+        [[nodiscard]] int check_or_get_next_available(const int id, const std::string& name) const {
+            const auto already_defined = name_map.find(name) != std::end(name_map);
+            if(already_defined)
+                for (const auto kv: id_map)
+                    if (kv.second == name)
+                        return kv.first;
+            return check_or_get_next_available(id);
+        }
+
         //! Accessor for the list of registered names
         [[nodiscard]] std::vector<std::string> names() const { return common::keys(name_map); }
 

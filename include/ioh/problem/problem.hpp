@@ -362,7 +362,8 @@ namespace ioh
                                         Constraint<T> constraint = Constraint<T>())
         {
             auto &factory = ProblemFactoryType<Problem<T>>::instance();
-            int id = factory.check_or_get_next_available(1);
+
+            int id = factory.check_or_get_next_available(1, name);
 
             factory.include(name, id, [=](const int, const int dimension)
             {
