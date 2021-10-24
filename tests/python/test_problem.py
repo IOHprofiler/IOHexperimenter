@@ -5,7 +5,6 @@ import shutil
 import math
 
 import ioh
-import numpy as np
 
 class Algorithm:
     def __init__(self):
@@ -199,12 +198,6 @@ class TestProblem(unittest.TestCase):
 
     def test_wrap_problem_builtins(self):
         for f in (sum, min, max):
-            p = ioh.problem.wrap_real_problem(f, "f")
-            y = p([0]*5)
-            self.assertEqual(y, 0.0)
-
-    def test_wrap_problem_numpy(self):
-        for f in (np.sum, np.mean, np.median, np.std):
             p = ioh.problem.wrap_real_problem(f, "f")
             y = p([0]*5)
             self.assertEqual(y, 0.0)
