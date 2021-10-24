@@ -188,6 +188,8 @@ void define_base_class(py::module &m, const std::string &name)
         });
 }
 
+static std::vector<py::handle> WRAPPED_FUNCTIONS;
+
 template <typename T>
 void define_wrapper_functions(py::module &m, const std::string &class_name, const std::string &function_name)
 {
@@ -197,7 +199,9 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
 
     m.def(
         function_name.c_str(),
-        [](py::function f, const std::string &name, int d, ioh::common::OptimizationType t, Constraint<T> &c) {
+        [](py::handle f, const std::string &name, int d, ioh::common::OptimizationType t, Constraint<T> &c) {
+            f.inc_ref();
+            WRAPPED_FUNCTIONS.push_back(f);
             return wrap_function<T>([f](const std::vector<T> &x) { return PyFloat_AsDouble(f(x).ptr()); }, name, d, t,
                                     c);
         },
@@ -485,4 +489,10 @@ void define_problem(py::module &m)
     define_bbob_problems(m);
     define_pbo_problems(m);
     define_wmodels(m);
+
+    py::module_::import("atexit").attr("register")(py::cpp_function([]() {
+        for (const auto fn : WRAPPED_FUNCTIONS){
+            fn.dec_ref();
+        }
+    }));
 }
