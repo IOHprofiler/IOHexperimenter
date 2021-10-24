@@ -100,6 +100,7 @@ namespace ioh::common
             return it == known_ids.end() ? id : get_next_id(known_ids);
         }
 
+        //! Get the next available id
         [[nodiscard]] int check_or_get_next_available(const int id, const std::string& name) const {
             const auto already_defined = name_map.find(name) != std::end(name_map);
             if(already_defined)

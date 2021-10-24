@@ -5,6 +5,7 @@ import shutil
 import math
 
 import ioh
+import numpy as np
 
 class Algorithm:
     def __init__(self):
@@ -176,6 +177,39 @@ class TestProblem(unittest.TestCase):
                         x = list(map(dtype, x))
                         p = ioh.get_problem(int(fid), int(iid), dim, suite.upper())
                         self.assertTrue(math.isclose(p(x), float(y), abs_tol = tol))
+
+
+    def test_wrap_problem_scoped(self):
+        def w():
+            l = lambda x: 0.0
+            p = ioh.problem.wrap_real_problem(l, "l")
+            return p
+        p = w()
+        y = p([0]*5)
+        self.assertEqual(y, 0.0)
+
+    def test_wrap_problem(self):
+        l = lambda x: 0.0
+        p = ioh.problem.wrap_real_problem(l, "f")
+        p([0]*5)
+
+        p2 = ioh.problem.wrap_real_problem(l, "f")
+        self.assertEqual(p.meta_data.problem_id, p2.meta_data.problem_id)
+        self.assertEqual(p.meta_data.name, p2.meta_data.name)
+
+    def test_wrap_problem_builtins(self):
+        for f in (sum, min, max):
+            p = ioh.problem.wrap_real_problem(f, "f")
+            y = p([0]*5)
+            self.assertEqual(y, 0.0)
+
+    def test_wrap_problem_numpy(self):
+        for f in (np.sum, np.mean, np.median, np.std):
+            p = ioh.problem.wrap_real_problem(f, "f")
+            y = p([0]*5)
+            self.assertEqual(y, 0.0)
+
+
 
 
 if __name__ == "__main__":
