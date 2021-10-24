@@ -3,6 +3,7 @@
 #include <pybind11/stl.h>
 #include "ioh.hpp"
 
+
 namespace py = pybind11;
 using namespace ioh::problem;
 
@@ -187,6 +188,8 @@ void define_base_class(py::module &m, const std::string &name)
         });
 }
 
+static std::vector<py::handle> WRAPPED_FUNCTIONS;
+
 template <typename T>
 void define_wrapper_functions(py::module &m, const std::string &class_name, const std::string &function_name)
 {
@@ -196,8 +199,9 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
 
     m.def(
         function_name.c_str(),
-        [](py::function f, const std::string &name, int d, ioh::common::OptimizationType t, Constraint<T> &c) {
-            f.dec_ref();
+        [](py::handle f, const std::string &name, int d, ioh::common::OptimizationType t, Constraint<T> &c) {
+            f.inc_ref();
+            WRAPPED_FUNCTIONS.push_back(f);
             return wrap_function<T>([f](const std::vector<T> &x) { return PyFloat_AsDouble(f(x).ptr()); }, name, d, t,
                                     c);
         },
@@ -474,9 +478,9 @@ void define_wmodels(py::module &m)
              py::arg("ruggedness_gamma") = 0);
 
     py::class_<wmodel::WModelOneMax, WModel, std::shared_ptr<wmodel::WModelOneMax>>(m, "WModelOneMax")
-        .def(py::init<int, int, double, int, int, int>(),
-             py::arg("instance"), py::arg("n_variables"), py::arg("dummy_select_rate") = 0.0,
-             py::arg("epistasis_block_size") = 0, py::arg("neutrality_mu") = 0, py::arg("ruggedness_gamma") = 0);
+        .def(py::init<int, int, double, int, int, int>(), py::arg("instance"), py::arg("n_variables"),
+             py::arg("dummy_select_rate") = 0.0, py::arg("epistasis_block_size") = 0, py::arg("neutrality_mu") = 0,
+             py::arg("ruggedness_gamma") = 0);
 }
 
 void define_problem(py::module &m)
@@ -485,4 +489,10 @@ void define_problem(py::module &m)
     define_bbob_problems(m);
     define_pbo_problems(m);
     define_wmodels(m);
+
+    py::module_::import("atexit").attr("register")(py::cpp_function([]() {
+        for (const auto fn : WRAPPED_FUNCTIONS){
+            fn.dec_ref();
+        }
+    }));
 }

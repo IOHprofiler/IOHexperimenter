@@ -1,8 +1,6 @@
 '''Python specific functions for IOH package
 
 TODO: best far precision
-TODO: tracking of out-of bounds
-TODO: Check quadratic function, min dimension bbob=2
 TODO: Rename Integer -> Discrete
 '''
 
@@ -36,7 +34,7 @@ except ModuleNotFoundError:
 
 ProblemType = typing.Union[problem.Real, problem.Integer]
 
-def get_problem(fid: int, iid: int, dim: int, problem_type: str = "Real") -> ProblemType:
+def get_problem(fid: typing.Union[int, str], iid: int, dim: int, problem_type: str = "Real") -> ProblemType:
     '''Instantiate a problem based on its function ID, dimension, instance and suite
 
     Parameters
@@ -52,15 +50,22 @@ def get_problem(fid: int, iid: int, dim: int, problem_type: str = "Real") -> Pro
         Only used if fid is an int.
 
     '''
-    if problem_type in ("BBOB", "Real",):
-        return getattr(problem, problem_type).create(fid, iid, dim)
-    elif problem_type in ("PBO", "Integer",):
-        if fid in [21, 23, "IsingTriangular", "NQueens"]:
-            if not math.sqrt(dim).is_integer():
-                raise ValueError("For this function, the dimension needs to be a perfect square!")
-        return getattr(problem, problem_type).create(fid, iid, dim)
+    if problem_type in ("PBO", "Integer",) and fid in [21, 23, "IsingTriangular", "NQueens"]:
+        if not math.sqrt(dim).is_integer():
+            raise ValueError("For this function, the dimension needs to be a perfect square!")
 
-    raise ValueError(f"Suite {problem_type} is not yet supported")    
+    bbob_fns = getattr(problem, "BBOB").problems.values() | getattr(problem, "BBOB").problems.keys()
+    if problem_type in ("BBOB", "Real",) and fid in bbob_fns:
+        if not dim >= 2:
+            raise ValueError("For BBOB functions the minimal dimension is 2")
+
+    base_problem = getattr(problem, problem_type)
+    if base_problem:
+        if fid not in (base_problem.problems.values() | base_problem.problems.keys()):
+            raise ValueError(f"{fid} is not registered for problem type: {problem_type}")
+        return base_problem.create(fid, iid, dim)  
+
+    raise ValueError(f"Problem type {problem_type} is not supported")    
 
 class Experiment:
     def __init__(self, 
@@ -192,7 +197,7 @@ class Experiment:
         for attr in itertools.chain(self.run_attributes, self.logged_attributes):
             if not hasattr(self.algorithm, attr):
                 raise TypeError(
-                    f"Attribute {attr} is a member of algorithm {self.algorithm}"
+                    f"Attribute {attr} is not a member of algorithm {self.algorithm}"
                 )
 
 
@@ -217,8 +222,8 @@ class Experiment:
         if self.logged:
             l = logger.Analyzer(**self.logger_params)
             l.set_experiment_attributes(self.experiment_attributes)
-            l.add_run_attributes(self.algorithm, self.run_attributes)
-            l.watch(self.algorithm, self.logged_attributes)
+            l.add_run_attributes(algorithm, self.run_attributes)
+            l.watch(algorithm, self.logged_attributes)
 
             p.attach_logger(l)
             self.apply(algorithm, p)

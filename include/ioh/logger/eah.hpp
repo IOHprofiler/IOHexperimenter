@@ -1081,9 +1081,10 @@ namespace ioh
                     template <class BinaryOperation>
                     double accumulate(const EAH &logger, double init, BinaryOperation op)
                     {
+#ifndef NDEBUG
                         const AttainmentSuite &attainment = logger.data();
                         assert(attainment.size() > 0);
-
+#endif
                         Histogram histo;
                         Histogram::Mat mat = histo(logger);
                         assert(histo.nb_attainments() > 0);
