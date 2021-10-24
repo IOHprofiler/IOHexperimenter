@@ -54,14 +54,15 @@ def get_problem(fid: typing.Union[int, str], iid: int, dim: int, problem_type: s
         if not math.sqrt(dim).is_integer():
             raise ValueError("For this function, the dimension needs to be a perfect square!")
 
-    if problem_type == "BBOB" or (problem_type == "Real" and fid in range(1, 25)):
+    bbob_fns = getattr(problem, "BBOB").problems.values() | getattr(problem, "BBOB").problems.keys()
+    if problem_type in ("BBOB", "Real",) and fid in bbob_fns:
         if not dim >= 2:
             raise ValueError("For BBOB functions the minimal dimension is 2")
 
-    if (base_problem:= getattr(problem, problem_type)):
-        if fid not in (base_problem.problems.values() |base_problem.problems.keys()):
+    base_problem = getattr(problem, problem_type)
+    if base_problem:
+        if fid not in (base_problem.problems.values() | base_problem.problems.keys()):
             raise ValueError(f"{fid} is not registered for problem type: {problem_type}")
-            
         return base_problem.create(fid, iid, dim)  
 
     raise ValueError(f"Problem type {problem_type} is not supported")    
