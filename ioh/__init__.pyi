@@ -4,7 +4,7 @@ from typing import Any
 
 ProblemType: Any
 
-def get_problem(fid: int, iid: int, dim: int, problem_type: str = ...) -> ProblemType: ...
+def get_problem(fid: typing.Union[int, str], iid: int, dim: int, problem_type: str = ...) -> ProblemType: ...
 
 class Experiment:
     algorithm: Any
