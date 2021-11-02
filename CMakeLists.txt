@@ -15,6 +15,7 @@ option(BUILD_TESTS "Whether to build test cases with gtest" ON)
 option(BUILD_EXAMPLE "Whether to build Python package" ON)  
 option(BUILD_DOCS "Build docs" OFF) 
 option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python modules as if they were an IOH problem" OFF)
+option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" ON)
 
 if(MSVC)
     set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windows
@@ -48,6 +49,21 @@ add_library(ioh::ioh ALIAS ioh)
 add_subdirectory(${EXTERNAL_DIR}/fmt)
 target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
 
+if(ENABLE_MKLANDSCAPE_PROBLEMS)
+
+    
+    # Find cargo executable
+    find_program(CARGO_EXECUTABLE cargo)
+    if(${CARGO_EXECUTABLE} STREQUAL CARGO_EXECUTABLE-NOTFOUND)
+         execute_process(
+            COMMAND bash -c "curl https://sh.rustup.rs -sSf | sh -s -- -y"
+            OUTPUT_VARIABLE outVar
+            )
+        )
+    endif()
+    add_subdirectory(${EXTERNAL_DIR}/MkLandscape)
+    target_link_libraries(ioh INTERFACE problem_generator_lib)
+endif()
 
 
 # Add Python Library
