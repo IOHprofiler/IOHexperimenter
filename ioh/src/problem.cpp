@@ -3,6 +3,7 @@
 #include <pybind11/stl.h>
 #include "ioh.hpp"
 
+#include <iostream>
 
 namespace py = pybind11;
 using namespace ioh::problem;
@@ -58,7 +59,8 @@ void define_constraint(py::module &m, const std::string &name)
     options.disable_function_signatures();
 
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<std::vector<T>, std::vector<T>>())
+        .def(py::init<std::vector<T>, std::vector<T>>(), py::arg("ub"), py::arg("lb"))
+        .def(py::init<int, T, T>(), py::arg("size"), py::arg("ub"), py::arg("lb"))
         .def_readonly("ub", &Class::ub, "The upper bound (box constraint)")
         .def_readonly("lb", &Class::lb, "The lower bound (box constraint)")
         .def("__repr__", &Class::repr)
@@ -79,11 +81,12 @@ class PyProblem : public P
     {
         auto meta_data = this->meta_data();
         auto constraint = this->constraint();
-        ioh::common::Factory<P, int, int>::instance().include(
+        auto &factory = ioh::common::Factory<P, int, int>::instance();
+        factory.include(
             meta_data.name, meta_data.problem_id, [=](const int instance, const int n_variables) {
                 return std::make_shared<PyProblem<P, T>>(
                     MetaData(meta_data.problem_id, instance, meta_data.name, n_variables, meta_data.optimization_type),
-                    constraint);
+                    constraint.resize(n_variables));
             });
         return true;
     }
@@ -102,7 +105,7 @@ public:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
-        static auto registered = perform_registration();
+        auto registered = perform_registration();
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop
 #endif
@@ -185,7 +188,8 @@ void define_base_class(py::module &m, const std::string &name)
             const auto meta_data = p.meta_data();
             return "<" + name + fmt::format("Problem {:d}. ", meta_data.problem_id) + meta_data.name +
                 fmt::format(" (iid={:d} dim={:d})>", meta_data.instance, meta_data.n_variables);
-        });
+        })      
+        ;
 }
 
 static std::vector<py::handle> WRAPPED_FUNCTIONS;

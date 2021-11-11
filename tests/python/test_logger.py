@@ -38,6 +38,24 @@ class TestLogger(unittest.TestCase):
 
         self.assertTrue(os.path.isdir("ioh_data"))
 
+    def test_triggers(self):
+        always = ioh.logger.trigger.Always()
+        on_improvement = ioh.logger.trigger.OnImprovement()
+        at = ioh.logger.trigger.At({1, 22})
+        self.assertSetEqual(at.time_points, {1, 22})
+
+        each = ioh.logger.trigger.Each(10, 2)
+        self.assertEqual(each.interval, 10)
+        self.assertEqual(each.starting_at, 2)
+
+        during = ioh.logger.trigger.During({(10, 25), (30, 40)})
+        self.assertEqual(during.time_ranges, {(10, 25), (30, 40)})
+
+        log_info = ioh.LogInfo(22, 0, 0, 0, ioh.RealSolution([0, 1], 0), ioh.RealSolution([1, 0], 0))
+        problem = ioh.get_problem(1, 1, 2)
+        for t in (always, on_improvement, at, each, during):
+            self.assertTrue(t(log_info, problem.meta_data))
+
     def tearDown(self) -> None:
         if os.path.isdir("ioh_data"):
             shutil.rmtree("ioh_data")
