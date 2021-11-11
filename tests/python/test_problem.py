@@ -69,8 +69,12 @@ class TestProblem(unittest.TestCase):
             elif os.path.isdir(path):
                 for f in os.listdir(path):
                     if f in data_files:
-                        self.assertNotEqual(os.path.getsize(
-                            os.path.join(path, f)), 0)
+                        path = os.path.join(path, f)
+                        self.assertNotEqual(os.path.getsize(path), 0)
+                        with open(path) as h:
+                            data = list(filter(lambda x:x.startswith('"'), h))       
+
+                        self.assertEqual(len(data), 4)
                         data_files.remove(f)
 
         self.assertSetEqual(info_files, set())
