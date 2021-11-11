@@ -45,8 +45,9 @@ public:
         py::module::import("atexit").attr("register")(py::cpp_function{[self = this]() -> void {
             // type-pun alive bool in order to check if is still a boolean 1, if so, delete.
             // in some cases this might cause a segfault, only happens in a very small prob. (1/MAX_INT)
-            int alive_int = (int)(*(char *)(&self->alive)); 
-            if (alive_int == 1){
+            int alive_int = (int)(*(char *)(&self->alive));
+            if (alive_int == 1)
+            {
                 self->close();
             }
         }});
@@ -173,12 +174,14 @@ void define_triggers(py::module &m)
         .def("reset", &logger::Trigger::reset);
 
     py::class_<trigger::Always, logger::Trigger, std::shared_ptr<trigger::Always>>(t, "Always")
+        .def(py::init<>())
         .def(py::pickle([](const trigger::Always &) { return py::make_tuple(); },
                         [](py::tuple) { return trigger::Always{}; }));
 
     t.attr("ALWAYS") = py::cast(trigger::always);
 
     py::class_<trigger::OnImprovement, logger::Trigger, std::shared_ptr<trigger::OnImprovement>>(t, "OnImprovement")
+        .def(py::init<>())
         .def(py::pickle([](const trigger::OnImprovement &t) { return py::make_tuple(t.best(), t.type()); },
                         [](py::tuple t) {
                             return trigger::OnImprovement{t[0].cast<double>(), t[1].cast<common::OptimizationType>()};
@@ -186,17 +189,25 @@ void define_triggers(py::module &m)
 
     ;
     t.attr("ON_IMPROVEMENT") = py::cast(trigger::on_improvement);
-    py::class_<trigger::At, logger::Trigger, std::shared_ptr<trigger::At>>(t, "At").def(
-        py::pickle([](const trigger::At &t) { return py::make_tuple(t.time_points()); },
-                   [](py::tuple t) { return trigger::At{t[0].cast<std::set<size_t>>()}; }));
 
-    py::class_<trigger::Each, logger::Trigger, std::shared_ptr<trigger::Each>>(t, "Each").def(
-        py::pickle([](const trigger::Each &t) { return py::make_tuple(t.interval(), t.starting_at()); },
-                   [](py::tuple t) {
-                       return trigger::Each{t[0].cast<size_t>(), t[1].cast<size_t>()};
-                   }));
+    py::class_<trigger::At, logger::Trigger, std::shared_ptr<trigger::At>>(t, "At")
+        .def(py::init<std::set<size_t>>(), py::arg("time_points"))
+        .def_property_readonly("time_points", &trigger::At::time_points)
+        .def(py::pickle([](const trigger::At &t) { return py::make_tuple(t.time_points()); },
+                        [](py::tuple t) { return trigger::At{t[0].cast<std::set<size_t>>()}; }));
+
+    py::class_<trigger::Each, logger::Trigger, std::shared_ptr<trigger::Each>>(t, "Each")
+        .def(py::init<size_t, size_t>(), py::arg("interval"), py::arg("starting_at") = 0)
+        .def_property_readonly("interval", &trigger::Each::interval)
+        .def_property_readonly("starting_at", &trigger::Each::starting_at)
+        .def(py::pickle([](const trigger::Each &t) { return py::make_tuple(t.interval(), t.starting_at()); },
+                        [](py::tuple t) {
+                            return trigger::Each{t[0].cast<size_t>(), t[1].cast<size_t>()};
+                        }));
 
     py::class_<trigger::During, logger::Trigger, std::shared_ptr<trigger::During>>(t, "During")
+        .def(py::init<std::set<std::pair<size_t, size_t>>>(), py::arg("time_ranges"))
+        .def_property_readonly("time_ranges", &trigger::During::time_ranges)
         .def(py::pickle([](const trigger::During &t) { return py::make_tuple(t.time_ranges()); },
                         [](py::tuple t) { return trigger::During{t[0].cast<std::set<std::pair<size_t, size_t>>>()}; }));
 }
@@ -276,9 +287,8 @@ void define_bases(py::module &m)
 }
 
 
-
-
-void define_flatfile(py::module &m){
+void define_flatfile(py::module &m)
+{
     using namespace logger;
     const std::vector<std::string> common_headers = {
         "suite_name", "problem_name", "problem_id", "problem_instance", "optimization_type", "dimension", "run"};
@@ -303,7 +313,8 @@ void define_flatfile(py::module &m){
         });
 }
 
-void define_store(py::module& m){
+void define_store(py::module &m)
+{
     using namespace logger;
 
     using PyStore = PyWatcher<Store>;
@@ -323,7 +334,8 @@ void define_store(py::module& m){
         });
 }
 
-void define_analyzer(py::module& m){
+void define_analyzer(py::module &m)
+{
     using namespace logger;
     Triggers def_trigs{trigger::on_improvement};
     Properties def_props{};
@@ -377,7 +389,8 @@ void define_eah_scale(py::module &m, const std::string &name)
     py::class_<Log10Scale<T>, Scale<T>, std::shared_ptr<Log10Scale<T>>>(m, ("Log10" + name).c_str())
         .def(py::init<T, T, size_t>());
 }
-void define_eah(py::module &m){
+void define_eah(py::module &m)
+{
     using namespace logger;
     auto eah = m.def_submodule("eah");
     define_eah_scale<double>(eah, "RealScale");
@@ -386,10 +399,11 @@ void define_eah(py::module &m){
     py::class_<EAH, Logger, std::shared_ptr<EAH>>(m, "EAH")
         .def(py::init<double, double, size_t, size_t, size_t, size_t>(), py::arg("error_min"), py::arg("error_max"),
              py::arg("error_buckets"), py::arg("evals_min"), py::arg("evals_max"), py::arg("evals_buckets"))
-        .def(py::init<eah::LinearScale<double>&, eah::LinearScale<size_t>&>(), py::arg("error_scale"),
+        .def(py::init<eah::LinearScale<double> &, eah::LinearScale<size_t> &>(), py::arg("error_scale"),
              py::arg("eval_scale"))
-        .def(py::init<eah::Log2Scale<double>&, eah::Log2Scale<size_t>&>(), py::arg("error_scale"), py::arg("eval_scale"))
-        .def(py::init<eah::Log10Scale<double>&, eah::Log10Scale<size_t>&>(), py::arg("error_scale"),
+        .def(py::init<eah::Log2Scale<double> &, eah::Log2Scale<size_t> &>(), py::arg("error_scale"),
+             py::arg("eval_scale"))
+        .def(py::init<eah::Log10Scale<double> &, eah::Log10Scale<size_t> &>(), py::arg("error_scale"),
              py::arg("eval_scale"))
         .def("at", &logger::EAH::at)
         .def_property_readonly("data", &logger::EAH::data)
@@ -399,31 +413,28 @@ void define_eah(py::module &m){
         .def("__repr__", [](const logger::EAH &l) { return fmt::format("<EAH {}>", l.size()); });
 }
 
-void define_eaf(py::module &m){
+void define_eaf(py::module &m)
+{
     using namespace logger;
 
     auto eaf = m.def_submodule("eaf");
     py::class_<eaf::Point, std::shared_ptr<eaf::Point>>(eaf, "Point")
         .def(py::init<double, size_t>())
-        .def("__repr__", [](const eaf::Point& p){return fmt::format("<Point {} {}>", p.qual, p.time);})
-    ;
+        .def("__repr__", [](const eaf::Point &p) { return fmt::format("<Point {} {}>", p.qual, p.time); });
 
     py::class_<eaf::RunPoint, eaf::Point, std::shared_ptr<eaf::RunPoint>>(eaf, "RunPoint")
         .def(py::init<double, size_t, size_t>())
-        .def("__repr__", [](const eaf::RunPoint& p){return fmt::format("<RunPoint {} {} {}>", p.qual, p.time, p.run);})
-    ;
+        .def("__repr__",
+             [](const eaf::RunPoint &p) { return fmt::format("<RunPoint {} {} {}>", p.qual, p.time, p.run); });
 
     py::class_<EAF, Logger, std::shared_ptr<EAF>>(m, "EAF")
         .def(py::init<>())
         .def_property_readonly("data", py::overload_cast<>(&EAF::data, py::const_))
-        .def("at",
-             [](EAF &f, std::string suite_name, int pb, int dim, int inst, size_t run) {
-                 const auto cursor = EAF::Cursor(suite_name, pb, dim, inst, run);
-                 return f.data(cursor);
-             })
-    ;
+        .def("at", [](EAF &f, std::string suite_name, int pb, int dim, int inst, size_t run) {
+            const auto cursor = EAF::Cursor(suite_name, pb, dim, inst, run);
+            return f.data(cursor);
+        });
 }
-
 
 
 void define_loggers(py::module &m)
