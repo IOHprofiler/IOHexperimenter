@@ -33,6 +33,8 @@ void show_registered_objects()
     }
 }
 
+double fn(const std::vector<double>& x){ return 0.0; }
+
 
 int main()
 {
@@ -40,5 +42,7 @@ int main()
     // suite_example();
     // logger_example();
     // problem_example();
-    experiment_example();
+    // experiment_example();
+    ioh::problem::wrap_function<double>(&fn, "fn", ioh::common::OptimizationType::Minimization);
+    
 }

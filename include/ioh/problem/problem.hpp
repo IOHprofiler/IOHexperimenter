@@ -268,7 +268,7 @@ namespace ioh
          * @tparam T type of the problem
          */
         template <typename T>
-        using Function = std::function<double(const std::vector<T> &)>;
+        using ObjectiveFunction = std::function<double(const std::vector<T> &)>;
 
         /**
          * @brief Registry type def
@@ -315,7 +315,7 @@ namespace ioh
         {
         protected:
             //! Wrapped function
-            Function<T> function_;
+            ObjectiveFunction<T> function_;
 
             double evaluate(const std::vector<T> &x) override
             {
@@ -333,12 +333,12 @@ namespace ioh
              * @param optimization_type the type of optimization
              * @param constraint the contraint for the problem
              */
-            WrappedProblem(Function<T> f, const std::string &name, const int n_variables,
-                           const int problem_id = 0,
+            WrappedProblem(ObjectiveFunction<T> f, const std::string &name, const int n_variables,
+                           const int problem_id = 0, const int instance_id = 0,
                            const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
                            Constraint<T> constraint = Constraint<T>()
                 ) :
-                Problem<T>(MetaData(problem_id, 0, name, n_variables, optimization_type), constraint),
+                Problem<T>(MetaData(problem_id, instance_id, name, n_variables, optimization_type), constraint),
                 function_(f)
             {
             }
@@ -356,10 +356,12 @@ namespace ioh
          * @return WrappedProblem<T> A wrapped problem instance
          */
         template <typename T>
-        WrappedProblem<T> wrap_function(Function<T> f, const std::string &name, const int n_variables = 5,
+        WrappedProblem<T> wrap_function(ObjectiveFunction<T> f, const std::string &name, const int n_variables = 5,
                                         const common::OptimizationType optimization_type =
                                             common::OptimizationType::Minimization,
-                                        Constraint<T> constraint = Constraint<T>())
+                                        Constraint<T> constraint = Constraint<T>()
+
+                                        )
         {
             auto &factory = ProblemFactoryType<Problem<T>>::instance();
 
@@ -371,6 +373,27 @@ namespace ioh
             });
             return WrappedProblem<T>{f, name, n_variables, id, optimization_type, constraint};
         }
+
+
+        // template <typename T>
+        // void wrap_function(
+        //     ObjectiveFunction<T> f, 
+        //     const std::string &name, 
+        //     const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
+        //     const std::optional<T> lb = std::nullopt, const std::optional<T> ub = std::nullopt
+        // )
+        // {
+        //     auto &factory = ProblemFactoryType<Problem<T>>::instance();
+
+        //     int id = factory.check_or_get_next_available(1, name);
+
+        //     auto constraint = Constraint<T>();
+
+        //     factory.include(name, id, [=](const int instance, const int dimension)
+        //     {
+        //         return std::make_unique<WrappedProblem<T>>(f, name, dimension, id, instance, optimization_type, constraint);
+        //     });
+        // }
 
         //! Type def for Real problems
         using Real = Problem<double>;
