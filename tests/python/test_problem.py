@@ -1,21 +1,11 @@
 import os
-import random
 import unittest
-import shutil
 import math
 
 import ioh
 
-class Algorithm:
-    def __init__(self):
-        self.x = 10
-        self.i = 1
-    
-    def __call__(self, p: ioh.problem.Real):
-        for i in range(10000):
-            x = list(map(lambda x: random.random(), range(p.meta_data.n_variables)))    
-            p(x)
-            self.i = i
+DATA_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)), "static")
 
 class wmodel(ioh.problem.AbstractWModel):
     def __init__(self, instance, dim):
@@ -24,10 +14,6 @@ class wmodel(ioh.problem.AbstractWModel):
     def wmodel_evaluate(self, x) -> int:
         return x.count(1)
 
-
-
-DATA_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "static")
 
 class TestProblem(unittest.TestCase):
     def test_get_problem(self):
@@ -41,49 +27,6 @@ class TestProblem(unittest.TestCase):
         for p in map(lambda x: x(1, 10), (wmodel, ioh.problem.WModelLeadingOnes, ioh.problem.WModelOneMax)):
             self.assertEqual(p([1] * 10), 10)
 
-    def test_experimenter(self):
-        exp = ioh.Experiment(
-            Algorithm(),
-            [1], [1, 2], [5],
-            njobs = 1,
-            reps = 2,
-            experiment_attributes = {"a": "1"},
-            run_attributes = ['x'],
-            logged_attributes = ['i']
-        )
-
-        def a_problem(x):
-            return 0.0
-            
-        exp.add_custom_problem(a_problem, "Name")
-        exp()
-
-        info_files = {'IOHprofiler_f25_Name.info', 'IOHprofiler_f1_Sphere.info'}
-        data_files = {'IOHprofiler_f25_DIM5.dat', 'IOHprofiler_f1_DIM5.dat'}
-
-        for item in os.listdir('ioh_data'):
-            path = os.path.join('ioh_data', item)
-            if os.path.isfile(path) and item in info_files:
-                self.assertNotEqual(os.path.getsize(path), 0)
-                info_files.remove(item)
-            elif os.path.isdir(path):
-                for f in os.listdir(path):
-                    if f in data_files:
-                        path = os.path.join(path, f)
-                        self.assertNotEqual(os.path.getsize(path), 0)
-                        with open(path) as h:
-                            data = list(filter(lambda x:x.startswith('"'), h))       
-
-                        self.assertEqual(len(data), 4)
-                        data_files.remove(f)
-
-        self.assertSetEqual(info_files, set())
-        self.assertSetEqual(data_files, set())
-
-        self.assertTrue(os.path.isfile("ioh_data.zip"))
-
-        shutil.rmtree("ioh_data")
-        os.remove("ioh_data.zip")
            
     def test_evaluation_bbob_problems(self):
         for fid in range(1,25):
@@ -122,7 +65,7 @@ class TestProblem(unittest.TestCase):
             18.635078550302751,
             1782.2733296400438,
         ]
-        for i in sorted(ioh.problem.BBOB.problems.keys()):
+        for i in sorted(ioh.problem.BBOB.problems.keys())[:24]:
             p = ioh.problem.BBOB.create(i, 1, 5)
             self.assertTrue(
                 math.isclose(p([0.1, 1., 2., 4., 5.4]), expected[i-1])
@@ -156,7 +99,7 @@ class TestProblem(unittest.TestCase):
             0.45,
             -0.70717,
         ]
-        for i in sorted(ioh.problem.PBO.problems.keys()):
+        for i in sorted(ioh.problem.PBO.problems.keys())[:24]:
             p = ioh.problem.PBO.create(i, 1, 9)
             y = p([1, 1, 0, 1, 0, 0, 0, 1, 1])
             self.assertTrue(math.isclose(y, expected[i-1], abs_tol = 0.000099),
@@ -180,32 +123,6 @@ class TestProblem(unittest.TestCase):
                         x = list(map(dtype, x))
                         p = ioh.get_problem(int(fid), int(iid), dim, suite.upper())
                         self.assertTrue(math.isclose(p(x), float(y), abs_tol = tol))
-
-
-    def test_wrap_problem_scoped(self):
-        def w():
-            l = lambda x: 0.0
-            p = ioh.problem.wrap_real_problem(l, "l")
-            return p
-        p = w()
-        y = p([0]*5)
-        self.assertEqual(y, 0.0)
-
-    def test_wrap_problem(self):
-        l = lambda x: 0.0
-        p = ioh.problem.wrap_real_problem(l, "f")
-        p([0]*5)
-
-        p2 = ioh.problem.wrap_real_problem(l, "f")
-        self.assertEqual(p.meta_data.problem_id, p2.meta_data.problem_id)
-        self.assertEqual(p.meta_data.name, p2.meta_data.name)
-
-    def test_wrap_problem_builtins(self):
-        for f in (sum, min, max):
-            p = ioh.problem.wrap_real_problem(f, "f")
-            y = p([0]*5)
-            self.assertEqual(y, 0.0)
-
 
 
 

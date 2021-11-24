@@ -74,6 +74,11 @@ void define_constraint(py::module &m, const std::string &name)
         )pbdoc");
 }
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+
 template <typename P, typename T>
 class PyProblem : public P
 {
@@ -82,12 +87,11 @@ class PyProblem : public P
         auto meta_data = this->meta_data();
         auto constraint = this->constraint();
         auto &factory = ioh::common::Factory<P, int, int>::instance();
-        factory.include(
-            meta_data.name, meta_data.problem_id, [=](const int instance, const int n_variables) {
-                return std::make_shared<PyProblem<P, T>>(
-                    MetaData(meta_data.problem_id, instance, meta_data.name, n_variables, meta_data.optimization_type),
-                    constraint.resize(n_variables));
-            });
+        factory.include(meta_data.name, meta_data.problem_id, [=](const int instance, const int n_variables) {
+            return std::make_shared<PyProblem<P, T>>(
+                MetaData(meta_data.problem_id, instance, meta_data.name, n_variables, meta_data.optimization_type),
+                constraint.resize(n_variables));
+        });
         return true;
     }
 
@@ -101,14 +105,8 @@ public:
                                    : ioh::common::OptimizationType::Maximization),
           constraint)
     {
-#if defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#endif
+
         auto registered = perform_registration();
-#if defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif
     }
 
     double evaluate(const std::vector<T> &x) override { PYBIND11_OVERRIDE_PURE(double, P, evaluate, x); }
@@ -188,11 +186,17 @@ void define_base_class(py::module &m, const std::string &name)
             const auto meta_data = p.meta_data();
             return "<" + name + fmt::format("Problem {:d}. ", meta_data.problem_id) + meta_data.name +
                 fmt::format(" (iid={:d} dim={:d})>", meta_data.instance, meta_data.n_variables);
-        })      
-        ;
+        });
+}
+static std::vector<py::handle> WRAPPED_FUNCTIONS;
+
+bool register_python_fn(py::handle f)
+{
+    f.inc_ref();
+    WRAPPED_FUNCTIONS.push_back(f);
+    return true;
 }
 
-static std::vector<py::handle> WRAPPED_FUNCTIONS;
 
 template <typename T>
 void define_wrapper_functions(py::module &m, const std::string &class_name, const std::string &function_name)
@@ -203,16 +207,65 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
 
     m.def(
         function_name.c_str(),
-        [](py::handle f, const std::string &name, int d, ioh::common::OptimizationType t, Constraint<T> &c) {
-            f.inc_ref();
-            WRAPPED_FUNCTIONS.push_back(f);
-            return wrap_function<T>([f](const std::vector<T> &x) { return PyFloat_AsDouble(f(x).ptr()); }, name, d, t,
-                                    c);
+        [](py::handle f, const std::string &name, ioh::common::OptimizationType t, std::optional<double> lb,
+           std::optional<double> ub, std::optional<py::handle> tx, std::optional<py::handle> ty,
+           std::optional<py::handle> co) {
+            register_python_fn(f);
+            auto of = [f](const std::vector<T> &x) { return PyFloat_AsDouble(f(x).ptr()); };
+
+            auto ptx = [tx](std::vector<T> x, const int iid) {
+                if (tx)
+                {
+                    static bool r = register_python_fn(tx.value());
+                    py::list px = (tx.value()(x, iid));
+                    if(px.size() == x.size())
+                        return px.cast<std::vector<T>>();
+                    else
+                        py::module_::import("warnings").attr("warn")(
+                            fmt::format(
+                                "Objective transformation function returned an iterable of invalid length ({} != {}). Transformation is disabled.", 
+                                px.size(), x.size()
+                            )
+                        );
+                }
+                return x;
+            };
+
+            auto pty = [ty](double y, const int iid) {
+                if (ty)
+                {
+                    static bool r = register_python_fn(ty.value());
+                    return PyFloat_AsDouble(ty.value()(y, iid).ptr());
+                }
+                return y;
+            };
+
+            auto pco = [co, t](const int iid, const int dim) {
+                if (co)
+                {
+                    static bool r = register_python_fn(co.value());
+                    py::object xt = co.value()(iid, dim);
+                    if(py::isinstance<py::iterable>(xt) && xt.cast<py::tuple>().size() == 2){
+                        py::tuple args = xt;
+                        py::list x = args[0];
+                        py::float_ y = args[1];
+                        return Solution<T>(x.cast<std::vector<T>>(), y.cast<double>());
+                    }
+                    return xt.cast<Solution<T>>();
+                }
+                return Solution<T>(dim, t);
+            };
+
+            wrap_function<T>(of, name, t, lb, ub, ptx, pty, pco);
         },
-        py::arg("f"), py::arg("name"), py::arg("n_variables") = 5,
-        py::arg("optimization_type") = ioh::common::OptimizationType::Minimization,
-        py::arg("constraint") = Constraint<T>(5));
+        py::arg("f"), py::arg("name"), py::arg("optimization_type") = ioh::common::OptimizationType::Minimization,
+        py::arg("lb") = std::nullopt, py::arg("ub") = std::nullopt, py::arg("transform_variables") = std::nullopt,
+        py::arg("transform_objectives") = std::nullopt, py::arg("calculate_objective") = std::nullopt);
 }
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
 void define_helper_classes(py::module &m)
 {
@@ -353,7 +406,7 @@ void define_pbo_problems(py::module &m)
     py::class_<pbo::MIS, Integer, std::shared_ptr<pbo::MIS>>(m, "MIS", py::is_final()).def(py::init<int, int>());
     py::class_<pbo::NQueens, Integer, std::shared_ptr<pbo::NQueens>>(m, "NQueens", py::is_final())
         .def(py::init<int, int>());
-    py::class_<pbo::ConcatenatedTrap, Integer, std::shared_ptr<pbo::ConcatenatedTrap>>(m, "ConcatenatedTra",
+    py::class_<pbo::ConcatenatedTrap, Integer, std::shared_ptr<pbo::ConcatenatedTrap>>(m, "ConcatenatedTrap",
                                                                                        py::is_final())
         .def(py::init<int, int>());
 }
@@ -495,7 +548,8 @@ void define_problem(py::module &m)
     define_wmodels(m);
 
     py::module_::import("atexit").attr("register")(py::cpp_function([]() {
-        for (const auto fn : WRAPPED_FUNCTIONS){
+        for (const auto fn : WRAPPED_FUNCTIONS)
+        {
             fn.dec_ref();
         }
     }));

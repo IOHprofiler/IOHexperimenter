@@ -104,7 +104,7 @@ namespace ioh
             //! Return resize version of constraint
             Constraint<T> resize(const int s) const
             {
-                return Constraint<T>(std::vector<T>(s, std::vector<T>(s, lb.at(0)), ub.at(0)));
+                return Constraint<T>(std::vector<T>(s, lb.at(0)), std::vector<T>(s, ub.at(0)));
             }
 
             std::string repr() const override { return fmt::format("<Constraint lb: [{}] ub: [{}]>", lb, ub); }

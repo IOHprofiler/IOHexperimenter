@@ -33,10 +33,15 @@ except ModuleNotFoundError:
 
 
 ProblemType = typing.Union[problem.Real, problem.Integer]
+VariableType = typing.Union[int, float]
+ObjectiveType = typing.List[VariableType]
 
 
 def get_problem(
-    fid: typing.Union[int, str], iid: int, dim: int, problem_type: str = "Real"
+    fid: typing.Union[int, str],
+    instance: int = 1,
+    dimension: int = 5,
+    problem_type: str = "Real",
 ) -> ProblemType:
     """Instantiate a problem based on its function ID, dimension, instance and suite
 
@@ -44,9 +49,9 @@ def get_problem(
     ----------
     fid: int or str
         The function ID of the problem in the suite, or the name of the function as string
-    dim: int
+    dimension: int
         The dimension (number of variables) of the problem
-    iid: int
+    instance: int
         The instance ID of the problem
     problem_type: str
         Which suite the problem is from. Either 'BBOB' or 'PBO' or 'Real' or 'Integer'
@@ -61,7 +66,7 @@ def get_problem(
         )
         and fid in [21, 23, "IsingTriangular", "NQueens"]
     ):
-        if not math.sqrt(dim).is_integer():
+        if not math.sqrt(dimension).is_integer():
             raise ValueError(
                 "For this function, the dimension needs to be a perfect square!"
             )
@@ -78,7 +83,7 @@ def get_problem(
         )
         and fid in bbob_fns
     ):
-        if not dim >= 2:
+        if not dimension >= 2:
             raise ValueError("For BBOB functions the minimal dimension is 2")
 
     base_problem = getattr(problem, problem_type)
@@ -87,8 +92,86 @@ def get_problem(
             raise ValueError(
                 f"{fid} is not registered for problem type: {problem_type}"
             )
-        return base_problem.create(fid, iid, dim)
+        return base_problem.create(fid, instance, dimension)
 
+    raise ValueError(f"Problem type {problem_type} is not supported")
+
+
+def wrap_problem(
+    function: typing.Callable[[ObjectiveType], float],
+    name: str,
+    problem_type: str,
+    dimension: int = 5,
+    instance: int = 1,
+    optimization_type: OptimizationType = OptimizationType.Minimization,
+    lb: VariableType = None,
+    ub: VariableType = None,
+    transform_variables: typing.Callable[[ObjectiveType, int], ObjectiveType] = None,
+    transform_objectives: typing.Callable[[float, int], float] = None,
+    calculate_objective: typing.Callable[
+        [int, int], typing.Union[IntegerSolution, RealSolution]
+    ] = None,
+) -> ProblemType:
+    """Function to wrap a callable as an ioh function
+
+    Parameters
+    ----------
+    function: fn(x: list) -> float
+        The callable to wrap
+    name: str
+        The name of the function. This can be used to create new instances of this function.
+        Note, when not using unique names, this will override the previously wrapped functions.
+    problem_type: str
+        The type of the problem, accepted types are: 'Real' and 'Integer'
+    dimension: int
+        The dimension (number of variables) of the problem
+    instance: int
+        The instance ID of the problem
+    optimization_type: OptimizationType
+        The type of optimization to do, maximization or minimization
+    lb: [int, float]
+        The lower bound of the constraint, should be the same type as problem_type. When left to None, this will set
+        to the lowest possible value for that type.
+    ub: [int, float]
+        The upper bound of the constraint, should be the same type as problem_type. When left to None, this will set
+        to the highest possible value for that type.
+    transform_variables: fn(x: list) -> list
+        A function to transform the elements of x, prior to calling the function.
+    transform_objectives: fn(y: float) -> float
+        A function to tranform the float value of y, after callling the function.
+    calculate_objective: fn(instance, dimension) -> Solution | (x, y)
+        A function to calculate the global optimum of the function. This function gets a dimension and instance id,
+        and should return either a Solution objective(IntegerSolution or RealSolution) or a tuple giving the
+        x and y values for the global optimum. Where x is the search space representation and y the target value.
+    """
+
+    if problem_type == "Integer":
+        wrapper = problem.wrap_integer_problem
+    elif problem_type == "Real":
+        wrapper = problem.wrap_real_problem
+    else:
+        raise ValueError(
+            f"Problem type {problem_type} is not supported. Please select one of ('Integer', 'Real')"
+        )
+
+    wrapper(
+        function,
+        name,
+        optimization_type,
+        lb,
+        ub,
+        transform_variables,
+        transform_objectives,
+        calculate_objective,
+    )
+    return get_problem(name, instance, dimension, problem_type)
+
+
+def get_problem_id(problem_name: str, problem_type: str):
+    if problem_type in ("BBOB", "PBO", "Integer", "Real"):
+        return {v: k for k, v in getattr(problem, problem_type).problems.items()}.get(
+            problem_name
+        )
     raise ValueError(f"Problem type {problem_type} is not supported")
 
 
@@ -100,7 +183,7 @@ class Experiment:
         iids: typing.List[int],
         dims: typing.List[int],
         reps: int = 1,
-        problem_type: str = "BBOB",
+        problem_type: str = "Real",
         njobs: int = 1,
         logged: bool = True,
         logger_triggers: typing.List[logger.trigger.Trigger] = [
@@ -254,7 +337,7 @@ class Experiment:
             l.watch(algorithm, self.logged_attributes)
             l.reset()
             p.attach_logger(l)
-            
+
         self.apply(algorithm, p)
 
     def apply(self, algorithm: any, problem: ProblemType):
@@ -277,14 +360,20 @@ class Experiment:
             An optional name of the the newly added function.
         """
 
-        if self.problem_type in ("PBO", "Integer"):
-            p = problem.wrap_integer_problem(p, name or "CustomProblem", **kwargs)
-            self.problem_type = "Integer"
+        name = name or "CustomProblem"
+
+        if self.problem_type == "Integer":
+            problem.wrap_integer_problem(p, name, **kwargs)
+        elif self.problem_type == "Real":
+            problem.wrap_real_problem(p, name, **kwargs)
         else:
-            p = problem.wrap_real_problem(p, name or "CustomProblem", **kwargs)
-            self.problem_type = "Real"
-        
-        self.fids.append(p.meta_data.problem_id)
+            warnings.warn(
+                "Adding custom problems is only allowed for problem_type in ('Integer', 'Real'). "
+                "The added problem is ignored."
+            )
+            return
+
+        self.fids.append(get_problem_id(name, self.problem_type))
 
     def merge_output_to_single_folder(self, prefix: str, target_folder: str):
         """Merges all ioh data folders into a single folder, having the same folder name prefix
@@ -374,7 +463,6 @@ class Experiment:
         else:
             for job in iterator:
                 self.evaluate(*job)
-
 
         self.merge_tmp_folders()
 

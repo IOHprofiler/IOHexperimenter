@@ -382,8 +382,8 @@ namespace ioh
         wrap_function(ObjectiveFunction<T> f, const std::string &name,
                       const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
                       const std::optional<T> lb = std::nullopt, const std::optional<T> ub = std::nullopt,
-                      VariablesTransformationFunction<T> transform_variables_function = utils::identity<std::vector<T>, int>,
-                      ObjectiveTransformationFunction transform_objectives_function = utils::identity<double, int>,
+                      std::optional<VariablesTransformationFunction<T>> transform_variables_function = std::nullopt,
+                      std::optional<ObjectiveTransformationFunction> transform_objectives_function = std::nullopt,
                       std::optional<CalculateObjectiveFunction<T>> calculate_objective = std::nullopt)
         {
             auto &factory = ProblemFactoryType<Problem<T>>::instance();
@@ -393,14 +393,18 @@ namespace ioh
             auto constraint = Constraint<T>(1, lb.value_or(std::numeric_limits<T>::lowest()),
                                             ub.value_or(std::numeric_limits<T>::max()));
 
-            factory.include(name, id, [=](const int instance, const int dimension) {
-                auto objective = calculate_objective ? calculate_objective.value()(instance, dimension)
-                                                     : Solution<T>(dimension, optimization_type);
+            auto tx = transform_variables_function.value_or(utils::identity<std::vector<T>, int>);
+            auto ty = transform_objectives_function.value_or(utils::identity<double, int>);
 
-                return std::make_unique<WrappedProblem<T>>(f, name, dimension, id, instance, optimization_type,
-                                                           constraint, transform_variables_function,
-                                                           transform_objectives_function, objective);
-            });
+            factory.include(name, id,
+                            [f, name, id, optimization_type, constraint, tx, ty, calculate_objective](const int iid,
+                                                                                                      const int dim) {
+                                auto objective = calculate_objective ? calculate_objective.value()(iid, dim)
+                                                                     : Solution<T>(dim, optimization_type);
+
+                                return std::make_unique<WrappedProblem<T>>(f, name, dim, id, iid, optimization_type,
+                                                                           constraint, tx, ty, objective);
+                            });
         }
 
         //! Type def for Real problems
