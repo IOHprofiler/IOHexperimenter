@@ -59,8 +59,8 @@ void define_constraint(py::module &m, const std::string &name)
     options.disable_function_signatures();
 
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<std::vector<T>, std::vector<T>>(), py::arg("ub"), py::arg("lb"))
-        .def(py::init<int, T, T>(), py::arg("size"), py::arg("ub"), py::arg("lb"))
+        .def(py::init<std::vector<T>, std::vector<T>>(), py::arg("lb"), py::arg("ub"))
+        .def(py::init<int, T, T>(), py::arg("size"), py::arg("lb"), py::arg("ub"))
         .def_readonly("ub", &Class::ub, "The upper bound (box constraint)")
         .def_readonly("lb", &Class::lb, "The lower bound (box constraint)")
         .def("__repr__", &Class::repr)

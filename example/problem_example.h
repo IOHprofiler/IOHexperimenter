@@ -83,12 +83,12 @@ inline void extending_problems_example()
     std::cout << another_problem->meta_data() << std::endl;
 
     // We also provide convenience wrapper functions for wrapping 'standalone' functions.
-    auto const_z_problem = ioh::problem::wrap_function<double>(&constant_zero, "ConstantZero");
-    std::cout << const_z_problem.meta_data() << std::endl;
+    // auto const_z_problem = ioh::problem::wrap_function<double>(&constant_zero, "ConstantZero");
+    // std::cout << const_z_problem.meta_data() << std::endl;
 
-    // Note that this also 'auto-registers' the problem
-    auto const_z_problem_f = factory.create("ConstantZero", 1, 10);
-    std::cout << const_z_problem_f->meta_data() << std::endl;
+    // // Note that this also 'auto-registers' the problem
+    // auto const_z_problem_f = factory.create("ConstantZero", 1, 10);
+    // std::cout << const_z_problem_f->meta_data() << std::endl;
     
 }
 

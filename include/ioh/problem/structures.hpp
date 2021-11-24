@@ -29,12 +29,22 @@ namespace ioh
              */
             Solution(const std::vector<T> &x, const double y) : x(x), y(y) {}
 
+
+            //! Shorthand constructor for use with unknown optimum
+            Solution(const int n_variables, const common::OptimizationType optimization_type) : 
+                x(std::vector<T>(n_variables, std::numeric_limits<T>::signaling_NaN())),
+                y{optimization_type == common::OptimizationType::Minimization
+                             ? -std::numeric_limits<double>::infinity()
+                             : std::numeric_limits<double>::infinity()} {}
+
             Solution() = default;
 
-            std::string repr() const override { return fmt::format("<Solution x: {} y: {}>", x, y); }
+            std::string repr() const override {
+                return fmt::format("<Solution x: {} y: {}>", x, y); }
 
             //! Cast solution to double type
-            [[nodiscard]] Solution<double> as_double() const { return {std::vector<double>(x.begin(), x.end()), y}; }
+            [[nodiscard]] Solution<double> as_double() const {
+                return {std::vector<double>(x.begin(), x.end()), y}; }
         };
 
         //! Box-Constraint object
@@ -94,9 +104,8 @@ namespace ioh
             //! Return resize version of constraint
             Constraint<T> resize(const int s) const
             {
-                return Constraint<T>(std::vector<T>(s, std::vector<T>(s, lb.at(0)),  ub.at(0)));
+                return Constraint<T>(std::vector<T>(s, std::vector<T>(s, lb.at(0)), ub.at(0)));
             }
-
 
             std::string repr() const override { return fmt::format("<Constraint lb: [{}] ub: [{}]>", lb, ub); }
         };
