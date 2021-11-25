@@ -9,4 +9,7 @@
 
 // #include "problem/python.hpp"
 #include "problem/wmodel.hpp"
+
+#ifdef USING_MKLANDSCAPE
 #include "problem/mklandscape.hpp"
+#endif

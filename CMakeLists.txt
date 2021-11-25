@@ -51,7 +51,9 @@ target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
 
 if(ENABLE_MKLANDSCAPE_PROBLEMS)
 
-    
+    # Adding Macro for C++ Headers
+    add_compile_definitions(USING_MKLANDSCAPE)
+
     # Find cargo executable
     find_program(CARGO_EXECUTABLE cargo)
     if(${CARGO_EXECUTABLE} STREQUAL CARGO_EXECUTABLE-NOTFOUND)
@@ -59,9 +61,10 @@ if(ENABLE_MKLANDSCAPE_PROBLEMS)
             COMMAND bash -c "curl https://sh.rustup.rs -sSf | sh -s -- -y"
             OUTPUT_VARIABLE outVar
             )
-        )
     endif()
     add_subdirectory(${EXTERNAL_DIR}/MkLandscape)
+    file(COPY ${EXTERNAL_DIR}/MkLandscape/problem_generator.h DESTINATION include/ioh/problem/mklandscape/)
+    
     target_link_libraries(ioh INTERFACE problem_generator_lib)
 endif()
 
