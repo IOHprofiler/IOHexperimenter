@@ -104,15 +104,14 @@ std::vector<double> test_problem(const std::vector<double> &)
 Then, you only need to "wrap" this new function as follows:
 
 ```c++
-auto new_problem = ioh::problem::wrap_function<double>(
+ioh::problem::wrap_function<double>(
   &test_problem,
   "test_problem" // name for the new function
 );
-std::cout << new_problem.meta_data() << std::endl;
 ```
 
-After wrapping, we could also create this `test_problem` from the problem factory. Note that,
-the instance id is ineffective in this approach since we haven't implemented it for the wrapped problem.
+After wrapping, we could create this `test_problem` from the problem factory. Note that,
+the instance id is ineffective in this approach since we haven't implemented any transformations for the wrapped problem.
 
 ```c++
 auto &factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();

@@ -26,7 +26,7 @@ namespace ioh::common::random
     /**
      * @brief Seed the random number generator device. This is a std::mt19937 rng
      */
-    inline void seed(const size_t seed){
+    inline void seed(const unsigned int seed){
         gen.seed(seed);
     }
     

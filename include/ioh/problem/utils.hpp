@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <numeric>
 #include "ioh/common/random.hpp"
 
 namespace ioh
@@ -351,6 +352,11 @@ namespace ioh
 
                 return max - k - (2 * j * j - j) - q % 2 * (-2 * j + 1);
             }
+
+            //! Helper function which forwards its first argument
+            template<typename T, typename... Args>
+            T identity(T p, Args &&...) {return p;}
+
         } // namespace utils
     } // namespace problem
 } // namespace ioh
