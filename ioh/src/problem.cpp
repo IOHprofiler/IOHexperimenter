@@ -548,9 +548,9 @@ void define_problem(py::module &m)
     define_wmodels(m);
 
     py::module_::import("atexit").attr("register")(py::cpp_function([]() {
-        for (const auto fn : WRAPPED_FUNCTIONS)
-        {
-            fn.dec_ref();
+        for (const auto fn : WRAPPED_FUNCTIONS){
+            if (fn)
+                fn.dec_ref();
         }
     }));
 }
