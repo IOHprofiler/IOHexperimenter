@@ -266,8 +266,9 @@ namespace ioh
         protected:
             //! Local memory of the best value.
             double _best;
+            
             //! Current problem type.
-            common::OptimizationType _type;
+            common::FOptimizationType _type;
 
             //! State management flag.
             // Avoids being dependent on a problem at construction,
@@ -284,14 +285,15 @@ namespace ioh
              * @param best Local memory of the best value.
              * @param type Current problem type.
              */
-            OnImprovement(double best, common::OptimizationType type) : _best(best), _type(type), _has_type(true) {}
+            OnImprovement(double best, common::OptimizationType type) : _best(best), _type{type}, _has_type(true) {
+
+            }
 
             //! Accessor for _best
             double best() const { return _best; }
 
             //! Accessor for _type
-            common::OptimizationType type() const { return _type; }
-
+            common::OptimizationType type() const { return _type.type(); }
 
             //! Main call interface.
             bool operator()(const logger::Info &log_info, const problem::MetaData &pb_info) override
@@ -299,7 +301,7 @@ namespace ioh
                 if (not _has_type)
                 {
                     _type = pb_info.optimization_type;
-                    if (_type == common::OptimizationType::Minimization)
+                    if (_type.type() == common::OptimizationType::Minimization)
                     {
                         IOH_DBG(debug, "reconfigure problem type as minimization")
                         _best = std::numeric_limits<double>::infinity();
@@ -316,7 +318,7 @@ namespace ioh
                 // That would force to test for equality to trigger on improvement,
                 // and we only want to trigger on strict inequality.
                 assert(_has_type);
-                if (common::compare_objectives(log_info.transformed_y, _best, _type))
+                if (_type(log_info.transformed_y, _best))
                 {
                     _best = log_info.transformed_y;
                     IOH_DBG(debug, "triggered on improvement by " << log_info.transformed_y << " / " << _best)

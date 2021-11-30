@@ -418,7 +418,7 @@ namespace ioh::logger
                 {
                     evals_ = log_info.evaluations;
                     FlatFile::call(log_info);
-                    if (compare_objectives(log_info.current.y, best_point_.point.y, problem_->optimization_type))
+                    if (problem_->optimization_type(log_info.current.y, best_point_.point.y))
                         best_point_ = {log_info.evaluations, log_info.current.as_double()};
                     log_info_ = {};
                 }

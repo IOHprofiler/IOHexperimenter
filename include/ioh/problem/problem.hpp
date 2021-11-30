@@ -141,7 +141,7 @@ namespace ioh
              * @param constraint a constraint for the problem
              */
             explicit Problem(MetaData meta_data, Constraint<T> constraint = Constraint<T>()) :
-                Problem(meta_data, constraint, {meta_data.n_variables, meta_data.optimization_type})
+                Problem(meta_data, constraint, {meta_data.n_variables, meta_data.optimization_type.type()})
             {
             }
 
