@@ -1,11 +1,14 @@
 import typing
-from .iohcpp import IntegerConstraint as IntegerConstraint, IntegerSolution as IntegerSolution, IntegerState as IntegerState, LogInfo as LogInfo, MetaData as MetaData, OptimizationType as OptimizationType, RealConstraint as RealConstraint, RealSolution as RealSolution, RealState as RealState, logger, suite as suite
+from .iohcpp import IntegerConstraint as IntegerConstraint, IntegerSolution as IntegerSolution, IntegerState as IntegerState, LogInfo as LogInfo, MetaData as MetaData, OptimizationType, RealConstraint as RealConstraint, RealSolution as RealSolution, RealState as RealState, logger, suite as suite
 from typing import Any
 
 ProblemType: Any
+VariableType: Any
+ObjectiveType: Any
 
-def get_problem(fid: typing.Union[int, str], iid: int, dim: int, problem_type: str = ...) -> ProblemType: ...
-def wrap_problem(function) -> None: ...
+def get_problem(fid: typing.Union[int, str], instance: int = ..., dimension: int = ..., problem_type: str = ...) -> ProblemType: ...
+def wrap_problem(function: typing.Callable[[ObjectiveType], float], name: str, problem_type: str, dimension: int = ..., instance: int = ..., optimization_type: OptimizationType = ..., lb: VariableType = ..., ub: VariableType = ..., transform_variables: typing.Callable[[ObjectiveType, int], ObjectiveType] = ..., transform_objectives: typing.Callable[[float, int], float] = ..., calculate_objective: typing.Callable[[int, int], typing.Union[IntegerSolution, RealSolution]] = ...) -> ProblemType: ...
+def get_problem_id(problem_name: str, problem_type: str): ...
 
 class Experiment:
     algorithm: Any

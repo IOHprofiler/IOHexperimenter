@@ -89,7 +89,7 @@ class PyProblem : public P
         auto &factory = ioh::common::Factory<P, int, int>::instance();
         factory.include(meta_data.name, meta_data.problem_id, [=](const int instance, const int n_variables) {
             return std::make_shared<PyProblem<P, T>>(
-                MetaData(meta_data.problem_id, instance, meta_data.name, n_variables, meta_data.optimization_type),
+                MetaData(meta_data.problem_id, instance, meta_data.name, n_variables, meta_data.optimization_type.type()),
                 constraint.resize(n_variables));
         });
         return true;
