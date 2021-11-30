@@ -127,7 +127,7 @@ namespace ioh
             std::string name;
 
             //! optimization type
-            common::OptimizationType optimization_type;
+            common::FOptimizationType optimization_type;
 
             //! problem dimension
             int n_variables{};
@@ -148,7 +148,7 @@ namespace ioh
             MetaData(const int problem_id, const int instance, std::string name, const int n_variables,
                      const common::OptimizationType optimization_type = common::OptimizationType::Minimization) :
                 instance(instance),
-                problem_id(problem_id), name(std::move(name)), optimization_type(optimization_type),
+                problem_id(problem_id), name(std::move(name)), optimization_type{optimization_type},
                 n_variables(n_variables),
                 initial_objective_value(optimization_type == common::OptimizationType::Minimization
                                             ? std::numeric_limits<double>::infinity()
@@ -236,7 +236,7 @@ namespace ioh
             void update(const MetaData &meta_data, const Solution<T> &objective)
             {
                 ++evaluations;
-                if (common::compare_objectives(current.y, current_best.y, meta_data.optimization_type))
+                if (meta_data.optimization_type(current.y, current_best.y))
                 {
                     current_best_internal = current_internal;
                     current_best = current;
