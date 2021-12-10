@@ -11,5 +11,5 @@
 #include "problem/wmodel.hpp"
 
 #ifdef USING_MKLANDSCAPE
-#include "problem/mklandscape.hpp"
+#include "problem/mklandscape/cliqueTreeC.hpp"
 #endif

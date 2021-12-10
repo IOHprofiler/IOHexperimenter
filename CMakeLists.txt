@@ -56,15 +56,18 @@ if(ENABLE_MKLANDSCAPE_PROBLEMS)
 
     # Find cargo executable
     find_program(CARGO_EXECUTABLE cargo)
+    message(${CARGO_EXECUTABLE})
     if(${CARGO_EXECUTABLE} STREQUAL CARGO_EXECUTABLE-NOTFOUND)
-         execute_process(
+        execute_process(
             COMMAND bash -c "curl https://sh.rustup.rs -sSf | sh -s -- -y"
-            OUTPUT_VARIABLE outVar
-            )
+            OUTPUT_VARIABLE outVar)
+        execute_process(
+            COMMAND bash -c "source $HOME/.cargo/env"
+            OUTPUT_VARIABLE outVar)
     endif()
-    add_subdirectory(${EXTERNAL_DIR}/MkLandscape)
-    file(COPY ${EXTERNAL_DIR}/MkLandscape/problem_generator.h DESTINATION include/ioh/problem/mklandscape/)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${EXTERNAL_DIR}/MkLandscape/release)
     
+    add_subdirectory(${EXTERNAL_DIR}/MkLandscape include/ioh/problem/mklandscape/)
     target_link_libraries(ioh INTERFACE problem_generator_lib)
 endif()
 
@@ -147,7 +150,7 @@ export(PACKAGE ioh)
 
 
 # Add subdirectories to build.
-if(BUILD_TESTS) 
+if(BUILD_TESTS)
     add_subdirectory(tests)
 endif()
 
