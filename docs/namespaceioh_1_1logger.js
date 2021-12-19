@@ -24,6 +24,7 @@ var namespaceioh_1_1logger =
     [ "eah", "namespaceioh_1_1logger_1_1eah.html", "namespaceioh_1_1logger_1_1eah" ],
     [ "stat", "namespaceioh_1_1logger_1_1stat.html", "namespaceioh_1_1logger_1_1stat" ],
     [ "Combine", "classioh_1_1logger_1_1_combine.html", "classioh_1_1logger_1_1_combine" ],
+    [ "Default", "classioh_1_1logger_1_1_default.html", "classioh_1_1logger_1_1_default" ],
     [ "EAH", "classioh_1_1logger_1_1_e_a_h.html", "classioh_1_1logger_1_1_e_a_h" ],
     [ "FlatFile", "classioh_1_1logger_1_1_flat_file.html", "classioh_1_1logger_1_1_flat_file" ],
     [ "Info", "structioh_1_1logger_1_1_info.html", "structioh_1_1logger_1_1_info" ],

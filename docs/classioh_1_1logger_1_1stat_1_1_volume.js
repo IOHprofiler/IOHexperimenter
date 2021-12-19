@@ -8,5 +8,5 @@ var classioh_1_1logger_1_1stat_1_1_volume =
     [ "operator()", "classioh_1_1logger_1_1stat_1_1_volume.html#af9e62626de3f3b9455d1deab9d75d7f4", null ],
     [ "_has_nadir", "classioh_1_1logger_1_1stat_1_1_volume.html#a4c489e7491eea1673f300a836902c64e", null ],
     [ "_nadir", "classioh_1_1logger_1_1stat_1_1_volume.html#ac882e7f7715360228b1eb48929df8cce", null ],
-    [ "_optim_type", "classioh_1_1logger_1_1stat_1_1_volume.html#ad30e559a4129f32d830c50c8a7f16fed", null ]
+    [ "_optim_type", "classioh_1_1logger_1_1stat_1_1_volume.html#a73553ca4ea69154aca113d982bb88278", null ]
 ];

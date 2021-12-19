@@ -9,6 +9,6 @@ var structioh_1_1problem_1_1_meta_data =
     [ "instance", "structioh_1_1problem_1_1_meta_data.html#acb3c2ca4cd902f65fc2dae2d4f35d334", null ],
     [ "n_variables", "structioh_1_1problem_1_1_meta_data.html#a67a73db29b3a04908363a1e0a649ce75", null ],
     [ "name", "structioh_1_1problem_1_1_meta_data.html#acb8c5ceb1960e0c37660e668157ffae3", null ],
-    [ "optimization_type", "structioh_1_1problem_1_1_meta_data.html#a6fd54ff5a3553272792774a0d442009d", null ],
+    [ "optimization_type", "structioh_1_1problem_1_1_meta_data.html#aed5cacb9769c1292bde564ba27edf298", null ],
     [ "problem_id", "structioh_1_1problem_1_1_meta_data.html#a9b4e1b192d991f83864b7ef958288799", null ]
 ];

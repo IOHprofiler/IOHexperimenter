@@ -42,7 +42,7 @@ void fail(const Error error, const std::string& msg = "")
 
 int main(int argc, char** argv)
 {
-    auto m = common::OptimizationType::Minimization;
+    // auto m = common::OptimizationType::Minimization;
 
     if(argc < 4) { fail(not_enough_args, "Not enough arguments"); }
 

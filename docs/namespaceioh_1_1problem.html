@@ -158,10 +158,21 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a6c275da9389d062ef703187efffe8dfb"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a6c275da9389d062ef703187efffe8dfb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1problem.html#a6c275da9389d062ef703187efffe8dfb">Function</a> = std::function&lt; double(const std::vector&lt; T &gt; &amp;)&gt;</td></tr>
-<tr class="memdesc:a6c275da9389d062ef703187efffe8dfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">typedef for functions which can be wrapped in <a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html">WrappedProblem</a>  <a href="namespaceioh_1_1problem.html#a6c275da9389d062ef703187efffe8dfb">More...</a><br /></td></tr>
-<tr class="separator:a6c275da9389d062ef703187efffe8dfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec8a338670bf985e76805ef7e7d1816b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aec8a338670bf985e76805ef7e7d1816b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1problem.html#aec8a338670bf985e76805ef7e7d1816b">ObjectiveFunction</a> = std::function&lt; double(const std::vector&lt; T &gt; &amp;)&gt;</td></tr>
+<tr class="memdesc:aec8a338670bf985e76805ef7e7d1816b"><td class="mdescLeft">&#160;</td><td class="mdescRight">typedef for functions which can be wrapped in <a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html">WrappedProblem</a>  <a href="namespaceioh_1_1problem.html#aec8a338670bf985e76805ef7e7d1816b">More...</a><br /></td></tr>
+<tr class="separator:aec8a338670bf985e76805ef7e7d1816b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d75509199b6329270d88b993a1ffd7a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a4d75509199b6329270d88b993a1ffd7a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1problem.html#a4d75509199b6329270d88b993a1ffd7a">VariablesTransformationFunction</a> = std::function&lt; std::vector&lt; T &gt;(std::vector&lt; T &gt;, const int)&gt;</td></tr>
+<tr class="memdesc:a4d75509199b6329270d88b993a1ffd7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">typedef for functions which take a vector and return a transformed version of that vector.  <a href="namespaceioh_1_1problem.html#a4d75509199b6329270d88b993a1ffd7a">More...</a><br /></td></tr>
+<tr class="separator:a4d75509199b6329270d88b993a1ffd7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30fdd7af0b7f3a3767bc5d59e3c49cb3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1problem.html#a30fdd7af0b7f3a3767bc5d59e3c49cb3">ObjectiveTransformationFunction</a> = std::function&lt; double(const double, const int)&gt;</td></tr>
+<tr class="memdesc:a30fdd7af0b7f3a3767bc5d59e3c49cb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">typedef for functions which take a value and return a transformed version of that value.  <a href="namespaceioh_1_1problem.html#a30fdd7af0b7f3a3767bc5d59e3c49cb3">More...</a><br /></td></tr>
+<tr class="separator:a30fdd7af0b7f3a3767bc5d59e3c49cb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8da01fca625be01da12f93a4f46bc054"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a8da01fca625be01da12f93a4f46bc054"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1problem.html#a8da01fca625be01da12f93a4f46bc054">CalculateObjectiveFunction</a> = std::function&lt; <a class="el" href="structioh_1_1problem_1_1_solution.html">Solution</a>&lt; T &gt;(const int, const int)&gt;</td></tr>
+<tr class="memdesc:a8da01fca625be01da12f93a4f46bc054"><td class="mdescLeft">&#160;</td><td class="mdescRight">typedef for functions which compute a value for an optimum based on a given instance, dimension combination Used in wrap_problem  <a href="namespaceioh_1_1problem.html#a8da01fca625be01da12f93a4f46bc054">More...</a><br /></td></tr>
+<tr class="separator:a8da01fca625be01da12f93a4f46bc054"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6edb36c1113875bd966c67dc0eebe736"><td class="memTemplParams" colspan="2">template&lt;typename ProblemType &gt; </td></tr>
 <tr class="memitem:a6edb36c1113875bd966c67dc0eebe736"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1problem.html#a6edb36c1113875bd966c67dc0eebe736">ProblemRegistryType</a> = <a class="el" href="structioh_1_1common_1_1_register_with_factory.html">common::RegisterWithFactory</a>&lt; ProblemType, int, int &gt;</td></tr>
 <tr class="memdesc:a6edb36c1113875bd966c67dc0eebe736"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registry type def.  <a href="namespaceioh_1_1problem.html#a6edb36c1113875bd966c67dc0eebe736">More...</a><br /></td></tr>
@@ -189,10 +200,10 @@ using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nam
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2f83252ed3be4f43666ee97586bfd46c"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a2f83252ed3be4f43666ee97586bfd46c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html">WrappedProblem</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1problem.html#a2f83252ed3be4f43666ee97586bfd46c">wrap_function</a> (<a class="el" href="namespaceioh_1_1problem.html#a6c275da9389d062ef703187efffe8dfb">Function</a>&lt; T &gt; f, const std::string &amp;name, const int n_variables=5, const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">common::OptimizationType</a> optimization_type=common::OptimizationType::Minimization, <a class="el" href="structioh_1_1problem_1_1_constraint.html">Constraint</a>&lt; T &gt; constraint=<a class="el" href="structioh_1_1problem_1_1_constraint.html">Constraint</a>&lt; T &gt;())</td></tr>
-<tr class="memdesc:a2f83252ed3be4f43666ee97586bfd46c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shorthand for wrapping function in a problem.  <a href="namespaceioh_1_1problem.html#a2f83252ed3be4f43666ee97586bfd46c">More...</a><br /></td></tr>
-<tr class="separator:a2f83252ed3be4f43666ee97586bfd46c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71976cf1e0e908bd49cf5b0f27f6a0ce"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a71976cf1e0e908bd49cf5b0f27f6a0ce"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1problem.html#a71976cf1e0e908bd49cf5b0f27f6a0ce">wrap_function</a> (<a class="el" href="namespaceioh_1_1problem.html#aec8a338670bf985e76805ef7e7d1816b">ObjectiveFunction</a>&lt; T &gt; f, const std::string &amp;name, const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">common::OptimizationType</a> optimization_type=common::OptimizationType::Minimization, const std::optional&lt; T &gt; lb=std::nullopt, const std::optional&lt; T &gt; ub=std::nullopt, std::optional&lt; <a class="el" href="namespaceioh_1_1problem.html#a4d75509199b6329270d88b993a1ffd7a">VariablesTransformationFunction</a>&lt; T &gt;&gt; transform_variables_function=std::nullopt, std::optional&lt; <a class="el" href="namespaceioh_1_1problem.html#a30fdd7af0b7f3a3767bc5d59e3c49cb3">ObjectiveTransformationFunction</a> &gt; transform_objectives_function=std::nullopt, std::optional&lt; <a class="el" href="namespaceioh_1_1problem.html#a8da01fca625be01da12f93a4f46bc054">CalculateObjectiveFunction</a>&lt; T &gt;&gt; calculate_objective=std::nullopt)</td></tr>
+<tr class="memdesc:a71976cf1e0e908bd49cf5b0f27f6a0ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shorthand for wrapping function in a problem.  <a href="namespaceioh_1_1problem.html#a71976cf1e0e908bd49cf5b0f27f6a0ce">More...</a><br /></td></tr>
+<tr class="separator:a71976cf1e0e908bd49cf5b0f27f6a0ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classioh_1_1problem_1_1_problem.html" title="Problem Base class.">Problem</a> namespace. </p>
@@ -222,8 +233,8 @@ template&lt;class Derived , class Parent &gt; </div>
 
 </div>
 </div>
-<a id="a6c275da9389d062ef703187efffe8dfb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c275da9389d062ef703187efffe8dfb">&#9670;&nbsp;</a></span>Function</h2>
+<a id="a8da01fca625be01da12f93a4f46bc054"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8da01fca625be01da12f93a4f46bc054">&#9670;&nbsp;</a></span>CalculateObjectiveFunction</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -231,12 +242,59 @@ template&lt;class Derived , class Parent &gt; </div>
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceioh_1_1problem.html#a6c275da9389d062ef703187efffe8dfb">ioh::problem::Function</a> = typedef std::function&lt;double(const std::vector&lt;T&gt; &amp;)&gt;</td>
+          <td class="memname">using <a class="el" href="namespaceioh_1_1problem.html#a8da01fca625be01da12f93a4f46bc054">ioh::problem::CalculateObjectiveFunction</a> = typedef std::function&lt;<a class="el" href="structioh_1_1problem_1_1_solution.html">Solution</a>&lt;T&gt;(const int, const int)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>typedef for functions which compute a value for an optimum based on a given instance, dimension combination Used in wrap_problem </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>type of the problem </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aec8a338670bf985e76805ef7e7d1816b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec8a338670bf985e76805ef7e7d1816b">&#9670;&nbsp;</a></span>ObjectiveFunction</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceioh_1_1problem.html#aec8a338670bf985e76805ef7e7d1816b">ioh::problem::ObjectiveFunction</a> = typedef std::function&lt;double(const std::vector&lt;T&gt; &amp;)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>typedef for functions which can be wrapped in <a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html">WrappedProblem</a> </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>type of the problem </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a30fdd7af0b7f3a3767bc5d59e3c49cb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30fdd7af0b7f3a3767bc5d59e3c49cb3">&#9670;&nbsp;</a></span>ObjectiveTransformationFunction</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceioh_1_1problem.html#a30fdd7af0b7f3a3767bc5d59e3c49cb3">ioh::problem::ObjectiveTransformationFunction</a> = typedef std::function&lt;double(const double, const int)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>typedef for functions which take a value and return a transformed version of that value. </p>
+<p>Used in <a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html">WrappedProblem</a></p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>type of the problem </td></tr>
@@ -318,9 +376,8 @@ template&lt;typename ProblemType &gt; </div>
 
 </div>
 </div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a2f83252ed3be4f43666ee97586bfd46c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f83252ed3be4f43666ee97586bfd46c">&#9670;&nbsp;</a></span>wrap_function()</h2>
+<a id="a4d75509199b6329270d88b993a1ffd7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d75509199b6329270d88b993a1ffd7a">&#9670;&nbsp;</a></span>VariablesTransformationFunction</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -328,9 +385,35 @@ template&lt;typename ProblemType &gt; </div>
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html">WrappedProblem</a>&lt;T&gt; ioh::problem::wrap_function </td>
+          <td class="memname">using <a class="el" href="namespaceioh_1_1problem.html#a4d75509199b6329270d88b993a1ffd7a">ioh::problem::VariablesTransformationFunction</a> = typedef std::function&lt;std::vector&lt;T&gt;(std::vector&lt;T&gt;, const int)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>typedef for functions which take a vector and return a transformed version of that vector. </p>
+<p>Used in <a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html">WrappedProblem</a></p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>type of the problem </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a71976cf1e0e908bd49cf5b0f27f6a0ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71976cf1e0e908bd49cf5b0f27f6a0ce">&#9670;&nbsp;</a></span>wrap_function()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void ioh::problem::wrap_function </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceioh_1_1problem.html#a6c275da9389d062ef703187efffe8dfb">Function</a>&lt; T &gt;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceioh_1_1problem.html#aec8a338670bf985e76805ef7e7d1816b">ObjectiveFunction</a>&lt; T &gt;&#160;</td>
           <td class="paramname"><em>f</em>, </td>
         </tr>
         <tr>
@@ -342,20 +425,38 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>n_variables</em> = <code>5</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">common::OptimizationType</a>&#160;</td>
           <td class="paramname"><em>optimization_type</em> = <code>common::OptimizationType::Minimization</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structioh_1_1problem_1_1_constraint.html">Constraint</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>constraint</em> = <code><a class="el" href="structioh_1_1problem_1_1_constraint.html">Constraint</a>&lt;T&gt;()</code>&#160;</td>
+          <td class="paramtype">const std::optional&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>lb</em> = <code>std::nullopt</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::optional&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>ub</em> = <code>std::nullopt</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::optional&lt; <a class="el" href="namespaceioh_1_1problem.html#a4d75509199b6329270d88b993a1ffd7a">VariablesTransformationFunction</a>&lt; T &gt;&gt;&#160;</td>
+          <td class="paramname"><em>transform_variables_function</em> = <code>std::nullopt</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::optional&lt; <a class="el" href="namespaceioh_1_1problem.html#a30fdd7af0b7f3a3767bc5d59e3c49cb3">ObjectiveTransformationFunction</a> &gt;&#160;</td>
+          <td class="paramname"><em>transform_objectives_function</em> = <code>std::nullopt</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::optional&lt; <a class="el" href="namespaceioh_1_1problem.html#a8da01fca625be01da12f93a4f46bc054">CalculateObjectiveFunction</a>&lt; T &gt;&gt;&#160;</td>
+          <td class="paramname"><em>calculate_objective</em> = <code>std::nullopt</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -376,13 +477,15 @@ template&lt;typename T &gt; </div>
   <table class="params">
     <tr><td class="paramname">f</td><td>a function to be wrapped </td></tr>
     <tr><td class="paramname">name</td><td>the name for the new function in the registry </td></tr>
-    <tr><td class="paramname">n_variables</td><td>the dimension of the problem </td></tr>
     <tr><td class="paramname">optimization_type</td><td>the type of optimization </td></tr>
-    <tr><td class="paramname">constraint</td><td>the contraint for the problem </td></tr>
+    <tr><td class="paramname">lb</td><td>lower bound for the constraint of the problem </td></tr>
+    <tr><td class="paramname">ub</td><td>upper bound for the constraint of the problem </td></tr>
+    <tr><td class="paramname">transform_variables_function</td><td>function which transforms the variables of the search problem prior to calling f. </td></tr>
+    <tr><td class="paramname">transform_objectives_function</td><td>a function which transforms the objective value of the search problem after calling f. </td></tr>
+    <tr><td class="paramname">calculate_objective_function</td><td>a function which returns the optimum based on a given problem dimension and instance. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>WrappedProblem&lt;T&gt; A wrapped problem instance </dd></dl>
 
 </div>
 </div>
@@ -392,7 +495,7 @@ template&lt;typename T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>ioh</b></li><li class="navelem"><a class="el" href="namespaceioh_1_1problem.html">problem</a></li>
-    <li class="footer">Generated on Fri Sep 24 2021 15:51:41 for IOH by
+    <li class="footer">Generated on Sat Dec 18 2021 16:52:37 for IOH by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

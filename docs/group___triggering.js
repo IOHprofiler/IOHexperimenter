@@ -51,7 +51,7 @@ var group___triggering =
       [ "type", "classioh_1_1trigger_1_1_on_improvement.html#a49930a6b4958d734ee34019bfb796f07", null ],
       [ "_best", "classioh_1_1trigger_1_1_on_improvement.html#a03bd9824c02d08c5515f3f206930a4f7", null ],
       [ "_has_type", "classioh_1_1trigger_1_1_on_improvement.html#ad91728fbdab8a9fb3c6d9f2e934da585", null ],
-      [ "_type", "classioh_1_1trigger_1_1_on_improvement.html#adbebafac2faa559b790b361c1e0a9e50", null ]
+      [ "_type", "classioh_1_1trigger_1_1_on_improvement.html#a5ca1bd9f741beb19a5261fd0223325d7", null ]
     ] ],
     [ "Each", "classioh_1_1trigger_1_1_each.html", [
       [ "Each", "classioh_1_1trigger_1_1_each.html#abd9467bcf3324f6489eb369fefae9c07", null ],

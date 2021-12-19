@@ -124,23 +124,25 @@ $(document).ready(function(){initNavTree('leading__ones__epistasis_8hpp_source.h
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                    <a class="code" href="classioh_1_1problem_1_1_p_b_o_problem.html">PBOProblem</a>(14, instance, n_variables, <span class="stringliteral">&quot;LeadingOnesEpistasis&quot;</span>)</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                {</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                    <a class="code" href="classioh_1_1problem_1_1_problem.html#ab86840b83707dd92208b74e97b0c72a9">objective_</a>.y = {<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(n_variables)};</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                }</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            };</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        } <span class="comment">// namespace pbo</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    } <span class="comment">// namespace problem</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;} <span class="comment">// namespace ioh</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                    <a class="code" href="classioh_1_1problem_1_1_problem.html#ab86840b83707dd92208b74e97b0c72a9">objective_</a>.y = <a class="code" href="classioh_1_1problem_1_1_p_b_o.html#a7e86a8d6ddbf7232ca5c31eff308aa8d">transform_objectives</a>(<a class="code" href="classioh_1_1problem_1_1_problem.html#ab86840b83707dd92208b74e97b0c72a9">objective_</a>.y);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                }</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            };</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        } <span class="comment">// namespace pbo</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    } <span class="comment">// namespace problem</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;} <span class="comment">// namespace ioh</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aclassioh_1_1problem_1_1pbo_1_1_leading_ones_epistasis_html_abb7e216e05b685e05a54382d417a35c0"><div class="ttname"><a href="classioh_1_1problem_1_1pbo_1_1_leading_ones_epistasis.html#abb7e216e05b685e05a54382d417a35c0">ioh::problem::pbo::LeadingOnesEpistasis::LeadingOnesEpistasis</a></div><div class="ttdeci">LeadingOnesEpistasis(const int instance, const int n_variables)</div><div class="ttdoc">Construct a new LeadingOnes_Epistasis object.</div><div class="ttdef"><b>Definition:</b> leading_ones_epistasis.hpp:37</div></div>
-<div class="ttc" id="aclassioh_1_1problem_1_1_p_b_o_problem_html"><div class="ttname"><a href="classioh_1_1problem_1_1_p_b_o_problem.html">ioh::problem::PBOProblem</a></div><div class="ttdoc">CRTP class for PBO problems.</div><div class="ttdef"><b>Definition:</b> pbo_problem.hpp:52</div></div>
+<div class="ttc" id="aclassioh_1_1problem_1_1_p_b_o_problem_html"><div class="ttname"><a href="classioh_1_1problem_1_1_p_b_o_problem.html">ioh::problem::PBOProblem</a></div><div class="ttdoc">CRTP class for PBO problems.</div><div class="ttdef"><b>Definition:</b> pbo_problem.hpp:62</div></div>
 <div class="ttc" id="aclassioh_1_1problem_1_1pbo_1_1_leading_ones_epistasis_html_a988d30814300e22b48a39742c5a7ec4e"><div class="ttname"><a href="classioh_1_1problem_1_1pbo_1_1_leading_ones_epistasis.html#a988d30814300e22b48a39742c5a7ec4e">ioh::problem::pbo::LeadingOnesEpistasis::evaluate</a></div><div class="ttdeci">double evaluate(const std::vector&lt; int &gt; &amp;x) override</div><div class="ttdoc">Evaluation method.</div><div class="ttdef"><b>Definition:</b> leading_ones_epistasis.hpp:16</div></div>
+<div class="ttc" id="aclassioh_1_1problem_1_1_p_b_o_html_a7e86a8d6ddbf7232ca5c31eff308aa8d"><div class="ttname"><a href="classioh_1_1problem_1_1_p_b_o.html#a7e86a8d6ddbf7232ca5c31eff308aa8d">ioh::problem::PBO::transform_objectives</a></div><div class="ttdeci">double transform_objectives(const double y) override</div><div class="ttdoc">Objectives transformation method.</div><div class="ttdef"><b>Definition:</b> pbo_problem.hpp:22</div></div>
 <div class="ttc" id="aclassioh_1_1problem_1_1pbo_1_1_leading_ones_epistasis_html"><div class="ttname"><a href="classioh_1_1problem_1_1pbo_1_1_leading_ones_epistasis.html">ioh::problem::pbo::LeadingOnesEpistasis</a></div><div class="ttdoc">LeadingOnesEpistasis problem id 14.</div><div class="ttdef"><b>Definition:</b> leading_ones_epistasis.hpp:12</div></div>
 <div class="ttc" id="aclassioh_1_1problem_1_1_problem_html_ab86840b83707dd92208b74e97b0c72a9"><div class="ttname"><a href="classioh_1_1problem_1_1_problem.html#ab86840b83707dd92208b74e97b0c72a9">ioh::problem::Problem::objective_</a></div><div class="ttdeci">Solution&lt; T &gt; objective_</div><div class="ttdoc">The solution to the problem.</div><div class="ttdef"><b>Definition:</b> problem.hpp:33</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_16490b82e4913ea57419aaea13a7c432.html">ioh</a></li><li class="navelem"><a class="el" href="dir_ef669c8ccd66f3754dd4e819fb7c3d91.html">problem</a></li><li class="navelem"><a class="el" href="dir_413424b05ede86e55b0b237bdd4294a8.html">pbo</a></li><li class="navelem"><b>leading_ones_epistasis.hpp</b></li>
-    <li class="footer">Generated on Fri Sep 24 2021 15:51:41 for IOH by
+    <li class="footer">Generated on Sat Dec 18 2021 16:52:37 for IOH by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

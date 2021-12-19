@@ -9,5 +9,5 @@ var classioh_1_1logger_1_1stat_1_1_surface =
     [ "surface", "classioh_1_1logger_1_1stat_1_1_surface.html#a7335f76bc056a33e0b89ac00e76c4a17", null ],
     [ "_has_nadir", "classioh_1_1logger_1_1stat_1_1_surface.html#a4c489e7491eea1673f300a836902c64e", null ],
     [ "_nadir", "classioh_1_1logger_1_1stat_1_1_surface.html#ac882e7f7715360228b1eb48929df8cce", null ],
-    [ "_optim_type", "classioh_1_1logger_1_1stat_1_1_surface.html#ad30e559a4129f32d830c50c8a7f16fed", null ]
+    [ "_optim_type", "classioh_1_1logger_1_1stat_1_1_surface.html#a73553ca4ea69154aca113d982bb88278", null ]
 ];

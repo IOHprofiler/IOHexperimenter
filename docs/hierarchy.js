@@ -4,6 +4,9 @@ var hierarchy =
       [ "ioh.Problem", "classioh_1_1_problem.html", null ]
     ] ],
     [ "ioh::logger::analyzer::structures::Attributes", "structioh_1_1logger_1_1analyzer_1_1structures_1_1_attributes.html", null ],
+    [ "Base", null, [
+      [ "ioh::logger::Default", "classioh_1_1logger_1_1_default.html", null ]
+    ] ],
     [ "base", null, [
       [ "ioh::problem::python::ExternPythonProblem< InputType >", "classioh_1_1problem_1_1python_1_1_extern_python_problem.html", null ]
     ] ],
@@ -22,6 +25,7 @@ var hierarchy =
       [ "fmt::formatter< std::reference_wrapper< ioh::logger::Property > >", "structfmt_1_1formatter_3_01std_1_1reference__wrapper_3_01ioh_1_1logger_1_1_property_01_4_01_4.html", null ]
     ] ],
     [ "ioh::common::HasRepr", "structioh_1_1common_1_1_has_repr.html", [
+      [ "ioh::common::FOptimizationType", "classioh_1_1common_1_1_f_optimization_type.html", null ],
       [ "ioh::logger::analyzer::structures::AlgorithmInfo", "structioh_1_1logger_1_1analyzer_1_1structures_1_1_algorithm_info.html", null ],
       [ "ioh::logger::analyzer::structures::Attribute< T >", "structioh_1_1logger_1_1analyzer_1_1structures_1_1_attribute.html", null ],
       [ "ioh::logger::analyzer::structures::BestPoint", "structioh_1_1logger_1_1analyzer_1_1structures_1_1_best_point.html", null ],
@@ -57,11 +61,13 @@ var hierarchy =
     [ "metaclass", null, [
       [ "ioh.Problem", "classioh_1_1_problem.html", null ]
     ] ],
+    [ "Observer", null, [
+      [ "ioh::logger::Default", "classioh_1_1logger_1_1_default.html", null ]
+    ] ],
     [ "ioh::problem::bbob::Gallagher< T >::Peak::Permutation", "structioh_1_1problem_1_1bbob_1_1_gallagher_1_1_peak_1_1_permutation.html", null ],
     [ "ioh::logger::eaf::Point", "structioh_1_1logger_1_1eaf_1_1_point.html", [
       [ "ioh::logger::eaf::RunPoint", "structioh_1_1logger_1_1eaf_1_1_run_point.html", null ]
     ] ],
-    [ "ioh::logger::EAH::Problem", "structioh_1_1logger_1_1_e_a_h_1_1_problem.html", null ],
     [ "ioh::problem::Problem< T >", "classioh_1_1problem_1_1_problem.html", [
       [ "ioh::problem::BBOB", "classioh_1_1problem_1_1_b_b_o_b.html", [
         [ "ioh::problem::BBOProblem< AttractiveSector >", "classioh_1_1problem_1_1_b_b_o_problem.html", [
@@ -253,6 +259,7 @@ var hierarchy =
       ] ],
       [ "ioh::problem::WrappedProblem< T >", "classioh_1_1problem_1_1_wrapped_problem.html", null ]
     ] ],
+    [ "ioh::logger::EAH::Problem", "structioh_1_1logger_1_1_e_a_h_1_1_problem.html", null ],
     [ "ioh::logger::Property", "classioh_1_1logger_1_1_property.html", [
       [ "ioh::watch::CurrentY", "structioh_1_1watch_1_1_current_y.html", null ],
       [ "ioh::watch::Evaluations", "structioh_1_1watch_1_1_evaluations.html", null ],
@@ -399,10 +406,10 @@ var hierarchy =
     [ "ioh::logger::eah::Scale< size_t >", "classioh_1_1logger_1_1eah_1_1_scale.html", [
       [ "ioh::logger::eah::Log10Scale< size_t >", "classioh_1_1logger_1_1eah_1_1_log10_scale.html", null ]
     ] ],
-    [ "ioh::logger::eah::Stat< T >", "classioh_1_1logger_1_1eah_1_1_stat.html", null ],
     [ "ioh::logger::Stat< T >", "classioh_1_1logger_1_1_stat.html", [
       [ "ioh::logger::NadirStat< T >", "classioh_1_1logger_1_1_nadir_stat.html", null ]
     ] ],
+    [ "ioh::logger::eah::Stat< T >", "classioh_1_1logger_1_1eah_1_1_stat.html", null ],
     [ "ioh::logger::Stat< double >", "classioh_1_1logger_1_1_stat.html", [
       [ "ioh::logger::NadirStat< double >", "classioh_1_1logger_1_1_nadir_stat.html", [
         [ "ioh::logger::stat::Volume", "classioh_1_1logger_1_1stat_1_1_volume.html", null ]

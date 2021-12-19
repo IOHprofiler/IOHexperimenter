@@ -1,0 +1,9 @@
+{
+    "reply_type": "value",
+    "value": 123.456,
+    
+    "solution": [0,1,1,0],
+    "id": 12345,
+    "timestamp": "2021-12-21T12:21:12-00:00",
+    "remarks": "IOHexperimenter service v3.3.0"
+}
