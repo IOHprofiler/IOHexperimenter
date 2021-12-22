@@ -445,7 +445,7 @@ class Experiment:
             target = root + f"-{idx}"
             idx += 1
 
-        os.rename(root + "-tmp-1", target)
+        os.rename(self.logger_root + "-tmp-1", target)
         self.merge_output_to_single_folder(root + "-tmp", target)
 
     def run(self):
