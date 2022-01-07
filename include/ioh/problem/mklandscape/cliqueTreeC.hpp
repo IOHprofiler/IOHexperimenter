@@ -16,11 +16,6 @@ namespace ioh::problem
 
         InputParameters inputParameters;
 
-        int m = 0;
-        int k = 0;
-        int o = 0;
-        int b = 0;
-
         double globOptScore;
         std::set<std::vector<int>> globOptimaSet;
 
@@ -48,7 +43,7 @@ namespace ioh::problem
         bool globalOptimumFound;
 
         CliqueTreeC(const int problem_id, const int instance, const int n_variables, const std::string &name,
-               const int m, const int k, const int o, const int b) :
+               const int m, const int k, const int o, const int b, const uint64_t clique_seed = 2398) :
             Integer(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::Maximization))
         {
             inputParameters = InputParameters();
@@ -60,9 +55,12 @@ namespace ioh::problem
             CodomainFunction codomainFunction = CodomainFunction();
             codomainFunction.tag = CodomainFunction::Tag::DeceptiveTrap; 
 
+            ChaChaRng* chaChaRng;
+            chaChaRng = get_rng_c(&clique_seed);
+
             uintptr_t length = (inputParameters.m - 1) * (inputParameters.k - inputParameters.o) + inputParameters.k;
 
-            this->cliqueTree = construct_clique_tree(inputParameters, codomainFunction);
+            this->cliqueTree = construct_clique_tree(inputParameters, codomainFunction, chaChaRng);
 
             uintptr_t num_glob_opt = get_number_of_global_optima(this->cliqueTree);
             this->globOptScore = get_score_of_global_optima(this->cliqueTree);
