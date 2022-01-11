@@ -67,7 +67,7 @@ if(ENABLE_MKLANDSCAPE_PROBLEMS)
     endif()
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${EXTERNAL_DIR}/MkLandscape/release)
     
-    add_subdirectory(${EXTERNAL_DIR}/MkLandscape include/ioh/problem/mklandscape/)
+    add_subdirectory(${EXTERNAL_DIR}/MkLandscape ${PROJECT_SOURCE_DIR}/include/ioh/problem/mklandscape/)
     target_link_libraries(ioh INTERFACE problem_generator_lib)
 endif()
 
