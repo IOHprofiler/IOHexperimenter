@@ -37,8 +37,7 @@ class TestWrappedProblem(unittest.TestCase):
 
     def test_wrap_problem_scoped(self):
         def w():
-            l = lambda _: 0.0
-            ioh.problem.wrap_real_problem(l, "l")
+            ioh.problem.wrap_real_problem(lambda _: 0.0, "l")
             return ioh.get_problem("l")
         p = w()
         y = p([0]*5)

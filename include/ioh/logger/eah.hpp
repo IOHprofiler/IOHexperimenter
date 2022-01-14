@@ -501,7 +501,7 @@ namespace ioh
                 _current.pb = problem.problem_id;
                 _current.dim = problem.n_variables;
                 _current.ins = problem.instance;
-                _current.max_min = problem.optimization_type;
+                _current.max_min = problem.optimization_type.type();
                 _current.is_tracked = false;
                 _current.run = 1 + static_cast<int>(_eah_suite[static_cast<int>(_current.pb)][static_cast<int>(_current.
                     dim)][static_cast<int>(_current.ins)].size());

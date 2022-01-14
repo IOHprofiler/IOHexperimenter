@@ -242,7 +242,7 @@ namespace logger {
 
             IOH_DBG(note, "Attach to: pb=" << _current.pb << ", dim=" << _current.dim << ", ins=" << _current.ins << ", run=" << _current.run)
 #ifndef NDEBUG
-            if(_has_problem_type and _current_problem_type != problem.optimization_type) {
+            if(_has_problem_type and _current_problem_type.type() != problem.optimization_type.type()) {
                 IOH_DBG(warning, "different types of problems are mixed, you will not be able to compute levels")
             }
 #endif
@@ -269,7 +269,7 @@ namespace logger {
             assert(evaluations);
 
             // If trigger::on_improvement does its job, we always have an improvement here.
-            assert(common::compare_objectives(transformed_y_best.value(),_current_best,_current_problem_type));
+            assert(_current_problem_type(transformed_y_best.value(),_current_best));
             _current_best = transformed_y_best.value();
 #endif
             eaf::Front& f = current_front();
@@ -290,7 +290,7 @@ namespace logger {
         common::OptimizationType optimization_type() const
         {
             assert(_has_problem_type);
-            return _current_problem_type;
+            return _current_problem_type.type();
         }
 
     protected:
@@ -300,7 +300,7 @@ namespace logger {
         double _current_best;
 #endif
         bool _has_problem_type;
-        common::OptimizationType _current_problem_type;
+        common::FOptimizationType _current_problem_type;
 
         /** The main data structure in which log events are stored. */
         Suites _data;
@@ -409,7 +409,7 @@ namespace logger {
                 std::vector<size_t> _attlevels;
 
                 /** Whether we minimize or maximize. */
-                const common::OptimizationType _optim_type;
+                const common::FOptimizationType _optim_type;
 
                 /** Compare two objective function values.
                  * 
@@ -421,7 +421,7 @@ namespace logger {
                  */
                 bool is_better(const double q1, const double q2)
                 {
-                    return common::compare_objectives(q1, q2, _optim_type);
+                    return _optim_type(q1, q2);
                 }
                 
                 /** Compare two objective function values.
@@ -455,7 +455,7 @@ namespace logger {
                  */
                 Levels(const common::OptimizationType optim_type, std::vector<size_t> attainment_levels = {})
                 : _attlevels(attainment_levels)
-                , _optim_type(optim_type)
+                , _optim_type{optim_type}
                 { }
 
                 /** Extract the runs from the logger and computes the attainment levelsets. */
@@ -465,7 +465,7 @@ namespace logger {
                     // But, there is no way to ensure that all problems seen by the loggers
                     // have been of the same type.
                     // This is at least a check.
-                    assert(_optim_type == logger.problem().optimization_type);
+                    assert(_optim_type == logger.problem().optimization_type.type());
                     
                     // Input:
                     std::vector<eaf::Front> fronts;
@@ -672,7 +672,7 @@ namespace logger {
                 //! The worst reference point.
                 eaf::Point _nadir;
                 //! The problem type (i.e. min or max).
-                const common::OptimizationType _optim_type;
+                const common::FOptimizationType _optim_type;
 
                 /** Computes the extremum point as the worst coordinates on both quality and time axis for all front points.
                  */
@@ -680,7 +680,7 @@ namespace logger {
                 {
                     size_t worst_time;
                     double worst_qual;
-                    if(_optim_type == common::OptimizationType::Minimization) {
+                    if(_optim_type.type() == common::OptimizationType::Minimization) {
                         worst_time =  std::numeric_limits<size_t>::lowest();
                         worst_qual = -std::numeric_limits<double>::infinity();
                     } else {
@@ -689,7 +689,7 @@ namespace logger {
                     }
                     for(const auto& p : front) {
                         if(p.time > worst_time) { worst_time = p.time; }
-                        if(common::compare_objectives(worst_qual, p.qual, _optim_type)) { worst_qual = p.qual; }
+                        if(_optim_type(worst_qual, p.qual)) { worst_qual = p.qual; }
                     }
                     return eaf::Point(worst_qual, worst_time);
                 }
@@ -705,10 +705,10 @@ namespace logger {
                 using Type = typename Stat<T>::Type;
                 
                 /** Constructor without a nadir reference point. */
-                NadirStat(const common::OptimizationType optim_type) : _has_nadir(false), _nadir(), _optim_type(optim_type) { }
+                NadirStat(const common::OptimizationType optim_type) : _has_nadir(false), _nadir(), _optim_type{optim_type} { }
 
                 /** Constructor with a nadir reference point. */
-                NadirStat(const common::OptimizationType optim_type, eaf::Point nadir) : _has_nadir(true), _nadir(nadir), _optim_type(optim_type) { }
+                NadirStat(const common::OptimizationType optim_type, eaf::Point nadir) : _has_nadir(true), _nadir(nadir), _optim_type{optim_type} { }
 
                 /** Update the nadir point (if not previously indicated) and then calls NadirStat::call. */
                 T operator()(const eaf::Levels::Type& levels) override
@@ -726,7 +726,7 @@ namespace logger {
                         for(const auto& [level,front] : levels) {
                             eaf::Point nadir = extremum(front);
                             if(nadir.time > worst_time) { worst_time = nadir.time; }
-                            if(common::compare_objectives(worst_qual, nadir.qual, _optim_type)) { worst_qual = nadir.qual; }
+                            if(_optim_type(worst_qual, nadir.qual)) { worst_qual = nadir.qual; }
                         }
                         _nadir = eaf::Point(worst_qual, worst_time);
                         _has_nadir = true;
@@ -821,7 +821,7 @@ namespace logger {
 
                     double call(const eaf::Levels::Type& levels) override
                     {
-                        Surface s(_optim_type, _nadir);
+                        Surface s(_optim_type.type(), _nadir);
                         // Do not compute surfaces right here to avoid two loops on levels instead of one.
 
                         double volume = 0;

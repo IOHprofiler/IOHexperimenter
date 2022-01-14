@@ -9,12 +9,15 @@
 TEST_F(BaseTest, common_test)
 {
 	using namespace ioh::common;
+    
+    auto min = FOptimizationType(OptimizationType::Minimization);
+    auto max = FOptimizationType(OptimizationType::Maximization);
 
-	EXPECT_TRUE(compare_objectives(4, 2, OptimizationType::Maximization));
-	EXPECT_FALSE(compare_objectives(2, 2, OptimizationType::Maximization));
+	EXPECT_TRUE(max(4, 2));
+	EXPECT_FALSE(max(2, 2));
 
-	EXPECT_TRUE(compare_objectives(2, 5, OptimizationType::Minimization));
-	EXPECT_FALSE(compare_objectives(4, 2, OptimizationType::Minimization)); 
+	EXPECT_TRUE(min(2, 5));
+	EXPECT_FALSE(min(4, 2)); 
 }
 
  
