@@ -92,7 +92,7 @@ namespace ioh::logger {
                  * @param run_id run id
                  * @param evaluation_id evaluation number
                  */
-                Cursor(std::string suite_name = default_suite,
+                Cursor(const std::string& suite_name = default_suite,
                         int problem_id = 0,
                         int dimension = 0,
                         int instance_id = 0,
@@ -108,19 +108,19 @@ namespace ioh::logger {
             };
 
             /** Access a map of property values with a Cursor. */
-            Attributes data(const Cursor current)
+            Attributes data(const Cursor& current)
             {
                 return _data.at(current.suite).at(current.pb).at(current.dim).at(current.instance).at(current.run).at(current.evaluation);
             }
 
             /** Access a property value with a Cursor and the property name. */
-            Value at(const Cursor current, const std::string property_name)
+            Value at(const Cursor& current, const std::string& property_name)
             {
                 return data(current).at(property_name);
             }
 
             /** Access a property value with a Cursor and the Property itself. */
-            Value at(const Cursor current, const Property& property)
+            Value at(const Cursor& current, const Property& property)
             {
                 return data(current).at(property.name());
             }

@@ -5,30 +5,29 @@ IOHprofiler: IOHexperimenter {#mainpage}
 ![MacOS clang++, g++-{9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/MacOS/badge.svg)
 ![Windows MVSC-2019](https://github.com/IOHprofiler/IOHexperimenter/workflows/Windows/badge.svg)
 
-
 __Experimenter__ for **I**terative **O**ptimization **H**euristics (IOHs), built natively in* `C++`.
 
-* __Documentation__: [https://iohprofiler.github.io/IOHexperimenter](https://iohprofiler.github.io/IOHexperimenter)
-* __Publication__: [https://arxiv.org/abs/1810.05281](https://arxiv.org/abs/1810.05281)
-* __Wiki page__: [https://iohprofiler.github.io](https://iohprofiler.github.io/)
-* __General Contact__: [iohprofiler@liacs.leidenuniv.nl](iohprofiler@liacs.leidenuniv.nl)
+  * __Documentation__: [https://iohprofiler.github.io/IOHexperimenter](https://iohprofiler.github.io/IOHexperimenter)
+  * __Publication__: [https://arxiv.org/abs/1810.05281](https://arxiv.org/abs/1810.05281)
+  * __Wiki page__: [https://iohprofiler.github.io](https://iohprofiler.github.io/)
+  * __General Contact__: [iohprofiler@liacs.leidenuniv.nl](iohprofiler@liacs.leidenuniv.nl)
 <!-- * __Mailing List__: [https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler](https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler) -->
 
 **IOHexperimenter** *provides*:
 
-* A framework to ease the benchmarking of any iterative optimization heuristic
-* Continuous and discrete benchmarking problems
-* [Pseudo-Boolean Optimization (PBO)](https://iohprofiler.github.io/IOHproblem/) problem set (25 pseudo-Boolean problems)
-* Integration of the well-known [Black-black Optimization Benchmarking (BBOB)](https://github.com/numbbo/coco) problem set (24 continuous problems)
-* Interface for adding new problems and suite/problem set
-* Advanced logging module that takes care of registering the data in a seamless manner
-* Data format is compatible with [IOHanalyzer](https://github.com/IOHprofiler/IOHanalyzer)
+  * A framework to ease the benchmarking of any iterative optimization heuristic
+  * Continuous and discrete benchmarking problems
+  * [Pseudo-Boolean Optimization (PBO)](https://iohprofiler.github.io/IOHproblem/) problem set (25 pseudo-Boolean problems)
+  * Integration of the well-known [Black-black Optimization Benchmarking (BBOB)](https://github.com/numbbo/coco) problem set (24 continuous problems)
+  * Interface for adding new problems and suite/problem set
+  * Advanced logging module that takes care of registering the data in a seamless manner
+  * Data format is compatible with [IOHanalyzer](https://github.com/IOHprofiler/IOHanalyzer)
 
 **IOHexperimenter** is available for:
 
-* `C++` manual can be found [here](https://iohprofiler.github.io/IOHexp/Cpp/)
-* `Python`: please see [here](https://github.com/IOHprofiler/IOHexperimenter/tree/master/ioh) for details user manual
-* or as a [pip package](https://pypi.org/project/ioh); [Wiki Page](https://iohprofiler.github.io/IOHexp/python/).
+  * `C++` manual can be found [here](https://iohprofiler.github.io/IOHexp/Cpp/)
+  * `Python`: please see [here](https://github.com/IOHprofiler/IOHexperimenter/tree/master/ioh) for details user manual
+  * or as a [pip package](https://pypi.org/project/ioh); [Wiki Page](https://iohprofiler.github.io/IOHexp/python/).
 
 ## C++ Interface
 
@@ -36,8 +35,8 @@ __Experimenter__ for **I**terative **O**ptimization **H**euristics (IOHs), built
 
 The following toolkits are needed for compiling IOHexperimenter:
 
-* A `C++` compiler. The minimum compiler version is g++ 7 or equivalent, but we recommend g++ 9 or equivalent.
-* [CMake](https://cmake.org), version 3.12 or higher
+  * A `C++` compiler. The minimum compiler version is g++ 7 or equivalent, but we recommend g++ 9 or equivalent.
+  * [CMake](https://cmake.org), version 3.12 or higher
 
 Please use the following commands to download, compile, and install this package:
 
@@ -69,8 +68,8 @@ The instance id is intended to generalize a certain problem by some transformati
 it serves as the random seed for randomizing the transformations, e.g., affine
 transforms for BBOB problems and scaling of objective values for PBO problems. Please see
 
-* [PBO transformations](https://iohprofiler.github.io/IOHproblem/)
-* [BBOB/COCO transformations](https://coco.gforge.inria.fr/downloads/download16.00/bbobdocfunctions.pdf)
+  * [PBO transformations](https://iohprofiler.github.io/IOHproblem/)
+  * [BBOB/COCO transformations](https://coco.gforge.inria.fr/downloads/download16.00/bbobdocfunctions.pdf)
 
 We also provide problem factories for this purpose:
 
@@ -81,9 +80,9 @@ const auto om = problem_factory.create("OneMax", 1, 10);
 
 Also, we include some simple examples to demonstrate the basic usage:
 
-* Using [a single problem](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/problem_example.h)
-* Using a pre-defined [problem suite/set](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/suite_example.h)
-* Using the [logging ability](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/logger_example.h) for storing benchmark data
+  * Using [a single problem](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/problem_example.h)
+  * Using a pre-defined [problem suite/set](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/suite_example.h)
+  * Using the [logging ability](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/logger_example.h) for storing benchmark data
 
 For the detailed documentation of all available functionality in the __IOHexperimenter__, please check our [this page](https://iohexperimenter.readthedocs.io/en/restru/index.html) __[under construction]__.
 
@@ -126,8 +125,8 @@ Alternatively, one might wish to create the new problem by subclassing the abstr
 in IOHexperimenter, taking benefits of implementing more details, e.g., aforementioned transformations.
 This can be done by inheriting the corresponding problem registration class, which is
 
-* `ioh::problem::IntegerProblem` for pseudo-Boolean problems, and
-* `ioh::problem::RealProblem` for continuous problems.
+  * `ioh::problem::IntegerProblem` for pseudo-Boolean problems, and
+  * `ioh::problem::RealProblem` for continuous problems.
 
 In the below example, we show how to do this for pseudo-Boolean problems.
 
@@ -188,12 +187,12 @@ If you have any questions, comments or suggestions, please don't hesitate contac
 
 ## Our team
 
-* [Jacob de Nobel](https://www.universiteitleiden.nl/en/staffmembers/jacob-de-nobel), *Leiden Institute of Advanced Computer Science*,
-* [Furong Ye](https://www.universiteitleiden.nl/en/staffmembers/furong-ye#tab-1), *Leiden Institute of Advanced Computer Science*,
-* [Diederick Vermetten](https://www.universiteitleiden.nl/en/staffmembers/diederick-vermetten#tab-1), *Leiden Institute of Advanced Computer Science*,
-* [Hao Wang](https://www.universiteitleiden.nl/en/staffmembers/hao-wang#tab-1), *Leiden Institute of Advanced Computer Science*,
-* [Carola Doerr](http://www-desir.lip6.fr/~doerr/), *CNRS and Sorbonne University*,
-* [Thomas Bäck](https://www.universiteitleiden.nl/en/staffmembers/thomas-back#tab-1), *Leiden Institute of Advanced Computer Science*,
+  * [Jacob de Nobel](https://www.universiteitleiden.nl/en/staffmembers/jacob-de-nobel), *Leiden Institute of Advanced Computer Science*,
+  * [Furong Ye](https://www.universiteitleiden.nl/en/staffmembers/furong-ye#tab-1), *Leiden Institute of Advanced Computer Science*,
+  * [Diederick Vermetten](https://www.universiteitleiden.nl/en/staffmembers/diederick-vermetten#tab-1), *Leiden Institute of Advanced Computer Science*,
+  * [Hao Wang](https://www.universiteitleiden.nl/en/staffmembers/hao-wang#tab-1), *Leiden Institute of Advanced Computer Science*,
+  * [Carola Doerr](http://www-desir.lip6.fr/~doerr/), *CNRS and Sorbonne University*,
+  * [Thomas Bäck](https://www.universiteitleiden.nl/en/staffmembers/thomas-back#tab-1), *Leiden Institute of Advanced Computer Science*,
 
 When using IOHprofiler and parts thereof, please kindly cite this work as
 

@@ -31,14 +31,14 @@ auto y = (*om)(x).at(0)
 Suites are collections of problems. Two suites, PBO for the pseudo-Boolean problems and BBOB for the continuous problems, are available in __IOHexperimenter__. An example of using suites is provided in [suite_example.h](suite_example.h).
 
 The following statements create a `bbob` consisting of 8 problems of the BBOB suite:
-1. problem 1, instance 1, dimension 5
-2. problem 1, instance 3, dimension 5
-3. problem 1, instance 1, dimension 10
-4. problem 1, instance 3, dimension 10
-5. problem 2, instance 1, dimension 5
-6. problem 2, instance 3, dimension 5
-7. problem 2, instance 1, dimension 10
-8. problem 2, instance 3, dimension 10
+  1. problem 1, instance 1, dimension 5
+  2. problem 1, instance 3, dimension 5
+  3. problem 1, instance 1, dimension 10
+  4. problem 1, instance 3, dimension 10
+  5. problem 2, instance 1, dimension 5
+  6. problem 2, instance 3, dimension 5
+  7. problem 2, instance 1, dimension 10
+  8. problem 2, instance 3, dimension 10
 
 ```cpp
 const auto &suite_factory = ioh::suite::SuiteRegistry<ioh::problem::Real>::instance();

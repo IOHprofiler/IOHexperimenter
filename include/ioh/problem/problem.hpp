@@ -123,13 +123,12 @@ namespace ioh
              * @param objective the solution to the problem
              */
             explicit Problem(MetaData meta_data, Constraint<T> constraint, Solution<T> objective) :
-                meta_data_(std::move(meta_data)), constraint_(std::move(constraint)), objective_(std::move(objective))
+                meta_data_(std::move(meta_data)), constraint_(std::move(constraint)),
+                state_(State<T>({std::vector<T>(meta_data.n_variables, std::numeric_limits<T>::signaling_NaN()),
+                                 meta_data.initial_objective_value})),
+                objective_(std::move(objective))
             {
-                state_ = State<T>({std::vector<T>(meta_data_.n_variables, std::numeric_limits<T>::signaling_NaN()),
-                                   meta_data_.initial_objective_value});
-
                 constraint_.check_size(meta_data_.n_variables);
-
                 log_info_.optimum = objective_.as_double();
                 log_info_.current = state_.current.as_double();
             }
