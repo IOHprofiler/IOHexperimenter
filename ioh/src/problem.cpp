@@ -269,7 +269,8 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
 
 void define_helper_classes(py::module &m)
 {
-    py::enum_<ioh::common::OptimizationType>(m, "OptimizationType")
+    py::enum_<ioh::common::OptimizationType>(m, "OptimizationType", 
+        "Enum used for defining wheter the problem is Mimization or Maximization")
         .value("Maximization", ioh::common::OptimizationType::Maximization)
         .value("Minimization", ioh::common::OptimizationType::Minimization)
         .export_values();
