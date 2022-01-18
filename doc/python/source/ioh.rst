@@ -1,3 +1,3 @@
-IOHExperimenter
+ioh
 ================
 .. automodapi:: ioh

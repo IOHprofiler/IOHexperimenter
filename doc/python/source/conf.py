@@ -64,7 +64,7 @@ html_static_path = ['_static']
 
 github_url = 'https://github.com/IOHprofiler/IOHexperimenter'
 
+autoclass_content = 'both'
+
 autodoc_default_options = {
-    "ignore-module-all": "pybind11",
-    # "special-members": ["__init__"]
 }
