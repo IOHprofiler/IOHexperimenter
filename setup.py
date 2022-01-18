@@ -21,6 +21,8 @@ if platform.system() == "Darwin":
     os.environ["CXX"] = "clang"
     os.environ["ARCHFLAGS"] = "-std=c++14"
 
+BASE_DIR = os.path.realpath(os.path.dirname(__file__))
+MAKE_DOCS = True
 
 # A CMakeExtension needs a sourcedir instead of a file list.
 # The name must be the _single_ output extension from the CMake build.
@@ -54,12 +56,14 @@ class CMakeBuild(build_ext):
                 -o ./"""
         subprocess.check_call(command, cwd=ext.sourcedir, shell=True)
 
+    def generate_docs(self):
+        ext, *_ = self.extensions
+        directory = os.path.join()
+        subprocess.check_call(["make html"], cwd=ext.sourcedir)
+
     def run(self):
         super().run()
-        try:
-            self.generate_stubs()
-        except subprocess.CalledProcessError: 
-            pass
+        self.generate_stubs()
 
     def build_extension(self, ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
@@ -179,3 +183,10 @@ setup(
     python_requires='>=3.6',
     setup_requires=['cmake', 'ninja', 'pybind11', 'mypy']
 )
+
+if MAKE_DOCS:
+    directory = os.path.join(BASE_DIR, "doc", "python")
+    shutil.rmtree(os.path.join(directory, "source",  "api"))
+    subprocess.check_call(f"make html", 
+        shell=True, cwd=directory
+    )

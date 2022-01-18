@@ -10,7 +10,9 @@ using namespace ioh::suite;
 template <typename SuiteType>
 void define_base_class(py::module &m, const std::string &name)
 {
-    py::class_<SuiteType, std::shared_ptr<SuiteType>>(m, name.c_str(), py::buffer_protocol())
+    py::class_<SuiteType, std::shared_ptr<SuiteType>>(m, name.c_str(), py::buffer_protocol(), 
+        fmt::format("{} suite", name).c_str()
+    )
         .def(
             "reset", &SuiteType::reset,
             R"pbdoc(
@@ -67,18 +69,29 @@ void define_suite(py::module &m)
 {
     define_base_class<Suite<ioh::problem::Real>>(m, "RealBase");
 
-    py::class_<Real, Suite<ioh::problem::Real>, std::shared_ptr<Real>>(m, "Real")
+    py::class_<Real, Suite<ioh::problem::Real>, std::shared_ptr<Real>>(m, "Real", 
+        "Suite with real-valued functions")
         .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>());
 
-    py::class_<BBOB, Suite<ioh::problem::Real>, std::shared_ptr<BBOB>>(m, "BBOB")
+    py::class_<BBOB, Suite<ioh::problem::Real>, std::shared_ptr<BBOB>>(m, "BBOB", 
+        "Suite with real-valued functions from BBOB single-objective benchmark")
         .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>());
 
     define_base_class<Suite<ioh::problem::Integer>>(m, "IntegerBase");
 
-    py::class_<Integer, Suite<ioh::problem::Integer>, std::shared_ptr<Integer>>(m, "Integer")
+    py::class_<Integer, Suite<ioh::problem::Integer>, std::shared_ptr<Integer>>(m, "Integer",
+        "Suite with integer-valued functions"
+    )
         .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>());
 
-    py::class_<PBO, Suite<ioh::problem::Integer>, std::shared_ptr<PBO>>(m, "PBO")
+    py::class_<PBO, Suite<ioh::problem::Integer>, std::shared_ptr<PBO>>(m, "PBO",
+        R"pbdoc(
+            
+            Suite with integer-valued functions from PBO single objective benchmark
+
+            This is the most amazing code
+        )pbdoc"
+    )
         .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>());
 
 }

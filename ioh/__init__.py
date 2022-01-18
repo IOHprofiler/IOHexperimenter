@@ -1,8 +1,4 @@
-"""Python specific functions for IOH package
-
-TODO: best far precision
-TODO: Rename Integer -> Discrete
-"""
+"""Python interface of IOH package."""
 
 import os
 import math
