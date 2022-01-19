@@ -523,18 +523,93 @@ public:
 
 void define_wmodels(py::module &m)
 {
-    py::class_<WModel, WModelTrampoline, Integer, std::shared_ptr<WModel>>(m, "AbstractWModel")
+    py::class_<WModel, WModelTrampoline, Integer, std::shared_ptr<WModel>>(m, "AbstractWModel",
+                                                                            R"pbdoc(
+            An abstract W-model class. Please apply the WModelOneMax and WModelLeadingOnes classes.
+             
+            W-model problems applies four basic transformations: reduction of dummy variables,
+            neutrality, epistasis, and fitness perturbation on benchmark problems. Each transformation
+            is configured by the corresponding argument dummy_select_rate, epistasis_block_size,
+            neutrality_mu, and ruggedness_gamma.
+
+            The details of the transformations can be found in
+            https://www.sciencedirect.com/science/article/pii/S1568494619308099
+
+            We have acknowledged Thomas Weise, proposing the original W-model
+            https://dl.acm.org/doi/abs/10.1145/3205651.3208240 and having discussions supporting this work.
+
+            Reference
+            ---------
+            [WeiseW18] Thomas Weise and Zijun Wu. "Difficult features of combinatorial optimization problems
+            and the tunable w-model benchmark problem for simulating them." Proc. of the Genetic and 
+            Evolutionary Computation Conference Companion, 1769-1776, 2018
+
+            [DoerrYHWSB20] Carola Doerr, Furong Ye, Naama Horesh, Hao Wang, Ofer M. Shir, Thomas Bäck.
+            "Benchmarking discrete optimization heuristics with IOHprofiler."
+            Applied Soft Computing, 88: 106027, 2020 
+
+        )pbdoc")
         .def(py::init<int, int, int, std::string, double, int, int, int>(), py::arg("problem_id"), py::arg("instance"),
              py::arg("n_variables"), py::arg("name"), py::arg("dummy_select_rate") = 0.0,
              py::arg("epistasis_block_size") = 0, py::arg("neutrality_mu") = 0, py::arg("ruggedness_gamma") = 0)
         .def("wmodel_evaluate", &WModelPublisher::wmodel_evaluate);
 
-    py::class_<wmodel::WModelLeadingOnes, WModel, std::shared_ptr<wmodel::WModelLeadingOnes>>(m, "WModelLeadingOnes")
+    py::class_<wmodel::WModelLeadingOnes, WModel, std::shared_ptr<wmodel::WModelLeadingOnes>>(m, "WModelLeadingOnes",
+                                                                                              R"pbdoc(
+            A W-model problem built on LeadingOnes.
+             
+            This W-model problem applies four basic transformations: reduction of dummy variables,
+            neutrality, epistasis, and fitness perturbation on the LeadingOnes problem. Each transformation
+            is configured by the corresponding argument dummy_select_rate, epistasis_block_size,
+            neutrality_mu, and ruggedness_gamma.
+
+            The definitions of LeadingOnes and the transformations can be found in
+            https://www.sciencedirect.com/science/article/pii/S1568494619308099
+
+            We have acknowledged Thomas Weise, proposing the original W-model
+            https://dl.acm.org/doi/abs/10.1145/3205651.3208240 and having discussions supporting this work.
+
+            Reference
+            ---------
+            [WeiseW18] Thomas Weise and Zijun Wu. "Difficult features of combinatorial optimization problems
+            and the tunable w-model benchmark problem for simulating them." Proc. of the Genetic and 
+            Evolutionary Computation Conference Companion, 1769-1776, 2018
+
+            [DoerrYHWSB20] Carola Doerr, Furong Ye, Naama Horesh, Hao Wang, Ofer M. Shir, Thomas Bäck.
+            "Benchmarking discrete optimization heuristics with IOHprofiler."
+            Applied Soft Computing, 88: 106027, 2020 
+
+        )pbdoc")
         .def(py::init<int, int, double, int, int, int>(), py::arg("instance"), py::arg("n_variables"),
              py::arg("dummy_select_rate") = 0.0, py::arg("epistasis_block_size") = 0, py::arg("neutrality_mu") = 0,
              py::arg("ruggedness_gamma") = 0);
 
-    py::class_<wmodel::WModelOneMax, WModel, std::shared_ptr<wmodel::WModelOneMax>>(m, "WModelOneMax")
+    py::class_<wmodel::WModelOneMax, WModel, std::shared_ptr<wmodel::WModelOneMax>>(m, "WModelOneMax",
+                                                                                              R"pbdoc(
+            A W-model problem built on OneMax.
+             
+            This W-model problem applies four basic transformations: reduction of dummy variables,
+            neutrality, epistasis, and fitness perturbation on the OneMax problem. Each transformation
+            is configured by the corresponding argument dummy_select_rate, epistasis_block_size,
+            neutrality_mu, and ruggedness_gamma.
+
+            The definitions of OneMax and the transformations can be found in
+            https://www.sciencedirect.com/science/article/pii/S1568494619308099
+
+            We have acknowledged Thomas Weise, proposing the original W-model
+            https://dl.acm.org/doi/abs/10.1145/3205651.3208240 and having discussions supporting this work.
+
+            Reference
+            ---------
+            [WeiseW18] Thomas Weise and Zijun Wu. "Difficult features of combinatorial optimization problems
+            and the tunable w-model benchmark problem for simulating them." Proc. of the Genetic and 
+            Evolutionary Computation Conference Companion, 1769-1776, 2018
+
+            [DoerrYHWSB20] Carola Doerr, Furong Ye, Naama Horesh, Hao Wang, Ofer M. Shir, Thomas Bäck.
+            "Benchmarking discrete optimization heuristics with IOHprofiler."
+            Applied Soft Computing, 88: 106027, 2020 
+
+        )pbdoc")
         .def(py::init<int, int, double, int, int, int>(), py::arg("instance"), py::arg("n_variables"),
              py::arg("dummy_select_rate") = 0.0, py::arg("epistasis_block_size") = 0, py::arg("neutrality_mu") = 0,
              py::arg("ruggedness_gamma") = 0);
