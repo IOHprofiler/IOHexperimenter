@@ -258,7 +258,7 @@ namespace ioh
                 }
             }
 
-            inline void layer_epistasis_compute(const std::vector<int> &x, std::vector<int> &epistasis_x,
+            inline void layer_epistasis_compute(const std::vector<int> x, std::vector<int> &epistasis_x,
                                                 const int block_size)
             {
                 epistasis_compute(x, epistasis_x, block_size);
