@@ -9,13 +9,13 @@ Note that these instructions are only for versions >= 1.0.0
 You can install the experimenter directly from pip:
 
 ```bash
-pip3 install IOHexperimenter
+pip install ioh
 ```
 
 To verify the installation, you can use:
 
 ```bash
-pip3 freeze | grep IOHexperimenter
+pip3 freeze | grep ioh
 ```
 
 ## Create a function object
@@ -107,7 +107,7 @@ This logger can then be initialized with the directory in which to store the log
 
 ```python
 #Create default logger which writes to folder 'temp'
-l = logger.Default("temp")
+l = logger.Analyzer("temp")
 ```
 This can then be attached to the problem:
 
