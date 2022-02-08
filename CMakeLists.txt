@@ -69,6 +69,8 @@ if(ENABLE_MKLANDSCAPE_PROBLEMS)
     
     add_subdirectory(${EXTERNAL_DIR}/MkLandscape ${PROJECT_SOURCE_DIR}/include/ioh/problem/mklandscape/)
     target_link_libraries(ioh INTERFACE problem_generator_lib)
+    
+    add_compile_definitions(MK_COMPILED)
 endif()
 
 
