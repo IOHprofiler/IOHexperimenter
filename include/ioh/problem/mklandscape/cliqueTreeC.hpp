@@ -4,7 +4,7 @@
 #include "ioh/problem/utils.hpp"
 #include <set>
 
-#IFDEF MK_COMPILED
+#ifdef MK_COMPILED
 
 #include "problem_generator.h"
 
@@ -111,4 +111,4 @@ namespace ioh::problem
     };
 }
 
-#ENDIF
+#endif
