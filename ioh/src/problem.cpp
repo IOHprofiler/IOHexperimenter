@@ -441,7 +441,7 @@ void define_bbob_problems(py::module &m)
             Technical Report 2009/20, Research Center PPE, 2009. Updated February, 2010.
 
         )pbdoc");
-    py::class_<bbob::Sphere, Real, std::shared_ptr<bbob::Sphere>>(m, "Sphere", py::is_final())
+    py::class_<bbob::Sphere, Real, std::shared_ptr<bbob::Sphere>>(m, "Sphere", py::is_final(), "Here be the docs")
         .def(py::init<int, int>());
     py::class_<bbob::Ellipsoid, Real, std::shared_ptr<bbob::Ellipsoid>>(m, "Ellipsoid", py::is_final())
         .def(py::init<int, int>());
