@@ -68,3 +68,5 @@ autoclass_content = 'both'
 
 autodoc_default_options = {
 }
+
+master_doc = "contents"

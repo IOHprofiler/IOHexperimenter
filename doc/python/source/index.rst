@@ -6,15 +6,6 @@
 Welcome to IOHExperimenter's documentation!
 ===========================================
 
-.. toctree::
-   :maxdepth: 10
-   :caption: Contents:
-
-   self
-   ioh.rst
-   problem.rst
-   logger.rst
-   suite.rst 
 
 
 
