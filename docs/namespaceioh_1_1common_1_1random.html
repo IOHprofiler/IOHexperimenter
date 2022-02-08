@@ -107,10 +107,10 @@ Functions</h2></td></tr>
 std::mt19937&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1common_1_1random.html#a9123ce89ab6eead6123687621dcb1051">gen</a> (<a class="el" href="namespaceioh_1_1common_1_1random.html#ae28c55987a43850888cac97a89ce9a60">rd</a>())</td></tr>
 <tr class="memdesc:a9123ce89ab6eead6123687621dcb1051"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global random generator. <br /></td></tr>
 <tr class="separator:a9123ce89ab6eead6123687621dcb1051"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5313182ae40e3e3715ca6ebc36ccee88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1common_1_1random.html#a5313182ae40e3e3715ca6ebc36ccee88">seed</a> (const size_t seed)</td></tr>
-<tr class="memdesc:a5313182ae40e3e3715ca6ebc36ccee88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Seed the random number generator device.  <a href="namespaceioh_1_1common_1_1random.html#a5313182ae40e3e3715ca6ebc36ccee88">More...</a><br /></td></tr>
-<tr class="separator:a5313182ae40e3e3715ca6ebc36ccee88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d4246918163d2b718ebe763aea5ab9d"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1common_1_1random.html#a4d4246918163d2b718ebe763aea5ab9d">lcg_rand</a> (long <a class="el" href="namespaceioh_1_1common_1_1random.html#a5313182ae40e3e3715ca6ebc36ccee88">seed</a>)</td></tr>
+<tr class="memitem:a192361748853257762749275ddf2d042"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1common_1_1random.html#a192361748853257762749275ddf2d042">seed</a> (const unsigned int seed)</td></tr>
+<tr class="memdesc:a192361748853257762749275ddf2d042"><td class="mdescLeft">&#160;</td><td class="mdescRight">Seed the random number generator device.  <a href="namespaceioh_1_1common_1_1random.html#a192361748853257762749275ddf2d042">More...</a><br /></td></tr>
+<tr class="separator:a192361748853257762749275ddf2d042"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d4246918163d2b718ebe763aea5ab9d"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1common_1_1random.html#a4d4246918163d2b718ebe763aea5ab9d">lcg_rand</a> (long <a class="el" href="namespaceioh_1_1common_1_1random.html#a192361748853257762749275ddf2d042">seed</a>)</td></tr>
 <tr class="memdesc:a4d4246918163d2b718ebe763aea5ab9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Linear congruential generator using a given seed.  <a href="namespaceioh_1_1common_1_1random.html#a4d4246918163d2b718ebe763aea5ab9d">More...</a><br /></td></tr>
 <tr class="separator:a4d4246918163d2b718ebe763aea5ab9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59214089bc3ed009dd90a20415adb502"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1common_1_1random.html#a59214089bc3ed009dd90a20415adb502">integer</a> (const int min=std::numeric_limits&lt; int &gt;::min(), const int max=std::numeric_limits&lt; int &gt;::max())</td></tr>
@@ -369,8 +369,8 @@ std::random_device&#160;</td><td class="memItemRight" valign="bottom"><a class="
 
 </div>
 </div>
-<a id="a5313182ae40e3e3715ca6ebc36ccee88"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5313182ae40e3e3715ca6ebc36ccee88">&#9670;&nbsp;</a></span>seed()</h2>
+<a id="a192361748853257762749275ddf2d042"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a192361748853257762749275ddf2d042">&#9670;&nbsp;</a></span>seed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -381,7 +381,7 @@ std::random_device&#160;</td><td class="memItemRight" valign="bottom"><a class="
         <tr>
           <td class="memname">void ioh::common::random::seed </td>
           <td>(</td>
-          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramtype">const unsigned int&#160;</td>
           <td class="paramname"><em>seed</em></td><td>)</td>
           <td></td>
         </tr>
@@ -404,7 +404,7 @@ std::random_device&#160;</td><td class="memItemRight" valign="bottom"><a class="
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>ioh</b></li><li class="navelem"><a class="el" href="namespaceioh_1_1common.html">common</a></li><li class="navelem"><a class="el" href="namespaceioh_1_1common_1_1random.html">random</a></li>
-    <li class="footer">Generated on Fri Sep 24 2021 15:51:41 for IOH by
+    <li class="footer">Generated on Tue Feb 8 2022 16:15:08 for IOH by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

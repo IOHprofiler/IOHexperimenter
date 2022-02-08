@@ -3,28 +3,30 @@ import abc
 
 class Problem(metaclass=abc.ABCMeta):
 
-    # Objective function
     @abc.abstractmethod
     def call(self, *args ):
+        "Objective function"
         raise NotImplementedError('Classes inheriting from ioh.Problem must define `call(self,*args):`')
 
-    # i.e. for invariance checking
+    
     @abc.abstractmethod
     def get_instance(self):
+        "i.e. for invariance checking"
         raise NotImplementedError('Classes inheriting from ioh.Problem must define `get_instance(self)`')
 
-    # Dimension
     @abc.abstractmethod
     def get_number_of_variables(self):
+        "Dimension"
         raise NotImplementedError('Classes inheriting from ioh.Problem must define `get_number_of_variables(self)`')
 
-    # Bounds
     @abc.abstractmethod
     def get_lowerbound(self):
+        "Bounds"
         raise NotImplementedError('Classes inheriting from ioh.Problem must define `get_lowerbound(self)`')
 
     @abc.abstractmethod
     def get_upperbound(self):
+        "Bounds"
         raise NotImplementedError('Classes inheriting from ioh.Problem must define `et_upperbound(self)`')
 
 

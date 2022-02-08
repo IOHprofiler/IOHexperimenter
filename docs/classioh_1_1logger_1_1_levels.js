@@ -6,5 +6,5 @@ var classioh_1_1logger_1_1_levels =
     [ "is_better_or_eq", "classioh_1_1logger_1_1_levels.html#aee07f212aaf68e27c4658e63afd123a1", null ],
     [ "operator()", "classioh_1_1logger_1_1_levels.html#a30b38e7cfe33c690630b235cfbeb4b96", null ],
     [ "_attlevels", "classioh_1_1logger_1_1_levels.html#a8b4ebf058da980c8db8934d49072a263", null ],
-    [ "_optim_type", "classioh_1_1logger_1_1_levels.html#a7b5bd599988fe4229b9d67b7f3f1e33d", null ]
+    [ "_optim_type", "classioh_1_1logger_1_1_levels.html#a65f63d9f7c509690659f4defb408dbfa", null ]
 ];

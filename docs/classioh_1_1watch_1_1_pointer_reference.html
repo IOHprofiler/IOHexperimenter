@@ -139,9 +139,9 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="classioh_1_1watch_1_1_pointer_reference.html#a5c29cb86a5786e7acfbdf7878d09fd18">RefType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1watch_1_1_pointer_reference.html#a1a97a3834b52d6e8b26f6e6adb8ca56b">ref_ptr_var</a> () const</td></tr>
 <tr class="memdesc:a1a97a3834b52d6e8b26f6e6adb8ca56b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor for the internal ptr. <br /></td></tr>
 <tr class="separator:a1a97a3834b52d6e8b26f6e6adb8ca56b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad01a40bbd63252a3b377b89151800cbb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1watch_1_1_pointer_reference.html#ad01a40bbd63252a3b377b89151800cbb">PointerReference</a> (const std::string <a class="el" href="classioh_1_1logger_1_1_property.html#aab369229be2a9e7a5be582bc7abf8a9a">name</a>, <a class="el" href="classioh_1_1watch_1_1_pointer_reference.html#a8c0d95a1c974b90fc7586e92bb56060a">ConstRefType</a> <a class="el" href="classioh_1_1watch_1_1_pointer_reference.html#a1a97a3834b52d6e8b26f6e6adb8ca56b">ref_ptr_var</a>, const std::string &amp;<a class="el" href="classioh_1_1logger_1_1_property.html#a3205058004b459ba00391ef684e413aa">format</a>=&quot;{:f}&quot;)</td></tr>
-<tr class="memdesc:ad01a40bbd63252a3b377b89151800cbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classioh_1_1watch_1_1_pointer_reference.html#ad01a40bbd63252a3b377b89151800cbb">More...</a><br /></td></tr>
-<tr class="separator:ad01a40bbd63252a3b377b89151800cbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6b28196a4e5598fa1cf1ea59abd8595"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1watch_1_1_pointer_reference.html#af6b28196a4e5598fa1cf1ea59abd8595">PointerReference</a> (const std::string &amp;<a class="el" href="classioh_1_1logger_1_1_property.html#aab369229be2a9e7a5be582bc7abf8a9a">name</a>, <a class="el" href="classioh_1_1watch_1_1_pointer_reference.html#a8c0d95a1c974b90fc7586e92bb56060a">ConstRefType</a> <a class="el" href="classioh_1_1watch_1_1_pointer_reference.html#a1a97a3834b52d6e8b26f6e6adb8ca56b">ref_ptr_var</a>, const std::string &amp;<a class="el" href="classioh_1_1logger_1_1_property.html#a3205058004b459ba00391ef684e413aa">format</a>=&quot;{:f}&quot;)</td></tr>
+<tr class="memdesc:af6b28196a4e5598fa1cf1ea59abd8595"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classioh_1_1watch_1_1_pointer_reference.html#af6b28196a4e5598fa1cf1ea59abd8595">More...</a><br /></td></tr>
+<tr class="separator:af6b28196a4e5598fa1cf1ea59abd8595"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bf3280886435de7942fd91317787b9d"><td class="memItemLeft" align="right" valign="top"><a id="a2bf3280886435de7942fd91317787b9d"></a>
 std::optional&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1watch_1_1_pointer_reference.html#a2bf3280886435de7942fd91317787b9d">operator()</a> (const <a class="el" href="structioh_1_1logger_1_1_info.html">logger::Info</a> &amp;) const override</td></tr>
 <tr class="memdesc:a2bf3280886435de7942fd91317787b9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main call interface. <br /></td></tr>
@@ -182,8 +182,8 @@ class ioh::watch::PointerReference&lt; T &gt;</h3>
 <dl class="section warning"><dt>Warning</dt><dd>It is your responsability to ensure that the referenced pointer is a nullptr if the variable is out of the logged scope.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The pointed variable must be castable to a double. </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ad01a40bbd63252a3b377b89151800cbb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad01a40bbd63252a3b377b89151800cbb">&#9670;&nbsp;</a></span>PointerReference()</h2>
+<a id="af6b28196a4e5598fa1cf1ea59abd8595"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6b28196a4e5598fa1cf1ea59abd8595">&#9670;&nbsp;</a></span>PointerReference()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -196,7 +196,7 @@ template&lt;class T &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classioh_1_1watch_1_1_pointer_reference.html">ioh::watch::PointerReference</a>&lt; T &gt;::<a class="el" href="classioh_1_1watch_1_1_pointer_reference.html">PointerReference</a> </td>
           <td>(</td>
-          <td class="paramtype">const std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>name</em>, </td>
         </tr>
         <tr>
@@ -292,7 +292,7 @@ template&lt;class T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>ioh</b></li><li class="navelem"><a class="el" href="namespaceioh_1_1watch.html">watch</a></li><li class="navelem"><a class="el" href="classioh_1_1watch_1_1_pointer_reference.html">PointerReference</a></li>
-    <li class="footer">Generated on Fri Sep 24 2021 15:51:42 for IOH by
+    <li class="footer">Generated on Tue Feb 8 2022 16:15:08 for IOH by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

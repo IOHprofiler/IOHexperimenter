@@ -1,6 +1,6 @@
 var structioh_1_1watch_1_1_raw_y_best =
 [
-    [ "RawYBest", "structioh_1_1watch_1_1_raw_y_best.html#a249a84ede5d3012f9bb9f457609a1b55", null ],
+    [ "RawYBest", "structioh_1_1watch_1_1_raw_y_best.html#af3af9fe99f440a9cfbbd39e5dd8d9e69", null ],
     [ "call_to_string", "structioh_1_1watch_1_1_raw_y_best.html#af382fb2a84f74301dd0a4eaeee50887c", null ],
     [ "format", "structioh_1_1watch_1_1_raw_y_best.html#a3205058004b459ba00391ef684e413aa", null ],
     [ "name", "structioh_1_1watch_1_1_raw_y_best.html#aab369229be2a9e7a5be582bc7abf8a9a", null ],

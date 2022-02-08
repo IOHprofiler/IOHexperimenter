@@ -118,24 +118,28 @@ $(document).ready(function(){initNavTree('one__max_8hpp_source.html',''); initRe
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                {</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                    <a class="code" href="classioh_1_1problem_1_1_problem.html#ab86840b83707dd92208b74e97b0c72a9">objective_</a>.x = std::vector&lt;int&gt;(n_variables,1);</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                    <a class="code" href="classioh_1_1problem_1_1_problem.html#ab86840b83707dd92208b74e97b0c72a9">objective_</a>.y = <a class="code" href="classioh_1_1problem_1_1pbo_1_1_one_max.html#aef3686090fd53b10024dfa2ba95cd4b9">evaluate</a>(<a class="code" href="classioh_1_1problem_1_1_problem.html#ab86840b83707dd92208b74e97b0c72a9">objective_</a>.x);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                }</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            };</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        }</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    }</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                    <a class="code" href="classioh_1_1problem_1_1_problem.html#ab86840b83707dd92208b74e97b0c72a9">objective_</a>.x = <a class="code" href="classioh_1_1problem_1_1_p_b_o.html#a00ce8976c63309ac17b2afaab1bdf605">reset_transform_variables</a>(<a class="code" href="classioh_1_1problem_1_1_problem.html#ab86840b83707dd92208b74e97b0c72a9">objective_</a>.x);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                    <a class="code" href="classioh_1_1problem_1_1_problem.html#ab86840b83707dd92208b74e97b0c72a9">objective_</a>.y = <a class="code" href="classioh_1_1problem_1_1_p_b_o.html#a7e86a8d6ddbf7232ca5c31eff308aa8d">transform_objectives</a>(<a class="code" href="classioh_1_1problem_1_1_problem.html#ab86840b83707dd92208b74e97b0c72a9">objective_</a>.y);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                }</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            };</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        }</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aclassioh_1_1problem_1_1pbo_1_1_one_max_html_adbb2cd8597e1d5ca222c2b8a5de3d47c"><div class="ttname"><a href="classioh_1_1problem_1_1pbo_1_1_one_max.html#adbb2cd8597e1d5ca222c2b8a5de3d47c">ioh::problem::pbo::OneMax::OneMax</a></div><div class="ttdeci">OneMax(const int instance, const int n_variables)</div><div class="ttdoc">Construct a new OneMax object.</div><div class="ttdef"><b>Definition:</b> one_max.hpp:29</div></div>
 <div class="ttc" id="aclassioh_1_1problem_1_1pbo_1_1_one_max_html"><div class="ttname"><a href="classioh_1_1problem_1_1pbo_1_1_one_max.html">ioh::problem::pbo::OneMax</a></div><div class="ttdoc">OneMax problem id 1.</div><div class="ttdef"><b>Definition:</b> one_max.hpp:12</div></div>
-<div class="ttc" id="aclassioh_1_1problem_1_1_p_b_o_problem_html"><div class="ttname"><a href="classioh_1_1problem_1_1_p_b_o_problem.html">ioh::problem::PBOProblem</a></div><div class="ttdoc">CRTP class for PBO problems.</div><div class="ttdef"><b>Definition:</b> pbo_problem.hpp:52</div></div>
+<div class="ttc" id="aclassioh_1_1problem_1_1_p_b_o_html_a00ce8976c63309ac17b2afaab1bdf605"><div class="ttname"><a href="classioh_1_1problem_1_1_p_b_o.html#a00ce8976c63309ac17b2afaab1bdf605">ioh::problem::PBO::reset_transform_variables</a></div><div class="ttdeci">std::vector&lt; int &gt; reset_transform_variables(std::vector&lt; int &gt; x)</div><div class="ttdoc">Optimum before transformation.</div><div class="ttdef"><b>Definition:</b> pbo_problem.hpp:31</div></div>
+<div class="ttc" id="aclassioh_1_1problem_1_1_p_b_o_problem_html"><div class="ttname"><a href="classioh_1_1problem_1_1_p_b_o_problem.html">ioh::problem::PBOProblem</a></div><div class="ttdoc">CRTP class for PBO problems.</div><div class="ttdef"><b>Definition:</b> pbo_problem.hpp:62</div></div>
 <div class="ttc" id="aclassioh_1_1problem_1_1pbo_1_1_one_max_html_aef3686090fd53b10024dfa2ba95cd4b9"><div class="ttname"><a href="classioh_1_1problem_1_1pbo_1_1_one_max.html#aef3686090fd53b10024dfa2ba95cd4b9">ioh::problem::pbo::OneMax::evaluate</a></div><div class="ttdeci">double evaluate(const std::vector&lt; int &gt; &amp;x) override</div><div class="ttdoc">Evaluation method.</div><div class="ttdef"><b>Definition:</b> one_max.hpp:16</div></div>
+<div class="ttc" id="aclassioh_1_1problem_1_1_p_b_o_html_a7e86a8d6ddbf7232ca5c31eff308aa8d"><div class="ttname"><a href="classioh_1_1problem_1_1_p_b_o.html#a7e86a8d6ddbf7232ca5c31eff308aa8d">ioh::problem::PBO::transform_objectives</a></div><div class="ttdeci">double transform_objectives(const double y) override</div><div class="ttdoc">Objectives transformation method.</div><div class="ttdef"><b>Definition:</b> pbo_problem.hpp:22</div></div>
 <div class="ttc" id="aclassioh_1_1problem_1_1_problem_html_ab86840b83707dd92208b74e97b0c72a9"><div class="ttname"><a href="classioh_1_1problem_1_1_problem.html#ab86840b83707dd92208b74e97b0c72a9">ioh::problem::Problem::objective_</a></div><div class="ttdeci">Solution&lt; T &gt; objective_</div><div class="ttdoc">The solution to the problem.</div><div class="ttdef"><b>Definition:</b> problem.hpp:33</div></div>
 <div class="ttc" id="agroup___e_a_h___a_p_i_html_ga622dfee42039186653c5760b7d2cc639"><div class="ttname"><a href="group___e_a_h___a_p_i.html#ga622dfee42039186653c5760b7d2cc639">ioh::logger::eah::stat::accumulate</a></div><div class="ttdeci">T accumulate(const EAH &amp;logger, const T init, const BinaryOperation &amp;op)</div><div class="ttdoc">Generic functor for accumulated statistics.</div><div class="ttdef"><b>Definition:</b> eah.hpp:824</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_16490b82e4913ea57419aaea13a7c432.html">ioh</a></li><li class="navelem"><a class="el" href="dir_ef669c8ccd66f3754dd4e819fb7c3d91.html">problem</a></li><li class="navelem"><a class="el" href="dir_413424b05ede86e55b0b237bdd4294a8.html">pbo</a></li><li class="navelem"><b>one_max.hpp</b></li>
-    <li class="footer">Generated on Fri Sep 24 2021 15:51:41 for IOH by
+    <li class="footer">Generated on Tue Feb 8 2022 16:15:07 for IOH by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

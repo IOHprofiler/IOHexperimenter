@@ -28,7 +28,7 @@ var group___e_a_f___a_p_i =
       [ "operator()", "classioh_1_1logger_1_1_nadir_stat.html#af9e62626de3f3b9455d1deab9d75d7f4", null ],
       [ "_has_nadir", "classioh_1_1logger_1_1_nadir_stat.html#a4c489e7491eea1673f300a836902c64e", null ],
       [ "_nadir", "classioh_1_1logger_1_1_nadir_stat.html#ac882e7f7715360228b1eb48929df8cce", null ],
-      [ "_optim_type", "classioh_1_1logger_1_1_nadir_stat.html#ad30e559a4129f32d830c50c8a7f16fed", null ]
+      [ "_optim_type", "classioh_1_1logger_1_1_nadir_stat.html#a73553ca4ea69154aca113d982bb88278", null ]
     ] ],
     [ "ascending_qual", "group___e_a_f___a_p_i.html#ga7308d01bd27f375b2798a98027505833", null ],
     [ "ascending_time", "group___e_a_f___a_p_i.html#gab05e1da95734324740031d6353e51c7f", null ],

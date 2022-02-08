@@ -4,7 +4,7 @@ var classioh_1_1watch_1_1_pointer_reference =
     [ "ConstRefType", "classioh_1_1watch_1_1_pointer_reference.html#a8c0d95a1c974b90fc7586e92bb56060a", null ],
     [ "PtrType", "classioh_1_1watch_1_1_pointer_reference.html#aaf95e5d1d17e30845fae2567de0fb79f", null ],
     [ "RefType", "classioh_1_1watch_1_1_pointer_reference.html#a5c29cb86a5786e7acfbdf7878d09fd18", null ],
-    [ "PointerReference", "classioh_1_1watch_1_1_pointer_reference.html#ad01a40bbd63252a3b377b89151800cbb", null ],
+    [ "PointerReference", "classioh_1_1watch_1_1_pointer_reference.html#af6b28196a4e5598fa1cf1ea59abd8595", null ],
     [ "call_to_string", "classioh_1_1watch_1_1_pointer_reference.html#af382fb2a84f74301dd0a4eaeee50887c", null ],
     [ "format", "classioh_1_1watch_1_1_pointer_reference.html#a3205058004b459ba00391ef684e413aa", null ],
     [ "name", "classioh_1_1watch_1_1_pointer_reference.html#aab369229be2a9e7a5be582bc7abf8a9a", null ],

@@ -86,7 +86,7 @@ var group___loggers =
       [ "is_better_or_eq", "classioh_1_1logger_1_1_levels.html#aee07f212aaf68e27c4658e63afd123a1", null ],
       [ "operator()", "classioh_1_1logger_1_1_levels.html#a30b38e7cfe33c690630b235cfbeb4b96", null ],
       [ "_attlevels", "classioh_1_1logger_1_1_levels.html#a8b4ebf058da980c8db8934d49072a263", null ],
-      [ "_optim_type", "classioh_1_1logger_1_1_levels.html#a7b5bd599988fe4229b9d67b7f3f1e33d", null ]
+      [ "_optim_type", "classioh_1_1logger_1_1_levels.html#a65f63d9f7c509690659f4defb408dbfa", null ]
     ] ],
     [ "EAH", "classioh_1_1logger_1_1_e_a_h.html", [
       [ "Problem", "structioh_1_1logger_1_1_e_a_h_1_1_problem.html", [
@@ -174,7 +174,7 @@ var group___loggers =
     ] ],
     [ "Store", "classioh_1_1logger_1_1_store.html", [
       [ "Cursor", "structioh_1_1logger_1_1_store_1_1_cursor.html", [
-        [ "Cursor", "structioh_1_1logger_1_1_store_1_1_cursor.html#a5cf10518a9f225285be5e7f341aa179c", null ],
+        [ "Cursor", "structioh_1_1logger_1_1_store_1_1_cursor.html#ab3c0f1ec14cfc2ebf65960ca028507e6", null ],
         [ "dim", "structioh_1_1logger_1_1_store_1_1_cursor.html#a8329f49f1477a4efed752780b6e483e2", null ],
         [ "evaluation", "structioh_1_1logger_1_1_store_1_1_cursor.html#a32ada633ef11241c01ad5c631784533e", null ],
         [ "instance", "structioh_1_1logger_1_1_store_1_1_cursor.html#aafbcd6a372fdae95f3c6538cfd2b675b", null ],
@@ -191,8 +191,8 @@ var group___loggers =
       [ "Suites", "classioh_1_1logger_1_1_store.html#a9c850d9ac09c6506bfe0b01fd81ef426", null ],
       [ "Value", "classioh_1_1logger_1_1_store.html#ae402776ed9b166fd48bc927b80e1e08b", null ],
       [ "Store", "classioh_1_1logger_1_1_store.html#a510e6235d4c611f8a0f1abefae02dbe3", null ],
-      [ "at", "classioh_1_1logger_1_1_store.html#a8de3be49428420a6787fd73d9de3d539", null ],
-      [ "at", "classioh_1_1logger_1_1_store.html#a97f83fbe902279c81dce28907c396148", null ],
+      [ "at", "classioh_1_1logger_1_1_store.html#a5f310b1c50646ce5dd26718f4e99a83a", null ],
+      [ "at", "classioh_1_1logger_1_1_store.html#a7be0101d77fea972ba1a8f31b3ad3c7f", null ],
       [ "attach_problem", "classioh_1_1logger_1_1_store.html#a534e0f9c3dda4ee7ab6439dc7344730f", null ],
       [ "attach_suite", "classioh_1_1logger_1_1_store.html#aacc70a8aed301b78e282cfe92cf803a4", null ],
       [ "call", "classioh_1_1logger_1_1_store.html#a8fe8ccb592c0c56c7a2875c7e868fc47", null ],
@@ -200,7 +200,7 @@ var group___loggers =
       [ "consistent_properties", "classioh_1_1logger_1_1_store.html#a13a08b9c2fd26f6a528d8426db103244", null ],
       [ "current_attributes", "classioh_1_1logger_1_1_store.html#a452f6c493ae6356301d7d0520e0b5c48", null ],
       [ "data", "classioh_1_1logger_1_1_store.html#a1519e3daf2a04dbff1314b6fb0d3e7a8", null ],
-      [ "data", "classioh_1_1logger_1_1_store.html#a241d2c0fc5e2fca59ba70f55c28a279f", null ],
+      [ "data", "classioh_1_1logger_1_1_store.html#a36f17644356711399c44a25a16e80a2a", null ],
       [ "log", "classioh_1_1logger_1_1_store.html#ae03591699913d7bc71cbb07f0c245f4e", null ],
       [ "problem", "classioh_1_1logger_1_1_store.html#aefda3d3f995a55d4461b386d37889aba", null ],
       [ "reset", "classioh_1_1logger_1_1_store.html#a15ffee3436f277bdab243f219fb03d07", null ],

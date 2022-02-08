@@ -17,7 +17,7 @@ namespace ioh
         class CpuTimer
         {
             /**
-             * \brief A info message to be printed to stdout when the timer completes
+             * \brief A info message to be logged to stdout when the timer completes
              */
             std::string info_msg_;
             /**

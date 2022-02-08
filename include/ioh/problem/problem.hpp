@@ -235,7 +235,7 @@ namespace ioh
 
         /**
          * @brief typedef for functions which take a vector and return a transformed version of that vector.
-         * Used in \ref WrappedProblem
+         * Used in WrappedProblem
          *
          * @tparam T type of the problem
          */
@@ -244,7 +244,7 @@ namespace ioh
 
         /**
          * @brief typedef for functions which take a value and return a transformed version of that value.
-         * Used in \ref WrappedProblem
+         * Used in WrappedProblem
          *
          * @tparam T type of the problem
          */
@@ -253,7 +253,7 @@ namespace ioh
 
         /**
          * @brief typedef for functions which compute a value for an optimum based on a given instance, dimension
-         * combination Used in \ref wrap_problem
+         * combination Used in wrap_problem
          *
          * @tparam T type of the problem
          */
@@ -336,12 +336,14 @@ namespace ioh
              * @param name the name for the new function in the registry
              * @param n_variables the dimension of the problem
              * @param problem_id the problem id
+             * @param instance_id the problem instance
              * @param optimization_type the type of optimization
              * @param constraint the contraint for the problem
              * @param transform_variables_function function which transforms the variables of the search problem
              * prior to calling f.
              * @param transform_objectives_function a function which transforms the objective value of the search
              * problem after calling f.
+             * @param objective the value for the objective
              *
              */
             WrappedProblem(
@@ -373,7 +375,7 @@ namespace ioh
          * prior to calling f.
          * @param transform_objectives_function a function which transforms the objective value of the search problem
          * after calling f.
-         * @param calculate_objective_function a function which returns the optimum based on a given problem
+         * @param calculate_objective a function which returns the optimum based on a given problem
          * dimension and instance.
          */
         template <typename T>

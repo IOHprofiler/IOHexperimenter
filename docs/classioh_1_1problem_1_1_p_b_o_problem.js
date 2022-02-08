@@ -13,6 +13,7 @@ var classioh_1_1problem_1_1_p_b_o_problem =
     [ "operator()", "classioh_1_1problem_1_1_p_b_o_problem.html#aa0036755e754bb469607fc6efa324107", null ],
     [ "PBO", "classioh_1_1problem_1_1_p_b_o_problem.html#ac2e5f0ba4d0ec949853b81ce69b1169c", null ],
     [ "reset", "classioh_1_1problem_1_1_p_b_o_problem.html#a74c1782b980bb11ff3c3730087b779f1", null ],
+    [ "reset_transform_variables", "classioh_1_1problem_1_1_p_b_o_problem.html#a00ce8976c63309ac17b2afaab1bdf605", null ],
     [ "state", "classioh_1_1problem_1_1_p_b_o_problem.html#a346cf32b7dd49a7e21ff63757b9c8c58", null ],
     [ "transform_objectives", "classioh_1_1problem_1_1_p_b_o_problem.html#a7e86a8d6ddbf7232ca5c31eff308aa8d", null ],
     [ "transform_variables", "classioh_1_1problem_1_1_p_b_o_problem.html#ab7509f9cbafc8b51aea2bfc816418a68", null ],

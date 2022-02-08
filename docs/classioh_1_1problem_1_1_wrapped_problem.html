@@ -113,9 +113,9 @@ Inheritance diagram for ioh::problem::WrappedProblem&lt; T &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a57f53b3dd460a192f9c2b6c7bb32e6b3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html#a57f53b3dd460a192f9c2b6c7bb32e6b3">WrappedProblem</a> (<a class="el" href="namespaceioh_1_1problem.html#a6c275da9389d062ef703187efffe8dfb">Function</a>&lt; T &gt; f, const std::string &amp;name, const int n_variables, const int problem_id=0, const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">common::OptimizationType</a> optimization_type=common::OptimizationType::Minimization, <a class="el" href="structioh_1_1problem_1_1_constraint.html">Constraint</a>&lt; T &gt; <a class="el" href="classioh_1_1problem_1_1_problem.html#ab2d5d6f0941cf63fea85a508a1100c40">constraint</a>=<a class="el" href="structioh_1_1problem_1_1_constraint.html">Constraint</a>&lt; T &gt;())</td></tr>
-<tr class="memdesc:a57f53b3dd460a192f9c2b6c7bb32e6b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new Wrapped <a class="el" href="classioh_1_1problem_1_1_problem.html" title="Problem Base class.">Problem</a> object.  <a href="classioh_1_1problem_1_1_wrapped_problem.html#a57f53b3dd460a192f9c2b6c7bb32e6b3">More...</a><br /></td></tr>
-<tr class="separator:a57f53b3dd460a192f9c2b6c7bb32e6b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a27a82f61f7401d6beda9bcfbaa4e08"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html#a2a27a82f61f7401d6beda9bcfbaa4e08">WrappedProblem</a> (<a class="el" href="namespaceioh_1_1problem.html#aec8a338670bf985e76805ef7e7d1816b">ObjectiveFunction</a>&lt; T &gt; f, const std::string &amp;name, const int n_variables, const int problem_id=0, const int instance_id=0, const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">common::OptimizationType</a> optimization_type=common::OptimizationType::Minimization, <a class="el" href="structioh_1_1problem_1_1_constraint.html">Constraint</a>&lt; T &gt; <a class="el" href="classioh_1_1problem_1_1_problem.html#ab2d5d6f0941cf63fea85a508a1100c40">constraint</a>=<a class="el" href="structioh_1_1problem_1_1_constraint.html">Constraint</a>&lt; T &gt;(), <a class="el" href="namespaceioh_1_1problem.html#a4d75509199b6329270d88b993a1ffd7a">VariablesTransformationFunction</a>&lt; T &gt; transform_variables_function=utils::identity&lt; std::vector&lt; T &gt;, int &gt;, <a class="el" href="namespaceioh_1_1problem.html#a30fdd7af0b7f3a3767bc5d59e3c49cb3">ObjectiveTransformationFunction</a> transform_objectives_function=utils::identity&lt; double, int &gt;, std::optional&lt; <a class="el" href="structioh_1_1problem_1_1_solution.html">Solution</a>&lt; T &gt;&gt; <a class="el" href="classioh_1_1problem_1_1_problem.html#a0a16b54f4838763c0c9ccaac94ecfdfe">objective</a>=std::nullopt)</td></tr>
+<tr class="memdesc:a2a27a82f61f7401d6beda9bcfbaa4e08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new Wrapped <a class="el" href="classioh_1_1problem_1_1_problem.html" title="Problem Base class.">Problem</a> object.  <a href="classioh_1_1problem_1_1_wrapped_problem.html#a2a27a82f61f7401d6beda9bcfbaa4e08">More...</a><br /></td></tr>
+<tr class="separator:a2a27a82f61f7401d6beda9bcfbaa4e08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74c1782b980bb11ff3c3730087b779f1"><td class="memItemLeft" align="right" valign="top"><a id="a74c1782b980bb11ff3c3730087b779f1"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_problem.html#a74c1782b980bb11ff3c3730087b779f1">reset</a> ()</td></tr>
 <tr class="memdesc:a74c1782b980bb11ff3c3730087b779f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset method, resets problem state and logger if attached. <br /></td></tr>
@@ -161,8 +161,16 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:aa71784e5842b72370b3acb3f8fde795d"><td class="memItemLeft" align="right" valign="top"><a id="aa71784e5842b72370b3acb3f8fde795d"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html#aa71784e5842b72370b3acb3f8fde795d">evaluate</a> (const std::vector&lt; T &gt; &amp;x) override</td></tr>
-<tr class="memdesc:aa71784e5842b72370b3acb3f8fde795d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluation function. <br /></td></tr>
+<tr class="memdesc:aa71784e5842b72370b3acb3f8fde795d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pass call to wrapped function. <br /></td></tr>
 <tr class="separator:aa71784e5842b72370b3acb3f8fde795d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8aa1133f8affa08d288cf606df097e1b"><td class="memItemLeft" align="right" valign="top"><a id="a8aa1133f8affa08d288cf606df097e1b"></a>
+std::vector&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html#a8aa1133f8affa08d288cf606df097e1b">transform_variables</a> (std::vector&lt; T &gt; x) override</td></tr>
+<tr class="memdesc:a8aa1133f8affa08d288cf606df097e1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Variables transformation function. <br /></td></tr>
+<tr class="separator:a8aa1133f8affa08d288cf606df097e1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae836918dbda64c847ce4d9825df3a278"><td class="memItemLeft" align="right" valign="top"><a id="ae836918dbda64c847ce4d9825df3a278"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html#ae836918dbda64c847ce4d9825df3a278">transform_objectives</a> (const double y) override</td></tr>
+<tr class="memdesc:ae836918dbda64c847ce4d9825df3a278"><td class="mdescLeft">&#160;</td><td class="mdescRight">Objectives transformation function. <br /></td></tr>
+<tr class="separator:ae836918dbda64c847ce4d9825df3a278"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8877171846a106febeb801ee5a36f2a8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_problem.html#a8877171846a106febeb801ee5a36f2a8">check_input_dimensions</a> (const std::vector&lt; T &gt; &amp;x)</td></tr>
 <tr class="memdesc:a8877171846a106febeb801ee5a36f2a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method for checking the input given to the problem has the correct dimension.  <a href="classioh_1_1problem_1_1_problem.html#a8877171846a106febeb801ee5a36f2a8">More...</a><br /></td></tr>
 <tr class="separator:a8877171846a106febeb801ee5a36f2a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,21 +182,21 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="memitem:ad31583f6f84e3e486095c988e81e4158"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if&lt; std::is_floating_point&lt; Floating &gt;::value, bool &gt;::type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_problem.html#ad31583f6f84e3e486095c988e81e4158">check_input</a> (const std::vector&lt; T &gt; &amp;x)</td></tr>
 <tr class="memdesc:ad31583f6f84e3e486095c988e81e4158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check input given to problem for Floating point types.  <a href="classioh_1_1problem_1_1_problem.html#ad31583f6f84e3e486095c988e81e4158">More...</a><br /></td></tr>
 <tr class="separator:ad31583f6f84e3e486095c988e81e4158"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7673c3bf03e3743bae9fec30f35ae62a"><td class="memItemLeft" align="right" valign="top"><a id="a7673c3bf03e3743bae9fec30f35ae62a"></a>
-virtual std::vector&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_problem.html#a7673c3bf03e3743bae9fec30f35ae62a">transform_variables</a> (std::vector&lt; T &gt; x)</td></tr>
-<tr class="memdesc:a7673c3bf03e3743bae9fec30f35ae62a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Variables transformation function. <br /></td></tr>
-<tr class="separator:a7673c3bf03e3743bae9fec30f35ae62a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47cda64061790c2b2b0c2bb4c208b377"><td class="memItemLeft" align="right" valign="top"><a id="a47cda64061790c2b2b0c2bb4c208b377"></a>
-virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_problem.html#a47cda64061790c2b2b0c2bb4c208b377">transform_objectives</a> (const double y)</td></tr>
-<tr class="memdesc:a47cda64061790c2b2b0c2bb4c208b377"><td class="mdescLeft">&#160;</td><td class="mdescRight">Objectives transformation function. <br /></td></tr>
-<tr class="separator:a47cda64061790c2b2b0c2bb4c208b377"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a500a69bd3e6ad06641ff550cdbd4d68e"><td class="memItemLeft" align="right" valign="top"><a id="a500a69bd3e6ad06641ff550cdbd4d68e"></a>
-<a class="el" href="namespaceioh_1_1problem.html#a6c275da9389d062ef703187efffe8dfb">Function</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html#a500a69bd3e6ad06641ff550cdbd4d68e">function_</a></td></tr>
-<tr class="memdesc:a500a69bd3e6ad06641ff550cdbd4d68e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapped function. <br /></td></tr>
-<tr class="separator:a500a69bd3e6ad06641ff550cdbd4d68e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04ae7b09da6e025400930f14c6d0b382"><td class="memItemLeft" align="right" valign="top"><a id="a04ae7b09da6e025400930f14c6d0b382"></a>
+<a class="el" href="namespaceioh_1_1problem.html#aec8a338670bf985e76805ef7e7d1816b">ObjectiveFunction</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html#a04ae7b09da6e025400930f14c6d0b382">function_</a></td></tr>
+<tr class="memdesc:a04ae7b09da6e025400930f14c6d0b382"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapped objective function. <br /></td></tr>
+<tr class="separator:a04ae7b09da6e025400930f14c6d0b382"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91f684721ac7ed45c3792565a3695e9c"><td class="memItemLeft" align="right" valign="top"><a id="a91f684721ac7ed45c3792565a3695e9c"></a>
+<a class="el" href="namespaceioh_1_1problem.html#a4d75509199b6329270d88b993a1ffd7a">VariablesTransformationFunction</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html#a91f684721ac7ed45c3792565a3695e9c">transform_variables_function_</a></td></tr>
+<tr class="memdesc:a91f684721ac7ed45c3792565a3695e9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapped variables transformation function. <br /></td></tr>
+<tr class="separator:a91f684721ac7ed45c3792565a3695e9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb82cbdbee15ab92d2733918a12a8652"><td class="memItemLeft" align="right" valign="top"><a id="acb82cbdbee15ab92d2733918a12a8652"></a>
+<a class="el" href="namespaceioh_1_1problem.html#a30fdd7af0b7f3a3767bc5d59e3c49cb3">ObjectiveTransformationFunction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html#acb82cbdbee15ab92d2733918a12a8652">transform_objectives_function_</a></td></tr>
+<tr class="memdesc:acb82cbdbee15ab92d2733918a12a8652"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapped objective transformation function. <br /></td></tr>
+<tr class="separator:acb82cbdbee15ab92d2733918a12a8652"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d5a4088efb8b41722cf407b621e8ed0"><td class="memItemLeft" align="right" valign="top"><a id="a7d5a4088efb8b41722cf407b621e8ed0"></a>
 <a class="el" href="structioh_1_1problem_1_1_meta_data.html">MetaData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1problem_1_1_problem.html#a7d5a4088efb8b41722cf407b621e8ed0">meta_data_</a></td></tr>
 <tr class="memdesc:a7d5a4088efb8b41722cf407b621e8ed0"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classioh_1_1problem_1_1_problem.html" title="Problem Base class.">Problem</a> meta data. <br /></td></tr>
@@ -225,8 +233,8 @@ class ioh::problem::WrappedProblem&lt; T &gt;</h3>
   </dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a57f53b3dd460a192f9c2b6c7bb32e6b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57f53b3dd460a192f9c2b6c7bb32e6b3">&#9670;&nbsp;</a></span>WrappedProblem()</h2>
+<a id="a2a27a82f61f7401d6beda9bcfbaa4e08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a27a82f61f7401d6beda9bcfbaa4e08">&#9670;&nbsp;</a></span>WrappedProblem()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -239,7 +247,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html">ioh::problem::WrappedProblem</a>&lt; T &gt;::<a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html">WrappedProblem</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceioh_1_1problem.html#a6c275da9389d062ef703187efffe8dfb">Function</a>&lt; T &gt;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespaceioh_1_1problem.html#aec8a338670bf985e76805ef7e7d1816b">ObjectiveFunction</a>&lt; T &gt;&#160;</td>
           <td class="paramname"><em>f</em>, </td>
         </tr>
         <tr>
@@ -263,6 +271,12 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>instance_id</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">common::OptimizationType</a>&#160;</td>
           <td class="paramname"><em>optimization_type</em> = <code>common::OptimizationType::Minimization</code>, </td>
         </tr>
@@ -270,7 +284,25 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structioh_1_1problem_1_1_constraint.html">Constraint</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>constraint</em> = <code><a class="el" href="structioh_1_1problem_1_1_constraint.html">Constraint</a>&lt;T&gt;()</code>&#160;</td>
+          <td class="paramname"><em>constraint</em> = <code><a class="el" href="structioh_1_1problem_1_1_constraint.html">Constraint</a>&lt;T&gt;()</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceioh_1_1problem.html#a4d75509199b6329270d88b993a1ffd7a">VariablesTransformationFunction</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>transform_variables_function</em> = <code>utils::identity&lt;std::vector&lt;T&gt;,&#160;int&gt;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceioh_1_1problem.html#a30fdd7af0b7f3a3767bc5d59e3c49cb3">ObjectiveTransformationFunction</a>&#160;</td>
+          <td class="paramname"><em>transform_objectives_function</em> = <code>utils::identity&lt;double,&#160;int&gt;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::optional&lt; <a class="el" href="structioh_1_1problem_1_1_solution.html">Solution</a>&lt; T &gt;&gt;&#160;</td>
+          <td class="paramname"><em>objective</em> = <code>std::nullopt</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -292,8 +324,12 @@ template&lt;typename T &gt; </div>
     <tr><td class="paramname">name</td><td>the name for the new function in the registry </td></tr>
     <tr><td class="paramname">n_variables</td><td>the dimension of the problem </td></tr>
     <tr><td class="paramname">problem_id</td><td>the problem id </td></tr>
+    <tr><td class="paramname">instance_id</td><td>the problem instance </td></tr>
     <tr><td class="paramname">optimization_type</td><td>the type of optimization </td></tr>
     <tr><td class="paramname">constraint</td><td>the contraint for the problem </td></tr>
+    <tr><td class="paramname">transform_variables_function</td><td>function which transforms the variables of the search problem prior to calling f. </td></tr>
+    <tr><td class="paramname">transform_objectives_function</td><td>a function which transforms the objective value of the search problem after calling f. </td></tr>
+    <tr><td class="paramname">objective</td><td>the value for the objective </td></tr>
   </table>
   </dd>
 </dl>
@@ -439,7 +475,7 @@ false input is incorrect </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>ioh</b></li><li class="navelem"><a class="el" href="namespaceioh_1_1problem.html">problem</a></li><li class="navelem"><a class="el" href="classioh_1_1problem_1_1_wrapped_problem.html">WrappedProblem</a></li>
-    <li class="footer">Generated on Fri Sep 24 2021 15:51:41 for IOH by
+    <li class="footer">Generated on Tue Feb 8 2022 16:15:08 for IOH by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

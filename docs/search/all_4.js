@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['data_142',['data',['../classioh_1_1logger_1_1_e_a_h.html#a6d69b4b8707e254cb209b58ebbc07cd3',1,'ioh::logger::EAH::data()'],['../classioh_1_1logger_1_1_store.html#a1519e3daf2a04dbff1314b6fb0d3e7a8',1,'ioh::logger::Store::data()'],['../classioh_1_1logger_1_1_store.html#a241d2c0fc5e2fca59ba70f55c28a279f',1,'ioh::logger::Store::data(const Cursor current)']]],
+  ['data_142',['data',['../classioh_1_1logger_1_1_e_a_h.html#a6d69b4b8707e254cb209b58ebbc07cd3',1,'ioh::logger::EAH::data()'],['../classioh_1_1logger_1_1_store.html#a1519e3daf2a04dbff1314b6fb0d3e7a8',1,'ioh::logger::Store::data()'],['../classioh_1_1logger_1_1_store.html#a36f17644356711399c44a25a16e80a2a',1,'ioh::logger::Store::data(const Cursor &amp;current)']]],
   ['data_5ffile_143',['data_file',['../structioh_1_1logger_1_1analyzer_1_1structures_1_1_scenario_info.html#aab5aa9a0fd80632f3d975ec99a3cd01e',1,'ioh::logger::analyzer::structures::ScenarioInfo']]],
   ['default_144',['Default',['../group___logging.html#ga1d8fc82f8b84986bf2b00edf0619549b',1,'ioh::logger']]],
   ['default_5fsuite_145',['default_suite',['../classioh_1_1logger_1_1_store.html#a99012abda2968e5f8dfd167704cbe687',1,'ioh::logger::Store']]],

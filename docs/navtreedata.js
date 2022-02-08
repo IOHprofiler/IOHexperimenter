@@ -25,7 +25,6 @@ var NAVTREE =
   [ "IOH", "index.html", [
     [ "IOHprofiler: IOHexperimenter", "index.html", null ],
     [ "IOHexperimenter : W-model", "md_ioh_problem_wmodel__r_e_a_d_m_e.html", null ],
-    [ "Todo List", "todo.html", null ],
     [ "Modules", "modules.html", "modules" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -58,18 +57,18 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"classioh_1_1logger_1_1_property.html#a72c5a101669dd77be6a52f4875f76bb8",
-"classioh_1_1logger_1_1stat_1_1_volume.html#ac882e7f7715360228b1eb48929df8cce",
-"classioh_1_1problem_1_1bbob_1_1_bent_cigar.html#a38edbf0ca114bac3fa990f50e2522ac8",
-"classioh_1_1problem_1_1bbob_1_1_gallagher21.html#a5e2d871518f75322fab4cf5fb7c89514",
-"classioh_1_1problem_1_1bbob_1_1_rosenbrock_base.html#a5e2d871518f75322fab4cf5fb7c89514",
-"classioh_1_1problem_1_1bbob_1_1_weierstrass.html#a294216874d9cb719e61968d5ed46187b",
-"classioh_1_1problem_1_1pbo_1_1_leading_ones_epistasis.html#a7d5a4088efb8b41722cf407b621e8ed0",
-"classioh_1_1problem_1_1pbo_1_1_one_max.html#ab7509f9cbafc8b51aea2bfc816418a68",
-"classioh_1_1problem_1_1python_1_1_extern_python_problem.html#aebbc4f6caacbcb9018a72669bf3d487c",
-"group___e_a_h.html",
-"structioh_1_1logger_1_1eaf_1_1_run_point.html#afce05db9a5ae4c201b3cf614646ca3a5",
-"todo.html"
+"classioh_1_1logger_1_1_nadir_stat.html#aedcfb971c3158a7994c77f908e7139d6",
+"classioh_1_1logger_1_1stat_1_1_volume.html#a0047093b344624d9ed4c2485a6404d42",
+"classioh_1_1problem_1_1bbob_1_1_attractive_sector.html#afd79c0136bc8a7dce922314c178db1fe",
+"classioh_1_1problem_1_1bbob_1_1_gallagher101.html#af5b6b36dacd3e01f78a99dd761453f95",
+"classioh_1_1problem_1_1bbob_1_1_rosenbrock_base.html",
+"classioh_1_1problem_1_1bbob_1_1_step_ellipsoid.html#ab2d5d6f0941cf63fea85a508a1100c40",
+"classioh_1_1problem_1_1pbo_1_1_leading_ones_dummy2.html#ab2d5d6f0941cf63fea85a508a1100c40",
+"classioh_1_1problem_1_1pbo_1_1_n_queens.html#aa5380aa06720aa98b93523ba7441f380",
+"classioh_1_1problem_1_1python_1_1_extern_python_helper.html#ac652f913cfdf06f80482418d1564bd81",
+"functions_h.html",
+"structioh_1_1logger_1_1analyzer_1_1structures_1_1_best_point.html#ac719a49b64a84fbc868db8625d6616b9",
+"structioh_1_1watch_1_1_current_y.html#ae0b8a1b338b9199b45a987155d64c630"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

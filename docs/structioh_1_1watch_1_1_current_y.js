@@ -1,6 +1,6 @@
 var structioh_1_1watch_1_1_current_y =
 [
-    [ "CurrentY", "structioh_1_1watch_1_1_current_y.html#acc621485bb75dd8acf2dbc5f9fae15a8", null ],
+    [ "CurrentY", "structioh_1_1watch_1_1_current_y.html#ae52a16c38e28ab5b29df757a7a25dd4e", null ],
     [ "call_to_string", "structioh_1_1watch_1_1_current_y.html#af382fb2a84f74301dd0a4eaeee50887c", null ],
     [ "format", "structioh_1_1watch_1_1_current_y.html#a3205058004b459ba00391ef684e413aa", null ],
     [ "name", "structioh_1_1watch_1_1_current_y.html#aab369229be2a9e7a5be582bc7abf8a9a", null ],

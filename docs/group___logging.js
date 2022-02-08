@@ -63,7 +63,7 @@ var group___logging =
       [ "name_", "classioh_1_1logger_1_1_property.html#ae0b8a1b338b9199b45a987155d64c630", null ]
     ] ],
     [ "Evaluations", "structioh_1_1watch_1_1_evaluations.html", [
-      [ "Evaluations", "structioh_1_1watch_1_1_evaluations.html#aad94a6a1a7525060f2f017f3e37d8132", null ],
+      [ "Evaluations", "structioh_1_1watch_1_1_evaluations.html#a9f8b1b98efc0c2bf4a3e5a0502c4e6ea", null ],
       [ "call_to_string", "structioh_1_1watch_1_1_evaluations.html#af382fb2a84f74301dd0a4eaeee50887c", null ],
       [ "format", "structioh_1_1watch_1_1_evaluations.html#a3205058004b459ba00391ef684e413aa", null ],
       [ "name", "structioh_1_1watch_1_1_evaluations.html#aab369229be2a9e7a5be582bc7abf8a9a", null ],
@@ -72,7 +72,7 @@ var group___logging =
       [ "name_", "structioh_1_1watch_1_1_evaluations.html#ae0b8a1b338b9199b45a987155d64c630", null ]
     ] ],
     [ "RawYBest", "structioh_1_1watch_1_1_raw_y_best.html", [
-      [ "RawYBest", "structioh_1_1watch_1_1_raw_y_best.html#a249a84ede5d3012f9bb9f457609a1b55", null ],
+      [ "RawYBest", "structioh_1_1watch_1_1_raw_y_best.html#af3af9fe99f440a9cfbbd39e5dd8d9e69", null ],
       [ "call_to_string", "structioh_1_1watch_1_1_raw_y_best.html#af382fb2a84f74301dd0a4eaeee50887c", null ],
       [ "format", "structioh_1_1watch_1_1_raw_y_best.html#a3205058004b459ba00391ef684e413aa", null ],
       [ "name", "structioh_1_1watch_1_1_raw_y_best.html#aab369229be2a9e7a5be582bc7abf8a9a", null ],
@@ -81,7 +81,7 @@ var group___logging =
       [ "name_", "structioh_1_1watch_1_1_raw_y_best.html#ae0b8a1b338b9199b45a987155d64c630", null ]
     ] ],
     [ "CurrentY", "structioh_1_1watch_1_1_current_y.html", [
-      [ "CurrentY", "structioh_1_1watch_1_1_current_y.html#acc621485bb75dd8acf2dbc5f9fae15a8", null ],
+      [ "CurrentY", "structioh_1_1watch_1_1_current_y.html#ae52a16c38e28ab5b29df757a7a25dd4e", null ],
       [ "call_to_string", "structioh_1_1watch_1_1_current_y.html#af382fb2a84f74301dd0a4eaeee50887c", null ],
       [ "format", "structioh_1_1watch_1_1_current_y.html#a3205058004b459ba00391ef684e413aa", null ],
       [ "name", "structioh_1_1watch_1_1_current_y.html#aab369229be2a9e7a5be582bc7abf8a9a", null ],
@@ -90,7 +90,7 @@ var group___logging =
       [ "name_", "structioh_1_1watch_1_1_current_y.html#ae0b8a1b338b9199b45a987155d64c630", null ]
     ] ],
     [ "TransformedY", "structioh_1_1watch_1_1_transformed_y.html", [
-      [ "TransformedY", "structioh_1_1watch_1_1_transformed_y.html#ad2cc288edf849c0b382ee34210dbe5c9", null ],
+      [ "TransformedY", "structioh_1_1watch_1_1_transformed_y.html#a9ff4a7821ea27a533dc9219776a27fd5", null ],
       [ "call_to_string", "structioh_1_1watch_1_1_transformed_y.html#af382fb2a84f74301dd0a4eaeee50887c", null ],
       [ "format", "structioh_1_1watch_1_1_transformed_y.html#a3205058004b459ba00391ef684e413aa", null ],
       [ "name", "structioh_1_1watch_1_1_transformed_y.html#aab369229be2a9e7a5be582bc7abf8a9a", null ],
@@ -99,7 +99,7 @@ var group___logging =
       [ "name_", "structioh_1_1watch_1_1_transformed_y.html#ae0b8a1b338b9199b45a987155d64c630", null ]
     ] ],
     [ "TransformedYBest", "structioh_1_1watch_1_1_transformed_y_best.html", [
-      [ "TransformedYBest", "structioh_1_1watch_1_1_transformed_y_best.html#a7f472d68d4d897552f3f7c1fe8106fe5", null ],
+      [ "TransformedYBest", "structioh_1_1watch_1_1_transformed_y_best.html#ad8175b0a9cbe66773b985cb634ffd5c7", null ],
       [ "call_to_string", "structioh_1_1watch_1_1_transformed_y_best.html#af382fb2a84f74301dd0a4eaeee50887c", null ],
       [ "format", "structioh_1_1watch_1_1_transformed_y_best.html#a3205058004b459ba00391ef684e413aa", null ],
       [ "name", "structioh_1_1watch_1_1_transformed_y_best.html#aab369229be2a9e7a5be582bc7abf8a9a", null ],
@@ -108,7 +108,7 @@ var group___logging =
       [ "name_", "structioh_1_1watch_1_1_transformed_y_best.html#ae0b8a1b338b9199b45a987155d64c630", null ]
     ] ],
     [ "Reference", "classioh_1_1watch_1_1_reference.html", [
-      [ "Reference", "classioh_1_1watch_1_1_reference.html#ac56752c4d3ff37c9e5eee6d585f968e8", null ],
+      [ "Reference", "classioh_1_1watch_1_1_reference.html#a11954deb9665f7cebacc1bec2ad6b745", null ],
       [ "call_to_string", "classioh_1_1watch_1_1_reference.html#af382fb2a84f74301dd0a4eaeee50887c", null ],
       [ "format", "classioh_1_1watch_1_1_reference.html#a3205058004b459ba00391ef684e413aa", null ],
       [ "name", "classioh_1_1watch_1_1_reference.html#aab369229be2a9e7a5be582bc7abf8a9a", null ],
@@ -118,7 +118,7 @@ var group___logging =
       [ "name_", "classioh_1_1watch_1_1_reference.html#ae0b8a1b338b9199b45a987155d64c630", null ]
     ] ],
     [ "Pointer", "classioh_1_1watch_1_1_pointer.html", [
-      [ "Pointer", "classioh_1_1watch_1_1_pointer.html#adb02fc80691e212606686833548bec5c", null ],
+      [ "Pointer", "classioh_1_1watch_1_1_pointer.html#add93e62e60c7f255e53bf2759e51673c", null ],
       [ "call_to_string", "classioh_1_1watch_1_1_pointer.html#af382fb2a84f74301dd0a4eaeee50887c", null ],
       [ "format", "classioh_1_1watch_1_1_pointer.html#a3205058004b459ba00391ef684e413aa", null ],
       [ "name", "classioh_1_1watch_1_1_pointer.html#aab369229be2a9e7a5be582bc7abf8a9a", null ],
@@ -132,7 +132,7 @@ var group___logging =
       [ "ConstRefType", "classioh_1_1watch_1_1_pointer_reference.html#a8c0d95a1c974b90fc7586e92bb56060a", null ],
       [ "PtrType", "classioh_1_1watch_1_1_pointer_reference.html#aaf95e5d1d17e30845fae2567de0fb79f", null ],
       [ "RefType", "classioh_1_1watch_1_1_pointer_reference.html#a5c29cb86a5786e7acfbdf7878d09fd18", null ],
-      [ "PointerReference", "classioh_1_1watch_1_1_pointer_reference.html#ad01a40bbd63252a3b377b89151800cbb", null ],
+      [ "PointerReference", "classioh_1_1watch_1_1_pointer_reference.html#af6b28196a4e5598fa1cf1ea59abd8595", null ],
       [ "call_to_string", "classioh_1_1watch_1_1_pointer_reference.html#af382fb2a84f74301dd0a4eaeee50887c", null ],
       [ "format", "classioh_1_1watch_1_1_pointer_reference.html#a3205058004b459ba00391ef684e413aa", null ],
       [ "name", "classioh_1_1watch_1_1_pointer_reference.html#aab369229be2a9e7a5be582bc7abf8a9a", null ],

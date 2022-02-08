@@ -324,6 +324,7 @@ namespace ioh
          *
          * @param name the name of the property.
          * @param variable a pointer to the logged variable.
+         * @param format a string to format the variable when logging. 
          *
          * @ingroup Properties
          */

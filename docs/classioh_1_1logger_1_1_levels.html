@@ -138,10 +138,10 @@ Protected Attributes</h2></td></tr>
 std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1logger_1_1_levels.html#a8b4ebf058da980c8db8934d49072a263">_attlevels</a></td></tr>
 <tr class="memdesc:a8b4ebf058da980c8db8934d49072a263"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asked attainment levels indices. <br /></td></tr>
 <tr class="separator:a8b4ebf058da980c8db8934d49072a263"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b5bd599988fe4229b9d67b7f3f1e33d"><td class="memItemLeft" align="right" valign="top"><a id="a7b5bd599988fe4229b9d67b7f3f1e33d"></a>
-const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">common::OptimizationType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1logger_1_1_levels.html#a7b5bd599988fe4229b9d67b7f3f1e33d">_optim_type</a></td></tr>
-<tr class="memdesc:a7b5bd599988fe4229b9d67b7f3f1e33d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether we minimize or maximize. <br /></td></tr>
-<tr class="separator:a7b5bd599988fe4229b9d67b7f3f1e33d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65f63d9f7c509690659f4defb408dbfa"><td class="memItemLeft" align="right" valign="top"><a id="a65f63d9f7c509690659f4defb408dbfa"></a>
+const <a class="el" href="classioh_1_1common_1_1_f_optimization_type.html">common::FOptimizationType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1logger_1_1_levels.html#a65f63d9f7c509690659f4defb408dbfa">_optim_type</a></td></tr>
+<tr class="memdesc:a65f63d9f7c509690659f4defb408dbfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether we minimize or maximize. <br /></td></tr>
+<tr class="separator:a65f63d9f7c509690659f4defb408dbfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A logger that store the 2D quality/time attainment fronts for each runs. </p>
@@ -199,7 +199,7 @@ const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aa
 <div class="line"><span class="stringliteral">            { }</span></div>
 <div class="line"><span class="stringliteral">        };</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">        [[nodiscard]] const eaf::Front&amp; data(const Cursor cur) const</span></div>
+<div class="line"><span class="stringliteral">        [[nodiscard]] const eaf::Front&amp; data(const Cursor&amp; cur) const</span></div>
 <div class="line"><span class="stringliteral">        {</span></div>
 <div class="line"><span class="stringliteral">#ifndef NDEBUG</span></div>
 <div class="line"><span class="stringliteral">            assert(_data.count(cur.suite) &gt; 0);</span></div>
@@ -242,7 +242,7 @@ const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aa
 <div class="line"> </div>
 <div class="line">            IOH_DBG(note, <span class="stringliteral">&quot;Attach to: pb=&quot;</span> &lt;&lt; _current.pb &lt;&lt; <span class="stringliteral">&quot;, dim=&quot;</span> &lt;&lt; _current.dim &lt;&lt; <span class="stringliteral">&quot;, ins=&quot;</span> &lt;&lt; _current.ins &lt;&lt; <span class="stringliteral">&quot;, run=&quot;</span> &lt;&lt; _current.run)</div>
 <div class="line"><span class="preprocessor">#ifndef NDEBUG</span></div>
-<div class="line">            <span class="keywordflow">if</span>(_has_problem_type and _current_problem_type != problem.optimization_type) {</div>
+<div class="line">            <span class="keywordflow">if</span>(_has_problem_type and _current_problem_type.type() != problem.optimization_type.type()) {</div>
 <div class="line">                IOH_DBG(warning, <span class="stringliteral">&quot;different types of problems are mixed, you will not be able to compute levels&quot;</span>)</div>
 <div class="line">            }</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -268,7 +268,7 @@ const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aa
 <div class="line">            assert(<a class="code" href="group___properties.html#gab6f329675f4deebd09b38e283de35ea7">evaluations</a>);</div>
 <div class="line"> </div>
 <div class="line">            <span class="comment">// If trigger::on_improvement does its job, we always have an improvement here.</span></div>
-<div class="line">            assert(<a class="code" href="namespaceioh_1_1common.html#a674d06da4a9470cecfdc07ef2e8e0691">common::compare_objectives</a>(<a class="code" href="group___properties.html#gadfe2a79b8d1a64dc7583e2d4b2b07030">transformed_y_best</a>.value(),_current_best,_current_problem_type));</div>
+<div class="line">            assert(_current_problem_type(<a class="code" href="group___properties.html#gadfe2a79b8d1a64dc7583e2d4b2b07030">transformed_y_best</a>.value(),_current_best));</div>
 <div class="line">            _current_best = <a class="code" href="group___properties.html#gadfe2a79b8d1a64dc7583e2d4b2b07030">transformed_y_best</a>.value();</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line">            eaf::Front&amp; f = current_front();</div>
@@ -288,7 +288,7 @@ const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aa
 <div class="line">        <a class="code" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">common::OptimizationType</a> optimization_type()<span class="keyword"> const</span></div>
 <div class="line"><span class="keyword">        </span>{</div>
 <div class="line">            assert(_has_problem_type);</div>
-<div class="line">            <span class="keywordflow">return</span> _current_problem_type;</div>
+<div class="line">            <span class="keywordflow">return</span> _current_problem_type.type();</div>
 <div class="line">        }</div>
 <div class="line"> </div>
 <div class="line">    <span class="keyword">protected</span>:</div>
@@ -298,7 +298,7 @@ const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aa
 <div class="line">        <span class="keywordtype">double</span> _current_best;</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line">        <span class="keywordtype">bool</span> _has_problem_type;</div>
-<div class="line">        <a class="code" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">common::OptimizationType</a> _current_problem_type;</div>
+<div class="line">        common::FOptimizationType _current_problem_type;</div>
 <div class="line"> </div>
 <div class="line">        Suites _data;</div>
 <div class="line"> </div>
@@ -505,17 +505,16 @@ const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aa
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aclassioh_1_1_logger_html_a2be703d7bdcbdbfc636063a20d3eaa8e"><div class="ttname"><a href="classioh_1_1_logger.html#a2be703d7bdcbdbfc636063a20d3eaa8e">ioh::Logger::attach_problem</a></div><div class="ttdeci">virtual void attach_problem(const problem::MetaData &amp;problem)</div><div class="ttdoc">Starts a new session for the given problem/instance/dimension/run.</div><div class="ttdef"><b>Definition:</b> loggers.hpp:184</div></div>
-<div class="ttc" id="anamespaceioh_1_1common_html_a674d06da4a9470cecfdc07ef2e8e0691"><div class="ttname"><a href="namespaceioh_1_1common.html#a674d06da4a9470cecfdc07ef2e8e0691">ioh::common::compare_objectives</a></div><div class="ttdeci">bool compare_objectives(const T v1, const T v2, const OptimizationType optimization_type)</div><div class="ttdoc">Compares two values v1 and v2, and returns true if v1 is better.</div><div class="ttdef"><b>Definition:</b> optimization_type.hpp:30</div></div>
 <div class="ttc" id="agroup___properties_html_gab6f329675f4deebd09b38e283de35ea7"><div class="ttname"><a href="group___properties.html#gab6f329675f4deebd09b38e283de35ea7">ioh::watch::evaluations</a></div><div class="ttdeci">Evaluations evaluations</div><div class="ttdoc">Number of evaluations of the objective function called by the solver.</div><div class="ttdef"><b>Definition:</b> properties.hpp:152</div></div>
 <div class="ttc" id="agroup___properties_html_gadfe2a79b8d1a64dc7583e2d4b2b07030"><div class="ttname"><a href="group___properties.html#gadfe2a79b8d1a64dc7583e2d4b2b07030">ioh::watch::transformed_y_best</a></div><div class="ttdeci">TransformedYBest transformed_y_best</div><div class="ttdoc">Best objective function value found so far, with transformation.</div><div class="ttdef"><b>Definition:</b> properties.hpp:243</div></div>
-<div class="ttc" id="agroup___triggers_html_gadc8aea7a9dfbe41f425b6c9fe993337c"><div class="ttname"><a href="group___triggers.html#gadc8aea7a9dfbe41f425b6c9fe993337c">ioh::trigger::at</a></div><div class="ttdeci">At &amp; at(const std::set&lt; size_t &gt; time_points)</div><div class="ttdoc">Do log at the given number of evaluations.</div><div class="ttdef"><b>Definition:</b> triggers.hpp:435</div></div>
+<div class="ttc" id="agroup___triggers_html_gadc8aea7a9dfbe41f425b6c9fe993337c"><div class="ttname"><a href="group___triggers.html#gadc8aea7a9dfbe41f425b6c9fe993337c">ioh::trigger::at</a></div><div class="ttdeci">At &amp; at(const std::set&lt; size_t &gt; time_points)</div><div class="ttdoc">Do log at the given number of evaluations.</div><div class="ttdef"><b>Definition:</b> triggers.hpp:438</div></div>
 <div class="ttc" id="aclassioh_1_1_logger_html_a15ffee3436f277bdab243f219fb03d07"><div class="ttname"><a href="classioh_1_1_logger.html#a15ffee3436f277bdab243f219fb03d07">ioh::Logger::reset</a></div><div class="ttdeci">virtual void reset()</div><div class="ttdoc">Optional actions when the logger is detached from a suite/problem or the problem is reset.</div><div class="ttdef"><b>Definition:</b> loggers.hpp:202</div></div>
-<div class="ttc" id="anamespaceioh_1_1common_html_a10ff539dd4ec41851f2c305aac9e3c4b"><div class="ttname"><a href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">ioh::common::OptimizationType</a></div><div class="ttdeci">OptimizationType</div><div class="ttdoc">Enum containing minimization = 0 and maximization = 1 flags.</div><div class="ttdef"><b>Definition:</b> optimization_type.hpp:13</div></div>
+<div class="ttc" id="anamespaceioh_1_1common_html_a10ff539dd4ec41851f2c305aac9e3c4b"><div class="ttname"><a href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">ioh::common::OptimizationType</a></div><div class="ttdeci">OptimizationType</div><div class="ttdoc">Enum containing minimization = 0 and maximization = 1 flags.</div><div class="ttdef"><b>Definition:</b> optimization_type.hpp:11</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>ioh</b></li><li class="navelem"><a class="el" href="namespaceioh_1_1logger.html">logger</a></li><li class="navelem"><a class="el" href="classioh_1_1logger_1_1_levels.html">Levels</a></li>
-    <li class="footer">Generated on Fri Sep 24 2021 15:51:41 for IOH by
+    <li class="footer">Generated on Tue Feb 8 2022 16:15:08 for IOH by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>
