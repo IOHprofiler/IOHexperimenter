@@ -97,3 +97,39 @@ const auto logger = std::make_shared<ioh::logger::Default>(std::string("logger-e
 ioh::experiment::Experimenter<ioh::problem::Real> f(suite, logger, solver, 10);
 f.run();
 ```
+
+## Testing New Problems
+<a id="#testing-new-problems"/>
+
+We offer a very simple and convenient interface for integrating new benchmark problems/functions. First, you could define a new `test_problem` as you like. Note that the `<vector>` header is already imported in "ioh.hpp".
+
+```C++
+#include "ioh.hpp"
+
+std::vector<double> test_problem(const std::vector<double> &)
+{
+    // the actual function body start here
+    // ...
+}
+```
+
+Then, you only need to "wrap" this new function as follows:
+
+```c++
+ioh::problem::wrap_function<double>(
+  &test_problem,
+  "test_problem" // name for the new function
+);
+```
+
+After wrapping, we could create this `test_problem` from the problem factory. Note that,
+the instance id is ineffective in this approach since we haven't implemented any transformations for the wrapped problem.
+
+```c++
+auto &factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();
+auto new_problem_f = factory.create(
+  "test_problem",  // create by name
+  1,               // instance id
+  10               // number of search variables
+);
+```
