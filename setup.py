@@ -186,7 +186,8 @@ setup(
 
 if MAKE_DOCS:
     directory = os.path.join(BASE_DIR, "doc", "python")
-    shutil.rmtree(os.path.join(directory, "source",  "api"))
-    subprocess.check_call(f"make html", 
-        shell=True, cwd=directory
-    )
+    try:
+        shutil.rmtree(os.path.join(directory, "source",  "api"))
+    except FileNotFoundError:
+        pass
+    subprocess.check_call(f"make html", shell=True, cwd=directory)
