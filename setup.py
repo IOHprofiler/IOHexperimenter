@@ -157,37 +157,40 @@ with open("README.md", "r") as fh:
 
 iohcpp = CMakeExtension("ioh.iohcpp")
 
-setup(
-    name="ioh",
-    version=__version__,
-    author="Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck",
-    author_email="iohprofiler@liacs.leidenuniv.nl",
-    description="The experimenter for Iterative Optimization Heuristics",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    packages=find_packages(),
-    package_dir={'IOHexperimenter':'ioh'},
-    package_data={"ioh": [
-        "ioh/__init__.pyi",
-        "ioh/iohcpp/__init__.pyi",
-        "ioh/iohcpp/problem.pyi",
-        "ioh/iohcpp/suite.pyi",
-        "ioh/iohcpp/logger/__init__.pyi",
-        "ioh/iohcpp/logger/property.pyi",
-        "ioh/iohcpp/logger/trigger.pyi"
-    ]},
-    ext_modules=[iohcpp],
-    cmdclass={"build_ext": CMakeBuild},
-    zip_safe=False,
-    test_suite='tests.python',
-    python_requires='>=3.6',
-    setup_requires=['cmake', 'ninja', 'pybind11', 'mypy']
-)
-
-if MAKE_DOCS:
-    directory = os.path.join(BASE_DIR, "doc", "python")
-    try:
-        shutil.rmtree(os.path.join(directory, "source",  "api"))
-    except FileNotFoundError:
-        pass
-    subprocess.check_call(f"make html", shell=True, cwd=directory)
+try:
+    setup(
+        name="ioh",
+        version=__version__,
+        author="Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck",
+        author_email="iohprofiler@liacs.leidenuniv.nl",
+        description="The experimenter for Iterative Optimization Heuristics",
+        long_description=long_description,
+        long_description_content_type="text/markdown",
+        packages=find_packages(),
+        package_dir={'IOHexperimenter':'ioh'},
+        package_data={"ioh": [
+            "ioh/__init__.pyi",
+            "ioh/iohcpp/__init__.pyi",
+            "ioh/iohcpp/problem.pyi",
+            "ioh/iohcpp/suite.pyi",
+            "ioh/iohcpp/logger/__init__.pyi",
+            "ioh/iohcpp/logger/property.pyi",
+            "ioh/iohcpp/logger/trigger.pyi"
+        ]},
+        ext_modules=[iohcpp],
+        cmdclass={"build_ext": CMakeBuild},
+        zip_safe=False,
+        test_suite='tests.python',
+        python_requires='>=3.6',
+        setup_requires=['cmake', 'ninja', 'pybind11', 'mypy']
+    )
+except Exception as err:
+    raise err
+else:
+    if MAKE_DOCS:
+        directory = os.path.join(BASE_DIR, "doc", "python")
+        try:
+            shutil.rmtree(os.path.join(directory, "source",  "api"))
+        except FileNotFoundError:
+            pass
+        subprocess.check_call(f"make html", shell=True, cwd=directory)

@@ -41,8 +41,8 @@ void define_state(py::module &m, const std::string &name)
             R"pbdoc(
                 Initialize a state object using its coordinates and fitness.
 
-                Arguments
-                ---------
+                Parameters
+                ----------
                     initial: a `Solution` object to initialize the state, which is usually the initial solution
                     to an optimization problem
             )pbdoc"
@@ -51,15 +51,15 @@ void define_state(py::module &m, const std::string &name)
         .def_readonly("optimum_found", &Class::optimum_found,
                       "Boolean value indicating whether the optimum of a given problem has been found.")
         .def_readonly("current_best_internal", &Class::current_best_internal,
-                      "The internal representation of the best so far solution. 
-                      See `current_internal` for a short explanation on the meaning of 'internal'")
+                      "The internal representation of the best so far solution. "
+                      "See `current_internal` for a short explanation on the meaning of 'internal'")
         .def_readonly("current_best", &Class::current_best, "The current best-so-far solution.")
         .def_readonly("current_internal", &Class::current_internal,
-                      "The internal representation of the last-evaluated solution. Note that, for a given
-                      problem instance, the input search point will be transformed with an automorphism 
-                      (see https://iohprofiler.github.io/IOHproblem/ for the detail) and after evaluating the
-                      transformed point, the resulting objective value will also be transformed with another
-                      automorphism in the objective space. Such interal information are stored in this attribute.")
+                      "The internal representation of the last-evaluated solution. Note that, for a given "
+                      "problem instance, the input search point will be transformed with an automorphism "
+                      "(see https://iohprofiler.github.io/IOHproblem/ for the detail) and after evaluating the "
+                      "transformed point, the resulting objective value will also be transformed with another "
+                      "automorphism in the objective space. Such interal information are stored in this attribute.")
         .def_readonly("current", &Class::current, "The last-evaluated solution.")
         .def("__repr__", &Class::repr);
 }
@@ -77,8 +77,8 @@ void define_constraint(py::module &m, const std::string &name)
              R"pbdoc(
                 Create box constraints. It is currently used only in BBOB problems.
 
-                Arguments
-                ---------
+                Parameters
+                ----------
                     lb: the lower bound of the search space/domain
                     ub: the upper bound of the search space/domain
             )pbdoc")
@@ -185,24 +185,22 @@ void define_base_class(py::module &m, const std::string &name)
                     x: the search point to evaluate. It must be a 1-dimensional array/list whose length matches 
                         search space's dimensionality
             )pbdoc")
-        .def_static(
-            "create",
-            [](const std::string &name, int iid, int dim) {
-        return Factory::instance().create(name, iid, dim); 
+        .def_static("create", [](const std::string &name, int iid, int dim) {
+                return Factory::instance().create(name, iid, dim); 
             },
             py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"), 
             R"pbdoc(
                 Create a problem instance
 
-                Arguments
-                ---------
+                Parameters
+                ----------
                     problem_name: a string indicating the problem name. For the built-in problems, we advise
                         the user to look into https://iohprofiler.github.io/IOHexp/Cpp/#using-individual-problems
                         for the full list of available problems
                     instance_id: an integer identifier of the problem instance, which seeds the random generation
                         of the tranformations in the search/objective spaces
                     dimension: integer, representing the dimensionality of the search space
-            )pbdoc")
+            )pbdoc"
         )
         .def_static(
             "create", [](int id, int iid, int dim) {
@@ -211,14 +209,14 @@ void define_base_class(py::module &m, const std::string &name)
             R"pbdoc(
                 Create a problem instance
 
-                Arguments
-                ---------
+                Parameters
+                ----------
                     problem_id: the index of the problem to create. For the built-in problems, the indexing of
                         problems can be found here: https://iohprofiler.github.io/IOHexp/Cpp/#using-individual-problems
                     instance_id: an integer identifier of the problem instance, which seeds the random generation
                         of the tranformations in the search/objective spaces
                     dimension: integer, representing the dimensionality of the search space
-            )pbdoc")
+            )pbdoc"
         )
         .def_property_readonly_static(
             "problems", [](py::object) {
@@ -226,8 +224,8 @@ void define_base_class(py::module &m, const std::string &name)
         .def_property_readonly("log_info", &ProblemType::log_info, "Check what data is being sent to the logger.")
         .def_property_readonly(
             "state", &ProblemType::state,
-            "The current state of the optimization process containing, e.g., the current solution and the 
-            number of function evaluated consumed so far")
+            "The current state of the optimization process containing, e.g., the current solution and the "
+            "number of function evaluated consumed so far")
         .def_property_readonly(
             "meta_data", &ProblemType::meta_data,
             "The static meta-data of the problem containing, e.g., problem id, instance id, and problem's dimensionality")
@@ -322,8 +320,7 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
 void define_helper_classes(py::module &m)
 {
     py::enum_<ioh::common::OptimizationType>(m, "OptimizationType",
-                                             "Enum used for defining whether the problem is subject to 
-                                             minimization or maximization")
+                                             "Enum used for defining whether the problem is subject to minimization or maximization")
         .value("Maximization", ioh::common::OptimizationType::Maximization)
         .value("Minimization", ioh::common::OptimizationType::Minimization)
         .export_values();
