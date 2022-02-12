@@ -21,13 +21,13 @@ void define_solution(py::module &m, const std::string &name)
              R"pbdoc(
             Initialize a Solution object using its coordinates and fitness.
 
-            Parameters
+            Attributes
             ----------
-                x: the coordinates in the searchspace
-                y: the coordinates in the objective space (fitness value)
+                x: the search point in a search space, e.g., R^d or {0,1}^d
+                y: the corresponding objective value of `x`, i.e., y = f(x)
         )pbdoc")
-        .def_readonly("x", &Class::x, "The coordinates in the searchspace.")
-        .def_readonly("y", &Class::y, "The fitness value.")
+        .def_readonly("x", &Class::x, "The search point in a search space, e.g., R^d or {0,1}^d")
+        .def_readonly("y", &Class::y, "The corresponding objective value of `x`, i.e., y = f(x)")
         .def("__repr__", &Class::repr);
 }
 
@@ -37,15 +37,29 @@ void define_state(py::module &m, const std::string &name)
     using Class = State<T>;
     using Class2 = Solution<T>;
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<Class2>())
+        .def(py::init<Class2>(), 
+            R"pbdoc(
+                Initialize a state object using its coordinates and fitness.
+
+                Arguments
+                ---------
+                    initial: a `Solution` object to initialize the state, which is usually the initial solution
+                    to an optimization problem
+            )pbdoc"
+        )
         .def_readonly("evaluations", &Class::evaluations, "The number of times the problem has been evaluated so far.")
         .def_readonly("optimum_found", &Class::optimum_found,
-                      "Boolean indicating whether or not the optimum has been found.")
+                      "Boolean value indicating whether the optimum of a given problem has been found.")
         .def_readonly("current_best_internal", &Class::current_best_internal,
-                      "The internal representation of the best so far solution.")
+                      "The internal representation of the best so far solution. 
+                      See `current_internal` for a short explanation on the meaning of 'internal'")
         .def_readonly("current_best", &Class::current_best, "The current best-so-far solution.")
         .def_readonly("current_internal", &Class::current_internal,
-                      "The internal representation of the last-evaluated solution.")
+                      "The internal representation of the last-evaluated solution. Note that, for a given
+                      problem instance, the input search point will be transformed with an automorphism 
+                      (see https://iohprofiler.github.io/IOHproblem/ for the detail) and after evaluating the
+                      transformed point, the resulting objective value will also be transformed with another
+                      automorphism in the objective space. Such interal information are stored in this attribute.")
         .def_readonly("current", &Class::current, "The last-evaluated solution.")
         .def("__repr__", &Class::repr);
 }
@@ -59,19 +73,27 @@ void define_constraint(py::module &m, const std::string &name)
     options.disable_function_signatures();
 
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<std::vector<T>, std::vector<T>>(), py::arg("lb"), py::arg("ub"))
+        .def(py::init<std::vector<T>, std::vector<T>>(), py::arg("lb"), py::arg("ub"),
+             R"pbdoc(
+                Create box constraints. It is currently used only in BBOB problems.
+
+                Arguments
+                ---------
+                    lb: the lower bound of the search space/domain
+                    ub: the upper bound of the search space/domain
+            )pbdoc")
         .def(py::init<int, T, T>(), py::arg("size"), py::arg("lb"), py::arg("ub"))
         .def_readonly("ub", &Class::ub, "The upper bound (box constraint)")
         .def_readonly("lb", &Class::lb, "The lower bound (box constraint)")
         .def("__repr__", &Class::repr)
         .def("check", &Class::check,
              R"pbdoc(
-            Check if a point is inside the bounds or not.
+                Check if a point is within the bounds or not.
 
-            Parameters
-            ----------
-                x: The point for which to check the boundary conditions
-        )pbdoc");
+                Parameters
+                ----------
+                    x: the search point to check
+            )pbdoc");
 }
 
 #if defined(__GNUC__)
@@ -88,9 +110,9 @@ class PyProblem : public P
         auto constraint = this->constraint();
         auto &factory = ioh::common::Factory<P, int, int>::instance();
         factory.include(meta_data.name, meta_data.problem_id, [=](const int instance, const int n_variables) {
-            return std::make_shared<PyProblem<P, T>>(
-                MetaData(meta_data.problem_id, instance, meta_data.name, n_variables, meta_data.optimization_type.type()),
-                constraint.resize(n_variables));
+            return std::make_shared<PyProblem<P, T>>(MetaData(meta_data.problem_id, instance, meta_data.name,
+                                                              n_variables, meta_data.optimization_type.type()),
+                                                     constraint.resize(n_variables));
         });
         return true;
     }
@@ -136,56 +158,87 @@ void define_base_class(py::module &m, const std::string &name)
              py::arg("instance") = 1, py::arg("is_minimization") = true, py::arg("constraint") = Constraint<T>(5))
         .def("reset", &ProblemType::reset,
              R"pbdoc(
-            Reset all state-variables of the problem.
-        )pbdoc")
+                Reset all state variables of the problem.
+            )pbdoc")
         .def("attach_logger", &ProblemType::attach_logger,
              R"pbdoc(
-            Attach a logger to the problem to allow performance tracking.
+                Attach a logger to the problem to allow performance tracking.
 
-            Parameters
-            ----------
-                logger: A logger-object from the IOHexperimenter 'logger' module.
-        )pbdoc")
+                Parameters
+                ----------
+                    logger: A logger-object from the IOHexperimenter `logger` module.
+            )pbdoc")
         .def("detach_logger", &ProblemType::detach_logger,
              R"pbdoc(
-            Remove the specified logger from the problem.
+                Remove the specified logger from the problem.
 
-            Parameters
-            ----------
-                logger: A logger-object from the IOHexperimenter 'logger' module.
-        )pbdoc")
+                Parameters
+                ----------
+                    logger: A logger object created from the IOHexperimenter `logger` module.
+            )pbdoc")
         .def("__call__", &ProblemType::operator(),
              R"pbdoc(
-            Evaluate the problem.
+                Evaluate the problem.
 
-            Parameters
-            ----------
-                x: a 1-dimensional array / list of size equal to the dimension of this problem
-        )pbdoc")
+                Parameters
+                ----------
+                    x: the search point to evaluate. It must be a 1-dimensional array/list whose length matches 
+                        search space's dimensionality
+            )pbdoc")
         .def_static(
             "create",
-            [](const std::string &name, int iid, int dim) { return Factory::instance().create(name, iid, dim); },
-            py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"), "Create a problem instance")
+            [](const std::string &name, int iid, int dim) {
+        return Factory::instance().create(name, iid, dim); 
+            },
+            py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"), 
+            R"pbdoc(
+                Create a problem instance
+
+                Arguments
+                ---------
+                    problem_name: a string indicating the problem name. For the built-in problems, we advise
+                        the user to look into https://iohprofiler.github.io/IOHexp/Cpp/#using-individual-problems
+                        for the full list of available problems
+                    instance_id: an integer identifier of the problem instance, which seeds the random generation
+                        of the tranformations in the search/objective spaces
+                    dimension: integer, representing the dimensionality of the search space
+            )pbdoc")
+        )
         .def_static(
-            "create", [](int id, int iid, int dim) { return Factory::instance().create(id, iid, dim); },
-            py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"), "Create a problem instance")
+            "create", [](int id, int iid, int dim) {
+        return Factory::instance().create(id, iid, dim); },
+            py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"), 
+            R"pbdoc(
+                Create a problem instance
+
+                Arguments
+                ---------
+                    problem_id: the index of the problem to create. For the built-in problems, the indexing of
+                        problems can be found here: https://iohprofiler.github.io/IOHexp/Cpp/#using-individual-problems
+                    instance_id: an integer identifier of the problem instance, which seeds the random generation
+                        of the tranformations in the search/objective spaces
+                    dimension: integer, representing the dimensionality of the search space
+            )pbdoc")
+        )
         .def_property_readonly_static(
-            "problems", [](py::object) { return Factory::instance().map(); }, "All registered problems")
+            "problems", [](py::object) {
+        return Factory::instance().map(); }, "All registered problems")
         .def_property_readonly("log_info", &ProblemType::log_info, "Check what data is being sent to the logger.")
         .def_property_readonly(
             "state", &ProblemType::state,
-            "The current state of the problem all variables which change during the optimization procedure.")
+            "The current state of the optimization process containing, e.g., the current solution and the 
+            number of function evaluated consumed so far")
         .def_property_readonly(
             "meta_data", &ProblemType::meta_data,
-            "The meta-data of the problem: these variables are static during the lifetime of the problem.")
+            "The static meta-data of the problem containing, e.g., problem id, instance id, and problem's dimensionality")
         .def_property_readonly("objective", &ProblemType::objective,
-                               "The optimal point and value for the current instanciation of the problem.")
-        .def_property_readonly("constraint", &ProblemType::constraint, "The constraints (bounds) of the problem.")
+                               "The optimum and its objective value for a problem instance")
+        .def_property_readonly("constraint", &ProblemType::constraint, "The box constraints of the problem.")
         .def("__repr__", [=](const ProblemType &p) {
-            using namespace ioh::common;
-            const auto meta_data = p.meta_data();
-            return "<" + name + fmt::format("Problem {:d}. ", meta_data.problem_id) + meta_data.name +
-                fmt::format(" (iid={:d} dim={:d})>", meta_data.instance, meta_data.n_variables);
+        using namespace ioh::common;
+        const auto meta_data = p.meta_data();
+        return "<" + name + fmt::format("Problem {:d}. ", meta_data.problem_id) + meta_data.name +
+            fmt::format(" (iid={:d} dim={:d})>", meta_data.instance, meta_data.n_variables);
         });
 }
 static std::vector<py::handle> WRAPPED_FUNCTIONS;
@@ -218,15 +271,13 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
                 {
                     static bool r = register_python_fn(tx.value());
                     py::list px = (tx.value()(x, iid));
-                    if(px.size() == x.size())
+                    if (px.size() == x.size())
                         return px.cast<std::vector<T>>();
                     else
-                        py::module_::import("warnings").attr("warn")(
-                            fmt::format(
-                                "Objective transformation function returned an iterable of invalid length ({} != {}). Transformation is disabled.", 
-                                px.size(), x.size()
-                            )
-                        );
+                        py::module_::import("warnings")
+                            .attr("warn")(fmt::format("Objective transformation function returned an iterable of "
+                                                      "invalid length ({} != {}). Transformation is disabled.",
+                                                      px.size(), x.size()));
                 }
                 return x;
             };
@@ -245,7 +296,8 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
                 {
                     static bool r = register_python_fn(co.value());
                     py::object xt = co.value()(iid, dim);
-                    if(py::isinstance<py::iterable>(xt) && xt.cast<py::tuple>().size() == 2){
+                    if (py::isinstance<py::iterable>(xt) && xt.cast<py::tuple>().size() == 2)
+                    {
                         py::tuple args = xt;
                         py::list x = args[0];
                         py::float_ y = args[1];
@@ -269,8 +321,9 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
 
 void define_helper_classes(py::module &m)
 {
-    py::enum_<ioh::common::OptimizationType>(m, "OptimizationType", 
-        "Enum used for defining wheter the problem is Mimization or Maximization")
+    py::enum_<ioh::common::OptimizationType>(m, "OptimizationType",
+                                             "Enum used for defining whether the problem is subject to 
+                                             minimization or maximization")
         .value("Maximization", ioh::common::OptimizationType::Maximization)
         .value("Minimization", ioh::common::OptimizationType::Minimization)
         .export_values();
@@ -297,7 +350,7 @@ void define_helper_classes(py::module &m)
     py::class_<ioh::logger::Info>(m, "LogInfo")
         .def(py::init<size_t, double, double, double, Solution<double>, Solution<double>>())
         .def_readonly("evaluations", &ioh::logger::Info::evaluations,
-                      "The number of evaluations performed on the current problem so far")
+                      "The number of function evaluations performed on the current problem so far")
         .def_readonly("y_best", &ioh::logger::Info::raw_y_best, "The best fitness value found so far")
         .def_readonly("transformed_y", &ioh::logger::Info::transformed_y,
                       "The internal representation of the current fitness value")
@@ -397,7 +450,12 @@ void define_pbo_problems(py::module &m)
 
         )pbdoc")
         .def(py::init<int, int>());
-    py::class_<pbo::IsingRing, Integer, std::shared_ptr<pbo::IsingRing>>(m, "IsingRing", py::is_final())
+    py::class_<pbo::IsingRing, Integer, std::shared_ptr<pbo::IsingRing>>(m, "IsingRing", py::is_final(),
+                                                                         R"pbdoc(
+            Low Autocorrelation Binary Sequences (LABS):
+            x ↦ n^2 / 2∑_{k=1}^{n-1}(∑_{i=1}^{n−k}s_is_{i+k})^2, where s_i = 2x_i − 1
+
+        )pbdoc")
         .def(py::init<int, int>());
     py::class_<pbo::IsingTorus, Integer, std::shared_ptr<pbo::IsingTorus>>(m, "IsingTorus", py::is_final())
         .def(py::init<int, int>());
@@ -549,7 +607,8 @@ void define_problem(py::module &m)
     define_wmodels(m);
 
     py::module_::import("atexit").attr("register")(py::cpp_function([]() {
-        for (const auto fn : WRAPPED_FUNCTIONS){
+        for (const auto fn : WRAPPED_FUNCTIONS)
+        {
             if (fn)
                 fn.dec_ref();
         }
