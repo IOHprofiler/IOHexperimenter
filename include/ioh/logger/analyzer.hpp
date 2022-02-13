@@ -363,10 +363,12 @@ namespace ioh::logger
                  * @param attributes See: analyzer::Attributes.
                  */
                 Analyzer(const Triggers &triggers = {trigger::on_improvement},
-                         const Properties &additional_properties = {}, const fs::path &root = fs::current_path(),
+                         const Properties &additional_properties = {},
+                         const fs::path &root = fs::current_path(),
                          const std::string &folder_name = "ioh_data",
                          const std::string &algorithm_name = "algorithm_name",
-                         const std::string &algorithm_info = "algorithm_info", const bool store_positions = false,
+                         const std::string &algorithm_info = "algorithm_info",
+                         const bool store_positions = false,
                          const structures::Attributes &attributes = {}) :
                     FlatFile(triggers, common::concatenate(default_properties_, additional_properties), "", {}, " ", "",
                              "None", "\n", true, store_positions, {}),
@@ -409,6 +411,7 @@ namespace ioh::logger
                 //! Set log_info_ in order to check if the last line has been logged
                 virtual void log(const logger::Info &log_info) override
                 {
+                    IOH_DBG(debug, "Analyzer log");
                     log_info_ = log_info;
                     FlatFile::log(log_info);
                 }
@@ -416,12 +419,21 @@ namespace ioh::logger
                 //! See: logger::FlatFile::call. Updates `best_point_`
                 virtual void call(const Info &log_info) override
                 {
+                    IOH_DBG(debug, "Analyzer called");
                     evals_ = log_info.evaluations;
                     FlatFile::call(log_info);
                     if (problem_->optimization_type(log_info.current.y, best_point_.point.y))
                         best_point_ = {log_info.evaluations, log_info.current.as_double()};
                     log_info_ = {};
                 }
+
+                #ifndef NDEBUG
+                void reset()
+                {
+                    IOH_DBG(debug, "Analyzer reset");
+                    FlatFile::reset();
+                }
+                #endif
 
                 //! Watcher::watch is protected, so it can only be called before track_problem is called for the first
                 //! time.

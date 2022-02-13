@@ -158,6 +158,7 @@ namespace ioh::logger
 
         void call(const Info &log_info) override
         {
+            IOH_DBG(debug, "FlatFile called");
             if (requires_header_)
             {
                 IOH_DBG(xdebug, "print header")
