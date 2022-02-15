@@ -208,7 +208,7 @@ namespace logger {
         };
 
         /** Return the front at the given cursor. */
-        [[nodiscard]] const eaf::Front& data(const Cursor cur) const
+        [[nodiscard]] const eaf::Front& data(const Cursor& cur) const
         {
 #ifndef NDEBUG
             assert(_data.count(cur.suite) > 0);

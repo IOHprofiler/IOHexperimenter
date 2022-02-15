@@ -1,0 +1,1107 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="common" href="cpp/ioh_common.html" /><link rel="prev" title="IOHexperimenter" href="index.html" />
+
+    <meta name="generator" content="sphinx-4.2.0, furo 2022.01.02"/>
+        <title>C++ - IOHExperimenter 0.3.2.6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="contents.html"><div class="brand">IOHExperimenter 0.3.2.6 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="contents.html">
+  
+  
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.2.6 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">IOHexperimenter</a></li>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">C++</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="cpp/ioh_common.html">common</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common_file.html">file</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="cpp/ioh_common_random.html">random</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_common_random_bbob2009.html">bbob2009</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_common_random_pbo.html">pbo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="cpp/ioh_logger.html">logger</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="cpp/ioh_logger_analyzer.html">analyzer</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_logger_analyzer_structures.html">structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_logger_analyzer_v1.html">v1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_logger_analyzer_v2.html">v2</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger_eaf.html">eaf</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="cpp/ioh_logger_eah.html">eah</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="cpp/ioh_logger_eah_stat.html">stat</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eah_stat_Distribution.html">Distribution</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eah_stat_under_curve.html">under_curve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger_stat.html">stat</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="cpp/ioh_problem.html">problem</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem_bbob.html">bbob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem_pbo.html">pbo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem_python.html">python</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="cpp/ioh_problem_transformation.html">transformation</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_problem_transformation_objective.html">objective</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html">variables</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem_utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem_wmodel.html">wmodel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_suite.html">suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_trigger.html">trigger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_watch.html">watch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh.html">ioh</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="python.html">Python</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="python/ioh.html">Utilities</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.get_problem.html">get_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.wrap_problem.html">wrap_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.get_problem_id.html">get_problem_id</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.Experiment.html">Experiment</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="python/structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.IntegerConstraint.html">IntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.IntegerSolution.html">IntegerSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.IntegerState.html">IntegerState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.LogInfo.html">LogInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.MetaData.html">MetaData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.OptimizationType.html">OptimizationType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.RealConstraint.html">RealConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.RealSolution.html">RealSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.RealState.html">RealState</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="python/problem.html">Problem</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.problem.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.problem.Real.html">Real</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="python/bbob.html">BBOB</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.AttractiveSector.html">AttractiveSector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.BBOB.html">BBOB</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.BentCigar.html">BentCigar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.BuecheRastrigin.html">BuecheRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.DifferentPowers.html">DifferentPowers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Discus.html">Discus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Ellipsoid.html">Ellipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.EllipsoidRotated.html">EllipsoidRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Gallagher101.html">Gallagher101</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Gallagher21.html">Gallagher21</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.GriewankRosenBrock.html">GriewankRosenBrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Katsuura.html">Katsuura</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.LinearSlope.html">LinearSlope</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.LunacekBiRastrigin.html">LunacekBiRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Rastrigin.html">Rastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.RastriginRotated.html">RastriginRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Rosenbrock.html">Rosenbrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.RosenbrockRotated.html">RosenbrockRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Schaffers10.html">Schaffers10</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Schaffers1000.html">Schaffers1000</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Schwefel.html">Schwefel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.SharpRidge.html">SharpRidge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Sphere.html">Sphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.StepEllipsoid.html">StepEllipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Weierstrass.html">Weierstrass</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="python/pbo.html">PBO</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.ConcatenatedTrap.html">ConcatenatedTrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.IsingRing.html">IsingRing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.IsingTorus.html">IsingTorus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.IsingTriangular.html">IsingTriangular</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.LABS.html">LABS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.LeadingOnes.html">LeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.LeadingOnesDummy1.html">LeadingOnesDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.LeadingOnesDummy2.html">LeadingOnesDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.LeadingOnesEpistasis.html">LeadingOnesEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.LeadingOnesNeutrality.html">LeadingOnesNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.LeadingOnesRuggedness1.html">LeadingOnesRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.LeadingOnesRuggedness2.html">LeadingOnesRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.LeadingOnesRuggedness3.html">LeadingOnesRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Linear.html">Linear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.MIS.html">MIS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.NQueens.html">NQueens</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.OneMax.html">OneMax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.OneMaxDummy1.html">OneMaxDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.OneMaxDummy2.html">OneMaxDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.OneMaxEpistasis.html">OneMaxEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.OneMaxNeutrality.html">OneMaxNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.OneMaxRuggedness1.html">OneMaxRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.OneMaxRuggedness2.html">OneMaxRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.OneMaxRuggedness3.html">OneMaxRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.PBO.html">PBO</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="python/wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.AbstractWModel.html">AbstractWModel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.WModelLeadingOnes.html">WModelLeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.WModelOneMax.html">WModelOneMax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="python/logger.html">Logging</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.trigger.Always.html">Always</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.trigger.At.html">At</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.trigger.During.html">During</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.trigger.Each.html">Each</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.trigger.OnImprovement.html">OnImprovement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.trigger.Trigger.html">Trigger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.property.AbstractProperty.html">AbstractProperty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.property.CurrentY.html">CurrentY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.property.Evaluations.html">Evaluations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.property.Property.html">Property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.property.RawYBest.html">RawYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.property.TransformedY.html">TransformedY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.property.TransformedYBest.html">TransformedYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.property.CURRENT_Y_BEST.html">CURRENT_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.property.EVALUATIONS.html">EVALUATIONS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.property.RAW_Y_BEST.html">RAW_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.property.TRANSFORMED_Y.html">TRANSFORMED_Y</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.property.TRANSFORMED_Y_BEST.html">TRANSFORMED_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.AbstractWatcher.html">AbstractWatcher</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.Analyzer.html">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.Combine.html">Combine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.EAF.html">EAF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.EAH.html">EAH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.FlatFile.html">FlatFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.Logger.html">Logger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.logger.Store.html">Store</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="python/suite.html">Suite</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.suite.BBOB.html">BBOB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.suite.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.suite.PBO.html">PBO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.suite.Real.html">Real</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="c">
+<h1>C++<a class="headerlink" href="#c" title="Permalink to this headline">¶</a></h1>
+<section id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h2>
+<section id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
+<p>The following toolkits are needed for compiling IOHexperimenter:</p>
+<ul class="simple">
+<li><p>A <code class="docutils literal notranslate"><span class="pre">C++</span></code> compiler. The minimum compiler version is g++ 7 or equivalent, but we recommend g++ 9 or equivalent.</p></li>
+<li><p><a class="reference external" href="https://cmake.org">CMake</a>, version 3.12 or higher</p></li>
+</ul>
+<p>Please use the following commands to download, compile, and install this package:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt; git clone --recursive https://github.com/IOHprofiler/IOHexperimenter.git
+&gt; <span class="nb">cd</span> IOHexperimenter
+&gt; mkdir build
+&gt; <span class="nb">cd</span> build
+&gt; cmake .. <span class="o">&amp;&amp;</span> make install
+</pre></div>
+</div>
+<p>which installs all header files to <code class="docutils literal notranslate"><span class="pre">/usr/local/include/ioh</span></code> by default.
+If you want to change this directory, please use the following flag <code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">-DCMAKE_INSTALL_PREFIX=your/path</span> <span class="pre">..</span></code></p>
+<p>If you want to change build options, check the output of <code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">-L</span></code> or use <code class="docutils literal notranslate"><span class="pre">cmake-gui</span></code> or <code class="docutils literal notranslate"><span class="pre">ccmake</span></code>.</p>
+</section>
+<section id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h3>
+<p>To obtain a built-in problem, you could create a problem instance by passing the
+<em>instance id</em> and the <em>search dimension</em> to the constructor of the intended problem class, e.g.,</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"ioh.hpp"</span><span class="cp"></span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">om</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">pbo</span><span class="o">::</span><span class="n">OneMax</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span><span class="w"> </span><span class="c1">// PBO problem: instance 1, dim 10</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">sp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">bbob</span><span class="o">::</span><span class="n">Sphere</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span><span class="w"> </span><span class="c1">// BBOB problem: instance 1, dim 5</span>
+</pre></div>
+</div>
+<p>The instance id is intended to generalize a certain problem by some transformations, where
+it serves as the random seed for randomizing the transformations, e.g., affine
+transforms for BBOB problems and scaling of objective values for PBO problems. Please see</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://iohprofiler.github.io/IOHproblem/">PBO transformations</a></p></li>
+<li><p><a class="reference external" href="https://coco.gforge.inria.fr/downloads/download16.00/bbobdocfunctions.pdf">BBOB/COCO transformations</a></p></li>
+</ul>
+<p>Alternatively, we can also obtain a <code class="docutils literal notranslate"><span class="pre">std::shared_ptr</span></code> to a problem by using a problem registry of a given type. Using the registry, we can obtain problems by their name, which can be usefull in a dynamic setting:</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">problem_factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">ProblemRegistry</span><span class="o">&lt;</span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">Integer</span><span class="o">&gt;::</span><span class="n">instance</span><span class="p">();</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">om</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">problem_factory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="s">"OneMax"</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Problem</span></code> objects are callable objects, and a search point can be evaluated on a problem by passing it to the call operator of the problem, for example:</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">x0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mf">1.</span><span class="p">,</span><span class="w"> </span><span class="mf">2.</span><span class="p">,</span><span class="w"> </span><span class="mf">3.</span><span class="p">,</span><span class="w"> </span><span class="mf">4.</span><span class="p">,</span><span class="w"> </span><span class="mf">5.</span><span class="p">};</span><span class="w"></span>
+<span class="kt">double</span><span class="w"> </span><span class="n">y0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sp</span><span class="p">(</span><span class="n">x0</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<p>For more advanced usage examples, please take a look at the example folder in the github repository. Some examples include:</p>
+<ul class="simple">
+<li><p>Using a <a class="reference external" href="https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/problem_example.h">problem</a></p></li>
+<li><p>Using a pre-defined <a class="reference external" href="https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/suite_example.h">problem suite</a></p></li>
+<li><p>Using the <a class="reference external" href="https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/logger_example.h">logger</a> for storing benchmark data</p></li>
+</ul>
+</section>
+<section id="adding-new-problems">
+<h3>Adding new problems<a class="headerlink" href="#adding-new-problems" title="Permalink to this headline">¶</a></h3>
+<p>We offer a very simple and convenient interface for integrating new benchmark problems/functions. First, you could define a new <code class="docutils literal notranslate"><span class="pre">test_problem</span></code> as you like. Note that the <code class="docutils literal notranslate"><span class="pre">&lt;vector&gt;</span></code> header is already imported in “ioh.hpp”.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"ioh.hpp"</span><span class="cp"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">test_problem</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// the actual function body start here</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Then, you only need to “wrap” this new function as follows:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">wrap_function</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="w"></span>
+<span class="w">  </span><span class="o">&amp;</span><span class="n">test_problem</span><span class="p">,</span><span class="w"></span>
+<span class="w">  </span><span class="s">"test_problem"</span><span class="w"> </span><span class="c1">// name for the new function</span>
+<span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<p>After wrapping, we could create this <code class="docutils literal notranslate"><span class="pre">test_problem</span></code> from the problem factory. Note that,
+the instance id is ineffective in this approach since we haven’t implemented any transformations for the wrapped problem.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">ProblemRegistry</span><span class="o">&lt;</span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">Real</span><span class="o">&gt;::</span><span class="n">instance</span><span class="p">();</span><span class="w"></span>
+<span class="k">auto</span><span class="w"> </span><span class="n">new_problem_f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="w"></span>
+<span class="w">  </span><span class="s">"test_problem"</span><span class="p">,</span><span class="w">  </span><span class="c1">// create by name</span>
+<span class="w">  </span><span class="mi">1</span><span class="p">,</span><span class="w">               </span><span class="c1">// instance id</span>
+<span class="w">  </span><span class="mi">10</span><span class="w">               </span><span class="c1">// number of search variables</span>
+<span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Alternatively, one might wish to create the new problem by subclassing the abstract problem class
+in IOHexperimenter, taking benefits of implementing more details, e.g., aforementioned transformations.
+This can be done by inheriting the corresponding problem registration class, which is</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ioh::problem::IntegerProblem</span></code> for pseudo-Boolean problems, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ioh::problem::RealProblem</span></code> for continuous problems.</p></li>
+</ul>
+<p>In the below example, we show how to do this for pseudo-Boolean problems.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">NewBooleanProblem</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">IntegerProblem</span><span class="o">&lt;</span><span class="n">NewBooleanProblem</span><span class="o">&gt;</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="k">protected</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// [mandatory] The evaluate method is mandatory to implement</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">evaluate</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="c1">// the function body goes here</span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">    </span><span class="c1">// [optional] If one wish to implement transformations on objective values</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">transform_objectives</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">    </span><span class="c1">// [optional] If one wish to implement transformations on search variables</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">transform_objectives</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+
+<span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="c1">/// [mandatory] This constructor always take `instance` as input even</span>
+<span class="w">    </span><span class="c1">/// if it is ineffective by default. `instance` would be effective if and only if</span>
+<span class="w">    </span><span class="c1">/// at least one of `transform_objectives` and `transform_objectives` is implemented</span>
+<span class="w">    </span><span class="n">NewBooleanProblem</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">instance</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n_variables</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="n">IntegerProblem</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">MetaData</span><span class="p">(</span><span class="w"></span>
+<span class="w">            </span><span class="mi">1</span><span class="p">,</span><span class="w">                     </span><span class="c1">// problem id, which will be overwritten when registering this class in all pseudo-Boolean problems</span>
+<span class="w">            </span><span class="n">instance</span><span class="p">,</span><span class="w">              </span><span class="c1">// the instance id</span>
+<span class="w">            </span><span class="s">"NewBooleanProblem"</span><span class="p">,</span><span class="w">   </span><span class="c1">// problem name</span>
+<span class="w">            </span><span class="n">n_variables</span><span class="p">,</span><span class="w">           </span><span class="c1">// search dimensionality</span>
+<span class="w">            </span><span class="mi">1</span><span class="p">,</span><span class="w">                     </span><span class="c1">// number of objectives, only support 1 for now</span>
+<span class="w">            </span><span class="n">ioh</span><span class="o">::</span><span class="n">common</span><span class="o">::</span><span class="n">OptimizationType</span><span class="o">::</span><span class="n">Minimization</span><span class="w"></span>
+<span class="w">            </span><span class="p">)</span><span class="w"></span>
+<span class="w">          </span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Please check <a class="reference external" href="https://github.com/IOHprofiler/IOHexperimenter/blob/759750759331fff1243ef9e121209cde450b9726/example/problem_example.h#L51">this example</a> for adding continuous problems in this manner.</p>
+</section>
+</section>
+<section id="api-documentation">
+<h2>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cpp/ioh_common.html">common</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_common.html#namespaces">Namespaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common_file.html">file</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_common_file.html#classes">Classes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_common_file.html#filesystemitem">FileSystemItem</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_common_file.html#uniquefolder">UniqueFolder</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common_random.html">random</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_common_random.html#namespaces">Namespaces</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_common_random_bbob2009.html">bbob2009</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="cpp/ioh_common_random_bbob2009.html#functions">Functions</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_common_random_bbob2009.html#normal">normal</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_common_random_bbob2009.html#uniform">uniform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_common_random_pbo.html">pbo</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="cpp/ioh_common_random_pbo.html#functions">Functions</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_common_random_pbo.html#normal">normal</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_common_random_pbo.html#uniform">uniform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_common_random.html#functions">Functions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_common_random.html#doubles">doubles</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_common_random.html#gen">gen</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_common_random.html#integer">integer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_common_random.html#integers">integers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_common_random.html#lcg-rand">lcg_rand</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_common_random.html#real">real</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_common_random.html#seed">seed</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_common_random.html#variables">Variables</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_common_random.html#rd">rd</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_common.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#cputimer">CpuTimer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#foptimizationtype">FOptimizationType</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_common.html#structs">Structs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#automatictyperegistration">AutomaticTypeRegistration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#factory">Factory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#hasrepr">HasRepr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#idgetter">IdGetter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#idgetter-false">IdGetter&lt; false &gt;</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#idgetter-true">IdGetter&lt; true &gt;</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#invokeapplyonconstruction">InvokeApplyOnConstruction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#registerwithfactory">RegisterWithFactory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#registrationinvoker">RegistrationInvoker</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_common.html#enumerations">Enumerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#optimizationtype">OptimizationType</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_common.html#functions">Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#all-finite">all_finite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#as-vector">as_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#class-name">class_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#concatenate">concatenate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#get-next-id">get_next_id</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#has-inf">has_inf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#has-nan">has_nan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#keys">keys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#range">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#type-name">type_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_common.html#values">values</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cpp/ioh_logger.html">logger</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_logger.html#namespaces">Namespaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger_analyzer.html">analyzer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_logger_analyzer.html#namespaces">Namespaces</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_analyzer_structures.html">structures</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="cpp/ioh_logger_analyzer_structures.html#types">Types</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_analyzer_structures.html#stringmap">StringMap</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_analyzer_structures.html#dptrmap">dPtrMap</a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="cpp/ioh_logger_analyzer_structures.html#structs">Structs</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_analyzer_structures.html#algorithminfo">AlgorithmInfo</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_analyzer_structures.html#attribute">Attribute</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_analyzer_structures.html#attributes">Attributes</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_analyzer_structures.html#bestpoint">BestPoint</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_analyzer_structures.html#experimentinfo">ExperimentInfo</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_analyzer_structures.html#runinfo">RunInfo</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_analyzer_structures.html#scenarioinfo">ScenarioInfo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_analyzer_v1.html">v1</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="cpp/ioh_logger_analyzer_v1.html#classes">Classes</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_analyzer_v1.html#analyzer">Analyzer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_analyzer_v2.html">v2</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="cpp/ioh_logger_analyzer_v2.html#classes">Classes</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_analyzer_v2.html#analyzer">Analyzer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger_eaf.html">eaf</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_logger_eaf.html#types">Types</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eaf.html#front">Front</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_logger_eaf.html#structs">Structs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eaf.html#point">Point</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eaf.html#runpoint">RunPoint</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_logger_eaf.html#functions">Functions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eaf.html#ascending-qual">ascending_qual</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eaf.html#ascending-time">ascending_time</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eaf.html#descending-qual">descending_qual</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eaf.html#descending-time">descending_time</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger_eah.html">eah</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_logger_eah.html#namespaces">Namespaces</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eah_stat.html">stat</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="cpp/ioh_logger_eah_stat.html#namespaces">Namespaces</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_eah_stat_Distribution.html">Distribution</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="cpp/ioh_logger_eah_stat_Distribution.html#types">Types</a><ul>
+<li class="toctree-l9"><a class="reference internal" href="cpp/ioh_logger_eah_stat_Distribution.html#mat">Mat</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_eah_stat_under_curve.html">under_curve</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="cpp/ioh_logger_eah_stat_under_curve.html#functions">Functions</a><ul>
+<li class="toctree-l9"><a class="reference internal" href="cpp/ioh_logger_eah_stat_under_curve.html#accumulate">accumulate</a></li>
+<li class="toctree-l9"><a class="reference internal" href="cpp/ioh_logger_eah_stat_under_curve.html#volume">volume</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="cpp/ioh_logger_eah_stat.html#classes">Classes</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_eah_stat.html#histogram">Histogram</a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="cpp/ioh_logger_eah_stat.html#functions">Functions</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_eah_stat.html#accumulate">accumulate</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_eah_stat.html#distribution">distribution</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_eah_stat.html#id1">histogram</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_logger_eah_stat.html#sum">sum</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_logger_eah.html#types">Types</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eah.html#attainmentmatrix">AttainmentMatrix</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eah.html#attainmentsuite">AttainmentSuite</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_logger_eah.html#classes">Classes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eah.html#linearscale">LinearScale</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eah.html#log10scale">Log10Scale</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eah.html#log2scale">Log2Scale</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eah.html#scale">Scale</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eah.html#stat">Stat</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_logger_eah.html#functions">Functions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eah.html#colormap">colormap</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_eah.html#operator">operator&lt;&lt;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger_stat.html">stat</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_logger_stat.html#classes">Classes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_stat.html#surface">Surface</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_stat.html#volume">Volume</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_logger_stat.html#functions">Functions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_stat.html#id1">surface</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_logger_stat.html#id2">volume</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_logger.html#types">Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#analyzer">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#default">Default</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#properties">Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#triggers">Triggers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_logger.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#combine">Combine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#eah">EAH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#flatfile">FlatFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#levels">Levels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#nadirstat">NadirStat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#property">Property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#stat">Stat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#store">Store</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#watcher">Watcher</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_logger.html#structs">Structs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#info">Info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#trigger">Trigger</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_logger.html#functions">Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#id1">levels</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_logger.html#variables">Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger.html#default-double-format">DEFAULT_DOUBLE_FORMAT</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cpp/ioh_problem.html">problem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_problem.html#namespaces">Namespaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem_bbob.html">bbob</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_problem_bbob.html#classes">Classes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#attractivesector">AttractiveSector</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#bentcigar">BentCigar</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#buecherastrigin">BuecheRastrigin</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#differentpowers">DifferentPowers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#discus">Discus</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#ellipsoid">Ellipsoid</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#ellipsoidbase">EllipsoidBase</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#ellipsoidrotated">EllipsoidRotated</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#gallagher">Gallagher</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#gallagher101">Gallagher101</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#gallagher21">Gallagher21</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#griewankrosenbrock">GriewankRosenBrock</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#katsuura">Katsuura</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#linearslope">LinearSlope</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#lunacekbirastrigin">LunacekBiRastrigin</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#rastrigin">Rastrigin</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#rastriginbase">RastriginBase</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#rastriginrotated">RastriginRotated</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#rosenbrock">Rosenbrock</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#rosenbrockbase">RosenbrockBase</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#rosenbrockrotated">RosenbrockRotated</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#schaffers">Schaffers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#schaffers10">Schaffers10</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#schaffers1000">Schaffers1000</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#schwefel">Schwefel</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#sharpridge">SharpRidge</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#sphere">Sphere</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#stepellipsoid">StepEllipsoid</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_bbob.html#weierstrass">Weierstrass</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem_pbo.html">pbo</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_problem_pbo.html#classes">Classes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#concatenatedtrap">ConcatenatedTrap</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#isingring">IsingRing</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#isingtorus">IsingTorus</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#isingtriangular">IsingTriangular</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#labs">LABS</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#leadingones">LeadingOnes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#leadingonesdummy1">LeadingOnesDummy1</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#leadingonesdummy2">LeadingOnesDummy2</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#leadingonesepistasis">LeadingOnesEpistasis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#leadingonesneutrality">LeadingOnesNeutrality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#leadingonesruggedness1">LeadingOnesRuggedness1</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#leadingonesruggedness2">LeadingOnesRuggedness2</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#leadingonesruggedness3">LeadingOnesRuggedness3</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#linear">Linear</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#mis">MIS</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#nklandscapes">NKLandscapes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#nqueens">NQueens</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#onemax">OneMax</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#onemaxdummy1">OneMaxDummy1</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#onemaxdummy2">OneMaxDummy2</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#onemaxepistasis">OneMaxEpistasis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#onemaxneutrality">OneMaxNeutrality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#onemaxruggedness1">OneMaxRuggedness1</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#onemaxruggedness2">OneMaxRuggedness2</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_pbo.html#onemaxruggedness3">OneMaxRuggedness3</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem_python.html">python</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_problem_python.html#classes">Classes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_python.html#externpythonhelper">ExternPythonHelper</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_python.html#externpythonproblem">ExternPythonProblem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem_transformation.html">transformation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_problem_transformation.html#namespaces">Namespaces</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_transformation_objective.html">objective</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="cpp/ioh_problem_transformation_objective.html#types">Types</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_objective.html#transformation">Transformation</a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="cpp/ioh_problem_transformation_objective.html#functions">Functions</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_objective.html#exclusive-or">exclusive_or</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_objective.html#oscillate">oscillate</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_objective.html#penalize">penalize</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_objective.html#scale">scale</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_objective.html#shift">shift</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_objective.html#uniform">uniform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html">variables</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html#functions">Functions</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html#affine">affine</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html#asymmetric">asymmetric</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html#brs">brs</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html#conditioning">conditioning</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html#oscillate">oscillate</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html#random-flip">random_flip</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html#random-reorder">random_reorder</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html#random-reorder-reset">random_reorder_reset</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html#random-sign-flip">random_sign_flip</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html#scale">scale</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html#subtract">subtract</a></li>
+<li class="toctree-l7"><a class="reference internal" href="cpp/ioh_problem_transformation_variables.html#z-hat">z_hat</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem_utils.html">utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_problem_utils.html#functions">Functions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#base-epistasis">base_epistasis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#dummy">dummy</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#epistasis">epistasis</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#epistasis-compute">epistasis_compute</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#identity">identity</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#layer-epistasis-compute">layer_epistasis_compute</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#layer-neutrality-compute">layer_neutrality_compute</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#max-gamma">max_gamma</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#neutrality">neutrality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#ruggedness1">ruggedness1</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#ruggedness2">ruggedness2</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#ruggedness3">ruggedness3</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#ruggedness-raw">ruggedness_raw</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_utils.html#ruggedness-translate">ruggedness_translate</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem_wmodel.html">wmodel</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cpp/ioh_problem_wmodel.html#classes">Classes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_wmodel.html#wmodelleadingones">WModelLeadingOnes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cpp/ioh_problem_wmodel.html#wmodelonemax">WModelOneMax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_problem.html#types">Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#automaticproblemregistration">AutomaticProblemRegistration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#calculateobjectivefunction">CalculateObjectiveFunction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#integer">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#objectivefunction">ObjectiveFunction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#objectivetransformationfunction">ObjectiveTransformationFunction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#problemfactorytype">ProblemFactoryType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#problemregistry">ProblemRegistry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#problemregistrytype">ProblemRegistryType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#real">Real</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#variablestransformationfunction">VariablesTransformationFunction</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_problem.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#bbob">BBOB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#bboproblem">BBOProblem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#pbo">PBO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#pboproblem">PBOProblem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#id1">Problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#realproblem">RealProblem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#wmodel">WModel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#wrappedproblem">WrappedProblem</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_problem.html#structs">Structs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#constraint">Constraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#integerproblem">IntegerProblem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#metadata">MetaData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#solution">Solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#state">State</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_problem.html#functions">Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem.html#wrap-function">wrap_function</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cpp/ioh_suite.html">suite</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_suite.html#types">Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_suite.html#automaticsuiteregistration">AutomaticSuiteRegistration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_suite.html#suitefactorytype">SuiteFactoryType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_suite.html#suiteregistry">SuiteRegistry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_suite.html#suiteregistrytype">SuiteRegistryType</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_suite.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_suite.html#id1">Suite</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_suite.html#structs">Structs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_suite.html#bbob">BBOB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_suite.html#integer">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_suite.html#integersuite">IntegerSuite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_suite.html#pbo">PBO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_suite.html#real">Real</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_suite.html#realsuite">RealSuite</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cpp/ioh_trigger.html">trigger</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_trigger.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#at">At</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#during">During</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#each">Each</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#onimprovement">OnImprovement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#set">Set</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_trigger.html#structs">Structs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#all">All</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#always">Always</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#any">Any</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_trigger.html#functions">Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#id1">all</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#id2">any</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#id3">at</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#id4">during</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#id5">each</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_trigger.html#variables">Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#id6">always</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_trigger.html#on-improvement">on_improvement</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cpp/ioh_watch.html">watch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_watch.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#pointer">Pointer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#pointerreference">PointerReference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#reference">Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_watch.html#structs">Structs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#currenty">CurrentY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#evaluations">Evaluations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#rawybest">RawYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#transformedy">TransformedY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#transformedybest">TransformedYBest</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_watch.html#functions">Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#address">address</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#id1">pointer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#id2">reference</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh_watch.html#variables">Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#current-y">current_y</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#id3">evaluations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#raw-y-best">raw_y_best</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#transformed-y">transformed_y</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh_watch.html#transformed-y-best">transformed_y_best</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cpp/ioh.html">ioh</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cpp/ioh.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh.html#experimenter">Experimenter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh.html#logger">Logger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cpp/ioh.html#problem">Problem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="cpp/ioh_common.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">common</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">IOHexperimenter</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2022, Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck |
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="_sources/cpp.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">C++</a><ul>
+<li><a class="reference internal" href="#quickstart">Quickstart</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#adding-new-problems">Adding new problems</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#api-documentation">API documentation</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    </body>
+</html>

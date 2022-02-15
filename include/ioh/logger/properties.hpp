@@ -10,7 +10,7 @@ namespace ioh
     namespace logger
     {
 
-        inline std::string DEFAULT_DOUBLE_FORMAT = "{:.10f}";
+        inline std::string DEFAULT_DOUBLE_FORMAT = "{:.8f}";
         
         /** @defgroup Properties Properties
          * Accessors to values that are to be logged.
@@ -136,7 +136,7 @@ namespace ioh
         struct Evaluations : public logger::Property
         {
             //! Constructor.
-            Evaluations(const std::string name = "evaluations", const std::string &format = "{:g}") :
+            Evaluations(const std::string& name = "evaluations", const std::string &format = "{:g}") :
                 logger::Property(name, format)
             {
             }
@@ -326,6 +326,7 @@ namespace ioh
          *
          * @param name the name of the property.
          * @param variable a pointer to the logged variable.
+         * @param format a string to format the variable when logging. 
          *
          * @ingroup Properties
          */

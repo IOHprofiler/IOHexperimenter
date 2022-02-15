@@ -1,18 +1,14 @@
-IOHprofiler: IOHexperimenter {#mainpage}
-=========
+# IOHexperimenter
 
 ![Ubuntu g++-{10, 9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/Ubuntu/badge.svg)
 ![MacOS clang++, g++-{9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/MacOS/badge.svg)
 ![Windows MVSC-2019](https://github.com/IOHprofiler/IOHexperimenter/workflows/Windows/badge.svg)
 
+**Experimenter** for **I**terative **O**ptimization **H**euristics (IOHs), built natively in* `C++`.
 
-__Experimenter__ for **I**terative **O**ptimization **H**euristics (IOHs), built natively in* `C++`.
-
-* __Documentation__: [https://iohprofiler.github.io/IOHexperimenter](https://iohprofiler.github.io/IOHexperimenter)
-* __Publication__: [https://arxiv.org/abs/1810.05281](https://arxiv.org/pdf/2111.04077.pdf)
-* __Wiki page__: [https://iohprofiler.github.io](https://iohprofiler.github.io/)
-* __General Contact__: [iohprofiler@liacs.leidenuniv.nl](iohprofiler@liacs.leidenuniv.nl)
-<!-- * __Mailing List__: [https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler](https://lists.leidenuniv.nl/mailman/listinfo/iohprofiler) -->
+* **Documentation**: [https://iohprofiler.github.io/IOHexperimenter](https://iohprofiler.github.io/IOHexperimenter)
+* **Publication**: [https://arxiv.org/abs/1810.05281](https://arxiv.org/abs/1810.05281)
+* **Wiki page**: [https://iohprofiler.github.io](https://iohprofiler.github.io/)
 
 **IOHexperimenter** *provides*:
 
@@ -24,18 +20,19 @@ __Experimenter__ for **I**terative **O**ptimization **H**euristics (IOHs), built
 * Advanced logging module that takes care of registering the data in a seamless manner
 * Data format is compatible with [IOHanalyzer](https://github.com/IOHprofiler/IOHanalyzer)
 
-**IOHexperimenter** is available for:
+## C++
 
-* `C++` manual can be found [here](https://iohprofiler.github.io/IOHexp/Cpp/)
-* `Python`: please see [here](https://github.com/IOHprofiler/IOHexperimenter/tree/master/tests/python) for details user manual
-* or as a [pip package](https://pypi.org/project/ioh); 
-<!-- [Wiki Page](https://iohprofiler.github.io/IOHexp/python/). -->
+The interface for `C++` interface is described in more detail in the [wiki](https://iohprofiler.github.io/IOHexp/Cpp/). The complete API documentation, including some usage examples, can be found [here](https://iohprofiler.github.io/IOHexperimenter/cpp).
+
+## Python
+
+A quickstart for the `Python` interface and the full API documentation can be found [here](https://iohprofiler.github.io/IOHexperimenter/python). It is also described in the [wiki](https://iohprofiler.github.io/IOHexp/Python/) and available via [pip](https://pypi.org/project/ioh). 
 
 ## Contact
 
 If you have any questions, comments or suggestions, please don't hesitate contacting us <IOHprofiler@liacs.leidenuniv.nl>.
 
-## Our team
+### Our team
 
 * [Jacob de Nobel](https://www.universiteitleiden.nl/en/staffmembers/jacob-de-nobel), *Leiden Institute of Advanced Computer Science*,
 * [Furong Ye](https://www.universiteitleiden.nl/en/staffmembers/furong-ye#tab-1), *Leiden Institute of Advanced Computer Science*,

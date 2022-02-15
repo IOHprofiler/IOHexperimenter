@@ -424,6 +424,7 @@ namespace ioh
              */
             At(const std::set<size_t> time_points) : _time_points(time_points) {}
 
+            //! Return the time points when to log
             std::set<size_t> time_points() const {return _time_points;}
 
             //! Main call interface.

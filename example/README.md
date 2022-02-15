@@ -54,9 +54,15 @@ const std::vector<int> problems{1, 2};
 const std::vector<int> instances{1, 2};
 const std::vector<int> dimensions{1, 2};
 
-const auto bbob_suite = std::make_shared<ioh::suite::BBOB>(problems, instances, dimensions);
-}
-```
+The following statements create a `bbob` consisting of 8 problems of the BBOB suite:
+  1. problem 1, instance 1, dimension 5
+  2. problem 1, instance 3, dimension 5
+  3. problem 1, instance 1, dimension 10
+  4. problem 1, instance 3, dimension 10
+  5. problem 2, instance 1, dimension 5
+  6. problem 2, instance 3, dimension 5
+  7. problem 2, instance 1, dimension 10
+  8. problem 2, instance 3, dimension 10
 
 We also provide factories for the suites:
 ```C++

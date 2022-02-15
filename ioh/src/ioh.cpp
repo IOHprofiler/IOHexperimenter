@@ -44,9 +44,9 @@ PYBIND11_MODULE(iohcpp, m) {
         }
     )pbdoc";
 
-    auto m_problem = m.def_submodule("problem", "IOHExperimenter problems");
-    auto m_suite = m.def_submodule("suite", "IOHExperimenter suites");
-    auto m_logger = m.def_submodule("logger", "IOHExperimenter logger");
+    auto m_problem = m.def_submodule("problem", "Module that includes all IOHExperimenter problems");
+    auto m_suite = m.def_submodule("suite", "Module that includes all IOHExperimenter suites");
+    auto m_logger = m.def_submodule("logger", "Module that includes all IOHExperimenter loggers");
     
     define_helper_classes(m);
     define_logger(m_logger);
