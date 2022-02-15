@@ -4,7 +4,7 @@ import collections
 import xmltodict
 
 unit_template = '''{name}
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygen{dtype}:: {ns}::{name}
 '''
 

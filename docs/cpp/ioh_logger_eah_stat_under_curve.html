@@ -362,17 +362,41 @@
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <section id="accumulate">
 <h3>accumulate<a class="headerlink" href="#accumulate" title="Permalink to this headline">¶</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenfunction: Cannot find file: /home/jacob/code/IOHexperimenter/doc/python/build/xml/index.xml</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh6logger3eah4stat11under_curve10accumulateEdRK3EAHd15BinaryOperation">
+<span id="_CPPv3I0EN3ioh6logger3eah4stat11under_curve10accumulateERK3EAHd15BinaryOperation"></span><span id="_CPPv2I0EN3ioh6logger3eah4stat11under_curve10accumulateERK3EAHd15BinaryOperation"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BinaryOperation</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="group___e_a_h___a_p_i_1ga8df0a48dda42c99eb5177aff29d79475"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">stat</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">under_curve</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">accumulate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger3EAHE" title="ioh::logger::EAH"><span class="n"><span class="pre">EAH</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">logger</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">init</span></span>, <a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah4stat11under_curve10accumulateEdRK3EAHd15BinaryOperation" title="ioh::logger::eah::stat::under_curve::accumulate::BinaryOperation"><span class="n"><span class="pre">BinaryOperation</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">op</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh6logger3eah4stat11under_curve10accumulateEdRK3EAHd15BinaryOperation" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Generic function for accumulated statistics over the normalized attainment space. </p>
+<p>Most probably used from a function defaulting the basic operation, like <a class="reference internal" href="#group___e_a_h_1gac7c5c1abbb01d2ab53536c6203b6c134"><span class="std std-ref">under_curve::volume</span></a>, or used as a function to compute something else.</p>
+<p>
+You most probably only need the simplified interface: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">using</span> <span class="n">namespace</span> <span class="n">ioh</span><span class="p">::</span><span class="n">logger</span><span class="p">;</span>
+<span class="n">EAH</span> <span class="n">logger</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span> <span class="o">//</span> <span class="n">Whatever</span>
+<span class="o">//</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">definition</span> <span class="n">of</span> <span class="n">under_curve</span><span class="p">::</span><span class="n">volume</span><span class="p">,</span> <span class="k">for</span> <span class="n">instance</span><span class="p">:</span>
+<span class="n">double</span> <span class="n">v</span> <span class="o">=</span> <span class="n">eah</span><span class="p">::</span><span class="n">stat</span><span class="p">::</span><span class="n">under_curve</span><span class="p">::</span><span class="n">accumulate</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">std</span><span class="p">::</span><span class="n">plus</span><span class="o">&lt;</span><span class="n">double</span><span class="o">&gt;</span><span class="p">());</span>
+</pre></div>
 </div>
+</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operation is computed on normalized dimensions (i.e. error, evals and probas), so as to avoid a scale bias in favor of one (or the other) dimension.</p>
+</div>
+</dd></dl>
 </section>
 <section id="volume">
 <h3>volume<a class="headerlink" href="#volume" title="Permalink to this headline">¶</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenfunction: Cannot find file: /home/jacob/code/IOHexperimenter/doc/python/build/xml/index.xml</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah4stat11under_curve6volumeERK3EAH">
+<span id="_CPPv3N3ioh6logger3eah4stat11under_curve6volumeERK3EAH"></span><span id="_CPPv2N3ioh6logger3eah4stat11under_curve6volumeERK3EAH"></span><span id="ioh::logger::eah::stat::under_curve::volume__EAHCR"></span><span class="target" id="group___e_a_h_1gac7c5c1abbb01d2ab53536c6203b6c134"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">stat</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">under_curve</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">volume</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger3EAHE" title="ioh::logger::EAH"><span class="n"><span class="pre">EAH</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">logger</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah4stat11under_curve6volumeERK3EAH" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Computes the normalized volume under the curve of the <a class="reference internal" href="ioh_logger.html#classioh_1_1logger_1_1_e_a_h"><span class="std std-ref">logger::EAH</span></a>’s data structure. </p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">using</span> <span class="n">namespace</span> <span class="n">iof</span><span class="p">::</span><span class="n">logger</span><span class="p">;</span>
+<span class="n">double</span> <span class="n">v</span> <span class="o">=</span> <span class="n">eah</span><span class="p">::</span><span class="n">stat</span><span class="p">::</span><span class="n">under_curve</span><span class="p">::</span><span class="n">volume</span><span class="p">(</span><span class="n">logger</span><span class="p">);</span>
+</pre></div>
 </div>
+</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is just a proxy to the <a class="reference internal" href="#group___e_a_h___a_p_i_1ga8df0a48dda42c99eb5177aff29d79475"><span class="std std-ref">stat::under_curve::accumulate</span></a> function, which provides a more detailled interface. </p>
+</div>
+</dd></dl>
 </section>
 </section>
 </section>

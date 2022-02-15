@@ -362,58 +362,174 @@
 <h2>Types<a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h2>
 <section id="front">
 <h3>Front<a class="headerlink" href="#front" title="Permalink to this headline">¶</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygentypedef: Cannot find file: /home/jacob/code/IOHexperimenter/doc/python/build/xml/index.xml</p>
-</div>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf5FrontE">
+<span id="_CPPv3N3ioh6logger3eaf5FrontE"></span><span id="_CPPv2N3ioh6logger3eaf5FrontE"></span><span class="target" id="eaf_8hpp_1a6b79c8a49cf7d35c123f7b125c92da9c"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">Front</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3ioh6logger3eaf8RunPointE" title="ioh::logger::eaf::RunPoint"><span class="n"><span class="pre">RunPoint</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf5FrontE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>A set of non-dominated points. </p>
+</dd></dl>
 </section>
 </section>
 <section id="structs">
 <h2>Structs<a class="headerlink" href="#structs" title="Permalink to this headline">¶</a></h2>
 <section id="point">
 <h3>Point<a class="headerlink" href="#point" title="Permalink to this headline">¶</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenstruct: Cannot find file: /home/jacob/code/IOHexperimenter/doc/python/build/xml/index.xml</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf5PointE">
+<span id="_CPPv3N3ioh6logger3eaf5PointE"></span><span id="_CPPv2N3ioh6logger3eaf5PointE"></span><span id="ioh::logger::eaf::Point"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_point"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">Point</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf5PointE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>A point in the quality/time 2D space. </p>
+<p>That is, the values associated with an objective function call, as logged by an EAF logger.</p>
+<p>“time” means “number of calls to the objective function”. </p>
+<p>Subclassed by <a class="reference internal" href="#structioh_1_1logger_1_1eaf_1_1_run_point"><span class="std std-ref">ioh::logger::eaf::RunPoint</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf5Point5PointEv">
+<span id="_CPPv3N3ioh6logger3eaf5Point5PointEv"></span><span id="_CPPv2N3ioh6logger3eaf5Point5PointEv"></span><span id="ioh::logger::eaf::Point::Point"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_point_1a6c57240fb9ebcffb1d272edd9bc759d7"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Point</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf5Point5PointEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Empty constructor, building up an invalid <a class="reference internal" href="#structioh_1_1logger_1_1eaf_1_1_point"><span class="std std-ref">Point</span></a>. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf5Point5PointEd6size_t">
+<span id="_CPPv3N3ioh6logger3eaf5Point5PointEd6size_t"></span><span id="_CPPv2N3ioh6logger3eaf5Point5PointEd6size_t"></span><span id="ioh::logger::eaf::Point::Point__double.s"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_point_1a8e952097896cbdc0c35177cf4dd6a4e5"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Point</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">quality</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">nb_evals</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf5Point5PointEd6size_t" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Constructor with quality, then time. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf5Point5PointE6size_td">
+<span id="_CPPv3N3ioh6logger3eaf5Point5PointE6size_td"></span><span id="_CPPv2N3ioh6logger3eaf5Point5PointE6size_td"></span><span id="ioh::logger::eaf::Point::Point__s.double"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_point_1a71327943a43a4bce8883e1d6894f159d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Point</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">nb_evals</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">quality</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf5Point5PointE6size_td" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Constructor with time, then quality. </p>
+</dd></dl>
 </div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf5Point4qualE">
+<span id="_CPPv3N3ioh6logger3eaf5Point4qualE"></span><span id="_CPPv2N3ioh6logger3eaf5Point4qualE"></span><span id="ioh::logger::eaf::Point::qual__double"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_point_1a9d03d741c7df79f1b1fcc714547de99f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qual</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf5Point4qualE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The quality of the point, i.e. </p>
+<p>its objective function value. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf5Point4timeE">
+<span id="_CPPv3N3ioh6logger3eaf5Point4timeE"></span><span id="_CPPv2N3ioh6logger3eaf5Point4timeE"></span><span id="ioh::logger::eaf::Point::time__s"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_point_1afce05db9a5ae4c201b3cf614646ca3a5"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">time</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf5Point4timeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The time of the point, i.e. </p>
+<p>the number of the objective function calls. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-friends">Friends</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf5PointlsERNSt7ostreamERK5Point">
+<span id="_CPPv3N3ioh6logger3eaf5PointlsERNSt7ostreamERK5Point"></span><span id="_CPPv2N3ioh6logger3eaf5PointlsERNSt7ostreamERK5Point"></span><span id="ioh::logger::eaf::Point::lshift-operator__osR.PointCR"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_point_1aa818efa680e0d94ce91173ccb4b7aa08"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;&lt;</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">out</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6logger3eaf5PointE" title="ioh::logger::eaf::Point"><span class="n"><span class="pre">Point</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf5PointlsERNSt7ostreamERK5Point" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+</dd></dl>
 </section>
 <section id="runpoint">
 <h3>RunPoint<a class="headerlink" href="#runpoint" title="Permalink to this headline">¶</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenstruct: Cannot find file: /home/jacob/code/IOHexperimenter/doc/python/build/xml/index.xml</p>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf8RunPointE">
+<span id="_CPPv3N3ioh6logger3eaf8RunPointE"></span><span id="_CPPv2N3ioh6logger3eaf8RunPointE"></span><span id="ioh::logger::eaf::RunPoint"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_run_point"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">RunPoint</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3ioh6logger3eaf5PointE" title="ioh::logger::eaf::Point"><span class="n"><span class="pre">Point</span></span></a><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf8RunPointE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>A point and its corresponding run index. </p>
+<p>Used in stat::Levels. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf8RunPoint8RunPointEv">
+<span id="_CPPv3N3ioh6logger3eaf8RunPoint8RunPointEv"></span><span id="_CPPv2N3ioh6logger3eaf8RunPoint8RunPointEv"></span><span id="ioh::logger::eaf::RunPoint::RunPoint"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_run_point_1a4c84a16a9c986ca059c3755c4ff5659c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RunPoint</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf8RunPoint8RunPointEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Empty constructor, building up an invalid <a class="reference internal" href="#structioh_1_1logger_1_1eaf_1_1_point"><span class="std std-ref">Point</span></a>. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf8RunPoint8RunPointEd6size_t6size_t">
+<span id="_CPPv3N3ioh6logger3eaf8RunPoint8RunPointEd6size_t6size_t"></span><span id="_CPPv2N3ioh6logger3eaf8RunPoint8RunPointEd6size_t6size_t"></span><span id="ioh::logger::eaf::RunPoint::RunPoint__double.s.s"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_run_point_1a4c53cb1252c72109b2879b06fd00d83d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RunPoint</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">q</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">t</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">r</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf8RunPoint8RunPointEd6size_t6size_t" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Constructor with quality, then time. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf8RunPoint8RunPointE6size_td6size_t">
+<span id="_CPPv3N3ioh6logger3eaf8RunPoint8RunPointE6size_td6size_t"></span><span id="_CPPv2N3ioh6logger3eaf8RunPoint8RunPointE6size_td6size_t"></span><span id="ioh::logger::eaf::RunPoint::RunPoint__s.double.s"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_run_point_1adbbc5c4e5f666a1573bc9bbd070b9883"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RunPoint</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">t</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">q</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">r</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf8RunPoint8RunPointE6size_td6size_t" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Constructor with time, then quality. </p>
+</dd></dl>
 </div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf8RunPoint3runE">
+<span id="_CPPv3N3ioh6logger3eaf8RunPoint3runE"></span><span id="_CPPv2N3ioh6logger3eaf8RunPoint3runE"></span><span id="ioh::logger::eaf::RunPoint::run__s"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_run_point_1a6fa1939ce6ba0b3b16118f50c6f129ff"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">run</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf8RunPoint3runE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Index of the run among all the runs hosted in the logger. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf8RunPoint4qualE">
+<span id="_CPPv3N3ioh6logger3eaf8RunPoint4qualE"></span><span id="_CPPv2N3ioh6logger3eaf8RunPoint4qualE"></span><span id="ioh::logger::eaf::RunPoint::qual__double"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_point_1a9d03d741c7df79f1b1fcc714547de99f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qual</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf8RunPoint4qualE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The quality of the point, i.e. </p>
+<p>its objective function value. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf8RunPoint4timeE">
+<span id="_CPPv3N3ioh6logger3eaf8RunPoint4timeE"></span><span id="_CPPv2N3ioh6logger3eaf8RunPoint4timeE"></span><span id="ioh::logger::eaf::RunPoint::time__s"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_point_1afce05db9a5ae4c201b3cf614646ca3a5"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">time</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf8RunPoint4timeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The time of the point, i.e. </p>
+<p>the number of the objective function calls. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-friends">Friends</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf8RunPointlsERNSt7ostreamERK8RunPoint">
+<span id="_CPPv3N3ioh6logger3eaf8RunPointlsERNSt7ostreamERK8RunPoint"></span><span id="_CPPv2N3ioh6logger3eaf8RunPointlsERNSt7ostreamERK8RunPoint"></span><span id="ioh::logger::eaf::RunPoint::lshift-operator__osR.RunPointCR"></span><span class="target" id="structioh_1_1logger_1_1eaf_1_1_run_point_1a806abeba91e630892fd2e20ee38cae0e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;&lt;</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">out</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6logger3eaf8RunPointE" title="ioh::logger::eaf::RunPoint"><span class="n"><span class="pre">RunPoint</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf8RunPointlsERNSt7ostreamERK8RunPoint" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+</dd></dl>
 </section>
 </section>
 <section id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <section id="ascending-qual">
 <h3>ascending_qual<a class="headerlink" href="#ascending-qual" title="Permalink to this headline">¶</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenfunction: Cannot find file: /home/jacob/code/IOHexperimenter/doc/python/build/xml/index.xml</p>
-</div>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf14ascending_qualERKN3eaf5PointERKN3eaf5PointE">
+<span id="_CPPv3N3ioh6logger3eaf14ascending_qualERKN3eaf5PointERKN3eaf5PointE"></span><span id="_CPPv2N3ioh6logger3eaf14ascending_qualERKN3eaf5PointERKN3eaf5PointE"></span><span id="ioh::logger::eaf::ascending_qual__eaf::PointCR.eaf::PointCR"></span><span class="target" id="group___e_a_f___a_p_i_1ga7308d01bd27f375b2798a98027505833"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">ascending_qual</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3ioh6logger3eaf5PointE" title="ioh::logger::eaf::Point"><span class="n"><span class="pre">Point</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3ioh6logger3eaf5PointE" title="ioh::logger::eaf::Point"><span class="n"><span class="pre">Point</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf14ascending_qualERKN3eaf5PointERKN3eaf5PointE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Comparator for sorting a vector of <a class="reference internal" href="#structioh_1_1logger_1_1eaf_1_1_point"><span class="std std-ref">eaf::Point</span></a> with ascending qualities. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>true if the quality of <code class="docutils literal notranslate"><span class="pre">a</span></code> is smaller than the time of <code class="docutils literal notranslate"><span class="pre">b</span></code>. </p>
+</dd>
+</dl>
+</dd></dl>
 </section>
 <section id="ascending-time">
 <h3>ascending_time<a class="headerlink" href="#ascending-time" title="Permalink to this headline">¶</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenfunction: Cannot find file: /home/jacob/code/IOHexperimenter/doc/python/build/xml/index.xml</p>
-</div>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf14ascending_timeERKN3eaf5PointERKN3eaf5PointE">
+<span id="_CPPv3N3ioh6logger3eaf14ascending_timeERKN3eaf5PointERKN3eaf5PointE"></span><span id="_CPPv2N3ioh6logger3eaf14ascending_timeERKN3eaf5PointERKN3eaf5PointE"></span><span id="ioh::logger::eaf::ascending_time__eaf::PointCR.eaf::PointCR"></span><span class="target" id="group___e_a_f___a_p_i_1gab05e1da95734324740031d6353e51c7f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">ascending_time</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3ioh6logger3eaf5PointE" title="ioh::logger::eaf::Point"><span class="n"><span class="pre">Point</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3ioh6logger3eaf5PointE" title="ioh::logger::eaf::Point"><span class="n"><span class="pre">Point</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf14ascending_timeERKN3eaf5PointERKN3eaf5PointE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Comparator for sorting a vector of <a class="reference internal" href="#structioh_1_1logger_1_1eaf_1_1_point"><span class="std std-ref">eaf::Point</span></a> with ascending times. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>true if the time of <code class="docutils literal notranslate"><span class="pre">a</span></code> is smaller than the time of <code class="docutils literal notranslate"><span class="pre">b</span></code>. </p>
+</dd>
+</dl>
+</dd></dl>
 </section>
 <section id="descending-qual">
 <h3>descending_qual<a class="headerlink" href="#descending-qual" title="Permalink to this headline">¶</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenfunction: Cannot find file: /home/jacob/code/IOHexperimenter/doc/python/build/xml/index.xml</p>
-</div>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf15descending_qualERKN3eaf5PointERKN3eaf5PointE">
+<span id="_CPPv3N3ioh6logger3eaf15descending_qualERKN3eaf5PointERKN3eaf5PointE"></span><span id="_CPPv2N3ioh6logger3eaf15descending_qualERKN3eaf5PointERKN3eaf5PointE"></span><span id="ioh::logger::eaf::descending_qual__eaf::PointCR.eaf::PointCR"></span><span class="target" id="group___e_a_f___a_p_i_1ga66d2786fe69c1a7f821701c3e62950d0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">descending_qual</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3ioh6logger3eaf5PointE" title="ioh::logger::eaf::Point"><span class="n"><span class="pre">Point</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3ioh6logger3eaf5PointE" title="ioh::logger::eaf::Point"><span class="n"><span class="pre">Point</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf15descending_qualERKN3eaf5PointERKN3eaf5PointE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Comparator for sorting a vector of <a class="reference internal" href="#structioh_1_1logger_1_1eaf_1_1_point"><span class="std std-ref">eaf::Point</span></a> with descending qualities. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>true if the quality of <code class="docutils literal notranslate"><span class="pre">a</span></code> is larger than the quality of <code class="docutils literal notranslate"><span class="pre">b</span></code>. </p>
+</dd>
+</dl>
+</dd></dl>
 </section>
 <section id="descending-time">
 <h3>descending_time<a class="headerlink" href="#descending-time" title="Permalink to this headline">¶</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenfunction: Cannot find file: /home/jacob/code/IOHexperimenter/doc/python/build/xml/index.xml</p>
-</div>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eaf15descending_timeERKN3eaf5PointERKN3eaf5PointE">
+<span id="_CPPv3N3ioh6logger3eaf15descending_timeERKN3eaf5PointERKN3eaf5PointE"></span><span id="_CPPv2N3ioh6logger3eaf15descending_timeERKN3eaf5PointERKN3eaf5PointE"></span><span id="ioh::logger::eaf::descending_time__eaf::PointCR.eaf::PointCR"></span><span class="target" id="group___e_a_f___a_p_i_1ga4fb20c987b3979e89c19399dda1f6e5f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">descending_time</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3ioh6logger3eaf5PointE" title="ioh::logger::eaf::Point"><span class="n"><span class="pre">Point</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">eaf</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3ioh6logger3eaf5PointE" title="ioh::logger::eaf::Point"><span class="n"><span class="pre">Point</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eaf15descending_timeERKN3eaf5PointERKN3eaf5PointE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Comparator for sorting a vector of <a class="reference internal" href="#structioh_1_1logger_1_1eaf_1_1_point"><span class="std std-ref">eaf::Point</span></a> with descending time. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>true if the time of <code class="docutils literal notranslate"><span class="pre">a</span></code> is larger than the quality of <code class="docutils literal notranslate"><span class="pre">b</span></code>. </p>
+</dd>
+</dl>
+</dd></dl>
 </section>
 </section>
 </section>

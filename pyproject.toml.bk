@@ -6,4 +6,5 @@ requires = [
     "mypy",
     "pybind11",
     "ninja",
+    "xmltodict",
 ]

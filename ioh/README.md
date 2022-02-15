@@ -1,17 +1,8 @@
-<<<<<<< HEAD
 ## Quickstart
 
 Note that these instructions are for versions >= 0.3.2.4.
 
 ### Installation
-=======
-# Usage guide for IOHexperimenter in python
-
-This document describes how to use the python version of the IOHexperimenter.
-Note that these instructions are only for versions >= 0.3.2.4
-
-## Installation
->>>>>>> master
 
 You can install the experimenter directly from pip:
 

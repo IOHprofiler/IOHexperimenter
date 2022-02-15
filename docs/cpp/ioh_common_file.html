@@ -362,17 +362,172 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <section id="filesystemitem">
 <h3>FileSystemItem<a class="headerlink" href="#filesystemitem" title="Permalink to this headline">¶</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenclass: Cannot find file: /home/jacob/code/IOHexperimenter/doc/python/build/xml/index.xml</p>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file14FileSystemItemE">
+<span id="_CPPv3N3ioh6common4file14FileSystemItemE"></span><span id="_CPPv2N3ioh6common4file14FileSystemItemE"></span><span id="ioh::common::file::FileSystemItem"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">FileSystemItem</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common4file14FileSystemItemE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Item on the filesystem. </p>
+<p>Subclassed by <a class="reference internal" href="#classioh_1_1common_1_1file_1_1_unique_folder"><span class="std std-ref">ioh::common::file::UniqueFolder</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file14FileSystemItem14FileSystemItemEv">
+<span id="_CPPv3N3ioh6common4file14FileSystemItem14FileSystemItemEv"></span><span id="_CPPv2N3ioh6common4file14FileSystemItem14FileSystemItemEv"></span><span id="ioh::common::file::FileSystemItem::FileSystemItem"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a30bda75df2f41c00d24db7a53e9a803a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">FileSystemItem</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common4file14FileSystemItem14FileSystemItemEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file14FileSystemItem14FileSystemItemEN2fs4pathERKNSt6stringE">
+<span id="_CPPv3N3ioh6common4file14FileSystemItem14FileSystemItemEN2fs4pathERKNSt6stringE"></span><span id="_CPPv2N3ioh6common4file14FileSystemItem14FileSystemItemEN2fs4pathERKNSt6stringE"></span><span id="ioh::common::file::FileSystemItem::FileSystemItem__fs::path.ssCR"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a26132385c24c57a4fa9a6aaf7b05e469"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">FileSystemItem</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">root</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common4file14FileSystemItem14FileSystemItemEN2fs4pathERKNSt6stringE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Construct a new File System Item object. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> – the directory containing the item </p></li>
+<li><p><strong>name</strong> – name of the item </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file14FileSystemItem4pathERKN2fs4pathE">
+<span id="_CPPv3N3ioh6common4file14FileSystemItem4pathERKN2fs4pathE"></span><span id="_CPPv2N3ioh6common4file14FileSystemItem4pathERKN2fs4pathE"></span><span id="ioh::common::file::FileSystemItem::path__fs::pathCR"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1ae84fe68046057e0caa870e026a1f4501"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">path</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">path</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common4file14FileSystemItem4pathERKN2fs4pathE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Set the path of the item. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common4file14FileSystemItem4pathEv">
+<span id="_CPPv3NK3ioh6common4file14FileSystemItem4pathEv"></span><span id="_CPPv2NK3ioh6common4file14FileSystemItem4pathEv"></span><span id="ioh::common::file::FileSystemItem::pathC"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a47cd403dc12b8cf5b1def0d169e1bff4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">path</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common4file14FileSystemItem4pathEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Accessor for <code class="docutils literal notranslate"><span class="pre">path_</span></code> </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common4file14FileSystemItem4rootEv">
+<span id="_CPPv3NK3ioh6common4file14FileSystemItem4rootEv"></span><span id="_CPPv2NK3ioh6common4file14FileSystemItem4rootEv"></span><span id="ioh::common::file::FileSystemItem::rootC"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a613c9a5332a8832e6a1dfd31a1d461fa"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">root</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common4file14FileSystemItem4rootEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Accessor for <code class="docutils literal notranslate"><span class="pre">root_</span></code> </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common4file14FileSystemItem4nameEv">
+<span id="_CPPv3NK3ioh6common4file14FileSystemItem4nameEv"></span><span id="_CPPv2NK3ioh6common4file14FileSystemItem4nameEv"></span><span id="ioh::common::file::FileSystemItem::nameC"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a580c8cdf1eb7eee4841cc62a71e49a5b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">name</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common4file14FileSystemItem4nameEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Accessor for <code class="docutils literal notranslate"><span class="pre">name_</span></code> </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common4file14FileSystemItem6removeEv">
+<span id="_CPPv3NK3ioh6common4file14FileSystemItem6removeEv"></span><span id="_CPPv2NK3ioh6common4file14FileSystemItem6removeEv"></span><span id="ioh::common::file::FileSystemItem::removeC"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a0083a9612a5191b1ead85fed2fdb5fe5"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">remove</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common4file14FileSystemItem6removeEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Remove the item on the filesystem. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common4file14FileSystemItemdvERKNSt6stringE">
+<span id="_CPPv3NK3ioh6common4file14FileSystemItemdvERKNSt6stringE"></span><span id="_CPPv2NK3ioh6common4file14FileSystemItemdvERKNSt6stringE"></span><span id="ioh::common::file::FileSystemItem::div-operator__ssCRC"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a48deaef3e496676d6a18902630441358"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">/</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common4file14FileSystemItemdvERKNSt6stringE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Join the path. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common4file14FileSystemItemdvERKN2fs4pathE">
+<span id="_CPPv3NK3ioh6common4file14FileSystemItemdvERKN2fs4pathE"></span><span id="_CPPv2NK3ioh6common4file14FileSystemItemdvERKN2fs4pathE"></span><span id="ioh::common::file::FileSystemItem::div-operator__fs::pathCRC"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a489b634ef6a08b5fa74a20f2e7df1945"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">/</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common4file14FileSystemItemdvERKN2fs4pathE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Join the path. </p>
+</dd></dl>
 </div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file14FileSystemItem5root_E">
+<span id="_CPPv3N3ioh6common4file14FileSystemItem5root_E"></span><span id="_CPPv2N3ioh6common4file14FileSystemItem5root_E"></span><span id="ioh::common::file::FileSystemItem::root___fs::path"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a9e88443912a33e636a835d8ce00d7961"></span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">root_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common4file14FileSystemItem5root_E" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>the directory containing the item </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file14FileSystemItem5name_E">
+<span id="_CPPv3N3ioh6common4file14FileSystemItem5name_E"></span><span id="_CPPv2N3ioh6common4file14FileSystemItem5name_E"></span><span id="ioh::common::file::FileSystemItem::name___ss"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1ab5821af3e80387f02bf52a8c5395ed46"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">name_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common4file14FileSystemItem5name_E" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>name of the item </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file14FileSystemItem5path_E">
+<span id="_CPPv3N3ioh6common4file14FileSystemItem5path_E"></span><span id="_CPPv2N3ioh6common4file14FileSystemItem5path_E"></span><span id="ioh::common::file::FileSystemItem::path___fs::path"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1ab25120db112290a29bea06f80fb93203"></span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">path_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common4file14FileSystemItem5path_E" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The full path of the file. </p>
+</dd></dl>
+</div>
+</dd></dl>
 </section>
 <section id="uniquefolder">
 <h3>UniqueFolder<a class="headerlink" href="#uniquefolder" title="Permalink to this headline">¶</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenclass: Cannot find file: /home/jacob/code/IOHexperimenter/doc/python/build/xml/index.xml</p>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file12UniqueFolderE">
+<span id="_CPPv3N3ioh6common4file12UniqueFolderE"></span><span id="_CPPv2N3ioh6common4file12UniqueFolderE"></span><span id="ioh::common::file::UniqueFolder"></span><span class="target" id="classioh_1_1common_1_1file_1_1_unique_folder"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">UniqueFolder</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3ioh6common4file14FileSystemItemE" title="ioh::common::file::FileSystemItem"><span class="n"><span class="pre">FileSystemItem</span></span></a><a class="headerlink" href="#_CPPv4N3ioh6common4file12UniqueFolderE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Creates a new folder with a unique name. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file12UniqueFolder12UniqueFolderEN2fs4pathERKNSt6stringE">
+<span id="_CPPv3N3ioh6common4file12UniqueFolder12UniqueFolderEN2fs4pathERKNSt6stringE"></span><span id="_CPPv2N3ioh6common4file12UniqueFolder12UniqueFolderEN2fs4pathERKNSt6stringE"></span><span id="ioh::common::file::UniqueFolder::UniqueFolder__fs::path.ssCR"></span><span class="target" id="classioh_1_1common_1_1file_1_1_unique_folder_1afbb8b2db82d6ebd3115d8a51b99fb066"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">UniqueFolder</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">root</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common4file12UniqueFolder12UniqueFolderEN2fs4pathERKNSt6stringE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Construct a new Unique Folder object. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> – the directory containing the item </p></li>
+<li><p><strong>name</strong> – name of the folder </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file12UniqueFolder12UniqueFolderERKNSt6stringE">
+<span id="_CPPv3N3ioh6common4file12UniqueFolder12UniqueFolderERKNSt6stringE"></span><span id="_CPPv2N3ioh6common4file12UniqueFolder12UniqueFolderERKNSt6stringE"></span><span id="ioh::common::file::UniqueFolder::UniqueFolder__ssCR"></span><span class="target" id="classioh_1_1common_1_1file_1_1_unique_folder_1afce3aa3e6a0928fd66ab48d7fef01cf6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">UniqueFolder</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common4file12UniqueFolder12UniqueFolderERKNSt6stringE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Construct a new Unique Folder object. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file12UniqueFolder12UniqueFolderEv">
+<span id="_CPPv3N3ioh6common4file12UniqueFolder12UniqueFolderEv"></span><span id="_CPPv2N3ioh6common4file12UniqueFolder12UniqueFolderEv"></span><span id="ioh::common::file::UniqueFolder::UniqueFolder"></span><span class="target" id="classioh_1_1common_1_1file_1_1_unique_folder_1a1c61f908f264162c1535e6e409f5df45"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">UniqueFolder</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common4file12UniqueFolder12UniqueFolderEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Construct a new Unique Folder object. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file12UniqueFolder4pathERKN2fs4pathE">
+<span id="_CPPv3N3ioh6common4file12UniqueFolder4pathERKN2fs4pathE"></span><span id="_CPPv2N3ioh6common4file12UniqueFolder4pathERKN2fs4pathE"></span><span id="ioh::common::file::UniqueFolder::path__fs::pathCR"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1ae84fe68046057e0caa870e026a1f4501"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">path</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">path</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common4file12UniqueFolder4pathERKN2fs4pathE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Set the path of the item. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common4file12UniqueFolder4pathEv">
+<span id="_CPPv3NK3ioh6common4file12UniqueFolder4pathEv"></span><span id="_CPPv2NK3ioh6common4file12UniqueFolder4pathEv"></span><span id="ioh::common::file::UniqueFolder::pathC"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a47cd403dc12b8cf5b1def0d169e1bff4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">path</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common4file12UniqueFolder4pathEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Accessor for <code class="docutils literal notranslate"><span class="pre">path_</span></code> </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common4file12UniqueFolder4rootEv">
+<span id="_CPPv3NK3ioh6common4file12UniqueFolder4rootEv"></span><span id="_CPPv2NK3ioh6common4file12UniqueFolder4rootEv"></span><span id="ioh::common::file::UniqueFolder::rootC"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a613c9a5332a8832e6a1dfd31a1d461fa"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">root</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common4file12UniqueFolder4rootEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Accessor for <code class="docutils literal notranslate"><span class="pre">root_</span></code> </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common4file12UniqueFolder4nameEv">
+<span id="_CPPv3NK3ioh6common4file12UniqueFolder4nameEv"></span><span id="_CPPv2NK3ioh6common4file12UniqueFolder4nameEv"></span><span id="ioh::common::file::UniqueFolder::nameC"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a580c8cdf1eb7eee4841cc62a71e49a5b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">name</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common4file12UniqueFolder4nameEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Accessor for <code class="docutils literal notranslate"><span class="pre">name_</span></code> </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common4file12UniqueFolder6removeEv">
+<span id="_CPPv3NK3ioh6common4file12UniqueFolder6removeEv"></span><span id="_CPPv2NK3ioh6common4file12UniqueFolder6removeEv"></span><span id="ioh::common::file::UniqueFolder::removeC"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a0083a9612a5191b1ead85fed2fdb5fe5"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">remove</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common4file12UniqueFolder6removeEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Remove the item on the filesystem. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common4file12UniqueFolderdvERKNSt6stringE">
+<span id="_CPPv3NK3ioh6common4file12UniqueFolderdvERKNSt6stringE"></span><span id="_CPPv2NK3ioh6common4file12UniqueFolderdvERKNSt6stringE"></span><span id="ioh::common::file::UniqueFolder::div-operator__ssCRC"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a48deaef3e496676d6a18902630441358"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">/</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common4file12UniqueFolderdvERKNSt6stringE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Join the path. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common4file12UniqueFolderdvERKN2fs4pathE">
+<span id="_CPPv3NK3ioh6common4file12UniqueFolderdvERKN2fs4pathE"></span><span id="_CPPv2NK3ioh6common4file12UniqueFolderdvERKN2fs4pathE"></span><span id="ioh::common::file::UniqueFolder::div-operator__fs::pathCRC"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a489b634ef6a08b5fa74a20f2e7df1945"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">/</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common4file12UniqueFolderdvERKN2fs4pathE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Join the path. </p>
+</dd></dl>
 </div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file12UniqueFolder5root_E">
+<span id="_CPPv3N3ioh6common4file12UniqueFolder5root_E"></span><span id="_CPPv2N3ioh6common4file12UniqueFolder5root_E"></span><span id="ioh::common::file::UniqueFolder::root___fs::path"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1a9e88443912a33e636a835d8ce00d7961"></span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">root_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common4file12UniqueFolder5root_E" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>the directory containing the item </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file12UniqueFolder5name_E">
+<span id="_CPPv3N3ioh6common4file12UniqueFolder5name_E"></span><span id="_CPPv2N3ioh6common4file12UniqueFolder5name_E"></span><span id="ioh::common::file::UniqueFolder::name___ss"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1ab5821af3e80387f02bf52a8c5395ed46"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">name_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common4file12UniqueFolder5name_E" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>name of the item </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common4file12UniqueFolder5path_E">
+<span id="_CPPv3N3ioh6common4file12UniqueFolder5path_E"></span><span id="_CPPv2N3ioh6common4file12UniqueFolder5path_E"></span><span id="ioh::common::file::UniqueFolder::path___fs::path"></span><span class="target" id="classioh_1_1common_1_1file_1_1_file_system_item_1ab25120db112290a29bea06f80fb93203"></span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">path_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common4file12UniqueFolder5path_E" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The full path of the file. </p>
+</dd></dl>
+</div>
+</dd></dl>
 </section>
 </section>
 </section>
