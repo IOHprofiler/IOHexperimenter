@@ -1,4 +1,5 @@
-"""Python interface of IOH package."""
+"""Python interface of IOH package. Includes several ease-of-use routines not available in C++. 
+"""
 
 import os
 import math
@@ -163,7 +164,20 @@ def wrap_problem(
     return get_problem(name, instance, dimension, problem_type)
 
 
-def get_problem_id(problem_name: str, problem_type: str):
+def get_problem_id(problem_name: str, problem_type: str) -> int: 
+    '''Get the problem id corresponding to a problem name of a given type
+    
+    Parameters
+    ----------
+    problem_name:str
+        The name of the problem
+    problem_type:str
+        The type of the problem
+    
+    Returns
+    -------
+    int: the id of the problem
+    '''
     if problem_type in ("BBOB", "PBO", "Integer", "Real"):
         return {v: k for k, v in getattr(problem, problem_type).problems.items()}.get(
             problem_name
@@ -172,6 +186,8 @@ def get_problem_id(problem_name: str, problem_type: str):
 
 
 class Experiment:
+    '''Class to help easily setup benchmarking experiments. '''
+
     def __init__(
         self,
         algorithm: typing.Any,
@@ -474,3 +490,11 @@ class Experiment:
             shutil.rmtree(self.logger_root)
 
         return self
+
+
+__all__ = (
+    "get_problem",
+    "wrap_problem",
+    "get_problem_id",
+    "Experiment"
+)

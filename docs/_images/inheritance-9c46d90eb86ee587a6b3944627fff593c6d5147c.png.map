@@ -1,0 +1,8 @@
+<map id="inheritance8fefb89218" name="inheritance8fefb89218">
+<area shape="rect" id="node1" href="../api/ioh.iohcpp.logger.trigger.Always.html#ioh.iohcpp.logger.trigger.Always" target="_top" title="Trigger that always evaluates to true" alt="" coords="331,5,403,31"/>
+<area shape="rect" id="node2" href="../api/ioh.iohcpp.logger.trigger.Trigger.html#ioh.iohcpp.logger.trigger.Trigger" target="_top" title="Base class for all Triggers" alt="" coords="183,104,255,129"/>
+<area shape="rect" id="node3" href="../api/ioh.iohcpp.logger.trigger.At.html#ioh.iohcpp.logger.trigger.At" target="_top" title="At" alt="" coords="331,55,403,80"/>
+<area shape="rect" id="node4" href="../api/ioh.iohcpp.logger.trigger.During.html#ioh.iohcpp.logger.trigger.During" target="_top" title="During" alt="" coords="331,104,403,129"/>
+<area shape="rect" id="node5" href="../api/ioh.iohcpp.logger.trigger.Each.html#ioh.iohcpp.logger.trigger.Each" target="_top" title="Each" alt="" coords="331,153,403,179"/>
+<area shape="rect" id="node6" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html#ioh.iohcpp.logger.trigger.OnImprovement" target="_top" title="Trigger that evaluates to true when improvement of the objective function is observed" alt="" coords="303,203,431,228"/>
+</map>

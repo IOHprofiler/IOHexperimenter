@@ -4,9 +4,13 @@ import sys
 import shutil
 import platform
 import subprocess
+import warnings
+import atexit
 
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
+
+from generate_sphinx_templates_from_xml import main
 
 # Convert distutils Windows platform specifiers to CMake -A arguments
 PLAT_TO_CMAKE = {
@@ -22,7 +26,7 @@ if platform.system() == "Darwin":
     os.environ["ARCHFLAGS"] = "-std=c++14"
 
 BASE_DIR = os.path.realpath(os.path.dirname(__file__))
-MAKE_DOCS = True
+MAKE_DOCS = os.environ.get("MAKE_DOCS")
 
 # A CMakeExtension needs a sourcedir instead of a file list.
 # The name must be the _single_ output extension from the CMake build.
@@ -31,6 +35,7 @@ class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=""):
         Extension.__init__(self, name, sources=[])
         self.sourcedir = os.path.abspath(sourcedir)
+
 
 class CMakeBuild(build_ext):
     def generate_stubs(self):
@@ -41,7 +46,7 @@ class CMakeBuild(build_ext):
             stubfile = os.path.join(ext.sourcedir, "ioh", stubfile)
             if stubfile.endswith(".pyi"):
                 os.remove(stubfile)
-        
+
         for subdir in ("iohcpp", "logger"):
             if os.path.isdir(os.path.join(ext.sourcedir, "ioh", subdir)):
                 shutil.rmtree(os.path.join(ext.sourcedir, "ioh", subdir))
@@ -55,11 +60,6 @@ class CMakeBuild(build_ext):
                 -m ioh.iohcpp.logger.property \
                 -o ./"""
         subprocess.check_call(command, cwd=ext.sourcedir, shell=True)
-
-    def generate_docs(self):
-        ext, *_ = self.extensions
-        directory = os.path.join()
-        subprocess.check_call(["make html"], cwd=ext.sourcedir)
 
     def run(self):
         super().run()
@@ -87,6 +87,7 @@ class CMakeBuild(build_ext):
             "-DPYTHON_EXECUTABLE={}".format(sys.executable),
             "-DBUILD_PYTHON_PACKAGE=ON",
             "-DBUILD_TESTS=OFF",
+            "-DBUILD_DOCS={}".format("ON" if MAKE_DOCS else "OFF"),
             "-DBUILD_EXAMPLE=OFF",
             "-DEXAMPLE_VERSION_INFO={}".format(self.distribution.get_version()),
             "-DCMAKE_BUILD_TYPE={}".format(cfg),  # not used on MSVC, but no harm
@@ -143,6 +144,27 @@ class CMakeBuild(build_ext):
         )
 
 
+def generate_docs():
+    if MAKE_DOCS:
+        try:
+            main()
+            directory = os.path.join(BASE_DIR, "doc", "python")
+            try:
+                shutil.rmtree(os.path.join(directory, "source", "api"))
+            except FileNotFoundError:
+                pass
+            subprocess.check_call(f"make html", shell=True, cwd=directory)
+
+            shutil.copytree(
+                os.path.join(BASE_DIR, "doc", "build", "html"),
+                os.path.join(BASE_DIR, "docs"),
+                dirs_exist_ok=True
+            )
+        except Exception as err:
+            warnings.warn("Cannot compile docs", RuntimeWarning)
+
+
+atexit.register(generate_docs)
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 
@@ -157,40 +179,32 @@ with open("README.md", "r") as fh:
 
 iohcpp = CMakeExtension("ioh.iohcpp")
 
-try:
-    setup(
-        name="ioh",
-        version=__version__,
-        author="Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck",
-        author_email="iohprofiler@liacs.leidenuniv.nl",
-        description="The experimenter for Iterative Optimization Heuristics",
-        long_description=long_description,
-        long_description_content_type="text/markdown",
-        packages=find_packages(),
-        package_dir={'IOHexperimenter':'ioh'},
-        package_data={"ioh": [
+
+setup(
+    name="ioh",
+    version=__version__,
+    author="Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck",
+    author_email="iohprofiler@liacs.leidenuniv.nl",
+    description="The experimenter for Iterative Optimization Heuristics",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    packages=find_packages(),
+    package_dir={"IOHexperimenter": "ioh"},
+    package_data={
+        "ioh": [
             "ioh/__init__.pyi",
             "ioh/iohcpp/__init__.pyi",
             "ioh/iohcpp/problem.pyi",
             "ioh/iohcpp/suite.pyi",
             "ioh/iohcpp/logger/__init__.pyi",
             "ioh/iohcpp/logger/property.pyi",
-            "ioh/iohcpp/logger/trigger.pyi"
-        ]},
-        ext_modules=[iohcpp],
-        cmdclass={"build_ext": CMakeBuild},
-        zip_safe=False,
-        test_suite='tests.python',
-        python_requires='>=3.6',
-        setup_requires=['cmake', 'ninja', 'pybind11', 'mypy']
-    )
-except Exception as err:
-    raise err
-else:
-    if MAKE_DOCS:
-        directory = os.path.join(BASE_DIR, "doc", "python")
-        try:
-            shutil.rmtree(os.path.join(directory, "source",  "api"))
-        except FileNotFoundError:
-            pass
-        subprocess.check_call(f"make html", shell=True, cwd=directory)
+            "ioh/iohcpp/logger/trigger.pyi",
+        ]
+    },
+    ext_modules=[iohcpp],
+    cmdclass={"build_ext": CMakeBuild},
+    zip_safe=False,
+    test_suite="tests.python",
+    python_requires=">=3.6",
+    setup_requires=["cmake", "ninja", "pybind11", "mypy"],
+)
