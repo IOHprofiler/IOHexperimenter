@@ -452,6 +452,21 @@ void define_pbo_problems(py::module &m)
                     dimension: int
                         the dimensionality of the search space
             )pbdoc")
+         .def_static(
+            "create", [](int id, int iid, int dim) { return ioh::common::Factory<PBO, int, int>::instance().create(id, iid, dim); },
+            py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
+            R"pbdoc(
+                Create a problem instance
+
+                Parameters
+                ----------
+                    problem_name: int
+                        a string indicating the problem name. 
+                    instance_id: int
+                        an integer identifier of the problem instance
+                    dimension: int
+                        the dimensionality of the search space
+            )pbdoc")
         ;
 
     py::class_<pbo::OneMax, PBO, std::shared_ptr<pbo::OneMax>>(m, "OneMax", py::is_final(),
@@ -586,7 +601,24 @@ void define_bbob_problems(py::module &m)
                         an integer identifier of the problem instance
                     dimension: int
                         the dimensionality of the search space
-            )pbdoc");
+            )pbdoc")
+            
+        .def_static(
+            "create", [](int id, int iid, int dim) { return ioh::common::Factory<BBOB, int, int>::instance().create(id, iid, dim); },
+            py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
+            R"pbdoc(
+                Create a problem instance
+
+                Parameters
+                ----------
+                    problem_name: int
+                        a string indicating the problem name. 
+                    instance_id: int
+                        an integer identifier of the problem instance
+                    dimension: int
+                        the dimensionality of the search space
+            )pbdoc")
+            ;
     py::class_<bbob::Sphere, BBOB, std::shared_ptr<bbob::Sphere>>(m, "Sphere", py::is_final(), "Sphere function")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<bbob::Ellipsoid, BBOB, std::shared_ptr<bbob::Ellipsoid>>(m, "Ellipsoid", py::is_final())

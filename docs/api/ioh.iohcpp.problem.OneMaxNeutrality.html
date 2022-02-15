@@ -402,8 +402,8 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.OneMaxNeutrality.attach_logger" title="ioh.iohcpp.problem.OneMaxNeutrality.attach_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attach_logger</span></code></a></p></td>
 <td><p>Attach a logger to the problem to allow performance tracking.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.OneMaxNeutrality.create" title="ioh.iohcpp.problem.OneMaxNeutrality.create"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create</span></code></a>(problem_name, instance_id, dimension)</p></td>
-<td><p>Create a problem instance</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.OneMaxNeutrality.create" title="ioh.iohcpp.problem.OneMaxNeutrality.create"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Overloaded function.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.OneMaxNeutrality.detach_logger" title="ioh.iohcpp.problem.OneMaxNeutrality.detach_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detach_logger</span></code></a></p></td>
 <td><p>Remove the specified logger from the problem.</p></td>
@@ -466,17 +466,40 @@
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.OneMaxNeutrality.create">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimension</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="ioh.iohcpp.problem.PBO.html#ioh.iohcpp.problem.PBO" title="ioh.iohcpp.problem.PBO"><span class="pre">ioh.iohcpp.problem.PBO</span></a></span></span><a class="headerlink" href="#ioh.iohcpp.problem.OneMaxNeutrality.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a problem instance</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>problem_name</strong> (<em>str</em>) – a string indicating the problem name.</p></li>
-<li><p><strong>instance_id</strong> (<em>int</em>) – an integer identifier of the problem instance</p></li>
-<li><p><strong>dimension</strong> (<em>int</em>) – the dimensionality of the search space</p></li>
-</ul>
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.problem.OneMaxNeutrality.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic">
+<li><p>create(problem_name: str, instance_id: int, dimension: int) -&gt; ioh.iohcpp.problem.PBO</p>
+<blockquote>
+<div><p>Create a problem instance</p>
+<blockquote>
+<div><dl class="simple">
+<dt>problem_name: str</dt><dd><p>a string indicating the problem name.</p>
+</dd>
+<dt>instance_id: int</dt><dd><p>an integer identifier of the problem instance</p>
+</dd>
+<dt>dimension: int</dt><dd><p>the dimensionality of the search space</p>
 </dd>
 </dl>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p>create(problem_id: int, instance_id: int, dimension: int) -&gt; ioh.iohcpp.problem.PBO</p>
+<blockquote>
+<div><p>Create a problem instance</p>
+<blockquote>
+<div><dl class="simple">
+<dt>problem_name: int</dt><dd><p>a string indicating the problem name.</p>
+</dd>
+<dt>instance_id: int</dt><dd><p>an integer identifier of the problem instance</p>
+</dd>
+<dt>dimension: int</dt><dd><p>the dimensionality of the search space</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+</li>
+</ol>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.OneMaxNeutrality.detach_logger">
