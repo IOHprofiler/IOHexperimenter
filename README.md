@@ -13,7 +13,7 @@
 **IOHexperimenter** *provides*:
 
 * A framework to ease the benchmarking of any iterative optimization heuristic
-* Continuous and discrete benchmarking problems
+<!-- * Continuous and discrete benchmarking problems -->
 * [Pseudo-Boolean Optimization (PBO)](https://iohprofiler.github.io/IOHproblem/) problem set (25 pseudo-Boolean problems)
 * Integration of the well-known [Black-black Optimization Benchmarking (BBOB)](https://github.com/numbbo/coco) problem set (24 continuous problems)
 * Interface for adding new problems and suite/problem set
@@ -46,15 +46,20 @@ When using IOHprofiler and parts thereof, please kindly cite this work as
 Carola Doerr, Hao Wang, Furong Ye, Sander van Rijn, Thomas Bäck: *IOHprofiler: A Benchmarking and Profiling Tool for Iterative Optimization Heuristics*, arXiv e-prints:1810.05281, 2018.
 
 ```bibtex
-@ARTICLE{IOHprofiler,
-  author = {Carola Doerr and Hao Wang and Furong Ye and Sander van Rijn and Thomas B{\"a}ck},
-  title = {{IOHprofiler: A Benchmarking and Profiling Tool for Iterative Optimization Heuristics}},
-  journal = {arXiv e-prints:1810.05281},
+@ARTICLE{IOHexperimenter,
+  author = {Jacob de Nobel and
+               Furong Ye and
+               Diederick Vermetten and
+               Hao Wang and
+               Carola Doerr and
+               Thomas B{\"{a}}ck},
+  title = {{IOHexperimenter: Benchmarking Platform for Iterative Optimization Heuristics}},
+  journal = {arXiv e-prints:2111.04077},
   archivePrefix = "arXiv",
-  eprint = {1810.05281},
-  year = 2018,
-  month = oct,
+  eprint = {2111.04077},
+  year = 2021,
+  month = Nov,
   keywords = {Computer Science - Neural and Evolutionary Computing},
-  url = {https://arxiv.org/abs/1810.05281}
+  url = {https://arxiv.org/abs/2111.04077}
 }
 ```

@@ -1,8 +1,17 @@
+<<<<<<< HEAD
 ## Quickstart
 
 Note that these instructions are for versions >= 0.3.2.4.
 
 ### Installation
+=======
+# Usage guide for IOHexperimenter in python
+
+This document describes how to use the python version of the IOHexperimenter.
+Note that these instructions are only for versions >= 0.3.2.4
+
+## Installation
+>>>>>>> master
 
 You can install the experimenter directly from pip:
 
@@ -43,12 +52,14 @@ f = problem.Real.create("Sphere", 1, 5)
 from ioh import get_problem
 f = get_problem("Sphere", 1, 5)
 ```
+
 Instead of using the name of the function, you can also use their function number within their respecitve suite:
 
 ```python
 #Create a problem object from the Integer class (PBO functions) by fid, iid, dim
 f1 = get_problem(7, 1, 5, problem_type="PBO")
 ```
+
 With these problem-objects, the state, meta_data and contrainsts can easily be accessed:
 
 ```python
@@ -79,7 +90,6 @@ f.state.evaluations
 
 To showcase how to use these functions in combination with an optimization algorith, we define a simple random-search example wich accepts an argument of class IOH_function.
 
-
 ```python
 import numpy as np
 np.random.seed(42)
@@ -108,6 +118,7 @@ This logger can then be initialized with the directory in which to store the log
 #Create default logger which writes to folder 'temp'
 l = logger.Analyzer(folder_name="temp")
 ```
+
 This can then be attached to the problem:
 
 ```python
@@ -120,7 +131,6 @@ f.attach_logger(f)
 
 Now, we can run the algorithm and store data
 
-
 ```python
 random_search(f)
 ```
@@ -130,6 +140,7 @@ To ensure all data is written, we should flush the logger after running our expe
 ```python
 f.reset()
 ```
+
 Note that we should call the `reset` method on a problem. By calling the `reset` method, the problem's internal state is automatically reset, and the data for the attached loggers will be flushed to the output streams. This function should also be used when performing multiple runs of the same problem in a loop, for example:
 
 ```python

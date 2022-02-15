@@ -161,7 +161,7 @@ TEST_F(BaseTest, eaf_levels_volume)
         }
     }
 
-    auto levels = logger::eaf::levels(common::OptimizationType::Minimization, logger);
+    auto levels = logger::eaf::levels(logger);
 
     double volume = logger::eaf::stat::volume(common::OptimizationType::Minimization, levels);
     IOH_DBG(info, "EAF volume: " << volume)

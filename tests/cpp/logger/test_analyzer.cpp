@@ -55,9 +55,9 @@ TEST_F(BaseTest, logger_v1)
     const std::string header =
         R"#("function evaluation" "current f(x)" "best-so-far f(x)" "current af(x)+b" "best af(x)+b")#";
     std::array<std::pair<std::string, fs::path>, 3> cases;
-    cases[0] = {header + "\n1 1.402094 1.402094 80.882094 80.882094\n", get_dat_path(output_directory, p1)};
-    cases[1] = {header + "\n1 5.637287 5.637287 85.117287 85.117287\n", get_dat_path(output_directory, p)};
-    cases[2] = {header + "\n1 28268.397464 28268.397464 28304.297464 28304.297464\n",
+    cases[0] = {header + "\n1 1.4020940800 1.4020940800 80.8820940800 80.8820940800\n", get_dat_path(output_directory, p1)};
+    cases[1] = {header + "\n1 5.6372870400 5.6372870400 85.1172870400 85.1172870400\n", get_dat_path(output_directory, p)};
+    cases[2] = {header + "\n1 28268.3974644746 28268.3974644746 28304.2974644746 28304.2974644746\n",
                 get_dat_path(output_directory, p2)};
 
     for (const auto &[data, path] : cases)

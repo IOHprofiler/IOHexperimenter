@@ -160,7 +160,8 @@ namespace ioh {
         // This is virtual because logger::Combine needs to bypass the default behaviour.
         virtual void log(const logger::Info& log_info)
         {
-            IOH_DBG(debug,"log " << log_info.raw_y_best << " => " << log_info.transformed_y << " / " << log_info.transformed_y_best)
+            IOH_DBG(debug, "log event");
+            IOH_DBG(debug,"log raw_y_best=" << log_info.raw_y_best << " => transformed_y=" << log_info.transformed_y << " / transformed_y_best=" << log_info.transformed_y_best)
             assert(problem_ != nullptr); // For Debug builds.
             if(not problem_) { // For Release builds.
                 throw std::runtime_error("Logger has not been attached to a problem.");
@@ -169,9 +170,14 @@ namespace ioh {
             assert(properties_.size() > 0);
             assert(triggers_.size() > 0);
             if(triggers_(log_info, *problem_)) {
-                IOH_DBG(debug,"logger triggered")
+                IOH_DBG(debug, "logger triggered")
                 call(log_info);
             }
+#ifndef NDEBUG
+            else {
+                IOH_DBG(debug, "logger not triggered");
+            }
+#endif
         }
 
         /** Starts a new session for the given problem/instance/dimension/run.
@@ -195,13 +201,17 @@ namespace ioh {
 
         /** Optional actions when the logger is detached from a suite/problem or the problem is reset.
          *
-         * Useful if you want to flush data, for instance.
+         * Useful if you want to flush data, for instance, and/or start a new run of the linked algorithm.
+         * 
+         * @warning You most probably don't want to call this directly,
+         *          but should call the Problem::reset() instead,
+         *          which will call this anyway.
          * 
          * @warning If you override this function, do not forget to call the base class' one.
          */
         virtual void reset()
         {
-            IOH_DBG(debug,"reset")
+            IOH_DBG(debug,"reset logger")
             triggers_.reset();
         }
 

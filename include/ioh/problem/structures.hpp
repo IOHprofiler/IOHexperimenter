@@ -29,7 +29,6 @@ namespace ioh
              */
             Solution(const std::vector<T> &x, const double y) : x(x), y(y) {}
 
-
             //! Shorthand constructor for use with unknown optimum
             Solution(const int n_variables, const common::OptimizationType optimization_type) : 
                 x(std::vector<T>(n_variables, std::numeric_limits<T>::signaling_NaN())),
@@ -38,6 +37,14 @@ namespace ioh
                              : std::numeric_limits<double>::infinity()} {}
 
             Solution() = default;
+            
+            /** @brief Returns true if the solution's objective has been set.
+             */
+            bool exists() {
+                return y !=  std::numeric_limits<double>::signaling_NaN()
+                   and y !=  std::numeric_limits<double>::infinity()
+                   and y != -std::numeric_limits<double>::infinity();
+            }
 
             std::string repr() const override {
                 return fmt::format("<Solution x: {} y: {}>", x, y); }

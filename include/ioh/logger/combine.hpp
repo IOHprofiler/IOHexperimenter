@@ -93,8 +93,9 @@ namespace ioh::logger
         // So here, we just proxy to sub-loggers' `log` method to do it.
         void log(const logger::Info &logger_info) override
         {
-            IOH_DBG(debug,"call sub-loggers")
+            IOH_DBG(debug,"call sub-loggers...")
             for(auto &logger : _loggers) {
+                IOH_DBG(debug,"call sublogger")
                 logger.get().log(logger_info);
             }
         }
@@ -108,6 +109,7 @@ namespace ioh::logger
 
         void reset() override
         {
+            IOH_DBG(debug, "reset combined loggers");
             Logger::reset();
             for(auto& logger : _loggers) {
                 logger.get().reset();

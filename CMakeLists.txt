@@ -64,7 +64,7 @@ target_include_directories(ioh
 INTERFACE
     # Interface paths are relative to the installation path, not the current directory.
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:include> 
 )
 
 target_compile_features(ioh
@@ -130,6 +130,7 @@ export(PACKAGE ioh)
 
 # Add subdirectories to build.
 if(BUILD_TESTS) 
+    enable_testing()
     add_subdirectory(tests)
 endif()
 
