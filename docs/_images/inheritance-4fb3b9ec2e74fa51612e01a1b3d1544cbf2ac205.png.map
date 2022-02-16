@@ -1,0 +1,28 @@
+<map id="inheritanceb56d784816" name="inheritanceb56d784816">
+<area shape="rect" id="node1" href="../api/ioh.iohcpp.problem.ConcatenatedTrap.html#ioh.iohcpp.problem.ConcatenatedTrap" target="_top" title="ConcatenatedTrap" alt="" coords="443,5,579,30"/>
+<area shape="rect" id="node2" href="../api/ioh.iohcpp.problem.PBO.html#ioh.iohcpp.problem.PBO" target="_top" title="Pseudo&#45;Boolean Optimization (PBO) problem set." alt="" coords="298,564,369,589"/>
+<area shape="rect" id="node5" href="../api/ioh.iohcpp.problem.IsingRing.html#ioh.iohcpp.problem.IsingRing" target="_top" title="Low Autocorrelation Binary Sequences (LABS):" alt="" coords="470,54,552,79"/>
+<area shape="rect" id="node6" href="../api/ioh.iohcpp.problem.IsingTorus.html#ioh.iohcpp.problem.IsingTorus" target="_top" title="IsingTorus" alt="" coords="468,102,554,127"/>
+<area shape="rect" id="node7" href="../api/ioh.iohcpp.problem.IsingTriangular.html#ioh.iohcpp.problem.IsingTriangular" target="_top" title="IsingTriangular" alt="" coords="453,151,569,176"/>
+<area shape="rect" id="node8" href="../api/ioh.iohcpp.problem.LABS.html#ioh.iohcpp.problem.LABS" target="_top" title="Low Autocorrelation Binary Sequences (LABS):" alt="" coords="476,199,546,224"/>
+<area shape="rect" id="node9" href="../api/ioh.iohcpp.problem.LeadingOnes.html#ioh.iohcpp.problem.LeadingOnes" target="_top" title="LeadingOnes:" alt="" coords="459,248,564,273"/>
+<area shape="rect" id="node10" href="../api/ioh.iohcpp.problem.LeadingOnesDummy1.html#ioh.iohcpp.problem.LeadingOnesDummy1" target="_top" title="LeadingOnesDummy1" alt="" coords="429,297,593,321"/>
+<area shape="rect" id="node11" href="../api/ioh.iohcpp.problem.LeadingOnesDummy2.html#ioh.iohcpp.problem.LeadingOnesDummy2" target="_top" title="LeadingOnesDummy2" alt="" coords="429,345,593,370"/>
+<area shape="rect" id="node12" href="../api/ioh.iohcpp.problem.LeadingOnesEpistasis.html#ioh.iohcpp.problem.LeadingOnesEpistasis" target="_top" title="LeadingOnesEpistasis" alt="" coords="430,394,592,419"/>
+<area shape="rect" id="node13" href="../api/ioh.iohcpp.problem.LeadingOnesNeutrality.html#ioh.iohcpp.problem.LeadingOnesNeutrality" target="_top" title="LeadingOnesNeutrality" alt="" coords="427,442,595,467"/>
+<area shape="rect" id="node14" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness1.html#ioh.iohcpp.problem.LeadingOnesRuggedness1" target="_top" title="LeadingOnesRuggedness1" alt="" coords="416,491,606,516"/>
+<area shape="rect" id="node15" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness2.html#ioh.iohcpp.problem.LeadingOnesRuggedness2" target="_top" title="LeadingOnesRuggedness2" alt="" coords="416,539,606,564"/>
+<area shape="rect" id="node16" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness3.html#ioh.iohcpp.problem.LeadingOnesRuggedness3" target="_top" title="LeadingOnesRuggedness3" alt="" coords="416,588,606,613"/>
+<area shape="rect" id="node17" href="../api/ioh.iohcpp.problem.Linear.html#ioh.iohcpp.problem.Linear" target="_top" title="A Linear Function with Harmonic Weights:" alt="" coords="476,636,546,661"/>
+<area shape="rect" id="node18" href="../api/ioh.iohcpp.problem.MIS.html#ioh.iohcpp.problem.MIS" target="_top" title="MIS" alt="" coords="476,685,546,710"/>
+<area shape="rect" id="node19" href="../api/ioh.iohcpp.problem.NQueens.html#ioh.iohcpp.problem.NQueens" target="_top" title="NQueens" alt="" coords="471,733,551,758"/>
+<area shape="rect" id="node20" href="../api/ioh.iohcpp.problem.OneMax.html#ioh.iohcpp.problem.OneMax" target="_top" title="OneMax:" alt="" coords="474,782,548,807"/>
+<area shape="rect" id="node21" href="../api/ioh.iohcpp.problem.OneMaxDummy1.html#ioh.iohcpp.problem.OneMaxDummy1" target="_top" title="OneMaxDummy1" alt="" coords="444,831,578,855"/>
+<area shape="rect" id="node22" href="../api/ioh.iohcpp.problem.OneMaxDummy2.html#ioh.iohcpp.problem.OneMaxDummy2" target="_top" title="OneMaxDummy2" alt="" coords="444,879,578,904"/>
+<area shape="rect" id="node23" href="../api/ioh.iohcpp.problem.OneMaxEpistasis.html#ioh.iohcpp.problem.OneMaxEpistasis" target="_top" title="OneMaxEpistasis" alt="" coords="445,928,577,953"/>
+<area shape="rect" id="node24" href="../api/ioh.iohcpp.problem.OneMaxNeutrality.html#ioh.iohcpp.problem.OneMaxNeutrality" target="_top" title="OneMaxNeutrality" alt="" coords="442,976,581,1001"/>
+<area shape="rect" id="node25" href="../api/ioh.iohcpp.problem.OneMaxRuggedness1.html#ioh.iohcpp.problem.OneMaxRuggedness1" target="_top" title="OneMaxRuggedness1" alt="" coords="431,1025,591,1050"/>
+<area shape="rect" id="node26" href="../api/ioh.iohcpp.problem.OneMaxRuggedness2.html#ioh.iohcpp.problem.OneMaxRuggedness2" target="_top" title="OneMaxRuggedness2" alt="" coords="431,1073,591,1098"/>
+<area shape="rect" id="node27" href="../api/ioh.iohcpp.problem.OneMaxRuggedness3.html#ioh.iohcpp.problem.OneMaxRuggedness3" target="_top" title="OneMaxRuggedness3" alt="" coords="431,1122,591,1147"/>
+<area shape="rect" id="node3" href="../api/ioh.iohcpp.problem.Integer.html#ioh.iohcpp.problem.Integer" target="_top" title="Integer" alt="" coords="180,564,251,589"/>
+</map>

@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.12) 
 
 project(ioh   
-    VERSION 0.0.0.1
+    VERSION 0.3.2.6
     LANGUAGES CXX  
 ) 
 set(CMAKE_CXX_STANDARD 17)
@@ -66,7 +66,7 @@ target_include_directories(ioh
 INTERFACE
     # Interface paths are relative to the installation path, not the current directory.
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:include> 
 )
 
 target_compile_features(ioh

@@ -49,6 +49,12 @@ namespace logger {
 
             /** Constructor with time, then quality. */
             Point(size_t nb_evals, double quality) : qual(quality), time(nb_evals) { }
+
+            friend std::ostream& operator<< (std::ostream& out, const Point& p )
+            {
+                out << "{\"qual\":" << p.qual << ",\"time\":" << p.time << "}";
+                return out;
+            }
         };
 
         /** A point and its corresponding run index.
@@ -69,6 +75,14 @@ namespace logger {
 
             /** Constructor with time, then quality. */
             RunPoint(size_t t, double q, size_t r) : Point(q,t), run(r) { }
+
+            friend std::ostream& operator<< (std::ostream& out, const RunPoint& p )
+            {
+                out << "{\"run\":" << p.run << ", \"point\":";
+                out << static_cast<const Point&>(p);
+                out << "}";
+                return out;
+            }
         };
 
         /** A set of non-dominated points. */
@@ -249,7 +263,8 @@ namespace logger {
             _current_problem_type = problem.optimization_type;
             _has_problem_type = true;
 #ifndef NDEBUG
-            if(problem.optimization_type == common::OptimizationType::Minimization) {
+            // Reset _current_best (double check of trigger::on_improvement behaviour).
+            if(_current_problem_type == common::OptimizationType::Minimization) {
                 _current_best =  std::numeric_limits<double>::infinity();
             } else {
                 _current_best = -std::numeric_limits<double>::infinity();
@@ -269,6 +284,9 @@ namespace logger {
             assert(evaluations);
 
             // If trigger::on_improvement does its job, we always have an improvement here.
+            IOH_DBG(debug, "transformed_y_best=" << transformed_y_best.value()
+                <<  (_current_problem_type == common::OptimizationType::Minimization ? " <" : " >")
+                << " current_best=" << _current_best << " ?");
             assert(_current_problem_type(transformed_y_best.value(),_current_best));
             _current_best = transformed_y_best.value();
 #endif
@@ -283,8 +301,15 @@ namespace logger {
         /** Reset the state. */
         void reset() override
         {
+            IOH_DBG(debug, "EAF reset")
             Logger::reset();
-            IOH_DBG(note, "reset")
+#ifndef NDEBUG
+            if(_current_problem_type == common::OptimizationType::Minimization) {
+                _current_best =  std::numeric_limits<double>::infinity();
+            } else {
+                _current_best = -std::numeric_limits<double>::infinity();
+            }
+#endif
         }
 
         common::OptimizationType optimization_type() const
@@ -295,7 +320,7 @@ namespace logger {
 
     protected:
 #ifndef NDEBUG
-        // Use to double check that trigger::on_improvement do its job.
+        // Use to double check that trigger::on_improvement does its job.
         // It should not be necessary otherwise.
         double _current_best;
 #endif
@@ -624,7 +649,6 @@ namespace logger {
 
         /** Computes attainment levels of the Empirical Attainment Function.
          * 
-         * @param optim_type Whether we target a minimization or a maximization problem.
          * @param logger the logger holding the data.
          * @param levels The desired level indices (empty=all, the default).
          * @returns A map associating a level index to the corresponding set of non-dominated quality/time points.
@@ -633,9 +657,9 @@ namespace logger {
          * 
          * @ingroup EAF
          */
-        inline Levels::Type levels(const common::OptimizationType optim_type, const EAF& logger, std::vector<size_t> levels = {} )
+        inline Levels::Type levels(const EAF& logger, std::vector<size_t> levels = {} )
         {
-            Levels levels_of(optim_type, levels);
+            Levels levels_of(logger.optimization_type(), levels);
             return levels_of(logger);
         }
 
@@ -872,19 +896,41 @@ namespace logger {
                 Volume volume_of(logger.optimization_type(), Point(error_max, evals_max));
 
                 // Computes all levels.
-                auto v = volume_of(levels(logger.optimization_type(), logger, {}));
+                auto v = volume_of(levels(logger, {}));
 
                 // Get the number of runs from the first instance.
                 // WARNING: this assume that all instances have the same number of runs,
                 // an assumption that is not enforced in the logger.
                 if(nb_runs == 0) {
-                    nb_runs = logger.data().at(0).at(0).at(0).at(0).size();
+                    const auto suite = logger.data().begin();
+                    assert(suite != logger.data().end());
+                    const auto pb = suite->second.begin();
+                    assert(pb != suite->second.end());
+                    const auto dim = pb->second.begin();
+                    assert(dim != pb->second.end());
+                    const auto ins = dim->second.begin();
+                    assert(ins != dim->second.end());
+                    nb_runs = ins->second.size();
 #ifndef NDEBUG
                     // FIXME double check that all instances have that many runs
 #endif
                 }
                 assert(nb_runs > 0);
                 return v / (nb_runs * (error_max-error_min) * (evals_max-evals_min));
+            }
+
+            /** Computes the absolute "hypervolume" of the whole empirical attainement function.
+             *
+             * @warning The nadir reference point is computed automatically as the extremum of all the levels.
+             *          Thus, if you call this function several times on different levels,
+             *          the surfaces will (may) be computed with different nadir points.
+             *          To indicate your own nadir point, use the stat::Volume class directly.
+             * 
+             * @ingroup EAF
+             */
+            inline double volume(const EAF& logger)
+            {
+                return volume(logger.optimization_type(), levels(logger));
             }
             
         } // stat

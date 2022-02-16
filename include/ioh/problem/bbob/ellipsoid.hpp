@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     /**
      * @brief CTRP base class for ellipsiod class variants
-     * 
+     *
      * @tparam T type of the ellipsiod problem
      */
     template <typename T>
@@ -34,7 +34,7 @@ namespace ioh::problem::bbob
     public:
         /**
          * @brief Construct a new Ellipsoid Base object
-         * 
+         *
          * @param problem_id the problem id
          * @param instance the instance
          * @param n_variables the dimension
@@ -42,7 +42,7 @@ namespace ioh::problem::bbob
          */
         EllipsoidBase(const int problem_id, const int instance, const int n_variables, const std::string &name) :
             BBOProblem<T>(problem_id, instance, n_variables, name)
-           
+
         {
             static const auto condition = 1.0e6;
             for (auto i = 1; i < this->meta_data_.n_variables; ++i)
@@ -56,13 +56,10 @@ namespace ioh::problem::bbob
     public:
         /**
          * @brief Construct a new Ellipsoid object
-         * 
+         *
          * @param instance instance id
          * @param n_variables the dimension of the problem
          */
-        Ellipsoid(const int instance, const int n_variables) :
-            EllipsoidBase(2, instance, n_variables, "Ellipsoid")
-        {
-        }
+        Ellipsoid(const int instance, const int n_variables) : EllipsoidBase(2, instance, n_variables, "Ellipsoid") {}
     };
-}
+} // namespace ioh::problem::bbob
