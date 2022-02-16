@@ -10,5 +10,5 @@ TEST_F(BaseTest, test_precision) {
     info.raw_y_best = 1e-8;
     EXPECT_EQ("0.00000001", watch::raw_y_best.call_to_string(info));
     info.raw_y_best = 1e-11;
-    EXPECT_EQ("0.0000000000", watch::raw_y_best.call_to_string(info));
+    EXPECT_EQ("0.00000000", watch::raw_y_best.call_to_string(info));
 }
