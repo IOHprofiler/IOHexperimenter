@@ -1,6 +1,6 @@
 var classioh_1_1problem_1_1_wrapped_problem =
 [
-    [ "WrappedProblem", "classioh_1_1problem_1_1_wrapped_problem.html#a57f53b3dd460a192f9c2b6c7bb32e6b3", null ],
+    [ "WrappedProblem", "classioh_1_1problem_1_1_wrapped_problem.html#a2a27a82f61f7401d6beda9bcfbaa4e08", null ],
     [ "attach_logger", "classioh_1_1problem_1_1_wrapped_problem.html#aa5380aa06720aa98b93523ba7441f380", null ],
     [ "check_input", "classioh_1_1problem_1_1_wrapped_problem.html#a5e2d871518f75322fab4cf5fb7c89514", null ],
     [ "check_input", "classioh_1_1problem_1_1_wrapped_problem.html#ad31583f6f84e3e486095c988e81e4158", null ],
@@ -14,14 +14,16 @@ var classioh_1_1problem_1_1_wrapped_problem =
     [ "operator()", "classioh_1_1problem_1_1_wrapped_problem.html#aa0036755e754bb469607fc6efa324107", null ],
     [ "reset", "classioh_1_1problem_1_1_wrapped_problem.html#a74c1782b980bb11ff3c3730087b779f1", null ],
     [ "state", "classioh_1_1problem_1_1_wrapped_problem.html#a346cf32b7dd49a7e21ff63757b9c8c58", null ],
-    [ "transform_objectives", "classioh_1_1problem_1_1_wrapped_problem.html#a47cda64061790c2b2b0c2bb4c208b377", null ],
-    [ "transform_variables", "classioh_1_1problem_1_1_wrapped_problem.html#a7673c3bf03e3743bae9fec30f35ae62a", null ],
+    [ "transform_objectives", "classioh_1_1problem_1_1_wrapped_problem.html#ae836918dbda64c847ce4d9825df3a278", null ],
+    [ "transform_variables", "classioh_1_1problem_1_1_wrapped_problem.html#a8aa1133f8affa08d288cf606df097e1b", null ],
     [ "update_log_info", "classioh_1_1problem_1_1_wrapped_problem.html#aff82da96879041bbee7bb0f2e0735db6", null ],
     [ "constraint_", "classioh_1_1problem_1_1_wrapped_problem.html#a38edbf0ca114bac3fa990f50e2522ac8", null ],
-    [ "function_", "classioh_1_1problem_1_1_wrapped_problem.html#a500a69bd3e6ad06641ff550cdbd4d68e", null ],
+    [ "function_", "classioh_1_1problem_1_1_wrapped_problem.html#a04ae7b09da6e025400930f14c6d0b382", null ],
     [ "log_info_", "classioh_1_1problem_1_1_wrapped_problem.html#a110a180da0786815eb13cd542dba114c", null ],
     [ "logger_", "classioh_1_1problem_1_1_wrapped_problem.html#a01bb71557cedbf06214435d3e100be38", null ],
     [ "meta_data_", "classioh_1_1problem_1_1_wrapped_problem.html#a7d5a4088efb8b41722cf407b621e8ed0", null ],
     [ "objective_", "classioh_1_1problem_1_1_wrapped_problem.html#ab86840b83707dd92208b74e97b0c72a9", null ],
-    [ "state_", "classioh_1_1problem_1_1_wrapped_problem.html#a7bc6e1954f5bc3d9ed043c779d2e9552", null ]
+    [ "state_", "classioh_1_1problem_1_1_wrapped_problem.html#a7bc6e1954f5bc3d9ed043c779d2e9552", null ],
+    [ "transform_objectives_function_", "classioh_1_1problem_1_1_wrapped_problem.html#acb82cbdbee15ab92d2733918a12a8652", null ],
+    [ "transform_variables_function_", "classioh_1_1problem_1_1_wrapped_problem.html#a91f684721ac7ed45c3792565a3695e9c", null ]
 ];

@@ -97,7 +97,8 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="textblock"><p><object type="image/svg+xml" data="https://github.com/IOHprofiler/IOHexperimenter/workflows/Ubuntu/badge.svg" style="pointer-events: none;">Ubuntu g++-{10, 9, 8}</object> <object type="image/svg+xml" data="https://github.com/IOHprofiler/IOHexperimenter/workflows/MacOS/badge.svg" style="pointer-events: none;">MacOS clang++, g++-{9, 8}</object> <object type="image/svg+xml" data="https://github.com/IOHprofiler/IOHexperimenter/workflows/Windows/badge.svg" style="pointer-events: none;">Windows MVSC-2019</object></p>
 <p><b>Experimenter</b> for **I**terative **O**ptimization **H**euristics (IOHs), built natively in* <code>C++</code>.</p>
 <ul>
-<li><b>Documentation</b>: <a href="https://arxiv.org/abs/1810.05281">https://arxiv.org/abs/1810.05281</a></li>
+<li><b>Documentation</b>: <a href="https://iohprofiler.github.io/IOHexperimenter">https://iohprofiler.github.io/IOHexperimenter</a></li>
+<li><b>Publication</b>: <a href="https://arxiv.org/abs/1810.05281">https://arxiv.org/abs/1810.05281</a></li>
 <li><b>Wiki page</b>: <a href="https://iohprofiler.github.io/">https://iohprofiler.github.io</a></li>
 <li><b>General Contact</b>: <a href="iohprofiler@liacs.leidenuniv.nl">iohprofiler@liacs.leidenuniv.nl</a></li>
 </ul>
@@ -166,12 +167,11 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="line">}</div>
 </div><!-- fragment --><p>Then, you only need to "wrap" this new function as follows:</p>
 <div class="fragment"><div class="line"> {c++}</div>
-<div class="line">auto new_problem = ioh::problem::wrap_function&lt;double&gt;(</div>
+<div class="line">ioh::problem::wrap_function&lt;double&gt;(</div>
 <div class="line">  &amp;test_problem,</div>
 <div class="line">  &quot;test_problem&quot; // name for the new function</div>
 <div class="line">);</div>
-<div class="line">std::cout &lt;&lt; new_problem.meta_data() &lt;&lt; std::endl;</div>
-</div><!-- fragment --><p>After wrapping, we could also create this <code>test_problem</code> from the problem factory. Note that, the instance id is ineffective in this approach since we haven't implemented it for the wrapped problem.</p>
+</div><!-- fragment --><p>After wrapping, we could create this <code>test_problem</code> from the problem factory. Note that, the instance id is ineffective in this approach since we haven't implemented any transformations for the wrapped problem.</p>
 <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">auto &amp;factory = ioh::problem::ProblemRegistry&lt;ioh::problem::Real&gt;::instance();</div>
 <div class="line">auto new_problem_f = factory.create(</div>
@@ -258,7 +258,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Sep 24 2021 15:51:42 for IOH by
+    <li class="footer">Generated on Sat Dec 18 2021 16:52:38 for IOH by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

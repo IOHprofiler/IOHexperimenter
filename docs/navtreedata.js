@@ -25,7 +25,6 @@ var NAVTREE =
   [ "IOH", "index.html", [
     [ "IOHprofiler: IOHexperimenter", "index.html", null ],
     [ "IOHexperimenter : W-model", "md_ioh_problem_wmodel__r_e_a_d_m_e.html", null ],
-    [ "Todo List", "todo.html", null ],
     [ "Modules", "modules.html", "modules" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -58,18 +57,18 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"classioh_1_1logger_1_1_property.html#a72c5a101669dd77be6a52f4875f76bb8",
-"classioh_1_1logger_1_1stat_1_1_volume.html#ac882e7f7715360228b1eb48929df8cce",
-"classioh_1_1problem_1_1bbob_1_1_bent_cigar.html#a38edbf0ca114bac3fa990f50e2522ac8",
-"classioh_1_1problem_1_1bbob_1_1_gallagher21.html#a5e2d871518f75322fab4cf5fb7c89514",
-"classioh_1_1problem_1_1bbob_1_1_rosenbrock_base.html#a5e2d871518f75322fab4cf5fb7c89514",
-"classioh_1_1problem_1_1bbob_1_1_weierstrass.html#a294216874d9cb719e61968d5ed46187b",
-"classioh_1_1problem_1_1pbo_1_1_leading_ones_epistasis.html#a7d5a4088efb8b41722cf407b621e8ed0",
-"classioh_1_1problem_1_1pbo_1_1_one_max.html#ab7509f9cbafc8b51aea2bfc816418a68",
-"classioh_1_1problem_1_1python_1_1_extern_python_problem.html#aebbc4f6caacbcb9018a72669bf3d487c",
-"group___e_a_h.html",
-"structioh_1_1logger_1_1eaf_1_1_run_point.html#afce05db9a5ae4c201b3cf614646ca3a5",
-"todo.html"
+"classioh_1_1logger_1_1_levels.html#a4d9d7b811e3dfa2054a2313a19590c34",
+"classioh_1_1logger_1_1eah_1_1stat_1_1_histogram.html",
+"classioh_1_1problem_1_1bbob_1_1_attractive_sector.html#a346cf32b7dd49a7e21ff63757b9c8c58",
+"classioh_1_1problem_1_1bbob_1_1_gallagher101.html#a2abee443b122bf850d5113128c728352",
+"classioh_1_1problem_1_1bbob_1_1_rosenbrock.html#a38edbf0ca114bac3fa990f50e2522ac8",
+"classioh_1_1problem_1_1bbob_1_1_step_ellipsoid.html#a110a180da0786815eb13cd542dba114c",
+"classioh_1_1problem_1_1pbo_1_1_leading_ones_dummy2.html#a00ce8976c63309ac17b2afaab1bdf605",
+"classioh_1_1problem_1_1pbo_1_1_n_queens.html",
+"classioh_1_1problem_1_1pbo_1_1_one_max_ruggedness3.html#af16d12b55dc9f51c3dae0c9b7954a975",
+"functions_func_d.html",
+"structioh_1_1logger_1_1_trigger.html#a5c68b5596f0d794d7b9872d6382755a5",
+"structioh_1_1trigger_1_1_all.html#ac5a68939623c3e0ae04b73cd00bc8be2"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

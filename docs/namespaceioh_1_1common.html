@@ -123,6 +123,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structioh_1_1common_1_1_factory.html">Factory</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for generating classes for a given abtract type.  <a href="structioh_1_1common_1_1_factory.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classioh_1_1common_1_1_f_optimization_type.html">FOptimizationType</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapper class for optimization type, contains comparison operator.  <a href="classioh_1_1common_1_1_f_optimization_type.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structioh_1_1common_1_1_has_repr.html">HasRepr</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface which defines a repr method.  <a href="structioh_1_1common_1_1_has_repr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -147,10 +150,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a10ff539dd4ec41851f2c305aac9e3c4b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">OptimizationType</a> { <b>Minimization</b>, 
+<tr class="memitem:a10ff539dd4ec41851f2c305aac9e3c4b"><td class="memItemLeft" align="right" valign="top"><a id="a10ff539dd4ec41851f2c305aac9e3c4b"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">OptimizationType</a> { <b>Minimization</b>, 
 <b>Maximization</b>
  }</td></tr>
-<tr class="memdesc:a10ff539dd4ec41851f2c305aac9e3c4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum containing minimization = 0 and maximization = 1 flags.  <a href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">More...</a><br /></td></tr>
+<tr class="memdesc:a10ff539dd4ec41851f2c305aac9e3c4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum containing minimization = 0 and maximization = 1 flags. <br /></td></tr>
 <tr class="separator:a10ff539dd4ec41851f2c305aac9e3c4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -203,40 +206,10 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="names
 <tr class="memitem:a7cce97cc479694554e9dcf5158c1ea90"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1common.html#a7cce97cc479694554e9dcf5158c1ea90">class_name</a> ()</td></tr>
 <tr class="memdesc:a7cce97cc479694554e9dcf5158c1ea90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the type name of the problem.  <a href="namespaceioh_1_1common.html#a7cce97cc479694554e9dcf5158c1ea90">More...</a><br /></td></tr>
 <tr class="separator:a7cce97cc479694554e9dcf5158c1ea90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a674d06da4a9470cecfdc07ef2e8e0691"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a674d06da4a9470cecfdc07ef2e8e0691"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceioh_1_1common.html#a674d06da4a9470cecfdc07ef2e8e0691">compare_objectives</a> (const T v1, const T v2, const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">OptimizationType</a> optimization_type)</td></tr>
-<tr class="memdesc:a674d06da4a9470cecfdc07ef2e8e0691"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares two values v1 and v2, and returns true if v1 is better.  <a href="namespaceioh_1_1common.html#a674d06da4a9470cecfdc07ef2e8e0691">More...</a><br /></td></tr>
-<tr class="separator:a674d06da4a9470cecfdc07ef2e8e0691"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Common utilities. </p>
-</div><h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="a10ff539dd4ec41851f2c305aac9e3c4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10ff539dd4ec41851f2c305aac9e3c4b">&#9670;&nbsp;</a></span>OptimizationType</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">ioh::common::OptimizationType</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Enum containing minimization = 0 and maximization = 1 flags. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>FIXME this should really be a class with two instances holding comparison operators, so as to avoid tests. </dd></dl>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a8c17cfa6d59b512aaaf4498633a3bea0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8c17cfa6d59b512aaaf4498633a3bea0">&#9670;&nbsp;</a></span>all_finite()</h2>
 
@@ -297,59 +270,6 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the name of T </dd></dl>
-
-</div>
-</div>
-<a id="a674d06da4a9470cecfdc07ef2e8e0691"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a674d06da4a9470cecfdc07ef2e8e0691">&#9670;&nbsp;</a></span>compare_objectives()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ioh::common::compare_objectives </td>
-          <td>(</td>
-          <td class="paramtype">const T&#160;</td>
-          <td class="paramname"><em>v1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const T&#160;</td>
-          <td class="paramname"><em>v2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="namespaceioh_1_1common.html#a10ff539dd4ec41851f2c305aac9e3c4b">OptimizationType</a>&#160;</td>
-          <td class="paramname"><em>optimization_type</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Compares two values v1 and v2, and returns true if v1 is better. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>Type of v1 and v2 </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">v1</td><td>The first value </td></tr>
-    <tr><td class="paramname">v2</td><td>The second value </td></tr>
-    <tr><td class="paramname">optimization_type</td><td>Used to determine which value is better, when optimization_type == OptimizationType::Minimization lower elements are better, otherwise higher elements are better. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if v1 is better than v2 </dd></dl>
 
 </div>
 </div>
@@ -556,7 +476,7 @@ template&lt;typename T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>ioh</b></li><li class="navelem"><a class="el" href="namespaceioh_1_1common.html">common</a></li>
-    <li class="footer">Generated on Fri Sep 24 2021 15:51:41 for IOH by
+    <li class="footer">Generated on Sat Dec 18 2021 16:52:37 for IOH by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

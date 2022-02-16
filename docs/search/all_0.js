@@ -20,7 +20,7 @@ var searchData=
   ['_5fnadir_17',['_nadir',['../classioh_1_1logger_1_1_nadir_stat.html#ac882e7f7715360228b1eb48929df8cce',1,'ioh::logger::NadirStat']]],
   ['_5fnb_5fatt_18',['_nb_att',['../classioh_1_1logger_1_1eah_1_1stat_1_1_histogram.html#a2a3416342f4acd43e588fb2395261987',1,'ioh::logger::eah::stat::Histogram']]],
   ['_5fon_5fimprovement_19',['_on_improvement',['../classioh_1_1logger_1_1_e_a_h.html#aff0f09c2454e16e632a6e0e693c694d3',1,'ioh::logger::EAH']]],
-  ['_5foptim_5ftype_20',['_optim_type',['../classioh_1_1logger_1_1_levels.html#a7b5bd599988fe4229b9d67b7f3f1e33d',1,'ioh::logger::Levels::_optim_type()'],['../classioh_1_1logger_1_1_nadir_stat.html#ad30e559a4129f32d830c50c8a7f16fed',1,'ioh::logger::NadirStat::_optim_type()']]],
+  ['_5foptim_5ftype_20',['_optim_type',['../classioh_1_1logger_1_1_levels.html#a65f63d9f7c509690659f4defb408dbfa',1,'ioh::logger::Levels::_optim_type()'],['../classioh_1_1logger_1_1_nadir_stat.html#a73553ca4ea69154aca113d982bb88278',1,'ioh::logger::NadirStat::_optim_type()']]],
   ['_5frange_5ferror_21',['_range_error',['../classioh_1_1logger_1_1_e_a_h.html#a28ac2bc839987eb37b280c6f82bb15f0',1,'ioh::logger::EAH']]],
   ['_5frange_5fevals_22',['_range_evals',['../classioh_1_1logger_1_1_e_a_h.html#a9b79977facee5ec2a8af9dc716f9b15e',1,'ioh::logger::EAH']]],
   ['_5fref_5fptr_5fvar_23',['_ref_ptr_var',['../classioh_1_1watch_1_1_pointer_reference.html#a8928ee350e84da14da6679115ff479f6',1,'ioh::watch::PointerReference']]],
@@ -30,6 +30,6 @@ var searchData=
   ['_5ftime_5fpoints_27',['_time_points',['../classioh_1_1trigger_1_1_at.html#a5b22d82e28bc104d31edafa2f130c0e8',1,'ioh::trigger::At']]],
   ['_5ftime_5franges_28',['_time_ranges',['../classioh_1_1trigger_1_1_during.html#a1752b7a06ef8cf692bfe9be4ee9ff53f',1,'ioh::trigger::During']]],
   ['_5ftransformed_5fy_5fbest_29',['_transformed_y_best',['../classioh_1_1logger_1_1_e_a_h.html#a3d54d84875e285388e15c357466b1c8d',1,'ioh::logger::EAH']]],
-  ['_5ftype_30',['_type',['../classioh_1_1trigger_1_1_on_improvement.html#adbebafac2faa559b790b361c1e0a9e50',1,'ioh::trigger::OnImprovement']]],
+  ['_5ftype_30',['_type',['../classioh_1_1trigger_1_1_on_improvement.html#a5ca1bd9f741beb19a5261fd0223325d7',1,'ioh::trigger::OnImprovement']]],
   ['_5fvariable_31',['_variable',['../classioh_1_1watch_1_1_reference.html#a4a084a5ce4763dbced5c839de8ba8834',1,'ioh::watch::Reference::_variable()'],['../classioh_1_1watch_1_1_pointer.html#a614469ca3a66a8fbd7a6f23789f2303b',1,'ioh::watch::Pointer::_variable()']]]
 ];

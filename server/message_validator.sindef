@@ -1,0 +1,53 @@
+Bootstrap: library
+From: ubuntu:20.04
+
+%post
+
+    # Dependencies
+    apt -y update
+    apt -y install software-properties-common
+    add-apt-repository universe
+    apt -y update
+    apt -y dist-upgrade
+
+    apt -y install python3-pip git g++ cmake make
+
+    # yaml2json
+    pip3 install json2yaml
+
+    # Temporary directory where we are going to build everything.
+    tmpdir=$(mktemp -d)
+    cd ${tmpdir}
+
+    # JSON library
+    git clone --single-branch --branch master --depth 1 https://github.com/nlohmann/json.git
+    cd json
+    mkdir build
+    cd build
+    cmake -DBUILD_TESTING=OFF -DJSON_BuildTests=OFF -DCMAKE_BUILD_TYPE=Release -DJSON_ImplicitConversions=OFF -DJSON_Install=ON ..
+    make install
+
+    # JSON schema validator
+    git clone --single-branch --branch master --depth 1 https://github.com/pboettch/json-schema-validator.git
+    cd json-schema-validator
+    mkdir build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=Release -DJSON_VALIDATOR_BUILD_EXAMPLES=OFF -DJSON_VALIDATOR_BUILD_TESTS=OFF ..
+    make json-schema-validate
+    cp json-schema-validate /usr/local/bin/
+
+    # Clean-up
+    rm -rf ${tmpdir}
+    apt -y purge software-properties-common nlohmann-json3-dev
+    apt -y --purge autoremove
+    apt -y autoclean
+    apt clean
+
+%runscript 
+    echo "Converting the schema to json:"
+    yaml2json ${1} ${1}.json
+    echo "Validating the message:"
+    /usr/local/bin/json-schema-validate ${1}.json < ${2} 
+
+%labels
+    Author Johann Dreo
