@@ -7,3 +7,4 @@ Contents
    index.rst
    cpp.rst
    python.rst
+   server.rst

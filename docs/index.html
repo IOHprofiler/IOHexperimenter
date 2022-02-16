@@ -14,20 +14,6 @@
     
     
 
-<<<<<<< HEAD
-<div class="PageDoc"><div class="header">
-  <div class="headertitle">
-<div class="title">IOHprofiler: IOHexperimenter </div>  </div>
-</div><!--header-->
-<div class="contents">
-<div class="textblock"><p><object type="image/svg+xml" data="https://github.com/IOHprofiler/IOHexperimenter/workflows/Ubuntu/badge.svg" style="pointer-events: none;">Ubuntu g++-{10, 9, 8}</object> <object type="image/svg+xml" data="https://github.com/IOHprofiler/IOHexperimenter/workflows/MacOS/badge.svg" style="pointer-events: none;">MacOS clang++, g++-{9, 8}</object> <object type="image/svg+xml" data="https://github.com/IOHprofiler/IOHexperimenter/workflows/Windows/badge.svg" style="pointer-events: none;">Windows MVSC-2019</object></p>
-<p><b>Experimenter</b> for **I**terative **O**ptimization **H**euristics (IOHs), built natively in* <code>C++</code>.</p>
-<ul>
-<li><b>Documentation</b>: <a href="https://iohprofiler.github.io/IOHexperimenter">https://iohprofiler.github.io/IOHexperimenter</a></li>
-<li><b>Publication</b>: <a href="https://arxiv.org/abs/1810.05281">https://arxiv.org/abs/1810.05281</a></li>
-<li><b>Wiki page</b>: <a href="https://iohprofiler.github.io/">https://iohprofiler.github.io</a></li>
-<li><b>General Contact</b>: <a href="iohprofiler@liacs.leidenuniv.nl">iohprofiler@liacs.leidenuniv.nl</a></li>
-=======
 
 <style>
   body {
@@ -177,7 +163,6 @@
 <li class="toctree-l3 has-children"><a class="reference internal" href="cpp/ioh_common_random.html">random</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="cpp/ioh_common_random_bbob2009.html">bbob2009</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cpp/ioh_common_random_pbo.html">pbo</a></li>
->>>>>>> master
 </ul>
 </li>
 </ul>
@@ -200,37 +185,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cpp/ioh_logger_stat.html">stat</a></li>
 </ul>
-<<<<<<< HEAD
-<p>For the detailed documentation of all available functionality in the <b>IOHexperimenter</b>, please check our <a href="https://iohexperimenter.readthedocs.io/en/restru/index.html">this page</a> <b>[under construction]</b>.</p>
-<h2>Add new problems</h2>
-<p>We offer a very simple and convenient interface for integrating new benchmark problems/functions. First, you could define a new <code>test_problem</code> as you like. Note that the <code>&lt;vector&gt;</code> header is already imported in "ioh.hpp".</p>
-<div class="fragment"><div class="line"> {C++}</div>
-<div class="line">#include &quot;ioh.hpp&quot;</div>
-<div class="line"> </div>
-<div class="line">std::vector&lt;double&gt; test_problem(const std::vector&lt;double&gt; &amp;)</div>
-<div class="line">{</div>
-<div class="line">    // the actual function body start here</div>
-<div class="line">    // ...</div>
-<div class="line">}</div>
-</div><!-- fragment --><p>Then, you only need to "wrap" this new function as follows:</p>
-<div class="fragment"><div class="line"> {c++}</div>
-<div class="line">ioh::problem::wrap_function&lt;double&gt;(</div>
-<div class="line">  &amp;test_problem,</div>
-<div class="line">  &quot;test_problem&quot; // name for the new function</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>After wrapping, we could create this <code>test_problem</code> from the problem factory. Note that, the instance id is ineffective in this approach since we haven't implemented any transformations for the wrapped problem.</p>
-<div class="fragment"><div class="line"> {c++}</div>
-<div class="line">auto &amp;factory = ioh::problem::ProblemRegistry&lt;ioh::problem::Real&gt;::instance();</div>
-<div class="line">auto new_problem_f = factory.create(</div>
-<div class="line">  &quot;test_problem&quot;,  // create by name</div>
-<div class="line">  1,               // instance id</div>
-<div class="line">  10               // number of search variables</div>
-<div class="line">);</div>
-</div><!-- fragment --><p>Alternatively, one might wish to create the new problem by subclassing the abstract problem class in IOHexperimenter, taking benefits of implementing more details, e.g., aforementioned transformations. This can be done by inheriting the corresponding problem registration class, which is</p>
-<ul>
-<li><code><a class="el" href="structioh_1_1problem_1_1_integer_problem.html" title="CRTP class for automatically registering problems in the apropriate factory.">ioh::problem::IntegerProblem</a></code> for pseudo-Boolean problems, and</li>
-<li><code><a class="el" href="classioh_1_1problem_1_1_real_problem.html" title="CRTP class for automatically registering problems in the apropriate factory.">ioh::problem::RealProblem</a></code> for continuous problems.</li>
-=======
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="cpp/ioh_problem.html">problem</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="cpp/ioh_problem_bbob.html">bbob</a></li>
@@ -257,7 +211,6 @@
 <li class="toctree-l3"><a class="reference internal" href="api/ioh.wrap_problem.html">wrap_problem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/ioh.get_problem_id.html">get_problem_id</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/ioh.Experiment.html">Experiment</a></li>
->>>>>>> master
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="python/structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -377,6 +330,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
 </ul>
 
 </div>
@@ -447,29 +401,6 @@
 </ul>
 <p>When using IOHprofiler and parts thereof, please kindly cite this work as</p>
 <p>Carola Doerr, Hao Wang, Furong Ye, Sander van Rijn, Thomas Bäck: <em>IOHprofiler: A Benchmarking and Profiling Tool for Iterative Optimization Heuristics</em>, arXiv e-prints:1810.05281, 2018.</p>
-<<<<<<< HEAD
-<div class="fragment"><div class="line">@ARTICLE{IOHprofiler,</div>
-<div class="line">  author = {Carola Doerr and Hao Wang and Furong Ye and Sander van Rijn and Thomas B{\&quot;a}ck},</div>
-<div class="line">  title = {{IOHprofiler: A Benchmarking and Profiling Tool for Iterative Optimization Heuristics}},</div>
-<div class="line">  journal = {arXiv e-prints:1810.05281},</div>
-<div class="line">  archivePrefix = &quot;arXiv&quot;,</div>
-<div class="line">  eprint = {1810.05281},</div>
-<div class="line">  year = 2018,</div>
-<div class="line">  month = oct,</div>
-<div class="line">  keywords = {Computer Science - Neural and Evolutionary Computing},</div>
-<div class="line">  url = {https://arxiv.org/abs/1810.05281}</div>
-<div class="line">}</div>
-</div><!-- fragment --> </div></div><!-- PageDoc -->
-</div><!-- contents -->
-</div><!-- doc-content -->
-<!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated on Sat Dec 18 2021 16:52:38 for IOH by
-    <a href="http://www.doxygen.org/index.html">
-    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
-  </ul>
-=======
 <div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@ARTICLE</span><span class="p">{</span><span class="nl">IOHexperimenter</span><span class="p">,</span>
   <span class="na">author</span> <span class="p">=</span> <span class="s">{Jacob de Nobel and</span>
 <span class="s">               Furong Ye and</span>
@@ -487,7 +418,6 @@
   <span class="na">url</span> <span class="p">=</span> <span class="s">{https://arxiv.org/abs/2111.04077}</span>
 <span class="p">}</span>
 </pre></div>
->>>>>>> master
 </div>
 </section>
 </section>
