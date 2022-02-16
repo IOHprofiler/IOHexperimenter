@@ -10,7 +10,7 @@ namespace ioh
     namespace logger
     {
 
-        inline std::string DEFAULT_DOUBLE_FORMAT = "{:.9f}";
+        inline std::string DEFAULT_DOUBLE_FORMAT = "{:.10f}";
         
         /** @defgroup Properties Properties
          * Accessors to values that are to be logged.
