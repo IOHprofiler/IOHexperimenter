@@ -3,8 +3,12 @@ C++
 
 This page contains the full documentation for the C++ engine of the IOHexperimenter.
 
-
 .. mdinclude:: ../../../include/README.md
+
+Logger Architecture
+-------------------
+.. raw:: html
+    :file: cpp/logger_architecture.svg
 
 
 API documentation

@@ -115,6 +115,9 @@ namespace ioh
             [[nodiscard]] virtual double transform_objectives(const double y) { return y; }
 
         public:
+            //! The current type held within the instance.
+            using Type = T;
+            
             /**
              * @brief Construct a new Problem object
              *

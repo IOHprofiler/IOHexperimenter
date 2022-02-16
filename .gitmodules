@@ -13,3 +13,9 @@
 	path = external/clutchlog
 	url = https://github.com/jacobdenobel/clutchlog.git
 
+[submodule "external/cxxopts"]
+	path = external/cxxopts
+	url = https://github.com/jarro2783/cxxopts
+[submodule "external/json"]
+	path = external/json
+	url = https://github.com/nlohmann/json.git

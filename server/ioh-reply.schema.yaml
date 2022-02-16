@@ -1,0 +1,56 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+id: "#IOHreply"
+
+type: object # Reply sent by the (IOH) server to the (solver) client.
+properties:
+
+    reply_type: # Type of the reply.
+        type: string
+        enum:
+            - value # Objective function value.
+            - ack   # Simple acknowledgment.
+            - error # Error message.
+
+    if: # If reply_type == "value".
+        properties:
+            reply_type:
+                const: value
+    then: # Require the "value" (and maybe the "solution") properties.
+        properties:
+            value: # The objective function value.
+                type: number
+            solution: # The solution for which the value has been computed (useful for debugging).
+                type: array
+                items:
+                    type: number
+                    minItems: 1 # Dimension should be > 0.
+        required:
+            - value
+            # "solution" is optional.
+
+    if: # If reply_type == "error".
+        properties:
+            reply_type:
+                const: error
+    then: # Require the "message" property.
+        properties:
+            code: # Unique identifier of the error type.
+                type: integer
+            message:
+                type: string
+        required:
+            - message
+            # "code" is optional.
+
+    id: # The unique identifier of the query to which the server replies (useful for debugging).
+        type: integer
+
+    timestamp: # Date and time of the reply (useful for debugging).
+        type: string
+        format: date-time
+
+    remarks: # Generic comment (e.g. server's version).
+        type: string
+
+required:
+    - reply_type
