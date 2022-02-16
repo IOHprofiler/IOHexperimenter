@@ -147,7 +147,7 @@ class CMakeBuild(build_ext):
 def generate_docs():
     if MAKE_DOCS:
         try:
-            main()
+            # main()
             directory = os.path.join(BASE_DIR, "doc", "python")
             try:
                 shutil.rmtree(os.path.join(directory, "source", "api"))

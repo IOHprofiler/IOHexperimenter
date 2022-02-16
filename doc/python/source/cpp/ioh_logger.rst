@@ -2,6 +2,11 @@
 logger 
 ================
 
+Architecture
+------------
+.. raw:: html
+    :file: logger_architecture.svg
+
 Namespaces
 ------------------
 .. toctree::

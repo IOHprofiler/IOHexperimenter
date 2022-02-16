@@ -26,7 +26,7 @@ TEST_F(BaseTest, logger_v1)
 
         for (auto *problem : std::array<ioh::problem::BBOB *, 3>({&p, &p1, &p2}))
         {
-            const auto x = std::vector<double>(problem->meta_data().n_variables, 0);
+            const auto x = std::vector<double>(problem->meta_data().n_variables, 0.);
             for (auto count = 0; 2 > count; ++count)
             {
                 problem->attach_logger(l);
@@ -55,10 +55,16 @@ TEST_F(BaseTest, logger_v1)
     const std::string header =
         R"#("function evaluation" "current f(x)" "best-so-far f(x)" "current af(x)+b" "best af(x)+b")#";
     std::array<std::pair<std::string, fs::path>, 3> cases;
-    cases[0] = {header + "\n1 1.40209408 1.40209408 80.88209408 80.88209408\n", get_dat_path(output_directory, p1)};
-    cases[1] = {header + "\n1 5.63728704 5.63728704 85.11728704 85.11728704\n", get_dat_path(output_directory, p)};
-    cases[2] = {header + "\n1 28268.39746447 28268.39746447 28304.29746447 28304.29746447\n",
-                get_dat_path(output_directory, p2)};
+    cases[0] = {header + "\n1 1.4020940800 1.4020940800 80.8820940800 80.8820940800\n", get_dat_path(output_directory, p1)};
+    cases[1] = {header + "\n1 5.6372870400 5.6372870400 85.1172870400 85.1172870400\n", get_dat_path(output_directory, p)};
+
+#if defined(__APPLE__) 
+    // On MacOS double values are sligtly different, this is probably causes by implementations in math.h
+    // see: https://stackoverflow.com/questions/44765611/slightly-different-result-from-exp-function-on-mac-and-linux
+    cases[2] = {header + "\n1 28268.3974644752 28268.3974644752 28304.2974644752 28304.2974644752\n", get_dat_path(output_directory, p2)};
+#else
+    cases[2] = {header + "\n1 28268.3974644746 28268.3974644746 28304.2974644746 28304.2974644746\n", get_dat_path(output_directory, p2)};
+#endif
 
     for (const auto &[data, path] : cases)
         compare_file_with_string(path, data + data);
