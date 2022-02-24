@@ -186,10 +186,12 @@ public:
 Please check [this example](https://github.com/IOHprofiler/IOHexperimenter/blob/8a49d76d591c52b4ae8ed0991d4b6ea8d5c3adaa/example/problem_example.h#L52) for adding continuous problems in this manner.
 
 ### Use a logger
+
 We provide a default logger to track and record function evaluations during the optimization process into csv files. The structure and format of csv files is introduced [here](https://arxiv.org/pdf/1810.05281.pdf).
 
 The default logger can be initialized by
-```c++
+
+```cpp
 inline ioh::logger::Analyzer get_logger(const std::string &folder_name = "logger_example", const bool store_positions = false)
 {
     /// Instantiate a logger.
@@ -211,7 +213,8 @@ Note that the logger must be attached to the suite or the problem before any fun
 By attaching the logger to a problem, information (best-found fitness so far, etc.) of each function evaluation during the optimization process will be recorded automatically.
 
 In addition, the default logger supports recording the algorithms' parameters.
-```c++
+
+```cpp
 // Add parameters fixed throughout the experiment, which are stored in *.info files.
 logger.add_experiment_attribute("meta_data_x", "69");
 logger.add_experiment_attribute("meta_data_y", "69");
@@ -224,10 +227,10 @@ logger.watch(ioh::watch::address("x0", x.data()));
 logger.watch(ioh::watch::address("x1", x.data() + 1));
 ```
 
-
 ### Using Experiment
 
-`Experimenter` class automatically tests the given `solver` on the pre-defined `suite` of problems and record the optimization process using a `logger`. The usage of `suite` and `logger` is introduced above. 
+`Experimenter` class automatically tests the given `solver` on the pre-defined `suite` of problems and record the optimization process using a `logger`. The usage of `suite` and `logger` is introduced above.
+
 ```cpp
 // You can use ioh::problem::Integer for discrete optimization.
 void solver(const std::shared_ptr<ioh::problem::Real> p)
@@ -242,7 +245,6 @@ const auto logger = std::make_shared<ioh::logger::Default>(std::string("logger-e
 ioh::experiment::Experimenter<ioh::problem::Real> f(suite, logger, solver, 10);
 f.run();
 ```
-
 
 For the detailed documentation of all available functionality in the __IOHexperimenter__, please check our [this page](https://iohexperimenter.readthedocs.io/en/restru/index.html) __[under construction]__.
 
