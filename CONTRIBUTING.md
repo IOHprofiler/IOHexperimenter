@@ -2,6 +2,8 @@
 
 ### Table of Contents
 
+Note that this page is __under construction__. More detailed guidelines are being added.
+
 [What should I Know before Getting Started?](#what-should-i-know-before-getting-started)
 
 [How can I Contribute?](#how-can-i-contribute)
@@ -60,11 +62,11 @@ Explain the issue with additional information that can help the maintainers. Ple
 
 <a id="#adding-new-problems-and-suites"></a>
 
-This section guides you through creating new benchmarking problems and suites for **IOHexperimenter**.  Instead of testing additional problems using the [proxy]() provided in IOHexperimenter, the goal is to integrate new problems as internal packages.
+This section guides you through creating new benchmarking problems and suites for **IOHexperimenter**.  Instead of testing additional problems using the [proxy](https://github.com/IOHprofiler/IOHexperimenter/blob/8ed56649d9b6f6261de74f745468133a414c57ea/example/add_new_problem.cpp#L29) provided in IOHexperimenter, the goal is to integrate new problems as internal packages.
 
 Follow the steps of contributing new problems:
 * [Implementing new problem classes](#implementing-new-problem-classes)
-* [Creating a suite class (optional)](#creating-a-suite-class)
+* [Using the suite class (optional)](#using-the-suite-class)
 * [Pull request](#pull-request)
 
 #### Implementing new problem classes
@@ -303,13 +305,13 @@ New description (introduce briefly if the content is too long):
 * Use the present tense ("Add feature" not "Added feature")
 * Use the imperative mood ("Improve the function..." not "Improves the function...")
 * When only changing documentation, include "Update README" in the commit title
-* Start the title with:
+<!-- * Start the title with:
   * [New Features:] for adding new functionalities
   * [Bug Fix:] for fixing bugs
   * [Enhancement:] for improving data structure, efficiency, etc.
   * [Polish:] for only polishing code styles (i.e., names, layout. etc.)
   * [Update README:] for updating documentations
-  * [Maintain:] indicates that the changes are still under development
+  * [Maintain:] indicates that the changes are still under development -->
 
 ### C++ styleguide
 <a id="cpp-styleguide"></a>
