@@ -39,16 +39,7 @@ namespace ioh::problem::pbo
             return result;
         }
 
-        // [optional] If one wish to implement transformations on objective values
-        double transform_objectives(const double y) override { return y; }
-
-        // [optional] If one wish to implement transformations on search variables
-        std::vector<int> transform_variables(std::vector<int> x) override { return x; }
-
     public:
-        /// [mandatory] This constructor always take `instance` as input even
-        /// if it is ineffective by default. `instance` would be effective if and only if
-        /// at least one of `transform_objectives` and `transform_objectives` is implemented
         MaxVertexCover(const int instance, const int n_variables) :
             GraphProblem(
                 101, // problem id, which will be overwritten when registering this class in all pseudo-Boolean problems
