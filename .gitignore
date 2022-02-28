@@ -22,6 +22,7 @@ out/
 .vscode/
 nbproject/
 *.code-workspace
+*.vcxproj*
 
 
 # Ignore OS metadata files.
@@ -185,3 +186,4 @@ debug
 release
 ioh_data
 run.py
+/IOHexperimenter.vcxproj.user
