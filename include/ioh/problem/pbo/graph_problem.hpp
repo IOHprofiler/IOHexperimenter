@@ -33,6 +33,7 @@ namespace ioh::problem
         }
         double get_vertex_weight(const int vertex) const { return vertex_weights[vertex]; }
         double get_cons_weight(const int index) const { return cons_weights[index]; }
+        int get_cons_weights_count() const { return cons_weights.size(); }
 
         /**
          * @brief Read a graph object with optional weights
@@ -57,6 +58,8 @@ namespace ioh::problem
             std::vector<std::vector<int>> edge_indexes{};
             while (std::getline(edge_data, str))
             {
+                if (str.empty())// Skip over empty lines
+                    continue;
                 int first_vertex, second_vertex;
                 for (int i = 0; i < str.size(); i++)
                 {
@@ -93,6 +96,8 @@ namespace ioh::problem
                 std::ifstream e_weights_data((*e_weights));
                 while (std::getline(e_weights_data, str))
                 {
+                    if (str.empty()) // Skip over empty lines
+                        continue;
                     edge_weights[edge_indexes[index][0]][edge_indexes[index][1]] = std::stod(str);
                     index++;
                 }
@@ -105,6 +110,8 @@ namespace ioh::problem
                 std::ifstream v_weights_data((*v_weights));
                 while (std::getline(v_weights_data, str))
                 {
+                    if (str.empty()) // Skip over empty lines
+                        continue;
                     vertex_weights[index++] = std::stod(str);
                 }
             }
@@ -117,6 +124,8 @@ namespace ioh::problem
                 std::ifstream c_weights_data((*c_weights));
                 while (std::getline(c_weights_data, str))
                 {
+                    if (str.empty()) // Skip over empty lines
+                        continue;
                     cons_weights.push_back(std::stod(str));
                 }
                 cons_weight_limit = cons_weights.back();
@@ -128,46 +137,32 @@ namespace ioh::problem
             GraphInstance(&file_list[instance][0], &file_list[instance][1], &file_list[instance][2],
                           &file_list[instance][3])
         {
-            // graph_list[instance] = this;
         }
     };
     std::vector<GraphInstance *> graph_list;
 
+    // Read list of graph instances to load
     int read_meta_list_graph(const bool reread = false, const std::string &path_to_meta_list_graph = "example_list")
     {
-        if (file_list.empty() || reread)
+        if (file_list.empty() || reread)// Only read if unread, or forced reread
         {
             std::vector<std::vector<std::string>> l{};
             std::vector<GraphInstance *> g{};
             std::ifstream list_data(path_to_meta_list_graph);
-            std::string str;
+            std::string str{};
             while (std::getline(list_data, str))
             {
-                std::string edge(""), e_weights(""), v_weights(""), c_weights(""), rstr;
+                if (str.empty())// Skip over empty lines
+                    continue;
+                std::vector<std::string> entry(4, "");
+                std::string rstr;
                 std::istringstream iss(str);
                 int index = 0;
-                while (std::getline(iss, rstr, '|'))
+                while (std::getline(iss, rstr, '|'))// File paths are delimited by '|'
                 {
-                    switch (index)
-                    {
-                    case 0:
-                        edge = rstr.c_str();
-                        break;
-                    case 1:
-                        e_weights = rstr.c_str();
-                        break;
-                    case 2:
-                        v_weights = rstr.c_str();
-                        break;
-                    case 3:
-                        c_weights = rstr.c_str();
-                        break;
-                    default:
-                        break;
-                    }
-                    index++;
+                    entry[index++] = rstr.c_str();
                 }
-                l.push_back({edge, e_weights, v_weights, c_weights});
+                l.push_back(entry);
                 g.push_back(nullptr);
             }
             file_list = l;
@@ -175,6 +170,8 @@ namespace ioh::problem
         }
         return file_list.size();
     }
+
+    // Get dimensions from graph instances, and load these if not yet loaded
     std::vector<int> get_dimensions_from_ids(const std::vector<int> &instances, const bool is_edge = false, const bool reread = false)
     {// instances are 0-indexed
         int list_size = read_meta_list_graph();
@@ -184,7 +181,7 @@ namespace ioh::problem
             if (id >= list_size)
                 dimensions.push_back(-1);
             else {
-                if (graph_list[id] == nullptr || reread)
+                if (graph_list[id] == nullptr || reread)// Only read if unread, or forced reread
                     graph_list[id] = new GraphInstance(id);
                 dimensions.push_back(is_edge ? graph_list[id]->get_n_edges() : graph_list[id]->get_n_vertices());
             }

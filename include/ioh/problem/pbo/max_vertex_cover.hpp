@@ -1,5 +1,6 @@
 #pragma once
 #include "graph_problem.hpp"
+#include <stdexcept>
 
 namespace ioh::problem::pbo
 {
@@ -48,6 +49,8 @@ namespace ioh::problem::pbo
                 "MaxVertexCover" // problem name
             )
         {
+            if(graph.get_n_vertices() != graph.get_cons_weights_count()) 
+                throw std::invalid_argument("Number of constraint weights does not match number of vertices");
             objective_.x = std::vector<int>(graph.get_n_vertices(), 1);
             objective_.y = evaluate(objective_.x);
         }
