@@ -24,8 +24,11 @@ public:
 
     std::optional<double> operator()(const logger::Info &) const override
     {
-        if (py::hasattr(container_, attribute_.c_str()))
-            return std::make_optional<double>(PyFloat_AsDouble(container_.attr(attribute_.c_str()).ptr()));
+        if (py::hasattr(container_, attribute_.c_str())){
+            auto pyobj = container_.attr(attribute_.c_str()).ptr();
+            if (pyobj != Py_None)
+                return std::make_optional<double>(PyFloat_AsDouble(pyobj));
+        }
         return {};
     }
 };

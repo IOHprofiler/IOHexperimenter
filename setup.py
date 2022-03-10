@@ -168,7 +168,7 @@ atexit.register(generate_docs)
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 
-__version__ = "0.3.2.6"
+__version__ = "0.3.2.7.2"
 gh_ref = os.environ.get("GITHUB_REF")
 if gh_ref:
     *_, tag = gh_ref.split("/")
