@@ -18,9 +18,41 @@ void solver(const std::shared_ptr<ioh::problem::Integer> p)
 //Run an experiment on graph problems
 int main()
 {
-    const auto b = std::make_shared<ioh::logger::Analyzer>();
-    const auto suite =
-        ioh::suite::SuiteRegistry<ioh::problem::Integer>::instance().create("PBO", {101, 102}, {1, 3}, {1});
-    ioh::Experimenter<ioh::problem::Integer> f(suite, b, solver, 10);
-    f.run();
+    // Max Vertex Cover
+    ioh::problem::read_meta_list_graph(true, "example_list_maxvertexcover");
+    std::vector<std::shared_ptr<ioh::problem::Integer>> problems = {
+        std::make_shared<ioh::problem::pbo::MaxVertexCover>(1), std::make_shared<ioh::problem::pbo::MaxVertexCover>(2)
+    };
+    for (auto p : problems)
+    {
+        auto b = ioh::logger::Analyzer({ioh::trigger::on_improvement},
+                                       {}, // no additional properties
+                                       fs::current_path(), // path to store data
+                                       "maxvertex_"+std::to_string(p->meta_data().instance));
+        p->attach_logger(b);
+        for (auto i = 0; i < 10; i++)
+        {
+            solver(p);
+            p->reset();
+        }
+    }
+
+    // Max Cut
+    ioh::problem::read_meta_list_graph(true, "example_list_maxcut");
+    problems = std::vector<std::shared_ptr<ioh::problem::Integer>>({
+        std::make_shared<ioh::problem::pbo::MaxCut>(1), std::make_shared<ioh::problem::pbo::MaxCut>(2)
+    });
+    for (auto p : problems)
+    {
+        auto b = ioh::logger::Analyzer({ioh::trigger::on_improvement},
+                                       {}, // no additional properties
+                                       fs::current_path(), // path to store data
+                                       "maxcut_" + std::to_string(p->meta_data().instance));
+        p->attach_logger(b);
+        for (auto i = 0; i < 10; i++)
+        {
+            solver(p);
+            p->reset();
+        }
+    }
 }

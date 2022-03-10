@@ -30,3 +30,6 @@
 #include "pbo/graph_problem.hpp"
 #include "pbo/max_vertex_cover.hpp"
 #include "pbo/max_cut.hpp"
+#include "pbo/max_influence.hpp"
+#include "pbo/max_cut.hpp"
+#include "pbo/pack_while_travel.hpp"

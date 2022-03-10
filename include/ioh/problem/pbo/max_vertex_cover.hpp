@@ -39,6 +39,7 @@ namespace ioh::problem::pbo
                 result = graph.get_cons_weight_limit() - cons_weight;
             return result;
         }
+        double transform_objectives(const double y) override { return y; }
 
     public:
         MaxVertexCover(const int instance, const int n_variables) :

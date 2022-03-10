@@ -6,7 +6,7 @@
 
 namespace ioh::problem
 {
-    std::vector<std::vector<std::string>> file_list;
+    std::vector<std::vector<std::string>> meta_list_graph;
     class GraphInstance
     {
     protected:
@@ -27,9 +27,9 @@ namespace ioh::problem
         double get_cons_weight_limit() const { return cons_weight_limit; }
         int get_adj_vertex(const int vertex, const int neighbor) const { return adj_array[vertex][neighbor]; }
         std::vector<int> const &get_neighbors(const int vertex) const { return adj_array[vertex]; }
-        double get_edge_weight(const int in_vertex, const int out_vertex) const 
+        double get_edge_weight(const int in_vertex, const int out_neighbor_index) const 
         {
-            return edge_weights[in_vertex][out_vertex];
+            return edge_weights[in_vertex][out_neighbor_index];
         }
         double get_vertex_weight(const int vertex) const { return vertex_weights[vertex]; }
         double get_cons_weight(const int index) const { return cons_weights[index]; }
@@ -134,8 +134,8 @@ namespace ioh::problem
         }
         // Instantiate graph instance object via id
         GraphInstance(const int instance) :
-            GraphInstance(&file_list[instance][0], &file_list[instance][1], &file_list[instance][2],
-                          &file_list[instance][3])
+            GraphInstance(&meta_list_graph[instance][0], &meta_list_graph[instance][1], &meta_list_graph[instance][2],
+                          &meta_list_graph[instance][3])
         {
         }
     };
@@ -144,7 +144,7 @@ namespace ioh::problem
     // Read list of graph instances to load
     int read_meta_list_graph(const bool reread = false, const std::string &path_to_meta_list_graph = "example_list")
     {
-        if (file_list.empty() || reread)// Only read if unread, or forced reread
+        if (meta_list_graph.empty() || reread)// Only read if unread, or forced reread
         {
             std::vector<std::vector<std::string>> l{};
             std::vector<GraphInstance *> g{};
@@ -165,10 +165,10 @@ namespace ioh::problem
                 l.push_back(entry);
                 g.push_back(nullptr);
             }
-            file_list = l;
+            meta_list_graph = l;
             graph_list = g;
         }
-        return file_list.size();
+        return meta_list_graph.size();
     }
 
     // Get dimensions from graph instances, and load these if not yet loaded
@@ -179,7 +179,7 @@ namespace ioh::problem
         for (auto id : instances)
         {
             if (id >= list_size)
-                dimensions.push_back(-1);
+                dimensions.push_back(-1);// Instance not in meta list
             else {
                 if (graph_list[id] == nullptr || reread)// Only read if unread, or forced reread
                     graph_list[id] = new GraphInstance(id);
