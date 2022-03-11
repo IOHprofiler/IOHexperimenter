@@ -42,7 +42,7 @@ namespace ioh::problem::pbo
         double transform_objectives(const double y) override { return y; }
 
     public:
-        MaxVertexCover(const int instance, const int n_variables) :
+        MaxVertexCover(const int instance, const int n_variables = 1) :
             GraphProblem(
                 101, // problem id, which will be overwritten when registering this class in all pseudo-Boolean problems
                 instance, // the instance id

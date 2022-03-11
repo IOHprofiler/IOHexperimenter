@@ -18,7 +18,7 @@ namespace ioh::problem::pbo
                 is_activated[selected] = true;// Activate seeded nodes
             }
             double total = 0;
-            std::queue<int> visits{seed};// Queue for BFS, simulate in chronological order
+            std::queue<int> visits{std::deque<int>(seed.begin(), seed.end())}; // Queue for BFS, simulate in chronological order
             while (!visits.empty())// Terminate when no more spreading
             {
                 int currentIndex = visits.front();
@@ -57,7 +57,7 @@ namespace ioh::problem::pbo
             }
             if (cons_weight > graph.get_cons_weight_limit()) // If the weight limit is exceeded (violating constraint),
                                                              // return a penalized value
-                return = graph.get_cons_weight_limit() - cons_weight;
+                return graph.get_cons_weight_limit() - cons_weight;
             double result = 0;
             int repetitions = 100;
             for (auto i = repetitions; i > 0; i--)
@@ -68,7 +68,7 @@ namespace ioh::problem::pbo
         }
 
     public:
-        MaxInfluence(const int instance, const int n_variables) :
+        MaxInfluence(const int instance, const int n_variables = 1) :
             GraphProblem(
                 103, // problem id, which will be overwritten when registering this class in all pseudo-Boolean problems
                 instance, // the instance id
@@ -76,8 +76,8 @@ namespace ioh::problem::pbo
                 "MaxInfluence" // problem name
             )
         {
-            if (graph.get_n_vertices() != graph.get_cons_weights_count())
-                throw std::invalid_argument("Number of constraint weights does not match number of vertices");
+            /*if (graph.get_n_vertices() != graph.get_cons_weights_count())
+                throw std::invalid_argument("Number of constraint weights does not match number of vertices");*/
             objective_.x = std::vector<int>(graph.get_n_vertices(), 1);
             objective_.y = evaluate(objective_.x);
         }

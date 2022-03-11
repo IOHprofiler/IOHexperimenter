@@ -48,7 +48,7 @@ namespace ioh::problem::pbo
         }
 
     public:
-        MaxCut(const int instance, const int n_variables) :
+        MaxCut(const int instance, const int n_variables = 1) :
             GraphProblem(
                 102, // problem id, which will be overwritten when registering this class in all pseudo-Boolean problems
                 instance, // the instance id

@@ -16,6 +16,10 @@ void solver(const std::shared_ptr<ioh::problem::Integer> p)
 }
 
 //Run an experiment on graph problems
+//Currently, loggers don't differentiate by instance id, data from runs on different
+//instances of the same dimension and problem are written into the same file.
+//For now, separate loggers for different instances are used instead of suite.
+//This is not ideal, clearly.
 int main()
 {
     // Max Vertex Cover
@@ -48,6 +52,23 @@ int main()
                                        {}, // no additional properties
                                        fs::current_path(), // path to store data
                                        "maxcut_" + std::to_string(p->meta_data().instance));
+        p->attach_logger(b);
+        for (auto i = 0; i < 10; i++)
+        {
+            solver(p);
+            p->reset();
+        }
+    }
+
+    // Pack While Travel
+    ioh::problem::read_meta_list_graph(true, "example_list_pwt");
+    problems = std::vector<std::shared_ptr<ioh::problem::Integer>>({std::make_shared<ioh::problem::pbo::PackWhileTravel>(1),
+                                                             std::make_shared<ioh::problem::pbo::PackWhileTravel>(2)});
+    for (auto p : problems)
+    {
+        auto b = ioh::logger::Analyzer({ioh::trigger::on_improvement}, {}, // no additional properties
+                                       fs::current_path(), // path to store data
+                                       "pwt_" + std::to_string(p->meta_data().instance));
         p->attach_logger(b);
         for (auto i = 0; i < 10; i++)
         {
