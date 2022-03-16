@@ -141,7 +141,8 @@ namespace ioh::problem
     };
     std::vector<GraphInstance *> graph_list;
 
-    // Read list of graph instances to load
+    // Read list of graph instances to load, one entry per line
+    // Each entry is formatted with {Edge list}|[Edge weights]|[Vertex weights]|[Constraint weights]
     int read_meta_list_graph(const bool reread = false, const std::string &path_to_meta_list_graph = "example_list")
     {
         if (meta_list_graph.empty() || reread)// Only read if unread, or forced reread
@@ -194,7 +195,10 @@ namespace ioh::problem
     {
     protected:
         const ioh::problem::GraphInstance &graph;
-
+        //! Variables transformation method
+        std::vector<int> transform_variables(std::vector<int> x) override { return x; }
+        //! Objectives transformation method
+        double transform_objectives(const double y) override { return y; }
     public:
         /**
          * @brief Construct a new Graph object

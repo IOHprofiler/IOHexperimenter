@@ -12,13 +12,13 @@ namespace ioh::problem::pbo
         {
             double result = 0, cons_weight = 0;
             int index = 0;
-            for (const int &selected : x)
+            for (auto &selected : x)
             { // Iterate through 0-1 values
                 if (selected >= 1)
                 { // See if the vertex is selected
                     cons_weight += graph.get_cons_weight(index); // Add weight
                     int subindex = 0;
-                    for (int neighbor : graph.get_neighbors(index))
+                    for (auto neighbor : graph.get_neighbors(index))
                     { // If the neighbors are not selected, add edge weights to the objective value
                         if (x[neighbor] == 0)
                         {
@@ -30,7 +30,7 @@ namespace ioh::problem::pbo
                 else if (graph.get_is_digraph())
                 { // In digraph case, check unselected vertex as well
                     int subindex = 0;
-                    for (int neighbor : graph.get_neighbors(index))
+                    for (auto neighbor : graph.get_neighbors(index))
                     { // If the neighbors are selected, substract edge weights from the objective value
                         if (x[neighbor] == 1)
                         {

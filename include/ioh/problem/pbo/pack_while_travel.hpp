@@ -101,7 +101,12 @@ namespace ioh::problem::pbo
             }
             return n_items;// Dimension is number of items
         }
+
     protected:
+        //! Variables transformation method
+        std::vector<int> transform_variables(std::vector<int> x) override { return x; }
+        //! Objectives transformation method
+        double transform_objectives(const double y) override { return y; }
         // [mandatory] The evaluate method is mandatory to implement
         double evaluate(const std::vector<int> &x) override
         { 

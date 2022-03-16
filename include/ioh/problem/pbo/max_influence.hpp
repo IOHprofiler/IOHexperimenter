@@ -13,7 +13,7 @@ namespace ioh::problem::pbo
         double random_spread_count(const std::vector<int> &seed)
         {
             bool *is_activated = new bool[graph.get_n_vertices()]{0};
-            for (const int &selected : seed)
+            for (auto &selected : seed)
             {
                 is_activated[selected] = true;// Activate seeded nodes
             }
@@ -24,7 +24,7 @@ namespace ioh::problem::pbo
                 int currentIndex = visits.front();
                 visits.pop();
                 int subIndex = 0;
-                for (const int &neighbor : graph.get_neighbors(currentIndex))// 2-way spread if undirected
+                for (auto &neighbor : graph.get_neighbors(currentIndex))// 2-way spread if undirected
                 {// Check if not already activated and spreading successfully
                     if (!is_activated[neighbor] &&
                         ioh::common::random::real() <= graph.get_edge_weight(currentIndex, subIndex))
@@ -45,7 +45,7 @@ namespace ioh::problem::pbo
             double cons_weight = 0, seed_weight = 0;
             int index = 0;
             std::vector<int> seedIndex{};
-            for (const int &selected : x)
+            for (auto &selected : x)
             { // Iterate through 0-1 values
                 if (selected >= 1)
                 { // See if the vertex is selected
