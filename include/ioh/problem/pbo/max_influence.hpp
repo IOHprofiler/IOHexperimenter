@@ -43,7 +43,7 @@ namespace ioh::problem::pbo
         double evaluate(const std::vector<int> &x) override
         {
             double cons_weight = 0, seed_weight = 0;
-            int index = 0;
+            int index = 0, count = 0;
             std::vector<int> seedIndex{};
             for (auto &selected : x)
             { // Iterate through 0-1 values
@@ -55,6 +55,7 @@ namespace ioh::problem::pbo
                 }
                 index++; // Follow the current vertex by moving index, regardless of selection
             }
+            cons_weight += sqrt(count) * graph.get_chance_cons_factor();
             if (cons_weight > graph.get_cons_weight_limit()) // If the weight limit is exceeded (violating constraint),
                                                              // return a penalized value
                 return graph.get_cons_weight_limit() - cons_weight;

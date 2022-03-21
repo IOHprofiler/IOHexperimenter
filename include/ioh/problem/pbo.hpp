@@ -28,7 +28,7 @@
 #include "pbo/one_max_ruggedness3.hpp"
 
 #include "pbo/graph_problem.hpp"
-#include "pbo/max_vertex_cover.hpp"
+#include "pbo/max_coverage.hpp"
 #include "pbo/max_cut.hpp"
 #include "pbo/max_influence.hpp"
 #include "pbo/max_cut.hpp"

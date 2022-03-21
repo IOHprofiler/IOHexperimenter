@@ -18,6 +18,7 @@ namespace ioh::problem
             edge_weights{}; // Edge weights in adjacency array form, must be paired with adj_array
         std::vector<double> vertex_weights{}; // Vertex weights for objective function
         std::vector<double> cons_weights{}; // Vertex weights for constraint function
+        double chance_cons_factor = 0; // chance constraint factor c, to be added to constraint value as c*sqrt(|x|)
 
     public:
         // Getters
@@ -34,6 +35,10 @@ namespace ioh::problem
         double get_vertex_weight(const int vertex) const { return vertex_weights[vertex]; }
         double get_cons_weight(const int index) const { return cons_weights[index]; }
         int get_cons_weights_count() const { return cons_weights.size(); }
+        double get_chance_cons_factor() const { return chance_cons_factor; }
+
+        // Setters
+        void set_chance_cons_factor(double new_factor) { chance_cons_factor = new_factor; }
 
         /**
          * @brief Read a graph object with optional weights
