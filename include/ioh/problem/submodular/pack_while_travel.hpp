@@ -18,37 +18,37 @@ namespace ioh
                 std::vector<std::vector<double>> *weights, *profits;
                 std::vector<std::vector<int>> *index_map;
 
-                int read_meta_list_graph(const bool reread = false,
-                                         const std::string &path_to_meta_list_graph = "example_list")
-                {
-                    if (meta_list_graph.empty() || reread) // Only read if unread, or forced reread
-                    {
-                        std::vector<std::vector<std::string>> l{};
-                        std::vector<std::shared_ptr<GraphInstance>> g{};
-                        std::ifstream list_data(path_to_meta_list_graph);
-                        if (!list_data)
-                            throw std::invalid_argument("Fail to open v_weights: " + (path_to_meta_list_graph));
-                        std::string str{};
-                        while (std::getline(list_data, str))
-                        {
-                            if (str.empty()) // Skip over empty lines
-                                continue;
-                            std::vector<std::string> entry(4, "");
-                            std::string rstr;
-                            std::istringstream iss(str);
-                            int index = 0;
-                            while (std::getline(iss, rstr, '|')) // File paths are delimited by '|'
-                            {
-                                entry[index++] = rstr.c_str();
-                            }
-                            l.push_back(entry);
-                            g.push_back(nullptr);
-                        }
-                        meta_list_graph = l;
-                        graph_list = g;
-                    }
-                    return meta_list_graph.size();
-                }
+                // int read_meta_list_graph(const bool reread = false,
+                //                          const std::string &path_to_meta_list_graph = "example_list")
+                // {
+                //     if (meta_list_graph.empty() || reread) // Only read if unread, or forced reread
+                //     {
+                //         std::vector<std::vector<std::string>> l{};
+                //         std::vector<std::shared_ptr<GraphInstance>> g{};
+                //         std::ifstream list_data(path_to_meta_list_graph);
+                //         if (!list_data)
+                //             throw std::invalid_argument("Fail to open v_weights: " + (path_to_meta_list_graph));
+                //         std::string str{};
+                //         while (std::getline(list_data, str))
+                //         {
+                //             if (str.empty()) // Skip over empty lines
+                //                 continue;
+                //             std::vector<std::string> entry(4, "");
+                //             std::string rstr;
+                //             std::istringstream iss(str);
+                //             int index = 0;
+                //             while (std::getline(iss, rstr, '|')) // File paths are delimited by '|'
+                //             {
+                //                 entry[index++] = rstr.c_str();
+                //             }
+                //             l.push_back(entry);
+                //             g.push_back(nullptr);
+                //         }
+                //         meta_list_graph = l;
+                //         graph_list = g;
+                //     }
+                //     return meta_list_graph.size();
+                // }
 
                 // Read TTP instance from file, convert to PWT instance, return problem dimension
                 int read_instance_by_id(const int instance)
@@ -58,6 +58,8 @@ namespace ioh
                                                // return a valid dummy size
                         return 1;
                     std::ifstream ttp_data(meta_list_pwt[instance]);
+                    if (!ttp_data)
+                            throw std::invalid_argument("Fail to open v_weights: " + (meta_list_pwt[instance]));
                     std::string str, tstr;
                     int index_line = 0;
                     while (std::getline(ttp_data, str) && index_line++ < 2) // Skip 2 lines, to line 3
@@ -134,6 +136,8 @@ namespace ioh
                     {
                         std::vector<std::string> l{};
                         std::ifstream list_data(path_to_meta_list_instance);
+                        if (!list_data)
+                            throw std::invalid_argument("Fail to open v_weights: " + (path_to_meta_list_instance));
                         std::string str{};
                         while (std::getline(list_data, str))
                         {
@@ -189,7 +193,7 @@ namespace ioh
                             // // dimensions "PackWhileTravel" // problem name
                     )
                 {
-                    int max_intanstance = read_meta_list_graph(true, instance_file);
+                    int max_intanstance = read_meta_list_instance(true, instance_file);
                     if (instance > max_intanstance)
                         throw std::invalid_argument("The required instance id exceeds the limit.");
                     meta_data_.n_variables = read_instance_by_id(instance - 1);
