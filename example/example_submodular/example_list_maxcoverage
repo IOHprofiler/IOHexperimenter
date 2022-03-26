@@ -1,0 +1,12 @@
+example_graphs/example_graph0|||example_graphs/example_graph0_c_unweighted
+example_graphs/example_graph1|||example_graphs/example_graph1_c_unweighted
+example_graphs/example_graph2|||example_graphs/example_graph2_c_unweighted
+example_graphs/example_graph3|||example_graphs/example_graph3_c_unweighted
+example_graphs/example_graph0|||example_graphs/example_graph0_c_linear
+example_graphs/example_graph1|||example_graphs/example_graph1_c_linear
+example_graphs/example_graph2|||example_graphs/example_graph2_c_linear
+example_graphs/example_graph3|||example_graphs/example_graph3_c_linear
+example_graphs/example_graph0|||example_graphs/example_graph0_c_quadratic
+example_graphs/example_graph1|||example_graphs/example_graph1_c_quadratic
+example_graphs/example_graph2|||example_graphs/example_graph2_c_quadratic
+example_graphs/example_graph3|||example_graphs/example_graph3_c_quadratic
