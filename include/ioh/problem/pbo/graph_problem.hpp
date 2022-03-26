@@ -53,6 +53,8 @@ namespace ioh::problem
                       const std::string *v_weights = nullptr, const std::string *c_weights = nullptr)
         {
             // Read edge data (adjacency)
+            if (!edge_file)
+                return;
             std::ifstream edge_data((*edge_file));
             std::string str;
             std::getline(edge_data, str);
@@ -201,7 +203,7 @@ namespace ioh::problem
     class Graph : public PBO
     {
     protected:
-        const ioh::problem::GraphInstance &graph;
+        const ioh::problem::GraphInstance *graph;
         //! Variables transformation method
         std::vector<int> transform_variables(std::vector<int> x) override { return x; }
         //! Objectives transformation method
@@ -216,7 +218,7 @@ namespace ioh::problem
          */
         Graph(const int problem_id, const int instance, const int n_variables, const std::string &name) :
             PBO(problem_id, instance, n_variables, name), // Assuming graph list is already instantiated
-            graph(*graph_list[instance-1])
+            graph(graph_list.empty() || graph_list.size() < instance ? nullptr: graph_list[instance-1])
         {
         }
     };

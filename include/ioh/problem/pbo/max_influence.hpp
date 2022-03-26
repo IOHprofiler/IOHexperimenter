@@ -12,7 +12,7 @@ namespace ioh::problem::pbo
         // Simulate Independent Cascade Model with seed and return weighted sum of activated nodes other than seeds
         double random_spread_count(const std::vector<int> &seed)
         {
-            bool *is_activated = new bool[graph.get_n_vertices()]{0};
+            bool *is_activated = new bool[graph->get_n_vertices()]{0};
             for (auto &selected : seed)
             {
                 is_activated[selected] = true;// Activate seeded nodes
@@ -24,14 +24,14 @@ namespace ioh::problem::pbo
                 int currentIndex = visits.front();
                 visits.pop();
                 int subIndex = 0;
-                for (auto &neighbor : graph.get_neighbors(currentIndex))// 2-way spread if undirected
+                for (auto &neighbor : graph->get_neighbors(currentIndex))// 2-way spread if undirected
                 {// Check if not already activated and spreading successfully
                     if (!is_activated[neighbor] &&
-                        ioh::common::random::real() <= graph.get_edge_weight(currentIndex, subIndex))
+                        ioh::common::random::real() <= graph->get_edge_weight(currentIndex, subIndex))
                     {
                         is_activated[neighbor] = true;// Avoid redundant activation
                         visits.push(neighbor);// Cascading
-                        total += graph.get_vertex_weight(neighbor);// Add weight
+                        total += graph->get_vertex_weight(neighbor);// Add weight
                     }
                     subIndex++;
                 }
@@ -49,16 +49,16 @@ namespace ioh::problem::pbo
             { // Iterate through 0-1 values
                 if (selected >= 1)
                 { // See if the vertex is selected
-                    cons_weight += graph.get_cons_weight(index); // Add weight
+                    cons_weight += graph->get_cons_weight(index); // Add weight
                     seedIndex.push_back(index);
-                    seed_weight += graph.get_vertex_weight(index);
+                    seed_weight += graph->get_vertex_weight(index);
                 }
                 index++; // Follow the current vertex by moving index, regardless of selection
             }
-            cons_weight += sqrt(count) * graph.get_chance_cons_factor();
-            if (cons_weight > graph.get_cons_weight_limit()) // If the weight limit is exceeded (violating constraint),
+            cons_weight += sqrt(count) * graph->get_chance_cons_factor();
+            if (cons_weight > graph->get_cons_weight_limit()) // If the weight limit is exceeded (violating constraint),
                                                              // return a penalized value
-                return graph.get_cons_weight_limit() - cons_weight;
+                return graph->get_cons_weight_limit() - cons_weight;
             double result = 0;
             int repetitions = 100;
             for (auto i = repetitions; i > 0; i--)
@@ -73,13 +73,13 @@ namespace ioh::problem::pbo
             GraphProblem(
                 103, // problem id, which will be overwritten when registering this class in all pseudo-Boolean problems
                 instance, // the instance id
-                get_dimensions_from_ids({instance - 1})[0], // dimensions
+                get_dimensions_from_ids({instance - 1}, false, true)[0], // dimensions
                 "MaxInfluence" // problem name
             )
         {
-            /*if (graph.get_n_vertices() != graph.get_cons_weights_count())
+            /*if (graph->get_n_vertices() != graph->get_cons_weights_count())
                 throw std::invalid_argument("Number of constraint weights does not match number of vertices");
-            objective_.x = std::vector<int>(graph.get_n_vertices(), 1);
+            objective_.x = std::vector<int>(graph->get_n_vertices(), 1);
             objective_.y = evaluate(objective_.x);*/
         }
     };

@@ -61,9 +61,10 @@ double chernoff_cons_factor(const double delta = 0, const double alpha = 1)
 //This is not ideal, clearly.
 int main()
 {
+    int repetition = 10;
     // Max Vertex Cover
     int instance_number = ioh::problem::read_meta_list_graph(
-        true, std::filesystem::current_path().string() + "\\" + "example_list_maxcoverage");
+        true, fs::current_path().string() + "\\" + "example_list_maxcoverage");
     std::vector<std::shared_ptr<ioh::problem::Integer>> problems = {};
     for (auto a = 0; a < instance_number; a++)
         problems.push_back(std::make_shared<ioh::problem::pbo::MaxCoverage>(a + 1));
@@ -76,7 +77,7 @@ int main()
                                        fs::current_path(), // path to store data
                                        "maxcoverage_"+std::to_string(p->meta_data().instance));
         p->attach_logger(b);
-        for (auto i = 0; i < 10; i++)
+        for (auto i = 0; i < repetition; i++)
         {
             solver(p);
             p->reset();
@@ -85,7 +86,7 @@ int main()
 
     // Max Cut
     instance_number = ioh::problem::read_meta_list_graph(
-        true, std::filesystem::current_path().string() + "\\" + "example_list_maxcut");
+        true, fs::current_path().string() + "\\" + "example_list_maxcut");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
         problems.push_back(std::make_shared<ioh::problem::pbo::MaxCut>(a + 1));
@@ -96,7 +97,7 @@ int main()
                                        fs::current_path(), // path to store data
                                        "maxcut_" + std::to_string(p->meta_data().instance));
         p->attach_logger(b);
-        for (auto i = 0; i < 10; i++)
+        for (auto i = 0; i < repetition; i++)
         {
             solver(p);
             p->reset();
@@ -105,7 +106,7 @@ int main()
 
     // Max Influence
     instance_number = ioh::problem::read_meta_list_graph(
-        true, std::filesystem::current_path().string() + "\\" + "example_list_maxinfluence");
+        true, fs::current_path().string() + "\\" + "example_list_maxinfluence");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
         problems.push_back(std::make_shared<ioh::problem::pbo::MaxInfluence>(a + 1));
@@ -117,7 +118,7 @@ int main()
                                        fs::current_path(), // path to store data
                                        "maxinfluence_" + std::to_string(p->meta_data().instance));
         p->attach_logger(b);
-        for (auto i = 0; i < 10; i++)
+        for (auto i = 0; i < repetition; i++)
         {
             solver(p);
             p->reset();
@@ -126,7 +127,7 @@ int main()
 
     // Pack While Travel
     instance_number = ioh::problem::pbo::read_meta_list_instance(
-        true, std::filesystem::current_path().string() + "\\" + "example_list_pwt");
+        true, fs::current_path().string() + "\\" + "example_list_pwt");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
         problems.push_back(std::make_shared<ioh::problem::pbo::PackWhileTravel>(a + 1));
@@ -136,7 +137,7 @@ int main()
                                        fs::current_path(), // path to store data
                                        "pwt_" + std::to_string(p->meta_data().instance));
         p->attach_logger(b);
-        for (auto i = 0; i < 10; i++)
+        for (auto i = 0; i < repetition; i++)
         {
             solver(p);
             p->reset();
