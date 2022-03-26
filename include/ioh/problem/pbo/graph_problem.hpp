@@ -148,7 +148,9 @@ namespace ioh::problem
 
     // Read list of graph instances to load, one entry per line
     // Each entry is formatted with {Edge list}|[Edge weights]|[Vertex weights]|[Constraint weights]
-    int read_meta_list_graph(const bool reread = false, const std::string &path_to_meta_list_graph = "example_list")
+    int read_meta_list_graph(const bool reread = false,
+                             const std::string &path_to_meta_list_graph = std::filesystem::current_path().string() +
+                                 "\\" + "example_list")
     {
         if (meta_list_graph.empty() || reread)// Only read if unread, or forced reread
         {
@@ -185,7 +187,7 @@ namespace ioh::problem
         for (auto id : instances)
         {
             if (id >= list_size)
-                dimensions.push_back(-1);// Instance not in meta list
+                dimensions.push_back(1);// Instance not in meta list, return a valid dummy size
             else {
                 if (graph_list[id] == nullptr || reread)// Only read if unread, or forced reread
                     graph_list[id] = new GraphInstance(id);

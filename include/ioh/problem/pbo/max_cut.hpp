@@ -58,10 +58,10 @@ namespace ioh::problem::pbo
                 "MaxCut" // problem name
             )
         {
-            if (graph.get_n_vertices() != graph.get_cons_weights_count())
+            /*if (graph.get_n_vertices() != graph.get_cons_weights_count())
                 throw std::invalid_argument("Number of constraint weights does not match number of vertices");
             objective_.x = std::vector<int>(graph.get_n_vertices(), 1);
-            objective_.y = evaluate(objective_.x);
+            objective_.y = evaluate(objective_.x);*/
         }
     };
 } // namespace ioh::problem::pbo

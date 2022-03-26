@@ -6,7 +6,10 @@
 namespace ioh::problem::pbo
 {
     std::vector<std::string> meta_list_pwt;
-    int read_meta_list_instance(const bool reread = false, const std::string &path_to_meta_list_instance = "example_list_pwt")
+    int
+    read_meta_list_instance(const bool reread = false,
+                            const std::string &path_to_meta_list_instance = std::filesystem::current_path().string() +
+                                "\\" + "example_list_pwt")
     {
         if (meta_list_pwt.empty() || reread) // Only read if unread, or forced reread
         {
@@ -139,7 +142,7 @@ namespace ioh::problem::pbo
                 "PackWhileTravel" // problem name
             )
         {
-            if (velocity_gap >= velocity_max || velocity_gap <= 0 || velocity_max <= 0)
+            /*if (velocity_gap >= velocity_max || velocity_gap <= 0 || velocity_max <= 0)
                 throw std::invalid_argument("Minimum velocity must be positive and smaller than maximum velocity");
             if (capacity <= 0)
                 throw std::invalid_argument("Capacity must be positive");
@@ -159,7 +162,7 @@ namespace ioh::problem::pbo
                 }
             }
             objective_.x = std::vector<int>(meta_data_.n_variables, 1);
-            objective_.y = evaluate(objective_.x);
+            objective_.y = evaluate(objective_.x);*/
         }
     };
 } // namespace ioh::problem::pbo

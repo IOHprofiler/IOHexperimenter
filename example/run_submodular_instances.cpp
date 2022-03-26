@@ -6,20 +6,20 @@
 #include "ioh/problem/problem.hpp"
 
 
-//Make sure the meta graph list file shares directory with .exe and graph data are in proper format (i.e. edge list)
-//Extract example_graphs.zip there
+//Make sure the meta list files are in the working directory and graph data are in proper format (i.e. edge list)
+//Extract example_submodular.zip there
 
 //Solver function, uses problem oracle as input
 void solver(const std::shared_ptr<ioh::problem::Integer> p)
 {
     //Random search
-    /*for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 1000; i++)
     {
         (*p)(ioh::common::random::integers(p->meta_data().n_variables, 0, 1));
-    }*/
+    }
 
     //Greedy
-    auto x = std::vector<int>(p->meta_data().n_variables, 0);
+    /*auto x = std::vector<int>(p->meta_data().n_variables, 0);
     double cur_best = (*p)(x);
     int best_index;
     do
@@ -41,7 +41,7 @@ void solver(const std::shared_ptr<ioh::problem::Integer> p)
         }
         if (best_index >= 0)
             x[best_index] = 1;
-    } while (best_index >= 0);
+    } while (best_index >= 0);*/
 }
 
 double chebyshev_cons_factor(const double delta = 0, const double alpha = 0)
@@ -62,7 +62,8 @@ double chernoff_cons_factor(const double delta = 0, const double alpha = 1)
 int main()
 {
     // Max Vertex Cover
-    int instance_number = ioh::problem::read_meta_list_graph(true, "example_list_maxcoverage");
+    int instance_number = ioh::problem::read_meta_list_graph(
+        true, std::filesystem::current_path().string() + "\\" + "example_list_maxcoverage");
     std::vector<std::shared_ptr<ioh::problem::Integer>> problems = {};
     for (auto a = 0; a < instance_number; a++)
         problems.push_back(std::make_shared<ioh::problem::pbo::MaxCoverage>(a + 1));
@@ -83,7 +84,8 @@ int main()
     }
 
     // Max Cut
-    instance_number = ioh::problem::read_meta_list_graph(true, "example_list_maxcut");
+    instance_number = ioh::problem::read_meta_list_graph(
+        true, std::filesystem::current_path().string() + "\\" + "example_list_maxcut");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
         problems.push_back(std::make_shared<ioh::problem::pbo::MaxCut>(a + 1));
@@ -102,7 +104,8 @@ int main()
     }
 
     // Max Influence
-    instance_number = ioh::problem::read_meta_list_graph(true, "example_list_maxinfluence");
+    instance_number = ioh::problem::read_meta_list_graph(
+        true, std::filesystem::current_path().string() + "\\" + "example_list_maxinfluence");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
         problems.push_back(std::make_shared<ioh::problem::pbo::MaxInfluence>(a + 1));
@@ -122,7 +125,8 @@ int main()
     }
 
     // Pack While Travel
-    instance_number = ioh::problem::read_meta_list_graph(true, "example_list_pwt");
+    instance_number = ioh::problem::pbo::read_meta_list_instance(
+        true, std::filesystem::current_path().string() + "\\" + "example_list_pwt");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
         problems.push_back(std::make_shared<ioh::problem::pbo::PackWhileTravel>(a + 1));
