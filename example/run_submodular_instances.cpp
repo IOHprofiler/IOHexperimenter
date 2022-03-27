@@ -62,11 +62,11 @@ int main()
 {
     int repetition = 10;
     // Max Vertex Cover
-    int instance_number = ioh::problem::read_meta_list_graph(
+    int instance_number = ioh::problem::submodular::Graph::read_meta_list_graph(
         true, fs::current_path().string() + "\\" + "example_list_maxcoverage");
     std::vector<std::shared_ptr<ioh::problem::Integer>> problems = {};
     for (auto a = 0; a < instance_number; a++)
-        problems.push_back(std::make_shared<ioh::problem::pbo::MaxCoverage>(a + 1));
+        problems.push_back(std::make_shared<ioh::problem::submodular::MaxCoverage>(a + 1));
     for (auto p : problems)
     {
         // Optional chance constraint factor
@@ -84,12 +84,12 @@ int main()
     }
 
     // Max Cut
-    instance_number = ioh::problem::read_meta_list_graph(
+    instance_number = ioh::problem::submodular::Graph::read_meta_list_graph(
         true, fs::current_path().string() + "\\" + "example_list_maxcut");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
-    // problems.push_back(std::make_shared<ioh::problem::pbo::MaxCut>(a + 1));
-    // for (auto p : problems)
+    problems.push_back(std::make_shared<ioh::problem::submodular::MaxCut>(a + 1));
+    for (auto p : problems)
     {
         auto b = ioh::logger::Analyzer({ioh::trigger::on_improvement},
                                        {}, // no additional properties
@@ -104,10 +104,11 @@ int main()
     }
 
     // Max Influence
-    instance_number = ioh::problem::read_meta_list_graph(true, "example_list_maxinfluence");
+    instance_number = ioh::problem::submodular::Graph::read_meta_list_graph(
+        true, fs::current_path().string() + "\\" + "example_list_maxinfluence");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
-        problems.push_back(std::make_shared<ioh::problem::pbo::MaxInfluence>(a + 1));
+        problems.push_back(std::make_shared<ioh::problem::submodular::MaxInfluence>(a + 1));
     for (auto p : problems)
     {
         // Optional chance constraint factor
@@ -124,14 +125,13 @@ int main()
     }
 
     // Pack While Travel
-    instance_number = ioh::problem::pbo::read_meta_list_instance(
+    instance_number = ioh::problem::submodular::PackWhileTravel::read_meta_list_instance(
         true, fs::current_path().string() + "\\" + "example_list_pwt");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
-        problems.push_back(std::make_shared<ioh::problem::pbo::PackWhileTravel>(a + 1));
+        problems.push_back(std::make_shared<ioh::problem::submodular::PackWhileTravel>(a + 1));
     for (auto p : problems)
     {
-        auto p = std::make_shared<ioh::problem::submodular::PackWhileTravel>(a + 1,1,"example_list_pwt");
         auto b = ioh::logger::Analyzer({ioh::trigger::on_improvement}, {}, // no additional properties
                                        fs::current_path(), // path to store data
                                        "pwt_" + std::to_string(p->meta_data().instance));

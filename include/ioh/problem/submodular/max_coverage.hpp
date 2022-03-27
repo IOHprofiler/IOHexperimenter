@@ -58,6 +58,11 @@ namespace ioh
                                  "MaxCoverage", // problem name
                                  instance_file)
                 {
+                    if (!graph)
+                    {
+                        std::cout << "Null MaxCoverage instance" << std::endl;
+                        return;
+                    }
                     if (graph->get_n_vertices() != graph->get_cons_weights_count())
                         throw std::invalid_argument("Number of constraint weights does not match number of vertices");
                     objective_.x = std::vector<int>(graph->get_n_vertices(), 1);

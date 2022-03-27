@@ -138,7 +138,7 @@ namespace ioh
 
                     // Read constraint weights data (include bound at last line)
                     // if (c_weights->empty())
-                    if (c_weights != "NULL")
+                    if (c_weights == "NULL")
                         cons_weights = std::vector<double>(n_vertices, 1);
                     else
                     {
@@ -166,10 +166,12 @@ namespace ioh
                 // }
             };
 
-
+            std::vector<std::shared_ptr<GraphInstance>> graph_list;
+            std::vector<std::vector<std::string>> meta_list_graph;
             //! Graph base class
             class Graph : public Integer
             {
+            private:
             protected:
                 std::shared_ptr<GraphInstance> graph;
                 //! Variables transformation method
@@ -177,17 +179,10 @@ namespace ioh
                 //! Objectives transformation method
                 double transform_objectives(const double y) override { return y; }
 
-                std::vector<std::vector<std::string>> meta_list_graph;
-
             public:
-                /**
-                 * @brief Construct a new Graph object
-                 *
-                 * @param problem_id The id of the problem
-                 * @param instance The instance of the problem
-                 * @param name the name of the problem
-                 */
-                int read_meta_list_graph(const bool reread = false,
+                // Read list of graph instances to load, one entry per line
+                // Each entry is formatted with {Edge list}|[Edge weights]|[Vertex weights]|[Constraint weights]
+                static int read_meta_list_graph(const bool reread = false,
                                          const std::string &path_to_meta_list_graph = "example_list")
                 {
                     if (meta_list_graph.empty() || reread) // Only read if unread, or forced reread
@@ -196,7 +191,11 @@ namespace ioh
                         std::vector<std::shared_ptr<GraphInstance>> g{};
                         std::ifstream list_data(path_to_meta_list_graph);
                         if (!list_data)
-                            throw std::invalid_argument("Fail to open v_weights: " + (path_to_meta_list_graph));
+                        {
+                            std::cout << "Fail to open v_weights: " << path_to_meta_list_graph << std::endl;
+                            std::cout << "Skip reading meta list file" << std::endl;
+                            return 0;
+                        }
                         std::string str{};
                         while (std::getline(list_data, str))
                         {
@@ -220,7 +219,7 @@ namespace ioh
                 }
 
                 // Get dimensions from graph instances, and load these if not yet loaded
-                std::vector<int> get_dimensions_from_ids(const std::vector<int> &instances, const bool is_edge = false,
+                static std::vector<int> get_dimensions_from_ids(const std::vector<int> &instances, const bool is_edge = false,
                                                          const bool reread = false)
                 { // instances are 0-indexed
                     int list_size = read_meta_list_graph();
@@ -241,7 +240,13 @@ namespace ioh
                     }
                     return dimensions;
                 }
-
+                /**
+                 * @brief Construct a new Graph object
+                 *
+                 * @param problem_id The id of the problem
+                 * @param instance The instance of the problem
+                 * @param name the name of the problem
+                 */
                 Graph(const int problem_id, const int instance, const int n_variables, const std::string &name,
                       const std::string &instance_file) :
                     // Integer(problem_id, instance, n_variables, name) // Assuming graph list is already instantiated
@@ -251,17 +256,17 @@ namespace ioh
                                      common::OptimizationType::Maximization),
                             Constraint<int>(n_variables, 0, 1))
                 {
-                    int max_intanstance = read_meta_list_graph(true, instance_file.c_str());
+                    int max_intanstance = read_meta_list_graph(false, instance_file.c_str());
                     if (instance > max_intanstance)
-                        throw std::invalid_argument("The required instance id exceeds the limit.");
+                    {
+                        std::cout << "The required instance id exceeds the limit. Skip creating instance oracle."
+                                  << std::endl;
+                        return;
+                    }
                     meta_data_.n_variables = get_dimensions_from_ids({instance - 1})[0];
                     graph = graph_list[instance - 1];
                 }
 
-                std::vector<std::shared_ptr<GraphInstance>> graph_list;
-
-                // Read list of graph instances to load, one entry per line
-                // Each entry is formatted with {Edge list}|[Edge weights]|[Vertex weights]|[Constraint weights]
             };
 
             /**

@@ -11,6 +11,7 @@ namespace ioh
         namespace submodular
 
         {
+            std::vector<std::string> meta_list_pwt;
             class PackWhileTravel final : public Integer
             {
                 double velocity_gap, velocity_max, capacity, penalty;
@@ -129,31 +130,7 @@ namespace ioh
                     return n_items; // Dimension is number of items
                 }
 
-                int read_meta_list_instance(const bool reread = false,
-                                            const std::string &path_to_meta_list_instance = "example_list_pwt")
-                {
-                    if (meta_list_pwt.empty() || reread) // Only read if unread, or forced reread
-                    {
-                        std::vector<std::string> l{};
-                        std::ifstream list_data(path_to_meta_list_instance);
-                        if (!list_data)
-                            throw std::invalid_argument("Fail to open v_weights: " + (path_to_meta_list_instance));
-                        std::string str{};
-                        while (std::getline(list_data, str))
-                        {
-                            if (str.empty()) // Skip over empty lines
-                                continue;
-                            l.push_back(str);
-                        }
-                        meta_list_pwt = l;
-                    }
-                    return meta_list_pwt.size();
-                }
-
             protected:
-                std::vector<std::vector<std::string>> meta_list_graph;
-                std::vector<std::string> meta_list_pwt;
-                std::vector<std::shared_ptr<GraphInstance>> graph_list;
                 //! Variables transformation method
                 std::vector<int> transform_variables(std::vector<int> x) override { return x; }
                 //! Objectives transformation method
@@ -182,6 +159,32 @@ namespace ioh
                 }
 
             public:
+                // Read instance list from file
+                static int read_meta_list_instance(const bool reread = false,
+                                                   const std::string &path_to_meta_list_instance = "example_list_pwt")
+                {
+                    if (meta_list_pwt.empty() || reread) // Only read if unread, or forced reread
+                    {
+                        std::vector<std::string> l{};
+                        std::ifstream list_data(path_to_meta_list_instance);
+                        if (!list_data)
+                        {
+                            std::cout << "Fail to open v_weights: " << path_to_meta_list_instance << std::endl;
+                            std::cout << "Skip reading meta list file" << std::endl;
+                            return 0;
+                        }
+                        std::string str{};
+                        while (std::getline(list_data, str))
+                        {
+                            if (str.empty()) // Skip over empty lines
+                                continue;
+                            l.push_back(str);
+                        }
+                        meta_list_pwt = l;
+                    }
+                    return meta_list_pwt.size();
+                }
+
                 PackWhileTravel(const int instance = 1, const int n_variables = 1,
                                 const std::string &instance_file = "example_list_pwt") :
                     Integer(MetaData(4, instance, "PackWhileTravel",
@@ -193,7 +196,7 @@ namespace ioh
                             // // dimensions "PackWhileTravel" // problem name
                     )
                 {
-                    int max_intanstance = read_meta_list_instance(true, instance_file);
+                    int max_intanstance = read_meta_list_instance(false, instance_file);
                     if (instance > max_intanstance)
                         throw std::invalid_argument("The required instance id exceeds the limit.");
                     meta_data_.n_variables = read_instance_by_id(instance - 1);
