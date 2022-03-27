@@ -3,7 +3,6 @@
 #include <cmath>
 
 #include "ioh.hpp"
-#include "ioh/problem/problem.hpp"
 
 
 //Make sure the meta list files are in the working directory and graph data are in proper format (i.e. edge list)
@@ -13,7 +12,7 @@
 void solver(const std::shared_ptr<ioh::problem::Integer> p)
 {
     //Random search
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 100; i++)
     {
         (*p)(ioh::common::random::integers(p->meta_data().n_variables, 0, 1));
     }
@@ -89,8 +88,8 @@ int main()
         true, fs::current_path().string() + "\\" + "example_list_maxcut");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
-        problems.push_back(std::make_shared<ioh::problem::pbo::MaxCut>(a + 1));
-    for (auto p : problems)
+    // problems.push_back(std::make_shared<ioh::problem::pbo::MaxCut>(a + 1));
+    // for (auto p : problems)
     {
         auto b = ioh::logger::Analyzer({ioh::trigger::on_improvement},
                                        {}, // no additional properties
@@ -105,8 +104,7 @@ int main()
     }
 
     // Max Influence
-    instance_number = ioh::problem::read_meta_list_graph(
-        true, fs::current_path().string() + "\\" + "example_list_maxinfluence");
+    instance_number = ioh::problem::read_meta_list_graph(true, "example_list_maxinfluence");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
         problems.push_back(std::make_shared<ioh::problem::pbo::MaxInfluence>(a + 1));
@@ -133,6 +131,7 @@ int main()
         problems.push_back(std::make_shared<ioh::problem::pbo::PackWhileTravel>(a + 1));
     for (auto p : problems)
     {
+        auto p = std::make_shared<ioh::problem::submodular::PackWhileTravel>(a + 1,1,"example_list_pwt");
         auto b = ioh::logger::Analyzer({ioh::trigger::on_improvement}, {}, // no additional properties
                                        fs::current_path(), // path to store data
                                        "pwt_" + std::to_string(p->meta_data().instance));
