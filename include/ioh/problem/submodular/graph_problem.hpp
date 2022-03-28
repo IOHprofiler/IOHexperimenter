@@ -12,6 +12,7 @@ namespace ioh
     {
         namespace submodular
         {
+
             class GraphInstance
             {
             protected:
@@ -239,10 +240,21 @@ namespace ioh
                     // Integer(problem_id, instance, n_variables, name) // Assuming graph list is already instantiated
                     // graph(*graph_list[instance-1])
                     Integer(MetaData(problem_id, instance, name,
-                        read_instances_from_files(instance - 1, is_edge, instance_list_file),
+                        // read_instances_from_files(instance - 1, is_edge, instance_list_file),
+                        n_variables,
                         common::OptimizationType::Maximization),
                         Constraint<int>(n_variables, 0, 1))
                 {
+                    /// The Constraint class in Integer Constructor requires identical n_variables.
+                    /// Therefore, we assign the n_variables here calling read_instances_from_files once istead of twice.
+                    int dim = read_instances_from_files(instance - 1, is_edge, instance_list_file);
+                    if (meta_data_.n_variables != dim) {
+                        meta_data_.n_variables = dim;
+                        // Comment out the following output if you do not want to show them.
+                        // std::cerr << "The dimension defined by the user is inconsistent with the graph instance. The problem dimension is updated based on the graph instance."
+                        //               << std::endl;
+                        // std::cerr << "The dimension of problem " << meta_data_.name << " is " << meta_data_.n_variables << std::endl;
+                    }
                     if (is_null())
                     {
                         std::cout << "Invalid instance id. Skip creating instance oracle."
@@ -265,6 +277,38 @@ namespace ioh
             public:
                 using Graph::Graph;
             };
+
+
+            static std::vector<int> read_instances_from_files(const bool is_edge, const std::string &path_to_meta_list_graph = "example_list")
+            {
+                std::vector<int> d;
+                std::ifstream list_data(path_to_meta_list_graph);
+                if (!list_data)
+                {
+                    std::cout << "Fail to open v_weights: " << path_to_meta_list_graph << std::endl;
+                    std::cout << "Skip reading meta list file" << std::endl;
+                    return {};
+                }
+                std::string str{};
+                auto counter = 0;
+                while (std::getline(list_data, str))
+                {
+                    if (str.empty()) // Skip over empty lines
+                        continue;
+                    std::vector<std::string> entry(5, "NULL");
+                    std::string rstr;
+                    std::istringstream iss(str);
+                    int index = 0;
+                    while (std::getline(iss, rstr, '|')) // File paths are delimited by '|'
+                    {
+                        entry[index++] = rstr.c_str();
+                    }
+                    GraphInstance graph(entry); // Pass graph object to handle
+                    d.push_back(is_edge ? graph.get_n_edges() : graph.get_n_vertices());
+                    
+                }
+                return d;
+            }
         } // namespace submodular
     } // namespace problem
 } // namespace ioh

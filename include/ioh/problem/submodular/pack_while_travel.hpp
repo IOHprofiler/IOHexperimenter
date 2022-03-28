@@ -19,30 +19,6 @@ namespace ioh
                 std::vector<std::vector<int>> *index_map;
                 bool is_initialized;
 
-                
-                // Read instance list from file
-                static std::vector<std::string>
-                read_meta_list_instance(const std::string &path_to_meta_list_instance = "example_list_pwt")
-                {
-                    std::vector<std::string> l{};
-                    std::ifstream list_data(path_to_meta_list_instance);
-                    if (!list_data)
-                    {
-                        std::cout << "Fail to instance list file for PWT: " << path_to_meta_list_instance << std::endl;
-                        std::cout << "Skip reading instance list file" << std::endl;
-                        return {};
-                    }
-                    std::string str{};
-                    while (std::getline(list_data, str))
-                    {
-                        if (str.empty()) // Skip over empty lines
-                            continue;
-                        l.push_back(str);
-                    }
-                    return l;
-                }
-
-
                 // Read TTP instance from file, convert to PWT instance, return problem dimension
                 int read_instance_by_id(const int instance, const std::string &instance_list_file)
                 {
@@ -161,11 +137,20 @@ namespace ioh
                                 const std::string &instance_list_file = "example_list_pwt") :
                     Integer(MetaData(instance + 3000000,// problem id, starting at 3000000
                         instance, "PackWhileTravel" + std::to_string(instance),
-                        read_instance_by_id(instance - 1, instance_list_file), // n_variables will be updated based on the given instance.
+                        // read_instance_by_id(instance - 1, instance_list_file), // n_variables will be updated based on the given instance.
+                        n_variables,
                         common::OptimizationType::Maximization),
                         Constraint<int>(n_variables, 0, 1)
                     )
                 {
+                    int dim = read_instance_by_id(instance - 1, instance_list_file);
+                    if (meta_data_.n_variables != dim) {
+                        meta_data_.n_variables = dim;
+                        // Comment out the following output if you do not want to show them.
+                        // std::cerr << "The dimension defined by the user is inconsistent with the graph instance. The problem dimension is updated based on the graph instance."
+                        //               << std::endl;
+                        // std::cerr << "The dimension of problem " << meta_data_.name << " is " << meta_data_.n_variables << std::endl;
+                    }
                     if (is_null())
                     {
                         std::cout << "Instance not created properly (e.g. invalid id)." << std::endl;
@@ -194,6 +179,29 @@ namespace ioh
                     objective_.x = std::vector<int>(meta_data_.n_variables, 1);
                     objective_.y = evaluate(objective_.x);
                 }
+
+                // Read instance list from file
+                static std::vector<std::string>
+                read_meta_list_instance(const std::string &path_to_meta_list_instance = "example_list_pwt")
+                {
+                    std::vector<std::string> l{};
+                    std::ifstream list_data(path_to_meta_list_instance);
+                    if (!list_data)
+                    {
+                        std::cout << "Fail to instance list file for PWT: " << path_to_meta_list_instance << std::endl;
+                        std::cout << "Skip reading instance list file" << std::endl;
+                        return {};
+                    }
+                    std::string str{};
+                    while (std::getline(list_data, str))
+                    {
+                        if (str.empty()) // Skip over empty lines
+                            continue;
+                        l.push_back(str);
+                    }
+                    return l;
+                }
+
             };
         } // namespace submodular
     } // namespace problem

@@ -62,11 +62,12 @@ int main()
 {
     int repetition = 10;
     // Max Vertex Cover
-    int instance_number = ioh::problem::submodular::Graph::read_meta_list_graph(
-        true, fs::current_path().string() + "\\" + "example_list_maxcoverage");
+    std::vector<int> instance_dimensions = ioh::problem::submodular::read_instances_from_files(
+        false, "./example_list_maxcoverage");
+    int instance_number = instance_dimensions.size();
     std::vector<std::shared_ptr<ioh::problem::Integer>> problems = {};
     for (auto a = 0; a < instance_number; a++)
-        problems.push_back(std::make_shared<ioh::problem::submodular::MaxCoverage>(a + 1));
+        problems.push_back(std::make_shared<ioh::problem::submodular::MaxCoverage>(a + 1,instance_dimensions[a]));
     for (auto p : problems)
     {
         // Optional chance constraint factor
@@ -83,12 +84,15 @@ int main()
         }
     }
 
-    // Max Cut
-    instance_number = ioh::problem::submodular::Graph::read_meta_list_graph(
-        true, fs::current_path().string() + "\\" + "example_list_maxcut");
+    //Max Cut
+    instance_dimensions = ioh::problem::submodular::read_instances_from_files(
+        false, "./example_list_maxcut");
+    instance_number = instance_dimensions.size();
+    // instance_number = ioh::problem::submodular::Graph::read_meta_list_graph(
+    //     true, fs::current_path().string() + "\\" + "example_list_maxcut");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
-    problems.push_back(std::make_shared<ioh::problem::submodular::MaxCut>(a + 1));
+    problems.push_back(std::make_shared<ioh::problem::submodular::MaxCut>(a + 1,instance_dimensions[a]));
     for (auto p : problems)
     {
         auto b = ioh::logger::Analyzer({ioh::trigger::on_improvement},
@@ -104,11 +108,14 @@ int main()
     }
 
     // Max Influence
-    instance_number = ioh::problem::submodular::Graph::read_meta_list_graph(
-        true, fs::current_path().string() + "\\" + "example_list_maxinfluence");
+    instance_dimensions = ioh::problem::submodular::read_instances_from_files(
+        false, "./example_list_maxinfluence");
+    instance_number = instance_dimensions.size();
+    // instance_number = ioh::problem::submodular::Graph::read_meta_list_graph(
+    //     true, fs::current_path().string() + "\\" + "example_list_maxinfluence");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
-        problems.push_back(std::make_shared<ioh::problem::submodular::MaxInfluence>(a + 1));
+        problems.push_back(std::make_shared<ioh::problem::submodular::MaxInfluence>(a + 1,instance_dimensions[a]));
     for (auto p : problems)
     {
         // Optional chance constraint factor
@@ -124,9 +131,10 @@ int main()
         }
     }
 
-    // Pack While Travel
-    instance_number = ioh::problem::submodular::PackWhileTravel::read_meta_list_instance(
-        true, fs::current_path().string() + "\\" + "example_list_pwt");
+    // // Pack While Travel
+    instance_number = ioh::problem::submodular::PackWhileTravel::read_meta_list_instance("./example_list_maxinfluence").size();
+    // instance_number = ioh::problem::submodular::PackWhileTravel::read_meta_list_instance(
+    //     true, fs::current_path().string() + "\\" + "example_list_pwt");
     problems.clear();
     for (auto a = 0; a < instance_number; a++)
         problems.push_back(std::make_shared<ioh::problem::submodular::PackWhileTravel>(a + 1));
