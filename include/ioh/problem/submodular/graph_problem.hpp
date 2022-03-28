@@ -43,8 +43,8 @@ namespace ioh
                 int get_cons_weights_count() const { return cons_weights.size(); }
                 double get_chance_cons_factor() const { return chance_cons_factor; }
 
-                // Setters
-                void set_chance_cons_factor(double new_factor) { chance_cons_factor = new_factor; }
+                // Check if graph is empty
+                bool is_empty() { return n_vertices == 0; }
 
                 /**
                  * @brief Read a graph object with optional weights
@@ -53,10 +53,12 @@ namespace ioh
                  * @param e_weights name of file containing edge weights, one per line
                  * @param v_weights name of file containing vertex weights, one per line
                  * @param c_weights name of file containing constraint weights for knapsack constraint, one per line,
+                 * @param chance_cons chance constraint factor, default to 0
                  * can be for edges for vertices, default to vertices
                  */
                 GraphInstance(const std::string edge_file, const std::string e_weights = "NULL",
-                              const std::string v_weights = "NULL", const std::string c_weights = "NULL")
+                              const std::string v_weights = "NULL", const std::string c_weights = "NULL",
+                              const double chance_cons = 0)
                 {
                     // Read edge data (adjacency)
                     // std::ifstream edge_data((*edge_file));
@@ -156,52 +158,56 @@ namespace ioh
                         cons_weight_limit = cons_weights.back();
                         cons_weights.pop_back();
                     }
+                    // Assign chance constraint factor
+                    chance_cons_factor = chance_cons;
                 }
-                // // Instantiate graph instance object via id
-                // GraphInstance(const int instance) :
-                //     GraphInstance(meta_list_graph[instance][0], meta_list_graph[instance][1],
-                //     meta_list_graph[instance][2],
-                //                   meta_list_graph[instance][3])
-                // {
-                // }
+                // Instantiate graph instance object via file names vector
+                GraphInstance(const std::vector<std::string> &files) :
+                    GraphInstance(files[0], 
+                        files.size() > 1 ? files[1] : nullptr,
+                        files.size() > 2 ? files[2] : nullptr, 
+                        files.size() > 3 ? files[3] : nullptr,
+                        (files.size() > 4 && files[4] != "NULL") ? std::stod(files[4]) : 0)
+                {
+                }
+                // Empty constructor
+                GraphInstance() {}
             };
-
-            std::vector<std::shared_ptr<GraphInstance>> graph_list;
-            std::vector<std::vector<std::string>> meta_list_graph;
             //! Graph base class
             class Graph : public Integer
             {
             private:
             protected:
-                std::shared_ptr<GraphInstance> graph;
+                GraphInstance *graph;
+                bool is_initialized;
                 //! Variables transformation method
                 std::vector<int> transform_variables(std::vector<int> x) override { return x; }
                 //! Objectives transformation method
                 double transform_objectives(const double y) override { return y; }
 
             public:
-                // Read list of graph instances to load, one entry per line
+                // Read list of graph instances to load, return problem dimension
+                // First, read the meta list of files to load (one entry per line), then read the files
                 // Each entry is formatted with {Edge list}|[Edge weights]|[Vertex weights]|[Constraint weights]
-                static int read_meta_list_graph(const bool reread = false,
-                                         const std::string &path_to_meta_list_graph = "example_list")
+                int read_instances_from_files(const int instance, const bool is_edge = false,
+                                                     const std::string &path_to_meta_list_graph = "example_list")
                 {
-                    if (meta_list_graph.empty() || reread) // Only read if unread, or forced reread
+                    std::ifstream list_data(path_to_meta_list_graph);
+                    if (!list_data)
                     {
-                        std::vector<std::vector<std::string>> l{};
-                        std::vector<std::shared_ptr<GraphInstance>> g{};
-                        std::ifstream list_data(path_to_meta_list_graph);
-                        if (!list_data)
+                        std::cout << "Fail to open v_weights: " << path_to_meta_list_graph << std::endl;
+                        std::cout << "Skip reading meta list file" << std::endl;
+                        return 0;
+                    }
+                    std::string str{};
+                    auto counter = 0;
+                    while (std::getline(list_data, str))
+                    {
+                        if (str.empty()) // Skip over empty lines
+                            continue;
+                        if (counter++ == instance)
                         {
-                            std::cout << "Fail to open v_weights: " << path_to_meta_list_graph << std::endl;
-                            std::cout << "Skip reading meta list file" << std::endl;
-                            return 0;
-                        }
-                        std::string str{};
-                        while (std::getline(list_data, str))
-                        {
-                            if (str.empty()) // Skip over empty lines
-                                continue;
-                            std::vector<std::string> entry(4, "");
+                            std::vector<std::string> entry(5, "NULL");
                             std::string rstr;
                             std::istringstream iss(str);
                             int index = 0;
@@ -209,37 +215,17 @@ namespace ioh
                             {
                                 entry[index++] = rstr.c_str();
                             }
-                            l.push_back(entry);
-                            g.push_back(nullptr);
+                            graph = new GraphInstance(entry); // Pass graph object to handle
+                            is_initialized = true;
+                            return is_edge ? (*graph).get_n_edges() : (*graph).get_n_vertices();
                         }
-                        meta_list_graph = l;
-                        graph_list = g;
                     }
-                    return meta_list_graph.size();
+                    is_initialized = false;
+                    return 0;// No matching instance (e.g. invalid instance)
                 }
+                // Check if instance is null
+                bool is_null() { return (!is_initialized) || graph->is_empty(); }
 
-                // Get dimensions from graph instances, and load these if not yet loaded
-                static std::vector<int> get_dimensions_from_ids(const std::vector<int> &instances, const bool is_edge = false,
-                                                         const bool reread = false)
-                { // instances are 0-indexed
-                    int list_size = read_meta_list_graph();
-                    std::vector<int> dimensions{};
-                    for (auto id : instances)
-                    {
-                        if (id >= list_size)
-                            dimensions.push_back(-1); // Instance not in meta list
-                        else
-                        {
-                            if (graph_list[id] == nullptr || reread) // Only read if unread, or forced reread
-                                graph_list[id] = std::shared_ptr<GraphInstance>(
-                                    new GraphInstance(meta_list_graph[id][0], meta_list_graph[id][1],
-                                                      meta_list_graph[id][2], meta_list_graph[id][3]));
-                            dimensions.push_back(is_edge ? graph_list[id]->get_n_edges()
-                                                         : graph_list[id]->get_n_vertices());
-                        }
-                    }
-                    return dimensions;
-                }
                 /**
                  * @brief Construct a new Graph object
                  *
@@ -248,25 +234,21 @@ namespace ioh
                  * @param name the name of the problem
                  */
                 Graph(const int problem_id, const int instance, const int n_variables, const std::string &name,
-                      const std::string &instance_file) :
+                    const bool is_edge, const std::string &instance_list_file) :
                     // Integer(problem_id, instance, n_variables, name) // Assuming graph list is already instantiated
                     // graph(*graph_list[instance-1])
                     Integer(MetaData(problem_id, instance, name,
-                                     n_variables, // n_variables will be updated based on the given instance.
-                                     common::OptimizationType::Maximization),
-                            Constraint<int>(n_variables, 0, 1))
+                        read_instances_from_files(instance - 1, is_edge, instance_list_file),
+                        common::OptimizationType::Maximization),
+                        Constraint<int>(n_variables, 0, 1))
                 {
-                    int max_intanstance = read_meta_list_graph(false, instance_file.c_str());
-                    if (instance > max_intanstance)
+                    if (is_null())
                     {
-                        std::cout << "The required instance id exceeds the limit. Skip creating instance oracle."
+                        std::cout << "Invalid instance id. Skip creating instance oracle."
                                   << std::endl;
                         return;
                     }
-                    meta_data_.n_variables = get_dimensions_from_ids({instance - 1})[0];
-                    graph = graph_list[instance - 1];
                 }
-
             };
 
             /**

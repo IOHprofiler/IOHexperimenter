@@ -58,12 +58,13 @@ namespace ioh
                        const std::string instance_file = "example_list_maxcut") :
                     GraphProblem(2, // problem id, which will be overwritten when registering this class in all
                                     // pseudo-Boolean problems
-                                 instance, // the instance id
-                                 n_variable, // dimensions
-                                 "MaxCut", // problem name
-                                 instance_file)
+                        instance, // the instance id
+                        n_variable, // dimensions
+                        "MaxCut", // problem name
+                        false, // Using number of edges as dimension or not
+                        instance_file)
                 {
-                    if (!graph)
+                    if (is_null())
                     {
                         std::cout << "Null MaxCut instance" << std::endl;
                         return;

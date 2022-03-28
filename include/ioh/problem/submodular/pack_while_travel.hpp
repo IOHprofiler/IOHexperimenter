@@ -11,56 +11,49 @@ namespace ioh
         namespace submodular
 
         {
-            std::vector<std::string> meta_list_pwt;
             class PackWhileTravel final : public Integer
             {
                 double velocity_gap, velocity_max, capacity, penalty;
                 std::vector<double> *distances;
                 std::vector<std::vector<double>> *weights, *profits;
                 std::vector<std::vector<int>> *index_map;
+                bool is_initialized;
 
-                // int read_meta_list_graph(const bool reread = false,
-                //                          const std::string &path_to_meta_list_graph = "example_list")
-                // {
-                //     if (meta_list_graph.empty() || reread) // Only read if unread, or forced reread
-                //     {
-                //         std::vector<std::vector<std::string>> l{};
-                //         std::vector<std::shared_ptr<GraphInstance>> g{};
-                //         std::ifstream list_data(path_to_meta_list_graph);
-                //         if (!list_data)
-                //             throw std::invalid_argument("Fail to open v_weights: " + (path_to_meta_list_graph));
-                //         std::string str{};
-                //         while (std::getline(list_data, str))
-                //         {
-                //             if (str.empty()) // Skip over empty lines
-                //                 continue;
-                //             std::vector<std::string> entry(4, "");
-                //             std::string rstr;
-                //             std::istringstream iss(str);
-                //             int index = 0;
-                //             while (std::getline(iss, rstr, '|')) // File paths are delimited by '|'
-                //             {
-                //                 entry[index++] = rstr.c_str();
-                //             }
-                //             l.push_back(entry);
-                //             g.push_back(nullptr);
-                //         }
-                //         meta_list_graph = l;
-                //         graph_list = g;
-                //     }
-                //     return meta_list_graph.size();
-                // }
+                
+                // Read instance list from file
+                static std::vector<std::string>
+                read_meta_list_instance(const std::string &path_to_meta_list_instance = "example_list_pwt")
+                {
+                    std::vector<std::string> l{};
+                    std::ifstream list_data(path_to_meta_list_instance);
+                    if (!list_data)
+                    {
+                        std::cout << "Fail to instance list file for PWT: " << path_to_meta_list_instance << std::endl;
+                        std::cout << "Skip reading instance list file" << std::endl;
+                        return {};
+                    }
+                    std::string str{};
+                    while (std::getline(list_data, str))
+                    {
+                        if (str.empty()) // Skip over empty lines
+                            continue;
+                        l.push_back(str);
+                    }
+                    return l;
+                }
+
 
                 // Read TTP instance from file, convert to PWT instance, return problem dimension
-                int read_instance_by_id(const int instance)
+                int read_instance_by_id(const int instance, const std::string &instance_list_file)
                 {
-                    int list_size = read_meta_list_instance();
-                    if (list_size <= instance) // If instance doesn't exist (e.g. called during initial registration),
+                    is_initialized = false;
+                    std::vector<std::string> instance_list = read_meta_list_instance(instance_list_file);
+                    if (instance_list.size() <= instance || instance < 0) // If instance id is invalid,
                                                // return a valid dummy size
                         return 1;
-                    std::ifstream ttp_data(meta_list_pwt[instance]);
+                    std::ifstream ttp_data(instance_list[instance]);
                     if (!ttp_data)
-                            throw std::invalid_argument("Fail to open v_weights: " + (meta_list_pwt[instance]));
+                        throw std::invalid_argument("Fail to open instance file: " + (instance_list[instance]));
                     std::string str, tstr;
                     int index_line = 0;
                     while (std::getline(ttp_data, str) && index_line++ < 2) // Skip 2 lines, to line 3
@@ -127,6 +120,7 @@ namespace ioh
                         (*weights)[city_index].push_back(
                             std::stod(tstr.substr(first_space + 1, second_space - first_space - 1)));
                     }
+                    is_initialized = true;
                     return n_items; // Dimension is number of items
                 }
 
@@ -159,47 +153,23 @@ namespace ioh
                 }
 
             public:
-                // Read instance list from file
-                static int read_meta_list_instance(const bool reread = false,
-                                                   const std::string &path_to_meta_list_instance = "example_list_pwt")
-                {
-                    if (meta_list_pwt.empty() || reread) // Only read if unread, or forced reread
-                    {
-                        std::vector<std::string> l{};
-                        std::ifstream list_data(path_to_meta_list_instance);
-                        if (!list_data)
-                        {
-                            std::cout << "Fail to open v_weights: " << path_to_meta_list_instance << std::endl;
-                            std::cout << "Skip reading meta list file" << std::endl;
-                            return 0;
-                        }
-                        std::string str{};
-                        while (std::getline(list_data, str))
-                        {
-                            if (str.empty()) // Skip over empty lines
-                                continue;
-                            l.push_back(str);
-                        }
-                        meta_list_pwt = l;
-                    }
-                    return meta_list_pwt.size();
-                }
+                // Check if instance is null
+                bool is_null() { return (!is_initialized) || distances->empty(); }
 
+                // Constructor
                 PackWhileTravel(const int instance = 1, const int n_variables = 1,
-                                const std::string &instance_file = "example_list_pwt") :
+                                const std::string &instance_list_file = "example_list_pwt") :
                     Integer(MetaData(4, instance, "PackWhileTravel",
-                                     n_variables, // n_variables will be updated based on the given instance.
-                                     common::OptimizationType::Maximization),
-                            Constraint<int>(n_variables, 0, 1)
-                            // 4, // problem id, which will be overwritten when registering this class in all
-                            // pseudo-Boolean problems instance, // the instance id read_instance_by_id(instance - 1),
-                            // // dimensions "PackWhileTravel" // problem name
+                        read_instance_by_id(instance - 1, instance_list_file), // n_variables will be updated based on the given instance.
+                        common::OptimizationType::Maximization),
+                        Constraint<int>(n_variables, 0, 1)
                     )
                 {
-                    int max_intanstance = read_meta_list_instance(false, instance_file);
-                    if (instance > max_intanstance)
-                        throw std::invalid_argument("The required instance id exceeds the limit.");
-                    meta_data_.n_variables = read_instance_by_id(instance - 1);
+                    if (is_null())
+                    {
+                        std::cout << "Instance not created properly (e.g. invalid id)." << std::endl;
+                        return;
+                    }
                     if (velocity_gap >= velocity_max || velocity_gap <= 0 || velocity_max <= 0)
                         throw std::invalid_argument(
                             "Minimum velocity must be positive and smaller than maximum velocity");
