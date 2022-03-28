@@ -77,11 +77,10 @@ namespace ioh
             public:
                 MaxInfluence(const int instance = 1, const int n_variables = 1,
                              const std::string &instance_file = "example_list_maxinfluence") :
-                    GraphProblem(3, // problem id, which will be overwritten when registering this class in all
-                                    // pseudo-Boolean problems
+                    GraphProblem(instance + 1000000, // problem id, starting at 1000000
                         instance, // the instance id
                         n_variables, // dimensions
-                        "MaxInfluence", // problem name
+                        "MaxInfluence" + std::to_string(instance), // problem name
                         false, // Using number of edges as dimension or not
                         instance_file)
                 {

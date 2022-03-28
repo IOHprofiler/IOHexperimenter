@@ -51,11 +51,10 @@ namespace ioh
             public:
                 MaxCoverage(const int instance = 1, const int n_variable = 1,
                             const std::string &instance_file = "example_list_maxcoverage") :
-                    GraphProblem(1, // problem id, which will be overwritten when registering this class in all
-                                    // pseudo-Boolean problems
+                    GraphProblem(instance, // problem id, starting at 0
                         instance, // the instance id
                         n_variable, // n_variables, which is configured by the given instance.
-                        "MaxCoverage", // problem name
+                        "MaxCoverage" + std::to_string(instance), // problem name
                         false, // Using number of edges as dimension or not
                         instance_file)
                 {

@@ -159,7 +159,8 @@ namespace ioh
                 // Constructor
                 PackWhileTravel(const int instance = 1, const int n_variables = 1,
                                 const std::string &instance_list_file = "example_list_pwt") :
-                    Integer(MetaData(4, instance, "PackWhileTravel",
+                    Integer(MetaData(instance + 3000000,// problem id, starting at 3000000
+                        instance, "PackWhileTravel" + std::to_string(instance),
                         read_instance_by_id(instance - 1, instance_list_file), // n_variables will be updated based on the given instance.
                         common::OptimizationType::Maximization),
                         Constraint<int>(n_variables, 0, 1)

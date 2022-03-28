@@ -188,7 +188,8 @@ namespace ioh
             public:
                 // Read list of graph instances to load, return problem dimension
                 // First, read the meta list of files to load (one entry per line), then read the files
-                // Each entry is formatted with {Edge list}|[Edge weights]|[Vertex weights]|[Constraint weights]
+                // Each entry is formatted with {Edge list}|[Edge weights]|[Vertex weights]|[Constraint weights]|[Chance constraint factor]
+                // Chance constraint factor must be in numeric
                 int read_instances_from_files(const int instance, const bool is_edge = false,
                                                      const std::string &path_to_meta_list_graph = "example_list")
                 {
