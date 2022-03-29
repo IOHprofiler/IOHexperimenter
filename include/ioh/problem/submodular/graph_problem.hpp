@@ -14,48 +14,52 @@ namespace ioh
     {
         namespace submodular
         {
-            std::string instance_list_path = ""; // Default path to instance list file
-
-            // Helper: Get end of line characters in a file, assume file can be read
-            char get_eol_in_file(const std::string file_path) { 
-                std::ifstream file_data(file_path);
-                char eol = '\n';// Unix
-                std::string test;
-                std::getline(file_data, test, eol);// Attempt to read next line
-                auto index = test.find_first_of('\r\n');// Windows
-                if (index != std::string::npos)// Check if line break is passed
-                    eol = '\r\n';
-                else
-                {
-                    index = test.find_first_of('\r');// MacOS
-                    if (index != std::string::npos)// Check if line break is passed
-                        eol = '\r';
-                }
-                return eol;
-            }
-            // Helper: Read instance list from file
-            static std::vector<std::string>
-            read_list_instance(const std::string &path_to_meta_list_instance = instance_list_path)
+            class Helper
             {
-                std::vector<std::string> l{};
-                std::ifstream list_data(path_to_meta_list_instance);
-                if (!list_data)
+            public:
+                inline static std::string instance_list_path;// Default path to instance list file
+                // Helper: Get end of line characters in a file, assume file can be read
+                static char get_eol_in_file(const std::string file_path)
                 {
-                    std::cout << "Fail to instance list file: " << path_to_meta_list_instance << std::endl;
-                    std::cout << "Skip reading instance list file" << std::endl;
-                    return {};
+                    std::ifstream file_data(file_path);
+                    char eol = 13; // MacOS
+                    std::string test;
+                    std::getline(file_data, test, eol); // Attempt to read next line
+                    auto index = test.find_first_of('\r\n'); // Windows
+                    if (index != std::string::npos) // Check if line break is passed
+                        eol = '\r\n';
+                    else
+                    {
+                        index = test.find_first_of(10); // Unix
+                        if (index != std::string::npos) // Check if line break is passed
+                            eol = 10;
+                    }
+                    return eol;
                 }
-                instance_list_path = path_to_meta_list_instance;
-                char eol = get_eol_in_file(path_to_meta_list_instance);
-                std::string str{};
-                while (std::getline(list_data, str, eol))
+                // Helper: Read instance list from file
+                static std::vector<std::string>
+                read_list_instance(const std::string &path_to_meta_list_instance)
                 {
-                    if (str.empty()) // Skip over empty lines
-                        continue;
-                    l.push_back(str);
+                    std::vector<std::string> l{};
+                    std::ifstream list_data(path_to_meta_list_instance);
+                    if (!list_data)
+                    {
+                        std::cout << "Fail to instance list file: " << path_to_meta_list_instance << std::endl;
+                        std::cout << "Skip reading instance list file" << std::endl;
+                        return {};
+                    }
+                    instance_list_path = path_to_meta_list_instance;
+                    char eol = get_eol_in_file(path_to_meta_list_instance);
+                    std::string str{};
+                    while (std::getline(list_data, str, eol))
+                    {
+                        if (str.empty()) // Skip over empty lines
+                            continue;
+                        l.push_back(str);
+                    }
+                    return l;
                 }
-                return l;
-            }
+            };
 
             class GraphInstance
             {
@@ -110,7 +114,7 @@ namespace ioh
                     std::ifstream edge_data(edge_file);
                     if (!edge_data)
                         throw std::invalid_argument("Fail to open edge_file: " + (edge_file));
-                    char eol = get_eol_in_file(edge_file);
+                    char eol = Helper::get_eol_in_file(edge_file);
                     std::string str;
                     std::getline(edge_data, str, eol);
                     if (str == "1")
@@ -159,7 +163,7 @@ namespace ioh
                         std::ifstream e_weights_data(e_weights);
                         if (!e_weights_data)
                             throw std::invalid_argument("Fail to open e_weights: " + e_weights);
-                        eol = get_eol_in_file(e_weights);
+                        eol = Helper::get_eol_in_file(e_weights);
                         while (std::getline(e_weights_data, str, eol))
                         {
                             if (str.empty()) // Skip over empty lines
@@ -177,7 +181,7 @@ namespace ioh
                         std::ifstream v_weights_data(v_weights);
                         if (!v_weights_data)
                             throw std::invalid_argument("Fail to open v_weights: " + v_weights);
-                        eol = get_eol_in_file(v_weights);
+                        eol = Helper::get_eol_in_file(v_weights);
                         while (std::getline(v_weights_data, str, eol))
                         {
                             if (str.empty()) // Skip over empty lines
@@ -196,7 +200,7 @@ namespace ioh
                         std::ifstream c_weights_data(c_weights);
                         if (!c_weights_data)
                             throw std::invalid_argument("Fail to open c_weights: " + c_weights);
-                        eol = get_eol_in_file(c_weights);
+                        eol = Helper::get_eol_in_file(c_weights);
                         while (std::getline(c_weights_data, str, eol))
                         {
                             if (str.empty()) // Skip over empty lines
@@ -240,7 +244,7 @@ namespace ioh
                 // Chance constraint factor must be in numeric
                 int read_instances_from_files(const int instance,
                     const bool is_edge = false,
-                    const std::string &path_to_meta_list_graph = instance_list_path)
+                    const std::string &path_to_meta_list_graph = Helper::instance_list_path)
                 {
                     std::ifstream list_data(path_to_meta_list_graph);
                     if (!list_data)
@@ -249,7 +253,7 @@ namespace ioh
                         std::cout << "Skip reading meta list file" << std::endl;
                         return 0;
                     }
-                    char eol = get_eol_in_file(path_to_meta_list_graph);
+                    char eol = Helper::get_eol_in_file(path_to_meta_list_graph);
                     std::string str{};
                     auto counter = 0;
                     while (std::getline(list_data, str, eol))
@@ -291,7 +295,7 @@ namespace ioh
                  * @param name the name of the problem
                  */
                 Graph(const int problem_id, const int instance, const int n_variables, const std::string &name,
-                    const bool is_edge, const std::string &instance_list_file = instance_list_path) :
+                      const bool is_edge, const std::string &instance_list_file = Helper::instance_list_path) :
                     Integer(MetaData(problem_id, instance, name, n_variables,
                         // n_variables,
                         common::OptimizationType::Maximization),

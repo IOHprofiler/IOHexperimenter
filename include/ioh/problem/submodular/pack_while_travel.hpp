@@ -28,14 +28,14 @@ namespace ioh
                 int read_instance_by_id(const int instance, const std::string &instance_list_file)
                 {
                     is_initialized = false;
-                    std::vector<std::string> instance_list = read_list_instance(instance_list_file);
+                    std::vector<std::string> instance_list = Helper::read_list_instance(instance_list_file);
                     if (instance_list.size() <= instance || instance < 0) // If instance id is invalid,
                                                // return a valid dummy size
                         return 1;
                     std::ifstream ttp_data(instance_list[instance]);
                     if (!ttp_data)
                         throw std::invalid_argument("Fail to open instance file: " + (instance_list[instance]));
-                    char eol = get_eol_in_file(instance_list[instance]);
+                    char eol = Helper::get_eol_in_file(instance_list[instance]);
                     std::string str, tstr;
                     int index_line = 0;
                     while (std::getline(ttp_data, str, eol) && index_line++ < 2); // Skip 2 lines, to line 3
@@ -53,7 +53,7 @@ namespace ioh
                     double rent_ratio = std::stod(str.substr(str.find_last_of(':') + 1));
                     while (std::getline(ttp_data, str, eol) && index_line++ < 5) // Skip 2 lines, to line 11
                         ;
-                    double cur_x, cur_y, next_x, next_y, init_x, init_y, distance;
+                    double cur_x, cur_y, init_x, init_y, distance;
                     int first_space = str.find_first_of('	'), second_space = str.find_last_of('	');
                     init_x = std::stod(str.substr(first_space + 1, second_space - first_space - 1));
                     init_y = std::stod(str.substr(second_space + 1));
@@ -68,8 +68,8 @@ namespace ioh
                     while (std::getline(ttp_data, str, eol) && index_line++ < n_cities - 1) // Read until next header
                     {
                         first_space = str.find_first_of('	'), second_space = str.find_last_of('	');
-                        next_x = std::stod(str.substr(first_space + 1, second_space - first_space - 1));
-                        next_y = std::stod(str.substr(second_space + 1));
+                        int next_x = std::stod(str.substr(first_space + 1, second_space - first_space - 1));
+                        int next_y = std::stod(str.substr(second_space + 1));
                         distance =
                             std::ceil(std::sqrt(std::pow(next_x - cur_x, 2) + std::pow(next_y - cur_y, 2))); // CEIL_2D
                         distances->push_back(distance);
@@ -142,7 +142,7 @@ namespace ioh
 
                 // Constructor
                 PackWhileTravel(const int instance = 1, const int n_variables = 1,
-                                const std::string &instance_list_file = instance_list_path) :
+                                const std::string &instance_list_file = Helper::instance_list_path) :
                     Integer(MetaData(instance + 3000000,// problem id, starting at 3000000
                         instance, "PackWhileTravel" + std::to_string(instance),
                         get_dim(), // n_variables will be updated based on the given instance.
@@ -190,7 +190,7 @@ namespace ioh
                     objective_.y = evaluate(objective_.x);
                 }
                 // Constructor without n_variable, swap argument positions to avoid ambiguity
-                PackWhileTravel(const std::string &instance_file = instance_list_path, const int instance = 1) :
+                PackWhileTravel(const std::string &instance_file = Helper::instance_list_path, const int instance = 1) :
                     PackWhileTravel(instance, 1, instance_file)
                 {
                 }

@@ -54,8 +54,9 @@ namespace ioh
 
             public:
                 MaxCoverage(const int instance = 1, const int n_variable = 1,
-                            const std::string &instance_file = instance_list_path.empty() ? "example_list_maxcoverage"
-                                                                                          : instance_list_path) :
+                            const std::string &instance_file = Helper::instance_list_path.empty()
+                                ? "example_list_maxcoverage"
+                                : Helper::instance_list_path) :
                     GraphProblem(instance, // problem id, starting at 0
                         instance, // the instance id
                         read_instances_from_files(
@@ -70,13 +71,11 @@ namespace ioh
                         std::cout << "Null MaxCoverage instance" << std::endl;
                         return;
                     }
-                    if (graph->get_n_vertices() != graph->get_cons_weights_count())
-                        throw std::invalid_argument("Number of constraint weights does not match number of vertices");
                     objective_.x = std::vector<int>(graph->get_n_vertices(), 1);
                     objective_.y = evaluate(objective_.x);
                 }
                 // Constructor without n_variable, swap argument positions to avoid ambiguity
-                MaxCoverage(const std::string &instance_file = instance_list_path, const int instance = 1) :
+                MaxCoverage(const std::string &instance_file = Helper::instance_list_path, const int instance = 1) :
                     MaxCoverage(instance, 1, instance_file)
                 {
                 }

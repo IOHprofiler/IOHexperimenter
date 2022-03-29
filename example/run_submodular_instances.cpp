@@ -72,26 +72,26 @@ int main()
     // Max Vertex Cover
     // Call this function to overwrite default path to instance list file, otherwise specify it in problem constructor
     // The latter is recommended if different problems are to be run in parallel (not overwriting default path)
-    int instance_number = ioh::problem::submodular::read_list_instance(instance_list_paths[0]).size();
+    int instance_number = ioh::problem::submodular::Helper::read_list_instance(instance_list_paths[0]).size();
     for (auto a = 1; a <= instance_number; a++)
         // To specify path: std::make_shared<ioh::problem::submodular::MaxCoverage>("path_to_list",a)
         problems.push_back(std::make_shared<ioh::problem::submodular::MaxCoverage>(a));
 
     // Max Influence
     // Call this function to override default path to instance list file, otherwise specify it in problem constructor
-    instance_number = ioh::problem::submodular::read_list_instance(instance_list_paths[1]).size();
+    instance_number = ioh::problem::submodular::Helper::read_list_instance(instance_list_paths[1]).size();
     for (auto a = 1; a <= instance_number; a++)
         problems.push_back(std::make_shared<ioh::problem::submodular::MaxInfluence>(a));
 
     // Max Cut
     // Call this function to override default path to instance list file, otherwise specify it in problem constructor
-    instance_number = ioh::problem::submodular::read_list_instance(instance_list_paths[2]).size();
+    instance_number = ioh::problem::submodular::Helper::read_list_instance(instance_list_paths[2]).size();
     for (auto a = 1; a <= instance_number; a++)
         problems.push_back(std::make_shared<ioh::problem::submodular::MaxCut>(a));
 
     // Pack While Travel
     // Call this function to override default path to instance list file, otherwise specify it in problem constructor
-    instance_number = ioh::problem::submodular::read_list_instance(instance_list_paths[3]).size();
+    instance_number = ioh::problem::submodular::Helper::read_list_instance(instance_list_paths[3]).size();
     for (auto a = 1; a <= instance_number; a++)
         problems.push_back(std::make_shared<ioh::problem::submodular::PackWhileTravel>(a));
 
