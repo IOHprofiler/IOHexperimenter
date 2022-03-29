@@ -11,7 +11,7 @@ namespace ioh
         namespace submodular
         {
             // Max Cut
-            // Description: refer to Evolutionary Submodular Optimization website at https://gecco-2022.sigevo.org/Competitions
+            // Description: refer to Evolutionary Submodular Optimization website at https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php
             class MaxCut final : public GraphProblem<MaxCut>
             {
             protected:

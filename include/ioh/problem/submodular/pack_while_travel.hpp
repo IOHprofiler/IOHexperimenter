@@ -14,7 +14,7 @@ namespace ioh
 
         {
             // Packing While Travelling
-            // Description: refer to Evolutionary Submodular Optimization website at https://gecco-2022.sigevo.org/Competitions
+            // Description: refer to Evolutionary Submodular Optimization website at https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php
             class PackWhileTravel final : public Integer
             {
                 int n_items;
@@ -39,21 +39,21 @@ namespace ioh
                     std::string str, tstr;
                     int index_line = 0;
                     while (std::getline(ttp_data, str, eol) && index_line++ < 2); // Skip 2 lines, to line 3
-                    int n_cities = std::stoi(str.substr(str.find_last_of(':') + 1));
+                    int n_cities = std::stoi(str.substr(str.find_last_of(':') + 1)); // Number of locations
                     std::getline(ttp_data, str, eol);
-                    n_items = std::stoi(str.substr(str.find_last_of(':') + 1));
+                    n_items = std::stoi(str.substr(str.find_last_of(':') + 1)); // Number of items
                     std::getline(ttp_data, str, eol);
-                    capacity = std::stod(str.substr(str.find_last_of(':') + 1));
+                    capacity = std::stod(str.substr(str.find_last_of(':') + 1)); // Carry capacity
                     std::getline(ttp_data, str, eol);
-                    velocity_gap = std::stod(str.substr(str.find_last_of(':') + 1));
+                    velocity_gap = std::stod(str.substr(str.find_last_of(':') + 1)); // Minimum velocity
                     std::getline(ttp_data, str, eol);
-                    velocity_max = std::stod(str.substr(str.find_last_of(':') + 1));
+                    velocity_max = std::stod(str.substr(str.find_last_of(':') + 1)); // Maximum velocity
                     velocity_gap = velocity_max - velocity_gap;
                     std::getline(ttp_data, str, eol);
-                    double rent_ratio = std::stod(str.substr(str.find_last_of(':') + 1));
+                    double rent_ratio = std::stod(str.substr(str.find_last_of(':') + 1)); // Rent ratio
                     while (std::getline(ttp_data, str, eol) && index_line++ < 5) // Skip 2 lines, to line 11
                         ;
-                    double cur_x, cur_y, init_x, init_y, distance;
+                    double cur_x, cur_y, init_x, init_y, distance; // Start reading location coordinates
                     int first_space = str.find_first_of('	'), second_space = str.find_last_of('	');
                     init_x = std::stod(str.substr(first_space + 1, second_space - first_space - 1));
                     init_y = std::stod(str.substr(second_space + 1));
@@ -66,7 +66,7 @@ namespace ioh
                     profits = new std::vector<std::vector<double>>();
                     index_map = new std::vector<std::vector<int>>();
                     while (std::getline(ttp_data, str, eol) && index_line++ < n_cities - 1) // Read until next header
-                    {
+                    {// Populate route distances and compute penalty term
                         first_space = str.find_first_of('	'), second_space = str.find_last_of('	');
                         int next_x = std::stod(str.substr(first_space + 1, second_space - first_space - 1));
                         int next_y = std::stod(str.substr(second_space + 1));
@@ -76,20 +76,19 @@ namespace ioh
                         penalty -= distance;
                         cur_x = next_x;
                         cur_y = next_y;
-                    }
+                    } // End reading location coordinates
                     distance =
                         std::ceil(std::sqrt(std::pow(init_x - cur_x, 2) + std::pow(init_y - cur_y, 2))); // CEIL_2D
                     distances->push_back(distance);
                     penalty =
                         (penalty - distance) * rent_ratio / (velocity_max - velocity_gap); // Complete penalty term
                     index_line = 0;
-                    int city_index;
-                    while (std::getline(ttp_data, str, eol) && index_line < n_items)
+                    while (std::getline(ttp_data, str, eol) && index_line < n_items)// Read item data
                     {
                         tstr = str.substr(str.find_first_of('	') + 1);
                         first_space = tstr.find_first_of('	');
                         second_space = tstr.find_last_of('	');
-                        city_index = std::stoi(tstr.substr(second_space + 1)) - 1;
+                        int city_index = std::stoi(tstr.substr(second_space + 1)) - 1;
                         while (weights->size() <= city_index)
                         {
                             weights->push_back({});
@@ -142,25 +141,17 @@ namespace ioh
 
                 // Constructor
                 PackWhileTravel(const int instance = 1, const int n_variables = 1,
-                                const std::string &instance_list_file = Helper::instance_list_path) :
+                                const std::string &instance_list_file = Helper::instance_list_path.empty()
+                                    ? "example_list_pwt"
+                                    : Helper::instance_list_path) :
                     Integer(MetaData(instance + 3000000,// problem id, starting at 3000000
                         instance, "PackWhileTravel" + std::to_string(instance),
                         get_dim(), // n_variables will be updated based on the given instance.
                         // n_variables,
                         common::OptimizationType::Maximization),
-                        Constraint<int>(read_instance_by_id(instance - 1,
-                            instance_list_file.empty() ? "example_list_pwt" : instance_list_file),
-                            0, 1)
+                        Constraint<int>(read_instance_by_id(instance - 1, instance_list_file), 0, 1)
                     )
                 {
-                    //int dim = read_instance_by_id(instance - 1, instance_list_file);
-                    //if (meta_data_.n_variables != dim) {
-                    //    meta_data_.n_variables = dim;
-                    //    // Comment out the following output if you do not want to show them.
-                    //    // std::cerr << "The dimension defined by the user is inconsistent with the graph instance. The problem dimension is updated based on the graph instance."
-                    //    //               << std::endl;
-                    //    // std::cerr << "The dimension of problem " << meta_data_.name << " is " << meta_data_.n_variables << std::endl;
-                    //}
                     if (is_null())
                     {
                         std::cout << "Instance not created properly (e.g. invalid id)." << std::endl;

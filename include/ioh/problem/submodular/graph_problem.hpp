@@ -22,18 +22,12 @@ namespace ioh
                 static char get_eol_in_file(const std::string file_path)
                 {
                     std::ifstream file_data(file_path);
-                    char eol = 13; // MacOS
+                    char eol = 10; // Unix, Windows
                     std::string test;
                     std::getline(file_data, test, eol); // Attempt to read next line
-                    auto index = test.find_first_of('\r\n'); // Windows
+                    auto index = test.find_first_of(13); // MacOS
                     if (index != std::string::npos) // Check if line break is passed
-                        eol = '\r\n';
-                    else
-                    {
-                        index = test.find_first_of(10); // Unix
-                        if (index != std::string::npos) // Check if line break is passed
-                            eol = 10;
-                    }
+                        eol = 13;
                     return eol;
                 }
                 // Helper: Read instance list from file
@@ -110,7 +104,6 @@ namespace ioh
                               const double chance_cons = 0)
                 {
                     // Read edge data (adjacency)
-                    // std::ifstream edge_data((*edge_file));
                     std::ifstream edge_data(edge_file);
                     if (!edge_data)
                         throw std::invalid_argument("Fail to open edge_file: " + (edge_file));
@@ -241,6 +234,7 @@ namespace ioh
                 // Read list of graph instances to load, return problem dimension
                 // First, read the meta list of files to load (one entry per line), then read the files
                 // Each entry is formatted with {Edge list}|[Edge weights]|[Vertex weights]|[Constraint weights]|[Chance constraint factor]
+                // "NULL" within an entry means no file
                 // Chance constraint factor must be in numeric
                 int read_instances_from_files(const int instance,
                     const bool is_edge = false,

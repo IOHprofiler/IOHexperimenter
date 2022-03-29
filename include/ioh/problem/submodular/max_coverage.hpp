@@ -11,7 +11,7 @@ namespace ioh
         namespace submodular
         {
             // Max Coverage
-            // Description: refer to Evolutionary Submodular Optimization website at https://gecco-2022.sigevo.org/Competitions
+            // Description: refer to Evolutionary Submodular Optimization website at https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php
             class MaxCoverage final : public GraphProblem<MaxCoverage>
             {
             protected:
@@ -50,7 +50,6 @@ namespace ioh
                         result = graph->get_cons_weight_limit() - cons_weight;
                     return result;
                 }
-                double transform_objectives(const double y) override { return y; }
 
             public:
                 MaxCoverage(const int instance = 1, const int n_variable = 1,
