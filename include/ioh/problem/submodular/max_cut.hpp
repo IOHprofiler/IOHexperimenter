@@ -59,7 +59,7 @@ namespace ioh
 
             public:
                 MaxCut(const int instance = 1, const int n_variable = 1,
-                       const std::string instance_file = Helper::instance_list_path.empty() ? "example_list_maxcut"
+                       const std::string &instance_file = Helper::instance_list_path.empty() ? "example_list_maxcut"
                            : Helper::instance_list_path) :
                     GraphProblem(instance + 2000000, // problem id, starting at 2000000
                         instance, // the instance id

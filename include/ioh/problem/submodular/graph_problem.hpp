@@ -19,7 +19,7 @@ namespace ioh
             public:
                 inline static std::string instance_list_path;// Default path to instance list file
                 // Helper: Get end of line characters in a file, assume file can be read
-                static char get_eol_in_file(const std::string file_path)
+                static char get_eol_in_file(const std::string &file_path)
                 {
                     std::ifstream file_data(file_path);
                     char eol = 10; // Unix, Windows
@@ -99,8 +99,8 @@ namespace ioh
                  * @param chance_cons chance constraint factor, default to 0
                  * can be for edges for vertices, default to vertices
                  */
-                GraphInstance(const std::string edge_file, const std::string e_weights = "NULL",
-                              const std::string v_weights = "NULL", const std::string c_weights = "NULL",
+                GraphInstance(const std::string &edge_file = "NULL", const std::string &e_weights = "NULL",
+                              const std::string &v_weights = "NULL", const std::string &c_weights = "NULL",
                               const double chance_cons = 0)
                 {
                     // Read edge data (adjacency)
@@ -119,13 +119,13 @@ namespace ioh
                     {
                         if (str.empty()) // Skip over empty lines
                             continue;
-                        int first_vertex, second_vertex;
-                        for (int i = 0; i < str.size(); i++)
+                        int first_vertex = 0, second_vertex = 1;
+                        for (auto i = 0; i < str.size(); i++)
                         {
                             if (str[i] == ' ') // Read 2 end vertices
                             {
-                                first_vertex = std::stoi(str.substr(0, i));
-                                second_vertex = std::stoi(str.substr(i + 1));
+                                first_vertex = std::stoi(str.substr(0, i)) - 1; // 1-index to 0-index
+                                second_vertex = std::stoi(str.substr(i + 1)) - 1;
                                 break;
                             }
                         }
@@ -136,13 +136,13 @@ namespace ioh
                             edge_weights.push_back({});
                             vertex_weights.push_back(1);
                         }
-                        edge_indexes.push_back({first_vertex - 1, (int)adj_array[first_vertex - 1].size()});
-                        adj_array[first_vertex - 1].push_back(second_vertex - 1);
-                        edge_weights[first_vertex - 1].push_back(1); // Default value
+                        edge_indexes.push_back({first_vertex, (int)adj_array[first_vertex].size()});
+                        adj_array[first_vertex].push_back(second_vertex - 1);
+                        edge_weights[first_vertex].push_back(1); // Default value
                         if (!is_digraph)
                         {
-                            adj_array[second_vertex - 1].push_back(first_vertex - 1);
-                            edge_weights[second_vertex - 1].push_back(1); // Default value
+                            adj_array[second_vertex].push_back(first_vertex);
+                            edge_weights[second_vertex].push_back(1); // Default value
                         }
                         n_edges++;
                     }
@@ -207,7 +207,7 @@ namespace ioh
                     chance_cons_factor = chance_cons;
                 }
                 // Instantiate graph instance object via file names vector
-                GraphInstance(const std::vector<std::string> &files) :
+                GraphInstance(const std::vector<std::string> &files = {"NULL"}) :
                     GraphInstance(files[0], 
                         files.size() > 1 ? files[1] : nullptr,
                         files.size() > 2 ? files[2] : nullptr, 
