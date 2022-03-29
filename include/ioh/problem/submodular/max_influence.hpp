@@ -1,3 +1,5 @@
+// Author: Viet Anh Do
+
 #pragma once
 #include <queue>
 #include <stdexcept>
@@ -9,6 +11,8 @@ namespace ioh
     {
         namespace submodular
         {
+            // Max Influence
+            // Description: refer to Evolutionary Submodular Optimization website at https://gecco-2022.sigevo.org/Competitions
             class MaxInfluence final : public GraphProblem<MaxInfluence>
             {
             private:
@@ -76,10 +80,13 @@ namespace ioh
 
             public:
                 MaxInfluence(const int instance = 1, const int n_variables = 1,
-                             const std::string &instance_file = "example_list_maxinfluence") :
+                             const std::string &instance_file = instance_list_path.empty() ? "example_list_maxinfluence"
+                                                                                           : instance_list_path) :
                     GraphProblem(instance + 1000000, // problem id, starting at 1000000
                         instance, // the instance id
-                        n_variables, // dimensions
+                        read_instances_from_files(
+                            instance - 1, false,
+                            instance_file), // dimensions
                         "MaxInfluence" + std::to_string(instance), // problem name
                         false, // Using number of edges as dimension or not
                         instance_file)
@@ -93,6 +100,11 @@ namespace ioh
                         throw std::invalid_argument("Number of constraint weights does not match number of vertices");*/
                     objective_.x = std::vector<int>(graph->get_n_vertices(), 1);
                     objective_.y = evaluate(objective_.x);
+                }
+                // Constructor without n_variable, swap argument positions to avoid ambiguity
+                MaxInfluence(const std::string &instance_file = instance_list_path, const int instance = 1):
+                    MaxInfluence(instance, 1, instance_file)
+                {
                 }
             };
         } // namespace submodular

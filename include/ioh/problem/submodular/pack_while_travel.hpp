@@ -1,3 +1,5 @@
+// Author: Viet Anh Do
+
 #pragma once
 #include <fstream>
 #include <stdexcept>
@@ -11,8 +13,11 @@ namespace ioh
         namespace submodular
 
         {
+            // Packing While Travelling
+            // Description: refer to Evolutionary Submodular Optimization website at https://gecco-2022.sigevo.org/Competitions
             class PackWhileTravel final : public Integer
             {
+                int n_items;
                 double velocity_gap, velocity_max, capacity, penalty;
                 std::vector<double> *distances;
                 std::vector<std::vector<double>> *weights, *profits;
@@ -23,30 +28,30 @@ namespace ioh
                 int read_instance_by_id(const int instance, const std::string &instance_list_file)
                 {
                     is_initialized = false;
-                    std::vector<std::string> instance_list = read_meta_list_instance(instance_list_file);
+                    std::vector<std::string> instance_list = read_list_instance(instance_list_file);
                     if (instance_list.size() <= instance || instance < 0) // If instance id is invalid,
                                                // return a valid dummy size
                         return 1;
                     std::ifstream ttp_data(instance_list[instance]);
                     if (!ttp_data)
                         throw std::invalid_argument("Fail to open instance file: " + (instance_list[instance]));
+                    char eol = get_eol_in_file(instance_list[instance]);
                     std::string str, tstr;
                     int index_line = 0;
-                    while (std::getline(ttp_data, str) && index_line++ < 2) // Skip 2 lines, to line 3
-                        ;
+                    while (std::getline(ttp_data, str, eol) && index_line++ < 2); // Skip 2 lines, to line 3
                     int n_cities = std::stoi(str.substr(str.find_last_of(':') + 1));
-                    std::getline(ttp_data, str);
-                    int n_items = std::stoi(str.substr(str.find_last_of(':') + 1));
-                    std::getline(ttp_data, str);
+                    std::getline(ttp_data, str, eol);
+                    n_items = std::stoi(str.substr(str.find_last_of(':') + 1));
+                    std::getline(ttp_data, str, eol);
                     capacity = std::stod(str.substr(str.find_last_of(':') + 1));
-                    std::getline(ttp_data, str);
+                    std::getline(ttp_data, str, eol);
                     velocity_gap = std::stod(str.substr(str.find_last_of(':') + 1));
-                    std::getline(ttp_data, str);
+                    std::getline(ttp_data, str, eol);
                     velocity_max = std::stod(str.substr(str.find_last_of(':') + 1));
                     velocity_gap = velocity_max - velocity_gap;
-                    std::getline(ttp_data, str);
+                    std::getline(ttp_data, str, eol);
                     double rent_ratio = std::stod(str.substr(str.find_last_of(':') + 1));
-                    while (std::getline(ttp_data, str) && index_line++ < 5) // Skip 2 lines, to line 11
+                    while (std::getline(ttp_data, str, eol) && index_line++ < 5) // Skip 2 lines, to line 11
                         ;
                     double cur_x, cur_y, next_x, next_y, init_x, init_y, distance;
                     int first_space = str.find_first_of('	'), second_space = str.find_last_of('	');
@@ -60,7 +65,7 @@ namespace ioh
                     weights = new std::vector<std::vector<double>>();
                     profits = new std::vector<std::vector<double>>();
                     index_map = new std::vector<std::vector<int>>();
-                    while (std::getline(ttp_data, str) && index_line++ < n_cities - 1) // Read until next header
+                    while (std::getline(ttp_data, str, eol) && index_line++ < n_cities - 1) // Read until next header
                     {
                         first_space = str.find_first_of('	'), second_space = str.find_last_of('	');
                         next_x = std::stod(str.substr(first_space + 1, second_space - first_space - 1));
@@ -79,7 +84,7 @@ namespace ioh
                         (penalty - distance) * rent_ratio / (velocity_max - velocity_gap); // Complete penalty term
                     index_line = 0;
                     int city_index;
-                    while (std::getline(ttp_data, str) && index_line < n_items)
+                    while (std::getline(ttp_data, str, eol) && index_line < n_items)
                     {
                         tstr = str.substr(str.find_first_of('	') + 1);
                         first_space = tstr.find_first_of('	');
@@ -132,25 +137,30 @@ namespace ioh
                 // Check if instance is null
                 bool is_null() { return (!is_initialized) || distances->empty(); }
 
+                // Get problem dimension from initialized instance
+                int get_dim() { return is_null() ? 0 : n_items; }
+
                 // Constructor
                 PackWhileTravel(const int instance = 1, const int n_variables = 1,
-                                const std::string &instance_list_file = "example_list_pwt") :
+                                const std::string &instance_list_file = instance_list_path) :
                     Integer(MetaData(instance + 3000000,// problem id, starting at 3000000
                         instance, "PackWhileTravel" + std::to_string(instance),
-                        // read_instance_by_id(instance - 1, instance_list_file), // n_variables will be updated based on the given instance.
-                        n_variables,
+                        get_dim(), // n_variables will be updated based on the given instance.
+                        // n_variables,
                         common::OptimizationType::Maximization),
-                        Constraint<int>(n_variables, 0, 1)
+                        Constraint<int>(read_instance_by_id(instance - 1,
+                            instance_list_file.empty() ? "example_list_pwt" : instance_list_file),
+                            0, 1)
                     )
                 {
-                    int dim = read_instance_by_id(instance - 1, instance_list_file);
-                    if (meta_data_.n_variables != dim) {
-                        meta_data_.n_variables = dim;
-                        // Comment out the following output if you do not want to show them.
-                        // std::cerr << "The dimension defined by the user is inconsistent with the graph instance. The problem dimension is updated based on the graph instance."
-                        //               << std::endl;
-                        // std::cerr << "The dimension of problem " << meta_data_.name << " is " << meta_data_.n_variables << std::endl;
-                    }
+                    //int dim = read_instance_by_id(instance - 1, instance_list_file);
+                    //if (meta_data_.n_variables != dim) {
+                    //    meta_data_.n_variables = dim;
+                    //    // Comment out the following output if you do not want to show them.
+                    //    // std::cerr << "The dimension defined by the user is inconsistent with the graph instance. The problem dimension is updated based on the graph instance."
+                    //    //               << std::endl;
+                    //    // std::cerr << "The dimension of problem " << meta_data_.name << " is " << meta_data_.n_variables << std::endl;
+                    //}
                     if (is_null())
                     {
                         std::cout << "Instance not created properly (e.g. invalid id)." << std::endl;
@@ -179,27 +189,10 @@ namespace ioh
                     objective_.x = std::vector<int>(meta_data_.n_variables, 1);
                     objective_.y = evaluate(objective_.x);
                 }
-
-                // Read instance list from file
-                static std::vector<std::string>
-                read_meta_list_instance(const std::string &path_to_meta_list_instance = "example_list_pwt")
+                // Constructor without n_variable, swap argument positions to avoid ambiguity
+                PackWhileTravel(const std::string &instance_file = instance_list_path, const int instance = 1) :
+                    PackWhileTravel(instance, 1, instance_file)
                 {
-                    std::vector<std::string> l{};
-                    std::ifstream list_data(path_to_meta_list_instance);
-                    if (!list_data)
-                    {
-                        std::cout << "Fail to instance list file for PWT: " << path_to_meta_list_instance << std::endl;
-                        std::cout << "Skip reading instance list file" << std::endl;
-                        return {};
-                    }
-                    std::string str{};
-                    while (std::getline(list_data, str))
-                    {
-                        if (str.empty()) // Skip over empty lines
-                            continue;
-                        l.push_back(str);
-                    }
-                    return l;
                 }
 
             };

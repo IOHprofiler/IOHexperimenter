@@ -1,3 +1,5 @@
+// Author: Viet Anh Do
+
 #pragma once
 
 #include "ioh/problem/problem.hpp"
@@ -12,6 +14,48 @@ namespace ioh
     {
         namespace submodular
         {
+            std::string instance_list_path = ""; // Default path to instance list file
+
+            // Helper: Get end of line characters in a file, assume file can be read
+            char get_eol_in_file(const std::string file_path) { 
+                std::ifstream file_data(file_path);
+                char eol = '\n';// Unix
+                std::string test;
+                std::getline(file_data, test, eol);// Attempt to read next line
+                auto index = test.find_first_of('\r\n');// Windows
+                if (index != std::string::npos)// Check if line break is passed
+                    eol = '\r\n';
+                else
+                {
+                    index = test.find_first_of('\r');// MacOS
+                    if (index != std::string::npos)// Check if line break is passed
+                        eol = '\r';
+                }
+                return eol;
+            }
+            // Helper: Read instance list from file
+            static std::vector<std::string>
+            read_list_instance(const std::string &path_to_meta_list_instance = instance_list_path)
+            {
+                std::vector<std::string> l{};
+                std::ifstream list_data(path_to_meta_list_instance);
+                if (!list_data)
+                {
+                    std::cout << "Fail to instance list file: " << path_to_meta_list_instance << std::endl;
+                    std::cout << "Skip reading instance list file" << std::endl;
+                    return {};
+                }
+                instance_list_path = path_to_meta_list_instance;
+                char eol = get_eol_in_file(path_to_meta_list_instance);
+                std::string str{};
+                while (std::getline(list_data, str, eol))
+                {
+                    if (str.empty()) // Skip over empty lines
+                        continue;
+                    l.push_back(str);
+                }
+                return l;
+            }
 
             class GraphInstance
             {
@@ -63,17 +107,18 @@ namespace ioh
                 {
                     // Read edge data (adjacency)
                     // std::ifstream edge_data((*edge_file));
-                    std::ifstream edge_data((edge_file));
+                    std::ifstream edge_data(edge_file);
                     if (!edge_data)
                         throw std::invalid_argument("Fail to open edge_file: " + (edge_file));
+                    char eol = get_eol_in_file(edge_file);
                     std::string str;
-                    std::getline(edge_data, str);
+                    std::getline(edge_data, str, eol);
                     if (str == "1")
                     {
                         is_digraph = true;
                     }
                     std::vector<std::vector<int>> edge_indexes{};
-                    while (std::getline(edge_data, str))
+                    while (std::getline(edge_data, str, eol))
                     {
                         if (str.empty()) // Skip over empty lines
                             continue;
@@ -111,10 +156,11 @@ namespace ioh
                     if (e_weights != "NULL")
                     {
                         int index = 0;
-                        std::ifstream e_weights_data((e_weights));
+                        std::ifstream e_weights_data(e_weights);
                         if (!e_weights_data)
-                            throw std::invalid_argument("Fail to open e_weights: " + (e_weights));
-                        while (std::getline(e_weights_data, str))
+                            throw std::invalid_argument("Fail to open e_weights: " + e_weights);
+                        eol = get_eol_in_file(e_weights);
+                        while (std::getline(e_weights_data, str, eol))
                         {
                             if (str.empty()) // Skip over empty lines
                                 continue;
@@ -128,10 +174,11 @@ namespace ioh
                     if (v_weights != "NULL")
                     {
                         int index = 0;
-                        std::ifstream v_weights_data((v_weights));
+                        std::ifstream v_weights_data(v_weights);
                         if (!v_weights_data)
-                            throw std::invalid_argument("Fail to open v_weights: " + (v_weights));
-                        while (std::getline(v_weights_data, str))
+                            throw std::invalid_argument("Fail to open v_weights: " + v_weights);
+                        eol = get_eol_in_file(v_weights);
+                        while (std::getline(v_weights_data, str, eol))
                         {
                             if (str.empty()) // Skip over empty lines
                                 continue;
@@ -146,11 +193,11 @@ namespace ioh
                     else
                     {
 
-                        std::ifstream c_weights_data((c_weights));
+                        std::ifstream c_weights_data(c_weights);
                         if (!c_weights_data)
-                            throw std::invalid_argument("Fail to open c_weights: " + (c_weights));
-
-                        while (std::getline(c_weights_data, str))
+                            throw std::invalid_argument("Fail to open c_weights: " + c_weights);
+                        eol = get_eol_in_file(c_weights);
+                        while (std::getline(c_weights_data, str, eol))
                         {
                             if (str.empty()) // Skip over empty lines
                                 continue;
@@ -191,8 +238,9 @@ namespace ioh
                 // First, read the meta list of files to load (one entry per line), then read the files
                 // Each entry is formatted with {Edge list}|[Edge weights]|[Vertex weights]|[Constraint weights]|[Chance constraint factor]
                 // Chance constraint factor must be in numeric
-                int read_instances_from_files(const int instance, const bool is_edge = false,
-                                                     const std::string &path_to_meta_list_graph = "example_list")
+                int read_instances_from_files(const int instance,
+                    const bool is_edge = false,
+                    const std::string &path_to_meta_list_graph = instance_list_path)
                 {
                     std::ifstream list_data(path_to_meta_list_graph);
                     if (!list_data)
@@ -201,9 +249,10 @@ namespace ioh
                         std::cout << "Skip reading meta list file" << std::endl;
                         return 0;
                     }
+                    char eol = get_eol_in_file(path_to_meta_list_graph);
                     std::string str{};
                     auto counter = 0;
-                    while (std::getline(list_data, str))
+                    while (std::getline(list_data, str, eol))
                     {
                         if (str.empty()) // Skip over empty lines
                             continue;
@@ -217,9 +266,9 @@ namespace ioh
                             {
                                 entry[index++] = rstr.c_str();
                             }
-                            graph = new GraphInstance(entry); // Pass graph object to handle
+                            graph = new GraphInstance(entry); // Initialize graph instance object
                             is_initialized = true;
-                            return is_edge ? (*graph).get_n_edges() : (*graph).get_n_vertices();
+                            return is_edge ? graph->get_n_edges() : graph->get_n_vertices();
                         }
                     }
                     is_initialized = false;
@@ -227,6 +276,12 @@ namespace ioh
                 }
                 // Check if instance is null
                 bool is_null() { return (!is_initialized) || graph->is_empty(); }
+
+                // Get problem dimension from initialized graph instance
+                int get_dim(const bool is_edge = false)
+                {
+                    return is_null() ? 0 : is_edge ? graph->get_n_edges() : graph->get_n_vertices();
+                }
 
                 /**
                  * @brief Construct a new Graph object
@@ -236,25 +291,12 @@ namespace ioh
                  * @param name the name of the problem
                  */
                 Graph(const int problem_id, const int instance, const int n_variables, const std::string &name,
-                    const bool is_edge, const std::string &instance_list_file) :
-                    // Integer(problem_id, instance, n_variables, name) // Assuming graph list is already instantiated
-                    // graph(*graph_list[instance-1])
-                    Integer(MetaData(problem_id, instance, name,
-                        // read_instances_from_files(instance - 1, is_edge, instance_list_file),
-                        n_variables,
+                    const bool is_edge, const std::string &instance_list_file = instance_list_path) :
+                    Integer(MetaData(problem_id, instance, name, n_variables,
+                        // n_variables,
                         common::OptimizationType::Maximization),
-                        Constraint<int>(n_variables, 0, 1))
+                            Constraint<int>(n_variables, 0, 1))
                 {
-                    /// The Constraint class in Integer Constructor requires identical n_variables.
-                    /// Therefore, we assign the n_variables here calling read_instances_from_files once istead of twice.
-                    int dim = read_instances_from_files(instance - 1, is_edge, instance_list_file);
-                    if (meta_data_.n_variables != dim) {
-                        meta_data_.n_variables = dim;
-                        // Comment out the following output if you do not want to show them.
-                        // std::cerr << "The dimension defined by the user is inconsistent with the graph instance. The problem dimension is updated based on the graph instance."
-                        //               << std::endl;
-                        // std::cerr << "The dimension of problem " << meta_data_.name << " is " << meta_data_.n_variables << std::endl;
-                    }
                     if (is_null())
                     {
                         std::cout << "Invalid instance id. Skip creating instance oracle."
@@ -277,38 +319,6 @@ namespace ioh
             public:
                 using Graph::Graph;
             };
-
-
-            static std::vector<int> read_instances_from_files(const bool is_edge, const std::string &path_to_meta_list_graph = "example_list")
-            {
-                std::vector<int> d;
-                std::ifstream list_data(path_to_meta_list_graph);
-                if (!list_data)
-                {
-                    std::cout << "Fail to open v_weights: " << path_to_meta_list_graph << std::endl;
-                    std::cout << "Skip reading meta list file" << std::endl;
-                    return {};
-                }
-                std::string str{};
-                auto counter = 0;
-                while (std::getline(list_data, str))
-                {
-                    if (str.empty()) // Skip over empty lines
-                        continue;
-                    std::vector<std::string> entry(5, "NULL");
-                    std::string rstr;
-                    std::istringstream iss(str);
-                    int index = 0;
-                    while (std::getline(iss, rstr, '|')) // File paths are delimited by '|'
-                    {
-                        entry[index++] = rstr.c_str();
-                    }
-                    GraphInstance graph(entry); // Pass graph object to handle
-                    d.push_back(is_edge ? graph.get_n_edges() : graph.get_n_vertices());
-                    
-                }
-                return d;
-            }
         } // namespace submodular
     } // namespace problem
 } // namespace ioh

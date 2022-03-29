@@ -1,3 +1,5 @@
+// Author: Viet Anh Do
+
 #pragma once
 #include <stdexcept>
 #include "graph_problem.hpp"
@@ -8,6 +10,8 @@ namespace ioh
     {
         namespace submodular
         {
+            // Max Coverage
+            // Description: refer to Evolutionary Submodular Optimization website at https://gecco-2022.sigevo.org/Competitions
             class MaxCoverage final : public GraphProblem<MaxCoverage>
             {
             protected:
@@ -50,10 +54,13 @@ namespace ioh
 
             public:
                 MaxCoverage(const int instance = 1, const int n_variable = 1,
-                            const std::string &instance_file = "example_list_maxcoverage") :
+                            const std::string &instance_file = instance_list_path.empty() ? "example_list_maxcoverage"
+                                                                                          : instance_list_path) :
                     GraphProblem(instance, // problem id, starting at 0
                         instance, // the instance id
-                        n_variable, // n_variables, which is configured by the given instance.
+                        read_instances_from_files(
+                            instance - 1, false,
+                            instance_file), // n_variables, which is configured by the given instance.
                         "MaxCoverage" + std::to_string(instance), // problem name
                         false, // Using number of edges as dimension or not
                         instance_file)
@@ -67,6 +74,11 @@ namespace ioh
                         throw std::invalid_argument("Number of constraint weights does not match number of vertices");
                     objective_.x = std::vector<int>(graph->get_n_vertices(), 1);
                     objective_.y = evaluate(objective_.x);
+                }
+                // Constructor without n_variable, swap argument positions to avoid ambiguity
+                MaxCoverage(const std::string &instance_file = instance_list_path, const int instance = 1) :
+                    MaxCoverage(instance, 1, instance_file)
+                {
                 }
             };
         } // namespace submodular
