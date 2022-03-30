@@ -253,7 +253,6 @@ namespace ioh
                     {
                         std::cout << "Fail to open instance list file: " << path_to_meta_list_graph << std::endl;
                         is_initialized = false;
-                        graph = new GraphInstance({"NULL"});
                         return 0;
                     }
                     char eol = Helper::get_eol_in_file(path_to_meta_list_graph);
