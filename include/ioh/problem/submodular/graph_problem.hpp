@@ -39,7 +39,6 @@ namespace ioh
                     if (!list_data)
                     {
                         std::cout << "Fail to instance list file: " << path_to_meta_list_instance << std::endl;
-                        std::cout << "Skip reading instance list file" << std::endl;
                         return {};
                     }
                     instance_list_path = path_to_meta_list_instance;
@@ -52,6 +51,11 @@ namespace ioh
                         l.push_back(str);
                     }
                     return l;
+                }
+                // Helper: check if string is double
+                static bool is_double(const std::string &text) {
+                    double test_number;
+                    return ((std::istringstream(text) >> test_number >> std::ws).eof());
                 }
             };
 
@@ -101,9 +105,13 @@ namespace ioh
                  */
                 GraphInstance(const std::string &edge_file = "NULL", const std::string &e_weights = "NULL",
                               const std::string &v_weights = "NULL", const std::string &c_weights = "NULL",
-                              const double chance_cons = 0)
+                              const bool is_edge = false, const double chance_cons = 0)
                 {
                     // Read edge data (adjacency)
+                    if (edge_file == "NULL")
+                    {
+                        return;
+                    }
                     std::ifstream edge_data(edge_file);
                     if (!edge_data)
                         throw std::invalid_argument("Fail to open edge_file: " + (edge_file));
@@ -130,7 +138,7 @@ namespace ioh
                             }
                         }
                         int max_vertex = std::max(first_vertex, second_vertex);
-                        while (adj_array.size() < max_vertex) // Fill array until enough entries for vertices
+                        while (adj_array.size() <= max_vertex) // Fill array until enough entries for vertices
                         {
                             adj_array.push_back({});
                             edge_weights.push_back({});
@@ -186,10 +194,9 @@ namespace ioh
                     // Read constraint weights data (include bound at last line)
                     // if (c_weights->empty())
                     if (c_weights == "NULL")
-                        cons_weights = std::vector<double>(n_vertices, 1);
+                        cons_weights = std::vector<double>(is_edge ? n_edges : n_vertices, 1);
                     else
                     {
-
                         std::ifstream c_weights_data(c_weights);
                         if (!c_weights_data)
                             throw std::invalid_argument("Fail to open c_weights: " + c_weights);
@@ -207,12 +214,13 @@ namespace ioh
                     chance_cons_factor = chance_cons;
                 }
                 // Instantiate graph instance object via file names vector
-                GraphInstance(const std::vector<std::string> &files = {"NULL"}) :
+                GraphInstance(const std::vector<std::string> &files = {"NULL"}, const bool is_edge = false) :
                     GraphInstance(files[0], 
                         files.size() > 1 ? files[1] : nullptr,
                         files.size() > 2 ? files[2] : nullptr, 
                         files.size() > 3 ? files[3] : nullptr,
-                        (files.size() > 4 && files[4] != "NULL") ? std::stod(files[4]) : 0)
+                        is_edge,
+                        (files.size() > 4 && Helper::is_double(files[4])) ? std::stod(files[4]) : 0)
                 {
                 }
                 // Empty constructor
@@ -243,8 +251,9 @@ namespace ioh
                     std::ifstream list_data(path_to_meta_list_graph);
                     if (!list_data)
                     {
-                        std::cout << "Fail to open v_weights: " << path_to_meta_list_graph << std::endl;
-                        std::cout << "Skip reading meta list file" << std::endl;
+                        std::cout << "Fail to open instance list file: " << path_to_meta_list_graph << std::endl;
+                        is_initialized = false;
+                        graph = new GraphInstance({"NULL"});
                         return 0;
                     }
                     char eol = Helper::get_eol_in_file(path_to_meta_list_graph);
@@ -260,11 +269,11 @@ namespace ioh
                             std::string rstr;
                             std::istringstream iss(str);
                             int index = 0;
-                            while (std::getline(iss, rstr, '|')) // File paths are delimited by '|'
+                            while (std::getline(iss, rstr, '|') && index < 5) // File paths are delimited by '|'
                             {
                                 entry[index++] = rstr.c_str();
                             }
-                            graph = new GraphInstance(entry); // Initialize graph instance object
+                            graph = new GraphInstance(entry, is_edge); // Initialize graph instance object
                             is_initialized = true;
                             return is_edge ? graph->get_n_edges() : graph->get_n_vertices();
                         }
@@ -287,6 +296,8 @@ namespace ioh
                  * @param problem_id The id of the problem
                  * @param instance The instance of the problem
                  * @param name the name of the problem
+                 * @param is_edge whether to define problem dimension with edges or vertices
+                 * @param instance_list_file the name of file containing instance list
                  */
                 Graph(const int problem_id, const int instance, const int n_variables, const std::string &name,
                       const bool is_edge, const std::string &instance_list_file = Helper::instance_list_path) :
