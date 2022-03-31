@@ -39,24 +39,53 @@ namespace ioh
                     std::string str, tstr;
                     int index_line = 0;
                     while (std::getline(ttp_data, str, eol) && index_line++ < 2); // Skip 2 lines, to line 3
-                    int n_cities = std::stoi(str.substr(str.find_last_of(':') + 1)); // Number of locations
-                    std::getline(ttp_data, str, eol);
-                    n_items = std::stoi(str.substr(str.find_last_of(':') + 1)); // Number of items
-                    std::getline(ttp_data, str, eol);
-                    capacity = std::stod(str.substr(str.find_last_of(':') + 1)); // Carry capacity
-                    std::getline(ttp_data, str, eol);
-                    velocity_gap = std::stod(str.substr(str.find_last_of(':') + 1)); // Minimum velocity
-                    std::getline(ttp_data, str, eol);
-                    velocity_max = std::stod(str.substr(str.find_last_of(':') + 1)); // Maximum velocity
+                    int n_cities; // Number of locations
+                    if (!Helper::is_int(str.substr(str.find_last_of(':') + 1), &n_cities)){
+                        std::cout << "Cannot read number of cities for PWT" << std::endl;
+                        return 1; // return a valid dummy size
+                    }
+                    std::getline(ttp_data, str, eol); // Number of items
+                    if (!Helper::is_int(str.substr(str.find_last_of(':') + 1), &n_items))
+                    {
+                        std::cout << "Cannot read number of items for PWT" << std::endl;
+                        return 1; // return a valid dummy size
+                    }
+                    std::getline(ttp_data, str, eol); // Carry capacity
+                    if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &capacity))
+                    {
+                        std::cout << "Cannot read carry capacity for PWT" << std::endl;
+                        return 1; // return a valid dummy size
+                    }
+                    std::getline(ttp_data, str, eol); // Minimum velocity
+                    if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &velocity_gap))
+                    {
+                        std::cout << "Cannot read minimum velocity for PWT" << std::endl;
+                        return 1; // return a valid dummy size
+                    }
+                    std::getline(ttp_data, str, eol); // Maximum velocity
+                    if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &velocity_max))
+                    {
+                        std::cout << "Cannot read maximum velocity for PWT" << std::endl;
+                        return 1; // return a valid dummy size
+                    }
                     velocity_gap = velocity_max - velocity_gap;
                     std::getline(ttp_data, str, eol);
-                    double rent_ratio = std::stod(str.substr(str.find_last_of(':') + 1)); // Rent ratio
+                    double rent_ratio; // Rent ratio
+                    if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &rent_ratio))
+                    {
+                        std::cout << "Cannot read rent ratio for PWT" << std::endl;
+                        return 1; // return a valid dummy size
+                    }
                     while (std::getline(ttp_data, str, eol) && index_line++ < 5) // Skip 2 lines, to line 11
                         ;
                     double cur_x, cur_y, init_x, init_y, distance; // Start reading location coordinates
                     int first_space = str.find_first_of('	'), second_space = str.find_last_of('	');
-                    init_x = std::stod(str.substr(first_space + 1, second_space - first_space - 1));
-                    init_y = std::stod(str.substr(second_space + 1));
+                    if (!Helper::is_double(str.substr(first_space + 1, second_space - first_space - 1), &init_x) ||
+                        !Helper::is_double(str.substr(second_space + 1), &init_y))
+                    {
+                        std::cout << "Cannot read coordinates for PWT" << std::endl;
+                        return 1; // return a valid dummy size
+                    }
                     cur_x = init_x;
                     cur_y = init_y;
                     index_line = 0;
@@ -68,8 +97,13 @@ namespace ioh
                     while (std::getline(ttp_data, str, eol) && index_line++ < n_cities - 1) // Read until next header
                     {// Populate route distances and compute penalty term
                         first_space = str.find_first_of('	'), second_space = str.find_last_of('	');
-                        int next_x = std::stod(str.substr(first_space + 1, second_space - first_space - 1));
-                        int next_y = std::stod(str.substr(second_space + 1));
+                        double next_x, next_y;
+                        if (!Helper::is_double(str.substr(first_space + 1, second_space - first_space - 1), &next_x) ||
+                            !Helper::is_double(str.substr(second_space + 1), &next_y))
+                        {
+                            std::cout << "Cannot read coordinates for PWT" << std::endl;
+                            return 1; // return a valid dummy size
+                        }
                         distance =
                             std::ceil(std::sqrt(std::pow(next_x - cur_x, 2) + std::pow(next_y - cur_y, 2))); // CEIL_2D
                         distances->push_back(distance);
@@ -96,9 +130,25 @@ namespace ioh
                             index_map->push_back({});
                         }
                         (*index_map)[city_index].push_back(index_line++);
-                        (*profits)[city_index].push_back(std::stod(tstr.substr(0, first_space)));
-                        (*weights)[city_index].push_back(
-                            std::stod(tstr.substr(first_space + 1, second_space - first_space - 1)));
+                        double temp;
+                        if (Helper::is_double(tstr.substr(0, first_space), &temp))
+                        {
+                            (*profits)[city_index].push_back(temp);
+                        }
+                        else
+                        {
+                            std::cout << "Cannot read item profits for PWT" << std::endl;
+                            return 1; // return a valid dummy size
+                        }
+                        if (Helper::is_double(tstr.substr(first_space + 1, second_space - first_space - 1), &temp))
+                        {
+                            (*weights)[city_index].push_back(temp);
+                        }
+                        else
+                        {
+                            std::cout << "Cannot read item weights for PWT" << std::endl;
+                            return 1; // return a valid dummy size
+                        }
                     }
                     is_initialized = true;
                     return n_items; // Dimension is number of items

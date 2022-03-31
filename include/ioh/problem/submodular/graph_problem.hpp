@@ -53,9 +53,14 @@ namespace ioh
                     return l;
                 }
                 // Helper: check if string is double
-                static bool is_double(const std::string &text) {
-                    double test_number;
-                    return ((std::istringstream(text) >> test_number >> std::ws).eof());
+                static bool is_double(const std::string &text, double *num = new double()) 
+                {
+                    return ((std::istringstream(text) >> *num >> std::ws).eof());
+                }
+                // Helper: check if string is integer
+                static bool is_int(const std::string &text, int *num = new int())
+                {
+                    return ((std::istringstream(text) >> *num >> std::ws).eof());
                 }
             };
 
@@ -132,8 +137,18 @@ namespace ioh
                         {
                             if (str[i] == ' ') // Read 2 end vertices
                             {
-                                first_vertex = std::stoi(str.substr(0, i)) - 1; // 1-index to 0-index
-                                second_vertex = std::stoi(str.substr(i + 1)) - 1;
+                                if (Helper::is_int(str.substr(0, i), &first_vertex)&&
+                                    Helper::is_int(str.substr(i + 1), &second_vertex))
+                                {
+                                    first_vertex--;
+                                    second_vertex--;
+                                }
+                                else
+                                {
+                                    std::cout << "Invalid edge file format" << std::endl;
+                                    n_vertices=0;
+                                    return;
+                                }
                                 break;
                             }
                         }
@@ -169,7 +184,15 @@ namespace ioh
                         {
                             if (str.empty()) // Skip over empty lines
                                 continue;
-                            edge_weights[edge_indexes[index][0]][edge_indexes[index][1]] = std::stod(str);
+                            double temp;
+                            if (Helper::is_double(str, &temp))
+                                edge_weights[edge_indexes[index][0]][edge_indexes[index][1]] = temp;
+                            else
+                            {
+                                std::cout << "Invalid edge weights file format" << std::endl;
+                                n_vertices = 0;
+                                return;
+                            }
                             index++;
                         }
                     }
@@ -187,7 +210,15 @@ namespace ioh
                         {
                             if (str.empty()) // Skip over empty lines
                                 continue;
-                            vertex_weights[index++] = std::stod(str);
+                            double temp;
+                            if (Helper::is_double(str, &temp))
+                                vertex_weights[index++] = temp;
+                            else
+                            {
+                                std::cout << "Invalid vertex weights file format" << std::endl;
+                                n_vertices = 0;
+                                return;
+                            }
                         }
                     }
 
@@ -205,7 +236,15 @@ namespace ioh
                         {
                             if (str.empty()) // Skip over empty lines
                                 continue;
-                            cons_weights.push_back(std::stod(str));
+                            double temp;
+                            if (Helper::is_double(str, &temp))
+                                cons_weights.push_back(temp);
+                            else
+                            {
+                                std::cout << "Invalid constraint weights file format" << std::endl;
+                                n_vertices = 0;
+                                return;
+                            }
                         }
                         cons_weight_limit = cons_weights.back();
                         cons_weights.pop_back();

@@ -74,36 +74,52 @@ int main()
     // The latter is recommended if different problems are to be run in parallel (not overwriting default path)
     int instance_number = ioh::problem::submodular::Helper::read_list_instance(instance_list_paths[0]).size();
     for (auto a = 1; a <= instance_number; a++)
+    {
         // To specify path: std::make_shared<ioh::problem::submodular::MaxCoverage>("path_to_list",a)
-        problems.push_back(std::make_shared<ioh::problem::submodular::MaxCoverage>(a));
+        auto problem = std::make_shared<ioh::problem::submodular::MaxCoverage>(a);
+        if (!problem->is_null())
+            problems.push_back(problem);
+    }
 
     // Max Influence
     // Call this function to override default path to instance list file, otherwise specify it in problem constructor
     instance_number = ioh::problem::submodular::Helper::read_list_instance(instance_list_paths[1]).size();
     for (auto a = 1; a <= instance_number; a++)
-        problems.push_back(std::make_shared<ioh::problem::submodular::MaxInfluence>(a));
+    {
+        auto problem = std::make_shared<ioh::problem::submodular::MaxInfluence>(a);
+        if (!problem->is_null())
+            problems.push_back(problem);
+    }
 
     // Max Cut
     // Call this function to override default path to instance list file, otherwise specify it in problem constructor
     instance_number = ioh::problem::submodular::Helper::read_list_instance(instance_list_paths[2]).size();
     for (auto a = 1; a <= instance_number; a++)
-        problems.push_back(std::make_shared<ioh::problem::submodular::MaxCut>(a));
+    {
+        auto problem = std::make_shared<ioh::problem::submodular::MaxCut>(a);
+        if (!problem->is_null())
+            problems.push_back(problem);
+    }
 
     // Pack While Travel
     // Call this function to override default path to instance list file, otherwise specify it in problem constructor
     instance_number = ioh::problem::submodular::Helper::read_list_instance(instance_list_paths[3]).size();
     for (auto a = 1; a <= instance_number; a++)
-        problems.push_back(std::make_shared<ioh::problem::submodular::PackWhileTravel>(a));
+    {
+        auto problem = std::make_shared<ioh::problem::submodular::PackWhileTravel>(a);
+        if (!problem->is_null())
+            problems.push_back(problem);
+    }
 
     auto b = ioh::logger::Analyzer({ioh::trigger::on_improvement}, {}, // no additional properties
                                     fs::current_path(), // path to store data
                                    "example_log"); // folder to store data
     for (auto p : problems)
     {
-        // Print some problem properties
-        std::cout << "Problem size: " << std::to_string(p->meta_data().n_variables)
+        // Some problem properties
+        /*std::cout << "Problem size: " << std::to_string(p->meta_data().n_variables)
             << " Constraint size: " << std::to_string(p->constraint().lb.size())
-            << std::endl;
+            << std::endl;*/
         p->attach_logger(b);
         for (auto i = 0; i < repetition; i++)
         {
