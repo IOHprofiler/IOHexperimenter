@@ -27,6 +27,8 @@ namespace ioh
                 // Read TTP instance from file, convert to PWT instance, return problem dimension
                 int read_instance_by_id(const int instance, const std::string &instance_list_file)
                 {
+                    if (!is_null()) // If already initialized, skip reading file
+                        return n_items;
                     is_initialized = false;
                     std::vector<std::string> instance_list = Helper::read_list_instance(instance_list_file);
                     if (instance_list.size() <= instance || instance < 0) // If instance id is invalid,
@@ -184,7 +186,7 @@ namespace ioh
 
             public:
                 // Check if instance is null
-                bool is_null() { return (!is_initialized) || distances->empty(); }
+                bool is_null() { return !distances || (!is_initialized) || distances->empty(); }
 
                 // Get problem dimension from initialized instance
                 int get_dim() { return is_null() ? 0 : n_items; }
@@ -196,7 +198,7 @@ namespace ioh
                                     : Helper::instance_list_path) :
                     Integer(MetaData(instance + 3000000,// problem id, starting at 3000000
                         instance, "PackWhileTravel" + std::to_string(instance),
-                        n_variables, // n_variables will be updated based on the given instance.
+                        read_instance_by_id(instance - 1, instance_list_file), // n_variables will be updated based on the given instance.
                         // n_variables,
                         common::OptimizationType::Maximization),
                         Constraint<int>(read_instance_by_id(instance - 1, instance_list_file), 0, 1)
@@ -207,7 +209,6 @@ namespace ioh
                         std::cout << "Instance not created properly (e.g. invalid id)." << std::endl;
                         return;
                     }
-                    meta_data_.n_variables = get_dim();
                     if (velocity_gap >= velocity_max || velocity_gap <= 0 || velocity_max <= 0)
                         throw std::invalid_argument(
                             "Minimum velocity must be positive and smaller than maximum velocity");
