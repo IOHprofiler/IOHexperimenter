@@ -196,7 +196,7 @@ namespace ioh
                                     : Helper::instance_list_path) :
                     Integer(MetaData(instance + 3000000,// problem id, starting at 3000000
                         instance, "PackWhileTravel" + std::to_string(instance),
-                        get_dim(), // n_variables will be updated based on the given instance.
+                        n_variables, // n_variables will be updated based on the given instance.
                         // n_variables,
                         common::OptimizationType::Maximization),
                         Constraint<int>(read_instance_by_id(instance - 1, instance_list_file), 0, 1)
@@ -207,6 +207,7 @@ namespace ioh
                         std::cout << "Instance not created properly (e.g. invalid id)." << std::endl;
                         return;
                     }
+                    meta_data_.n_variables = get_dim();
                     if (velocity_gap >= velocity_max || velocity_gap <= 0 || velocity_max <= 0)
                         throw std::invalid_argument(
                             "Minimum velocity must be positive and smaller than maximum velocity");

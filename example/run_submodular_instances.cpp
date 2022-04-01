@@ -9,6 +9,7 @@
 
 //Make sure the meta list files are in the working directory and graph data are in proper format (i.e. edge list)
 //Extract example_submodular.zip there
+//If custom instance files cannot be read even in the correct format, try setting them to Unix line-breaks
 
 //Solver function, uses problem oracle as input
 void solver(const std::shared_ptr<ioh::problem::Integer> p)
