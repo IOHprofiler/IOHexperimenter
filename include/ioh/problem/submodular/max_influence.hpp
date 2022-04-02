@@ -16,6 +16,7 @@ namespace ioh
             class MaxInfluence final : public GraphProblem<MaxInfluence>
             {
             private:
+                int simulation_reps = 100;
                 // Simulate Independent Cascade Model with seed and return weighted sum of activated nodes other than
                 // seeds
                 double random_spread_count(const std::vector<int> &seed)
@@ -53,7 +54,7 @@ namespace ioh
                 double evaluate(const std::vector<int> &x) override
                 {
                     double cons_weight = 0, seed_weight = 0;
-                    int index = 0, count = 0;
+                    int index = 0;
                     std::vector<int> seedIndex{};
                     for (auto &selected : x)
                     { // Iterate through 0-1 values
@@ -65,17 +66,16 @@ namespace ioh
                         }
                         index++; // Follow the current vertex by moving index, regardless of selection
                     }
-                    cons_weight += sqrt(count) * graph->get_chance_cons_factor();
+                    cons_weight += sqrt(seedIndex.size()) * graph->get_chance_cons_factor();
                     if (cons_weight > graph->get_cons_weight_limit()) // If the weight limit is exceeded (violating
                                                                       // constraint), return a penalized value
                         return graph->get_cons_weight_limit() - cons_weight;
                     double result = 0;
-                    int repetitions = 100;
-                    for (auto i = repetitions; i > 0; i--)
+                    for (auto i = simulation_reps; i > 0; i--)
                     {
                         result += random_spread_count(seedIndex); // Simulate Independent Cascade Model
                     }
-                    return seed_weight + result / repetitions; // Return average
+                    return seed_weight + result / simulation_reps; // Return average
                 }
 
             public:
@@ -105,6 +105,8 @@ namespace ioh
                     MaxInfluence(instance, 1, instance_file)
                 {
                 }
+                // Set number of times to repeat simulation, must be at least 1
+                void set_simulation_reps(const int new_reps) { simulation_reps = std::max(new_reps, 1); }
             };
         } // namespace submodular
     } // namespace problem
