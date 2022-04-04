@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <numeric>
+#include <memory>
 
 #include "loggers.hpp"
 
@@ -222,6 +223,14 @@ namespace logger {
         }
 
     public:
+        /** Constructor.
+         * 
+         * @warning A classical error in C++ is to instantiate a constructor with empty parentheses.
+         *          Here, you should take care of instantiating without any parenthese at all:
+         *          @code
+         *              ioh::logger::EAF my_logger;
+         *          @endcode
+         */
         EAF() : Logger(), _has_problem_type(false)
         {
             // Do not use the Logger's constructor, to avoid passing references to uninitialized members.
@@ -434,7 +443,7 @@ namespace logger {
                 std::vector<size_t> _attlevels;
 
                 /** Whether we minimize or maximize. */
-                const common::FOptimizationType _optim_type;
+                const common::FOptimizationType _f_optim;
 
                 /** Compare two objective function values.
                  * 
@@ -446,7 +455,7 @@ namespace logger {
                  */
                 bool is_better(const double q1, const double q2)
                 {
-                    return _optim_type(q1, q2);
+                    return _f_optim(q1, q2);
                 }
                 
                 /** Compare two objective function values.
@@ -480,7 +489,7 @@ namespace logger {
                  */
                 Levels(const common::OptimizationType optim_type, std::vector<size_t> attainment_levels = {})
                 : _attlevels(attainment_levels)
-                , _optim_type{optim_type}
+                , _f_optim{optim_type}
                 { }
 
                 /** Extract the runs from the logger and computes the attainment levelsets. */
@@ -490,7 +499,7 @@ namespace logger {
                     // But, there is no way to ensure that all problems seen by the loggers
                     // have been of the same type.
                     // This is at least a check.
-                    assert(_optim_type == logger.problem().optimization_type.type());
+                    assert(_f_optim == logger.problem().optimization_type.type());
                     
                     // Input:
                     std::vector<eaf::Front> fronts;
@@ -527,7 +536,7 @@ namespace logger {
                     // Sort the two sets of data.
                     std::sort(std::begin(data_time),std::end(data_time),  ascending_time); // Time always ascend.
 
-                    if(_optim_type == common::OptimizationType::Minimization ) {
+                    if(_f_optim == common::OptimizationType::Minimization ) {
                         std::sort(std::begin(data_qual),std::end(data_qual), descending_qual); 
                     } else {
                         std::sort(std::begin(data_qual),std::end(data_qual),  ascending_qual); 
@@ -612,7 +621,7 @@ namespace logger {
                                 // assert(nb_attained < level);
                                 assert(it < total_nb_points);
                                 assert(iq-1 < total_nb_points);
-                                IOH_DBG(debug, ">> Front level point: (" << data_time[it].time << "," << data_qual[iq-1].qual << ")")
+                                IOH_DBG(debug, ">> Front level point: (time=" << data_time[it].time << ",qual=" << data_qual[iq-1].qual << ")")
                                 level_front.push_back( eaf::RunPoint(
                                         data_time[it].time,
                                         data_qual[iq-1].qual,
@@ -627,7 +636,7 @@ namespace logger {
                         assert(level_front.size() > 0);
                         assert(levels.find(level) == std::end(levels));
                         levels[level] = level_front;
-                        #ifndef NDEBUG
+#ifndef NDEBUG
                             IOH_DBG(xdebug,">> Involved runs:")
                             IOH_DBG(xdebug,">>> " << level_front[0].run)
                             for(size_t i = 1; i < level_front.size(); ++i) {
@@ -636,7 +645,7 @@ namespace logger {
                                 }
                                 assert(level_front[i].run == level_front[i-1].run);
                             }
-                        #endif
+#endif
                     } // l in levels
 
                     IOH_DBG(note, "Ended with " << levels.size() << " levels")
@@ -685,6 +694,9 @@ namespace logger {
          * @note Letting the class computes its nadir point will be more expensive than
          *       using an extremum that you would know from bounds.
          * 
+         * @warning This should always compute a metric that should be maximized in order to improve the performance.
+         *          (i.e. *under* the curve for maximization problems, *above* the curve for minimization problems)
+         * 
          * @ingroup EAF_API
          */
         template<class T>
@@ -693,29 +705,48 @@ namespace logger {
             protected:
                 //! Initialization check flag.
                 bool _has_nadir;
+
                 //! The worst reference point.
                 eaf::Point _nadir;
+
                 //! The problem type (i.e. min or max).
-                const common::FOptimizationType _optim_type;
+                const common::FOptimizationType _is_better;
+
+                //! Shift of the nadir point regarding the extremum of data.
+                static const size_t _shift_time = 1;
+                const double _shift_qual;
 
                 /** Computes the extremum point as the worst coordinates on both quality and time axis for all front points.
                  */
                 eaf::Point extremum(const eaf::Front& front) const
                 {
-                    size_t worst_time;
-                    double worst_qual;
-                    if(_optim_type.type() == common::OptimizationType::Minimization) {
-                        worst_time =  std::numeric_limits<size_t>::lowest();
-                        worst_qual = -std::numeric_limits<double>::infinity();
+                    // size_t worst_time;
+                    // double worst_qual;
+                    // if(_is_better.type() == common::OptimizationType::Minimization) {
+                    //     worst_time =  std::numeric_limits<size_t>::lowest();
+                    //     worst_qual = -std::numeric_limits<double>::infinity();
+                    // } else {
+                    //     worst_time =  std::numeric_limits<size_t>::infinity();
+                    //     worst_qual =  std::numeric_limits<double>::infinity();
+                    // }
+                    // for(const auto& p : front) {
+                    //     if(p.time > worst_time) { worst_time = p.time; }
+                    //     if(_is_better(worst_qual, p.qual)) { worst_qual = p.qual; }
+                    // }
+                    // return eaf::Point(worst_qual, worst_time);
+                    double nadir_qual;
+                    size_t nadir_time = std::numeric_limits<size_t>::lowest();
+
+                    if(_is_better.type() == common::OptimizationType::Minimization) {
+                        nadir_qual = -std::numeric_limits<double>::infinity();
                     } else {
-                        worst_time =  std::numeric_limits<size_t>::infinity();
-                        worst_qual =  std::numeric_limits<double>::infinity();
+                        nadir_qual =  std::numeric_limits<double>::infinity();
                     }
-                    for(const auto& p : front) {
-                        if(p.time > worst_time) { worst_time = p.time; }
-                        if(_optim_type(worst_qual, p.qual)) { worst_qual = p.qual; }
+                    for(const auto& candidate_nadir : front) {
+                        if(candidate_nadir.time > nadir_time) { nadir_time = candidate_nadir.time; }
+                        if(_is_better(nadir_qual, candidate_nadir.qual)) { nadir_qual = candidate_nadir.qual; }
                     }
-                    return eaf::Point(worst_qual, worst_time);
+                    return eaf::Point(nadir_qual, nadir_time);
                 }
 
                 /** Main interface.
@@ -729,30 +760,44 @@ namespace logger {
                 using Type = typename Stat<T>::Type;
                 
                 /** Constructor without a nadir reference point. */
-                NadirStat(const common::OptimizationType optim_type) : _has_nadir(false), _nadir(), _optim_type{optim_type} { }
+                NadirStat(const common::OptimizationType optim_type, const double shift_qual = 1e-6) : _has_nadir(false), _nadir(), _is_better{optim_type}, _shift_qual(shift_qual) {
+                    IOH_DBG(note, "NadirStat without a nadir");
+                }
 
-                /** Constructor with a nadir reference point. */
-                NadirStat(const common::OptimizationType optim_type, eaf::Point nadir) : _has_nadir(true), _nadir(nadir), _optim_type{optim_type} { }
+                /** Constructor with a nadir reference point.
+                 *
+                 * @warning Using this constructor, you are responsible of passing the correct nadir point.
+                 * 
+                 * @warning Note that you must shift it to ensure that the statistic is always non-zero.
+                 */
+                NadirStat(const common::OptimizationType optim_type, eaf::Point nadir) : _has_nadir(true), _nadir(nadir), _is_better{optim_type},
+                    _shift_qual(std::numeric_limits<double>::signaling_NaN()) { }
 
                 /** Update the nadir point (if not previously indicated) and then calls NadirStat::call. */
                 T operator()(const eaf::Levels::Type& levels) override
                 {
                     if(not _has_nadir) {
-                        size_t worst_time;
-                        double worst_qual;
-                        if(_optim_type == common::OptimizationType::Minimization) {
-                            worst_time =  std::numeric_limits<size_t>::lowest();
-                            worst_qual = -std::numeric_limits<double>::infinity();
+                        double nadir_qual;
+                        double epsil_qual;
+                        size_t nadir_time = 0;
+                        const size_t epsil_time = 1;
+
+                        if(_is_better.type() == common::OptimizationType::Minimization) {
+                            nadir_qual = -std::numeric_limits<double>::infinity();
+                            // epsil_qual =  1;//std::numeric_limits<double>::epsilon();
+                            epsil_qual =  _shift_qual;
                         } else {
-                            worst_time =  std::numeric_limits<size_t>::infinity();
-                            worst_qual =  std::numeric_limits<double>::infinity();
+                            nadir_qual =  std::numeric_limits<double>::infinity();
+                            epsil_qual = -1;//std::numeric_limits<double>::epsilon();
+                            epsil_qual = -_shift_qual;
                         }
                         for(const auto& [level,front] : levels) {
-                            eaf::Point nadir = extremum(front);
-                            if(nadir.time > worst_time) { worst_time = nadir.time; }
-                            if(_optim_type(worst_qual, nadir.qual)) { worst_qual = nadir.qual; }
+                            eaf::Point candidate_nadir = extremum(front);
+                            if(candidate_nadir.time > nadir_time) { nadir_time = candidate_nadir.time; }
+                            if(_is_better(nadir_qual, candidate_nadir.qual)) { nadir_qual = candidate_nadir.qual; }
                         }
-                        _nadir = eaf::Point(worst_qual, worst_time);
+                        IOH_DBG(debug,"Estimated nadir: (time=" << nadir_time+epsil_time << ",qual=" << nadir_qual+epsil_qual << ")" );
+                        _nadir = eaf::Point(nadir_qual+epsil_qual, nadir_time+epsil_time);
                         _has_nadir = true;
                     }
 
@@ -769,9 +814,12 @@ namespace logger {
              * This computes the surface encompassed by each levelset, up to the extremum point,
              * and returns a map between the level index and of the corresponding surfaces.
              * 
+             * @warning This will always compute a metric that should be maximized in order to improve the performance.
+             *          (i.e. *under* the curve for maximization problems, *above* the curve for minimization problems)
+             * 
              * @ingroup EAF
              */
-            class Surface : public NadirStat<std::map<size_t,double>>
+            class Surfaces : public NadirStat<std::map<size_t,double>>
             {
                 protected:
                     /** The NadirStat interface. */
@@ -781,15 +829,17 @@ namespace logger {
                         for(auto [level,front] : levels) {
                             results[level] = surface(front);
                         }
+                        IOH_DBG(debug,"Surfaces of " << levels.size() << " levels");
+                        assert(results.size() == levels.size());
                         return results;
                     }
                     
                 public:
                     /** Constructor without a nadir reference point. */
-                    Surface(const common::OptimizationType optim_type) : NadirStat(optim_type) { }
+                    Surfaces(const common::OptimizationType optim_type) : NadirStat(optim_type) { }
 
                     /** Constructor with a nadir reference point. */
-                    Surface(const common::OptimizationType optim_type, eaf::Point nadir) : NadirStat(optim_type, nadir) { }
+                    Surfaces(const common::OptimizationType optim_type, eaf::Point nadir) : NadirStat(optim_type, nadir) { }
 
                     // This is public so as to allow for single loop computations in Volume::call.
                     /** Computes the surface of the given non-dominated set of points.
@@ -798,36 +848,47 @@ namespace logger {
                      */
                     double surface(eaf::Front front) const
                     {
+                        IOH_DBG(xdebug,"Front of size: " << front.size());
                         assert(_has_nadir);
                         double n_qual = _nadir.qual;
                         double surface = 0;
 
-                        std::sort(std::begin(front), std::end(front), eaf::descending_qual);
+                        if(this->_is_better.type() == common::OptimizationType::Minimization) {
+                            std::sort(std::begin(front), std::end(front), eaf::descending_qual);
+                        } else {
+                            std::sort(std::begin(front), std::end(front), eaf::ascending_qual);
+                        }
+                        
                         for(const auto& p : front) {
                             surface +=   std::fabs(n_qual - p.qual) 
                                        * std::labs(static_cast<long>(_nadir.time) - static_cast<long>(p.time)); // cast because time are unsigned
                             n_qual = p.qual;
+                            assert(surface > 0);
                         }
+                        IOH_DBG(xdebug, "Surface of front = " << surface);
                         return surface;
                     }
             };
 
             /** Computes the "hypervolumes" of the given attainment levelsets.
              * 
-             * This computes the surface encompassed by each levelset, up to the extremum point,
+             * This computes the surfaces encompassed by each levelset, up to the extremum point,
              * and returns a map between the level index and of the corresponding surfaces.
              * 
              * @warning The nadir reference point is computed automatically as the extremum of all the levels.
              *          Thus, if you call this function several times on different levels,
              *          the surfaces will (may) be computed with different nadir points.
-             *          To indicate your own nadir point, use the stat::Surface class directly.
+             *          To indicate your own nadir point, use the stat::Surfaces class directly.
+             * 
+             * @warning This will always compute a metric that should be maximized in order to improve the performance.
+             *          (i.e. *under* the curve for maximization problems, *above* the curve for minimization problems)
              * 
              * @ingroup EAF
              */
-            inline Surface::Type surface(const common::OptimizationType optim_type, const eaf::Levels::Type& levels)
+            inline Surfaces::Type surfaces(const common::OptimizationType optim_type, const eaf::Levels::Type& levels)
             {
-                Surface surface_of(optim_type);
-                return surface_of(levels);
+                Surfaces surfaces_of(optim_type);
+                return surfaces_of(levels);
             }
                                   
             /** Computes the volume of the whole empirical attainement function.
@@ -837,6 +898,9 @@ namespace logger {
              * 
              * @note If only a subset of the levelsets are given, the true volume will be underestimated.
              * 
+             * @warning This will always compute a metric that should be maximized in order to improve the performance.
+             *          (i.e. *under* the curve for maximization problems, *above* the curve for minimization problems)
+             * 
              * @ingroup EAF
              */
             class Volume : public NadirStat<double>
@@ -845,15 +909,28 @@ namespace logger {
 
                     double call(const eaf::Levels::Type& levels) override
                     {
-                        Surface s(_optim_type.type(), _nadir);
+                        IOH_DBG(debug, "Volume of " << levels.size() << " levels");
+                        Surfaces s(this->_is_better.type(), _nadir);
                         // Do not compute surfaces right here to avoid two loops on levels instead of one.
 
                         double volume = 0;
                         auto prev_level = -1;
                         for(const auto& [level,front] : levels) {
-                            volume += s.surface(front) * (static_cast<double>(level) - prev_level);
+                            const auto fsurf = s.surface(front);
+#ifndef NDEBUG
+                                if(fsurf == 0) {
+                                    IOH_DBG(warning, "Level " << level << " has a null surface.");
+                                }
+#endif
+                            volume += fsurf * (static_cast<double>(level) - prev_level);
                             prev_level = static_cast<int>(level);
                         }
+                        IOH_DBG(debug, "Volume = " << volume);
+#ifndef NDEBUG
+                            if(volume == 0) {
+                                IOH_DBG(warning, "Null volume, if some front have single points, set a nadir point.");
+                            }
+#endif
                         return volume;
                     }
                 public:
@@ -872,6 +949,9 @@ namespace logger {
              *          the surfaces will (may) be computed with different nadir points.
              *          To indicate your own nadir point, use the stat::Volume class directly.
              * 
+             * @warning This will always compute a metric that should be maximized in order to improve the performance.
+             *          (i.e. *under* the curve for maximization problems, *above* the curve for minimization problems)
+             * 
              * @ingroup EAF
              */
             inline double volume(const common::OptimizationType optim_type, const eaf::Levels::Type& levels)
@@ -885,6 +965,9 @@ namespace logger {
              * If you don't pass the number of runs, it will be guessed by looking at
              * the number of runs in the very first logs.
              * 
+             * @warning This will compute a metric that should be maximized in order to improve the performance.
+             *          (i.e. *under* the curve for maximization problems, *above* the curve for minimization problems)
+             * 
              * @ingroup EAF
              */
             inline double volume(const EAF& logger, double error_min, double error_max, size_t evals_min, size_t evals_max, size_t nb_runs = 0)
@@ -893,10 +976,15 @@ namespace logger {
                 assert(evals_max > evals_min);
 
                 // Prepare the instance with the Nadir point.
-                Volume volume_of(logger.optimization_type(), Point(error_max, evals_max));
+                std::unique_ptr<Volume> volume_of = nullptr;
+                if(logger.optimization_type() == common::OptimizationType::Minimization) {
+                    volume_of = std::make_unique<Volume>(logger.optimization_type(), Point(error_max, evals_max));
+                } else {
+                    volume_of = std::make_unique<Volume>(logger.optimization_type(), Point(error_min, evals_max));
+                }
 
                 // Computes all levels.
-                auto v = volume_of(levels(logger, {}));
+                auto v = (*volume_of)(levels(logger, {}));
 
                 // Get the number of runs from the first instance.
                 // WARNING: this assume that all instances have the same number of runs,
@@ -912,8 +1000,16 @@ namespace logger {
                     assert(ins != dim->second.end());
                     nb_runs = ins->second.size();
 #ifndef NDEBUG
-                    // FIXME double check that all instances have that many runs
+                    // Double check that all instances have that many runs
+                    for(const auto& suite_pb : logger.data()) {
+                        for(const auto& pb_dim : suite_pb.second) {
+                            for(const auto& dim_ins : pb_dim.second) {
+                                for(const auto& ins_runs : dim_ins.second) {
+                                    for(const auto& run_front : ins_runs.second) {
+                                       assert(run_front.second.size() == nb_runs);
+                    } } } } }
 #endif
+
                 }
                 assert(nb_runs > 0);
                 return v / (nb_runs * (error_max-error_min) * (evals_max-evals_min));
@@ -925,6 +1021,9 @@ namespace logger {
              *          Thus, if you call this function several times on different levels,
              *          the surfaces will (may) be computed with different nadir points.
              *          To indicate your own nadir point, use the stat::Volume class directly.
+             * 
+             * @warning This will always compute a metric that should be maximized in order to improve the performance.
+             *          (i.e. *under* the curve for maximization problems, *above* the curve for minimization problems)
              * 
              * @ingroup EAF
              */

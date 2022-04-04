@@ -25,6 +25,8 @@ TEST_F(BaseTest, common_log)
 {
     auto& ioh_dbg = clutchlog::logger();
     ioh_dbg.threshold(clutchlog::level::xdebug);
+    ioh_dbg.file(".*");
+    ioh_dbg.depth(std::numeric_limits<size_t>::max());
 
 	testing::internal::CaptureStderr();
 	ioh_dbg.format("{msg}");
