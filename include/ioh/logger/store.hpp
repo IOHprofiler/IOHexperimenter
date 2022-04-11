@@ -3,6 +3,7 @@
 #include <map>
 #include <optional>
 
+#include <ioh/common/log.hpp>
 #include "loggers.hpp"
 
 namespace ioh::logger {

@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "ioh/problem/problem.hpp"
-#include "ioh/problem/transformation.hpp"
+#include <ioh/problem/problem.hpp>
+#include <ioh/problem/transformation.hpp>
+#include <ioh/common/log.hpp>
 
 #include <fstream>
 #include <limits>
@@ -38,7 +39,7 @@ namespace ioh
                     std::ifstream list_data(path_to_meta_list_instance);
                     if (!list_data)
                     {
-                        std::cout << "Fail to instance list file: " << path_to_meta_list_instance << std::endl;
+                        IOH_DBG(error, "Fail to instance list file: " << path_to_meta_list_instance ); // FIXME raise an exception?
                         return {};
                     }
                     instance_list_path = path_to_meta_list_instance;
@@ -145,7 +146,7 @@ namespace ioh
                                 }
                                 else
                                 {
-                                    std::cout << "Invalid edge file format" << std::endl;
+                                    IOH_DBG(error, "Invalid edge file format" ); // FIXME raise an exception?
                                     n_vertices=0;
                                     return;
                                 }
@@ -189,7 +190,7 @@ namespace ioh
                                 edge_weights[edge_indexes[index][0]][edge_indexes[index][1]] = temp;
                             else
                             {
-                                std::cout << "Invalid edge weights file format" << std::endl;
+                                IOH_DBG(error, "Invalid edge weights file format" ); // FIXME raise an exception?
                                 n_vertices = 0;
                                 return;
                             }
@@ -215,7 +216,7 @@ namespace ioh
                                 vertex_weights[index++] = temp;
                             else
                             {
-                                std::cout << "Invalid vertex weights file format" << std::endl;
+                                IOH_DBG(error, "Invalid vertex weights file format" ); // FIXME raise an exception?
                                 n_vertices = 0;
                                 return;
                             }
@@ -241,7 +242,7 @@ namespace ioh
                                 cons_weights.push_back(temp);
                             else
                             {
-                                std::cout << "Invalid constraint weights file format" << std::endl;
+                                IOH_DBG(error, "Invalid constraint weights file format" ); // FIXME raise an exception?
                                 n_vertices = 0;
                                 return;
                             }
@@ -290,7 +291,7 @@ namespace ioh
                     std::ifstream list_data(path_to_meta_list_graph);
                     if (!list_data)
                     {
-                        std::cout << "Fail to open instance list file: " << path_to_meta_list_graph << std::endl;
+                        IOH_DBG(error, "Fail to open instance list file: " << path_to_meta_list_graph ); // FIXME raise an exception?
                         is_initialized = false;
                         return 0;
                     }
@@ -346,8 +347,7 @@ namespace ioh
                 {
                     if (is_null())
                     {
-                        std::cout << "Invalid instance id. Skip creating instance oracle."
-                                  << std::endl;
+                        IOH_DBG(error, "Invalid instance id. Skip creating instance oracle." ); // FIXME raise an exception?
                         return;
                     }
                 }

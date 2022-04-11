@@ -4,8 +4,9 @@
 #include <utility>
 #include <vector>
 
-#include "ioh/common/optimization_type.hpp"
-#include "ioh/common/repr.hpp"
+#include <ioh/common/optimization_type.hpp>
+#include <ioh/common/repr.hpp>
+#include <ioh/common/log.hpp>
 
 namespace ioh
 {
@@ -96,7 +97,7 @@ namespace ioh
                 }
 
                 if ((ub.size() != static_cast<size_t>(s)) || (ub.size() != lb.size()))
-                    std::cout << "Bound dimension is wrong" << std::endl;
+                    IOH_DBG(error, "Bound dimension is wrong"); // FIXME raise an exception?
             }
 
             //! Check if the constraints are violated
