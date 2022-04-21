@@ -13,3 +13,4 @@ graft external/pybind11/tools
 include external/pybind11/CMakeLists.txt
 
 include external/clutchlog/clutchlog/clutchlog.h external/clutchlog/CMakeLists.txt
+include generate_sphinx_templates_from_xml.py
