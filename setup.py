@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from fileinput import filename
 import os
 import sys
 import shutil
@@ -9,8 +10,6 @@ import atexit
 
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
-
-from generate_sphinx_templates_from_xml import main
 
 # Convert distutils Windows platform specifiers to CMake -A arguments
 PLAT_TO_CMAKE = {
@@ -27,6 +26,7 @@ if platform.system() == "Darwin":
 
 BASE_DIR = os.path.realpath(os.path.dirname(__file__))
 MAKE_DOCS = os.environ.get("MAKE_DOCS")
+MAKE_STUBS = os.environ.get("MAKE_STUBS")
 
 # A CMakeExtension needs a sourcedir instead of a file list.
 # The name must be the _single_ output extension from the CMake build.
@@ -52,18 +52,20 @@ class CMakeBuild(build_ext):
                 shutil.rmtree(os.path.join(ext.sourcedir, "ioh", subdir))
 
         # generate stub files
-        command = """stubgen -m ioh -m ioh.iohcpp \
-                -m ioh.iohcpp.problem \
-                -m ioh.iohcpp.logger \
-                -m ioh.iohcpp.suite \
-                -m ioh.iohcpp.logger.trigger \
-                -m ioh.iohcpp.logger.property \
-                -o ./"""
+        command = """stubgen -m ioh -p ioh.iohcpp -o ./"""
         subprocess.check_call(command, cwd=ext.sourcedir, shell=True)
+
+        for root, dirs, files in os.walk(os.path.join(ext.sourcedir, "ioh", "iohcpp")):
+            for fname, ext in map(os.path.splitext, files):
+                if fname != "__init__":
+                    os.mkdir(os.path.join(root, fname))
+                    os.rename(os.path.join(root, f"{fname}{ext}"),                        
+                            os.path.join(root, fname, "__init__.pyi"))
 
     def run(self):
         super().run()
-        self.generate_stubs()
+        if MAKE_STUBS:
+            self.generate_stubs()
 
     def build_extension(self, ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
@@ -147,6 +149,7 @@ class CMakeBuild(build_ext):
 def generate_docs():
     if MAKE_DOCS:
         try:
+            from generate_sphinx_templates_from_xml import main
             main()
             directory = os.path.join(BASE_DIR, "doc", "python")
             try:
@@ -160,7 +163,7 @@ def generate_docs():
                 os.path.join(BASE_DIR, "docs"),
                 dirs_exist_ok=True
             )
-        except Exception as err:
+        except:
             warnings.warn("Cannot compile docs", RuntimeWarning)
 
 
@@ -190,17 +193,8 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(),
     package_dir={"IOHexperimenter": "ioh"},
-    package_data={
-        "ioh": [
-            "ioh/__init__.pyi",
-            "ioh/iohcpp/__init__.pyi",
-            "ioh/iohcpp/problem.pyi",
-            "ioh/iohcpp/suite.pyi",
-            "ioh/iohcpp/logger/__init__.pyi",
-            "ioh/iohcpp/logger/property.pyi",
-            "ioh/iohcpp/logger/trigger.pyi",
-        ]
-    },
+    include_package_data=True,
+    exclude_package_data={"": ["src/*", "*CMakeLists.txt", "*README.md"]},
     ext_modules=[iohcpp],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,

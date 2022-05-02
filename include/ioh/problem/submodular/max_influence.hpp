@@ -12,7 +12,8 @@ namespace ioh
         namespace submodular
         {
             // Max Influence
-            // Description: refer to Evolutionary Submodular Optimization website at https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php
+            // Description: refer to Evolutionary Submodular Optimization website at
+            // https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php
             class MaxInfluence final : public GraphProblem<MaxInfluence>
             {
             private:
@@ -84,13 +85,12 @@ namespace ioh
                                  ? "example_list_maxinfluence"
                                  : Helper::instance_list_path) :
                     GraphProblem(instance + 1000000, // problem id, starting at 1000000
-                        instance, // the instance id
-                        read_instances_from_files(
-                            instance - 1, false,
-                            instance_file), // dimensions
-                        "MaxInfluence" + std::to_string(instance), // problem name
-                        false, // Using number of edges as dimension or not
-                        instance_file)
+                                 instance, // the instance id
+                                 read_instances_from_files(instance - 1, false,
+                                                           instance_file), // dimensions
+                                 "MaxInfluence" + std::to_string(instance), // problem name
+                                 false, // Using number of edges as dimension or not
+                                 instance_file)
                 {
                     if (is_null())
                     {

@@ -1,4 +1,5 @@
 from typing import Dict, List, Optional, Tuple
+from . import eaf, eah, property, trigger
 
 from typing import overload
 import ioh.iohcpp

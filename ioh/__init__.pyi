@@ -1,6 +1,15 @@
 import typing
-from .iohcpp import IntegerSolution, OptimizationType, RealSolution, logger
+from .iohcpp import IntegerSolution, OptimizationType, RealSolution
+
+from .iohcpp import problem as problem
+from .iohcpp import suite as suite
+from .iohcpp import logger as logger
+
 from typing import Any
+
+ProblemType = typing.Union[problem.Real, problem.Integer]
+VariableType = typing.Union[int, float]
+ObjectiveType = typing.List[VariableType]
 
 def get_problem(fid: typing.Union[int, str], instance: int = ..., dimension: int = ..., problem_type: str = ...) -> ProblemType: ...
 def wrap_problem(function: typing.Callable[[ObjectiveType], float], name: str, problem_type: str, dimension: int = ..., instance: int = ..., optimization_type: OptimizationType = ..., lb: VariableType = ..., ub: VariableType = ..., transform_variables: typing.Callable[[ObjectiveType, int], ObjectiveType] = ..., transform_objectives: typing.Callable[[float, int], float] = ..., calculate_objective: typing.Callable[[int, int], typing.Union[IntegerSolution, RealSolution]] = ...) -> ProblemType: ...

@@ -9,24 +9,21 @@ import multiprocessing
 import typing
 import shutil
 import copy
-
-try:
-    from .iohcpp import (
-        problem,
-        suite,
-        logger,
-        OptimizationType,
-        RealSolution,
-        IntegerSolution,
-        IntegerConstraint,
-        RealConstraint,
-        RealState,
-        IntegerState,
-        MetaData,
-        LogInfo,
-    )
-except ModuleNotFoundError:
-    raise ModuleNotFoundError("No module named ioh")
+ 
+from .iohcpp import (
+    problem,
+    suite, 
+    logger,
+    OptimizationType,
+    RealSolution,
+    IntegerSolution,
+    IntegerConstraint,
+    RealConstraint,
+    RealState, 
+    IntegerState,
+    MetaData,
+    LogInfo,
+)
 
 
 ProblemType = typing.Union[problem.Real, problem.Integer]
