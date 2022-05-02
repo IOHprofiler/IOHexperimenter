@@ -26,3 +26,9 @@
 #include "pbo/one_max_ruggedness1.hpp"
 #include "pbo/one_max_ruggedness2.hpp"
 #include "pbo/one_max_ruggedness3.hpp"
+
+#include "submodular/graph_problem.hpp"
+#include "submodular/max_coverage.hpp"
+#include "submodular/max_cut.hpp"
+#include "submodular/max_influence.hpp"
+#include "submodular/pack_while_travel.hpp"
