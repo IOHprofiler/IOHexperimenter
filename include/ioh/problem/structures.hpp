@@ -6,6 +6,7 @@
 
 #include "ioh/common/optimization_type.hpp"
 #include "ioh/common/repr.hpp"
+#include "ioh/common/log.hpp"
 
 namespace ioh
 {
@@ -96,7 +97,7 @@ namespace ioh
                 }
 
                 if ((ub.size() != static_cast<size_t>(s)) || (ub.size() != lb.size()))
-                    IOH_DBG(debug, "Bound dimension is wrong")
+                    IOH_DBG(debug, "Bound dimension is wrong");
             }
 
             //! Check if the constraints are violated
