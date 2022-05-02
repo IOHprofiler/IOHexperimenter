@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from fileinput import filename
 import os
 import sys
 import shutil
@@ -54,13 +53,6 @@ class CMakeBuild(build_ext):
         # generate stub files
         command = """stubgen -m ioh -p ioh.iohcpp -o ./"""
         subprocess.check_call(command, cwd=ext.sourcedir, shell=True)
-
-        for root, dirs, files in os.walk(os.path.join(ext.sourcedir, "ioh", "iohcpp")):
-            for fname, ext in map(os.path.splitext, files):
-                if fname != "__init__":
-                    os.mkdir(os.path.join(root, fname))
-                    os.rename(os.path.join(root, f"{fname}{ext}"),                        
-                            os.path.join(root, fname, "__init__.pyi"))
 
     def run(self):
         super().run()
@@ -144,7 +136,6 @@ class CMakeBuild(build_ext):
         subprocess.check_call(
             ["cmake", "--build", "."] + build_args, cwd=self.build_temp
         )
-
 
 def generate_docs():
     if MAKE_DOCS:

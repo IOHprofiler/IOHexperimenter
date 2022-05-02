@@ -96,7 +96,7 @@ namespace ioh
                 }
 
                 if ((ub.size() != static_cast<size_t>(s)) || (ub.size() != lb.size()))
-                    std::cout << "Bound dimension is wrong" << std::endl;
+                    IOH_DBG(debug, "Bound dimension is wrong")
             }
 
             //! Check if the constraints are violated

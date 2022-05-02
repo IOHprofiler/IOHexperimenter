@@ -31,7 +31,7 @@ namespace ioh
                         return n_items;
                     is_initialized = false;
                     std::vector<std::string> instance_list = Helper::read_list_instance(instance_list_file);
-                    if (instance_list.size() <= instance || instance < 0) // If instance id is invalid,
+                    if (static_cast<int>(instance_list.size()) <= instance || instance < 0) // If instance id is invalid,
                                                // return a valid dummy size
                         return 1;
                     std::ifstream ttp_data(instance_list[instance]);
@@ -43,31 +43,32 @@ namespace ioh
                     while (std::getline(ttp_data, str, eol) && index_line++ < 2); // Skip 2 lines, to line 3
                     int n_cities; // Number of locations
                     if (!Helper::is_int(str.substr(str.find_last_of(':') + 1), &n_cities)){
-                        std::cout << "Cannot read number of cities for PWT" << std::endl;
+                        
+                        IOH_DBG(debug,  "Cannot read number of cities for PWT" )
                         return 1; // return a valid dummy size
                     }
                     std::getline(ttp_data, str, eol); // Number of items
                     if (!Helper::is_int(str.substr(str.find_last_of(':') + 1), &n_items))
                     {
-                        std::cout << "Cannot read number of items for PWT" << std::endl;
+                        IOH_DBG(debug,  "Cannot read number of items for PWT" )
                         return 1; // return a valid dummy size
                     }
                     std::getline(ttp_data, str, eol); // Carry capacity
                     if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &capacity))
                     {
-                        std::cout << "Cannot read carry capacity for PWT" << std::endl;
+                        IOH_DBG(debug,  "Cannot read carry capacity for PWT" )
                         return 1; // return a valid dummy size
                     }
                     std::getline(ttp_data, str, eol); // Minimum velocity
                     if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &velocity_gap))
                     {
-                        std::cout << "Cannot read minimum velocity for PWT" << std::endl;
+                        IOH_DBG(debug,  "Cannot read minimum velocity for PWT" )
                         return 1; // return a valid dummy size
                     }
                     std::getline(ttp_data, str, eol); // Maximum velocity
                     if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &velocity_max))
                     {
-                        std::cout << "Cannot read maximum velocity for PWT" << std::endl;
+                        IOH_DBG(debug,  "Cannot read maximum velocity for PWT" )
                         return 1; // return a valid dummy size
                     }
                     velocity_gap = velocity_max - velocity_gap;
@@ -75,7 +76,7 @@ namespace ioh
                     double rent_ratio; // Rent ratio
                     if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &rent_ratio))
                     {
-                        std::cout << "Cannot read rent ratio for PWT" << std::endl;
+                        IOH_DBG(debug,  "Cannot read rent ratio for PWT" )
                         return 1; // return a valid dummy size
                     }
                     while (std::getline(ttp_data, str, eol) && index_line++ < 5) // Skip 2 lines, to line 11
@@ -85,7 +86,7 @@ namespace ioh
                     if (!Helper::is_double(str.substr(first_space + 1, second_space - first_space - 1), &init_x) ||
                         !Helper::is_double(str.substr(second_space + 1), &init_y))
                     {
-                        std::cout << "Cannot read coordinates for PWT" << std::endl;
+                        IOH_DBG(debug,  "Cannot read coordinates for PWT" )
                         return 1; // return a valid dummy size
                     }
                     cur_x = init_x;
@@ -103,7 +104,7 @@ namespace ioh
                         if (!Helper::is_double(str.substr(first_space + 1, second_space - first_space - 1), &next_x) ||
                             !Helper::is_double(str.substr(second_space + 1), &next_y))
                         {
-                            std::cout << "Cannot read coordinates for PWT" << std::endl;
+                            IOH_DBG(debug,  "Cannot read coordinates for PWT" )
                             return 1; // return a valid dummy size
                         }
                         distance =
@@ -125,7 +126,7 @@ namespace ioh
                         first_space = tstr.find_first_of('	');
                         second_space = tstr.find_last_of('	');
                         int city_index = std::stoi(tstr.substr(second_space + 1)) - 1;
-                        while (weights->size() <= city_index)
+                        while (static_cast<int>(weights->size()) <= city_index)
                         {
                             weights->push_back({});
                             profits->push_back({});
@@ -139,7 +140,7 @@ namespace ioh
                         }
                         else
                         {
-                            std::cout << "Cannot read item profits for PWT" << std::endl;
+                            IOH_DBG(debug,  "Cannot read item profits for PWT" )
                             return 1; // return a valid dummy size
                         }
                         if (Helper::is_double(tstr.substr(first_space + 1, second_space - first_space - 1), &temp))
@@ -148,7 +149,7 @@ namespace ioh
                         }
                         else
                         {
-                            std::cout << "Cannot read item weights for PWT" << std::endl;
+                            IOH_DBG(debug,  "Cannot read item weights for PWT" )
                             return 1; // return a valid dummy size
                         }
                     }
@@ -165,9 +166,9 @@ namespace ioh
                 double evaluate(const std::vector<int> &x) override
                 {
                     double profit_sum = 0, cons = 0, time = 0;
-                    for (auto i = 0; i < weights->size(); i++)
+                    for (size_t i = 0; i < weights->size(); i++)
                     {
-                        for (auto j = 0; j < (*weights)[i].size(); j++)
+                        for (size_t j = 0; j < (*weights)[i].size(); j++)
                         {
                             if (x[(*index_map)[i][j]] >= 1)
                             {
@@ -192,7 +193,7 @@ namespace ioh
                 int get_dim() { return is_null() ? 0 : n_items; }
 
                 // Constructor
-                PackWhileTravel(const int instance = 1, const int n_variables = 1,
+                PackWhileTravel(const int instance = 1, [[maybe_unused]] const int n_variables = 1,
                                 const std::string &instance_list_file = Helper::instance_list_path.empty()
                                     ? "example_list_pwt"
                                     : Helper::instance_list_path) :
@@ -206,7 +207,7 @@ namespace ioh
                 {
                     if (is_null())
                     {
-                        std::cout << "Instance not created properly (e.g. invalid id)." << std::endl;
+                        IOH_DBG(debug,  "Instance not created properly (e.g. invalid id)." )
                         return;
                     }
                     if (velocity_gap >= velocity_max || velocity_gap <= 0 || velocity_max <= 0)
@@ -216,14 +217,14 @@ namespace ioh
                         throw std::invalid_argument("Capacity must be positive");
                     if (weights->size() != profits->size() || weights->size() != distances->size())
                         throw std::invalid_argument("Weights, profits, and number of cities don't match");
-                    for (int i = 0; i < weights->size(); i++)
+                    for (size_t i = 0; i < weights->size(); i++)
                     {
                         if ((*weights)[i].size() != (*profits)[i].size())
                             throw std::invalid_argument("Weights and profits don't match");
                     }
-                    for (int i = 0; i < weights->size(); i++)
+                    for (size_t i = 0; i < weights->size(); i++)
                     {
-                        for (int j = 0; j < (*weights)[i].size(); j++)
+                        for (size_t j = 0; j < (*weights)[i].size(); j++)
                         {
                             if ((*weights)[i][j] < 0 || (*profits)[i][j] < 0)
                                 throw std::invalid_argument("Weights and profits must be non-negative");

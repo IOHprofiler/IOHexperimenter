@@ -80,7 +80,7 @@ namespace ioh
                 }
 
             public:
-                MaxInfluence(const int instance = 1, const int n_variables = 1,
+                MaxInfluence(const int instance = 1, [[maybe_unused]] const int n_variables = 1,
                              const std::string &instance_file = Helper::instance_list_path.empty()
                                  ? "example_list_maxinfluence"
                                  : Helper::instance_list_path) :
@@ -94,7 +94,7 @@ namespace ioh
                 {
                     if (is_null())
                     {
-                        std::cout << "Null MaxInfluence instance" << std::endl;
+                        IOH_DBG(warning, "Null MaxInfluence instance")
                         return;
                     }
                     objective_.x = std::vector<int>(graph->get_n_vertices(), 1);

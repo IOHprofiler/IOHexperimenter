@@ -2,11 +2,12 @@
 
 #pragma once
 
-#include "ioh/problem/problem.hpp"
-#include "ioh/problem/transformation.hpp"
-
 #include <fstream>
 #include <limits>
+
+#include "ioh/common/log.hpp"
+#include "ioh/problem/problem.hpp"
+#include "ioh/problem/transformation.hpp"
 
 namespace ioh
 {
@@ -17,7 +18,7 @@ namespace ioh
             class Helper
             {
             public:
-                inline static std::string instance_list_path;// Default path to instance list file
+                inline static std::string instance_list_path; // Default path to instance list file
                 // Helper: Get end of line characters in a file, assume file can be read
                 static char get_eol_in_file(const std::string &file_path)
                 {
@@ -31,14 +32,13 @@ namespace ioh
                     return eol;
                 }
                 // Helper: Read instance list from file
-                static std::vector<std::string>
-                read_list_instance(const std::string &path_to_meta_list_instance)
+                static std::vector<std::string> read_list_instance(const std::string &path_to_meta_list_instance)
                 {
                     std::vector<std::string> l{};
                     std::ifstream list_data(path_to_meta_list_instance);
                     if (!list_data)
                     {
-                        std::cout << "Fail to instance list file: " << path_to_meta_list_instance << std::endl;
+                        IOH_DBG(debug, fmt::format("Fail to instance list file: {}", path_to_meta_list_instance))
                         return {};
                     }
                     instance_list_path = path_to_meta_list_instance;
@@ -53,7 +53,7 @@ namespace ioh
                     return l;
                 }
                 // Helper: check if string is double
-                static bool is_double(const std::string &text, double *num = new double()) 
+                static bool is_double(const std::string &text, double *num = new double())
                 {
                     return ((std::istringstream(text) >> *num >> std::ws).eof());
                 }
@@ -133,11 +133,11 @@ namespace ioh
                         if (str.empty()) // Skip over empty lines
                             continue;
                         int first_vertex = 0, second_vertex = 1;
-                        for (auto i = 0; i < str.size(); i++)
+                        for (size_t i = 0; i < str.size(); i++)
                         {
                             if (str[i] == ' ') // Read 2 end vertices
                             {
-                                if (Helper::is_int(str.substr(0, i), &first_vertex)&&
+                                if (Helper::is_int(str.substr(0, i), &first_vertex) &&
                                     Helper::is_int(str.substr(i + 1), &second_vertex))
                                 {
                                     first_vertex--;
@@ -145,15 +145,15 @@ namespace ioh
                                 }
                                 else
                                 {
-                                    std::cout << "Invalid edge file format" << std::endl;
-                                    n_vertices=0;
+                                    IOH_DBG(debug, "Invalid edge file format")
+                                    n_vertices = 0;
                                     return;
                                 }
                                 break;
                             }
                         }
                         int max_vertex = std::max(first_vertex, second_vertex);
-                        while (adj_array.size() <= max_vertex) // Fill array until enough entries for vertices
+                        while (static_cast<int>(adj_array.size()) <= max_vertex) // Fill array until enough entries for vertices
                         {
                             adj_array.push_back({});
                             edge_weights.push_back({});
@@ -189,7 +189,7 @@ namespace ioh
                                 edge_weights[edge_indexes[index][0]][edge_indexes[index][1]] = temp;
                             else
                             {
-                                std::cout << "Invalid edge weights file format" << std::endl;
+                                IOH_DBG(debug, "Invalid edge weights file format")
                                 n_vertices = 0;
                                 return;
                             }
@@ -215,7 +215,7 @@ namespace ioh
                                 vertex_weights[index++] = temp;
                             else
                             {
-                                std::cout << "Invalid vertex weights file format" << std::endl;
+                                IOH_DBG(debug, "Invalid vertex weights file format")
                                 n_vertices = 0;
                                 return;
                             }
@@ -241,7 +241,7 @@ namespace ioh
                                 cons_weights.push_back(temp);
                             else
                             {
-                                std::cout << "Invalid constraint weights file format" << std::endl;
+                                IOH_DBG(debug, "Invalid constraint weights file format")
                                 n_vertices = 0;
                                 return;
                             }
@@ -254,12 +254,9 @@ namespace ioh
                 }
                 // Instantiate graph instance object via file names vector
                 GraphInstance(const std::vector<std::string> &files = {"NULL"}, const bool is_edge = false) :
-                    GraphInstance(files[0], 
-                        files.size() > 1 ? files[1] : nullptr,
-                        files.size() > 2 ? files[2] : nullptr, 
-                        files.size() > 3 ? files[3] : nullptr,
-                        is_edge,
-                        (files.size() > 4 && Helper::is_double(files[4])) ? std::stod(files[4]) : 0)
+                    GraphInstance(files[0], files.size() > 1 ? files[1] : nullptr,
+                                  files.size() > 2 ? files[2] : nullptr, files.size() > 3 ? files[3] : nullptr, is_edge,
+                                  (files.size() > 4 && Helper::is_double(files[4])) ? std::stod(files[4]) : 0)
                 {
                 }
                 // Empty constructor
@@ -280,17 +277,15 @@ namespace ioh
             public:
                 // Read list of graph instances to load, return problem dimension
                 // First, read the meta list of files to load (one entry per line), then read the files
-                // Each entry is formatted with {Edge list}|[Edge weights]|[Vertex weights]|[Constraint weights]|[Chance constraint factor]
-                // "NULL" within an entry means no file
-                // Chance constraint factor must be in numeric
-                int read_instances_from_files(const int instance,
-                    const bool is_edge = false,
-                    const std::string &path_to_meta_list_graph = Helper::instance_list_path)
+                // Each entry is formatted with {Edge list}|[Edge weights]|[Vertex weights]|[Constraint weights]|[Chance
+                // constraint factor] "NULL" within an entry means no file Chance constraint factor must be in numeric
+                int read_instances_from_files(const int instance, const bool is_edge = false,
+                                              const std::string &path_to_meta_list_graph = Helper::instance_list_path)
                 {
                     std::ifstream list_data(path_to_meta_list_graph);
                     if (!list_data)
                     {
-                        std::cout << "Fail to open instance list file: " << path_to_meta_list_graph << std::endl;
+                        IOH_DBG(debug, fmt::format("Fail to open instance list file: {}", path_to_meta_list_graph))
                         is_initialized = false;
                         return 0;
                     }
@@ -317,7 +312,7 @@ namespace ioh
                         }
                     }
                     is_initialized = false;
-                    return 0;// No matching instance (e.g. invalid instance)
+                    return 0; // No matching instance (e.g. invalid instance)
                 }
                 // Check if instance is null
                 bool is_null() { return (!is_initialized) || graph->is_empty(); }
@@ -338,16 +333,14 @@ namespace ioh
                  * @param instance_list_file the name of file containing instance list
                  */
                 Graph(const int problem_id, const int instance, const int n_variables, const std::string &name,
-                      const bool is_edge, const std::string &instance_list_file = Helper::instance_list_path) :
+                      [[maybe_unused]] const bool is_edge, [[maybe_unused]] const std::string &instance_list_file = Helper::instance_list_path) :
                     Integer(MetaData(problem_id, instance, name, n_variables,
-                        // n_variables,
-                        common::OptimizationType::Maximization),
+                                     common::OptimizationType::Maximization),
                             Constraint<int>(n_variables, 0, 1))
                 {
                     if (is_null())
                     {
-                        std::cout << "Invalid instance id. Skip creating instance oracle."
-                                  << std::endl;
+                        IOH_DBG(debug, "Invalid instance id. Skip creating instance oracle.")
                         return;
                     }
                 }
