@@ -149,7 +149,7 @@ namespace ioh
                                 }
                                 else
                                 {
-                                    IOH_DBG(error, "Invalid edge file format" ); // FIXME raise an exception?
+                                    IOH_DBG(warning, "Invalid edge file format" ); // FIXME raise an exception?
                                     n_vertices=0;
                                     return;
                                 }
@@ -193,7 +193,7 @@ namespace ioh
                                 edge_weights[edge_indexes[index][0]][edge_indexes[index][1]] = temp;
                             else
                             {
-                                IOH_DBG(error, "Invalid edge weights file format" ); // FIXME raise an exception?
+                                IOH_DBG(warning, "Invalid edge weights file format" ); // FIXME raise an exception?
                                 n_vertices = 0;
                                 return;
                             }
@@ -219,7 +219,7 @@ namespace ioh
                                 vertex_weights[index++] = temp;
                             else
                             {
-                                IOH_DBG(error, "Invalid vertex weights file format" ); // FIXME raise an exception?
+                                IOH_DBG(warning, "Invalid vertex weights file format" ); // FIXME raise an exception?
                                 n_vertices = 0;
                                 return;
                             }
@@ -245,7 +245,7 @@ namespace ioh
                                 cons_weights.push_back(temp);
                             else
                             {
-                                IOH_DBG(error, "Invalid constraint weights file format" ); // FIXME raise an exception?
+                                IOH_DBG(warning, "Invalid constraint weights file format" ); // FIXME raise an exception?
                                 n_vertices = 0;
                                 return;
                             }
@@ -289,7 +289,7 @@ namespace ioh
                     std::ifstream list_data(path_to_meta_list_graph);
                     if (!list_data)
                     {
-                        IOH_DBG(error, "Fail to open instance list file: " << path_to_meta_list_graph ); // FIXME raise an exception?
+                        IOH_DBG(warning, "Fail to open instance list file: " << path_to_meta_list_graph ); // FIXME raise an exception?
                         is_initialized = false;
                         return 0;
                     }
@@ -344,7 +344,7 @@ namespace ioh
                 {
                     if (is_null())
                     {
-                        IOH_DBG(error, "Invalid instance id. Skip creating instance oracle." ); // FIXME raise an exception?
+                        IOH_DBG(warning, "Invalid instance id. Skip creating instance oracle." ); // FIXME raise an exception?
                         return;
                     }
                 }

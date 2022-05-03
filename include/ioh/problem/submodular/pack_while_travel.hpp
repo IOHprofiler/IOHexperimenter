@@ -44,31 +44,31 @@ namespace ioh
                     while (std::getline(ttp_data, str, eol) && index_line++ < 2); // Skip 2 lines, to line 3
                     int n_cities; // Number of locations
                     if (!Helper::is_int(str.substr(str.find_last_of(':') + 1), &n_cities)){
-                        IOH_DBG(error, "Cannot read number of cities for PWT"); // FIXME raise an exception?
+                        IOH_DBG(warning, "Cannot read number of cities for PWT"); // FIXME raise an exception?
                         return 1; // return a valid dummy size
                     }
                     std::getline(ttp_data, str, eol); // Number of items
                     if (!Helper::is_int(str.substr(str.find_last_of(':') + 1), &n_items))
                     {
-                        IOH_DBG(error, "Cannot read number of items for PWT"); // FIXME raise an exception?
+                        IOH_DBG(warning, "Cannot read number of items for PWT"); // FIXME raise an exception?
                         return 1; // return a valid dummy size
                     }
                     std::getline(ttp_data, str, eol); // Carry capacity
                     if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &capacity))
                     {
-                        IOH_DBG(error, "Cannot read carry capacity for PWT"); // FIXME raise an exception?
+                        IOH_DBG(warning, "Cannot read carry capacity for PWT"); // FIXME raise an exception?
                         return 1; // return a valid dummy size
                     }
                     std::getline(ttp_data, str, eol); // Minimum velocity
                     if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &velocity_gap))
                     {
-                        IOH_DBG(error, "Cannot read minimum velocity for PWT"); // FIXME raise an exception?
+                        IOH_DBG(warning, "Cannot read minimum velocity for PWT"); // FIXME raise an exception?
                         return 1; // return a valid dummy size
                     }
                     std::getline(ttp_data, str, eol); // Maximum velocity
                     if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &velocity_max))
                     {
-                        IOH_DBG(error, "Cannot read maximum velocity for PWT"); // FIXME raise an exception?
+                        IOH_DBG(warning, "Cannot read maximum velocity for PWT"); // FIXME raise an exception?
                         return 1; // return a valid dummy size
                     }
                     velocity_gap = velocity_max - velocity_gap;
@@ -76,7 +76,7 @@ namespace ioh
                     double rent_ratio; // Rent ratio
                     if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &rent_ratio))
                     {
-                        IOH_DBG(error, "Cannot read rent ratio for PWT"); // FIXME raise an exception?
+                        IOH_DBG(warning, "Cannot read rent ratio for PWT"); // FIXME raise an exception?
                         return 1; // return a valid dummy size
                     }
                     while (std::getline(ttp_data, str, eol) && index_line++ < 5) // Skip 2 lines, to line 11
@@ -86,7 +86,7 @@ namespace ioh
                     if (!Helper::is_double(str.substr(first_space + 1, second_space - first_space - 1), &init_x) ||
                         !Helper::is_double(str.substr(second_space + 1), &init_y))
                     {
-                        IOH_DBG(error, "Cannot read coordinates for PWT"); // FIXME raise an exception?
+                        IOH_DBG(warning, "Cannot read coordinates for PWT"); // FIXME raise an exception?
                         return 1; // return a valid dummy size
                     }
                     cur_x = init_x;
@@ -207,7 +207,7 @@ namespace ioh
                 {
                     if (is_null())
                     {
-                        IOH_DBG(error, "Instance not created properly (e.g. invalid id)."); // FIXME raise an exception?
+                        IOH_DBG(warning, "Instance not created properly (e.g. invalid id)."); // FIXME raise an exception?
                         return;
                     }
                     if (velocity_gap >= velocity_max || velocity_gap <= 0 || velocity_max <= 0)
