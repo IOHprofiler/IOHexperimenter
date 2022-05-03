@@ -11,7 +11,7 @@ function(register_test test_name test_sources)
     target_link_libraries(${test_name} PRIVATE ${PROJECT_NAME} gtest)
 
     # When testing with ctest, only show messages up to the Warning.
-    gtest_discover_tests(${test_name} EXTRA_ARGS "Warning")
+    gtest_discover_tests(${test_name} EXTRA_ARGS "Warning" "'.*'" "99999")
 endfunction()
 
 # Add all tests in single executable
