@@ -3,6 +3,7 @@
 #pragma once
 #include <queue>
 #include <stdexcept>
+#include <ioh/common/log.hpp>
 #include "graph_problem.hpp"
 
 namespace ioh
@@ -94,7 +95,7 @@ namespace ioh
                 {
                     if (is_null())
                     {
-                        std::cout << "Null MaxInfluence instance" << std::endl;
+                        IOH_DBG(error, "Null MaxInfluence instance"); // FIXME raise an exception?
                         return;
                     }
                     objective_.x = std::vector<int>(graph->get_n_vertices(), 1);
