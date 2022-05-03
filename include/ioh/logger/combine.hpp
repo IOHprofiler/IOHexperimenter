@@ -52,7 +52,6 @@ namespace ioh::logger
         /** Handle several loggers at once, but you have to pass pointers.
          *
          * @note you can use initializer lists to instantiate the given std::vector:
-         * 
          * @code
             LoggerCombine loggers({log_ecdf, log_csv});
          * @endcode
