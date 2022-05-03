@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ioh/common/log.hpp>
 #include "triggers.hpp"
 #include "properties.hpp"
 
@@ -114,8 +115,8 @@ namespace ioh {
         , problem_(nullptr)
         {
             //  auto ref = properties_.at("Att_PtrRef");
-            //     std::cout << "ref addr " << &ref.get() << std::endl;
-            //     std::cout << ref.get()(log_info).value_or(-1) << std::endl;
+            //     IOH_DBG(debug, "ref addr " << &ref.get());
+            //     IOH_DBG(debug, ref.get()(log_info).value_or(-1));
             
             store_properties(properties);
             assert(consistent_properties());

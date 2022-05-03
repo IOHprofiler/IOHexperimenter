@@ -3,6 +3,7 @@
 #pragma once
 #include <queue>
 #include <stdexcept>
+#include <ioh/common/log.hpp>
 #include "graph_problem.hpp"
 
 namespace ioh
