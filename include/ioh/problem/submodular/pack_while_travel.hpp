@@ -32,7 +32,7 @@ namespace ioh
                         return n_items;
                     is_initialized = false;
                     std::vector<std::string> instance_list = Helper::read_list_instance(instance_list_file);
-                    if (instance_list.size() <= instance || instance < 0) // If instance id is invalid,
+                    if (static_cast<int>(instance_list.size()) <= instance || instance < 0) // If instance id is invalid,
                                                // return a valid dummy size
                         return 1;
                     std::ifstream ttp_data(instance_list[instance]);
@@ -104,7 +104,7 @@ namespace ioh
                         if (!Helper::is_double(str.substr(first_space + 1, second_space - first_space - 1), &next_x) ||
                             !Helper::is_double(str.substr(second_space + 1), &next_y))
                         {
-                            IOH_DBG(error, "Cannot read coordinates for PWT"); // FIXME raise an exception?
+                            IOH_DBG(warning,  "Cannot read coordinates for PWT" )
                             return 1; // return a valid dummy size
                         }
                         distance =
@@ -126,7 +126,7 @@ namespace ioh
                         first_space = tstr.find_first_of('	');
                         second_space = tstr.find_last_of('	');
                         int city_index = std::stoi(tstr.substr(second_space + 1)) - 1;
-                        while (weights->size() <= city_index)
+                        while (static_cast<int>(weights->size()) <= city_index)
                         {
                             weights->push_back({});
                             profits->push_back({});
@@ -140,7 +140,7 @@ namespace ioh
                         }
                         else
                         {
-                            IOH_DBG(error, "Cannot read item profits for PWT"); // FIXME raise an exception?
+                            IOH_DBG(warning,  "Cannot read item profits for PWT" )
                             return 1; // return a valid dummy size
                         }
                         if (Helper::is_double(tstr.substr(first_space + 1, second_space - first_space - 1), &temp))
@@ -149,7 +149,7 @@ namespace ioh
                         }
                         else
                         {
-                            IOH_DBG(error, "Cannot read item weights for PWT"); // FIXME raise an exception?
+                            IOH_DBG(warning,  "Cannot read item weights for PWT" )
                             return 1; // return a valid dummy size
                         }
                     }
@@ -166,9 +166,9 @@ namespace ioh
                 double evaluate(const std::vector<int> &x) override
                 {
                     double profit_sum = 0, cons = 0, time = 0;
-                    for (auto i = 0; i < weights->size(); i++)
+                    for (size_t i = 0; i < weights->size(); i++)
                     {
-                        for (auto j = 0; j < (*weights)[i].size(); j++)
+                        for (size_t j = 0; j < (*weights)[i].size(); j++)
                         {
                             if (x[(*index_map)[i][j]] >= 1)
                             {
@@ -193,7 +193,7 @@ namespace ioh
                 int get_dim() { return is_null() ? 0 : n_items; }
 
                 // Constructor
-                PackWhileTravel(const int instance = 1, const int n_variables = 1,
+                PackWhileTravel(const int instance = 1, [[maybe_unused]] const int n_variables = 1,
                                 const std::string &instance_list_file = Helper::instance_list_path.empty()
                                     ? "example_list_pwt"
                                     : Helper::instance_list_path) :
@@ -217,14 +217,14 @@ namespace ioh
                         throw std::invalid_argument("Capacity must be positive");
                     if (weights->size() != profits->size() || weights->size() != distances->size())
                         throw std::invalid_argument("Weights, profits, and number of cities don't match");
-                    for (int i = 0; i < weights->size(); i++)
+                    for (size_t i = 0; i < weights->size(); i++)
                     {
                         if ((*weights)[i].size() != (*profits)[i].size())
                             throw std::invalid_argument("Weights and profits don't match");
                     }
-                    for (int i = 0; i < weights->size(); i++)
+                    for (size_t i = 0; i < weights->size(); i++)
                     {
-                        for (int j = 0; j < (*weights)[i].size(); j++)
+                        for (size_t j = 0; j < (*weights)[i].size(); j++)
                         {
                             if ((*weights)[i][j] < 0 || (*profits)[i][j] < 0)
                                 throw std::invalid_argument("Weights and profits must be non-negative");

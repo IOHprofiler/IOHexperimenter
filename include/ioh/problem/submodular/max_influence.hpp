@@ -13,7 +13,8 @@ namespace ioh
         namespace submodular
         {
             // Max Influence
-            // Description: refer to Evolutionary Submodular Optimization website at https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php
+            // Description: refer to Evolutionary Submodular Optimization website at
+            // https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php
             class MaxInfluence final : public GraphProblem<MaxInfluence>
             {
             private:
@@ -80,22 +81,21 @@ namespace ioh
                 }
 
             public:
-                MaxInfluence(const int instance = 1, const int n_variables = 1,
+                MaxInfluence(const int instance = 1, [[maybe_unused]] const int n_variables = 1,
                              const std::string &instance_file = Helper::instance_list_path.empty()
                                  ? "example_list_maxinfluence"
                                  : Helper::instance_list_path) :
                     GraphProblem(instance + 1000000, // problem id, starting at 1000000
-                        instance, // the instance id
-                        read_instances_from_files(
-                            instance - 1, false,
-                            instance_file), // dimensions
-                        "MaxInfluence" + std::to_string(instance), // problem name
-                        false, // Using number of edges as dimension or not
-                        instance_file)
+                                 instance, // the instance id
+                                 read_instances_from_files(instance - 1, false,
+                                                           instance_file), // dimensions
+                                 "MaxInfluence" + std::to_string(instance), // problem name
+                                 false, // Using number of edges as dimension or not
+                                 instance_file)
                 {
                     if (is_null())
                     {
-                        IOH_DBG(error, "Null MaxInfluence instance"); // FIXME raise an exception?
+                        IOH_DBG(warning, "Null MaxInfluence instance")
                         return;
                     }
                     objective_.x = std::vector<int>(graph->get_n_vertices(), 1);

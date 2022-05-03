@@ -19,7 +19,7 @@ option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python module
 
 if(MSVC)
     set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windows
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /bigobj")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT /02") 
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd ")
 endif()  

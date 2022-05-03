@@ -4,15 +4,15 @@
 #include <utility>
 #include <vector>
 
-#include <ioh/common/optimization_type.hpp>
-#include <ioh/common/repr.hpp>
-#include <ioh/common/log.hpp>
+#include "ioh/common/log.hpp"
+#include "ioh/common/optimization_type.hpp"
+#include "ioh/common/repr.hpp"
 
 namespace ioh
 {
     namespace problem
     {
-        //! Solution object
+        //! Solution object 
         template <typename T>
         struct Solution : common::HasRepr
         {
@@ -31,28 +31,27 @@ namespace ioh
             Solution(const std::vector<T> &x, const double y) : x(x), y(y) {}
 
             //! Shorthand constructor for use with unknown optimum
-            Solution(const int n_variables, const common::OptimizationType optimization_type) : 
+            Solution(const int n_variables, const common::OptimizationType optimization_type) :
                 x(std::vector<T>(n_variables, std::numeric_limits<T>::signaling_NaN())),
-                y{optimization_type == common::OptimizationType::Minimization
-                             ? -std::numeric_limits<double>::infinity()
-                             : std::numeric_limits<double>::infinity()} {}
-
-            Solution() = default;
-            
-            /** @brief Returns true if the solution's objective has been set.
-             */
-            bool exists() {
-                return y !=  std::numeric_limits<double>::signaling_NaN()
-                   and y !=  std::numeric_limits<double>::infinity()
-                   and y != -std::numeric_limits<double>::infinity();
+                y{optimization_type == common::OptimizationType::Minimization ? -std::numeric_limits<double>::infinity()
+                                                                              : std::numeric_limits<double>::infinity()}
+            {
             }
 
-            std::string repr() const override {
-                return fmt::format("<Solution x: {} y: {}>", x, y); }
+            Solution() = default;
+
+            /** @brief Returns true if the solution's objective has been set.
+             */
+            bool exists()
+            {
+                return y != std::numeric_limits<double>::signaling_NaN() and
+                    y != std::numeric_limits<double>::infinity() and y != -std::numeric_limits<double>::infinity();
+            }
+
+            std::string repr() const override { return fmt::format("<Solution x: {} y: {}>", x, y); }
 
             //! Cast solution to double type
-            [[nodiscard]] Solution<double> as_double() const {
-                return {std::vector<double>(x.begin(), x.end()), y}; }
+            [[nodiscard]] Solution<double> as_double() const { return {std::vector<double>(x.begin(), x.end()), y}; }
         };
 
         //! Box-Constraint object
@@ -97,7 +96,7 @@ namespace ioh
                 }
 
                 if ((ub.size() != static_cast<size_t>(s)) || (ub.size() != lb.size()))
-                    IOH_DBG(error, "Bound dimension is wrong"); // FIXME raise an exception?
+                    IOH_DBG(warning, "Bound dimension is wrong");
             }
 
             //! Check if the constraints are violated

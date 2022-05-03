@@ -9,24 +9,21 @@ import multiprocessing
 import typing
 import shutil
 import copy
-
-try:
-    from .iohcpp import (
-        problem,
-        suite,
-        logger,
-        OptimizationType,
-        RealSolution,
-        IntegerSolution,
-        IntegerConstraint,
-        RealConstraint,
-        RealState,
-        IntegerState,
-        MetaData,
-        LogInfo,
-    )
-except ModuleNotFoundError:
-    raise ModuleNotFoundError("No module named ioh")
+ 
+from .iohcpp import (
+    problem,
+    suite, 
+    logger,
+    OptimizationType,
+    RealSolution,
+    IntegerSolution,
+    IntegerConstraint,
+    RealConstraint,
+    RealState, 
+    IntegerState,
+    MetaData,
+    LogInfo,
+)
 
 
 ProblemType = typing.Union[problem.Real, problem.Integer]
@@ -398,6 +395,10 @@ class Experiment:
             The target folder, i.e. the folder with the final output
         """
 
+        def file_to_dir(path):
+            root, dirname = os.path.split(os.path.splitext(path)[0])
+            return os.path.join(root, dirname.replace("IOHprofiler", "data"))
+
         root = os.path.dirname(self.logger_root)
 
         for folder_name in os.listdir(root):
@@ -420,12 +421,9 @@ class Experiment:
 
                     target = os.path.join(target_folder, info_file)
                     target_exists = os.path.isfile(target)
-                    source_dat_folder = os.path.splitext(source)[0].replace(
-                        "IOHprofiler", "data"
-                    )
-                    target_dat_folder = os.path.splitext(target)[0].replace(
-                        "IOHprofiler", "data"
-                    )
+
+                    source_dat_folder = file_to_dir(source)
+                    target_dat_folder = file_to_dir(target)
 
                     with open(source) as info_in, open(target, "a+") as info_out:
                         if target_exists:

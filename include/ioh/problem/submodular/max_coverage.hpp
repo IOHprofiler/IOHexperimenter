@@ -53,7 +53,7 @@ namespace ioh
                 }
 
             public:
-                MaxCoverage(const int instance = 1, const int n_variable = 1,
+                MaxCoverage(const int instance = 1, [[maybe_unused]] const int n_variable = 1,
                             const std::string &instance_file = Helper::instance_list_path.empty()
                                 ? "example_list_maxcoverage"
                                 : Helper::instance_list_path) :
@@ -68,7 +68,7 @@ namespace ioh
                 {
                     if (is_null())
                     {
-                        IOH_DBG(error, "Null MaxCoverage instance"); // FIXME raise an exception?
+                        IOH_DBG(warning, "Null MaxCoverage instance")
                         return;
                     }
                     objective_.x = std::vector<int>(graph->get_n_vertices(), 1);

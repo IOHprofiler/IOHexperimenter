@@ -26,11 +26,15 @@ TEST_F(BaseTest, common_log)
     auto& ioh_dbg = clutchlog::logger();
     ioh_dbg.threshold(clutchlog::level::xdebug);
     ioh_dbg.file(".*");
-    ioh_dbg.depth(std::numeric_limits<size_t>::max());
+    
+    // @Johann Jacob: I don't know what this does, but the default constructor subtracts _strip_calls
+    // from the depth. If I set it to std::numeric_limits<size_t>::max(), then no messages are logged.
+    // I added the -5 (default value for _strip_calls) and then it again logs the expected message. 
+    ioh_dbg.depth(std::numeric_limits<size_t>::max() - 5);
 
 	testing::internal::CaptureStderr();
 	ioh_dbg.format("{msg}");
-	IOH_DBG(info,"Hello")
+	IOH_DBG(info, "Hello")
 	auto output = testing::internal::GetCapturedStderr();
     EXPECT_EQ(output, "Hello\x1B[0m"); // Hello + color reset ANSI code
 }
