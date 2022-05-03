@@ -49,11 +49,17 @@ namespace ioh
             }
 
 
-            //! Comparison operator between two values v1 & v2. > When OptimizationType is Maximization, < otherwise. 
+            /** Comparison operator between two values v1 & v2. > When OptimizationType is Maximization, < otherwise. 
+             * 
+             * @return true if v1 is better than v2
+             */
             bool operator()(const double v1, const double v2) const { return comparator_(v1, v2); }
 
             //! Equality operator
             bool operator==(FOptimizationType other) const { return type_ == other.type(); }
+
+            //! Equality operator
+            bool operator==(OptimizationType other) const { return type_ == other; }
         };
 
     } // namespace common

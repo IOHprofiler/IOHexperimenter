@@ -5,6 +5,39 @@
 
 using namespace ioh;
 
+TEST_F(BaseTest, eaf_single_level)
+{
+    const size_t n_variables = 20;
+    const size_t instance  = 0;
+    const double w_dummy   = 0;
+    const int w_epistasis  = 6;
+    const int w_neutrality = 2;
+    const int w_ruggedness = 10;
+    const int max_target   = 3;//10; // known optimum
+
+    ioh::problem::wmodel::WModelOneMax pb(instance, n_variables, w_dummy, w_epistasis, w_neutrality, w_ruggedness);
+
+    logger::EAF eaf;
+    pb.attach_logger(eaf);
+
+    std::vector<int> sol1(20,0), sol2(20,0);
+    
+    sol1[19] = 1;
+    pb(sol1);
+
+    auto levels = logger::eaf::levels(eaf);
+    EXPECT_EQ(levels.size(),1);
+
+    double vol_min = logger::eaf::stat::volume(eaf);
+    EXPECT_GT(vol_min, 0);
+
+    // Use a true nadir point (i.e. epsilon-away from the bound).
+    double vol_max = logger::eaf::stat::volume(eaf, 0-1, max_target, 0, 1+1/*one solutions*/, 1/*one run*/);
+
+    EXPECT_GT(vol_max,0);
+    EXPECT_GT(vol_max, vol_min);
+}
+
 TEST_F(BaseTest, eaf_logger)
 {
     size_t sample_size = 100;
