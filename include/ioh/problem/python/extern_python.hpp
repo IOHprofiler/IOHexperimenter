@@ -1,7 +1,8 @@
 #pragma once
 
 #include "extern_python_helper.hpp"
-#include "ioh/problem.hpp"
+#include <ioh/common/log.hpp>
+#include <ioh/problem.hpp>
 
 namespace ioh {
     namespace problem {
