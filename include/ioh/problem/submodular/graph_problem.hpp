@@ -38,7 +38,7 @@ namespace ioh
                     std::ifstream list_data(path_to_meta_list_instance);
                     if (!list_data)
                     {
-                        IOH_DBG(debug, fmt::format("Fail to instance list file: {}", path_to_meta_list_instance))
+                        IOH_DBG(warning, fmt::format("Fail to instance list file: {}", path_to_meta_list_instance))
                         return {};
                     }
                     instance_list_path = path_to_meta_list_instance;
