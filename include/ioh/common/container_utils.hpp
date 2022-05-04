@@ -110,6 +110,7 @@ namespace ioh
             std::vector<int> v((stop - start) / step);
             std::generate(v.begin(), v.end(), [=, c=start - step] () mutable { c += step; return c; });
             return v;
-        } 
+        }
+        
     }
 }

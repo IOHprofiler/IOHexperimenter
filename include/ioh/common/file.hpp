@@ -1,8 +1,9 @@
+
 #pragma once
 
+#include <fmt/format.h>
 #include <string>
 #include <utility>
-#include <fmt/format.h>
 
 #ifdef FSEXPERIMENTAL
 #include <experimental/filesystem>
@@ -16,9 +17,143 @@ namespace fs = std::filesystem;
 namespace ioh::common::file
 {
 
+    namespace utils
+    {
+        /**
+         * @brief Convert a string to a integral type
+         *
+         * @tparam T the type to cast to
+         * @param s the input string
+         * @return std::enable_if<std::is_integral<T>::value, T>::type
+         */
+        template <typename T>
+        inline typename std::enable_if<std::is_integral<T>::value, T>::type from_string(const std::string &s)
+        {
+            return {std::stoi(s)};
+        }
+
+        /**
+         * @brief Convert a string to a floating point type
+         *
+         * @tparam T the type to cast to
+         * @param s the input string
+         * @return std::enable_if<std::is_integral<T>::value, T>::type
+         */
+        template <typename T>
+        inline typename std::enable_if<std::is_floating_point<T>::value, T>::type from_string(const std::string &s)
+        {
+            return {std::stod(s)};
+        }
+
+        /**
+         * @brief Helper class to extract lines with istream_iterator
+         *
+         */
+        class Line
+        {
+            std::string data;
+
+        public:
+            friend std::istream &operator>>(std::istream &is, Line &l)
+            {
+                std::getline(is, l.data);
+                return is;
+            }
+            operator std::string() const { return data; }
+        };
+    } // namespace utils
+
+
+    /**
+     * @brief Finds a file located in the static folder of this repository
+     *
+     * @param filename the name of the file
+     * @return fs::path the absolute path of the file
+     */
+    inline fs::path find_static_file(const std::string &filename)
+    {
+        auto file = fs::path("IOHexperimenter") / fs::path("static") / filename;
+        fs::path root;
+        for (const auto &e : fs::current_path())
+        {
+            root /= e;
+            if (exists(root / file))
+            {
+                file = root / file;
+                break;
+            }
+        }
+        if (!exists(file))
+        {
+            IOH_DBG(warning, "could not find file: " << filename);
+            return {};
+        }
+        return file;
+    }
+
+    /**
+     * @brief Get the file contents as string object
+     *
+     * @param path the path of the file
+     * @return std::string the contents of the file
+     */
+    inline std::string as_string(const fs::path &path)
+    {
+        std::ifstream t(path);
+        std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+        return str;
+    }
+
+
+    /**
+     * @brief Extracts all numbers from a file and converts them to a given numeric type T
+     *
+     * @tparam T the numeric type
+     * @tparam std::enable_if<std::is_arithmetic<T>::value, T>::type
+     * @param path The path of the
+     * @return std::vector<T> all the numbers in the file given by path
+     */
+    template <typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+    inline std::vector<T> as_numeric_vector(const fs::path &path)
+    {
+        std::vector<T> result;
+        std::ifstream t(path);
+        std::transform(std::istream_iterator<std::string>(t), std::istream_iterator<std::string>(),
+                       std::back_inserter(result), utils::from_string<T>);
+        return result;
+    }
+
+
+    /**
+     * @brief Get the file contents as a string vector per line
+     * example usage:
+     * @code
+     * struct Person{
+     *      std::string name;
+     *      Person(const std::string& name): name(name) {}
+     * };
+     * std::vector<Person> persons = as_text_vector<Person>(file_with_names);
+     *
+     * @tparam T the type of the output vector, should be instantiatable from a std::string
+     * @param path the path of the file
+     * @return std::vector<T> the contents of the file
+     */
+    template <typename T = std::string,
+              typename = typename std::enable_if<std::is_constructible<T, std::string>::value, T>::type>
+    inline std::vector<T> as_text_vector(const fs::path &path)
+    {
+        std::istringstream in(as_string(path));
+        std::vector<T> result;
+
+        std::transform(std::istream_iterator<utils::Line>(in), std::istream_iterator<utils::Line>(),
+                       std::back_inserter(result),
+                       [](const utils::Line &line) { return static_cast<std::string>(line); });
+        return result;
+    }
+
     /**
      * @brief Item on the filesystem
-     * 
+     *
      */
     class FileSystemItem
     {
@@ -37,7 +172,7 @@ namespace ioh::common::file
 
         /**
          * @brief Construct a new File System Item object
-         * 
+         *
          * @param root the directory containing the item
          * @param name name of the item
          */
@@ -68,21 +203,21 @@ namespace ioh::common::file
 
         //! Join the path
         fs::path operator/(const std::string &p) const { return path() / p; }
-        
+
         //! Join the path
         fs::path operator/(const fs::path &p) const { return path() / p; }
     };
-    
+
     /**
      * @brief Creates a new folder with a unique name
-     * 
+     *
      */
     class UniqueFolder : public FileSystemItem
     {
     public:
         /**
          * @brief Construct a new Unique Folder object.
-         * 
+         *
          * @param root the directory containing the item
          * @param name name of the folder
          */

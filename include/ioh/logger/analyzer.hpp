@@ -428,7 +428,7 @@ namespace ioh::logger
                 }
 
                 #ifndef NDEBUG
-                void reset()
+                void reset() override
                 {
                     IOH_DBG(debug, "Analyzer reset");
                     FlatFile::reset();

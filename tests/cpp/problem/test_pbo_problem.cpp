@@ -13,7 +13,7 @@ TEST_F(BaseTest, PBOfitness_dimension16)
     auto& ioh_dbg = clutchlog::logger();
     ioh_dbg.threshold(clutchlog::level::xdebug);
 
-    const auto file_name = find_test_file("pbofitness16.in");
+    const auto file_name = ioh::common::file::find_static_file("pbofitness16.in");
 
     std::string s;
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::PBO>::instance();
@@ -41,7 +41,7 @@ TEST_F(BaseTest, PBOfitness_dimension100)
     auto& ioh_dbg = clutchlog::logger();
     ioh_dbg.threshold(clutchlog::level::xdebug);
 
-    const auto file_name = find_test_file("pbofitness100.in");
+    const auto file_name = ioh::common::file::find_static_file("pbofitness100.in");
     std::string s;
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::PBO>::instance();
     std::ifstream infile(file_name.c_str());
