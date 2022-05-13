@@ -15,11 +15,13 @@ namespace ioh
             // Description: refer to Evolutionary Submodular Optimization website at https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php
             class MaxCoverage final : public GraphProblem<MaxCoverage>
             {
+            private:
+                bool *is_covered = nullptr;
             protected:
                 // [mandatory] The evaluate method is mandatory to implement
                 double evaluate(const std::vector<int> &x) override
                 {
-                    bool *is_covered = new bool[graph->get_n_vertices()]{0};
+                    std::fill_n(is_covered, graph->get_n_vertices(), false);
                     double result = 0, cons_weight = 0;
                     int index = 0, count = 0;
                     for (auto &selected : x)
@@ -49,7 +51,6 @@ namespace ioh
                     if (cons_weight > graph->get_cons_weight_limit()) // If the weight limit is exceeded (violating
                                                                       // constraint), return a penalized value
                         result = graph->get_cons_weight_limit() - cons_weight;
-                    delete[] is_covered;
                     return result;
                 }
 
@@ -72,6 +73,7 @@ namespace ioh
                         IOH_DBG(warning, "Null MaxCoverage instance")
                         return;
                     }
+                    is_covered = new bool[graph->get_n_vertices()]{0};
                     objective_.x = std::vector<int>(graph->get_n_vertices(), 1);
                     objective_.y = evaluate(objective_.x);
                 }

@@ -18,19 +18,24 @@ namespace ioh
             class MaxInfluence final : public GraphProblem<MaxInfluence>
             {
             private:
+                bool *is_activated = nullptr;
                 int simulation_reps = 100;
                 // Simulate Independent Cascade Model with seed and return weighted sum of activated nodes other than
                 // seeds
                 double random_spread_count(const std::vector<int> &seed)
                 {
-                    bool *is_activated = new bool[graph->get_n_vertices()]{0};
-                    for (auto &selected : seed)
+                    std::queue<int> visits; // Queue for BFS, simulate in chronological order
+                    for (auto i = 0; i < seed.size(); i++)
                     {
-                        is_activated[selected] = true; // Activate seeded nodes
+                        if (seed[i] == 1)
+                        {
+                            is_activated[i] = true; // Activate seeded nodes
+                            visits.push(i);
+                        }
+                        else
+                            is_activated[i] = false;
                     }
                     double total = 0;
-                    std::queue<int> visits{
-                        std::deque<int>(seed.begin(), seed.end())}; // Queue for BFS, simulate in chronological order
                     while (!visits.empty()) // Terminate when no more spreading
                     {
                         int currentIndex = visits.front();
@@ -48,7 +53,6 @@ namespace ioh
                             subIndex++;
                         }
                     }
-                    delete[] is_activated;
                     return total;
                 }
 
@@ -56,27 +60,26 @@ namespace ioh
                 // [mandatory] The evaluate method is mandatory to implement
                 double evaluate(const std::vector<int> &x) override
                 {
-                    double cons_weight = 0, seed_weight = 0;
+                    double cons_weight = 0, seed_size = 0, seed_weight = 0;
                     int index = 0;
-                    std::vector<int> seedIndex{};
                     for (auto &selected : x)
                     { // Iterate through 0-1 values
                         if (selected >= 1)
                         { // See if the vertex is selected
                             cons_weight += graph->get_cons_weight(index); // Add weight
-                            seedIndex.push_back(index);
+                            seed_size++;
                             seed_weight += graph->get_vertex_weight(index);
                         }
                         index++; // Follow the current vertex by moving index, regardless of selection
                     }
-                    cons_weight += sqrt(seedIndex.size()) * graph->get_chance_cons_factor();
+                    cons_weight += sqrt(seed_size) * graph->get_chance_cons_factor();
                     if (cons_weight > graph->get_cons_weight_limit()) // If the weight limit is exceeded (violating
                                                                       // constraint), return a penalized value
                         return graph->get_cons_weight_limit() - cons_weight;
                     double result = 0;
                     for (auto i = simulation_reps; i > 0; i--)
                     {
-                        result += random_spread_count(seedIndex); // Simulate Independent Cascade Model
+                        result += random_spread_count(x); // Simulate Independent Cascade Model
                     }
                     return seed_weight + result / simulation_reps; // Return average
                 }
@@ -99,6 +102,7 @@ namespace ioh
                         IOH_DBG(warning, "Null MaxInfluence instance")
                         return;
                     }
+                    is_activated = new bool[graph->get_n_vertices()]{0};
                     objective_.x = std::vector<int>(graph->get_n_vertices(), 1);
                     objective_.y = evaluate(objective_.x);
                 }
