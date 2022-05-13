@@ -49,6 +49,7 @@ namespace ioh
                     if (cons_weight > graph->get_cons_weight_limit()) // If the weight limit is exceeded (violating
                                                                       // constraint), return a penalized value
                         result = graph->get_cons_weight_limit() - cons_weight;
+                    delete[] is_covered;
                     return result;
                 }
 
