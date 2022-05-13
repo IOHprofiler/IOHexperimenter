@@ -16,12 +16,12 @@ namespace ioh
             class MaxCoverage final : public GraphProblem<MaxCoverage>
             {
             private:
-                bool *is_covered = nullptr;
+                std::unique_ptr<bool[]> is_covered;
             protected:
                 // [mandatory] The evaluate method is mandatory to implement
                 double evaluate(const std::vector<int> &x) override
                 {
-                    std::fill_n(is_covered, graph->get_n_vertices(), false);
+                    std::fill_n(is_covered.get(), graph->get_n_vertices(), false);
                     double result = 0, cons_weight = 0;
                     int index = 0, count = 0;
                     for (auto &selected : x)
@@ -73,7 +73,7 @@ namespace ioh
                         IOH_DBG(warning, "Null MaxCoverage instance")
                         return;
                     }
-                    is_covered = new bool[graph->get_n_vertices()]{0};
+                    is_covered = std::make_unique<bool[]>(graph->get_n_vertices());
                     objective_.x = std::vector<int>(graph->get_n_vertices(), 1);
                     objective_.y = evaluate(objective_.x);
                 }

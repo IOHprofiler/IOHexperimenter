@@ -18,7 +18,7 @@ namespace ioh
             class MaxInfluence final : public GraphProblem<MaxInfluence>
             {
             private:
-                bool *is_activated = nullptr;
+                std::unique_ptr<bool[]> is_activated;
                 int simulation_reps = 100;
                 // Simulate Independent Cascade Model with seed and return weighted sum of activated nodes other than
                 // seeds
@@ -102,7 +102,7 @@ namespace ioh
                         IOH_DBG(warning, "Null MaxInfluence instance")
                         return;
                     }
-                    is_activated = new bool[graph->get_n_vertices()]{0};
+                    is_activated = std::make_unique<bool[]>(graph->get_n_vertices());
                     objective_.x = std::vector<int>(graph->get_n_vertices(), 1);
                     objective_.y = evaluate(objective_.x);
                 }
