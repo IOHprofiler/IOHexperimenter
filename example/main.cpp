@@ -82,15 +82,15 @@ namespace ioh::problem
             auto problem = problem_factory.create(id, 1, 1);
 
             if (problem->meta_data().problem_id < 2100)
-                ioh::problem::test_and_compare(
+                test_and_compare(
                     get_graph_problem<submodular::MaxCut>(problem->meta_data().problem_id - 2000 + 1), problem);
 
             else if (problem->meta_data().problem_id < 2200)
-                ioh::problem::test_and_compare(
+                test_and_compare(
                     get_graph_problem<submodular::MaxCoverage>(problem->meta_data().problem_id - 2100 + 1), problem);
 
             else if (problem->meta_data().problem_id < 2300)
-                ioh::problem::test_and_compare(
+                test_and_compare(
                     get_graph_problem<submodular::MaxInfluence>(problem->meta_data().problem_id - 2200 + 1), problem);
         }
     }
