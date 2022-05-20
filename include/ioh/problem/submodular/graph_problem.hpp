@@ -360,9 +360,9 @@ namespace ioh
              * @tparam ProblemType The New Graph problem class
              */
             template <typename ProblemType>
-            class GraphProblem : public Graph,
-                                 AutomaticProblemRegistration<ProblemType, Graph>,
-                                 AutomaticProblemRegistration<ProblemType, Integer>
+            class GraphProblem : public Graph //,
+                                //  AutomaticProblemRegistration<ProblemType, Graph>,
+                                //  AutomaticProblemRegistration<ProblemType, Integer>
             {
             public:
                 using Graph::Graph;

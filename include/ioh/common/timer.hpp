@@ -39,10 +39,10 @@ namespace ioh
              */
             ~CpuTimer()
             {
-                IOH_DBG(progress,
+                std::cout <<
                         fmt::format(
                             "{}CPU Time: {:d} ms", info_msg_,
-                            std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - start_time_).count()));
+                            std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - start_time_).count());
             }
         };
 
