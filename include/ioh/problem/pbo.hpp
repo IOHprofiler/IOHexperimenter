@@ -32,3 +32,4 @@
 #include "submodular/max_cut.hpp"
 #include "submodular/max_influence.hpp"
 #include "submodular/pack_while_travel.hpp"
+#include "submodular/v2.hpp"

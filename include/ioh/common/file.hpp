@@ -57,7 +57,8 @@ namespace ioh::common::file
         public:
             friend std::istream &operator>>(std::istream &is, Line &l)
             {
-                std::getline(is, l.data);
+                while (std::getline(is, l.data) && l.data.empty())
+                    ;
                 return is;
             }
             operator std::string() const { return data; }
@@ -65,7 +66,7 @@ namespace ioh::common::file
 
         /**
          * @brief Get the absolute path of IOHexperimenter/static
-         * 
+         *
          * @return fs::path the absolute path of IOHexperimenter/static
          */
         inline fs::path get_static_root()
