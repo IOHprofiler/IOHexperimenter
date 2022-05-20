@@ -368,7 +368,7 @@ namespace ioh::problem
 {
 
     template <>
-    InstanceBasedProblem::Constructors<submodular::v2::problems::MaxCut, int, int>
+    inline InstanceBasedProblem::Constructors<submodular::v2::problems::MaxCut, int, int>
     InstanceBasedProblem::load_instances<submodular::v2::problems::MaxCut>(
         const std::optional<fs::path> &definitions_file)
     {
@@ -378,7 +378,7 @@ namespace ioh::problem
     }
 
     template <>
-    InstanceBasedProblem::Constructors<submodular::v2::problems::MaxCoverage, int, int>
+    inline InstanceBasedProblem::Constructors<submodular::v2::problems::MaxCoverage, int, int>
     InstanceBasedProblem::load_instances<submodular::v2::problems::MaxCoverage>(
         const std::optional<fs::path> &definitions_file)
     {
@@ -388,7 +388,7 @@ namespace ioh::problem
     }
 
     template <>
-    InstanceBasedProblem::Constructors<submodular::v2::problems::MaxInfluence, int, int>
+    inline InstanceBasedProblem::Constructors<submodular::v2::problems::MaxInfluence, int, int>
     InstanceBasedProblem::load_instances<submodular::v2::problems::MaxInfluence>(
         const std::optional<fs::path> &definitions_file)
     {

@@ -81,7 +81,7 @@ TEST_F(BaseTest, common_file_parsing) {
     EXPECT_TRUE(fs::is_regular_file(file));
 
     auto rows = file::as_text_vector<Row>(file);
-    EXPECT_EQ(rows.size(), 26);
+    EXPECT_EQ(rows.size(), 24);
     EXPECT_EQ(rows.at(0).elements.at(0), "example_graphs/facebook_combined");
     
     auto integers = file::as_numeric_vector<int>(file::utils::find_static_file(rows.at(0).elements.at(3)));
