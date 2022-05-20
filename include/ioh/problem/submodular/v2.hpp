@@ -172,7 +172,8 @@ namespace ioh::problem::submodular
                 for (auto graph : graphs)
                 {
                     graph.meta.root = root_path;
-                    constructors.push_back({[graph, i](int, int) { return ProblemType(i, 1, graph); }, i++});
+                    constructors.push_back({[graph, i](int, int) { 
+                        return ProblemType(i, 1, graph); }, i++});
                 }
                 return constructors;
             }
