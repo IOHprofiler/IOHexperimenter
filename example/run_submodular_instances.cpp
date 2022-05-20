@@ -1,7 +1,5 @@
 // Author: Viet Anh Do
 
-#pragma once
-
 #include <cmath>
 
 #include "ioh.hpp"
@@ -58,17 +56,22 @@ double chernoff_cons_factor(const double delta = 0, const double alpha = 1)
 
 // Run an experiment on graph problems
 int main()
+
 {
     int repetition = 10;
     std::vector<std::shared_ptr<ioh::problem::Integer>> problems = {};
     std::cout << "Current working dir: " << fs::current_path().string() << std::endl;
 
+    const fs::path root = ioh::common::file::utils::get_static_root();
+
+    fs::current_path(root);
+
     std::vector<std::string> instance_list_paths({
-        fs::current_path().string() + "/example_list_maxcoverage",
-        fs::current_path().string() + "/example_list_maxinfluence",
-        fs::current_path().string() + "/example_list_maxcut",
-        fs::current_path().string() + "/example_list_pwt"
-        });
+        "example_list_maxcoverage",
+        "example_list_maxinfluence",
+        "example_list_maxcut",
+        "example_list_pwt"
+    });
 
     // Max Vertex Cover
     // Call this function to overwrite default path to instance list file, otherwise specify it in problem constructor
@@ -112,21 +115,21 @@ int main()
             problems.push_back(problem);
     }
 
-    auto b = ioh::logger::Analyzer({ioh::trigger::on_improvement}, {}, // no additional properties
-                                    fs::current_path(), // path to store data
-                                   "example_log"); // folder to store data
+    // auto b = ioh::logger::Analyzer({ioh::trigger::on_improvement}, {}, // no additional properties
+    //                                 fs::current_path(), // path to store data
+    //                                "example_log"); // folder to store data
     for (auto p : problems)
     {
         // Some problem properties
         /*std::cout << "Problem size: " << std::to_string(p->meta_data().n_variables)
             << " Constraint size: " << std::to_string(p->constraint().lb.size())
             << std::endl;*/
-        p->attach_logger(b);
+        // p->attach_logger(b);
         for (auto i = 0; i < repetition; i++)
         {
             solver(p);
             p->reset();
         }
-        p->detach_logger();
+        // p->detach_logger();
     }
 }

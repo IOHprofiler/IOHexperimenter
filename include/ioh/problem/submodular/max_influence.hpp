@@ -48,6 +48,7 @@ namespace ioh
                             subIndex++;
                         }
                     }
+                    delete[] is_activated;
                     return total;
                 }
 

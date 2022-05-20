@@ -23,7 +23,7 @@ namespace ioh
                     double result = 0, cons_weight = 0;
                     int index = 0, count = 0;
                     for (auto &selected : x)
-                    { // Iterate through 0-1 values
+                    { // Iterate through 0-1 values 
                         if (selected >= 1)
                         { // See if the vertex is selected
                             cons_weight += graph->get_cons_weight(index); // Add weight
@@ -49,6 +49,8 @@ namespace ioh
                     if (cons_weight > graph->get_cons_weight_limit()) // If the weight limit is exceeded (violating
                                                                       // constraint), return a penalized value
                         result = graph->get_cons_weight_limit() - cons_weight;
+
+                    delete[] is_covered;
                     return result;
                 }
 

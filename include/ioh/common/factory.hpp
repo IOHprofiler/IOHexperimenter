@@ -4,18 +4,47 @@
 #include <cassert>
 #include <cstdlib>
 #include <functional>
+#include <map>
 #include <memory>
 #include <string>
 #include <type_traits>
-#include <map>
 #include <utility>
 #include <vector>
+#include <optional>
 
 #if defined(__GNUC__) || defined(__GNUG__)
 #include <cxxabi.h>
 #endif
 
 #include "container_utils.hpp"
+#include "file.hpp"
+
+
+namespace ioh::problem
+{
+    struct InstanceBasedProblem
+    {
+        /**
+         * @brief A problem class with multiple instances defined, where each
+         * instance is a single unique problem, with its own dimension etc. Every fid has only
+         * 1 instance, and only one dimension.
+         * 
+         */
+        
+        template <typename T, typename... Args>
+        using Constructor = std::function<T(Args &&...)>;
+
+        template <typename T, typename... Args>
+        using Constructors = std::vector<std::pair<Constructor<T, Args...>, int>>;
+
+
+        template <typename T, typename... Args>
+        static Constructors<T, Args...> load_instances(const std::optional<fs::path>& definitions = std::nullopt)
+        {
+            return {}; // Return empty vector by default
+        }
+    };
+} // namespace ioh::problem
 
 namespace ioh::common
 {
@@ -101,10 +130,11 @@ namespace ioh::common
         }
 
         //! Get the next available id
-        [[nodiscard]] int check_or_get_next_available(const int id, const std::string& name) const {
+        [[nodiscard]] int check_or_get_next_available(const int id, const std::string &name) const
+        {
             const auto already_defined = name_map.find(name) != std::end(name_map);
-            if(already_defined)
-                for (const auto kv: id_map)
+            if (already_defined)
+                for (const auto kv : id_map)
                     if (kv.second == name)
                         return kv.first;
             return check_or_get_next_available(id);
@@ -182,16 +212,33 @@ namespace ioh::common
     template <typename Parent, typename... Args>
     struct RegisterWithFactory
     {
+        using InstanceBasedProblem = ioh::problem::InstanceBasedProblem;
+
         //! Include Parent in the factory
         template <class T>
-        static void include()
+        static typename std::enable_if<!std::is_base_of<InstanceBasedProblem, T>::value, void>::type include()
         {
             auto &factory = Factory<Parent, Args...>::instance();
             const auto is_problem_type = std::conjunction<std::is_same<int, Args>...>::value;
             const int id = IdGetter<is_problem_type>::template get_id<T>(factory.ids());
-
+            
             factory.include(class_name<T>(), id,
                             [](Args &&...params) { return std::make_unique<T>(std::forward<Args>(params)...); });
+        }
+
+        template <class T>
+        static typename std::enable_if<std::is_base_of<InstanceBasedProblem, T>::value, void>::type include()
+        {
+            auto &factory = Factory<Parent, Args...>::instance();
+            auto constructors = InstanceBasedProblem::load_instances<T, Args...>();
+
+            for(auto& [constructor, id]: constructors){
+                factory.include(fmt::format("{}{}", class_name<T>(), id), id,
+                    [constructor](Args &&...params) { 
+                        return std::make_unique<T>(constructor(std::forward<Args>(params)...));
+                    });
+
+            }
         }
 
         //! Accessor to static instance

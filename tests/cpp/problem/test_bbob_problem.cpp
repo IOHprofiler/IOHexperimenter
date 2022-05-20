@@ -9,7 +9,7 @@ double test_eval(const std::shared_ptr<ioh::problem::Real> &f)
 
 TEST_F(BaseTest, BBOBfitness_dimension5)
 {
-    const auto file_name = ioh::common::file::find_static_file("bbobfitness5.in");
+    const auto file_name = ioh::common::file::utils::find_static_file("bbobfitness5.in");
     std::string s;
 
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::BBOB>::instance();
@@ -32,7 +32,7 @@ TEST_F(BaseTest, BBOBfitness_dimension5)
 
 TEST_F(BaseTest, BBOBfitness_dimension20)
 {
-    const auto file_name = ioh::common::file::find_static_file("bbobfitness20.in");
+    const auto file_name = ioh::common::file::utils::find_static_file("bbobfitness20.in");
     std::string s;
 
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::BBOB>::instance();

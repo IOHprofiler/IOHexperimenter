@@ -164,8 +164,9 @@ namespace ioh
                             vertex_weights.push_back(1);
                         }
                         edge_indexes.push_back({first_vertex, (int)adj_array[first_vertex].size()});
-                        adj_array[first_vertex].push_back(second_vertex - 1);
+                        adj_array[first_vertex].push_back(second_vertex);
                         edge_weights[first_vertex].push_back(1); // Default value
+                        
                         if (!is_digraph)
                         {
                             adj_array[second_vertex].push_back(first_vertex);

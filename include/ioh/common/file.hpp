@@ -4,6 +4,7 @@
 #include <fmt/format.h>
 #include <string>
 #include <utility>
+#include "ioh/common/log.hpp"
 
 #ifdef FSEXPERIMENTAL
 #include <experimental/filesystem>
@@ -61,35 +62,49 @@ namespace ioh::common::file
             }
             operator std::string() const { return data; }
         };
-    } // namespace utils
 
-
-    /**
-     * @brief Finds a file located in the static folder of this repository
-     *
-     * @param filename the name of the file
-     * @return fs::path the absolute path of the file
-     */
-    inline fs::path find_static_file(const std::string &filename)
-    {
-        auto file = fs::path("IOHexperimenter") / fs::path("static") / filename;
-        fs::path root;
-        for (const auto &e : fs::current_path())
+        /**
+         * @brief Get the absolute path of IOHexperimenter/static
+         * 
+         * @return fs::path the absolute path of IOHexperimenter/static
+         */
+        inline fs::path get_static_root()
         {
-            root /= e;
-            if (exists(root / file))
+            auto static_root = fs::path("IOHexperimenter") / fs::path("static");
+            fs::path root;
+            for (const auto &e : fs::current_path())
             {
-                file = root / file;
-                break;
+                root /= e;
+                if (exists(root / static_root))
+                {
+                    root = root / static_root;
+                    return root;
+                }
             }
-        }
-        if (!exists(file))
-        {
-            IOH_DBG(warning, "could not find file: " << filename);
+            IOH_DBG(warning, "could static root");
             return {};
         }
-        return file;
-    }
+
+
+        /**
+         * @brief Finds a file located in the static folder of this repository
+         *
+         * @param filename the name of the file
+         * @return fs::path the absolute path of the file
+         */
+        inline fs::path find_static_file(const std::string &filename)
+        {
+            auto file = get_static_root() / filename;
+
+            if (!exists(file))
+            {
+                IOH_DBG(warning, "could not find file: " << filename);
+                return {};
+            }
+            return file;
+        }
+    } // namespace utils
+
 
     /**
      * @brief Get the file contents as string object
