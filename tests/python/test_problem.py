@@ -5,7 +5,7 @@ import math
 import ioh
 
 DATA_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "static")
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "static")
 
 class wmodel(ioh.problem.AbstractWModel):
     def __init__(self, instance, dim):
