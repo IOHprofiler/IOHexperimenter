@@ -274,7 +274,7 @@ namespace logger {
 #ifndef NDEBUG
             // Reset _current_best (double check of trigger::on_improvement behaviour).
             if(_current_problem_type == common::OptimizationType::Minimization) {
-                _current_best =  std::numeric_limits<double>::infinity();
+                _current_best = std::numeric_limits<double>::infinity();
             } else {
                 _current_best = -std::numeric_limits<double>::infinity();
             }

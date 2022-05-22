@@ -1,10 +1,13 @@
 #pragma once
 
 #include <algorithm>
+#include <string>
 #include <cmath>
 #include <map>
 #include <utility>
 #include <vector>
+
+#include "ioh/common/random.hpp"
 
 namespace ioh
 {
@@ -138,5 +141,30 @@ namespace ioh
         }
 
 
+        //! Permutation struct
+        struct Permutation
+        {
+            //! value
+            double value;
+
+            //! index
+            int index;
+
+            //! sort operator
+            bool operator<(const Permutation &b) const { return value < b.value; }
+
+            //! sort a set of random permutations
+            static std::vector<Permutation> sorted(const int n, const int seed)
+            {
+                const auto random_numbers = random::bbob2009::uniform(n, seed);
+                std::vector<Permutation> permutations(n);
+
+                for (auto i = 0; i < n; ++i)
+                    permutations[i] = {random_numbers.at(i), i};
+
+                std::sort(permutations.begin(), permutations.end());
+                return permutations;
+            }
+        }; 
     } // namespace common
 } // namespace ioh

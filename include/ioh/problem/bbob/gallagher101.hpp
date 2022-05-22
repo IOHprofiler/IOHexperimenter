@@ -4,6 +4,10 @@
 
 namespace ioh::problem::bbob
 {
+    
+    
+
+    
     /**
      * @brief CTRP base class for Gallagher problems
      * 
@@ -18,57 +22,28 @@ namespace ioh::problem::bbob
             double value;
             std::vector<double> scales;
 
-            //! Permutation struct
-            struct Permutation
-            {
-                //! value
-                double value;
-
-                //! index
-                int index;
-
-                //! sort operator
-                bool operator<(const Permutation &b) const
-                {
-                    return value < b.value;
-                }
-
-                //! sort a set of random permutations
-                static std::vector<Permutation> sorted(const int n, const int seed)
-                {
-                    const auto random_numbers = common::random::bbob2009::uniform(n, seed);
-                    std::vector<Permutation> permutations(n);
-
-                    for (auto i = 0; i < n; ++i)
-                        permutations[i] = {random_numbers.at(i), i};
-
-                    std::sort(permutations.begin(), permutations.end());
-                    return permutations;
-                }
-            };
-
             Peak(const double value, const int seed, const int n_variables, const double condition) :
                 value(value), scales(n_variables)
             {
-                auto permutations = Permutation::sorted(n_variables, seed);
+                auto permutations = common::Permutation::sorted(n_variables, seed);
                 for (auto i = 0; i < n_variables; ++i)
-                    scales[i] = pow(condition,
-                                    static_cast<double>(permutations[i].index) / (static_cast<double>(n_variables) - 1.)
-                                    - 0.5);
+                    scales[i] =
+                        pow(condition,
+                            static_cast<double>(permutations[i].index) / (static_cast<double>(n_variables) - 1.) - 0.5);
             }
 
-            static std::vector<Peak> get_peaks(const int n, const int n_variables, const int seed, const double max_condition)
+            static std::vector<Peak> get_peaks(const int n, const int n_variables, const int seed,
+                                               const double max_condition)
             {
                 static const auto f0 = 1.1, f1 = 9.1, mc = 1000.;
                 static const auto divisor = static_cast<double>(n) - 2.;
 
-                auto permutations = Permutation::sorted(n - 1, seed);
+                auto permutations = common::Permutation::sorted(n - 1, seed);
 
                 std::vector<Peak> peaks(1, {10.0, seed, n_variables, max_condition});
-                for (size_t i = 1; i < static_cast<size_t>(n); ++i)
+                for (int i = 1; i < n; ++i)
                     peaks.emplace_back((static_cast<double>(i) - 1.) / divisor * (f1 - f0) + f0, seed + (1000 * i),
-                                       n_variables,
-                                       pow(mc, static_cast<double>(permutations[i - 1].index) / divisor));
+                                       n_variables, pow(mc, static_cast<double>(permutations[i - 1].index) / divisor));
 
                 return peaks;
             }

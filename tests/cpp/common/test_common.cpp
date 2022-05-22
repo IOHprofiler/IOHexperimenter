@@ -1,3 +1,4 @@
+#include  <array>
 #include "../utils.hpp"
 
 #include "ioh/common/optimization_type.hpp"
@@ -85,11 +86,11 @@ TEST_F(BaseTest, common_file_parsing) {
     EXPECT_EQ(rows.at(0).elements.at(0), "example_graphs/facebook_combined");
     
     auto integers = file::as_numeric_vector<int>(file::utils::find_static_file(rows.at(0).elements.at(3)));
-    EXPECT_EQ(integers.size(), 4040);
-    EXPECT_EQ(integers.at(0), 1);
+    EXPECT_EQ(integers.size(), size_t{4040});
+    EXPECT_EQ(integers.at(0), size_t{1});
 
-    auto doubles = file::as_numeric_vector<double>(file::utils::find_static_file(rows.at(0).elements.at(1)));
-    EXPECT_EQ(doubles.size(), 176468);
-    EXPECT_FLOAT_EQ(doubles.at(0), 0.05882353);
+    auto floats = file::as_numeric_vector<float>(file::utils::find_static_file(rows.at(0).elements.at(1)));
+    EXPECT_EQ(floats.size(), size_t{176468});
+    EXPECT_FLOAT_EQ(floats.at(0), 0.05882353f);
 }   
 

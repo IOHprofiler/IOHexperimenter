@@ -96,7 +96,7 @@ namespace ioh
                 }
                 double get_vertex_weight(const int vertex) const { return vertex_weights[vertex]; }
                 double get_cons_weight(const int index) const { return cons_weights[index]; }
-                int get_cons_weights_count() const { return cons_weights.size(); }
+                int get_cons_weights_count() const { return static_cast<int>(cons_weights.size()); }
                 double get_chance_cons_factor() const { return chance_cons_factor; }
 
                 // Check if graph is empty
@@ -174,7 +174,7 @@ namespace ioh
                         }
                         n_edges++;
                     }
-                    n_vertices = adj_array.size();
+                    n_vertices = static_cast<int>(adj_array.size());
 
                     // Read edge weights data
                     // if (!e_weights->empty())

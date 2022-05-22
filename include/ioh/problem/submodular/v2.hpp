@@ -127,7 +127,7 @@ namespace ioh::problem::submodular
                 {
                     if (!loaded)
                         load();
-                    return meta.is_edge ? edges.size() : meta.n_vertices;
+                    return meta.is_edge ? static_cast<int>(edges.size()) : meta.n_vertices;
                 }
             };
         } // namespace graph
@@ -310,7 +310,7 @@ namespace ioh::problem::submodular
                     using namespace ioh::common::random;
                     double total = 0;
 
-                    std::queue<int> visits;
+                    std::queue<size_t> visits;
 
                     for (size_t i = 0; i < x.size(); i++)
                     {
@@ -321,7 +321,7 @@ namespace ioh::problem::submodular
 
                     while (!visits.empty())
                     {
-                        int source = visits.front();
+                        size_t source = visits.front();
                         visits.pop();
 
                         for (const auto &[target, weight] : graph.adjacency_list[source])

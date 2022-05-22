@@ -43,7 +43,7 @@ namespace ioh::common::file
         template <typename T>
         inline typename std::enable_if<std::is_floating_point<T>::value, T>::type from_string(const std::string &s)
         {
-            return {std::stod(s)};
+            return static_cast<T>(std::stod(s));
         }
 
         /**
