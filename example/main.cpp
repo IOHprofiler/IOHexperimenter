@@ -1,6 +1,5 @@
 #include "ioh.hpp"
 
-
 void show_registered_objects()
 {
     {
@@ -31,7 +30,6 @@ void show_registered_objects()
     }
 }
 
-
 // Example
 int main()
 {
@@ -60,3 +58,4 @@ int main()
         std::cout << (*problem).meta_data() << std::endl;
     }
 }
+

@@ -31,6 +31,7 @@ TEST_F(BaseTest, common_log)
     // @Johann: I don't know what this does, but the default constructor subtracts _strip_calls
     // from the depth. If I set it to std::numeric_limits<size_t>::max(), then no messages are logged.
     // I added the -5 (default value for _strip_calls) and then it again logs the expected message. 
+    // Also, on windows this fails
     // ioh_dbg.depth(std::numeric_limits<size_t>::max() - 5);
 
 	testing::internal::CaptureStderr();
