@@ -232,10 +232,10 @@ namespace ioh::common
             auto &factory = Factory<Parent, Args...>::instance();
             auto constructors = InstanceBasedProblem::load_instances<T, Args...>();
 
-            for(auto& [constructor, id]: constructors){
-                factory.include(fmt::format("{}{}", class_name<T>(), id), id,
-                    [constructor](Args &&...params) { 
-                        return std::make_unique<T>(constructor(std::forward<Args>(params)...));
+            for(auto& ci: constructors){
+                factory.include(fmt::format("{}{}", class_name<T>(), ci.second), ci.second,
+                    [c=ci.first](Args &&...params) { 
+                        return std::make_unique<T>(c(std::forward<Args>(params)...));
                     });
 
             }

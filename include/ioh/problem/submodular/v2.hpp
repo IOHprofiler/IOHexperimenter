@@ -171,10 +171,10 @@ namespace ioh::problem::submodular
 
                     double penalty = 0;
                     double velocity_gap = 0;
-                    std::vector<double> distances;
-                    std::vector<Point> nodes;
-                    std::vector<Item> items;
-                    std::map<size_t, std::vector<Item>> city_map;
+                    std::vector<double> distances{};
+                    std::vector<Point> nodes{};
+                    std::vector<Item> items{};
+                    std::map<size_t, std::vector<Item>> city_map{};
                 };
 
                 struct TTPGraph : Graph

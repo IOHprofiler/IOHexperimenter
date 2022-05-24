@@ -54,4 +54,9 @@ int main()
         std::cout << "y0: " << (*problem)(x0) << std::endl;
     }
 
+    // Alternatively, we can create a suite
+    ioh::suite::Submodular suite;
+    for (const auto& problem: suite){
+        std::cout << (*problem).meta_data() << std::endl;
+    }
 }
