@@ -1,7 +1,9 @@
 #pragma once
 
 #include "ioh/problem/utils.hpp"
+#include "ioh/problem/structures.hpp"
 
+/* Transformation namespace */
 namespace ioh::problem::transformation
 {
     namespace objective
@@ -61,7 +63,7 @@ namespace ioh::problem::transformation
          */
         inline double uniform(const Transformation &t, const double y, const int seed, const double lb, const double ub)
         {
-            const auto scalar = common::random::uniform(1, seed, lb, ub).at(0);
+            const auto scalar = common::random::pbo::uniform(1, seed, lb, ub).at(0);
             return t(y, scalar);
         }
 
@@ -117,7 +119,7 @@ namespace ioh::problem::transformation
         inline void random_flip(std::vector<int> &x, const int seed)
         {
             const auto n = static_cast<int>(x.size());
-            const auto rx = common::random::uniform(n, seed);
+            const auto rx = common::random::pbo::uniform(n, seed);
 
             for (auto i = 0; i < n; ++i)
                 x[i] = objective::exclusive_or(x.at(i), static_cast<int>(2.0 * floor(1e4 * rx.at(i)) / 1e4));
@@ -134,7 +136,7 @@ namespace ioh::problem::transformation
             std::iota(index.begin(), index.end(), 0);
 
             const auto n = static_cast<int>(x.size());
-            const auto rx = common::random::uniform(n, seed);
+            const auto rx = common::random::pbo::uniform(n, seed);
             const auto copy_x = x;
 
             for (auto i = 0; i != n; ++i)
@@ -148,6 +150,32 @@ namespace ioh::problem::transformation
                 x[i] = copy_x.at(index[i]);
         }
 
+
+        /**
+         * \brief reset x from x_1 whose elements were randomly reordered from x
+         * \param x_1 the reordered variables
+         * \param seed seed for the random flip
+         */
+        inline std::vector<int> random_reorder_reset(const std::vector<int> &x_1, const int seed)
+        {
+            std::vector<int> x(x_1.size());
+            std::vector<int> index(x_1.size());
+            std::iota(index.begin(), index.end(), 0);
+
+            const auto n = static_cast<int>(x_1.size());
+            const auto rx = common::random::pbo::uniform(n, seed);
+
+            for (auto i = 0; i != n; ++i)
+            {
+                const auto t = static_cast<int>(floor(rx.at(i) * n));
+                const auto temp = index[0];
+                index[0] = index[t];
+                index[t] = temp;
+            }
+            for (auto i = 0; i < n; ++i)
+                x[index[i]] = x_1.at(i);
+            return x;
+        }
 
         /**
          * \brief Affine transformation for x using matrix M and vector B

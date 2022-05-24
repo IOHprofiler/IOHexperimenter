@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ioh.hpp"
+#include "ioh.hpp" 
 
 /// Create a OneMax problem. We can use either factory construction, or direct object construction.
 inline std::shared_ptr<ioh::problem::Integer> create_one_max_problem(const int instance, const int dimension,
@@ -32,6 +32,7 @@ inline void simple_problem_example()
             {
                 /// To output information of the current problem.
                 std::cout << om->meta_data() << std::endl;
+                std::cout << "bounds of variables :  " << om->constraint() << std::endl;
 
                 /// Random search on the problem with the given budget 100.
                 for (auto budget = 100; budget > 0; budget--)
@@ -67,30 +68,57 @@ public:
     }
 };
 
-inline double constant_zero(const std::vector<double> &)
+//! Compute the sum of a vector of double
+inline double sum_vector(const std::vector<double> &x) { 
+    return std::accumulate(x.begin(), x.end(), 0.0); 
+}
+
+//! Method to compute the optimum for a given problem instance (iid)
+ioh::problem::Solution<double> calculate_objective(const int iid, const int dim)
 {
-    return 0.0;
+    return {std::vector<double>(dim, iid), static_cast<double>(iid * dim)};
+}
+
+//! Example of a variables transformation function
+std::vector<double> tx(std::vector<double> x, const int iid){
+    x.at(0) = static_cast<double>(iid);
+    return x;
+}
+
+//! Example of a objective transformation function
+double ty(const double y, const int iid){
+    return y * iid;
 }
 
 inline void extending_problems_example()
 {
     /// Note that problems which extend RealProblem are automatically avaible in the corresponsing Factory:
     auto &factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();
+    
+    const int instance = 10;
+    const int dimension = 10;
+
     auto another_problem = factory.create("AnotherRealProblem", 1, 10);
     std::cout << another_problem->meta_data() << std::endl;
 
-    // We also provide convenience wrapper functions for wrapping 'standalone' functions.
-    auto const_z_problem = ioh::problem::wrap_function<double>(&constant_zero, "ConstantZero");
-    std::cout << const_z_problem.meta_data() << std::endl;
-
-    // Note that this also 'auto-registers' the problem
-    auto const_z_problem_f = factory.create("ConstantZero", 1, 10);
-    std::cout << const_z_problem_f->meta_data() << std::endl;
+    // We provide convenience wrapper functions for wrapping 'standalone' functions, which 
+    // register a function in the factory. Only the first two arguments are required.
+    ioh::problem::wrap_function<double>(
+        sum_vector, "Sum", ioh::common::OptimizationType::Minimization, 
+        -1, // the lower bound for the constraint
+        10, // the upper bound for the constraint
+        tx, // variables transformation function, transforms x prior to calling f(x)
+        ty, // objective transformation function, transforms the output of f(x), i.e. t(f(x))
+        calculate_objective // compute the value for the objective for this function
+    );
     
+    // We can now create new Sum objects from the factory
+    auto problem = factory.create("Sum", instance, dimension);
+    std::cout << (*problem).meta_data() << std::endl;
 }
+
+
 ///////////////////// Extending Problems //////////////////
-
-
 inline void problem_example()
 {
     simple_problem_example();

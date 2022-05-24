@@ -8,10 +8,11 @@ namespace ioh
     {
         namespace pbo
         {
+            //! OneMaxEpistasis problem id 7
             class OneMaxEpistasis final: public PBOProblem<OneMaxEpistasis>
             {
             protected:
-
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto new_variables = utils::epistasis(x, 4);
@@ -33,7 +34,8 @@ namespace ioh
                 OneMaxEpistasis(const int instance, const int n_variables) :
                     PBOProblem(7, instance, n_variables, "OneMaxEpistasis")
                 {
-                    objective_.y = evaluate(objective_.x);
+                    objective_.y = {static_cast<double>(n_variables)};
+                    objective_.y = transform_objectives(objective_.y);
                 }
             };
         } // namespace pbo

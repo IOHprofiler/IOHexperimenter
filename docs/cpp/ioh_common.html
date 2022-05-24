@@ -1,0 +1,1019 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="file" href="ioh_common_file.html" /><link rel="prev" title="C++" href="../cpp.html" />
+
+    <meta name="generator" content="sphinx-4.2.0, furo 2022.01.02"/>
+        <title>common - IOHExperimenter 0.3.2.6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.2.6 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../contents.html">
+  
+  
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.2.6 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">IOHexperimenter</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../cpp.html">C++</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current has-children current-page"><a class="current reference internal" href="#">common</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="ioh_common_file.html">file</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_common_random.html">random</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_random_bbob2009.html">bbob2009</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_random_pbo.html">pbo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh_logger.html">logger</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_logger_analyzer.html">analyzer</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_structures.html">structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_v1.html">v1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_v2.html">v2</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_logger_eaf.html">eaf</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_logger_eah.html">eah</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="ioh_logger_eah_stat.html">stat</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="ioh_logger_eah_stat_Distribution.html">Distribution</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ioh_logger_eah_stat_under_curve.html">under_curve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_logger_stat.html">stat</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh_problem.html">problem</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_bbob.html">bbob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_pbo.html">pbo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_python.html">python</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_problem_transformation.html">transformation</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_transformation_objective.html">objective</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_transformation_variables.html">variables</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_wmodel.html">wmodel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_suite.html">suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_trigger.html">trigger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_watch.html">watch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh.html">ioh</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python.html">Python</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/ioh.html">Utilities</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem.html">get_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.wrap_problem.html">wrap_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem_id.html">get_problem_id</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.Experiment.html">Experiment</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraint.html">IntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerSolution.html">IntegerSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerState.html">IntegerState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.LogInfo.html">LogInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.MetaData.html">MetaData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.OptimizationType.html">OptimizationType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealConstraint.html">RealConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealSolution.html">RealSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealState.html">RealState</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/problem.html">Problem</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Real.html">Real</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/bbob.html">BBOB</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AttractiveSector.html">AttractiveSector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BBOB.html">BBOB</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BentCigar.html">BentCigar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BuecheRastrigin.html">BuecheRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.DifferentPowers.html">DifferentPowers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Discus.html">Discus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Ellipsoid.html">Ellipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.EllipsoidRotated.html">EllipsoidRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher101.html">Gallagher101</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher21.html">Gallagher21</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GriewankRosenBrock.html">GriewankRosenBrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Katsuura.html">Katsuura</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LinearSlope.html">LinearSlope</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html">LunacekBiRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rastrigin.html">Rastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RastriginRotated.html">RastriginRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rosenbrock.html">Rosenbrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RosenbrockRotated.html">RosenbrockRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers10.html">Schaffers10</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers1000.html">Schaffers1000</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schwefel.html">Schwefel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SharpRidge.html">SharpRidge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Sphere.html">Sphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.StepEllipsoid.html">StepEllipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Weierstrass.html">Weierstrass</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/pbo.html">PBO</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.ConcatenatedTrap.html">ConcatenatedTrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingRing.html">IsingRing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTorus.html">IsingTorus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTriangular.html">IsingTriangular</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LABS.html">LABS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnes.html">LeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy1.html">LeadingOnesDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy2.html">LeadingOnesDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesEpistasis.html">LeadingOnesEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesNeutrality.html">LeadingOnesNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness1.html">LeadingOnesRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness2.html">LeadingOnesRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness3.html">LeadingOnesRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Linear.html">Linear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MIS.html">MIS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.NQueens.html">NQueens</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMax.html">OneMax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy1.html">OneMaxDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy2.html">OneMaxDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxEpistasis.html">OneMaxEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxNeutrality.html">OneMaxNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness1.html">OneMaxRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness2.html">OneMaxRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness3.html">OneMaxRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PBO.html">PBO</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AbstractWModel.html">AbstractWModel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelLeadingOnes.html">WModelLeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelOneMax.html">WModelOneMax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/logger.html">Logging</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Always.html">Always</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.At.html">At</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.During.html">During</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Each.html">Each</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html">OnImprovement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Trigger.html">Trigger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html">AbstractProperty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentY.html">CurrentY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Evaluations.html">Evaluations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Property.html">Property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawYBest.html">RawYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedY.html">TransformedY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedYBest.html">TransformedYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENT_Y_BEST.html">CURRENT_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.EVALUATIONS.html">EVALUATIONS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAW_Y_BEST.html">RAW_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMED_Y.html">TRANSFORMED_Y</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMED_Y_BEST.html">TRANSFORMED_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.AbstractWatcher.html">AbstractWatcher</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Analyzer.html">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Combine.html">Combine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAF.html">EAF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAH.html">EAH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.FlatFile.html">FlatFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Logger.html">Logger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Store.html">Store</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/suite.html">Suite</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.BBOB.html">BBOB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.PBO.html">PBO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Real.html">Real</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../server.html">Server</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="common">
+<h1>common<a class="headerlink" href="#common" title="Permalink to this headline">¶</a></h1>
+<section id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ioh_common_file.html">file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ioh_common_random.html">random</a></li>
+</ul>
+</div>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<section id="cputimer">
+<h3>CpuTimer<a class="headerlink" href="#cputimer" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common8CpuTimerE">
+<span id="_CPPv3N3ioh6common8CpuTimerE"></span><span id="_CPPv2N3ioh6common8CpuTimerE"></span><span id="ioh::common::CpuTimer"></span><span class="target" id="classioh_1_1common_1_1_cpu_timer"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">CpuTimer</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common8CpuTimerE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>A simple timer class, logging elapsed CPU time to stdout. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common8CpuTimer8CpuTimerENSt6stringE">
+<span id="_CPPv3N3ioh6common8CpuTimer8CpuTimerENSt6stringE"></span><span id="_CPPv2N3ioh6common8CpuTimer8CpuTimerENSt6stringE"></span><span id="ioh::common::CpuTimer::CpuTimer__ss"></span><span class="target" id="classioh_1_1common_1_1_cpu_timer_1af73850fab45a749648a5eabfa436d45d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CpuTimer</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">info_msg</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">""</span></s><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common8CpuTimer8CpuTimerENSt6stringE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Constructs a timer, sets start time. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info_msg</strong> – The value for info_msg_ </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common8CpuTimerD0Ev">
+<span id="_CPPv3N3ioh6common8CpuTimerD0Ev"></span><span id="_CPPv2N3ioh6common8CpuTimerD0Ev"></span><span id="ioh::common::CpuTimer::~CpuTimer"></span><span class="target" id="classioh_1_1common_1_1_cpu_timer_1a7b29e60b5522c3d6de3bf882524f2af4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~CpuTimer</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common8CpuTimerD0Ev" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Destructs a timer, prints time elapsed to stdout. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-types">Private Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common8CpuTimer5ClockE">
+<span id="_CPPv3N3ioh6common8CpuTimer5ClockE"></span><span id="_CPPv2N3ioh6common8CpuTimer5ClockE"></span><span class="target" id="classioh_1_1common_1_1_cpu_timer_1aaa6d03c52f930b2b1f8fdb5ebd2f57bd"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Clock</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">chrono</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">high_resolution_clock</span></span><a class="headerlink" href="#_CPPv4N3ioh6common8CpuTimer5ClockE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The start time of the timer. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common8CpuTimer9info_msg_E">
+<span id="_CPPv3N3ioh6common8CpuTimer9info_msg_E"></span><span id="_CPPv2N3ioh6common8CpuTimer9info_msg_E"></span><span id="ioh::common::CpuTimer::info_msg___ss"></span><span class="target" id="classioh_1_1common_1_1_cpu_timer_1a7626daa962d89f017cc0b01d1d2b4da9"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">info_msg_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common8CpuTimer9info_msg_E" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>A info message to be logged to stdout when the timer completes. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common8CpuTimer11start_time_E">
+<span id="_CPPv3N3ioh6common8CpuTimer11start_time_E"></span><span id="_CPPv2N3ioh6common8CpuTimer11start_time_E"></span><span id="ioh::common::CpuTimer::start_time___Clock::time_point"></span><span class="target" id="classioh_1_1common_1_1_cpu_timer_1ae4bb2413d9b3a5d459727e665a84a518"></span><a class="reference internal" href="#_CPPv4N3ioh6common8CpuTimer5ClockE" title="ioh::common::CpuTimer::Clock"><span class="n"><span class="pre">Clock</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">time_point</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">start_time_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common8CpuTimer11start_time_E" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+</dd></dl>
+</section>
+<section id="foptimizationtype">
+<h3>FOptimizationType<a class="headerlink" href="#foptimizationtype" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common17FOptimizationTypeE">
+<span id="_CPPv3N3ioh6common17FOptimizationTypeE"></span><span id="_CPPv2N3ioh6common17FOptimizationTypeE"></span><span id="ioh::common::FOptimizationType"></span><span class="target" id="classioh_1_1common_1_1_f_optimization_type"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">FOptimizationType</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3ioh6common7HasReprE" title="ioh::common::HasRepr"><span class="n"><span class="pre">HasRepr</span></span></a><a class="headerlink" href="#_CPPv4N3ioh6common17FOptimizationTypeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Wrapper class for optimization type, contains comparison operator. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common17FOptimizationType17FOptimizationTypeEK16OptimizationType">
+<span id="_CPPv3N3ioh6common17FOptimizationType17FOptimizationTypeEK16OptimizationType"></span><span id="_CPPv2N3ioh6common17FOptimizationType17FOptimizationTypeEK16OptimizationType"></span><span id="ioh::common::FOptimizationType::FOptimizationType__OptimizationTypeC"></span><span class="target" id="classioh_1_1common_1_1_f_optimization_type_1a0fc460a917fcd3b33e7bd696c7575d50"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">FOptimizationType</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6common16OptimizationTypeE" title="ioh::common::OptimizationType"><span class="n"><span class="pre">OptimizationType</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">type</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6common16OptimizationTypeE" title="ioh::common::OptimizationType"><span class="n"><span class="pre">OptimizationType</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3ioh6common16OptimizationType12MaximizationE" title="ioh::common::OptimizationType::Maximization"><span class="n"><span class="pre">Maximization</span></span></a><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common17FOptimizationType17FOptimizationTypeEK16OptimizationType" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Construct a new <a class="reference internal" href="#classioh_1_1common_1_1_f_optimization_type"><span class="std std-ref">FOptimizationType</span></a> object. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>type</strong> – The optimization type </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common17FOptimizationType4typeEv">
+<span id="_CPPv3NK3ioh6common17FOptimizationType4typeEv"></span><span id="_CPPv2NK3ioh6common17FOptimizationType4typeEv"></span><span id="ioh::common::FOptimizationType::typeC"></span><span class="target" id="classioh_1_1common_1_1_f_optimization_type_1a9dc6c0c0a8d35a86db216903919e0fbe"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6common16OptimizationTypeE" title="ioh::common::OptimizationType"><span class="n"><span class="pre">OptimizationType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">type</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common17FOptimizationType4typeEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Accessor for type_. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common17FOptimizationType4reprEv">
+<span id="_CPPv3NK3ioh6common17FOptimizationType4reprEv"></span><span id="_CPPv2NK3ioh6common17FOptimizationType4reprEv"></span><span id="ioh::common::FOptimizationType::reprC"></span><span class="target" id="classioh_1_1common_1_1_f_optimization_type_1a3ebce3df38d8ef24ddd4999d36ae605a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">repr</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common17FOptimizationType4reprEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>String representation. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common17FOptimizationTypeclEKdKd">
+<span id="_CPPv3NK3ioh6common17FOptimizationTypeclEKdKd"></span><span id="_CPPv2NK3ioh6common17FOptimizationTypeclEKdKd"></span><span id="ioh::common::FOptimizationType::call-operator__doubleC.doubleCC"></span><span class="target" id="classioh_1_1common_1_1_f_optimization_type_1ab5e20b229bc67e21e56f37b02fa29e11"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">()</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">v1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">v2</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common17FOptimizationTypeclEKdKd" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Comparison operator between two values v1 &amp; v2. &gt; When OptimizationType is Maximization, &lt; otherwise. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common17FOptimizationTypeeqE17FOptimizationType">
+<span id="_CPPv3NK3ioh6common17FOptimizationTypeeqE17FOptimizationType"></span><span id="_CPPv2NK3ioh6common17FOptimizationTypeeqE17FOptimizationType"></span><span id="ioh::common::FOptimizationType::eq-operator__FOptimizationTypeC"></span><span class="target" id="classioh_1_1common_1_1_f_optimization_type_1a16f7226fa2f59328114154a9cb1825fd"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">==</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N3ioh6common17FOptimizationTypeE" title="ioh::common::FOptimizationType"><span class="n"><span class="pre">FOptimizationType</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common17FOptimizationTypeeqE17FOptimizationType" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Equality operator. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common17FOptimizationType5type_E">
+<span id="_CPPv3N3ioh6common17FOptimizationType5type_E"></span><span id="_CPPv2N3ioh6common17FOptimizationType5type_E"></span><span id="ioh::common::FOptimizationType::type___OptimizationType"></span><span class="target" id="classioh_1_1common_1_1_f_optimization_type_1a2c7b8acde5294a50f298410d78e2013c"></span><a class="reference internal" href="#_CPPv4N3ioh6common16OptimizationTypeE" title="ioh::common::OptimizationType"><span class="n"><span class="pre">OptimizationType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">type_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common17FOptimizationType5type_E" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The underlying optimization type. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common17FOptimizationType11comparator_E">
+<span id="_CPPv3N3ioh6common17FOptimizationType11comparator_E"></span><span id="_CPPv2N3ioh6common17FOptimizationType11comparator_E"></span><span class="target" id="classioh_1_1common_1_1_f_optimization_type_1ae16e4b9f710b0a19b93405f4ab9d7aa8"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">comparator_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common17FOptimizationType11comparator_E" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The comparison operator. </p>
+</dd></dl>
+</div>
+</dd></dl>
+</section>
+</section>
+<section id="structs">
+<h2>Structs<a class="headerlink" href="#structs" title="Permalink to this headline">¶</a></h2>
+<section id="automatictyperegistration">
+<h3>AutomaticTypeRegistration<a class="headerlink" href="#automatictyperegistration" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN3ioh6common25AutomaticTypeRegistrationE">
+<span id="_CPPv3I00EN3ioh6common25AutomaticTypeRegistrationE"></span><span id="_CPPv2I00EN3ioh6common25AutomaticTypeRegistrationE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Type</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Factory</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="structioh_1_1common_1_1_automatic_type_registration"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">AutomaticTypeRegistration</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I00EN3ioh6common19RegistrationInvokerE" title="ioh::common::RegistrationInvoker"><span class="n"><span class="pre">RegistrationInvoker</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25AutomaticTypeRegistrationE" title="ioh::common::AutomaticTypeRegistration::Type"><span class="n"><span class="pre">Type</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25AutomaticTypeRegistrationE" title="ioh::common::AutomaticTypeRegistration::Factory"><span class="n"><span class="pre">Factory</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I00EN3ioh6common25AutomaticTypeRegistrationE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Helper for factory system. </p>
+<p>Subclassed by <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; AttractiveSector &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; AttractiveSector &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; BentCigar &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; BentCigar &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; BuecheRastrigin &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; BuecheRastrigin &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; DifferentPowers &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; DifferentPowers &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Discus &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Discus &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Ellipsoid &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Ellipsoid &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; EllipsoidRotated &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; EllipsoidRotated &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Gallagher101 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Gallagher101 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Gallagher21 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Gallagher21 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; GriewankRosenBrock &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; GriewankRosenBrock &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Katsuura &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Katsuura &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; LinearSlope &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; LinearSlope &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; LunacekBiRastrigin &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; LunacekBiRastrigin &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Rastrigin &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Rastrigin &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; RastriginRotated &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; RastriginRotated &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Rosenbrock &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Rosenbrock &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; RosenbrockRotated &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; RosenbrockRotated &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Schaffers10 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Schaffers10 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Schaffers1000 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Schaffers1000 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Schwefel &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Schwefel &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; SharpRidge &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; SharpRidge &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Sphere &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Sphere &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; StepEllipsoid &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; StepEllipsoid &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; T &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; T &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Weierstrass &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; Weierstrass &gt;</span></a>, <a class="reference internal" href="ioh_suite.html#structioh_1_1suite_1_1_integer_suite"><span class="std std-ref">ioh::suite::IntegerSuite&lt; Integer &gt;</span></a>, <a class="reference internal" href="ioh_suite.html#structioh_1_1suite_1_1_integer_suite"><span class="std std-ref">ioh::suite::IntegerSuite&lt; PBO &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; ProblemType &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_b_b_o_problem"><span class="std std-ref">ioh::problem::BBOProblem&lt; ProblemType &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#structioh_1_1problem_1_1_integer_problem"><span class="std std-ref">ioh::problem::IntegerProblem&lt; ProblemType &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; ProblemType &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; ProblemType &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_real_problem"><span class="std std-ref">ioh::problem::RealProblem&lt; ProblemType &gt;</span></a>, <a class="reference internal" href="ioh_suite.html#structioh_1_1suite_1_1_integer_suite"><span class="std std-ref">ioh::suite::IntegerSuite&lt; Derived &gt;</span></a>, <a class="reference internal" href="ioh_suite.html#structioh_1_1suite_1_1_real_suite"><span class="std std-ref">ioh::suite::RealSuite&lt; Derived &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; ConcatenatedTrap &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; ConcatenatedTrap &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; IsingRing &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; IsingRing &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; IsingTorus &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; IsingTorus &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; IsingTriangular &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; IsingTriangular &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LABS &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LABS &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnes &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnes &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesDummy1 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesDummy1 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesDummy2 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesDummy2 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesEpistasis &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesEpistasis &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesNeutrality &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesNeutrality &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesRuggedness1 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesRuggedness1 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesRuggedness2 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesRuggedness2 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesRuggedness3 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; LeadingOnesRuggedness3 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; Linear &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; Linear &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; MIS &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; MIS &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; NKLandscapes &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; NKLandscapes &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; NQueens &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; NQueens &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMax &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMax &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxDummy1 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxDummy1 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxDummy2 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxDummy2 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxEpistasis &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxEpistasis &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxNeutrality &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxNeutrality &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxRuggedness1 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxRuggedness1 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxRuggedness2 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxRuggedness2 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxRuggedness3 &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_p_b_o_problem"><span class="std std-ref">ioh::problem::PBOProblem&lt; OneMaxRuggedness3 &gt;</span></a>, <a class="reference internal" href="ioh_suite.html#structioh_1_1suite_1_1_real_suite"><span class="std std-ref">ioh::suite::RealSuite&lt; BBOB &gt;</span></a>, <a class="reference internal" href="ioh_suite.html#structioh_1_1suite_1_1_real_suite"><span class="std std-ref">ioh::suite::RealSuite&lt; Real &gt;</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common25AutomaticTypeRegistration7invokerE">
+<span id="_CPPv3N3ioh6common25AutomaticTypeRegistration7invokerE"></span><span id="_CPPv2N3ioh6common25AutomaticTypeRegistration7invokerE"></span><span id="ioh::common::AutomaticTypeRegistration::invoker__InvokeApplyOnConstruction:Type.Factory:R"></span><span class="target" id="structioh_1_1common_1_1_automatic_type_registration_1a61cec20e1a596d16d5da2ca83cf4b6d9"></span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25InvokeApplyOnConstructionE" title="ioh::common::InvokeApplyOnConstruction"><span class="n"><span class="pre">InvokeApplyOnConstruction</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25AutomaticTypeRegistrationE" title="ioh::common::AutomaticTypeRegistration::Type"><span class="n"><span class="pre">Type</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25AutomaticTypeRegistrationE" title="ioh::common::AutomaticTypeRegistration::Factory"><span class="n"><span class="pre">Factory</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">invoker</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common19RegistrationInvokerE" title="ioh::common::RegistrationInvoker"><span class="n"><span class="pre">RegistrationInvoker</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25AutomaticTypeRegistrationE" title="ioh::common::AutomaticTypeRegistration::Type"><span class="n"><span class="pre">Type</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25AutomaticTypeRegistrationE" title="ioh::common::AutomaticTypeRegistration::Factory"><span class="n"><span class="pre">Factory</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">registration_invoker</span></span><a class="headerlink" href="#_CPPv4N3ioh6common25AutomaticTypeRegistration7invokerE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Forces creation of <code class="docutils literal notranslate"><span class="pre">invoker</span></code> </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-attributes">Public Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common25AutomaticTypeRegistration20registration_invokerE">
+<span id="_CPPv3N3ioh6common25AutomaticTypeRegistration20registration_invokerE"></span><span id="_CPPv2N3ioh6common25AutomaticTypeRegistration20registration_invokerE"></span><span id="ioh::common::AutomaticTypeRegistration::registration_invoker__InvokeApplyOnConstruction:Type.Factory:"></span><span class="target" id="structioh_1_1common_1_1_registration_invoker_1a0d5c7dfec28a6fe688521248af347330"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25InvokeApplyOnConstructionE" title="ioh::common::InvokeApplyOnConstruction"><span class="n"><span class="pre">InvokeApplyOnConstruction</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25AutomaticTypeRegistrationE" title="ioh::common::AutomaticTypeRegistration::Type"><span class="n"><span class="pre">Type</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25AutomaticTypeRegistrationE" title="ioh::common::AutomaticTypeRegistration::Factory"><span class="n"><span class="pre">Factory</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">registration_invoker</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25InvokeApplyOnConstructionE" title="ioh::common::InvokeApplyOnConstruction"><span class="n"><span class="pre">InvokeApplyOnConstruction</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25AutomaticTypeRegistrationE" title="ioh::common::AutomaticTypeRegistration::Type"><span class="n"><span class="pre">Type</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25AutomaticTypeRegistrationE" title="ioh::common::AutomaticTypeRegistration::Factory"><span class="n"><span class="pre">Factory</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N3ioh6common25AutomaticTypeRegistration20registration_invokerE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Forces creation of <code class="docutils literal notranslate"><span class="pre">registration_invoker</span></code> </p>
+</dd></dl>
+</div>
+</dd></dl>
+</section>
+<section id="factory">
+<h3>Factory<a class="headerlink" href="#factory" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I0DpEN3ioh6common7FactoryE">
+<span id="_CPPv3I0DpEN3ioh6common7FactoryE"></span><span id="_CPPv2I0DpEN3ioh6common7FactoryE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AbstractType</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">Args</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="structioh_1_1common_1_1_factory"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">Factory</span></span></span><a class="headerlink" href="#_CPPv4I0DpEN3ioh6common7FactoryE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Class for generating classes for a given abtract type. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AbstractType</strong> – the parent type of the classes to be generator </p></li>
+<li><p><strong>Args</strong> – the arguments of the common constructor for children of AbtractType </p></li>
+</ul>
+</dd>
+</dl>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common7Factory4TypeE">
+<span id="_CPPv3N3ioh6common7Factory4TypeE"></span><span id="_CPPv2N3ioh6common7Factory4TypeE"></span><span class="target" id="structioh_1_1common_1_1_factory_1a56d327cd2a1bd316adccd3e5cd73df0c"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0DpEN3ioh6common7FactoryE" title="ioh::common::Factory::AbstractType"><span class="n"><span class="pre">AbstractType</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh6common7Factory4TypeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>A shared ptr to AbstractType. </p>
+</dd></dl>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common7Factory7CreatorE">
+<span id="_CPPv3N3ioh6common7Factory7CreatorE"></span><span id="_CPPv2N3ioh6common7Factory7CreatorE"></span><span class="target" id="structioh_1_1common_1_1_factory_1a9de0c7b2a52e22db2044814a481d3937"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Creator</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh6common7Factory4TypeE" title="ioh::common::Factory::Type"><span class="n"><span class="pre">Type</span></span></a><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#_CPPv4I0DpEN3ioh6common7FactoryE" title="ioh::common::Factory::Args"><span class="n"><span class="pre">Args</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh6common7Factory7CreatorE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Creator method for instances of Type. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common7Factory7includeERKNSt6stringEKi7Creator">
+<span id="_CPPv3N3ioh6common7Factory7includeERKNSt6stringEKi7Creator"></span><span id="_CPPv2N3ioh6common7Factory7includeERKNSt6stringEKi7Creator"></span><span id="ioh::common::Factory::include__ssCR.iC.Creator"></span><span class="target" id="structioh_1_1common_1_1_factory_1af662160a0d4d78709abdea53436b062e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">include</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">id</span></span>, <a class="reference internal" href="#_CPPv4N3ioh6common7Factory7CreatorE" title="ioh::common::Factory::Creator"><span class="n"><span class="pre">Creator</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">creator</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common7Factory7includeERKNSt6stringEKi7Creator" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Include a new element to the factory. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common7Factory27check_or_get_next_availableEKi">
+<span id="_CPPv3NK3ioh6common7Factory27check_or_get_next_availableEKi"></span><span id="_CPPv2NK3ioh6common7Factory27check_or_get_next_availableEKi"></span><span id="ioh::common::Factory::check_or_get_next_available__iCC"></span><span class="target" id="structioh_1_1common_1_1_factory_1a0b121817df317474476671c741df5a34"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">check_or_get_next_available</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">id</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common7Factory27check_or_get_next_availableEKi" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Get the next available id. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common7Factory27check_or_get_next_availableEKiRKNSt6stringE">
+<span id="_CPPv3NK3ioh6common7Factory27check_or_get_next_availableEKiRKNSt6stringE"></span><span id="_CPPv2NK3ioh6common7Factory27check_or_get_next_availableEKiRKNSt6stringE"></span><span id="ioh::common::Factory::check_or_get_next_available__iC.ssCRC"></span><span class="target" id="structioh_1_1common_1_1_factory_1ae09049a348c7a6cd93e2a3cd182747b0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">check_or_get_next_available</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">id</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common7Factory27check_or_get_next_availableEKiRKNSt6stringE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Get the next available id. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common7Factory5namesEv">
+<span id="_CPPv3NK3ioh6common7Factory5namesEv"></span><span id="_CPPv2NK3ioh6common7Factory5namesEv"></span><span id="ioh::common::Factory::namesC"></span><span class="target" id="structioh_1_1common_1_1_factory_1a3fb43fe3569737249eb363071c238f9b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">names</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common7Factory5namesEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Accessor for the list of registered names. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common7Factory3idsEv">
+<span id="_CPPv3NK3ioh6common7Factory3idsEv"></span><span id="_CPPv2NK3ioh6common7Factory3idsEv"></span><span id="ioh::common::Factory::idsC"></span><span class="target" id="structioh_1_1common_1_1_factory_1ab94052ab88310c33fa8d994e9f6a2288"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ids</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common7Factory3idsEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Accessor for the list of registered ids. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common7Factory3mapEv">
+<span id="_CPPv3NK3ioh6common7Factory3mapEv"></span><span id="_CPPv2NK3ioh6common7Factory3mapEv"></span><span id="ioh::common::Factory::mapC"></span><span class="target" id="structioh_1_1common_1_1_factory_1a8c6a47021ad51b4601575ed5080f40e6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">map</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common7Factory3mapEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Accessor for the map from id to name. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common7Factory6createERKNSt6stringEDp4Args">
+<span id="_CPPv3NK3ioh6common7Factory6createERKNSt6stringEDp4Args"></span><span id="_CPPv2NK3ioh6common7Factory6createERKNSt6stringEDp4Args"></span><span id="ioh::common::Factory::create__ssCR.ArgsDpC"></span><span class="target" id="structioh_1_1common_1_1_factory_1a773b0f5292944b23ee1ae864f8e8a8f4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6common7Factory4TypeE" title="ioh::common::Factory::Type"><span class="n"><span class="pre">Type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">create</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span>, <a class="reference internal" href="#_CPPv4I0DpEN3ioh6common7FactoryE" title="ioh::common::Factory::Args"><span class="n"><span class="pre">Args</span></span></a><span class="p"><span class="pre">...</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">params</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common7Factory6createERKNSt6stringEDp4Args" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Create a new instance of Type using the Creator registered. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common7Factory6createEKiDp4Args">
+<span id="_CPPv3NK3ioh6common7Factory6createEKiDp4Args"></span><span id="_CPPv2NK3ioh6common7Factory6createEKiDp4Args"></span><span id="ioh::common::Factory::create__iC.ArgsDpC"></span><span class="target" id="structioh_1_1common_1_1_factory_1a89801fe56543499a292fc08248be16b9"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6common7Factory4TypeE" title="ioh::common::Factory::Type"><span class="n"><span class="pre">Type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">create</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">id</span></span>, <a class="reference internal" href="#_CPPv4I0DpEN3ioh6common7FactoryE" title="ioh::common::Factory::Args"><span class="n"><span class="pre">Args</span></span></a><span class="p"><span class="pre">...</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">params</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common7Factory6createEKiDp4Args" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Create a new instance of Type using the Creator registered. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common7Factory8instanceEv">
+<span id="_CPPv3N3ioh6common7Factory8instanceEv"></span><span id="_CPPv2N3ioh6common7Factory8instanceEv"></span><span id="ioh::common::Factory::instance"></span><span class="target" id="structioh_1_1common_1_1_factory_1a4e7bdf67aaae8dea03ced7335a3f3df0"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0DpEN3ioh6common7FactoryE" title="ioh::common::Factory"><span class="n"><span class="pre">Factory</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">instance</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common7Factory8instanceEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Accessor to static instance. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common7Factory7FactoryEv">
+<span id="_CPPv3N3ioh6common7Factory7FactoryEv"></span><span id="_CPPv2N3ioh6common7Factory7FactoryEv"></span><span id="ioh::common::Factory::Factory"></span><span class="target" id="structioh_1_1common_1_1_factory_1a2a2862c4d2fe6bf59b0f3d9fa1bde47e"></span><span class="sig-name descname"><span class="n"><span class="pre">Factory</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N3ioh6common7Factory7FactoryEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common7Factory7FactoryERK7Factory">
+<span id="_CPPv3N3ioh6common7Factory7FactoryERK7Factory"></span><span id="_CPPv2N3ioh6common7Factory7FactoryERK7Factory"></span><span id="ioh::common::Factory::Factory__FactoryCR"></span><span class="target" id="structioh_1_1common_1_1_factory_1a16e24d7757ba47e91b04cb8cb319d5c8"></span><span class="sig-name descname"><span class="n"><span class="pre">Factory</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6common7Factory7FactoryERK7Factory" title="ioh::common::Factory::Factory"><span class="n"><span class="pre">Factory</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N3ioh6common7Factory7FactoryERK7Factory" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common7Factory8name_mapE">
+<span id="_CPPv3N3ioh6common7Factory8name_mapE"></span><span id="_CPPv2N3ioh6common7Factory8name_mapE"></span><span id="ioh::common::Factory::name_map__std::map:ss.Creator:"></span><span class="target" id="structioh_1_1common_1_1_factory_1a190865611cc39b2cb7e1876c0a4b362d"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6common7Factory7CreatorE" title="ioh::common::Factory::Creator"><span class="n"><span class="pre">Creator</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">name_map</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common7Factory8name_mapE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common7Factory6id_mapE">
+<span id="_CPPv3N3ioh6common7Factory6id_mapE"></span><span id="_CPPv2N3ioh6common7Factory6id_mapE"></span><span id="ioh::common::Factory::id_map__std::map:i.ss:"></span><span class="target" id="structioh_1_1common_1_1_factory_1a3fe6296b5dd555b44f020b6a2ca7598d"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">id_map</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common7Factory6id_mapE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+</dd></dl>
+</section>
+<section id="hasrepr">
+<h3>HasRepr<a class="headerlink" href="#hasrepr" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common7HasReprE">
+<span id="_CPPv3N3ioh6common7HasReprE"></span><span id="_CPPv2N3ioh6common7HasReprE"></span><span id="ioh::common::HasRepr"></span><span class="target" id="structioh_1_1common_1_1_has_repr"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">HasRepr</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common7HasReprE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Interface which defines a repr method. </p>
+<p>Subclassed by <a class="reference internal" href="#classioh_1_1common_1_1_f_optimization_type"><span class="std std-ref">ioh::common::FOptimizationType</span></a>, <a class="reference internal" href="ioh_logger_analyzer_structures.html#structioh_1_1logger_1_1analyzer_1_1structures_1_1_algorithm_info"><span class="std std-ref">ioh::logger::analyzer::structures::AlgorithmInfo</span></a>, <a class="reference internal" href="ioh_logger_analyzer_structures.html#structioh_1_1logger_1_1analyzer_1_1structures_1_1_attribute"><span class="std std-ref">ioh::logger::analyzer::structures::Attribute&lt; T &gt;</span></a>, <a class="reference internal" href="ioh_logger_analyzer_structures.html#structioh_1_1logger_1_1analyzer_1_1structures_1_1_best_point"><span class="std std-ref">ioh::logger::analyzer::structures::BestPoint</span></a>, <a class="reference internal" href="ioh_logger_analyzer_structures.html#structioh_1_1logger_1_1analyzer_1_1structures_1_1_experiment_info"><span class="std std-ref">ioh::logger::analyzer::structures::ExperimentInfo</span></a>, <a class="reference internal" href="ioh_logger_analyzer_structures.html#structioh_1_1logger_1_1analyzer_1_1structures_1_1_run_info"><span class="std std-ref">ioh::logger::analyzer::structures::RunInfo</span></a>, <a class="reference internal" href="ioh_logger_analyzer_structures.html#structioh_1_1logger_1_1analyzer_1_1structures_1_1_scenario_info"><span class="std std-ref">ioh::logger::analyzer::structures::ScenarioInfo</span></a>, <a class="reference internal" href="ioh_problem.html#structioh_1_1problem_1_1_constraint"><span class="std std-ref">ioh::problem::Constraint&lt; T &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#structioh_1_1problem_1_1_meta_data"><span class="std std-ref">ioh::problem::MetaData</span></a>, <a class="reference internal" href="ioh_problem.html#structioh_1_1problem_1_1_solution"><span class="std std-ref">ioh::problem::Solution&lt; T &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#structioh_1_1problem_1_1_state"><span class="std std-ref">ioh::problem::State&lt; T &gt;</span></a>, <a class="reference internal" href="ioh_problem.html#structioh_1_1problem_1_1_solution"><span class="std std-ref">ioh::problem::Solution&lt; double &gt;</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6common7HasRepr4reprEv">
+<span id="_CPPv3NK3ioh6common7HasRepr4reprEv"></span><span id="_CPPv2NK3ioh6common7HasRepr4reprEv"></span><span id="ioh::common::HasRepr::reprC"></span><span class="target" id="structioh_1_1common_1_1_has_repr_1ac1008965bc65e65fdf3e3e2365e14b05"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">repr</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4NK3ioh6common7HasRepr4reprEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Representation of the object. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-friends">Friends</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common7HasReprlsERNSt7ostreamERK7HasRepr">
+<span id="_CPPv3N3ioh6common7HasReprlsERNSt7ostreamERK7HasRepr"></span><span id="_CPPv2N3ioh6common7HasReprlsERNSt7ostreamERK7HasRepr"></span><span id="ioh::common::HasRepr::lshift-operator__osR.HasReprCR"></span><span class="target" id="structioh_1_1common_1_1_has_repr_1a83fc47151695cd8aca020c930bfe2984"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;&lt;</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">os</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6common7HasReprE" title="ioh::common::HasRepr"><span class="n"><span class="pre">HasRepr</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">obj</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common7HasReprlsERNSt7ostreamERK7HasRepr" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Default string stream method. </p>
+</dd></dl>
+</div>
+</dd></dl>
+</section>
+<section id="idgetter">
+<h3>IdGetter<a class="headerlink" href="#idgetter" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I_bEN3ioh6common8IdGetterE">
+<span id="_CPPv3I_bEN3ioh6common8IdGetterE"></span><span id="_CPPv2I_bEN3ioh6common8IdGetterE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IsProblem</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="structioh_1_1common_1_1_id_getter"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IdGetter</span></span></span><a class="headerlink" href="#_CPPv4I_bEN3ioh6common8IdGetterE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Helper to get a new ID for a given class. </p>
+</dd></dl>
+</section>
+<section id="idgetter-false">
+<h3>IdGetter&lt; false &gt;<a class="headerlink" href="#idgetter-false" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh6common8IdGetterIXL0EEEE">
+<span id="_CPPv3IEN3ioh6common8IdGetterIXL0EEEE"></span><span id="_CPPv2IEN3ioh6common8IdGetterIXfalseEEE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="structioh_1_1common_1_1_id_getter_3_01false_01_4"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">IdGetter</span></span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">false</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4IEN3ioh6common8IdGetterIXL0EEEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Helper to get a new ID for a non problem class. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh6common8IdGetterIXL0EEE6get_idEiRKNSt6vectorIiEE">
+<span id="_CPPv3I0EN3ioh6common8IdGetterIXL0EEE6get_idERKNSt6vectorIiEE"></span><span id="_CPPv2I0EN3ioh6common8IdGetterIXfalseEE6get_idERKNSt6vectorIiEE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="structioh_1_1common_1_1_id_getter_3_01false_01_4_1a220cd212487f005cec2ded4fba38b33f"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_id</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">ids</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh6common8IdGetterIXL0EEE6get_idEiRKNSt6vectorIiEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Gets an id. </p>
+</dd></dl>
+</div>
+</dd></dl>
+</section>
+<section id="idgetter-true">
+<h3>IdGetter&lt; true &gt;<a class="headerlink" href="#idgetter-true" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh6common8IdGetterIXL1EEEE">
+<span id="_CPPv3IEN3ioh6common8IdGetterIXL1EEEE"></span><span id="_CPPv2IEN3ioh6common8IdGetterIXtrueEEE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="structioh_1_1common_1_1_id_getter_3_01true_01_4"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">IdGetter</span></span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">true</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4IEN3ioh6common8IdGetterIXL1EEEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Helper to get a new ID for a problem class. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh6common8IdGetterIXL1EEE6get_idEiRKNSt6vectorIiEE">
+<span id="_CPPv3I0EN3ioh6common8IdGetterIXL1EEE6get_idERKNSt6vectorIiEE"></span><span id="_CPPv2I0EN3ioh6common8IdGetterIXtrueEE6get_idERKNSt6vectorIiEE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="structioh_1_1common_1_1_id_getter_3_01true_01_4_1a0c4541551c34e14142377a5c9221d213"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_id</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh6common8IdGetterIXL1EEE6get_idEiRKNSt6vectorIiEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Gets an from the class meta_data. </p>
+</dd></dl>
+</div>
+</dd></dl>
+</section>
+<section id="invokeapplyonconstruction">
+<h3>InvokeApplyOnConstruction<a class="headerlink" href="#invokeapplyonconstruction" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN3ioh6common25InvokeApplyOnConstructionE">
+<span id="_CPPv3I00EN3ioh6common25InvokeApplyOnConstructionE"></span><span id="_CPPv2I00EN3ioh6common25InvokeApplyOnConstructionE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Type</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Factory</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="structioh_1_1common_1_1_invoke_apply_on_construction"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">InvokeApplyOnConstruction</span></span></span><a class="headerlink" href="#_CPPv4I00EN3ioh6common25InvokeApplyOnConstructionE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Helper for factory system. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common25InvokeApplyOnConstruction25InvokeApplyOnConstructionEv">
+<span id="_CPPv3N3ioh6common25InvokeApplyOnConstruction25InvokeApplyOnConstructionEv"></span><span id="_CPPv2N3ioh6common25InvokeApplyOnConstruction25InvokeApplyOnConstructionEv"></span><span id="ioh::common::InvokeApplyOnConstruction::InvokeApplyOnConstruction"></span><span class="target" id="structioh_1_1common_1_1_invoke_apply_on_construction_1a26463ffc420363f1c2cfb0b0df0c114f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InvokeApplyOnConstruction</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common25InvokeApplyOnConstruction25InvokeApplyOnConstructionEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+</dd></dl>
+</section>
+<section id="registerwithfactory">
+<h3>RegisterWithFactory<a class="headerlink" href="#registerwithfactory" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I0DpEN3ioh6common19RegisterWithFactoryE">
+<span id="_CPPv3I0DpEN3ioh6common19RegisterWithFactoryE"></span><span id="_CPPv2I0DpEN3ioh6common19RegisterWithFactoryE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Parent</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="sig-name descname"><span class="n"><span class="pre">Args</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="structioh_1_1common_1_1_register_with_factory"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">RegisterWithFactory</span></span></span><a class="headerlink" href="#_CPPv4I0DpEN3ioh6common19RegisterWithFactoryE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Base factory registry. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Parent</strong> – Abstract type </p></li>
+<li><p><strong>Args</strong> – Parent constructor args </p></li>
+</ul>
+</dd>
+</dl>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh6common19RegisterWithFactory7includeEvv">
+<span id="_CPPv3I0EN3ioh6common19RegisterWithFactory7includeEv"></span><span id="_CPPv2I0EN3ioh6common19RegisterWithFactory7includeEv"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="structioh_1_1common_1_1_register_with_factory_1afff2864ec3b6b864dc709690ed373dc8"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">include</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh6common19RegisterWithFactory7includeEvv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Include Parent in the factory. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common19RegisterWithFactory8instanceEv">
+<span id="_CPPv3N3ioh6common19RegisterWithFactory8instanceEv"></span><span id="_CPPv2N3ioh6common19RegisterWithFactory8instanceEv"></span><span id="ioh::common::RegisterWithFactory::instance"></span><span class="target" id="structioh_1_1common_1_1_register_with_factory_1aed545c3b96ba20af580004064bb69967"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0DpEN3ioh6common7FactoryE" title="ioh::common::Factory"><span class="n"><span class="pre">Factory</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0DpEN3ioh6common19RegisterWithFactoryE" title="ioh::common::RegisterWithFactory::Parent"><span class="n"><span class="pre">Parent</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0DpEN3ioh6common19RegisterWithFactoryE" title="ioh::common::RegisterWithFactory::Args"><span class="n"><span class="pre">Args</span></span></a><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">instance</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common19RegisterWithFactory8instanceEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Accessor to static instance. </p>
+</dd></dl>
+</div>
+</dd></dl>
+</section>
+<section id="registrationinvoker">
+<h3>RegistrationInvoker<a class="headerlink" href="#registrationinvoker" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN3ioh6common19RegistrationInvokerE">
+<span id="_CPPv3I00EN3ioh6common19RegistrationInvokerE"></span><span id="_CPPv2I00EN3ioh6common19RegistrationInvokerE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Type</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Factory</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="structioh_1_1common_1_1_registration_invoker"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">RegistrationInvoker</span></span></span><a class="headerlink" href="#_CPPv4I00EN3ioh6common19RegistrationInvokerE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Helper for factory system. </p>
+<p>Subclassed by <a class="reference internal" href="#structioh_1_1common_1_1_automatic_type_registration"><span class="std std-ref">ioh::common::AutomaticTypeRegistration&lt; Type, Factory &gt;</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-attributes">Public Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common19RegistrationInvoker20registration_invokerE">
+<span id="_CPPv3N3ioh6common19RegistrationInvoker20registration_invokerE"></span><span id="_CPPv2N3ioh6common19RegistrationInvoker20registration_invokerE"></span><span id="ioh::common::RegistrationInvoker::registration_invoker__InvokeApplyOnConstruction:Type.Factory:"></span><span class="target" id="structioh_1_1common_1_1_registration_invoker_1a0d5c7dfec28a6fe688521248af347330"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25InvokeApplyOnConstructionE" title="ioh::common::InvokeApplyOnConstruction"><span class="n"><span class="pre">InvokeApplyOnConstruction</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3ioh6common19RegistrationInvokerE" title="ioh::common::RegistrationInvoker::Type"><span class="n"><span class="pre">Type</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common19RegistrationInvokerE" title="ioh::common::RegistrationInvoker::Factory"><span class="n"><span class="pre">Factory</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">registration_invoker</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common25InvokeApplyOnConstructionE" title="ioh::common::InvokeApplyOnConstruction"><span class="n"><span class="pre">InvokeApplyOnConstruction</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3ioh6common19RegistrationInvokerE" title="ioh::common::RegistrationInvoker::Type"><span class="n"><span class="pre">Type</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common19RegistrationInvokerE" title="ioh::common::RegistrationInvoker::Factory"><span class="n"><span class="pre">Factory</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N3ioh6common19RegistrationInvoker20registration_invokerE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Forces creation of <code class="docutils literal notranslate"><span class="pre">registration_invoker</span></code> </p>
+</dd></dl>
+</div>
+</dd></dl>
+</section>
+</section>
+<section id="enumerations">
+<h2>Enumerations<a class="headerlink" href="#enumerations" title="Permalink to this headline">¶</a></h2>
+<section id="optimizationtype">
+<h3>OptimizationType<a class="headerlink" href="#optimizationtype" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp enum-class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common16OptimizationTypeE">
+<span id="_CPPv3N3ioh6common16OptimizationTypeE"></span><span id="_CPPv2N3ioh6common16OptimizationTypeE"></span><span class="target" id="namespaceioh_1_1common_1a10ff539dd4ec41851f2c305aac9e3c4b"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">OptimizationType</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common16OptimizationTypeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Enum containing minimization = 0 and maximization = 1 flags. </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common16OptimizationType12MinimizationE">
+<span id="_CPPv3N3ioh6common16OptimizationType12MinimizationE"></span><span id="_CPPv2N3ioh6common16OptimizationType12MinimizationE"></span><span class="target" id="namespaceioh_1_1common_1a10ff539dd4ec41851f2c305aac9e3c4baace1337f7aedb992174668251cfd946b"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Minimization</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common16OptimizationType12MinimizationE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common16OptimizationType12MaximizationE">
+<span id="_CPPv3N3ioh6common16OptimizationType12MaximizationE"></span><span id="_CPPv2N3ioh6common16OptimizationType12MaximizationE"></span><span class="target" id="namespaceioh_1_1common_1a10ff539dd4ec41851f2c305aac9e3c4badd47febfc66f3919761d0eedf7eeb80e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Maximization</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6common16OptimizationType12MaximizationE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</dd></dl>
+</section>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<section id="all-finite">
+<h3>all_finite<a class="headerlink" href="#all-finite" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common10all_finiteERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh6common10all_finiteERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh6common10all_finiteERKNSt6vectorIdEE"></span><span id="ioh::common::all_finite__std::vector:double:CR"></span><span class="target" id="namespaceioh_1_1common_1a8c17cfa6d59b512aaaf4498633a3bea0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">all_finite</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common10all_finiteERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Checks a vector of doubles for nan values. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – vector to be checked </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true if x contains a nan value </p>
+</dd>
+</dl>
+</dd></dl>
+</section>
+<section id="as-vector">
+<h3>as_vector<a class="headerlink" href="#as-vector" title="Permalink to this headline">¶</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenfunction: Unable to resolve function “ioh::common::as_vector” with arguments None in doxygen xml output for project “iohcpp” from directory: ../../build/xml/.
+Potential matches:
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">K</span><span class="p">,</span> <span class="n">typename</span> <span class="n">V</span><span class="p">,</span> <span class="n">typename</span> <span class="n">P</span> <span class="o">=</span> <span class="n">std</span><span class="p">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="o">&gt;&gt;</span> <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">P</span><span class="o">&gt;</span> <span class="n">as_vector</span><span class="p">(</span><span class="n">const</span> <span class="n">std</span><span class="p">::</span><span class="nb">map</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="o">*&gt;</span> <span class="o">&amp;</span><span class="n">m</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">K</span><span class="p">,</span> <span class="n">typename</span> <span class="n">V</span><span class="p">,</span> <span class="n">typename</span> <span class="n">P</span> <span class="o">=</span> <span class="n">std</span><span class="p">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="o">&gt;&gt;</span> <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">P</span><span class="o">&gt;</span> <span class="n">as_vector</span><span class="p">(</span><span class="n">const</span> <span class="n">std</span><span class="p">::</span><span class="nb">map</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">m</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="class-name">
+<h3>class_name<a class="headerlink" href="#class-name" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh6common10class_nameENSt6stringEv">
+<span id="_CPPv3I0EN3ioh6common10class_nameEv"></span><span id="_CPPv2I0EN3ioh6common10class_nameEv"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="namespaceioh_1_1common_1a7cce97cc479694554e9dcf5158c1ea90"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">class_name</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh6common10class_nameENSt6stringEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Get the type name of the problem. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters</dt>
+<dd class="field-odd"><p><strong>T</strong> – the template of the <a class="reference internal" href="ioh.html#classioh_1_1_problem"><span class="std std-ref">Problem</span></a> </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the name of T </p>
+</dd>
+</dl>
+</dd></dl>
+</section>
+<section id="concatenate">
+<h3>concatenate<a class="headerlink" href="#concatenate" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh6common11concatenateENSt6vectorI1TEENSt6vectorI1TEERKNSt6vectorI1TEE">
+<span id="_CPPv3I0EN3ioh6common11concatenateENSt6vectorI1TEERKNSt6vectorI1TEE"></span><span id="_CPPv2I0EN3ioh6common11concatenateENSt6vectorI1TEERKNSt6vectorI1TEE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="namespaceioh_1_1common_1a85866034d08f7502cfdcba8b7bd4c3fc"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh6common11concatenateENSt6vectorI1TEENSt6vectorI1TEERKNSt6vectorI1TEE" title="ioh::common::concatenate::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">concatenate</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh6common11concatenateENSt6vectorI1TEENSt6vectorI1TEERKNSt6vectorI1TEE" title="ioh::common::concatenate::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh6common11concatenateENSt6vectorI1TEENSt6vectorI1TEERKNSt6vectorI1TEE" title="ioh::common::concatenate::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh6common11concatenateENSt6vectorI1TEENSt6vectorI1TEERKNSt6vectorI1TEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>concatenates two vectors </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters</dt>
+<dd class="field-odd"><p><strong>T</strong> – the type of the vectors </p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>a</strong> – the first vector </p></li>
+<li><p><strong>b</strong> – the second vector </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the resulting vector, containing the elements of both a and b </p>
+</dd>
+</dl>
+</dd></dl>
+</section>
+<section id="get-next-id">
+<h3>get_next_id<a class="headerlink" href="#get-next-id" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common11get_next_idERKNSt6vectorIiEE">
+<span id="_CPPv3N3ioh6common11get_next_idERKNSt6vectorIiEE"></span><span id="_CPPv2N3ioh6common11get_next_idERKNSt6vectorIiEE"></span><span id="ioh::common::get_next_id__std::vector:i:CR"></span><span class="target" id="namespaceioh_1_1common_1add58cbcf118e76da3f964e7c5fffd2a4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">get_next_id</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">ids</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common11get_next_idERKNSt6vectorIiEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Function to get the next non zero value in an array of integers. </p>
+</dd></dl>
+</section>
+<section id="has-inf">
+<h3>has_inf<a class="headerlink" href="#has-inf" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common7has_infERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh6common7has_infERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh6common7has_infERKNSt6vectorIdEE"></span><span id="ioh::common::has_inf__std::vector:double:CR"></span><span class="target" id="namespaceioh_1_1common_1ad2bbee7680d2bc87bd505ff74292fc8b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">has_inf</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common7has_infERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Checks a vector of doubles for inf values. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – vector to be checked </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true if x contains a nan value </p>
+</dd>
+</dl>
+</dd></dl>
+</section>
+<section id="has-nan">
+<h3>has_nan<a class="headerlink" href="#has-nan" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common7has_nanERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh6common7has_nanERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh6common7has_nanERKNSt6vectorIdEE"></span><span id="ioh::common::has_nan__std::vector:double:CR"></span><span class="target" id="namespaceioh_1_1common_1ab56aa412dc7882bcb63debfe16ad9fae"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">has_nan</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common7has_nanERKNSt6vectorIdEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Checks a vector of doubles for nan values. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – vector to be checked </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true if x contains a nan value </p>
+</dd>
+</dl>
+</dd></dl>
+</section>
+<section id="keys">
+<h3>keys<a class="headerlink" href="#keys" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN3ioh6common4keysENSt6vectorI1KEERKNSt3mapI1K1VEE">
+<span id="_CPPv3I00EN3ioh6common4keysERKNSt3mapI1K1VEE"></span><span id="_CPPv2I00EN3ioh6common4keysERKNSt3mapI1K1VEE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">K</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">V</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="namespaceioh_1_1common_1a4a410fe9236cfe0111106c242469d8be"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3ioh6common4keysENSt6vectorI1KEERKNSt3mapI1K1VEE" title="ioh::common::keys::K"><span class="n"><span class="pre">K</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">keys</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">map</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3ioh6common4keysENSt6vectorI1KEERKNSt3mapI1K1VEE" title="ioh::common::keys::K"><span class="n"><span class="pre">K</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common4keysENSt6vectorI1KEERKNSt3mapI1K1VEE" title="ioh::common::keys::V"><span class="n"><span class="pre">V</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN3ioh6common4keysENSt6vectorI1KEERKNSt3mapI1K1VEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Retrieve the keys from a map. </p>
+</dd></dl>
+</section>
+<section id="range">
+<h3>range<a class="headerlink" href="#range" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6common5rangeEKiKiKi">
+<span id="_CPPv3N3ioh6common5rangeEKiKiKi"></span><span id="_CPPv2N3ioh6common5rangeEKiKiKi"></span><span id="ioh::common::range__iC.iC.iC"></span><span class="target" id="namespaceioh_1_1common_1a5e572f51212ce4d3d4f3cbe499bbcc1a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">range</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">start</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">stop</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">step</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6common5rangeEKiKiKi" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Returns a range of integers. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> – start of the range </p></li>
+<li><p><strong>stop</strong> – end of the range </p></li>
+<li><p><strong>step</strong> – stepsize of the range </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a vector filled with numbers </p>
+</dd>
+</dl>
+</dd></dl>
+</section>
+<section id="type-name">
+<h3>type_name<a class="headerlink" href="#type-name" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh6common9type_nameENSt6stringEv">
+<span id="_CPPv3I0EN3ioh6common9type_nameEv"></span><span id="_CPPv2I0EN3ioh6common9type_nameEv"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="namespaceioh_1_1common_1a5975c051598fd88b74343ea4b56620e0"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">type_name</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh6common9type_nameENSt6stringEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Get the type name of a given template T. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters</dt>
+<dd class="field-odd"><p><strong>T</strong> – a type </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the name of T </p>
+</dd>
+</dl>
+</dd></dl>
+</section>
+<section id="values">
+<h3>values<a class="headerlink" href="#values" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN3ioh6common6valuesENSt6vectorI1VEERKNSt3mapI1K1VEE">
+<span id="_CPPv3I00EN3ioh6common6valuesERKNSt3mapI1K1VEE"></span><span id="_CPPv2I00EN3ioh6common6valuesERKNSt3mapI1K1VEE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">K</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">V</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="namespaceioh_1_1common_1a14c32d5dff4212d58808bd49b525023b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3ioh6common6valuesENSt6vectorI1VEERKNSt3mapI1K1VEE" title="ioh::common::values::V"><span class="n"><span class="pre">V</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">values</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">map</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3ioh6common6valuesENSt6vectorI1VEERKNSt3mapI1K1VEE" title="ioh::common::values::K"><span class="n"><span class="pre">K</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh6common6valuesENSt6vectorI1VEERKNSt3mapI1K1VEE" title="ioh::common::values::V"><span class="n"><span class="pre">V</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN3ioh6common6valuesENSt6vectorI1VEERKNSt3mapI1K1VEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Retrieve the values from a map. </p>
+</dd></dl>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="ioh_common_file.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">file</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../cpp.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">C++</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2022, Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck |
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="../_sources/cpp/ioh_common.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">common</a><ul>
+<li><a class="reference internal" href="#namespaces">Namespaces</a></li>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#cputimer">CpuTimer</a></li>
+<li><a class="reference internal" href="#foptimizationtype">FOptimizationType</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#structs">Structs</a><ul>
+<li><a class="reference internal" href="#automatictyperegistration">AutomaticTypeRegistration</a></li>
+<li><a class="reference internal" href="#factory">Factory</a></li>
+<li><a class="reference internal" href="#hasrepr">HasRepr</a></li>
+<li><a class="reference internal" href="#idgetter">IdGetter</a></li>
+<li><a class="reference internal" href="#idgetter-false">IdGetter&lt; false &gt;</a></li>
+<li><a class="reference internal" href="#idgetter-true">IdGetter&lt; true &gt;</a></li>
+<li><a class="reference internal" href="#invokeapplyonconstruction">InvokeApplyOnConstruction</a></li>
+<li><a class="reference internal" href="#registerwithfactory">RegisterWithFactory</a></li>
+<li><a class="reference internal" href="#registrationinvoker">RegistrationInvoker</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#enumerations">Enumerations</a><ul>
+<li><a class="reference internal" href="#optimizationtype">OptimizationType</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#all-finite">all_finite</a></li>
+<li><a class="reference internal" href="#as-vector">as_vector</a></li>
+<li><a class="reference internal" href="#class-name">class_name</a></li>
+<li><a class="reference internal" href="#concatenate">concatenate</a></li>
+<li><a class="reference internal" href="#get-next-id">get_next_id</a></li>
+<li><a class="reference internal" href="#has-inf">has_inf</a></li>
+<li><a class="reference internal" href="#has-nan">has_nan</a></li>
+<li><a class="reference internal" href="#keys">keys</a></li>
+<li><a class="reference internal" href="#range">range</a></li>
+<li><a class="reference internal" href="#type-name">type_name</a></li>
+<li><a class="reference internal" href="#values">values</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    </body>
+</html>

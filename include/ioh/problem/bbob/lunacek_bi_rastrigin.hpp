@@ -4,10 +4,11 @@
 
 namespace ioh::problem::bbob
 {
+    //! LunacekBiRastrigin problem id 24
     class LunacekBiRastrigin final : public BBOProblem<LunacekBiRastrigin>
-
     {
     protected:
+        //! Evaluation method
         double evaluate(const std::vector<double> &x) override
         {
             static const auto mu0 = 2.5;
@@ -50,6 +51,12 @@ namespace ioh::problem::bbob
         }
 
     public:
+        /**
+         * @brief Construct a new Lunacek Bi Rastrigin object
+         * 
+         * @param instance instance id
+         * @param n_variables the dimension of the problem
+         */
         LunacekBiRastrigin(const int instance, const int n_variables) :
             BBOProblem(24, instance, n_variables, "LunacekBiRastrigin")
         {

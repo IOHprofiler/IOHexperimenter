@@ -1,0 +1,9 @@
+<map id="inheritance19deab0200" name="inheritance19deab0200">
+<area shape="rect" id="node1" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html#ioh.iohcpp.logger.property.AbstractProperty" target="_top" title="Base class for all Properties" alt="" coords="183,129,313,155"/>
+<area shape="rect" id="node3" href="../api/ioh.iohcpp.logger.property.CurrentY.html#ioh.iohcpp.logger.property.CurrentY" target="_top" title="CurrentY" alt="" coords="392,5,471,31"/>
+<area shape="rect" id="node4" href="../api/ioh.iohcpp.logger.property.Evaluations.html#ioh.iohcpp.logger.property.Evaluations" target="_top" title="Evaluations" alt="" coords="382,55,481,80"/>
+<area shape="rect" id="node5" href="../api/ioh.iohcpp.logger.property.Property.html#ioh.iohcpp.logger.property.Property" target="_top" title="Property" alt="" coords="393,104,470,129"/>
+<area shape="rect" id="node6" href="../api/ioh.iohcpp.logger.property.RawYBest.html#ioh.iohcpp.logger.property.RawYBest" target="_top" title="RawYBest" alt="" coords="388,153,475,179"/>
+<area shape="rect" id="node7" href="../api/ioh.iohcpp.logger.property.TransformedY.html#ioh.iohcpp.logger.property.TransformedY" target="_top" title="TransformedY" alt="" coords="376,203,487,228"/>
+<area shape="rect" id="node8" href="../api/ioh.iohcpp.logger.property.TransformedYBest.html#ioh.iohcpp.logger.property.TransformedYBest" target="_top" title="TransformedYBest" alt="" coords="361,252,501,277"/>
+</map>

@@ -8,12 +8,13 @@ namespace ioh
     {
         namespace pbo
         {
+            //! LeadingOnesDummy2 problem id 12
             class LeadingOnesDummy2 final: public PBOProblem<LeadingOnesDummy2>
             {
-            protected:
                 std::vector<int> info_;
+            protected:
               
-
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
@@ -42,6 +43,8 @@ namespace ioh
                 {
                     objective_.x = std::vector<int>(n_variables,1);
                     objective_.y = evaluate(objective_.x);
+                    objective_.x = reset_transform_variables(objective_.x);
+                    objective_.y = transform_objectives(objective_.y);
                 }
             };
         } // namespace pbo

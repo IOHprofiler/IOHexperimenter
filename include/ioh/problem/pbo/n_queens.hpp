@@ -8,9 +8,11 @@ namespace ioh
     {
         namespace pbo
         {
+            //! NQueens problem id 23
             class NQueens final: public PBOProblem<NQueens>
             {
             protected:
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     int j, i;
@@ -23,8 +25,10 @@ namespace ioh
                     auto index = 0;
                     const auto c = static_cast<float>(n_queens);
 
-                    if (floor(sqrt(static_cast<double>(meta_data_.n_variables))) != sqrt(static_cast<double>(meta_data_.n_variables)))
-                        common::log::error("Number of parameters in the N Queen problem must be a square number");
+                    if (floor(sqrt(static_cast<double>(meta_data_.n_variables))) != sqrt(static_cast<double>(meta_data_.n_variables))) {
+                        IOH_DBG(error,"Number of parameters in the N Queen problem must be a square number")
+                        assert(floor(sqrt(static_cast<double>(meta_data_.n_variables))) == sqrt(static_cast<double>(meta_data_.n_variables)));
+                    }
 
                     for (; index < meta_data_.n_variables; index++)
                     {
@@ -103,6 +107,7 @@ namespace ioh
                 {
                     assert(sqrt(n_variables) - floor(sqrt(n_variables)) == 0);
                     objective_.y = {sqrt(n_variables)};
+                    objective_.y = transform_objectives(objective_.y);
                 }
             };
         } // namespace pbo

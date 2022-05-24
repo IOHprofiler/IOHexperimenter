@@ -1,0 +1,1002 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="stat" href="ioh_logger_eah_stat.html" /><link rel="prev" title="eaf" href="ioh_logger_eaf.html" />
+
+    <meta name="generator" content="sphinx-4.2.0, furo 2022.01.02"/>
+        <title>eah - IOHExperimenter 0.3.2.6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.2.6 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../contents.html">
+  
+  
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.2.6 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">IOHexperimenter</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../cpp.html">C++</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh_common.html">common</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="ioh_common_file.html">file</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_common_random.html">random</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_random_bbob2009.html">bbob2009</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_random_pbo.html">pbo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="ioh_logger.html">logger</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_logger_analyzer.html">analyzer</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_structures.html">structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_v1.html">v1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_v2.html">v2</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_logger_eaf.html">eaf</a></li>
+<li class="toctree-l3 current has-children current-page"><a class="current reference internal" href="#">eah</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="ioh_logger_eah_stat.html">stat</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="ioh_logger_eah_stat_Distribution.html">Distribution</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ioh_logger_eah_stat_under_curve.html">under_curve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_logger_stat.html">stat</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh_problem.html">problem</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_bbob.html">bbob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_pbo.html">pbo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_python.html">python</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_problem_transformation.html">transformation</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_transformation_objective.html">objective</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_transformation_variables.html">variables</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_wmodel.html">wmodel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_suite.html">suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_trigger.html">trigger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_watch.html">watch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh.html">ioh</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python.html">Python</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/ioh.html">Utilities</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem.html">get_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.wrap_problem.html">wrap_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem_id.html">get_problem_id</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.Experiment.html">Experiment</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraint.html">IntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerSolution.html">IntegerSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerState.html">IntegerState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.LogInfo.html">LogInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.MetaData.html">MetaData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.OptimizationType.html">OptimizationType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealConstraint.html">RealConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealSolution.html">RealSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealState.html">RealState</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/problem.html">Problem</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Real.html">Real</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/bbob.html">BBOB</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AttractiveSector.html">AttractiveSector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BBOB.html">BBOB</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BentCigar.html">BentCigar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BuecheRastrigin.html">BuecheRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.DifferentPowers.html">DifferentPowers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Discus.html">Discus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Ellipsoid.html">Ellipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.EllipsoidRotated.html">EllipsoidRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher101.html">Gallagher101</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher21.html">Gallagher21</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GriewankRosenBrock.html">GriewankRosenBrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Katsuura.html">Katsuura</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LinearSlope.html">LinearSlope</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html">LunacekBiRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rastrigin.html">Rastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RastriginRotated.html">RastriginRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rosenbrock.html">Rosenbrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RosenbrockRotated.html">RosenbrockRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers10.html">Schaffers10</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers1000.html">Schaffers1000</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schwefel.html">Schwefel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SharpRidge.html">SharpRidge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Sphere.html">Sphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.StepEllipsoid.html">StepEllipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Weierstrass.html">Weierstrass</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/pbo.html">PBO</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.ConcatenatedTrap.html">ConcatenatedTrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingRing.html">IsingRing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTorus.html">IsingTorus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTriangular.html">IsingTriangular</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LABS.html">LABS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnes.html">LeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy1.html">LeadingOnesDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy2.html">LeadingOnesDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesEpistasis.html">LeadingOnesEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesNeutrality.html">LeadingOnesNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness1.html">LeadingOnesRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness2.html">LeadingOnesRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness3.html">LeadingOnesRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Linear.html">Linear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MIS.html">MIS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.NQueens.html">NQueens</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMax.html">OneMax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy1.html">OneMaxDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy2.html">OneMaxDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxEpistasis.html">OneMaxEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxNeutrality.html">OneMaxNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness1.html">OneMaxRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness2.html">OneMaxRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness3.html">OneMaxRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PBO.html">PBO</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AbstractWModel.html">AbstractWModel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelLeadingOnes.html">WModelLeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelOneMax.html">WModelOneMax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/logger.html">Logging</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Always.html">Always</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.At.html">At</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.During.html">During</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Each.html">Each</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html">OnImprovement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Trigger.html">Trigger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html">AbstractProperty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentY.html">CurrentY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Evaluations.html">Evaluations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Property.html">Property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawYBest.html">RawYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedY.html">TransformedY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedYBest.html">TransformedYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENT_Y_BEST.html">CURRENT_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.EVALUATIONS.html">EVALUATIONS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAW_Y_BEST.html">RAW_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMED_Y.html">TRANSFORMED_Y</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMED_Y_BEST.html">TRANSFORMED_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.AbstractWatcher.html">AbstractWatcher</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Analyzer.html">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Combine.html">Combine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAF.html">EAF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAH.html">EAH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.FlatFile.html">FlatFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Logger.html">Logger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Store.html">Store</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/suite.html">Suite</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.BBOB.html">BBOB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.PBO.html">PBO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Real.html">Real</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../server.html">Server</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="eah">
+<h1>eah<a class="headerlink" href="#eah" title="Permalink to this headline">¶</a></h1>
+<section id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ioh_logger_eah_stat.html">stat</a></li>
+</ul>
+</div>
+</section>
+<section id="types">
+<h2>Types<a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h2>
+<section id="attainmentmatrix">
+<h3>AttainmentMatrix<a class="headerlink" href="#attainmentmatrix" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah16AttainmentMatrixE">
+<span id="_CPPv3N3ioh6logger3eah16AttainmentMatrixE"></span><span id="_CPPv2N3ioh6logger3eah16AttainmentMatrixE"></span><span class="target" id="group___e_a_h___a_p_i_1gaa6b57014d23bea490cfdcbc87146e05d"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">AttainmentMatrix</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah16AttainmentMatrixE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Type used to store a single run attainment bi-dimensional function. </p>
+<p>First dimension is error targets, second dimension function evaluations targets.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>One expect to have a lot of those matrix in a real-life setting, and the more general case is to have objective-function bounded computation times. It is thus chosen to reduce the memory footprint, using the infamous bool vector specialization instead of the faster vector of char. During our tests, using char was 1.02 times faster, while consuming 1.4 more memory. </p>
+</div>
+</dd></dl>
+</section>
+<section id="attainmentsuite">
+<h3>AttainmentSuite<a class="headerlink" href="#attainmentsuite" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah15AttainmentSuiteE">
+<span id="_CPPv3N3ioh6logger3eah15AttainmentSuiteE"></span><span id="_CPPv2N3ioh6logger3eah15AttainmentSuiteE"></span><span class="target" id="group___e_a_h___a_p_i_1gaa6caf8cddf6e3b4ba95542e2aa85ba22"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">AttainmentSuite</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6logger3eah16AttainmentMatrixE" title="ioh::logger::eah::AttainmentMatrix"><span class="n"><span class="pre">AttainmentMatrix</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah15AttainmentSuiteE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Type used to store all bi-dimensional attainment functions. </p>
+<p>First dimension is the problem id, second dimension is the dimension id, third dimension is the instance id. fourth dimension is the run id. Every item is an AttainmentMatrix. </p>
+</dd></dl>
+</section>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<section id="linearscale">
+<h3>LinearScale<a class="headerlink" href="#linearscale" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh6logger3eah11LinearScaleE">
+<span id="_CPPv3I0EN3ioh6logger3eah11LinearScaleE"></span><span id="_CPPv2I0EN3ioh6logger3eah11LinearScaleE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">R</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1logger_1_1eah_1_1_linear_scale"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">LinearScale</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale"><span class="n"><span class="pre">Scale</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah11LinearScaleE" title="ioh::logger::eah::LinearScale::R"><span class="n"><span class="pre">R</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN3ioh6logger3eah11LinearScaleE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Linear scale. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah11LinearScale10BoundsTypeE">
+<span id="_CPPv3N3ioh6logger3eah11LinearScale10BoundsTypeE"></span><span id="_CPPv2N3ioh6logger3eah11LinearScale10BoundsTypeE"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_linear_scale_1a170c9a789d3c8643886df83c89e75cd9"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BoundsType</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale"><span class="n"><span class="pre">Scale</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah11LinearScaleE" title="ioh::logger::eah::LinearScale::R"><span class="n"><span class="pre">R</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">BoundsType</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah11LinearScale10BoundsTypeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The type in which bounds are stored by the <code class="docutils literal notranslate"><span class="pre">bounds</span></code> method. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah11LinearScale11LinearScaleEK1RK1RK6size_t">
+<span id="_CPPv3N3ioh6logger3eah11LinearScale11LinearScaleEK1RK1RK6size_t"></span><span id="_CPPv2N3ioh6logger3eah11LinearScale11LinearScaleEK1RK1RK6size_t"></span><span id="ioh::logger::eah::LinearScale::LinearScale__RC.RC.sC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_linear_scale_1a2f814c9e80844ac3f1412883e38f74fc"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">LinearScale</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah11LinearScaleE" title="ioh::logger::eah::LinearScale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">min</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah11LinearScaleE" title="ioh::logger::eah::LinearScale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">max</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah11LinearScale11LinearScaleEK1RK1RK6size_t" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Constructor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>min</strong> – the minimum of the scale domain. </p></li>
+<li><p><strong>max</strong> – the maximum of the scale domain. </p></li>
+<li><p><strong>size</strong> – the number of buckets in the scale. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah11LinearScale5indexEKd">
+<span id="_CPPv3NK3ioh6logger3eah11LinearScale5indexEKd"></span><span id="_CPPv2NK3ioh6logger3eah11LinearScale5indexEKd"></span><span id="ioh::logger::eah::LinearScale::index__doubleCC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_linear_scale_1ac1ea8e900510b362f88948a168b795f3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">index</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah11LinearScale5indexEKd" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Returns the index of the bucket in which a value falls. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – the value on the scale. </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the corresponding bucket index. </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah11LinearScale6boundsEK6size_t">
+<span id="_CPPv3NK3ioh6logger3eah11LinearScale6boundsEK6size_t"></span><span id="_CPPv2NK3ioh6logger3eah11LinearScale6boundsEK6size_t"></span><span id="ioh::logger::eah::LinearScale::bounds__sCC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_linear_scale_1a84ca75175238a55d53ef08cc3a3b40d3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6logger3eah11LinearScale10BoundsTypeE" title="ioh::logger::eah::LinearScale::BoundsType"><span class="n"><span class="pre">BoundsType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bounds</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah11LinearScale6boundsEK6size_t" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Returns the bounds of the corresponding bucket index. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>i</strong> – the index of the bucket. </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[min,max[ of the bucket i. </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah11LinearScale4stepEv">
+<span id="_CPPv3NK3ioh6logger3eah11LinearScale4stepEv"></span><span id="_CPPv2NK3ioh6logger3eah11LinearScale4stepEv"></span><span id="ioh::logger::eah::LinearScale::stepC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_linear_scale_1a4580b5cde6716231e2ec334fbad4f6db"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah11LinearScaleE" title="ioh::logger::eah::LinearScale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">step</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah11LinearScale4stepEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Returns the width of a bucket. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah11LinearScale3minEv">
+<span id="_CPPv3NK3ioh6logger3eah11LinearScale3minEv"></span><span id="_CPPv2NK3ioh6logger3eah11LinearScale3minEv"></span><span id="ioh::logger::eah::LinearScale::minC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a9e83ed05d6a84ab7f770e90444e54865"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah11LinearScaleE" title="ioh::logger::eah::LinearScale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">min</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah11LinearScale3minEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Minimum value on the axis. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah11LinearScale3maxEv">
+<span id="_CPPv3NK3ioh6logger3eah11LinearScale3maxEv"></span><span id="_CPPv2NK3ioh6logger3eah11LinearScale3maxEv"></span><span id="ioh::logger::eah::LinearScale::maxC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1ae44135db5305d83414d51e501e9381e2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah11LinearScaleE" title="ioh::logger::eah::LinearScale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">max</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah11LinearScale3maxEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Maximum value on the axis. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah11LinearScale4sizeEv">
+<span id="_CPPv3NK3ioh6logger3eah11LinearScale4sizeEv"></span><span id="_CPPv2NK3ioh6logger3eah11LinearScale4sizeEv"></span><span id="ioh::logger::eah::LinearScale::sizeC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1ab758415ff2ecc084a65d59b6d7de1243"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah11LinearScale4sizeEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Number of buckets. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah11LinearScale6lengthEv">
+<span id="_CPPv3NK3ioh6logger3eah11LinearScale6lengthEv"></span><span id="_CPPv2NK3ioh6logger3eah11LinearScale6lengthEv"></span><span id="ioh::logger::eah::LinearScale::lengthC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a9bc0749a10f0a7de9427856090c383d1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah11LinearScaleE" title="ioh::logger::eah::LinearScale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">length</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah11LinearScale6lengthEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Span of the axis. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah11LinearScale4_minE">
+<span id="_CPPv3N3ioh6logger3eah11LinearScale4_minE"></span><span id="_CPPv2N3ioh6logger3eah11LinearScale4_minE"></span><span id="ioh::logger::eah::LinearScale::_min__R"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a1abf1c4315eeea798d3b2cd25c1f2c28"></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah11LinearScaleE" title="ioh::logger::eah::LinearScale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_min</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah11LinearScale4_minE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Minimum. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah11LinearScale4_maxE">
+<span id="_CPPv3N3ioh6logger3eah11LinearScale4_maxE"></span><span id="_CPPv2N3ioh6logger3eah11LinearScale4_maxE"></span><span id="ioh::logger::eah::LinearScale::_max__R"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a6f5bf599d998f6482e20f8fe682f4226"></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah11LinearScaleE" title="ioh::logger::eah::LinearScale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_max</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah11LinearScale4_maxE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Maximum. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah11LinearScale5_sizeE">
+<span id="_CPPv3N3ioh6logger3eah11LinearScale5_sizeE"></span><span id="_CPPv2N3ioh6logger3eah11LinearScale5_sizeE"></span><span id="ioh::logger::eah::LinearScale::_size__s"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a5090a9a2f99c1b9e6d42dd530f0303a7"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_size</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah11LinearScale5_sizeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Number of buckets. </p>
+</dd></dl>
+</div>
+</dd></dl>
+</section>
+<section id="log10scale">
+<h3>Log10Scale<a class="headerlink" href="#log10scale" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh6logger3eah10Log10ScaleE">
+<span id="_CPPv3I0EN3ioh6logger3eah10Log10ScaleE"></span><span id="_CPPv2I0EN3ioh6logger3eah10Log10ScaleE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">R</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1logger_1_1eah_1_1_log10_scale"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">Log10Scale</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale"><span class="n"><span class="pre">Scale</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah10Log10ScaleE" title="ioh::logger::eah::Log10Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN3ioh6logger3eah10Log10ScaleE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Logarithmic (base 10) scale. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This implementation is not very robust to rounding errors especially if you use the bounds method with large lengths. </p>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah10Log10Scale10BoundsTypeE">
+<span id="_CPPv3N3ioh6logger3eah10Log10Scale10BoundsTypeE"></span><span id="_CPPv2N3ioh6logger3eah10Log10Scale10BoundsTypeE"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log10_scale_1a03ef77026800eaf7039bb4619a68899e"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BoundsType</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale"><span class="n"><span class="pre">Scale</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah10Log10ScaleE" title="ioh::logger::eah::Log10Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">BoundsType</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah10Log10Scale10BoundsTypeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The type in which bounds are stored by the <code class="docutils literal notranslate"><span class="pre">bounds</span></code> method. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah10Log10Scale10Log10ScaleEK1RK1RK6size_t">
+<span id="_CPPv3N3ioh6logger3eah10Log10Scale10Log10ScaleEK1RK1RK6size_t"></span><span id="_CPPv2N3ioh6logger3eah10Log10Scale10Log10ScaleEK1RK1RK6size_t"></span><span id="ioh::logger::eah::Log10Scale::Log10Scale__RC.RC.sC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log10_scale_1a85944104d5007524f8372fec3849b07e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Log10Scale</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah10Log10ScaleE" title="ioh::logger::eah::Log10Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">min</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah10Log10ScaleE" title="ioh::logger::eah::Log10Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">max</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah10Log10Scale10Log10ScaleEK1RK1RK6size_t" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Constructor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>min</strong> – the minimum of the scale domain. </p></li>
+<li><p><strong>max</strong> – the maximum of the scale domain. </p></li>
+<li><p><strong>size</strong> – the number of buckets in the scale. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah10Log10Scale5indexEKd">
+<span id="_CPPv3NK3ioh6logger3eah10Log10Scale5indexEKd"></span><span id="_CPPv2NK3ioh6logger3eah10Log10Scale5indexEKd"></span><span id="ioh::logger::eah::Log10Scale::index__doubleCC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log10_scale_1a5a84208b5c0f488d5cec7fd9f92575e9"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">index</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah10Log10Scale5indexEKd" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Returns the index of the bucket in which a value falls. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – the value on the scale. </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the corresponding bucket index. </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah10Log10Scale6boundsEK6size_t">
+<span id="_CPPv3NK3ioh6logger3eah10Log10Scale6boundsEK6size_t"></span><span id="_CPPv2NK3ioh6logger3eah10Log10Scale6boundsEK6size_t"></span><span id="ioh::logger::eah::Log10Scale::bounds__sCC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log10_scale_1a88aa54674a5ab297537465ed10268800"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6logger3eah10Log10Scale10BoundsTypeE" title="ioh::logger::eah::Log10Scale::BoundsType"><span class="n"><span class="pre">BoundsType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bounds</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah10Log10Scale6boundsEK6size_t" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Returns the bounds of the corresponding bucket index. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>i</strong> – the index of the bucket. </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[min,max[ of the bucket i. </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah10Log10Scale3minEv">
+<span id="_CPPv3NK3ioh6logger3eah10Log10Scale3minEv"></span><span id="_CPPv2NK3ioh6logger3eah10Log10Scale3minEv"></span><span id="ioh::logger::eah::Log10Scale::minC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a9e83ed05d6a84ab7f770e90444e54865"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah10Log10ScaleE" title="ioh::logger::eah::Log10Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">min</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah10Log10Scale3minEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Minimum value on the axis. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah10Log10Scale3maxEv">
+<span id="_CPPv3NK3ioh6logger3eah10Log10Scale3maxEv"></span><span id="_CPPv2NK3ioh6logger3eah10Log10Scale3maxEv"></span><span id="ioh::logger::eah::Log10Scale::maxC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1ae44135db5305d83414d51e501e9381e2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah10Log10ScaleE" title="ioh::logger::eah::Log10Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">max</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah10Log10Scale3maxEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Maximum value on the axis. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah10Log10Scale4sizeEv">
+<span id="_CPPv3NK3ioh6logger3eah10Log10Scale4sizeEv"></span><span id="_CPPv2NK3ioh6logger3eah10Log10Scale4sizeEv"></span><span id="ioh::logger::eah::Log10Scale::sizeC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1ab758415ff2ecc084a65d59b6d7de1243"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah10Log10Scale4sizeEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Number of buckets. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah10Log10Scale6lengthEv">
+<span id="_CPPv3NK3ioh6logger3eah10Log10Scale6lengthEv"></span><span id="_CPPv2NK3ioh6logger3eah10Log10Scale6lengthEv"></span><span id="ioh::logger::eah::Log10Scale::lengthC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a9bc0749a10f0a7de9427856090c383d1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah10Log10ScaleE" title="ioh::logger::eah::Log10Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">length</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah10Log10Scale6lengthEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Span of the axis. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah10Log10Scale2_mE">
+<span id="_CPPv3N3ioh6logger3eah10Log10Scale2_mE"></span><span id="_CPPv2N3ioh6logger3eah10Log10Scale2_mE"></span><span id="ioh::logger::eah::Log10Scale::_m__doubleC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log10_scale_1ac1904c89622fa02ae022a8451886ed04"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_m</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah10Log10Scale2_mE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The minimum. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah10Log10Scale2_lE">
+<span id="_CPPv3N3ioh6logger3eah10Log10Scale2_lE"></span><span id="_CPPv2N3ioh6logger3eah10Log10Scale2_lE"></span><span id="ioh::logger::eah::Log10Scale::_l__doubleC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log10_scale_1aa1cd39a817fe821b6e99be94dfec3940"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_l</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah10Log10Scale2_lE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Max - min. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah10Log10Scale2_sE">
+<span id="_CPPv3N3ioh6logger3eah10Log10Scale2_sE"></span><span id="_CPPv2N3ioh6logger3eah10Log10Scale2_sE"></span><span id="ioh::logger::eah::Log10Scale::_s__doubleC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log10_scale_1a9ab6be9e63943a6d0ed99ebba53ca58e"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_s</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah10Log10Scale2_sE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The number of buckets. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah10Log10Scale2_kE">
+<span id="_CPPv3N3ioh6logger3eah10Log10Scale2_kE"></span><span id="_CPPv2N3ioh6logger3eah10Log10Scale2_kE"></span><span id="ioh::logger::eah::Log10Scale::_k__doubleC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log10_scale_1aa02310042b0b7893220bc48760f2fea1"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_k</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah10Log10Scale2_kE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">log(1+max-min)</span></code> constant. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah10Log10Scale4_minE">
+<span id="_CPPv3N3ioh6logger3eah10Log10Scale4_minE"></span><span id="_CPPv2N3ioh6logger3eah10Log10Scale4_minE"></span><span id="ioh::logger::eah::Log10Scale::_min__R"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a1abf1c4315eeea798d3b2cd25c1f2c28"></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah10Log10ScaleE" title="ioh::logger::eah::Log10Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_min</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah10Log10Scale4_minE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Minimum. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah10Log10Scale4_maxE">
+<span id="_CPPv3N3ioh6logger3eah10Log10Scale4_maxE"></span><span id="_CPPv2N3ioh6logger3eah10Log10Scale4_maxE"></span><span id="ioh::logger::eah::Log10Scale::_max__R"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a6f5bf599d998f6482e20f8fe682f4226"></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah10Log10ScaleE" title="ioh::logger::eah::Log10Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_max</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah10Log10Scale4_maxE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Maximum. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah10Log10Scale5_sizeE">
+<span id="_CPPv3N3ioh6logger3eah10Log10Scale5_sizeE"></span><span id="_CPPv2N3ioh6logger3eah10Log10Scale5_sizeE"></span><span id="ioh::logger::eah::Log10Scale::_size__s"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a5090a9a2f99c1b9e6d42dd530f0303a7"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_size</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah10Log10Scale5_sizeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Number of buckets. </p>
+</dd></dl>
+</div>
+</dd></dl>
+</section>
+<section id="log2scale">
+<h3>Log2Scale<a class="headerlink" href="#log2scale" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh6logger3eah9Log2ScaleE">
+<span id="_CPPv3I0EN3ioh6logger3eah9Log2ScaleE"></span><span id="_CPPv2I0EN3ioh6logger3eah9Log2ScaleE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">R</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1logger_1_1eah_1_1_log2_scale"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">Log2Scale</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale"><span class="n"><span class="pre">Scale</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah9Log2ScaleE" title="ioh::logger::eah::Log2Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN3ioh6logger3eah9Log2ScaleE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Logarithmic (base 2) scale. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This implementation is not very robust to rounding errors especially if you use the bounds method with large lengths. </p>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah9Log2Scale10BoundsTypeE">
+<span id="_CPPv3N3ioh6logger3eah9Log2Scale10BoundsTypeE"></span><span id="_CPPv2N3ioh6logger3eah9Log2Scale10BoundsTypeE"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log2_scale_1a779076a10a98d2a50b484d78f4f2d5b9"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BoundsType</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale"><span class="n"><span class="pre">Scale</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah9Log2ScaleE" title="ioh::logger::eah::Log2Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">BoundsType</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah9Log2Scale10BoundsTypeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The type in which bounds are stored by the <code class="docutils literal notranslate"><span class="pre">bounds</span></code> method. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah9Log2Scale9Log2ScaleEK1RK1RK6size_t">
+<span id="_CPPv3N3ioh6logger3eah9Log2Scale9Log2ScaleEK1RK1RK6size_t"></span><span id="_CPPv2N3ioh6logger3eah9Log2Scale9Log2ScaleEK1RK1RK6size_t"></span><span id="ioh::logger::eah::Log2Scale::Log2Scale__RC.RC.sC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log2_scale_1a9f2049d7839729868537973e398d6d9b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Log2Scale</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah9Log2ScaleE" title="ioh::logger::eah::Log2Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">min</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah9Log2ScaleE" title="ioh::logger::eah::Log2Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">max</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah9Log2Scale9Log2ScaleEK1RK1RK6size_t" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Constructor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>min</strong> – the minimum of the scale domain. </p></li>
+<li><p><strong>max</strong> – the maximum of the scale domain. </p></li>
+<li><p><strong>size</strong> – the number of buckets in the scale. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah9Log2Scale5indexEKd">
+<span id="_CPPv3NK3ioh6logger3eah9Log2Scale5indexEKd"></span><span id="_CPPv2NK3ioh6logger3eah9Log2Scale5indexEKd"></span><span id="ioh::logger::eah::Log2Scale::index__doubleCC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log2_scale_1a1ed1e46b78d008484088e1a6889c6057"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">index</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah9Log2Scale5indexEKd" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Returns the index of the bucket in which a value falls. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – the value on the scale. </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the corresponding bucket index. </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah9Log2Scale6boundsEK6size_t">
+<span id="_CPPv3NK3ioh6logger3eah9Log2Scale6boundsEK6size_t"></span><span id="_CPPv2NK3ioh6logger3eah9Log2Scale6boundsEK6size_t"></span><span id="ioh::logger::eah::Log2Scale::bounds__sCC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log2_scale_1a0443187270c8fbc8e28f1322ac7a0fa5"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6logger3eah9Log2Scale10BoundsTypeE" title="ioh::logger::eah::Log2Scale::BoundsType"><span class="n"><span class="pre">BoundsType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bounds</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah9Log2Scale6boundsEK6size_t" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Returns the bounds of the corresponding bucket index. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>i</strong> – the index of the bucket. </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[min,max[ of the bucket i. </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah9Log2Scale3minEv">
+<span id="_CPPv3NK3ioh6logger3eah9Log2Scale3minEv"></span><span id="_CPPv2NK3ioh6logger3eah9Log2Scale3minEv"></span><span id="ioh::logger::eah::Log2Scale::minC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a9e83ed05d6a84ab7f770e90444e54865"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah9Log2ScaleE" title="ioh::logger::eah::Log2Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">min</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah9Log2Scale3minEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Minimum value on the axis. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah9Log2Scale3maxEv">
+<span id="_CPPv3NK3ioh6logger3eah9Log2Scale3maxEv"></span><span id="_CPPv2NK3ioh6logger3eah9Log2Scale3maxEv"></span><span id="ioh::logger::eah::Log2Scale::maxC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1ae44135db5305d83414d51e501e9381e2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah9Log2ScaleE" title="ioh::logger::eah::Log2Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">max</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah9Log2Scale3maxEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Maximum value on the axis. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah9Log2Scale4sizeEv">
+<span id="_CPPv3NK3ioh6logger3eah9Log2Scale4sizeEv"></span><span id="_CPPv2NK3ioh6logger3eah9Log2Scale4sizeEv"></span><span id="ioh::logger::eah::Log2Scale::sizeC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1ab758415ff2ecc084a65d59b6d7de1243"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah9Log2Scale4sizeEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Number of buckets. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah9Log2Scale6lengthEv">
+<span id="_CPPv3NK3ioh6logger3eah9Log2Scale6lengthEv"></span><span id="_CPPv2NK3ioh6logger3eah9Log2Scale6lengthEv"></span><span id="ioh::logger::eah::Log2Scale::lengthC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a9bc0749a10f0a7de9427856090c383d1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah9Log2ScaleE" title="ioh::logger::eah::Log2Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">length</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah9Log2Scale6lengthEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Span of the axis. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah9Log2Scale2_mE">
+<span id="_CPPv3N3ioh6logger3eah9Log2Scale2_mE"></span><span id="_CPPv2N3ioh6logger3eah9Log2Scale2_mE"></span><span id="ioh::logger::eah::Log2Scale::_m__doubleC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log2_scale_1aad498f39e7216e34f4c201acdc40aa0c"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_m</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah9Log2Scale2_mE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The minimum. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah9Log2Scale2_lE">
+<span id="_CPPv3N3ioh6logger3eah9Log2Scale2_lE"></span><span id="_CPPv2N3ioh6logger3eah9Log2Scale2_lE"></span><span id="ioh::logger::eah::Log2Scale::_l__doubleC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log2_scale_1ad13f45b571c34054c7c5b1ad8d4a46e7"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_l</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah9Log2Scale2_lE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Max - min. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah9Log2Scale2_sE">
+<span id="_CPPv3N3ioh6logger3eah9Log2Scale2_sE"></span><span id="_CPPv2N3ioh6logger3eah9Log2Scale2_sE"></span><span id="ioh::logger::eah::Log2Scale::_s__doubleC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log2_scale_1adfd98343c8166909a03fd7a471e12eea"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_s</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah9Log2Scale2_sE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The number of buckets. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah9Log2Scale2_kE">
+<span id="_CPPv3N3ioh6logger3eah9Log2Scale2_kE"></span><span id="_CPPv2N3ioh6logger3eah9Log2Scale2_kE"></span><span id="ioh::logger::eah::Log2Scale::_k__doubleC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_log2_scale_1ae357f854d706236fb6ddf7e810fedc6d"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_k</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah9Log2Scale2_kE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">log(1+max-min)</span></code> constant. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah9Log2Scale4_minE">
+<span id="_CPPv3N3ioh6logger3eah9Log2Scale4_minE"></span><span id="_CPPv2N3ioh6logger3eah9Log2Scale4_minE"></span><span id="ioh::logger::eah::Log2Scale::_min__R"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a1abf1c4315eeea798d3b2cd25c1f2c28"></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah9Log2ScaleE" title="ioh::logger::eah::Log2Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_min</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah9Log2Scale4_minE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Minimum. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah9Log2Scale4_maxE">
+<span id="_CPPv3N3ioh6logger3eah9Log2Scale4_maxE"></span><span id="_CPPv2N3ioh6logger3eah9Log2Scale4_maxE"></span><span id="ioh::logger::eah::Log2Scale::_max__R"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a6f5bf599d998f6482e20f8fe682f4226"></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah9Log2ScaleE" title="ioh::logger::eah::Log2Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_max</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah9Log2Scale4_maxE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Maximum. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah9Log2Scale5_sizeE">
+<span id="_CPPv3N3ioh6logger3eah9Log2Scale5_sizeE"></span><span id="_CPPv2N3ioh6logger3eah9Log2Scale5_sizeE"></span><span id="ioh::logger::eah::Log2Scale::_size__s"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a5090a9a2f99c1b9e6d42dd530f0303a7"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_size</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah9Log2Scale5_sizeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Number of buckets. </p>
+</dd></dl>
+</div>
+</dd></dl>
+</section>
+<section id="scale">
+<h3>Scale<a class="headerlink" href="#scale" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh6logger3eah5ScaleE">
+<span id="_CPPv3I0EN3ioh6logger3eah5ScaleE"></span><span id="_CPPv2I0EN3ioh6logger3eah5ScaleE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">R</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">Scale</span></span></span><a class="headerlink" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Interface for classes that computes indices from ranges. </p>
+<p>The idea is to input [min,max] and the discretization size and to compute the position in [0,size-1] of any value in [min,max].</p>
+<p>You can think of it as a way to compute discrete histograms’ bucket indices. Or as a morphism between any 1D “origin” space to another 1D strictly positive integer “indexed” space.</p>
+<p>
+Used in <a class="reference internal" href="ioh_logger.html#classioh_1_1logger_1_1_e_a_h"><span class="std std-ref">EAH</span></a>. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Contrary to what is common in computer science, this uses a closed [min,max] interval for the “origin” values. So that any value at <code class="docutils literal notranslate"><span class="pre">max</span></code> will be assigned to the <code class="docutils literal notranslate"><span class="pre">size-1</span></code>th bucket.</p>
+</div>
+<p>Subclassed by <a class="reference internal" href="#classioh_1_1logger_1_1eah_1_1_linear_scale"><span class="std std-ref">ioh::logger::eah::LinearScale&lt; R &gt;</span></a>, <a class="reference internal" href="#classioh_1_1logger_1_1eah_1_1_log10_scale"><span class="std std-ref">ioh::logger::eah::Log10Scale&lt; R &gt;</span></a>, <a class="reference internal" href="#classioh_1_1logger_1_1eah_1_1_log2_scale"><span class="std std-ref">ioh::logger::eah::Log2Scale&lt; R &gt;</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah5Scale10BoundsTypeE">
+<span id="_CPPv3N3ioh6logger3eah5Scale10BoundsTypeE"></span><span id="_CPPv2N3ioh6logger3eah5Scale10BoundsTypeE"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1ab262c33ca746c364f607041d0ffcbcd0"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BoundsType</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah5Scale10BoundsTypeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Type returned by the bounds method. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a pair of double, whatever the type of the <a class="reference internal" href="#classioh_1_1logger_1_1eah_1_1_scale"><span class="std std-ref">Scale</span></a>, because one can ask for non-integer buckets limits (e.g. when size &gt; max-min). </p>
+</div>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah5Scale5ScaleEK1RK1RK6size_t">
+<span id="_CPPv3N3ioh6logger3eah5Scale5ScaleEK1RK1RK6size_t"></span><span id="_CPPv2N3ioh6logger3eah5Scale5ScaleEK1RK1RK6size_t"></span><span id="ioh::logger::eah::Scale::Scale__RC.RC.sC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a3b2516b3ea93daebd68245af6cc5e4bc"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Scale</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">amin</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">amax</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">asize</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah5Scale5ScaleEK1RK1RK6size_t" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Constructor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>amin</strong> – the minimum of the scale domain. </p></li>
+<li><p><strong>amax</strong> – the maximum of the scale domain. </p></li>
+<li><p><strong>asize</strong> – the number of buckets in the scale. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah5Scale3minEv">
+<span id="_CPPv3NK3ioh6logger3eah5Scale3minEv"></span><span id="_CPPv2NK3ioh6logger3eah5Scale3minEv"></span><span id="ioh::logger::eah::Scale::minC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a9e83ed05d6a84ab7f770e90444e54865"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">min</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah5Scale3minEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Minimum value on the axis. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah5Scale3maxEv">
+<span id="_CPPv3NK3ioh6logger3eah5Scale3maxEv"></span><span id="_CPPv2NK3ioh6logger3eah5Scale3maxEv"></span><span id="ioh::logger::eah::Scale::maxC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1ae44135db5305d83414d51e501e9381e2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">max</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah5Scale3maxEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Maximum value on the axis. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah5Scale4sizeEv">
+<span id="_CPPv3NK3ioh6logger3eah5Scale4sizeEv"></span><span id="_CPPv2NK3ioh6logger3eah5Scale4sizeEv"></span><span id="ioh::logger::eah::Scale::sizeC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1ab758415ff2ecc084a65d59b6d7de1243"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah5Scale4sizeEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Number of buckets. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah5Scale6lengthEv">
+<span id="_CPPv3NK3ioh6logger3eah5Scale6lengthEv"></span><span id="_CPPv2NK3ioh6logger3eah5Scale6lengthEv"></span><span id="ioh::logger::eah::Scale::lengthC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a9bc0749a10f0a7de9427856090c383d1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">length</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah5Scale6lengthEv" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Span of the axis. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah5Scale5indexEd">
+<span id="_CPPv3NK3ioh6logger3eah5Scale5indexEd"></span><span id="_CPPv2NK3ioh6logger3eah5Scale5indexEd"></span><span id="ioh::logger::eah::Scale::index__doubleC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a47cefec73434d63e64dd01139d63cb85"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">index</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah5Scale5indexEd" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Interface: from value to index. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – The targeted real value. </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The corresponding index. </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger3eah5Scale6boundsE6size_t">
+<span id="_CPPv3NK3ioh6logger3eah5Scale6boundsE6size_t"></span><span id="_CPPv2NK3ioh6logger3eah5Scale6boundsE6size_t"></span><span id="ioh::logger::eah::Scale::bounds__sC"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a61d75d3429bea5652405e4f53880b8df"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6logger3eah5Scale10BoundsTypeE" title="ioh::logger::eah::Scale::BoundsType"><span class="n"><span class="pre">BoundsType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bounds</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">i</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger3eah5Scale6boundsE6size_t" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Interface: from index to bounds values. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>i</strong> – Targeted index. </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The {min,max} pair of the bounds of the corresponding bucket. </p>
+</dd>
+</dl>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah5Scale4_minE">
+<span id="_CPPv3N3ioh6logger3eah5Scale4_minE"></span><span id="_CPPv2N3ioh6logger3eah5Scale4_minE"></span><span id="ioh::logger::eah::Scale::_min__R"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a1abf1c4315eeea798d3b2cd25c1f2c28"></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_min</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah5Scale4_minE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Minimum. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah5Scale4_maxE">
+<span id="_CPPv3N3ioh6logger3eah5Scale4_maxE"></span><span id="_CPPv2N3ioh6logger3eah5Scale4_maxE"></span><span id="ioh::logger::eah::Scale::_max__R"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a6f5bf599d998f6482e20f8fe682f4226"></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_max</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah5Scale4_maxE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Maximum. </p>
+</dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah5Scale5_sizeE">
+<span id="_CPPv3N3ioh6logger3eah5Scale5_sizeE"></span><span id="_CPPv2N3ioh6logger3eah5Scale5_sizeE"></span><span id="ioh::logger::eah::Scale::_size__s"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_scale_1a5090a9a2f99c1b9e6d42dd530f0303a7"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_size</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah5Scale5_sizeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Number of buckets. </p>
+</dd></dl>
+</div>
+</dd></dl>
+</section>
+<section id="stat">
+<h3>Stat<a class="headerlink" href="#stat" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh6logger3eah4StatE">
+<span id="_CPPv3I0EN3ioh6logger3eah4StatE"></span><span id="_CPPv2I0EN3ioh6logger3eah4StatE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1logger_1_1eah_1_1_stat"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">Stat</span></span></span><a class="headerlink" href="#_CPPv4I0EN3ioh6logger3eah4StatE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>An interface for classes that computes statistics over the AttainmentSuite computed by an eah::EAH logger. </p>
+<p>The template indicates the return type of the functor interface. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah4Stat4TypeE">
+<span id="_CPPv3N3ioh6logger3eah4Stat4TypeE"></span><span id="_CPPv2N3ioh6logger3eah4Stat4TypeE"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_stat_1a6a1b8fc393149783dda50f6f52916f1e"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah4StatE" title="ioh::logger::eah::Stat::T"><span class="n"><span class="pre">T</span></span></a><a class="headerlink" href="#_CPPv4N3ioh6logger3eah4Stat4TypeE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Type of the computed statistic. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eah4StatclERK3EAH">
+<span id="_CPPv3N3ioh6logger3eah4StatclERK3EAH"></span><span id="_CPPv2N3ioh6logger3eah4StatclERK3EAH"></span><span id="ioh::logger::eah::Stat::call-operator__EAHCR"></span><span class="target" id="classioh_1_1logger_1_1eah_1_1_stat_1a529dbff9d075349f18f52a946737786e"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah4StatE" title="ioh::logger::eah::Stat::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">()</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger3EAHE" title="ioh::logger::EAH"><span class="n"><span class="pre">EAH</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">logger</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger3eah4StatclERK3EAH" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Call interface. </p>
+</dd></dl>
+</div>
+</dd></dl>
+</section>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<section id="colormap">
+<h3>colormap<a class="headerlink" href="#colormap" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh6logger3eah8colormapENSt6stringERKNSt6vectorINSt6vectorI1TEEEENSt4pairIPK5ScaleIdEPK5ScaleI6size_tEEEb">
+<span id="_CPPv3I0EN3ioh6logger3eah8colormapERKNSt6vectorINSt6vectorI1TEEEENSt4pairIPK5ScaleIdEPK5ScaleI6size_tEEEb"></span><span id="_CPPv2I0EN3ioh6logger3eah8colormapERKNSt6vectorINSt6vectorI1TEEEENSt4pairIPK5ScaleIdEPK5ScaleI6size_tEEEb"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="group___e_a_h_1ga848aa448c02a26fbd580e4e60bde6e7c"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">colormap</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah8colormapENSt6stringERKNSt6vectorINSt6vectorI1TEEEENSt4pairIPK5ScaleIdEPK5ScaleI6size_tEEEb" title="ioh::logger::eah::colormap::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale"><span class="n"><span class="pre">Scale</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh6logger3eah5ScaleE" title="ioh::logger::eah::Scale"><span class="n"><span class="pre">Scale</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ranges</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="k"><span class="pre">nullptr</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><span class="p"><span class="pre">}</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">values</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh6logger3eah8colormapENSt6stringERKNSt6vectorINSt6vectorI1TEEEENSt4pairIPK5ScaleIdEPK5ScaleI6size_tEEEb" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Print a 2D colormap as a 256-color ASCII-art. </p>
+<p>Convenience function to print the 2D vector arrays outputed by histogram or distribution.</p>
+<p>Useful to rapidely check or debug the core data structure of the <a class="reference internal" href="ioh_logger.html#classioh_1_1logger_1_1_e_a_h"><span class="std std-ref">EAH</span></a> logger.</p>
+<p>By default, just display the colormap. If ranges are passed, display axis legends with values.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The y-axis lowver buckets values are printed as vertical numbers. The x-axis legend show both min and max of buckets.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A 2D vector array. </p></li>
+<li><p><strong>ranges</strong> – The pair of <a class="reference internal" href="#classioh_1_1logger_1_1eah_1_1_scale"><span class="std std-ref">Scale</span></a> used for the computation of data. If given, will add axis legends. </p></li>
+<li><p><strong>values</strong> – If true, will display one 2-digits value over two within the colored pixels. Numbers with more than 2 digits are rendered as “++”. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+</section>
+<section id="operator">
+<h3>operator&lt;&lt;<a class="headerlink" href="#operator" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger3eahlsERNSt7ostreamERK16AttainmentMatrix">
+<span id="_CPPv3N3ioh6logger3eahlsERNSt7ostreamERK16AttainmentMatrix"></span><span id="_CPPv2N3ioh6logger3eahlsERNSt7ostreamERK16AttainmentMatrix"></span><span id="ioh::logger::eah::lshift-operator__osR.AttainmentMatrixCR"></span><span class="target" id="group___e_a_h_1ga99f1358335f1ce5b42794233356e3d3b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">eah</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;&lt;</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">out</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6logger3eah16AttainmentMatrixE" title="ioh::logger::eah::AttainmentMatrix"><span class="n"><span class="pre">AttainmentMatrix</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">mat</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger3eahlsERNSt7ostreamERK16AttainmentMatrix" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Pretty print an AttainmentMatrix. </p>
+</dd></dl>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="ioh_logger_eah_stat.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">stat</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="ioh_logger_eaf.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">eaf</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2022, Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck |
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="../_sources/cpp/ioh_logger_eah.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">eah</a><ul>
+<li><a class="reference internal" href="#namespaces">Namespaces</a></li>
+<li><a class="reference internal" href="#types">Types</a><ul>
+<li><a class="reference internal" href="#attainmentmatrix">AttainmentMatrix</a></li>
+<li><a class="reference internal" href="#attainmentsuite">AttainmentSuite</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#linearscale">LinearScale</a></li>
+<li><a class="reference internal" href="#log10scale">Log10Scale</a></li>
+<li><a class="reference internal" href="#log2scale">Log2Scale</a></li>
+<li><a class="reference internal" href="#scale">Scale</a></li>
+<li><a class="reference internal" href="#stat">Stat</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#colormap">colormap</a></li>
+<li><a class="reference internal" href="#operator">operator&lt;&lt;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    </body>
+</html>

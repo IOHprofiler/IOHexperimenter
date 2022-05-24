@@ -7,18 +7,20 @@ namespace ioh
     {
         namespace pbo
         {
+            //! IsingRing problem id 19
             class IsingRing final: public PBOProblem<IsingRing>
             {
-            protected:
                 static int modulo_ising_ring(const int x, const int n){ return (x % n + n) % n; }
-
+            protected:
+            
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
                     for (auto i = 0; i < meta_data_.n_variables; ++i)
                     {
-                        const auto neighbors = x[modulo_ising_ring(i - 1, meta_data_.n_variables)];
-                        result += x[i] * neighbors + (1 - x[i]) * (1 - neighbors);
+                        const auto neighbors = x.at(modulo_ising_ring(i - 1, meta_data_.n_variables));
+                        result += static_cast<double>(x.at(i)) * neighbors + (1.0 - x.at(i)) * (1.0 - neighbors);
                     }
                     return result;
                 }
@@ -37,6 +39,8 @@ namespace ioh
                 {
                     objective_.x = std::vector<int>(n_variables,1);
                     objective_.y = evaluate(objective_.x);
+                    objective_.x = reset_transform_variables(objective_.x);
+                    objective_.y = transform_objectives(objective_.y);
                 }
             };
         } // namespace pbo

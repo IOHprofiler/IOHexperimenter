@@ -22,6 +22,7 @@ out/
 .vscode/
 nbproject/
 *.code-workspace
+*.vcxproj*
 
 
 # Ignore OS metadata files.
@@ -178,5 +179,10 @@ cython_debug/
 
 data/
 
-test.py
 CMakeSettings.json
+.clangd
+compile_commands.json
+debug
+release
+ioh_data
+run.py

@@ -1,0 +1,702 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="transformation" href="ioh_problem_transformation.html" /><link rel="prev" title="pbo" href="ioh_problem_pbo.html" />
+
+    <meta name="generator" content="sphinx-4.2.0, furo 2022.01.02"/>
+        <title>python - IOHExperimenter 0.3.2.6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.2.6 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../contents.html">
+  
+  
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.2.6 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">IOHexperimenter</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../cpp.html">C++</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh_common.html">common</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="ioh_common_file.html">file</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_common_random.html">random</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_random_bbob2009.html">bbob2009</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_random_pbo.html">pbo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh_logger.html">logger</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_logger_analyzer.html">analyzer</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_structures.html">structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_v1.html">v1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_v2.html">v2</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_logger_eaf.html">eaf</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_logger_eah.html">eah</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="ioh_logger_eah_stat.html">stat</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="ioh_logger_eah_stat_Distribution.html">Distribution</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ioh_logger_eah_stat_under_curve.html">under_curve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_logger_stat.html">stat</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="ioh_problem.html">problem</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_bbob.html">bbob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_pbo.html">pbo</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">python</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_problem_transformation.html">transformation</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_transformation_objective.html">objective</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_transformation_variables.html">variables</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_wmodel.html">wmodel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_suite.html">suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_trigger.html">trigger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_watch.html">watch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh.html">ioh</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python.html">Python</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/ioh.html">Utilities</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem.html">get_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.wrap_problem.html">wrap_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem_id.html">get_problem_id</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.Experiment.html">Experiment</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraint.html">IntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerSolution.html">IntegerSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerState.html">IntegerState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.LogInfo.html">LogInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.MetaData.html">MetaData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.OptimizationType.html">OptimizationType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealConstraint.html">RealConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealSolution.html">RealSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealState.html">RealState</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/problem.html">Problem</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Real.html">Real</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/bbob.html">BBOB</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AttractiveSector.html">AttractiveSector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BBOB.html">BBOB</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BentCigar.html">BentCigar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BuecheRastrigin.html">BuecheRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.DifferentPowers.html">DifferentPowers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Discus.html">Discus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Ellipsoid.html">Ellipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.EllipsoidRotated.html">EllipsoidRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher101.html">Gallagher101</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher21.html">Gallagher21</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GriewankRosenBrock.html">GriewankRosenBrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Katsuura.html">Katsuura</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LinearSlope.html">LinearSlope</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html">LunacekBiRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rastrigin.html">Rastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RastriginRotated.html">RastriginRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rosenbrock.html">Rosenbrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RosenbrockRotated.html">RosenbrockRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers10.html">Schaffers10</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers1000.html">Schaffers1000</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schwefel.html">Schwefel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SharpRidge.html">SharpRidge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Sphere.html">Sphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.StepEllipsoid.html">StepEllipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Weierstrass.html">Weierstrass</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/pbo.html">PBO</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.ConcatenatedTrap.html">ConcatenatedTrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingRing.html">IsingRing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTorus.html">IsingTorus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTriangular.html">IsingTriangular</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LABS.html">LABS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnes.html">LeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy1.html">LeadingOnesDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy2.html">LeadingOnesDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesEpistasis.html">LeadingOnesEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesNeutrality.html">LeadingOnesNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness1.html">LeadingOnesRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness2.html">LeadingOnesRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness3.html">LeadingOnesRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Linear.html">Linear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MIS.html">MIS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.NQueens.html">NQueens</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMax.html">OneMax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy1.html">OneMaxDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy2.html">OneMaxDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxEpistasis.html">OneMaxEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxNeutrality.html">OneMaxNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness1.html">OneMaxRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness2.html">OneMaxRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness3.html">OneMaxRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PBO.html">PBO</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AbstractWModel.html">AbstractWModel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelLeadingOnes.html">WModelLeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelOneMax.html">WModelOneMax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/logger.html">Logging</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Always.html">Always</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.At.html">At</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.During.html">During</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Each.html">Each</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html">OnImprovement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Trigger.html">Trigger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html">AbstractProperty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentY.html">CurrentY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Evaluations.html">Evaluations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Property.html">Property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawYBest.html">RawYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedY.html">TransformedY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedYBest.html">TransformedYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENT_Y_BEST.html">CURRENT_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.EVALUATIONS.html">EVALUATIONS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAW_Y_BEST.html">RAW_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMED_Y.html">TRANSFORMED_Y</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMED_Y_BEST.html">TRANSFORMED_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.AbstractWatcher.html">AbstractWatcher</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Analyzer.html">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Combine.html">Combine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAF.html">EAF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAH.html">EAH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.FlatFile.html">FlatFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Logger.html">Logger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Store.html">Store</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/suite.html">Suite</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.BBOB.html">BBOB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.PBO.html">PBO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Real.html">Real</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../server.html">Server</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="python">
+<h1>python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<section id="externpythonhelper">
+<h3>ExternPythonHelper<a class="headerlink" href="#externpythonhelper" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh7problem6python18ExternPythonHelperE">
+<span id="_CPPv3I0EN3ioh7problem6python18ExternPythonHelperE"></span><span id="_CPPv2I0EN3ioh7problem6python18ExternPythonHelperE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InputType</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">python</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">ExternPythonHelper</span></span></span><a class="headerlink" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelperE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-unnamed-group">Unnamed Group</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh7problem6python18ExternPythonHelper4callEvP8PyObject">
+<span id="_CPPv3IEN3ioh7problem6python18ExternPythonHelper4callEP8PyObject"></span><span id="_CPPv2IEN3ioh7problem6python18ExternPythonHelper4callEP8PyObject"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a5fda52c2de97a8a2bcb3ff5b038e61d2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">call</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_function</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IEN3ioh7problem6python18ExternPythonHelper4callEvP8PyObject" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Template specializations of call. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh7problem6python18ExternPythonHelper4callENSt6vectorI9InputTypeEEP8PyObject">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1afb8033bb3e310813d1882a57b74d3232"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelperE" title="ioh::problem::python::ExternPythonHelper::InputType"><span class="n"><span class="pre">InputType</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">call</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_function</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IEN3ioh7problem6python18ExternPythonHelper4callENSt6vectorI9InputTypeEEP8PyObject" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh7problem6python18ExternPythonHelper4callENSt6stringEP8PyObject">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a217ca9d7be827128a1d45b66b3dc3215"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">call</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_function</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IEN3ioh7problem6python18ExternPythonHelper4callENSt6stringEP8PyObject" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN3ioh7problem6python18ExternPythonHelper4callE1RP8PyObject1T">
+<span id="_CPPv3I00EN3ioh7problem6python18ExternPythonHelper4callEP8PyObject1T"></span><span id="_CPPv2I00EN3ioh7problem6python18ExternPythonHelper4callEP8PyObject1T"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">R</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a4076d206b01546cb3c076826f1a5f34c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3ioh7problem6python18ExternPythonHelper4callE1RP8PyObject1T" title="ioh::problem::python::ExternPythonHelper::call::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">call</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_function</span></span>, <a class="reference internal" href="#_CPPv4I00EN3ioh7problem6python18ExternPythonHelper4callE1RP8PyObject1T" title="ioh::problem::python::ExternPythonHelper::call::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">args</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I00EN3ioh7problem6python18ExternPythonHelper4callE1RP8PyObject1T" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh7problem6python18ExternPythonHelper4callEvP8PyObject1T">
+<span id="_CPPv3I0EN3ioh7problem6python18ExternPythonHelper4callEP8PyObject1T"></span><span id="_CPPv2I0EN3ioh7problem6python18ExternPythonHelper4callEP8PyObject1T"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a0c262fc2c834e9c58bedaa7d044f901f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">call</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_function</span></span>, <a class="reference internal" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper4callEvP8PyObject1T" title="ioh::problem::python::ExternPythonHelper::call::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">args</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper4callEvP8PyObject1T" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-unnamed-group">Unnamed Group</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh7problem6python18ExternPythonHelper8from_numEP8PyObjecti">
+<span id="_CPPv3IEN3ioh7problem6python18ExternPythonHelper8from_numEi"></span><span id="_CPPv2IEN3ioh7problem6python18ExternPythonHelper8from_numEi"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1af54bc623146af709f1563b319e357ad8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">from_num</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IEN3ioh7problem6python18ExternPythonHelper8from_numEP8PyObjecti" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Template specializations of from_num for integer InputType(s). </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh7problem6python18ExternPythonHelper8from_numEP8PyObjectl">
+<span id="_CPPv3IEN3ioh7problem6python18ExternPythonHelper8from_numEl"></span><span id="_CPPv2IEN3ioh7problem6python18ExternPythonHelper8from_numEl"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a76816eb52322a75d0dbb55b0859593ac"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">from_num</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IEN3ioh7problem6python18ExternPythonHelper8from_numEP8PyObjectl" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh7problem6python18ExternPythonHelper8from_numEP8PyObjectx">
+<span id="_CPPv3IEN3ioh7problem6python18ExternPythonHelper8from_numEx"></span><span id="_CPPv2IEN3ioh7problem6python18ExternPythonHelper8from_numEx"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1aa5e3f3906570369e60f2631a98cd249d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">from_num</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IEN3ioh7problem6python18ExternPythonHelper8from_numEP8PyObjectx" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh7problem6python18ExternPythonHelper8from_numEP8PyObjectm">
+<span id="_CPPv3IEN3ioh7problem6python18ExternPythonHelper8from_numEm"></span><span id="_CPPv2IEN3ioh7problem6python18ExternPythonHelper8from_numEm"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a771021baaa670f0ff37c5f05207465ad"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">from_num</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IEN3ioh7problem6python18ExternPythonHelper8from_numEP8PyObjectm" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh7problem6python18ExternPythonHelper8from_numEP8PyObjecty">
+<span id="_CPPv3IEN3ioh7problem6python18ExternPythonHelper8from_numEy"></span><span id="_CPPv2IEN3ioh7problem6python18ExternPythonHelper8from_numEy"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a71dc7a874ebac5c28bb9aca4bd667e55"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">from_num</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IEN3ioh7problem6python18ExternPythonHelper8from_numEP8PyObjecty" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-unnamed-group">Unnamed Group</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh7problem6python18ExternPythonHelper11long_as_numEiP8PyObject">
+<span id="_CPPv3IEN3ioh7problem6python18ExternPythonHelper11long_as_numEP8PyObject"></span><span id="_CPPv2IEN3ioh7problem6python18ExternPythonHelper11long_as_numEP8PyObject"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1ae710824307dbe947490eb662048da6c7"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">long_as_num</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IEN3ioh7problem6python18ExternPythonHelper11long_as_numEiP8PyObject" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Template specialization of as_num. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh7problem6python18ExternPythonHelper11long_as_numEdP8PyObject">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1aea6cb173101df01563f4cd72f090d682"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">long_as_num</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IEN3ioh7problem6python18ExternPythonHelper11long_as_numEdP8PyObject" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh7problem6python18ExternPythonHelper11long_as_numExP8PyObject">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1ac652f913cfdf06f80482418d1564bd81"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">long_as_num</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IEN3ioh7problem6python18ExternPythonHelper11long_as_numExP8PyObject" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh7problem6python18ExternPythonHelper11long_as_numEmP8PyObject">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1af2913ab00337bbbe304ba7597d0c9595"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">long_as_num</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IEN3ioh7problem6python18ExternPythonHelper11long_as_numEmP8PyObject" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4IEN3ioh7problem6python18ExternPythonHelper11long_as_numEyP8PyObject">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a7550ed2187e128838d6c143b095658b6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">long_as_num</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4IEN3ioh7problem6python18ExternPythonHelper11long_as_numEyP8PyObject" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python18ExternPythonHelper18ExternPythonHelperERKNSt6stringERKNSt6stringE">
+<span id="_CPPv3N3ioh7problem6python18ExternPythonHelper18ExternPythonHelperERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N3ioh7problem6python18ExternPythonHelper18ExternPythonHelperERKNSt6stringERKNSt6stringE"></span><span id="ioh::problem::python::ExternPythonHelper::ExternPythonHelper__ssCR.ssCR"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1ad2330cf147acd48b23aab980960ea592"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ExternPythonHelper</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">module_name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">instance_name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem6python18ExternPythonHelper18ExternPythonHelperERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python18ExternPythonHelperD0Ev">
+<span id="_CPPv3N3ioh7problem6python18ExternPythonHelperD0Ev"></span><span id="_CPPv2N3ioh7problem6python18ExternPythonHelperD0Ev"></span><span id="ioh::problem::python::ExternPythonHelper::~ExternPythonHelper"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a2802f1f9987f215203f031eef82719a1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~ExternPythonHelper</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem6python18ExternPythonHelperD0Ev" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python18ExternPythonHelper12get_callableENSt6stringE">
+<span id="_CPPv3N3ioh7problem6python18ExternPythonHelper12get_callableENSt6stringE"></span><span id="_CPPv2N3ioh7problem6python18ExternPythonHelper12get_callableENSt6stringE"></span><span id="ioh::problem::python::ExternPythonHelper::get_callable__ss"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a43383c65a6f6a8f54b31055bbe095f54"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_callable</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">func_name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem6python18ExternPythonHelper12get_callableENSt6stringE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh7problem6python18ExternPythonHelper4callE1RP8PyObject">
+<span id="_CPPv3I0EN3ioh7problem6python18ExternPythonHelper4callEP8PyObject"></span><span id="_CPPv2I0EN3ioh7problem6python18ExternPythonHelper4callEP8PyObject"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">R</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a7526b4a83aad6cf092749f007f757c4b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper4callE1RP8PyObject" title="ioh::problem::python::ExternPythonHelper::call::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">call</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_function</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper4callE1RP8PyObject" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python18ExternPythonHelper6moduleE">
+<span id="_CPPv3N3ioh7problem6python18ExternPythonHelper6moduleE"></span><span id="_CPPv2N3ioh7problem6python18ExternPythonHelper6moduleE"></span><span id="ioh::problem::python::ExternPythonHelper::module__PyObjectP"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a7857d1de8b7d13a793797bf2b46fb4f3"></span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">module</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python18ExternPythonHelper6moduleE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python18ExternPythonHelper6pycallEP8PyObjectP8PyObject">
+<span id="_CPPv3N3ioh7problem6python18ExternPythonHelper6pycallEP8PyObjectP8PyObject"></span><span id="_CPPv2N3ioh7problem6python18ExternPythonHelper6pycallEP8PyObjectP8PyObject"></span><span id="ioh::problem::python::ExternPythonHelper::pycall__PyObjectP.PyObjectP"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1afd47bed3ef71c59ef29f8b87326c8ed4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">pycall</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_callable</span></span>, <span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_args</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem6python18ExternPythonHelper6pycallEP8PyObjectP8PyObject" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh7problem6python18ExternPythonHelper8as_tupleEP8PyObjectRK1T">
+<span id="_CPPv3I0EN3ioh7problem6python18ExternPythonHelper8as_tupleERK1T"></span><span id="_CPPv2I0EN3ioh7problem6python18ExternPythonHelper8as_tupleERK1T"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1ad17243a9818426fb66c8d0a36eb530bd"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">as_tuple</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper8as_tupleEP8PyObjectRK1T" title="ioh::problem::python::ExternPythonHelper::as_tuple::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper8as_tupleEP8PyObjectRK1T" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh7problem6python18ExternPythonHelper6as_numE1RP8PyObject">
+<span id="_CPPv3I0EN3ioh7problem6python18ExternPythonHelper6as_numEP8PyObject"></span><span id="_CPPv2I0EN3ioh7problem6python18ExternPythonHelper6as_numEP8PyObject"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">R</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1ab78f8f86db571799869a745216298b5b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper6as_numE1RP8PyObject" title="ioh::problem::python::ExternPythonHelper::as_num::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">as_num</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper6as_numE1RP8PyObject" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh7problem6python18ExternPythonHelper12float_as_numE1RP8PyObject">
+<span id="_CPPv3I0EN3ioh7problem6python18ExternPythonHelper12float_as_numEP8PyObject"></span><span id="_CPPv2I0EN3ioh7problem6python18ExternPythonHelper12float_as_numEP8PyObject"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">R</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a6933c95ef247663e48a983931ab15603"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper12float_as_numE1RP8PyObject" title="ioh::problem::python::ExternPythonHelper::float_as_num::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">float_as_num</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper12float_as_numE1RP8PyObject" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh7problem6python18ExternPythonHelper11long_as_numE1RP8PyObject">
+<span id="_CPPv3I0EN3ioh7problem6python18ExternPythonHelper11long_as_numEP8PyObject"></span><span id="_CPPv2I0EN3ioh7problem6python18ExternPythonHelper11long_as_numEP8PyObject"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">R</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1ac65594eb645f36bafbe5004a30c14eee"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper11long_as_numE1RP8PyObject" title="ioh::problem::python::ExternPythonHelper::long_as_num::R"><span class="n"><span class="pre">R</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">long_as_num</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">py_value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper11long_as_numE1RP8PyObject" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh7problem6python18ExternPythonHelper8from_numEP8PyObject1T">
+<span id="_CPPv3I0EN3ioh7problem6python18ExternPythonHelper8from_numE1T"></span><span id="_CPPv2I0EN3ioh7problem6python18ExternPythonHelper8from_numE1T"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a5fda2b46773c31ca8b71c29b357f6b67"></span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">from_num</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper8from_numEP8PyObject1T" title="ioh::problem::python::ExternPythonHelper::from_num::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelper8from_numEP8PyObject1T" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python18ExternPythonHelper11_api_moduleE">
+<span id="_CPPv3N3ioh7problem6python18ExternPythonHelper11_api_moduleE"></span><span id="_CPPv2N3ioh7problem6python18ExternPythonHelper11_api_moduleE"></span><span id="ioh::problem::python::ExternPythonHelper::_api_module__ss"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1aedebe1c02d51b8bfdd43f27e87420b63"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_api_module</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python18ExternPythonHelper11_api_moduleE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python18ExternPythonHelper13_api_instanceE">
+<span id="_CPPv3N3ioh7problem6python18ExternPythonHelper13_api_instanceE"></span><span id="_CPPv2N3ioh7problem6python18ExternPythonHelper13_api_instanceE"></span><span id="ioh::problem::python::ExternPythonHelper::_api_instance__ss"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_helper_1a6eacfa66ae62bb6a8b6683bdda83a2e6"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_api_instance</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python18ExternPythonHelper13_api_instanceE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+</dd></dl>
+</section>
+<section id="externpythonproblem">
+<h3>ExternPythonProblem<a class="headerlink" href="#externpythonproblem" title="Permalink to this headline">¶</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh7problem6python19ExternPythonProblemE">
+<span id="_CPPv3I0EN3ioh7problem6python19ExternPythonProblemE"></span><span id="_CPPv2I0EN3ioh7problem6python19ExternPythonProblemE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InputType</span></span></span><span class="p"><span class="pre">&gt;</span></span><br/><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">python</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">ExternPythonProblem</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh7problem6python19ExternPythonProblemE" title="ioh::problem::python::ExternPythonProblem::InputType"><span class="n"><span class="pre">InputType</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN3ioh7problem6python19ExternPythonProblemE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem19ExternPythonProblemERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem19ExternPythonProblemERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem19ExternPythonProblemERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringE"></span><span id="ioh::problem::python::ExternPythonProblem::ExternPythonProblem__ssCR.ssCR.ssCR.ssCR.ssCR.ssCR.ssCR.ssCR.ssCR.ssCR.ssCR.ssCR"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a93aee5f60641f558a1fa8bd4bc80e391"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ExternPythonProblem</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">module_name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">instance_name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">objective_function_api</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">"call"</span></s>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">instance_api_get</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">"get_instance"</span></s>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dimension_api_get</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">"get_number_of_variables"</span></s>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">problem_id_api_get</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">"get_problem_id"</span></s>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">lowerbound_api</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">"get_lowerbound"</span></s>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">upperbound_api</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">"get_upperbound"</span></s>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">minimization_api</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">"get_minimization"</span></s>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name_api</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">"get_name"</span></s>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">type_api</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">"get_type"</span></s>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">number_of_objectives_api</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">"get_number_of_objectives"</span></s><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem19ExternPythonProblemERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringERKNSt6stringE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>The only mandatory arguments are the module and the instance. </p>
+<p>All other arguments defines the API which will be used to reach the Python code.</p>
+<p>This constructor initialize the Python API and check if all the necessary member functions can actually be called. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem17internal_evaluateERKNSt6vectorI9InputTypeEE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem17internal_evaluateERKNSt6vectorI9InputTypeEE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem17internal_evaluateERKNSt6vectorI9InputTypeEE"></span><span id="ioh::problem::python::ExternPythonProblem::internal_evaluate__std::vector:InputType:CR"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1ad2bc3b05fe0671daf9eb7f48f117ba9b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">internal_evaluate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh7problem6python19ExternPythonProblemE" title="ioh::problem::python::ExternPythonProblem::InputType"><span class="n"><span class="pre">InputType</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem17internal_evaluateERKNSt6vectorI9InputTypeEE" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Actually call the objective function. </p>
+</dd></dl>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblemD0Ev">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblemD0Ev"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblemD0Ev"></span><span id="ioh::problem::python::ExternPythonProblem::~ExternPythonProblem"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a751ee5b79c44c1b85d9904dc705d4825"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~ExternPythonProblem</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblemD0Ev" title="Permalink to this definition">¶</a><br/></dt>
+<dd><p>Deallocate Python variables. </p>
+</dd></dl>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem12_api_objfuncE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem12_api_objfuncE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem12_api_objfuncE"></span><span id="ioh::problem::python::ExternPythonProblem::_api_objfunc__ss"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1ae3c89b06028e82ee9b3148c20a9187d2"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_api_objfunc</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem12_api_objfuncE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem11_py_objfuncE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem11_py_objfuncE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem11_py_objfuncE"></span><span id="ioh::problem::python::ExternPythonProblem::_py_objfunc__PyObjectP"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a6ab9d9d6d8efa4027d1383e6cf4a86ff"></span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">_py_objfunc</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem11_py_objfuncE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem17_api_instance_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem17_api_instance_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem17_api_instance_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_api_instance_get__ss"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a87eff5dc326c46b11d822b2d3644c7b2"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_api_instance_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem17_api_instance_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem16_py_instance_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem16_py_instance_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem16_py_instance_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_py_instance_get__PyObjectP"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a7d1cfc9250df94725d925f52c7b9a53a"></span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">_py_instance_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem16_py_instance_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem18_api_dimension_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem18_api_dimension_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem18_api_dimension_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_api_dimension_get__ss"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a18ba1fc412d2a99834548e547159339f"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_api_dimension_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem18_api_dimension_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem17_py_dimension_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem17_py_dimension_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem17_py_dimension_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_py_dimension_get__PyObjectP"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a9b84bd055b3ed88b137a433b35467c45"></span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">_py_dimension_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem17_py_dimension_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem19_api_problem_id_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem19_api_problem_id_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem19_api_problem_id_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_api_problem_id_get__ss"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a950769e684f1ddf0ccb0713008fa8ede"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_api_problem_id_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem19_api_problem_id_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem18_py_problem_id_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem18_py_problem_id_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem18_py_problem_id_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_py_problem_id_get__PyObjectP"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a05dfc0a47fc7135babacb8cf2ebe3bd0"></span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">_py_problem_id_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem18_py_problem_id_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem19_api_lowerbound_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem19_api_lowerbound_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem19_api_lowerbound_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_api_lowerbound_get__ss"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1aed0cd95f5ac5e9e5b9c6f856e59978d9"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_api_lowerbound_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem19_api_lowerbound_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem18_py_lowerbound_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem18_py_lowerbound_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem18_py_lowerbound_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_py_lowerbound_get__PyObjectP"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a3f84d9b47f34afd0a4116de235501924"></span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">_py_lowerbound_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem18_py_lowerbound_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem19_api_upperbound_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem19_api_upperbound_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem19_api_upperbound_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_api_upperbound_get__ss"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a17500d19a47a46735ec602e733537259"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_api_upperbound_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem19_api_upperbound_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem18_py_upperbound_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem18_py_upperbound_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem18_py_upperbound_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_py_upperbound_get__PyObjectP"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a15503b08d59f87b3c77a110d9c2ea0a5"></span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">_py_upperbound_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem18_py_upperbound_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem21_api_minimization_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem21_api_minimization_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem21_api_minimization_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_api_minimization_get__ss"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1ac5a599fb5b2d0cac04a3b282a448aff9"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_api_minimization_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem21_api_minimization_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem20_py_minimization_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem20_py_minimization_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem20_py_minimization_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_py_minimization_get__PyObjectP"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a2883f911060620803879dcc5ed10907e"></span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">_py_minimization_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem20_py_minimization_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem13_api_name_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem13_api_name_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem13_api_name_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_api_name_get__ss"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a47c39d7a54a69c36317d17c07665bd5e"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_api_name_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem13_api_name_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem12_py_name_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem12_py_name_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem12_py_name_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_py_name_get__PyObjectP"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1ae1584956ab2897bc109d1f2de80123be"></span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">_py_name_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem12_py_name_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem13_api_type_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem13_api_type_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem13_api_type_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_api_type_get__ss"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1ae7f9e8096d4a2c84cc8c6accfb210147"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_api_type_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem13_api_type_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem12_py_type_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem12_py_type_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem12_py_type_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_py_type_get__PyObjectP"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a229877d102f1fa2c26d6d9176c91f369"></span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">_py_type_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem12_py_type_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem29_api_number_of_objectives_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem29_api_number_of_objectives_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem29_api_number_of_objectives_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_api_number_of_objectives_get__ss"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1aad91048e651225ebad97f98ec024a261"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_api_number_of_objectives_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem29_api_number_of_objectives_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem28_py_number_of_objectives_getE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem28_py_number_of_objectives_getE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem28_py_number_of_objectives_getE"></span><span id="ioh::problem::python::ExternPythonProblem::_py_number_of_objectives_get__PyObjectP"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1aebbc4f6caacbcb9018a72669bf3d487c"></span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">_py_number_of_objectives_get</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem28_py_number_of_objectives_getE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem16_return_on_errorE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem16_return_on_errorE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem16_return_on_errorE"></span><span id="ioh::problem::python::ExternPythonProblem::_return_on_error__InputTypeC"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a8f3397cb21d3f013aa64a5759aed0ddb"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh7problem6python19ExternPythonProblemE" title="ioh::problem::python::ExternPythonProblem::InputType"><span class="n"><span class="pre">InputType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">_return_on_error</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem16_return_on_errorE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem6python19ExternPythonProblem2pyE">
+<span id="_CPPv3N3ioh7problem6python19ExternPythonProblem2pyE"></span><span id="_CPPv2N3ioh7problem6python19ExternPythonProblem2pyE"></span><span id="ioh::problem::python::ExternPythonProblem::py__ExternPythonHelper:InputType:"></span><span class="target" id="classioh_1_1problem_1_1python_1_1_extern_python_problem_1a25f6e7f3b660dc229c02c821fe39c627"></span><a class="reference internal" href="#_CPPv4I0EN3ioh7problem6python18ExternPythonHelperE" title="ioh::problem::python::ExternPythonHelper"><span class="n"><span class="pre">ExternPythonHelper</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh7problem6python19ExternPythonProblemE" title="ioh::problem::python::ExternPythonProblem::InputType"><span class="n"><span class="pre">InputType</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">py</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem6python19ExternPythonProblem2pyE" title="Permalink to this definition">¶</a><br/></dt>
+<dd></dd></dl>
+</div>
+</dd></dl>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="ioh_problem_transformation.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">transformation</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="ioh_problem_pbo.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">pbo</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2022, Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck |
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="../_sources/cpp/ioh_problem_python.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">python</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#externpythonhelper">ExternPythonHelper</a></li>
+<li><a class="reference internal" href="#externpythonproblem">ExternPythonProblem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    </body>
+</html>

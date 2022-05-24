@@ -1,10 +1,10 @@
 [submodule "external/pybind11"]
 	path = external/pybind11
-	url = ../../pybind/pybind11
+	url = https://github.com/pybind/pybind11
 	branch = stable
 [submodule "external/googletest"]
 	path = external/googletest
-	url = ../../google/googletest/
+	url = https://github.com/google/googletest
 	branch = v1.10.x
 [submodule "external/fmt"]
 	path = external/fmt
@@ -13,3 +13,14 @@
 	path = external/MkLandscape
 	url = https://github.com/tobiasvandriessel/problem-generator.git
 	branch = cpp_integration
+	url = https://github.com/fmtlib/fmt
+[submodule "external/clutchlog"]
+	path = external/clutchlog
+	url = https://github.com/jacobdenobel/clutchlog.git
+
+[submodule "external/cxxopts"]
+	path = external/cxxopts
+	url = https://github.com/jarro2783/cxxopts
+[submodule "external/json"]
+	path = external/json
+	url = https://github.com/nlohmann/json.git

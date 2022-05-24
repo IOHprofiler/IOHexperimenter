@@ -7,16 +7,18 @@ namespace ioh
     {
         namespace pbo
         {
+            //! Linear problem id 3
             class Linear final: public PBOProblem<Linear>
             {
-            protected:
                 std::vector<double> info_;
-
+            protected:
+            
+                //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
                     for (auto i = 0; i < meta_data_.n_variables; ++i)
-                        result += static_cast<double>(x[i]) * static_cast<double>(i + 1);
+                        result += static_cast<double>(x[i]) * (static_cast<double>(i) + 1.0);
                     return result;
                 }
 
@@ -33,6 +35,8 @@ namespace ioh
                 {
                     objective_.x = std::vector<int>(n_variables,1);
                     objective_.y = evaluate(objective_.x);
+                    objective_.x = reset_transform_variables(objective_.x);
+                    objective_.y = transform_objectives(objective_.y);
                 }
             };
         } // namespace pbo

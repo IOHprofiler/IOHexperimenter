@@ -1,9 +1,9 @@
 ## Build the ioh library.
 ##
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.12) 
 
 project(ioh   
-    VERSION 0.0.0.1
+    VERSION 0.3.2.6
     LANGUAGES CXX  
 ) 
 set(CMAKE_CXX_STANDARD 17)
@@ -14,25 +14,26 @@ option(BUILD_PYTHON_PACKAGE "Whether to build Python package" OFF)
 option(BUILD_TESTS "Whether to build test cases with gtest" ON)
 option(BUILD_EXAMPLE "Whether to build Python package" ON)  
 option(BUILD_DOCS "Build docs" OFF) 
+option(BUILD_SERVER "Whether to build the objective function server" OFF)
 option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python modules as if they were an IOH problem" OFF)
 option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" ON)
 
 if(MSVC)
     set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windows
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /bigobj")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT /02") 
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd ")
 endif()  
  
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU") 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")  
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++17 -lstdc++fs")
-    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ffast-math")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
         link_libraries(stdc++fs)
         add_compile_definitions(FSEXPERIMENTAL)
     endif()
-endif() 
- 
+endif()   
+
 # Define project targets.
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
   
@@ -46,6 +47,7 @@ add_library(ioh INTERFACE)
 add_library(ioh::ioh ALIAS ioh)
 
 #Include external formatting lib
+include_directories(${EXTERNAL_DIR}/fmt/include/)
 add_subdirectory(${EXTERNAL_DIR}/fmt)
 target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
 
@@ -73,6 +75,8 @@ if(ENABLE_MKLANDSCAPE_PROBLEMS)
     add_compile_definitions(MK_COMPILED)
 endif()
 
+# Include external clutchlog lib
+include_directories(${EXTERNAL_DIR}/clutchlog)
 
 # Add Python Library
 if(ENABLE_PYTHON_PROBLEMS)
@@ -87,7 +91,7 @@ target_include_directories(ioh
 INTERFACE
     # Interface paths are relative to the installation path, not the current directory.
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:include> 
 )
 
 target_compile_features(ioh
@@ -152,7 +156,8 @@ export(PACKAGE ioh)
 
 
 # Add subdirectories to build.
-if(BUILD_TESTS)
+if(BUILD_TESTS) 
+    enable_testing()
     add_subdirectory(tests)
 endif()
 
@@ -168,5 +173,9 @@ if(BUILD_PYTHON_PACKAGE)
     add_subdirectory(ioh)
 endif()
 
-
+if(BUILD_SERVER)
+    include_directories(${EXTERNAL_DIR}/cxxopts/include/)
+    include_directories(${EXTERNAL_DIR}/json/include/)
+    add_subdirectory(server)
+endif()
 
