@@ -12,6 +12,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
+        rust : stable
         compiler: [clang++, g++-9] 
 
     steps:
