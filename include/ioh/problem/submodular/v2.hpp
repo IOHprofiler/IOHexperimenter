@@ -32,7 +32,8 @@ namespace ioh::problem::submodular
                                                    &meta.constraint_weights, &dp};
                     std::stringstream ss(definition);
                     size_t i = 0;
-                    while (getline(ss, *p[i++], '|') && (i < p.size()));
+                    while (getline(ss, *p[i++], '|') && (i < p.size()))
+                        ;
                     try
                     {
                         meta.chance_cons = std::stod(dp);
@@ -58,15 +59,9 @@ namespace ioh::problem::submodular
 
                 bool loaded = false;
 
-                Graph(const Meta &meta) :
-                    meta(meta)
-                {
-                }
+                Graph(const Meta &meta) : meta(meta) {}
 
-                Graph(const std::string &definition) :
-                    Graph(Meta::from_string(definition))
-                {
-                }
+                Graph(const std::string &definition) : Graph(Meta::from_string(definition)) {}
 
                 [[nodiscard]] std::string repr() const override
                 {
@@ -89,8 +84,8 @@ namespace ioh::problem::submodular
                         const auto str = contents[i];
                         const auto space = str.find_first_of(' ');
                         auto source = std::stoi(str.substr(0, space));
-                        auto target = std::stoi(str.substr(space+1));
-                        
+                        auto target = std::stoi(str.substr(space + 1));
+
                         meta.n_vertices = std::max(meta.n_vertices, std::max(source, target));
                         edges.push_back(std::make_tuple(source - 1, target - 1, edge_weights[i - 1]));
                     }
@@ -137,7 +132,7 @@ namespace ioh::problem::submodular
                 }
             };
 
-            //! Helpers for PackWhileTravel 
+            //! Helpers for PackWhileTravel
             namespace pwt
             {
                 struct Point
@@ -250,7 +245,7 @@ namespace ioh::problem::submodular
                         loaded = true;
                     }
                 };
-            }
+            } // namespace pwt
         } // namespace graph
 
 
@@ -284,7 +279,7 @@ namespace ioh::problem::submodular
              * @param path
              * @return InstanceBasedProblem::Constructors<ProblemType, int, int>
              */
-            template <typename G=graph::Graph>
+            template <typename G = graph::Graph>
             static Constructors<ProblemType, int, int> get_constructors(const fs::path &path)
             {
                 Constructors<ProblemType, int, int> constructors;
@@ -295,13 +290,31 @@ namespace ioh::problem::submodular
                 for (auto &graph : graphs)
                 {
                     graph->meta.root = root_path;
-                    constructors.push_back({[graph, i](int, int)
-                                            {
-                                                return ProblemType(i, 1, graph);
-                                            },
-                                            i++});
+                    constructors.push_back({[graph, i](int, int) { return ProblemType(i, 1, graph); }, i++});
                 }
                 return constructors;
+            }
+
+            // TODO: Use Factory method for this
+            //! Helper to load problems from a file
+            template <typename... Args>
+            static void load_graph_instances(const fs::path &path)
+            {
+                using namespace ioh::problem;
+                using namespace ioh::common;
+
+                auto constructors = InstanceBasedProblem::load_instances<ProblemType, int, int>(path);
+
+                for (auto &ci : constructors)
+                {
+                    const auto name = fmt::format("{}{}", class_name<ProblemType>(), ci.second);
+
+                    auto c = [c = ci.first](Args &&...params) {
+                        return std::make_unique<ProblemType>(c(std::forward<Args>(params)...));
+                    };
+                    Factory<Integer, Args...>::instance().include(name, ci.second, c);
+                    Factory<submodular::v2::GraphProblem, Args...>::instance().include(name, ci.second, c);
+                }
             }
         };
 
