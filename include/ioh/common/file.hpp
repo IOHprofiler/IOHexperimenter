@@ -105,6 +105,18 @@ namespace ioh::common::file
             }
             return file;
         }
+
+
+        //! Helper type for detecting shared ptr of which the element type can be constructed from a string
+        template <typename T>
+        struct is_shared_ptr_string_constructible : std::false_type
+        {
+        };
+        template <typename T>
+        struct is_shared_ptr_string_constructible<std::shared_ptr<T>> : std::is_constructible<T, std::string>
+        {
+        };
+
     } // namespace utils
 
 
@@ -156,8 +168,8 @@ namespace ioh::common::file
      * @return std::vector<T> the contents of the file
      */
     template <typename T = std::string,
-              typename = typename std::enable_if<std::is_constructible<T, std::string>::value, T>::type>
-    inline std::vector<T> as_text_vector(const fs::path &path)
+              typename std::enable_if<std::is_constructible<T, std::string>::value, T>::type* = nullptr>
+    std::vector<T> as_text_vector(const fs::path &path)
     {
         std::istringstream in(as_string(path));
         std::vector<T> result;
@@ -176,16 +188,16 @@ namespace ioh::common::file
     //         typename = typename std::enable_if<is_shared_ptr<T>::value &&
     //                                            std::is_constructible<typename T::element_type, std::string>::value>::value>
     // The above fails because of substitutions with types that don't have T::element_type
-    template <typename T = std::string,
-              typename = typename std::enable_if<std::is_constructible<T, std::string>::value, T>::type>
-    inline std::vector<std::shared_ptr<T>> as_text_vector_ptr(const fs::path &path)
+    template <typename T,
+              typename std::enable_if<utils::is_shared_ptr_string_constructible<T>::value, T>::type* = nullptr>
+    std::vector<T> as_text_vector(const fs::path &path)
     {
         std::istringstream in(as_string(path));
-        std::vector<std::shared_ptr<T>> result;
+        std::vector<T> result;
 
         std::transform(std::istream_iterator<utils::Line>(in), std::istream_iterator<utils::Line>(),
                        std::back_inserter(result),
-                       [](const utils::Line &line) { return std::make_shared<T>(static_cast<std::string>(line)); });
+                       [](const utils::Line &line) { return std::make_shared<typename T::element_type>(static_cast<std::string>(line)); });
         return result;
     }
 

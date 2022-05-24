@@ -5,7 +5,12 @@
 #include <stdexcept>
 
 
+#include <ioh/common/log.hpp>
+#include <ioh/problem/problem.hpp>
+
 #include "ioh/problem/submodular/graph_problem.hpp"
+
+
 
 namespace ioh
 {
@@ -26,10 +31,12 @@ namespace ioh
                 bool is_initialized;
 
                 // Read TTP instance from file, convert to PWT instance, return problem dimension
-                int read_instance_by_id(const int instance, const std::string &instance_list_file)
+                int read_instance_by_id(const int instance, const std::string &instance_list_file, const bool force=false)
                 {
-                    if (!is_null()) // If already initialized, skip reading file
-                        return n_items;
+                    if (!force)
+                        if (!is_null()) // If already initialized, skip reading file
+                            return n_items;
+
                     is_initialized = false;
                     std::vector<std::string> instance_list = Helper::read_list_instance(instance_list_file);
                     if (static_cast<int>(instance_list.size()) <= instance || instance < 0) // If instance id is invalid,
@@ -199,12 +206,15 @@ namespace ioh
                                     : Helper::instance_list_path) :
                     Integer(MetaData(instance + 3000000,// problem id, starting at 3000000
                         instance, "PackWhileTravel" + std::to_string(instance),
-                        read_instance_by_id(instance - 1, instance_list_file), // n_variables will be updated based on the given instance.
-                        // n_variables,
+
+                        // This is unexpected behaviour, you cannot use a child class before a parent
+                        // is initialized. I added the force option to force execution of this.
+                        read_instance_by_id(instance - 1, instance_list_file, true), 
                         common::OptimizationType::Maximization),
-                        Constraint<int>(read_instance_by_id(instance - 1, instance_list_file), 0, 1)
+                        Constraint<int>(read_instance_by_id(instance - 1, instance_list_file, true), 0, 1)
                     )
                 {
+
                     if (is_null())
                     {
                         IOH_DBG(warning, "Instance not created properly (e.g. invalid id)."); // FIXME raise an exception?

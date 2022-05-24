@@ -63,7 +63,7 @@ TEST_F(BaseTest, SubmodularMaxCoverage)
 
 TEST_F(BaseTest, SubmodularMaxInfluence)
 {
-    // test_submodular_problems<ioh::problem::submodular::MaxInfluence>("MaxInfluence", 2200);
+    test_submodular_problems<ioh::problem::submodular::MaxInfluence>("MaxInfluence", 2200);
 }
 
 

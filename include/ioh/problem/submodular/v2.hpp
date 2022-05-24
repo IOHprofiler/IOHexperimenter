@@ -86,8 +86,11 @@ namespace ioh::problem::submodular
 
                     for (size_t i = 1; i < contents.size(); i++)
                     {
-                        int source, target;
-                        std::stringstream{contents[i]} >> source >> target;
+                        const auto str = contents[i];
+                        const auto space = str.find_first_of(' ');
+                        auto source = std::stoi(str.substr(0, space));
+                        auto target = std::stoi(str.substr(space+1));
+                        
                         meta.n_vertices = std::max(meta.n_vertices, std::max(source, target));
                         edges.push_back(std::make_tuple(source - 1, target - 1, edge_weights[i - 1]));
                     }
@@ -152,7 +155,8 @@ namespace ioh::problem::submodular
                     int index, profit, weight, node_number;
                 };
 
-
+                //! TODO: Find out what data is redundant and how we can better map to other graph data
+                //! TODO: Don't use stringstream; slow
                 struct TTPData
                 {
                     std::string name;
@@ -286,7 +290,7 @@ namespace ioh::problem::submodular
                 Constructors<ProblemType, int, int> constructors;
 
                 const auto root_path = path.parent_path();
-                auto graphs = common::file::as_text_vector_ptr<G>(path);
+                auto graphs = common::file::as_text_vector<std::shared_ptr<G>>(path);
                 int i = ProblemType::default_id;
                 for (auto &graph : graphs)
                 {
