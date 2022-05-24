@@ -89,7 +89,7 @@ namespace ioh
                     while (std::getline(ttp_data, str, eol) && index_line++ < 5) // Skip 2 lines, to line 11
                         ;
                     double cur_x, cur_y, init_x, init_y, distance; // Start reading location coordinates
-                    int first_space = str.find_first_of('	'), second_space = str.find_last_of('	');
+                    size_t first_space = str.find_first_of('	'), second_space = str.find_last_of('	');
                     if (!Helper::is_double(str.substr(first_space + 1, second_space - first_space - 1), &init_x) ||
                         !Helper::is_double(str.substr(second_space + 1), &init_y))
                     {
