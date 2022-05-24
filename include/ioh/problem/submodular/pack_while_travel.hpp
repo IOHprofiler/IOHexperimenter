@@ -3,9 +3,9 @@
 #pragma once
 #include <fstream>
 #include <stdexcept>
-#include <ioh/common/log.hpp>
-#include <ioh/problem/problem.hpp>
-#include <ioh/problem/transformation.hpp>
+
+
+#include "ioh/problem/submodular/graph_problem.hpp"
 
 namespace ioh
 {

@@ -46,6 +46,7 @@ namespace ioh::common::file
             return static_cast<T>(std::stod(s));
         }
 
+
         /**
          * @brief Helper class to extract lines with istream_iterator
          *
@@ -71,7 +72,7 @@ namespace ioh::common::file
          */
         inline fs::path get_static_root()
         {
-            auto static_root = fs::path("IOHexperimenter") / fs::path("static");
+            const auto static_root = fs::path("IOHexperimenter") / fs::path("static");
             fs::path root;
             for (const auto &e : fs::current_path())
             {
@@ -164,6 +165,27 @@ namespace ioh::common::file
         std::transform(std::istream_iterator<utils::Line>(in), std::istream_iterator<utils::Line>(),
                        std::back_inserter(result),
                        [](const utils::Line &line) { return static_cast<std::string>(line); });
+        return result;
+    }
+
+    // TODO: make use templates for this function
+    // example SFINAI https://stackoverflow.com/questions/62264951/handle-logical-or-for-predicates-in-stdenable-if
+    // Something like: 
+    // template <
+    //         typename T,
+    //         typename = typename std::enable_if<is_shared_ptr<T>::value &&
+    //                                            std::is_constructible<typename T::element_type, std::string>::value>::value>
+    // The above fails because of substitutions with types that don't have T::element_type
+    template <typename T = std::string,
+              typename = typename std::enable_if<std::is_constructible<T, std::string>::value, T>::type>
+    inline std::vector<std::shared_ptr<T>> as_text_vector_ptr(const fs::path &path)
+    {
+        std::istringstream in(as_string(path));
+        std::vector<std::shared_ptr<T>> result;
+
+        std::transform(std::istream_iterator<utils::Line>(in), std::istream_iterator<utils::Line>(),
+                       std::back_inserter(result),
+                       [](const utils::Line &line) { return std::make_shared<T>(static_cast<std::string>(line)); });
         return result;
     }
 

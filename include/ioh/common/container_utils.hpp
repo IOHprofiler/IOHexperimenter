@@ -7,6 +7,9 @@
 #include <utility>
 #include <vector>
 
+#include <cctype>
+#include <locale>
+
 #include "ioh/common/random.hpp"
 
 namespace ioh
@@ -68,7 +71,7 @@ namespace ioh
 
         //! Retrieve the keys from a map
         template <typename K, typename V>
-        inline std::vector<K> keys(const std::map<K, V> &m)
+        std::vector<K> keys(const std::map<K, V> &m)
         {
             std::vector<K> keys;
             for (const auto &p : m)
@@ -78,7 +81,7 @@ namespace ioh
 
         //! Retrieve the values from a map
         template <typename K, typename V>
-        inline std::vector<V> values(const std::map<K, V> &m)
+        std::vector<V> values(const std::map<K, V> &m)
         {
             std::vector<V> values;
             for (const auto &p : m)
@@ -88,7 +91,7 @@ namespace ioh
 
         //! Return a vector of key-value pairs for a given map
         template <typename K, typename V, typename P = std::pair<K, V>>
-        inline std::vector<P> as_vector(const std::map<K, V> &m)
+        std::vector<P> as_vector(const std::map<K, V> &m)
         {
             std::vector<P> values;
             for (const auto &[first, second] : m)
@@ -98,7 +101,7 @@ namespace ioh
 
         //! Return a vector of key-value pairs for a given map, where V is a pointer
         template <typename K, typename V, typename P = std::pair<K, V>>
-        inline std::vector<P> as_vector(const std::map<K, V *> &m)
+        std::vector<P> as_vector(const std::map<K, V *> &m)
         {
             std::vector<P> values;
             for (const auto &[first, second] : m)
@@ -116,7 +119,8 @@ namespace ioh
         inline std::vector<int> range(const int start, const int stop, const int step = 1)
         {
             std::vector<int> v((stop - start) / step);
-            std::generate(v.begin(), v.end(), [=, c = start - step]() mutable {
+            std::generate(v.begin(), v.end(), [=, c = start - step]() mutable
+            {
                 c += step;
                 return c;
             });
@@ -124,20 +128,51 @@ namespace ioh
         }
 
         /**
-         * @brief Helper to print the contents of iteror to stdout
+         * @brief Helper to print the contents of iterator to stdout
          * 
          * @tparam Iterator 
          * @param x the iterators to print, for example a std::vector
          * @param del the delimeter between each element
          */
         template <typename Iterator>
-        inline void print(const Iterator x, const std::string &del = " ")
+        void print(const Iterator x, const std::string &del = " ")
         {
             for (auto e : x)
             {
                 std::cout << e << del;
             }
             std::cout << std::endl;
+        }
+
+        
+        /**
+         * \brief trim leading whitespace (in place)
+         * \param s the string to trim
+         */
+        inline void ltrim(std::string &s)
+        {
+            s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](const unsigned char ch) { return !std::isspace(ch); }));
+        }
+
+      
+        /**
+         * \brief trim from end (in place)
+         * \param s the string to trim
+         */
+        inline void rtrim(std::string &s)
+        {
+            s.erase(std::find_if(s.rbegin(), s.rend(), [](const unsigned char ch) { return !std::isspace(ch); }).base(),
+                    s.end());
+        }
+
+        /**
+         * \brief trim from both ends (in pla0ce)
+         * \param s the string to trim
+         */
+        inline void trim(std::string &s)
+        {
+            ltrim(s);
+            rtrim(s);
         }
 
 
@@ -165,6 +200,6 @@ namespace ioh
                 std::sort(permutations.begin(), permutations.end());
                 return permutations;
             }
-        }; 
+        };
     } // namespace common
 } // namespace ioh
