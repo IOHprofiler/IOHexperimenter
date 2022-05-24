@@ -12,11 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        rust: [stable, nightly]
         compiler: [g++-10, g++-9, g++-8, g++-7] 
 
     steps:
     - uses: actions/checkout@v2
       with:
+        with:
+        rust-version: ${{ matrix.rust }}
         submodules: true
 
     - name: Install dependencies
