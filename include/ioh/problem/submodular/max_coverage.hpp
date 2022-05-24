@@ -52,7 +52,6 @@ namespace ioh
                                                                       // constraint), return a penalized value
                         result = graph->get_cons_weight_limit() - cons_weight;
 
-                    delete[] is_covered;
                     return result;
                 }
 
