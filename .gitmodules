@@ -13,11 +13,9 @@
 	path = external/MkLandscape
 	url = https://github.com/tobiasvandriessel/problem-generator.git
 	branch = cpp_integration
-	url = https://github.com/fmtlib/fmt
 [submodule "external/clutchlog"]
 	path = external/clutchlog
 	url = https://github.com/jacobdenobel/clutchlog.git
-
 [submodule "external/cxxopts"]
 	path = external/cxxopts
 	url = https://github.com/jarro2783/cxxopts
