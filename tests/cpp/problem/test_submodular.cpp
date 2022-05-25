@@ -3,6 +3,14 @@
 #include "ioh/problem.hpp"
 
 
+std::vector<int> half_zero(const int size)
+{
+    std::vector<int> x(size, 0);
+    for (auto i = 0; i < (size / 2); i++)
+        x[i] = 1;
+    return x;
+}
+
 void test_submodular_problems(const std::string &type, const std::vector<double> &results)
 {
 
@@ -15,9 +23,7 @@ void test_submodular_problems(const std::string &type, const std::vector<double>
         {
             auto problem = problem_factory.create(id, 1, 1);
             ioh::common::random::seed(10);
-            auto y0 =
-                std::round((*problem)(ioh::common::random::integers(problem->meta_data().n_variables, 0, 1)) * 10.0) /
-                10.0;
+            auto y0 = std::round((*problem)(half_zero(problem->meta_data().n_variables)) * 10.0) / 10.0;
             EXPECT_DOUBLE_EQ(y0, results.at(i++)) << name;
         }
     }
@@ -26,27 +32,29 @@ void test_submodular_problems(const std::string &type, const std::vector<double>
 
 TEST_F(BaseTest, SubmodularMaxCut)
 {
-
-    const std::vector<double> results = {9561, 9560, 9573, 9575, 9621};
+    const std::vector<double> results = {9586, 9622, 9510, 9548, 9590};
     test_submodular_problems("MaxCut", results);
 }
 
 TEST_F(BaseTest, SubmodularMaxCoverage)
 {
-    const std::vector<double> results = {-197,   -197,     -263,     -355,     -16058,   -16270,   -25280,
-                                         -39624, -1291706, -1319498, -2445316, -4490674, -209.5,   -209.5,
-                                         -277.3, -371.5,   -16556.4, -16768.4, -25852.4, -40285.8, -212.4,
-                                         -212.4, -280.7,   -375.5,   -16675.5, -16887.5, -25989.1, -40444};
+    const std::vector<double> results = {
+
+        -215,     -215,     -287,   -370,   -17873,   -17762,   -27331,   -40317,   -1482525, -1441376,
+        -2617055, -4481295, -228,   -228,   -301.9,   -386.9,   -18392.6, -18281.6, -27928,   -40992.3,
+        -231.1,   -231.1,   -305.5, -390.9, -18516.8, -18405.8, -28070.7, -41153.7,
+
+    };
 
     test_submodular_problems("MaxCoverage", results);
 }
 
 TEST_F(BaseTest, SubmodularMaxInfluence)
 {
-    const std::vector<double> results = {-1980,    -1970,    -1940,   -1890,   -89798,  -89598,   -88998,
-                                         -87998,   -2018.6,  -2008.6, -1978.6, -1928.6, -91343.3, -91143.3,
-                                         -90543.3, -89543.3, -2027.9, -2017.9, -1987.9, -1937.9,  -91712.6,
-                                         -91512.6, -90912.6, -89912.6
+    const std::vector<double> results = {
+        -2009,   -1999,   -1969,   -1919,   -85823,   -85623,   -85023,   -84023,
+        -2047.9, -2037.9, -2007.9, -1957.9, -87379.5, -87179.5, -86579.5, -85579.5,
+        -2057.2, -2047.2, -2017.2, -1967.2, -87751.5, -87551.5, -86951.5, -85951.5,
 
     };
 
@@ -56,8 +64,9 @@ TEST_F(BaseTest, SubmodularMaxInfluence)
 
 TEST_F(BaseTest, SubmodularPackWhileTravel)
 {
-    const std::vector<double> results = {-266230.1, -2117748,  665166.8,   -83935805,   -1014885579.6,
-                                         3135759.5, -81782253, -763316471, -228852040.2};
+    const std::vector<double> results = {
+        -257680.1, -2135849, 673789.2, -83966736, -1014996648.6, 3174860.5, -81768787, -763482837, -229277375,
+    };
 
 
     test_submodular_problems("PackWhileTravel", results);
