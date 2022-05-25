@@ -326,7 +326,7 @@ namespace ioh::suite
             [[maybe_unused]] const std::vector<int> &instances = {},
             [[maybe_unused]] const std::vector<int> &dimensions = {}) :
             IntegerSuite(problem_ids, {1}, {1}, "Submodular", 1, 2,
-                         reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::submodular::v2::GraphProblem>::instance()))
+                         reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::submodular::GraphProblem>::instance()))
         {
         }
 

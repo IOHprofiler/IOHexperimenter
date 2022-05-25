@@ -1,51 +1,24 @@
-#include "../utils.hpp" 
+#include "../utils.hpp"
 
 #include "ioh/problem.hpp"
 
-#include "ioh/problem/submodular/graph_problem.hpp"
-#include "ioh/problem/submodular/max_coverage.hpp"
-#include "ioh/problem/submodular/max_cut.hpp"
-#include "ioh/problem/submodular/max_influence.hpp"
-#include "ioh/problem/submodular/pack_while_travel.hpp"
 
-
-template <typename GraphProblem>
-std::shared_ptr<GraphProblem> get_graph_problem(const int instance)
+void test_submodular_problems(const std::string &type, const std::vector<double> &results)
 {
-    const auto path = fs::current_path();
-    current_path(ioh::common::file::utils::get_static_root());
-    auto problem = std::make_shared<GraphProblem>(instance);
-    current_path(path);
-    return problem;
-}
 
+    const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::submodular::GraphProblem>::instance();
 
-void test_and_compare(const std::shared_ptr<ioh::problem::Integer> &o, const std::shared_ptr<ioh::problem::Integer> &n)
-{
-    ioh::common::random::seed(10);
-    const auto x0 = ioh::common::random::integers(o->meta_data().n_variables, 0, 1);
-
-    ioh::common::random::seed(10);
-    (*o)(x0);
-    ioh::common::random::seed(10);
-    (*n)(x0);
-
-    EXPECT_DOUBLE_EQ(o->state().current.y, n->state().current.y) << n->meta_data()
-        <<  o->state().current.y << "!=" << n->state().current.y;
-}
-
-
-template <typename  T>
-void test_submodular_problems(const std::string& type, const int default_id = 2000)
-{
-    const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::submodular::v2::GraphProblem>::instance();
+    int i = 0;
     for (auto &[id, name] : problem_factory.map())
     {
         if (name.substr(0, type.size()) == type)
         {
             auto problem = problem_factory.create(id, 1, 1);
-            test_and_compare(get_graph_problem<T>(problem->meta_data().problem_id - default_id + 1),
-                problem);
+            ioh::common::random::seed(10);
+            auto y0 =
+                std::round((*problem)(ioh::common::random::integers(problem->meta_data().n_variables, 0, 1)) * 10.0) /
+                10.0;
+            EXPECT_DOUBLE_EQ(y0, results.at(i++)) << name;
         }
     }
 }
@@ -53,24 +26,39 @@ void test_submodular_problems(const std::string& type, const int default_id = 20
 
 TEST_F(BaseTest, SubmodularMaxCut)
 {
-    test_submodular_problems<ioh::problem::submodular::MaxCut>("MaxCut", 2000);
+
+    const std::vector<double> results = {9561, 9560, 9573, 9575, 9621};
+    test_submodular_problems("MaxCut", results);
 }
 
 TEST_F(BaseTest, SubmodularMaxCoverage)
 {
-    test_submodular_problems<ioh::problem::submodular::MaxCoverage>("MaxCoverage", 2100);
+    const std::vector<double> results = {-197,   -197,     -263,     -355,     -16058,   -16270,   -25280,
+                                         -39624, -1291706, -1319498, -2445316, -4490674, -209.5,   -209.5,
+                                         -277.3, -371.5,   -16556.4, -16768.4, -25852.4, -40285.8, -212.4,
+                                         -212.4, -280.7,   -375.5,   -16675.5, -16887.5, -25989.1, -40444};
+
+    test_submodular_problems("MaxCoverage", results);
 }
 
 TEST_F(BaseTest, SubmodularMaxInfluence)
 {
-    test_submodular_problems<ioh::problem::submodular::MaxInfluence>("MaxInfluence", 2200);
+    const std::vector<double> results = {-1980,    -1970,    -1940,   -1890,   -89798,  -89598,   -88998,
+                                         -87998,   -2018.6,  -2008.6, -1978.6, -1928.6, -91343.3, -91143.3,
+                                         -90543.3, -89543.3, -2027.9, -2017.9, -1987.9, -1937.9,  -91712.6,
+                                         -91512.6, -90912.6, -89912.6
+
+    };
+
+    test_submodular_problems("MaxInfluence", results);
 }
 
 
 TEST_F(BaseTest, SubmodularPackWhileTravel)
 {
-    test_submodular_problems<ioh::problem::submodular::PackWhileTravel>("PackWhileTravel", 2300);
-    
+    const std::vector<double> results = {-266230.1, -2117748,  665166.8,   -83935805,   -1014885579.6,
+                                         3135759.5, -81782253, -763316471, -228852040.2};
+
+
+    test_submodular_problems("PackWhileTravel", results);
 }
-
-

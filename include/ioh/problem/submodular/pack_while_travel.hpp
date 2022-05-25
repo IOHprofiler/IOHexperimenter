@@ -1,255 +1,181 @@
-// Author: Viet Anh Do
-
 #pragma once
-#include <fstream>
-#include <stdexcept>
 
+#include "graph_problem.hpp"
 
-#include <ioh/common/log.hpp>
-#include <ioh/problem/problem.hpp>
-
-#include "ioh/problem/submodular/graph_problem.hpp"
-
-
-
-namespace ioh
+namespace ioh::problem
 {
-    namespace problem
+    namespace submodular
     {
-        namespace submodular
-
+        namespace pwt
         {
-            // Packing While Travelling
-            // Description: refer to Evolutionary Submodular Optimization website at https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php
-            class PackWhileTravel final : public Integer
+            //! Helpers for PackWhileTravel
+            struct Point
             {
-                int n_items;
-                double velocity_gap, velocity_max, capacity, penalty;
-                std::vector<double> *distances;
-                std::vector<std::vector<double>> *weights, *profits;
-                std::vector<std::vector<int>> *index_map;
-                bool is_initialized;
+                int x, y;
 
-                // Read TTP instance from file, convert to PWT instance, return problem dimension
-                int read_instance_by_id(const int instance, const std::string &instance_list_file, const bool force=false)
+                double distance(const Point &other) const
                 {
-                    if (!force)
-                        if (!is_null()) // If already initialized, skip reading file
-                            return n_items;
-
-                    is_initialized = false;
-                    std::vector<std::string> instance_list = Helper::read_list_instance(instance_list_file);
-                    if (static_cast<int>(instance_list.size()) <= instance || instance < 0) // If instance id is invalid,
-                                               // return a valid dummy size
-                        return 1;
-                    std::ifstream ttp_data(instance_list[instance]);
-                    if (!ttp_data)
-                        throw std::invalid_argument("Fail to open instance file: " + (instance_list[instance]));
-                    char eol = Helper::get_eol_in_file(instance_list[instance]);
-                    std::string str, tstr;
-                    int index_line = 0;
-                    while (std::getline(ttp_data, str, eol) && index_line++ < 2); // Skip 2 lines, to line 3
-                    int n_cities; // Number of locations
-                    if (!Helper::is_int(str.substr(str.find_last_of(':') + 1), &n_cities)){
-                        IOH_DBG(warning, "Cannot read number of cities for PWT"); // FIXME raise an exception?
-                        return 1; // return a valid dummy size
-                    }
-                    std::getline(ttp_data, str, eol); // Number of items
-                    if (!Helper::is_int(str.substr(str.find_last_of(':') + 1), &n_items))
-                    {
-                        IOH_DBG(warning, "Cannot read number of items for PWT"); // FIXME raise an exception?
-                        return 1; // return a valid dummy size
-                    }
-                    std::getline(ttp_data, str, eol); // Carry capacity
-                    if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &capacity))
-                    {
-                        IOH_DBG(warning, "Cannot read carry capacity for PWT"); // FIXME raise an exception?
-                        return 1; // return a valid dummy size
-                    }
-                    std::getline(ttp_data, str, eol); // Minimum velocity
-                    if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &velocity_gap))
-                    {
-                        IOH_DBG(warning, "Cannot read minimum velocity for PWT"); // FIXME raise an exception?
-                        return 1; // return a valid dummy size
-                    }
-                    std::getline(ttp_data, str, eol); // Maximum velocity
-                    if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &velocity_max))
-                    {
-                        IOH_DBG(warning, "Cannot read maximum velocity for PWT"); // FIXME raise an exception?
-                        return 1; // return a valid dummy size
-                    }
-                    velocity_gap = velocity_max - velocity_gap;
-                    std::getline(ttp_data, str, eol);
-                    double rent_ratio; // Rent ratio
-                    if (!Helper::is_double(str.substr(str.find_last_of(':') + 1), &rent_ratio))
-                    {
-                        IOH_DBG(warning, "Cannot read rent ratio for PWT"); // FIXME raise an exception?
-                        return 1; // return a valid dummy size
-                    }
-                    while (std::getline(ttp_data, str, eol) && index_line++ < 5) // Skip 2 lines, to line 11
-                        ;
-                    double cur_x, cur_y, init_x, init_y, distance; // Start reading location coordinates
-                    size_t first_space = str.find_first_of('	'), second_space = str.find_last_of('	');
-                    if (!Helper::is_double(str.substr(first_space + 1, second_space - first_space - 1), &init_x) ||
-                        !Helper::is_double(str.substr(second_space + 1), &init_y))
-                    {
-                        IOH_DBG(warning, "Cannot read coordinates for PWT"); // FIXME raise an exception?
-                        return 1; // return a valid dummy size
-                    }
-                    cur_x = init_x;
-                    cur_y = init_y;
-                    index_line = 0;
-                    penalty = 0;
-                    distances = new std::vector<double>();
-                    weights = new std::vector<std::vector<double>>();
-                    profits = new std::vector<std::vector<double>>();
-                    index_map = new std::vector<std::vector<int>>();
-                    while (std::getline(ttp_data, str, eol) && index_line++ < n_cities - 1) // Read until next header
-                    {// Populate route distances and compute penalty term
-                        first_space = str.find_first_of('	'), second_space = str.find_last_of('	');
-                        double next_x, next_y;
-                        if (!Helper::is_double(str.substr(first_space + 1, second_space - first_space - 1), &next_x) ||
-                            !Helper::is_double(str.substr(second_space + 1), &next_y))
-                        {
-                            IOH_DBG(warning,  "Cannot read coordinates for PWT" )
-                            return 1; // return a valid dummy size
-                        }
-                        distance =
-                            std::ceil(std::sqrt(std::pow(next_x - cur_x, 2) + std::pow(next_y - cur_y, 2))); // CEIL_2D
-                        distances->push_back(distance);
-                        penalty -= distance;
-                        cur_x = next_x;
-                        cur_y = next_y;
-                    } // End reading location coordinates
-                    distance =
-                        std::ceil(std::sqrt(std::pow(init_x - cur_x, 2) + std::pow(init_y - cur_y, 2))); // CEIL_2D
-                    distances->push_back(distance);
-                    penalty =
-                        (penalty - distance) * rent_ratio / (velocity_max - velocity_gap); // Complete penalty term
-                    index_line = 0;
-                    while (std::getline(ttp_data, str, eol) && index_line < n_items)// Read item data
-                    {
-                        tstr = str.substr(str.find_first_of('	') + 1);
-                        first_space = tstr.find_first_of('	');
-                        second_space = tstr.find_last_of('	');
-                        int city_index = std::stoi(tstr.substr(second_space + 1)) - 1;
-                        while (static_cast<int>(weights->size()) <= city_index)
-                        {
-                            weights->push_back({});
-                            profits->push_back({});
-                            index_map->push_back({});
-                        }
-                        (*index_map)[city_index].push_back(index_line++);
-                        double temp;
-                        if (Helper::is_double(tstr.substr(0, first_space), &temp))
-                        {
-                            (*profits)[city_index].push_back(temp);
-                        }
-                        else
-                        {
-                            IOH_DBG(warning,  "Cannot read item profits for PWT" )
-                            return 1; // return a valid dummy size
-                        }
-                        if (Helper::is_double(tstr.substr(first_space + 1, second_space - first_space - 1), &temp))
-                        {
-                            (*weights)[city_index].push_back(temp);
-                        }
-                        else
-                        {
-                            IOH_DBG(warning,  "Cannot read item weights for PWT" )
-                            return 1; // return a valid dummy size
-                        }
-                    }
-                    is_initialized = true;
-                    return n_items; // Dimension is number of items
+                    return std::ceil(std::sqrt(std::pow(x - other.x, 2) + std::pow(y - other.y, 2)));
                 }
-
-            protected:
-                //! Variables transformation method
-                std::vector<int> transform_variables(std::vector<int> x) override { return x; }
-                //! Objectives transformation method
-                double transform_objectives(const double y) override { return y; }
-                // [mandatory] The evaluate method is mandatory to implement
-                double evaluate(const std::vector<int> &x) override
-                {
-                    double profit_sum = 0, cons = 0, time = 0;
-                    for (size_t i = 0; i < weights->size(); i++)
-                    {
-                        for (size_t j = 0; j < (*weights)[i].size(); j++)
-                        {
-                            if (x[(*index_map)[i][j]] >= 1)
-                            {
-                                cons += (*weights)[i][j];
-                                profit_sum += (*profits)[i][j];
-                            }
-                        }
-                        if (cons > capacity) // Assuming weights are non-negative
-                            continue; // Keep adding weights, but ignore time to avoid division by 0
-                        time += (*distances)[i] / (velocity_max - (velocity_gap * cons / capacity));
-                    }
-                    if (cons > capacity)
-                        return capacity - cons + penalty;
-                    return profit_sum - time;
-                }
-
-            public:
-                // Check if instance is null
-                bool is_null() { return !distances || (!is_initialized) || distances->empty(); }
-
-                // Get problem dimension from initialized instance
-                int get_dim() { return is_null() ? 0 : n_items; }
-
-                // Constructor
-                PackWhileTravel(const int instance = 1, [[maybe_unused]] const int n_variables = 1,
-                                const std::string &instance_list_file = Helper::instance_list_path.empty()
-                                    ? "example_list_pwt"
-                                    : Helper::instance_list_path) :
-                    Integer(MetaData(instance + 3000000,// problem id, starting at 3000000
-                        instance, "PackWhileTravel" + std::to_string(instance),
-
-                        // This is unexpected behaviour, you cannot use a child class before a parent
-                        // is initialized. I added the force option to force execution of this.
-                        read_instance_by_id(instance - 1, instance_list_file, true), 
-                        common::OptimizationType::Maximization),
-                        Constraint<int>(read_instance_by_id(instance - 1, instance_list_file, true), 0, 1)
-                    )
-                {
-
-                    if (is_null())
-                    {
-                        IOH_DBG(warning, "Instance not created properly (e.g. invalid id)."); // FIXME raise an exception?
-                        return;
-                    }
-                    if (velocity_gap >= velocity_max || velocity_gap <= 0 || velocity_max <= 0)
-                        throw std::invalid_argument(
-                            "Minimum velocity must be positive and smaller than maximum velocity");
-                    if (capacity <= 0)
-                        throw std::invalid_argument("Capacity must be positive");
-                    if (weights->size() != profits->size() || weights->size() != distances->size())
-                        throw std::invalid_argument("Weights, profits, and number of cities don't match");
-                    for (size_t i = 0; i < weights->size(); i++)
-                    {
-                        if ((*weights)[i].size() != (*profits)[i].size())
-                            throw std::invalid_argument("Weights and profits don't match");
-                    }
-                    for (size_t i = 0; i < weights->size(); i++)
-                    {
-                        for (size_t j = 0; j < (*weights)[i].size(); j++)
-                        {
-                            if ((*weights)[i][j] < 0 || (*profits)[i][j] < 0)
-                                throw std::invalid_argument("Weights and profits must be non-negative");
-                        }
-                    }
-                    objective_.x = std::vector<int>(meta_data_.n_variables, 1);
-                    objective_.y = evaluate(objective_.x);
-                }
-                // Constructor without n_variable, swap argument positions to avoid ambiguity
-                PackWhileTravel(const std::string &instance_file = Helper::instance_list_path, const int instance = 1) :
-                    PackWhileTravel(instance, 1, instance_file)
-                {
-                }
-
             };
-        } // namespace submodular
-    } // namespace problem
-} // namespace ioh
+
+            struct Item
+            {
+                int index, profit, weight, node_number;
+            };
+
+            //! TODO: Find out what data is redundant and how we can better map to other graph data
+            //! TODO: Don't use stringstream; slow
+            struct TTPData
+            {
+                std::string name;
+                std::string data_type;
+                int dimension;
+                int n_items;
+                int capacity;
+                double min_speed;
+                double max_speed;
+                double rent_ratio;
+                std::string edge_weight_type;
+
+                double penalty = 0;
+                double velocity_gap = 0;
+                std::vector<double> distances{};
+                std::vector<Point> nodes{};
+                std::vector<Item> items{};
+                std::map<size_t, std::vector<Item>> city_map{};
+            };
+
+            struct TTPGraph : graph::Graph
+            {
+                using Graph::Graph;
+
+                TTPData ttp_data;
+
+                [[nodiscard]] std::string after_colon(const std::string &line) const
+                {
+                    std::stringstream ss(line);
+                    std::string result;
+                    std::getline(ss, result, ':');
+                    std::getline(ss, result, ':');
+                    common::trim(result);
+                    return result;
+                }
+
+
+                void load() override
+                {
+                    const auto contents = common::file::as_text_vector(meta.root / meta.edge_file);
+
+                    ttp_data = {after_colon(contents[0]),
+                                after_colon(contents[1]),
+                                std::stoi(after_colon(contents[2])),
+                                std::stoi(after_colon(contents[3])),
+                                std::stoi(after_colon(contents[4])),
+                                std::stod(after_colon(contents[5])),
+                                std::stod(after_colon(contents[6])),
+                                std::stod(after_colon(contents[7])),
+                                after_colon(contents[8])};
+
+                    ttp_data.nodes.resize(ttp_data.dimension);
+
+                    const auto coords_until = static_cast<size_t>(ttp_data.dimension) + 10;
+
+                    std::istringstream stream;
+                    for (size_t i = 10; i < coords_until; i++)
+                    {
+                        const auto current = i - 10;
+                        stream.str(contents[i]);
+                        stream >> ttp_data.nodes[current].x >> ttp_data.nodes[current].x >> ttp_data.nodes[current].y;
+
+                        if (current > 0)
+                        {
+                            ttp_data.distances.push_back(ttp_data.nodes[current].distance(ttp_data.nodes[current - 1]));
+                            ttp_data.penalty -= ttp_data.distances.back();
+                        }
+                        stream.clear();
+                    }
+                    ttp_data.velocity_gap = ttp_data.max_speed - ttp_data.min_speed;
+                    ttp_data.distances.push_back(ttp_data.nodes.front().distance(ttp_data.nodes.back()));
+                    ttp_data.penalty = (ttp_data.penalty - ttp_data.distances.back()) * ttp_data.rent_ratio /
+                        (ttp_data.max_speed - ttp_data.velocity_gap);
+
+                    ttp_data.items.resize(ttp_data.n_items);
+                    for (size_t i = (coords_until + 1); i < contents.size(); i++)
+                    {
+                        const auto index = i - (coords_until + 1);
+                        auto &record = ttp_data.items[index];
+                        std::stringstream{contents[i]} >> record.index >> record.profit >> record.weight >>
+                            record.node_number;
+                        record.node_number--;
+                        record.index--;
+                        ttp_data.city_map[record.node_number].push_back(record);
+                    }
+                    meta.is_edge = false;
+                    meta.n_vertices = ttp_data.n_items;
+
+                    IOH_DBG(xdebug, "loaded pwt graph problem");
+                    IOH_DBG(xdebug, "number of vertices: " << meta.n_vertices);
+                    IOH_DBG(xdebug, "number of items: " << ttp_data.items.size());
+                    loaded = true;
+                }
+            };
+        } // namespace pwt
+
+        struct PackWhileTravel final : GraphProblemType<PackWhileTravel>
+        {
+            static inline int default_id = 2300;
+            /**
+             * @brief Construct a new PackWhileTravel object. Suggested usage is via the factory.
+             * If you want to create your own objects, please be sure to pass a correct graph instance.
+             *
+             * @param problem_id the id to the problem
+             * @param instance_id for instance based problems this is ignored
+             * @param graph the graph object on which to operate
+             */
+            PackWhileTravel(const int problem_id, const int, const std::shared_ptr<pwt::TTPGraph> &graph) :
+                GraphProblemType(problem_id, 1, fmt::format("PackWhileTravel{}", problem_id), graph)
+            {
+                objective_.x = std::vector<int>(meta_data_.n_variables, 1);
+                objective_.y = evaluate(objective_.x);
+            }
+
+            double evaluate(const std::vector<int> &x) override
+            {
+                auto data = std::dynamic_pointer_cast<pwt::TTPGraph>(graph)->ttp_data;
+                auto profit_sum = 0.0, cons = 0.0, time = 0.0;
+
+                for (size_t i = 0; i < data.distances.size(); i++)
+                {
+                    for (auto &item : data.city_map[i])
+                    {
+                        if (x[item.index] >= 1)
+                        {
+                            cons += item.weight;
+                            profit_sum += item.profit;
+                        }
+                    }
+
+                    if (cons > data.capacity)
+                        continue;
+
+                    time += data.distances[i] / (data.max_speed - (data.velocity_gap * cons / data.capacity));
+                }
+
+                if (cons > data.capacity)
+                    return data.capacity - cons + data.penalty;
+
+                return profit_sum - time;
+            }
+        };
+    } // namespace submodular
+
+    template <>
+    inline InstanceBasedProblem::Constructors<submodular::PackWhileTravel, int, int>
+    InstanceBasedProblem::load_instances<submodular::PackWhileTravel>(const std::optional<fs::path> &definitions_file)
+    {
+        using namespace submodular;
+        return GraphProblemType<PackWhileTravel>::get_constructors<pwt::TTPGraph>(
+            definitions_file.value_or(common::file::utils::find_static_file("example_list_pwt")));
+    }
+} // namespace ioh::problem

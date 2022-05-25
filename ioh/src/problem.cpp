@@ -800,8 +800,7 @@ void define_wmodels(py::module &m)
 void define_submodular_problems(py::module &m)
 {
     using namespace ioh::problem;
-    using namespace submodular::v2;
-    using namespace problems;
+    using namespace submodular;    
 
     py::class_<GraphProblem, Integer, std::shared_ptr<GraphProblem>>(m, "GraphProblem", "Graph type problem")
         .def_static(
