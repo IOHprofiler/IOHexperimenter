@@ -38,6 +38,12 @@ class TestProblem(unittest.TestCase):
             f = ioh.get_problem(fid, 1 ,4, "PBO")
             self.assertGreater(f([0,0,0,0]), -1000) 
 
+    def test_has_submodular(self):
+        problems = list(getattr(ioh.problem, "GraphProblem").problems.values())
+        self.assertNotEqual(0, len(problems))
+        for name in ("MaxCut", "MaxInfluence", "MaxCoverage", "PackWhileTravel"):
+            self.assertNotEqual(0, len([p for p in problems if name in p]))
+
     def test_bbob_problems_first_instance(self):
         expected = [
             161.17445568,
