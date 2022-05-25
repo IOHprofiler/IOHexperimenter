@@ -7,7 +7,6 @@ Namespaces
 .. toctree::
     :maxdepth: 1
 
-    ioh_common_file.rst
     ioh_common_random.rst
 
 
@@ -50,6 +49,10 @@ IdGetter< true >
 InvokeApplyOnConstruction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: ioh::common::InvokeApplyOnConstruction
+
+Permutation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenstruct:: ioh::common::Permutation
 
 RegisterWithFactory
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -99,9 +102,25 @@ keys
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenfunction:: ioh::common::keys
 
+ltrim
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::common::ltrim
+
+print
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::common::print
+
 range
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenfunction:: ioh::common::range
+
+rtrim
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::common::rtrim
+
+trim
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::common::trim
 
 type_name
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

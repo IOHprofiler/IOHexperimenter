@@ -17,7 +17,7 @@ namespace ioh
                 double evaluate(const std::vector<int> &x) override
                 {
                     auto result = 0.0;
-                    int neighbors[3];
+                    size_t neighbors[3];
                     const auto lattice_size = static_cast<size_t>(sqrt(static_cast<double>(meta_data_.n_variables)));
 
                     for (size_t i = 0; i < lattice_size; ++i)

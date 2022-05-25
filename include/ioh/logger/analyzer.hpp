@@ -276,7 +276,7 @@ namespace ioh::logger
                 logger::Info log_info_{};
 
                 //! Evals
-                size_t evals_;
+                size_t evals_ = 0;
 
                 //! Gets called when a new problem is attached
                 virtual void handle_new_problem(const problem::MetaData &problem)
@@ -428,7 +428,7 @@ namespace ioh::logger
                 }
 
                 #ifndef NDEBUG
-                void reset()
+                void reset() override
                 {
                     IOH_DBG(debug, "Analyzer reset");
                     FlatFile::reset();

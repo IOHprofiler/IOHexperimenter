@@ -20,8 +20,13 @@ namespace ioh {
          * 
          * @ingroup Logging
         */
+#ifdef _MSC_VER
+#pragma warning(disable : 26495)
+#endif
         struct Info
         {
+
+            
             //! Number of evaluations of the objective function so far.
             size_t evaluations;
 
@@ -40,7 +45,9 @@ namespace ioh {
             //! Optimum to the current problem instance, with the corresponding transformed objective function value.
             problem::Solution<double> optimum; // was objective
         };
-
+#ifdef _MSC_VER  
+#pragma warning(default : 26495)
+#endif
     } // log
 } // ioh
 

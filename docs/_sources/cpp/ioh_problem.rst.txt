@@ -10,6 +10,7 @@ Namespaces
     ioh_problem_bbob.rst
     ioh_problem_pbo.rst
     ioh_problem_python.rst
+    ioh_problem_submodular.rst
     ioh_problem_transformation.rst
     ioh_problem_utils.rst
     ioh_problem_wmodel.rst
@@ -97,6 +98,10 @@ Constraint
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: ioh::problem::Constraint
 
+InstanceBasedProblem
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenstruct:: ioh::problem::InstanceBasedProblem
+
 IntegerProblem
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: ioh::problem::IntegerProblem
@@ -115,6 +120,22 @@ State
 
 Functions
 ----------
+MaxCoverage >
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::problem::MaxCoverage >
+
+MaxCut >
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::problem::MaxCut >
+
+MaxInfluence >
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::problem::MaxInfluence >
+
+PackWhileTravel >
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::problem::PackWhileTravel >
+
 wrap_function
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenfunction:: ioh::problem::wrap_function

@@ -79,8 +79,8 @@ void define_suite(py::module &m)
                 A list of problem dimensions to include in this instantiation of the suite   
                       
         )pbdoc")
-        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(), py::arg("problem_ids"),
-             py::arg("instances"), py::arg("dimensions"));
+        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(), py::arg("problem_ids") = std::vector<int>{},
+             py::arg("instances") = std::vector<int>{1}, py::arg("dimensions") = std::vector<int>{5});
 
     define_base_class<Suite<ioh::problem::Integer>>(m, "IntegerBase");
 
@@ -117,6 +117,28 @@ void define_suite(py::module &m)
                 A list of problem dimensions to include in this instantiation of the suite          
 
         )pbdoc")
-        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(), py::arg("problem_ids"),
-             py::arg("instances"), py::arg("dimensions"));
+        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(), py::arg("problem_ids") = std::vector<int>{},
+             py::arg("instances") = std::vector<int>{1}, py::arg("dimensions") = std::vector<int>{16});
+
+    py::class_<Submodular, Suite<ioh::problem::Integer>, std::shared_ptr<Submodular>>(m, "Submodular",
+                                                                        R"pbdoc(
+            Suite with integer-valued functions from Submodular single objective benchmark.
+
+            This class is an iterator for problems, you can define a set of problems to iterate over.
+
+            Note that although you can pass instances/dimension for in order to keep a standard API,
+            these options are ignored for this suite, only problem ids are considered.
+
+            Parameters
+            ----------
+            problem_ids: list[int]
+                A list of problems ids to include in this instantiation of the suite
+            instances: list[int]
+                A list of problem instances to include in this instantiation of the suite (ignored)
+            problem_ids: list[int]
+                A list of problem dimensions to include in this instantiation of the suite (ignored)         
+
+        )pbdoc")
+        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(), py::arg("problem_ids") = std::vector<int>{},
+             py::arg("instances") = std::vector<int>{1}, py::arg("dimensions") = std::vector<int>{1});
 }

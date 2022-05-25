@@ -1,119 +1,94 @@
-// Author: Viet Anh Do
-
 #pragma once
+
 #include <queue>
-#include <stdexcept>
-#include <ioh/common/log.hpp>
 #include "graph_problem.hpp"
 
-namespace ioh
+namespace ioh::problem
 {
-    namespace problem
+    namespace submodular
     {
-        namespace submodular
+        struct MaxInfluence final : GraphProblemType<MaxInfluence>
         {
-            // Max Influence
-            // Description: refer to Evolutionary Submodular Optimization website at
-            // https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php
-            class MaxInfluence final : public GraphProblem<MaxInfluence>
+            static inline int default_id = 2200;
+            int simulation_reps = 100;
+            std::vector<uint8_t> is_activated;
+
+            /**
+             * @brief Construct a new MaxInfluence object. Suggested usage is via the factory.
+             * If you want to create your own objects, please be sure to pass a correct graph instance.
+             *
+             * @param problem_id the id to the problem
+             * @param instance_id for instance based problems this is ignored
+             * @param graph the graph object on which to operate
+             */
+            MaxInfluence(const int problem_id, const int, const std::shared_ptr<graph::Graph> &graph) :
+                GraphProblemType(problem_id, 1, fmt::format("MaxInfluence{}", problem_id), graph),
+                is_activated(std::vector<uint8_t>(graph->dimension(), 0))
             {
-            private:
-                std::unique_ptr<bool[]> is_activated;
-                int simulation_reps = 100;
-                // Simulate Independent Cascade Model with seed and return weighted sum of activated nodes other than
-                // seeds
-                double random_spread_count(const std::vector<int> &seed)
+                objective_.x = std::vector<int>(graph->dimension(), 1);
+                objective_.y = evaluate(objective_.x);
+            }
+
+            double random_spread_count(const std::vector<int> &x)
+            {
+                double total = 0;
+
+                std::queue<size_t> visits;
+
+                for (size_t i = 0; i < x.size(); i++)
                 {
-                    std::queue<int> visits; // Queue for BFS, simulate in chronological order
-                    for (auto i = 0; i < seed.size(); i++)
+                    is_activated[i] = x[i];
+                    if (x[i] != 0)
+                        visits.push(i);
+                }
+
+                while (!visits.empty())
+                {
+                    size_t source = visits.front();
+                    visits.pop();
+
+                    for (const auto &[target, weight] : graph->adjacency_list[source])
                     {
-                        if (seed[i] == 1)
+                        const double r = common::random::real();
+                        if (!is_activated[target] && r <= weight)
                         {
-                            is_activated[i] = true; // Activate seeded nodes
-                            visits.push(i);
-                        }
-                        else
-                            is_activated[i] = false;
-                    }
-                    double total = 0;
-                    while (!visits.empty()) // Terminate when no more spreading
-                    {
-                        int currentIndex = visits.front();
-                        visits.pop();
-                        int subIndex = 0;
-                        for (auto &neighbor : graph->get_neighbors(currentIndex)) // 2-way spread if undirected
-                        { // Check if not already activated and spreading successfully
-                            if (!is_activated[neighbor] &&
-                                ioh::common::random::real() <= graph->get_edge_weight(currentIndex, subIndex))
-                            {
-                                is_activated[neighbor] = true; // Avoid redundant activation
-                                visits.push(neighbor); // Cascading
-                                total += graph->get_vertex_weight(neighbor); // Add weight
-                            }
-                            subIndex++;
+                            is_activated[target] = 1;
+                            visits.push(target);
+                            total += graph->vertex_weights[target];
                         }
                     }
-                    return total;
+                }
+                return total;
+            }
+
+            double evaluate(const std::vector<int> &x) override
+            {
+                double result = 0, constraint = 0;
+                int count = 0;
+                for (size_t source = 0; source < x.size(); source++)
+                {
+                    constraint += graph->constraint_weights[source] * x[source];
+                    result += graph->vertex_weights[source] * x[source];
+                    count += x[source];
                 }
 
-            protected:
-                // [mandatory] The evaluate method is mandatory to implement
-                double evaluate(const std::vector<int> &x) override
-                {
-                    double cons_weight = 0, seed_size = 0, seed_weight = 0;
-                    int index = 0;
-                    for (auto &selected : x)
-                    { // Iterate through 0-1 values
-                        if (selected >= 1)
-                        { // See if the vertex is selected
-                            cons_weight += graph->get_cons_weight(index); // Add weight
-                            seed_size++;
-                            seed_weight += graph->get_vertex_weight(index);
-                        }
-                        index++; // Follow the current vertex by moving index, regardless of selection
-                    }
-                    cons_weight += sqrt(seed_size) * graph->get_chance_cons_factor();
-                    if (cons_weight > graph->get_cons_weight_limit()) // If the weight limit is exceeded (violating
-                                                                      // constraint), return a penalized value
-                        return graph->get_cons_weight_limit() - cons_weight;
-                    double result = 0;
-                    for (auto i = simulation_reps; i > 0; i--)
-                    {
-                        result += random_spread_count(x); // Simulate Independent Cascade Model
-                    }
-                    return seed_weight + result / simulation_reps; // Return average
-                }
+                constraint += sqrt(count) * graph->meta.chance_cons;
+                if (constraint > graph->meta.constraint_limit)
+                    return graph->meta.constraint_limit - constraint;
 
-            public:
-                MaxInfluence(const int instance = 1, [[maybe_unused]] const int n_variables = 1,
-                             const std::string &instance_file = Helper::instance_list_path.empty()
-                                 ? "example_list_maxinfluence"
-                                 : Helper::instance_list_path) :
-                    GraphProblem(instance + 1000000, // problem id, starting at 1000000
-                                 instance, // the instance id
-                                 read_instances_from_files(instance - 1, false,
-                                                           instance_file), // dimensions
-                                 "MaxInfluence" + std::to_string(instance), // problem name
-                                 false, // Using number of edges as dimension or not
-                                 instance_file)
-                {
-                    if (is_null())
-                    {
-                        IOH_DBG(warning, "Null MaxInfluence instance")
-                        return;
-                    }
-                    is_activated = std::make_unique<bool[]>(graph->get_n_vertices());
-                    objective_.x = std::vector<int>(graph->get_n_vertices(), 1);
-                    objective_.y = evaluate(objective_.x);
-                }
-                // Constructor without n_variable, swap argument positions to avoid ambiguity
-                MaxInfluence(const std::string &instance_file = Helper::instance_list_path, const int instance = 1) :
-                    MaxInfluence(instance, 1, instance_file)
-                {
-                }
-                // Set number of times to repeat simulation, must be at least 1
-                void set_simulation_reps(const int new_reps) { simulation_reps = std::max(new_reps, 1); }
-            };
-        } // namespace submodular
-    } // namespace problem
-} // namespace ioh
+                for (auto i = 0; i < simulation_reps; i++)
+                    result += random_spread_count(x) / simulation_reps;
+                return result;
+            }
+        };
+    } // namespace submodular
+    
+    template <>
+    inline InstanceBasedProblem::Constructors<submodular::MaxInfluence, int, int>
+    InstanceBasedProblem::load_instances<submodular::MaxInfluence>(const std::optional<fs::path> &definitions_file)
+    {
+        using namespace submodular;
+        return GraphProblemType<MaxInfluence>::get_constructors(
+            definitions_file.value_or(common::file::utils::find_static_file("example_list_maxinfluence")));
+    }
+} // namespace ioh::problem

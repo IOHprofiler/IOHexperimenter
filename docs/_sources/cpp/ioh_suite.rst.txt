@@ -53,3 +53,7 @@ RealSuite
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: ioh::suite::RealSuite
 
+Submodular
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenstruct:: ioh::suite::Submodular
+

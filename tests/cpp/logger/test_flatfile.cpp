@@ -31,7 +31,7 @@ TEST_F(BaseTest, logger_flatfile)
         }
     }
     EXPECT_TRUE(fs::exists("./IOH.dat"));
-    EXPECT_GT(get_file_as_string("./IOH.dat").size(),0);
+    EXPECT_GT(ioh::common::file::as_string("./IOH.dat").size(),0);
     fs::remove("./IOH.dat");
     EXPECT_TRUE(!fs::exists("./IOH.dat"));
 }
