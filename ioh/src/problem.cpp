@@ -1,12 +1,15 @@
+#include <pybind11/numpy.h>
 #include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+
 #include "ioh.hpp"
 
 #include <iostream>
 
 namespace py = pybind11;
 using namespace ioh::problem;
+
 
 template <typename T>
 void define_solution(py::module &m, const std::string &name)
@@ -29,7 +32,8 @@ void define_solution(py::module &m, const std::string &name)
                 the corresponding objective value of `x`, i.e., y = f(x)
 
         )pbdoc")
-        .def_readonly("x", &Class::x, "The search point in a search space, e.g., R^d or {0,1}^d")
+        .def_property_readonly("x", [](const Class& c){return py::array(c.x.size(), c.x.data());},
+                      "The search point in a search space, e.g., R^d or {0,1}^d")
         .def_readonly("y", &Class::y, "The corresponding objective value of `x`, i.e., y = f(x)")
         .def("__repr__", &Class::repr);
 }
@@ -101,7 +105,8 @@ void define_constraint(py::module &m, const std::string &name)
             )pbdoc"
 
              )
-        .def_readonly("ub", &Class::ub, "The upper bound (box constraint)")
+        .def_property_readonly("ub", [](const Class &c) { return py::array(c.ub.size(), c.ub.data()); }, "The upper bound (box constraint)")
+        .def_property_readonly("lb", [](const Class &c) { return py::array(c.lb.size(), c.lb.data()); }, "The lower bound (box constraint)")
         .def_readonly("lb", &Class::lb, "The lower bound (box constraint)")
         .def("__repr__", &Class::repr)
         .def("check", &Class::check,
@@ -149,7 +154,7 @@ public:
         auto registered = perform_registration();
     }
 
-    double evaluate(const std::vector<T> &x) override { PYBIND11_OVERRIDE_PURE(double, P, evaluate, x); }
+    double evaluate(const std::vector<T> &x) override { PYBIND11_OVERRIDE_PURE(double, P, evaluate, py::array(x.size(), x.data())); }
 
     [[nodiscard]] std::vector<T> transform_variables(std::vector<T> x) override
     {

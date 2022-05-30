@@ -9,6 +9,21 @@
 namespace py = pybind11;
 using namespace ioh;
 
+struct AbstractProperty : logger::Property
+{
+    AbstractProperty(const std::string& name): logger::Property(name) {}
+
+    std::string call_to_string(const logger::Info &log_info, const std::string &nan = "") const override
+    {
+        PYBIND11_OVERRIDE(std::string, logger::Property, call_to_string, log_info, nan);
+    }
+
+    std::optional<double> operator()(const logger::Info & info) const override
+    {
+        PYBIND11_OVERRIDE_PURE(std::optional<double>, logger::Property, operator(), info);
+    }
+};
+
 class PyProperty : public logger::Property
 {
     const py::object container_;
@@ -24,7 +39,8 @@ public:
 
     std::optional<double> operator()(const logger::Info &) const override
     {
-        if (py::hasattr(container_, attribute_.c_str())){
+        if (py::hasattr(container_, attribute_.c_str()))
+        {
             auto pyobj = container_.attr(attribute_.c_str()).ptr();
             if (pyobj != Py_None)
                 return std::make_optional<double>(PyFloat_AsDouble(pyobj));
@@ -32,6 +48,7 @@ public:
         return {};
     }
 };
+
 
 template <typename WatcherType>
 class PyWatcher : public WatcherType
@@ -248,8 +265,9 @@ void define_properties(py::module &m)
 {
     py::module t = m.def_submodule("property");
 
-    py::class_<logger::Property, std::shared_ptr<logger::Property>>(t, "AbstractProperty",
-                                                                    "Base class for all Properties")
+    py::class_<logger::Property, AbstractProperty, std::shared_ptr<logger::Property>>(t, "AbstractProperty",
+                                                                                      "Base class for all Properties")
+        .def(py::init<std::string>())
         .def("__call__", &logger::Property::operator())
         .def("name", &logger::Property::name)
         .def("call_to_string", &logger::Property::call_to_string);
@@ -269,6 +287,7 @@ void define_properties(py::module &m)
             )pbdoc"
 
              )
+        .def("call_to_string", &PyProperty::call_to_string)
         .def(py::pickle([](const PyProperty &t) { return py::make_tuple(t.container(), t.name()); },
                         [](py::tuple t) {
                             return PyProperty{t[0].cast<py::object>(), t[1].cast<std::string>()};
