@@ -172,7 +172,10 @@ namespace ioh
             }
 
             //! Accessor for current log info
-            [[nodiscard]] logger::Info &log_info() { return log_info_; }
+            [[nodiscard]] const logger::Info &log_info() const { return log_info_; }
+
+            //! Accessor for current log info
+            void set_log_info(const logger::Info& info) { log_info_ = info; }
 
             //! Attach a logger
             void attach_logger(Logger &logger)

@@ -1,4 +1,5 @@
 #include <pybind11/functional.h>
+#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
@@ -24,18 +25,33 @@ void define_base_class(py::module &m, const std::string &name)
              R"pbdoc(
                 Remove the specified logger from the problem
             )pbdoc")
-        .def_property_readonly("problem_ids", &SuiteType::problem_ids,
-                               R"pbdoc(
+        .def_property_readonly(
+            "problem_ids",
+            [](const SuiteType &c) {
+                const auto problem_ids = c.problem_ids();
+                return py::array(problem_ids.size(), problem_ids.data());
+            },
+            R"pbdoc(
                 The list of all problems ids contained in the current suite.
             )pbdoc")
-        .def_property_readonly("dimensions", &SuiteType::dimensions,
-                               R"pbdoc(
+        .def_property_readonly(
+            "dimensions",
+            [](const SuiteType &c) {
+                const auto dimensions = c.dimensions();
+                return py::array(dimensions.size(), dimensions.data());
+            },
+            R"pbdoc(
                 The list of all problems ids contained in the current suite.
             )pbdoc")
-        .def_property_readonly("instances", &SuiteType::instances,
-                               R"pbdoc(
+        .def_property_readonly(
+            "instances",
+            [](const SuiteType &c) {
+                const auto instances = c.instances();
+                return py::array(instances.size(), instances.data());
+            },
+            R"pbdoc(
                 The list of all instance ids contained in the current suite.
-            )pbdoc") // Should this be &SuiteType::instance_ids?
+            )pbdoc")
         .def_property_readonly("name", &SuiteType::name,
                                R"pbdoc(
                 The name of the suite.
@@ -79,8 +95,9 @@ void define_suite(py::module &m)
                 A list of problem dimensions to include in this instantiation of the suite   
                       
         )pbdoc")
-        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(), py::arg("problem_ids") = std::vector<int>{},
-             py::arg("instances") = std::vector<int>{1}, py::arg("dimensions") = std::vector<int>{5});
+        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(),
+             py::arg("problem_ids") = std::vector<int>{}, py::arg("instances") = std::vector<int>{1},
+             py::arg("dimensions") = std::vector<int>{5});
 
     define_base_class<Suite<ioh::problem::Integer>>(m, "IntegerBase");
 
@@ -117,11 +134,12 @@ void define_suite(py::module &m)
                 A list of problem dimensions to include in this instantiation of the suite          
 
         )pbdoc")
-        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(), py::arg("problem_ids") = std::vector<int>{},
-             py::arg("instances") = std::vector<int>{1}, py::arg("dimensions") = std::vector<int>{16});
+        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(),
+             py::arg("problem_ids") = std::vector<int>{}, py::arg("instances") = std::vector<int>{1},
+             py::arg("dimensions") = std::vector<int>{16});
 
     py::class_<Submodular, Suite<ioh::problem::Integer>, std::shared_ptr<Submodular>>(m, "Submodular",
-                                                                        R"pbdoc(
+                                                                                      R"pbdoc(
             Suite with integer-valued functions from Submodular single objective benchmark.
 
             This class is an iterator for problems, you can define a set of problems to iterate over.
@@ -139,6 +157,7 @@ void define_suite(py::module &m)
                 A list of problem dimensions to include in this instantiation of the suite (ignored)         
 
         )pbdoc")
-        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(), py::arg("problem_ids") = std::vector<int>{},
-             py::arg("instances") = std::vector<int>{1}, py::arg("dimensions") = std::vector<int>{1});
+        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(),
+             py::arg("problem_ids") = std::vector<int>{}, py::arg("instances") = std::vector<int>{1},
+             py::arg("dimensions") = std::vector<int>{1});
 }

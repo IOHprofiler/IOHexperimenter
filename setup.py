@@ -192,4 +192,5 @@ setup(
     test_suite="tests.python",
     python_requires=">=3.6",
     setup_requires=["cmake", "ninja", "pybind11", "mypy"],
+    install_requires=["numpy"]
 )
