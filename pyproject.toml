@@ -9,7 +9,3 @@ requires = [
     "xmltodict",
 ]
 
-[project]
-dependencies = [
-    "numpy",
-]
