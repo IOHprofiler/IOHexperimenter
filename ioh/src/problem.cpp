@@ -1,5 +1,5 @@
-#include <pybind11/numpy.h>
 #include <pybind11/functional.h>
+#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
@@ -32,8 +32,10 @@ void define_solution(py::module &m, const std::string &name)
                 the corresponding objective value of `x`, i.e., y = f(x)
 
         )pbdoc")
-        .def_property_readonly("x", [](const Class& c){return py::array(c.x.size(), c.x.data());},
-                      "The search point in a search space, e.g., R^d or {0,1}^d")
+        .def_property(
+            "x", [](const Class &c) { return py::array(c.x.size(), c.x.data()); },
+            [](Class &self, const std::vector<T> &x) { self.x = x; },
+            "The search point in a search space, e.g., R^d or {0,1}^d")
         .def_readonly("y", &Class::y, "The corresponding objective value of `x`, i.e., y = f(x)")
         .def("__repr__", &Class::repr);
 }
@@ -105,8 +107,12 @@ void define_constraint(py::module &m, const std::string &name)
             )pbdoc"
 
              )
-        .def_property_readonly("ub", [](const Class &c) { return py::array(c.ub.size(), c.ub.data()); }, "The upper bound (box constraint)")
-        .def_property_readonly("lb", [](const Class &c) { return py::array(c.lb.size(), c.lb.data()); }, "The lower bound (box constraint)")
+        .def_property_readonly(
+            "ub", [](const Class &c) { return py::array(c.ub.size(), c.ub.data()); },
+            "The upper bound (box constraint)")
+        .def_property_readonly(
+            "lb", [](const Class &c) { return py::array(c.lb.size(), c.lb.data()); },
+            "The lower bound (box constraint)")
         .def_readonly("lb", &Class::lb, "The lower bound (box constraint)")
         .def("__repr__", &Class::repr)
         .def("check", &Class::check,
@@ -154,7 +160,10 @@ public:
         auto registered = perform_registration();
     }
 
-    double evaluate(const std::vector<T> &x) override { PYBIND11_OVERRIDE_PURE(double, P, evaluate, py::array(x.size(), x.data())); }
+    double evaluate(const std::vector<T> &x) override
+    {
+        PYBIND11_OVERRIDE_PURE(double, P, evaluate, py::array(x.size(), x.data()));
+    }
 
     [[nodiscard]] std::vector<T> transform_variables(std::vector<T> x) override
     {
@@ -165,6 +174,8 @@ public:
     {
         PYBIND11_OVERRIDE(double, P, transform_objectives, y);
     }
+
+    void update_log_info() override { PYBIND11_OVERRIDE(void, P, update_log_info); }
 };
 
 template <typename ProblemType, typename T>
@@ -222,6 +233,7 @@ void define_base_class(py::module &m, const std::string &name)
                         of the tranformations in the search/objective spaces
                     dimension: integer, representing the dimensionality of the search space
             )pbdoc")
+        .def("update_log_info", &ProblemType::update_log_info, "Update current log info struct")
         .def_static(
             "create", [](int id, int iid, int dim) { return Factory::instance().create(id, iid, dim); },
             py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
@@ -238,7 +250,8 @@ void define_base_class(py::module &m, const std::string &name)
             )pbdoc")
         .def_property_readonly_static(
             "problems", [](py::object) { return Factory::instance().map(); }, "All registered problems")
-        .def_property_readonly("log_info", &ProblemType::log_info, "Check what data is being sent to the logger.")
+        .def_property("log_info", &ProblemType::log_info, &ProblemType::set_log_info,
+                      "Check what data is being sent to the logger.")
         .def_property_readonly(
             "state", &ProblemType::state,
             "The current state of the optimization process containing, e.g., the current solution and the "
@@ -805,7 +818,7 @@ void define_wmodels(py::module &m)
 void define_submodular_problems(py::module &m)
 {
     using namespace ioh::problem;
-    using namespace submodular;    
+    using namespace submodular;
 
     py::class_<GraphProblem, Integer, std::shared_ptr<GraphProblem>>(m, "GraphProblem", "Graph type problem")
         .def_static(
@@ -847,22 +860,21 @@ void define_submodular_problems(py::module &m)
             )pbdoc");
 
 
-    py::class_<MaxCut, GraphProblem, std::shared_ptr<MaxCut>>(m, "MaxCut", py::is_final(),
-                                                                                  "MaxCut function")
+    py::class_<MaxCut, GraphProblem, std::shared_ptr<MaxCut>>(m, "MaxCut", py::is_final(), "MaxCut function")
         .def_static("load_instances", &GraphProblemType<MaxCut>::load_graph_instances<int, int>);
 
     // Don't allow these object to be created in from constructors in python
-    py::class_<MaxCoverage, GraphProblem, std::shared_ptr<MaxCoverage>>(
-        m, "MaxCoverage", py::is_final(), "MaxCoverage function")
+    py::class_<MaxCoverage, GraphProblem, std::shared_ptr<MaxCoverage>>(m, "MaxCoverage", py::is_final(),
+                                                                        "MaxCoverage function")
         .def_static("load_instances", &GraphProblemType<MaxCoverage>::load_graph_instances<int, int>);
 
 
-    py::class_<MaxInfluence, GraphProblem, std::shared_ptr<MaxInfluence>>(
-        m, "MaxInfluence", py::is_final(), "MaxInfluence function")
+    py::class_<MaxInfluence, GraphProblem, std::shared_ptr<MaxInfluence>>(m, "MaxInfluence", py::is_final(),
+                                                                          "MaxInfluence function")
         .def_static("load_instances", &GraphProblemType<MaxInfluence>::load_graph_instances<int, int>);
 
-    py::class_<PackWhileTravel, GraphProblem, std::shared_ptr<PackWhileTravel>>(
-        m, "PackWhileTravel", py::is_final(), "PackWhileTravel function")
+    py::class_<PackWhileTravel, GraphProblem, std::shared_ptr<PackWhileTravel>>(m, "PackWhileTravel", py::is_final(),
+                                                                                "PackWhileTravel function")
         .def_static("load_instances", &GraphProblemType<PackWhileTravel>::load_graph_instances<int, int>);
 }
 
