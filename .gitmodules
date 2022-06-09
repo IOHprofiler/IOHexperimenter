@@ -9,10 +9,6 @@
 [submodule "external/fmt"]
 	path = external/fmt
 	url = git@github.com:fmtlib/fmt
-[submodule "external/MkLandscape"]
-	path = external/MkLandscape
-	url = https://github.com/FurongYe/problem-generator.git
-	branch = cpp_integration
 [submodule "external/clutchlog"]
 	path = external/clutchlog
 	url = https://github.com/jacobdenobel/clutchlog.git
