@@ -18,3 +18,6 @@
 [submodule "external/json"]
 	path = external/json
 	url = https://github.com/nlohmann/json.git
+[submodule "external/MkLandscape"]
+	path = external/MkLandscape
+	url = https://github.com/FurongYe/problem-generator.git

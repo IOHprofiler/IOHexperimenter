@@ -81,6 +81,7 @@ class CMakeBuild(build_ext):
             "-DPYTHON_EXECUTABLE={}".format(sys.executable),
             "-DBUILD_PYTHON_PACKAGE=ON",
             "-DBUILD_TESTS=OFF",
+            "-DENABLE_MKLANDSCAPE_PROBLEMS=OFF",
             "-DBUILD_DOCS={}".format("ON" if MAKE_DOCS else "OFF"),
             "-DBUILD_EXAMPLE=OFF",
             "-DEXAMPLE_VERSION_INFO={}".format(self.distribution.get_version()),
