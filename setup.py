@@ -191,6 +191,14 @@ setup(
     zip_safe=False,
     test_suite="tests.python",
     python_requires=">=3.6",
-    setup_requires=["cmake", "ninja", "pybind11", "mypy"],
+    setup_requires=[
+        "setuptools",
+        "wheel",
+        "cmake",
+        "mypy",
+        "pybind11",
+        "ninja",
+        "xmltodict",
+    ],
     install_requires=["numpy"]
 )

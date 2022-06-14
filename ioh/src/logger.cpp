@@ -20,7 +20,7 @@ struct AbstractProperty : logger::Property
 
     std::optional<double> operator()(const logger::Info & info) const override
     {
-        PYBIND11_OVERRIDE_PURE(std::optional<double>, logger::Property, operator(), info);
+        PYBIND11_OVERRIDE_PURE_NAME(std::optional<double>, logger::Property, "__call__", operator(), info);
     }
 };
 
@@ -571,7 +571,6 @@ void define_eaf(py::module &m)
         });
 }
 
-
 void define_loggers(py::module &m)
 {
     using namespace logger;
@@ -586,7 +585,6 @@ void define_loggers(py::module &m)
     define_eah(m);
     define_eaf(m);
 }
-
 
 void define_logger(py::module &m)
 {
