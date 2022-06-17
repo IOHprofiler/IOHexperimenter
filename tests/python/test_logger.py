@@ -93,6 +93,15 @@ class TestLogger(unittest.TestCase):
 
         self.assertEqual(list(l.data.keys()), [1])
                     
-                    
+    def test_can_inherit_property(self):
+        class P(ioh.logger.property.AbstractProperty):
+            def __call__(self, _):
+                return 10.0
+        c = ioh.RealSolution([0], 1)
+        l = ioh.LogInfo(0, 1, 1, 1, c, c)
+        a = P("x")
+        self.assertEqual(int(a(l)), int(float(a.call_to_string(l, "na"))))
+        
+
 if __name__ == "__main__":
     unittest.main()

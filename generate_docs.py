@@ -1,7 +1,11 @@
 import os
 import collections
-
+import subprocess
+import shutil
+import warnings
 import xmltodict
+
+BASE_DIR = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
 
 unit_template = '''{name}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -69,7 +73,7 @@ def get_values(list_of_d, attr ='#text'):
         list_of_d = [list_of_d]
     return list(sorted(set([x[attr] for x in list_of_d])))
         
-def main(xmldir = "doc/build/xml", outdir = "doc/python/source/cpp"):
+def generate_sphinx_templates_from_xml(xmldir = "doc/build/xml", outdir = "doc/python/source/cpp"):
     assert os.path.isdir(xmldir), xmldir
     assert os.path.isdir(outdir), outdir
 
@@ -116,6 +120,40 @@ def main(xmldir = "doc/build/xml", outdir = "doc/python/source/cpp"):
         with open(os.path.join(outdir, filename), "w+") as f:
             f.write(make_template(nsdata))
 
+
+def generate_stubs(sourcedir):
+    # remove any existing stubs
+    for stubfile in os.listdir(os.path.join(sourcedir, "ioh")):
+        stubfile = os.path.join(sourcedir, "ioh", stubfile)
+        if stubfile.endswith(".pyi"):
+            os.remove(stubfile)
+
+    for subdir in ("iohcpp", "logger"):
+        if os.path.isdir(os.path.join(sourcedir, "ioh", subdir)):
+            shutil.rmtree(os.path.join(sourcedir, "ioh", subdir))
+
+    # generate stub files
+    command = """stubgen -m ioh -p ioh.iohcpp -o ./"""
+    subprocess.check_call(command, cwd=sourcedir, shell=True)
+
+
+def main():
+    try:
+        generate_sphinx_templates_from_xml()
+        directory = os.path.join(BASE_DIR, "doc", "python")
+        try:
+            shutil.rmtree(os.path.join(directory, "source", "api"))
+        except FileNotFoundError:
+            pass
+        subprocess.check_call(f"make html", shell=True, cwd=directory)
+
+        shutil.copytree(
+            os.path.join(BASE_DIR, "doc", "build", "html"),
+            os.path.join(BASE_DIR, "docs"),
+            dirs_exist_ok=True
+        )
+    except:
+        warnings.warn("Cannot compile docs", RuntimeWarning)
 
 if __name__ == '__main__':
     main()
