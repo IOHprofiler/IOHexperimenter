@@ -282,8 +282,8 @@ namespace ioh {
             }
 
             /* Interface from Logger to be implemented:
-            virtual void track_problem(const problem::MetaData& problem) = 0;
-            virtual void track_suite(const std::string& suite_name) = 0;
+            virtual void attach_problem(const problem::MetaData& problem) = 0;
+            virtual void attach_suite(const std::string& suite_name) = 0;
             virtual void log(const logger::Info& log_info) = 0;
             */
         };

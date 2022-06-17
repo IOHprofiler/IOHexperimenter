@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import shutil
 import platform
 import subprocess
-import warnings
 import atexit
-
+from generate_docs import main, generate_stubs
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
@@ -27,9 +25,6 @@ BASE_DIR = os.path.realpath(os.path.dirname(__file__))
 MAKE_DOCS = os.environ.get("MAKE_DOCS")
 MAKE_STUBS = os.environ.get("MAKE_STUBS")
 
-# A CMakeExtension needs a sourcedir instead of a file list.
-# The name must be the _single_ output extension from the CMake build.
-# If you need multiple extensions, see scikit-build.
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=""):
         Extension.__init__(self, name, sources=[])
@@ -37,27 +32,11 @@ class CMakeExtension(Extension):
 
 
 class CMakeBuild(build_ext):
-    def generate_stubs(self):
-        ext, *_ = self.extensions
-
-        # remove any existing stubs
-        for stubfile in os.listdir(os.path.join(ext.sourcedir, "ioh")):
-            stubfile = os.path.join(ext.sourcedir, "ioh", stubfile)
-            if stubfile.endswith(".pyi"):
-                os.remove(stubfile)
-
-        for subdir in ("iohcpp", "logger"):
-            if os.path.isdir(os.path.join(ext.sourcedir, "ioh", subdir)):
-                shutil.rmtree(os.path.join(ext.sourcedir, "ioh", subdir))
-
-        # generate stub files
-        command = """stubgen -m ioh -p ioh.iohcpp -o ./"""
-        subprocess.check_call(command, cwd=ext.sourcedir, shell=True)
-
     def run(self):
         super().run()
         if MAKE_STUBS:
-            self.generate_stubs()
+            ext, *_ = self.extensions
+            generate_stubs(ext.sourcedir)
 
     def build_extension(self, ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
@@ -137,28 +116,14 @@ class CMakeBuild(build_ext):
             ["cmake", "--build", "."] + build_args, cwd=self.build_temp
         )
 
-def generate_docs():
-    if MAKE_DOCS:
-        try:
-            from generate_sphinx_templates_from_xml import main
-            main()
-            directory = os.path.join(BASE_DIR, "doc", "python")
-            try:
-                shutil.rmtree(os.path.join(directory, "source", "api"))
-            except FileNotFoundError:
-                pass
-            subprocess.check_call(f"make html", shell=True, cwd=directory)
-
-            shutil.copytree(
-                os.path.join(BASE_DIR, "doc", "build", "html"),
-                os.path.join(BASE_DIR, "docs"),
-                dirs_exist_ok=True
-            )
-        except:
-            warnings.warn("Cannot compile docs", RuntimeWarning)
 
 
-atexit.register(generate_docs)
+if MAKE_DOCS:
+    try:
+        atexit.register(main)
+    except:
+        pass
+
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 

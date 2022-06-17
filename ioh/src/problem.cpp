@@ -81,7 +81,7 @@ void define_constraint(py::module &m, const std::string &name)
     options.disable_function_signatures();
 
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<std::vector<T>, std::vector<T>>(), py::arg("lb"), py::arg("ub"),
+        .def(py::init<std::vector<T>, std::vector<T>, bool>(), py::arg("lb"), py::arg("ub"), py::arg("enforced"),
              R"pbdoc(
                 Create box constraints. 
 
@@ -91,8 +91,11 @@ void define_constraint(py::module &m, const std::string &name)
                         the lower bound of the search space/domain
                     ub: list
                         the upper bound of the search space/domain
+                    enforced: bool
+                        whether the constraint should be enforced
+                    
             )pbdoc")
-        .def(py::init<int, T, T>(), py::arg("size"), py::arg("lb"), py::arg("ub"),
+        .def(py::init<int, T, T, bool>(), py::arg("size"), py::arg("lb"), py::arg("ub"), py::arg("enforced"),
              R"pbdoc(
                 Create box constraints. 
 
@@ -104,6 +107,8 @@ void define_constraint(py::module &m, const std::string &name)
                         the lower bound of the search space/domain
                     ub: float
                         the upper bound of the search space/domain
+                    enforced: bool
+                        whether the constraint should be enforced
             )pbdoc"
 
              )
@@ -113,7 +118,7 @@ void define_constraint(py::module &m, const std::string &name)
         .def_property_readonly(
             "lb", [](const Class &c) { return py::array(c.lb.size(), c.lb.data()); },
             "The lower bound (box constraint)")
-        .def_readonly("lb", &Class::lb, "The lower bound (box constraint)")
+        .def_readwrite("enforced", &Class::enforced)
         .def("__repr__", &Class::repr)
         .def("check", &Class::check,
              R"pbdoc(

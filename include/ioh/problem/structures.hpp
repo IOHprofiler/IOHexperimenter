@@ -65,24 +65,29 @@ namespace ioh
             //! Upper bound
             std::vector<T> ub;
 
-            /**
-             * @brief Construct a new Constraint object
-             *
-             * @param lower lower bound
-             * @param upper upper bound
-             */
-            Constraint(const std::vector<T> &lower, const std::vector<T> &upper) : lb(lower), ub(upper) {}
+            //! whether the constraint is enforced or not
+            bool enforced;
 
             /**
              * @brief Construct a new Constraint object
              *
+             * @param lower lower bound
+             * @param upper upper bound
+             * @param enforced whether the constraint should be enforced
+             */
+            Constraint(const std::vector<T> &lower, const std::vector<T> &upper, const bool enforced = false) : lb(lower), ub(upper), enforced(enforced) {}
+
+            /**
+             * @brief Construct a new Constraint object 
+             *
              * @param size size of the constraint
              * @param lower lower bound
              * @param upper upper bound
+             * * @param enforced whether the constraint should be enforced
              */
             explicit Constraint(const int size = 1, const T lower = std::numeric_limits<T>::lowest(),
-                                const T upper = std::numeric_limits<T>::max()) :
-                Constraint(std::vector<T>(size, lower), std::vector<T>(size, upper))
+                                const T upper = std::numeric_limits<T>::max(), const bool enforced = false) :
+                Constraint(std::vector<T>(size, lower), std::vector<T>(size, upper), enforced)
             {
             }
 
@@ -100,11 +105,17 @@ namespace ioh
             }
 
             //! Check if the constraints are violated
-            bool check(const std::vector<T> &x)
+            bool check(const std::vector<T> &x) const
             {
                 for (size_t i = 0; i < x.size(); i++)
                     if (!(ub.at(i) >= x.at(i) && x.at(i) <= lb.at(i)))
                         return false;
+                return true;
+            }
+
+            [[nodiscard]] bool operator()(const std::vector<T>& x) const {
+                if(enforced)
+                    return check(x);
                 return true;
             }
 
