@@ -89,7 +89,7 @@ which would be answered by a reply similar to:
 
 ```json
 {
-    "query_type": "value",
+    "reply_type": "value",
     "value": 21
 }
 ```

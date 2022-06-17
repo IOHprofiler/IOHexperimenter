@@ -130,11 +130,6 @@ if MAKE_DOCS:
     except:
         pass
 
-# The information here can also be placed in setup.cfg - better separation of
-# logic and declaration, and simpler if you include description/version in a file.
-
-
-
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
