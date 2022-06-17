@@ -8,6 +8,12 @@ from generate_docs import main, generate_stubs
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
+__version__ = "0.3.2.8.1"
+gh_ref = os.environ.get("GITHUB_REF")
+if gh_ref:
+    *_, tag = gh_ref.split("/")
+    __version__ = tag.replace("v", "")
+
 # Convert distutils Windows platform specifiers to CMake -A arguments
 PLAT_TO_CMAKE = {
     "win32": "Win32",
@@ -127,11 +133,7 @@ if MAKE_DOCS:
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 
-__version__ = "0.3.2.8.0"
-gh_ref = os.environ.get("GITHUB_REF")
-if gh_ref:
-    *_, tag = gh_ref.split("/")
-    __version__ = tag.replace("v", "")
+
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
