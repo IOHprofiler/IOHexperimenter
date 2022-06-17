@@ -8,7 +8,7 @@ from generate_docs import main, generate_stubs
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
-__version__ = "0.3.2.8.1"
+__version__ = "0.3.2.8.2"
 gh_ref = os.environ.get("GITHUB_REF")
 if gh_ref:
     *_, tag = gh_ref.split("/")
