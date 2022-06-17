@@ -297,13 +297,13 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
            std::optional<double> ub, std::optional<py::handle> tx, std::optional<py::handle> ty,
            std::optional<py::handle> co) {
             register_python_fn(f);
-            auto of = [f](const std::vector<T> &x) { return PyFloat_AsDouble(f(x).ptr()); };
+            auto of = [f](const std::vector<T> &x) { return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr()); };
 
             auto ptx = [tx](std::vector<T> x, const int iid) {
                 if (tx)
                 {
                     static bool r = register_python_fn(tx.value());
-                    py::list px = (tx.value()(x, iid));
+                    py::list px = (tx.value()(py::array(x.size(), x.data()), iid));
                     if (px.size() == x.size())
                         return px.cast<std::vector<T>>();
                     else
