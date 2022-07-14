@@ -43,5 +43,3 @@ foreach(test_source ${SOURCES})
     get_filename_component(test_fname "${test_source}" NAME_WE)
     register_test(${test_fname} "${test_source}")
 endforeach()
-
-  

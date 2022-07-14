@@ -16,7 +16,7 @@ option(BUILD_EXAMPLE "Whether to build Python package" ON)
 option(BUILD_DOCS "Build docs" OFF) 
 option(BUILD_SERVER "Whether to build the objective function server" OFF)
 option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python modules as if they were an IOH problem" OFF)
-option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" ON)
+option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF)
 
 if(MSVC)
     set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windows
