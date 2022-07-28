@@ -87,8 +87,9 @@ namespace ioh
                 if (!check_input_dimensions(x))
                     return false;
 
-                if (common::all_finite(x))
+                if (common::all_finite(x)){
                     return true;
+                }                  
 
                 if (common::has_nan(x))
                 {
@@ -107,7 +108,7 @@ namespace ioh
             //! Evaluation function
             [[nodiscard]] virtual double evaluate(const std::vector<T> &x) = 0;
 
-            //! TODO: check why this is not const
+            
             //! Variables transformation function
             [[nodiscard]] virtual std::vector<T> transform_variables(std::vector<T> x) { return x; }
 
@@ -172,7 +173,10 @@ namespace ioh
             }
 
             //! Accessor for current log info
-            [[nodiscard]] logger::Info &log_info() { return log_info_; }
+            [[nodiscard]] const logger::Info &log_info() const { return log_info_; }
+
+            //! Accessor for current log info
+            void set_log_info(const logger::Info& info) { log_info_ = info; }
 
             //! Attach a logger
             void attach_logger(Logger &logger)
@@ -194,6 +198,9 @@ namespace ioh
             {
                 if (!check_input(x))
                     return std::numeric_limits<double>::signaling_NaN();
+
+                if(!constraint_(x))
+                    return meta_data_.initial_objective_value;
 
                 state_.current.x = x;
                 state_.current_internal.x = transform_variables(x);
@@ -218,7 +225,7 @@ namespace ioh
             [[nodiscard]] State<T> state() const { return state_; }
 
             //! Accessor for `constraint_`
-            [[nodiscard]] Constraint<T> constraint() const { return constraint_; }
+            [[nodiscard]] Constraint<T>& constraint() { return constraint_; }
 
             //! Stream operator
             friend std::ostream &operator<<(std::ostream &os, const Problem &obj)

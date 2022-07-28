@@ -11,3 +11,5 @@
 #ifdef USING_MKLANDSCAPE
 #include "problem/mklandscape/cliqueTreeC.hpp"
 #endif
+
+#include "problem/submodular.hpp"

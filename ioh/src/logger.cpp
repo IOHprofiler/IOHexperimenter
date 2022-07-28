@@ -9,6 +9,23 @@
 namespace py = pybind11;
 using namespace ioh;
 
+// Trampoline 
+struct AbstractProperty : logger::Property
+{
+    AbstractProperty(const std::string& name): logger::Property(name) {}
+
+    std::string call_to_string(const logger::Info &log_info, const std::string &nan = "") const override
+    {
+        PYBIND11_OVERRIDE(std::string, logger::Property, call_to_string, log_info, nan);
+    }
+
+    std::optional<double> operator()(const logger::Info & info) const override
+    {
+        PYBIND11_OVERRIDE_PURE_NAME(std::optional<double>, logger::Property, "__call__", operator(), info);
+    }
+};
+
+// Python spec. implementation
 class PyProperty : public logger::Property
 {
     const py::object container_;
@@ -24,7 +41,8 @@ public:
 
     std::optional<double> operator()(const logger::Info &) const override
     {
-        if (py::hasattr(container_, attribute_.c_str())){
+        if (py::hasattr(container_, attribute_.c_str()))
+        {
             auto pyobj = container_.attr(attribute_.c_str()).ptr();
             if (pyobj != Py_None)
                 return std::make_optional<double>(PyFloat_AsDouble(pyobj));
@@ -33,6 +51,23 @@ public:
     }
 };
 
+// Trampoline 
+struct AbstractWatcher: logger::Watcher {
+
+    using logger::Watcher::Watcher;
+
+    void attach_problem(const problem::MetaData& problem) override {
+        PYBIND11_OVERRIDE(void, logger::Watcher, attach_problem, problem);
+    }
+    void attach_suite(const std::string& suite_name) override {
+        PYBIND11_OVERRIDE_PURE(void, logger::Watcher, attach_suite, suite_name);
+    }
+    void call(const logger::Info& log_info) override {
+        PYBIND11_OVERRIDE_PURE_NAME(void, logger::Watcher, "__call__", call, log_info);
+    }
+};
+
+// Python spec. implementation
 template <typename WatcherType>
 class PyWatcher : public WatcherType
 {
@@ -44,7 +79,7 @@ public:
     template <typename... Args>
     PyWatcher(Args &&...args) : WatcherType(std::forward<Args>(args)...)
     {
-        py::module::import("atexit").attr("register")(py::cpp_function{[self = this]() -> void {
+        auto x = py::module::import("atexit").attr("register")(py::cpp_function{[self = this]() -> void {
             // type-pun alive bool in order to check if is still a boolean 1, if so, delete.
             // in some cases this might cause a segfault, only happens in a very small prob. (1/MAX_INT)
             int alive_int = (int)(*(char *)(&self->alive));
@@ -84,8 +119,6 @@ public:
             watch(container, attr);
     }
 
-    void log(const logger::Info &log_info) override { PYBIND11_OVERRIDE(void, WatcherType, log, log_info); }
-
     void attach_problem(const problem::MetaData &problem) override
     {
         PYBIND11_OVERRIDE(void, WatcherType, attach_problem, problem);
@@ -99,6 +132,7 @@ public:
     void call(const logger::Info &log_info) override { PYBIND11_OVERRIDE(void, WatcherType, call, log_info); }
 };
 
+// Python spec. implementation
 class PyAnalyzer : public PyWatcher<logger::Analyzer>
 {
     std::vector<double *> double_ptrs_;
@@ -248,8 +282,9 @@ void define_properties(py::module &m)
 {
     py::module t = m.def_submodule("property");
 
-    py::class_<logger::Property, std::shared_ptr<logger::Property>>(t, "AbstractProperty",
-                                                                    "Base class for all Properties")
+    py::class_<logger::Property, AbstractProperty, std::shared_ptr<logger::Property>>(t, "AbstractProperty",
+                                                                                      "Base class for all Properties")
+        .def(py::init<std::string>())
         .def("__call__", &logger::Property::operator())
         .def("name", &logger::Property::name)
         .def("call_to_string", &logger::Property::call_to_string);
@@ -269,6 +304,7 @@ void define_properties(py::module &m)
             )pbdoc"
 
              )
+        .def("call_to_string", &PyProperty::call_to_string)
         .def(py::pickle([](const PyProperty &t) { return py::make_tuple(t.container(), t.name()); },
                         [](py::tuple t) {
                             return PyProperty{t[0].cast<py::object>(), t[1].cast<std::string>()};
@@ -326,19 +362,18 @@ void define_bases(py::module &m)
 {
     py::class_<Logger, std::shared_ptr<Logger>>(m, "Logger", "Base class for all loggers")
         .def("add_trigger", &Logger::trigger, "Add a trigger to the logger")
-        .def("log", &Logger::log, "Performs logging behaviour")
         .def("attach_problem", &Logger::attach_problem, "Attach a problem to the logger")
         .def("attach_suite", &Logger::attach_suite, "Attach a suite to the logger")
-        .def("call", &Logger::call, "Calls log if any of the triggers evaluate to true")
+        .def("call", &Logger::call, "Performs logging behaviour")
         .def("reset", &Logger::reset, "Reset the state of the logger")
         .def_property_readonly("problem", &Logger::problem, "Reference to the currently attached problem");
 
     using namespace logger;
-    py::class_<Watcher, Logger, std::shared_ptr<Watcher>>(m, "AbstractWatcher",
+    py::class_<Watcher, AbstractWatcher, Logger, std::shared_ptr<Watcher>>(m, "AbstractLogger",
                                                           "Base class for loggers which track properties")
+        .def(py::init<Triggers, Properties>(), py::arg("triggers") = Triggers{}, py::arg("properties") = Properties{})
         .def("watch", &Watcher::watch);
 }
-
 
 void define_flatfile(py::module &m)
 {
@@ -552,7 +587,6 @@ void define_eaf(py::module &m)
         });
 }
 
-
 void define_loggers(py::module &m)
 {
     using namespace logger;
@@ -567,7 +601,6 @@ void define_loggers(py::module &m)
     define_eah(m);
     define_eaf(m);
 }
-
 
 void define_logger(py::module &m)
 {

@@ -144,7 +144,8 @@ namespace ioh::suite
             const int max_problem_id = *std::max_element(available_ids.begin(), available_ids.end());
             const int min_problem_id = *std::min_element(available_ids.begin(), available_ids.end());
 
-            for (const auto &problem_id : problem_ids)
+            
+            for (const auto &problem_id : (!problem_ids.empty() ? problem_ids : available_ids))
                 for (const auto &n_variables : dimensions)
                     for (const auto &instance : instances)
                         problems_.emplace_back(factory.create(
@@ -282,11 +283,11 @@ namespace ioh::suite
          * @brief Construct a new BBOB object
          * 
          * @param problem_ids List of problem ids
-         * @param instances List of problem instances
-         * @param dimensions List of problem dimensions
+         * @param instances List of problem instances (defaults to first instance)
+         * @param dimensions List of problem dimensions (defaults to 5D)
          */
-        BBOB(const std::vector<int> &problem_ids, const std::vector<int> &instances,
-             const std::vector<int> &dimensions) :
+        BBOB(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
+             const std::vector<int> &dimensions = {5}) :
             RealSuite(problem_ids, instances, dimensions, "BBOB", 100, 100,
                       reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::BBOB>::instance()))
         {
@@ -300,14 +301,34 @@ namespace ioh::suite
          * @brief Construct a new PBO object
          * 
          * @param problem_ids List of problem ids
-         * @param instances List of problem instances
-         * @param dimensions List of problem dimensions
+         * @param instances List of problem instances (defaults to first instance)
+         * @param dimensions List of problem dimensions  (defaults to 16D)
          */
-        PBO(const std::vector<int> &problem_ids, const std::vector<int> &instances,
-            const std::vector<int> &dimensions) :
+        PBO(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
+            const std::vector<int> &dimensions = {16}) :
             IntegerSuite(problem_ids, instances, dimensions, "PBO", 100, 20000,
                          reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::PBO>::instance()))
         {
         }
+    };
+
+
+    struct Submodular final : IntegerSuite<Submodular>
+    {
+        /**
+         * @brief Construct a new Submodular object
+         * 
+         * @param problem_ids List of problem ids
+         * @param instances List of problem instances (ignored)
+         * @param dimensions List of problem dimensions (ignored)
+         */
+        Submodular(const std::vector<int> &problem_ids = {},
+            [[maybe_unused]] const std::vector<int> &instances = {},
+            [[maybe_unused]] const std::vector<int> &dimensions = {}) :
+            IntegerSuite(problem_ids, {1}, {1}, "Submodular", 1, 2,
+                         reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::submodular::GraphProblem>::instance()))
+        {
+        }
+
     };
 } // namespace ioh::suite

@@ -43,10 +43,10 @@ def get_problem(
     ----------
     fid: int or str
         The function ID of the problem in the suite, or the name of the function as string
-    dimension: int
-        The dimension (number of variables) of the problem
     instance: int
         The instance ID of the problem
+    dimension: int
+        The dimension (number of variables) of the problem
     problem_type: str
         Which suite the problem is from. Either 'BBOB' or 'PBO' or 'Real' or 'Integer'
         Only used if fid is an int.

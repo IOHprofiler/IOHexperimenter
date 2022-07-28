@@ -1,12 +1,15 @@
 #include <pybind11/functional.h>
+#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+
 #include "ioh.hpp"
 
 #include <iostream>
 
 namespace py = pybind11;
 using namespace ioh::problem;
+
 
 template <typename T>
 void define_solution(py::module &m, const std::string &name)
@@ -29,7 +32,10 @@ void define_solution(py::module &m, const std::string &name)
                 the corresponding objective value of `x`, i.e., y = f(x)
 
         )pbdoc")
-        .def_readonly("x", &Class::x, "The search point in a search space, e.g., R^d or {0,1}^d")
+        .def_property(
+            "x", [](const Class &c) { return py::array(c.x.size(), c.x.data()); },
+            [](Class &self, const std::vector<T> &x) { self.x = x; },
+            "The search point in a search space, e.g., R^d or {0,1}^d")
         .def_readonly("y", &Class::y, "The corresponding objective value of `x`, i.e., y = f(x)")
         .def("__repr__", &Class::repr);
 }
@@ -75,7 +81,7 @@ void define_constraint(py::module &m, const std::string &name)
     options.disable_function_signatures();
 
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<std::vector<T>, std::vector<T>>(), py::arg("lb"), py::arg("ub"),
+        .def(py::init<std::vector<T>, std::vector<T>, bool>(), py::arg("lb"), py::arg("ub"), py::arg("enforced"),
              R"pbdoc(
                 Create box constraints. 
 
@@ -85,8 +91,11 @@ void define_constraint(py::module &m, const std::string &name)
                         the lower bound of the search space/domain
                     ub: list
                         the upper bound of the search space/domain
+                    enforced: bool
+                        whether the constraint should be enforced
+                    
             )pbdoc")
-        .def(py::init<int, T, T>(), py::arg("size"), py::arg("lb"), py::arg("ub"),
+        .def(py::init<int, T, T, bool>(), py::arg("size"), py::arg("lb"), py::arg("ub"), py::arg("enforced"),
              R"pbdoc(
                 Create box constraints. 
 
@@ -98,11 +107,18 @@ void define_constraint(py::module &m, const std::string &name)
                         the lower bound of the search space/domain
                     ub: float
                         the upper bound of the search space/domain
+                    enforced: bool
+                        whether the constraint should be enforced
             )pbdoc"
 
              )
-        .def_readonly("ub", &Class::ub, "The upper bound (box constraint)")
-        .def_readonly("lb", &Class::lb, "The lower bound (box constraint)")
+        .def_property_readonly(
+            "ub", [](const Class &c) { return py::array(c.ub.size(), c.ub.data()); },
+            "The upper bound (box constraint)")
+        .def_property_readonly(
+            "lb", [](const Class &c) { return py::array(c.lb.size(), c.lb.data()); },
+            "The lower bound (box constraint)")
+        .def_readwrite("enforced", &Class::enforced)
         .def("__repr__", &Class::repr)
         .def("check", &Class::check,
              R"pbdoc(
@@ -149,7 +165,10 @@ public:
         auto registered = perform_registration();
     }
 
-    double evaluate(const std::vector<T> &x) override { PYBIND11_OVERRIDE_PURE(double, P, evaluate, x); }
+    double evaluate(const std::vector<T> &x) override
+    {
+        PYBIND11_OVERRIDE_PURE(double, P, evaluate, py::array(x.size(), x.data()));
+    }
 
     [[nodiscard]] std::vector<T> transform_variables(std::vector<T> x) override
     {
@@ -160,6 +179,8 @@ public:
     {
         PYBIND11_OVERRIDE(double, P, transform_objectives, y);
     }
+
+    void update_log_info() override { PYBIND11_OVERRIDE(void, P, update_log_info); }
 };
 
 template <typename ProblemType, typename T>
@@ -172,15 +193,9 @@ void define_base_class(py::module &m, const std::string &name)
     options.disable_function_signatures();
 
     py::class_<ProblemType, PyProblem, std::shared_ptr<ProblemType>>(m, name.c_str(), py::buffer_protocol())
-        .def(
-            py::init<const std::string, int, int, bool, Constraint<T>>(), 
-            py::arg("name"), 
-            py::arg("n_variables") = 5,
-            py::arg("instance") = 1, 
-            py::arg("is_minimization") = true, 
-            py::arg("constraint") = Constraint<T>(5),
-            fmt::format("Base class for {} problems",  name).c_str()
-            )
+        .def(py::init<const std::string, int, int, bool, Constraint<T>>(), py::arg("name"), py::arg("n_variables") = 5,
+             py::arg("instance") = 1, py::arg("is_minimization") = true, py::arg("constraint") = Constraint<T>(5),
+             fmt::format("Base class for {} problems", name).c_str())
         .def("reset", &ProblemType::reset,
              R"pbdoc(
                 Reset all state variables of the problem.
@@ -223,6 +238,7 @@ void define_base_class(py::module &m, const std::string &name)
                         of the tranformations in the search/objective spaces
                     dimension: integer, representing the dimensionality of the search space
             )pbdoc")
+        .def("update_log_info", &ProblemType::update_log_info, "Update current log info struct")
         .def_static(
             "create", [](int id, int iid, int dim) { return Factory::instance().create(id, iid, dim); },
             py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
@@ -239,7 +255,8 @@ void define_base_class(py::module &m, const std::string &name)
             )pbdoc")
         .def_property_readonly_static(
             "problems", [](py::object) { return Factory::instance().map(); }, "All registered problems")
-        .def_property_readonly("log_info", &ProblemType::log_info, "Check what data is being sent to the logger.")
+        .def_property("log_info", &ProblemType::log_info, &ProblemType::set_log_info,
+                      "Check what data is being sent to the logger.")
         .def_property_readonly(
             "state", &ProblemType::state,
             "The current state of the optimization process containing, e.g., the current solution and the "
@@ -280,13 +297,13 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
            std::optional<double> ub, std::optional<py::handle> tx, std::optional<py::handle> ty,
            std::optional<py::handle> co) {
             register_python_fn(f);
-            auto of = [f](const std::vector<T> &x) { return PyFloat_AsDouble(f(x).ptr()); };
+            auto of = [f](const std::vector<T> &x) { return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr()); };
 
             auto ptx = [tx](std::vector<T> x, const int iid) {
                 if (tx)
                 {
                     static bool r = register_python_fn(tx.value());
-                    py::list px = (tx.value()(x, iid));
+                    py::list px = (tx.value()(py::array(x.size(), x.data()), iid));
                     if (px.size() == x.size())
                         return px.cast<std::vector<T>>();
                     else
@@ -438,7 +455,9 @@ void define_pbo_problems(py::module &m)
         )pbdoc")
         .def_static(
             "create",
-            [](const std::string &name, int iid, int dim) { return ioh::common::Factory<PBO, int, int>::instance().create(name, iid, dim); },
+            [](const std::string &name, int iid, int dim) {
+                return ioh::common::Factory<PBO, int, int>::instance().create(name, iid, dim);
+            },
             py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
             R"pbdoc(
                 Create a problem instance
@@ -452,8 +471,11 @@ void define_pbo_problems(py::module &m)
                     dimension: int
                         the dimensionality of the search space
             )pbdoc")
-         .def_static(
-            "create", [](int id, int iid, int dim) { return ioh::common::Factory<PBO, int, int>::instance().create(id, iid, dim); },
+        .def_static(
+            "create",
+            [](int id, int iid, int dim) {
+                return ioh::common::Factory<PBO, int, int>::instance().create(id, iid, dim);
+            },
             py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
             R"pbdoc(
                 Create a problem instance
@@ -466,8 +488,7 @@ void define_pbo_problems(py::module &m)
                         an integer identifier of the problem instance
                     dimension: int
                         the dimensionality of the search space
-            )pbdoc")
-        ;
+            )pbdoc");
 
     py::class_<pbo::OneMax, PBO, std::shared_ptr<pbo::OneMax>>(m, "OneMax", py::is_final(),
                                                                R"pbdoc(
@@ -588,7 +609,9 @@ void define_bbob_problems(py::module &m)
         )pbdoc")
         .def_static(
             "create",
-            [](const std::string &name, int iid, int dim) { return ioh::common::Factory<BBOB, int, int>::instance().create(name, iid, dim); },
+            [](const std::string &name, int iid, int dim) {
+                return ioh::common::Factory<BBOB, int, int>::instance().create(name, iid, dim);
+            },
             py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
             R"pbdoc(
                 Create a problem instance
@@ -602,9 +625,12 @@ void define_bbob_problems(py::module &m)
                     dimension: int
                         the dimensionality of the search space
             )pbdoc")
-            
+
         .def_static(
-            "create", [](int id, int iid, int dim) { return ioh::common::Factory<BBOB, int, int>::instance().create(id, iid, dim); },
+            "create",
+            [](int id, int iid, int dim) {
+                return ioh::common::Factory<BBOB, int, int>::instance().create(id, iid, dim);
+            },
             py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
             R"pbdoc(
                 Create a problem instance
@@ -617,8 +643,7 @@ void define_bbob_problems(py::module &m)
                         an integer identifier of the problem instance
                     dimension: int
                         the dimensionality of the search space
-            )pbdoc")
-            ;
+            )pbdoc");
     py::class_<bbob::Sphere, BBOB, std::shared_ptr<bbob::Sphere>>(m, "Sphere", py::is_final(), "Sphere function")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<bbob::Ellipsoid, BBOB, std::shared_ptr<bbob::Ellipsoid>>(m, "Ellipsoid", py::is_final())
@@ -703,7 +728,7 @@ public:
 void define_wmodels(py::module &m)
 {
     py::class_<WModel, WModelTrampoline, Integer, std::shared_ptr<WModel>>(m, "AbstractWModel",
-                                                                            R"pbdoc(
+                                                                           R"pbdoc(
             An abstract W-model class. Please apply the WModelOneMax and WModelLeadingOnes classes.
              
             W-model problems applies four basic transformations: reduction of dummy variables,
@@ -764,7 +789,7 @@ void define_wmodels(py::module &m)
              py::arg("ruggedness_gamma") = 0);
 
     py::class_<wmodel::WModelOneMax, WModel, std::shared_ptr<wmodel::WModelOneMax>>(m, "WModelOneMax",
-                                                                                              R"pbdoc(
+                                                                                    R"pbdoc(
             A W-model problem built on OneMax.
              
             This W-model problem applies four basic transformations: reduction of dummy variables,
@@ -794,12 +819,77 @@ void define_wmodels(py::module &m)
              py::arg("ruggedness_gamma") = 0);
 }
 
+
+void define_submodular_problems(py::module &m)
+{
+    using namespace ioh::problem;
+    using namespace submodular;
+
+    py::class_<GraphProblem, Integer, std::shared_ptr<GraphProblem>>(m, "GraphProblem", "Graph type problem")
+        .def_static(
+            "create",
+            [](const std::string &name, int iid, int dim) {
+                return ioh::common::Factory<GraphProblem, int, int>::instance().create(name, iid, dim);
+            },
+            py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
+            R"pbdoc(
+                Create a problem instance
+
+                Parameters
+                ----------
+                    problem_name: str
+                        a string indicating the problem name. 
+                    instance_id: int
+                        an integer identifier of the problem instance
+                    dimension: int
+                        the dimensionality of the search space
+            )pbdoc")
+
+        .def_static(
+            "create",
+            [](int id, int iid, int dim) {
+                return ioh::common::Factory<GraphProblem, int, int>::instance().create(id, iid, dim);
+            },
+            py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
+            R"pbdoc(
+                Create a problem instance
+
+                Parameters
+                ----------
+                    problem_name: int
+                        a string indicating the problem name. 
+                    instance_id: int
+                        an integer identifier of the problem instance
+                    dimension: int
+                        the dimensionality of the search space
+            )pbdoc");
+
+
+    py::class_<MaxCut, GraphProblem, std::shared_ptr<MaxCut>>(m, "MaxCut", py::is_final(), "MaxCut function")
+        .def_static("load_instances", &GraphProblemType<MaxCut>::load_graph_instances<int, int>);
+
+    // Don't allow these object to be created in from constructors in python
+    py::class_<MaxCoverage, GraphProblem, std::shared_ptr<MaxCoverage>>(m, "MaxCoverage", py::is_final(),
+                                                                        "MaxCoverage function")
+        .def_static("load_instances", &GraphProblemType<MaxCoverage>::load_graph_instances<int, int>);
+
+
+    py::class_<MaxInfluence, GraphProblem, std::shared_ptr<MaxInfluence>>(m, "MaxInfluence", py::is_final(),
+                                                                          "MaxInfluence function")
+        .def_static("load_instances", &GraphProblemType<MaxInfluence>::load_graph_instances<int, int>);
+
+    py::class_<PackWhileTravel, GraphProblem, std::shared_ptr<PackWhileTravel>>(m, "PackWhileTravel", py::is_final(),
+                                                                                "PackWhileTravel function")
+        .def_static("load_instances", &GraphProblemType<PackWhileTravel>::load_graph_instances<int, int>);
+}
+
 void define_problem(py::module &m)
 {
     define_problem_bases(m);
     define_bbob_problems(m);
     define_pbo_problems(m);
     define_wmodels(m);
+    define_submodular_problems(m);
 
     py::module_::import("atexit").attr("register")(py::cpp_function([]() {
         for (const auto fn : WRAPPED_FUNCTIONS)

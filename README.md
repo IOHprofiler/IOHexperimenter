@@ -26,7 +26,7 @@ The interface for `C++` interface is described in more detail in the [wiki](http
 
 ## Python
 
-A quickstart for the `Python` interface and the full API documentation can be found [here](https://iohprofiler.github.io/IOHexperimenter/python). It is also described in the [wiki](https://iohprofiler.github.io/IOHexp/Python/) and available via [pip](https://pypi.org/project/ioh).
+A quickstart for the `Python` interface and the full API documentation can be found [here](https://iohprofiler.github.io/IOHexperimenter/python). It is also described in the [wiki](https://iohprofiler.github.io/IOHexp/python/) and available via [pip](https://pypi.org/project/ioh).
 
 ## Contact
 

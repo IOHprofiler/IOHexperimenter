@@ -10,7 +10,6 @@ Namespaces
     ioh_logger_analyzer.rst
     ioh_logger_eaf.rst
     ioh_logger_eah.rst
-    ioh_logger_stat.rst
 
 
 Types
@@ -45,21 +44,9 @@ FlatFile
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenclass:: ioh::logger::FlatFile
 
-Levels
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenclass:: ioh::logger::Levels
-
-NadirStat
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenclass:: ioh::logger::NadirStat
-
 Property
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenclass:: ioh::logger::Property
-
-Stat
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenclass:: ioh::logger::Stat
 
 Store
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,13 +68,69 @@ Trigger
 
 Functions
 ----------
-levels
+EAF
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenfunction:: ioh::logger::levels
+.. doxygenfunction:: ioh::logger::EAF
+
+attach_problem
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::logger::attach_problem
+
+attach_suite
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::logger::attach_suite
+
+call
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::logger::call
+
+current_front
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::logger::current_front
+
+optimization_type
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::logger::optimization_type
+
+reset
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::logger::reset
 
 Variables
 ----------
 DEFAULT_DOUBLE_FORMAT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenvariable:: ioh::logger::DEFAULT_DOUBLE_FORMAT
+
+_current
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenvariable:: ioh::logger::_current
+
+_current_best
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenvariable:: ioh::logger::_current_best
+
+_current_problem_type
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenvariable:: ioh::logger::_current_problem_type
+
+_data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenvariable:: ioh::logger::_data
+
+_evaluations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenvariable:: ioh::logger::_evaluations
+
+_has_problem_type
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenvariable:: ioh::logger::_has_problem_type
+
+_on_improvement
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenvariable:: ioh::logger::_on_improvement
+
+_transformed_y_best
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenvariable:: ioh::logger::_transformed_y_best
 

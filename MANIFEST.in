@@ -1,5 +1,5 @@
 graft cmake 
-graft include 
+graft include
 graft ioh
 include CMakeLists.txt *.md ioh/CMakeLists.txt
 
@@ -13,4 +13,4 @@ graft external/pybind11/tools
 include external/pybind11/CMakeLists.txt
 
 include external/clutchlog/clutchlog/clutchlog.h external/clutchlog/CMakeLists.txt
-include generate_sphinx_templates_from_xml.py
+include generate_docs.py
