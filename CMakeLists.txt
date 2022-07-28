@@ -16,6 +16,7 @@ option(BUILD_EXAMPLE "Whether to build Python package" ON)
 option(BUILD_DOCS "Build docs" OFF) 
 option(BUILD_SERVER "Whether to build the objective function server" OFF)
 option(ENABLE_PYTHON_PROBLEMS "Enable the ability to call external Python modules as if they were an IOH problem" OFF)
+option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF) # Turn this option ON if you plan to test MK-landscape problems.
 
 if(MSVC)
     set(ENABLE_PYTHON_PROBLEMS FALSE) # The call-problem-from-python interface is broken on windows
@@ -49,6 +50,30 @@ add_library(ioh::ioh ALIAS ioh)
 include_directories(${EXTERNAL_DIR}/fmt/include/)
 add_subdirectory(${EXTERNAL_DIR}/fmt)
 target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
+
+if(ENABLE_MKLANDSCAPE_PROBLEMS)
+
+    # Adding Macro for C++ Headers
+    add_compile_definitions(USING_MKLANDSCAPE)
+
+    # Find cargo executable
+    find_program(CARGO_EXECUTABLE cargo)
+    message(${CARGO_EXECUTABLE})
+    if(${CARGO_EXECUTABLE} STREQUAL CARGO_EXECUTABLE-NOTFOUND)
+        execute_process(
+            COMMAND bash -c "curl https://sh.rustup.rs -sSf | sh -s -- -y"
+            OUTPUT_VARIABLE outVar)
+        execute_process(
+            COMMAND bash -c "source $HOME/.cargo/env"
+            OUTPUT_VARIABLE outVar)
+    endif()
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${EXTERNAL_DIR}/MkLandscape/release)
+    
+    add_subdirectory(${EXTERNAL_DIR}/MkLandscape ${PROJECT_SOURCE_DIR}/include/ioh/problem/mklandscape/)
+    target_link_libraries(ioh INTERFACE problem_generator_lib)
+    
+    add_compile_definitions(MK_COMPILED)
+endif()
 
 # Include external clutchlog lib
 include_directories(${EXTERNAL_DIR}/clutchlog)

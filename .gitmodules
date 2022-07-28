@@ -8,14 +8,16 @@
 	branch = v1.10.x
 [submodule "external/fmt"]
 	path = external/fmt
-	url = https://github.com/fmtlib/fmt
+	url = git@github.com:fmtlib/fmt
 [submodule "external/clutchlog"]
 	path = external/clutchlog
 	url = https://github.com/jacobdenobel/clutchlog.git
-
 [submodule "external/cxxopts"]
 	path = external/cxxopts
 	url = https://github.com/jarro2783/cxxopts
 [submodule "external/json"]
 	path = external/json
 	url = https://github.com/nlohmann/json.git
+[submodule "external/MkLandscape"]
+	path = external/MkLandscape
+	url = https://github.com/tobiasvandriessel/problem-generator.git

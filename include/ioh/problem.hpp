@@ -7,7 +7,9 @@
 
 #include "problem/python.hpp"
 #include "problem/wmodel.hpp"
+
+#ifdef USING_MKLANDSCAPE
+#include "problem/mklandscape/cliqueTreeC.hpp"
+#endif
+
 #include "problem/submodular.hpp"
-
-
-
