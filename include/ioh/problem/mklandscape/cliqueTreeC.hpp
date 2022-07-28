@@ -47,9 +47,9 @@ namespace ioh::problem
 
         CliqueTreeC(const int problem_id, const int instance, const int n_variables, const std::string &name,
                const int m, const int k, const int o, const int b, const uint64_t clique_seed = 2398) :
-            Integer(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::Maximization))
+            Integer(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::Maximization)),
+            inputParameters()
         {
-            inputParameters = InputParameters();
             inputParameters.m = m;
             inputParameters.k = k;
             inputParameters.o = o;
