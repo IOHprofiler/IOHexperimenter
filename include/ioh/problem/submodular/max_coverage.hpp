@@ -6,8 +6,6 @@ namespace ioh::problem
 {
     namespace submodular
     {
-
-
         struct MaxCoverage final : GraphProblemType<MaxCoverage>
         {
             static inline int default_id = 2100;
@@ -24,23 +22,17 @@ namespace ioh::problem
                 GraphProblemType(problem_id, 1, fmt::format("MaxCoverage{}", problem_id), graph),
                 is_covered(std::vector<uint8_t>(graph->dimension(), 0))
             {
-                objective_.x = std::vector<int>(graph->dimension(), 1);
-                objective_.y = evaluate(objective_.x);
             }
 
             double evaluate(const std::vector<int> &x) override
             {
                 std::fill(is_covered.begin(), is_covered.end(), 0);
 
-                double result = 0, constraint = 0;
-                int count = 0;
+                double result = 0;
                 for (size_t source = 0; source < x.size(); source++)
                 {
                     if (x[source])
                     {
-                        constraint += graph->constraint_weights[source];
-                        count++;
-
                         if (!is_covered[source])
                         {
                             result += graph->vertex_weights[source];
@@ -56,9 +48,6 @@ namespace ioh::problem
                         }
                     }
                 }
-                constraint += sqrt(count) * graph->meta.chance_cons;
-                if (constraint > graph->meta.constraint_limit)
-                    result = graph->meta.constraint_limit - constraint;
                 return result;
             }
         };

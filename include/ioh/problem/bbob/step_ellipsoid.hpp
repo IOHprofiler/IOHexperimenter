@@ -19,7 +19,7 @@ namespace ioh::problem::bbob
                 for (auto j = 0; j < meta_data_.n_variables; ++j)
                     transformation_state_.transformation_base[i] += transformation_state_.conditions.at(i)
                     * transformation_state_.second_rotation.at(i).at(j)
-                    * (x.at(j) - objective_.x.at(j));
+                    * (x.at(j) - optimum_.x.at(j));
 
                 x0 = transformation_state_.transformation_base.at(0);
 
@@ -52,14 +52,7 @@ namespace ioh::problem::bbob
             }
 
             result = 0.1 * (fabs(x0) * 1.0e-4 > result ? fabs(x0) * 1.0e-4 : result);
-            result += penalty + objective_.y;
-            return result;
-        }
-
-        //! Objectives transformation method
-        double transform_objectives(const double y) override
-        {
-            return y;
+            return result + penalty;
         }
 
     public:

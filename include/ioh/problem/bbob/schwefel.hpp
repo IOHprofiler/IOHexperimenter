@@ -6,7 +6,6 @@ namespace ioh::problem::bbob
 {
     //! Schefel problem id 20
     class Schwefel final : public BBOProblem<Schwefel>
-
     {
         std::vector<double> negative_offset_;
         std::vector<double> positive_offset_;
@@ -35,7 +34,7 @@ namespace ioh::problem::bbob
         {
             transformation::variables::random_sign_flip(x, transformation_state_.seed);
             transformation::variables::scale(x, 2);
-            transformation::variables::z_hat(x, objective_.x);
+            transformation::variables::z_hat(x, optimum_.x);
             transformation::variables::subtract(x, positive_offset_);
             transformation::variables::conditioning(x, 10.0);
             transformation::variables::subtract(x, negative_offset_);
@@ -56,12 +55,12 @@ namespace ioh::problem::bbob
             positive_offset_(n_variables)
         {
             for (auto i = 0; i < n_variables; ++i)
-                objective_.x[i] = (negative_offset_.at(i) < 0.5 ? -1 : 1) * 0.5 * 4.2096874637;
+                optimum_.x[i] = (negative_offset_.at(i) < 0.5 ? -1 : 1) * 0.5 * 4.2096874637;
 
             for (auto i = 0; i < n_variables; ++i)
             {
-                negative_offset_[i] = -2 * fabs(objective_.x.at(i));
-                positive_offset_[i] = 2 * fabs(objective_.x.at(i));
+                negative_offset_[i] = -2 * fabs(optimum_.x.at(i));
+                positive_offset_[i] = 2 * fabs(optimum_.x.at(i));
             }
         }
     };

@@ -99,7 +99,7 @@ TEST_F(BaseTest, xopt_equals_yopt_pbo)
         {
             for (const int i: std::vector<int>({1, 2, 3, 4, 51, 52, 53, 54})){
                 auto problem = problem_factory.create(name, i, 16);
-                EXPECT_DOUBLE_EQ(problem->objective().y, (*problem)(problem->objective().x)) << *problem;
+                EXPECT_DOUBLE_EQ(problem->optimum().y, (*problem)(problem->optimum().x)) << *problem;
             }
         }
     }

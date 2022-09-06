@@ -33,7 +33,7 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
-            subtract(x, this->objective_.x);
+            subtract(x, this->optimum_.x);
             oscillate(x);
             asymmetric(x, 0.2);
             conditioning(x, 10.0);

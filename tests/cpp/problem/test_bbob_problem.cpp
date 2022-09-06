@@ -25,10 +25,11 @@ TEST_F(BaseTest, BBOBfitness_dimension5)
         auto f = stod(tmp[3]);
         auto problem = problem_factory.create(func_id, ins_id, 5);
         auto y = (*problem)(x);
-        EXPECT_LE(abs(y - f) / f, 1.0/pow(10,6-log(10))) << "The fitness of function " << func_id << "( ins " << ins_id
- << " ) is " << f << " ( not " << y << ").";
+        EXPECT_LE(abs(y - f) / f, 1.0/pow(10,6-log(10))) << "The fitness of function " 
+             << func_id << "( ins " << ins_id << " ) is " << f << " ( not " << y << ").";
     }
 }
+
 
 TEST_F(BaseTest, BBOBfitness_dimension20)
 {
@@ -129,7 +130,10 @@ TEST_F(BaseTest, xopt_equals_yopt_bbob)
     const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::BBOB>::instance();
     for (const auto& name : problem_factory.names())
     {
-        auto problem = problem_factory.create(name, 1, 16);
-        EXPECT_DOUBLE_EQ(problem->objective().y, (*problem)(problem->objective().x)) << *problem;
+        for (auto instance = 1; instance < 5; instance++)
+        {
+            auto problem = problem_factory.create(name, instance, 16);
+            EXPECT_DOUBLE_EQ(problem->optimum().y, (*problem)(problem->optimum().x)) << *problem;
+        }
     }
 }

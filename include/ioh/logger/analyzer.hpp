@@ -369,15 +369,21 @@ namespace ioh::logger
                          const std::string &algorithm_name = "algorithm_name",
                          const std::string &algorithm_info = "algorithm_info",
                          const bool store_positions = false,
-                         const structures::Attributes &attributes = {}) :
-                    FlatFile(triggers, common::concatenate(default_properties_, additional_properties), "", {}, " ", "",
+                         const structures::Attributes &attributes = {},
+                         const bool use_old_data_format = true
+                ) :
+                    FlatFile(triggers,
+                             common::concatenate(use_old_data_format ? default_properties_old_ : default_properties_,
+                                                 additional_properties),
+                             "", {},
+                             " ", "",
                              "None", "\n", true, store_positions, {}),
                     path_(root, folder_name), algorithm_(algorithm_name, algorithm_info), best_point_{},
                     attributes_(attributes), has_started_(false)
                 {
                 }
 
-                 //! close data file
+                //! close data file
                 virtual void close() override {
                     if (info_stream_.is_open()){
                         handle_last_eval();
@@ -422,8 +428,8 @@ namespace ioh::logger
                     IOH_DBG(debug, "Analyzer called");
                     evals_ = log_info.evaluations;
                     FlatFile::call(log_info);
-                    if (problem_->optimization_type(log_info.current.y, best_point_.point.y))
-                        best_point_ = {log_info.evaluations, log_info.current.as_double()};
+                    if (problem_->optimization_type(log_info.raw_y, best_point_.point.y))
+                        best_point_ = {log_info.evaluations, {log_info.x, log_info.raw_y}};
                     log_info_ = {};
                 }
 
@@ -478,12 +484,16 @@ namespace ioh::logger
 
             private:
                 static inline watch::Evaluations evaluations_{R"#("function evaluation")#"};
-                static inline watch::CurrentY current_y_{R"#("current f(x)")#"};
+                static inline watch::RawY current_y_{R"#("current f(x)")#"};
                 static inline watch::RawYBest y_best_{R"#("best-so-far f(x)")#"};
                 static inline watch::TransformedY transformed_y_{R"#("current af(x)+b")#"};
                 static inline watch::TransformedYBest transformed_y_best_{R"#("best af(x)+b")#"};
-                static inline Properties default_properties_{evaluations_, current_y_, y_best_, transformed_y_,
+                static inline Properties default_properties_old_{evaluations_, current_y_, y_best_, transformed_y_,
                                                              transformed_y_best_};
+
+
+                //! The only properties used by the analyzer (actually only y_best)
+                static inline Properties default_properties_{watch::evaluations, watch::raw_y, watch::raw_y_best};
             };
         } // namespace v1
         

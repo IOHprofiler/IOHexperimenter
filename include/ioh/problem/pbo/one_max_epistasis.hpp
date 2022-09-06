@@ -34,8 +34,8 @@ namespace ioh
                 OneMaxEpistasis(const int instance, const int n_variables) :
                     PBOProblem(7, instance, n_variables, "OneMaxEpistasis")
                 {
-                    objective_.y = {static_cast<double>(n_variables)};
-                    objective_.y = transform_objectives(objective_.y);
+                    optimum_.y = {static_cast<double>(n_variables)};
+                    optimum_.y = transform_objectives(optimum_.y);
                 }
             };
         } // namespace pbo

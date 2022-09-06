@@ -7,26 +7,16 @@ namespace ioh::problem::bbob
     //! BuecheRastrigin problem id 4
     class BuecheRastrigin final : public RastriginBase<BuecheRastrigin>
     {
-        const double penalty_factor_ = 100.0;
-
     protected:
         //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
-            subtract(x, objective_.x);
+            subtract(x, optimum_.x);
             oscillate(x);
             brs(x);
             return x;
-        }
-        
-        //! Objectives transformation method
-        double transform_objectives(const double y) override
-        {
-            using namespace transformation::objective;
-            return penalize(state_.current.x, constraint_, penalty_factor_,shift(y, objective_.y));
-        }
-
+        }   
     public:
         /**
          * @brief Construct a new Bueche Rastrigin object
@@ -37,9 +27,11 @@ namespace ioh::problem::bbob
         BuecheRastrigin(const int instance, const int n_variables) :
             RastriginBase(4, instance, n_variables, "BuecheRastrigin")
         {
-            for (size_t i = 0; i < objective_.x.size(); i += 2)
+            enforce_bounds(100);
+            
+            for (size_t i = 0; i < optimum_.x.size(); i += 2)
             {
-                objective_.x[i] = fabs(objective_.x[i]);
+                optimum_.x[i] = fabs(optimum_.x[i]);
             }
         }
     };

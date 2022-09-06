@@ -113,7 +113,10 @@ namespace ioh::problem
         WModel(const int problem_id, const int instance, const int n_variables, const std::string &name,
                const double dummy_select_rate, const int epistasis_block_size, const int neutrality_mu,
                const int ruggedness_gamma) :
-            Integer(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::Maximization)),
+            Integer(
+                MetaData(problem_id, instance, name, n_variables, common::OptimizationType::Maximization),
+                    Bounds<int>(n_variables, 0, 1)
+            ),
             dummy_select_rate_(dummy_select_rate), epistasis_block_size_(epistasis_block_size),
             neutrality_mu_(neutrality_mu), ruggedness_gamma_(ruggedness_gamma * n_variables)
         {
@@ -134,9 +137,9 @@ namespace ioh::problem
                     utils::ruggedness_translate(ruggedness_gamma_, temp_dimension), temp_dimension);
 
             if (epistasis_block_size_ == 0)
-                objective_.x = std::vector<int>(n_variables, 1);
+                optimum_.x = std::vector<int>(n_variables, 1);
 
-            objective_.y = static_cast<double>(n_variables * (dummy_select_rate_ > 0 ? dummy_select_rate_ : 1) / 
+            optimum_.y = static_cast<double>(n_variables * (dummy_select_rate_ > 0 ? dummy_select_rate_ : 1) / 
                                                 (neutrality_mu_ == 0 ? 1 : neutrality_mu_));
         }
     };

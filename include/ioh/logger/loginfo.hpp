@@ -25,25 +25,38 @@ namespace ioh {
 #endif
         struct Info
         {
-
-            
             //! Number of evaluations of the objective function so far.
             size_t evaluations;
 
+            //! The current value
+            double raw_y;
+
             //! The current best internal objective function value (since the last reset).
-            double raw_y_best; // was y_best
-            
+            double raw_y_best;
+
             //! The current transformed objective function value.
             double transformed_y;
-            
+
             //! The current best transformed objective function value (since the last reset).
             double transformed_y_best;
-            
-            //! Currently considered solution with the corresponding transformed objective function value.
-            problem::Solution<double> current;
+
+            //! The current transformed objective function value with constraints applied.
+            double y;
+
+            //! The current best transformed objective function value with constraints applied (since the last reset).
+            double y_best;
+
+            //! Current search space variables
+            std::vector<double> x;
+
+            //! Constraint violations, first element is total violation by ContraintSet
+            std::vector<double> violations;            
+
+            //! Applied penalties by constraint, first element is total penalty applied by ContraintSet
+            std::vector<double> penalties;
             
             //! Optimum to the current problem instance, with the corresponding transformed objective function value.
-            problem::Solution<double> optimum; // was objective
+            problem::Solution<double> optimum; 
         };
 #ifdef _MSC_VER  
 #pragma warning(default : 26495)

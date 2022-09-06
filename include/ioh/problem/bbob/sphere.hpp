@@ -19,7 +19,7 @@ namespace ioh::problem::bbob
         //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            transformation::variables::subtract(x, objective_.x);
+            transformation::variables::subtract(x, optimum_.x);
             return x;
         }
     public:

@@ -4,6 +4,7 @@
 #include "ioh/common/factory.hpp"
 #include "ioh/logger/loggers.hpp"
 #include "ioh/problem/structures.hpp"
+#include "ioh/problem/constraints.hpp"
 #include "ioh/problem/utils.hpp"
 
 namespace ioh
@@ -23,14 +24,17 @@ namespace ioh
             //! Problem meta data
             MetaData meta_data_;
 
-            //! The Constraint
-            Constraint<T> constraint_;
+            //! The problem bounds
+            Bounds<T> bounds_;            
+            
+            //! The associated constraints constriants 
+            ConstraintSet<T> constraints_; //TODO check interop with wrap problem
 
             //! The Problem state
             State<T> state_;
 
             //! The solution to the problem
-            Solution<T> objective_;
+            Solution<T> optimum_;
 
             //! A pointer to the attached logger
             Logger *logger_{};
@@ -123,28 +127,31 @@ namespace ioh
              * @brief Construct a new Problem object
              *
              * @param meta_data meta data for the problem
-             * @param constraint a constraint for the problem
+             * @param bounds the bounds to the problem
+             * @param constraints a set of constraints for the problem
              * @param objective the solution to the problem
              */
-            explicit Problem(MetaData meta_data, Constraint<T> constraint, Solution<T> objective) :
-                meta_data_(std::move(meta_data)), constraint_(std::move(constraint)),
-                state_(State<T>({std::vector<T>(meta_data.n_variables, std::numeric_limits<T>::signaling_NaN()),
-                                 meta_data.initial_objective_value})),
-                objective_(std::move(objective))
+            explicit Problem(MetaData meta_data, Bounds<T> bounds, ConstraintSet<T> constraints, Solution<T> objective) :
+                meta_data_(std::move(meta_data)), bounds_(std::move(bounds)), constraints_(std::move(constraints)),
+                state_(State<T>({std::vector<T>(meta_data_.n_variables, std::numeric_limits<T>::signaling_NaN()),
+                                 meta_data_.initial_objective_value})),
+                optimum_(std::move(objective))
             {
-                constraint_.check_size(meta_data_.n_variables);
-                log_info_.optimum = objective_.as_double();
-                log_info_.current = state_.current.as_double();
+                bounds_.fit(meta_data_.n_variables);
+                allocate_log_info();
             }
 
             /**
              * @brief Construct a new Problem object with an unkown solution
              *
              * @param meta_data meta data for the problem
-             * @param constraint a constraint for the problem
+             * @param bounds the bounds to the problem
+             * @param constraints a set of constraint for the problem
              */
-            explicit Problem(MetaData meta_data, Constraint<T> constraint = Constraint<T>()) :
-                Problem(meta_data, constraint, {meta_data.n_variables, meta_data.optimization_type.type()})
+            explicit Problem(MetaData meta_data, Bounds<T> bounds = Bounds<T>(), ConstraintSet<T> constraints = {}) :
+                Problem(meta_data, bounds, constraints,
+                    Solution<T>(meta_data.n_variables, meta_data.optimization_type.type())
+                )
             {
             }
 
@@ -166,10 +173,30 @@ namespace ioh
             virtual void update_log_info()
             {
                 log_info_.evaluations = static_cast<size_t>(state_.evaluations);
-                log_info_.raw_y_best = state_.current_best_internal.y;
-                log_info_.transformed_y = state_.current.y;
-                log_info_.transformed_y_best = state_.current_best.y;
-                log_info_.current = state_.current.as_double();
+                
+                // before transformation
+                log_info_.raw_y = state_.current_internal.y;
+                log_info_.raw_y_best = state_.current_best_internal.y; 
+
+                // after transformation
+                log_info_.transformed_y = state_.y_unconstrained;
+                log_info_.transformed_y_best = state_.y_unconstrained_best;
+
+                // after constraint
+                log_info_.y = state_.current.y;
+                log_info_.y_best = state_.current_best.y;
+
+                // constraint values
+                log_info_.violations[0] = constraints_.violation();
+                log_info_.penalties[0] = constraints_.penalty();
+                
+                for (size_t i = 0; i < constraints_.n(); i++)
+                {
+                    log_info_.violations[i + 1] = constraints_.constraints[i]->violation();
+                    log_info_.penalties[i + 1] = constraints_.constraints[i]->penalty();    
+                }
+                
+                log_info_.x = std::vector<double>(state_.current.x.begin(), state_.current.x.end());
             }
 
             //! Accessor for current log info
@@ -199,39 +226,73 @@ namespace ioh
                 if (!check_input(x))
                     return std::numeric_limits<double>::signaling_NaN();
 
-                if(!constraint_(x))
-                    return meta_data_.initial_objective_value;
-
                 state_.current.x = x;
                 state_.current_internal.x = transform_variables(x);
                 state_.current_internal.y = evaluate(state_.current_internal.x);
-                state_.current.y = transform_objectives(state_.current_internal.y);
-                state_.update(meta_data_, objective_);
+                state_.y_unconstrained = transform_objectives(state_.current_internal.y);
+                state_.current.y = constraints_(x, state_.y_unconstrained);
+                
+                state_.update(meta_data_, optimum_);
+
                 if (logger_ != nullptr)
                 {
                     update_log_info();
                     logger_->log(log_info());
                 }
+
                 return state_.current.y;
             }
+
+            void enforce_bounds(const double weight = 1.0, const constraint::Enforced how = constraint::Enforced::SOFT)
+            {
+                
+                bounds_.weight = weight;
+                bounds_.enforced = how;
+                
+                add_constraint(ConstraintPtr<T>(ConstraintPtr<T>(), &bounds_));
+            }          
 
             //! Accessor for `meta_data_`
             [[nodiscard]] MetaData meta_data() const { return meta_data_; }
 
-            //! Accessor for `objective_`
-            [[nodiscard]] Solution<T> objective() const { return objective_; }
+            //! Accessor for `optimum_`
+            [[nodiscard]] Solution<T> optimum() const { return optimum_; }
 
             //! Accessor for `state_`
             [[nodiscard]] State<T> state() const { return state_; }
 
-            //! Accessor for `constraint_`
-            [[nodiscard]] Constraint<T>& constraint() { return constraint_; }
+            //! Accessor for `bounds_`
+            [[nodiscard]] Bounds<T> bounds() { return bounds_; }
+
+            //! Accessor for `constraints_`
+            [[nodiscard]] ConstraintSet<T>& constraints() { return constraints_; }    
+
+            //! Alias for constraints().add
+            void add_constraint(const ConstraintPtr<T> &c) { 
+                constraints_.add(c);
+                allocate_log_info();
+            }
+
+            //! Alias for constraints().remove
+            void remove_constraint(const ConstraintPtr<T> &c)
+            {
+                constraints_.remove(c);
+                allocate_log_info();
+            }
 
             //! Stream operator
             friend std::ostream &operator<<(std::ostream &os, const Problem &obj)
             {
-                return os << "Problem(\n\t" << obj.meta_data_ << "\n\tconstraint: " << obj.constraint_
-                          << "\n\tstate: " << obj.state_ << "\n\tobjective: " << obj.objective_ << "\n)";
+                return os << "Problem(\n\t" << obj.meta_data_ << "\n\t" << obj.constraints_
+                          << "\n\tstate: " << obj.state_ << "\n\toptimum: " << obj.optimum_ << "\n)";
+            }
+
+        private:
+            void allocate_log_info() {
+                log_info_.optimum.x = std::vector<double>(optimum_.x.begin(), optimum_.x.end());
+                log_info_.optimum.y = optimum_.y;
+                log_info_.violations = std::vector<double>(constraints_.n() + 1, 0.0);
+                log_info_.penalties = std::vector<double>(constraints_.n() + 1, 0.0);
             }
         };
 
@@ -348,7 +409,7 @@ namespace ioh
              * @param problem_id the problem id
              * @param instance_id the problem instance
              * @param optimization_type the type of optimization
-             * @param constraint the contraint for the problem
+             * @param BoxConstraint the contraint for the problem
              * @param transform_variables_function function which transforms the variables of the search problem
              * prior to calling f.
              * @param transform_objectives_function a function which transforms the objective value of the search
@@ -360,12 +421,17 @@ namespace ioh
                 ObjectiveFunction<T> f, const std::string &name, const int n_variables, const int problem_id = 0,
                 const int instance_id = 0,
                 const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
-                Constraint<T> constraint = Constraint<T>(),
+                Bounds<T> bounds = {}, 
                 VariablesTransformationFunction<T> transform_variables_function = utils::identity<std::vector<T>, int>,
                 ObjectiveTransformationFunction transform_objectives_function = utils::identity<double, int>,
-                std::optional<Solution<T>> objective = std::nullopt) :
-                Problem<T>(MetaData(problem_id, instance_id, name, n_variables, optimization_type), constraint,
-                           objective.value_or(Solution<T>(n_variables, optimization_type))),
+                std::optional<Solution<T>> objective = std::nullopt, ConstraintSet<T> constraints = {}
+                ) :
+                Problem<T>(
+                    MetaData(problem_id, instance_id, name, n_variables, optimization_type), 
+                    bounds,                      
+                    constraints,
+                    objective.value_or(Solution<T>(n_variables, optimization_type))
+                ),
                 function_(f), transform_variables_function_(transform_variables_function),
                 transform_objectives_function_(transform_objectives_function)
             {
@@ -379,8 +445,8 @@ namespace ioh
          * @param f a function to be wrapped
          * @param name the name for the new function in the registry
          * @param optimization_type the type of optimization
-         * @param lb lower bound for the constraint of the problem
-         * @param ub upper bound for the constraint of the problem
+         * @param lb lower bound for the BoxConstraint of the problem
+         * @param ub upper bound for the BoxConstraint of the problem
          * @param transform_variables_function function which transforms the variables of the search problem
          * prior to calling f.
          * @param transform_objectives_function a function which transforms the objective value of the search problem
@@ -401,20 +467,21 @@ namespace ioh
 
             int id = factory.check_or_get_next_available(1, name);
 
-            auto constraint = Constraint<T>(1, lb.value_or(std::numeric_limits<T>::lowest()),
-                                            ub.value_or(std::numeric_limits<T>::max()));
+            auto bounds = BoxConstraint<T>(
+                1, lb.value_or(std::numeric_limits<T>::lowest()), ub.value_or(std::numeric_limits<T>::max())
+            );
 
             auto tx = transform_variables_function.value_or(utils::identity<std::vector<T>, int>);
             auto ty = transform_objectives_function.value_or(utils::identity<double, int>);
 
             factory.include(name, id,
-                            [f, name, id, optimization_type, constraint, tx, ty, calculate_objective](const int iid,
+                            [f, name, id, optimization_type, bounds, tx, ty, calculate_objective](const int iid,
                                                                                                       const int dim) {
                                 auto objective = calculate_objective ? calculate_objective.value()(iid, dim)
                                                                      : Solution<T>(dim, optimization_type);
 
                                 return std::make_unique<WrappedProblem<T>>(f, name, dim, id, iid, optimization_type,
-                                                                           constraint, tx, ty, objective);
+                                                                           bounds, tx, ty, objective);
                             });
         }
 

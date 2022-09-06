@@ -21,20 +21,15 @@ namespace ioh::problem
             MaxCut(const int problem_id, const int, const std::shared_ptr<graph::Graph> &graph) :
                 GraphProblemType(problem_id, 1, fmt::format("MaxCut{}", problem_id), graph)
             {
-                objective_.x = std::vector<int>(graph->dimension(), 1);
-                objective_.y = evaluate(objective_.x);
             }
 
             double evaluate(const std::vector<int> &x) override
             {
-                double result = 0, constraint = 0;
-                int count = 0;
+                double result = 0;
                 for (size_t source = 0; source < x.size(); source++)
                 {
                     if (x[source])
                     {
-                        constraint += graph->constraint_weights[source];
-                        count++;
                         for (const auto &[target, weight] : graph->adjacency_list[source])
                             result += weight * (x[target] == 0);
                     }
@@ -44,9 +39,6 @@ namespace ioh::problem
                             result -= weight * (x[target] == 1);
                     }
                 }
-                constraint += sqrt(count) * graph->meta.chance_cons;
-                if (constraint > graph->meta.constraint_limit)
-                    result = graph->meta.constraint_limit - constraint;
                 return result;
             }
         };

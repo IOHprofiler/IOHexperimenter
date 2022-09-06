@@ -33,11 +33,11 @@ TEST_F(BaseTest, test_wrap_real_problem){
 
     for (auto inst: {1, 2, 3}){
         auto problem = factory.create("fn", inst, 3);
-        EXPECT_DOUBLE_EQ(-5, problem->constraint().lb.at(0));
-        EXPECT_DOUBLE_EQ(5, problem->constraint().ub.at(0));
+        EXPECT_EQ(-5, problem->bounds().lb.at(0));
+        EXPECT_EQ(5, problem->bounds().ub.at(0));
 
-        EXPECT_DOUBLE_EQ(static_cast<double>(inst), problem->objective().x.at(0));
-        EXPECT_DOUBLE_EQ(static_cast<double>(inst) * 3, problem->objective().y);
+        EXPECT_DOUBLE_EQ(static_cast<double>(inst), problem->optimum().x.at(0));
+        EXPECT_DOUBLE_EQ(static_cast<double>(inst) * 3, problem->optimum().y);
         EXPECT_DOUBLE_EQ((fn<double>(x0) + inst - 1) * inst, (*problem)(x0));
     }
 }
@@ -52,11 +52,11 @@ TEST_F(BaseTest, test_wrap_integer_problem){
 
     for (auto inst: {1, 2, 3}){
         auto problem = factory.create("fn", inst, 3);
-        EXPECT_EQ(-5, problem->constraint().lb.at(0));
-        EXPECT_EQ(5, problem->constraint().ub.at(0));
+        EXPECT_EQ(-5, problem->bounds().lb.at(0));
+        EXPECT_EQ(5, problem->bounds().ub.at(0));
 
-        EXPECT_EQ(static_cast<double>(inst), problem->objective().x.at(0));
-        EXPECT_DOUBLE_EQ(static_cast<double>(inst) * 3, problem->objective().y);
+        EXPECT_EQ(static_cast<double>(inst), problem->optimum().x.at(0));
+        EXPECT_DOUBLE_EQ(static_cast<double>(inst) * 3, problem->optimum().y);
         EXPECT_DOUBLE_EQ((fn<int>(x0) + inst - 1) * inst, (*problem)(x0));
     }
 }

@@ -39,3 +39,18 @@ struct fmt::formatter<T, std::enable_if_t<std::is_base_of<ioh::common::HasRepr, 
     }
 };
 
+/**
+ * @brief Formatter for classes with repr method, shared_ptr version
+ */
+template <typename T>
+struct fmt::formatter<std::shared_ptr<T>, std::enable_if_t<std::is_base_of<ioh::common::HasRepr, T>::value, char>>
+    : fmt::formatter<std::string>
+{
+    //! format call interface
+    template <typename FormatContext>
+    auto format(const std::shared_ptr<T> &a, FormatContext &ctx)
+    {
+        return formatter<std::string>::format(a->repr(), ctx);
+    }
+};
+

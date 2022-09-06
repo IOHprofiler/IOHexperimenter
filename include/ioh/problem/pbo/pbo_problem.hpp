@@ -23,7 +23,12 @@ namespace ioh::problem
         {
             using namespace transformation::objective;
             if (meta_data_.instance > 1)
-                return uniform(shift, uniform(scale, y, meta_data_.instance, 0.2, 5.0), meta_data_.instance, -1e3, 1e3);
+                return uniform(shift, 
+                            uniform(
+                                scale, y, meta_data_.instance, 0.2, 5.0
+                            ), 
+                        meta_data_.instance, -1e3, 1e3
+                    );
             return y;
         }
 
@@ -47,8 +52,8 @@ namespace ioh::problem
          * @param name the name of the problem
          */
         PBO(const int problem_id, const int instance, const int n_variables, const std::string &name) :
-            Integer(MetaData(problem_id, instance, name, n_variables,
-                             common::OptimizationType::Maximization),Constraint<int>(n_variables, 0, 1))
+            Integer(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::Maximization),
+                    Bounds<int>(n_variables, 0, 1))
         {
         }
     };

@@ -3,6 +3,7 @@
 #include "ioh/logger/analyzer.hpp"
 #include "ioh/problem/bbob/attractive_sector.hpp"
 #include "ioh/problem/bbob/sphere.hpp"
+#include "ioh/problem/bbob/katsuura.hpp"
 
 fs::path get_dat_path(const fs::path &root, const ioh::problem::Real &p)
 {
@@ -103,7 +104,6 @@ TEST_F(BaseTest, structures)
 
 TEST_F(BaseTest, logger_v2)
 {
-
     using namespace ioh;
     fs::path output_directory;
     {
@@ -133,5 +133,40 @@ TEST_F(BaseTest, logger_v2)
     EXPECT_TRUE(fs::exists(output_directory / "data_f1_Sphere" / "IOHprofiler_f1_DIM2.dat"));
     EXPECT_TRUE(fs::exists(output_directory / "data_f1_Sphere" / "IOHprofiler_f1_DIM5.dat"));
     EXPECT_TRUE(fs::remove_all(output_directory));
+    EXPECT_TRUE(!fs::exists(output_directory));
+}
+
+
+TEST_F(BaseTest, test_logging_new_header) {
+    using namespace ioh;
+    auto p = problem::bbob::Katsuura(1, 4);
+    const auto info_file_name1 = fmt::format("IOHprofiler_f{:d}_{}.info", p.meta_data().problem_id, p.meta_data().name);
+    fs::path output_directory;
+    {
+        logger::Analyzer l({trigger::on_improvement}, {watch::violation, watch::penalty}, fs::current_path(), "ioh_data", "algorithm_name",
+                           "algorithm_info", false, {}, false);
+        output_directory = l.output_directory();
+
+        const auto x = std::vector<double>(p.meta_data().n_variables, -6.);
+        for (auto count = 0; 2 > count; ++count)
+        {
+            p.attach_logger(l);
+            p(x);
+            p.reset();
+        }
+    } // force destructor of logger to be called, flushes to files
+
+    const std::string test_info1 =
+        R"(suite = "unknown_suite", funcId = 23, funcName = "Katsuura", DIM = 4, maximization = "F", algId = "algorithm_name", algInfo = "algorithm_info")"
+        "\n%\ndata_f23_Katsuura/IOHprofiler_f23_DIM4.dat, 1:1|27.7634, 1:1|27.7634"
+        ;
+    
+    compare_file_with_string(output_directory / info_file_name1, test_info1);
+    
+    const std::string header = "evaluations raw_y raw_y_best violation penalty"  
+                                "\n1 27.7633746377 27.7633746377 4.0000000000 4.0000000000\n";
+    compare_file_with_string(get_dat_path(output_directory, p), header + header);
+
+    fs::remove_all(output_directory);
     EXPECT_TRUE(!fs::exists(output_directory));
 }

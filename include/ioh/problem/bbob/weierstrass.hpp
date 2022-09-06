@@ -8,7 +8,6 @@ namespace ioh::problem::bbob
     class Weierstrass final : public BBOProblem<Weierstrass>
     {
         double f0_;
-        double penalty_factor_;
         std::vector<double> ak_;
         std::vector<double> bk_;
 
@@ -30,18 +29,11 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
-            subtract(x, objective_.x);
+            subtract(x, optimum_.x);
             affine(x, transformation_state_.transformation_matrix, transformation_state_.transformation_base);
             oscillate(x);
             affine(x, transformation_state_.second_transformation_matrix, transformation_state_.transformation_base);
             return x;
-        }
-
-        //! Objectives transformation method
-        double transform_objectives(const double y) override
-        {
-            using namespace transformation::objective;
-            return penalize(state_.current.x, constraint_, penalty_factor_, shift(y, objective_.y));
         }
 
     public:
@@ -53,8 +45,10 @@ namespace ioh::problem::bbob
          */
         Weierstrass(const int instance, const int n_variables) :
             BBOProblem(16, instance, n_variables, "Weierstrass", 1 / sqrt(100.0)),
-            f0_(0.0), penalty_factor_(10.0 / n_variables), ak_(12), bk_(12)
+            f0_(0.0), ak_(12), bk_(12)
         {
+            enforce_bounds(10.0 / n_variables);
+            
             for (size_t i = 0; i < ak_.size(); ++i)
             {
                 ak_[i] = pow(0.5, static_cast<double>(i));
