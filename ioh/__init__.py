@@ -21,6 +21,7 @@ from .iohcpp import (
     RealBounds,
     IntegerConstraint,
     RealConstraint,
+    ConstraintEnforcement,
     RealState, 
     IntegerState,
     MetaData,
@@ -214,6 +215,7 @@ class Experiment:
         merge_output: bool = True,
         zip_output: bool = True,
         remove_data: bool = False,
+        enforce_bounds: bool = False,
     ):
         """
         Parameters
@@ -308,6 +310,7 @@ class Experiment:
         self.merge_output = merge_output
         self.zip_output = zip_output
         self.remove_data = remove_data
+        self.enforce_bounds = enforce_bounds
 
         if os.path.isdir(self.logger_root) and self.merge_output:
             warnings.warn(
@@ -348,6 +351,9 @@ class Experiment:
             l.watch(algorithm, self.logged_attributes)
             l.reset()
             p.attach_logger(l)
+
+        if self.enforce_bounds:
+            p.enforce_bounds()
 
         self.apply(algorithm, p)
 

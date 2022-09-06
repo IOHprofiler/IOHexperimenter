@@ -12,7 +12,10 @@ class Algorithm:
     
     def __call__(self, p: ioh.problem.Real):
         for i in range(10000):
-            x = list(map(lambda x: random.random(), range(p.meta_data.n_variables)))    
+            x = list(
+                map(lambda x: 10 * random.random(), 
+                range(p.meta_data.n_variables)
+                ))    
             p(x)
             self.i = i
 
@@ -23,18 +26,27 @@ class TestExperiment(unittest.TestCase):
         shutil.rmtree("ioh_data")
         os.remove("ioh_data.zip")
 
+
     def test_experimenter(self):
         exp = ioh.Experiment(
             Algorithm(),
             [1], [1, 2], [5],
             njobs = 1,
             reps = 2,
+            algorithm_name = "RandomSearch", 
             experiment_attributes = {"a": "1"},
             run_attributes = ['x'],
             logged_attributes = ['i'],
-            logger_additional_properties = []
+            logger_triggers = [
+                ioh.logger.trigger.ALWAYS
+            ],
+            logger_additional_properties = [
+                ioh.logger.property.VIOLATION,
+                ioh.logger.property.PENALTY
+            ],
+            enforce_bounds=True,
+            store_positions=True,
         )
-        
 
         def a_problem(x):
             return 0.0
