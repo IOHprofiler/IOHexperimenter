@@ -11,6 +11,16 @@ namespace py = pybind11;
 using namespace ioh::problem;
 
 
+static std::vector<py::handle> WRAPPED_FUNCTIONS;
+
+bool register_python_fn(py::handle f)
+{
+    f.inc_ref();
+    WRAPPED_FUNCTIONS.push_back(f);
+    return true;
+}
+
+
 template <typename T>
 void define_solution(py::module &m, const std::string &name)
 {
@@ -124,7 +134,13 @@ void define_functionalconstraint(py::module &m, const std::string &name){
     using Class = FunctionalConstraint<T>;
 
     py::class_<Class, Parent, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<ConstraintFunction<T>, double, constraint::Enforced, std::string>(), 
+        .def(
+            // py::init<ConstraintFunction<T>, double, constraint::Enforced, std::string>(), 
+            py::init([](py::handle f, const double w, const constraint::Enforced e, const std::string& n){
+                register_python_fn(f);
+                auto fn = [f](const std::vector<T> &x, const double y) { return PyFloat_AsDouble(f(py::array(x.size(), x.data()), y).ptr()); };
+                return Class(fn, w, e, n);
+            }),
             py::arg("fn"), 
             py::arg("weight") = 1.0, 
             py::arg("enforced") = constraint::Enforced::SOFT,
@@ -356,14 +372,6 @@ void define_base_class(py::module &m, const std::string &name)
             return "<" + name + fmt::format("Problem {:d}. ", meta_data.problem_id) + meta_data.name +
                 fmt::format(" (iid={:d} dim={:d})>", meta_data.instance, meta_data.n_variables);
         });
-}
-static std::vector<py::handle> WRAPPED_FUNCTIONS;
-
-bool register_python_fn(py::handle f)
-{
-    f.inc_ref();
-    WRAPPED_FUNCTIONS.push_back(f);
-    return true;
 }
 
 
