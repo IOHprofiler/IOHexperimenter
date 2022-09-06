@@ -83,12 +83,6 @@ namespace ioh::problem
         */
         [[nodiscard]] virtual bool compute_violation(const std::vector<T> &x, const double y) = 0;
 
-        //! Accessor for violation_
-        [[nodiscard]] virtual double violation() const { return violation_; }
-        
-        //! Accessor for penalty
-        [[nodiscard]] virtual double penalty() const { return weight * violation(); }
-        
         /**
          * @brief Penalize the y value. This method is only called when there is a violation, 
          * and is_feasible returns a false value, see operator().
@@ -96,6 +90,13 @@ namespace ioh::problem
          * @return the penalized value for y.
         */
         [[nodiscard]] virtual double penalize(const double y) const { return y + penalty(); }
+        
+        //! Accessor for violation_
+        [[nodiscard]] virtual double violation() const { return violation_; }
+        
+        //! Accessor for penalty
+        [[nodiscard]] virtual double penalty() const { return weight * violation(); }
+        
     };
 
     /**

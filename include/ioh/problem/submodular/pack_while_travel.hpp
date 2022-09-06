@@ -152,8 +152,6 @@ namespace ioh::problem
             };
         } // namespace pwt
 
-      
-
 
         struct PackWhileTravel final : GraphProblemType<PackWhileTravel>
         {

@@ -17,6 +17,8 @@ from .iohcpp import (
     OptimizationType,
     RealSolution,
     IntegerSolution,
+    IntegerBounds,
+    RealBounds,
     IntegerConstraint,
     RealConstraint,
     RealState, 
@@ -64,18 +66,13 @@ def get_problem(
             raise ValueError(
                 "For this function, the dimension needs to be a perfect square!"
             )
-
-    bbob_fns = (
-        getattr(problem, "BBOB").problems.values()
-        | getattr(problem, "BBOB").problems.keys()
-    )
     if (
         problem_type
         in (
             "BBOB",
             "Real",
         )
-        and fid in bbob_fns
+        and fid in range(1, 25)
     ):
         if not dimension >= 2:
             raise ValueError("For BBOB functions the minimal dimension is 2")
@@ -97,7 +94,7 @@ def wrap_problem(
     problem_type: str,
     dimension: int = 5,
     instance: int = 1,
-    optimization_type: OptimizationType = OptimizationType.Minimization,
+    optimization_type: OptimizationType = OptimizationType.MIN,
     lb: VariableType = None,
     ub: VariableType = None,
     transform_variables: typing.Callable[[ObjectiveType, int], ObjectiveType] = None,
@@ -105,6 +102,8 @@ def wrap_problem(
     calculate_objective: typing.Callable[
         [int, int], typing.Union[IntegerSolution, RealSolution]
     ] = None,
+    constraints: typing.List[typing.Union[IntegerConstraint, RealConstraint]] = None
+
 ) -> ProblemType:
     """Function to wrap a callable as an ioh function
 
@@ -137,6 +136,8 @@ def wrap_problem(
         A function to calculate the global optimum of the function. This function gets a dimension and instance id,
         and should return either a Solution objective(IntegerSolution or RealSolution) or a tuple giving the
         x and y values for the global optimum. Where x is the search space representation and y the target value.
+    constraints: list[IntegerConstraint | RealConstraint]
+        The constraints applied to the problem
     """
 
     if problem_type == "Integer":
@@ -157,6 +158,7 @@ def wrap_problem(
         transform_variables,
         transform_objectives,
         calculate_objective,
+        [] if constraints is None else constraints
     )
     return get_problem(name, instance, dimension, problem_type)
 
@@ -250,7 +252,7 @@ class Experiment:
                 A name for the algorithm. This is used in the log files.
             algorithm_info: str = ""
                 Optional information, additional information used in log files
-            optimization_type: OptimizationType = OptimizationType.Minimization
+            optimization_type: OptimizationType = OptimizationType.MIN
                 The type of optimization
             store_positions: bool = False
                 Whether to store the x-positions in the data-files

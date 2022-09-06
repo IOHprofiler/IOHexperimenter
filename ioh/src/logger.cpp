@@ -278,6 +278,21 @@ void define_triggers(py::module &m)
                         [](py::tuple t) { return trigger::During{t[0].cast<std::set<std::pair<size_t, size_t>>>()}; }));
 }
 
+template<typename P>
+void define_property(py::module &m, std::string name, P predef){
+
+    py::class_<P, logger::Property, std::shared_ptr<P>>(m, name.c_str(), py::buffer_protocol())
+        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
+             ("Property which tracks the " + name).c_str())
+        .def(py::pickle([](const P &t) { return py::make_tuple(t.name(), t.format()); },
+                        [](py::tuple t) {
+                            return P{t[0].cast<std::string>(), t[1].cast<std::string>()};
+                        }));
+    
+    std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+    m.attr(name.c_str()) = py::cast(predef);
+}
+
 void define_properties(py::module &m)
 {
     py::module t = m.def_submodule("property");
@@ -310,52 +325,19 @@ void define_properties(py::module &m)
                             return PyProperty{t[0].cast<py::object>(), t[1].cast<std::string>()};
                         }));
 
-    py::class_<watch::Evaluations, logger::Property, std::shared_ptr<watch::Evaluations>>(t, "Evaluations")
-        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
-             "Property which tracks the number of evaluations")
-        .def(py::pickle([](const watch::Evaluations &t) { return py::make_tuple(t.name(), t.format()); },
-                        [](py::tuple t) {
-                            return watch::Evaluations{t[0].cast<std::string>(), t[1].cast<std::string>()};
-                        }));
-    t.attr("EVALUATIONS") = py::cast(watch::evaluations);
+    define_property<watch::Evaluations>(t, "Evaluations", watch::evaluations);
 
-    py::class_<watch::RawYBest, logger::Property, std::shared_ptr<watch::RawYBest>>(t, "RawYBest")
-        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
-             "Property which tracks the raw best y value")
-        .def(py::pickle([](const watch::RawYBest &t) { return py::make_tuple(t.name(), t.format()); },
-                        [](py::tuple t) {
-                            return watch::RawYBest{t[0].cast<std::string>(), t[1].cast<std::string>()};
-                        }));
-    t.attr("RAW_Y_BEST") = py::cast(watch::raw_y_best);
+    define_property<watch::RawY>(t, "RawY", watch::raw_y);
+    define_property<watch::RawYBest>(t, "RawYBest", watch::raw_y_best);
 
-    py::class_<watch::CurrentY, logger::Property, std::shared_ptr<watch::CurrentY>>(t, "CurrentY")
-        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
-             "Property which tracks the current y value")
-        .def(py::pickle([](const watch::CurrentY &t) { return py::make_tuple(t.name(), t.format()); },
-                        [](py::tuple t) {
-                            return watch::CurrentY{t[0].cast<std::string>(), t[1].cast<std::string>()};
-                        }));
-    t.attr("CURRENT_Y_BEST") = py::cast(watch::current_y);
+    define_property<watch::TransformedY>(t, "TransformedY", watch::transformed_y);
+    define_property<watch::TransformedYBest>(t, "TransformedYBest", watch::transformed_y_best);
 
-    py::class_<watch::TransformedY, logger::Property, std::shared_ptr<watch::TransformedY>>(t, "TransformedY")
-        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
-             "Property which tracks the current transformed y value")
-        .def(py::pickle([](const watch::TransformedY &t) { return py::make_tuple(t.name(), t.format()); },
-                        [](py::tuple t) {
-                            return watch::TransformedY{t[0].cast<std::string>(), t[1].cast<std::string>()};
-                        }));
-    t.attr("TRANSFORMED_Y") = py::cast(watch::transformed_y);
+    define_property<watch::CurrentY>(t, "CurrentY", watch::current_y);
+    define_property<watch::CurrentBestY>(t, "CurrentBestY", watch::current_y_best);
 
-    py::class_<watch::TransformedYBest, logger::Property, std::shared_ptr<watch::TransformedYBest>>(t,
-                                                                                                    "TransformedYBest")
-        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
-             "Property which tracks the current best transformed y value")
-        .def(py::pickle([](const watch::TransformedYBest &t) { return py::make_tuple(t.name(), t.format()); },
-                        [](py::tuple t) {
-                            return watch::TransformedYBest{t[0].cast<std::string>(), t[1].cast<std::string>()};
-                        }));
-
-    t.attr("TRANSFORMED_Y_BEST") = py::cast(watch::transformed_y_best);
+    define_property<watch::Violation>(t, "Violation", watch::violation);
+    define_property<watch::Penalty>(t, "Penalty", watch::penalty);
 }
 
 void define_bases(py::module &m)
@@ -471,11 +453,11 @@ void define_analyzer(py::module &m)
     Triggers def_trigs{trigger::on_improvement};
     Properties def_props{};
     py::class_<PyAnalyzer, Watcher, std::shared_ptr<PyAnalyzer>>(m, "Analyzer")
-        .def(py::init<Triggers, Properties, fs::path, std::string, std::string, std::string, bool>(),
+        .def(py::init<Triggers, Properties, fs::path, std::string, std::string, std::string, bool, bool>(),
              py::arg("triggers") = def_trigs, py::arg("additional_properties") = def_props,
              py::arg("root") = fs::current_path(), py::arg("folder_name") = "ioh_data",
              py::arg("algorithm_name") = "algorithm_name", py::arg("algorithm_info") = "algorithm_info",
-             py::arg("store_positions") = false,
+             py::arg("store_positions") = false, py::arg("use_old_data_format") = false,
              R"pbdoc(
                 A logger which stores all tracked properties to a file.
 

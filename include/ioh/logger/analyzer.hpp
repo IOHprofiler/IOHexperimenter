@@ -360,6 +360,7 @@ namespace ioh::logger
                  * @param algorithm_name The string separating fields.
                  * @param algorithm_info The string indicating a comment.
                  * @param store_positions Whether to store x positions in the logged data
+                 * @param use_old_data_format Wheter to use the old data format
                  * @param attributes See: analyzer::Attributes.
                  */
                 Analyzer(const Triggers &triggers = {trigger::on_improvement},
@@ -369,8 +370,8 @@ namespace ioh::logger
                          const std::string &algorithm_name = "algorithm_name",
                          const std::string &algorithm_info = "algorithm_info",
                          const bool store_positions = false,
-                         const structures::Attributes &attributes = {},
-                         const bool use_old_data_format = true
+                         const bool use_old_data_format = false,
+                         const structures::Attributes &attributes = {}
                 ) :
                     FlatFile(triggers,
                              common::concatenate(use_old_data_format ? default_properties_old_ : default_properties_,

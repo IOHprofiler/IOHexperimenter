@@ -36,9 +36,9 @@ file(GLOB_RECURSE HEADERS include/ioh *.hpp)
  
 add_library(ioh INTERFACE)
 add_library(ioh::ioh ALIAS ioh)
-
+if (MSVC)
 set_property(TARGET ioh PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-
+endif()   
 
 #Include external formatting lib
 include_directories(${EXTERNAL_DIR}/fmt/include/)

@@ -18,6 +18,11 @@ class Algorithm:
 
 
 class TestExperiment(unittest.TestCase):
+
+    def tearDown(self) -> None:
+        shutil.rmtree("ioh_data")
+        os.remove("ioh_data.zip")
+
     def test_experimenter(self):
         exp = ioh.Experiment(
             Algorithm(),
@@ -26,8 +31,10 @@ class TestExperiment(unittest.TestCase):
             reps = 2,
             experiment_attributes = {"a": "1"},
             run_attributes = ['x'],
-            logged_attributes = ['i']
+            logged_attributes = ['i'],
+            logger_additional_properties = []
         )
+        
 
         def a_problem(x):
             return 0.0
@@ -49,18 +56,14 @@ class TestExperiment(unittest.TestCase):
                         path = os.path.join(path, f)
                         self.assertNotEqual(os.path.getsize(path), 0)
                         with open(path) as h:
-                            data = list(filter(lambda x:x.startswith('"'), h))       
+                            data = list(filter(lambda x:x.startswith('evaluations'), h))       
 
                         self.assertEqual(len(data), 4)
                         data_files.remove(f)
 
         self.assertSetEqual(info_files, set())
         self.assertSetEqual(data_files, set())
-
-        self.assertTrue(os.path.isfile("ioh_data.zip"))
-
-        shutil.rmtree("ioh_data")
-        os.remove("ioh_data.zip")
+        self.assertTrue(os.path.isfile("ioh_data.zip"))    
            
     
 

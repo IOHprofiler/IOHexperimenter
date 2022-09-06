@@ -415,6 +415,7 @@ namespace ioh
              * @param transform_objectives_function a function which transforms the objective value of the search
              * problem after calling f.
              * @param objective the value for the objective
+             * @param constraints the constraints applied to the problem
              *
              */
             WrappedProblem(
@@ -451,8 +452,9 @@ namespace ioh
          * prior to calling f.
          * @param transform_objectives_function a function which transforms the objective value of the search problem
          * after calling f.
-         * @param calculate_objective a function which returns the optimum based on a given problem
+         * @param calculate_optimum a function which returns the optimum based on a given problem
          * dimension and instance.
+         * @param constraints the constraints
          */
         template <typename T>
         void
@@ -461,7 +463,9 @@ namespace ioh
                       const std::optional<T> lb = std::nullopt, const std::optional<T> ub = std::nullopt,
                       std::optional<VariablesTransformationFunction<T>> transform_variables_function = std::nullopt,
                       std::optional<ObjectiveTransformationFunction> transform_objectives_function = std::nullopt,
-                      std::optional<CalculateObjectiveFunction<T>> calculate_objective = std::nullopt)
+                      std::optional<CalculateObjectiveFunction<T>> calculate_optimum = std::nullopt,
+                      ConstraintSet<T> constraints = {}
+            )
         {
             auto &factory = ProblemFactoryType<Problem<T>>::instance();
 
@@ -475,13 +479,13 @@ namespace ioh
             auto ty = transform_objectives_function.value_or(utils::identity<double, int>);
 
             factory.include(name, id,
-                            [f, name, id, optimization_type, bounds, tx, ty, calculate_objective](const int iid,
+                            [f, name, id, optimization_type, bounds, tx, ty, calculate_optimum, constraints](const int iid,
                                                                                                       const int dim) {
-                                auto objective = calculate_objective ? calculate_objective.value()(iid, dim)
+                                auto optimum = calculate_optimum ? calculate_optimum.value()(iid, dim)
                                                                      : Solution<T>(dim, optimization_type);
 
                                 return std::make_unique<WrappedProblem<T>>(f, name, dim, id, iid, optimization_type,
-                                                                           bounds, tx, ty, objective);
+                                                                           bounds, tx, ty, optimum, constraints);
                             });
         }
 
