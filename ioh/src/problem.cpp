@@ -1019,10 +1019,9 @@ void define_problem(py::module &m)
     define_submodular_problems(m);
 
     py::module_::import("atexit").attr("register")(py::cpp_function([]() {
-        for (const auto fn : WRAPPED_FUNCTIONS)
-        {
-            if (fn)
-                fn.dec_ref();
-        }
+        py::module_::import("os").attr("_exit")(0);
+        // for (const auto fn : WRAPPED_FUNCTIONS)
+        //     if (fn)
+        //         fn.dec_ref();
     }));
 }

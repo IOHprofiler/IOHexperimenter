@@ -22,7 +22,8 @@ TEST_F(BaseTest, logger_v1)
     const auto info_file_name2 =
         fmt::format("IOHprofiler_f{:d}_{}.info", p2.meta_data().problem_id, p2.meta_data().name);
     {
-        logger::Analyzer l;
+        logger::Analyzer l({trigger::on_improvement}, {}, fs::current_path(), "ioh_data", "algorithm_name",
+                           "algorithm_info", false, true);
         output_directory = l.output_directory();
 
         for (auto *problem : std::array<ioh::problem::BBOB *, 3>({&p, &p1, &p2}))
@@ -144,7 +145,7 @@ TEST_F(BaseTest, test_logging_new_header) {
     fs::path output_directory;
     {
         logger::Analyzer l({trigger::on_improvement}, {watch::violation, watch::penalty}, fs::current_path(), "ioh_data", "algorithm_name",
-                           "algorithm_info", false, {}, false);
+                           "algorithm_info", false, false);
         output_directory = l.output_directory();
 
         const auto x = std::vector<double>(p.meta_data().n_variables, -6.);

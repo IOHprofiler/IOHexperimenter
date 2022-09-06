@@ -73,6 +73,5 @@ class TestWrappedProblem(unittest.TestCase):
         self.assertEqual(p([10, 0]), 0)
 
 
-
 if __name__ == "__main__":
     unittest.main()

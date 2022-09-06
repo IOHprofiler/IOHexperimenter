@@ -13,3 +13,7 @@ value, char > >
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: fmt::value, char > >
 
+value, char > >
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenstruct:: fmt::value, char > >
+
