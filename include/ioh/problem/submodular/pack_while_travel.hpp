@@ -146,7 +146,7 @@ namespace ioh::problem
                     return false;
                 }
 
-                double penalize(const double y) const override { return penalty(); }
+                double penalize(const double) const override { return penalty(); }
 
                 std::string repr() const override { return fmt::format("<PWTConstraint {}>", violation()); }
             };

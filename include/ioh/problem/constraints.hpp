@@ -297,7 +297,7 @@ namespace ioh::problem
         //! Check if the BoxConstraints are violated, override Constraint::compute_violation
         [[nodiscard]] bool compute_violation(const std::vector<T> &x, const double) override
         {
-            violation_ = 0.0;
+            this->violation_ = 0.0;
             for (size_t i = 0; i < x.size(); i++)
             {
                 double v = 0.;
@@ -306,10 +306,10 @@ namespace ioh::problem
                 else if (x[i] < lb[i]) 
                     v = lb[i] - x[i];
 
-                violation_ += v * v;
+                this->violation_ += v * v;
             }
 
-            return violation_ > 0.0;
+            return this->violation_ > 0.0;
         }
 
         //! Return resize version of BoxConstraint
@@ -363,8 +363,8 @@ namespace ioh::problem
          * @return true when the absolute value for violation_ > 0 false otherwise
         */
         [[nodiscard]] bool compute_violation(const std::vector<T> &x, const double y) override {
-            violation_ = fn_(x, y);
-            return abs(violation_) > 0.0;
+            this->violation_ = fn_(x, y);
+            return abs(this->violation_) > 0.0;
         }
 
         //! Override string representation

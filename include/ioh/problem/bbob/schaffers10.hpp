@@ -55,7 +55,7 @@ namespace ioh::problem::bbob
                   const double condition) :
             BBOProblem<T>(problem_id, instance, n_variables, name), condition_(condition)
         {
-            enforce_bounds(10.0);
+            this->enforce_bounds(10.0);
 
             for (auto i = 0; i < n_variables; ++i)
                 for (auto j = 0; j < n_variables; ++j)

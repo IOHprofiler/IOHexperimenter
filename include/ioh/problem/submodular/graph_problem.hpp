@@ -161,7 +161,7 @@ namespace ioh::problem::submodular
             return false;            
         }
 
-        double penalize(const double y) const override { 
+        double penalize(const double) const override { 
             return penalty(); 
         }
 
