@@ -45,17 +45,12 @@ include_directories(${EXTERNAL_DIR}/fmt/include/)
 add_subdirectory(${EXTERNAL_DIR}/fmt)
 target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
 
-# target_include_directories(ioh INTERFACE ${EXTERNAL_DIR}/clutchlog)
-target_include_directories(ioh INTERFACE 
-    $<BUILD_INTERFACE:${EXTERNAL_DIR}/clutchlog>  
-    $<INSTALL_INTERFACE:clutchlog> 
-)
+include_directories(${EXTERNAL_DIR}/clutchlog)
 
-target_include_directories(ioh INTERFACE 
-    $<BUILD_INTERFACE:${EXTERNAL_DIR}/json/include>  
-    $<INSTALL_INTERFACE:json/include> 
-)
-
+# Add Json lib
+set(JSON_Install OFF CACHE INTERNAL "")
+add_subdirectory(${EXTERNAL_DIR}/json)
+target_link_libraries(ioh INTERFACE nlohmann_json::nlohmann_json)
 
 if(ENABLE_MKLANDSCAPE_PROBLEMS)
 
@@ -114,7 +109,7 @@ write_basic_package_version_file(
 # Define installation rules.
 include(GNUInstallDirs)
 
-install(TARGETS ioh fmt-header-only
+install(TARGETS ioh fmt-header-only nlohmann_json
     EXPORT ioh-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
