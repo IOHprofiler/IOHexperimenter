@@ -1,11 +1,14 @@
 ## Build the ioh library.
 ##
 cmake_minimum_required(VERSION 3.15) 
+file(READ VERSION VERSION_STRING)
 
 project(ioh   
-    VERSION 0.3.2.6
+    VERSION ${VERSION_STRING}
     LANGUAGES CXX  
 ) 
+ 
+add_compile_definitions(PROJECT_VER="${CMAKE_PROJECT_VERSION}")
 set(CMAKE_CXX_STANDARD 17)  
 set(EXTERNAL_DIR "${PROJECT_SOURCE_DIR}/external")
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
@@ -28,7 +31,9 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         link_libraries(stdc++fs)
         add_compile_definitions(FSEXPERIMENTAL)
     endif()
-endif()   
+endif()  
+
+
 
 # Define project targets.
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 

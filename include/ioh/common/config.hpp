@@ -38,3 +38,8 @@
 #pragma warning(disable : 4996)
 #endif
 
+#ifndef PROJECT_VER
+#define PROJECT_VER "0.0.0"
+#endif // !1
+
+

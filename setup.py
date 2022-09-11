@@ -8,7 +8,9 @@ from generate_docs import main, generate_stubs
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
-__version__ = "0.3.2.8.4"
+DIR = os.path.realpath(os.path.dirname(__file__))
+with open(os.path.join(DIR, "VERSION")) as f:
+    __version__ = f.read().strip()
 
 # Convert distutils Windows platform specifiers to CMake -A arguments
 PLAT_TO_CMAKE = {
@@ -65,7 +67,6 @@ class CMakeBuild(build_ext):
             "-DENABLE_MKLANDSCAPE_PROBLEMS=OFF",
             "-DBUILD_DOCS={}".format("ON" if MAKE_DOCS else "OFF"),
             "-DBUILD_EXAMPLE=OFF",
-            "-DEXAMPLE_VERSION_INFO={}".format(self.distribution.get_version()),
             "-DCMAKE_BUILD_TYPE={}".format(cfg),  # not used on MSVC, but no harm
         ]
         build_args = []

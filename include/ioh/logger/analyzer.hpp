@@ -181,8 +181,8 @@ namespace ioh::logger
                 const std::vector<Attribute<std::string>> attributes;
                 //! Run attributes
                 const std::vector<std::string> run_attribute_names;
-                //! Extra attributes
-                const std::vector<std::string> extra_attribute_names;
+                //! attributes names
+                const std::vector<std::string> attribute_names;
 
                 //! Scenarios
                 std::vector<ScenarioInfo> dims;
@@ -195,28 +195,28 @@ namespace ioh::logger
                  * @param algorithm Algoritm meta data
                  * @param attributes Attributes
                  * @param run_attribute_names Run attributes
-                 * @param extra_attribute_names Extra attributes
+                 * @param attribute_names attributes names
                  * @param dims Scenarios
                  */
                 ExperimentInfo(const std::string &suite, const problem::MetaData &problem,
                                const AlgorithmInfo &algorithm,
                                const std::vector<Attribute<std::string>> &attributes = {},
                                const std::vector<std::string> &run_attribute_names = {},
-                               const std::vector<std::string> &extra_attribute_names = {},
+                               const std::vector<std::string> &attribute_names = {},
                                const std::vector<ScenarioInfo> &dims = {}) :
                     suite(suite),
                     problem(problem), algorithm(algorithm), attributes(attributes),
-                    run_attribute_names(run_attribute_names), extra_attribute_names(extra_attribute_names), dims(dims)
+                    run_attribute_names(run_attribute_names), attribute_names(attribute_names), dims(dims)
                 {
                 }
 
                 std::string repr() const override
                 {
                     return fmt::format(
-                        "{{\n\t\"suite\": \"{}\", \n\t\"function_id\": {}, \n\t\"function_name\": \"{}\", "
-                        "\n\t\"maximization\": "
-                        "{}, \n\t\"algorithm\": {{{}}},{}{}{}\n\t\"scenarios\": [\n\t\t{{{}}}\n\t]\n}}\n",
-                        suite, problem.problem_id, problem.name,
+                        "{{\n\t\"version\": \"{}\", \n\t\"suite\": \"{}\", \n\t\"function_id\": {}, \n\t\"function_name\": \"{}\", "
+                        "\n\t\"maximization\": {}, "
+                        "\n\t\"algorithm\": {{{}}},{}{}{}\n\t\"scenarios\": [\n\t\t{{{}}}\n\t]\n}}\n",
+                        PROJECT_VER, suite, problem.problem_id, problem.name,
                         (problem.optimization_type == common::OptimizationType::MAX), algorithm,
                         !attributes.empty()
                             ? fmt::format("\n\t\"experiment_attributes\": [{{{}}}],", fmt::join(attributes, "}, {"))
@@ -224,8 +224,8 @@ namespace ioh::logger
                         !run_attribute_names.empty()
                             ? fmt::format("\n\t\"run_attributes\": [\"{}\"],", fmt::join(run_attribute_names, "\", \""))
                             : "",
-                        !extra_attribute_names.empty() ? fmt::format("\n\t\"extra_attributes\": [\"{}\"],",
-                                                                     fmt::join(extra_attribute_names, "\", \""))
+                        !attribute_names.empty() ? fmt::format("\n\t\"attributes\": [\"{}\"],",
+                                                                     fmt::join(attribute_names, "\", \""))
                                                        : "",
                         fmt::join(dims, "},\n\t\t{"));
                 }
@@ -516,10 +516,10 @@ namespace ioh::logger
                 std::map<std::string, structures::ExperimentInfo> experiments_;
                 std::string current_filename_;
 
-                std::vector<std::string> extra_attribute_names() const
+                std::vector<std::string> attribute_names() const
                 {
                     std::vector<std::string> names;
-                    for (size_t i = 5; i < properties_vector_.size(); i++)
+                    for (size_t i = 0; i < properties_vector_.size(); i++)
                         names.push_back(properties_vector_.at(i).get().name());
                     return names;
                 }
@@ -535,7 +535,7 @@ namespace ioh::logger
                         experiments_.insert({current_filename_,
                                              {current_suite_, problem, algorithm_,
                                               common::as_vector<str, str, sAttr>(attributes_.experiment),
-                                              common::keys(attributes_.run), extra_attribute_names()}});
+                                              common::keys(attributes_.run), attribute_names()}});
                 }
 
                 //! Gets called after the last evaluation of a run
