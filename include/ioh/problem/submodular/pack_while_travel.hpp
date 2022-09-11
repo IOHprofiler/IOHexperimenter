@@ -126,7 +126,7 @@ namespace ioh::problem
                 std::shared_ptr<TTPGraph> graph;
 
                 PWTConstraint(const std::shared_ptr<TTPGraph> &graph) :
-                    Constraint(constraint::Enforced::HARD), graph(graph)
+                    Constraint(constraint::Enforced::OVERRIDE), graph(graph)
                 {
                 }
                 

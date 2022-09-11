@@ -28,7 +28,7 @@ int main(){
 
   ioh::problem::wrap_function<double>(&new_problem,  // the new function
                                       "new_problem", // name of the new function
-                                      ioh::common::OptimizationType::Minimization, // optimization type
+                                      ioh::common::OptimizationType::MIN, // optimization type
                                       0,  // lowerbound  
                                       1,  // upperbound
                                       &new_transform_variables_function, // the variable transformation method. Optional argument when transformation is applied.

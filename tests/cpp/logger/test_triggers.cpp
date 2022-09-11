@@ -21,7 +21,7 @@ TEST_F(BaseTest, trigger_always) {
 TEST_F(BaseTest, trigger_on_improvement)
 {
 
-    problem::MetaData pb(0,0,"fake",2); // Minimization
+    problem::MetaData pb(0,0,"fake",2); // MIN
     logger::Info i;
     i.transformed_y = 9999;
 

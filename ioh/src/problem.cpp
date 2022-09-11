@@ -143,7 +143,7 @@ void define_functionalconstraint(py::module &m, const std::string &name){
             }),
             py::arg("fn"), 
             py::arg("weight") = 1.0, 
-            py::arg("enforced") = constraint::Enforced::SOFT,
+            py::arg("enforced") = constraint::Enforced::ADDITIVE,
             py::arg("name") = ""
         )
         .def("__repr__", &Class::repr);
@@ -252,8 +252,8 @@ public:
     explicit PyProblem(const std::string &name, const int n_variables = 5, const int instance = 1,
                        const bool is_minimization = true, Bounds<T> bounds = Bounds<T>()) :
         P(MetaData(instance, name, n_variables,
-                   is_minimization ? ioh::common::OptimizationType::Minimization
-                                   : ioh::common::OptimizationType::Maximization),
+                   is_minimization ? ioh::common::OptimizationType::MIN
+                                   : ioh::common::OptimizationType::MAX),
           bounds)
     {
 
@@ -365,7 +365,7 @@ void define_base_class(py::module &m, const std::string &name)
         .def_property_readonly("constraints", &ProblemType::constraints, "The constraints of the problem.")
         .def("add_constraint", &ProblemType::add_constraint, "add a constraint")
         .def("remove_constraint", &ProblemType::remove_constraint, "remove a constraint")
-        .def("enforce_bounds", &ProblemType::enforce_bounds, py::arg("weight") = 1., py::arg("how") = constraint::Enforced::SOFT)
+        .def("enforce_bounds", &ProblemType::enforce_bounds, py::arg("weight") = 1., py::arg("how") = constraint::Enforced::ADDITIVE)
         .def("__repr__", [=](const ProblemType &p) {
             using namespace ioh::common;
             const auto meta_data = p.meta_data();
@@ -436,7 +436,7 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
 
             wrap_function<T>(of, name, t, lb, ub, ptx, pty, pco, cs);
         },
-        py::arg("f"), py::arg("name"), py::arg("optimization_type") = ioh::common::OptimizationType::Minimization,
+        py::arg("f"), py::arg("name"), py::arg("optimization_type") = ioh::common::OptimizationType::MIN,
         py::arg("lb") = std::nullopt, py::arg("ub") = std::nullopt, py::arg("transform_variables") = std::nullopt,
         py::arg("transform_objectives") = std::nullopt, 
         py::arg("calculate_objective") = std::nullopt,
@@ -453,15 +453,15 @@ void define_helper_classes(py::module &m)
 {
     py::enum_<ioh::common::OptimizationType>(
         m, "OptimizationType", "Enum used for defining whether the problem is subject to minimization or maximization")
-        .value("MAX", ioh::common::OptimizationType::Maximization)
-        .value("MIN", ioh::common::OptimizationType::Minimization)
+        .value("MAX", ioh::common::OptimizationType::MAX)
+        .value("MIN", ioh::common::OptimizationType::MIN)
         .export_values();
 
     py::enum_<ioh::problem::constraint::Enforced>(m, "ConstraintEnforcement", "Enum defining constraint handling strategies")
         .value("NOT", ioh::problem::constraint::Enforced::NOT)
         .value("HIDDEN", ioh::problem::constraint::Enforced::HIDDEN)
-        .value("SOFT", ioh::problem::constraint::Enforced::SOFT)
-        .value("HARD", ioh::problem::constraint::Enforced::HARD)
+        .value("ADDITIVE", ioh::problem::constraint::Enforced::ADDITIVE)
+        .value("OVERRIDE", ioh::problem::constraint::Enforced::OVERRIDE)
         .export_values();
 
     define_solution<double>(m, "RealSolution");

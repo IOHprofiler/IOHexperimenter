@@ -33,7 +33,7 @@ namespace ioh
             //! Shorthand constructor for use with unknown optimum
             Solution(const int n_variables, const common::OptimizationType optimization_type) :
                 x(std::vector<T>(n_variables, std::numeric_limits<T>::signaling_NaN())),
-                y{optimization_type == common::OptimizationType::Minimization ? -std::numeric_limits<double>::infinity()
+                y{optimization_type == common::OptimizationType::MIN ? -std::numeric_limits<double>::infinity()
                                                                               : std::numeric_limits<double>::infinity()}
             {
             }
@@ -88,11 +88,11 @@ namespace ioh
              * @param optimization_type optimization type
              */
             MetaData(const int problem_id, const int instance, std::string name, const int n_variables,
-                     const common::OptimizationType optimization_type = common::OptimizationType::Minimization) :
+                     const common::OptimizationType optimization_type = common::OptimizationType::MIN) :
                 instance(instance),
                 problem_id(problem_id), name(std::move(name)), optimization_type{optimization_type},
                 n_variables(n_variables),
-                initial_objective_value(optimization_type == common::OptimizationType::Minimization
+                initial_objective_value(optimization_type == common::OptimizationType::MIN
                                             ? std::numeric_limits<double>::infinity()
                                             : -std::numeric_limits<double>::infinity())
             {
@@ -107,7 +107,7 @@ namespace ioh
              * @param optimization_type optimization type
              */
             MetaData(const int instance, const std::string &name, const int n_variables,
-                     const common::OptimizationType optimization_type = common::OptimizationType::Minimization) :
+                     const common::OptimizationType optimization_type = common::OptimizationType::MIN) :
                 MetaData(0, instance, name, n_variables, optimization_type)
             {
             }

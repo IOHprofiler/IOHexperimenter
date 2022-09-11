@@ -217,7 +217,7 @@ namespace ioh::logger
                         "\n\t\"maximization\": "
                         "{}, \n\t\"algorithm\": {{{}}},{}{}{}\n\t\"scenarios\": [\n\t\t{{{}}}\n\t]\n}}\n",
                         suite, problem.problem_id, problem.name,
-                        (problem.optimization_type == common::OptimizationType::Maximization), algorithm,
+                        (problem.optimization_type == common::OptimizationType::MAX), algorithm,
                         !attributes.empty()
                             ? fmt::format("\n\t\"experiment_attributes\": [{{{}}}],", fmt::join(attributes, "}, {"))
                             : "",
@@ -311,7 +311,7 @@ namespace ioh::logger
                     info_stream_ << "suite = \"" << current_suite_ << "\", funcId = " << problem.problem_id
                                  << ", funcName = \"" << problem.name << "\", DIM = " << problem.n_variables
                                  << ", maximization = \""
-                                 << (problem.optimization_type == common::OptimizationType::Maximization ? 'T' : 'F')
+                                 << (problem.optimization_type == common::OptimizationType::MAX ? 'T' : 'F')
                                  << "\", algId = \"" << algorithm_.name << "\", algInfo = \"" << algorithm_.info << '"';
 
                     // extra attrs const per experiment

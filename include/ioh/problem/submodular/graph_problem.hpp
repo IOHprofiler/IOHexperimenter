@@ -139,7 +139,7 @@ namespace ioh::problem::submodular
         std::shared_ptr<graph::Graph> graph;
 
         GraphConstraint(const std::shared_ptr<graph::Graph> &graph) : 
-            Constraint(constraint::Enforced::HARD), graph(graph) {}
+            Constraint(constraint::Enforced::OVERRIDE), graph(graph) {}
 
         bool compute_violation(const std::vector<int>& x, const double) override { 
             
@@ -176,7 +176,7 @@ namespace ioh::problem::submodular
 
         GraphProblem(const int problem_id, const int instance, const std::string &name,
                      const std::shared_ptr<graph::Graph> &graph) :
-            Integer(MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::Maximization),
+            Integer(MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::MAX),
                     Bounds<int>(graph->dimension()),
                     ConstraintSet<int>(std::make_shared<GraphConstraint>(graph))    
                 ),

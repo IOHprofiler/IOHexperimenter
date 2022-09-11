@@ -8,12 +8,12 @@ namespace ioh::problem
     {
         enum class Enforced
         {
-            NOT,    // don't do anything
-            HIDDEN, // calculate but don't penalize
+            NOT,        // don't do anything
+            HIDDEN,     // calculate but don't penalize
 
-                    // The following only have impact on constraint sets
-            SOFT,   // penalize, but aggregate all the constraint penalties into a sum 
-            HARD    // penalize, and if violation return only penalty for this constraint in contraintset         
+                        // The following only have impact on constraint sets:
+            ADDITIVE,   // penalize, but aggregate all the constraint penalties into a sum 
+            OVERRIDE    // penalize, and if violation return only penalty for this constraint in contraintset         
         };   
     }
     
@@ -127,7 +127,7 @@ namespace ioh::problem
          * @param cs the constraints
         */
         ConstraintSet(const Constraints<T> &cs = {}) :
-            Constraint<T>(constraint::Enforced::HARD), // ConstraintSet is always enforced
+            Constraint<T>(constraint::Enforced::OVERRIDE), // ConstraintSet is always enforced
             constraints(cs)
         {
         }
@@ -178,7 +178,7 @@ namespace ioh::problem
         }
 
         /**
-         * @brief Override voor penalize. If any of the constraints has a HARD enforcement policy and 
+         * @brief Override voor penalize. If any of the constraints has a OVERRIDE enforcement policy and 
          * is not feasible, the penalize method for that constraint will be returned by this method (by first occurence).
          * Otherwise, y is penalized by y + penalty(), which is the sum of all penalty values for each constraint.
          * 
@@ -188,7 +188,7 @@ namespace ioh::problem
         [[nodiscard]] double penalize(const double y) const override
         {
             for (const auto &ci : constraints)
-                if (ci->enforced == constraint::Enforced::HARD and !ci->cached_is_feasible())
+                if (ci->enforced == constraint::Enforced::OVERRIDE and !ci->cached_is_feasible())
                     return ci->penalize(y);
 
             return y + penalty();
@@ -350,7 +350,7 @@ namespace ioh::problem
          * @param name a name for this constraint, only used for the string representation.
         */
         FunctionalConstraint(ConstraintFunction<T> fn, const double weight = 1.0,
-                             const constraint::Enforced enforced = constraint::Enforced::SOFT,
+                             const constraint::Enforced enforced = constraint::Enforced::ADDITIVE,
                              const std::string &name = "") : 
             Constraint<T>(enforced, weight),
             fn_(fn), name_(name)

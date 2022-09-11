@@ -28,7 +28,7 @@ TEST_F(BaseTest, test_wrap_real_problem){
     using namespace ioh::problem;
     auto &factory = ProblemRegistry<Real>::instance();
     
-    wrap_function<double>(fn<double>, "fn", OptimizationType::Minimization, -5, 5, tx<double>, ty, co<double>);
+    wrap_function<double>(fn<double>, "fn", OptimizationType::MIN, -5, 5, tx<double>, ty, co<double>);
     const std::vector<double> x0 = {1, 0, 2};
 
     for (auto inst: {1, 2, 3}){
@@ -47,7 +47,7 @@ TEST_F(BaseTest, test_wrap_integer_problem){
     using namespace ioh::problem;
     auto &factory = ProblemRegistry<Integer>::instance();
     
-    wrap_function<int>(fn<int>, "fn", OptimizationType::Minimization, -5, 5, tx<int>, ty, co<int>);
+    wrap_function<int>(fn<int>, "fn", OptimizationType::MIN, -5, 5, tx<int>, ty, co<int>);
     const std::vector<int> x0 = {1, 0, 2};
 
     for (auto inst: {1, 2, 3}){

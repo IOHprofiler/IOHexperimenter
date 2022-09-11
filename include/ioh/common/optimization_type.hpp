@@ -10,8 +10,8 @@ namespace ioh
         //! Enum containing minimization = 0 and maximization = 1 flags
         enum class OptimizationType
         {
-            Minimization,
-            Maximization
+            MIN,
+            MAX
         };
 
         //! Wrapper class for optimization type, contains comparison operator.
@@ -29,8 +29,8 @@ namespace ioh
              * 
              * @param type The optimization type
              */
-            FOptimizationType(const OptimizationType type = OptimizationType::Maximization) :
-                type_(type), comparator_(type == OptimizationType::Maximization
+            FOptimizationType(const OptimizationType type = OptimizationType::MAX) :
+                type_(type), comparator_(type == OptimizationType::MAX
                                              ? std::function<bool(double, double)>(std::greater<double>())
                                              : std::function<bool(double, double)>(std::less<double>()))
 
@@ -45,11 +45,11 @@ namespace ioh
             std::string repr() const override
             {
                 return fmt::format("<OptimizationType: {}>",
-                                   type_ == OptimizationType::Maximization ? "Maximization" : "Minization");
+                                   type_ == OptimizationType::MAX ? "MAX" : "Minization");
             }
 
 
-            /** Comparison operator between two values v1 & v2. > When OptimizationType is Maximization, < otherwise. 
+            /** Comparison operator between two values v1 & v2. > When OptimizationType is MAX, < otherwise. 
              * 
              * @return true if v1 is better than v2
              */

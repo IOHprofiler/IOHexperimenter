@@ -305,7 +305,7 @@ namespace ioh
                 {
                     _type = pb_info.optimization_type;
                     _has_type = true;
-                    if (_type.type() == common::OptimizationType::Minimization)
+                    if (_type.type() == common::OptimizationType::MIN)
                     {
                         IOH_DBG(debug, "reconfigure problem type (as minimization)")
                         _best = std::numeric_limits<double>::infinity();
@@ -324,13 +324,13 @@ namespace ioh
                 if (_type(log_info.transformed_y, _best))
                 {
                     IOH_DBG(debug, "triggered on improvement by " << log_info.transformed_y
-                        << (_type == common::OptimizationType::Minimization ? " < " : " > ")
+                        << (_type == common::OptimizationType::MIN ? " < " : " > ")
                         << _best)
                     _best = log_info.transformed_y;
                     return true;
                 }
                 IOH_DBG(xdebug, "not triggered on improvement by " << log_info.transformed_y
-                    << (_type == common::OptimizationType::Minimization ? " < " : " > ")
+                    << (_type == common::OptimizationType::MIN ? " < " : " > ")
                     << _best)
                 return false;
             }

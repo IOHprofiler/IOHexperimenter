@@ -11,8 +11,8 @@ TEST_F(BaseTest, common_test)
 {
 	using namespace ioh::common;
     
-    auto min = FOptimizationType(OptimizationType::Minimization);
-    auto max = FOptimizationType(OptimizationType::Maximization);
+    auto min = FOptimizationType(OptimizationType::MIN);
+    auto max = FOptimizationType(OptimizationType::MAX);
 
 	EXPECT_TRUE(max(4, 2));
 	EXPECT_FALSE(max(2, 2));

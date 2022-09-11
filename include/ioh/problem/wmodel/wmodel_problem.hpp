@@ -114,7 +114,7 @@ namespace ioh::problem
                const double dummy_select_rate, const int epistasis_block_size, const int neutrality_mu,
                const int ruggedness_gamma) :
             Integer(
-                MetaData(problem_id, instance, name, n_variables, common::OptimizationType::Maximization),
+                MetaData(problem_id, instance, name, n_variables, common::OptimizationType::MAX),
                     Bounds<int>(n_variables, 0, 1)
             ),
             dummy_select_rate_(dummy_select_rate), epistasis_block_size_(epistasis_block_size),

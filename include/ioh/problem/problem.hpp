@@ -243,7 +243,7 @@ namespace ioh
                 return state_.current.y;
             }
 
-            void enforce_bounds(const double weight = 1.0, const constraint::Enforced how = constraint::Enforced::SOFT)
+            void enforce_bounds(const double weight = 1.0, const constraint::Enforced how = constraint::Enforced::ADDITIVE)
             {
                 
                 bounds_.weight = weight;
@@ -421,7 +421,7 @@ namespace ioh
             WrappedProblem(
                 ObjectiveFunction<T> f, const std::string &name, const int n_variables, const int problem_id = 0,
                 const int instance_id = 0,
-                const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
+                const common::OptimizationType optimization_type = common::OptimizationType::MIN,
                 Bounds<T> bounds = {}, 
                 VariablesTransformationFunction<T> transform_variables_function = utils::identity<std::vector<T>, int>,
                 ObjectiveTransformationFunction transform_objectives_function = utils::identity<double, int>,
@@ -459,7 +459,7 @@ namespace ioh
         template <typename T>
         void
         wrap_function(ObjectiveFunction<T> f, const std::string &name,
-                      const common::OptimizationType optimization_type = common::OptimizationType::Minimization,
+                      const common::OptimizationType optimization_type = common::OptimizationType::MIN,
                       const std::optional<T> lb = std::nullopt, const std::optional<T> ub = std::nullopt,
                       std::optional<VariablesTransformationFunction<T>> transform_variables_function = std::nullopt,
                       std::optional<ObjectiveTransformationFunction> transform_objectives_function = std::nullopt,

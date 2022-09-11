@@ -75,8 +75,8 @@ TEST_F(BaseTest, FunctionalConstraint) {
     using namespace ioh::problem;
     using namespace ioh::problem::constraint;
     
-    auto c1 = std::make_shared<FunctionalConstraint<double>>(y_cons, 1.0, Enforced::SOFT,"c1");
-    auto c2 = std::make_shared<FunctionalConstraint<double>>(x_cons, 10, Enforced::SOFT, "c2");
+    auto c1 = std::make_shared<FunctionalConstraint<double>>(y_cons, 1.0, Enforced::ADDITIVE,"c1");
+    auto c2 = std::make_shared<FunctionalConstraint<double>>(x_cons, 10, Enforced::ADDITIVE, "c2");
 
     Sphere p(1, 2);
     std::vector<double> x0{10.0, 1.};

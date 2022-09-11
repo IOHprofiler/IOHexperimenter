@@ -111,7 +111,7 @@ TEST_F(BaseTest, eaf_all_levels)
         }
     }
 
-    logger::eaf::Levels all_levels_of(common::OptimizationType::Minimization);
+    logger::eaf::Levels all_levels_of(common::OptimizationType::MIN);
     auto levels = all_levels_of(logger);
 
     IOH_DBG(info, levels.size() << " resulting attainment levels:")
@@ -169,7 +169,7 @@ TEST_F(BaseTest, eaf_some_levels)
         }
     }
 
-    logger::eaf::Levels levels_at(common::OptimizationType::Minimization, {0, nb_runs/2, nb_runs-1});
+    logger::eaf::Levels levels_at(common::OptimizationType::MIN, {0, nb_runs/2, nb_runs-1});
     auto levels = levels_at(logger);
     EXPECT_EQ(levels.size(), 3);
 }
@@ -196,7 +196,7 @@ TEST_F(BaseTest, eaf_levels_volume)
 
     auto levels = logger::eaf::levels(logger);
 
-    double volume = logger::eaf::stat::volume(common::OptimizationType::Minimization, levels);
+    double volume = logger::eaf::stat::volume(common::OptimizationType::MIN, levels);
     IOH_DBG(info, "EAF volume: " << volume)
     EXPECT_GT(volume, 0);
     // EXPECT_LT(volume, nb_runs * sample_size * FIXME );
