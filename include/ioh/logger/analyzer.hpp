@@ -493,8 +493,8 @@ namespace ioh::logger
                                                              transformed_y_best_};
 
 
-                //! The only properties used by the analyzer (actually only y_best)
-                static inline Properties default_properties_{watch::evaluations, watch::raw_y, watch::raw_y_best};
+                //! The only properties used by the analyzer (actually only raw_y is used)
+                static inline Properties default_properties_{watch::evaluations, watch::raw_y};
             };
         } // namespace v1
         

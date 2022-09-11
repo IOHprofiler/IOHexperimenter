@@ -2,6 +2,9 @@
 #pragma once
 
 #include <fmt/format.h>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 #include <string>
 #include <utility>
 #include "ioh/common/log.hpp"
@@ -117,9 +120,92 @@ namespace ioh::common::file
         {
         };
 
+        
+
     } // namespace utils
 
 
+    /**
+     * @brief Merge the tmp_dat_file_path to tar_dat_file_path
+     * 
+     * @param tmp_dat_file_path 
+     * @param tar_dat_file_path 
+     */
+    inline void merge_dat_file(const std::string tmp_dat_file_path, const std::string tar_dat_file_path) {
+        std::ofstream tar_dat_file(tar_dat_file_path,std::ios_base::app);
+        std::ifstream tmp_dat_file(tmp_dat_file_path);
+        std::string tmp_line;
+        if (tar_dat_file.is_open() && tmp_dat_file.is_open()) {
+            while (getline(tmp_dat_file,tmp_line)) {
+                tar_dat_file << tmp_line << std::endl;
+            }
+        }
+        tar_dat_file.close();
+        tmp_dat_file.close();
+    }
+
+    /**
+     * @brief Merge the files in tmp_folder into the target folder
+     * 
+     * @param tmp_folder 
+     * @param target_folder 
+     */
+    inline void merge_output_to_single_folder(std::string tmp_folder, std::string target_folder) 
+    {
+        const fs::path tmp_directory_path{tmp_folder};
+        const fs::path target_directory_path{target_folder};
+
+        // std::vector<fs::path> tmp_sub_directories;
+        // std::vector<fs::path> tmp_sub_info;
+        
+        // ! Getting the file name directory names
+        for (auto const& dir_entry : fs::directory_iterator{tmp_directory_path}) 
+        {
+            if(!dir_entry.is_directory()) {
+                std::string tmp_file_string = dir_entry.path().filename().string();
+                if(tmp_file_string.substr(tmp_file_string.length()-5,tmp_file_string.length()-1) == ".json")
+                {
+                    std::ifstream tmp(dir_entry.path().string(), std::ifstream::binary);
+                    json tmp_data = json::parse(tmp);
+
+                    if(!fs::exists(target_folder + tmp_file_string)) {
+                        fs::copy(tmp_folder+tmp_file_string, target_folder+tmp_file_string);
+                        std::ifstream tar(target_folder + tmp_file_string);
+                        json tar_data = json::parse(tar);
+                        auto tmp_scenarios = tmp_data["scenarios"];
+                        for (auto tmp_dim_data : tmp_scenarios) {
+                            merge_dat_file(tmp_folder+to_string(tmp_dim_data["path"]),target_folder+to_string(tmp_dim_data["path"]));
+                        }
+                        tar.close();
+                    } else {
+                        std::ifstream tar(target_folder + tmp_file_string);
+                        json tar_data = json::parse(tar);
+                        auto tmp_scenarios = tmp_data["scenarios"];
+                        for (auto tmp_dim_data : tmp_scenarios) {
+                            auto dim = tmp_dim_data["dimension"];
+                            auto tmp_run_data = tmp_dim_data["runs"];
+                            // std::cout << tmp_ins_data << std::endl;
+                            for (size_t i = 0; i != tar_data["scenarios"].size(); ++i) {
+                                for (auto tmp_ins_data : tmp_run_data) {
+                                    if(tar_data["scenarios"].at(i)["dimension"] == dim) {
+                                    tar_data["scenarios"][i]["runs"] += tmp_ins_data;
+                                    }
+                                }
+                            }
+                            auto path = to_string(tmp_dim_data["path"]);
+                            path.erase(remove(path.begin(), path.end(), '"'), path.end()); 
+                            merge_dat_file(tmp_folder+path,target_folder+path);
+                        }
+                        tar.close();
+
+                        std::ofstream tar_json(target_folder + dir_entry.path().filename().string());
+                        tar_json << tar_data;
+                        tar_json.close();
+                    }
+                }
+            }   
+        }
+    }
     /**
      * @brief Get the file contents as string object
      *
