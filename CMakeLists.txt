@@ -45,6 +45,10 @@ include_directories(${EXTERNAL_DIR}/fmt/include/)
 add_subdirectory(${EXTERNAL_DIR}/fmt)
 target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
 
+include_directories(${EXTERNAL_DIR}/clutchlog)
+include_directories(${EXTERNAL_DIR}/json/include)
+
+
 if(ENABLE_MKLANDSCAPE_PROBLEMS)
 
     # Adding Macro for C++ Headers
@@ -68,9 +72,6 @@ if(ENABLE_MKLANDSCAPE_PROBLEMS)
     
     add_compile_definitions(MK_COMPILED)
 endif()
-
-# Include external clutchlog lib
-include_directories(${EXTERNAL_DIR}/clutchlog)
 
 
 target_include_directories(ioh
@@ -160,7 +161,6 @@ endif()
 
 if(BUILD_SERVER)
     include_directories(${EXTERNAL_DIR}/cxxopts/include/)
-    include_directories(${EXTERNAL_DIR}/json/include/)
     add_subdirectory(server)
 endif()
 
