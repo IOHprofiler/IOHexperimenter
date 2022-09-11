@@ -45,8 +45,16 @@ include_directories(${EXTERNAL_DIR}/fmt/include/)
 add_subdirectory(${EXTERNAL_DIR}/fmt)
 target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
 
-include_directories(${EXTERNAL_DIR}/clutchlog)
-include_directories(${EXTERNAL_DIR}/json/include)
+# target_include_directories(ioh INTERFACE ${EXTERNAL_DIR}/clutchlog)
+target_include_directories(ioh INTERFACE 
+    $<BUILD_INTERFACE:${EXTERNAL_DIR}/clutchlog>  
+    $<INSTALL_INTERFACE:clutchlog> 
+)
+
+target_include_directories(ioh INTERFACE 
+    $<BUILD_INTERFACE:${EXTERNAL_DIR}/json/include>  
+    $<INSTALL_INTERFACE:json/include> 
+)
 
 
 if(ENABLE_MKLANDSCAPE_PROBLEMS)
