@@ -168,7 +168,7 @@ namespace ioh::common::file
         // ! Getting the file name directory names
         for (auto const& dir_entry : fs::directory_iterator{tmp_directory_path}) 
         {
-            if(!dir_entry.is_directory()) {
+            if(!fs::is_directory(dir_entry)) {
                 std::string tmp_file_string = dir_entry.path().filename().string();
                 if(tmp_file_string.substr(tmp_file_string.length()-5,tmp_file_string.length()-1) == ".json")
                 {
