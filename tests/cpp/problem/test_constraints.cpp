@@ -6,7 +6,6 @@
 
 TEST_F(BaseTest, BoxBBOBConstraint)
 {
-
     using namespace ioh::problem::bbob;
 
     Sphere p(1, 1);
@@ -39,7 +38,6 @@ TEST_F(BaseTest, BoundsAsConstraints) {
 
 TEST_F(BaseTest, BoxPBOConstraint)
 {
-
     using namespace ioh::problem::pbo;
 
     LeadingOnes p(1, 1);
@@ -120,4 +118,16 @@ TEST_F(BaseTest, GraphConstraint) {
     EXPECT_FLOAT_EQ((float)problem->constraints()[0]->violation(), 1.f);
     EXPECT_FLOAT_EQ((float)problem->constraints()[1]->violation(), 0.f);
     EXPECT_FLOAT_EQ((float)problem->constraints().violation(), 1.f);
+
+    // Turn of bound constraint
+    problem->enforce_bounds(0);
+    
+    // Turn graph constraint into a hidden constraint, so only compute it but not enforce it. 
+    problem->constraints()[0]->enforced = ioh::problem::constraint::Enforced::HIDDEN;
+    const auto y2 = (*problem)(x1);
+
+    EXPECT_FLOAT_EQ((float)y2, 450.f);
+    EXPECT_FLOAT_EQ((float)problem->constraints()[0]->violation(), -440.f);
+    EXPECT_FLOAT_EQ((float)problem->constraints()[1]->violation(), 0.f);
+    EXPECT_FLOAT_EQ((float)problem->constraints().violation(), -440.f);
 }

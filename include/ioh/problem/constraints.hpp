@@ -9,7 +9,7 @@ namespace ioh::problem
         enum class Enforced
         {
             NOT,        // don't do anything
-            HIDDEN,     // calculate but don't penalize
+            HIDDEN,     // calculate violation, but don't penalize
 
                         // The following only have impact on constraint sets:
             ADDITIVE,   // penalize, but aggregate all the constraint penalties into a sum 
@@ -61,11 +61,12 @@ namespace ioh::problem
         */
         [[nodiscard]] bool is_feasible(const std::vector<T> &x, const double y)
         {
+            violation_ = 0.0;
             if (enforced == constraint::Enforced::NOT)
                 return true;
             
-            is_feasible_ = enforced == constraint::Enforced::HIDDEN or !compute_violation(x, y);
-            return is_feasible_;
+            is_feasible_ = !compute_violation(x, y);
+            return enforced == constraint::Enforced::HIDDEN or is_feasible_;
         }
 
         /**
