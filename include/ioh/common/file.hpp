@@ -11,6 +11,7 @@
 
 #ifdef FSEXPERIMENTAL
 #define JSON_HAS_EXPERIMENTAL_FILESYSTEM 1
+#define JSON_HAS_FILESYSTEM 0
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 #else
