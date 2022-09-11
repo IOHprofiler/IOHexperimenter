@@ -27,6 +27,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
         link_libraries(stdc++fs)
         add_compile_definitions(FSEXPERIMENTAL)
+        add_compile_definitions(JSON_HAS_EXPERIMENTAL_FILESYSTEM)
     endif()
 endif()   
 
@@ -51,13 +52,6 @@ include_directories(${EXTERNAL_DIR}/clutchlog)
 set(JSON_Install OFF CACHE INTERNAL "")
 add_subdirectory(${EXTERNAL_DIR}/json)
 target_link_libraries(ioh INTERFACE nlohmann_json::nlohmann_json)
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" 
-    AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 
-    AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
-        target_link_libraries(nlohmann_json INTERFACE stdc++fs)
-        target_compile_definitions(nlohmann_json INTERFACE FSEXPERIMENTAL)
-endif()
 
 
 if(ENABLE_MKLANDSCAPE_PROBLEMS)
