@@ -15,6 +15,8 @@
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 #else
+#undef JSON_HAS_EXPERIMENTAL_FILESYSTEM 
+#define JSON_HAS_FILESYSTEM 1
 #include <filesystem>
 namespace fs = std::filesystem;
 #endif
