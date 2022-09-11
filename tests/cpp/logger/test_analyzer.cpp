@@ -164,8 +164,8 @@ TEST_F(BaseTest, test_logging_new_header) {
     
     compare_file_with_string(output_directory / info_file_name1, test_info1);
     
-    const std::string header = "evaluations raw_y raw_y_best violation penalty"  
-                                "\n1 27.7633746377 27.7633746377 4.0000000000 4.0000000000\n";
+    const std::string header = "evaluations raw_y violation penalty"  
+                                "\n1 27.7633746377 4.0000000000 4.0000000000\n";
     compare_file_with_string(get_dat_path(output_directory, p), header + header);
 
     fs::remove_all(output_directory);
