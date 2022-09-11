@@ -56,7 +56,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
     AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 
     AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
         target_link_libraries(nlohmann_json INTERFACE stdc++fs)
-        target_add_compile_definitions(nlohmann_json FSEXPERIMENTAL)
+        target_compile_definitions(nlohmann_json INTERFACE FSEXPERIMENTAL)
 endif()
 
 
