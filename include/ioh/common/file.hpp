@@ -2,20 +2,24 @@
 #pragma once
 
 #include <fmt/format.h>
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
+
+
 
 #include <string>
 #include <utility>
 #include "ioh/common/log.hpp"
 
 #ifdef FSEXPERIMENTAL
+#define JSON_HAS_EXPERIMENTAL_FILESYSTEM 1
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 #else
 #include <filesystem>
 namespace fs = std::filesystem;
 #endif
+
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 //! File namespace
 namespace ioh::common::file

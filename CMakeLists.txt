@@ -27,7 +27,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
         link_libraries(stdc++fs)
         add_compile_definitions(FSEXPERIMENTAL)
-        add_compile_definitions(JSON_HAS_EXPERIMENTAL_FILESYSTEM)
     endif()
 endif()   
 
