@@ -36,6 +36,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt install ${{ matrix.compiler }} -y
+        git submodule status
         cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Configure CMake

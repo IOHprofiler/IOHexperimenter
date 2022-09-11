@@ -19,9 +19,6 @@ namespace fs = std::experimental::filesystem;
 namespace fs = std::filesystem;
 #endif
 
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
-
 //! File namespace
 namespace ioh::common::file
 {
