@@ -183,7 +183,6 @@ namespace ioh::logger
                 const std::vector<std::string> run_attribute_names;
                 //! attributes names
                 const std::vector<std::string> attribute_names;
-
                 //! Scenarios
                 std::vector<ScenarioInfo> dims;
 
@@ -370,7 +369,7 @@ namespace ioh::logger
                          const std::string &algorithm_name = "algorithm_name",
                          const std::string &algorithm_info = "algorithm_info",
                          const bool store_positions = false,
-                         const bool use_old_data_format = false,
+                         const bool use_old_data_format = true,
                          const structures::Attributes &attributes = {}
                 ) :
                     FlatFile(triggers,
@@ -511,7 +510,7 @@ namespace ioh::logger
              * attributes} csv file: {runid, "function evaluation", "current f(x)" "best-so-far f(x)" "current af(x)+b"
              * "best af(x)+b"}
              */
-            class Analyzer : public analyzer::v1::Analyzer
+            class Analyzer : public v1::Analyzer
             {
                 std::map<std::string, structures::ExperimentInfo> experiments_;
                 std::string current_filename_;
@@ -572,7 +571,31 @@ namespace ioh::logger
                 }
 
             public:
-                using logger::analyzer::v1::Analyzer::Analyzer;
+                /** Logger formatting data in a format supported by iohprofiler.
+                 *
+                 * @param triggers When to fire a log event.
+                 * @param additional_properties What to log.
+                 * @param root Path in which to store the data.
+                 * @param folder_name Name of folder in which to store data. Will be created as a subdirectory of
+                 * `root`.
+                 * @param algorithm_name The string separating fields.
+                 * @param algorithm_info The string indicating a comment.
+                 * @param store_positions Whether to store x positions in the logged data
+                 * @param use_old_data_format Wheter to use the old data format
+                 * @param attributes See: analyzer::Attributes.
+                 */
+                Analyzer(const Triggers &triggers = {trigger::on_improvement},
+                         const Properties &additional_properties = {}, 
+                         const fs::path &root = fs::current_path(),
+                         const std::string &folder_name = "ioh_data",
+                         const std::string &algorithm_name = "algorithm_name",
+                         const std::string &algorithm_info = "algorithm_info", const bool store_positions = false,
+                         const structures::Attributes &attributes = {}) :
+                    v1::Analyzer(triggers, additional_properties, root, folder_name, algorithm_name,
+                                           algorithm_info, 
+                        store_positions, false, attributes)
+                {
+                }
 
                 virtual ~Analyzer() { write(); }
             };

@@ -133,13 +133,14 @@ public:
 };
 
 // Python spec. implementation
-class PyAnalyzer : public PyWatcher<logger::Analyzer>
+template<typename A=logger::Analyzer>
+class PyAnalyzer : public PyWatcher<A>
 {
     std::vector<double *> double_ptrs_;
     std::vector<PyProperty *> prop_ptrs_;
 
 public:
-    using Analyzer = PyWatcher<logger::Analyzer>;
+    using Analyzer = PyWatcher<A>;
     using Analyzer::Analyzer;
 
     virtual void close() override
@@ -447,17 +448,18 @@ void define_store(py::module &m)
         });
 }
 
+template<typename A>
 void define_analyzer(py::module &m)
 {
     using namespace logger;
     Triggers def_trigs{trigger::on_improvement};
     Properties def_props{};
-    py::class_<PyAnalyzer, Watcher, std::shared_ptr<PyAnalyzer>>(m, "Analyzer")
-        .def(py::init<Triggers, Properties, fs::path, std::string, std::string, std::string, bool, bool>(),
+    py::class_<PyAnalyzer<A>, Watcher, std::shared_ptr<PyAnalyzer<A>>>(m, "Analyzer")
+        .def(py::init<Triggers, Properties, fs::path, std::string, std::string, std::string, bool>(),
              py::arg("triggers") = def_trigs, py::arg("additional_properties") = def_props,
              py::arg("root") = fs::current_path(), py::arg("folder_name") = "ioh_data",
              py::arg("algorithm_name") = "algorithm_name", py::arg("algorithm_info") = "algorithm_info",
-             py::arg("store_positions") = false, py::arg("use_old_data_format") = false,
+             py::arg("store_positions") = false
              R"pbdoc(
                 A logger which stores all tracked properties to a file.
 
@@ -579,7 +581,8 @@ void define_loggers(py::module &m)
 
     define_flatfile(m);
     define_store(m);
-    define_analyzer(m);
+    define_analyzer<logger::Analyzer>(m);
+
     define_eah(m);
     define_eaf(m);
 }
