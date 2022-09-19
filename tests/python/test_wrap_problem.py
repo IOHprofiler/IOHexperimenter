@@ -66,7 +66,7 @@ class TestWrappedProblem(unittest.TestCase):
             self.assertEqual(y, 0.0)
 
     def test_wrap_problem_constrains(self):
-        c = ioh.RealConstraint(lambda x,y: float(x[0] > 1), 10.0)
+        c = ioh.RealConstraint(lambda x: float(x[0] > 1), 10.0)
         p = ioh.wrap_problem(zero, "test", "Real", dimension = 2, constraints=[c])
         self.assertEqual(p([10, 0]), 10.0)
         p.remove_constraint(c)

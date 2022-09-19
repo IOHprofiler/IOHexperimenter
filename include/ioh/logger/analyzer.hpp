@@ -419,6 +419,7 @@ namespace ioh::logger
                 {
                     IOH_DBG(debug, "Analyzer log");
                     log_info_ = log_info;
+                    evals_ = log_info.evaluations;
                     FlatFile::log(log_info);
                 }
 
@@ -426,7 +427,7 @@ namespace ioh::logger
                 virtual void call(const Info &log_info) override
                 {
                     IOH_DBG(debug, "Analyzer called");
-                    evals_ = log_info.evaluations;
+                    
                     FlatFile::call(log_info);
                     if (problem_->optimization_type(log_info.raw_y, best_point_.point.y))
                         best_point_ = {log_info.evaluations, {log_info.x, log_info.raw_y}};
@@ -524,7 +525,7 @@ namespace ioh::logger
                 }
 
                 //! Gets called when a new problem is attached
-                virtual void handle_new_problem(const problem::MetaData &problem)
+                virtual void handle_new_problem(const problem::MetaData &problem) override
                 {
                     using str = std::string;
                     using sAttr = structures::Attribute<str>;
@@ -538,14 +539,14 @@ namespace ioh::logger
                 }
 
                 //! Gets called after the last evaluation of a run
-                virtual void handle_new_dimension(const problem::MetaData &problem, const std::string &dat_path)
+                virtual void handle_new_dimension(const problem::MetaData &problem, const std::string &dat_path) override
                 {
                     experiments_.at(current_filename_)
                         .dims.emplace_back(static_cast<size_t>(problem.n_variables), dat_path);
                 }
 
                 //! Gets called when the current problem changes dimension
-                virtual void handle_last_eval()
+                virtual void handle_last_eval() override
                 {
                     if (best_point_.evals != 0)
                     {
@@ -559,9 +560,11 @@ namespace ioh::logger
                     }
                 }
 
+            protected:
                 //! Writes all data to the info file
-                void write()
+                void close() override
                 {
+                    handle_last_eval(); // TODO: check if this doesn't cause duplicate writes
                     for (const auto &[filename, exp] : experiments_)
                     {
                         info_stream_ = std::ofstream(path_ / filename);
@@ -597,7 +600,7 @@ namespace ioh::logger
                 {
                 }
 
-                virtual ~Analyzer() { write(); }
+                virtual ~Analyzer() { close(); }
             };
         } // namespace v2
     } // namespace analyzer

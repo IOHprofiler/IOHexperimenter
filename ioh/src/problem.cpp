@@ -10,7 +10,6 @@
 namespace py = pybind11;
 using namespace ioh::problem;
 
-
 static std::vector<py::handle> WRAPPED_FUNCTIONS;
 
 bool register_python_fn(py::handle f)
@@ -89,8 +88,8 @@ template <typename T>
 struct PyConstraint: Constraint<T> {
     using Constraint<T>::Constraint;
 
-    bool compute_violation(const std::vector<T>& x, const double y) override {
-        PYBIND11_OVERRIDE_PURE(bool, Constraint<T>, compute_violation, py::array(x.size(), x.data()), y);
+    bool compute_violation(const std::vector<T>& x) override {
+        PYBIND11_OVERRIDE_PURE(bool, Constraint<T>, compute_violation, py::array(x.size(), x.data()));
     }
 
     [[nodiscard]] std::string repr() const override
@@ -116,13 +115,15 @@ void define_constraint(py::module &m, const std::string &name){
 
 template <typename T>
 void define_constraintset(py::module &m, const std::string &name){
-    using Parent = Constraint<T>;
     using Class = ConstraintSet<T>;
 
-    py::class_<Class, Parent, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
+    py::class_<Class, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<Constraints<T>>(), py::arg("constraints"))
         .def("add", &Class::add)
         .def("remove", &Class::remove)
+        .def("penalize", &Class::penalize)
+        .def("penalty", &Class::penalty)
+        .def("violation", &Class::violation)
         .def("n", &Class::n)
         .def("__getitem__", &Class::operator[])
         .def("__repr__", &Class::repr);
@@ -138,12 +139,12 @@ void define_functionalconstraint(py::module &m, const std::string &name){
             // py::init<ConstraintFunction<T>, double, constraint::Enforced, std::string>(), 
             py::init([](py::handle f, const double w, const constraint::Enforced e, const std::string& n){
                 register_python_fn(f);
-                auto fn = [f](const std::vector<T> &x, const double y) { return PyFloat_AsDouble(f(py::array(x.size(), x.data()), y).ptr()); };
+                auto fn = [f](const std::vector<T> &x) { return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr()); };
                 return Class(fn, w, e, n);
             }),
             py::arg("fn"), 
             py::arg("weight") = 1.0, 
-            py::arg("enforced") = constraint::Enforced::ADDITIVE,
+            py::arg("enforced") = constraint::Enforced::SOFT,
             py::arg("name") = ""
         )
         .def("__repr__", &Class::repr);
@@ -365,7 +366,7 @@ void define_base_class(py::module &m, const std::string &name)
         .def_property_readonly("constraints", &ProblemType::constraints, "The constraints of the problem.")
         .def("add_constraint", &ProblemType::add_constraint, "add a constraint")
         .def("remove_constraint", &ProblemType::remove_constraint, "remove a constraint")
-        .def("enforce_bounds", &ProblemType::enforce_bounds, py::arg("weight") = 1., py::arg("how") = constraint::Enforced::ADDITIVE)
+        .def("enforce_bounds", &ProblemType::enforce_bounds, py::arg("weight") = 1., py::arg("how") = constraint::Enforced::SOFT)
         .def("__repr__", [=](const ProblemType &p) {
             using namespace ioh::common;
             const auto meta_data = p.meta_data();
@@ -460,7 +461,8 @@ void define_helper_classes(py::module &m)
     py::enum_<ioh::problem::constraint::Enforced>(m, "ConstraintEnforcement", "Enum defining constraint handling strategies")
         .value("NOT", ioh::problem::constraint::Enforced::NOT)
         .value("HIDDEN", ioh::problem::constraint::Enforced::HIDDEN)
-        .value("ADDITIVE", ioh::problem::constraint::Enforced::ADDITIVE)
+        .value("SOFT", ioh::problem::constraint::Enforced::SOFT)
+        .value("HARD", ioh::problem::constraint::Enforced::HARD)
         .value("OVERRIDE", ioh::problem::constraint::Enforced::OVERRIDE)
         .export_values();
 

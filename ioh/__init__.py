@@ -1,6 +1,7 @@
 """Python interface of IOH package. Includes several ease-of-use routines not available in C++. 
 """
 
+from heapq import merge
 import os
 import math
 import warnings
@@ -9,6 +10,7 @@ import multiprocessing
 import typing
 import shutil
 import copy
+import json
  
 from .iohcpp import (
     problem,
@@ -216,6 +218,7 @@ class Experiment:
         zip_output: bool = True,
         remove_data: bool = False,
         enforce_bounds: bool = False,
+        old_logger: bool = True
     ):
         """
         Parameters
@@ -311,6 +314,7 @@ class Experiment:
         self.zip_output = zip_output
         self.remove_data = remove_data
         self.enforce_bounds = enforce_bounds
+        self.old_logger = old_logger
 
         if os.path.isdir(self.logger_root) and self.merge_output:
             warnings.warn(
@@ -345,7 +349,9 @@ class Experiment:
         if self.logged:
             logger_params = copy.deepcopy(self.logger_params)
             logger_params["folder_name"] += f"-tmp-{ii}"
-            l = logger.Analyzer(**logger_params)
+            
+            logger_cls = logger.old.Analyzer if self.old_logger else logger.Analyzer
+            l = logger_cls(**logger_params) 
             l.set_experiment_attributes(self.experiment_attributes)
             l.add_run_attributes(algorithm, self.run_attributes)
             l.watch(algorithm, self.logged_attributes)
@@ -403,6 +409,35 @@ class Experiment:
             The target folder, i.e. the folder with the final output
         """
 
+
+        def merge_info_file(target, source):                        
+            ext = ".info" if self.old_logger else ".json"
+
+            if not (target.endswith(ext) and source.endswith(ext)):
+                raise RuntimeError("Merging output with incompatible folders")
+
+            has_file = os.path.isfile(target)
+            if not has_file:
+                return os.rename(source, target)
+            with open(source) as info_in:
+                if self.old_logger:
+                    with open(target, "a+") as info_out:        
+                        info_out.write("\n")
+                        for line in info_in:
+                            info_out.write(line)
+                else:
+                    with open(target, "r+") as info_out:
+                        data_out = json.loads(info_out.read())
+                        data_in = json.loads(info_in.read())
+                        for scen in data_in['scenarios']:
+                            scen_out, *_ = [s for s in data_out['scenarios'] if s['dimension'] == scen['dimension']]
+                            scen_out['runs'].extend(scen['runs'])
+                        info_out.seek(0)
+                        info_out.write(json.dumps(data_out, indent=4))
+                        info_out.truncate()
+                os.remove(source)
+                    
+
         def file_to_dir(path):
             root, dirname = os.path.split(os.path.splitext(path)[0])
             return os.path.join(root, dirname.replace("IOHprofiler", "data"))
@@ -423,22 +458,12 @@ class Experiment:
                     source = os.path.join(folder, info_file)
                     if not os.path.isfile(source):
                         continue
-
-                    if not info_file.endswith(".info"):
-                        raise RuntimeError("Merging output with incompatible folders")
-
+                    
                     target = os.path.join(target_folder, info_file)
-                    target_exists = os.path.isfile(target)
+                    merge_info_file(target, source)
 
                     source_dat_folder = file_to_dir(source)
                     target_dat_folder = file_to_dir(target)
-
-                    with open(source) as info_in, open(target, "a+") as info_out:
-                        if target_exists:
-                            info_out.write("\n")
-                        for line in info_in:
-                            info_out.write(line)
-                    os.remove(source)
 
                     os.makedirs(target_dat_folder, exist_ok=True)
                     for dat_file in os.listdir(source_dat_folder):

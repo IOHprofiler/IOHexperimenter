@@ -37,7 +37,7 @@ class TestProblem(unittest.TestCase):
 
     def test_custom_constraint(self):
         p = ioh.get_problem(1, 1, 2)
-        c = ioh.RealConstraint(lambda x,y: float(x[0] > 1), 25.0)
+        c = ioh.RealConstraint(lambda x: float(x[0] > 1), 25.0)
         y0 = p([10, 1])
         p.add_constraint(c)
         self.assertEqual(p([10, 1]), y0 + 25)

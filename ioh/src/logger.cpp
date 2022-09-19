@@ -145,10 +145,10 @@ public:
 
     virtual void close() override
     {
-        if (alive)
+        if (this->alive)
         {
             clear_ptrs();
-            Analyzer::close();
+            A::close();
         }
     }
 
@@ -174,7 +174,7 @@ public:
         double_ptrs_.push_back(ptr);
     }
 
-    void set_run_attribute_python(const std::string &name, double value) { *(attributes_.run.at(name)) = value; }
+    void set_run_attribute_python(const std::string &name, double value) { *(this->attributes_.run.at(name)) = value; }
 
     void set_run_attributes_python(const std::map<std::string, double> &attributes)
     {
@@ -345,8 +345,6 @@ void define_bases(py::module &m)
 {
     py::class_<Logger, std::shared_ptr<Logger>>(m, "Logger", "Base class for all loggers")
         .def("add_trigger", &Logger::trigger, "Add a trigger to the logger")
-        .def("attach_problem", &Logger::attach_problem, "Attach a problem to the logger")
-        .def("attach_suite", &Logger::attach_suite, "Attach a suite to the logger")
         .def("call", &Logger::call, "Performs logging behaviour")
         .def("reset", &Logger::reset, "Reset the state of the logger")
         .def_property_readonly("problem", &Logger::problem, "Reference to the currently attached problem");
@@ -454,12 +452,13 @@ void define_analyzer(py::module &m)
     using namespace logger;
     Triggers def_trigs{trigger::on_improvement};
     Properties def_props{};
-    py::class_<PyAnalyzer<A>, Watcher, std::shared_ptr<PyAnalyzer<A>>>(m, "Analyzer")
+    using PyAnalyzer = PyAnalyzer<A>;
+    py::class_<PyAnalyzer, Watcher, std::shared_ptr<PyAnalyzer>>(m, "Analyzer")
         .def(py::init<Triggers, Properties, fs::path, std::string, std::string, std::string, bool>(),
              py::arg("triggers") = def_trigs, py::arg("additional_properties") = def_props,
              py::arg("root") = fs::current_path(), py::arg("folder_name") = "ioh_data",
              py::arg("algorithm_name") = "algorithm_name", py::arg("algorithm_info") = "algorithm_info",
-             py::arg("store_positions") = false
+             py::arg("store_positions") = false,
              R"pbdoc(
                 A logger which stores all tracked properties to a file.
 
@@ -581,7 +580,9 @@ void define_loggers(py::module &m)
 
     define_flatfile(m);
     define_store(m);
-    define_analyzer<logger::Analyzer>(m);
+    auto old = m.def_submodule("old");
+    define_analyzer<logger::Analyzer>(old);
+    define_analyzer<logger::analyzer::v2::Analyzer>(m);
 
     define_eah(m);
     define_eaf(m);

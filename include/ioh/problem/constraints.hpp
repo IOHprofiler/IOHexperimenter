@@ -130,7 +130,6 @@ namespace ioh::problem
          * @param cs the constraints
         */
         ConstraintSet(const Constraints<T> &cs = {}) :
-            //Constraint<T>(constraint::Enforced::OVERRIDE), // ConstraintSet is always enforced
             constraints(cs)
         {
         }
@@ -194,11 +193,13 @@ namespace ioh::problem
         [[nodiscard]] double penalize(const double y) const 
         {
             for (const auto &ci : constraints)
-                if (!ci->cached_is_feasible())
+                if (!ci->cached_is_feasible()){
                     if (ci->enforced == constraint::Enforced::HARD)
                         return ci->penalty();
                     else if (ci->enforced == constraint::Enforced::OVERRIDE)
                         return ci->penalize(y);
+                }
+                    
             return y + penalty();
         }
 
