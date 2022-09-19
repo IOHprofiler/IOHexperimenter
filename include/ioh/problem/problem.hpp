@@ -28,7 +28,7 @@ namespace ioh
             Bounds<T> bounds_;            
             
             //! The associated constraints constriants 
-            ConstraintSet<T> constraints_; //TODO check interop with wrap problem
+            ConstraintSet<T> constraintset_; //TODO check interop with wrap problem
 
             //! The Problem state
             State<T> state_;
@@ -91,10 +91,9 @@ namespace ioh
                 if (!check_input_dimensions(x))
                     return false;
 
-                if (common::all_finite(x)){
+                if (common::all_finite(x))
                     return true;
-                }                  
-
+            
                 if (common::has_nan(x))
                 {
                     IOH_DBG(warning, "The solution contains NaN.")
@@ -112,7 +111,6 @@ namespace ioh
             //! Evaluation function
             [[nodiscard]] virtual double evaluate(const std::vector<T> &x) = 0;
 
-            
             //! Variables transformation function
             [[nodiscard]] virtual std::vector<T> transform_variables(std::vector<T> x) { return x; }
 
@@ -132,7 +130,7 @@ namespace ioh
              * @param objective the solution to the problem
              */
             explicit Problem(MetaData meta_data, Bounds<T> bounds, ConstraintSet<T> constraints, Solution<T> objective) :
-                meta_data_(std::move(meta_data)), bounds_(std::move(bounds)), constraints_(std::move(constraints)),
+                meta_data_(std::move(meta_data)), bounds_(std::move(bounds)), constraintset_(std::move(constraints)),
                 state_(State<T>({std::vector<T>(meta_data_.n_variables, std::numeric_limits<T>::signaling_NaN()),
                                  meta_data_.initial_objective_value})),
                 optimum_(std::move(objective))
@@ -187,13 +185,13 @@ namespace ioh
                 log_info_.y_best = state_.current_best.y;
 
                 // constraint values
-                log_info_.violations[0] = constraints_.violation();
-                log_info_.penalties[0] = constraints_.penalty();
+                log_info_.violations[0] = constraintset_.violation();
+                log_info_.penalties[0] = constraintset_.penalty();
                 
-                for (size_t i = 0; i < constraints_.n(); i++)
+                for (size_t i = 0; i < constraintset_.n(); i++)
                 {
-                    log_info_.violations[i + 1] = constraints_.constraints[i]->violation();
-                    log_info_.penalties[i + 1] = constraints_.constraints[i]->penalty();    
+                    log_info_.violations[i + 1] = constraintset_.constraints[i]->violation();
+                    log_info_.penalties[i + 1] = constraintset_.constraints[i]->penalty();    
                 }
                 
                 log_info_.x = std::vector<double>(state_.current.x.begin(), state_.current.x.end());
@@ -227,11 +225,20 @@ namespace ioh
                     return std::numeric_limits<double>::signaling_NaN();
 
                 state_.current.x = x;
-                state_.current_internal.x = transform_variables(x);
-                state_.current_internal.y = evaluate(state_.current_internal.x);
-                state_.y_unconstrained = transform_objectives(state_.current_internal.y);
-                state_.current.y = constraints_(x, state_.y_unconstrained);
+                if (constraintset_.hard_violation(x))
+                {
+                    state_.current_internal.x = x; 
+                    state_.current_internal.y = meta_data_.initial_objective_value;
+                    state_.y_unconstrained = meta_data_.initial_objective_value;
+                }
+                else
+                {
+                    state_.current_internal.x = transform_variables(x);
+                    state_.current_internal.y = evaluate(state_.current_internal.x);
+                    state_.y_unconstrained = transform_objectives(state_.current_internal.y);
+                }
                 
+                state_.current.y = constraintset_.penalize(state_.y_unconstrained);
                 state_.update(meta_data_, optimum_);
 
                 if (logger_ != nullptr)
@@ -243,7 +250,7 @@ namespace ioh
                 return state_.current.y;
             }
 
-            void enforce_bounds(const double weight = 1.0, const constraint::Enforced how = constraint::Enforced::ADDITIVE)
+            void enforce_bounds(const double weight = 1.0, const constraint::Enforced how = constraint::Enforced::SOFT)
             {
                 
                 bounds_.weight = weight;
@@ -264,26 +271,26 @@ namespace ioh
             //! Accessor for `bounds_`
             [[nodiscard]] Bounds<T> bounds() { return bounds_; }
 
-            //! Accessor for `constraints_`
-            [[nodiscard]] ConstraintSet<T>& constraints() { return constraints_; }    
+            //! Accessor for `constraintset_`
+            [[nodiscard]] ConstraintSet<T>& constraints() { return constraintset_; }    
 
             //! Alias for constraints().add
             void add_constraint(const ConstraintPtr<T> &c) { 
-                constraints_.add(c);
+                constraintset_.add(c);
                 allocate_log_info();
             }
 
             //! Alias for constraints().remove
             void remove_constraint(const ConstraintPtr<T> &c)
             {
-                constraints_.remove(c);
+                constraintset_.remove(c);
                 allocate_log_info();
             }
 
             //! Stream operator
             friend std::ostream &operator<<(std::ostream &os, const Problem &obj)
             {
-                return os << "Problem(\n\t" << obj.meta_data_ << "\n\t" << obj.constraints_
+                return os << "Problem(\n\t" << obj.meta_data_ << "\n\t" << obj.constraintset_
                           << "\n\tstate: " << obj.state_ << "\n\toptimum: " << obj.optimum_ << "\n)";
             }
 
@@ -291,8 +298,8 @@ namespace ioh
             void allocate_log_info() {
                 log_info_.optimum.x = std::vector<double>(optimum_.x.begin(), optimum_.x.end());
                 log_info_.optimum.y = optimum_.y;
-                log_info_.violations = std::vector<double>(constraints_.n() + 1, 0.0);
-                log_info_.penalties = std::vector<double>(constraints_.n() + 1, 0.0);
+                log_info_.violations = std::vector<double>(constraintset_.n() + 1, 0.0);
+                log_info_.penalties = std::vector<double>(constraintset_.n() + 1, 0.0);
             }
         };
 

@@ -126,11 +126,11 @@ namespace ioh::problem
                 std::shared_ptr<TTPGraph> graph;
 
                 PWTConstraint(const std::shared_ptr<TTPGraph> &graph) :
-                    Constraint(constraint::Enforced::OVERRIDE), graph(graph)
+                    Constraint(constraint::Enforced::HARD), graph(graph)
                 {
                 }
                 
-                bool compute_violation(const std::vector<int> &x, const double) override
+                bool compute_violation(const std::vector<int> &x) override
                 { 
                     violation_ = 0; 
                     
@@ -145,8 +145,6 @@ namespace ioh::problem
                     }
                     return false;
                 }
-
-                double penalize(const double) const override { return penalty(); }
 
                 std::string repr() const override { return fmt::format("<PWTConstraint {}>", violation()); }
             };
@@ -167,7 +165,7 @@ namespace ioh::problem
             PackWhileTravel(const int problem_id, const int, const std::shared_ptr<pwt::TTPGraph> &graph) :
                 GraphProblemType(problem_id, 1, fmt::format("PackWhileTravel{}", problem_id), graph)
             {
-                constraints_[0] = std::make_shared<pwt::PWTConstraint>(graph);
+                constraintset_[0] = std::make_shared<pwt::PWTConstraint>(graph);
             }
 
             double evaluate(const std::vector<int> &x) override

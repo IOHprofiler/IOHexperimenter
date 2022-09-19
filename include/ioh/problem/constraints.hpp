@@ -12,8 +12,9 @@ namespace ioh::problem
             HIDDEN,     // calculate violation, but don't penalize
 
                         // The following only have impact on constraint sets:
-            ADDITIVE,   // penalize, but aggregate all the constraint penalties into a sum 
-            OVERRIDE    // penalize, and if violation return only penalty for this constraint in contraintset         
+            SOFT,       // penalize (y + p), but aggregate all the constraint penalties into a sum 
+            HARD,       // penalize (p only), and if violation return only the penalty for this constraint in contraintset         
+            OVERRIDE    // penalize (p only), and if violation return the custom penalization function this constraint in contraintset         
         };   
     }
     
@@ -30,6 +31,7 @@ namespace ioh::problem
     public:
         constraint::Enforced enforced;
         double weight;
+
         /**
          * @brief Construct a new contraint object
          * @param enforced policy for enforcing the penalty on the constraint see constraint::Enforced
@@ -48,7 +50,7 @@ namespace ioh::problem
         */
         [[nodiscard]] double operator()(const std::vector<T> &x, const double y)
         {
-            if (!is_feasible(x, y))
+            if (!is_feasible(x))
                 return penalize(y);
             return y;
         }
@@ -59,13 +61,13 @@ namespace ioh::problem
          * @param y the objective space value
          * @return true if both x and y are feasible, false otherwise
         */
-        [[nodiscard]] bool is_feasible(const std::vector<T> &x, const double y)
+        [[nodiscard]] bool is_feasible(const std::vector<T> &x)
         {
             violation_ = 0.0;
             if (enforced == constraint::Enforced::NOT)
                 return true;
             
-            is_feasible_ = !compute_violation(x, y);
+            is_feasible_ = !compute_violation(x);
             return enforced == constraint::Enforced::HIDDEN or is_feasible_;
         }
 
@@ -82,7 +84,7 @@ namespace ioh::problem
          * @param y the objective space value 
          * @return true when there is violation and false otherwise.
         */
-        [[nodiscard]] virtual bool compute_violation(const std::vector<T> &x, const double y) = 0;
+        [[nodiscard]] virtual bool compute_violation(const std::vector<T> &x) = 0;
 
         /**
          * @brief Penalize the y value. This method is only called when there is a violation, 
@@ -120,7 +122,7 @@ namespace ioh::problem
      * @tparam T the numeric type for the Constraint
     */
     template <typename T>
-    struct ConstraintSet : Constraint<T>
+    struct ConstraintSet : common::HasRepr
     {
         Constraints<T> constraints;
         /**
@@ -128,7 +130,7 @@ namespace ioh::problem
          * @param cs the constraints
         */
         ConstraintSet(const Constraints<T> &cs = {}) :
-            Constraint<T>(constraint::Enforced::OVERRIDE), // ConstraintSet is always enforced
+            //Constraint<T>(constraint::Enforced::OVERRIDE), // ConstraintSet is always enforced
             constraints(cs)
         {
         }
@@ -140,37 +142,40 @@ namespace ioh::problem
         ConstraintSet(const ConstraintPtr<T> &c) : ConstraintSet(Constraints<T>{c}) {}
 
         /**
-         * @brief Override for Contraint<T>::compute_violation. Calls is_feasible for every constraint in order to 
+         * @brief Calls is_feasible for every constraint in order to 
          * check whether any of the constraints is violated.
          * @param x the search space value
          * @param y the objective space value 
          * @return true when there is violation, false otherwise
         */
-        [[nodiscard]] bool compute_violation(const std::vector<T> &x, const double y) override
+        [[nodiscard]] bool hard_violation(const std::vector<T> &x) 
         {
-            bool violated = false;
+            bool violated_hard_constraint = false;
             for (auto &ci : constraints)
-                violated = !ci->is_feasible(x, y) || violated;
-            return violated;
+                violated_hard_constraint = (!ci->is_feasible(x) and ci->enforced >= constraint::Enforced::HARD) or
+                    violated_hard_constraint;
+
+            return violated_hard_constraint;
         }
         
         /**
-         * @brief Override for Contraint::penalty(), which is the sum of the penalties of all the constraints in the set
+         * @brief Aggregates Contraint::penalty(), by the sum of the penalties of all the constraints in the set
          * @return the aggregated penalty value
         */
-        [[nodiscard]] double penalty() const override
+        [[nodiscard]] double penalty() const
         {
             double p = 0.;
             for (const auto &ci : constraints)
-                p += ci->penalty();
+                // You can have violation, but still be considered feasible
+                p += ci->penalty() * (!ci->cached_is_feasible() and ci->enforced >= constraint::Enforced::SOFT);
             return p;
         }
 
         /**
-         * @brief Override for Contraint::violation(), which is the sum of the violations of all the constraints in the set
+         * @brief Aggregates Contraint::violation(), by the sum of the violations of all the constraints in the set
          * @return the aggregated violation value
          */
-        [[nodiscard]] double violation() const override
+        [[nodiscard]] double violation() const
         {
             double v = 0.;
             for (const auto &ci : constraints)
@@ -186,12 +191,14 @@ namespace ioh::problem
          * @param y objective space value
          * @return penalized objective value
         */
-        [[nodiscard]] double penalize(const double y) const override
+        [[nodiscard]] double penalize(const double y) const 
         {
             for (const auto &ci : constraints)
-                if (ci->enforced == constraint::Enforced::OVERRIDE and !ci->cached_is_feasible())
-                    return ci->penalize(y);
-
+                if (!ci->cached_is_feasible())
+                    if (ci->enforced == constraint::Enforced::HARD)
+                        return ci->penalty();
+                    else if (ci->enforced == constraint::Enforced::OVERRIDE)
+                        return ci->penalize(y);
             return y + penalty();
         }
 
@@ -223,7 +230,6 @@ namespace ioh::problem
         */
         [[nodiscard]] size_t n() const { return constraints.size(); }
 
-        
         /**
          * @brief Alias for constraints.at()
          * @param i index
@@ -297,7 +303,7 @@ namespace ioh::problem
         }
 
         //! Check if the BoxConstraints are violated, override Constraint::compute_violation
-        [[nodiscard]] bool compute_violation(const std::vector<T> &x, const double) override
+        [[nodiscard]] bool compute_violation(const std::vector<T> &x) override
         {
             this->violation_ = 0.0;
             for (size_t i = 0; i < x.size(); i++)
@@ -331,7 +337,7 @@ namespace ioh::problem
 
     //! function that computes a constraint violation, recieves both the x and y values
     template <typename T>
-    using ConstraintFunction = std::function<double(const std::vector<T> &, const double)>;
+    using ConstraintFunction = std::function<double(const std::vector<T> &)>;
 
     /**
      * @brief Wrapper for functions, that compute a constraint violation
@@ -351,7 +357,7 @@ namespace ioh::problem
          * @param name a name for this constraint, only used for the string representation.
         */
         FunctionalConstraint(ConstraintFunction<T> fn, const double weight = 1.0,
-                             const constraint::Enforced enforced = constraint::Enforced::ADDITIVE,
+                             const constraint::Enforced enforced = constraint::Enforced::SOFT,
                              const std::string &name = "") : 
             Constraint<T>(enforced, weight),
             fn_(fn), name_(name)
@@ -364,13 +370,14 @@ namespace ioh::problem
          * @param y the objective space value  
          * @return true when the absolute value for violation_ > 0 false otherwise
         */
-        [[nodiscard]] bool compute_violation(const std::vector<T> &x, const double y) override {
-            this->violation_ = fn_(x, y);
+        [[nodiscard]] bool compute_violation(const std::vector<T> &x) override {
+            this->violation_ = fn_(x);
             return abs(this->violation_) > 0.0;
         }
 
         //! Override string representation
         [[nodiscard]] std::string repr() const override { return fmt::format("<FunctionalConstraint {}>", name_); }
     };
+
 
 } // namespace ioh::problem

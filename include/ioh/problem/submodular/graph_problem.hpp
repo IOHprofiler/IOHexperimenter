@@ -139,9 +139,9 @@ namespace ioh::problem::submodular
         std::shared_ptr<graph::Graph> graph;
 
         GraphConstraint(const std::shared_ptr<graph::Graph> &graph) : 
-            Constraint(constraint::Enforced::OVERRIDE), graph(graph) {}
+            Constraint(constraint::Enforced::HARD), graph(graph) {}
 
-        bool compute_violation(const std::vector<int>& x, const double) override { 
+        bool compute_violation(const std::vector<int>& x) override { 
             
             violation_ = 0;
              
@@ -161,12 +161,7 @@ namespace ioh::problem::submodular
             return false;            
         }
 
-        double penalize(const double) const override { 
-            return penalty(); 
-        }
-
         std::string repr() const override { return fmt::format("<GraphConstraint {}>", violation()); }
-
     };
 
 
