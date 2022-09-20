@@ -198,21 +198,21 @@ int main()
     
     for (auto &[id, name] : factory.map())
     {
-        if (id < 2100 or id >= 2105) continue;
+        if (id < 2100 or id >= 2200) continue;
 
         auto problem = factory.create(id, 1, 1);
         // Multiobjective setup
         problem->constraints()[0]->weight = -1.0;
         problem->constraints()[0]->exponent = .0;
-        
+
         problem->attach_logger(logger);
         // std::cout << problem->meta_data() << std::endl;
 
-        // for (int i =0; i < runs; ++i){
-        //     GSEMO<OptimizationType::MAX, OptimizationType::MIN> opt(budget, force_flip);
-        //     auto p = opt(problem);
-        //     print(p);        
-        //     problem->reset();
-        // }
+        for (int i =0; i < runs; ++i){
+            GSEMO<OptimizationType::MAX, OptimizationType::MIN> opt(budget, force_flip);
+            auto p = opt(problem);
+            print(p);        
+            problem->reset();
+        }
     }
 }
