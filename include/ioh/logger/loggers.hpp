@@ -35,7 +35,7 @@ namespace ioh {
         trigger::Set& triggers_;
 
         //! Access to the problem.
-        const problem::MetaData* problem_;
+        std::optional<problem::MetaData> problem_;
 
         /** Map property names to property references.
          * 
@@ -112,12 +112,8 @@ namespace ioh {
                std::vector<std::reference_wrapper<logger::Property>> properties)
         : any_(triggers)
         , triggers_(any_)
-        , problem_(nullptr)
+        , problem_(std::nullopt)
         {
-            //  auto ref = properties_.at("Att_PtrRef");
-            //     IOH_DBG(debug, "ref addr " << &ref.get());
-            //     IOH_DBG(debug, ref.get()(log_info).value_or(-1));
-            
             store_properties(properties);
             assert(consistent_properties());
         }
@@ -132,7 +128,7 @@ namespace ioh {
                std::vector<std::reference_wrapper<logger::Property>> properties               )
         : any_()
         , triggers_(triggers)
-        , problem_(nullptr)
+        , problem_(std::nullopt)
         {
             store_properties(properties);
             assert(consistent_properties());
@@ -149,7 +145,7 @@ namespace ioh {
          */
         // _triggers needs to be a reference, because it's an interface.
         // thus we initialize it with an (empty) _any.
-        Logger() : any_(), triggers_(any_), problem_(nullptr), properties_() {}
+        Logger() : any_(), triggers_(any_), problem_(std::nullopt), properties_() {}
 
         /** Add the given trigger to the list. */
         void trigger(logger::Trigger& when)
@@ -163,14 +159,14 @@ namespace ioh {
         {
             IOH_DBG(debug, "log event");
             IOH_DBG(debug,"log raw_y_best=" << log_info.raw_y_best << " => transformed_y=" << log_info.y << " / transformed_y_best=" << log_info.y_best)
-            assert(problem_ != nullptr); // For Debug builds.
+            assert(problem_.has_value()); // For Debug builds.
             if(not problem_) { // For Release builds.
                 throw std::runtime_error("Logger has not been attached to a problem.");
             }
 
             assert(properties_.size() > 0);
             assert(triggers_.size() > 0);
-            if(triggers_(log_info, *problem_)) {
+            if(triggers_(log_info, problem_.value())) {
                 IOH_DBG(debug, "logger triggered")
                 call(log_info);
             }
@@ -191,7 +187,7 @@ namespace ioh {
         virtual void attach_problem(const problem::MetaData& problem)
         {
             IOH_DBG(xdebug,"attach problem " << problem.problem_id)
-            problem_ = &problem;
+            problem_ = problem;
         }
 
     public:
@@ -223,7 +219,7 @@ namespace ioh {
         virtual ~Logger() = default;
 
         /** Access the attached problem's metadata. */
-        [[nodiscard]] problem::MetaData problem() const { return *problem_; }
+        [[nodiscard]] std::optional<problem::MetaData> problem() const { return problem_; }
     };
 
     /** Everything related to loggers. */

@@ -117,7 +117,7 @@ f = get_problem(1, 1, 5, problem_type="BBOB")
 ```
 
 ```python
-f.attach_logger(f)
+f.attach_logger(l)
 ```
 
 Now, we can run the algorithm and store data

@@ -10,10 +10,11 @@ LeadingOnes
 
    .. autosummary::
 
-      ~LeadingOnes.constraint
+      ~LeadingOnes.bounds
+      ~LeadingOnes.constraints
       ~LeadingOnes.log_info
       ~LeadingOnes.meta_data
-      ~LeadingOnes.objective
+      ~LeadingOnes.optimum
       ~LeadingOnes.problems
       ~LeadingOnes.state
 
@@ -22,24 +23,33 @@ LeadingOnes
    .. autosummary::
 
       ~LeadingOnes.__call__
+      ~LeadingOnes.add_constraint
       ~LeadingOnes.attach_logger
       ~LeadingOnes.create
       ~LeadingOnes.detach_logger
+      ~LeadingOnes.enforce_bounds
+      ~LeadingOnes.remove_constraint
       ~LeadingOnes.reset
+      ~LeadingOnes.update_log_info
 
    .. rubric:: Attributes Documentation
 
-   .. autoattribute:: constraint
+   .. autoattribute:: bounds
+   .. autoattribute:: constraints
    .. autoattribute:: log_info
    .. autoattribute:: meta_data
-   .. autoattribute:: objective
+   .. autoattribute:: optimum
    .. autoattribute:: problems
    .. autoattribute:: state
 
    .. rubric:: Methods Documentation
 
    .. automethod:: __call__
+   .. automethod:: add_constraint
    .. automethod:: attach_logger
    .. automethod:: create
    .. automethod:: detach_logger
+   .. automethod:: enforce_bounds
+   .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: update_log_info

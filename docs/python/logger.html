@@ -1,16 +1,16 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Always" href="../api/ioh.iohcpp.logger.trigger.Always.html" /><link rel="prev" title="WModelOneMax" href="../api/ioh.iohcpp.problem.WModelOneMax.html" />
 
-    <meta name="generator" content="sphinx-4.2.0, furo 2022.01.02"/>
-        <title>Logging - IOHExperimenter 0.3.2.6 documentation</title>
+    <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
+        <title>Logging - IOHExperimenter 0.3.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
 
@@ -21,38 +21,38 @@
   --color-code-foreground: black;
   
   }
-  body[data-theme="dark"] {
-    --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
-  
-  }
-  @media (prefers-color-scheme: dark) {
-    body:not([data-theme="light"]) {
+  @media not print {
+    body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
   
     }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
   }
 </style></head>
   <body>
+    
     <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z" />
-      <line x1="4" y1="6" x2="20" y2="6" />
-      <line x1="10" y1="12" x2="20" y2="12" />
-      <line x1="6" y1="18" x2="20" y2="18" />
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
     </svg>
   </symbol>
   <symbol id="svg-menu" viewBox="0 0 24 24">
     <title>Menu</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
       <line x1="3" y1="12" x2="21" y2="12"></line>
       <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -61,14 +61,14 @@
   </symbol>
   <symbol id="svg-arrow-right" viewBox="0 0 24 24">
     <title>Expand</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
       <polyline points="9 18 15 12 9 6"></polyline>
     </svg>
   </symbol>
   <symbol id="svg-sun" viewBox="0 0 24 24">
     <title>Light mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -83,7 +83,7 @@
   </symbol>
   <symbol id="svg-moon" viewBox="0 0 24 24">
     <title>Dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
@@ -91,7 +91,7 @@
   </symbol>
   <symbol id="svg-sun-half" viewBox="0 0 24 24">
     <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <circle cx="12" cy="12" r="9" />
@@ -124,7 +124,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.2.6 documentation</div></a>
+      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.3 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -147,7 +147,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../contents.html">
   
   
-  <span class="sidebar-brand-text">IOHExperimenter 0.3.2.6 documentation</span>
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.3 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -186,20 +186,14 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../cpp/ioh_problem.html">problem</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../cpp/ioh_problem_bbob.html">bbob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cpp/ioh_problem_constraint.html">constraint</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../cpp/ioh_problem_pbo.html">pbo</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../cpp/ioh_problem_python.html">python</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../cpp/ioh_problem_submodular.html">submodular</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../cpp/ioh_problem_submodular_v2.html">v2</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l5 has-children"><a class="reference internal" href="../cpp/ioh_problem_submodular_v2_graph.html">graph</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="../cpp/ioh_problem_submodular_v2_graph_pwt.html">pwt</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cpp/ioh_problem_submodular_graph.html">graph</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cpp/ioh_problem_submodular_pwt.html">pwt</a></li>
 </ul>
 </li>
-<li class="toctree-l5"><a class="reference internal" href="../cpp/ioh_problem_submodular_v2_problems.html">problems</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../cpp/ioh_problem_transformation.html">transformation</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../cpp/ioh_problem_transformation.html">transformation</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../cpp/ioh_problem_transformation_objective.html">objective</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cpp/ioh_problem_transformation_variables.html">variables</a></li>
 </ul>
@@ -214,30 +208,44 @@
 <li class="toctree-l2"><a class="reference internal" href="../cpp/ioh.html">ioh</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../python.html">Python</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="ioh.html">Utilities</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../python.html">Python</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh.html">Utilities</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem.html">get_problem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.wrap_problem.html">wrap_problem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem_id.html">get_problem_id</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.Experiment.html">Experiment</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.AbstractIntegerConstraint.html">AbstractIntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.AbstractRealConstraint.html">AbstractRealConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.ConstraintEnforcement.html">ConstraintEnforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerBounds.html">IntegerBounds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraint.html">IntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraintSet.html">IntegerConstraintSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerSolution.html">IntegerSolution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerState.html">IntegerState</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.LogInfo.html">LogInfo</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.MetaData.html">MetaData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.OptimizationType.html">OptimizationType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealBounds.html">RealBounds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealConstraint.html">RealConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealConstraintSet.html">RealConstraintSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealSolution.html">RealSolution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealState.html">RealState</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="problem.html">Problem</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="problem.html">Problem</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Real.html">Real</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="bbob.html">BBOB</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="bbob.html">BBOB</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AttractiveSector.html">AttractiveSector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BBOB.html">BBOB</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BentCigar.html">BentCigar</a></li>
@@ -248,10 +256,17 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.EllipsoidRotated.html">EllipsoidRotated</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher101.html">Gallagher101</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher21.html">Gallagher21</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GriewankRosenBrock.html">GriewankRosenBrock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Katsuura.html">Katsuura</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LinearSlope.html">LinearSlope</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html">LunacekBiRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rastrigin.html">Rastrigin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RastriginRotated.html">RastriginRotated</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rosenbrock.html">Rosenbrock</a></li>
@@ -265,8 +280,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Weierstrass.html">Weierstrass</a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pbo.html">PBO</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pbo.html">PBO</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.ConcatenatedTrap.html">ConcatenatedTrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingRing.html">IsingRing</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTorus.html">IsingTorus</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTriangular.html">IsingTriangular</a></li>
@@ -281,6 +298,9 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness3.html">LeadingOnesRuggedness3</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Linear.html">Linear</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MIS.html">MIS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.NQueens.html">NQueens</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMax.html">OneMax</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy1.html">OneMaxDummy1</a></li>
@@ -291,17 +311,26 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness2.html">OneMaxRuggedness2</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness3.html">OneMaxRuggedness3</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PBO.html">PBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AbstractWModel.html">AbstractWModel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelLeadingOnes.html">WModelLeadingOnes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelOneMax.html">WModelOneMax</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current has-children current-page"><a class="current reference internal" href="#">Logging</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 current has-children current-page"><a class="current reference internal" href="#">Logging</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Always.html">Always</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.At.html">At</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.During.html">During</a></li>
@@ -309,18 +338,26 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html">OnImprovement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Trigger.html">Trigger</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html">AbstractProperty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentBestY.html">CurrentBestY</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentY.html">CurrentY</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Evaluations.html">Evaluations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Penalty.html">Penalty</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Property.html">Property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawY.html">RawY</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawYBest.html">RawYBest</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedY.html">TransformedY</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedYBest.html">TransformedYBest</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENT_Y_BEST.html">CURRENT_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Violation.html">Violation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENTBESTY.html">CURRENTBESTY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENTY.html">CURRENTY</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.EVALUATIONS.html">EVALUATIONS</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAW_Y_BEST.html">RAW_Y_BEST</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMED_Y.html">TRANSFORMED_Y</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMED_Y_BEST.html">TRANSFORMED_Y_BEST</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.AbstractWatcher.html">AbstractWatcher</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.PENALTY.html">PENALTY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAWY.html">RAWY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAWYBEST.html">RAWYBEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMEDY.html">TRANSFORMEDY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMEDYBEST.html">TRANSFORMEDYBEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.VIOLATION.html">VIOLATION</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.AbstractLogger.html">AbstractLogger</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Analyzer.html">Analyzer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Combine.html">Combine</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAF.html">EAF</a></li>
@@ -330,11 +367,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Store.html">Store</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="suite.html">Suite</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="suite.html">Suite</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.BBOB.html">BBOB</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Integer.html">Integer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.PBO.html">PBO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Real.html">Real</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Submodular.html">Submodular</a></li>
 </ul>
 </li>
 </ul>
@@ -344,6 +382,7 @@
 
 </div>
 </div>
+
       </div>
       
     </div>
@@ -351,6 +390,12 @@
   <div class="main">
     <div class="content">
       <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
         <div class="content-icon-container">
           <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
@@ -367,30 +412,27 @@
         </div>
         <article role="main">
           <section id="logging">
-<h1>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h1>
+<h1>Logging<a class="headerlink" href="#logging" title="Permalink to this heading">#</a></h1>
 <p>Loggers and associated objects.</p>
 <section id="triggers">
-<h2>Triggers<a class="headerlink" href="#triggers" title="Permalink to this headline">¶</a></h2>
+<h2>Triggers<a class="headerlink" href="#triggers" title="Permalink to this heading">#</a></h2>
 <p>Loggers are triggered by <cite>Trigger</cite> objects, these can be combined and added to a given logger. When
 a trigger evaluates to true, the logger logs data.</p>
 <span class="target" id="module-ioh.iohcpp.logger.trigger"></span><section id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
-<div class="table-wrapper"><table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
-</colgroup>
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Always.html#ioh.iohcpp.logger.trigger.Always" title="ioh.iohcpp.logger.trigger.Always"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Always</span></code></a>(self)</p></td>
 <td><p>Trigger that always evaluates to true</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.At.html#ioh.iohcpp.logger.trigger.At" title="ioh.iohcpp.logger.trigger.At"><code class="xref py py-obj docutils literal notranslate"><span class="pre">At</span></code></a>(self, time_points)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.At.html#ioh.iohcpp.logger.trigger.At" title="ioh.iohcpp.logger.trigger.At"><code class="xref py py-obj docutils literal notranslate"><span class="pre">At</span></code></a>(self, time_points)</p></td>
 <td><p>Trigger that evaluates to true at specific time points</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.During.html#ioh.iohcpp.logger.trigger.During" title="ioh.iohcpp.logger.trigger.During"><code class="xref py py-obj docutils literal notranslate"><span class="pre">During</span></code></a>(self, time_ranges)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.During.html#ioh.iohcpp.logger.trigger.During" title="ioh.iohcpp.logger.trigger.During"><code class="xref py py-obj docutils literal notranslate"><span class="pre">During</span></code></a>(self, time_ranges)</p></td>
 <td><p>Trigger that evaluates to true during a given interval.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Each.html#ioh.iohcpp.logger.trigger.Each" title="ioh.iohcpp.logger.trigger.Each"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Each</span></code></a>(self, interval[, starting_at])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Each.html#ioh.iohcpp.logger.trigger.Each" title="ioh.iohcpp.logger.trigger.Each"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Each</span></code></a>(self, interval[, starting_at])</p></td>
 <td><p>Trigger that evaluates to true at a given interval</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html#ioh.iohcpp.logger.trigger.OnImprovement" title="ioh.iohcpp.logger.trigger.OnImprovement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnImprovement</span></code></a>(self)</p></td>
@@ -400,144 +442,167 @@ a trigger evaluates to true, the logger logs data.</p>
 <td><p>Base class for all Triggers</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 </section>
 <section id="class-inheritance-diagram">
-<h3>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this headline">¶</a></h3>
-<div class="graphviz"><img alt="Inheritance diagram of ioh.iohcpp.logger.trigger.Always, ioh.iohcpp.logger.trigger.At, ioh.iohcpp.logger.trigger.During, ioh.iohcpp.logger.trigger.Each, ioh.iohcpp.logger.trigger.OnImprovement, ioh.iohcpp.logger.trigger.Trigger" class="inheritance graphviz" src="../_images/inheritance-9c46d90eb86ee587a6b3944627fff593c6d5147c.png" usemap="#inheritance8fefb89218"/></div>
+<h3>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this heading">#</a></h3>
+<div class="graphviz"><img src="../_images/inheritance-9c46d90eb86ee587a6b3944627fff593c6d5147c.png" alt="Inheritance diagram of ioh.iohcpp.logger.trigger.Always, ioh.iohcpp.logger.trigger.At, ioh.iohcpp.logger.trigger.During, ioh.iohcpp.logger.trigger.Each, ioh.iohcpp.logger.trigger.OnImprovement, ioh.iohcpp.logger.trigger.Trigger" usemap="#inheritance8fefb89218" class="inheritance graphviz" /></div>
 <map id="inheritance8fefb89218" name="inheritance8fefb89218">
-<area alt="" coords="331,5,403,31" href="../api/ioh.iohcpp.logger.trigger.Always.html#ioh.iohcpp.logger.trigger.Always" id="node1" shape="rect" target="_top" title="Trigger that always evaluates to true"/>
-<area alt="" coords="183,104,255,129" href="../api/ioh.iohcpp.logger.trigger.Trigger.html#ioh.iohcpp.logger.trigger.Trigger" id="node2" shape="rect" target="_top" title="Base class for all Triggers"/>
-<area alt="" coords="331,55,403,80" href="../api/ioh.iohcpp.logger.trigger.At.html#ioh.iohcpp.logger.trigger.At" id="node3" shape="rect" target="_top" title="At"/>
-<area alt="" coords="331,104,403,129" href="../api/ioh.iohcpp.logger.trigger.During.html#ioh.iohcpp.logger.trigger.During" id="node4" shape="rect" target="_top" title="During"/>
-<area alt="" coords="331,153,403,179" href="../api/ioh.iohcpp.logger.trigger.Each.html#ioh.iohcpp.logger.trigger.Each" id="node5" shape="rect" target="_top" title="Each"/>
-<area alt="" coords="303,203,431,228" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html#ioh.iohcpp.logger.trigger.OnImprovement" id="node6" shape="rect" target="_top" title="Trigger that evaluates to true when improvement of the objective function is observed"/>
+<area shape="rect" id="node1" href="../api/ioh.iohcpp.logger.trigger.Always.html#ioh.iohcpp.logger.trigger.Always" target="_top" title="Trigger that always evaluates to true" alt="" coords="331,5,403,31"/>
+<area shape="rect" id="node2" href="../api/ioh.iohcpp.logger.trigger.Trigger.html#ioh.iohcpp.logger.trigger.Trigger" target="_top" title="Base class for all Triggers" alt="" coords="183,104,255,129"/>
+<area shape="rect" id="node3" href="../api/ioh.iohcpp.logger.trigger.At.html#ioh.iohcpp.logger.trigger.At" target="_top" title="At" alt="" coords="331,55,403,80"/>
+<area shape="rect" id="node4" href="../api/ioh.iohcpp.logger.trigger.During.html#ioh.iohcpp.logger.trigger.During" target="_top" title="During" alt="" coords="331,104,403,129"/>
+<area shape="rect" id="node5" href="../api/ioh.iohcpp.logger.trigger.Each.html#ioh.iohcpp.logger.trigger.Each" target="_top" title="Each" alt="" coords="331,153,403,179"/>
+<area shape="rect" id="node6" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html#ioh.iohcpp.logger.trigger.OnImprovement" target="_top" title="Trigger that evaluates to true when improvement of the objective function is observed" alt="" coords="303,203,431,228"/>
 </map></section>
 </section>
 <section id="properties">
-<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this heading">#</a></h2>
 <p>Wrapper classes for properties to be logged.</p>
 <span class="target" id="module-ioh.iohcpp.logger.property"></span><section id="id1">
-<h3>Classes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<div class="table-wrapper"><table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
-</colgroup>
+<h3>Classes<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html#ioh.iohcpp.logger.property.AbstractProperty" title="ioh.iohcpp.logger.property.AbstractProperty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractProperty</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html#ioh.iohcpp.logger.property.AbstractProperty" title="ioh.iohcpp.logger.property.AbstractProperty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractProperty</span></code></a>(self, arg0)</p></td>
 <td><p>Base class for all Properties</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentY.html#ioh.iohcpp.logger.property.CurrentY" title="ioh.iohcpp.logger.property.CurrentY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentY</span></code></a>(self, name, format)</p></td>
-<td><p>Property which tracks the current y value</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentBestY.html#ioh.iohcpp.logger.property.CurrentBestY" title="ioh.iohcpp.logger.property.CurrentBestY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentBestY</span></code></a>(self, name, format)</p></td>
+<td><p>Property which tracks the CurrentBestY</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Evaluations.html#ioh.iohcpp.logger.property.Evaluations" title="ioh.iohcpp.logger.property.Evaluations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Evaluations</span></code></a>(self, name, format)</p></td>
-<td><p>Property which tracks the number of evaluations</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentY.html#ioh.iohcpp.logger.property.CurrentY" title="ioh.iohcpp.logger.property.CurrentY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentY</span></code></a>(self, name, format)</p></td>
+<td><p>Property which tracks the CurrentY</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Property.html#ioh.iohcpp.logger.property.Property" title="ioh.iohcpp.logger.property.Property"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Property</span></code></a>(self, container, attribute)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Evaluations.html#ioh.iohcpp.logger.property.Evaluations" title="ioh.iohcpp.logger.property.Evaluations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Evaluations</span></code></a>(self, name, format)</p></td>
+<td><p>Property which tracks the Evaluations</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Penalty.html#ioh.iohcpp.logger.property.Penalty" title="ioh.iohcpp.logger.property.Penalty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Penalty</span></code></a>(self, name, format)</p></td>
+<td><p>Property which tracks the Penalty</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Property.html#ioh.iohcpp.logger.property.Property" title="ioh.iohcpp.logger.property.Property"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Property</span></code></a>(self, container, attribute)</p></td>
 <td><p>Wrapper for properties with a Python container</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawYBest.html#ioh.iohcpp.logger.property.RawYBest" title="ioh.iohcpp.logger.property.RawYBest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RawYBest</span></code></a>(self, name, format)</p></td>
-<td><p>Property which tracks the raw best y value</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawY.html#ioh.iohcpp.logger.property.RawY" title="ioh.iohcpp.logger.property.RawY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RawY</span></code></a>(self, name, format)</p></td>
+<td><p>Property which tracks the RawY</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedY.html#ioh.iohcpp.logger.property.TransformedY" title="ioh.iohcpp.logger.property.TransformedY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransformedY</span></code></a>(self, name, format)</p></td>
-<td><p>Property which tracks the current transformed y value</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawYBest.html#ioh.iohcpp.logger.property.RawYBest" title="ioh.iohcpp.logger.property.RawYBest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RawYBest</span></code></a>(self, name, format)</p></td>
+<td><p>Property which tracks the RawYBest</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedYBest.html#ioh.iohcpp.logger.property.TransformedYBest" title="ioh.iohcpp.logger.property.TransformedYBest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransformedYBest</span></code></a>(self, name, format)</p></td>
-<td><p>Property which tracks the current best transformed y value</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedY.html#ioh.iohcpp.logger.property.TransformedY" title="ioh.iohcpp.logger.property.TransformedY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransformedY</span></code></a>(self, name, format)</p></td>
+<td><p>Property which tracks the TransformedY</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedYBest.html#ioh.iohcpp.logger.property.TransformedYBest" title="ioh.iohcpp.logger.property.TransformedYBest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransformedYBest</span></code></a>(self, name, format)</p></td>
+<td><p>Property which tracks the TransformedYBest</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Violation.html#ioh.iohcpp.logger.property.Violation" title="ioh.iohcpp.logger.property.Violation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Violation</span></code></a>(self, name, format)</p></td>
+<td><p>Property which tracks the Violation</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 </section>
 <section id="variables">
-<h3>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h3>
-<div class="table-wrapper"><table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
-</colgroup>
+<h3>Variables<a class="headerlink" href="#variables" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENT_Y_BEST.html#ioh.iohcpp.logger.property.CURRENT_Y_BEST" title="ioh.iohcpp.logger.property.CURRENT_Y_BEST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CURRENT_Y_BEST</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENTBESTY.html#ioh.iohcpp.logger.property.CURRENTBESTY" title="ioh.iohcpp.logger.property.CURRENTBESTY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CURRENTBESTY</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.EVALUATIONS.html#ioh.iohcpp.logger.property.EVALUATIONS" title="ioh.iohcpp.logger.property.EVALUATIONS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EVALUATIONS</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENTY.html#ioh.iohcpp.logger.property.CURRENTY" title="ioh.iohcpp.logger.property.CURRENTY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CURRENTY</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAW_Y_BEST.html#ioh.iohcpp.logger.property.RAW_Y_BEST" title="ioh.iohcpp.logger.property.RAW_Y_BEST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RAW_Y_BEST</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.EVALUATIONS.html#ioh.iohcpp.logger.property.EVALUATIONS" title="ioh.iohcpp.logger.property.EVALUATIONS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EVALUATIONS</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMED_Y.html#ioh.iohcpp.logger.property.TRANSFORMED_Y" title="ioh.iohcpp.logger.property.TRANSFORMED_Y"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TRANSFORMED_Y</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.PENALTY.html#ioh.iohcpp.logger.property.PENALTY" title="ioh.iohcpp.logger.property.PENALTY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PENALTY</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMED_Y_BEST.html#ioh.iohcpp.logger.property.TRANSFORMED_Y_BEST" title="ioh.iohcpp.logger.property.TRANSFORMED_Y_BEST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TRANSFORMED_Y_BEST</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAWY.html#ioh.iohcpp.logger.property.RAWY" title="ioh.iohcpp.logger.property.RAWY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RAWY</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAWYBEST.html#ioh.iohcpp.logger.property.RAWYBEST" title="ioh.iohcpp.logger.property.RAWYBEST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RAWYBEST</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMEDY.html#ioh.iohcpp.logger.property.TRANSFORMEDY" title="ioh.iohcpp.logger.property.TRANSFORMEDY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TRANSFORMEDY</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMEDYBEST.html#ioh.iohcpp.logger.property.TRANSFORMEDYBEST" title="ioh.iohcpp.logger.property.TRANSFORMEDYBEST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TRANSFORMEDYBEST</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.property.VIOLATION.html#ioh.iohcpp.logger.property.VIOLATION" title="ioh.iohcpp.logger.property.VIOLATION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VIOLATION</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 </section>
 <section id="id2">
-<h3>Class Inheritance Diagram<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<div class="graphviz"><img alt="Inheritance diagram of ioh.iohcpp.logger.property.AbstractProperty, ioh.iohcpp.logger.property.CurrentY, ioh.iohcpp.logger.property.Evaluations, ioh.iohcpp.logger.property.Property, ioh.iohcpp.logger.property.RawYBest, ioh.iohcpp.logger.property.TransformedY, ioh.iohcpp.logger.property.TransformedYBest" class="inheritance graphviz" src="../_images/inheritance-c3d72ce0a8581f95867784b184891571c2e0b714.png" usemap="#inheritance19deab0200"/></div>
-<map id="inheritance19deab0200" name="inheritance19deab0200">
-<area alt="" coords="183,129,313,155" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html#ioh.iohcpp.logger.property.AbstractProperty" id="node1" shape="rect" target="_top" title="Base class for all Properties"/>
-<area alt="" coords="392,5,471,31" href="../api/ioh.iohcpp.logger.property.CurrentY.html#ioh.iohcpp.logger.property.CurrentY" id="node3" shape="rect" target="_top" title="CurrentY"/>
-<area alt="" coords="382,55,481,80" href="../api/ioh.iohcpp.logger.property.Evaluations.html#ioh.iohcpp.logger.property.Evaluations" id="node4" shape="rect" target="_top" title="Evaluations"/>
-<area alt="" coords="393,104,470,129" href="../api/ioh.iohcpp.logger.property.Property.html#ioh.iohcpp.logger.property.Property" id="node5" shape="rect" target="_top" title="Property"/>
-<area alt="" coords="388,153,475,179" href="../api/ioh.iohcpp.logger.property.RawYBest.html#ioh.iohcpp.logger.property.RawYBest" id="node6" shape="rect" target="_top" title="RawYBest"/>
-<area alt="" coords="376,203,487,228" href="../api/ioh.iohcpp.logger.property.TransformedY.html#ioh.iohcpp.logger.property.TransformedY" id="node7" shape="rect" target="_top" title="TransformedY"/>
-<area alt="" coords="361,252,501,277" href="../api/ioh.iohcpp.logger.property.TransformedYBest.html#ioh.iohcpp.logger.property.TransformedYBest" id="node8" shape="rect" target="_top" title="TransformedYBest"/>
+<h3>Class Inheritance Diagram<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<div class="graphviz"><img src="../_images/inheritance-d0a4a694875c8479b05f1b8460f27e4793060d34.png" alt="Inheritance diagram of ioh.iohcpp.logger.property.AbstractProperty, ioh.iohcpp.logger.property.CurrentBestY, ioh.iohcpp.logger.property.CurrentY, ioh.iohcpp.logger.property.Evaluations, ioh.iohcpp.logger.property.Penalty, ioh.iohcpp.logger.property.Property, ioh.iohcpp.logger.property.RawY, ioh.iohcpp.logger.property.RawYBest, ioh.iohcpp.logger.property.TransformedY, ioh.iohcpp.logger.property.TransformedYBest, ioh.iohcpp.logger.property.Violation" usemap="#inheritance8034d222d9" class="inheritance graphviz" /></div>
+<map id="inheritance8034d222d9" name="inheritance8034d222d9">
+<area shape="rect" id="node1" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html#ioh.iohcpp.logger.property.AbstractProperty" target="_top" title="Base class for all Properties" alt="" coords="183,228,313,253"/>
+<area shape="rect" id="node3" href="../api/ioh.iohcpp.logger.property.CurrentBestY.html#ioh.iohcpp.logger.property.CurrentBestY" target="_top" title="CurrentBestY" alt="" coords="378,5,485,31"/>
+<area shape="rect" id="node4" href="../api/ioh.iohcpp.logger.property.CurrentY.html#ioh.iohcpp.logger.property.CurrentY" target="_top" title="CurrentY" alt="" coords="392,55,471,80"/>
+<area shape="rect" id="node5" href="../api/ioh.iohcpp.logger.property.Evaluations.html#ioh.iohcpp.logger.property.Evaluations" target="_top" title="Evaluations" alt="" coords="382,104,481,129"/>
+<area shape="rect" id="node6" href="../api/ioh.iohcpp.logger.property.Penalty.html#ioh.iohcpp.logger.property.Penalty" target="_top" title="Penalty" alt="" coords="395,153,467,179"/>
+<area shape="rect" id="node7" href="../api/ioh.iohcpp.logger.property.Property.html#ioh.iohcpp.logger.property.Property" target="_top" title="Property" alt="" coords="393,203,470,228"/>
+<area shape="rect" id="node8" href="../api/ioh.iohcpp.logger.property.RawY.html#ioh.iohcpp.logger.property.RawY" target="_top" title="RawY" alt="" coords="395,252,467,277"/>
+<area shape="rect" id="node9" href="../api/ioh.iohcpp.logger.property.RawYBest.html#ioh.iohcpp.logger.property.RawYBest" target="_top" title="RawYBest" alt="" coords="388,301,475,327"/>
+<area shape="rect" id="node10" href="../api/ioh.iohcpp.logger.property.TransformedY.html#ioh.iohcpp.logger.property.TransformedY" target="_top" title="TransformedY" alt="" coords="376,351,487,376"/>
+<area shape="rect" id="node11" href="../api/ioh.iohcpp.logger.property.TransformedYBest.html#ioh.iohcpp.logger.property.TransformedYBest" target="_top" title="TransformedYBest" alt="" coords="361,400,501,425"/>
+<area shape="rect" id="node12" href="../api/ioh.iohcpp.logger.property.Violation.html#ioh.iohcpp.logger.property.Violation" target="_top" title="Violation" alt="" coords="391,449,471,475"/>
 </map></section>
 </section>
 <section id="loggers">
-<h2>Loggers<a class="headerlink" href="#loggers" title="Permalink to this headline">¶</a></h2>
+<h2>Loggers<a class="headerlink" href="#loggers" title="Permalink to this heading">#</a></h2>
 <p>All the supported loggers.</p>
 <section id="id3">
-<h3>Classes<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<div class="table-wrapper"><table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
-</colgroup>
+<h3>Classes<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.AbstractWatcher.html#ioh.iohcpp.logger.AbstractWatcher" title="ioh.iohcpp.logger.AbstractWatcher"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractWatcher</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.AbstractLogger.html#ioh.iohcpp.logger.AbstractLogger" title="ioh.iohcpp.logger.AbstractLogger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractLogger</span></code></a>(self[, triggers, properties])</p></td>
 <td><p>Base class for loggers which track properties</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.Analyzer.html#ioh.iohcpp.logger.Analyzer" title="ioh.iohcpp.logger.Analyzer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Analyzer</span></code></a>(self, triggers, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.Analyzer.html#ioh.iohcpp.logger.Analyzer" title="ioh.iohcpp.logger.Analyzer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Analyzer</span></code></a>(self, triggers, ...)</p></td>
 <td><p>A logger which stores all tracked properties to a file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.Combine.html#ioh.iohcpp.logger.Combine" title="ioh.iohcpp.logger.Combine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Combine</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.Combine.html#ioh.iohcpp.logger.Combine" title="ioh.iohcpp.logger.Combine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Combine</span></code></a>(*args, **kwargs)</p></td>
 <td><p>Utility class to combine multiple loggers</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.EAF.html#ioh.iohcpp.logger.EAF" title="ioh.iohcpp.logger.EAF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EAF</span></code></a>(self)</p></td>
 <td><p>Emperical Attainment Function Logger</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.EAH.html#ioh.iohcpp.logger.EAH" title="ioh.iohcpp.logger.EAH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EAH</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.EAH.html#ioh.iohcpp.logger.EAH" title="ioh.iohcpp.logger.EAH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EAH</span></code></a>(*args, **kwargs)</p></td>
 <td><p>Emperical Attainment Histogram Logger</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.FlatFile.html#ioh.iohcpp.logger.FlatFile" title="ioh.iohcpp.logger.FlatFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FlatFile</span></code></a>(self, triggers, properties[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.FlatFile.html#ioh.iohcpp.logger.FlatFile" title="ioh.iohcpp.logger.FlatFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FlatFile</span></code></a>(self, triggers, properties[, ...])</p></td>
 <td><p>A logger which stores all tracked properties to a file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.Logger.html#ioh.iohcpp.logger.Logger" title="ioh.iohcpp.logger.Logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Logger</span></code></a></p></td>
 <td><p>Base class for all loggers</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.Store.html#ioh.iohcpp.logger.Store" title="ioh.iohcpp.logger.Store"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Store</span></code></a>(self, triggers, properties)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.Store.html#ioh.iohcpp.logger.Store" title="ioh.iohcpp.logger.Store"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Store</span></code></a>(self, triggers, properties)</p></td>
 <td><p>A logger which stores all tracked properties in memory.</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 </section>
 <section id="id4">
-<h3>Class Inheritance Diagram<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
-<div class="graphviz"><img alt="Inheritance diagram of ioh.iohcpp.logger.AbstractWatcher, ioh.iohcpp.logger.Analyzer, ioh.iohcpp.logger.Combine, ioh.iohcpp.logger.EAF, ioh.iohcpp.logger.EAH, ioh.iohcpp.logger.FlatFile, ioh.iohcpp.logger.Logger, ioh.iohcpp.logger.Store" class="inheritance graphviz" src="../_images/inheritance-922d8192121101af9bf2f786a1f420e627838fda.png" usemap="#inheritance71bda15329"/></div>
-<map id="inheritance71bda15329" name="inheritance71bda15329">
-<area alt="" coords="303,55,432,80" href="../api/ioh.iohcpp.logger.AbstractWatcher.html#ioh.iohcpp.logger.AbstractWatcher" id="node1" shape="rect" target="_top" title="Base class for loggers which track properties"/>
-<area alt="" coords="480,5,559,31" href="../api/ioh.iohcpp.logger.Analyzer.html#ioh.iohcpp.logger.Analyzer" id="node3" shape="rect" target="_top" title="Analyzer"/>
-<area alt="" coords="483,55,555,80" href="../api/ioh.iohcpp.logger.FlatFile.html#ioh.iohcpp.logger.FlatFile" id="node7" shape="rect" target="_top" title="FlatFile"/>
-<area alt="" coords="483,104,555,129" href="../api/ioh.iohcpp.logger.Store.html#ioh.iohcpp.logger.Store" id="node9" shape="rect" target="_top" title="Store"/>
-<area alt="" coords="183,129,255,155" href="../api/ioh.iohcpp.logger.Logger.html#ioh.iohcpp.logger.Logger" id="node2" shape="rect" target="_top" title="Base class for all loggers"/>
-<area alt="" coords="327,104,407,129" href="../api/ioh.iohcpp.logger.Combine.html#ioh.iohcpp.logger.Combine" id="node4" shape="rect" target="_top" title="Utility class to combine multiple loggers"/>
-<area alt="" coords="331,153,403,179" href="../api/ioh.iohcpp.logger.EAF.html#ioh.iohcpp.logger.EAF" id="node5" shape="rect" target="_top" title="Emperical Attainment Function Logger"/>
-<area alt="" coords="331,203,403,228" href="../api/ioh.iohcpp.logger.EAH.html#ioh.iohcpp.logger.EAH" id="node6" shape="rect" target="_top" title="Emperical Attainment Histogram Logger"/>
+<h3>Class Inheritance Diagram<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<div class="graphviz"><img src="../_images/inheritance-42f11450046595ca8f15f23b9cae0965491a9af2.png" alt="Inheritance diagram of ioh.iohcpp.logger.AbstractLogger, ioh.iohcpp.logger.Analyzer, ioh.iohcpp.logger.Combine, ioh.iohcpp.logger.EAF, ioh.iohcpp.logger.EAH, ioh.iohcpp.logger.FlatFile, ioh.iohcpp.logger.Logger, ioh.iohcpp.logger.Store" usemap="#inheritancecb6c33b268" class="inheritance graphviz" /></div>
+<map id="inheritancecb6c33b268" name="inheritancecb6c33b268">
+<area shape="rect" id="node1" href="../api/ioh.iohcpp.logger.AbstractLogger.html#ioh.iohcpp.logger.AbstractLogger" target="_top" title="Base class for loggers which track properties" alt="" coords="303,55,423,80"/>
+<area shape="rect" id="node3" href="../api/ioh.iohcpp.logger.Analyzer.html#ioh.iohcpp.logger.Analyzer" target="_top" title="Analyzer" alt="" coords="471,5,549,31"/>
+<area shape="rect" id="node7" href="../api/ioh.iohcpp.logger.FlatFile.html#ioh.iohcpp.logger.FlatFile" target="_top" title="FlatFile" alt="" coords="474,55,546,80"/>
+<area shape="rect" id="node9" href="../api/ioh.iohcpp.logger.Store.html#ioh.iohcpp.logger.Store" target="_top" title="Store" alt="" coords="474,104,546,129"/>
+<area shape="rect" id="node2" href="../api/ioh.iohcpp.logger.Logger.html#ioh.iohcpp.logger.Logger" target="_top" title="Base class for all loggers" alt="" coords="183,129,255,155"/>
+<area shape="rect" id="node4" href="../api/ioh.iohcpp.logger.Combine.html#ioh.iohcpp.logger.Combine" target="_top" title="Utility class to combine multiple loggers" alt="" coords="323,104,403,129"/>
+<area shape="rect" id="node5" href="../api/ioh.iohcpp.logger.EAF.html#ioh.iohcpp.logger.EAF" target="_top" title="Emperical Attainment Function Logger" alt="" coords="327,153,399,179"/>
+<area shape="rect" id="node6" href="../api/ioh.iohcpp.logger.EAH.html#ioh.iohcpp.logger.EAH" target="_top" title="Emperical Attainment Histogram Logger" alt="" coords="327,203,399,228"/>
 </map></section>
 </section>
 </section>
@@ -554,10 +619,10 @@ a trigger evaluates to true, the logger logs data.</p>
                 </div>
                 <div class="title">Always</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="../api/ioh.iohcpp.problem.WModelOneMax.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -568,15 +633,21 @@ a trigger evaluates to true, the logger logs data.</p>
               </div>
             </a>
         </div>
-
-        <div class="related-information">
-              Copyright &#169; 2022, Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck |
-          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
-          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
-            | <a class="muted-link" href="../_sources/python/logger.rst.txt"
-               rel="nofollow">
-              Show Source
-            </a>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
         </div>
         
       </footer>
@@ -587,7 +658,7 @@ a trigger evaluates to true, the logger logs data.</p>
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -624,6 +695,7 @@ a trigger evaluates to true, the logger logs data.</p>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>

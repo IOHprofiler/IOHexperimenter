@@ -7,40 +7,37 @@ Namespaces
 .. toctree::
     :maxdepth: 1
 
-    ioh_problem_submodular_v2.rst
+    ioh_problem_submodular_graph.rst
+    ioh_problem_submodular_pwt.rst
 
 
-Classes
+Structs
 ----------
-Graph
+GraphConstraint
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenclass:: ioh::problem::submodular::Graph
-
-GraphInstance
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenclass:: ioh::problem::submodular::GraphInstance
+.. doxygenstruct:: ioh::problem::submodular::GraphConstraint
 
 GraphProblem
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenclass:: ioh::problem::submodular::GraphProblem
+.. doxygenstruct:: ioh::problem::submodular::GraphProblem
 
-Helper
+GraphProblemType
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenclass:: ioh::problem::submodular::Helper
+.. doxygenstruct:: ioh::problem::submodular::GraphProblemType
 
 MaxCoverage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenclass:: ioh::problem::submodular::MaxCoverage
+.. doxygenstruct:: ioh::problem::submodular::MaxCoverage
 
 MaxCut
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenclass:: ioh::problem::submodular::MaxCut
+.. doxygenstruct:: ioh::problem::submodular::MaxCut
 
 MaxInfluence
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenclass:: ioh::problem::submodular::MaxInfluence
+.. doxygenstruct:: ioh::problem::submodular::MaxInfluence
 
 PackWhileTravel
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenclass:: ioh::problem::submodular::PackWhileTravel
+.. doxygenstruct:: ioh::problem::submodular::PackWhileTravel
 

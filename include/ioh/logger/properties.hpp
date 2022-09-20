@@ -92,8 +92,7 @@ namespace ioh
              * @param log_info The current problem state data.
              * @returns An optional that holds a `double` if the variable is available, `std::nullopt` else.
              */
-            virtual std::optional<double> operator()(const logger::Info &log_info) const = 0
-                ;
+            virtual std::optional<double> operator()(const logger::Info &log_info) const = 0;
 
             //! Configured name accessor.
             std::string name() const { return name_; }
@@ -168,6 +167,9 @@ namespace ioh
             //! Main call interface.
             std::optional<double> operator()(const logger::Info &log_info) const override
             {
+                if(abs(log_info.raw_y) == std::numeric_limits<double>::infinity()){
+                    return {};
+                }                
                 return std::make_optional(log_info.raw_y);
             }
         };

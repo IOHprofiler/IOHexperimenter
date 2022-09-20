@@ -10,10 +10,11 @@ NQueens
 
    .. autosummary::
 
-      ~NQueens.constraint
+      ~NQueens.bounds
+      ~NQueens.constraints
       ~NQueens.log_info
       ~NQueens.meta_data
-      ~NQueens.objective
+      ~NQueens.optimum
       ~NQueens.problems
       ~NQueens.state
 
@@ -22,24 +23,33 @@ NQueens
    .. autosummary::
 
       ~NQueens.__call__
+      ~NQueens.add_constraint
       ~NQueens.attach_logger
       ~NQueens.create
       ~NQueens.detach_logger
+      ~NQueens.enforce_bounds
+      ~NQueens.remove_constraint
       ~NQueens.reset
+      ~NQueens.update_log_info
 
    .. rubric:: Attributes Documentation
 
-   .. autoattribute:: constraint
+   .. autoattribute:: bounds
+   .. autoattribute:: constraints
    .. autoattribute:: log_info
    .. autoattribute:: meta_data
-   .. autoattribute:: objective
+   .. autoattribute:: optimum
    .. autoattribute:: problems
    .. autoattribute:: state
 
    .. rubric:: Methods Documentation
 
    .. automethod:: __call__
+   .. automethod:: add_constraint
    .. automethod:: attach_logger
    .. automethod:: create
    .. automethod:: detach_logger
+   .. automethod:: enforce_bounds
+   .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: update_log_info

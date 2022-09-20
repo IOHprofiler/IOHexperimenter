@@ -22,7 +22,6 @@ void test_submodular_problems(const std::string &type, const std::vector<double>
         if (name.substr(0, type.size()) == type)
         {
             auto problem = problem_factory.create(id, 1, 1);
-            ioh::common::random::seed(10);
             auto y0 = std::round((*problem)(half_zero(problem->meta_data().n_variables)) * 10.0) / 10.0;
             EXPECT_DOUBLE_EQ(y0, results.at(i++)) << name;
             break;

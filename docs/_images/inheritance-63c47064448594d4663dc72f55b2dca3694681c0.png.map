@@ -1,0 +1,9 @@
+<map id="inheritance311ac94a6f" name="inheritance311ac94a6f">
+<area shape="rect" id="node1" href="../api/ioh.iohcpp.suite.BBOB.html#ioh.iohcpp.suite.BBOB" target="_top" title="Suite with real&#45;valued functions from BBOB single&#45;objective benchmark." alt="" coords="345,5,417,31"/>
+<area shape="rect" id="node2" title="RealBase suite" alt="" coords="191,55,274,80"/>
+<area shape="rect" id="node7" href="../api/ioh.iohcpp.suite.Real.html#ioh.iohcpp.suite.Real" target="_top" title="Suite with real&#45;valued functions included in IOH. " alt="" coords="345,55,417,80"/>
+<area shape="rect" id="node3" href="../api/ioh.iohcpp.suite.Integer.html#ioh.iohcpp.suite.Integer" target="_top" title="Suite with integer&#45;valued functions included in IOH. " alt="" coords="345,104,417,129"/>
+<area shape="rect" id="node4" title="IntegerBase suite" alt="" coords="183,128,283,153"/>
+<area shape="rect" id="node6" href="../api/ioh.iohcpp.suite.PBO.html#ioh.iohcpp.suite.PBO" target="_top" title="Suite with integer&#45;valued functions from PBO single objective benchmark." alt="" coords="345,153,417,179"/>
+<area shape="rect" id="node8" href="../api/ioh.iohcpp.suite.Submodular.html#ioh.iohcpp.suite.Submodular" target="_top" title="Suite with integer&#45;valued functions from Submodular single objective benchmark." alt="" coords="331,203,431,228"/>
+</map>

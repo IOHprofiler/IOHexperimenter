@@ -19,10 +19,7 @@ EAF
 
       ~EAF.add_trigger
       ~EAF.at
-      ~EAF.attach_problem
-      ~EAF.attach_suite
       ~EAF.call
-      ~EAF.log
       ~EAF.reset
 
    .. rubric:: Attributes Documentation
@@ -34,8 +31,5 @@ EAF
 
    .. automethod:: add_trigger
    .. automethod:: at
-   .. automethod:: attach_problem
-   .. automethod:: attach_suite
    .. automethod:: call
-   .. automethod:: log
    .. automethod:: reset

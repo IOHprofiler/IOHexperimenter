@@ -153,13 +153,13 @@ namespace ioh::problem::submodular
             }
 
             violation_ += sqrt(count) * graph->meta.chance_cons;
-            if (violation_ > graph->meta.constraint_limit)
-            {
-                violation_ = graph->meta.constraint_limit - violation_;
-                return true;
-            }
-            return false;            
+            return violation_ > graph->meta.constraint_limit;
         }
+
+        double penalty() const override {
+            return weight * pow(graph->meta.constraint_limit - violation(), exponent);
+        }
+        
 
         std::string repr() const override { return fmt::format("<GraphConstraint {}>", violation()); }
     };

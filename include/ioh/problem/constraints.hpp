@@ -29,16 +29,22 @@ namespace ioh::problem
         double violation_;
         bool is_feasible_;
     public:
+        //! Enforcement strategy
         constraint::Enforced enforced;
+        
+        //! Weight put on violation in penalty computation (penalty = weight * violation ^ exponent)
         double weight;
+        //! Exponent put on violation in penalty computation (penalty = weight * violation ^ exponent)
+        double exponent;
 
         /**
          * @brief Construct a new contraint object
          * @param enforced policy for enforcing the penalty on the constraint see constraint::Enforced
          * @param weight the penalty weight
+         * @param weight the penalty exponent
         */
-        Constraint(const constraint::Enforced enforced = constraint::Enforced::NOT, const double weight = 1.0) :
-            violation_(0.), is_feasible_(true), enforced(enforced), weight(weight)
+        Constraint(const constraint::Enforced enforced = constraint::Enforced::NOT, const double weight = 1.0, const double exponent = 1.0) :
+            violation_(0.), is_feasible_(true), enforced(enforced), weight(weight), exponent(exponent) 
         {
         }
         
@@ -98,7 +104,7 @@ namespace ioh::problem
         [[nodiscard]] virtual double violation() const { return violation_; }
         
         //! Accessor for penalty
-        [[nodiscard]] virtual double penalty() const { return weight * violation(); }
+        [[nodiscard]] virtual double penalty() const { return weight * pow(violation(), exponent); }
         
     };
 
@@ -164,9 +170,11 @@ namespace ioh::problem
         [[nodiscard]] double penalty() const
         {
             double p = 0.;
-            for (const auto &ci : constraints)
+            for (const auto &ci : constraints){
                 // You can have violation, but still be considered feasible
-                p += ci->penalty() * (!ci->cached_is_feasible() and ci->enforced >= constraint::Enforced::SOFT);
+                if (!ci->cached_is_feasible() and ci->enforced >= constraint::Enforced::SOFT)
+                    p += ci->penalty();
+            }
             return p;
         }
 
@@ -353,14 +361,15 @@ namespace ioh::problem
         /**
          * @brief Construct a new functional constraint
          * @param fn the function that computes the violation
-         * @param weight the constraint penalty weight, used to penalize the y value as weight * violation
+         * @param weight the constraint penalty weight, used to penalize the y value as weight * violation ^ exponent
+         * @param exponent the constraint penalty exponent, used to penalize the y value as weight * violation ^ exponent
          * @param enforced enforcement policy, see constraint::Enforced
          * @param name a name for this constraint, only used for the string representation.
         */
-        FunctionalConstraint(ConstraintFunction<T> fn, const double weight = 1.0,
+        FunctionalConstraint(ConstraintFunction<T> fn, const double weight = 1.0, const double exponent = 1.0,
                              const constraint::Enforced enforced = constraint::Enforced::SOFT,
                              const std::string &name = "") : 
-            Constraint<T>(enforced, weight),
+            Constraint<T>(enforced, weight, exponent),
             fn_(fn), name_(name)
         {
         }

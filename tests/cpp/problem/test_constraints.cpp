@@ -22,12 +22,11 @@ TEST_F(BaseTest, BoxBBOBConstraint)
     EXPECT_FLOAT_EQ((float)p.constraints().violation(), 25.f);
 
     // Hard penalty, return the value for penalty on violation, and don't call
-    // internal evaluate function. So, y is expected to be the penalty and the internally used
-    // values for y are expected to be inf (not evaluated). 
+    // internal evaluate function. So, y and all internally used values are expected to be the penalty
     p.enforce_bounds(1.0, ioh::problem::constraint::Enforced::HARD);
     EXPECT_EQ(p({10}), p.constraints().penalty());
-    EXPECT_EQ(p.state().current_internal.y, std::numeric_limits<double>::infinity());
-    EXPECT_EQ(p.state().y_unconstrained, std::numeric_limits<double>::infinity());
+    EXPECT_EQ(p.state().current_internal.y, p.constraints().penalty());
+    EXPECT_EQ(p.state().y_unconstrained, p.constraints().penalty());
 
     // Return only penalize(y), default implementation of penalize(y) is y + p, so inf + p == inf
     p.enforce_bounds(1.0, ioh::problem::constraint::Enforced::OVERRIDE);
@@ -136,4 +135,19 @@ TEST_F(BaseTest, GraphConstraint) {
     const auto y3 = (*problem)(x1);
     EXPECT_FLOAT_EQ((float)y3, (float)problem->state().y_unconstrained + (float)problem->constraints()[0]->violation());
 
+
+    // Multi-Objective definition
+    problem->constraints()[0]->enforced = ioh::problem::constraint::Enforced::HARD;
+    problem->constraints()[0]->weight = -1.;
+    problem->constraints()[0]->exponent = 0.;
+
+    // Invalid point gets -1
+    const auto y4 = (*problem)(x1);
+    EXPECT_FLOAT_EQ((float)y4, -1.);
+    EXPECT_FLOAT_EQ((float)problem->constraints()[0]->violation(), -440.f);
+
+    // Valid point get f(x)
+    EXPECT_FLOAT_EQ((float)(*problem)(x0), 81.f);
+    EXPECT_FLOAT_EQ((float)problem->constraints()[0]->violation(), 1.f);
+    EXPECT_FLOAT_EQ((float)problem->constraints().penalty(), 0.f);
 }

@@ -5,7 +5,7 @@ import shutil
 import warnings
 import xmltodict
 
-BASE_DIR = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
+BASE_DIR = os.path.realpath(os.path.dirname(__file__))
 
 unit_template = '''{name}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -139,18 +139,18 @@ def generate_stubs(sourcedir):
 def main():
     try:
         generate_sphinx_templates_from_xml()
-        # directory = os.path.join(BASE_DIR, "doc", "python")
-        # try:
-        #     shutil.rmtree(os.path.join(directory, "source", "api"))
-        # except FileNotFoundError:
-        #     pass
-        # subprocess.check_call(f"make html", shell=True, cwd=directory)
+        directory = os.path.join(BASE_DIR, "doc", "python")
+        try:
+            shutil.rmtree(os.path.join(directory, "source", "api"))
+        except FileNotFoundError:
+            pass
+        subprocess.check_call(f"make html", shell=True, cwd=directory)
 
-        # shutil.copytree(
-        #     os.path.join(BASE_DIR, "doc", "build", "html"),
-        #     os.path.join(BASE_DIR, "docs"),
-        #     dirs_exist_ok=True
-        # )
+        shutil.copytree(
+            os.path.join(BASE_DIR, "doc", "build", "html"),
+            os.path.join(BASE_DIR, "docs"),
+            dirs_exist_ok=True
+        )
     except Exception as reason:
         warnings.warn(f"Cannot compile docs reason: {reason}", RuntimeWarning)
 

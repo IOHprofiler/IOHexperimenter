@@ -19,10 +19,7 @@ FlatFile
    .. autosummary::
 
       ~FlatFile.add_trigger
-      ~FlatFile.attach_problem
-      ~FlatFile.attach_suite
       ~FlatFile.call
-      ~FlatFile.log
       ~FlatFile.reset
       ~FlatFile.watch
 
@@ -35,9 +32,6 @@ FlatFile
    .. rubric:: Methods Documentation
 
    .. automethod:: add_trigger
-   .. automethod:: attach_problem
-   .. automethod:: attach_suite
    .. automethod:: call
-   .. automethod:: log
    .. automethod:: reset
    .. automethod:: watch

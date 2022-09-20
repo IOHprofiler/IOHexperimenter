@@ -105,6 +105,7 @@ void define_constraint(py::module &m, const std::string &name){
     py::class_<Class, PyConstraint<T>, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
         .def_readwrite("enforced", &Class::enforced)
         .def_readwrite("weight", &Class::weight)
+        .def_readwrite("exponent", &Class::exponent)
         .def("__call__", &Class::operator())
         .def("is_feasible", &Class::is_feasible)
         .def("compute_violation", &Class::compute_violation)
@@ -137,13 +138,14 @@ void define_functionalconstraint(py::module &m, const std::string &name){
     py::class_<Class, Parent, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
         .def(
             // py::init<ConstraintFunction<T>, double, constraint::Enforced, std::string>(), 
-            py::init([](py::handle f, const double w, const constraint::Enforced e, const std::string& n){
+            py::init([](py::handle f, const double w, const double ex, const constraint::Enforced e, const std::string& n){
                 register_python_fn(f);
                 auto fn = [f](const std::vector<T> &x) { return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr()); };
-                return Class(fn, w, e, n);
+                return Class(fn, w, ex, e, n);
             }),
             py::arg("fn"), 
             py::arg("weight") = 1.0, 
+            py::arg("exponent") = 1.0, 
             py::arg("enforced") = constraint::Enforced::SOFT,
             py::arg("name") = ""
         )
@@ -366,7 +368,9 @@ void define_base_class(py::module &m, const std::string &name)
         .def_property_readonly("constraints", &ProblemType::constraints, "The constraints of the problem.")
         .def("add_constraint", &ProblemType::add_constraint, "add a constraint")
         .def("remove_constraint", &ProblemType::remove_constraint, "remove a constraint")
-        .def("enforce_bounds", &ProblemType::enforce_bounds, py::arg("weight") = 1., py::arg("how") = constraint::Enforced::SOFT)
+        .def("enforce_bounds", &ProblemType::enforce_bounds, py::arg("weight") = 1., 
+                                py::arg("how") = constraint::Enforced::SOFT,
+                                py::arg("exponent") = 1.)
         .def("__repr__", [=](const ProblemType &p) {
             using namespace ioh::common;
             const auto meta_data = p.meta_data();
@@ -1028,10 +1032,13 @@ void define_problem(py::module &m)
     define_wmodels(m);
     define_submodular_problems(m);
 
-    py::module_::import("atexit").attr("register")(py::cpp_function([]() {
-        py::module_::import("os").attr("_exit")(0);
-        // for (const auto fn : WRAPPED_FUNCTIONS)
-        //     if (fn)
-        //         fn.dec_ref();
-    }));
+    py::module_::import("atexit").attr("register")(
+        py::cpp_function([]() {
+            // std::cout << "exiting gracefully...";
+            for (const auto fn : WRAPPED_FUNCTIONS)
+                if (fn)
+                    fn.dec_ref();
+            // std::cout << " done\n";
+        })
+    );
 }

@@ -16,6 +16,8 @@ IntegerState
       ~IntegerState.current_internal
       ~IntegerState.evaluations
       ~IntegerState.optimum_found
+      ~IntegerState.y_unconstrained
+      ~IntegerState.y_unconstrained_best
 
    .. rubric:: Attributes Documentation
 
@@ -25,3 +27,5 @@ IntegerState
    .. autoattribute:: current_internal
    .. autoattribute:: evaluations
    .. autoattribute:: optimum_found
+   .. autoattribute:: y_unconstrained
+   .. autoattribute:: y_unconstrained_best

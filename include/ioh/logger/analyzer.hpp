@@ -291,7 +291,7 @@ namespace ioh::logger
                 {
                     if (best_point_.evals != 0)
                     {
-                        info_stream_ << fmt::format(", {:d}:{:d}|{:g}", problem_->instance, best_point_.evals,
+                        info_stream_ << fmt::format(", {:d}:{:d}|{:g}", problem_.value().instance, best_point_.evals,
                                                     best_point_.point.y);
                         for (auto &p : attributes_.run)
                             info_stream_ << fmt::format(";{:g}", *p.second);
@@ -328,14 +328,14 @@ namespace ioh::logger
             private:
                 void update_info_file(const problem::MetaData &problem, const std::string &dat_path)
                 {
-                    if (problem_ != nullptr)
+                    if (problem_.has_value())
                         handle_last_eval();
 
-                    if (problem_ == nullptr || problem_->problem_id != problem.problem_id)
+                    if (!problem_.has_value() || problem_.value().problem_id != problem.problem_id)
                         handle_new_problem(problem);
 
-                    if (problem_ == nullptr || problem.n_variables != problem_->n_variables ||
-                        problem.problem_id != problem_->problem_id)
+                    if (!problem_.has_value() || problem.n_variables != problem_.value().n_variables ||
+                        problem.problem_id != problem_.value().problem_id)
                         handle_new_dimension(problem, dat_path);
 
                     info_stream_.flush();
@@ -429,7 +429,7 @@ namespace ioh::logger
                     IOH_DBG(debug, "Analyzer called");
                     
                     FlatFile::call(log_info);
-                    if (problem_->optimization_type(log_info.raw_y, best_point_.point.y))
+                    if (problem_.value().optimization_type(log_info.raw_y, best_point_.point.y))
                         best_point_ = {log_info.evaluations, {log_info.x, log_info.raw_y}};
                     log_info_ = {};
                 }
@@ -553,7 +553,7 @@ namespace ioh::logger
                         experiments_.at(current_filename_)
                             .dims.back()
                             .runs.emplace_back(
-                                static_cast<size_t>(problem_->instance), evals_, best_point_,
+                                static_cast<size_t>(problem_.value().instance), evals_, best_point_,
                                 common::as_vector<std::string, double, structures::Attribute<double>>(attributes_.run));
                         if (log_info_.evaluations != 0)
                             FlatFile::call(log_info_);
@@ -607,5 +607,5 @@ namespace ioh::logger
 
 
     //! Default version of the logger
-    using Analyzer = analyzer::v1::Analyzer;
+    using Analyzer = analyzer::v2::Analyzer;
 } // namespace ioh::logger

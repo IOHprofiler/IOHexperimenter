@@ -1,0 +1,10 @@
+<map id="inheritancecb6c33b268" name="inheritancecb6c33b268">
+<area shape="rect" id="node1" href="../api/ioh.iohcpp.logger.AbstractLogger.html#ioh.iohcpp.logger.AbstractLogger" target="_top" title="Base class for loggers which track properties" alt="" coords="303,55,423,80"/>
+<area shape="rect" id="node3" href="../api/ioh.iohcpp.logger.Analyzer.html#ioh.iohcpp.logger.Analyzer" target="_top" title="Analyzer" alt="" coords="471,5,549,31"/>
+<area shape="rect" id="node7" href="../api/ioh.iohcpp.logger.FlatFile.html#ioh.iohcpp.logger.FlatFile" target="_top" title="FlatFile" alt="" coords="474,55,546,80"/>
+<area shape="rect" id="node9" href="../api/ioh.iohcpp.logger.Store.html#ioh.iohcpp.logger.Store" target="_top" title="Store" alt="" coords="474,104,546,129"/>
+<area shape="rect" id="node2" href="../api/ioh.iohcpp.logger.Logger.html#ioh.iohcpp.logger.Logger" target="_top" title="Base class for all loggers" alt="" coords="183,129,255,155"/>
+<area shape="rect" id="node4" href="../api/ioh.iohcpp.logger.Combine.html#ioh.iohcpp.logger.Combine" target="_top" title="Utility class to combine multiple loggers" alt="" coords="323,104,403,129"/>
+<area shape="rect" id="node5" href="../api/ioh.iohcpp.logger.EAF.html#ioh.iohcpp.logger.EAF" target="_top" title="Emperical Attainment Function Logger" alt="" coords="327,153,399,179"/>
+<area shape="rect" id="node6" href="../api/ioh.iohcpp.logger.EAH.html#ioh.iohcpp.logger.EAH" target="_top" title="Emperical Attainment Histogram Logger" alt="" coords="327,203,399,228"/>
+</map>

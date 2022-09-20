@@ -138,7 +138,7 @@ namespace ioh::logger
         void attach_problem(const problem::MetaData &problem) override
         {
             // If this is a new problem.
-            if (problem_ == nullptr or *problem_ != problem)
+            if (!problem_.has_value() or problem_.value() != problem)
             {
                 IOH_DBG(xdebug, "reset run counter")
                 current_run_ = 0; // Then reset the run counter.
@@ -174,6 +174,7 @@ namespace ioh::logger
             out_ << current_meta_data_;
             
             IOH_DBG(xdebug, "print watched properties")
+            
             for (auto p = properties_vector_.begin(); p != properties_vector_.end();){
                 out_ << p->get().call_to_string(log_info, nan_) << (++p != properties_vector_.end() ? sep_ : "");
             }
@@ -216,11 +217,11 @@ namespace ioh::logger
             {
                 std::stringstream ss;
                 ss /* no sep */ << current_suite_;
-                ss << sep_ << problem_->name;
-                ss << sep_ << problem_->problem_id;
-                ss << sep_ << problem_->instance;
-                ss << sep_ << (problem_->optimization_type == common::OptimizationType::MIN ? "min" : "max");
-                ss << sep_ << problem_->n_variables;
+                ss << sep_ << problem_.value().name;
+                ss << sep_ << problem_.value().problem_id;
+                ss << sep_ << problem_.value().instance;
+                ss << sep_ << (problem_.value().optimization_type == common::OptimizationType::MIN ? "min" : "max");
+                ss << sep_ << problem_.value().n_variables;
                 ss << sep_ << current_run_;
                 current_meta_data_ = ss.str();
             }

@@ -10,10 +10,11 @@ StepEllipsoid
 
    .. autosummary::
 
-      ~StepEllipsoid.constraint
+      ~StepEllipsoid.bounds
+      ~StepEllipsoid.constraints
       ~StepEllipsoid.log_info
       ~StepEllipsoid.meta_data
-      ~StepEllipsoid.objective
+      ~StepEllipsoid.optimum
       ~StepEllipsoid.problems
       ~StepEllipsoid.state
 
@@ -22,24 +23,33 @@ StepEllipsoid
    .. autosummary::
 
       ~StepEllipsoid.__call__
+      ~StepEllipsoid.add_constraint
       ~StepEllipsoid.attach_logger
       ~StepEllipsoid.create
       ~StepEllipsoid.detach_logger
+      ~StepEllipsoid.enforce_bounds
+      ~StepEllipsoid.remove_constraint
       ~StepEllipsoid.reset
+      ~StepEllipsoid.update_log_info
 
    .. rubric:: Attributes Documentation
 
-   .. autoattribute:: constraint
+   .. autoattribute:: bounds
+   .. autoattribute:: constraints
    .. autoattribute:: log_info
    .. autoattribute:: meta_data
-   .. autoattribute:: objective
+   .. autoattribute:: optimum
    .. autoattribute:: problems
    .. autoattribute:: state
 
    .. rubric:: Methods Documentation
 
    .. automethod:: __call__
+   .. automethod:: add_constraint
    .. automethod:: attach_logger
    .. automethod:: create
    .. automethod:: detach_logger
+   .. automethod:: enforce_bounds
+   .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: update_log_info

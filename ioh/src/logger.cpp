@@ -79,14 +79,17 @@ public:
     template <typename... Args>
     PyWatcher(Args &&...args) : WatcherType(std::forward<Args>(args)...)
     {
-        auto x = py::module::import("atexit").attr("register")(py::cpp_function{[self = this]() -> void {
+        auto x = py::module::import("atexit").attr("register")(
+            py::cpp_function{[self = this]() -> void {
             // type-pun alive bool in order to check if is still a boolean 1, if so, delete.
             // in some cases this might cause a segfault, only happens in a very small prob. (1/MAX_INT)
+            // std::cout << "killing logger...";
             int alive_int = (int)(*(char *)(&self->alive));
             if (alive_int == 1)
             {
                 self->close();
             }
+            // std::cout << "done\n";
         }});
     }
 
@@ -96,7 +99,7 @@ public:
         {
             WatcherType::close();
             alive = false;
-            for (auto ptr : property_ptrs_)
+            for (auto& ptr : property_ptrs_)
                 delete ptr;
             property_ptrs_.clear();
         }

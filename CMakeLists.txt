@@ -3,15 +3,15 @@
 cmake_minimum_required(VERSION 3.15) 
 file(READ VERSION VERSION_STRING)
 
-project(ioh   
-    VERSION ${VERSION_STRING}
+project(ioh    
+    VERSION ${VERSION_STRING} 
     LANGUAGES CXX  
 ) 
   
 add_compile_definitions(PROJECT_VER="${CMAKE_PROJECT_VERSION}")
 set(CMAKE_CXX_STANDARD 17)  
 set(EXTERNAL_DIR "${PROJECT_SOURCE_DIR}/external")
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH}) 
  
 option(BUILD_PYTHON_PACKAGE "Whether to build Python package" OFF)
 option(BUILD_TESTS "Whether to build test cases with gtest" ON)

@@ -26,7 +26,8 @@ copyright = '2022, Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Car
 author = 'Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck'
 
 # The full version, including alpha/beta/rc tags
-release = '0.3.2.6'
+with open(os.path.realpath(os.path.join(os.path.dirname(__file__), "../../..", "VERSION"))) as f:
+    release = f.read().strip()
 
 
 # -- General configuration ---------------------------------------------------

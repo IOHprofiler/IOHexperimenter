@@ -228,17 +228,18 @@ namespace ioh
                 if (constraintset_.hard_violation(x))
                 {
                     state_.current_internal.x = x; 
-                    state_.current_internal.y = meta_data_.initial_objective_value;
-                    state_.y_unconstrained = meta_data_.initial_objective_value;
+                    state_.current_internal.y = constraintset_.penalize(meta_data_.initial_objective_value);
+                    state_.y_unconstrained = state_.current_internal.y;
+                    state_.current.y = state_.current_internal.y;
                 }
                 else
                 {
                     state_.current_internal.x = transform_variables(x);
                     state_.current_internal.y = evaluate(state_.current_internal.x);
                     state_.y_unconstrained = transform_objectives(state_.current_internal.y);
+                    state_.current.y = constraintset_.penalize(state_.y_unconstrained);
                 }
                 
-                state_.current.y = constraintset_.penalize(state_.y_unconstrained);
                 state_.update(meta_data_, optimum_);
 
                 if (logger_ != nullptr)
@@ -250,10 +251,11 @@ namespace ioh
                 return state_.current.y;
             }
 
-            void enforce_bounds(const double weight = 1.0, const constraint::Enforced how = constraint::Enforced::SOFT)
+            void enforce_bounds(const double weight = 1.0, const constraint::Enforced how = constraint::Enforced::SOFT, const double exponent = 1.0)
             {
                 
                 bounds_.weight = weight;
+                bounds_.exponent = exponent;
                 bounds_.enforced = how;
                 
                 add_constraint(ConstraintPtr<T>(ConstraintPtr<T>(), &bounds_));

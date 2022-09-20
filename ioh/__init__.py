@@ -435,7 +435,7 @@ class Experiment:
                         info_out.seek(0)
                         info_out.write(json.dumps(data_out, indent=4))
                         info_out.truncate()
-                os.remove(source)
+            os.remove(source)
                     
 
         def file_to_dir(path):
@@ -529,3 +529,4 @@ __all__ = (
     "get_problem_id",
     "Experiment"
 )
+

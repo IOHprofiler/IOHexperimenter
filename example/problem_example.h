@@ -32,7 +32,7 @@ inline void simple_problem_example()
             {
                 /// To output information of the current problem.
                 std::cout << om->meta_data() << std::endl;
-                std::cout << "bounds of variables :  " << om->constraint() << std::endl;
+                std::cout << "bounds of variables :  " << om->bounds() << std::endl;
 
                 /// Random search on the problem with the given budget 100.
                 for (auto budget = 100; budget > 0; budget--)
@@ -63,7 +63,7 @@ public:
     /// instances/dimensions.
     AnotherRealProblem(const int instance, const int n_variables) :
         RealProblem(ioh::problem::MetaData(1, instance, "AnotherRealProblem", n_variables,
-                                           ioh::common::OptimizationType::Minimization))
+                                           ioh::common::OptimizationType::MIN))
     {
     }
 };
@@ -104,7 +104,7 @@ inline void extending_problems_example()
     // We provide convenience wrapper functions for wrapping 'standalone' functions, which 
     // register a function in the factory. Only the first two arguments are required.
     ioh::problem::wrap_function<double>(
-        sum_vector, "Sum", ioh::common::OptimizationType::Minimization, 
+        sum_vector, "Sum", ioh::common::OptimizationType::MIN, 
         -1, // the lower bound for the constraint
         10, // the upper bound for the constraint
         tx, // variables transformation function, transforms x prior to calling f(x)

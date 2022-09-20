@@ -10,10 +10,11 @@ EllipsoidRotated
 
    .. autosummary::
 
-      ~EllipsoidRotated.constraint
+      ~EllipsoidRotated.bounds
+      ~EllipsoidRotated.constraints
       ~EllipsoidRotated.log_info
       ~EllipsoidRotated.meta_data
-      ~EllipsoidRotated.objective
+      ~EllipsoidRotated.optimum
       ~EllipsoidRotated.problems
       ~EllipsoidRotated.state
 
@@ -22,24 +23,33 @@ EllipsoidRotated
    .. autosummary::
 
       ~EllipsoidRotated.__call__
+      ~EllipsoidRotated.add_constraint
       ~EllipsoidRotated.attach_logger
       ~EllipsoidRotated.create
       ~EllipsoidRotated.detach_logger
+      ~EllipsoidRotated.enforce_bounds
+      ~EllipsoidRotated.remove_constraint
       ~EllipsoidRotated.reset
+      ~EllipsoidRotated.update_log_info
 
    .. rubric:: Attributes Documentation
 
-   .. autoattribute:: constraint
+   .. autoattribute:: bounds
+   .. autoattribute:: constraints
    .. autoattribute:: log_info
    .. autoattribute:: meta_data
-   .. autoattribute:: objective
+   .. autoattribute:: optimum
    .. autoattribute:: problems
    .. autoattribute:: state
 
    .. rubric:: Methods Documentation
 
    .. automethod:: __call__
+   .. automethod:: add_constraint
    .. automethod:: attach_logger
    .. automethod:: create
    .. automethod:: detach_logger
+   .. automethod:: enforce_bounds
+   .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: update_log_info

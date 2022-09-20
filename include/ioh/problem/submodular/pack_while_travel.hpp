@@ -137,13 +137,12 @@ namespace ioh::problem
                     for (size_t i = 0; i < graph->ttp_data.distances.size(); i++)
                         for (auto &item : graph->ttp_data.city_map[i])
                             violation_ += item.weight * static_cast<bool>(x[item.index]);
+                    
+                    return violation_ > graph->ttp_data.capacity;
+                }
 
-                    if (violation_ > graph->ttp_data.capacity)
-                    {
-                        violation_ = graph->ttp_data.capacity - violation_ + graph->ttp_data.penalty;
-                        return true;
-                    }
-                    return false;
+                double penalty() const override {
+                    return weight * pow(graph->ttp_data.capacity - violation_ + graph->ttp_data.penalty, exponent);   
                 }
 
                 std::string repr() const override { return fmt::format("<PWTConstraint {}>", violation()); }

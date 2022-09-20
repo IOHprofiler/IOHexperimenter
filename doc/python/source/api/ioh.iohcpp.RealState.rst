@@ -16,6 +16,8 @@ RealState
       ~RealState.current_internal
       ~RealState.evaluations
       ~RealState.optimum_found
+      ~RealState.y_unconstrained
+      ~RealState.y_unconstrained_best
 
    .. rubric:: Attributes Documentation
 
@@ -25,3 +27,5 @@ RealState
    .. autoattribute:: current_internal
    .. autoattribute:: evaluations
    .. autoattribute:: optimum_found
+   .. autoattribute:: y_unconstrained
+   .. autoattribute:: y_unconstrained_best

@@ -38,7 +38,7 @@ class TestWrappedProblem(unittest.TestCase):
         self.assertEqual(p.optimum.x[0], 1)
         self.assertEqual(p.optimum.x[0], p.optimum.y)
     
-    @unittest.skip("can cause a segfault (cpp exit handler)")
+    # @unittest.skip("can cause a segfault (cpp exit handler)")
     def test_wrap_problem_scoped(self):
         def w():
             ioh.problem.wrap_real_problem(lambda _: 0.0, "l")

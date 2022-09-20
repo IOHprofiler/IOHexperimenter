@@ -499,7 +499,7 @@ namespace logger {
                     // But, there is no way to ensure that all problems seen by the loggers
                     // have been of the same type.
                     // This is at least a check.
-                    assert(_f_optim == logger.problem().optimization_type.type());
+                    assert(_f_optim == logger.problem().value().optimization_type.type());
                     
                     // Input:
                     std::vector<eaf::Front> fronts;
