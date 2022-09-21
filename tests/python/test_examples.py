@@ -18,9 +18,9 @@ class MetaTest(type):
                 self.assertTrue(os.path.isfile(notebook))
                 result = subprocess.run([
                     "jupyter", "nbconvert", "--to", "python",  "--execute", notebook],
-                    capture_output=True, text=True
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE
                 )
-                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(result.returncode, 0, result.stderr.decode("utf-8"))
                 os.remove(os.path.join(dirname, f"{fname}.py"))
             setattr(instance, f"test_notebook_{fname}", test_notebook_runner)
 
