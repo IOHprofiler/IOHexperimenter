@@ -126,14 +126,14 @@ TEST_F(BaseTest, GraphConstraint) {
     const auto y2 = (*problem)(x1);
 
     EXPECT_FLOAT_EQ((float)y2, (float)problem->state().y_unconstrained);
-    EXPECT_FLOAT_EQ((float)problem->constraints()[0]->violation(), -440.f);
+    EXPECT_FLOAT_EQ((float)problem->constraints()[0]->penalty(), -440.f);
     EXPECT_FLOAT_EQ((float)problem->constraints()[1]->violation(), 0.f);
-    EXPECT_FLOAT_EQ((float)problem->constraints().violation(), -440.f);
+    EXPECT_FLOAT_EQ((float)problem->constraints().violation(), 450.f);
 
     // Turn contraint to a soft one (y + p)
     problem->constraints()[0]->enforced = ioh::problem::constraint::Enforced::SOFT;
     const auto y3 = (*problem)(x1);
-    EXPECT_FLOAT_EQ((float)y3, (float)problem->state().y_unconstrained + (float)problem->constraints()[0]->violation());
+    EXPECT_FLOAT_EQ((float)y3, (float)problem->state().y_unconstrained + (float)problem->constraints()[0]->penalty());
 
 
     // Multi-Objective definition
@@ -144,7 +144,7 @@ TEST_F(BaseTest, GraphConstraint) {
     // Invalid point gets -1
     const auto y4 = (*problem)(x1);
     EXPECT_FLOAT_EQ((float)y4, -1.);
-    EXPECT_FLOAT_EQ((float)problem->constraints()[0]->violation(), -440.f);
+    EXPECT_FLOAT_EQ((float)problem->constraints()[0]->violation(), 450.f);
 
     // Valid point get f(x)
     EXPECT_FLOAT_EQ((float)(*problem)(x0), 81.f);

@@ -136,22 +136,22 @@ public:
 };
 
 // Python spec. implementation
-template<typename A=logger::Analyzer>
+template<typename A>
 class PyAnalyzer : public PyWatcher<A>
 {
     std::vector<double *> double_ptrs_;
     std::vector<PyProperty *> prop_ptrs_;
 
 public:
-    using Analyzer = PyWatcher<A>;
-    using Analyzer::Analyzer;
+    using AnalyzerType = PyWatcher<A>;
+    using AnalyzerType::AnalyzerType;
 
     virtual void close() override
     {
         if (this->alive)
         {
             clear_ptrs();
-            A::close();
+            AnalyzerType::close();
         }
     }
 
@@ -173,7 +173,7 @@ public:
     void add_run_attribute_python(const std::string &name, double value)
     {
         double *ptr = new double(value);
-        Analyzer::add_run_attribute(name, ptr);
+        AnalyzerType::add_run_attribute(name, ptr);
         double_ptrs_.push_back(ptr);
     }
 
@@ -201,7 +201,7 @@ public:
     {
         for (auto ptr : prop_ptrs_)
             set_run_attribute_python(ptr->name(), (*ptr)(logger::Info{}).value());
-        Analyzer::attach_problem(problem);
+        AnalyzerType::attach_problem(problem);
     }
 };
 
@@ -494,6 +494,7 @@ void define_analyzer(py::module &m)
         .def("set_run_attributes", &PyAnalyzer::set_run_attributes_python)
         .def("set_run_attribute", &PyAnalyzer::set_run_attribute_python)
         .def_property_readonly("output_directory", &PyAnalyzer::output_directory)
+        .def("close", &PyAnalyzer::close)
         .def("watch", py::overload_cast<Property &>(&PyAnalyzer::watch))
         .def("watch", py::overload_cast<const py::object &, const std::string &>(&PyAnalyzer::watch))
         .def("watch", py::overload_cast<const py::object &, const std::vector<std::string> &>(&PyAnalyzer::watch))
@@ -583,8 +584,8 @@ void define_loggers(py::module &m)
 
     define_flatfile(m);
     define_store(m);
-    auto old = m.def_submodule("old");
-    define_analyzer<logger::Analyzer>(old);
+    // auto old = m.def_submodule("old");
+    // define_analyzer<logger::Analyzer>(old);
     define_analyzer<logger::analyzer::v2::Analyzer>(m);
 
     define_eah(m);

@@ -34,13 +34,13 @@ namespace operators
 } // namespace operators
 
 template <ioh::common::OptimizationType... Args>
-struct Solution
+struct MultiSolution
 {
     static constexpr int S = sizeof...(Args);
     std::array<double, S> y;
     std::vector<int> x;
 
-    bool operator==(const Solution<Args...> &other) const
+    bool operator==(const MultiSolution<Args...> &other) const
     {
         for (size_t i = 0; i < S; i++)
             if (y[i] != other.y[i])
@@ -48,7 +48,7 @@ struct Solution
         return true;
     }
 
-    bool dominated_by(const Solution<Args...> &other) const
+    bool dominated_by(const MultiSolution<Args...> &other) const
     {
         bool dominated = true;
         int i = 0;
@@ -61,7 +61,7 @@ struct Solution
         return dominated;
     }
 
-    bool strictly_dominates(const Solution<Args...> &other) const
+    bool strictly_dominates(const MultiSolution<Args...> &other) const
     {
         bool dominates = true;
         int i = 0;
@@ -84,7 +84,7 @@ struct Solution
 };
 
 template <ioh::common::OptimizationType... Args>
-void print(const std::vector<Solution<Args...>> &p)
+void print(const std::vector<MultiSolution<Args...>> &p)
 {
     std::cout << "{";
     for (const auto &z : p)
@@ -108,7 +108,7 @@ void bitflip_binom(std::vector<int> &x, const double pm, const int m = 0)
 {
     std::binomial_distribution<> d(x.size(), pm);
     const auto n = std::max(m, d(ioh::common::random::gen));
-    for (const auto &pos : ioh::common::random::integers(n, 0, x.size() - 1))
+    for (const auto &pos : ioh::common::random::integers(n, 0, (int)x.size() - 1))
         x[pos] = abs(x[pos] - 1);
 }
 
@@ -116,7 +116,7 @@ void bitflip_binom(std::vector<int> &x, const double pm, const int m = 0)
 template <ioh::common::OptimizationType... Args>
 struct GSEMO
 {
-    using GSolution = Solution<Args...>;
+    using GSolution = MultiSolution<Args...>;
 
     int budget;
     bool force_flip;

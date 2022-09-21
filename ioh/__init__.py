@@ -218,7 +218,7 @@ class Experiment:
         zip_output: bool = True,
         remove_data: bool = False,
         enforce_bounds: bool = False,
-        old_logger: bool = True
+        old_logger: bool = False
     ):
         """
         Parameters
@@ -350,7 +350,7 @@ class Experiment:
             logger_params = copy.deepcopy(self.logger_params)
             logger_params["folder_name"] += f"-tmp-{ii}"
             
-            logger_cls = logger.old.Analyzer if self.old_logger else logger.Analyzer
+            logger_cls = logger.Analyzer# if self.old_logger else logger.Analyzer
             l = logger_cls(**logger_params) 
             l.set_experiment_attributes(self.experiment_attributes)
             l.add_run_attributes(algorithm, self.run_attributes)
@@ -430,8 +430,11 @@ class Experiment:
                         data_out = json.loads(info_out.read())
                         data_in = json.loads(info_in.read())
                         for scen in data_in['scenarios']:
-                            scen_out, *_ = [s for s in data_out['scenarios'] if s['dimension'] == scen['dimension']]
-                            scen_out['runs'].extend(scen['runs'])
+                            try:
+                                scen_out, *_ = [s for s in data_out['scenarios'] if s['dimension'] == scen['dimension']]
+                                scen_out['runs'].extend(scen['runs'])
+                            except:
+                                data_out['scenarios'].append(scen)
                         info_out.seek(0)
                         info_out.write(json.dumps(data_out, indent=4))
                         info_out.truncate()
