@@ -218,7 +218,7 @@ class Experiment:
         zip_output: bool = True,
         remove_data: bool = False,
         enforce_bounds: bool = False,
-        old_logger: bool = False
+        old_logger: bool = True
     ):
         """
         Parameters
@@ -350,7 +350,7 @@ class Experiment:
             logger_params = copy.deepcopy(self.logger_params)
             logger_params["folder_name"] += f"-tmp-{ii}"
             
-            logger_cls = logger.Analyzer# if self.old_logger else logger.Analyzer
+            logger_cls = logger.old.Analyzer if self.old_logger else logger.Analyzer
             l = logger_cls(**logger_params) 
             l.set_experiment_attributes(self.experiment_attributes)
             l.add_run_attributes(algorithm, self.run_attributes)

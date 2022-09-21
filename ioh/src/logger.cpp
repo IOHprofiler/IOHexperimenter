@@ -584,8 +584,8 @@ void define_loggers(py::module &m)
 
     define_flatfile(m);
     define_store(m);
-    // auto old = m.def_submodule("old");
-    // define_analyzer<logger::Analyzer>(old);
+    auto old = m.def_submodule("old");
+    define_analyzer<logger::analyzer::v1::Analyzer>(old);
     define_analyzer<logger::analyzer::v2::Analyzer>(m);
 
     define_eah(m);
