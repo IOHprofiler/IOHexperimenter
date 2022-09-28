@@ -72,45 +72,18 @@ template <typename WatcherType>
 class PyWatcher : public WatcherType
 {
 protected:
-    bool alive = true;
-    std::vector<PyProperty *> property_ptrs_;
+    std::vector<std::unique_ptr<PyProperty>> property_ptrs_;
 
 public:
-    template <typename... Args>
-    PyWatcher(Args &&...args) : WatcherType(std::forward<Args>(args)...)
-    {
-        auto x = py::module::import("atexit").attr("register")(py::cpp_function{[self = this]() -> void {
-            // type-pun alive bool in order to check if is still a boolean 1, if so, delete.
-            // in some cases this might cause a segfault, only happens in a very small prob. (1/MAX_INT)
-            int alive_int = (int)(*(char *)(&self->alive));
-            if (alive_int == 1)
-            {
-                self->close();
-            }
-        }});
-    }
-
-    void close() override
-    {
-        if (alive)
-        {
-            WatcherType::close();
-            alive = false;
-            for (auto ptr : property_ptrs_)
-                delete ptr;
-            property_ptrs_.clear();
-        }
-    }
-
-    virtual ~PyWatcher() { close(); }
+    using WatcherType::WatcherType;
 
     void watch(logger::Property &property) override { PYBIND11_OVERRIDE(void, WatcherType, watch, property); }
 
     void watch(const py::object &container, const std::string &attribute)
     {
-        auto *p = new PyProperty(container, attribute);
+        auto p = std::make_unique<PyProperty>(container, attribute); 
         watch(*p);
-        property_ptrs_.push_back(p);
+        property_ptrs_.push_back(std::move(p));
     }
 
     void watch(const py::object &container, const std::vector<std::string> &attributes)
@@ -133,31 +106,26 @@ public:
 };
 
 // Python spec. implementation
-class PyAnalyzer : public PyWatcher<logger::Analyzer>
+template<typename A>
+class PyAnalyzer : public PyWatcher<A>
 {
-    std::vector<double *> double_ptrs_;
-    std::vector<PyProperty *> prop_ptrs_;
+    std::vector<std::unique_ptr<double>> double_ptrs_;
+    std::vector<std::unique_ptr<PyProperty>> prop_ptrs_;
 
 public:
-    using Analyzer = PyWatcher<logger::Analyzer>;
-    using Analyzer::Analyzer;
+    using AnalyzerType = PyWatcher<A>;
+    using AnalyzerType::AnalyzerType;
 
     virtual void close() override
     {
-        if (alive)
-        {
-            clear_ptrs();
-            Analyzer::close();
-        }
+        AnalyzerType::close();
     }
-
-    virtual ~PyAnalyzer() { close(); }
 
     void add_run_attribute_python(const py::object &container, const std::string &name)
     {
-        auto *p = new PyProperty(container, name);
+        auto p = std::make_unique<PyProperty>(container, name);
         add_run_attribute_python(name, (*p)(logger::Info{}).value());
-        prop_ptrs_.push_back(p);
+        prop_ptrs_.push_back(std::move(p));
     }
 
     void add_run_attributes_python(const py::object &container, const std::vector<std::string> &attributes)
@@ -168,36 +136,25 @@ public:
 
     void add_run_attribute_python(const std::string &name, double value)
     {
-        double *ptr = new double(value);
-        Analyzer::add_run_attribute(name, ptr);
-        double_ptrs_.push_back(ptr);
+        auto ptr = std::make_unique<double>(value);
+        AnalyzerType::add_run_attribute(name, ptr.get());
+        double_ptrs_.push_back(std::move(ptr));
     }
 
-    void set_run_attribute_python(const std::string &name, double value) { *(attributes_.run.at(name)) = value; }
+    void set_run_attribute_python(const std::string &name, double value) { *(this->attributes_.run.at(name)) = value; }
 
     void set_run_attributes_python(const std::map<std::string, double> &attributes)
     {
-        clear_ptrs();
+        double_ptrs_.clear();
         for (auto &[key, value] : attributes)
             add_run_attribute_python(key, value);
     }
 
-    void clear_ptrs()
-    {
-        for (auto ptr : double_ptrs_)
-            delete ptr;
-
-        for (auto ptr : prop_ptrs_)
-            delete ptr;
-        double_ptrs_.clear();
-        prop_ptrs_.clear();
-    }
-
     void attach_problem(const problem::MetaData &problem) override
     {
-        for (auto ptr : prop_ptrs_)
+        for (auto& ptr : prop_ptrs_)
             set_run_attribute_python(ptr->name(), (*ptr)(logger::Info{}).value());
-        Analyzer::attach_problem(problem);
+        AnalyzerType::attach_problem(problem);
     }
 };
 
@@ -220,10 +177,8 @@ void define_triggers(py::module &m)
     py::class_<trigger::OnImprovement, logger::Trigger, std::shared_ptr<trigger::OnImprovement>>(
         t, "OnImprovement", "Trigger that evaluates to true when improvement of the objective function is observed")
         .def(py::init<>())
-        .def(py::pickle([](const trigger::OnImprovement &t) { return py::make_tuple(t.best(), t.type()); },
-                        [](py::tuple t) {
-                            return trigger::OnImprovement{t[0].cast<double>(), t[1].cast<common::OptimizationType>()};
-                        }));
+        .def(py::pickle([](const trigger::OnImprovement &) { return py::make_tuple(); },
+                        [](py::tuple) { return trigger::OnImprovement{}; }));
 
     ;
     t.attr("ON_IMPROVEMENT") = py::cast(trigger::on_improvement);
@@ -278,6 +233,21 @@ void define_triggers(py::module &m)
                         [](py::tuple t) { return trigger::During{t[0].cast<std::set<std::pair<size_t, size_t>>>()}; }));
 }
 
+template<typename P>
+void define_property(py::module &m, std::string name, P predef){
+
+    py::class_<P, logger::Property, std::shared_ptr<P>>(m, name.c_str(), py::buffer_protocol())
+        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
+             ("Property which tracks the " + name).c_str())
+        .def(py::pickle([](const P &t) { return py::make_tuple(t.name(), t.format()); },
+                        [](py::tuple t) {
+                            return P{t[0].cast<std::string>(), t[1].cast<std::string>()};
+                        }));
+    
+    std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+    m.attr(name.c_str()) = py::cast(predef);
+}
+
 void define_properties(py::module &m)
 {
     py::module t = m.def_submodule("property");
@@ -310,60 +280,25 @@ void define_properties(py::module &m)
                             return PyProperty{t[0].cast<py::object>(), t[1].cast<std::string>()};
                         }));
 
-    py::class_<watch::Evaluations, logger::Property, std::shared_ptr<watch::Evaluations>>(t, "Evaluations")
-        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
-             "Property which tracks the number of evaluations")
-        .def(py::pickle([](const watch::Evaluations &t) { return py::make_tuple(t.name(), t.format()); },
-                        [](py::tuple t) {
-                            return watch::Evaluations{t[0].cast<std::string>(), t[1].cast<std::string>()};
-                        }));
-    t.attr("EVALUATIONS") = py::cast(watch::evaluations);
+    define_property<watch::Evaluations>(t, "Evaluations", watch::evaluations);
 
-    py::class_<watch::RawYBest, logger::Property, std::shared_ptr<watch::RawYBest>>(t, "RawYBest")
-        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
-             "Property which tracks the raw best y value")
-        .def(py::pickle([](const watch::RawYBest &t) { return py::make_tuple(t.name(), t.format()); },
-                        [](py::tuple t) {
-                            return watch::RawYBest{t[0].cast<std::string>(), t[1].cast<std::string>()};
-                        }));
-    t.attr("RAW_Y_BEST") = py::cast(watch::raw_y_best);
+    define_property<watch::RawY>(t, "RawY", watch::raw_y);
+    define_property<watch::RawYBest>(t, "RawYBest", watch::raw_y_best);
 
-    py::class_<watch::CurrentY, logger::Property, std::shared_ptr<watch::CurrentY>>(t, "CurrentY")
-        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
-             "Property which tracks the current y value")
-        .def(py::pickle([](const watch::CurrentY &t) { return py::make_tuple(t.name(), t.format()); },
-                        [](py::tuple t) {
-                            return watch::CurrentY{t[0].cast<std::string>(), t[1].cast<std::string>()};
-                        }));
-    t.attr("CURRENT_Y_BEST") = py::cast(watch::current_y);
+    define_property<watch::TransformedY>(t, "TransformedY", watch::transformed_y);
+    define_property<watch::TransformedYBest>(t, "TransformedYBest", watch::transformed_y_best);
 
-    py::class_<watch::TransformedY, logger::Property, std::shared_ptr<watch::TransformedY>>(t, "TransformedY")
-        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
-             "Property which tracks the current transformed y value")
-        .def(py::pickle([](const watch::TransformedY &t) { return py::make_tuple(t.name(), t.format()); },
-                        [](py::tuple t) {
-                            return watch::TransformedY{t[0].cast<std::string>(), t[1].cast<std::string>()};
-                        }));
-    t.attr("TRANSFORMED_Y") = py::cast(watch::transformed_y);
+    define_property<watch::CurrentY>(t, "CurrentY", watch::current_y);
+    define_property<watch::CurrentBestY>(t, "CurrentBestY", watch::current_y_best);
 
-    py::class_<watch::TransformedYBest, logger::Property, std::shared_ptr<watch::TransformedYBest>>(t,
-                                                                                                    "TransformedYBest")
-        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
-             "Property which tracks the current best transformed y value")
-        .def(py::pickle([](const watch::TransformedYBest &t) { return py::make_tuple(t.name(), t.format()); },
-                        [](py::tuple t) {
-                            return watch::TransformedYBest{t[0].cast<std::string>(), t[1].cast<std::string>()};
-                        }));
-
-    t.attr("TRANSFORMED_Y_BEST") = py::cast(watch::transformed_y_best);
+    define_property<watch::Violation>(t, "Violation", watch::violation);
+    define_property<watch::Penalty>(t, "Penalty", watch::penalty);
 }
 
 void define_bases(py::module &m)
 {
     py::class_<Logger, std::shared_ptr<Logger>>(m, "Logger", "Base class for all loggers")
         .def("add_trigger", &Logger::trigger, "Add a trigger to the logger")
-        .def("attach_problem", &Logger::attach_problem, "Attach a problem to the logger")
-        .def("attach_suite", &Logger::attach_suite, "Attach a suite to the logger")
         .def("call", &Logger::call, "Performs logging behaviour")
         .def("reset", &Logger::reset, "Reset the state of the logger")
         .def_property_readonly("problem", &Logger::problem, "Reference to the currently attached problem");
@@ -465,11 +400,13 @@ void define_store(py::module &m)
         });
 }
 
+template<typename A>
 void define_analyzer(py::module &m)
 {
     using namespace logger;
     Triggers def_trigs{trigger::on_improvement};
     Properties def_props{};
+    using PyAnalyzer = PyAnalyzer<A>;
     py::class_<PyAnalyzer, Watcher, std::shared_ptr<PyAnalyzer>>(m, "Analyzer")
         .def(py::init<Triggers, Properties, fs::path, std::string, std::string, std::string, bool>(),
              py::arg("triggers") = def_trigs, py::arg("additional_properties") = def_props,
@@ -508,6 +445,7 @@ void define_analyzer(py::module &m)
         .def("set_run_attributes", &PyAnalyzer::set_run_attributes_python)
         .def("set_run_attribute", &PyAnalyzer::set_run_attribute_python)
         .def_property_readonly("output_directory", &PyAnalyzer::output_directory)
+        .def("close", &PyAnalyzer::close)
         .def("watch", py::overload_cast<Property &>(&PyAnalyzer::watch))
         .def("watch", py::overload_cast<const py::object &, const std::string &>(&PyAnalyzer::watch))
         .def("watch", py::overload_cast<const py::object &, const std::vector<std::string> &>(&PyAnalyzer::watch))
@@ -597,7 +535,10 @@ void define_loggers(py::module &m)
 
     define_flatfile(m);
     define_store(m);
-    define_analyzer(m);
+    auto old = m.def_submodule("old");
+    define_analyzer<logger::analyzer::v1::Analyzer>(old);
+    define_analyzer<logger::analyzer::v2::Analyzer>(m);
+
     define_eah(m);
     define_eaf(m);
 }

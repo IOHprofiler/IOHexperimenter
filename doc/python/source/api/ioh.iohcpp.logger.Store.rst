@@ -18,11 +18,8 @@ Store
 
       ~Store.add_trigger
       ~Store.at
-      ~Store.attach_problem
-      ~Store.attach_suite
       ~Store.call
       ~Store.data
-      ~Store.log
       ~Store.reset
       ~Store.watch
 
@@ -34,10 +31,7 @@ Store
 
    .. automethod:: add_trigger
    .. automethod:: at
-   .. automethod:: attach_problem
-   .. automethod:: attach_suite
    .. automethod:: call
    .. automethod:: data
-   .. automethod:: log
    .. automethod:: reset
    .. automethod:: watch

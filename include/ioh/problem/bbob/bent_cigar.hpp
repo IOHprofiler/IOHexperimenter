@@ -22,7 +22,7 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
-            subtract(x, objective_.x);
+            subtract(x, optimum_.x);
             affine(x, transformation_state_.transformation_matrix, transformation_state_.transformation_base);
             asymmetric(x, 0.5);
             affine(x, transformation_state_.transformation_matrix, transformation_state_.transformation_base);

@@ -13,7 +13,3 @@ Logger
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenclass:: ioh::Logger
 
-Problem
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenclass:: ioh::Problem
-

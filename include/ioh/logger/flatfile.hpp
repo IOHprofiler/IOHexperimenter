@@ -138,7 +138,7 @@ namespace ioh::logger
         void attach_problem(const problem::MetaData &problem) override
         {
             // If this is a new problem.
-            if (problem_ == nullptr or *problem_ != problem)
+            if (!problem_.has_value() or problem_.value() != problem)
             {
                 IOH_DBG(xdebug, "reset run counter")
                 current_run_ = 0; // Then reset the run counter.
@@ -164,7 +164,7 @@ namespace ioh::logger
                 IOH_DBG(xdebug, "print header")
                 out_ << com_ + common_header_ + format("{}", fmt::join(properties_vector_, sep_));
                 if (store_positions_)
-                    for (size_t i = 0; i < log_info.current.x.size(); i++)
+                    for (size_t i = 0; i < log_info.x.size(); i++)
                         out_ << sep_ << "x" << i;
                 out_ << eol_;
                 requires_header_ = false;
@@ -174,12 +174,13 @@ namespace ioh::logger
             out_ << current_meta_data_;
             
             IOH_DBG(xdebug, "print watched properties")
+            
             for (auto p = properties_vector_.begin(); p != properties_vector_.end();){
                 out_ << p->get().call_to_string(log_info, nan_) << (++p != properties_vector_.end() ? sep_ : "");
             }
 
             if (store_positions_)
-                out_ << sep_ << format("{:f}", fmt::join(log_info.current.x, sep_));
+                out_ << sep_ << format("{:f}", fmt::join(log_info.x, sep_));
 
             out_ << eol_;
             out_.flush();
@@ -216,11 +217,11 @@ namespace ioh::logger
             {
                 std::stringstream ss;
                 ss /* no sep */ << current_suite_;
-                ss << sep_ << problem_->name;
-                ss << sep_ << problem_->problem_id;
-                ss << sep_ << problem_->instance;
-                ss << sep_ << (problem_->optimization_type == common::OptimizationType::Minimization ? "min" : "max");
-                ss << sep_ << problem_->n_variables;
+                ss << sep_ << problem_.value().name;
+                ss << sep_ << problem_.value().problem_id;
+                ss << sep_ << problem_.value().instance;
+                ss << sep_ << (problem_.value().optimization_type == common::OptimizationType::MIN ? "min" : "max");
+                ss << sep_ << problem_.value().n_variables;
                 ss << sep_ << current_run_;
                 current_meta_data_ = ss.str();
             }

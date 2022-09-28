@@ -92,21 +92,21 @@ namespace ioh::problem::transformation
             return y + (factor * penalty);
         }
 
-        /**
-         * \brief penalizes the objective value for x when it is out of bounds, weighed by a constant factor
-         * \param x the object in the search space
-         * \param constraint the bounds of the problem
-         * \param factor the weight
-         * \param y the raw y value
-         * \return the penalized y value
-         */
-        template <typename T>
-        double penalize(const std::vector<double> &x, const Constraint<T> constraint, const double factor,
-                        const double y)
-        {
-            return penalize(x, static_cast<double>(constraint.lb.at(0)), static_cast<double>(constraint.ub.at(0)),
-                            factor, y);
-        }
+        ///**
+        // * \brief penalizes the objective value for x when it is out of bounds, weighed by a constant factor
+        // * \param x the object in the search space
+        // * \param constraint the bounds of the problem
+        // * \param factor the weight
+        // * \param y the raw y value
+        // * \return the penalized y value
+        // */
+        //template <typename T>
+        //double penalize(const std::vector<double> &x, const BoxConstraint<T> constraint, const double factor,
+        //                const double y)
+        //{
+        //    return penalize(x, static_cast<double>(constraint.lb.at(0)), static_cast<double>(constraint.ub.at(0)),
+        //                    factor, y);
+        //}
     }
 
     namespace variables

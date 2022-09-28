@@ -12,21 +12,40 @@ class Algorithm:
     
     def __call__(self, p: ioh.problem.Real):
         for i in range(10000):
-            x = list(map(lambda x: random.random(), range(p.meta_data.n_variables)))    
+            x = list(
+                map(lambda x: 10 * random.random(), 
+                range(p.meta_data.n_variables)
+                ))    
             p(x)
             self.i = i
 
 
 class TestExperiment(unittest.TestCase):
+
+    def tearDown(self) -> None:
+        shutil.rmtree("ioh_data")
+        os.remove("ioh_data.zip")
+
+
     def test_experimenter(self):
         exp = ioh.Experiment(
             Algorithm(),
             [1], [1, 2], [5],
             njobs = 1,
             reps = 2,
+            algorithm_name = "RandomSearch", 
             experiment_attributes = {"a": "1"},
             run_attributes = ['x'],
-            logged_attributes = ['i']
+            logged_attributes = ['i'],
+            logger_triggers = [
+                ioh.logger.trigger.ALWAYS
+            ],
+            logger_additional_properties = [
+                ioh.logger.property.VIOLATION,
+                ioh.logger.property.PENALTY
+            ],
+            enforce_bounds=True,
+            store_positions=True,
         )
 
         def a_problem(x):
@@ -54,13 +73,51 @@ class TestExperiment(unittest.TestCase):
                         self.assertEqual(len(data), 4)
                         data_files.remove(f)
 
+
         self.assertSetEqual(info_files, set())
         self.assertSetEqual(data_files, set())
+        self.assertTrue(os.path.isfile("ioh_data.zip"))    
 
-        self.assertTrue(os.path.isfile("ioh_data.zip"))
+    def test_experimenter_v2(self):
+        ioh.Experiment(
+            Algorithm(),
+            [1], [1, 2], [5],
+            njobs = 1,
+            reps = 2,
+            algorithm_name = "RandomSearch", 
+            old_logger=False,
+            logger_triggers = [
+                ioh.logger.trigger.ALWAYS
+            ],
+            logger_additional_properties = [
+                ioh.logger.property.VIOLATION,
+                ioh.logger.property.PENALTY
+            ],
+            enforce_bounds=True,
+        )()
 
-        shutil.rmtree("ioh_data")
-        os.remove("ioh_data.zip")
+        info_files = {'IOHprofiler_f1_Sphere.json'}
+        data_files = {'IOHprofiler_f1_DIM5.dat'}
+
+        for item in os.listdir('ioh_data'):
+            path = os.path.join('ioh_data', item)
+            if os.path.isfile(path) and item in info_files:
+                self.assertNotEqual(os.path.getsize(path), 0)
+                info_files.remove(item)
+            elif os.path.isdir(path):
+                for f in os.listdir(path):
+                    if f in data_files:
+                        path = os.path.join(path, f)
+                        self.assertNotEqual(os.path.getsize(path), 0)
+                        with open(path) as h:
+                            data = list(filter(lambda x:x.startswith('evaluations'), h))       
+
+                        self.assertEqual(len(data), 4)
+                        data_files.remove(f)
+
+        self.assertSetEqual(info_files, set())
+        self.assertSetEqual(data_files, set())
+        self.assertTrue(os.path.isfile("ioh_data.zip"))    
            
     
 

@@ -12,7 +12,7 @@ namespace ioh
 {
     namespace problem
     {
-        //! Solution object 
+        //! Solution object
         template <typename T>
         struct Solution : common::HasRepr
         {
@@ -33,8 +33,8 @@ namespace ioh
             //! Shorthand constructor for use with unknown optimum
             Solution(const int n_variables, const common::OptimizationType optimization_type) :
                 x(std::vector<T>(n_variables, std::numeric_limits<T>::signaling_NaN())),
-                y{optimization_type == common::OptimizationType::Minimization ? -std::numeric_limits<double>::infinity()
-                                                                              : std::numeric_limits<double>::infinity()}
+                y{optimization_type == common::OptimizationType::MIN ? -std::numeric_limits<double>::infinity()
+                                                                     : std::numeric_limits<double>::infinity()}
             {
             }
 
@@ -49,83 +49,6 @@ namespace ioh
             }
 
             std::string repr() const override { return fmt::format("<Solution x: {} y: {}>", x, y); }
-
-            //! Cast solution to double type
-            [[nodiscard]] Solution<double> as_double() const { return {std::vector<double>(x.begin(), x.end()), y}; }
-        };
-
-        //! Box-Constraint object
-        template <typename T>
-        struct Constraint : common::HasRepr
-        {
-
-            //! lower bound
-            std::vector<T> lb;
-
-            //! Upper bound
-            std::vector<T> ub;
-
-            //! whether the constraint is enforced or not
-            bool enforced;
-
-            /**
-             * @brief Construct a new Constraint object
-             *
-             * @param lower lower bound
-             * @param upper upper bound
-             * @param enforced whether the constraint should be enforced
-             */
-            Constraint(const std::vector<T> &lower, const std::vector<T> &upper, const bool enforced = false) : lb(lower), ub(upper), enforced(enforced) {}
-
-            /**
-             * @brief Construct a new Constraint object 
-             *
-             * @param size size of the constraint
-             * @param lower lower bound
-             * @param upper upper bound
-             * * @param enforced whether the constraint should be enforced
-             */
-            explicit Constraint(const int size = 1, const T lower = std::numeric_limits<T>::lowest(),
-                                const T upper = std::numeric_limits<T>::max(), const bool enforced = false) :
-                Constraint(std::vector<T>(size, lower), std::vector<T>(size, upper), enforced)
-            {
-            }
-
-            //! Initialization helper
-            void check_size(const int s)
-            {
-                if (ub.size() == lb.size() && lb.size() == size_t{1})
-                {
-                    ub = std::vector<T>(s, ub.at(0));
-                    lb = std::vector<T>(s, lb.at(0));
-                }
-
-                if ((ub.size() != static_cast<size_t>(s)) || (ub.size() != lb.size()))
-                    IOH_DBG(warning, "Bound dimension is wrong");
-            }
-
-            //! Check if the constraints are violated
-            bool check(const std::vector<T> &x) const
-            {
-                for (size_t i = 0; i < x.size(); i++)
-                    if (!(ub.at(i) >= x.at(i) && x.at(i) <= lb.at(i)))
-                        return false;
-                return true;
-            }
-
-            [[nodiscard]] bool operator()(const std::vector<T>& x) const {
-                if(enforced)
-                    return check(x);
-                return true;
-            }
-
-            //! Return resize version of constraint
-            Constraint<T> resize(const int s) const
-            {
-                return Constraint<T>(std::vector<T>(s, lb.at(0)), std::vector<T>(s, ub.at(0)));
-            }
-
-            std::string repr() const override { return fmt::format("<Constraint lb: [{}] ub: [{}]>", lb, ub); }
         };
 
 
@@ -150,10 +73,6 @@ namespace ioh
             //! problem dimension
             int n_variables{};
 
-            //! Initial objective value
-            double initial_objective_value{};
-
-
             /**
              * @brief Construct a new Meta Data object
              *
@@ -164,13 +83,10 @@ namespace ioh
              * @param optimization_type optimization type
              */
             MetaData(const int problem_id, const int instance, std::string name, const int n_variables,
-                     const common::OptimizationType optimization_type = common::OptimizationType::Minimization) :
+                     const common::OptimizationType optimization_type = common::OptimizationType::MIN) :
                 instance(instance),
                 problem_id(problem_id), name(std::move(name)), optimization_type{optimization_type},
-                n_variables(n_variables),
-                initial_objective_value(optimization_type == common::OptimizationType::Minimization
-                                            ? std::numeric_limits<double>::infinity()
-                                            : -std::numeric_limits<double>::infinity())
+                n_variables(n_variables)
             {
             }
 
@@ -183,7 +99,7 @@ namespace ioh
              * @param optimization_type optimization type
              */
             MetaData(const int instance, const std::string &name, const int n_variables,
-                     const common::OptimizationType optimization_type = common::OptimizationType::Minimization) :
+                     const common::OptimizationType optimization_type = common::OptimizationType::MIN) :
                 MetaData(0, instance, name, n_variables, optimization_type)
             {
             }
@@ -192,8 +108,7 @@ namespace ioh
             bool operator==(const MetaData &other) const
             {
                 return instance == other.instance and problem_id == other.problem_id and name == other.name and
-                    optimization_type == other.optimization_type and n_variables == other.n_variables and
-                    initial_objective_value == other.initial_objective_value;
+                    optimization_type == other.optimization_type and n_variables == other.n_variables;
             }
 
             //! comparison operator
@@ -220,17 +135,26 @@ namespace ioh
             //! Is optimum found?
             bool optimum_found = false;
 
-            //! Current best w.o. transformations
+            //! Current best x-transformed, y-raw w. constraints applied
             Solution<T> current_best_internal{};
 
-            //! Current best w. transformations
+            //! Current best x-raw, y-transformed
             Solution<T> current_best{};
 
-            //! Current w.o. transformations
+            //! Current x-transformed, y-raw
             Solution<T> current_internal{};
 
-            //! Current w. transformations
+            //! Current x-raw, y-transformed w. constraints applied
             Solution<T> current{};
+
+            //! Current y transformed w.o. constraints applied
+            double y_unconstrained;
+
+            //! Current y transformed w.o. constraints applied
+            double y_unconstrained_best;
+
+            //! Tracks whether the last update has caused an improvement
+            bool has_improved;
 
             State() = default;
 
@@ -247,15 +171,19 @@ namespace ioh
                 evaluations = 0;
                 current_best = initial_solution;
                 current_best_internal = initial_solution;
+                y_unconstrained = y_unconstrained_best = initial_solution.y;
                 optimum_found = false;
+                has_improved = false;
             }
 
             //! Update the state
             void update(const MetaData &meta_data, const Solution<T> &objective)
             {
                 ++evaluations;
-                if (meta_data.optimization_type(current.y, current_best.y))
+                has_improved = meta_data.optimization_type(current.y, current_best.y);
+                if (has_improved)
                 {
+                    y_unconstrained_best = y_unconstrained;
                     current_best_internal = current_internal;
                     current_best = current;
 

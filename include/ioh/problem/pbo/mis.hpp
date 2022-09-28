@@ -62,11 +62,11 @@ namespace ioh
                     PBOProblem(22, instance, n_variables, "MIS"),
                     number_of_variables_even_(n_variables % 2 != 0 ? n_variables - 1 : n_variables)
                 {
-                    objective_.y = number_of_variables_even_ % 4 == 0
+                    optimum_.y = number_of_variables_even_ % 4 == 0
                         ? (number_of_variables_even_ / 2)
                         : (number_of_variables_even_ / 2 + 1);
-                    objective_.y = transform_objectives(objective_.y);
-                    objective_.y = transform_objectives(objective_.y);
+                    optimum_.y = transform_objectives(optimum_.y);
+                    optimum_.y = transform_objectives(optimum_.y);
                 }
             };
         } // namespace pbo

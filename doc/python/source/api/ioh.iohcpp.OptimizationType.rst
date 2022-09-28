@@ -10,14 +10,14 @@ OptimizationType
 
    .. autosummary::
 
-      ~OptimizationType.Maximization
-      ~OptimizationType.Minimization
+      ~OptimizationType.MAX
+      ~OptimizationType.MIN
       ~OptimizationType.name
       ~OptimizationType.value
 
    .. rubric:: Attributes Documentation
 
-   .. autoattribute:: Maximization
-   .. autoattribute:: Minimization
+   .. autoattribute:: MAX
+   .. autoattribute:: MIN
    .. autoattribute:: name
    .. autoattribute:: value

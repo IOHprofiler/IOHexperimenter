@@ -213,10 +213,10 @@ namespace logger {
         {
 #ifndef NDEBUG
             assert(_data.count(cur.suite) > 0);
-            assert(   _data.at(cur.suite).count(cur.pb) > 0);
-            assert(   _data.at(cur.suite)   .at(cur.pb).count(cur.dim) > 0);
-            assert(   _data.at(cur.suite)   .at(cur.pb)   .at(cur.dim).count(cur.ins) > 0);
-            assert(   _data.at(cur.suite)   .at(cur.pb)   .at(cur.dim)   .at(cur.ins).count(cur.run) > 0);
+            assert(_data.at(cur.suite).count(cur.pb) > 0);
+            assert(_data.at(cur.suite).at(cur.pb).count(cur.dim) > 0);
+            assert(_data.at(cur.suite).at(cur.pb).at(cur.dim).count(cur.ins) > 0);
+            assert(_data.at(cur.suite).at(cur.pb).at(cur.dim).at(cur.ins).count(cur.run) > 0);
 #endif
             return _data.at(cur.suite).at(cur.pb).at(cur.dim).at(cur.ins).at(cur.run);
 
@@ -237,8 +237,8 @@ namespace logger {
             // /!\ needed by the algorithm, do not change unless you know what you're doing.
             triggers_.insert(std::ref(_on_improvement));
             // /!\ needed by the related eaf::stat::* classes.
-            properties_.insert_or_assign(_transformed_y_best.name(), _transformed_y_best);
-            properties_.insert_or_assign(       _evaluations.name(), _evaluations);
+            properties_.insert_or_assign(_y_best.name(), _y_best);
+            properties_.insert_or_assign(_evaluations.name(), _evaluations);
         }
 
         /** Set the current suite name.
@@ -273,7 +273,7 @@ namespace logger {
             _has_problem_type = true;
 #ifndef NDEBUG
             // Reset _current_best (double check of trigger::on_improvement behaviour).
-            if(_current_problem_type == common::OptimizationType::Minimization) {
+            if(_current_problem_type == common::OptimizationType::MIN) {
                 _current_best = std::numeric_limits<double>::infinity();
             } else {
                 _current_best = -std::numeric_limits<double>::infinity();
@@ -286,22 +286,23 @@ namespace logger {
         {
             IOH_DBG(debug, "EAF called after improvement")
             // Access the properties that were instantiated in the constructor.
-            const std::optional<double> transformed_y_best = properties_.at("transformed_y_best").get()(log_info);
-            const std::optional<double> evaluations        = properties_.at("evaluations").get()(log_info);
+            const std::optional<double> y_best      = properties_.at(_y_best.name()).get()(log_info);
+            const std::optional<double> evaluations = properties_.at(_evaluations.name()).get()(log_info);
 #ifndef NDEBUG
-            assert(transformed_y_best); // Assert that the optional holds a value, which should be the case here.
+            assert(y_best); // Assert that the optional holds a value, which should be the case here.
             assert(evaluations);
 
             // If trigger::on_improvement does its job, we always have an improvement here.
-            IOH_DBG(debug, "transformed_y_best=" << transformed_y_best.value()
-                <<  (_current_problem_type == common::OptimizationType::Minimization ? " <" : " >")
+            IOH_DBG(debug, "y_best=" << y_best.value()
+                <<  (_current_problem_type == common::OptimizationType::MIN ? " <" : " >")
                 << " current_best=" << _current_best << " ?");
-            assert(_current_problem_type(transformed_y_best.value(),_current_best));
-            _current_best = transformed_y_best.value();
+            
+            assert(_current_problem_type(y_best.value(), _current_best));
+            _current_best = y_best.value();
 #endif
             eaf::Front& f = current_front();
             f.push_back( eaf::RunPoint(
-                    transformed_y_best.value(),
+                    y_best.value(),
                     static_cast<size_t>(evaluations.value()),
                     _current.run
                 ));
@@ -313,7 +314,7 @@ namespace logger {
             IOH_DBG(debug, "EAF reset")
             Logger::reset();
 #ifndef NDEBUG
-            if(_current_problem_type == common::OptimizationType::Minimization) {
+            if(_current_problem_type == common::OptimizationType::MIN) {
                 _current_best =  std::numeric_limits<double>::infinity();
             } else {
                 _current_best = -std::numeric_limits<double>::infinity();
@@ -359,7 +360,7 @@ namespace logger {
         watch::Evaluations _evaluations;
 
         //! Property watching the objective function value.
-        watch::TransformedYBest _transformed_y_best;
+        watch::CurrentBestY _y_best;
 
 
     }; // class EAF
@@ -386,7 +387,7 @@ namespace logger {
             logger::EAF logger;
             suite.attach_logger(logger);
             // [call the problem... the logger will store the quality/time Pareto fronts for each run.
-            logger::eaf::stat::Levels levels_at(common::OptimizationType::Minimization, {0, nb_runs/2, nb_runs-1}); // Will computes 3 level sets.
+            logger::eaf::stat::Levels levels_at(common::OptimizationType::MIN, {0, nb_runs/2, nb_runs-1}); // Will computes 3 level sets.
             auto levels = levels_at(logger); // Actually compute the levels.
          * @endcode
          *
@@ -499,7 +500,7 @@ namespace logger {
                     // But, there is no way to ensure that all problems seen by the loggers
                     // have been of the same type.
                     // This is at least a check.
-                    assert(_f_optim == logger.problem().optimization_type.type());
+                    assert(_f_optim == logger.problem().value().optimization_type.type());
                     
                     // Input:
                     std::vector<eaf::Front> fronts;
@@ -536,7 +537,7 @@ namespace logger {
                     // Sort the two sets of data.
                     std::sort(std::begin(data_time),std::end(data_time),  ascending_time); // Time always ascend.
 
-                    if(_f_optim == common::OptimizationType::Minimization ) {
+                    if(_f_optim == common::OptimizationType::MIN ) {
                         std::sort(std::begin(data_qual),std::end(data_qual), descending_qual); 
                     } else {
                         std::sort(std::begin(data_qual),std::end(data_qual),  ascending_qual); 
@@ -722,7 +723,7 @@ namespace logger {
                 {
                     // size_t worst_time;
                     // double worst_qual;
-                    // if(_is_better.type() == common::OptimizationType::Minimization) {
+                    // if(_is_better.type() == common::OptimizationType::MIN) {
                     //     worst_time =  std::numeric_limits<size_t>::lowest();
                     //     worst_qual = -std::numeric_limits<double>::infinity();
                     // } else {
@@ -737,7 +738,7 @@ namespace logger {
                     double nadir_qual;
                     size_t nadir_time = std::numeric_limits<size_t>::lowest();
 
-                    if(_is_better.type() == common::OptimizationType::Minimization) {
+                    if(_is_better.type() == common::OptimizationType::MIN) {
                         nadir_qual = -std::numeric_limits<double>::infinity();
                     } else {
                         nadir_qual =  std::numeric_limits<double>::infinity();
@@ -782,7 +783,7 @@ namespace logger {
                         size_t nadir_time = 0;
                         const size_t epsil_time = 1;
 
-                        if(_is_better.type() == common::OptimizationType::Minimization) {
+                        if(_is_better.type() == common::OptimizationType::MIN) {
                             nadir_qual = -std::numeric_limits<double>::infinity();
                             // epsil_qual =  1;//std::numeric_limits<double>::epsilon();
                             epsil_qual =  _shift_qual;
@@ -791,7 +792,7 @@ namespace logger {
                             epsil_qual = -1;//std::numeric_limits<double>::epsilon();
                             epsil_qual = -_shift_qual;
                         }
-                        for(const auto& [level,front] : levels) {
+                        for(const auto& [_,front] : levels) {
                             eaf::Point candidate_nadir = extremum(front);
                             if(candidate_nadir.time > nadir_time) { nadir_time = candidate_nadir.time; }
                             if(_is_better(nadir_qual, candidate_nadir.qual)) { nadir_qual = candidate_nadir.qual; }
@@ -853,7 +854,7 @@ namespace logger {
                         double n_qual = _nadir.qual;
                         double surface = 0;
 
-                        if(this->_is_better.type() == common::OptimizationType::Minimization) {
+                        if(this->_is_better.type() == common::OptimizationType::MIN) {
                             std::sort(std::begin(front), std::end(front), eaf::descending_qual);
                         } else {
                             std::sort(std::begin(front), std::end(front), eaf::ascending_qual);
@@ -977,7 +978,7 @@ namespace logger {
 
                 // Prepare the instance with the Nadir point.
                 std::unique_ptr<Volume> volume_of = nullptr;
-                if(logger.optimization_type() == common::OptimizationType::Minimization) {
+                if(logger.optimization_type() == common::OptimizationType::MIN) {
                     volume_of = std::make_unique<Volume>(logger.optimization_type(), Point(error_max, evals_max));
                 } else {
                     volume_of = std::make_unique<Volume>(logger.optimization_type(), Point(error_min, evals_max));

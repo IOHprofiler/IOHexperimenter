@@ -27,7 +27,21 @@ class TestProblem(unittest.TestCase):
         for p in map(lambda x: x(1, 10), (wmodel, ioh.problem.WModelLeadingOnes, ioh.problem.WModelOneMax)):
             self.assertEqual(p([1] * 10), 10)
 
-           
+    def test_enforced_bounds(self):
+        p = ioh.get_problem(1, 1, 2)
+        x0 = [10, 1]
+        y0 = p(x0)
+        p.enforce_bounds()
+        y1 = p(x0)
+        self.assertEqual(y0 + p.constraints.penalty(), y1)
+
+    def test_custom_constraint(self):
+        p = ioh.get_problem(1, 1, 2)
+        c = ioh.RealConstraint(lambda x: float(x[0] > 1), 25.0)
+        y0 = p([10, 1])
+        p.add_constraint(c)
+        self.assertEqual(p([10, 1]), y0 + 25)
+
     def test_evaluation_bbob_problems(self):
         for fid in range(1,25):
             f = ioh.get_problem(fid, 1 ,5, "BBOB")

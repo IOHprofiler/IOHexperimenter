@@ -10,20 +10,30 @@ RealConstraint
 
    .. autosummary::
 
-      ~RealConstraint.lb
-      ~RealConstraint.ub
+      ~RealConstraint.enforced
+      ~RealConstraint.weight
 
    .. rubric:: Methods Summary
 
    .. autosummary::
 
-      ~RealConstraint.check
+      ~RealConstraint.__call__
+      ~RealConstraint.compute_violation
+      ~RealConstraint.is_feasible
+      ~RealConstraint.penalize
+      ~RealConstraint.penalty
+      ~RealConstraint.violation
 
    .. rubric:: Attributes Documentation
 
-   .. autoattribute:: lb
-   .. autoattribute:: ub
+   .. autoattribute:: enforced
+   .. autoattribute:: weight
 
    .. rubric:: Methods Documentation
 
-   .. automethod:: check
+   .. automethod:: __call__
+   .. automethod:: compute_violation
+   .. automethod:: is_feasible
+   .. automethod:: penalize
+   .. automethod:: penalty
+   .. automethod:: violation

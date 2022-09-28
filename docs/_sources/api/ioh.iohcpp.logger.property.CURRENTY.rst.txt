@@ -1,6 +1,6 @@
-RAW_Y_BEST
-==========
+CURRENTY
+========
 
 .. currentmodule:: ioh.iohcpp.logger.property
 
-.. autodata:: RAW_Y_BEST
+.. autodata:: CURRENTY

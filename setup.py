@@ -8,11 +8,9 @@ from generate_docs import main, generate_stubs
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
-__version__ = "0.3.2.8.2"
-gh_ref = os.environ.get("GITHUB_REF")
-if gh_ref:
-    *_, tag = gh_ref.split("/")
-    __version__ = tag.replace("v", "")
+DIR = os.path.realpath(os.path.dirname(__file__))
+with open(os.path.join(DIR, "VERSION")) as f:
+    __version__ = f.read().strip()
 
 # Convert distutils Windows platform specifiers to CMake -A arguments
 PLAT_TO_CMAKE = {
@@ -69,7 +67,6 @@ class CMakeBuild(build_ext):
             "-DENABLE_MKLANDSCAPE_PROBLEMS=OFF",
             "-DBUILD_DOCS={}".format("ON" if MAKE_DOCS else "OFF"),
             "-DBUILD_EXAMPLE=OFF",
-            "-DEXAMPLE_VERSION_INFO={}".format(self.distribution.get_version()),
             "-DCMAKE_BUILD_TYPE={}".format(cfg),  # not used on MSVC, but no harm
         ]
         build_args = []
@@ -124,7 +121,6 @@ class CMakeBuild(build_ext):
         )
 
 
-
 if MAKE_DOCS:
     try:
         atexit.register(main)
@@ -135,7 +131,6 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 iohcpp = CMakeExtension("ioh.iohcpp")
-
 
 setup(
     name="ioh",
@@ -163,5 +158,7 @@ setup(
         "ninja",
         "xmltodict",
     ],
+    license="BSD",
+    url="https://iohprofiler.github.io/IOHexperimenter",
     install_requires=["numpy"]
 )

@@ -1,4 +1,9 @@
 #include "ioh.hpp"
+#include "problem_example.h"
+#include "suite_example.h"
+#include "logger_example.h"
+#include "experiment_example.h"
+// #include "fmt/format.h"
 
 void show_registered_objects()
 {
@@ -33,5 +38,9 @@ void show_registered_objects()
 int main()
 {
     show_registered_objects();
+    problem_example();
+    suite_example();
+    experiment_example();
+    logger_example();
 }
 

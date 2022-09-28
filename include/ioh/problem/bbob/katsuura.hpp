@@ -34,17 +34,9 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
-            subtract(x, objective_.x);
+            subtract(x, optimum_.x);
             affine(x, transformation_state_.second_transformation_matrix, transformation_state_.transformation_base);
             return x;
-        }
-
-        //! Objectives transformation method
-        double transform_objectives(const double y) override
-        {
-            using namespace transformation::objective;
-            static const auto penalty_factor = 1.0;
-            return penalize(state_.current.x, constraint_, penalty_factor, shift(y, objective_.y));
         }
 
     public:
@@ -59,6 +51,8 @@ namespace ioh::problem::bbob
             exponent_(10. / pow(static_cast<double>(meta_data_.n_variables), 1.2)),
             factor_(10. / static_cast<double>(meta_data_.n_variables) / static_cast<double>(meta_data_.n_variables))
         {
+            enforce_bounds();
+            
             transformation_state_.exponents.resize(33);
             for (auto i = 1; i < 33; ++i)
                 transformation_state_.exponents[i] = pow(2., static_cast<double>(i));

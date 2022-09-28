@@ -133,7 +133,7 @@ namespace ioh::problem::bbob
 
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
             {
-                this->objective_.x[i] = 0.8 * (b * random_numbers[i] - c);
+                this->optimum_.x[i] = 0.8 * (b * random_numbers[i] - c);
                 for (auto j = 0; j < number_of_peaks; ++j)
                 {
                     for (auto k = 0; k < this->meta_data_.n_variables; ++k)

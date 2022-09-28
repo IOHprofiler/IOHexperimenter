@@ -5,6 +5,10 @@
 
 namespace ioh::problem
 {
+        
+    
+    
+    
     //! BBOB base class
     class BBOB : public Real
     {
@@ -118,7 +122,7 @@ namespace ioh::problem
         //! Default objective transform for BBOB
         double transform_objectives(const double y) override
         {
-            return transformation::objective::shift(y, objective_.y);
+            return transformation::objective::shift(y, optimum_.y);
         }
 
     public:
@@ -128,28 +132,17 @@ namespace ioh::problem
          * @param problem_id The id of the problem
          * @param instance The instance of the problem
          * @param n_variables the dimension of the problem
-         * @param name the name of the problem
+        * @param name the name of the problem
          * @param condition the conditioning of the problem
          */
         BBOB(const int problem_id, const int instance, const int n_variables, const std::string &name,
              const double condition = sqrt(10.0)):
-            Real(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::Minimization),
-                 Constraint<double>(n_variables,  -5, 5)),
+            Real(MetaData(problem_id, instance, name, n_variables),
+                 Bounds<double>(n_variables, -5, 5)),
             transformation_state_(problem_id, instance, n_variables, condition)
         {
-            objective_ = calculate_objective();
-            log_info_.optimum = objective_;
-        }
-
-        //! Update the log info
-        void update_log_info() override
-        {
-            log_info_.evaluations = static_cast<size_t>(state_.evaluations);
-            log_info_.raw_y_best = state_.current_best.y - objective_.y;
-            log_info_.transformed_y = state_.current.y;
-            log_info_.transformed_y_best = state_.current_best.y;
-            log_info_.current = state_.current;
-            log_info_.current.y = log_info_.current.y - objective_.y;
+            optimum_ = calculate_objective();
+            log_info_.optimum = optimum_;
         }
 
         //! Calculate the solution to the problem

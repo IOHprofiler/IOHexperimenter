@@ -8,8 +8,8 @@ Namespaces
     :maxdepth: 1
 
     ioh_problem_bbob.rst
+    ioh_problem_constraint.rst
     ioh_problem_pbo.rst
-    ioh_problem_python.rst
     ioh_problem_submodular.rst
     ioh_problem_transformation.rst
     ioh_problem_utils.rst
@@ -22,9 +22,25 @@ AutomaticProblemRegistration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygentypedef:: ioh::problem::AutomaticProblemRegistration
 
+Bounds
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygentypedef:: ioh::problem::Bounds
+
 CalculateObjectiveFunction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygentypedef:: ioh::problem::CalculateObjectiveFunction
+
+ConstraintFunction
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygentypedef:: ioh::problem::ConstraintFunction
+
+ConstraintPtr
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygentypedef:: ioh::problem::ConstraintPtr
+
+Constraints
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygentypedef:: ioh::problem::Constraints
 
 Integer
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -68,6 +84,14 @@ BBOProblem
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenclass:: ioh::problem::BBOProblem
 
+Constraint
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenclass:: ioh::problem::Constraint
+
+FunctionalConstraint
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenclass:: ioh::problem::FunctionalConstraint
+
 PBO
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenclass:: ioh::problem::PBO
@@ -94,9 +118,13 @@ WrappedProblem
 
 Structs
 ----------
-Constraint
+BoxConstraint
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenstruct:: ioh::problem::Constraint
+.. doxygenstruct:: ioh::problem::BoxConstraint
+
+ConstraintSet
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenstruct:: ioh::problem::ConstraintSet
 
 InstanceBasedProblem
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

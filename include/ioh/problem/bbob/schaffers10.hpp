@@ -28,19 +28,11 @@ namespace ioh::problem::bbob
             return pow(result / (static_cast<double>(this->meta_data_.n_variables) - 1.0), 2.0);
         }
 
-        //! Objectives transformation method
-        double transform_objectives(const double y) override
-        {
-            using namespace transformation::objective;
-            static const auto penalty_factor = 10.0;
-            return penalize<double>(this->state_.current.x, this->constraint_, penalty_factor,
-                                    shift(y, this->objective_.y));
-        }
         //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
-            subtract(x, this->objective_.x);
+            subtract(x, this->optimum_.x);
             affine(x, this->transformation_state_.transformation_matrix,
                    this->transformation_state_.transformation_base);
             asymmetric(x, 0.5);
@@ -63,6 +55,8 @@ namespace ioh::problem::bbob
                   const double condition) :
             BBOProblem<T>(problem_id, instance, n_variables, name), condition_(condition)
         {
+            this->enforce_bounds(10.0);
+
             for (auto i = 0; i < n_variables; ++i)
                 for (auto j = 0; j < n_variables; ++j)
                     this->transformation_state_.second_transformation_matrix[i][j] =

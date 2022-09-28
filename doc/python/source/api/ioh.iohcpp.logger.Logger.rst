@@ -17,10 +17,7 @@ Logger
    .. autosummary::
 
       ~Logger.add_trigger
-      ~Logger.attach_problem
-      ~Logger.attach_suite
       ~Logger.call
-      ~Logger.log
       ~Logger.reset
 
    .. rubric:: Attributes Documentation
@@ -30,8 +27,5 @@ Logger
    .. rubric:: Methods Documentation
 
    .. automethod:: add_trigger
-   .. automethod:: attach_problem
-   .. automethod:: attach_suite
    .. automethod:: call
-   .. automethod:: log
    .. automethod:: reset

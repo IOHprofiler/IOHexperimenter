@@ -10,10 +10,11 @@ RosenbrockRotated
 
    .. autosummary::
 
-      ~RosenbrockRotated.constraint
+      ~RosenbrockRotated.bounds
+      ~RosenbrockRotated.constraints
       ~RosenbrockRotated.log_info
       ~RosenbrockRotated.meta_data
-      ~RosenbrockRotated.objective
+      ~RosenbrockRotated.optimum
       ~RosenbrockRotated.problems
       ~RosenbrockRotated.state
 
@@ -22,24 +23,33 @@ RosenbrockRotated
    .. autosummary::
 
       ~RosenbrockRotated.__call__
+      ~RosenbrockRotated.add_constraint
       ~RosenbrockRotated.attach_logger
       ~RosenbrockRotated.create
       ~RosenbrockRotated.detach_logger
+      ~RosenbrockRotated.enforce_bounds
+      ~RosenbrockRotated.remove_constraint
       ~RosenbrockRotated.reset
+      ~RosenbrockRotated.update_log_info
 
    .. rubric:: Attributes Documentation
 
-   .. autoattribute:: constraint
+   .. autoattribute:: bounds
+   .. autoattribute:: constraints
    .. autoattribute:: log_info
    .. autoattribute:: meta_data
-   .. autoattribute:: objective
+   .. autoattribute:: optimum
    .. autoattribute:: problems
    .. autoattribute:: state
 
    .. rubric:: Methods Documentation
 
    .. automethod:: __call__
+   .. automethod:: add_constraint
    .. automethod:: attach_logger
    .. automethod:: create
    .. automethod:: detach_logger
+   .. automethod:: enforce_bounds
+   .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: update_log_info

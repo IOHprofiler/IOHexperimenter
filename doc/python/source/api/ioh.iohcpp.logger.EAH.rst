@@ -22,10 +22,7 @@ EAH
 
       ~EAH.add_trigger
       ~EAH.at
-      ~EAH.attach_problem
-      ~EAH.attach_suite
       ~EAH.call
-      ~EAH.log
       ~EAH.reset
 
    .. rubric:: Attributes Documentation
@@ -40,8 +37,5 @@ EAH
 
    .. automethod:: add_trigger
    .. automethod:: at
-   .. automethod:: attach_problem
-   .. automethod:: attach_suite
    .. automethod:: call
-   .. automethod:: log
    .. automethod:: reset

@@ -25,8 +25,7 @@ namespace ioh::problem
                 GraphProblemType(problem_id, 1, fmt::format("MaxInfluence{}", problem_id), graph),
                 is_activated(std::vector<uint8_t>(graph->dimension(), 0))
             {
-                objective_.x = std::vector<int>(graph->dimension(), 1);
-                objective_.y = evaluate(objective_.x);
+                
             }
 
             double random_spread_count(const std::vector<int> &x)
@@ -63,18 +62,9 @@ namespace ioh::problem
 
             double evaluate(const std::vector<int> &x) override
             {
-                double result = 0, constraint = 0;
-                int count = 0;
+                double result = 0.0;
                 for (size_t source = 0; source < x.size(); source++)
-                {
-                    constraint += graph->constraint_weights[source] * x[source];
                     result += graph->vertex_weights[source] * x[source];
-                    count += x[source];
-                }
-
-                constraint += sqrt(count) * graph->meta.chance_cons;
-                if (constraint > graph->meta.constraint_limit)
-                    return graph->meta.constraint_limit - constraint;
 
                 for (auto i = 0; i < simulation_reps; i++)
                     result += random_spread_count(x) / simulation_reps;

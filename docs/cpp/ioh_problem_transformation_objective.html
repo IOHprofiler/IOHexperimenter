@@ -1,16 +1,16 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="variables" href="ioh_problem_transformation_variables.html" /><link rel="prev" title="transformation" href="ioh_problem_transformation.html" />
 
-    <meta name="generator" content="sphinx-4.2.0, furo 2022.01.02"/>
-        <title>objective - IOHExperimenter 0.3.2.6 documentation</title>
+    <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
+        <title>objective - IOHExperimenter 0.3.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
 
@@ -21,38 +21,38 @@
   --color-code-foreground: black;
   
   }
-  body[data-theme="dark"] {
-    --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
-  
-  }
-  @media (prefers-color-scheme: dark) {
-    body:not([data-theme="light"]) {
+  @media not print {
+    body[data-theme="dark"] {
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
   
     }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
   }
 </style></head>
   <body>
+    
     <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z" />
-      <line x1="4" y1="6" x2="20" y2="6" />
-      <line x1="10" y1="12" x2="20" y2="12" />
-      <line x1="6" y1="18" x2="20" y2="18" />
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
     </svg>
   </symbol>
   <symbol id="svg-menu" viewBox="0 0 24 24">
     <title>Menu</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
       <line x1="3" y1="12" x2="21" y2="12"></line>
       <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -61,14 +61,14 @@
   </symbol>
   <symbol id="svg-arrow-right" viewBox="0 0 24 24">
     <title>Expand</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
       <polyline points="9 18 15 12 9 6"></polyline>
     </svg>
   </symbol>
   <symbol id="svg-sun" viewBox="0 0 24 24">
     <title>Light mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -83,7 +83,7 @@
   </symbol>
   <symbol id="svg-moon" viewBox="0 0 24 24">
     <title>Dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
@@ -91,7 +91,7 @@
   </symbol>
   <symbol id="svg-sun-half" viewBox="0 0 24 24">
     <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <circle cx="12" cy="12" r="9" />
@@ -124,7 +124,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.2.6 documentation</div></a>
+      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.3 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -147,7 +147,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../contents.html">
   
   
-  <span class="sidebar-brand-text">IOHExperimenter 0.3.2.6 documentation</span>
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.3 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -186,20 +186,14 @@
 </li>
 <li class="toctree-l2 current has-children"><a class="reference internal" href="ioh_problem.html">problem</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ioh_problem_bbob.html">bbob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_constraint.html">constraint</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh_problem_pbo.html">pbo</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ioh_problem_python.html">python</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ioh_problem_submodular.html">submodular</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l4 has-children"><a class="reference internal" href="ioh_problem_submodular_v2.html">v2</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l5 has-children"><a class="reference internal" href="ioh_problem_submodular_v2_graph.html">graph</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l6"><a class="reference internal" href="ioh_problem_submodular_v2_graph_pwt.html">pwt</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_submodular_graph.html">graph</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_submodular_pwt.html">pwt</a></li>
 </ul>
 </li>
-<li class="toctree-l5"><a class="reference internal" href="ioh_problem_submodular_v2_problems.html">problems</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l3 current has-children"><a class="reference internal" href="ioh_problem_transformation.html">transformation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3 current has-children"><a class="reference internal" href="ioh_problem_transformation.html">transformation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l4 current current-page"><a class="current reference internal" href="#">objective</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ioh_problem_transformation_variables.html">variables</a></li>
 </ul>
@@ -214,30 +208,44 @@
 <li class="toctree-l2"><a class="reference internal" href="ioh.html">ioh</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../python.html">Python</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../python/ioh.html">Utilities</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python.html">Python</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/ioh.html">Utilities</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem.html">get_problem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.wrap_problem.html">wrap_problem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem_id.html">get_problem_id</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.Experiment.html">Experiment</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../python/structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.AbstractIntegerConstraint.html">AbstractIntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.AbstractRealConstraint.html">AbstractRealConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.ConstraintEnforcement.html">ConstraintEnforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerBounds.html">IntegerBounds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraint.html">IntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraintSet.html">IntegerConstraintSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerSolution.html">IntegerSolution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerState.html">IntegerState</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.LogInfo.html">LogInfo</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.MetaData.html">MetaData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.OptimizationType.html">OptimizationType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealBounds.html">RealBounds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealConstraint.html">RealConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealConstraintSet.html">RealConstraintSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealSolution.html">RealSolution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealState.html">RealState</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../python/problem.html">Problem</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/problem.html">Problem</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Real.html">Real</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../python/bbob.html">BBOB</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/bbob.html">BBOB</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AttractiveSector.html">AttractiveSector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BBOB.html">BBOB</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BentCigar.html">BentCigar</a></li>
@@ -248,10 +256,17 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.EllipsoidRotated.html">EllipsoidRotated</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher101.html">Gallagher101</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher21.html">Gallagher21</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GriewankRosenBrock.html">GriewankRosenBrock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Katsuura.html">Katsuura</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LinearSlope.html">LinearSlope</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html">LunacekBiRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rastrigin.html">Rastrigin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RastriginRotated.html">RastriginRotated</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rosenbrock.html">Rosenbrock</a></li>
@@ -265,8 +280,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Weierstrass.html">Weierstrass</a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../python/pbo.html">PBO</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/pbo.html">PBO</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.ConcatenatedTrap.html">ConcatenatedTrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingRing.html">IsingRing</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTorus.html">IsingTorus</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTriangular.html">IsingTriangular</a></li>
@@ -281,6 +298,9 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness3.html">LeadingOnesRuggedness3</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Linear.html">Linear</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MIS.html">MIS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.NQueens.html">NQueens</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMax.html">OneMax</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy1.html">OneMaxDummy1</a></li>
@@ -291,17 +311,26 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness2.html">OneMaxRuggedness2</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness3.html">OneMaxRuggedness3</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PBO.html">PBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../python/wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AbstractWModel.html">AbstractWModel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelLeadingOnes.html">WModelLeadingOnes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelOneMax.html">WModelOneMax</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../python/logger.html">Logging</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/logger.html">Logging</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Always.html">Always</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.At.html">At</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.During.html">During</a></li>
@@ -309,18 +338,26 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html">OnImprovement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Trigger.html">Trigger</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html">AbstractProperty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentBestY.html">CurrentBestY</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentY.html">CurrentY</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Evaluations.html">Evaluations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Penalty.html">Penalty</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Property.html">Property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawY.html">RawY</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawYBest.html">RawYBest</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedY.html">TransformedY</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedYBest.html">TransformedYBest</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENT_Y_BEST.html">CURRENT_Y_BEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Violation.html">Violation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENTBESTY.html">CURRENTBESTY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENTY.html">CURRENTY</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.EVALUATIONS.html">EVALUATIONS</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAW_Y_BEST.html">RAW_Y_BEST</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMED_Y.html">TRANSFORMED_Y</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMED_Y_BEST.html">TRANSFORMED_Y_BEST</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.AbstractWatcher.html">AbstractWatcher</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.PENALTY.html">PENALTY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAWY.html">RAWY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAWYBEST.html">RAWYBEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMEDY.html">TRANSFORMEDY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMEDYBEST.html">TRANSFORMEDYBEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.VIOLATION.html">VIOLATION</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.AbstractLogger.html">AbstractLogger</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Analyzer.html">Analyzer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Combine.html">Combine</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAF.html">EAF</a></li>
@@ -330,11 +367,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Store.html">Store</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../python/suite.html">Suite</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/suite.html">Suite</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.BBOB.html">BBOB</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Integer.html">Integer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.PBO.html">PBO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Real.html">Real</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Submodular.html">Submodular</a></li>
 </ul>
 </li>
 </ul>
@@ -344,6 +382,7 @@
 
 </div>
 </div>
+
       </div>
       
     </div>
@@ -351,6 +390,12 @@
   <div class="main">
     <div class="content">
       <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
         <div class="content-icon-container">
           <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
@@ -367,116 +412,131 @@
         </div>
         <article role="main">
           <section id="objective">
-<h1>objective<a class="headerlink" href="#objective" title="Permalink to this headline">¶</a></h1>
+<h1>objective<a class="headerlink" href="#objective" title="Permalink to this heading">#</a></h1>
 <section id="types">
-<h2>Types<a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h2>
+<h2>Types<a class="headerlink" href="#types" title="Permalink to this heading">#</a></h2>
 <section id="transformation">
-<h3>Transformation<a class="headerlink" href="#transformation" title="Permalink to this headline">¶</a></h3>
+<h3>Transformation<a class="headerlink" href="#transformation" title="Permalink to this heading">#</a></h3>
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem14transformation9objective14TransformationE">
-<span id="_CPPv3N3ioh7problem14transformation9objective14TransformationE"></span><span id="_CPPv2N3ioh7problem14transformation9objective14TransformationE"></span><span class="target" id="transformation_8hpp_1abdc8be971fedb0cbe774e91dc32cff81"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">objective</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">Transformation</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem14transformation9objective14TransformationE" title="Permalink to this definition">¶</a><br/></dt>
+<span id="_CPPv3N3ioh7problem14transformation9objective14TransformationE"></span><span id="_CPPv2N3ioh7problem14transformation9objective14TransformationE"></span><span class="target" id="transformation_8hpp_1abdc8be971fedb0cbe774e91dc32cff81"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">objective</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">Transformation</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem14transformation9objective14TransformationE" title="Permalink to this definition">#</a><br /></dt>
 <dd></dd></dl>
+
 </section>
 </section>
 <section id="functions">
-<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">#</a></h2>
 <section id="exclusive-or">
-<h3>exclusive_or<a class="headerlink" href="#exclusive-or" title="Permalink to this headline">¶</a></h3>
+<h3>exclusive_or<a class="headerlink" href="#exclusive-or" title="Permalink to this heading">#</a></h3>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem14transformation9objective12exclusive_orEKiKi">
-<span id="_CPPv3N3ioh7problem14transformation9objective12exclusive_orEKiKi"></span><span id="_CPPv2N3ioh7problem14transformation9objective12exclusive_orEKiKi"></span><span id="ioh::problem::transformation::objective::exclusive_or__iC.iC"></span><span class="target" id="transformation_8hpp_1aed8103a1b59c883f12523bb4f7e9913d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">objective</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">exclusive_or</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem14transformation9objective12exclusive_orEKiKi" title="Permalink to this definition">¶</a><br/></dt>
+<span id="_CPPv3N3ioh7problem14transformation9objective12exclusive_orEKiKi"></span><span id="_CPPv2N3ioh7problem14transformation9objective12exclusive_orEKiKi"></span><span id="ioh::problem::transformation::objective::exclusive_or__iC.iC"></span><span class="target" id="transformation_8hpp_1aed8103a1b59c883f12523bb4f7e9913d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">objective</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">exclusive_or</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem14transformation9objective12exclusive_orEKiKi" title="Permalink to this definition">#</a><br /></dt>
 <dd><p>Exclusive or operation on two integers, which should either be 0 or 1. </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x1</strong> – first operand </p></li>
 <li><p><strong>x2</strong> – second operand </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the result of xor </p>
 </dd>
 </dl>
 </dd></dl>
+
 </section>
 <section id="oscillate">
-<h3>oscillate<a class="headerlink" href="#oscillate" title="Permalink to this headline">¶</a></h3>
+<h3>oscillate<a class="headerlink" href="#oscillate" title="Permalink to this heading">#</a></h3>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem14transformation9objective9oscillateEKdKd">
-<span id="_CPPv3N3ioh7problem14transformation9objective9oscillateEKdKd"></span><span id="_CPPv2N3ioh7problem14transformation9objective9oscillateEKdKd"></span><span id="ioh::problem::transformation::objective::oscillate__doubleC.doubleC"></span><span class="target" id="transformation_8hpp_1a2a992b67626ddfbbe4f2fce2901a0071"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">objective</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">oscillate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">factor</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.1</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem14transformation9objective9oscillateEKdKd" title="Permalink to this definition">¶</a><br/></dt>
+<span id="_CPPv3N3ioh7problem14transformation9objective9oscillateEKdKd"></span><span id="_CPPv2N3ioh7problem14transformation9objective9oscillateEKdKd"></span><span id="ioh::problem::transformation::objective::oscillate__doubleC.doubleC"></span><span class="target" id="transformation_8hpp_1a2a992b67626ddfbbe4f2fce2901a0071"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">objective</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">oscillate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">factor</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.1</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem14transformation9objective9oscillateEKdKd" title="Permalink to this definition">#</a><br /></dt>
 <dd><p>oscillates the value for y </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>y</strong> – the raw y value </p></li>
 <li><p><strong>factor</strong> – the factor of oscillation </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the transformed y value </p>
 </dd>
 </dl>
 </dd></dl>
+
 </section>
 <section id="penalize">
-<h3>penalize<a class="headerlink" href="#penalize" title="Permalink to this headline">¶</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>doxygenfunction: Unable to resolve function “ioh::problem::transformation::objective::penalize” with arguments None in doxygen xml output for project “iohcpp” from directory: ../../build/xml/.
-Potential matches:
-</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">double</span> <span class="n">penalize</span><span class="p">(</span><span class="n">const</span> <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="n">const</span> <span class="n">double</span> <span class="n">lb</span><span class="p">,</span> <span class="n">const</span> <span class="n">double</span> <span class="n">ub</span><span class="p">,</span> <span class="n">const</span> <span class="n">double</span> <span class="n">factor</span><span class="p">,</span> <span class="n">const</span> <span class="n">double</span> <span class="n">y</span><span class="p">)</span>
-<span class="o">-</span> <span class="n">template</span><span class="o">&lt;</span><span class="n">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="n">double</span> <span class="n">penalize</span><span class="p">(</span><span class="n">const</span> <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="n">const</span> <span class="n">Constraint</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">constraint</span><span class="p">,</span> <span class="n">const</span> <span class="n">double</span> <span class="n">factor</span><span class="p">,</span> <span class="n">const</span> <span class="n">double</span> <span class="n">y</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<h3>penalize<a class="headerlink" href="#penalize" title="Permalink to this heading">#</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem14transformation9objective8penalizeERKNSt6vectorIdEEKdKdKdKd">
+<span id="_CPPv3N3ioh7problem14transformation9objective8penalizeERKNSt6vectorIdEEKdKdKdKd"></span><span id="_CPPv2N3ioh7problem14transformation9objective8penalizeERKNSt6vectorIdEEKdKdKdKd"></span><span id="ioh::problem::transformation::objective::penalize__std::vector:double:CR.doubleC.doubleC.doubleC.doubleC"></span><span class="target" id="transformation_8hpp_1ae95e5d0759c05f01c6738c00192f6162"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">objective</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">penalize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">lb</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ub</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">factor</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem14transformation9objective8penalizeERKNSt6vectorIdEEKdKdKdKd" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>penalizes the objective value for x when it is out of bounds, weighed by a constant factor </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – the object in the search space </p></li>
+<li><p><strong>lb</strong> – the lower bound </p></li>
+<li><p><strong>ub</strong> – the upper bound </p></li>
+<li><p><strong>factor</strong> – the weight </p></li>
+<li><p><strong>y</strong> – the raw y value </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the penalized y value </p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="scale">
-<h3>scale<a class="headerlink" href="#scale" title="Permalink to this headline">¶</a></h3>
+<h3>scale<a class="headerlink" href="#scale" title="Permalink to this heading">#</a></h3>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem14transformation9objective5scaleEKdKd">
-<span id="_CPPv3N3ioh7problem14transformation9objective5scaleEKdKd"></span><span id="_CPPv2N3ioh7problem14transformation9objective5scaleEKdKd"></span><span id="ioh::problem::transformation::objective::scale__doubleC.doubleC"></span><span class="target" id="transformation_8hpp_1a942a9635878b6ee6e43caa8f759dfd16"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">objective</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">scale</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">offset</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem14transformation9objective5scaleEKdKd" title="Permalink to this definition">¶</a><br/></dt>
+<span id="_CPPv3N3ioh7problem14transformation9objective5scaleEKdKd"></span><span id="_CPPv2N3ioh7problem14transformation9objective5scaleEKdKd"></span><span id="ioh::problem::transformation::objective::scale__doubleC.doubleC"></span><span class="target" id="transformation_8hpp_1a942a9635878b6ee6e43caa8f759dfd16"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">objective</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">scale</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">offset</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem14transformation9objective5scaleEKdKd" title="Permalink to this definition">#</a><br /></dt>
 <dd><p>Scale a double y with a given offset. </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>y</strong> – the raw value </p></li>
 <li><p><strong>offset</strong> – the offset to scale by </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the scaled objective value </p>
 </dd>
 </dl>
 </dd></dl>
+
 </section>
 <section id="shift">
-<h3>shift<a class="headerlink" href="#shift" title="Permalink to this headline">¶</a></h3>
+<h3>shift<a class="headerlink" href="#shift" title="Permalink to this heading">#</a></h3>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem14transformation9objective5shiftEKdKd">
-<span id="_CPPv3N3ioh7problem14transformation9objective5shiftEKdKd"></span><span id="_CPPv2N3ioh7problem14transformation9objective5shiftEKdKd"></span><span id="ioh::problem::transformation::objective::shift__doubleC.doubleC"></span><span class="target" id="transformation_8hpp_1a93eeb7fc03e43c9710bf11cd2395cc94"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">objective</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">shift</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">offset</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem14transformation9objective5shiftEKdKd" title="Permalink to this definition">¶</a><br/></dt>
+<span id="_CPPv3N3ioh7problem14transformation9objective5shiftEKdKd"></span><span id="_CPPv2N3ioh7problem14transformation9objective5shiftEKdKd"></span><span id="ioh::problem::transformation::objective::shift__doubleC.doubleC"></span><span class="target" id="transformation_8hpp_1a93eeb7fc03e43c9710bf11cd2395cc94"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">objective</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">shift</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">offset</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem14transformation9objective5shiftEKdKd" title="Permalink to this definition">#</a><br /></dt>
 <dd><p>Shift a double y with a given offset. </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>y</strong> – the raw value </p></li>
 <li><p><strong>offset</strong> – the offset to shift by </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the shifted objective value </p>
 </dd>
 </dl>
 </dd></dl>
+
 </section>
 <section id="uniform">
-<h3>uniform<a class="headerlink" href="#uniform" title="Permalink to this headline">¶</a></h3>
+<h3>uniform<a class="headerlink" href="#uniform" title="Permalink to this heading">#</a></h3>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem14transformation9objective7uniformERK14TransformationKdKiKdKd">
-<span id="_CPPv3N3ioh7problem14transformation9objective7uniformERK14TransformationKdKiKdKd"></span><span id="_CPPv2N3ioh7problem14transformation9objective7uniformERK14TransformationKdKiKdKd"></span><span id="ioh::problem::transformation::objective::uniform__TransformationCR.doubleC.iC.doubleC.doubleC"></span><span class="target" id="transformation_8hpp_1aee4cab9793bb1b553a606de727d9a577"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">objective</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">uniform</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh7problem14transformation9objective14TransformationE" title="ioh::problem::transformation::objective::Transformation"><span class="n"><span class="pre">Transformation</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">t</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seed</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">lb</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ub</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem14transformation9objective7uniformERK14TransformationKdKiKdKd" title="Permalink to this definition">¶</a><br/></dt>
+<span id="_CPPv3N3ioh7problem14transformation9objective7uniformERK14TransformationKdKiKdKd"></span><span id="_CPPv2N3ioh7problem14transformation9objective7uniformERK14TransformationKdKiKdKd"></span><span id="ioh::problem::transformation::objective::uniform__TransformationCR.doubleC.iC.doubleC.doubleC"></span><span class="target" id="transformation_8hpp_1aee4cab9793bb1b553a606de727d9a577"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">transformation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">objective</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">uniform</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh7problem14transformation9objective14TransformationE" title="ioh::problem::transformation::objective::Transformation"><span class="n"><span class="pre">Transformation</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">t</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seed</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">lb</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ub</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem14transformation9objective7uniformERK14TransformationKdKiKdKd" title="Permalink to this definition">#</a><br /></dt>
 <dd><p>applies a given transformation method t(double y, double a) with a random number for a. </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>t</strong> – A transformation method </p></li>
 <li><p><strong>y</strong> – the raw y value </p></li>
@@ -485,11 +545,12 @@ Potential matches:
 <li><p><strong>ub</strong> – the upper bound for the random number </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the transformed y value </p>
 </dd>
 </dl>
 </dd></dl>
+
 </section>
 </section>
 </section>
@@ -506,10 +567,10 @@ Potential matches:
                 </div>
                 <div class="title">variables</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="ioh_problem_transformation.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -520,15 +581,21 @@ Potential matches:
               </div>
             </a>
         </div>
-
-        <div class="related-information">
-              Copyright &#169; 2022, Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck |
-          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
-          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
-            | <a class="muted-link" href="../_sources/cpp/ioh_problem_transformation_objective.rst.txt"
-               rel="nofollow">
-              Show Source
-            </a>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
         </div>
         
       </footer>
@@ -539,7 +606,7 @@ Potential matches:
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -573,6 +640,7 @@ Potential matches:
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>

@@ -120,7 +120,35 @@ namespace ioh::problem
                     loaded = true;
                 }
             };
+
+            struct PWTConstraint : Constraint<int>
+            {
+                std::shared_ptr<TTPGraph> graph;
+
+                PWTConstraint(const std::shared_ptr<TTPGraph> &graph) :
+                    Constraint(constraint::Enforced::HARD), graph(graph)
+                {
+                }
+                
+                bool compute_violation(const std::vector<int> &x) override
+                { 
+                    violation_ = 0; 
+                    
+                    for (size_t i = 0; i < graph->ttp_data.distances.size(); i++)
+                        for (auto &item : graph->ttp_data.city_map[i])
+                            violation_ += item.weight * static_cast<bool>(x[item.index]);
+                    
+                    return violation_ > graph->ttp_data.capacity;
+                }
+
+                double penalty() const override {
+                    return weight * pow(graph->ttp_data.capacity - violation_ + graph->ttp_data.penalty, exponent);   
+                }
+
+                std::string repr() const override { return fmt::format("<PWTConstraint {}>", violation()); }
+            };
         } // namespace pwt
+
 
         struct PackWhileTravel final : GraphProblemType<PackWhileTravel>
         {
@@ -136,13 +164,12 @@ namespace ioh::problem
             PackWhileTravel(const int problem_id, const int, const std::shared_ptr<pwt::TTPGraph> &graph) :
                 GraphProblemType(problem_id, 1, fmt::format("PackWhileTravel{}", problem_id), graph)
             {
-                objective_.x = std::vector<int>(meta_data_.n_variables, 1);
-                objective_.y = evaluate(objective_.x);
+                constraintset_[0] = std::make_shared<pwt::PWTConstraint>(graph);
             }
 
             double evaluate(const std::vector<int> &x) override
             {
-                auto data = std::dynamic_pointer_cast<pwt::TTPGraph>(graph)->ttp_data;
+                auto& data = std::dynamic_pointer_cast<pwt::TTPGraph>(graph)->ttp_data;
                 auto profit_sum = 0.0, cons = 0.0, time = 0.0;
 
                 for (size_t i = 0; i < data.distances.size(); i++)
@@ -155,16 +182,8 @@ namespace ioh::problem
                             profit_sum += item.profit;
                         }
                     }
-
-                    if (cons > data.capacity)
-                        continue;
-
                     time += data.distances[i] / (data.max_speed - (data.velocity_gap * cons / data.capacity));
-                }
-
-                if (cons > data.capacity)
-                    return data.capacity - cons + data.penalty;
-
+                }          
                 return profit_sum - time;
             }
         };

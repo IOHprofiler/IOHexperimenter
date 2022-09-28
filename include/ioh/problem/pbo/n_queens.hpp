@@ -106,8 +106,8 @@ namespace ioh
                 PBOProblem(23, instance, n_variables, "NQueens") 
                 {
                     assert(sqrt(n_variables) - floor(sqrt(n_variables)) == 0);
-                    objective_.y = {sqrt(n_variables)};
-                    objective_.y = transform_objectives(objective_.y);
+                    optimum_.y = {sqrt(n_variables)};
+                    optimum_.y = transform_objectives(optimum_.y);
                 }
             };
         } // namespace pbo

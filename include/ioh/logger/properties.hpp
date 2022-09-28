@@ -151,7 +151,34 @@ namespace ioh
          *
          * @ingroup Properties
          */
-        inline Evaluations evaluations; // Uncomment if one want a library.
+        inline Evaluations evaluations; 
+
+        /** A property that access the cyrrent objective value, without transformation.
+         *
+         * @ingroup Logging
+         */
+        struct RawY : public logger::Property
+        {
+            //! Constructor.
+            RawY(const std::string name = "raw_y", const std::string &format = logger::DEFAULT_DOUBLE_FORMAT) :
+                logger::Property(name, format)
+            {
+            }
+            //! Main call interface.
+            std::optional<double> operator()(const logger::Info &log_info) const override
+            {
+                if(abs(log_info.raw_y) == std::numeric_limits<double>::infinity()){
+                    return {};
+                }                
+                return std::make_optional(log_info.raw_y);
+            }
+        };
+
+        /** Current function value, without transformation.
+         *
+         * @ingroup Properties
+         */
+        inline RawY raw_y; 
 
         /** A property that access the best value so far, without transformation.
          *
@@ -174,30 +201,7 @@ namespace ioh
          *
          * @ingroup Properties
          */
-        inline RawYBest raw_y_best; // Uncomment if one want a library.
-
-        /** A property that access the current value so far, without transformation.
-         *
-         * @ingroup Logging
-         */
-        struct CurrentY : public logger::Property
-        {
-            //! Constructor.
-            //! Main call interface.
-            CurrentY(const std::string name = "current_y", const std::string &format = logger::DEFAULT_DOUBLE_FORMAT) :
-                logger::Property(name, format)
-            {
-            }
-            std::optional<double> operator()(const logger::Info &log_info) const override
-            {
-                return std::make_optional(log_info.current.y);
-            }
-        };
-        /** Objective function value for this call, without transformation.
-         *
-         * @ingroup Properties
-         */
-        inline CurrentY current_y; // Uncomment if one want a library.
+        inline RawYBest raw_y_best;         
 
         /** A property that access the current value so far, with transformation.
          *
@@ -220,7 +224,8 @@ namespace ioh
          *
          * @ingroup Properties
          */
-        inline TransformedY transformed_y; // Uncomment if one want a library.
+        inline TransformedY transformed_y; 
+
         /** A property that access the best value found so far, with transformation.
          *
          * @ingroup Logging
@@ -242,7 +247,121 @@ namespace ioh
          *
          * @ingroup Properties
          */
-        inline TransformedYBest transformed_y_best; // Uncomment if one want a library.
+        inline TransformedYBest transformed_y_best; 
+
+        /** A property that access the current value so far, with transformation and constraints applied
+         *
+         * @ingroup Logging
+         */
+        struct CurrentY : public logger::Property
+        {
+            //! Constructor.
+            //! Main call interface.
+            CurrentY(const std::string name = "current_y", const std::string &format = logger::DEFAULT_DOUBLE_FORMAT) :
+                logger::Property(name, format)
+            {
+            }
+            std::optional<double> operator()(const logger::Info &log_info) const override
+            {
+                return std::make_optional(log_info.y);
+            }
+        };
+        /** Objective function value for this call, without transformation.
+         *
+         * @ingroup Properties
+         */
+        inline CurrentY current_y; 
+
+
+         /** A property that access the current best value so far, with transformation and constraints applied
+         *
+         * @ingroup Logging
+         */
+        struct CurrentBestY : public logger::Property
+        {
+            //! Constructor.
+            //! Main call interface.
+            CurrentBestY(const std::string name = "current_y_best",
+                         const std::string &format = logger::DEFAULT_DOUBLE_FORMAT) :
+                logger::Property(name, format)
+            {
+            }
+            std::optional<double> operator()(const logger::Info &log_info) const override
+            {
+                return std::make_optional(log_info.y_best);
+            }
+        };
+        /** Objective function value for this call, without transformation.
+         *
+         * @ingroup Properties
+         */
+        inline CurrentBestY current_y_best;
+
+
+        /** A property that accesses the current constraint violation
+         *
+         * @ingroup Logging
+         */
+        struct Violation : public logger::Property
+        {
+            //! Constructor.
+            //! Main call interface.
+            Violation(const std::string name = "violation",
+                      const std::string &format = logger::DEFAULT_DOUBLE_FORMAT,
+                      const size_t ci = 0
+                ) :
+                logger::Property(name, format),
+                ci(ci)
+            {
+            }
+            std::optional<double> operator()(const logger::Info &log_info) const override
+            {
+                return std::make_optional(log_info.violations[ci]);
+            }
+
+            private:
+                //! Index of the constraint to be logged
+                size_t ci;
+        };
+
+        /** Objective function value for this call, without transformation.
+         *
+         * @ingroup Properties
+         */
+        inline Violation violation;
+
+
+        /** A property that accesses the current constraint penalty
+         *
+         * @ingroup Logging
+         */
+        struct Penalty : public logger::Property
+        {
+            //! Constructor.
+            //! Main call interface.
+            Penalty(const std::string name = "penalty", 
+                    const std::string &format = logger::DEFAULT_DOUBLE_FORMAT,
+                    const size_t ci = 0
+                ) :
+                logger::Property(name, format),
+                ci(ci)
+            {
+            }
+            std::optional<double> operator()(const logger::Info &log_info) const override
+            {
+                return std::make_optional(log_info.penalties[ci]);
+            }
+
+        private:
+            //! Index of the constraint to be logged
+            size_t ci;
+        };
+
+        /** Objective function value for this call, without transformation.
+         *
+         * @ingroup Properties
+         */
+        inline Penalty penalty;
 
         /** A property that access a referenced variable.
          *

@@ -18,10 +18,7 @@ Combine
 
       ~Combine.add_trigger
       ~Combine.append
-      ~Combine.attach_problem
-      ~Combine.attach_suite
       ~Combine.call
-      ~Combine.log
       ~Combine.reset
 
    .. rubric:: Attributes Documentation
@@ -32,8 +29,5 @@ Combine
 
    .. automethod:: add_trigger
    .. automethod:: append
-   .. automethod:: attach_problem
-   .. automethod:: attach_suite
    .. automethod:: call
-   .. automethod:: log
    .. automethod:: reset

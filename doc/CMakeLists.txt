@@ -11,7 +11,7 @@ set(DOXYFILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 #Replace variables inside @@ with the current values
 configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT}  @ONLY)
 
-file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR}) 
+file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR})  
 add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
                    DEPENDS ${HEADERS}
                    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}

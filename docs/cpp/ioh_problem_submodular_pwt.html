@@ -1,0 +1,872 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="transformation" href="ioh_problem_transformation.html" /><link rel="prev" title="graph" href="ioh_problem_submodular_graph.html" />
+
+    <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
+        <title>pwt - IOHExperimenter 0.3.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.3 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../contents.html">
+  
+  
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.3 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">IOHexperimenter</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../cpp.html">C++</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh_common.html">common</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_common_random.html">random</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_random_bbob2009.html">bbob2009</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_random_pbo.html">pbo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh_logger.html">logger</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_logger_analyzer.html">analyzer</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_structures.html">structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_v1.html">v1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_v2.html">v2</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_logger_eaf.html">eaf</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_logger_eah.html">eah</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="ioh_logger_eah_stat.html">stat</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="ioh_logger_eah_stat_Distribution.html">Distribution</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ioh_logger_eah_stat_under_curve.html">under_curve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="ioh_problem.html">problem</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_bbob.html">bbob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_constraint.html">constraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_pbo.html">pbo</a></li>
+<li class="toctree-l3 current has-children"><a class="reference internal" href="ioh_problem_submodular.html">submodular</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_submodular_graph.html">graph</a></li>
+<li class="toctree-l4 current current-page"><a class="current reference internal" href="#">pwt</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_problem_transformation.html">transformation</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_transformation_objective.html">objective</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_transformation_variables.html">variables</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_wmodel.html">wmodel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_suite.html">suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_trigger.html">trigger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_watch.html">watch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh.html">ioh</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python.html">Python</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/ioh.html">Utilities</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem.html">get_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.wrap_problem.html">wrap_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem_id.html">get_problem_id</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.Experiment.html">Experiment</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.AbstractIntegerConstraint.html">AbstractIntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.AbstractRealConstraint.html">AbstractRealConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.ConstraintEnforcement.html">ConstraintEnforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerBounds.html">IntegerBounds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraint.html">IntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraintSet.html">IntegerConstraintSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerSolution.html">IntegerSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerState.html">IntegerState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.LogInfo.html">LogInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.MetaData.html">MetaData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.OptimizationType.html">OptimizationType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealBounds.html">RealBounds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealConstraint.html">RealConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealConstraintSet.html">RealConstraintSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealSolution.html">RealSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealState.html">RealState</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/problem.html">Problem</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Real.html">Real</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/bbob.html">BBOB</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AttractiveSector.html">AttractiveSector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BBOB.html">BBOB</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BentCigar.html">BentCigar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BuecheRastrigin.html">BuecheRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.DifferentPowers.html">DifferentPowers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Discus.html">Discus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Ellipsoid.html">Ellipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.EllipsoidRotated.html">EllipsoidRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher101.html">Gallagher101</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher21.html">Gallagher21</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GriewankRosenBrock.html">GriewankRosenBrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Katsuura.html">Katsuura</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LinearSlope.html">LinearSlope</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html">LunacekBiRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rastrigin.html">Rastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RastriginRotated.html">RastriginRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rosenbrock.html">Rosenbrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RosenbrockRotated.html">RosenbrockRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers10.html">Schaffers10</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers1000.html">Schaffers1000</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schwefel.html">Schwefel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SharpRidge.html">SharpRidge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Sphere.html">Sphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.StepEllipsoid.html">StepEllipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Weierstrass.html">Weierstrass</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/pbo.html">PBO</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.ConcatenatedTrap.html">ConcatenatedTrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingRing.html">IsingRing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTorus.html">IsingTorus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTriangular.html">IsingTriangular</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LABS.html">LABS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnes.html">LeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy1.html">LeadingOnesDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy2.html">LeadingOnesDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesEpistasis.html">LeadingOnesEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesNeutrality.html">LeadingOnesNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness1.html">LeadingOnesRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness2.html">LeadingOnesRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness3.html">LeadingOnesRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Linear.html">Linear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MIS.html">MIS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.NQueens.html">NQueens</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMax.html">OneMax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy1.html">OneMaxDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy2.html">OneMaxDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxEpistasis.html">OneMaxEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxNeutrality.html">OneMaxNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness1.html">OneMaxRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness2.html">OneMaxRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness3.html">OneMaxRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PBO.html">PBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AbstractWModel.html">AbstractWModel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelLeadingOnes.html">WModelLeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelOneMax.html">WModelOneMax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/logger.html">Logging</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Always.html">Always</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.At.html">At</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.During.html">During</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Each.html">Each</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html">OnImprovement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Trigger.html">Trigger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html">AbstractProperty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentBestY.html">CurrentBestY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentY.html">CurrentY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Evaluations.html">Evaluations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Penalty.html">Penalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Property.html">Property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawY.html">RawY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawYBest.html">RawYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedY.html">TransformedY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedYBest.html">TransformedYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Violation.html">Violation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENTBESTY.html">CURRENTBESTY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENTY.html">CURRENTY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.EVALUATIONS.html">EVALUATIONS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.PENALTY.html">PENALTY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAWY.html">RAWY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAWYBEST.html">RAWYBEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMEDY.html">TRANSFORMEDY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMEDYBEST.html">TRANSFORMEDYBEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.VIOLATION.html">VIOLATION</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.AbstractLogger.html">AbstractLogger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Analyzer.html">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Combine.html">Combine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAF.html">EAF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAH.html">EAH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.FlatFile.html">FlatFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Logger.html">Logger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Store.html">Store</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/suite.html">Suite</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.BBOB.html">BBOB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.PBO.html">PBO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Real.html">Real</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Submodular.html">Submodular</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../server.html">Server</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="pwt">
+<h1>pwt<a class="headerlink" href="#pwt" title="Permalink to this heading">#</a></h1>
+<section id="structs">
+<h2>Structs<a class="headerlink" href="#structs" title="Permalink to this heading">#</a></h2>
+<section id="item">
+<h3>Item<a class="headerlink" href="#item" title="Permalink to this heading">#</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt4ItemE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt4ItemE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt4ItemE"></span><span id="ioh::problem::submodular::pwt::Item"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_item"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Item</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt4ItemE" title="Permalink to this definition">#</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt4Item5indexE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt4Item5indexE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt4Item5indexE"></span><span id="ioh::problem::submodular::pwt::Item::index__i"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_item_1af3474c723e70caeebb071b8d3972a26b"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">index</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt4Item5indexE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt4Item6profitE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt4Item6profitE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt4Item6profitE"></span><span id="ioh::problem::submodular::pwt::Item::profit__i"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_item_1ad2b70aa1a22a21718a87c1b70ef6abfe"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">profit</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt4Item6profitE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt4Item6weightE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt4Item6weightE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt4Item6weightE"></span><span id="ioh::problem::submodular::pwt::Item::weight__i"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_item_1ae2b7c002df4cdc7ea4408b8dcf21805a"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">weight</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt4Item6weightE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt4Item11node_numberE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt4Item11node_numberE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt4Item11node_numberE"></span><span id="ioh::problem::submodular::pwt::Item::node_number__i"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_item_1a5355aa50b1867d1557443affa2859fb0"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">node_number</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt4Item11node_numberE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="point">
+<h3>Point<a class="headerlink" href="#point" title="Permalink to this heading">#</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt5PointE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt5PointE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt5PointE"></span><span id="ioh::problem::submodular::pwt::Point"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_point"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Point</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt5PointE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Helpers for <a class="reference internal" href="ioh_problem_submodular.html#structioh_1_1problem_1_1submodular_1_1_pack_while_travel"><span class="std std-ref">PackWhileTravel</span></a>. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh7problem10submodular3pwt5Point8distanceERK5Point">
+<span id="_CPPv3NK3ioh7problem10submodular3pwt5Point8distanceERK5Point"></span><span id="_CPPv2NK3ioh7problem10submodular3pwt5Point8distanceERK5Point"></span><span id="ioh::problem::submodular::pwt::Point::distance__PointCRC"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_point_1a9fab0e7af334f93d6f3d2485ee4fcb2f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">distance</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh7problem10submodular3pwt5PointE" title="ioh::problem::submodular::pwt::Point"><span class="n"><span class="pre">Point</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh7problem10submodular3pwt5Point8distanceERK5Point" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt5Point1xE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt5Point1xE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt5Point1xE"></span><span id="ioh::problem::submodular::pwt::Point::x__i"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_point_1a71f685fb29af5259b6577169854d3977"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">x</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt5Point1xE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt5Point1yE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt5Point1yE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt5Point1yE"></span><span id="ioh::problem::submodular::pwt::Point::y__i"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_point_1a8733a80574fb8d8fe0151b057d22748a"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">y</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt5Point1yE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="pwtconstraint">
+<h3>PWTConstraint<a class="headerlink" href="#pwtconstraint" title="Permalink to this heading">#</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt13PWTConstraintE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt13PWTConstraintE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt13PWTConstraintE"></span><span id="ioh::problem::submodular::pwt::PWTConstraint"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_p_w_t_constraint"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PWTConstraint</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4I0EN3ioh7problem10ConstraintE" title="ioh::problem::Constraint"><span class="n"><span class="pre">Constraint</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt13PWTConstraintE" title="Permalink to this definition">#</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint13PWTConstraintERKNSt10shared_ptrI8TTPGraphEE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt13PWTConstraint13PWTConstraintERKNSt10shared_ptrI8TTPGraphEE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt13PWTConstraint13PWTConstraintERKNSt10shared_ptrI8TTPGraphEE"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::PWTConstraint__std::shared_ptr:TTPGraph:CR"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_p_w_t_constraint_1a2bd5034a4e62387cb9ab000ade2c0b57"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PWTConstraint</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem10submodular3pwt8TTPGraphE" title="ioh::problem::submodular::pwt::TTPGraph"><span class="n"><span class="pre">TTPGraph</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">graph</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint13PWTConstraintERKNSt10shared_ptrI8TTPGraphEE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint17compute_violationERKNSt6vectorIiEE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt13PWTConstraint17compute_violationERKNSt6vectorIiEE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt13PWTConstraint17compute_violationERKNSt6vectorIiEE"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::compute_violation__std::vector:i:CR"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_p_w_t_constraint_1ade0b189a0f8ddd84534087a2799be040"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compute_violation</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint17compute_violationERKNSt6vectorIiEE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Compute if x or y has any violations of the constraint. </p>
+<p>This should set violation_. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – the search space value </p></li>
+<li><p><strong>y</strong> – the objective space value </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>true when there is violation and false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh7problem10submodular3pwt13PWTConstraint4reprEv">
+<span id="_CPPv3NK3ioh7problem10submodular3pwt13PWTConstraint4reprEv"></span><span id="_CPPv2NK3ioh7problem10submodular3pwt13PWTConstraint4reprEv"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::reprC"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_p_w_t_constraint_1a550f362cbdd46e178460d8368f2c1cc2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">repr</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4NK3ioh7problem10submodular3pwt13PWTConstraint4reprEv" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Representation of the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt13PWTConstraintclERKNSt6vectorIiEEKd">
+<span id="_CPPv3N3ioh7problem10submodular3pwt13PWTConstraintclERKNSt6vectorIiEEKd"></span><span id="_CPPv2N3ioh7problem10submodular3pwt13PWTConstraintclERKNSt6vectorIiEEKd"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::call-operator__std::vector:i:CR.doubleC"></span><span class="target" id="classioh_1_1problem_1_1_constraint_1a4964f09834615d5644c529b84ffdbd8b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">()</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt13PWTConstraintclERKNSt6vectorIiEEKd" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>apply the constraint, and return a (potentially) penalized value for y </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – the search space value </p></li>
+<li><p><strong>y</strong> – the objective space value </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>penalized value for y </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint11is_feasibleERKNSt6vectorIiEE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt13PWTConstraint11is_feasibleERKNSt6vectorIiEE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt13PWTConstraint11is_feasibleERKNSt6vectorIiEE"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::is_feasible__std::vector:i:CR"></span><span class="target" id="classioh_1_1problem_1_1_constraint_1a8c11b16db10094b493e317db94ec2394"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_feasible</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint11is_feasibleERKNSt6vectorIiEE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Checks whether the x and y values are in the feasible domain. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – the search space value </p></li>
+<li><p><strong>y</strong> – the objective space value </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>true if both x and y are feasible, false otherwise </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh7problem10submodular3pwt13PWTConstraint18cached_is_feasibleEv">
+<span id="_CPPv3NK3ioh7problem10submodular3pwt13PWTConstraint18cached_is_feasibleEv"></span><span id="_CPPv2NK3ioh7problem10submodular3pwt13PWTConstraint18cached_is_feasibleEv"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::cached_is_feasibleC"></span><span class="target" id="classioh_1_1problem_1_1_constraint_1a0e5f3ef21dfa60e85bb66b993b6ff5f7"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cached_is_feasible</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh7problem10submodular3pwt13PWTConstraint18cached_is_feasibleEv" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>The value for is_feasibile_ is cached, in order not to call compute_violation again. </p>
+<p>This value corresponse to the last call of is_feasible </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>is_feasible_ </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh7problem10submodular3pwt13PWTConstraint8penalizeEKd">
+<span id="_CPPv3NK3ioh7problem10submodular3pwt13PWTConstraint8penalizeEKd"></span><span id="_CPPv2NK3ioh7problem10submodular3pwt13PWTConstraint8penalizeEKd"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::penalize__doubleCC"></span><span class="target" id="classioh_1_1problem_1_1_constraint_1ab6393fcb353c111494a55dd20e1df916"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">penalize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh7problem10submodular3pwt13PWTConstraint8penalizeEKd" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Penalize the y value. </p>
+<p>This method is only called when there is a violation, and is_feasible returns a false value, see operator(). </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>y</strong> – the objective space value </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the penalized value for y. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh7problem10submodular3pwt13PWTConstraint9violationEv">
+<span id="_CPPv3NK3ioh7problem10submodular3pwt13PWTConstraint9violationEv"></span><span id="_CPPv2NK3ioh7problem10submodular3pwt13PWTConstraint9violationEv"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::violationC"></span><span class="target" id="classioh_1_1problem_1_1_constraint_1a495fdf8fdbe2a009af75c003a455a304"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">violation</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh7problem10submodular3pwt13PWTConstraint9violationEv" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Accessor for violation_. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh7problem10submodular3pwt13PWTConstraint7penaltyEv">
+<span id="_CPPv3NK3ioh7problem10submodular3pwt13PWTConstraint7penaltyEv"></span><span id="_CPPv2NK3ioh7problem10submodular3pwt13PWTConstraint7penaltyEv"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::penaltyC"></span><span class="target" id="classioh_1_1problem_1_1_constraint_1af96269c6246757b938f293102296ae38"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">penalty</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh7problem10submodular3pwt13PWTConstraint7penaltyEv" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Accessor for penalty. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint5graphE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt13PWTConstraint5graphE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt13PWTConstraint5graphE"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::graph__std::shared_ptr:TTPGraph:"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_p_w_t_constraint_1a54afc7453de9c5deaf921295d5539b56"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem10submodular3pwt8TTPGraphE" title="ioh::problem::submodular::pwt::TTPGraph"><span class="n"><span class="pre">TTPGraph</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">graph</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint5graphE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint8enforcedE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt13PWTConstraint8enforcedE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt13PWTConstraint8enforcedE"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::enforced__constraint::Enforced"></span><span class="target" id="classioh_1_1problem_1_1_constraint_1af6477224b042731708fbeee84da2d101"></span><span class="n"><span class="pre">constraint</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem_constraint.html#_CPPv4N3ioh7problem10constraint8EnforcedE" title="ioh::problem::constraint::Enforced"><span class="n"><span class="pre">Enforced</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">enforced</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint8enforcedE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint6weightE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt13PWTConstraint6weightE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt13PWTConstraint6weightE"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::weight__double"></span><span class="target" id="classioh_1_1problem_1_1_constraint_1a8ee2515086dce3200105992114038e0f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">weight</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint6weightE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint10violation_E">
+<span id="_CPPv3N3ioh7problem10submodular3pwt13PWTConstraint10violation_E"></span><span id="_CPPv2N3ioh7problem10submodular3pwt13PWTConstraint10violation_E"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::violation___double"></span><span class="target" id="classioh_1_1problem_1_1_constraint_1ac18516cae84aa2fc10eb9fc11f0b1566"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">violation_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint10violation_E" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint12is_feasible_E">
+<span id="_CPPv3N3ioh7problem10submodular3pwt13PWTConstraint12is_feasible_E"></span><span id="_CPPv2N3ioh7problem10submodular3pwt13PWTConstraint12is_feasible_E"></span><span id="ioh::problem::submodular::pwt::PWTConstraint::is_feasible___b"></span><span class="target" id="classioh_1_1problem_1_1_constraint_1a81c1e092d5eb0f2494ac728cf8e718af"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_feasible_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt13PWTConstraint12is_feasible_E" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="ttpdata">
+<h3>TTPData<a class="headerlink" href="#ttpdata" title="Permalink to this heading">#</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPDataE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPDataE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPDataE"></span><span id="ioh::problem::submodular::pwt::TTPData"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TTPData</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPDataE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>TODO: Find out what data is redundant and how we can better map to other graph data TODO: Don’t use stringstream; slow. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData4nameE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData4nameE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData4nameE"></span><span id="ioh::problem::submodular::pwt::TTPData::name__ss"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1a3292867b449a1b32b37795f05fc0a265"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">name</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData4nameE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData9data_typeE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData9data_typeE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData9data_typeE"></span><span id="ioh::problem::submodular::pwt::TTPData::data_type__ss"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1adc65a9991e2dd0e4f898e5ea37539574"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">data_type</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData9data_typeE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData9dimensionE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData9dimensionE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData9dimensionE"></span><span id="ioh::problem::submodular::pwt::TTPData::dimension__i"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1aa04c8294f166042192dac6a00d431939"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dimension</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData9dimensionE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData7n_itemsE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData7n_itemsE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData7n_itemsE"></span><span id="ioh::problem::submodular::pwt::TTPData::n_items__i"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1a2217d73de62510ca464c34074f811ae8"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">n_items</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData7n_itemsE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData8capacityE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData8capacityE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData8capacityE"></span><span id="ioh::problem::submodular::pwt::TTPData::capacity__i"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1abfc932e0eb0a40a36fafc061277d680b"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">capacity</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData8capacityE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData9min_speedE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData9min_speedE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData9min_speedE"></span><span id="ioh::problem::submodular::pwt::TTPData::min_speed__double"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1ae7c7171cd492515d998cda2605c20bd4"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">min_speed</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData9min_speedE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData9max_speedE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData9max_speedE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData9max_speedE"></span><span id="ioh::problem::submodular::pwt::TTPData::max_speed__double"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1a793427c8344c99a784b7f7452a9a03af"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">max_speed</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData9max_speedE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData10rent_ratioE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData10rent_ratioE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData10rent_ratioE"></span><span id="ioh::problem::submodular::pwt::TTPData::rent_ratio__double"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1ad48b414483e50652e4b2e09e445c3dd0"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rent_ratio</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData10rent_ratioE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData16edge_weight_typeE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData16edge_weight_typeE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData16edge_weight_typeE"></span><span id="ioh::problem::submodular::pwt::TTPData::edge_weight_type__ss"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1a78626d364faae7fa5a0f9de9a23db5bf"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">edge_weight_type</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData16edge_weight_typeE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData7penaltyE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData7penaltyE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData7penaltyE"></span><span id="ioh::problem::submodular::pwt::TTPData::penalty__double"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1a6d78eec25fc9fc2ce1582853370148fe"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">penalty</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData7penaltyE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData12velocity_gapE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData12velocity_gapE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData12velocity_gapE"></span><span id="ioh::problem::submodular::pwt::TTPData::velocity_gap__double"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1a319cfe5a7d9af29924b26f8cca854491"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">velocity_gap</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData12velocity_gapE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData9distancesE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData9distancesE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData9distancesE"></span><span id="ioh::problem::submodular::pwt::TTPData::distances__std::vector:double:"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1a667e1c645822a09d6f408badda9d2879"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">distances</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData9distancesE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData5nodesE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData5nodesE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData5nodesE"></span><span id="ioh::problem::submodular::pwt::TTPData::nodes__std::vector:Point:"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1ad8d50413efefd599435aa768cacd91b1"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem10submodular3pwt5PointE" title="ioh::problem::submodular::pwt::Point"><span class="n"><span class="pre">Point</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nodes</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData5nodesE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData5itemsE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData5itemsE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData5itemsE"></span><span id="ioh::problem::submodular::pwt::TTPData::items__std::vector:Item:"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1ae731ac7f2eca9c46f07167ada4b33110"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem10submodular3pwt4ItemE" title="ioh::problem::submodular::pwt::Item"><span class="n"><span class="pre">Item</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">items</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData5itemsE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt7TTPData8city_mapE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt7TTPData8city_mapE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt7TTPData8city_mapE"></span><span id="ioh::problem::submodular::pwt::TTPData::city_map__std::map:s.std::vector:Item::"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_data_1ad0209ab7b3733e1c8b706d3949ebf481"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem10submodular3pwt4ItemE" title="ioh::problem::submodular::pwt::Item"><span class="n"><span class="pre">Item</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">city_map</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPData8city_mapE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="ttpgraph">
+<h3>TTPGraph<a class="headerlink" href="#ttpgraph" title="Permalink to this heading">#</a></h3>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt8TTPGraphE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt8TTPGraphE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt8TTPGraphE"></span><span id="ioh::problem::submodular::pwt::TTPGraph"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_graph"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TTPGraph</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">submodular</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">graph</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem_submodular_graph.html#_CPPv4N3ioh7problem10submodular5graph5GraphE" title="ioh::problem::submodular::graph::Graph"><span class="n"><span class="pre">Graph</span></span></a><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt8TTPGraphE" title="Permalink to this definition">#</a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh7problem10submodular3pwt8TTPGraph11after_colonERKNSt6stringE">
+<span id="_CPPv3NK3ioh7problem10submodular3pwt8TTPGraph11after_colonERKNSt6stringE"></span><span id="_CPPv2NK3ioh7problem10submodular3pwt8TTPGraph11after_colonERKNSt6stringE"></span><span id="ioh::problem::submodular::pwt::TTPGraph::after_colon__ssCRC"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_graph_1ab6b5cd54e03c454d857024e547a0a70a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">after_colon</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">line</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh7problem10submodular3pwt8TTPGraph11after_colonERKNSt6stringE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt8TTPGraph4loadEv">
+<span id="_CPPv3N3ioh7problem10submodular3pwt8TTPGraph4loadEv"></span><span id="_CPPv2N3ioh7problem10submodular3pwt8TTPGraph4loadEv"></span><span id="ioh::problem::submodular::pwt::TTPGraph::load"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_graph_1aab759a1540b8ce149d65deddfdcd4223"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">load</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt8TTPGraph4loadEv" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3ioh7problem10submodular3pwt8TTPGraph4reprEv">
+<span id="_CPPv3NK3ioh7problem10submodular3pwt8TTPGraph4reprEv"></span><span id="_CPPv2NK3ioh7problem10submodular3pwt8TTPGraph4reprEv"></span><span id="ioh::problem::submodular::pwt::TTPGraph::reprC"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1graph_1_1_graph_1aee9dba5969ec5d4f89697653652fb4d6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">repr</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4NK3ioh7problem10submodular3pwt8TTPGraph4reprEv" title="Permalink to this definition">#</a><br /></dt>
+<dd><p>Representation of the object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt8TTPGraph9dimensionEv">
+<span id="_CPPv3N3ioh7problem10submodular3pwt8TTPGraph9dimensionEv"></span><span id="_CPPv2N3ioh7problem10submodular3pwt8TTPGraph9dimensionEv"></span><span id="ioh::problem::submodular::pwt::TTPGraph::dimension"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1graph_1_1_graph_1a594128981d81fdbbe33b3c6a495072a3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dimension</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt8TTPGraph9dimensionEv" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt8TTPGraph8ttp_dataE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt8TTPGraph8ttp_dataE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt8TTPGraph8ttp_dataE"></span><span id="ioh::problem::submodular::pwt::TTPGraph::ttp_data__TTPData"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1pwt_1_1_t_t_p_graph_1a437bb4aab900db584be226072a7d22b6"></span><a class="reference internal" href="#_CPPv4N3ioh7problem10submodular3pwt7TTPDataE" title="ioh::problem::submodular::pwt::TTPData"><span class="n"><span class="pre">TTPData</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ttp_data</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt8TTPGraph8ttp_dataE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt8TTPGraph4metaE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt8TTPGraph4metaE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt8TTPGraph4metaE"></span><span id="ioh::problem::submodular::pwt::TTPGraph::meta__Meta"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1graph_1_1_graph_1a3b0571be1ddc4a9a2f189d04a953708c"></span><span class="n"><span class="pre">Meta</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">meta</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt8TTPGraph4metaE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt8TTPGraph14adjacency_listE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt8TTPGraph14adjacency_listE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt8TTPGraph14adjacency_listE"></span><span id="ioh::problem::submodular::pwt::TTPGraph::adjacency_list__std::vector:std::vector:std::pair:i.double:::"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1graph_1_1_graph_1afc7bbca24e45020b2c27be13c37013c6"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">adjacency_list</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt8TTPGraph14adjacency_listE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt8TTPGraph5edgesE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt8TTPGraph5edgesE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt8TTPGraph5edgesE"></span><span id="ioh::problem::submodular::pwt::TTPGraph::edges__std::vector:std::tuple:i.i.double::"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1graph_1_1_graph_1a27387288551833758163cdcb1740653d"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">tuple</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">edges</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt8TTPGraph5edgesE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt8TTPGraph12edge_weightsE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt8TTPGraph12edge_weightsE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt8TTPGraph12edge_weightsE"></span><span id="ioh::problem::submodular::pwt::TTPGraph::edge_weights__std::vector:double:"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1graph_1_1_graph_1a9a2f848bd29c432b3de291a1a8743583"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">edge_weights</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt8TTPGraph12edge_weightsE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt8TTPGraph14vertex_weightsE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt8TTPGraph14vertex_weightsE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt8TTPGraph14vertex_weightsE"></span><span id="ioh::problem::submodular::pwt::TTPGraph::vertex_weights__std::vector:double:"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1graph_1_1_graph_1aa152a8baad21eb2386ab21da2ceb3749"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vertex_weights</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt8TTPGraph14vertex_weightsE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt8TTPGraph18constraint_weightsE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt8TTPGraph18constraint_weightsE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt8TTPGraph18constraint_weightsE"></span><span id="ioh::problem::submodular::pwt::TTPGraph::constraint_weights__std::vector:double:"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1graph_1_1_graph_1a465f14cf1af54e9ddcb9195ad34ff39a"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">constraint_weights</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt8TTPGraph18constraint_weightsE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10submodular3pwt8TTPGraph6loadedE">
+<span id="_CPPv3N3ioh7problem10submodular3pwt8TTPGraph6loadedE"></span><span id="_CPPv2N3ioh7problem10submodular3pwt8TTPGraph6loadedE"></span><span id="ioh::problem::submodular::pwt::TTPGraph::loaded__b"></span><span class="target" id="structioh_1_1problem_1_1submodular_1_1graph_1_1_graph_1a2e2d9de0f99f9d134e7e107f3f45db8c"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loaded</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10submodular3pwt8TTPGraph6loadedE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="ioh_problem_transformation.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">transformation</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="ioh_problem_submodular_graph.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">graph</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">pwt</a><ul>
+<li><a class="reference internal" href="#structs">Structs</a><ul>
+<li><a class="reference internal" href="#item">Item</a></li>
+<li><a class="reference internal" href="#point">Point</a></li>
+<li><a class="reference internal" href="#pwtconstraint">PWTConstraint</a></li>
+<li><a class="reference internal" href="#ttpdata">TTPData</a></li>
+<li><a class="reference internal" href="#ttpgraph">TTPGraph</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    </body>
+</html>

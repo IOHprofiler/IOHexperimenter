@@ -26,7 +26,7 @@ namespace ioh::problem::bbob
 
             /* x_hat */
             for (auto i = 0; i < meta_data_.n_variables; ++i)
-                x_hat[i] = objective_.x.at(i) > 0. ? 2. * x.at(i) : 2. * x.at(i) * -1;
+                x_hat[i] = optimum_.x.at(i) > 0. ? 2. * x.at(i) : 2. * x.at(i) * -1;
              
             /* affine transformation */
             for (auto i = 0; i < meta_data_.n_variables; ++i)
@@ -63,7 +63,7 @@ namespace ioh::problem::bbob
             const auto random_normal = common::random::bbob2009::normal(n_variables, transformation_state_.seed);
             for (auto i = 0; i < n_variables; ++i)
             {
-                objective_.x[i] = random_normal.at(i) < 0.0 ? 0.5 * 2.5 * -1 : 0.5 * 2.5;
+                optimum_.x[i] = random_normal.at(i) < 0.0 ? 0.5 * 2.5 * -1 : 0.5 * 2.5;
                 transformation_state_.conditions[i] = pow(sqrt(100.), transformation_state_.exponents.at(i));
             }
         }

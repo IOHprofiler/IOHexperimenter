@@ -11,8 +11,8 @@ TEST_F(BaseTest, common_test)
 {
 	using namespace ioh::common;
     
-    auto min = FOptimizationType(OptimizationType::Minimization);
-    auto max = FOptimizationType(OptimizationType::Maximization);
+    auto min = FOptimizationType(OptimizationType::MIN);
+    auto max = FOptimizationType(OptimizationType::MAX);
 
 	EXPECT_TRUE(max(4, 2));
 	EXPECT_FALSE(max(2, 2));
@@ -21,8 +21,11 @@ TEST_F(BaseTest, common_test)
 	EXPECT_FALSE(min(4, 2)); 
 }
 
- 
+#ifdef NDEBUG
+TEST_F(BaseTest, DISABLED_common_log)
+#else
 TEST_F(BaseTest, common_log)
+#endif
 {
     auto& ioh_dbg = clutchlog::logger();
     ioh_dbg.threshold(clutchlog::level::xdebug);

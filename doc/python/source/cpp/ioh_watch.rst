@@ -19,6 +19,10 @@ Reference
 
 Structs
 ----------
+CurrentBestY
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenstruct:: ioh::watch::CurrentBestY
+
 CurrentY
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: ioh::watch::CurrentY
@@ -26,6 +30,14 @@ CurrentY
 Evaluations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: ioh::watch::Evaluations
+
+Penalty
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenstruct:: ioh::watch::Penalty
+
+RawY
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenstruct:: ioh::watch::RawY
 
 RawYBest
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,6 +50,10 @@ TransformedY
 TransformedYBest
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: ioh::watch::TransformedYBest
+
+Violation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenstruct:: ioh::watch::Violation
 
 Functions
 ----------
@@ -59,9 +75,21 @@ current_y
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenvariable:: ioh::watch::current_y
 
+current_y_best
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenvariable:: ioh::watch::current_y_best
+
 evaluations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenvariable:: ioh::watch::evaluations
+
+penalty
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenvariable:: ioh::watch::penalty
+
+raw_y
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenvariable:: ioh::watch::raw_y
 
 raw_y_best
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,4 +102,8 @@ transformed_y
 transformed_y_best
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenvariable:: ioh::watch::transformed_y_best
+
+violation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenvariable:: ioh::watch::violation
 

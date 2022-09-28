@@ -51,10 +51,10 @@ namespace ioh
                 IsingTriangular(const int instance, const int n_variables) :
                     PBOProblem(21, instance, n_variables, "IsingTriangular")
                 {
-                    objective_.x = std::vector<int>(n_variables,1);
-                    objective_.y = evaluate(objective_.x);
-                    objective_.x = reset_transform_variables(objective_.x);
-                    objective_.y = transform_objectives(objective_.y);
+                    optimum_.x = std::vector<int>(n_variables,1);
+                    optimum_.y = evaluate(optimum_.x);
+                    optimum_.x = reset_transform_variables(optimum_.x);
+                    optimum_.y = transform_objectives(optimum_.y);
                 }
             };
         } // namespace pbo

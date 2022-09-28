@@ -6,6 +6,9 @@ import ioh
 def problem(x):
     return sum(x)
 
+def zero(x):
+    return 0.
+
 
 def tx(x, iid):
     x[1] = iid
@@ -32,10 +35,10 @@ class TestWrappedProblem(unittest.TestCase):
             calculate_objective=co,
         )
         self.assertEqual(p([1, 2]), 2.0)
-        self.assertEqual(p.objective.x[0], 1)
-        self.assertEqual(p.objective.x[0], p.objective.y)
+        self.assertEqual(p.optimum.x[0], 1)
+        self.assertEqual(p.optimum.x[0], p.optimum.y)
     
-    @unittest.skip("can cause a segfault (cpp exit handler)")
+    # @unittest.skip("can cause a segfault (cpp exit handler)")
     def test_wrap_problem_scoped(self):
         def w():
             ioh.problem.wrap_real_problem(lambda _: 0.0, "l")
@@ -61,6 +64,13 @@ class TestWrappedProblem(unittest.TestCase):
             p = ioh.get_problem(f.__name__)
             y = p([0]*5)
             self.assertEqual(y, 0.0)
+
+    def test_wrap_problem_constrains(self):
+        c = ioh.RealConstraint(lambda x: float(x[0] > 1), 10.0)
+        p = ioh.wrap_problem(zero, "test", "Real", dimension = 2, constraints=[c])
+        self.assertEqual(p([10, 0]), 10.0)
+        p.remove_constraint(c)
+        self.assertEqual(p([10, 0]), 0)
 
 
 if __name__ == "__main__":

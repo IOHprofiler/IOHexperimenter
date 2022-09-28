@@ -3,6 +3,7 @@
 #include "ioh/common.hpp"
 #include "ioh/problem/problem.hpp"
 
+
 namespace ioh::problem::submodular
 {
     namespace graph
@@ -29,7 +30,7 @@ namespace ioh::problem::submodular
                                                &meta.constraint_weights, &dp};
                 std::stringstream ss(definition);
                 size_t i = 0;
-                while (getline(ss, *p[i++], '|') && (i < p.size()))
+                while (std::getline(ss, *p[i++], '|') && (i < p.size()))
                     ;
                 try
                 {
@@ -127,9 +128,41 @@ namespace ioh::problem::submodular
                     load();
                 return meta.is_edge ? static_cast<int>(edges.size()) : meta.n_vertices;
             }
+
+
         };
 
     } // namespace graph
+
+    struct GraphConstraint : Constraint<int>
+    {
+        std::shared_ptr<graph::Graph> graph;
+
+        GraphConstraint(const std::shared_ptr<graph::Graph> &graph) : 
+            Constraint(constraint::Enforced::HARD), graph(graph) {}
+
+        bool compute_violation(const std::vector<int>& x) override { 
+            
+            violation_ = 0;
+             
+            int count = 0;
+            for (size_t source = 0; source < x.size(); source++)
+            {
+                violation_ += graph->constraint_weights[source] * x[source];
+                count += x[source];
+            }
+
+            violation_ += sqrt(count) * graph->meta.chance_cons;
+            return violation_ > graph->meta.constraint_limit;
+        }
+
+        double penalty() const override {
+            return weight * pow(graph->meta.constraint_limit - violation(), exponent);
+        }
+        
+
+        std::string repr() const override { return fmt::format("<GraphConstraint {}>", violation()); }
+    };
 
 
     struct GraphProblem : Integer
@@ -138,8 +171,10 @@ namespace ioh::problem::submodular
 
         GraphProblem(const int problem_id, const int instance, const std::string &name,
                      const std::shared_ptr<graph::Graph> &graph) :
-            Integer(MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::Maximization),
-                    Constraint<int>(graph->dimension(), 0, 1)),
+            Integer(MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::MAX),
+                    Bounds<int>(graph->dimension()),
+                    ConstraintSet<int>(std::make_shared<GraphConstraint>(graph))    
+                ),
             graph(graph)
         {
         }

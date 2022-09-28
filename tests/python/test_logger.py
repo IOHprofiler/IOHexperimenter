@@ -3,6 +3,8 @@ import ioh
 import os
 import shutil
 import pickle
+import json
+
 
 class Container:
     def __init__(self):
@@ -13,7 +15,7 @@ class Container:
 class TestLogger(unittest.TestCase):
     def test_flatfile(self):
         pr = ioh.get_problem("Sphere", 1, 5) 
-        p = [ioh.logger.property.CURRENT_Y_BEST]
+        p = [ioh.logger.property.CURRENTBESTY]
         t = [ioh.logger.trigger.ON_IMPROVEMENT]
         l = ioh.logger.FlatFile(t, p, separator=" ")
         pr.attach_logger(l)
@@ -35,8 +37,22 @@ class TestLogger(unittest.TestCase):
                 c.xy = i*10
                 pr([i] * 5)
             pr.reset()
-
+        l.close()
+        
         self.assertTrue(os.path.isdir("ioh_data"))
+        meta = os.path.join("ioh_data", "IOHprofiler_f1_Sphere.json")
+        data = os.path.join("ioh_data", "data_f1_Sphere", "IOHprofiler_f1_DIM5.dat")
+        self.assertTrue(os.path.isfile(meta))
+        self.assertTrue(os.path.isfile(data))
+
+        with open(meta) as f:
+            meta_data = json.loads(f.read())
+            for i, run in enumerate(meta_data["scenarios"][0]["runs"]):
+                self.assertEqual(run['xv'], i)
+        with open(data) as f:
+            next(f)
+            for i in range(5):
+                self.assertEqual(i*10, float(next(f).split()[-1]))
 
     def test_triggers(self):
         always = ioh.logger.trigger.Always()
@@ -51,10 +67,10 @@ class TestLogger(unittest.TestCase):
         during = ioh.logger.trigger.During({(10, 25), (30, 40)})
         self.assertEqual(during.time_ranges, {(10, 25), (30, 40)})
 
-        log_info = ioh.LogInfo(22, 0, 0, 0, ioh.RealSolution([0, 1], 0), ioh.RealSolution([1, 0], 0))
+        l = ioh.LogInfo(22, 1, 1, 1, 1, 1, 1, [0, 1],[0, 1],[0, 1], ioh.RealSolution([0, 1], 0), True)
         problem = ioh.get_problem(1, 1, 2)
         for t in (always, on_improvement, at, each, during):
-            self.assertTrue(t(log_info, problem.meta_data))
+            self.assertTrue(t(l, problem.meta_data))
 
     def tearDown(self) -> None:
         if os.path.isdir("ioh_data"):
@@ -69,7 +85,7 @@ class TestLogger(unittest.TestCase):
         except Exception as err: 
             self.fail(str(err))
         try:
-            pickle.dumps(ioh.logger.property.RAW_Y_BEST)
+            pickle.dumps(ioh.logger.property.RAWYBEST)
         except Exception as err: 
             self.fail(str(err))
         try:
@@ -98,7 +114,7 @@ class TestLogger(unittest.TestCase):
             def __call__(self, _):
                 return 10.0
         c = ioh.RealSolution([0], 1)
-        l = ioh.LogInfo(0, 1, 1, 1, c, c)
+        l = ioh.LogInfo(0, 1, 1, 1, 1, 1, 1, [0],[0],[0], c)
         a = P("x")
         self.assertEqual(int(a(l)), int(float(a.call_to_string(l, "na"))))
         

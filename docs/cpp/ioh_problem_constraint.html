@@ -1,0 +1,535 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pbo" href="ioh_problem_pbo.html" /><link rel="prev" title="bbob" href="ioh_problem_bbob.html" />
+
+    <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
+        <title>constraint - IOHExperimenter 0.3.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.3 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../contents.html">
+  
+  
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.3 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">IOHexperimenter</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../cpp.html">C++</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh_common.html">common</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_common_random.html">random</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_random_bbob2009.html">bbob2009</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_random_pbo.html">pbo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh_logger.html">logger</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_logger_analyzer.html">analyzer</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_structures.html">structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_v1.html">v1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_v2.html">v2</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_logger_eaf.html">eaf</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_logger_eah.html">eah</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="ioh_logger_eah_stat.html">stat</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="ioh_logger_eah_stat_Distribution.html">Distribution</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ioh_logger_eah_stat_under_curve.html">under_curve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="ioh_problem.html">problem</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_bbob.html">bbob</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">constraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_pbo.html">pbo</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_problem_submodular.html">submodular</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_submodular_graph.html">graph</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_submodular_pwt.html">pwt</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_problem_transformation.html">transformation</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_transformation_objective.html">objective</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_transformation_variables.html">variables</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_wmodel.html">wmodel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_suite.html">suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_trigger.html">trigger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_watch.html">watch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh.html">ioh</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python.html">Python</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/ioh.html">Utilities</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem.html">get_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.wrap_problem.html">wrap_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem_id.html">get_problem_id</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.Experiment.html">Experiment</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.AbstractIntegerConstraint.html">AbstractIntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.AbstractRealConstraint.html">AbstractRealConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.ConstraintEnforcement.html">ConstraintEnforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerBounds.html">IntegerBounds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraint.html">IntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraintSet.html">IntegerConstraintSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerSolution.html">IntegerSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerState.html">IntegerState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.LogInfo.html">LogInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.MetaData.html">MetaData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.OptimizationType.html">OptimizationType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealBounds.html">RealBounds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealConstraint.html">RealConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealConstraintSet.html">RealConstraintSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealSolution.html">RealSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealState.html">RealState</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/problem.html">Problem</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.Real.html">Real</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/bbob.html">BBOB</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AttractiveSector.html">AttractiveSector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BBOB.html">BBOB</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BentCigar.html">BentCigar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BuecheRastrigin.html">BuecheRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.DifferentPowers.html">DifferentPowers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Discus.html">Discus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Ellipsoid.html">Ellipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.EllipsoidRotated.html">EllipsoidRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher101.html">Gallagher101</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher21.html">Gallagher21</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GriewankRosenBrock.html">GriewankRosenBrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Katsuura.html">Katsuura</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LinearSlope.html">LinearSlope</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html">LunacekBiRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rastrigin.html">Rastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RastriginRotated.html">RastriginRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rosenbrock.html">Rosenbrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RosenbrockRotated.html">RosenbrockRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers10.html">Schaffers10</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers1000.html">Schaffers1000</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schwefel.html">Schwefel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SharpRidge.html">SharpRidge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Sphere.html">Sphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.StepEllipsoid.html">StepEllipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Weierstrass.html">Weierstrass</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/pbo.html">PBO</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.ConcatenatedTrap.html">ConcatenatedTrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingRing.html">IsingRing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTorus.html">IsingTorus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTriangular.html">IsingTriangular</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LABS.html">LABS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnes.html">LeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy1.html">LeadingOnesDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy2.html">LeadingOnesDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesEpistasis.html">LeadingOnesEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesNeutrality.html">LeadingOnesNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness1.html">LeadingOnesRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness2.html">LeadingOnesRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness3.html">LeadingOnesRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Linear.html">Linear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MIS.html">MIS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.NQueens.html">NQueens</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMax.html">OneMax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy1.html">OneMaxDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy2.html">OneMaxDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxEpistasis.html">OneMaxEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxNeutrality.html">OneMaxNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness1.html">OneMaxRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness2.html">OneMaxRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness3.html">OneMaxRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PBO.html">PBO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AbstractWModel.html">AbstractWModel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelLeadingOnes.html">WModelLeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelOneMax.html">WModelOneMax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/logger.html">Logging</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Always.html">Always</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.At.html">At</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.During.html">During</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Each.html">Each</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html">OnImprovement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Trigger.html">Trigger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html">AbstractProperty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentBestY.html">CurrentBestY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentY.html">CurrentY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Evaluations.html">Evaluations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Penalty.html">Penalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Property.html">Property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawY.html">RawY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawYBest.html">RawYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedY.html">TransformedY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedYBest.html">TransformedYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Violation.html">Violation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENTBESTY.html">CURRENTBESTY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENTY.html">CURRENTY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.EVALUATIONS.html">EVALUATIONS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.PENALTY.html">PENALTY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAWY.html">RAWY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAWYBEST.html">RAWYBEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMEDY.html">TRANSFORMEDY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMEDYBEST.html">TRANSFORMEDYBEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.VIOLATION.html">VIOLATION</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.AbstractLogger.html">AbstractLogger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Analyzer.html">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Combine.html">Combine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAF.html">EAF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAH.html">EAH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.FlatFile.html">FlatFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Logger.html">Logger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Store.html">Store</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/suite.html">Suite</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.BBOB.html">BBOB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.PBO.html">PBO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Real.html">Real</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Submodular.html">Submodular</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../server.html">Server</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="constraint">
+<h1>constraint<a class="headerlink" href="#constraint" title="Permalink to this heading">#</a></h1>
+<section id="enumerations">
+<h2>Enumerations<a class="headerlink" href="#enumerations" title="Permalink to this heading">#</a></h2>
+<section id="enforced">
+<h3>Enforced<a class="headerlink" href="#enforced" title="Permalink to this heading">#</a></h3>
+<dl class="cpp enum-class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10constraint8EnforcedE">
+<span id="_CPPv3N3ioh7problem10constraint8EnforcedE"></span><span id="_CPPv2N3ioh7problem10constraint8EnforcedE"></span><span class="target" id="constraints_8hpp_1aca16cdafdafe94fbaf0616e691fdf0cc"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">constraint</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">Enforced</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10constraint8EnforcedE" title="Permalink to this definition">#</a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10constraint8Enforced3NOTE">
+<span id="_CPPv3N3ioh7problem10constraint8Enforced3NOTE"></span><span id="_CPPv2N3ioh7problem10constraint8Enforced3NOTE"></span><span class="target" id="constraints_8hpp_1aca16cdafdafe94fbaf0616e691fdf0cca10df3d67626099df882920ba6552f16d"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">NOT</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10constraint8Enforced3NOTE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10constraint8Enforced6HIDDENE">
+<span id="_CPPv3N3ioh7problem10constraint8Enforced6HIDDENE"></span><span id="_CPPv2N3ioh7problem10constraint8Enforced6HIDDENE"></span><span class="target" id="constraints_8hpp_1aca16cdafdafe94fbaf0616e691fdf0cca347e628a8f72626a0611ef842fe9d304"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HIDDEN</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10constraint8Enforced6HIDDENE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10constraint8Enforced4SOFTE">
+<span id="_CPPv3N3ioh7problem10constraint8Enforced4SOFTE"></span><span id="_CPPv2N3ioh7problem10constraint8Enforced4SOFTE"></span><span class="target" id="constraints_8hpp_1aca16cdafdafe94fbaf0616e691fdf0cca52e743143106c12bfd73aae547fc6e2e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SOFT</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10constraint8Enforced4SOFTE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10constraint8Enforced4HARDE">
+<span id="_CPPv3N3ioh7problem10constraint8Enforced4HARDE"></span><span id="_CPPv2N3ioh7problem10constraint8Enforced4HARDE"></span><span class="target" id="constraints_8hpp_1aca16cdafdafe94fbaf0616e691fdf0cca7c144eae2e08db14c82e376603cc01f4"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HARD</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10constraint8Enforced4HARDE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem10constraint8Enforced8OVERRIDEE">
+<span id="_CPPv3N3ioh7problem10constraint8Enforced8OVERRIDEE"></span><span id="_CPPv2N3ioh7problem10constraint8Enforced8OVERRIDEE"></span><span class="target" id="constraints_8hpp_1aca16cdafdafe94fbaf0616e691fdf0cca3a5974efbe92686d30f0261a204e6ee7"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">OVERRIDE</span></span></span><a class="headerlink" href="#_CPPv4N3ioh7problem10constraint8Enforced8OVERRIDEE" title="Permalink to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="ioh_problem_pbo.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">pbo</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="ioh_problem_bbob.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">bbob</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">constraint</a><ul>
+<li><a class="reference internal" href="#enumerations">Enumerations</a><ul>
+<li><a class="reference internal" href="#enforced">Enforced</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    </body>
+</html>

@@ -31,7 +31,7 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
-            subtract(x, this->objective_.x);
+            subtract(x, this->optimum_.x);
             scale(x, factor_);
             subtract(x, negative_one_);
             return x;
@@ -67,7 +67,7 @@ namespace ioh::problem::bbob
         Rosenbrock(const int instance, const int n_variables) :
             RosenbrockBase(8, instance, n_variables, "Rosenbrock")
         {
-            for (auto& e : objective_.x)
+            for (auto& e : optimum_.x)
                 e *= 0.75;
         }
     };

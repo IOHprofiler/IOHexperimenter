@@ -5,7 +5,7 @@ import shutil
 import warnings
 import xmltodict
 
-BASE_DIR = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
+BASE_DIR = os.path.realpath(os.path.dirname(__file__))
 
 unit_template = '''{name}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -69,9 +69,11 @@ def get_values(list_of_d, attr ='#text'):
     if list_of_d is None:
         return 
 
-    if isinstance(list_of_d, collections.OrderedDict):
+    if isinstance(list_of_d, (collections.OrderedDict, dict)):
         list_of_d = [list_of_d]
-    return list(sorted(set([x[attr] for x in list_of_d])))
+
+    return list(sorted(set([x[attr] for x in list_of_d])))  
+    
         
 def generate_sphinx_templates_from_xml(xmldir = "doc/build/xml", outdir = "doc/python/source/cpp"):
     assert os.path.isdir(xmldir), xmldir
@@ -85,14 +87,13 @@ def generate_sphinx_templates_from_xml(xmldir = "doc/build/xml", outdir = "doc/p
         namespaces = get_values(data['doxygen']['compounddef'].get('innernamespace'))
         classes = get_values(data['doxygen']['compounddef'].get('innerclass'))
         sections = data['doxygen']['compounddef'].get('sectiondef')
-
         nsdata = dict(name=name, namespaces=namespaces)
 
         if classes is not None:
             classes = []
             structs = []
             cdata = data['doxygen']['compounddef'].get('innerclass')
-            if isinstance(cdata, collections.OrderedDict):
+            if isinstance(cdata, (dict, collections.OrderedDict)):
                 cdata = [cdata]
             for e in cdata:
                 if e['@refid'].startswith('class'):
@@ -104,14 +105,12 @@ def generate_sphinx_templates_from_xml(xmldir = "doc/build/xml", outdir = "doc/p
             nsdata['structs'] = structs if any(structs) else None
 
         
-        
         if sections is not None:
-            if isinstance(sections, collections.OrderedDict):
+            if isinstance(sections, (dict, collections.OrderedDict)):
                 sections = [sections]
             for sec in sections:
                 nsdata[sec['@kind']] = [f"{name}::{x}" for x in get_values(sec['memberdef'], "name")]
 
-             
         ns[name] = nsdata
 
         
@@ -152,8 +151,8 @@ def main():
             os.path.join(BASE_DIR, "docs"),
             dirs_exist_ok=True
         )
-    except:
-        warnings.warn("Cannot compile docs", RuntimeWarning)
+    except Exception as reason:
+        warnings.warn(f"Cannot compile docs reason: {reason}", RuntimeWarning)
 
 if __name__ == '__main__':
     main()

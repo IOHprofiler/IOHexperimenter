@@ -9,7 +9,7 @@ double new_problem(const std::vector<double> &x)
   return result;
 }
 
-std::vector<double> new_transform_variables_function(const std::vector<double> &x, int instance_id) {
+std::vector<double> new_transform_variables_function(const std::vector<double> &x, int) {
   // The instance_id can be used as seed for possible randomizing process.
   auto tx = x;
   for (auto i : tx) {
@@ -18,7 +18,7 @@ std::vector<double> new_transform_variables_function(const std::vector<double> &
   return tx;
 }
 
-double new_transform_objective_functions(double y, int instance_id) {
+double new_transform_objective_functions(double y, int) {
   // The instance_id can be used as seed for possible randomizing process.
   return y + 100;
 }
@@ -28,7 +28,7 @@ int main(){
 
   ioh::problem::wrap_function<double>(&new_problem,  // the new function
                                       "new_problem", // name of the new function
-                                      ioh::common::OptimizationType::Minimization, // optimization type
+                                      ioh::common::OptimizationType::MIN, // optimization type
                                       0,  // lowerbound  
                                       1,  // upperbound
                                       &new_transform_variables_function, // the variable transformation method. Optional argument when transformation is applied.

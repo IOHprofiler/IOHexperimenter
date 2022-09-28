@@ -1,6 +1,7 @@
 """Python interface of IOH package. Includes several ease-of-use routines not available in C++. 
 """
 
+from heapq import merge
 import os
 import math
 import warnings
@@ -9,6 +10,7 @@ import multiprocessing
 import typing
 import shutil
 import copy
+import json
  
 from .iohcpp import (
     problem,
@@ -17,8 +19,11 @@ from .iohcpp import (
     OptimizationType,
     RealSolution,
     IntegerSolution,
+    IntegerBounds,
+    RealBounds,
     IntegerConstraint,
     RealConstraint,
+    ConstraintEnforcement,
     RealState, 
     IntegerState,
     MetaData,
@@ -64,18 +69,13 @@ def get_problem(
             raise ValueError(
                 "For this function, the dimension needs to be a perfect square!"
             )
-
-    bbob_fns = (
-        getattr(problem, "BBOB").problems.values()
-        | getattr(problem, "BBOB").problems.keys()
-    )
     if (
         problem_type
         in (
             "BBOB",
             "Real",
         )
-        and fid in bbob_fns
+        and fid in range(1, 25)
     ):
         if not dimension >= 2:
             raise ValueError("For BBOB functions the minimal dimension is 2")
@@ -97,7 +97,7 @@ def wrap_problem(
     problem_type: str,
     dimension: int = 5,
     instance: int = 1,
-    optimization_type: OptimizationType = OptimizationType.Minimization,
+    optimization_type: OptimizationType = OptimizationType.MIN,
     lb: VariableType = None,
     ub: VariableType = None,
     transform_variables: typing.Callable[[ObjectiveType, int], ObjectiveType] = None,
@@ -105,6 +105,8 @@ def wrap_problem(
     calculate_objective: typing.Callable[
         [int, int], typing.Union[IntegerSolution, RealSolution]
     ] = None,
+    constraints: typing.List[typing.Union[IntegerConstraint, RealConstraint]] = None
+
 ) -> ProblemType:
     """Function to wrap a callable as an ioh function
 
@@ -137,6 +139,8 @@ def wrap_problem(
         A function to calculate the global optimum of the function. This function gets a dimension and instance id,
         and should return either a Solution objective(IntegerSolution or RealSolution) or a tuple giving the
         x and y values for the global optimum. Where x is the search space representation and y the target value.
+    constraints: list[IntegerConstraint | RealConstraint]
+        The constraints applied to the problem
     """
 
     if problem_type == "Integer":
@@ -157,6 +161,7 @@ def wrap_problem(
         transform_variables,
         transform_objectives,
         calculate_objective,
+        [] if constraints is None else constraints
     )
     return get_problem(name, instance, dimension, problem_type)
 
@@ -212,6 +217,8 @@ class Experiment:
         merge_output: bool = True,
         zip_output: bool = True,
         remove_data: bool = False,
+        enforce_bounds: bool = False,
+        old_logger: bool = True
     ):
         """
         Parameters
@@ -250,7 +257,7 @@ class Experiment:
                 A name for the algorithm. This is used in the log files.
             algorithm_info: str = ""
                 Optional information, additional information used in log files
-            optimization_type: OptimizationType = OptimizationType.Minimization
+            optimization_type: OptimizationType = OptimizationType.MIN
                 The type of optimization
             store_positions: bool = False
                 Whether to store the x-positions in the data-files
@@ -306,6 +313,8 @@ class Experiment:
         self.merge_output = merge_output
         self.zip_output = zip_output
         self.remove_data = remove_data
+        self.enforce_bounds = enforce_bounds
+        self.old_logger = old_logger
 
         if os.path.isdir(self.logger_root) and self.merge_output:
             warnings.warn(
@@ -340,12 +349,17 @@ class Experiment:
         if self.logged:
             logger_params = copy.deepcopy(self.logger_params)
             logger_params["folder_name"] += f"-tmp-{ii}"
-            l = logger.Analyzer(**logger_params)
+            
+            logger_cls = logger.old.Analyzer if self.old_logger else logger.Analyzer
+            l = logger_cls(**logger_params) 
             l.set_experiment_attributes(self.experiment_attributes)
             l.add_run_attributes(algorithm, self.run_attributes)
             l.watch(algorithm, self.logged_attributes)
             l.reset()
             p.attach_logger(l)
+
+        if self.enforce_bounds:
+            p.enforce_bounds()
 
         self.apply(algorithm, p)
 
@@ -395,6 +409,38 @@ class Experiment:
             The target folder, i.e. the folder with the final output
         """
 
+
+        def merge_info_file(target, source):                        
+            ext = ".info" if self.old_logger else ".json"
+
+            if not (target.endswith(ext) and source.endswith(ext)):
+                raise RuntimeError("Merging output with incompatible folders")
+
+            has_file = os.path.isfile(target)
+            if not has_file:
+                return os.rename(source, target)
+            with open(source) as info_in:
+                if self.old_logger:
+                    with open(target, "a+") as info_out:        
+                        info_out.write("\n")
+                        for line in info_in:
+                            info_out.write(line)
+                else:
+                    with open(target, "r+") as info_out:
+                        data_out = json.loads(info_out.read())
+                        data_in = json.loads(info_in.read())
+                        for scen in data_in['scenarios']:
+                            try:
+                                scen_out, *_ = [s for s in data_out['scenarios'] if s['dimension'] == scen['dimension']]
+                                scen_out['runs'].extend(scen['runs'])
+                            except:
+                                data_out['scenarios'].append(scen)
+                        info_out.seek(0)
+                        info_out.write(json.dumps(data_out, indent=4))
+                        info_out.truncate()
+            os.remove(source)
+                    
+
         def file_to_dir(path):
             root, dirname = os.path.split(os.path.splitext(path)[0])
             return os.path.join(root, dirname.replace("IOHprofiler", "data"))
@@ -415,22 +461,12 @@ class Experiment:
                     source = os.path.join(folder, info_file)
                     if not os.path.isfile(source):
                         continue
-
-                    if not info_file.endswith(".info"):
-                        raise RuntimeError("Merging output with incompatible folders")
-
+                    
                     target = os.path.join(target_folder, info_file)
-                    target_exists = os.path.isfile(target)
+                    merge_info_file(target, source)
 
                     source_dat_folder = file_to_dir(source)
                     target_dat_folder = file_to_dir(target)
-
-                    with open(source) as info_in, open(target, "a+") as info_out:
-                        if target_exists:
-                            info_out.write("\n")
-                        for line in info_in:
-                            info_out.write(line)
-                    os.remove(source)
 
                     os.makedirs(target_dat_folder, exist_ok=True)
                     for dat_file in os.listdir(source_dat_folder):
@@ -496,3 +532,4 @@ __all__ = (
     "get_problem_id",
     "Experiment"
 )
+

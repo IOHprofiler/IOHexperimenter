@@ -2,6 +2,8 @@
 ##
 ## This will build a Google Test test runner for all contained tests.
 ##
+
+enable_testing()
 add_subdirectory(${EXTERNAL_DIR}/googletest EXCLUDE_FROM_ALL build)
 include(GoogleTest)
 
