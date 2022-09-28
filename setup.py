@@ -158,5 +158,7 @@ setup(
         "ninja",
         "xmltodict",
     ],
+    license="BSD",
+    url="https://iohprofiler.github.io/IOHexperimenter",
     install_requires=["numpy"]
 )

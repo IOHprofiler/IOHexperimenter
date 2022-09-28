@@ -51,7 +51,7 @@ class TestLogger(unittest.TestCase):
         during = ioh.logger.trigger.During({(10, 25), (30, 40)})
         self.assertEqual(during.time_ranges, {(10, 25), (30, 40)})
 
-        l = ioh.LogInfo(22, 1, 1, 1, 1, 1, 1, [0, 1],[0, 1],[0, 1], ioh.RealSolution([0, 1], 0))
+        l = ioh.LogInfo(22, 1, 1, 1, 1, 1, 1, [0, 1],[0, 1],[0, 1], ioh.RealSolution([0, 1], 0), True)
         problem = ioh.get_problem(1, 1, 2)
         for t in (always, on_improvement, at, each, during):
             self.assertTrue(t(l, problem.meta_data))

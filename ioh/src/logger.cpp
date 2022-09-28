@@ -224,10 +224,8 @@ void define_triggers(py::module &m)
     py::class_<trigger::OnImprovement, logger::Trigger, std::shared_ptr<trigger::OnImprovement>>(
         t, "OnImprovement", "Trigger that evaluates to true when improvement of the objective function is observed")
         .def(py::init<>())
-        .def(py::pickle([](const trigger::OnImprovement &t) { return py::make_tuple(t.best(), t.type()); },
-                        [](py::tuple t) {
-                            return trigger::OnImprovement{t[0].cast<double>(), t[1].cast<common::OptimizationType>()};
-                        }));
+        .def(py::pickle([](const trigger::OnImprovement &t) { return py::make_tuple(); },
+                        [](py::tuple) { return trigger::OnImprovement{}; }));
 
     ;
     t.attr("ON_IMPROVEMENT") = py::cast(trigger::on_improvement);
