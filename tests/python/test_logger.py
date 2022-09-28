@@ -3,6 +3,8 @@ import ioh
 import os
 import shutil
 import pickle
+import json
+
 
 class Container:
     def __init__(self):
@@ -35,8 +37,22 @@ class TestLogger(unittest.TestCase):
                 c.xy = i*10
                 pr([i] * 5)
             pr.reset()
-
+        l.close()
+        
         self.assertTrue(os.path.isdir("ioh_data"))
+        meta = os.path.join("ioh_data", "IOHprofiler_f1_Sphere.json")
+        data = os.path.join("ioh_data", "data_f1_Sphere", "IOHprofiler_f1_DIM5.dat")
+        self.assertTrue(os.path.isfile(meta))
+        self.assertTrue(os.path.isfile(data))
+
+        with open(meta) as f:
+            meta_data = json.loads(f.read())
+            for i, run in enumerate(meta_data["scenarios"][0]["runs"]):
+                self.assertEqual(run['xv'], i)
+        with open(data) as f:
+            next(f)
+            for i in range(5):
+                self.assertEqual(i*10, float(next(f).split()[-1]))
 
     def test_triggers(self):
         always = ioh.logger.trigger.Always()

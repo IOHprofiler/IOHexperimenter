@@ -23,36 +23,15 @@ TEST_F(BaseTest, trigger_on_improvement)
 
     problem::MetaData pb(0,0,"fake",2); // MIN
     logger::Info i;
-    i.transformed_y = 9999;
+    i.has_improved = true;
 
     trigger::OnImprovement t;
 
-    // First call.
+    // Trigger only based on cached value of has_improved
     EXPECT_TRUE(t(i,pb)); // Better than infinity.
 
-    i.transformed_y = 100;
-    EXPECT_TRUE(t(i,pb)); // Improvement.
+    i.has_improved = false;
     EXPECT_FALSE(t(i,pb)); // Strict inequality.
-
-    // Improvement.
-    i.transformed_y = 10;
-    EXPECT_TRUE(t(i,pb)); // Improvement.
-    EXPECT_FALSE(t(i,pb)); // Strict inequality.
-
-    // Unsuspected increasing.
-    i.transformed_y = 99;
-    EXPECT_FALSE(t(i,pb)); // Not improving.
-
-    // Internal state stability.
-    i.transformed_y = 11;
-    EXPECT_FALSE(t(i,pb)); // Still worst than internal test.
-
-    i.transformed_y = 9;
-    EXPECT_TRUE(t(i,pb)); // Better than internal state.
-
-    t.reset();
-    i.transformed_y = 99;
-    EXPECT_TRUE(t(i,pb)); // Better than infinity.
 }
 
 TEST_F(BaseTest, trigger_at)

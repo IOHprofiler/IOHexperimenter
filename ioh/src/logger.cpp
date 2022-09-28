@@ -72,48 +72,18 @@ template <typename WatcherType>
 class PyWatcher : public WatcherType
 {
 protected:
-    bool alive = true;
-    std::vector<PyProperty *> property_ptrs_;
+    std::vector<std::unique_ptr<PyProperty>> property_ptrs_;
 
 public:
-    template <typename... Args>
-    PyWatcher(Args &&...args) : WatcherType(std::forward<Args>(args)...)
-    {
-        auto x = py::module::import("atexit").attr("register")(
-            py::cpp_function{[self = this]() -> void {
-            // type-pun alive bool in order to check if is still a boolean 1, if so, delete.
-            // in some cases this might cause a segfault, only happens in a very small prob. (1/MAX_INT)
-            // std::cout << "killing logger...";
-            int alive_int = (int)(*(char *)(&self->alive));
-            if (alive_int == 1)
-            {
-                self->close();
-            }
-            // std::cout << "done\n";
-        }});
-    }
-
-    void close() override
-    {
-        if (alive)
-        {
-            WatcherType::close();
-            alive = false;
-            for (auto& ptr : property_ptrs_)
-                delete ptr;
-            property_ptrs_.clear();
-        }
-    }
-
-    virtual ~PyWatcher() { close(); }
+    using WatcherType::WatcherType;
 
     void watch(logger::Property &property) override { PYBIND11_OVERRIDE(void, WatcherType, watch, property); }
 
     void watch(const py::object &container, const std::string &attribute)
     {
-        auto *p = new PyProperty(container, attribute);
+        auto p = std::make_unique<PyProperty>(container, attribute); 
         watch(*p);
-        property_ptrs_.push_back(p);
+        property_ptrs_.push_back(std::move(p));
     }
 
     void watch(const py::object &container, const std::vector<std::string> &attributes)
@@ -139,8 +109,8 @@ public:
 template<typename A>
 class PyAnalyzer : public PyWatcher<A>
 {
-    std::vector<double *> double_ptrs_;
-    std::vector<PyProperty *> prop_ptrs_;
+    std::vector<std::unique_ptr<double>> double_ptrs_;
+    std::vector<std::unique_ptr<PyProperty>> prop_ptrs_;
 
 public:
     using AnalyzerType = PyWatcher<A>;
@@ -148,20 +118,14 @@ public:
 
     virtual void close() override
     {
-        if (this->alive)
-        {
-            clear_ptrs();
-            AnalyzerType::close();
-        }
+        AnalyzerType::close();
     }
-
-    virtual ~PyAnalyzer() { close(); }
 
     void add_run_attribute_python(const py::object &container, const std::string &name)
     {
-        auto *p = new PyProperty(container, name);
+        auto p = std::make_unique<PyProperty>(container, name);
         add_run_attribute_python(name, (*p)(logger::Info{}).value());
-        prop_ptrs_.push_back(p);
+        prop_ptrs_.push_back(std::move(p));
     }
 
     void add_run_attributes_python(const py::object &container, const std::vector<std::string> &attributes)
@@ -172,34 +136,23 @@ public:
 
     void add_run_attribute_python(const std::string &name, double value)
     {
-        double *ptr = new double(value);
-        AnalyzerType::add_run_attribute(name, ptr);
-        double_ptrs_.push_back(ptr);
+        auto ptr = std::make_unique<double>(value);
+        AnalyzerType::add_run_attribute(name, ptr.get());
+        double_ptrs_.push_back(std::move(ptr));
     }
 
     void set_run_attribute_python(const std::string &name, double value) { *(this->attributes_.run.at(name)) = value; }
 
     void set_run_attributes_python(const std::map<std::string, double> &attributes)
     {
-        clear_ptrs();
+        double_ptrs_.clear();
         for (auto &[key, value] : attributes)
             add_run_attribute_python(key, value);
     }
 
-    void clear_ptrs()
-    {
-        for (auto ptr : double_ptrs_)
-            delete ptr;
-
-        for (auto ptr : prop_ptrs_)
-            delete ptr;
-        double_ptrs_.clear();
-        prop_ptrs_.clear();
-    }
-
     void attach_problem(const problem::MetaData &problem) override
     {
-        for (auto ptr : prop_ptrs_)
+        for (auto& ptr : prop_ptrs_)
             set_run_attribute_python(ptr->name(), (*ptr)(logger::Info{}).value());
         AnalyzerType::attach_problem(problem);
     }
@@ -224,7 +177,7 @@ void define_triggers(py::module &m)
     py::class_<trigger::OnImprovement, logger::Trigger, std::shared_ptr<trigger::OnImprovement>>(
         t, "OnImprovement", "Trigger that evaluates to true when improvement of the objective function is observed")
         .def(py::init<>())
-        .def(py::pickle([](const trigger::OnImprovement &t) { return py::make_tuple(); },
+        .def(py::pickle([](const trigger::OnImprovement &) { return py::make_tuple(); },
                         [](py::tuple) { return trigger::OnImprovement{}; }));
 
     ;
