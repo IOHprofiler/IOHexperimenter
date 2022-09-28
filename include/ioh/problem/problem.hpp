@@ -195,6 +195,8 @@ namespace ioh
                 }
                 
                 log_info_.x = std::vector<double>(state_.current.x.begin(), state_.current.x.end());
+                
+                log_info_.has_improved = state_.has_improved;        
             }
 
             //! Accessor for current log info

@@ -457,7 +457,7 @@ namespace ioh
                 // Insert references after members are instantiated.
                 triggers_.insert(std::ref(_on_improvement));
                 assert(triggers_.size() > 0);
-                properties_.insert_or_assign(_transformed_y_best.name(), _transformed_y_best);
+                properties_.insert_or_assign(_y_best.name(), _y_best);
                 properties_.insert_or_assign(_evaluations.name(), _evaluations);
                 assert(consistent_properties());
             }
@@ -481,7 +481,7 @@ namespace ioh
                 // Insert references after members are instantiated.
                 triggers_.insert(std::ref(_on_improvement));
                 assert(triggers_.size() > 0);
-                properties_.insert_or_assign(_transformed_y_best.name(), _transformed_y_best);
+                properties_.insert_or_assign(_y_best.name(), _y_best);
                 properties_.insert_or_assign(_evaluations.name(), _evaluations);
                 assert(consistent_properties());
             }
@@ -529,19 +529,21 @@ namespace ioh
                 }
 
                 // Access the properties that were instantiated in the constructor.
-                const std::optional<double> transformed_y_best = properties_.at("transformed_y_best").get()(log_info);
-                assert(transformed_y_best); // Assert that the optional holds a value, which should be the case here.
-                const std::optional<double> evaluations = properties_.at("evaluations").get()(log_info);
+                const std::optional<double> y_best      = properties_.at(_y_best.name()).get()(log_info);
+                const std::optional<double> evaluations = properties_.at(_evaluations.name()).get()(log_info);
+                
+                // Assert that the optional's hold values, which should be the case here.
+                assert(y_best); 
                 assert(evaluations);
 
                 double err;
                 if (_current.has_opt)
                 {
-                    err = std::abs(_current.opt - transformed_y_best.value());
+                    err = std::abs(_current.opt - y_best.value());
                 }
                 else
                 {
-                    err = transformed_y_best.value();
+                    err = y_best.value();
                 }
 
                 // If this target is worst than the domain.
@@ -784,7 +786,7 @@ namespace ioh
             watch::Evaluations _evaluations;
 
             //! Property watching the objective function value.
-            watch::TransformedYBest _transformed_y_best;
+            watch::CurrentBestY _y_best;
 
             /** @} */
         };

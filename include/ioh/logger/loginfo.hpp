@@ -57,6 +57,9 @@ namespace ioh {
             
             //! Optimum to the current problem instance, with the corresponding transformed objective function value.
             problem::Solution<double> optimum; 
+
+            //! Single objective check whether state-update has caused an improvement
+            bool has_improved;
         };
 #ifdef _MSC_VER  
 #pragma warning(default : 26495)

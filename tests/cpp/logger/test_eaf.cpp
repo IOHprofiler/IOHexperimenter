@@ -16,7 +16,6 @@ TEST_F(BaseTest, eaf_single_level)
     const int max_target   = 3;//10; // known optimum
 
     ioh::problem::wmodel::WModelOneMax pb(instance, n_variables, w_dummy, w_epistasis, w_neutrality, w_ruggedness);
-
     logger::EAF eaf;
     pb.attach_logger(eaf);
 
@@ -27,7 +26,7 @@ TEST_F(BaseTest, eaf_single_level)
 
     auto levels = logger::eaf::levels(eaf);
     EXPECT_EQ(levels.size(),1);
-
+    
     double vol_min = logger::eaf::stat::volume(eaf);
     EXPECT_GT(vol_min, 0);
 

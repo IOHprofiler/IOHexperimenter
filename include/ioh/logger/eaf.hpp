@@ -213,10 +213,10 @@ namespace logger {
         {
 #ifndef NDEBUG
             assert(_data.count(cur.suite) > 0);
-            assert(   _data.at(cur.suite).count(cur.pb) > 0);
-            assert(   _data.at(cur.suite)   .at(cur.pb).count(cur.dim) > 0);
-            assert(   _data.at(cur.suite)   .at(cur.pb)   .at(cur.dim).count(cur.ins) > 0);
-            assert(   _data.at(cur.suite)   .at(cur.pb)   .at(cur.dim)   .at(cur.ins).count(cur.run) > 0);
+            assert(_data.at(cur.suite).count(cur.pb) > 0);
+            assert(_data.at(cur.suite).at(cur.pb).count(cur.dim) > 0);
+            assert(_data.at(cur.suite).at(cur.pb).at(cur.dim).count(cur.ins) > 0);
+            assert(_data.at(cur.suite).at(cur.pb).at(cur.dim).at(cur.ins).count(cur.run) > 0);
 #endif
             return _data.at(cur.suite).at(cur.pb).at(cur.dim).at(cur.ins).at(cur.run);
 
@@ -237,8 +237,8 @@ namespace logger {
             // /!\ needed by the algorithm, do not change unless you know what you're doing.
             triggers_.insert(std::ref(_on_improvement));
             // /!\ needed by the related eaf::stat::* classes.
-            properties_.insert_or_assign(_transformed_y_best.name(), _transformed_y_best);
-            properties_.insert_or_assign(       _evaluations.name(), _evaluations);
+            properties_.insert_or_assign(_y_best.name(), _y_best);
+            properties_.insert_or_assign(_evaluations.name(), _evaluations);
         }
 
         /** Set the current suite name.
@@ -286,22 +286,23 @@ namespace logger {
         {
             IOH_DBG(debug, "EAF called after improvement")
             // Access the properties that were instantiated in the constructor.
-            const std::optional<double> transformed_y_best = properties_.at("transformed_y_best").get()(log_info);
-            const std::optional<double> evaluations        = properties_.at("evaluations").get()(log_info);
+            const std::optional<double> y_best      = properties_.at(_y_best.name()).get()(log_info);
+            const std::optional<double> evaluations = properties_.at(_evaluations.name()).get()(log_info);
 #ifndef NDEBUG
-            assert(transformed_y_best); // Assert that the optional holds a value, which should be the case here.
+            assert(y_best); // Assert that the optional holds a value, which should be the case here.
             assert(evaluations);
 
             // If trigger::on_improvement does its job, we always have an improvement here.
-            IOH_DBG(debug, "transformed_y_best=" << transformed_y_best.value()
+            IOH_DBG(debug, "y_best=" << y_best.value()
                 <<  (_current_problem_type == common::OptimizationType::MIN ? " <" : " >")
                 << " current_best=" << _current_best << " ?");
-            assert(_current_problem_type(transformed_y_best.value(),_current_best));
-            _current_best = transformed_y_best.value();
+            
+            assert(_current_problem_type(y_best.value(), _current_best));
+            _current_best = y_best.value();
 #endif
             eaf::Front& f = current_front();
             f.push_back( eaf::RunPoint(
-                    transformed_y_best.value(),
+                    y_best.value(),
                     static_cast<size_t>(evaluations.value()),
                     _current.run
                 ));
@@ -359,7 +360,7 @@ namespace logger {
         watch::Evaluations _evaluations;
 
         //! Property watching the objective function value.
-        watch::TransformedYBest _transformed_y_best;
+        watch::CurrentBestY _y_best;
 
 
     }; // class EAF

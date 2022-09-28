@@ -304,9 +304,6 @@ namespace ioh::problem
         */
         void fit(const int s)
         {
-            if ((ub.size() != static_cast<size_t>(s)) || (ub.size() != lb.size()))
-                IOH_DBG(warning, "Bound dimension is wrong");
-            
             ub = std::vector<T>(s, ub.at(0));
             lb = std::vector<T>(s, lb.at(0));
         }

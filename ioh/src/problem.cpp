@@ -80,26 +80,27 @@ void define_state(py::module &m, const std::string &name)
         .def_readonly("current", &Class::current, "The last-evaluated solution.")
         .def_readonly("y_unconstrained", &Class::y_unconstrained, "The current unconstrained value.")
         .def_readonly("y_unconstrained_best", &Class::y_unconstrained_best, "The current best unconstrained value.")
+        .def_readonly("has_improved", &Class::has_improved, "Whether the last call to problem has caused global improvement.")
         .def("__repr__", &Class::repr);
 }
 
 
 template <typename T>
-struct PyConstraint: Constraint<T> {
+struct PyConstraint : Constraint<T>
+{
     using Constraint<T>::Constraint;
 
-    bool compute_violation(const std::vector<T>& x) override {
+    bool compute_violation(const std::vector<T> &x) override
+    {
         PYBIND11_OVERRIDE_PURE(bool, Constraint<T>, compute_violation, py::array(x.size(), x.data()));
     }
 
-    [[nodiscard]] std::string repr() const override
-    {
-        return "<AbstractConstraint>";
-    }
+    [[nodiscard]] std::string repr() const override { return "<AbstractConstraint>"; }
 };
 
 template <typename T>
-void define_constraint(py::module &m, const std::string &name){
+void define_constraint(py::module &m, const std::string &name)
+{
     using Class = Constraint<T>;
 
     py::class_<Class, PyConstraint<T>, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
@@ -115,7 +116,8 @@ void define_constraint(py::module &m, const std::string &name){
 }
 
 template <typename T>
-void define_constraintset(py::module &m, const std::string &name){
+void define_constraintset(py::module &m, const std::string &name)
+{
     using Class = ConstraintSet<T>;
 
     py::class_<Class, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
@@ -131,30 +133,31 @@ void define_constraintset(py::module &m, const std::string &name){
 }
 
 template <typename T>
-void define_functionalconstraint(py::module &m, const std::string &name){ 
+void define_functionalconstraint(py::module &m, const std::string &name)
+{
     using Parent = Constraint<T>;
     using Class = FunctionalConstraint<T>;
 
     py::class_<Class, Parent, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
         .def(
-            // py::init<ConstraintFunction<T>, double, constraint::Enforced, std::string>(), 
-            py::init([](py::handle f, const double w, const double ex, const constraint::Enforced e, const std::string& n){
-                register_python_fn(f);
-                auto fn = [f](const std::vector<T> &x) { return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr()); };
-                return Class(fn, w, ex, e, n);
-            }),
-            py::arg("fn"), 
-            py::arg("weight") = 1.0, 
-            py::arg("exponent") = 1.0, 
-            py::arg("enforced") = constraint::Enforced::SOFT,
-            py::arg("name") = ""
-        )
+            // py::init<ConstraintFunction<T>, double, constraint::Enforced, std::string>(),
+            py::init(
+                [](py::handle f, const double w, const double ex, const constraint::Enforced e, const std::string &n) {
+                    register_python_fn(f);
+                    auto fn = [f](const std::vector<T> &x) {
+                        return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr());
+                    };
+                    return Class(fn, w, ex, e, n);
+                }),
+            py::arg("fn"), py::arg("weight") = 1.0, py::arg("exponent") = 1.0,
+            py::arg("enforced") = constraint::Enforced::SOFT, py::arg("name") = "")
         .def("__repr__", &Class::repr);
 }
 
 
-template<typename T>
-void define_bounds(py::module &m, const std::string &name){
+template <typename T>
+void define_bounds(py::module &m, const std::string &name)
+{
 
     using Parent = Constraint<T>;
     using Class = Bounds<T>;
@@ -163,7 +166,8 @@ void define_bounds(py::module &m, const std::string &name){
     options.disable_function_signatures();
 
     py::class_<Class, Parent, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<std::vector<T>, std::vector<T>, constraint::Enforced>(), py::arg("lb"), py::arg("ub"), py::arg("enforced"),
+        .def(py::init<std::vector<T>, std::vector<T>, constraint::Enforced>(), py::arg("lb"), py::arg("ub"),
+             py::arg("enforced"),
              R"pbdoc(
                 Create box constraints. 
 
@@ -177,7 +181,8 @@ void define_bounds(py::module &m, const std::string &name){
                         whether the constraint should be enforced
                     
             )pbdoc")
-        .def(py::init<int, T, T, constraint::Enforced>(), py::arg("size"), py::arg("lb"), py::arg("ub"), py::arg("enforced"),
+        .def(py::init<int, T, T, constraint::Enforced>(), py::arg("size"), py::arg("lb"), py::arg("ub"),
+             py::arg("enforced"),
              R"pbdoc(
                 Create box constraints. 
 
@@ -225,7 +230,6 @@ void define_constraint_types(py::module &m, const std::string &name)
     define_constraintset<T>(m, fmt::format("{}ConstraintSet", name));
     define_functionalconstraint<T>(m, fmt::format("{}Constraint", name));
     define_bounds<T>(m, fmt::format("{}Bounds", name));
-    
 }
 
 #if defined(__GNUC__)
@@ -255,8 +259,7 @@ public:
     explicit PyProblem(const std::string &name, const int n_variables = 5, const int instance = 1,
                        const bool is_minimization = true, Bounds<T> bounds = Bounds<T>()) :
         P(MetaData(instance, name, n_variables,
-                   is_minimization ? ioh::common::OptimizationType::MIN
-                                   : ioh::common::OptimizationType::MAX),
+                   is_minimization ? ioh::common::OptimizationType::MIN : ioh::common::OptimizationType::MAX),
           bounds)
     {
 
@@ -368,9 +371,8 @@ void define_base_class(py::module &m, const std::string &name)
         .def_property_readonly("constraints", &ProblemType::constraints, "The constraints of the problem.")
         .def("add_constraint", &ProblemType::add_constraint, "add a constraint")
         .def("remove_constraint", &ProblemType::remove_constraint, "remove a constraint")
-        .def("enforce_bounds", &ProblemType::enforce_bounds, py::arg("weight") = 1., 
-                                py::arg("how") = constraint::Enforced::SOFT,
-                                py::arg("exponent") = 1.)
+        .def("enforce_bounds", &ProblemType::enforce_bounds, py::arg("weight") = 1.,
+             py::arg("how") = constraint::Enforced::SOFT, py::arg("exponent") = 1.)
         .def("__repr__", [=](const ProblemType &p) {
             using namespace ioh::common;
             const auto meta_data = p.meta_data();
@@ -391,9 +393,7 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
         function_name.c_str(),
         [](py::handle f, const std::string &name, ioh::common::OptimizationType t, std::optional<double> lb,
            std::optional<double> ub, std::optional<py::handle> tx, std::optional<py::handle> ty,
-           std::optional<py::handle> co,
-           Constraints<T> cs          
-           ) {
+           std::optional<py::handle> co, Constraints<T> cs) {
             register_python_fn(f);
             auto of = [f](const std::vector<T> &x) { return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr()); };
 
@@ -443,8 +443,7 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
         },
         py::arg("f"), py::arg("name"), py::arg("optimization_type") = ioh::common::OptimizationType::MIN,
         py::arg("lb") = std::nullopt, py::arg("ub") = std::nullopt, py::arg("transform_variables") = std::nullopt,
-        py::arg("transform_objectives") = std::nullopt, 
-        py::arg("calculate_objective") = std::nullopt,
+        py::arg("transform_objectives") = std::nullopt, py::arg("calculate_objective") = std::nullopt,
         py::arg("constraints") = Constraints<T>()
 
     );
@@ -462,7 +461,8 @@ void define_helper_classes(py::module &m)
         .value("MIN", ioh::common::OptimizationType::MIN)
         .export_values();
 
-    py::enum_<ioh::problem::constraint::Enforced>(m, "ConstraintEnforcement", "Enum defining constraint handling strategies")
+    py::enum_<ioh::problem::constraint::Enforced>(m, "ConstraintEnforcement",
+                                                  "Enum defining constraint handling strategies")
         .value("NOT", ioh::problem::constraint::Enforced::NOT)
         .value("HIDDEN", ioh::problem::constraint::Enforced::HIDDEN)
         .value("SOFT", ioh::problem::constraint::Enforced::SOFT)
@@ -508,18 +508,11 @@ void define_helper_classes(py::module &m)
         .def("__repr__", &MetaData::repr);
 
     py::class_<ioh::logger::Info>(m, "LogInfo")
-        .def(py::init<size_t, double, double, double, double, double, double, std::vector<double>, std::vector<double>, std::vector<double>, Solution<double>>(), 
-            py::arg("evaluations"),
-            py::arg("raw_y"), 
-            py::arg("raw_y_best"), 
-            py::arg("transformed_y"), 
-            py::arg("transformed_y_best"), 
-            py::arg("y"),
-            py::arg("y_best"),
-            py::arg("x"),
-            py::arg("violations"),
-            py::arg("penalties"),
-            py::arg("optimum"),
+        .def(py::init<size_t, double, double, double, double, double, double, std::vector<double>, std::vector<double>,
+                      std::vector<double>, Solution<double>, bool>(),
+             py::arg("evaluations"), py::arg("raw_y"), py::arg("raw_y_best"), py::arg("transformed_y"),
+             py::arg("transformed_y_best"), py::arg("y"), py::arg("y_best"), py::arg("x"), py::arg("violations"),
+             py::arg("penalties"), py::arg("optimum"), py::arg("has_improved") = false,
              R"pbdoc(
                 LogInfo struct. Gets passed to the call method of a logger when it is invoked. 
 
@@ -546,7 +539,10 @@ void define_helper_classes(py::module &m)
                 penalties: np.npdarray | list
                     The current solution constraint penalties
                 optimum: Solution
-                    The optimum solution for the problem                   
+                    The optimum solution for the problem
+                has_improved: bool = True
+                    Whether the evaluation has caused an improvement in the objective value
+
             )pbdoc")
         .def_readonly("evaluations", &ioh::logger::Info::evaluations,
                       "The number of function evaluations performed on the current problem so far")
@@ -563,7 +559,9 @@ void define_helper_classes(py::module &m)
         .def_readonly("x", &ioh::logger::Info::x)
         .def_readonly("violations", &ioh::logger::Info::violations)
         .def_readonly("penalties", &ioh::logger::Info::penalties)
-        .def_readonly("objective", &ioh::logger::Info::optimum, "The best possible fitness value");
+        .def_readonly("objective", &ioh::logger::Info::optimum, "The best possible fitness value")
+        .def_readonly("has_improved", &ioh::logger::Info::has_improved, "Whether the last call to problem has caused global improvement.")
+        ;
 }
 
 void define_pbo_problems(py::module &m)
@@ -964,7 +962,7 @@ void define_submodular_problems(py::module &m)
 
     py::class_<pwt::PWTConstraint, Constraint<int>, std::shared_ptr<pwt::PWTConstraint>>(m, "PWTConstraint")
         .def("__repr__", &pwt::PWTConstraint::repr);
-    
+
 
     py::class_<GraphProblem, Integer, std::shared_ptr<GraphProblem>>(m, "GraphProblem", "Graph type problem")
         .def_static(
@@ -1032,13 +1030,11 @@ void define_problem(py::module &m)
     define_wmodels(m);
     define_submodular_problems(m);
 
-    py::module_::import("atexit").attr("register")(
-        py::cpp_function([]() {
-            // std::cout << "exiting gracefully...";
-            for (const auto fn : WRAPPED_FUNCTIONS)
-                if (fn)
-                    fn.dec_ref();
-            // std::cout << " done\n";
-        })
-    );
+    py::module_::import("atexit").attr("register")(py::cpp_function([]() {
+        // std::cout << "exiting gracefully...";
+        for (const auto fn : WRAPPED_FUNCTIONS)
+            if (fn)
+                fn.dec_ref();
+        // std::cout << " done\n";
+    }));
 }

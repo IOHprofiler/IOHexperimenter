@@ -147,11 +147,14 @@ namespace ioh
             //! Current x-raw, y-transformed w. constraints applied
             Solution<T> current{};
 
-            // Current y transformed w.o. constraints applied
+            //! Current y transformed w.o. constraints applied
             double y_unconstrained;
 
-            // Current y transformed w.o. constraints applied
+            //! Current y transformed w.o. constraints applied
             double y_unconstrained_best;
+
+            //! Tracks whether the last update has caused an improvement
+            bool has_improved;
 
             State() = default;
 
@@ -170,13 +173,15 @@ namespace ioh
                 current_best_internal = initial_solution;
                 y_unconstrained = y_unconstrained_best = initial_solution.y;
                 optimum_found = false;
+                has_improved = false;
             }
 
             //! Update the state
             void update(const MetaData &meta_data, const Solution<T> &objective)
             {
                 ++evaluations;
-                if (meta_data.optimization_type(current.y, current_best.y))
+                has_improved = meta_data.optimization_type(current.y, current_best.y);
+                if (has_improved)
                 {
                     y_unconstrained_best = y_unconstrained;
                     current_best_internal = current_internal;

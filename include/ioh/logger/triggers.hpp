@@ -263,75 +263,12 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        class OnImprovement : public logger::Trigger
+        struct OnImprovement : logger::Trigger
         {
-        protected:
-            //! Local memory of the best value.
-            double _best;
-            
-            //! Current problem type.
-            common::FOptimizationType _type;
-
-            //! State management flag.
-            // Avoids being dependent on a problem at construction,
-            // to the expense of a test at each call.
-            bool _has_type;
-
-        public:
-            //! Constructor.
-            OnImprovement() : _has_type(false) { reset(); }
-
-            /**
-             * @brief Construct a new On Improvement object
-             * 
-             * @param best Local memory of the best value.
-             * @param type Current problem type.
-             */
-            OnImprovement(double best, common::OptimizationType type) : _best(best), _type{type}, _has_type(true) {
-
-            }
-
-            //! Accessor for _best
-            double best() const { return _best; }
-
-            //! Accessor for _type
-            common::OptimizationType type() const { return _type.type(); }
-
-            //! Main call interface.
-            bool operator()(const logger::Info &log_info, const problem::MetaData &pb_info) override
+            bool operator()(const logger::Info &log_info, const problem::MetaData&) override
             {
-                IOH_DBG(debug, "trigger OnImprovement called");
-                if (not _has_type)
-                {
-                    _type = pb_info.optimization_type; 
-                    _has_type = true;
-                    _best = _type.initial_value();
-                }
-                // We do not use logger::Info::transformed_y_best below,
-                // because all fields of logger::Info are updated before the trigger see them.
-                // That would force to test for equality to trigger on improvement,
-                // and we only want to trigger on strict inequality.
-                assert(_has_type);
-                if (_type(log_info.transformed_y, _best))
-                {
-                    IOH_DBG(debug, "triggered on improvement by " << log_info.transformed_y
-                        << (_type == common::OptimizationType::MIN ? " < " : " > ")
-                        << _best)
-                    _best = log_info.transformed_y;
-                    return true;
-                }
-                IOH_DBG(xdebug, "not triggered on improvement by " << log_info.transformed_y
-                    << (_type == common::OptimizationType::MIN ? " < " : " > ")
-                    << _best)
-                return false;
-            }
-
-            //! Forget previous state.
-            void reset() override
-            {
-                IOH_DBG(debug,"reset OnImprovement")
-                _has_type = false;
-                _best = std::numeric_limits<double>::signaling_NaN();
+                IOH_DBG(debug, "trigger OnImprovement called: " << log_info.has_improved);
+                return log_info.has_improved;
             }
         };
         /** Do log only if the transformed best objective function value found so far has strictly improved.
@@ -363,7 +300,7 @@ namespace ioh
             }
             //! Accessor for _interval
             size_t interval() const { return _interval; }
-            
+
             //! Accessor for _starting_at
             size_t starting_at() const { return _starting_at; }
 
@@ -416,7 +353,7 @@ namespace ioh
             At(const std::set<size_t> time_points) : _time_points(time_points) {}
 
             //! Return the time points when to log
-            std::set<size_t> time_points() const {return _time_points;}
+            std::set<size_t> time_points() const { return _time_points; }
 
             //! Main call interface.
             bool operator()(const logger::Info &log_info, const problem::MetaData &) override
@@ -433,8 +370,6 @@ namespace ioh
                     return false;
                 }
             }
-
-
         };
         /** Do log at the given number of evaluations.
          *
@@ -490,7 +425,7 @@ namespace ioh
 #endif
             }
             //! Accessor for _time_ranges
-            std::set<std::pair<size_t, size_t>> time_ranges() const {return _time_ranges;}
+            std::set<std::pair<size_t, size_t>> time_ranges() const { return _time_ranges; }
 
             //! Main call interface.
             bool operator()(const logger::Info &log_info, const problem::MetaData &) override

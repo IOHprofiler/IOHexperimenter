@@ -24,7 +24,7 @@ namespace ioh
             std::function<bool(double, double)> comparator_;
 
             //! Default (worst possible value)
-            const double initial_value_;
+            double initial_value_;
 
         public:
             /**
@@ -42,13 +42,13 @@ namespace ioh
             }
 
             //! Copy constructor
-            FOptimizationType(const FOptimizationType& o): FOptimizationType(o.type()) {}
+            FOptimizationType(const FOptimizationType &) = default;
 
             //! Accessor for type_
             OptimizationType type() const { return type_; }
 
             //! Accesor for initial_value_
-            double initial_value() const {return initial_value_;}
+            double initial_value() const { return initial_value_; }
 
 
             //! String representation
@@ -64,18 +64,16 @@ namespace ioh
             bool operator()(const double v1, const double v2) const { return comparator_(v1, v2); }
 
             //! Equality operator
-            bool operator==(const FOptimizationType& other) const { return type_ == other.type(); }
+            bool operator==(const FOptimizationType &other) const { return type_ == other.type(); }
 
             //! Equality operator
-            bool operator==(const OptimizationType& other) const { return type_ == other; }
+            bool operator==(const OptimizationType &other) const { return type_ == other; }
 
-            //! Copy
-            FOptimizationType operator=(const FOptimizationType&) const {
-                return {type_};
-            }
-           
-
+            // //! Copy
+            FOptimizationType& operator=(const FOptimizationType &) = default;
         };
 
     } // namespace common
 } // namespace ioh
+
+

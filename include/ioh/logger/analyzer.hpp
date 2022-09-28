@@ -429,7 +429,7 @@ namespace ioh::logger
                     IOH_DBG(debug, "Analyzer called");
                     
                     FlatFile::call(log_info);
-                    if (problem_.value().optimization_type(log_info.raw_y, best_point_.point.y))
+                    if (log_info.has_improved)
                         best_point_ = {log_info.evaluations, {log_info.x, log_info.raw_y}};
                     log_info_ = {};
                 }
