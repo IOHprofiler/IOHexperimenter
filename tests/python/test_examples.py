@@ -10,7 +10,7 @@ BASE_DIR = os.path.realpath(
 class MetaTest(type):
     def __new__(cls, name, bases, dct):
         instance = super().__new__(cls, name, bases, dct)
-        dirname = os.path.join(BASE_DIR, "example")
+        dirname = os.path.normpath(os.path.join(BASE_DIR, "example"))
         for f in filter(lambda x: x.endswith("ipynb"), os.listdir(dirname)):
             fname, *_ = os.path.basename(f).split(".")
             notebook =  os.path.join(dirname, f)

@@ -17,10 +17,6 @@ Each
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenclass:: ioh::trigger::Each
 
-OnImprovement
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenclass:: ioh::trigger::OnImprovement
-
 Set
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenclass:: ioh::trigger::Set
@@ -38,6 +34,10 @@ Always
 Any
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: ioh::trigger::Any
+
+OnImprovement
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenstruct:: ioh::trigger::OnImprovement
 
 Functions
 ----------
