@@ -132,7 +132,7 @@ namespace ioh
             explicit Problem(MetaData meta_data, Bounds<T> bounds, ConstraintSet<T> constraints, Solution<T> objective) :
                 meta_data_(std::move(meta_data)), bounds_(std::move(bounds)), constraintset_(std::move(constraints)),
                 state_(State<T>({std::vector<T>(meta_data_.n_variables, std::numeric_limits<T>::signaling_NaN()),
-                                 meta_data_.initial_objective_value})),
+                                 meta_data_.optimization_type.initial_value()})),
                 optimum_(std::move(objective))
             {
                 bounds_.fit(meta_data_.n_variables);
@@ -228,7 +228,7 @@ namespace ioh
                 if (constraintset_.hard_violation(x))
                 {
                     state_.current_internal.x = x; 
-                    state_.current_internal.y = constraintset_.penalize(meta_data_.initial_objective_value);
+                    state_.current_internal.y = constraintset_.penalize(meta_data_.optimization_type.initial_value());
                     state_.y_unconstrained = state_.current_internal.y;
                     state_.current.y = state_.current_internal.y;
                 }

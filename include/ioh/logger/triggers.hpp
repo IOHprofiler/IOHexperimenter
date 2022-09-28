@@ -303,18 +303,9 @@ namespace ioh
                 IOH_DBG(debug, "trigger OnImprovement called");
                 if (not _has_type)
                 {
-                    _type = pb_info.optimization_type;
+                    _type = pb_info.optimization_type; 
                     _has_type = true;
-                    if (_type.type() == common::OptimizationType::MIN)
-                    {
-                        IOH_DBG(debug, "reconfigure problem type (as minimization)")
-                        _best = std::numeric_limits<double>::infinity();
-                    }
-                    else
-                    {
-                        IOH_DBG(debug, "reconfigure problem type (as maximization)")
-                        _best = -std::numeric_limits<double>::infinity();
-                    }
+                    _best = _type.initial_value();
                 }
                 // We do not use logger::Info::transformed_y_best below,
                 // because all fields of logger::Info are updated before the trigger see them.

@@ -12,7 +12,7 @@ namespace ioh
 {
     namespace problem
     {
-        //! Solution object 
+        //! Solution object
         template <typename T>
         struct Solution : common::HasRepr
         {
@@ -34,7 +34,7 @@ namespace ioh
             Solution(const int n_variables, const common::OptimizationType optimization_type) :
                 x(std::vector<T>(n_variables, std::numeric_limits<T>::signaling_NaN())),
                 y{optimization_type == common::OptimizationType::MIN ? -std::numeric_limits<double>::infinity()
-                                                                              : std::numeric_limits<double>::infinity()}
+                                                                     : std::numeric_limits<double>::infinity()}
             {
             }
 
@@ -51,7 +51,6 @@ namespace ioh
             std::string repr() const override { return fmt::format("<Solution x: {} y: {}>", x, y); }
         };
 
-     
 
         //! struct of problem meta data
         struct MetaData : common::HasRepr
@@ -74,10 +73,6 @@ namespace ioh
             //! problem dimension
             int n_variables{};
 
-            //! Initial objective value
-            double initial_objective_value{};
-
-
             /**
              * @brief Construct a new Meta Data object
              *
@@ -91,10 +86,7 @@ namespace ioh
                      const common::OptimizationType optimization_type = common::OptimizationType::MIN) :
                 instance(instance),
                 problem_id(problem_id), name(std::move(name)), optimization_type{optimization_type},
-                n_variables(n_variables),
-                initial_objective_value(optimization_type == common::OptimizationType::MIN
-                                            ? std::numeric_limits<double>::infinity()
-                                            : -std::numeric_limits<double>::infinity())
+                n_variables(n_variables)
             {
             }
 
@@ -116,8 +108,7 @@ namespace ioh
             bool operator==(const MetaData &other) const
             {
                 return instance == other.instance and problem_id == other.problem_id and name == other.name and
-                    optimization_type == other.optimization_type and n_variables == other.n_variables and
-                    initial_objective_value == other.initial_objective_value;
+                    optimization_type == other.optimization_type and n_variables == other.n_variables;
             }
 
             //! comparison operator
@@ -159,7 +150,7 @@ namespace ioh
             // Current y transformed w.o. constraints applied
             double y_unconstrained;
 
-             // Current y transformed w.o. constraints applied
+            // Current y transformed w.o. constraints applied
             double y_unconstrained_best;
 
             State() = default;

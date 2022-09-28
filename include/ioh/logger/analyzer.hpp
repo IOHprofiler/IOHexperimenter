@@ -410,7 +410,7 @@ namespace ioh::logger
                     update_info_file(problem, fmt::format("{}/{}", dat_directory, dat_filename));
                     open_stream(dat_filename, path_ / dat_directory);
                     FlatFile::attach_problem(problem);
-                    best_point_ = {0, {std::vector<double>(problem.n_variables), problem.initial_objective_value}};
+                    best_point_ = {0, {std::vector<double>(problem.n_variables), problem.optimization_type.initial_value()}};
                     has_started_ = true;
                 }
 
