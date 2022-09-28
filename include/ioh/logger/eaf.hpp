@@ -792,7 +792,7 @@ namespace logger {
                             epsil_qual = -1;//std::numeric_limits<double>::epsilon();
                             epsil_qual = -_shift_qual;
                         }
-                        for(const auto& [level,front] : levels) {
+                        for(const auto& [_,front] : levels) {
                             eaf::Point candidate_nadir = extremum(front);
                             if(candidate_nadir.time > nadir_time) { nadir_time = candidate_nadir.time; }
                             if(_is_better(nadir_qual, candidate_nadir.qual)) { nadir_qual = candidate_nadir.qual; }

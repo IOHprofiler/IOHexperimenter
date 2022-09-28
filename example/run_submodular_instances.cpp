@@ -15,7 +15,7 @@ void example_evaluation()
     const auto &problem_factory = ProblemRegistry<submodular::GraphProblem>::instance();
 
     // We loop over all problems
-    for (auto &[id, name] : problem_factory.map())
+    for (auto &[id, _] : problem_factory.map())
     {
         // Creating a problem instance
         // This is slower the first time the problem is created, as the graph has to be loaded from file

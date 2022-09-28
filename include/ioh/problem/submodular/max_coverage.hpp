@@ -38,7 +38,7 @@ namespace ioh::problem
                             result += graph->vertex_weights[source];
                             is_covered[source] = 1;
                         }
-                        for (const auto &[target, weight] : graph->adjacency_list[source])
+                        for (const auto &[target, _] : graph->adjacency_list[source])
                         {
                             if (!is_covered[target])
                             {

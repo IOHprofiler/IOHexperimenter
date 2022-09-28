@@ -9,7 +9,7 @@ double new_problem(const std::vector<double> &x)
   return result;
 }
 
-std::vector<double> new_transform_variables_function(const std::vector<double> &x, int instance_id) {
+std::vector<double> new_transform_variables_function(const std::vector<double> &x, int) {
   // The instance_id can be used as seed for possible randomizing process.
   auto tx = x;
   for (auto i : tx) {
@@ -18,7 +18,7 @@ std::vector<double> new_transform_variables_function(const std::vector<double> &
   return tx;
 }
 
-double new_transform_objective_functions(double y, int instance_id) {
+double new_transform_objective_functions(double y, int) {
   // The instance_id can be used as seed for possible randomizing process.
   return y + 100;
 }

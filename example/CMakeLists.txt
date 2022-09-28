@@ -10,6 +10,3 @@ target_link_libraries(add_new_problem PRIVATE ioh)
 add_executable(gr "run_submodular_instances.cpp")
 target_link_libraries(gr PRIVATE ioh)
 
-add_executable(gsemo "gsemo.cpp")
-target_link_libraries(gsemo PRIVATE ioh)
-
