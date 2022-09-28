@@ -571,6 +571,9 @@ namespace ioh::logger
                         info_stream_ << fmt::format("{}", exp);
                         info_stream_.close();
                     }
+                    if (!has_started_)
+                        fs::remove(output_directory());
+                    FlatFile::close();                    
                 }
 
             public:
