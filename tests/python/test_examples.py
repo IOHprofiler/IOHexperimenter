@@ -1,5 +1,6 @@
 import os
 import json
+import shutil
 import unittest
 import io
 from contextlib import redirect_stdout
@@ -26,6 +27,7 @@ class MetaTest(type):
         instance = super().__new__(cls, name, bases, dct)
         dirname = os.path.normpath(os.path.join(BASE_DIR, "example"))
         for f in filter(lambda x: x.endswith("ipynb"), os.listdir(dirname)):
+            break
             fname, *_ = os.path.basename(f).split(".")
             notebook =  os.path.join(dirname, f)
             def test_notebook_runner(self):
@@ -37,11 +39,29 @@ class MetaTest(type):
                         except Exception as e:
                             raise RuntimeError(f"failed in cell {i}, reason:\n{e}")
             setattr(instance, f"test_notebook_{fname}", test_notebook_runner)
-
         return instance
 
 class TestExamples(unittest.TestCase, metaclass=MetaTest):
-    pass
+    def test_python_readme(self):
+        with open(os.path.join(BASE_DIR, "ioh/README.md")) as f:
+            data = f.read().split("```")
+            
+            with io.StringIO() as buf, redirect_stdout(buf):
+                for i, x in enumerate(data):
+                    if x.startswith("python"):
+                        block = x[6:].strip()
+                        try:
+                            exec(block, GB, LC)
+                        except Exception as e:
+                            raise RuntimeError(f"failed in cell {i}, reason:\n{e}")
+        
+        shutil.rmtree("temp")
+        shutil.rmtree("temp2")
+        shutil.rmtree("temp3")
+        shutil.rmtree("ioh_data")
+        os.remove("ioh_data.zip")
+                            
+
 
 
 if __name__ == "__main__":
