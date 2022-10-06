@@ -41,26 +41,27 @@ class MetaTest(type):
         return instance
 
 class TestExamples(unittest.TestCase, metaclass=MetaTest):
-    def test_python_readme(self):
-        fname = os.path.join(BASE_DIR, "ioh", "README.md")
-        self.assertTrue(os.path.isfile(fname))
-        with open(fname) as f:
-            data = f.read().split("```")
+    """Examples test"""
+    # def test_python_readme(self):
+    #     fname = os.path.join(BASE_DIR, "ioh", "README.md")
+    #     self.assertTrue(os.path.isfile(fname))
+    #     with open(fname) as f:
+    #         data = f.read().split("```")
             
-            with io.StringIO() as buf, redirect_stdout(buf):
-                for i, x in enumerate(data):
-                    if x.startswith("python"):
-                        block = x[6:].strip()
-                        try:
-                            exec(block, GB, LC)
-                        except Exception as e:
-                            raise RuntimeError(f"failed in cell {i}, reason:\n{e}")
+    #         with io.StringIO() as buf, redirect_stdout(buf):
+    #             for i, x in enumerate(data):
+    #                 if x.startswith("python"):
+    #                     block = x[6:].strip()
+    #                     try:
+    #                         exec(block, GB, LC)
+    #                     except Exception as e:
+    #                         raise RuntimeError(f"failed in cell {i}, reason:\n{e}")
         
-        shutil.rmtree("temp")
-        shutil.rmtree("temp2")
-        shutil.rmtree("temp3")
-        shutil.rmtree("ioh_data")
-        os.remove("ioh_data.zip")
+    #     shutil.rmtree("temp")
+    #     shutil.rmtree("temp2")
+    #     shutil.rmtree("temp3")
+    #     shutil.rmtree("ioh_data")
+    #     os.remove("ioh_data.zip")
                             
 
 
