@@ -27,7 +27,6 @@ class MetaTest(type):
         instance = super().__new__(cls, name, bases, dct)
         dirname = os.path.normpath(os.path.join(BASE_DIR, "example"))
         for f in filter(lambda x: x.endswith("ipynb"), os.listdir(dirname)):
-            break
             fname, *_ = os.path.basename(f).split(".")
             notebook =  os.path.join(dirname, f)
             def test_notebook_runner(self):
