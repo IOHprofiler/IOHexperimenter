@@ -43,7 +43,9 @@ class MetaTest(type):
 
 class TestExamples(unittest.TestCase, metaclass=MetaTest):
     def test_python_readme(self):
-        with open(os.path.join(BASE_DIR, "ioh/README.md")) as f:
+        fname = os.path.join(BASE_DIR, "ioh", "README.md")
+        self.assertTrue(os.path.isfile(fname))
+        with open(fname) as f:
             data = f.read().split("```")
             
             with io.StringIO() as buf, redirect_stdout(buf):
