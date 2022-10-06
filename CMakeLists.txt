@@ -2,9 +2,10 @@
 ##
 cmake_minimum_required(VERSION 3.15) 
 file(READ VERSION VERSION_STRING)
-
+string(STRIP ${VERSION_STRING} ${VERSION_STRING})
+string(REGEX REPLACE "\n$" "" VERSION_STRING "${VERSION_STRING}")
 project(ioh    
-    VERSION ${VERSION_STRING} 
+    VERSION "${VERSION_STRING}"
     LANGUAGES CXX  
 ) 
   
