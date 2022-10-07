@@ -12,8 +12,6 @@ jobs:
             os: [macos-latest, windows-latest]
             exclude:
               - os: macos-latest
-                architecture: x86
-
         runs-on: ${{matrix.os}}
         steps:
         - uses: actions/checkout@v2
