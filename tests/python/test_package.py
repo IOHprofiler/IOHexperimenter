@@ -10,7 +10,7 @@ DIR = os.path.realpath(os.path.join(__file__, "..", "..", ".."))
 
 class TestPackage(unittest.TestCase):
 
-    @unittest.skipUnless(sys.platform != "Windows", "pip location on windows")
+    @unittest.skipUnless("Windows" not in sys.platform, "pip location on windows")
     def test_can_install_source_dist(self):
         with tempfile.TemporaryDirectory() as tmpdirname:
             subprocess.check_call([sys.executable, 
