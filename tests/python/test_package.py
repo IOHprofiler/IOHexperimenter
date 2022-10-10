@@ -10,9 +10,8 @@ DIR = os.path.realpath(os.path.join(__file__, "..", "..", ".."))
 
 class TestPackage(unittest.TestCase):
 
-    @unittest.skipUnless("Windows" not in sys.platform, "pip location on windows")
+    @unittest.skipUnless(sys.platform != "win32", "pip location on windows")
     def test_can_install_source_dist(self):
-        print(sys.platform)
         with tempfile.TemporaryDirectory() as tmpdirname:
             subprocess.check_call([sys.executable, 
                 os.path.join(DIR, "setup.py"), "sdist", f"--dist-dir={tmpdirname}"],
