@@ -3,6 +3,7 @@
 #include <ioh/common/log.hpp>
 #include "triggers.hpp"
 #include "properties.hpp"
+#include "properties_mo.hpp"
 
 namespace ioh {
 
@@ -65,7 +66,10 @@ namespace ioh {
         
         //! A vector with all the properties
         logger::Properties properties_vector_{}; 
-        // TODO: check why we use a map here, and not a vector, with a map we cannot control order        
+        // TODO: check why we use a map here, and not a vector, with a map we cannot control order     
+
+        //! A vector with all the properties
+        logger::mo::Properties properties_vector_mo_{};    
 
 #ifndef NDEBUG
         //! Check that there is no duplicated properties (only in Debug builds).
@@ -177,6 +181,31 @@ namespace ioh {
 #endif
         }
 
+
+        /** Check if the logger should be triggered and if so, call `call(log_info)`. */
+        // This is virtual because logger::Combine needs to bypass the default behaviour.
+        virtual void log(const logger::MultiObjectiveInfo& log_info)
+        {
+            IOH_DBG(debug, "log event");
+            IOH_DBG(debug,"log raw_y_best=" << log_info.raw_y_best << " => y=" << log_info.y << " / y_best=" << log_info.y_best)
+            assert(problem_.has_value()); // For Debug builds.
+            if(not problem_) { // For Release builds.
+                throw std::runtime_error("Logger has not been attached to a problem.");
+            }
+
+            assert(properties_.size() > 0);
+            assert(triggers_.size() > 0);
+            if(triggers_(log_info, problem_.value())) {
+                IOH_DBG(debug, "logger triggered")
+                call(log_info);
+            }
+#ifndef NDEBUG
+            else {
+                IOH_DBG(debug, "logger not triggered");
+            }
+#endif
+        }
+
         /** Starts a new session for the given problem/instance/dimension/run.
          * 
          * This is called automatically by the Problem (or Suite) to which the Logger is attached,
@@ -196,6 +225,8 @@ namespace ioh {
 
         //! Main entry point, called everytime a Trigger is true.
         virtual void call(const logger::Info& log_info) = 0;
+
+        virtual void call(const logger::MultiObjectiveInfo& log_info) {};
 
         /** Optional actions when the logger is detached from a suite/problem or the problem is reset.
          *

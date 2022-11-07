@@ -186,6 +186,44 @@ namespace ioh::logger
             out_.flush();
         }
 
+        void call(const MultiObjectiveInfo &log_info) override
+        {
+            if (requires_header_)
+                    {
+                        IOH_DBG(xdebug, "print header")
+                        out_ << com_ + common_header_ + format("{}", fmt::join(properties_vector_, sep_));
+                        if (store_positions_)
+                            for (size_t i = 0; i < log_info.x.size(); i++)
+                                out_ << sep_ << "x" << i;
+                        out_ << eol_;
+                        requires_header_ = false;
+                    }
+
+                    IOH_DBG(xdebug, "print problem meta data")
+                    out_ << current_meta_data_;
+
+                    IOH_DBG(xdebug, "print watched properties")
+
+                    for (auto p = properties_vector_mo_.begin(); p != properties_vector_mo_.end();)
+                    {
+                        out_ << p->get().call_to_string(log_info, nan_)
+                             << (++p != properties_vector_mo_.end() ? sep_ : "");
+                    }
+
+
+                    for (auto p = properties_vector_.begin(); p != properties_vector_.end();)
+                    {
+                        out_ << p->get().call_to_string(log_info, nan_)
+                             << (++p != properties_vector_.end() ? sep_ : "");
+                    }
+
+                    if (store_positions_)
+                        out_ << sep_ << format("{:f}", fmt::join(log_info.x, sep_));
+
+                    out_ << eol_;
+                    out_.flush();
+        }
+
         //! Accessor for output directory
         virtual fs::path output_directory() const { return output_directory_; }
 

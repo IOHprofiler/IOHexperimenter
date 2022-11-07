@@ -2,7 +2,7 @@
 
 #include "ioh/common/container_utils.hpp"
 #include "ioh/common/factory.hpp"
-#include "ioh/logger/loggers.hpp"
+#include "ioh/logger/analyzer_mo.hpp"
 #include "ioh/problem/constraints.hpp"
 #include "ioh/problem/problem.hpp"
 #include "ioh/problem/structures.hpp"
