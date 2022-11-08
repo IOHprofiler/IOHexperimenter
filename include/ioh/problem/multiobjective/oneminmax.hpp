@@ -58,7 +58,7 @@ namespace ioh
              * \param n_variables The dimensionality of the problem to created, 4 by default.
              **/
             OneMinMax(const int instance, const int n_variables, const std::string &name = "OneMaxMin") :
-            MultiObjectiveProblem<int> (MetaData(1, instance, name, n_variables, common::OptimizationType::MAX),
+            MultiObjectiveProblem<int> (MetaData(1, instance, name, n_variables, common::OptimizationType::MAX, 2),
                     Bounds<int>(n_variables, 0, 1))
             {
                 add_objective(std::make_unique<OneMinMaxObj1>(instance, n_variables));

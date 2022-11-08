@@ -38,11 +38,11 @@ namespace ioh::logger
                     std::vector<std::string> y_string(points.size());
                     for (auto i = 0; i != points.size(); ++i)
                     {
-                        x_string[i] = fmt::format("{}", fmt::join(points[i].x, ","));
-                        y_string[i] = fmt::format("{}", fmt::join(points[i].y, ","));
+                        x_string[i] = fmt::format("[{}]", fmt::join(points[i].x, ","));
+                        y_string[i] = fmt::format("[{}]", fmt::join(points[i].y, ","));
                     }
-                    return fmt::format("\"evals\": {}, \"y\": {}, \"x\": [{}]", evals, fmt::join(y_string, "; "),
-                                       fmt::join(x_string, "; "));
+                    return fmt::format("\"evals\": {}, \"y\": [{}], \"x\": [{}]", evals, fmt::join(y_string, ","),
+                                       fmt::join(x_string, ","));
                 }
             };
 
@@ -248,12 +248,6 @@ namespace ioh::logger
                                               common::as_vector<str, str, sAttr>(attributes_.experiment),
                                               common::keys(attributes_.run), attribute_names()}});
 
-                    // if (default_properties_.size() != 0) {
-                    //     default_properties_.clear();
-                    //     default_properties_.push_back(watch::evaluations);
-                    //     this->watch(
-
-                    // }
                 }
 
                 //! Gets called after the last evaluation of a run
@@ -328,6 +322,7 @@ namespace ioh::logger
                     FlatFile(triggers,
                              common::concatenate(default_properties_,
                                                  additional_properties),
+                                                 default_properties_mo_,
                              "", {},
                              " ", "",
                              "None", "\n", true, store_positions, {}),
@@ -365,12 +360,14 @@ namespace ioh::logger
                     update_info_file(problem, fmt::format("{}/{}", dat_directory, dat_filename));
                     open_stream(dat_filename, path_ / dat_directory);
                     FlatFile::attach_problem(problem);
-                    best_points_ = {};
+                    best_points_ = {0, std::vector<problem::MultiObjectiveSolution<double> >(1,
+                                                                                            ioh::problem::MultiObjectiveSolution<double>(std::vector<double>(problem.n_variables), 
+                                                                                                                                        std::vector<double>(problem.n_objectives,problem.optimization_type.initial_value())))};
                     has_started_ = true;
                 }
 
                 //! Set log_info_ in order to check if the last line has been logged
-                virtual void log(const logger::Info &log_info) override
+                virtual void log(const logger::MultiObjectiveInfo &log_info) override
                 {
                     IOH_DBG(debug, "Analyzer log");
                     log_info_ = log_info;

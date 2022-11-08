@@ -72,8 +72,8 @@ namespace ioh
             //! Shorthand constructor for use with unknown optimum
             MultiObjectiveSolution(const int n_variables, const int n_objectives, const common::OptimizationType optimization_type) :
                 x(std::vector<T>(n_variables, std::numeric_limits<T>::signaling_NaN())),
-                y{std::vector<double >(n_objectives, optimization_type == common::OptimizationType::MIN ? -std::numeric_limits<double>::infinity()
-                                                                     : std::numeric_limits<double>::infinity())}
+                y{std::vector<double >(n_objectives, optimization_type == common::OptimizationType::MIN ? std::numeric_limits<double>::infinity()
+                                                                     : -std::numeric_limits<double>::infinity())}
             {
             }
 
@@ -135,10 +135,11 @@ namespace ioh
              * @param optimization_type optimization type
              */
             MetaData(const int problem_id, const int instance, std::string name, const int n_variables, 
-                     const common::OptimizationType optimization_type = common::OptimizationType::MIN) :
+                     const common::OptimizationType optimization_type = common::OptimizationType::MIN,
+                     const int n_objectives = 1) :
                 instance(instance),
                 problem_id(problem_id), name(std::move(name)), optimization_type{optimization_type},
-                n_variables(n_variables)
+                n_variables(n_variables), n_objectives(n_objectives)
             {
             }
 

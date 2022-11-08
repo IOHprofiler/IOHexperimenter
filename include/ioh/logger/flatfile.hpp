@@ -133,6 +133,29 @@ namespace ioh::logger
             assert(common_header_titles.empty() || common_header_titles.size() == 7);
         }
 
+
+        FlatFile(std::vector<std::reference_wrapper<Trigger>> triggers,
+                 std::vector<std::reference_wrapper<Property>> properties,
+                 std::vector<std::reference_wrapper<mo::Property>> properties_mo,
+                 const std::string &filename = "IOH.dat",
+                 const fs::path &output_directory = fs::current_path(), const std::string &separator = "\t",
+                 const std::string &comment = "# ", const std::string &no_value = "None",
+                 const std::string &end_of_line = "\n", const bool repeat_header = false,
+                 const bool store_positions = false,
+                 const std::vector<std::string> &common_header_titles = {"suite_name", "problem_name", "problem_id",
+                                                                         "problem_instance", "optimization_type",
+                                                                         "dimension", "run"}) :
+            Watcher(triggers, properties, properties_mo),
+            sep_(separator), com_(comment), eol_(end_of_line), nan_(no_value),
+            common_header_(format("{}", fmt::join(common_header_titles.begin(), common_header_titles.end(), sep_)) +
+                           (common_header_titles.empty() ? "" : sep_)),
+            repeat_header_(repeat_header), store_positions_(store_positions), requires_header_(true),
+            log_meta_data_(!common_header_titles.empty()), output_directory_(output_directory), filename_(filename),
+            current_suite_("unknown_suite"), current_run_(0), current_meta_data_{}
+        {
+            assert(common_header_titles.empty() || common_header_titles.size() == 7);
+        }
+
         void attach_suite(const std::string &suite_name) override { current_suite_ = suite_name; }
 
         void attach_problem(const problem::MetaData &problem) override
@@ -191,7 +214,7 @@ namespace ioh::logger
             if (requires_header_)
                     {
                         IOH_DBG(xdebug, "print header")
-                        out_ << com_ + common_header_ + format("{}", fmt::join(properties_vector_, sep_));
+                        out_ << com_ + common_header_ + format("{}", fmt::join(properties_vector_, sep_)) + sep_ +  format("{}", fmt::join(properties_vector_mo_, sep_));
                         if (store_positions_)
                             for (size_t i = 0; i < log_info.x.size(); i++)
                                 out_ << sep_ << "x" << i;
@@ -204,17 +227,18 @@ namespace ioh::logger
 
                     IOH_DBG(xdebug, "print watched properties")
 
-                    for (auto p = properties_vector_mo_.begin(); p != properties_vector_mo_.end();)
-                    {
-                        out_ << p->get().call_to_string(log_info, nan_)
-                             << (++p != properties_vector_mo_.end() ? sep_ : "");
-                    }
-
-
                     for (auto p = properties_vector_.begin(); p != properties_vector_.end();)
                     {
                         out_ << p->get().call_to_string(log_info, nan_)
                              << (++p != properties_vector_.end() ? sep_ : "");
+                    }
+
+                    out_ << sep_;
+
+                    for (auto p = properties_vector_mo_.begin(); p != properties_vector_mo_.end();)
+                    {
+                        out_ << p->get().call_to_string(log_info, nan_)
+                             << (++p != properties_vector_mo_.end() ? sep_ : "");
                     }
 
                     if (store_positions_)
