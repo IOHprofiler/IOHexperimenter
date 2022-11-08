@@ -1,0 +1,1 @@
+#include "ioh/problem/multiobjective/oneminmax.hpp"
