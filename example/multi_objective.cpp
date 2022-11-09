@@ -3,14 +3,14 @@
 int main()
 {
     auto p = std::make_shared<ioh::problem::OneMinMax>(1, 10);
-    auto logger = ioh::logger::analyzer::mo::Analyzer({ioh::trigger::always}, {},"./data", "ioh", "test", "binom_bitflip");
+    auto logger = ioh::logger::analyzer::mo::Analyzer({ioh::trigger::always}, {},"./data", "ioh", "test", "random_search");
     p->attach_logger(logger);
     int i = 0;
     int r = 0;
     while (r < 10)
     {
         i = 0;
-        while (i < 100)
+        while (i < 1000)
         {
             std::vector<int> a(10);
             for (auto j = 0; j != a.size(); ++j)
