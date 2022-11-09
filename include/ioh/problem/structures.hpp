@@ -62,14 +62,14 @@ namespace ioh
             std::vector<double > y = {};
 
             /**
-             * @brief Construct a new Solution object
+             * @brief Construct a new MultiObjectiveSolution object
              *
              * @param x variables
              * @param y objective values
              */
             MultiObjectiveSolution(const std::vector<T> &x, const std::vector<double > y) : x(x), y(y) {}
 
-            //! Shorthand constructor for use with unknown optimum
+            //! Shorthand constructor for use with unknown values
             MultiObjectiveSolution(const int n_variables, const int n_objectives, const common::OptimizationType optimization_type) :
                 x(std::vector<T>(n_variables, std::numeric_limits<T>::signaling_NaN())),
                 y{std::vector<double >(n_objectives, optimization_type == common::OptimizationType::MIN ? std::numeric_limits<double>::infinity()
@@ -91,13 +91,13 @@ namespace ioh
             {
                 if (y.size() == 0) return false;
                 if (other.y.size() != y.size()) return false;
-                for (size_t i = 0; i != y.size(); i++)
+                for (size_t i = 0; i != y.size(); ++i)
                     if (y[i] != other.y[i])
                         return false;
                 return true;
             }
 
-            std::string repr() const override { return fmt::format("<Solution x: {} y: {}>", x, y); }
+            std::string repr() const override { return fmt::format("<Solution x: [{}] y: [{}]>", fmt::join(x,","), fmt::join(y,",")); }
         };
 
 
@@ -273,17 +273,11 @@ namespace ioh
             //! Current x-raw, y-transformed w. constraints applied
             MultiObjectiveSolution<T> current{};
 
-            //! current y untransformed w.o. constraints applied
-            // std::vector<double > y_untransformed;
-
             //! Current y transformed w.o. constraints applied
             std::vector<double > y_unconstrained;
 
             //! Current y transformed w.o. constraints applied of the pareto front
             std::vector< std::vector<double> > y_unconstrained_pareto;
-
-            //! Current y untransformed w.o. constraints applied of the pareto front
-            // std::vector< std::vector<double> > y_untransformed_pareto;
 
             //! Tracks whether the last update has caused an improvement
             bool has_improved;
@@ -319,7 +313,7 @@ namespace ioh
             void update(const MetaData &meta_data, const std::vector< MultiObjectiveSolution<T> > &objective)
             {
                 ++evaluations;
-                has_improved = false;
+                has_improved = true;
                 std::vector<size_t> old;
                 for (auto i = 0; i != current_pareto_front.size(); ++i) 
                 {
@@ -329,25 +323,19 @@ namespace ioh
                     {
                         auto d = meta_data.optimization_type(current.y[j], current_pareto_front[i].y[j]);
                         dominate &= d;
-                        if (d) {
-                            dominated = false;
-                        }
+                        dominated &= (!d);
                     }                    
-                    if (!dominated) {
-                        has_improved = true;
-                        if (dominate) {
-                            current_pareto_front.erase(current_pareto_front.begin() + i);
-                            y_unconstrained_pareto.erase(y_unconstrained_pareto.begin() + i);
-                            // y_transformed_pareto.erase(y_transformed_pareto.begin() + i);
-                            --i;
-                        }
+                    
+                    if (dominate) {
+                        current_pareto_front.erase(current_pareto_front.begin() + i);
+                        y_unconstrained_pareto.erase(y_unconstrained_pareto.begin() + i);
+                        --i;
                     }
+                    has_improved &= (!dominated);
                 }
                 if (has_improved) {
                     current_pareto_front.push_back(current);
                     y_unconstrained_pareto.push_back(y_unconstrained);
-                    // y_transformed_pareto.push_back(y_untransformed);
-
 
                     if (current_pareto_front.size() == objective.size()) {
                         size_t i = 0;

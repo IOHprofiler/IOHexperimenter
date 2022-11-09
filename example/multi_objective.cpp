@@ -9,6 +9,7 @@ int main()
     int r = 0;
     while (r < 10)
     {
+        i = 0;
         while (i < 100)
         {
             std::vector<int> a(10);

@@ -36,11 +36,11 @@ namespace ioh
             //! The associated constraints constriants
             ConstraintSet<T> constraintset_; // TODO check interop with wrap problem
 
-            //! The Problem state
+            //! The MultiObjectiveProblem state
             MultiObjectiveState<T> state_;
 
-            //! The complete set of parent solutions
-            std::vector<MultiObjectiveSolution<T>> optimum_;
+            //! The complete set of pareto solutions
+            std::vector<MultiObjectiveSolution<T> > optimal_pareto_front_;
 
             //! The set of problems_, pointing to the evaluate of each objective.
             std::vector<ProblemPtr> problems_;
@@ -122,17 +122,18 @@ namespace ioh
             using Type = T;
 
             /**
-             * @brief Construct a new Problem object
+             * @brief Construct a new MultiObjectiveProblem object
              *
              * @param meta_data meta data for the problem
              * @param bounds the bounds to the problem
              * @param constraints a set of constraints for the problem
-             * @param objective the solution to the problem
+             * @param optimal_pareto_front the solutions at the optimal_pareto_front
              */
             explicit MultiObjectiveProblem(MetaData meta_data, Bounds<T> bounds, ConstraintSet<T> constraints,
-                                           MultiObjectiveSolution<T> objectives) :
+                                           std::vector<MultiObjectiveSolution<T> > optimal_pareto_front) :
                 meta_data_(std::move(meta_data)),
                 bounds_(std::move(bounds)), constraintset_(std::move(constraints)),
+                optimal_pareto_front_(std::move(optimal_pareto_front)),
                 state_(MultiObjectiveState<T>(MultiObjectiveSolution<T> (meta_data_.n_variables, meta_data_.n_objectives,meta_data_.optimization_type.type())))
             {
                 bounds_.fit(meta_data_.n_variables);
@@ -150,7 +151,10 @@ namespace ioh
                                            ConstraintSet<T> constraints = {}) :
                 MultiObjectiveProblem(
                     meta_data, bounds, constraints,
-                    MultiObjectiveSolution<T>(meta_data.n_variables, meta_data.n_objectives, meta_data.optimization_type.type()))
+                    std::vector<MultiObjectiveSolution<T> >(1,
+                                                            MultiObjectiveSolution<T>(std::vector<T> (meta_data.n_variables), 
+                                                                                      std::vector<double>(meta_data.n_objectives, 
+                                                                                                          -meta_data.optimization_type.initial_value()))))
             {
             }
 
@@ -177,15 +181,15 @@ namespace ioh
                 log_info_.evaluations = static_cast<size_t>(state_.evaluations);
 
                 // after transformation
-                log_info_.transformed_y_mo = std::vector<double> (state_.y_unconstrained);
-                log_info_.transformed_y_best_mo = std::vector<std::vector<double> >(state_.y_unconstrained_pareto.size());
+                log_info_.transformed_y = std::vector<double> (state_.y_unconstrained);
+                log_info_.transformed_y_best = std::vector<std::vector<double> >(state_.y_unconstrained_pareto.size());
                 for (auto i = 0; i != state_.y_unconstrained_pareto.size(); ++i)
                 {
-                    log_info_.transformed_y_best_mo[i] = std::vector<double>(state_.y_unconstrained_pareto[i]);
+                    log_info_.transformed_y_best[i] = std::vector<double>(state_.y_unconstrained_pareto[i]);
                 }
 
                 // after constraint
-                log_info_.y_mo = std::vector<double> (state_.current.y);
+                log_info_.y = std::vector<double> (state_.current.y);
                 log_info_.pareto_front = std::vector<problem::MultiObjectiveSolution <double> >(state_.current_pareto_front.size());
                 for (auto i = 0; i != state_.current_pareto_front.size(); ++i)
                 {
@@ -254,7 +258,7 @@ namespace ioh
                     
                 }
 
-                state_.update(meta_data_, optimum_);
+                state_.update(meta_data_, optimal_pareto_front_);
 
                 if (logger_ != nullptr)
                 {
@@ -280,7 +284,7 @@ namespace ioh
             [[nodiscard]] MetaData meta_data() const { return meta_data_; }
 
             //! Accessor for `optimum_`
-            [[nodiscard]] std::vector<MultiObjectiveSolution<T>> optimum() const { return optimum_; }
+            [[nodiscard]] std::vector<MultiObjectiveSolution<T> > optimal_pareto_front() const { return optimal_pareto_front_; }
 
             //! Accessor for `state_`
             [[nodiscard]] MultiObjectiveState<T> state() const { return state_; }
@@ -322,11 +326,11 @@ namespace ioh
         private:
             void allocate_log_info()
             {
-                log_info_.optimum_mo.resize(optimum_.size());
-                for (auto i = 0; i != optimum_.size(); ++i)
+                log_info_.optima.resize(optimal_pareto_front_.size());
+                for (auto i = 0; i != optimal_pareto_front_.size(); ++i)
                 {
-                    log_info_.optimum_mo[i].x = std::vector<double>(optimum_[i].x.begin(),optimum_[i].x.end());
-                    log_info_.optimum_mo[i].y = std::vector<double>(optimum_[i].y);
+                    log_info_.optima[i].x = std::vector<double>(optimal_pareto_front_[i].x.begin(),optimal_pareto_front_[i].x.end());
+                    log_info_.optima[i].y = std::vector<double>(optimal_pareto_front_[i].y);
                 }
                 log_info_.violations = std::vector<double>(constraintset_.n() + 1, 0.0);
                 log_info_.penalties = std::vector<double>(constraintset_.n() + 1, 0.0);

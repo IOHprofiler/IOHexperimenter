@@ -7,8 +7,6 @@ namespace ioh
 {
     namespace problem
     {
-
-
         class OneMinMax : public MultiObjectiveProblem<int>
         {
         protected:
@@ -51,13 +49,13 @@ namespace ioh
 
         public:
             /**
-             * \brief Construct a new OneMax object. Definition refers to https://doi.org/10.1016/j.asoc.2019.106027
+             * \brief Construct a new OneMinMax object. Definition refers to https://dl.acm.org/doi/pdf/10.1145/2908812.2908827
              *
              * \param instance The instance number of a problem, which controls the transformation
              * performed on the original problem.
-             * \param n_variables The dimensionality of the problem to created, 4 by default.
+             * \param n_variables The dimensionality of the problem to created, 10 by default.
              **/
-            OneMinMax(const int instance, const int n_variables, const std::string &name = "OneMaxMin") :
+            OneMinMax(const int instance = 0, const int n_variables = 10, const std::string &name = "OneMaxMin") :
             MultiObjectiveProblem<int> (MetaData(1, instance, name, n_variables, common::OptimizationType::MAX, 2),
                     Bounds<int>(n_variables, 0, 1))
             {

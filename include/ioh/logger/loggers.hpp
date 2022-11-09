@@ -210,7 +210,7 @@ namespace ioh {
         virtual void log(const logger::MultiObjectiveInfo& log_info)
         {
             IOH_DBG(debug, "log event");
-            IOH_DBG(debug,"log raw_y_best=" << log_info.raw_y_best << " => y=" << log_info.y << " / y_best=" << log_info.y_best)
+            IOH_DBG(debug,"log current_y =" << fmt::format("[{}]", fmt::join(log_info.y,",")));
             assert(problem_.has_value()); // For Debug builds.
             if(not problem_) { // For Release builds.
                 throw std::runtime_error("Logger has not been attached to a problem.");
