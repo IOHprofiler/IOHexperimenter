@@ -4,6 +4,7 @@
 #include "problem/problem.hpp"
 #include "problem/bbob.hpp"
 #include "problem/pbo.hpp"
+#include "problem/mo.hpp"
 
 #include "problem/wmodel.hpp"
 

@@ -2,6 +2,7 @@
 
 #include "logger/loginfo.hpp"
 #include "logger/properties.hpp"
+#include "logger/properties_mo.hpp"
 #include "logger/triggers.hpp"
 #include "logger/loggers.hpp"
 #include "logger/store.hpp"
@@ -10,7 +11,7 @@
 #include "logger/eah.hpp"
 #include "logger/eaf.hpp"
 #include "logger/analyzer.hpp"
-
+#include "logger/analyzer_mo.hpp"
 /** @defgroup Loggers Loggers
  * Objects that track the calls to the objective function.
  * 

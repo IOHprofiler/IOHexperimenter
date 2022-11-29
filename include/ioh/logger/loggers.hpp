@@ -3,6 +3,7 @@
 #include <ioh/common/log.hpp>
 #include "triggers.hpp"
 #include "properties.hpp"
+#include "properties_mo.hpp"
 
 namespace ioh {
 
@@ -62,10 +63,15 @@ namespace ioh {
         // We need references because we have container of instances of various classes.
         // As all share a common interface, we can have a container of references of this base class.
         std::map<std::string,std::reference_wrapper<logger::Property>> properties_;
+
+        std::map<std::string,std::reference_wrapper<logger::mo::Property>> properties_mo_;
         
         //! A vector with all the properties
         logger::Properties properties_vector_{}; 
-        // TODO: check why we use a map here, and not a vector, with a map we cannot control order        
+        // TODO: check why we use a map here, and not a vector, with a map we cannot control order     
+
+        //! A vector with all the multiobjective properties
+        logger::mo::Properties properties_vector_mo_{};    
 
 #ifndef NDEBUG
         //! Check that there is no duplicated properties (only in Debug builds).
@@ -98,6 +104,18 @@ namespace ioh {
                 properties_vector_.push_back(p);
             }
         }
+
+        //! Convert a vector of properties in a map of {name => property}.
+        void store_properties_mo(std::vector<std::reference_wrapper<logger::mo::Property>>& properties_mo)
+        {
+            for(auto& p : properties_mo) {
+                // operator[] of an std::map<K,T> requires that T be default-constructible.
+                // But reference_wrapper is not.
+                // Thus, we must directly forward the reference.
+                properties_mo_.insert_or_assign(p.get().name(), std::ref(p.get()));
+                properties_vector_mo_.push_back(p);
+            }
+        }
         
     public:
         /** Use this constructor if you just need to trigger a log event if ANY of the triggers are fired.
@@ -109,12 +127,17 @@ namespace ioh {
          *          add the triggers manually in your own constructor.
          */
         Logger(std::vector<std::reference_wrapper<logger::Trigger >> triggers,
-               std::vector<std::reference_wrapper<logger::Property>> properties)
+               std::vector<std::reference_wrapper<logger::Property>> properties,
+               std::vector<std::reference_wrapper<logger::mo::Property>> properties_mo = {})
         : any_(triggers)
         , triggers_(any_)
         , problem_(std::nullopt)
         {
             store_properties(properties);
+            if (properties_mo.size() != 0) 
+            {
+                store_properties_mo(properties_mo);
+            }
             assert(consistent_properties());
         }
 
@@ -125,12 +148,16 @@ namespace ioh {
          * are fired at once.
          */
         Logger(trigger::Set& triggers,
-               std::vector<std::reference_wrapper<logger::Property>> properties               )
+               std::vector<std::reference_wrapper<logger::Property>> properties,
+                std::vector<std::reference_wrapper<logger::mo::Property>> properties_mo = {})
         : any_()
         , triggers_(triggers)
         , problem_(std::nullopt)
         {
             store_properties(properties);
+            if (properties_mo.size() != 0) {
+                store_properties_mo(properties_mo);
+            }
             assert(consistent_properties());
         }
 
@@ -177,6 +204,31 @@ namespace ioh {
 #endif
         }
 
+
+        /** Check if the logger should be triggered and if so, call `call(log_info)`. */
+        // This is virtual because logger::Combine needs to bypass the default behaviour.
+        virtual void log(const logger::MultiObjectiveInfo& log_info)
+        {
+            IOH_DBG(debug, "log event");
+            IOH_DBG(debug,"log current_y =" << fmt::format("[{}]", fmt::join(log_info.y,",")));
+            assert(problem_.has_value()); // For Debug builds.
+            if(not problem_) { // For Release builds.
+                throw std::runtime_error("Logger has not been attached to a problem.");
+            }
+
+            assert(properties_.size() > 0);
+            assert(triggers_.size() > 0);
+            if(triggers_(log_info, problem_.value())) {
+                IOH_DBG(debug, "logger triggered")
+                call(log_info);
+            }
+#ifndef NDEBUG
+            else {
+                IOH_DBG(debug, "logger not triggered");
+            }
+#endif
+        }
+
         /** Starts a new session for the given problem/instance/dimension/run.
          * 
          * This is called automatically by the Problem (or Suite) to which the Logger is attached,
@@ -196,6 +248,8 @@ namespace ioh {
 
         //! Main entry point, called everytime a Trigger is true.
         virtual void call(const logger::Info& log_info) = 0;
+
+        virtual void call(const logger::MultiObjectiveInfo& log_info) {};
 
         /** Optional actions when the logger is detached from a suite/problem or the problem is reset.
          *
@@ -240,8 +294,9 @@ namespace ioh {
              *          add the properties manually in your own constructor.
              */
             Watcher(std::vector<std::reference_wrapper<logger::Trigger >> when,
-                    std::vector<std::reference_wrapper<logger::Property>> what)
-            : Logger(when,what)
+                    std::vector<std::reference_wrapper<logger::Property>> what,
+                    std::vector<std::reference_wrapper<logger::mo::Property>> what_mo = {})
+            : Logger(when,what,what_mo)
             { }
 
             /** Use this constructor if you want to combine triggers differently.
@@ -251,8 +306,9 @@ namespace ioh {
              * are fired at once.
              */
             Watcher(trigger::Set& when,
-                   std::vector<std::reference_wrapper<logger::Property>> what)
-            : Logger(when,what)
+                   std::vector<std::reference_wrapper<logger::Property>> what,
+                    std::vector<std::reference_wrapper<logger::mo::Property>> what_mo = {})
+            : Logger(when,what,what_mo)
             { }
 
             /** Use this constructor if you just need the interface without triggers or properties,
@@ -262,7 +318,7 @@ namespace ioh {
              *       use `_properties.insert_or_assign(name, std::ref(tp));`
              *       instead of classical access operators.
              */
-             Watcher() : Logger() { }
+            Watcher() : Logger() { }
 
             //! Adds a property to be logged.
             // This essentially just expose _properties.push_back with some checks.
@@ -276,6 +332,19 @@ namespace ioh {
                 properties_.insert_or_assign(property.name(), property);
                 properties_vector_.push_back(property);
                 assert(consistent_properties()); // Double check duplicates, in case the code above would be changed.
+            }
+
+
+            virtual void watch(logger::mo::Property& property)
+            {
+                IOH_DBG(debug,"watch property " << property.name())
+                // Assert that the Property is not already tracked.
+                assert(std::find_if(std::begin(properties_mo_),std::end(properties_mo_),
+                                    [&property](const auto rwp){return property.name() == rwp.second.get().name();}
+                                   ) == std::end(properties_mo_));
+                properties_mo_.insert_or_assign(property.name(), property);
+                properties_vector_mo_.push_back(property);
+                // assert(consistent_properties()); // Double check duplicates, in case the code above would be changed.
             }
 
             /* Interface from Logger to be implemented:
