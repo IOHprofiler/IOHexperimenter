@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ioh/common.hpp"
-#include "ioh/problem/problem.hpp"
+#include "ioh/problem/single.hpp"
 
 
 namespace ioh::problem::submodular
@@ -165,13 +165,14 @@ namespace ioh::problem::submodular
     };
 
 
-    struct GraphProblem : Integer
+    struct GraphProblem : IntegerSingleObjective
     {
         std::shared_ptr<graph::Graph> graph;
 
         GraphProblem(const int problem_id, const int instance, const std::string &name,
                      const std::shared_ptr<graph::Graph> &graph) :
-            Integer(MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::MAX),
+            IntegerSingleObjective(
+                MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::MAX),
                     Bounds<int>(graph->dimension()),
                     ConstraintSet<int>(std::make_shared<GraphConstraint>(graph))    
                 ),
@@ -183,7 +184,7 @@ namespace ioh::problem::submodular
     template <typename ProblemType>
     struct GraphProblemType : GraphProblem,
                               InstanceBasedProblem,
-                              AutomaticProblemRegistration<ProblemType, Integer>,
+                              AutomaticProblemRegistration<ProblemType, IntegerSingleObjective>,
                               AutomaticProblemRegistration<ProblemType, GraphProblem>
     {
         using GraphProblem::GraphProblem;
@@ -221,7 +222,7 @@ namespace ioh::problem::submodular
                 auto c = [c = ci.first](Args &&...params) {
                     return std::make_unique<ProblemType>(c(std::forward<Args>(params)...));
                 };
-                ioh::common::Factory<Integer, Args...>::instance().include(name, ci.second, c);
+                ioh::common::Factory<IntegerSingleObjective, Args...>::instance().include(name, ci.second, c);
                 ioh::common::Factory<submodular::GraphProblem, Args...>::instance().include(name, ci.second, c);
             }
         }       

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "ioh.hpp"
 
 double new_problem(const std::vector<double> &x)
@@ -18,27 +20,27 @@ std::vector<double> new_transform_variables_function(const std::vector<double> &
   return tx;
 }
 
-double new_transform_objective_functions(double y, int) {
+double new_transform_objective_function(double y, int) {
   // The instance_id can be used as seed for possible randomizing process.
   return y + 100;
 }
 
-int main(){
+void add_problem_example()
+{
   const std::vector<double> x {0.1,0.2,0.3,0.4,0.5};
 
-  ioh::problem::wrap_function<double>(&new_problem,  // the new function
+  ioh::problem::wrap_function<double, double>(&new_problem,  // the new function
                                       "new_problem", // name of the new function
                                       ioh::common::OptimizationType::MIN, // optimization type
                                       0,  // lowerbound  
                                       1,  // upperbound
                                       &new_transform_variables_function, // the variable transformation method. Optional argument when transformation is applied.
-                                      &new_transform_objective_functions // the objective transformation method. Optional argument when transformation is applied.
+                                      &new_transform_objective_function // the objective transformation method. Optional argument when transformation is applied.
                                       );
-  auto &factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();
+  auto &factory = ioh::problem::ProblemRegistry<ioh::problem::RealSingleObjective>::instance();
   auto problem =  factory.create("new_problem",  // create by name
                                   1,             // instance id
                                   5              // number of search variables
                                   );
   std::cout << (*problem)(x) << std::endl;
-  return 0;   
 }      

@@ -3,7 +3,7 @@
 #include <fmt/compile.h>
 #include <fmt/format.h>
 
-#include "ioh/problem/problem.hpp"
+#include "ioh/problem/single.hpp"
 
 namespace ioh::logger
 {

@@ -2,7 +2,7 @@
 
 #include "ioh/problem/bbob.hpp"
 
-double test_eval(const std::shared_ptr<ioh::problem::Real> &f)
+double test_eval(const std::shared_ptr<ioh::problem::RealSingleObjective> &f)
 {
     return std::round((*f)(ioh::common::random::pbo::normal(4, 42)) * 10000.0) / 10000.0;
 }

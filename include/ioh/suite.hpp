@@ -230,23 +230,24 @@ namespace ioh::suite
 
     //! Base class for Real suites
     template <class Derived>
-    struct RealSuite : Suite<problem::Real>, AutomaticSuiteRegistration<Derived, problem::Real>
+    struct RealSuite : Suite<problem::RealSingleObjective>, AutomaticSuiteRegistration<Derived, problem::RealSingleObjective>
     {
-        using Suite<problem::Real>::Suite;
+        using Suite<problem::RealSingleObjective>::Suite;
     };
 
     //! Base class for Integer suites
     template <class Derived>
-    struct IntegerSuite : Suite<problem::Integer>, AutomaticSuiteRegistration<Derived, problem::Integer>
+    struct IntegerSuite : Suite<problem::IntegerSingleObjective>,
+                          AutomaticSuiteRegistration<Derived, problem::IntegerSingleObjective>
     {
-        using Suite<problem::Integer>::Suite;
+        using Suite<problem::IntegerSingleObjective>::Suite;
     };
 
     //! Real suite
     struct Real final : RealSuite<Real>
     {
         /**
-         * @brief Construct a new Real object
+         * @brief Construct a new RealSingleObjective object
          * 
          * @param problem_ids List of problem ids
          * @param instances List of problem instances

@@ -135,7 +135,7 @@ A suite contains a set of problems that share common properties. Therefore, we s
 namespace ioh::problem
 {
     //! new base class of continuous optimization problems, of which objective is minization.
-    class NewBase : public Real
+    class NewBase : public RealSingleObjective
     {
     protected:
        ...
@@ -149,7 +149,7 @@ namespace ioh::problem
          * @param name the name of the problem
          */
         NewBase(const int problem_id, const int instance, const int n_variables, const std::string &name)
-            Real(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::Minimization))
+            RealSingleObjective(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::Minimization))
         {
             objective_ = ...
         }
@@ -163,7 +163,7 @@ namespace ioh::problem
     template <typename ProblemType>
     class NewBaseProblem : public NewBase,
                        AutomaticProblemRegistration<ProblemType, NewBase>,
-                       AutomaticProblemRegistration<ProblemType, Real>
+                       AutomaticProblemRegistration<ProblemType, RealSingleObjective>
     {
     public:
         /**
@@ -216,7 +216,7 @@ namespace ioh::problem::NewBase
 
 After implementing the new problem classes, suites can be created using either factory construction, or direct object construction.
 ```cpp
-td::shared_ptr<ioh::suite::Suite<ioh::problem::Real>> create_suite(const bool using_factory = true)
+td::shared_ptr<ioh::suite::Suite<ioh::problem::RealSingleObjective>> create_suite(const bool using_factory = true)
 {
     const std::vector<int> problems;
     const std::vector<int> instances;
@@ -225,7 +225,7 @@ td::shared_ptr<ioh::suite::Suite<ioh::problem::Real>> create_suite(const bool us
     ...
 
     if (using_factory)
-        return ioh::suite::SuiteRegistry<ioh::problem::Real>::instance()
+        return ioh::suite::SuiteRegistry<ioh::problem::RealSingleObjective>::instance()
             .create("NewBase", problems, instances, dimensions);
     return std::make_shared<ioh::suite::NewBase>(problems, instances, dimensions);
 }

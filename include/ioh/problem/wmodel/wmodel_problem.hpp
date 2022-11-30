@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ioh/problem/problem.hpp"
+#include "ioh/problem/single.hpp"
 #include "ioh/problem/utils.hpp"
 #include "ioh/problem/transformation.hpp"
 
@@ -8,7 +8,7 @@ namespace ioh::problem
 {
     
     //! Base class for WModel problems
-    class WModel : public Integer
+    class WModel : public IntegerSingleObjective
     {
     protected:
         //! Dummy variables
@@ -113,7 +113,7 @@ namespace ioh::problem
         WModel(const int problem_id, const int instance, const int n_variables, const std::string &name,
                const double dummy_select_rate, const int epistasis_block_size, const int neutrality_mu,
                const int ruggedness_gamma) :
-            Integer(
+            IntegerSingleObjective(
                 MetaData(problem_id, instance, name, n_variables, common::OptimizationType::MAX),
                     Bounds<int>(n_variables, 0, 1)
             ),

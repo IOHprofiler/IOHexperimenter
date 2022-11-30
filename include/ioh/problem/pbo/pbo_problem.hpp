@@ -1,12 +1,12 @@
 #pragma once
 
-#include "ioh/problem/problem.hpp"
+#include "ioh/problem/single.hpp"
 #include "ioh/problem/transformation.hpp"
 
 namespace ioh::problem
 {
     //! PBO base class
-    class PBO : public Integer
+    class PBO : public IntegerSingleObjective
     {
     protected:
         //! Variables transformation method
@@ -52,7 +52,7 @@ namespace ioh::problem
          * @param name the name of the problem
          */
         PBO(const int problem_id, const int instance, const int n_variables, const std::string &name) :
-            Integer(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::MAX),
+            IntegerSingleObjective(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::MAX),
                     Bounds<int>(n_variables, 0, 1))
         {
         }
@@ -66,7 +66,7 @@ namespace ioh::problem
     template <typename ProblemType>
     class PBOProblem : public PBO,
                        AutomaticProblemRegistration<ProblemType, PBO>,
-                       AutomaticProblemRegistration<ProblemType, Integer>
+                       AutomaticProblemRegistration<ProblemType, IntegerSingleObjective>
     {
     public:
         using PBO::PBO;

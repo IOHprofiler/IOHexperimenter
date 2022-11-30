@@ -24,7 +24,7 @@ inline void single_logger_example()
     std::cout << "==========\nAn example of testing logger\n==========" << std::endl;
     auto logger = get_logger();
     /// Instatiate a bbob suite of problem {1,2}, intance {1, 2} and dimension {5,10}.
-    const auto &suite_factory = ioh::suite::SuiteRegistry<ioh::problem::Real>::instance();
+    const auto &suite_factory = ioh::suite::SuiteRegistry<ioh::problem::RealSingleObjective>::instance();
     const auto suite = suite_factory.create("BBOB", {1, 2}, {1, 2}, {5, 10});
 
 

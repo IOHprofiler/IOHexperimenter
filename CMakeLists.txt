@@ -6,7 +6,7 @@ file(READ VERSION VERSION_STRING)
 project(ioh    
     VERSION ${VERSION_STRING} 
     LANGUAGES CXX  
-) 
+)  
   
 add_compile_definitions(PROJECT_VER="${CMAKE_PROJECT_VERSION}")
 set(CMAKE_CXX_STANDARD 17)  
@@ -23,7 +23,7 @@ option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF) 
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /bigobj")
 endif()   
- 
+  
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")  
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++17 -lstdc++fs")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math")
@@ -149,7 +149,7 @@ export(EXPORT ioh-targets
     NAMESPACE ioh::
 )
 export(PACKAGE ioh)
-
+ 
 
 # Add subdirectories to build.
 if(BUILD_TESTS) 

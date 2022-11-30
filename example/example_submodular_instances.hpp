@@ -1,6 +1,7 @@
+#pragma once
 #include "ioh.hpp"
 
-void random_search(const std::shared_ptr<ioh::problem::Integer> p)
+void random_search(const std::shared_ptr<ioh::problem::IntegerSingleObjective> p)
 {
     for (int i = 0; i < 100; i++)
         (*p)(ioh::common::random::integers(p->meta_data().n_variables, 0, 1));
@@ -29,7 +30,7 @@ void example_evaluation()
     }
 }
 
-void example_suite_with_logging()
+void example_submodular_suite_with_logging()
 {
     using namespace ioh::problem;
     
@@ -51,8 +52,4 @@ void example_suite_with_logging()
             problem->reset();
         }
     }
-}
-
-int main() {
-    example_suite_with_logging();
 }

@@ -57,7 +57,7 @@ namespace ioh::logger
                 //! At what eval was the point recorded
                 size_t evals;
                 //! Value of the point
-                problem::Solution<double> point;
+                problem::Solution<double, double> point;
 
                 /**
                  * @brief Construct a new Best Point object
@@ -65,7 +65,7 @@ namespace ioh::logger
                  * @param evals At what eval was the point recorded
                  * @param point Value of the point
                  */
-                BestPoint(const size_t evals = 0, const problem::Solution<double> &point = {}) :
+                BestPoint(const size_t evals = 0, const problem::Solution<double, double> &point = {}) :
                     evals(evals), point(point)
                 {
                 }
