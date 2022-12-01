@@ -58,7 +58,7 @@ f1.meta_data
 ```
 
 ```python
-f1.constraint
+f1.bounds
 ```
 
 ```python
@@ -92,7 +92,7 @@ def random_search(func, budget = None):
         budget = int(func.meta_data.n_variables * 1e3)
 
     for i in range(budget):
-        x = np.random.uniform(func.constraint.lb, func.constraint.ub)
+        x = np.random.uniform(func.bounds.lb, func.bounds.ub)
         func(x)
 ```
 
@@ -130,6 +130,7 @@ To ensure all data is written, we should flush the logger after running our expe
 
 ```python
 f.reset()
+l.close()
 ```
 
 Note that we should call the `reset` method on a problem. By calling the `reset` method, the problem's internal state is automatically reset, and the data for the attached loggers will be flushed to the output streams. This function should also be used when performing multiple runs of the same problem in a loop, for example:
@@ -145,6 +146,7 @@ for run in range(10):
 ```
 
 ### Tracking parameters
+
 If we want to track parameters of the algorithm, these variables need to be aviable on a object, i.e. as member variables on a class instance. In order to do this for the random search algorithm, we can do this be wrapping the function in a class.
 
 ```python
@@ -163,7 +165,7 @@ class RandomSearch:
         self.f_opt = np.Inf
         self.x_opt = None
         for i in range(self.budget):
-            x = np.random.uniform(func.constraint.lb, func.constraint.ub)
+            x = np.random.uniform(func.bounds.lb, func.bounds.ub)
             
             # Update the tracked parameter
             self.a_tracked_parameter = i ** 10 
@@ -205,7 +207,7 @@ for run in range(10):
     algorithm.reset() # update the algorithm_id parameter
 ```
 
-Alternatively, we can use the `Experiment` class, to more easily run the benchmarking experiment with multiple functions. 
+Alternatively, we can use the `Experiment` class, to more easily run the benchmarking experiment with multiple functions.
 
 ```python
 from ioh import Experiment
@@ -216,7 +218,6 @@ help(Experiment)
 ```
 
 This can be initialized using a suite (PBO or BBOB are available) by providing lists of function ids (or names), dimensions, instance ids and a number of independent repetitions as follows:
-
 
 ```python
 exp = Experiment(
@@ -237,5 +238,5 @@ exp = Experiment(
 ```python
 exp.run()
 ```
-To start analyzing this data, simply upload the zip 'data'-folder and upload it to the IOHanalyzer!
 
+To start analyzing this data, simply upload the zip 'data'-folder and upload it to the IOHanalyzer!

@@ -12,5 +12,11 @@ graft external/pybind11/include
 graft external/pybind11/tools
 include external/pybind11/CMakeLists.txt
 
+graft external/json/include
+graft external/json/cmake
+include external/json/CMakeLists.txt
+
 include external/clutchlog/clutchlog/clutchlog.h external/clutchlog/CMakeLists.txt
-include generate_docs.py
+include doc/generate_docs.py doc/__init__.py
+include VERSION
+include pyproject.toml

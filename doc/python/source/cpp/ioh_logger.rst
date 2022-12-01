@@ -130,7 +130,7 @@ _on_improvement
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenvariable:: ioh::logger::_on_improvement
 
-_transformed_y_best
+_y_best
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenvariable:: ioh::logger::_transformed_y_best
+.. doxygenvariable:: ioh::logger::_y_best
 

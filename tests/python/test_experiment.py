@@ -52,10 +52,11 @@ class TestExperiment(unittest.TestCase):
             return 0.0
             
         exp.add_custom_problem(a_problem, "Name")
+        pid = ioh.get_problem_id("Name", "Real")
         exp()
 
-        info_files = {'IOHprofiler_f25_Name.info', 'IOHprofiler_f1_Sphere.info'}
-        data_files = {'IOHprofiler_f25_DIM5.dat', 'IOHprofiler_f1_DIM5.dat'}
+        info_files = {f'IOHprofiler_f{pid}_Name.info', 'IOHprofiler_f1_Sphere.info'}
+        data_files = {f'IOHprofiler_f{pid}_DIM5.dat', 'IOHprofiler_f1_DIM5.dat'}
 
         for item in os.listdir('ioh_data'):
             path = os.path.join('ioh_data', item)
@@ -72,7 +73,6 @@ class TestExperiment(unittest.TestCase):
 
                         self.assertEqual(len(data), 4)
                         data_files.remove(f)
-
 
         self.assertSetEqual(info_files, set())
         self.assertSetEqual(data_files, set())

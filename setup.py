@@ -4,9 +4,11 @@ import sys
 import platform
 import subprocess
 import atexit
-from generate_docs import main, generate_stubs
-from setuptools import setup, Extension, find_packages
+from setuptools import setup, Extension, find_packages 
 from setuptools.command.build_ext import build_ext
+
+from doc.generate_docs import main, generate_stubs
+
 
 DIR = os.path.realpath(os.path.dirname(__file__))
 with open(os.path.join(DIR, "VERSION")) as f:
