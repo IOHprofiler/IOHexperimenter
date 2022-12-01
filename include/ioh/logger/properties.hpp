@@ -559,7 +559,7 @@ struct fmt::formatter<std::reference_wrapper<ioh::logger::Property>> : formatter
 {
     template <typename FormatContext>
     //! Format call interface
-    auto format(const std::reference_wrapper<ioh::logger::Property> &a, FormatContext &ctx)
+    auto format(const std::reference_wrapper<ioh::logger::Property> &a, FormatContext &ctx) const
     {
         return formatter<std::string>::format(a.get().name(), ctx);
     }

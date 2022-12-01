@@ -44,34 +44,34 @@ namespace ioh::problem
         //! Main call interface
         virtual double operator()(const std::vector<T> &x) override
         {
-            if (!check_input(x))
+            if (!this->check_input(x))
                 return std::numeric_limits<double>::signaling_NaN();
 
-            state_.current.x = x;
-            if (constraintset_.hard_violation(x))
+            this->state_.current.x = x;
+            if (this->constraintset_.hard_violation(x))
             {
-                state_.current_internal.x = x;
-                state_.current_internal.y = constraintset_.penalize(meta_data_.optimization_type.initial_value());
-                state_.y_unconstrained = state_.current_internal.y;
-                state_.current.y = state_.current_internal.y;
+                this->state_.current_internal.x = x;
+                this->state_.current_internal.y = this->constraintset_.penalize(this->meta_data_.optimization_type.initial_value());
+                this->state_.y_unconstrained = this->state_.current_internal.y;
+                this->state_.current.y = this->state_.current_internal.y;
             }
             else
             {
-                state_.current_internal.x = transform_variables(x);
-                state_.current_internal.y = evaluate(state_.current_internal.x);
-                state_.y_unconstrained = transform_objectives(state_.current_internal.y);
-                state_.current.y = constraintset_.penalize(state_.y_unconstrained);
+                this->state_.current_internal.x = this->transform_variables(x);
+                this->state_.current_internal.y = this->evaluate(this->state_.current_internal.x);
+                this->state_.y_unconstrained = this->transform_objectives(this->state_.current_internal.y);
+                this->state_.current.y = this->constraintset_.penalize(this->state_.y_unconstrained);
             }
 
-            state_.update(meta_data_, optimum_);
+            this->state_.update(this->meta_data_, this->optimum_);
 
-            if (logger_ != nullptr)
+            if (this->logger_ != nullptr)
             {
-                log_info_.update(state_, constraintset_);
-                logger_->log(log_info());
+                this->log_info_.update(this->state_, this->constraintset_);
+                this->logger_->log(this->log_info());
             }
 
-            return state_.current.y;
+            return this->state_.current.y;
         }
     };
 

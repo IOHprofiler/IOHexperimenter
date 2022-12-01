@@ -56,7 +56,7 @@ namespace ioh::problem
         }
         else
         {
-            throw std::exception("Not implemented");
+            throw std::invalid_argument("Not implemented");
         }
     }
 }

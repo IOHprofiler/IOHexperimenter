@@ -21,7 +21,7 @@ namespace ioh
             friend std::ostream &operator<<(std::ostream &os, const HasRepr &obj) {
                 return os << obj.repr();
             }
-        };
+        };       
     }
 }
 
@@ -33,7 +33,7 @@ struct fmt::formatter<T, std::enable_if_t<std::is_base_of<ioh::common::HasRepr, 
     fmt::formatter<std::string> {
     //! format call interface
     template <typename FormatContext>
-    auto format(const ioh::common::HasRepr &a, FormatContext &ctx)
+    auto format(const ioh::common::HasRepr &a, FormatContext &ctx) const
     {
         return formatter<std::string>::format(a.repr(), ctx);
     }
@@ -48,9 +48,8 @@ struct fmt::formatter<std::shared_ptr<T>, std::enable_if_t<std::is_base_of<ioh::
 {
     //! format call interface
     template <typename FormatContext>
-    auto format(const std::shared_ptr<T> &a, FormatContext &ctx)
+    auto format(const std::shared_ptr<T>& a, FormatContext &ctx) const
     {
         return formatter<std::string>::format(a->repr(), ctx);
     }
 };
-

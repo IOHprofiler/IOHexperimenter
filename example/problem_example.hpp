@@ -81,13 +81,13 @@ ioh::problem::Solution<double, double> calculate_objective(const int iid, const 
 }
 
 //! Example of a variables transformation function
-std::vector<double> tx(std::vector<double> x, const int iid){
+std::vector<double> transform_x(std::vector<double> x, const int iid){
     x.at(0) = static_cast<double>(iid);
     return x;
 }
 
 //! Example of a objective transformation function
-double ty(const double y, const int iid){
+double transform_y(const double y, const int iid){
     return y * iid;
 }
 
@@ -108,8 +108,8 @@ inline void extending_problems_example()
         sum_vector, "Sum", ioh::common::OptimizationType::MIN, 
         -1, // the lower bound for the constraint
         10, // the upper bound for the constraint
-        tx, // variables transformation function, transforms x prior to calling f(x)
-        ty, // objective transformation function, transforms the output of f(x), i.e. t(f(x))
+        transform_x, // variables transformation function, transforms x prior to calling f(x)
+        transform_y, // objective transformation function, transforms the output of f(x), i.e. t(f(x))
         calculate_objective // compute the value for the objective for this function
     );
     
