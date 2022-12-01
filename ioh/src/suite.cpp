@@ -64,9 +64,9 @@ void define_base_class(py::module &m, const std::string &name)
 
 void define_suite(py::module &m)
 {
-    define_base_class<Suite<ioh::problem::Real>>(m, "RealBase");
+    define_base_class<Suite<ioh::problem::RealSingleObjective>>(m, "RealBase");
 
-    py::class_<Real, Suite<ioh::problem::Real>, std::shared_ptr<Real>>(m, "Real",
+    py::class_<Real, Suite<ioh::problem::RealSingleObjective>, std::shared_ptr<Real>>(m, "Real",
                                                                        R"pbdoc(
         Suite with real-valued functions included in IOH. 
 
@@ -82,7 +82,7 @@ void define_suite(py::module &m)
         .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(), py::arg("problem_ids"),
              py::arg("instances"), py::arg("dimensions"));
 
-    py::class_<BBOB, Suite<ioh::problem::Real>, std::shared_ptr<BBOB>>(m, "BBOB", R"pbdoc(
+    py::class_<BBOB, Suite<ioh::problem::RealSingleObjective>, std::shared_ptr<BBOB>>(m, "BBOB", R"pbdoc(
             Suite with real-valued functions from BBOB single-objective benchmark.
 
             Parameters
@@ -99,9 +99,9 @@ void define_suite(py::module &m)
              py::arg("problem_ids") = std::vector<int>{}, py::arg("instances") = std::vector<int>{1},
              py::arg("dimensions") = std::vector<int>{5});
 
-    define_base_class<Suite<ioh::problem::Integer>>(m, "IntegerBase");
+    define_base_class<Suite<ioh::problem::IntegerSingleObjective>>(m, "IntegerBase");
 
-    py::class_<Integer, Suite<ioh::problem::Integer>, std::shared_ptr<Integer>>(m, "Integer",
+    py::class_<Integer, Suite<ioh::problem::IntegerSingleObjective>, std::shared_ptr<Integer>>(m, "Integer",
                                                                                 R"pbdoc(
             Suite with integer-valued functions included in IOH. 
 
@@ -117,7 +117,7 @@ void define_suite(py::module &m)
         .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(), py::arg("problem_ids"),
              py::arg("instances"), py::arg("dimensions"));
 
-    py::class_<PBO, Suite<ioh::problem::Integer>, std::shared_ptr<PBO>>(m, "PBO",
+    py::class_<PBO, Suite<ioh::problem::IntegerSingleObjective>, std::shared_ptr<PBO>>(m, "PBO",
                                                                         R"pbdoc(
             Suite with integer-valued functions from PBO single objective benchmark.
 
@@ -138,7 +138,7 @@ void define_suite(py::module &m)
              py::arg("problem_ids") = std::vector<int>{}, py::arg("instances") = std::vector<int>{1},
              py::arg("dimensions") = std::vector<int>{16});
 
-    py::class_<Submodular, Suite<ioh::problem::Integer>, std::shared_ptr<Submodular>>(m, "Submodular",
+    py::class_<Submodular, Suite<ioh::problem::IntegerSingleObjective>, std::shared_ptr<Submodular>>(m, "Submodular",
                                                                                       R"pbdoc(
             Suite with integer-valued functions from Submodular single objective benchmark.
 

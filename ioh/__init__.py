@@ -1,8 +1,7 @@
-"""Python interface of IOH package. Includes several ease-of-use routines not available in C++. 
-"""
+"""Python interface of IOH package. Includes several ease-of-use routines not available in C++."""
 
-from heapq import merge
 import os
+import enum
 import math
 import warnings
 import itertools
@@ -31,17 +30,34 @@ from .iohcpp import (
 )
 
 
-ProblemType = typing.Union[problem.Real, problem.Integer]
+
+ProblemInstanceType = typing.Union[problem.RealSingleObjective, problem.IntegerSingleObjective]
 VariableType = typing.Union[int, float]
 ObjectiveType = typing.List[VariableType]
+
+class ProblemType(enum.Enum):
+    """Enum for different problem types, values are class names"""
+
+    REAL = "RealSingleObjective"
+    INTEGER = "IntegerSingleObjective"
+
+    BBOB = "BBOB"
+    PBO = "PBO"
+    GRAPH = "GraphProblem"
+
+    def is_real(self):
+        return self in (ProblemType.REAL, ProblemType.BBOB,) 
+    
+    def is_single_objective(self):
+        return True
 
 
 def get_problem(
     fid: typing.Union[int, str],
     instance: int = 1,
     dimension: int = 5,
-    problem_type: str = "Real",
-) -> ProblemType:
+    problem_type: ProblemType = ProblemType.REAL,
+) -> ProblemInstanceType:
     """Instantiate a problem based on its function ID, dimension, instance and suite
 
     Parameters
@@ -52,17 +68,14 @@ def get_problem(
         The instance ID of the problem
     dimension: int
         The dimension (number of variables) of the problem
-    problem_type: str
+    problem_type: ProblemVariant
         Which suite the problem is from. Either 'BBOB' or 'PBO' or 'Real' or 'Integer'
         Only used if fid is an int.
 
     """
-    if (
-        problem_type
-        in (
-            "PBO",
-            "Integer",
-        )
+
+    if ( 
+        not problem_type.is_real()
         and fid in [21, 23, "IsingTriangular", "NQueens"]
     ):
         if not math.sqrt(dimension).is_integer():
@@ -70,17 +83,13 @@ def get_problem(
                 "For this function, the dimension needs to be a perfect square!"
             )
     if (
-        problem_type
-        in (
-            "BBOB",
-            "Real",
-        )
+        problem_type.is_real()
         and fid in range(1, 25)
     ):
         if not dimension >= 2:
             raise ValueError("For BBOB functions the minimal dimension is 2")
 
-    base_problem = getattr(problem, problem_type)
+    base_problem = getattr(problem, problem_type.value)
     if base_problem:
         if fid not in (base_problem.problems.values() | base_problem.problems.keys()):
             raise ValueError(
@@ -94,7 +103,7 @@ def get_problem(
 def wrap_problem(
     function: typing.Callable[[ObjectiveType], float],
     name: str,
-    problem_type: str,
+    problem_type: ProblemType,
     dimension: int = 5,
     instance: int = 1,
     optimization_type: OptimizationType = OptimizationType.MIN,
@@ -107,7 +116,7 @@ def wrap_problem(
     ] = None,
     constraints: typing.List[typing.Union[IntegerConstraint, RealConstraint]] = None
 
-) -> ProblemType:
+) -> ProblemInstanceType:
     """Function to wrap a callable as an ioh function
 
     Parameters
@@ -117,8 +126,8 @@ def wrap_problem(
     name: str
         The name of the function. This can be used to create new instances of this function.
         Note, when not using unique names, this will override the previously wrapped functions.
-    problem_type: str
-        The type of the problem, accepted types are: 'Real' and 'Integer'
+    problem_type: ProblemVariant
+        The type of the problem.
     dimension: int
         The dimension (number of variables) of the problem
     instance: int
@@ -142,15 +151,13 @@ def wrap_problem(
     constraints: list[IntegerConstraint | RealConstraint]
         The constraints applied to the problem
     """
-
-    if problem_type == "Integer":
-        wrapper = problem.wrap_integer_problem
-    elif problem_type == "Real":
-        wrapper = problem.wrap_real_problem
-    else:
+    if not problem_type.is_single_objective():
         raise ValueError(
-            f"Problem type {problem_type} is not supported. Please select one of ('Integer', 'Real')"
+            f"Problem type {problem_type} is not supported."
         )
+
+    wrapper = problem.wrap_real_problem if problem_type.is_real() \
+        else problem.wrap_integer_problem 
 
     wrapper(
         function,
@@ -166,29 +173,27 @@ def wrap_problem(
     return get_problem(name, instance, dimension, problem_type)
 
 
-def get_problem_id(problem_name: str, problem_type: str) -> int: 
-    '''Get the problem id corresponding to a problem name of a given type
+def get_problem_id(problem_name: str, problem_type: ProblemType) -> int: 
+    """Get the problem id corresponding to a problem name of a given type
     
     Parameters
     ----------
-    problem_name:str
+    problem_name: str
         The name of the problem
-    problem_type:str
+    problem_type: ProblemVariant
         The type of the problem
     
     Returns
     -------
     int: the id of the problem
-    '''
-    if problem_type in ("BBOB", "PBO", "Integer", "Real"):
-        return {v: k for k, v in getattr(problem, problem_type).problems.items()}.get(
-            problem_name
-        )
-    raise ValueError(f"Problem type {problem_type} is not supported")
+    """    
+    return {v: k for k, v in getattr(problem, problem_type.value).problems.items()}.get(
+        problem_name
+    )
 
 
 class Experiment:
-    '''Class to help easily setup benchmarking experiments. '''
+    """Class to help easily setup benchmarking experiments. """
 
     def __init__(
         self,
@@ -197,7 +202,7 @@ class Experiment:
         iids: typing.List[int],
         dims: typing.List[int],
         reps: int = 1,
-        problem_type: str = "Real",
+        problem_type: ProblemType = ProblemType.REAL,
         njobs: int = 1,
         logged: bool = True,
         logger_triggers: typing.List[logger.trigger.Trigger] = [
@@ -235,10 +240,8 @@ class Experiment:
             reps: int = 1,
                 The number of independent repetitions for each problem, instance
                 dimension combination
-            problem_type: str = "BBOB"
-                The type of problems to test. Available are "PBO", "BBOB",  "Integer"
-                and "Real". Note that "Integer" and "Real" are supersets of "PBO"
-                and "BBOB" resp.
+            problem_type: ProblemVariant = ProblemVariant.REAL
+                The type of problems to test.
             njobs: int = 1
                 The number of parallel jobs, -1 assigns all available cpu's,
             logged: bool = True
@@ -363,14 +366,14 @@ class Experiment:
 
         self.apply(algorithm, p)
 
-    def apply(self, algorithm: any, problem: ProblemType):
+    def apply(self, algorithm: any, problem: ProblemInstanceType):
         """Apply a given algorithm to a problem"""
 
         for _ in range(self.reps):
             algorithm(problem)
             problem.reset()
 
-    def add_custom_problem(self, p: ProblemType, name: str = None, **kwargs):
+    def add_custom_problem(self, p: ProblemInstanceType, name: str = None, **kwargs):
         """Add a custom problem to the list of functions to be evaluated.
 
         Parameters
@@ -385,16 +388,10 @@ class Experiment:
 
         name = name or "CustomProblem"
 
-        if self.problem_type == "Integer":
+        if not self.problem_type.is_real():
             problem.wrap_integer_problem(p, name, **kwargs)
-        elif self.problem_type == "Real":
-            problem.wrap_real_problem(p, name, **kwargs)
         else:
-            warnings.warn(
-                "Adding custom problems is only allowed for problem_type in ('Integer', 'Real'). "
-                "The added problem is ignored."
-            )
-            return
+            problem.wrap_real_problem(p, name, **kwargs)
 
         self.fids.append(get_problem_id(name, self.problem_type))
 

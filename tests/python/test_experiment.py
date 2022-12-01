@@ -10,7 +10,7 @@ class Algorithm:
         self.x = 10
         self.i = 1
     
-    def __call__(self, p: ioh.problem.Real):
+    def __call__(self, p: ioh.problem.RealSingleObjective):
         for i in range(10000):
             x = list(
                 map(lambda x: 10 * random.random(), 

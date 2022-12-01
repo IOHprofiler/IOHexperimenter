@@ -20,10 +20,10 @@ bool register_python_fn(py::handle f)
 }
 
 
-template <typename T>
+template <typename T, typename R>
 void define_solution(py::module &m, const std::string &name)
 {
-    using Class = Solution<T>;
+    using Class = Solution<T, R>;
 
     py::options options;
     options.disable_function_signatures();
@@ -49,11 +49,11 @@ void define_solution(py::module &m, const std::string &name)
         .def("__repr__", &Class::repr);
 }
 
-template <typename T>
+template <typename T, typename R>
 void define_state(py::module &m, const std::string &name)
 {
-    using Class = State<T>;
-    using Class2 = Solution<T>;
+    using Class = State<T, R>;
+    using Class2 = Solution<T, R>;
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<Class2>(), py::arg("initial"),
              R"pbdoc(
@@ -280,8 +280,6 @@ public:
     {
         PYBIND11_OVERRIDE(double, P, transform_objectives, y);
     }
-
-    void update_log_info() override { PYBIND11_OVERRIDE(void, P, update_log_info); }
 };
 
 template <typename ProblemType, typename T>
@@ -339,7 +337,6 @@ void define_base_class(py::module &m, const std::string &name)
                         of the tranformations in the search/objective spaces
                     dimension: integer, representing the dimensionality of the search space
             )pbdoc")
-        .def("update_log_info", &ProblemType::update_log_info, "Update current log info struct")
         .def_static(
             "create", [](int id, int iid, int dim) { return Factory::instance().create(id, iid, dim); },
             py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
@@ -369,6 +366,7 @@ void define_base_class(py::module &m, const std::string &name)
                                "The optimum and its objective value for a problem instance")
         .def_property_readonly("bounds", &ProblemType::bounds, "The bounds of the problem.")
         .def_property_readonly("constraints", &ProblemType::constraints, "The constraints of the problem.")
+        .def_property("log_info", &ProblemType::log_info, &ProblemType::set_log_info)
         .def("add_constraint", &ProblemType::add_constraint, "add a constraint")
         .def("remove_constraint", &ProblemType::remove_constraint, "remove a constraint")
         .def("enforce_bounds", &ProblemType::enforce_bounds, py::arg("weight") = 1.,
@@ -385,8 +383,8 @@ void define_base_class(py::module &m, const std::string &name)
 template <typename T>
 void define_wrapper_functions(py::module &m, const std::string &class_name, const std::string &function_name)
 {
-    using WrappedProblem = WrappedProblem<T>;
-    py::class_<WrappedProblem, Problem<T>, std::shared_ptr<WrappedProblem>>(m, class_name.c_str(),
+    using WrappedProblem = SingleObjectiveWrappedProblem<T>;
+    py::class_<WrappedProblem, SingleObjectiveProblem<T>, std::shared_ptr<WrappedProblem>>(m, class_name.c_str(),
                                                                             py::buffer_protocol());
 
     m.def(
@@ -432,14 +430,14 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
                         py::tuple args = xt;
                         py::list x = args[0];
                         py::float_ y = args[1];
-                        return Solution<T>(x.cast<std::vector<T>>(), y.cast<double>());
+                        return Solution<T, double>(x.cast<std::vector<T>>(), y.cast<double>());
                     }
-                    return xt.cast<Solution<T>>();
+                    return xt.cast<Solution<T, double>>();
                 }
-                return Solution<T>(dim, t);
+                return Solution<T, double>(dim, t);
             };
 
-            wrap_function<T>(of, name, t, lb, ub, ptx, pty, pco, cs);
+            wrap_function<T, double>(of, name, t, lb, ub, ptx, pty, pco, cs);
         },
         py::arg("f"), py::arg("name"), py::arg("optimization_type") = ioh::common::OptimizationType::MIN,
         py::arg("lb") = std::nullopt, py::arg("ub") = std::nullopt, py::arg("transform_variables") = std::nullopt,
@@ -470,12 +468,12 @@ void define_helper_classes(py::module &m)
         .value("OVERRIDE", ioh::problem::constraint::Enforced::OVERRIDE)
         .export_values();
 
-    define_solution<double>(m, "RealSolution");
-    define_solution<int>(m, "IntegerSolution");
+    define_solution<double, double>(m, "RealSolution");
+    define_solution<int, double>(m, "IntegerSolution");
     define_constraint_types<int>(m, "Integer");
     define_constraint_types<double>(m, "Real");
-    define_state<double>(m, "RealState");
-    define_state<int>(m, "IntegerState");
+    define_state<double, double>(m, "RealState");
+    define_state<int, double>(m, "IntegerState");
 
 
     py::class_<MetaData>(m, "MetaData")
@@ -509,7 +507,7 @@ void define_helper_classes(py::module &m)
 
     py::class_<ioh::logger::Info>(m, "LogInfo")
         .def(py::init<size_t, double, double, double, double, double, double, std::vector<double>, std::vector<double>,
-                      std::vector<double>, Solution<double>, bool>(),
+                      std::vector<double>, Solution<double, double>, bool>(),
              py::arg("evaluations"), py::arg("raw_y"), py::arg("raw_y_best"), py::arg("transformed_y"),
              py::arg("transformed_y_best"), py::arg("y"), py::arg("y_best"), py::arg("x"), py::arg("violations"),
              py::arg("penalties"), py::arg("optimum"), py::arg("has_improved") = false,
@@ -566,7 +564,7 @@ void define_helper_classes(py::module &m)
 
 void define_pbo_problems(py::module &m)
 {
-    py::class_<PBO, Integer, std::shared_ptr<PBO>>(m, "PBO",
+    py::class_<PBO, IntegerSingleObjective, std::shared_ptr<PBO>>(m, "PBO",
                                                    R"pbdoc(
             Pseudo-Boolean Optimization (PBO) problem set.
             
@@ -712,7 +710,7 @@ void define_pbo_problems(py::module &m)
 
 void define_bbob_problems(py::module &m)
 {
-    py::class_<BBOB, Real, std::shared_ptr<BBOB>>(m, "BBOB",
+    py::class_<BBOB, RealSingleObjective, std::shared_ptr<BBOB>>(m, "BBOB",
                                                   R"pbdoc(
             Black-Box Optimization Benchmarking (BBOB) problem set.
 
@@ -837,10 +835,10 @@ void define_bbob_problems(py::module &m)
 
 void define_problem_bases(py::module &m)
 {
-    define_base_class<Real, double>(m, "Real");
-    define_base_class<Integer, int>(m, "Integer");
-    define_wrapper_functions<double>(m, "RealWrappedProblem", "wrap_real_problem");
-    define_wrapper_functions<int>(m, "IntegerWrappedProblem", "wrap_integer_problem");
+    define_base_class<RealSingleObjective, double>(m, "RealSingleObjective");
+    define_base_class<IntegerSingleObjective, int>(m, "IntegerSingleObjective");
+    define_wrapper_functions<double>(m, "RealSingleObjectiveWrappedProblem", "wrap_real_problem");
+    define_wrapper_functions<int>(m, "IntegerSingleObjectiveWrappedProblem", "wrap_integer_problem");
 }
 
 class WModelTrampoline : public WModel
@@ -860,7 +858,7 @@ public:
 
 void define_wmodels(py::module &m)
 {
-    py::class_<WModel, WModelTrampoline, Integer, std::shared_ptr<WModel>>(m, "AbstractWModel",
+    py::class_<WModel, WModelTrampoline, IntegerSingleObjective, std::shared_ptr<WModel>>(m, "AbstractWModel",
                                                                            R"pbdoc(
             An abstract W-model class. Please apply the WModelOneMax and WModelLeadingOnes classes.
              
@@ -964,7 +962,7 @@ void define_submodular_problems(py::module &m)
         .def("__repr__", &pwt::PWTConstraint::repr);
 
 
-    py::class_<GraphProblem, Integer, std::shared_ptr<GraphProblem>>(m, "GraphProblem", "Graph type problem")
+    py::class_<GraphProblem, IntegerSingleObjective, std::shared_ptr<GraphProblem>>(m, "GraphProblem", "Graph type problem")
         .def_static(
             "create",
             [](const std::string &name, int iid, int dim) {
