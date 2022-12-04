@@ -1,0 +1,16 @@
+{
+	"version": "0.3.5", 
+	"suite": "unknown_suite", 
+	"function_id": 1, 
+	"function_name": "Sphere", 
+	"maximization": false, 
+	"algorithm": {"name": "algorithm_name", "info": "algorithm_info"},
+	"attributes": ["evaluations", "raw_y"],
+	"scenarios": [
+		{"dimension": 5,
+		"path": "data_f1_Sphere/IOHprofiler_f1_DIM5.dat",
+		"runs": [
+			{"instance": 1, "evals": 5000, "best": {"evals": 2102, "y": 2.2885824215102826, "x": [-0.6826717615715081, -0.47001899170036143, 0.12882602509573715, 2.130314563751039, -2.264971341702929]}}
+		]}
+	]
+}

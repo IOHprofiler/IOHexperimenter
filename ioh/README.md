@@ -18,7 +18,7 @@ pip show ioh
 
 ### Create a function object
 
-The most basic way to use the IOHexperimenter is to just access the problems from our predefined problem suites. Currently, we have implemented 25 Pseudo-Boolean problems and the single-objective BBOB-problems from COCO.
+The most basic way to use the IOHexperimenter is to just access the problems from our predefined problem suites. For example one of the 25 Pseudo-Boolean problems or any of the single-objective BBOB-problems from COCO.
 
 To use these problems, you can import the associated module as follows:
 
@@ -36,19 +36,15 @@ These modules can then be used exactly as their c++ equivalent. However, for con
 To get a 5-dimensional sphere function, with instance number 1, you can use the following:
 
 ```python
-# C++ style
-f = problem.Real.create("Sphere", 1, 5)
-
-# Using wrapper
-from ioh import get_problem
-f = get_problem("Sphere", 1, 5)
+from ioh import get_problem, ProblemType
+f = get_problem("Sphere", 1, 5, ProblemType.BBOB)
 ```
 
 Instead of using the name of the function, you can also use their function number within their respecitve suite:
 
 ```python
 #Create a problem object from the Integer class (PBO functions) by fid, iid, dim
-f1 = get_problem(7, 1, 5, problem_type="PBO")
+f1 = get_problem(7, 1, 5, ProblemType.PBO)
 ```
 
 With these problem-objects, the state, meta_data and contrainsts can easily be accessed:
@@ -113,7 +109,7 @@ l = logger.Analyzer(folder_name="temp")
 This can then be attached to the problem:
 
 ```python
-f = get_problem(1, 1, 5, problem_type="BBOB")
+f = get_problem(1, 1, 5, ProblemType.BBOB)
 ```
 
 ```python
@@ -143,6 +139,7 @@ f5.attach_logger(l2)
 for run in range(10):    
     random_search(f5)
     f5.reset()
+l2.close()
 ```
 
 ### Tracking parameters
@@ -221,14 +218,14 @@ This can be initialized using a suite (PBO or BBOB are available) by providing l
 
 ```python
 exp = Experiment(
-    RandomSearch(10_000),   # instance of optimization algorithm
-    [1],                    # list of problem id's
-    [1, 2],                 # list of problem instances
-    [5],                    # list of problem dimensions
-    problem_type = 'BBOB',  # the problem type, function ids should correspond to problems of this type
-    njobs = 2,              # the number of parrellel jobs for running this experiment
-    reps = 2,               # the number of repetitions for each (id x instance x dim)
-    logged_attributes = [   # list of the tracked variables, must be available on the algorithm instance (RandomSearch)
+    RandomSearch(10_000),               # instance of optimization algorithm
+    [1],                                # list of problem id's
+    [1, 2],                             # list of problem instances
+    [5],                                # list of problem dimensions
+    problem_type = ProblemType.BBOB,    # the problem type, function ids should correspond to problems of this type
+    njobs = 2,                          # the number of parrellel jobs for running this experiment
+    reps = 2,                           # the number of repetitions for each (id x instance x dim)
+    logged_attributes = [               # list of the tracked variables, must be available on the algorithm instance (RandomSearch)
         "a_property", 
         "a_tracked_parameter"
     ]                      

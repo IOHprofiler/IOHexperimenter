@@ -104,8 +104,8 @@ def get_problem(
 
 def wrap_problem(
     function: typing.Callable[[ObjectiveType], float],
-    name: str,
-    problem_type: ProblemType,
+    name: str = None,
+    problem_type: ProblemType = ProblemType.REAL,
     dimension: int = 5,
     instance: int = 1,
     optimization_type: OptimizationType = OptimizationType.MIN,
@@ -156,6 +156,9 @@ def wrap_problem(
     if not isinstance(problem_type, ProblemType):
         raise AttributeError(f"problem_type should be of type {ProblemType}")
 
+    if name is None:
+        name = function.__name__
+    
     if not problem_type.is_single_objective():
         raise ValueError(
             f"Problem type {problem_type} is not supported."
@@ -383,7 +386,7 @@ class Experiment:
             algorithm(problem)
             problem.reset()
 
-    def add_custom_problem(self, p: ProblemInstanceType, name: str = None, **kwargs):
+    def add_custom_problem(self, p: callable, name: str = None, **kwargs):
         """Add a custom problem to the list of functions to be evaluated.
 
         Parameters
