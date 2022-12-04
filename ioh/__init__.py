@@ -73,6 +73,8 @@ def get_problem(
         Only used if fid is an int.
 
     """
+    if not isinstance(problem_type, ProblemType):
+        raise AttributeError(f"problem_type should be of type {ProblemType}")
 
     if ( 
         not problem_type.is_real()
@@ -151,6 +153,9 @@ def wrap_problem(
     constraints: list[IntegerConstraint | RealConstraint]
         The constraints applied to the problem
     """
+    if not isinstance(problem_type, ProblemType):
+        raise AttributeError(f"problem_type should be of type {ProblemType}")
+
     if not problem_type.is_single_objective():
         raise ValueError(
             f"Problem type {problem_type} is not supported."
@@ -189,7 +194,7 @@ def get_problem_id(problem_name: str, problem_type: ProblemType) -> int:
     """    
     if not isinstance(problem_type, ProblemType):
         raise AttributeError(f"problem_type should be of type {ProblemType}")
-        
+
     return {v: k for k, v in getattr(problem, problem_type.value).problems.items()}.get(
         problem_name
     )
