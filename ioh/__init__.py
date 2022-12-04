@@ -298,6 +298,8 @@ class Experiment:
                 Whether to remove all the produced data, except for the .zip file
                 (when produced).
         """
+        if not isinstance(problem_type, ProblemType):
+           raise AttributeError(f"problem_type should be of type {ProblemType}")
 
         self.algorithm = algorithm
         self.logger_root = os.path.realpath(os.path.join(output_directory, folder_name))
