@@ -187,6 +187,9 @@ def get_problem_id(problem_name: str, problem_type: ProblemType) -> int:
     -------
     int: the id of the problem
     """    
+    if not isinstance(problem_type, ProblemType):
+        raise AttributeError(f"problem_type should be of type {ProblemType}")
+        
     return {v: k for k, v in getattr(problem, problem_type.value).problems.items()}.get(
         problem_name
     )

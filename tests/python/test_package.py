@@ -19,7 +19,6 @@ class TestPackage(unittest.TestCase):
                 stderr=subprocess.PIPE
             )
             
-            print(result.stderr)
             self.assertEqual(result.returncode, 0)
             
             source_dist, *_ = glob.glob(f"{tmpdirname}/*")

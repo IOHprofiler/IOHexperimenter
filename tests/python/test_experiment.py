@@ -52,7 +52,7 @@ class TestExperiment(unittest.TestCase):
             return 0.0
             
         exp.add_custom_problem(a_problem, "Name")
-        pid = ioh.get_problem_id("Name", "Real")
+        pid = ioh.get_problem_id("Name", ioh.ProblemType.REAL)
         exp()
 
         info_files = {f'IOHprofiler_f{pid}_Name.info', 'IOHprofiler_f1_Sphere.info'}
