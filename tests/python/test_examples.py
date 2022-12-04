@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import shutil
 import unittest
@@ -43,6 +44,7 @@ class MetaTest(type):
 class TestExamples(unittest.TestCase, metaclass=MetaTest):
 
     """Examples test"""
+    @unittest.skipUnless(sys.platform != "win32", "readme freezes on windows")
     def test_python_readme(self):
         try:
             fname = os.path.join(BASE_DIR, "ioh", "README.md")
