@@ -15,6 +15,7 @@ IntegerState
       ~IntegerState.current_best_internal
       ~IntegerState.current_internal
       ~IntegerState.evaluations
+      ~IntegerState.has_improved
       ~IntegerState.optimum_found
       ~IntegerState.y_unconstrained
       ~IntegerState.y_unconstrained_best
@@ -26,6 +27,7 @@ IntegerState
    .. autoattribute:: current_best_internal
    .. autoattribute:: current_internal
    .. autoattribute:: evaluations
+   .. autoattribute:: has_improved
    .. autoattribute:: optimum_found
    .. autoattribute:: y_unconstrained
    .. autoattribute:: y_unconstrained_best

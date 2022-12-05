@@ -30,7 +30,6 @@ OneMaxRuggedness3
       ~OneMaxRuggedness3.enforce_bounds
       ~OneMaxRuggedness3.remove_constraint
       ~OneMaxRuggedness3.reset
-      ~OneMaxRuggedness3.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ OneMaxRuggedness3
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

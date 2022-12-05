@@ -30,7 +30,6 @@ OneMaxNeutrality
       ~OneMaxNeutrality.enforce_bounds
       ~OneMaxNeutrality.remove_constraint
       ~OneMaxNeutrality.reset
-      ~OneMaxNeutrality.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ OneMaxNeutrality
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

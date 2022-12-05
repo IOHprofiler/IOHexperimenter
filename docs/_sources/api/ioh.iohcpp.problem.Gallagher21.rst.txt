@@ -30,7 +30,6 @@ Gallagher21
       ~Gallagher21.enforce_bounds
       ~Gallagher21.remove_constraint
       ~Gallagher21.reset
-      ~Gallagher21.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ Gallagher21
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

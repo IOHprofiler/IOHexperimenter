@@ -30,7 +30,6 @@ Katsuura
       ~Katsuura.enforce_bounds
       ~Katsuura.remove_constraint
       ~Katsuura.reset
-      ~Katsuura.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ Katsuura
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

@@ -30,7 +30,6 @@ LunacekBiRastrigin
       ~LunacekBiRastrigin.enforce_bounds
       ~LunacekBiRastrigin.remove_constraint
       ~LunacekBiRastrigin.reset
-      ~LunacekBiRastrigin.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ LunacekBiRastrigin
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

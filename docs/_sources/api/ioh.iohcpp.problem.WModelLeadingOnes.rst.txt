@@ -30,7 +30,6 @@ WModelLeadingOnes
       ~WModelLeadingOnes.enforce_bounds
       ~WModelLeadingOnes.remove_constraint
       ~WModelLeadingOnes.reset
-      ~WModelLeadingOnes.update_log_info
       ~WModelLeadingOnes.wmodel_evaluate
 
    .. rubric:: Attributes Documentation
@@ -53,5 +52,4 @@ WModelLeadingOnes
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info
    .. automethod:: wmodel_evaluate

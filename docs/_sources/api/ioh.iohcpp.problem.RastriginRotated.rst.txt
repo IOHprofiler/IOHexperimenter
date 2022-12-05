@@ -30,7 +30,6 @@ RastriginRotated
       ~RastriginRotated.enforce_bounds
       ~RastriginRotated.remove_constraint
       ~RastriginRotated.reset
-      ~RastriginRotated.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ RastriginRotated
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

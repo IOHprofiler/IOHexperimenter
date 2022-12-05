@@ -15,6 +15,7 @@ RealState
       ~RealState.current_best_internal
       ~RealState.current_internal
       ~RealState.evaluations
+      ~RealState.has_improved
       ~RealState.optimum_found
       ~RealState.y_unconstrained
       ~RealState.y_unconstrained_best
@@ -26,6 +27,7 @@ RealState
    .. autoattribute:: current_best_internal
    .. autoattribute:: current_internal
    .. autoattribute:: evaluations
+   .. autoattribute:: has_improved
    .. autoattribute:: optimum_found
    .. autoattribute:: y_unconstrained
    .. autoattribute:: y_unconstrained_best

@@ -30,7 +30,6 @@ LeadingOnesDummy1
       ~LeadingOnesDummy1.enforce_bounds
       ~LeadingOnesDummy1.remove_constraint
       ~LeadingOnesDummy1.reset
-      ~LeadingOnesDummy1.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ LeadingOnesDummy1
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

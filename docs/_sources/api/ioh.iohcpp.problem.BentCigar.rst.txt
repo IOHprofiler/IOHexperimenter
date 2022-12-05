@@ -30,7 +30,6 @@ BentCigar
       ~BentCigar.enforce_bounds
       ~BentCigar.remove_constraint
       ~BentCigar.reset
-      ~BentCigar.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ BentCigar
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

@@ -30,7 +30,6 @@ Linear
       ~Linear.enforce_bounds
       ~Linear.remove_constraint
       ~Linear.reset
-      ~Linear.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ Linear
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

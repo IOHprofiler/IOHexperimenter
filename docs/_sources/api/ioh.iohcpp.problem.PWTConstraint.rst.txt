@@ -11,6 +11,7 @@ PWTConstraint
    .. autosummary::
 
       ~PWTConstraint.enforced
+      ~PWTConstraint.exponent
       ~PWTConstraint.weight
 
    .. rubric:: Methods Summary
@@ -27,6 +28,7 @@ PWTConstraint
    .. rubric:: Attributes Documentation
 
    .. autoattribute:: enforced
+   .. autoattribute:: exponent
    .. autoattribute:: weight
 
    .. rubric:: Methods Documentation
