@@ -6,31 +6,29 @@
 
 **Experimenter** for **I**terative **O**ptimization **H**euristics (IOHs), built in* `C++`.
 
-* **Documentation**: [https://iohprofiler.github.io/IOHexperimenter](https://iohprofiler.github.io/IOHexperimenter)
-* **Publication**: [https://arxiv.org/abs/1810.05281](https://arxiv.org/abs/1810.05281)
-* **Wiki page**: [https://iohprofiler.github.io](https://iohprofiler.github.io/)
+* **Documentation**: [https://iohprofiler.github.io/IOHexperimenter](https://iohprofiler.github.io/IOHexperimenter).
+* **Publication**: [https://arxiv.org/abs/1810.05281](https://arxiv.org/abs/1810.05281).
+* **Wiki page**: [https://iohprofiler.github.io](https://iohprofiler.github.io/).
 
 **IOHexperimenter** *provides*:
 
-* A framework to ease the benchmarking of any iterative optimization heuristic
-* [Pseudo-Boolean Optimization (PBO)](https://iohprofiler.github.io/IOHproblem/) problem set (25 pseudo-Boolean problems)
-* Integration of the well-known [Black-black Optimization Benchmarking (BBOB)](https://github.com/numbbo/coco) problem set (24 continuous problems)
-* [W-model](https://dl.acm.org/doi/abs/10.1145/3205651.3208240?casa_token=S4U_Pi9f6MwAAAAA:U9ztNTPwmupT8K3GamWZfBL7-8fqjxPtr_kprv51vdwA-REsp0EyOFGa99BtbANb0XbqyrVg795hIw) problem sets constructed on OneMax and LeadingOnes
-* Integration of the [Tree Decomposition (TD) Mk Landscapes](https://github.com/tobiasvandriessel/problem-generator) problems
-* Integration of the submodular optimization problems in [Competition - Evolutionary Submodular Optimisation GECCO 2022](https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php)
-* Interface for adding new problems and suite/problem set
-* Advanced logging module that takes care of registering the data in a seamless manner
-* Data format is compatible with [IOHanalyzer](https://github.com/IOHprofiler/IOHanalyzer)
+* A framework to ease the benchmarking of any iterative optimization heuristic.
+* [Pseudo-Boolean Optimization (PBO)](https://iohprofiler.github.io/IOHproblem/) problem set (25 pseudo-Boolean problems).
+* Integration of the well-known [Black-black Optimization Benchmarking (BBOB)](https://github.com/numbbo/coco) problem set (24 continuous problems).
+* [W-model](https://dl.acm.org/doi/abs/10.1145/3205651.3208240?casa_token=S4U_Pi9f6MwAAAAA:U9ztNTPwmupT8K3GamWZfBL7-8fqjxPtr_kprv51vdwA-REsp0EyOFGa99BtbANb0XbqyrVg795hIw) problem sets constructed on OneMax and LeadingOnes.
+* Integration of the [Tree Decomposition (TD) Mk Landscapes](https://github.com/tobiasvandriessel/problem-generator) problems.
+* Submodular optimization problems, as seen in the [GECCO '22 workshop](https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php).
+* Flexible interface for adding new suites and problems.
+* Advanced logging module that takes care of registering the data in a seamless manner.
+* Data format is compatible with [IOHanalyzer](https://github.com/IOHprofiler/IOHanalyzer).
 
 ## C++
 
-The complete API documentation, can be found [here](https://iohprofiler.github.io/IOHexperimenter/cpp).
-In addition to the documentation, some example projects can be found in the [example](./example/) folder of this repository.
+The complete API documentation, can be found [here](https://iohprofiler.github.io/IOHexperimenter/cpp). In addition to the documentation, some example projects can be found in the [example](./example/) folder of this repository.
 
 ## Python
 
-The pip-version of IOHexperimenters python interface is available via [pip](https://pypi.org/project/ioh).
-A tutorial with python in the form of a jupyter notebook can be found in the example folder of this repository, [here](./example/tutorial.ipynb).
+The pip-version of IOHexperimenters python interface is available via [pip](https://pypi.org/project/ioh). A tutorial with python in the form of a jupyter notebook can be found in the example folder of [this repository](./example/tutorial.ipynb).
 The full API documentation can be found [here](https://iohprofiler.github.io/IOHexperimenter/python).
 
 ## Contact

@@ -30,7 +30,6 @@ LeadingOnesNeutrality
       ~LeadingOnesNeutrality.enforce_bounds
       ~LeadingOnesNeutrality.remove_constraint
       ~LeadingOnesNeutrality.reset
-      ~LeadingOnesNeutrality.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ LeadingOnesNeutrality
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

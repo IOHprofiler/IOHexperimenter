@@ -30,7 +30,6 @@ IsingRing
       ~IsingRing.enforce_bounds
       ~IsingRing.remove_constraint
       ~IsingRing.reset
-      ~IsingRing.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ IsingRing
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

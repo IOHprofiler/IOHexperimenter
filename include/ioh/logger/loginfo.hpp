@@ -106,7 +106,7 @@ namespace ioh {
              * @brief allocate static (during a run) values for the log info
              *
              * @tparam the type of the problem
-             * @param optimum the optimum of the problem
+             * @param opt the optimum of the problem
              * @param constraintset the set of constraints for the problem
              */
             template<typename T>

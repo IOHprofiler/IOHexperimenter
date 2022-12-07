@@ -175,7 +175,13 @@ namespace ioh
                     logger_->reset();
                 logger_ = nullptr;
             }
-                      
+            /**
+             * @brief Enforced the bounds(box-constraints) as constraint
+             * 
+             * @param weight The weight for computing the penalty
+             * @param how The constraint::Enforced strategy
+             * @param exponent the exponent for scaling the contraint
+             */
             void enforce_bounds(const double weight = 1.0, const constraint::Enforced how = constraint::Enforced::SOFT, const double exponent = 1.0)
             {
                 
@@ -272,7 +278,7 @@ namespace ioh
 
 
         /**
-         * @brief typedef for functions which can be wrapped in \ref WrappedProblem
+         * @brief typedef for functions which can be wrapped in \ref SingleObjectiveWrappedProblem
          *
          * @tparam T type of the problem
          * @tparam R the returntype of the problem

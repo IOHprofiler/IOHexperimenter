@@ -152,15 +152,15 @@ namespace ioh
             //! Default constructible
             Solution() = default;
 
-            /** @brief Returns true if the solution's objective has been set.
-             */
+            //! Returns true if the solution's objective has been set.
             bool exists() const
             {
                 return y.size() != 0 and y[0] != std::numeric_limits<double>::signaling_NaN() and
                     y[0] != std::numeric_limits<double>::infinity() and
                     y[0] != -std::numeric_limits<double>::infinity();
             }
-
+            
+            //! Equality operator
             bool operator==(const Solution<T, MultiObjective> &other) const
             {
                 if (y.size() == 0)
@@ -172,7 +172,7 @@ namespace ioh
                         return false;
                 return true;
             }
-
+            //! String representation
             std::string repr() const override
             {
                 return fmt::format("<Solution x: [{}] y: [{}]>", fmt::join(x, ","), fmt::join(y, ","));
@@ -267,7 +267,7 @@ namespace ioh
 
          //! Problem State`
         template <typename T>
-        struct State<T, std::vector<double>> : common::HasRepr
+        struct State<T, MultiObjective> : common::HasRepr
         {
         private:
             //Solution<T, double> initial_solution;
@@ -285,12 +285,10 @@ namespace ioh
                                    optimum_found);
             }
 
-             //! Update the state
-            void update(const MetaData &meta_data, const Solution<T, std::vector<double>> &objective) {
-
-            }
-
-
+            //! Update the state
+            void update(const MetaData &meta_data, const Solution<T, MultiObjective> &objective) { }
+            
+            //! Reset the state
             void reset() {
                 evaluations = 0;
                 optimum_found = false;

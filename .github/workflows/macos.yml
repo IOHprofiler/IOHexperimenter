@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         rust: [stable, nightly]
-        compiler: [clang++, gcc-11] 
+        compiler: [clang++] 
 
     steps:
     - uses: actions/checkout@v2

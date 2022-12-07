@@ -314,7 +314,7 @@ namespace ioh::suite
         }
     };
 
-
+    //! Submodular suite
     struct Submodular final : IntegerSuite<Submodular>
     {
         /**

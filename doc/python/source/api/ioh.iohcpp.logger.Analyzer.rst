@@ -21,6 +21,7 @@ Analyzer
       ~Analyzer.add_run_attributes
       ~Analyzer.add_trigger
       ~Analyzer.call
+      ~Analyzer.close
       ~Analyzer.reset
       ~Analyzer.set_experiment_attributes
       ~Analyzer.set_run_attribute
@@ -38,6 +39,7 @@ Analyzer
    .. automethod:: add_run_attributes
    .. automethod:: add_trigger
    .. automethod:: call
+   .. automethod:: close
    .. automethod:: reset
    .. automethod:: set_experiment_attributes
    .. automethod:: set_run_attribute

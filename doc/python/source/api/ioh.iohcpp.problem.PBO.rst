@@ -30,7 +30,6 @@ PBO
       ~PBO.enforce_bounds
       ~PBO.remove_constraint
       ~PBO.reset
-      ~PBO.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ PBO
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

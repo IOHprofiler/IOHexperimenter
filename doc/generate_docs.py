@@ -5,16 +5,16 @@ import shutil
 import warnings
 import xmltodict
 
-BASE_DIR = os.path.realpath(os.path.dirname(__file__))
+BASE_DIR = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
 
 unit_template = '''{name}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygen{dtype}:: {ns}::{name}
 '''
 
 namespace_template = '''
 Namespaces
-------------------
+------------------------------------------------------------------------------------------------
 .. toctree::
     :maxdepth: 1
 
@@ -23,7 +23,7 @@ Namespaces
 
 template = '''
 {name} 
-================
+================================================================================================
 {namespaces}
 {types}{classes}{structs}{enums}{functions}{variables}
 '''
@@ -41,10 +41,13 @@ def make_template(nsdata):
         nsdata['namespaces'] = None
 
     def formatter(dtype, title, objs):
-        return '' if objs is None else f'\n{title}\n----------\n' + '\n'.join(
-            unit_template.format(ns=ns, dtype=dtype, name=x.split("::")[-1]) for x in objs
+        return '' if objs is None else f'\n{title}\n--------------------------------\n' + '\n'.join(
+            unit_template.format(
+                ns=ns, 
+                dtype=dtype, 
+                name=x.split(f"{ns}::")[-1]) for x in objs
         )    
-   
+
     return template.format(
         name=ns.split("::")[-1], 
         ns=ns,
@@ -89,6 +92,8 @@ def generate_sphinx_templates_from_xml(xmldir = "doc/build/xml", outdir = "doc/p
         sections = data['doxygen']['compounddef'].get('sectiondef')
         nsdata = dict(name=name, namespaces=namespaces)
 
+        
+    
         if classes is not None:
             classes = []
             structs = []
@@ -104,18 +109,24 @@ def generate_sphinx_templates_from_xml(xmldir = "doc/build/xml", outdir = "doc/p
             nsdata['classes'] = classes if any(classes) else None
             nsdata['structs'] = structs if any(structs) else None
 
+
         
         if sections is not None:
             if isinstance(sections, (dict, collections.OrderedDict)):
                 sections = [sections]
             for sec in sections:
                 nsdata[sec['@kind']] = [f"{name}::{x}" for x in get_values(sec['memberdef'], "name")]
+                if name == "ioh::logger" and sec['@kind'] == 'var':
+                    nsdata[sec['@kind']] = [x for x in nsdata[sec['@kind']] if not "::_" in x]
 
         ns[name] = nsdata
-
+        
+        if name == "ioh::problem":
+            nsdata['func'] = [x for x in nsdata['func'] if not "InstanceBasedProblem" in x]
         
         filename = f'{name.replace("::", "_")}.rst'
-        
+        if filename in ("fmt.rst"):
+            continue
         with open(os.path.join(outdir, filename), "w+") as f:
             f.write(make_template(nsdata))
 
@@ -136,8 +147,19 @@ def generate_stubs(sourcedir):
     subprocess.check_call(command, cwd=sourcedir, shell=True)
 
 
+def run_doxygen():
+    out = subprocess.run(
+        "cmake --build /home/jacob/code/IOHexperimenter/build --config Release --target doc --",
+        shell=True, cwd=BASE_DIR, capture_output=True
+    )
+    for line in out.stdout.decode("utf-8").splitlines():
+        if "warning" in line and not "clutchlog" in line:
+            warnings.warn(line.replace("/home", " /home"))
+
+
 def main():
     try:
+        run_doxygen()
         generate_sphinx_templates_from_xml()
         directory = os.path.join(BASE_DIR, "doc", "python")
         try:

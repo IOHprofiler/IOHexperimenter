@@ -64,13 +64,12 @@ def get_problem(
     ----------
     fid: int or str
         The function ID of the problem in the suite, or the name of the function as string
-    instance: int
+    instance: int = 1
         The instance ID of the problem
-    dimension: int
+    dimension: int = 5
         The dimension (number of variables) of the problem
-    problem_type: ProblemVariant
-        Which suite the problem is from. Either 'BBOB' or 'PBO' or 'Real' or 'Integer'
-        Only used if fid is an int.
+    problem_type: ProblemType = ProblemType.REAL
+        The type of the problem.
 
     """
     if not isinstance(problem_type, ProblemType):
@@ -125,32 +124,32 @@ def wrap_problem(
     ----------
     function: fn(x: list) -> float
         The callable to wrap
-    name: str
+    name: str = None
         The name of the function. This can be used to create new instances of this function.
         Note, when not using unique names, this will override the previously wrapped functions.
-    problem_type: ProblemVariant
+    problem_type: ProblemType = ProblemType.REAL
         The type of the problem.
-    dimension: int
+    dimension: int = 5
         The dimension (number of variables) of the problem
-    instance: int
+    instance: int = 1
         The instance ID of the problem
-    optimization_type: OptimizationType
+    optimization_type: OptimizationType = OptimizationType.MIN
         The type of optimization to do, maximization or minimization
-    lb: [int, float]
+    lb: [int, float] = None
         The lower bound of the constraint, should be the same type as problem_type. When left to None, this will set
         to the lowest possible value for that type.
-    ub: [int, float]
+    ub: [int, float] = None
         The upper bound of the constraint, should be the same type as problem_type. When left to None, this will set
         to the highest possible value for that type.
-    transform_variables: fn(x: list) -> list
+    transform_variables: fn(x: list) -> list = None
         A function to transform the elements of x, prior to calling the function.
-    transform_objectives: fn(y: float) -> float
+    transform_objectives: fn(y: float) -> float = None
         A function to tranform the float value of y, after callling the function.
-    calculate_objective: fn(instance, dimension) -> Solution | (x, y)
+    calculate_objective: fn(instance, dimension) -> Solution | (x, y) = None
         A function to calculate the global optimum of the function. This function gets a dimension and instance id,
         and should return either a Solution objective(IntegerSolution or RealSolution) or a tuple giving the
         x and y values for the global optimum. Where x is the search space representation and y the target value.
-    constraints: list[IntegerConstraint | RealConstraint]
+    constraints: list[IntegerConstraint | RealConstraint] = None
         The constraints applied to the problem
     """
     if not isinstance(problem_type, ProblemType):
@@ -346,6 +345,7 @@ class Experiment:
                     f"Attribute {attr} is not a member of algorithm {self.algorithm}"
                 )
 
+
     def evaluate(self, ii: int, job: typing.Tuple[int, int, int]):
         """Evaluate a single function using self.algoritm.
 
@@ -359,7 +359,6 @@ class Experiment:
         job[fid: int, iid: int, dim: int]
             The problem id, the instance id and the problem dimension
         """
-
         algorithm = copy.deepcopy(self.algorithm)
         p = get_problem(*job, self.problem_type)
         if self.logged:
@@ -381,7 +380,6 @@ class Experiment:
 
     def apply(self, algorithm: any, problem: ProblemInstanceType):
         """Apply a given algorithm to a problem"""
-
         for _ in range(self.reps):
             algorithm(problem)
             problem.reset()
@@ -514,6 +512,7 @@ class Experiment:
 
         iterator = enumerate(itertools.product(self.fids, self.iids, self.dims), 1)
         if self.njobs != 1:
+            print(self.njobs)
             with multiprocessing.Pool(self.njobs) as p:
                 p.starmap(self.evaluate, iterator)
         else:

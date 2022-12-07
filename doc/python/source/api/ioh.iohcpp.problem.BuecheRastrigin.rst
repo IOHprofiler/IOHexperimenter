@@ -30,7 +30,6 @@ BuecheRastrigin
       ~BuecheRastrigin.enforce_bounds
       ~BuecheRastrigin.remove_constraint
       ~BuecheRastrigin.reset
-      ~BuecheRastrigin.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ BuecheRastrigin
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

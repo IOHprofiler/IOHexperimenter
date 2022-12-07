@@ -1,36 +1,35 @@
-Integer
-=======
+RealSingleObjective
+===================
 
 .. currentmodule:: ioh.iohcpp.problem
 
-.. autoclass:: Integer
+.. autoclass:: RealSingleObjective
    :show-inheritance:
 
    .. rubric:: Attributes Summary
 
    .. autosummary::
 
-      ~Integer.bounds
-      ~Integer.constraints
-      ~Integer.log_info
-      ~Integer.meta_data
-      ~Integer.optimum
-      ~Integer.problems
-      ~Integer.state
+      ~RealSingleObjective.bounds
+      ~RealSingleObjective.constraints
+      ~RealSingleObjective.log_info
+      ~RealSingleObjective.meta_data
+      ~RealSingleObjective.optimum
+      ~RealSingleObjective.problems
+      ~RealSingleObjective.state
 
    .. rubric:: Methods Summary
 
    .. autosummary::
 
-      ~Integer.__call__
-      ~Integer.add_constraint
-      ~Integer.attach_logger
-      ~Integer.create
-      ~Integer.detach_logger
-      ~Integer.enforce_bounds
-      ~Integer.remove_constraint
-      ~Integer.reset
-      ~Integer.update_log_info
+      ~RealSingleObjective.__call__
+      ~RealSingleObjective.add_constraint
+      ~RealSingleObjective.attach_logger
+      ~RealSingleObjective.create
+      ~RealSingleObjective.detach_logger
+      ~RealSingleObjective.enforce_bounds
+      ~RealSingleObjective.remove_constraint
+      ~RealSingleObjective.reset
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ Integer
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

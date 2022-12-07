@@ -22,6 +22,7 @@
 
 namespace ioh::problem
 {
+    //! Defintion interface of problems that are defined in static files
     struct InstanceBasedProblem
     {
         /**
@@ -30,14 +31,23 @@ namespace ioh::problem
          * 1 instance, and only one dimension.
          * 
          */
-        
+
+        //! A constructor function
         template <typename T, typename... Args>
         using Constructor = std::function<T(Args &&...)>;
-
+        
+        //! A vector of constructors-id pairs
         template <typename T, typename... Args>
         using Constructors = std::vector<std::pair<Constructor<T, Args...>, int>>;
 
-
+        /**
+         * @brief Method to load instances
+         * 
+         * @tparam T The type of the problem
+         * @tparam Args the arguments of the constructor
+         * @param definitions the file with instance defintions
+         * @return Constructors<T, Args...> a vector of constrcutor functions
+         */
         template <typename T, typename... Args>
         static Constructors<T, Args...> load_instances(const std::optional<fs::path>& definitions = std::nullopt)
         {
@@ -212,6 +222,7 @@ namespace ioh::common
     template <typename Parent, typename... Args>
     struct RegisterWithFactory
     {
+        //! Typedef for instance based problems
         using InstanceBasedProblem = ioh::problem::InstanceBasedProblem;
 
         //! Include Parent in the factory
@@ -225,7 +236,8 @@ namespace ioh::common
             factory.include(class_name<T>(), id,
                             [](Args &&...params) { return std::make_unique<T>(std::forward<Args>(params)...); });
         }
-
+        
+        //! Include specific for instance based problems
         template <class T>
         static typename std::enable_if<std::is_base_of<InstanceBasedProblem, T>::value, void>::type include()
         {

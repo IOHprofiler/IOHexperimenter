@@ -7,10 +7,16 @@ namespace ioh::problem
 {
     namespace submodular
     {
+        //! MaxInfluence problem definition
         struct MaxInfluence final : GraphProblemType<MaxInfluence>
         {
+            //! MaxInfluence problems start with problem ids starting from this id
             static inline int default_id = 2200;
+
+            //! The number of repetitions to used for \ref random_spread_count
             int simulation_reps = 100;
+
+            //! Vector of activations
             std::vector<uint8_t> is_activated;
 
             /**
@@ -18,7 +24,6 @@ namespace ioh::problem
              * If you want to create your own objects, please be sure to pass a correct graph instance.
              *
              * @param problem_id the id to the problem
-             * @param instance_id for instance based problems this is ignored
              * @param graph the graph object on which to operate
              */
             MaxInfluence(const int problem_id, const int, const std::shared_ptr<graph::Graph> &graph) :
@@ -27,7 +32,12 @@ namespace ioh::problem
             {
                 
             }
-
+            /**
+             * @brief Random process to compute the spread of x
+             * 
+             * @param x the candidate solutions
+             * @return double the spread of x
+             */
             double random_spread_count(const std::vector<int> &x)
             {
                 double total = 0;
@@ -60,6 +70,8 @@ namespace ioh::problem
                 return total;
             }
 
+
+            //! MaxInfluence evaluate function
             double evaluate(const std::vector<int> &x) override
             {
                 double result = 0.0;
@@ -73,6 +85,14 @@ namespace ioh::problem
         };
     } // namespace submodular
     
+
+    /**
+     * @brief Template instantiation for pwt problems.
+     * Ensures loading of PWT problems in the factory, using the correct files.
+     * 
+     * @param definitions_file optional file name
+     * @return InstanceBasedProblem::Constructors<submodular::PackWhileTravel, int, int> a vector of contructor functions
+     */
     template <>
     inline InstanceBasedProblem::Constructors<submodular::MaxInfluence, int, int>
     InstanceBasedProblem::load_instances<submodular::MaxInfluence>(const std::optional<fs::path> &definitions_file)

@@ -30,7 +30,6 @@ SharpRidge
       ~SharpRidge.enforce_bounds
       ~SharpRidge.remove_constraint
       ~SharpRidge.reset
-      ~SharpRidge.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ SharpRidge
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

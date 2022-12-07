@@ -63,13 +63,22 @@ namespace ioh
              */
             bool operator()(const double v1, const double v2) const { return comparator_(v1, v2); }
 
-            //! Equality operator
+            /**
+             * @brief Equality operato
+             * 
+             * @param other an FOptimizationType
+             */
             bool operator==(const FOptimizationType &other) const { return type_ == other.type(); }
 
-            //! Equality operator
+            
+            /**
+             * @brief Equality operato
+             * 
+             * @param other an OptimizationType
+             */
             bool operator==(const OptimizationType &other) const { return type_ == other; }
 
-            // //! Copy
+            //! Copy
             FOptimizationType& operator=(const FOptimizationType &) = default;
         };
 

@@ -30,7 +30,6 @@ OneMax
       ~OneMax.enforce_bounds
       ~OneMax.remove_constraint
       ~OneMax.reset
-      ~OneMax.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ OneMax
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

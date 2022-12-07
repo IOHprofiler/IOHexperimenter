@@ -26,7 +26,10 @@ namespace ioh::problem
     class Constraint : public common::HasRepr
     {
     protected:
+        //! The amount of violation of the last evaluated point
         double violation_;
+
+        //! Wheter the last evaluated point is feasible
         bool is_feasible_;
     public:
         //! Enforcement strategy
@@ -41,7 +44,7 @@ namespace ioh::problem
          * @brief Construct a new contraint object
          * @param enforced policy for enforcing the penalty on the constraint see constraint::Enforced
          * @param weight the penalty weight
-         * @param weight the penalty exponent
+         * @param exponent the penalty exponent
         */
         Constraint(const constraint::Enforced enforced = constraint::Enforced::NOT, const double weight = 1.0, const double exponent = 1.0) :
             violation_(0.), is_feasible_(true), enforced(enforced), weight(weight), exponent(exponent) 
@@ -64,7 +67,6 @@ namespace ioh::problem
         /**
          * @brief Checks whether the x and y values are in the feasible domain
          * @param x the search space value
-         * @param y the objective space value
          * @return true if both x and y are feasible, false otherwise
         */
         [[nodiscard]] bool is_feasible(const std::vector<T> &x)
@@ -87,7 +89,6 @@ namespace ioh::problem
         /**
          * @brief Compute if x or y has any violations of the constraint. This should set violation_.
          * @param x the search space value
-         * @param y the objective space value 
          * @return true when there is violation and false otherwise.
         */
         [[nodiscard]] virtual bool compute_violation(const std::vector<T> &x) = 0;
@@ -95,6 +96,7 @@ namespace ioh::problem
         /**
          * @brief Penalize the y value. This method is only called when there is a violation, 
          * and is_feasible returns a false value, see operator().
+         * 
          * @param y the objective space value
          * @return the penalized value for y.
         */
@@ -130,6 +132,7 @@ namespace ioh::problem
     template <typename T>
     struct ConstraintSet : common::HasRepr
     {
+        //! The set of contained constraints
         Constraints<T> constraints;
         /**
          * @brief Construct a new ConstrainSet object from a set of constrains (default constructor)
@@ -150,7 +153,6 @@ namespace ioh::problem
          * @brief Calls is_feasible for every constraint in order to 
          * check whether any of the constraints is violated.
          * @param x the search space value
-         * @param y the objective space value 
          * @return true when there is violation, false otherwise
         */
         [[nodiscard]] bool hard_violation(const std::vector<T> &x) 
@@ -374,7 +376,6 @@ namespace ioh::problem
         /**
          * @brief Override for Constraint::compute_violation, calls fn_ to compute violation_ value 
          * @param x the search space value
-         * @param y the objective space value  
          * @return true when the absolute value for violation_ > 0 false otherwise
         */
         [[nodiscard]] bool compute_violation(const std::vector<T> &x) override {

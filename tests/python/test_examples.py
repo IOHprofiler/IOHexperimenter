@@ -1,5 +1,4 @@
 import os
-import sys
 import json
 import shutil
 import unittest
@@ -44,22 +43,21 @@ class MetaTest(type):
 class TestExamples(unittest.TestCase, metaclass=MetaTest):
 
     """Examples test"""
-    @unittest.skipUnless(sys.platform != "win32", "readme freezes on windows")
     def test_python_readme(self):
         try:
             fname = os.path.join(BASE_DIR, "ioh", "README.md")
             self.assertTrue(os.path.isfile(fname))
             with open(fname) as f:
                 data = f.read().split("```")
-                
                 with io.StringIO() as buf, redirect_stdout(buf):
                     for i, x in enumerate(data):
                         if x.startswith("python"):
                             block = x[6:].strip()
-                            try:
-                                exec(block, GB, LC)
-                            except Exception as e:
-                                raise RuntimeError(f"failed in cell {i}, reason:\n{e}")
+                            if not 'help' in block:
+                                try:
+                                    exec(block, GB, LC)
+                                except Exception as e:
+                                    raise Exception(f"failed in cell {i}. Reasion {e}")
         except:
             raise
         finally:

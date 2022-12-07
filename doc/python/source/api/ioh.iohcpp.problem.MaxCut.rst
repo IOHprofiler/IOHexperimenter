@@ -31,7 +31,6 @@ MaxCut
       ~MaxCut.load_instances
       ~MaxCut.remove_constraint
       ~MaxCut.reset
-      ~MaxCut.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -54,4 +53,3 @@ MaxCut
    .. automethod:: load_instances
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

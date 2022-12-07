@@ -30,7 +30,6 @@ Schwefel
       ~Schwefel.enforce_bounds
       ~Schwefel.remove_constraint
       ~Schwefel.reset
-      ~Schwefel.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ Schwefel
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

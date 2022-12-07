@@ -35,7 +35,6 @@ namespace ioh::common::file
          *
          * @tparam T the type to cast to
          * @param s the input string
-         * @return std::enable_if<std::is_integral<T>::value, T>::type
          */
         template <typename T>
         inline typename std::enable_if<std::is_integral<T>::value, T>::type from_string(const std::string &s)
@@ -48,7 +47,6 @@ namespace ioh::common::file
          *
          * @tparam T the type to cast to
          * @param s the input string
-         * @return std::enable_if<std::is_integral<T>::value, T>::type
          */
         template <typename T>
         inline typename std::enable_if<std::is_floating_point<T>::value, T>::type from_string(const std::string &s)
@@ -63,15 +61,18 @@ namespace ioh::common::file
          */
         class Line
         {
+            //! Data container
             std::string data;
 
         public:
+            //! Stream operator
             friend std::istream &operator>>(std::istream &is, Line &l)
             {
                 while (std::getline(is, l.data) && l.data.empty())
                     ;
                 return is;
             }
+            //! String convertor
             operator std::string() const { return data; }
         };
 
@@ -255,7 +256,7 @@ namespace ioh::common::file
      *      Person(const std::string& name): name(name) {}
      * };
      * std::vector<Person> persons = as_text_vector<Person>(file_with_names);
-     *
+     * @endcode 
      * @tparam T the type of the output vector, should be instantiatable from a std::string
      * @param path the path of the file
      * @return std::vector<T> the contents of the file
@@ -385,4 +386,4 @@ namespace ioh::common::file
         //! Construct a new Unique Folder object.
         explicit UniqueFolder() {}
     };
-} // namespace ioh::common::file
+} 

@@ -484,11 +484,11 @@ namespace ioh::logger
                 virtual fs::path output_directory() const override { return path_.path(); }
 
             private:
-                static inline watch::Evaluations evaluations_{R"#("function evaluation")#"};
-                static inline watch::RawY current_y_{R"#("current f(x)")#"};
-                static inline watch::RawYBest y_best_{R"#("best-so-far f(x)")#"};
-                static inline watch::TransformedY transformed_y_{R"#("current af(x)+b")#"};
-                static inline watch::TransformedYBest transformed_y_best_{R"#("best af(x)+b")#"};
+                static inline watch::Evaluations evaluations_{R"$("function evaluation")$"};
+                static inline watch::RawY current_y_{R"$("current f(x)")$"};
+                static inline watch::RawYBest y_best_{R"$("best-so-far f(x)")$"};
+                static inline watch::TransformedY transformed_y_{R"$("current af(x)+b")$"};
+                static inline watch::TransformedYBest transformed_y_best_{R"$("best af(x)+b")$"};
                 static inline Properties default_properties_old_{evaluations_, current_y_, y_best_, transformed_y_,
                                                              transformed_y_best_};
 
@@ -587,7 +587,6 @@ namespace ioh::logger
                  * @param algorithm_name The string separating fields.
                  * @param algorithm_info The string indicating a comment.
                  * @param store_positions Whether to store x positions in the logged data
-                 * @param use_old_data_format Wheter to use the old data format
                  * @param attributes See: analyzer::Attributes.
                  */
                 Analyzer(const Triggers &triggers = {trigger::on_improvement},

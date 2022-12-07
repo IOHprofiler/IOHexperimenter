@@ -6,8 +6,11 @@ namespace ioh::problem
 {
     namespace submodular
     {
+        
+        //! MaxCut Problem
         struct MaxCut final : GraphProblemType<MaxCut>
         {
+            //! MaxCut problems start with problem ids starting from this id
             static inline int default_id = 2000;
 
             /**
@@ -15,14 +18,14 @@ namespace ioh::problem
              * If you want to create your own objects, please be sure to pass a correct graph instance.
              *
              * @param problem_id the id to the problem
-             * @param instance_id for instance based problems this is ignored
              * @param graph the graph object on which to operate
              */
             MaxCut(const int problem_id, const int, const std::shared_ptr<graph::Graph> &graph) :
                 GraphProblemType(problem_id, 1, fmt::format("MaxCut{}", problem_id), graph)
             {
             }
-
+            
+            //! Evaluate function
             double evaluate(const std::vector<int> &x) override
             {
                 double result = 0;
@@ -44,7 +47,13 @@ namespace ioh::problem
         };
     } // namespace submodular
 
-
+    /**
+     * @brief Template instantiation for pwt problems.
+     * Ensures loading of PWT problems in the factory, using the correct files.
+     * 
+     * @param definitions_file optional file name
+     * @return InstanceBasedProblem::Constructors<submodular::PackWhileTravel, int, int> a vector of contructor functions
+     */
     template <>
     inline InstanceBasedProblem::Constructors<submodular::MaxCut, int, int>
     InstanceBasedProblem::load_instances<submodular::MaxCut>(const std::optional<fs::path> &definitions_file)

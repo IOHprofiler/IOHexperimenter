@@ -30,7 +30,6 @@ ConcatenatedTrap
       ~ConcatenatedTrap.enforce_bounds
       ~ConcatenatedTrap.remove_constraint
       ~ConcatenatedTrap.reset
-      ~ConcatenatedTrap.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ ConcatenatedTrap
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

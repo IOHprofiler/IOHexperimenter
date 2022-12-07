@@ -11,6 +11,7 @@ GraphConstraint
    .. autosummary::
 
       ~GraphConstraint.enforced
+      ~GraphConstraint.exponent
       ~GraphConstraint.weight
 
    .. rubric:: Methods Summary
@@ -27,6 +28,7 @@ GraphConstraint
    .. rubric:: Attributes Documentation
 
    .. autoattribute:: enforced
+   .. autoattribute:: exponent
    .. autoattribute:: weight
 
    .. rubric:: Methods Documentation

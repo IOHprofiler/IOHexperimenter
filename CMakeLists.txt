@@ -17,7 +17,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 option(BUILD_PYTHON_PACKAGE "Whether to build Python package" OFF)
 option(BUILD_TESTS "Whether to build test cases with gtest" ON)
 option(BUILD_EXAMPLE "Whether to build Python package" ON)  
-option(BUILD_DOCS "Build docs" OFF)    
+option(BUILD_DOCS "Build docs" ON)    
 option(BUILD_SERVER "Whether to build the objective function server" OFF)
 option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF) # Turn this option ON if you plan to test MK-landscape problems.
 

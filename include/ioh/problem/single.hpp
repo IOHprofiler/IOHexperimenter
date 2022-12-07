@@ -4,6 +4,11 @@
 
 namespace ioh::problem
 {
+    /**
+     * @brief CRTP class for Single objective problems
+     * 
+     * @tparam T the type of the problem
+     */
     template <typename T>
     class SingleObjectiveProblem: public Problem<T, SingleObjective>
     {
@@ -75,15 +80,13 @@ namespace ioh::problem
         }
     };
 
-    
     //! Type def for Real problems
     using RealSingleObjective = SingleObjectiveProblem<double>;
 
     //! Type def for Integer problems
     using IntegerSingleObjective = SingleObjectiveProblem<int>;
 
-
-    /**
+        /**
      * @brief Wrapper class for new single objective problems
      *
      * @tparam T
@@ -127,7 +130,7 @@ namespace ioh::problem
          * @param problem_id the problem id
          * @param instance_id the problem instance
          * @param optimization_type the type of optimization
-         * @param BoxConstraint the contraint for the problem
+         * @param bounds the box-constraints for the problem
          * @param transform_variables_function function which transforms the variables of the search problem
          * prior to calling f.
          * @param transform_objectives_function a function which transforms the objective value of the search

@@ -1,39 +1,35 @@
 
-eaf 
+utils 
 ================================================================================================
 
 
-Types
+Classes
 --------------------------------
-Front
+Line
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygentypedef:: ioh::logger::eaf::Front
+.. doxygenclass:: ioh::common::file::utils::Line
 
 Structs
 --------------------------------
-Point
+is_shared_ptr_string_constructible
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenstruct:: ioh::logger::eaf::Point
+.. doxygenstruct:: ioh::common::file::utils::is_shared_ptr_string_constructible
 
-RunPoint
+is_shared_ptr_string_constructible< std::shared_ptr< T > >
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenstruct:: ioh::logger::eaf::RunPoint
+.. doxygenstruct:: ioh::common::file::utils::is_shared_ptr_string_constructible< std::shared_ptr< T > >
 
 Functions
 --------------------------------
-ascending_qual
+find_static_file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenfunction:: ioh::logger::eaf::ascending_qual
+.. doxygenfunction:: ioh::common::file::utils::find_static_file
 
-ascending_time
+from_string
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenfunction:: ioh::logger::eaf::ascending_time
+.. doxygenfunction:: ioh::common::file::utils::from_string
 
-descending_qual
+get_static_root
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenfunction:: ioh::logger::eaf::descending_qual
-
-descending_time
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenfunction:: ioh::logger::eaf::descending_time
+.. doxygenfunction:: ioh::common::file::utils::get_static_root
 
