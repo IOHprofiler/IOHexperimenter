@@ -149,7 +149,7 @@ def generate_stubs(sourcedir):
 
 def run_doxygen():
     out = subprocess.run(
-        "cmake --build /home/jacob/code/IOHexperimenter/build --config Release --target doc --",
+        "cmake -DBUILD_DOCS=ON --build /home/jacob/code/IOHexperimenter/build --config Release --target doc --",
         shell=True, cwd=BASE_DIR, capture_output=True
     )
     for line in out.stdout.decode("utf-8").splitlines():
