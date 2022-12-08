@@ -4,14 +4,14 @@
 
 /// Declare a bbob suite of problem {1,2}, instance {1, 2} and dimension {5,10}.
 /// We can use either factory construction, or direct object construction.
-inline std::shared_ptr<ioh::suite::Suite<ioh::problem::Real>> create_suite(const bool using_factory = true)
+inline std::shared_ptr<ioh::suite::Suite<ioh::problem::RealSingleObjective>> create_suite(const bool using_factory = true)
 {
     const std::vector<int> problems{1, 2};
     const std::vector<int> instances{1, 2};
     const std::vector<int> dimensions{1, 2};
 
     if (using_factory)
-        return ioh::suite::SuiteRegistry<ioh::problem::Real>::instance()
+        return ioh::suite::SuiteRegistry<ioh::problem::RealSingleObjective>::instance()
             .create("BBOB", problems, instances, dimensions);
     return std::make_shared<ioh::suite::BBOB>(problems, instances, dimensions);
 }

@@ -30,7 +30,6 @@ GraphProblem
       ~GraphProblem.enforce_bounds
       ~GraphProblem.remove_constraint
       ~GraphProblem.reset
-      ~GraphProblem.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ GraphProblem
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

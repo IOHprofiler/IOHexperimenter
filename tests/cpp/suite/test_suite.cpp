@@ -10,7 +10,7 @@ TEST_F(BaseTest, suite_factory)
     std::vector<int> problem_ids(24);
     std::iota(std::begin(problem_ids), std::end(problem_ids), 1);
 
-    auto suite = suite::SuiteRegistry<problem::Real>::instance().create("BBOB", problem_ids, {1}, {2});
+    auto suite = suite::SuiteRegistry<problem::RealSingleObjective>::instance().create("BBOB", problem_ids, {1}, {2});
 
     auto problems = suite->problem_ids();
 

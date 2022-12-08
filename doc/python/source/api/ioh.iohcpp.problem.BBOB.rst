@@ -30,7 +30,6 @@ BBOB
       ~BBOB.enforce_bounds
       ~BBOB.remove_constraint
       ~BBOB.reset
-      ~BBOB.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ BBOB
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

@@ -57,7 +57,7 @@ namespace ioh::logger
                 //! At what eval was the point recorded
                 size_t evals;
                 //! Value of the point
-                problem::Solution<double> point;
+                problem::Solution<double, double> point;
 
                 /**
                  * @brief Construct a new Best Point object
@@ -65,7 +65,7 @@ namespace ioh::logger
                  * @param evals At what eval was the point recorded
                  * @param point Value of the point
                  */
-                BestPoint(const size_t evals = 0, const problem::Solution<double> &point = {}) :
+                BestPoint(const size_t evals = 0, const problem::Solution<double, double> &point = {}) :
                     evals(evals), point(point)
                 {
                 }
@@ -587,7 +587,6 @@ namespace ioh::logger
                  * @param algorithm_name The string separating fields.
                  * @param algorithm_info The string indicating a comment.
                  * @param store_positions Whether to store x positions in the logged data
-                 * @param use_old_data_format Wheter to use the old data format
                  * @param attributes See: analyzer::Attributes.
                  */
                 Analyzer(const Triggers &triggers = {trigger::on_improvement},

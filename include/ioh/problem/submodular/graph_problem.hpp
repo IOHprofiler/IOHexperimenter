@@ -1,27 +1,47 @@
 #pragma once
 
 #include "ioh/common.hpp"
-#include "ioh/problem/problem.hpp"
+#include "ioh/problem/single.hpp"
 
 
 namespace ioh::problem::submodular
 {
     namespace graph
     {
+        //! Graph meta data
         struct Meta
         {
+            //! File with edge data
             std::string edge_file;
+
+            //! file with edge weights
             std::string edge_weights;
+
+            //! File with vertex weights
             std::string vertex_weights;
+
+            //! File with constraint weights
             std::string constraint_weights;
+
+            //! The root path of the files
             fs::path root;
+
+            //! Edge type
             bool is_edge = false;
+
+            //! Fixed chance constraint
             double chance_cons = 0.0;
 
+            //! Is digraph
             bool digraph = false;
+
+            //! Maximum value of the contraint
             double constraint_limit = std::numeric_limits<double>::infinity();
+
+            //! The number of vertices
             int n_vertices = 0;
 
+            //! Load a graph from a string
             static Meta from_string(const std::string &definition)
             {
                 Meta meta;
@@ -46,27 +66,46 @@ namespace ioh::problem::submodular
             }
         };
 
+        //! Abstraction of graph data
         struct Graph : common::HasRepr
         {
+            //! Meta data
             Meta meta;
+            
+            //! Adjecency list
             std::vector<std::vector<std::pair<int, double>>> adjacency_list;
+
+            //! Edge list
             std::vector<std::tuple<int, int, double>> edges;
+
+            //! Edge weights
             std::vector<double> edge_weights;
+
+            //! Vertex weights
             std::vector<double> vertex_weights;
+
+            //! Constraint weights
             std::vector<double> constraint_weights;
 
+            //! Flag to denoted wheter the graph has been loaded in memory
             bool loaded = false;
 
+            //! Constructor from meta data
             Graph(const Meta &meta) : meta(meta) {}
 
+
+            //! Constructor from string
             Graph(const std::string &definition) : Graph(Meta::from_string(definition)) {}
 
+            //! String representation
             [[nodiscard]] std::string repr() const override
             {
                 return fmt::format("<GraphInstance {} {} {} {}>", meta.edge_file, meta.edge_weights,
                                    meta.vertex_weights, meta.constraint_weights);
             }
 
+
+            //! Load method
             virtual void load()
             {
                 const auto contents = common::file::as_text_vector(meta.root / meta.edge_file);
@@ -121,7 +160,8 @@ namespace ioh::problem::submodular
                 IOH_DBG(xdebug, "number of constraints: " << constraint_weights.size());
                 loaded = true;
             }
-
+            
+            //! Accessor for dimension, loads the graph if it is not loaded
             int dimension()
             {
                 if (!loaded)
@@ -134,13 +174,28 @@ namespace ioh::problem::submodular
 
     } // namespace graph
 
+    //! Specific constraints function for submodular problems
     struct GraphConstraint : Constraint<int>
     {
+        
+        //! Shared ptr to the graph in memory
         std::shared_ptr<graph::Graph> graph;
 
+        /**
+         * @brief Construct a new Graph Constraint object
+         * 
+         * @param graph A shared ptr to a graph
+         */
         GraphConstraint(const std::shared_ptr<graph::Graph> &graph) : 
             Constraint(constraint::Enforced::HARD), graph(graph) {}
 
+        /**
+         * @brief Compute constraint violation
+         * 
+         * @param x the candidate solution
+         * @return true when there is constraint violation
+         * @return false when there is no constraint violaton
+         */
         bool compute_violation(const std::vector<int>& x) override { 
             
             violation_ = 0;
@@ -156,22 +211,34 @@ namespace ioh::problem::submodular
             return violation_ > graph->meta.constraint_limit;
         }
 
+        //! Compute the penalty by scaling the violotation
         double penalty() const override {
             return weight * pow(graph->meta.constraint_limit - violation(), exponent);
         }
         
-
+        //! String representation
         std::string repr() const override { return fmt::format("<GraphConstraint {}>", violation()); }
     };
 
-
-    struct GraphProblem : Integer
+    //! Implementation of the Graph Problem
+    struct GraphProblem : IntegerSingleObjective
     {
+        
+        //! Shared ptr to the graph in memory
         std::shared_ptr<graph::Graph> graph;
 
+        /**
+         * @brief Construct a new Graph Problem object
+         * 
+         * @param problem_id the id of the problem
+         * @param instance the instance id
+         * @param name the name of the problem
+         * @param graph the graph data
+         */
         GraphProblem(const int problem_id, const int instance, const std::string &name,
                      const std::shared_ptr<graph::Graph> &graph) :
-            Integer(MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::MAX),
+            IntegerSingleObjective(
+                MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::MAX),
                     Bounds<int>(graph->dimension()),
                     ConstraintSet<int>(std::make_shared<GraphConstraint>(graph))    
                 ),
@@ -180,10 +247,11 @@ namespace ioh::problem::submodular
         }
     };
 
+    //! Graph Problem Type
     template <typename ProblemType>
     struct GraphProblemType : GraphProblem,
                               InstanceBasedProblem,
-                              AutomaticProblemRegistration<ProblemType, Integer>,
+                              AutomaticProblemRegistration<ProblemType, IntegerSingleObjective>,
                               AutomaticProblemRegistration<ProblemType, GraphProblem>
     {
         using GraphProblem::GraphProblem;
@@ -221,7 +289,7 @@ namespace ioh::problem::submodular
                 auto c = [c = ci.first](Args &&...params) {
                     return std::make_unique<ProblemType>(c(std::forward<Args>(params)...));
                 };
-                ioh::common::Factory<Integer, Args...>::instance().include(name, ci.second, c);
+                ioh::common::Factory<IntegerSingleObjective, Args...>::instance().include(name, ci.second, c);
                 ioh::common::Factory<submodular::GraphProblem, Args...>::instance().include(name, ci.second, c);
             }
         }       

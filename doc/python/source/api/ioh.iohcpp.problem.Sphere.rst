@@ -30,7 +30,6 @@ Sphere
       ~Sphere.enforce_bounds
       ~Sphere.remove_constraint
       ~Sphere.reset
-      ~Sphere.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ Sphere
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

@@ -51,6 +51,7 @@ namespace logger {
             /** Constructor with time, then quality. */
             Point(size_t nb_evals, double quality) : qual(quality), time(nb_evals) { }
 
+            //! Stream operator
             friend std::ostream& operator<< (std::ostream& out, const Point& p )
             {
                 out << "{\"qual\":" << p.qual << ",\"time\":" << p.time << "}";
@@ -77,6 +78,7 @@ namespace logger {
             /** Constructor with time, then quality. */
             RunPoint(size_t t, double q, size_t r) : Point(q,t), run(r) { }
 
+            //! Stream operator
             friend std::ostream& operator<< (std::ostream& out, const RunPoint& p )
             {
                 out << "{\"run\":" << p.run << ", \"point\":";
@@ -143,7 +145,6 @@ namespace logger {
      * 
      * The underlying empirical attainment function levelsets can be computed with stat::Levels.
      *
-     * @ingroup EAF
      * @ingroup Loggers
      * 
      * More information in the following publication:
@@ -321,7 +322,8 @@ namespace logger {
             }
 #endif
         }
-
+        
+        //! Getter for the optimizetion type
         common::OptimizationType optimization_type() const
         {
             assert(_has_problem_type);
@@ -330,11 +332,13 @@ namespace logger {
 
     protected:
 #ifndef NDEBUG
-        // Use to double check that trigger::on_improvement does its job.
-        // It should not be necessary otherwise.
+        //! Use to double check that trigger::on_improvement does its job. It should not be necessary otherwise.
         double _current_best;
 #endif
+        //! Flag to denoted if it has been intialized
         bool _has_problem_type;
+        
+        //! The optimization type
         common::FOptimizationType _current_problem_type;
 
         /** The main data structure in which log events are stored. */
@@ -715,6 +719,8 @@ namespace logger {
 
                 //! Shift of the nadir point regarding the extremum of data.
                 static const size_t _shift_time = 1;
+                
+                //! The shift quality
                 const double _shift_qual;
 
                 /** Computes the extremum point as the worst coordinates on both quality and time axis for all front points.

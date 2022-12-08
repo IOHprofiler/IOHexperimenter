@@ -30,7 +30,6 @@ LeadingOnesEpistasis
       ~LeadingOnesEpistasis.enforce_bounds
       ~LeadingOnesEpistasis.remove_constraint
       ~LeadingOnesEpistasis.reset
-      ~LeadingOnesEpistasis.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ LeadingOnesEpistasis
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

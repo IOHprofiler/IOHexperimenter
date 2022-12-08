@@ -30,7 +30,6 @@ IsingTriangular
       ~IsingTriangular.enforce_bounds
       ~IsingTriangular.remove_constraint
       ~IsingTriangular.reset
-      ~IsingTriangular.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ IsingTriangular
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

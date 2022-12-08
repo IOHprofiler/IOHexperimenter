@@ -11,6 +11,7 @@ LogInfo
    .. autosummary::
 
       ~LogInfo.evaluations
+      ~LogInfo.has_improved
       ~LogInfo.objective
       ~LogInfo.penalties
       ~LogInfo.raw_y
@@ -25,6 +26,7 @@ LogInfo
    .. rubric:: Attributes Documentation
 
    .. autoattribute:: evaluations
+   .. autoattribute:: has_improved
    .. autoattribute:: objective
    .. autoattribute:: penalties
    .. autoattribute:: raw_y

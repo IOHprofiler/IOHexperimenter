@@ -30,7 +30,6 @@ GriewankRosenBrock
       ~GriewankRosenBrock.enforce_bounds
       ~GriewankRosenBrock.remove_constraint
       ~GriewankRosenBrock.reset
-      ~GriewankRosenBrock.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ GriewankRosenBrock
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

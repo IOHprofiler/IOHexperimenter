@@ -30,7 +30,6 @@ LinearSlope
       ~LinearSlope.enforce_bounds
       ~LinearSlope.remove_constraint
       ~LinearSlope.reset
-      ~LinearSlope.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ LinearSlope
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

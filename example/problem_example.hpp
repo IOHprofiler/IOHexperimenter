@@ -3,12 +3,12 @@
 #include "ioh.hpp" 
 
 /// Create a OneMax problem. We can use either factory construction, or direct object construction.
-inline std::shared_ptr<ioh::problem::Integer> create_one_max_problem(const int instance, const int dimension,
+inline std::shared_ptr<ioh::problem::IntegerSingleObjective> create_one_max_problem(const int instance, const int dimension,
                                                                      const bool using_factory = true)
 {
     if (using_factory)
     {
-        const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::Integer>::instance();
+        const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::IntegerSingleObjective>::instance();
         return problem_factory.create("OneMax", instance, dimension);
     }
     return std::make_shared<ioh::problem::pbo::OneMax>(instance, dimension);
@@ -49,7 +49,7 @@ inline void simple_problem_example()
 
 /// A new problem need to inherit from the problem class of the correct type: e.g. RealProblem for
 /// double type problems. Note that this class uses a CRTP pattern. 
-class AnotherRealProblem final : public ioh::problem::RealProblem<AnotherRealProblem>
+class AnotherRealProblem final : public ioh::problem::RegisteredProblem<AnotherRealProblem, ioh::problem::RealSingleObjective>
 {
 protected:
     // The evaluate method is required, in this case the value of x0 is return as objective value
@@ -62,7 +62,8 @@ public:
     /// This constructor is required(i.e. (int, int), even if the newly create problem does not have a way to handle different
     /// instances/dimensions.
     AnotherRealProblem(const int instance, const int n_variables) :
-        RealProblem(ioh::problem::MetaData(1, instance, "AnotherRealProblem", n_variables,
+        RegisteredProblem(
+            ioh::problem::MetaData(1, instance, "AnotherRealProblem", n_variables,
                                            ioh::common::OptimizationType::MIN))
     {
     }
@@ -74,26 +75,26 @@ inline double sum_vector(const std::vector<double> &x) {
 }
 
 //! Method to compute the optimum for a given problem instance (iid)
-ioh::problem::Solution<double> calculate_objective(const int iid, const int dim)
+ioh::problem::Solution<double, double> calculate_objective(const int iid, const int dim)
 {
     return {std::vector<double>(dim, iid), static_cast<double>(iid * dim)};
 }
 
 //! Example of a variables transformation function
-std::vector<double> tx(std::vector<double> x, const int iid){
+std::vector<double> transform_x(std::vector<double> x, const int iid){
     x.at(0) = static_cast<double>(iid);
     return x;
 }
 
 //! Example of a objective transformation function
-double ty(const double y, const int iid){
+double transform_y(const double y, const int iid){
     return y * iid;
 }
 
 inline void extending_problems_example()
 {
     /// Note that problems which extend RealProblem are automatically avaible in the corresponsing Factory:
-    auto &factory = ioh::problem::ProblemRegistry<ioh::problem::Real>::instance();
+    auto &factory = ioh::problem::ProblemRegistry<ioh::problem::RealSingleObjective>::instance();
     
     const int instance = 10;
     const int dimension = 10;
@@ -103,12 +104,12 @@ inline void extending_problems_example()
 
     // We provide convenience wrapper functions for wrapping 'standalone' functions, which 
     // register a function in the factory. Only the first two arguments are required.
-    ioh::problem::wrap_function<double>(
+    ioh::problem::wrap_function<double, double>(
         sum_vector, "Sum", ioh::common::OptimizationType::MIN, 
         -1, // the lower bound for the constraint
         10, // the upper bound for the constraint
-        tx, // variables transformation function, transforms x prior to calling f(x)
-        ty, // objective transformation function, transforms the output of f(x), i.e. t(f(x))
+        transform_x, // variables transformation function, transforms x prior to calling f(x)
+        transform_y, // objective transformation function, transforms the output of f(x), i.e. t(f(x))
         calculate_objective // compute the value for the objective for this function
     );
     
@@ -117,6 +118,35 @@ inline void extending_problems_example()
     std::cout << (*problem).meta_data() << std::endl;
 }
 
+inline void show_registered_objects()
+{
+    {
+        const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::RealSingleObjective>::instance();
+        const auto &suite_factory = ioh::suite::SuiteRegistry<ioh::problem::RealSingleObjective>::instance();
+
+        std::cout << "Registered RealSingleObjective Problems:\n";
+
+        for (auto &[id, name] : problem_factory.map())
+            std::cout << id << ", " << name << std::endl;
+
+        std::cout << "\nRegistered RealSingleObjective Suites:\n";
+        for (auto &[id, name] : suite_factory.map())
+            std::cout << id << ", " << name << std::endl;
+    }
+    {
+        const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::IntegerSingleObjective>::instance();
+        const auto &suite_factory = ioh::suite::SuiteRegistry<ioh::problem::IntegerSingleObjective>::instance();
+
+        std::cout << "\nRegistered Integer Problems:\n";
+
+        for (auto &[id, name] : problem_factory.map())
+            std::cout << id << ", " << name << std::endl;
+
+        std::cout << "\nRegistered Integer Suites:\n";
+        for (auto &[id, name] : suite_factory.map())
+            std::cout << id << ", " << name << std::endl;
+    }
+}
 
 ///////////////////// Extending Problems //////////////////
 inline void problem_example()

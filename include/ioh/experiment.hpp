@@ -35,7 +35,7 @@ namespace ioh
         std::shared_ptr<Logger> logger_;
 
         /**
-         * \brief A function pointer of type \ref algorithm_type
+         * \brief A function pointer of type \ref Algorithm
          */
         Algorithm algorithm_;
 

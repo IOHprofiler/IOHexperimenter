@@ -1,36 +1,35 @@
-Real
-====
+RealSingleObjective
+===================
 
 .. currentmodule:: ioh.iohcpp.problem
 
-.. autoclass:: Real
+.. autoclass:: RealSingleObjective
    :show-inheritance:
 
    .. rubric:: Attributes Summary
 
    .. autosummary::
 
-      ~Real.bounds
-      ~Real.constraints
-      ~Real.log_info
-      ~Real.meta_data
-      ~Real.optimum
-      ~Real.problems
-      ~Real.state
+      ~RealSingleObjective.bounds
+      ~RealSingleObjective.constraints
+      ~RealSingleObjective.log_info
+      ~RealSingleObjective.meta_data
+      ~RealSingleObjective.optimum
+      ~RealSingleObjective.problems
+      ~RealSingleObjective.state
 
    .. rubric:: Methods Summary
 
    .. autosummary::
 
-      ~Real.__call__
-      ~Real.add_constraint
-      ~Real.attach_logger
-      ~Real.create
-      ~Real.detach_logger
-      ~Real.enforce_bounds
-      ~Real.remove_constraint
-      ~Real.reset
-      ~Real.update_log_info
+      ~RealSingleObjective.__call__
+      ~RealSingleObjective.add_constraint
+      ~RealSingleObjective.attach_logger
+      ~RealSingleObjective.create
+      ~RealSingleObjective.detach_logger
+      ~RealSingleObjective.enforce_bounds
+      ~RealSingleObjective.remove_constraint
+      ~RealSingleObjective.reset
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ Real
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

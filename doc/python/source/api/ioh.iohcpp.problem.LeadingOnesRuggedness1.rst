@@ -30,7 +30,6 @@ LeadingOnesRuggedness1
       ~LeadingOnesRuggedness1.enforce_bounds
       ~LeadingOnesRuggedness1.remove_constraint
       ~LeadingOnesRuggedness1.reset
-      ~LeadingOnesRuggedness1.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ LeadingOnesRuggedness1
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

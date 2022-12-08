@@ -30,7 +30,6 @@ Discus
       ~Discus.enforce_bounds
       ~Discus.remove_constraint
       ~Discus.reset
-      ~Discus.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ Discus
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

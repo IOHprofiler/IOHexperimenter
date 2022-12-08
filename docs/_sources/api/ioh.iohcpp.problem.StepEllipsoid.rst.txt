@@ -30,7 +30,6 @@ StepEllipsoid
       ~StepEllipsoid.enforce_bounds
       ~StepEllipsoid.remove_constraint
       ~StepEllipsoid.reset
-      ~StepEllipsoid.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ StepEllipsoid
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

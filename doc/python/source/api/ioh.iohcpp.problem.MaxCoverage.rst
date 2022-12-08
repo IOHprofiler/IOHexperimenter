@@ -31,7 +31,6 @@ MaxCoverage
       ~MaxCoverage.load_instances
       ~MaxCoverage.remove_constraint
       ~MaxCoverage.reset
-      ~MaxCoverage.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -54,4 +53,3 @@ MaxCoverage
    .. automethod:: load_instances
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

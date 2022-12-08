@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include "ioh/problem/structures.hpp"
+#include "ioh/problem/constraints.hpp"
 
 namespace ioh {
 
@@ -56,10 +57,66 @@ namespace ioh {
             std::vector<double> penalties;
             
             //! Optimum to the current problem instance, with the corresponding transformed objective function value.
-            problem::Solution<double> optimum; 
+            problem::Solution<double, double> optimum; 
 
             //! Single objective check whether state-update has caused an improvement
             bool has_improved;
+
+
+            /**
+            * @brief update the log info based on the constraint and state of the problem
+            * 
+            * @tparam the type of the problem
+            * @param state the state of the problem
+            * @param constraintset the set of constraints for the problem
+            */
+            template<typename T>
+            void update(const problem::State<T, double>& state, const problem::ConstraintSet<T>& constraintset)
+            {
+                evaluations = static_cast<size_t>(state.evaluations);
+
+                // before transformation
+                raw_y = state.current_internal.y;
+                raw_y_best = state.current_best_internal.y;
+
+                // after transformation
+                transformed_y = state.y_unconstrained;
+                transformed_y_best = state.y_unconstrained_best;
+
+                // after constraint
+                y = state.current.y;
+                y_best = state.current_best.y;
+
+                // constraint values
+                violations[0] = constraintset.violation();
+                penalties[0] = constraintset.penalty();
+
+                for (size_t i = 0; i < constraintset.n(); i++)
+                {
+                    violations[i + 1] = constraintset.constraints[i]->violation();
+                    penalties[i + 1] = constraintset.constraints[i]->penalty();
+                }
+
+                x = std::vector<double>(state.current.x.begin(), state.current.x.end());
+
+                has_improved = state.has_improved;        
+            }
+
+            /**
+             * @brief allocate static (during a run) values for the log info
+             *
+             * @tparam the type of the problem
+             * @param opt the optimum of the problem
+             * @param constraintset the set of constraints for the problem
+             */
+            template<typename T>
+            void allocate(const problem::Solution<T, double> &opt, const problem::ConstraintSet<T> &constraintset)
+            {
+                optimum.x = std::vector<double>(opt.x.begin(), opt.x.end());
+                optimum.y = opt.y;
+                violations = std::vector<double>(constraintset.n() + 1, 0.0);
+                penalties = std::vector<double>(constraintset.n() + 1, 0.0);
+            }
         };
 #ifdef _MSC_VER  
 #pragma warning(default : 26495)

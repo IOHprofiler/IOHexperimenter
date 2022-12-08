@@ -1,16 +1,12 @@
 #pragma once
 
-#include "ioh/problem/problem.hpp"
+#include "ioh/problem/single.hpp"
 #include "ioh/problem/transformation.hpp"
 
 namespace ioh::problem
 {
-        
-    
-    
-    
     //! BBOB base class
-    class BBOB : public Real
+    class BBOB : public RealSingleObjective
     {
     protected:
         /**
@@ -137,7 +133,7 @@ namespace ioh::problem
          */
         BBOB(const int problem_id, const int instance, const int n_variables, const std::string &name,
              const double condition = sqrt(10.0)):
-            Real(MetaData(problem_id, instance, name, n_variables),
+            RealSingleObjective(MetaData(problem_id, instance, name, n_variables),
                  Bounds<double>(n_variables, -5, 5)),
             transformation_state_(problem_id, instance, n_variables, condition)
         {
@@ -147,7 +143,7 @@ namespace ioh::problem
 
         //! Calculate the solution to the problem
         [[nodiscard]]
-        Solution<double> calculate_objective() const
+        Solution<double, double> calculate_objective() const
         {
             using namespace common::random::bbob2009;
 
@@ -176,7 +172,7 @@ namespace ioh::problem
     template <typename ProblemType>
     class BBOProblem : public BBOB,
                        AutomaticProblemRegistration<ProblemType, BBOB>,
-                       AutomaticProblemRegistration<ProblemType, Real>
+                       AutomaticProblemRegistration<ProblemType, RealSingleObjective>
     {
     public:
         /**

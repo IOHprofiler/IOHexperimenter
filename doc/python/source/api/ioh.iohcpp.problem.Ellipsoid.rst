@@ -30,7 +30,6 @@ Ellipsoid
       ~Ellipsoid.enforce_bounds
       ~Ellipsoid.remove_constraint
       ~Ellipsoid.reset
-      ~Ellipsoid.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ Ellipsoid
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

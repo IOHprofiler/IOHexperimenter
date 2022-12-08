@@ -17,11 +17,11 @@ class wmodel(ioh.problem.AbstractWModel):
 
 class TestProblem(unittest.TestCase):
     def test_get_problem(self):
-        self.assertIsInstance(ioh.get_problem(1, 1, 2, "BBOB"), ioh.problem.Sphere)
-        self.assertIsInstance(ioh.get_problem("Sphere", 1, 2, "BBOB"), ioh.problem.Sphere)
+        self.assertIsInstance(ioh.get_problem(1, 1, 2, ioh.ProblemType.BBOB), ioh.problem.Sphere)
+        self.assertIsInstance(ioh.get_problem("Sphere", 1, 2, ioh.ProblemType.BBOB), ioh.problem.Sphere)
         self.assertIsInstance(ioh.get_problem("Sphere", 1, 2), ioh.problem.Sphere)
-        self.assertIsInstance(ioh.get_problem(1, 1, 2, "PBO"), ioh.problem.OneMax)
-        self.assertIsInstance(ioh.get_problem("OneMax", 1, 2, "PBO"), ioh.problem.OneMax)
+        self.assertIsInstance(ioh.get_problem(1, 1, 2, ioh.ProblemType.PBO), ioh.problem.OneMax)
+        self.assertIsInstance(ioh.get_problem("OneMax", 1, 2, ioh.ProblemType.PBO), ioh.problem.OneMax)
 
     def test_wmodel(self):
         for p in map(lambda x: x(1, 10), (wmodel, ioh.problem.WModelLeadingOnes, ioh.problem.WModelOneMax)):
@@ -44,12 +44,12 @@ class TestProblem(unittest.TestCase):
 
     def test_evaluation_bbob_problems(self):
         for fid in range(1,25):
-            f = ioh.get_problem(fid, 1 ,5, "BBOB")
+            f = ioh.get_problem(fid, 1 ,5, ioh.ProblemType.BBOB)
             self.assertGreater(f([0,0,0,0,0]), -1000)
 
     def test_evaluation_pbo_problems(self):
         for fid in range(1,26):
-            f = ioh.get_problem(fid, 1 ,4, "PBO")
+            f = ioh.get_problem(fid, 1 ,4, ioh.ProblemType.PBO)
             self.assertGreater(f([0,0,0,0]), -1000) 
 
     def test_has_submodular(self):
@@ -131,6 +131,7 @@ class TestProblem(unittest.TestCase):
                            "bbobfitness5.in", "bbobfitness20.in", ):
             with self.subTest(test_file=test_file):
                 suite, dim = test_file.split("fitness")
+                problem_type = ioh.ProblemType.PBO if suite == 'pbo' else ioh.ProblemType.BBOB
                 dim = int(dim[:-3])
                 dtype = float if suite == 'bbob' else int
                 tol = .01 if suite == 'bbob' else 0.000099
@@ -141,7 +142,7 @@ class TestProblem(unittest.TestCase):
                         if "," in x:
                             x = x.split(",")
                         x = list(map(dtype, x))
-                        p = ioh.get_problem(int(fid), int(iid), dim, suite.upper())
+                        p = ioh.get_problem(int(fid), int(iid), dim, problem_type)
                         self.assertTrue(math.isclose(p(x), float(y), abs_tol = tol))
 
 

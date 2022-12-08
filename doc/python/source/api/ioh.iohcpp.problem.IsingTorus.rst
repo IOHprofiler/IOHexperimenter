@@ -30,7 +30,6 @@ IsingTorus
       ~IsingTorus.enforce_bounds
       ~IsingTorus.remove_constraint
       ~IsingTorus.reset
-      ~IsingTorus.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ IsingTorus
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

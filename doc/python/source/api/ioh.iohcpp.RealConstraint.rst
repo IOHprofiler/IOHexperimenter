@@ -11,6 +11,7 @@ RealConstraint
    .. autosummary::
 
       ~RealConstraint.enforced
+      ~RealConstraint.exponent
       ~RealConstraint.weight
 
    .. rubric:: Methods Summary
@@ -27,6 +28,7 @@ RealConstraint
    .. rubric:: Attributes Documentation
 
    .. autoattribute:: enforced
+   .. autoattribute:: exponent
    .. autoattribute:: weight
 
    .. rubric:: Methods Documentation

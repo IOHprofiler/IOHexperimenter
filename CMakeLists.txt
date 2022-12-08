@@ -7,7 +7,7 @@ string(REGEX REPLACE "\n$" "" VERSION_STRING "${VERSION_STRING}")
 project(ioh    
     VERSION "${VERSION_STRING}"
     LANGUAGES CXX  
-) 
+)  
   
 add_compile_definitions(PROJECT_VER="${CMAKE_PROJECT_VERSION}")
 set(CMAKE_CXX_STANDARD 17)  
@@ -16,7 +16,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
  
 option(BUILD_PYTHON_PACKAGE "Whether to build Python package" OFF)
 option(BUILD_TESTS "Whether to build test cases with gtest" ON)
-option(BUILD_EXAMPLE "Whether to build Python package" ON)  
+option(BUILD_EXAMPLE "Whether to build examples" ON)  
 option(BUILD_DOCS "Build docs" OFF)    
 option(BUILD_SERVER "Whether to build the objective function server" OFF)
 option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF) # Turn this option ON if you plan to test MK-landscape problems.
@@ -24,14 +24,14 @@ option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF) 
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /bigobj")
 endif()   
- 
+  
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")  
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++17 -lstdc++fs")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -std=c++17 -lstdc++fs") 
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
         link_libraries(stdc++fs)
         add_compile_definitions(FSEXPERIMENTAL)
-    endif()
+    endif() 
 endif()  
 
 
@@ -150,7 +150,7 @@ export(EXPORT ioh-targets
     NAMESPACE ioh::
 )
 export(PACKAGE ioh)
-
+ 
 
 # Add subdirectories to build.
 if(BUILD_TESTS) 

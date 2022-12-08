@@ -3,14 +3,14 @@ from typing import Any, ClassVar, List, Optional
 import ioh.iohcpp as ic
 
 
-class AbstractWModel(Integer):
+class AbstractWModel(IntegerSingleObjective):
     def __init__(self, problem_id: int, instance: int, n_variables: int, name: str, dummy_select_rate: float = ..., epistasis_block_size: int = ..., neutrality_mu: int = ..., ruggedness_gamma: int = ...) -> None: ...
     def wmodel_evaluate(self, arg0: List[int]) -> int: ...
 
 class AttractiveSector(BBOB):
     def __init__(self, instance: int, n_variables: int) -> None: ...
 
-class BBOB(Real):
+class BBOB(RealSingleObjective):
     def __init__(self, *args, **kwargs) -> None: ...
     def create(self, *args, **kwargs) -> Any: ...
 
@@ -41,14 +41,14 @@ class Gallagher101(BBOB):
 class Gallagher21(BBOB):
     def __init__(self, instance: int, n_variables: int) -> None: ...
 
-class GraphProblem(Integer):
+class GraphProblem(IntegerSingleObjective):
     def __init__(self, *args, **kwargs) -> None: ...
     def create(self, *args, **kwargs) -> Any: ...
 
 class GriewankRosenBrock(BBOB):
     def __init__(self, instance: int, n_variables: int) -> None: ...
 
-class Integer:
+class IntegerSingleObjective:
     problems: ClassVar[Any] = ...  # read-only
     def __init__(self, *args, **kwargs) -> None: ...
     def attach_logger(self, *args, **kwargs) -> Any: ...
@@ -73,7 +73,7 @@ class Integer:
     def state(self) -> ic.IntegerState: ...
   
 
-class IntegerWrappedProblem(Integer):
+class IntegerWrappedProblem(IntegerSingleObjective):
     def __init__(self, *args, **kwargs) -> None: ...
 
 class IsingRing(PBO):
@@ -166,7 +166,7 @@ class OneMaxRuggedness2(PBO):
 class OneMaxRuggedness3(PBO):
     def __init__(self, instance: int, n_variables: int) -> None: ...
 
-class PBO(Integer):
+class PBO(IntegerSingleObjective):
     def __init__(self, *args, **kwargs) -> None: ...
     def create(self, *args, **kwargs) -> Any: ...
 
@@ -180,7 +180,7 @@ class Rastrigin(BBOB):
 class RastriginRotated(BBOB):
     def __init__(self, instance: int, n_variables: int) -> None: ...
 
-class Real:
+class RealSingleObjective:
     problems: ClassVar[Any] = ...  # read-only
     def __init__(self, *args, **kwargs) -> None: ...
     def attach_logger(self, *args, **kwargs) -> Any: ...
@@ -204,7 +204,7 @@ class Real:
     @property
     def state(self) -> ic.RealState: ...
 
-class RealWrappedProblem(Real):
+class RealWrappedProblem(RealSingleObjective):
     def __init__(self, *args, **kwargs) -> None: ...
 
 class Rosenbrock(BBOB):

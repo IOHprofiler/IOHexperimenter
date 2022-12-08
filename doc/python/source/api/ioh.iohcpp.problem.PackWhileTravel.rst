@@ -31,7 +31,6 @@ PackWhileTravel
       ~PackWhileTravel.load_instances
       ~PackWhileTravel.remove_constraint
       ~PackWhileTravel.reset
-      ~PackWhileTravel.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -54,4 +53,3 @@ PackWhileTravel
    .. automethod:: load_instances
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

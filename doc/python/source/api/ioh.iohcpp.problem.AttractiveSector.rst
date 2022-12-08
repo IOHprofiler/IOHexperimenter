@@ -30,7 +30,6 @@ AttractiveSector
       ~AttractiveSector.enforce_bounds
       ~AttractiveSector.remove_constraint
       ~AttractiveSector.reset
-      ~AttractiveSector.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ AttractiveSector
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

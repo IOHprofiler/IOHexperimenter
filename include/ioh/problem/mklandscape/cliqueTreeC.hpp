@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ioh/problem/problem.hpp"
+#include "ioh/problem/single.hpp"
 #include "ioh/problem/utils.hpp"
 #include <set>
 

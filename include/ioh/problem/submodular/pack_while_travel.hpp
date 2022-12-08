@@ -8,50 +8,107 @@ namespace ioh::problem
     {
         namespace pwt
         {
-            //! Helpers for PackWhileTravel
+            //! Abstraction of a point in xy space
             struct Point
             {
-                int x, y;
-
+                //! X Coordinate
+                int x;
+                //! Y Coordinates
+                int y;
+                
+                /**
+                 * @brief Compute Euclidian distance to other point
+                 * 
+                 * @param other Another point
+                 * @return double Euclidian distance
+                 */
                 double distance(const Point &other) const
                 {
                     return std::ceil(std::sqrt(std::pow(x - other.x, 2) + std::pow(y - other.y, 2)));
                 }
             };
 
+            //! Meta data container for items in the grpah
             struct Item
             {
-                int index, profit, weight, node_number;
+                //! Numeric index
+                int index;
+                
+                //! ammount
+                int profit;
+                
+                //! Weight
+                int weight;
+
+                //! node idex
+                int node_number;
             };
 
             //! TODO: Find out what data is redundant and how we can better map to other graph data
             //! TODO: Don't use stringstream; slow
+            //! Raw TTP-Graph data container
             struct TTPData
             {
+                //! The name
                 std::string name;
+
+                //! The data type
                 std::string data_type;
+
+                //! The dimension
                 int dimension;
+
+                //! The number of items
                 int n_items;
+
+                //! The capacity
                 int capacity;
+
+                //! The min speed
                 double min_speed;
+
+                //! The max speed
                 double max_speed;
+
+                //! Rent ration
                 double rent_ratio;
+
+                //! The type weight
                 std::string edge_weight_type;
 
+                //! numeric constant penalty
                 double penalty = 0;
+                
+                //! Veclocity gap
                 double velocity_gap = 0;
+
+                //! Vector of distances
                 std::vector<double> distances{};
+
+                //! Vector of nodes (points)
                 std::vector<Point> nodes{};
+
+                //! Vector of items (Item)
                 std::vector<Item> items{};
+
+                //! Map of index to Item for fast access
                 std::map<size_t, std::vector<Item>> city_map{};
             };
-
+            
+            //! Graph data container for pwt
             struct TTPGraph : graph::Graph
             {
                 using Graph::Graph;
-
+                
+                //! Dataset containing the raw data
                 TTPData ttp_data;
 
+                /**
+                 * @brief Split a string after a colon
+                 * 
+                 * @param line the line to split from
+                 * @return std::string the thing after the colon
+                 */
                 [[nodiscard]] std::string after_colon(const std::string &line) const
                 {
                     std::stringstream ss(line);
@@ -62,7 +119,7 @@ namespace ioh::problem
                     return result;
                 }
 
-
+                //! Load the graph from the static files
                 void load() override
                 {
                     const auto contents = common::file::as_text_vector(meta.root / meta.edge_file);
@@ -120,16 +177,28 @@ namespace ioh::problem
                     loaded = true;
                 }
             };
-
+            
+            //! Graph contraint for pwt
             struct PWTConstraint : Constraint<int>
             {
+                //! pointer to the graph data
                 std::shared_ptr<TTPGraph> graph;
-
+                /**
+                 * @brief Construct a new PWTConstraint object
+                 * 
+                 * @param graph a shared_ptr to some TTPGraph
+                 */
                 PWTConstraint(const std::shared_ptr<TTPGraph> &graph) :
                     Constraint(constraint::Enforced::HARD), graph(graph)
                 {
                 }
-                
+                /**
+                 * @brief Compute constraint violation
+                 * 
+                 * @param x the candidate solution
+                 * @return true when there is constraint violation
+                 * @return false when there is no constraint violaton
+                 */
                 bool compute_violation(const std::vector<int> &x) override
                 { 
                     violation_ = 0; 
@@ -141,24 +210,26 @@ namespace ioh::problem
                     return violation_ > graph->ttp_data.capacity;
                 }
 
+                //! Penalty function, scales violation
                 double penalty() const override {
                     return weight * pow(graph->ttp_data.capacity - violation_ + graph->ttp_data.penalty, exponent);   
                 }
-
+                
+                //! String representation
                 std::string repr() const override { return fmt::format("<PWTConstraint {}>", violation()); }
             };
         } // namespace pwt
 
-
+        //! PWT problem definition
         struct PackWhileTravel final : GraphProblemType<PackWhileTravel>
         {
+            //! PackWhileTravel problems start with problem ids starting from this id
             static inline int default_id = 2300;
             /**
              * @brief Construct a new PackWhileTravel object. Suggested usage is via the factory.
              * If you want to create your own objects, please be sure to pass a correct graph instance.
              *
              * @param problem_id the id to the problem
-             * @param instance_id for instance based problems this is ignored
              * @param graph the graph object on which to operate
              */
             PackWhileTravel(const int problem_id, const int, const std::shared_ptr<pwt::TTPGraph> &graph) :
@@ -167,6 +238,12 @@ namespace ioh::problem
                 constraintset_[0] = std::make_shared<pwt::PWTConstraint>(graph);
             }
 
+            /**
+             * @brief Evaluate the problem
+             * 
+             * @param x the candidate solution
+             * @return double the raw problem value
+             */
             double evaluate(const std::vector<int> &x) override
             {
                 auto& data = std::dynamic_pointer_cast<pwt::TTPGraph>(graph)->ttp_data;
@@ -189,6 +266,13 @@ namespace ioh::problem
         };
     } // namespace submodular
 
+    /**
+     * @brief Template instantiation for pwt problems.
+     * Ensures loading of PWT problems in the factory, using the correct files.
+     * 
+     * @param definitions_file optional file name
+     * @return InstanceBasedProblem::Constructors<submodular::PackWhileTravel, int, int> a vector of contructor functions
+     */
     template <>
     inline InstanceBasedProblem::Constructors<submodular::PackWhileTravel, int, int>
     InstanceBasedProblem::load_instances<submodular::PackWhileTravel>(const std::optional<fs::path> &definitions_file)

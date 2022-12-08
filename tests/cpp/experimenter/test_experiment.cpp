@@ -2,13 +2,13 @@
 
 #include "ioh.hpp"
 
-void real_random_search(const std::shared_ptr<ioh::problem::Real>& p)
+void real_random_search(const std::shared_ptr<ioh::problem::RealSingleObjective>& p)
 {
 	for (int i = 0; i < 10; i++)
 		(*p)(ioh::common::random::doubles(p->meta_data().n_variables));
 }
 
-void integer_random_search(const std::shared_ptr<ioh::problem::Integer>& p)
+void integer_random_search(const std::shared_ptr<ioh::problem::IntegerSingleObjective> &p)
 {
 	for (int i = 0; i < 10; i++)
 		(*p)(ioh::common::random::integers(p->meta_data().n_variables));
@@ -26,7 +26,7 @@ TEST_F(BaseTest, experiment_bbob)
 	const auto suite  = std::make_shared<suite::BBOB>(pbs, ins, dims);
 	const auto logger = std::make_shared<logger::Store>(
 		logger::Triggers{trigger::always}, logger::Properties{watch::raw_y_best});
-	auto experiment   = Experimenter<problem::Real>(suite, logger, real_random_search, 10);
+    auto experiment = Experimenter<problem::RealSingleObjective>(suite, logger, real_random_search, 10);
 
 	EXPECT_EQ(experiment.independent_runs(), 10);
 	experiment.run();

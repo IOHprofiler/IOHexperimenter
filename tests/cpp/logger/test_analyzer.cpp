@@ -4,7 +4,7 @@
 #include "ioh/suite.hpp"
 #include "ioh/problem/bbob.hpp"
 
-fs::path get_dat_path(const fs::path &root, const ioh::problem::Real &p)
+fs::path get_dat_path(const fs::path &root, const ioh::problem::RealSingleObjective &p)
 {
     return root / fmt::format("data_f{:d}_{}", p.meta_data().problem_id, p.meta_data().name) /
         fmt::format("IOHprofiler_f{:d}_DIM{:d}.dat", p.meta_data().problem_id, p.meta_data().n_variables);

@@ -30,7 +30,6 @@ LABS
       ~LABS.enforce_bounds
       ~LABS.remove_constraint
       ~LABS.reset
-      ~LABS.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ LABS
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info

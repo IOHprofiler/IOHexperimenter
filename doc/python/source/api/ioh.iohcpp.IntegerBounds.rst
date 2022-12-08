@@ -11,6 +11,7 @@ IntegerBounds
    .. autosummary::
 
       ~IntegerBounds.enforced
+      ~IntegerBounds.exponent
       ~IntegerBounds.lb
       ~IntegerBounds.ub
       ~IntegerBounds.weight
@@ -29,6 +30,7 @@ IntegerBounds
    .. rubric:: Attributes Documentation
 
    .. autoattribute:: enforced
+   .. autoattribute:: exponent
    .. autoattribute:: lb
    .. autoattribute:: ub
    .. autoattribute:: weight

@@ -8,7 +8,7 @@ double fn(const std::vector<T> &x) {
 }
 
 template <typename T>
-ioh::problem::Solution<T> co(const int iid, const int dim)
+ioh::problem::Solution<T, double> co(const int iid, const int dim)
 {
     return {std::vector<T>(dim, iid), static_cast<double>(iid * dim)};
 }
@@ -26,9 +26,9 @@ double ty(const double y, const int iid){
 TEST_F(BaseTest, test_wrap_real_problem){
     using namespace ioh::common;
     using namespace ioh::problem;
-    auto &factory = ProblemRegistry<Real>::instance();
+    auto &factory = ProblemRegistry<RealSingleObjective>::instance();
     
-    wrap_function<double>(fn<double>, "fn", OptimizationType::MIN, -5, 5, tx<double>, ty, co<double>);
+    wrap_function<double, double>(fn<double>, "fn", OptimizationType::MIN, -5, 5, tx<double>, ty, co<double>);
     const std::vector<double> x0 = {1, 0, 2};
 
     for (auto inst: {1, 2, 3}){
@@ -45,9 +45,9 @@ TEST_F(BaseTest, test_wrap_real_problem){
 TEST_F(BaseTest, test_wrap_integer_problem){
     using namespace ioh::common;
     using namespace ioh::problem;
-    auto &factory = ProblemRegistry<Integer>::instance();
+    auto &factory = ProblemRegistry<IntegerSingleObjective>::instance();
     
-    wrap_function<int>(fn<int>, "fn", OptimizationType::MIN, -5, 5, tx<int>, ty, co<int>);
+    wrap_function<int, double>(fn<int>, "fn", OptimizationType::MIN, -5, 5, tx<int>, ty, co<int>);
     const std::vector<int> x0 = {1, 0, 2};
 
     for (auto inst: {1, 2, 3}){

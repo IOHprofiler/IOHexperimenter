@@ -11,6 +11,7 @@ AbstractIntegerConstraint
    .. autosummary::
 
       ~AbstractIntegerConstraint.enforced
+      ~AbstractIntegerConstraint.exponent
       ~AbstractIntegerConstraint.weight
 
    .. rubric:: Methods Summary
@@ -27,6 +28,7 @@ AbstractIntegerConstraint
    .. rubric:: Attributes Documentation
 
    .. autoattribute:: enforced
+   .. autoattribute:: exponent
    .. autoattribute:: weight
 
    .. rubric:: Methods Documentation

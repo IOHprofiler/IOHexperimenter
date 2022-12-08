@@ -89,6 +89,8 @@ breathe_default_project = "iohcpp"
 
 source_suffix = ['.rst', '.md']
 
-breathe_default_members = ('members', 'undoc-members', 'private-members', 'protected-members', 'allow-dot-graphs')
+breathe_default_members = (
+    'members', 'undoc-members', 'private-members', 'protected-members', 'allow-dot-graphs'
+)
 
 

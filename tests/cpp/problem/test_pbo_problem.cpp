@@ -2,7 +2,7 @@
 
 #include "ioh/problem/pbo.hpp"
 
-double test_eval(const std::shared_ptr<ioh::problem::Integer> &f)
+double test_eval(const std::shared_ptr<ioh::problem::IntegerSingleObjective> &f)
 {
     const std::vector<int> x = {1, 1, 0, 1, 0, 0, 0, 1, 1};
     return std::floor((*f)(x) * 10000.0) / 10000.0;

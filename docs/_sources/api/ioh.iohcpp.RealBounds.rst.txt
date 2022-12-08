@@ -11,6 +11,7 @@ RealBounds
    .. autosummary::
 
       ~RealBounds.enforced
+      ~RealBounds.exponent
       ~RealBounds.lb
       ~RealBounds.ub
       ~RealBounds.weight
@@ -29,6 +30,7 @@ RealBounds
    .. rubric:: Attributes Documentation
 
    .. autoattribute:: enforced
+   .. autoattribute:: exponent
    .. autoattribute:: lb
    .. autoattribute:: ub
    .. autoattribute:: weight

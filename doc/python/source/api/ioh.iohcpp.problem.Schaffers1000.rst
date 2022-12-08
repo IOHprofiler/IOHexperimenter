@@ -30,7 +30,6 @@ Schaffers1000
       ~Schaffers1000.enforce_bounds
       ~Schaffers1000.remove_constraint
       ~Schaffers1000.reset
-      ~Schaffers1000.update_log_info
 
    .. rubric:: Attributes Documentation
 
@@ -52,4 +51,3 @@ Schaffers1000
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
-   .. automethod:: update_log_info
