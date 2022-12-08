@@ -8,8 +8,9 @@
 #include "example_submodular_instances.hpp"
 
 
+
 int main()
-{
+{   
     show_registered_objects();
     problem_example();
     suite_example();

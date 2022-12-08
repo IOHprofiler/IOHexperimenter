@@ -1,23 +1,23 @@
 ## License
 
-This application is governed by the __BSD 3-Clause license__. 
+This application is governed by the __BSD 3-Clause license__.
 
 BSD 3-Clause License
 
-Copyright (c) 2018, 
+Copyright (c) 2018,
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
-  * Redistributions of source code must retain the above copyright notice, this
+* Redistributions of source code must retain the above copyright notice, this
     list of conditions and the following disclaimer.
 
-  * Redistributions in binary form must reproduce the above copyright notice,
+* Redistributions in binary form must reproduce the above copyright notice,
     this list of conditions and the following disclaimer in the documentation
     and/or other materials provided with the distribution.
 
-  * Neither the name of the copyright holder nor the names of its
+* Neither the name of the copyright holder nor the names of its
     contributors may be used to endorse or promote products derived from
     this software without specific prior written permission.
 
@@ -36,7 +36,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Note that some part of IOHexperimenter have been writthen by other teams.
 We acknowledge that :
-  * the random number generator is implemented by NumBBO/CoCO team in the 
-  Numerical Black-Box Optimization Benchmarking Framework (https://github.com/numbbo/coco).
-  * the original BBOB test functions are implemented by NumBBO/COCO team 
-  (https://github.com/numbbo/coco), we did modifications to accommodate our framework.
+
+* the random number generator is implemented by NumBBO/CoCO team in the
+  Numerical Black-Box Optimization Benchmarking Framework (<https://github.com/numbbo/coco>).
+* the original BBOB test functions are implemented by NumBBO/COCO team
+  (<https://github.com/numbbo/coco>), we did modifications to accommodate our framework.
