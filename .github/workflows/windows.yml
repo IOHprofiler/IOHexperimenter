@@ -42,7 +42,7 @@ jobs:
       run: tests/Debug/test_ioh.exe
 
   build-test-python:
-    runs-on: windows-latest
+    runs-on: windows-2022
     strategy:
       matrix:
         python-version: ["3.6.x", "3.7.x", "3.8.x", "3.9.x", "3.10.x", "3.11.x"]
