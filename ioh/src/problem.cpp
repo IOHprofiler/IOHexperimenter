@@ -330,9 +330,7 @@ void define_base_class(py::module &m, const std::string &name)
 
                 Parameters
                 ----------
-                    problem_name: a string indicating the problem name. For the built-in problems, we advise
-                        the user to look into https://iohprofiler.github.io/IOHexp/Cpp/#using-individual-problems
-                        for the full list of available problems
+                    problem_name: a string indicating the problem name. 
                     instance_id: an integer identifier of the problem instance, which seeds the random generation
                         of the tranformations in the search/objective spaces
                     dimension: integer, representing the dimensionality of the search space
@@ -345,8 +343,7 @@ void define_base_class(py::module &m, const std::string &name)
 
                 Parameters
                 ----------
-                    problem_id: the index of the problem to create. For the built-in problems, the indexing of
-                        problems can be found here: https://iohprofiler.github.io/IOHexp/Cpp/#using-individual-problems
+                    problem_id: the index of the problem to create. 
                     instance_id: an integer identifier of the problem instance, which seeds the random generation
                         of the tranformations in the search/objective spaces
                     dimension: integer, representing the dimensionality of the search space
