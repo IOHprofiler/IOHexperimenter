@@ -9,3 +9,4 @@
 #include "common/random.hpp"  
 #include "common/repr.hpp"  
 #include "common/timer.hpp" 
+#include "common/sampler.hpp" 

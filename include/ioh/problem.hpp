@@ -13,3 +13,4 @@
 #include "problem/mklandscape/cliqueTreeC.hpp"
 #endif
 
+#include "problem/star_discrepancy/star_discrepancy.hpp"

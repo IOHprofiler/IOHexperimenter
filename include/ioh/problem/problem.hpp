@@ -223,8 +223,9 @@ namespace ioh
             //! Stream operator
             friend std::ostream &operator<<(std::ostream &os, const Problem &obj)
             {
-                return os << "Problem(\n\t" << obj.meta_data_ << "\n\t" << obj.constraintset_
-                          << "\n\tstate: " << obj.state_ << "\n\toptimum: " << obj.optimum_ << "\n)";
+                return os << "Problem(\n\t" << obj.meta_data_ << "\n\t" << obj.bounds_ << "\n\t"
+                          << obj.constraintset_  << "\n\t" << obj.state_ << "\n\t" 
+                          << obj.optimum_ << "\n)";
             }
         };
 

@@ -8,6 +8,23 @@
 
 #include "ioh/common/file.hpp"
 
+
+inline void expect_vector_eq(const std::vector<int> &x, const std::vector<int> &y)
+{
+    ASSERT_EQ(x.size(), y.size()) << "Vectors x and y are of unequal length";
+
+    for (int i = 0; i < x.size(); ++i)
+        EXPECT_EQ(x[i], y[i]) << "Vectors x and y differ at index " << i;
+}
+
+inline void expect_vector_eq(const std::vector<double> &x, const std::vector<double> &y, const double eta = 1e-4)
+{
+    ASSERT_EQ(x.size(), y.size()) << "Vectors x and y are of unequal length";
+
+    for (int i = 0; i < x.size(); ++i)
+        EXPECT_NEAR(x[i], y[i], eta) << "Vectors x and y differ at index " << i;
+}
+
 inline std::vector<std::string> split(const std::string &str, const std::string &pattern)
 {
     std::vector<std::string> res;

@@ -96,7 +96,8 @@ namespace ioh::common
         auto name = type_name<T>();
         name = name.substr(name.find_last_of(' ') + 1);
         name = name.substr(name.find_last_of("::") + 1);
-        return name = name.substr(0, name.find_first_of(">"));
+        name = name.substr(0, name.find_first_of(">")+1);
+        return name;
     }
 
     /**
@@ -136,7 +137,8 @@ namespace ioh::common
         {
             const auto known_ids = ids();
             const auto it = std::find(known_ids.begin(), known_ids.end(), id);
-            return it == known_ids.end() ? id : get_next_id(known_ids);
+
+            return it == known_ids.end() ? id : check_or_get_next_available(id+1);
         }
 
         //! Get the next available id

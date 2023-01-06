@@ -18,16 +18,16 @@ namespace ioh::common::random
 {
     
     //! Global random device
-    inline std::random_device rd;
+    inline std::random_device RD;
     
     //! Global random generator
-    inline std::mt19937 gen(rd());
+    inline std::mt19937 GENERATOR(RD());
 
     /**
      * @brief Seed the random number generator device. This is a std::mt19937 rng
      */
     inline void seed(const unsigned int seed){
-        gen.seed(seed);
+        GENERATOR.seed(seed);
     }
     
     /**
@@ -59,7 +59,7 @@ namespace ioh::common::random
     inline int integer(const int min = std::numeric_limits<int>::min(), const int max = std::numeric_limits<int>::max())
     {
         std::uniform_int_distribution<int> d(min, max);
-        return d(gen);
+        return d(GENERATOR);
     }
 
     /**
@@ -71,7 +71,7 @@ namespace ioh::common::random
     inline double real(const double min = 0.0, const double max = 1.0)
     {
         std::uniform_real_distribution<double> d(min, max);
-        return d(gen);
+        return d(GENERATOR);
     }
 
     /**
