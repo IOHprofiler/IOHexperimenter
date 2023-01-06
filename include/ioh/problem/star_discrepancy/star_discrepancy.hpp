@@ -11,6 +11,7 @@ namespace ioh::problem::star_discrepancy
         class StarDiscrepancy : public RealSingleObjective
         {
             std::vector<std::vector<double>> grid;
+            
         protected:
             double evaluate(const std::vector<double> &x) override { 
                 double ko = 0.0, kc = 0.0, vol = 1.0;
@@ -18,7 +19,7 @@ namespace ioh::problem::star_discrepancy
                 for (const auto &sample : grid)
                 {
                     double to = 1., tc = 1.;
-                    for (size_t i = 0; i < meta_data_.n_variables; i++)
+                    for (size_t i = 0; i < x.size(); i++)
                     {
                         if (sample[i] >= x[i])
                             to = 0.;
@@ -75,23 +76,13 @@ namespace ioh::problem::star_discrepancy
             using StarDiscrepancy::StarDiscrepancy;
         };
 
-        static inline std::array<size_t, 10> elements = {1, 2, 5, 10, 20, 50, 100, 200, 500, 1000};
-
-        int get_index(const int n)
-        {
-            for (size_t i = 0; i < 10; i++)
-                if (elements[i] == n)
-                    return static_cast<int>(i);
-            return 11;
-        }
-
         template <size_t N=2>
         struct UniformStarDiscrepancy : StarDiscrepancy_<UniformStarDiscrepancy<N>>
         {
             using Sampler = common::random::sampler::Uniform<double>;
 
             UniformStarDiscrepancy(const int instance, const int n_variables) :
-                StarDiscrepancy_(30, instance, n_variables, fmt::format("UniformStarDiscrepancy{}", N),
+                StarDiscrepancy_<UniformStarDiscrepancy<N>>(30, instance, n_variables, fmt::format("UniformStarDiscrepancy{}", N),
                                  StarDiscrepancy::generate_grid<Sampler>(instance, n_variables, N))
             {
             }
@@ -104,7 +95,7 @@ namespace ioh::problem::star_discrepancy
             using Sampler = common::random::sampler::Sobol;
 
             SobolStarDiscrepancy(const int instance, const int n_variables) :
-                StarDiscrepancy_(40, instance, n_variables, fmt::format("SobolStarDiscrepancy{}", N),
+                StarDiscrepancy_<SobolStarDiscrepancy<N>>(40, instance, n_variables, fmt::format("SobolStarDiscrepancy{}", N),
                                  StarDiscrepancy::generate_grid<Sampler>(instance, n_variables, N))
             {
             }
@@ -116,7 +107,7 @@ namespace ioh::problem::star_discrepancy
             using Sampler = common::random::sampler::Halton;
 
             HaltonStarDiscrepancy(const int instance, const int n_variables) :
-                StarDiscrepancy_(50, instance, n_variables, fmt::format("HaltonStarDiscrepancy{}", N),
+                StarDiscrepancy_<HaltonStarDiscrepancy<N>>(50, instance, n_variables, fmt::format("HaltonStarDiscrepancy{}", N),
                                  StarDiscrepancy::generate_grid<Sampler>(instance, n_variables, N))
             {
             }
@@ -133,7 +124,7 @@ namespace ioh::problem::star_discrepancy
         }
 
         template <>
-        inline int loop<2048>()
+        inline int loop<1024>()
         {
             return 0;
         }

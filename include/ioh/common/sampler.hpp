@@ -12,7 +12,7 @@ namespace ioh::common::random::sampler
         using seed_type = long long int;
         static inline seed_type default_seed = 1993;
 
-        Sampler(const size_t n, const seed_type seed, const T lb, const T ub) : n(n), lb(lb), ub(ub), seed(seed) {}
+        Sampler(const size_t n, const seed_type seed, const T lb, const T ub) : n(n), seed(seed), lb(lb), ub(ub) {}
 
         virtual std::vector<T> next() = 0;
 
@@ -27,18 +27,20 @@ namespace ioh::common::random::sampler
     template <typename T>
     struct Uniform : Sampler<T>
     {
+        using seed_type = long long int;
+        static inline seed_type default_seed = 1993;
         using Dist = std::conditional_t<std::is_integral_v<T>, std::uniform_int_distribution<int>,
                                         std::uniform_real_distribution<double>>;
 
         Uniform(const size_t n, const seed_type seed = default_seed, const T lb = 0, const T ub = 1) :
-            Sampler(n, seed, lb, ub), dist(lb, ub), gen(seed)
+            Sampler<T>(n, seed, lb, ub), dist(lb, ub), gen(seed)
         {
         }
 
         virtual std::vector<T> next()
         {
-            std::vector<T> res(n);
-            for (size_t i = 0; i < n; i++)
+            std::vector<T> res(this->n);
+            for (size_t i = 0; i < this->n; i++)
                 res[i] = dist(gen);
             return res;
         }
@@ -51,7 +53,7 @@ namespace ioh::common::random::sampler
 
     struct Sobol : Sampler<double>
     {
-        Sobol(const size_t n, const seed_type seed = default_seed, const double lb = 0, const double ub = 1) :
+        Sobol(const size_t n, const seed_type seed = Sampler::default_seed, const double lb = 0, const double ub = 1) :
             Sampler(n, std::max(seed_type{2}, seed), lb, ub)
         {
         }
@@ -65,7 +67,7 @@ namespace ioh::common::random::sampler
 
     struct Halton : Sampler<double>
     {
-        Halton(const size_t n, const seed_type seed = default_seed, const double lb = 0, const double ub = 1) :
+        Halton(const size_t n, const seed_type seed = Sampler::default_seed, const double lb = 0, const double ub = 1) :
             Sampler(n, seed, lb, ub), delta(ub - lb)
         {
             primes = sieve(std::max(6, static_cast<int>(n)));
