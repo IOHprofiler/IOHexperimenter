@@ -24,7 +24,7 @@ namespace ioh
          */
         template<typename T>
         inline bool is_equal(const std::vector<T> &x, const std::vector<T> &y){
-            if(!x.size() == y.size())
+            if(!(x.size() == y.size()))
                 return false;
 
             for(size_t i=0; i < x.size(); i++)

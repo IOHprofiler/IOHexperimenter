@@ -12,7 +12,6 @@
 #endif
 
 #include <cxxopts.hpp>
-#include <clutchlog/clutchlog.h>
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 

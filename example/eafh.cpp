@@ -1,5 +1,4 @@
 #include <ioh.hpp>
-#include <clutchlog/clutchlog.h>
 
 /******************************************************************************
  * This command line interface aims at comparing the performances of the
