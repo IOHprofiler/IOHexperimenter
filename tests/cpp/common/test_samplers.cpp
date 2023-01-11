@@ -17,7 +17,7 @@ void test_bounds(ioh::common::random::sampler::Sampler<T>& sampler, T lb, T ub) 
 TEST_F(BaseTest, test_unform_int)
 {
     ioh::common::random::sampler::Uniform<int> sampler(5, 10, 10, 100);
-    expect_vector_eq(sampler.next(), {96, 73, 84, 88, 26});
+    expect_vector_eq(sampler.next(), {79, 36, 11, 54, 67});
 	test_bounds(sampler, 10, 100);
 }
 
@@ -25,7 +25,8 @@ TEST_F(BaseTest, test_unform_int)
 TEST_F(BaseTest, test_unform_real)
 {
     ioh::common::random::sampler::Uniform<double> sampler(5, 10);
-    test_bounds(sampler, 0., 1.);
+    expect_vector_eq(sampler.next(), {0.7713, 0.2987, 0.0207, 0.4945, 0.6336});
+    test_bounds(sampler, 0., 1.); 
 }
 
 TEST_F(BaseTest, test_sobol) {
@@ -39,4 +40,5 @@ TEST_F(BaseTest, test_sobol) {
 TEST_F(BaseTest, test_halton) { 
     ioh::common::random::sampler::Halton sampler(5, 10);
     expect_vector_eq(sampler.next(), {0.3125, 0.37037, 0.08, 0.44898, 0.909091});
+    test_bounds(sampler, 0., 1.);
 }

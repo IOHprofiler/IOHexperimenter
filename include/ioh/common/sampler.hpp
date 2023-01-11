@@ -29,11 +29,9 @@ namespace ioh::common::random::sampler
     {
         using seed_type = long long int;
         static inline seed_type default_seed = 1993;
-        using Dist = std::conditional_t<std::is_integral_v<T>, std::uniform_int_distribution<int>,
-                                        std::uniform_real_distribution<double>>;
 
         Uniform(const size_t n, const seed_type seed = default_seed, const T lb = 0, const T ub = 1) :
-            Sampler<T>(n, seed, lb, ub), dist(lb, ub), gen(seed)
+            Sampler<T>(n, seed, lb, ub), gen(seed), delta_g(gen.max() - gen.min()), delta(ub - lb)
         {
         }
 
@@ -41,13 +39,14 @@ namespace ioh::common::random::sampler
         {
             std::vector<T> res(this->n);
             for (size_t i = 0; i < this->n; i++)
-                res[i] = dist(gen);
+                res[i] = (delta * (static_cast<double>(gen()) / delta_g)) + this->lb;
             return res;
         }
 
     private:
-        Dist dist;
         std::mt19937 gen;
+        size_t delta_g;
+        T delta;
     };
 
 

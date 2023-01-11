@@ -38,7 +38,7 @@ namespace ioh::problem
         
         //! A vector of constructors-id pairs
         template <typename T, typename... Args>
-        using Constructors = std::vector<std::pair<Constructor<T, Args...>, int>>;
+        using Constructors = std::vector<std::tuple<Constructor<T, Args...>, int, std::optional<std::string>>>;
 
         /**
          * @brief Method to load instances
@@ -96,7 +96,7 @@ namespace ioh::common
         auto name = type_name<T>();
         name = name.substr(name.find_last_of(' ') + 1);
         name = name.substr(name.find_last_of("::") + 1);
-        name = name.substr(0, name.find_first_of(">")+1);
+        name = name.substr(0, name.find_first_of(">"));
         return name;
     }
 
@@ -137,8 +137,7 @@ namespace ioh::common
         {
             const auto known_ids = ids();
             const auto it = std::find(known_ids.begin(), known_ids.end(), id);
-
-            return it == known_ids.end() ? id : check_or_get_next_available(id+1);
+            return it == known_ids.end() ? id : get_next_id(known_ids);
         }
 
         //! Get the next available id
@@ -247,8 +246,11 @@ namespace ioh::common
             auto constructors = InstanceBasedProblem::load_instances<T, Args...>();
 
             for(auto& ci: constructors){
-                factory.include(fmt::format("{}{}", class_name<T>(), ci.second), ci.second,
-                    [c=ci.first](Args &&...params) { 
+                const auto id = std::get<1>(ci);
+                const auto name = std::get<2>(ci).value_or(fmt::format("{}{}", class_name<T>(), id));
+
+                factory.include(name, id,
+                    [c=std::get<0>(ci)](Args &&...params) { 
                         return std::make_unique<T>(c(std::forward<Args>(params)...));
                     });
 

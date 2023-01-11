@@ -192,7 +192,6 @@ namespace ioh::common::file
                         for (auto tmp_dim_data : tmp_scenarios) {
                             auto dim = tmp_dim_data["dimension"];
                             auto tmp_run_data = tmp_dim_data["runs"];
-                            // std::cout << tmp_ins_data << std::endl;
                             for (size_t i = 0; i != tar_data["scenarios"].size(); ++i) {
                                 for (auto tmp_ins_data : tmp_run_data) {
                                     if(tar_data["scenarios"].at(i)["dimension"] == dim) {

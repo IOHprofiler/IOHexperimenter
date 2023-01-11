@@ -9,12 +9,10 @@ TEST_F(BaseTest, BoxBBOBConstraint)
     using namespace ioh::problem::bbob;
 
     Sphere p(1, 1);
-
     EXPECT_FLOAT_EQ((float)p({10.}), 174.48792f);
     EXPECT_FLOAT_EQ((float)p.constraints().violation(), 0.f);
 
     p.enforce_bounds(std::numeric_limits<double>::infinity());
- 
 	EXPECT_EQ(p({10}), std::numeric_limits<double>::infinity());
     EXPECT_FLOAT_EQ((float)p.constraints().violation(), 25.f);
 	
@@ -24,7 +22,9 @@ TEST_F(BaseTest, BoxBBOBConstraint)
     // Hard penalty, return the value for penalty on violation, and don't call
     // internal evaluate function. So, y and all internally used values are expected to be the penalty
     p.enforce_bounds(1.0, ioh::problem::constraint::Enforced::HARD);
-    EXPECT_EQ(p({10}), p.constraints().penalty());
+    auto y = p({11});
+
+    EXPECT_EQ(y, p.constraints().penalty());
     EXPECT_EQ(p.state().current_internal.y, p.constraints().penalty());
     EXPECT_EQ(p.state().y_unconstrained, p.constraints().penalty());
 

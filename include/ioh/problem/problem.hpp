@@ -182,14 +182,19 @@ namespace ioh
              * @param how The constraint::Enforced strategy
              * @param exponent the exponent for scaling the contraint
              */
-            void enforce_bounds(const double weight = 1.0, const constraint::Enforced how = constraint::Enforced::SOFT, const double exponent = 1.0)
+            void enforce_bounds(const double weight = 1.0, const constraint::Enforced enforced = constraint::Enforced::SOFT, const double exponent = 1.0)
             {
-                
+                for (auto &ci : constraintset_.constraints) {
+                    auto ptr = std::dynamic_pointer_cast<Bounds<T>>(ci);
+                    if (ptr && *ptr == bounds_){
+                        remove_constraint(ptr);
+                        break;
+                    }                       
+                }
+                bounds_.enforced = enforced;
                 bounds_.weight = weight;
                 bounds_.exponent = exponent;
-                bounds_.enforced = how;
-                
-                add_constraint(ConstraintPtr<T>(ConstraintPtr<T>(), &bounds_));
+                add_constraint(std::make_shared<Bounds<T>>(bounds_.lb, bounds_.ub, bounds_.enforced, bounds_.weight, bounds_.exponent));
             }          
 
             //! Accessor for `meta_data_`

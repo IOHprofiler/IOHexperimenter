@@ -1039,11 +1039,11 @@ star_discrepancy_init(const int instance, const int n_variables, const int n_sam
         grid = StarDiscrepancy::generate_grid<Uniform<double>>(instance, n_variables, n_samples);
         break;
     case SamplerType::HALTON:
-        grid = StarDiscrepancy::generate_grid<Uniform<double>>(instance, n_variables, n_samples);
+        grid = StarDiscrepancy::generate_grid<Halton>(instance, n_variables, n_samples);
         break;
     default:
     case SamplerType::SOBOL:
-        grid = StarDiscrepancy::generate_grid<Uniform<double>>(instance, n_variables, n_samples);
+        grid = StarDiscrepancy::generate_grid<Sobol>(instance, n_variables, n_samples);
     }
     return StarDiscrepancy(0, instance, n_variables, "StarDiscrepancy", grid);
 }

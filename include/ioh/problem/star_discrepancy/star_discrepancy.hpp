@@ -4,16 +4,21 @@
 #include "ioh/problem/single.hpp"
 
 
-namespace ioh::problem::star_discrepancy
+namespace ioh::problem
 {
-    namespace real
+    namespace star_discrepancy::real
     {
-        class StarDiscrepancy : public RealSingleObjective
+        class StarDiscrepancy : public RealSingleObjective,
+                                InstanceBasedProblem,
+                                AutomaticProblemRegistration<StarDiscrepancy, RealSingleObjective>,
+                                AutomaticProblemRegistration<StarDiscrepancy, StarDiscrepancy>
+
         {
             std::vector<std::vector<double>> grid;
-            
+
         protected:
-            double evaluate(const std::vector<double> &x) override { 
+            double evaluate(const std::vector<double> &x) override
+            {
                 double ko = 0.0, kc = 0.0, vol = 1.0;
                 
                 for (const auto &sample : grid)
@@ -39,10 +44,10 @@ namespace ioh::problem::star_discrepancy
 
         public:
             /**
-             * @brief Construct a new StarDiscrepancy_ object
+             * @brief Construct a new StarDiscrepancy object
              *
              * @param problem_id The id of the problem
-             * @param instance The instance of the problem
+             * @param instance The instance of the problem, used as seed for the sampler
              * @param n_variables the dimension of the problem
              * @param name the name of the problem
              * @param grid the point grid
@@ -57,7 +62,8 @@ namespace ioh::problem::star_discrepancy
             }
 
             template <typename Sampler>
-            static inline std::vector<std::vector<double>> generate_grid(const int instance, const int n_variables, const size_t n_points)
+            static inline std::vector<std::vector<double>> generate_grid(const int instance, const int n_variables,
+                                                                         const size_t n_points)
             {
                 auto sampler = Sampler(n_variables, instance);
                 std::vector<std::vector<double>> res(n_points);
@@ -66,72 +72,55 @@ namespace ioh::problem::star_discrepancy
                 return res;
             }
         };
+    } // namespace star_discrepancy::real
 
+    /**
+     * @brief Template instantiation for real::StarDiscrepancy problems.
+     *
+     * @return InstanceBasedProblem::Constructors<real::StarDiscrepancy, int, int> a vector of contructor
+     * functions
+     */
+    template <>
+    inline InstanceBasedProblem::Constructors<star_discrepancy::real::StarDiscrepancy, int, int>
+    InstanceBasedProblem::load_instances<star_discrepancy::real::StarDiscrepancy>(const std::optional<fs::path> &)
+    {
+        using namespace star_discrepancy::real;
+        using namespace common::random::sampler;
 
-        template <typename ProblemType>
-        struct StarDiscrepancy_ : StarDiscrepancy,
-                                  AutomaticProblemRegistration<ProblemType, StarDiscrepancy>,
-                                  AutomaticProblemRegistration<ProblemType, RealSingleObjective>
+        Constructors<StarDiscrepancy, int, int> constructors;
+        int i = 0;
+        std::vector<int> sample_sizes{10, 25, 50, 100, 150, 200, 250, 500, 750, 1000};
+
+        for (const auto &sample_size : sample_sizes)
         {
-            using StarDiscrepancy::StarDiscrepancy;
-        };
+            auto problem_name = fmt::format("UniformStarDiscrepancy{}", sample_size);
+            constructors.push_back({[sample_size, i, problem_name](int instance, int dim) {
+                                        return StarDiscrepancy(30 + i, instance, dim, problem_name,
+                                                               StarDiscrepancy::generate_grid<Uniform<double>>(
+                                                                   instance, dim, sample_size));
+                                    },
+                                    30 + i, problem_name});
 
-        template <size_t N=2>
-        struct UniformStarDiscrepancy : StarDiscrepancy_<UniformStarDiscrepancy<N>>
-        {
-            using Sampler = common::random::sampler::Uniform<double>;
+            problem_name = fmt::format("SobolStarDiscrepancy{}", sample_size);
+            constructors.push_back({[sample_size, i, problem_name](int instance, int dim) {
+                                        return StarDiscrepancy(40 + i, instance, dim, problem_name,
+                                                               StarDiscrepancy::generate_grid<Sobol>(
+                                                                   instance, dim, sample_size));
+                                    },
+                                    40 + i, problem_name});
 
-            UniformStarDiscrepancy(const int instance, const int n_variables) :
-                StarDiscrepancy_<UniformStarDiscrepancy<N>>(30, instance, n_variables, fmt::format("UniformStarDiscrepancy{}", N),
-                                 StarDiscrepancy::generate_grid<Sampler>(instance, n_variables, N))
-            {
-            }
-        };
-        
-
-        template <size_t N = 2>
-        struct SobolStarDiscrepancy : StarDiscrepancy_<SobolStarDiscrepancy<N>>
-        {
-            using Sampler = common::random::sampler::Sobol;
-
-            SobolStarDiscrepancy(const int instance, const int n_variables) :
-                StarDiscrepancy_<SobolStarDiscrepancy<N>>(40, instance, n_variables, fmt::format("SobolStarDiscrepancy{}", N),
-                                 StarDiscrepancy::generate_grid<Sampler>(instance, n_variables, N))
-            {
-            }
-        };
-
-        template <size_t N = 2>
-        struct HaltonStarDiscrepancy : StarDiscrepancy_<HaltonStarDiscrepancy<N>>
-        {
-            using Sampler = common::random::sampler::Halton;
-
-            HaltonStarDiscrepancy(const int instance, const int n_variables) :
-                StarDiscrepancy_<HaltonStarDiscrepancy<N>>(50, instance, n_variables, fmt::format("HaltonStarDiscrepancy{}", N),
-                                 StarDiscrepancy::generate_grid<Sampler>(instance, n_variables, N))
-            {
-            }
-        };
-
-
-        template <int N>
-        inline int loop()
-        {
-            UniformStarDiscrepancy<N>(1, 1);
-            SobolStarDiscrepancy<N>(1, 1);
-            HaltonStarDiscrepancy<N>(1, 1);
-            return loop<N * 2>();   
+            problem_name = fmt::format("HaltonStarDiscrepancy{}", sample_size);
+            constructors.push_back({[sample_size, i, problem_name](int instance, int dim) {
+                                        return StarDiscrepancy(50 + i, instance, dim, problem_name,
+                                                               StarDiscrepancy::generate_grid<Halton>(
+                                                                   instance, dim, sample_size));
+                                    },
+                                    50 + i, problem_name});
+            i++;
         }
 
-        template <>
-        inline int loop<1024>()
-        {
-            return 0;
-        }
-
-        static inline int __loop_invoker__ = loop<1>();
+        return constructors;
+    }
 
 
-    } // namespace real
-
-} // namespace ioh::problem::star_discrepancy
+} // namespace ioh::problem
