@@ -27,6 +27,21 @@ class TestProblem(unittest.TestCase):
         for p in map(lambda x: x(1, 10), (wmodel, ioh.problem.WModelLeadingOnes, ioh.problem.WModelOneMax)):
             self.assertEqual(p([1] * 10), 10)
 
+    def test_star_discrepancy(self):
+        uniform = ioh.get_problem(30, 4, 2)
+        self.assertAlmostEqual(uniform([.9, .5]), 0.25, 3)
+        sobol = ioh.get_problem(40, 4, 2)
+        self.assertAlmostEqual(sobol([.9, .5]), 0.0499, 3)
+        halton = ioh.get_problem(50, 4, 2)
+        self.assertAlmostEqual(halton([.9, .5]), 0.1499, 3)
+
+        random = ioh.problem.StarDiscrepancy(instance=69, n_variables=2, n_samples=9, 
+            sampler_type=ioh.problem.StarDiscrepancySampler.HALTON)
+        self.assertEqual(random([10, 10]), -float("inf"))
+
+        self.assertAlmostEqual(random([.9, .5]), 0.0055, 3)
+
+
     def test_enforced_bounds(self):
         p = ioh.get_problem(1, 1, 2)
         x0 = [10, 1]

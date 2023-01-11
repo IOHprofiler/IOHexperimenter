@@ -17,6 +17,23 @@ namespace ioh
     namespace common
     {
         /**
+         * \brief Checks if two vectors are equal
+         * \param x vector to be checked
+         * \param y vector to be checked
+         * \return true if all elements of x == y
+         */
+        template<typename T>
+        inline bool is_equal(const std::vector<T> &x, const std::vector<T> &y){
+            if(!(x.size() == y.size()))
+                return false;
+
+            for(size_t i=0; i < x.size(); i++)
+                if (x[i] != y[i])
+                    return false;
+            return true;
+        }
+        
+        /**
          * \brief Checks a vector of doubles for nan values
          * \param x vector to be checked
          * \return true if x contains a nan value

@@ -46,7 +46,8 @@ namespace ioh::problem
          * @param weight the penalty weight
          * @param exponent the penalty exponent
         */
-        Constraint(const constraint::Enforced enforced = constraint::Enforced::NOT, const double weight = 1.0, const double exponent = 1.0) :
+        Constraint(const constraint::Enforced enforced = constraint::Enforced::NOT, 
+                   const double weight = 1.0, const double exponent = 1.0) :
             violation_(0.), is_feasible_(true), enforced(enforced), weight(weight), exponent(exponent) 
         {
         }
@@ -209,7 +210,6 @@ namespace ioh::problem
                     else if (ci->enforced == constraint::Enforced::OVERRIDE)
                         return ci->penalize(y);
                 }
-                    
             return y + penalty();
         }
 
@@ -275,10 +275,11 @@ namespace ioh::problem
          * @param enforced enforcement policy
          */
         BoxConstraint(const std::vector<T> &lower, const std::vector<T> &upper,
-                      constraint::Enforced enforced = constraint::Enforced::NOT                      
+                      constraint::Enforced enforced = constraint::Enforced::NOT,
+                      const double weight = 1.0, const double exponent = 1.0                      
         
         ) :
-            Constraint<T>(enforced), lb(lower), ub(upper)
+            Constraint<T>(enforced, weight, exponent), lb(lower), ub(upper)
         {
         }
 
@@ -336,6 +337,12 @@ namespace ioh::problem
 
         //! String representation
         std::string repr() const override { return fmt::format("<BoxConstraint lb: [{}] ub: [{}]>", lb, ub); }
+
+
+        bool operator==(const BoxConstraint<T>& other) const {
+            return ioh::common::is_equal(lb, other.lb) && ioh::common::is_equal(ub, other.ub) &&
+                   this->enforced == other.enforced && this->weight == other.weight && this->exponent == other.exponent;
+        }
     };
 
 

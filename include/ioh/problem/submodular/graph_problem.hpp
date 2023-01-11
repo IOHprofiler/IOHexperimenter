@@ -274,23 +274,24 @@ namespace ioh::problem::submodular
             for (auto &graph : graphs)
             {
                 graph->meta.root = root_path;
-                constructors.push_back({[graph, i](int, int) { return ProblemType(i, 1, graph); }, i++});
+                constructors.push_back({[graph, i](int, int) { return ProblemType(i, 1, graph); }, i++, std::nullopt});
             }
             return constructors;
         }
     
         //! Helper to load problems from a file
+        //! Use if you want to manually load more graph based files
         template <typename... Args>
         static void load_graph_instances(const fs::path &path)
         {
             for (auto &ci : InstanceBasedProblem::load_instances<ProblemType, int, int>(path))
             {
-                const auto name = fmt::format("{}{}", ioh::common::class_name<ProblemType>(), ci.second);
-                auto c = [c = ci.first](Args &&...params) {
+                const auto name = fmt::format("{}{}", ioh::common::class_name<ProblemType>(), std::get<1>(ci));
+                auto c = [c = std::get<0>(ci)](Args &&...params) {
                     return std::make_unique<ProblemType>(c(std::forward<Args>(params)...));
                 };
-                ioh::common::Factory<IntegerSingleObjective, Args...>::instance().include(name, ci.second, c);
-                ioh::common::Factory<submodular::GraphProblem, Args...>::instance().include(name, ci.second, c);
+                ioh::common::Factory<IntegerSingleObjective, Args...>::instance().include(name, std::get<1>(ci), c);
+                ioh::common::Factory<submodular::GraphProblem, Args...>::instance().include(name, std::get<1>(ci), c);
             }
         }       
     };

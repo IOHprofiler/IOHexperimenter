@@ -28,7 +28,6 @@ namespace ioh::problem
                         {std::vector<T>(meta_data.n_variables, std::numeric_limits<T>::signaling_NaN()),
                          meta_data.optimization_type.initial_value()}), optimum)
         {
-            
         }
 
         /**
@@ -51,7 +50,7 @@ namespace ioh::problem
         {
             if (!this->check_input(x))
                 return std::numeric_limits<double>::signaling_NaN();
-
+            
             this->state_.current.x = x;
             if (this->constraintset_.hard_violation(x))
             {

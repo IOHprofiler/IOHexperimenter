@@ -80,7 +80,8 @@ void define_state(py::module &m, const std::string &name)
         .def_readonly("current", &Class::current, "The last-evaluated solution.")
         .def_readonly("y_unconstrained", &Class::y_unconstrained, "The current unconstrained value.")
         .def_readonly("y_unconstrained_best", &Class::y_unconstrained_best, "The current best unconstrained value.")
-        .def_readonly("has_improved", &Class::has_improved, "Whether the last call to problem has caused global improvement.")
+        .def_readonly("has_improved", &Class::has_improved,
+                      "Whether the last call to problem has caused global improvement.")
         .def("__repr__", &Class::repr);
 }
 
@@ -382,7 +383,7 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
 {
     using WrappedProblem = SingleObjectiveWrappedProblem<T>;
     py::class_<WrappedProblem, SingleObjectiveProblem<T>, std::shared_ptr<WrappedProblem>>(m, class_name.c_str(),
-                                                                            py::buffer_protocol());
+                                                                                           py::buffer_protocol());
 
     m.def(
         function_name.c_str(),
@@ -555,14 +556,14 @@ void define_helper_classes(py::module &m)
         .def_readonly("violations", &ioh::logger::Info::violations)
         .def_readonly("penalties", &ioh::logger::Info::penalties)
         .def_readonly("objective", &ioh::logger::Info::optimum, "The best possible fitness value")
-        .def_readonly("has_improved", &ioh::logger::Info::has_improved, "Whether the last call to problem has caused global improvement.")
-        ;
+        .def_readonly("has_improved", &ioh::logger::Info::has_improved,
+                      "Whether the last call to problem has caused global improvement.");
 }
 
 void define_pbo_problems(py::module &m)
 {
     py::class_<PBO, IntegerSingleObjective, std::shared_ptr<PBO>>(m, "PBO",
-                                                   R"pbdoc(
+                                                                  R"pbdoc(
             Pseudo-Boolean Optimization (PBO) problem set.
             
             Contains 25 test functions taking their domain on {0, 1}^n, where n is the length of bitstrings.
@@ -708,7 +709,7 @@ void define_pbo_problems(py::module &m)
 void define_bbob_problems(py::module &m)
 {
     py::class_<BBOB, RealSingleObjective, std::shared_ptr<BBOB>>(m, "BBOB",
-                                                  R"pbdoc(
+                                                                 R"pbdoc(
             Black-Box Optimization Benchmarking (BBOB) problem set.
 
             Contains 24 noiselessreal-valued test functions supported on [-5, 5]^n, where n is the dimensionality.
@@ -856,7 +857,7 @@ public:
 void define_wmodels(py::module &m)
 {
     py::class_<WModel, WModelTrampoline, IntegerSingleObjective, std::shared_ptr<WModel>>(m, "AbstractWModel",
-                                                                           R"pbdoc(
+                                                                                          R"pbdoc(
             An abstract W-model class. Please apply the WModelOneMax and WModelLeadingOnes classes.
              
             W-model problems applies four basic transformations: reduction of dummy variables,
@@ -959,7 +960,8 @@ void define_submodular_problems(py::module &m)
         .def("__repr__", &pwt::PWTConstraint::repr);
 
 
-    py::class_<GraphProblem, IntegerSingleObjective, std::shared_ptr<GraphProblem>>(m, "GraphProblem", "Graph type problem")
+    py::class_<GraphProblem, IntegerSingleObjective, std::shared_ptr<GraphProblem>>(m, "GraphProblem",
+                                                                                    "Graph type problem")
         .def_static(
             "create",
             [](const std::string &name, int iid, int dim) {
@@ -1017,6 +1019,56 @@ void define_submodular_problems(py::module &m)
         .def_static("load_instances", &GraphProblemType<PackWhileTravel>::load_graph_instances<int, int>);
 }
 
+enum class SamplerType
+{
+    UNIFORM,
+    SOBOL,
+    HALTON
+};
+
+ioh::problem::star_discrepancy::real::StarDiscrepancy
+star_discrepancy_init(const int instance, const int n_variables, const int n_samples, const SamplerType sampler_type)
+{
+    using namespace ioh::problem::star_discrepancy::real;
+    using namespace ioh::common::random::sampler;
+
+    std::vector<std::vector<double>> grid;
+    switch (sampler_type)
+    {
+    case SamplerType::UNIFORM:
+        grid = StarDiscrepancy::generate_grid<Uniform<double>>(instance, n_variables, n_samples);
+        break;
+    case SamplerType::HALTON:
+        grid = StarDiscrepancy::generate_grid<Halton>(instance, n_variables, n_samples);
+        break;
+    default:
+    case SamplerType::SOBOL:
+        grid = StarDiscrepancy::generate_grid<Sobol>(instance, n_variables, n_samples);
+    }
+    return StarDiscrepancy(0, instance, n_variables, "StarDiscrepancy", grid);
+}
+
+void define_star_discrepancy_problems(py::module &m)
+{
+    using namespace ioh::problem::star_discrepancy::real;
+    using namespace ioh::common::random::sampler;
+
+    py::enum_<SamplerType>(m, "StarDiscrepancySampler")
+        .value("UNIFORM", SamplerType::UNIFORM)
+        .value("HALTON", SamplerType::HALTON)
+        .value("SOBOL", SamplerType::SOBOL)
+        .export_values();
+
+
+    py::class_<StarDiscrepancy, RealSingleObjective, std::shared_ptr<StarDiscrepancy>>(m, "StarDiscrepancy")
+        .def(py::init(&star_discrepancy_init), 
+            py::arg("instance") = 1,
+            py::arg("n_variables") = 5,
+            py::arg("n_samples") = 5,
+            py::arg("sampler_type") = SamplerType::UNIFORM
+        );
+}
+
 void define_problem(py::module &m)
 {
     define_problem_bases(m);
@@ -1024,6 +1076,7 @@ void define_problem(py::module &m)
     define_pbo_problems(m);
     define_wmodels(m);
     define_submodular_problems(m);
+    define_star_discrepancy_problems(m);
 
     py::module_::import("atexit").attr("register")(py::cpp_function([]() {
         // std::cout << "exiting gracefully...";

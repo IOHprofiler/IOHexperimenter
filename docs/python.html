@@ -251,6 +251,8 @@
 <li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.problem.RealSingleObjective.html">RealSingleObjective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem.html">RealSingleObjectiveWrappedProblem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancy.html">StarDiscrepancy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="python/bbob.html">BBOB</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.AttractiveSector.html">AttractiveSector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.BBOB.html">BBOB</a></li>
@@ -286,6 +288,8 @@
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Schwefel.html">Schwefel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.SharpRidge.html">SharpRidge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Sphere.html">Sphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancy.html">StarDiscrepancy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.StepEllipsoid.html">StepEllipsoid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.Weierstrass.html">Weierstrass</a></li>
 </ul>
@@ -327,6 +331,8 @@
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.RealSingleObjective.html">RealSingleObjective</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem.html">RealSingleObjectiveWrappedProblem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancy.html">StarDiscrepancy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="python/wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -342,6 +348,8 @@
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.RealSingleObjective.html">RealSingleObjective</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem.html">RealSingleObjectiveWrappedProblem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancy.html">StarDiscrepancy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.WModelLeadingOnes.html">WModelLeadingOnes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ioh.iohcpp.problem.WModelOneMax.html">WModelOneMax</a></li>
 </ul>
@@ -434,11 +442,11 @@
 <p>This page contains the full documentation for the Python-interface of the IOHexperimenter. The Python-version of IOHexperimenter is built using pybind11, and desiged so most functions closely match their C++ equivalents, with a few added ease-of-use settings.</p>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this heading">#</a></h2>
-<p>Note that these instructions are for versions &gt;= 0.3.5.</p>
+<p>Note that these instructions are for versions &gt;= 0.3.6.</p>
 <section id="installation">
 <h3>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h3>
 <p>You can install the experimenter directly from pip:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install ioh&gt;<span class="o">=</span><span class="m">0</span>.3.5
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install ioh&gt;<span class="o">=</span><span class="m">0</span>.3.6
 </pre></div>
 </div>
 <p>To verify the installation, you can use:</p>
@@ -679,6 +687,8 @@ To get a 5-dimensional sphere function, with instance number 1, you can use the 
 <li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.problem.RealSingleObjective.html">RealSingleObjective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem.html">RealSingleObjectiveWrappedProblem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancy.html">StarDiscrepancy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
 <li class="toctree-l3"><a class="reference internal" href="python/problem.html#contents">Contents</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="python/bbob.html">BBOB</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="python/bbob.html#functions">Functions</a></li>
@@ -717,6 +727,8 @@ To get a 5-dimensional sphere function, with instance number 1, you can use the 
 <li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.Schwefel.html">Schwefel</a></li>
 <li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.SharpRidge.html">SharpRidge</a></li>
 <li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.Sphere.html">Sphere</a></li>
+<li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancy.html">StarDiscrepancy</a></li>
+<li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
 <li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.StepEllipsoid.html">StepEllipsoid</a></li>
 <li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.Weierstrass.html">Weierstrass</a></li>
 </ul>
@@ -767,6 +779,8 @@ To get a 5-dimensional sphere function, with instance number 1, you can use the 
 <li class="toctree-l7"><a class="reference internal" href="api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 <li class="toctree-l7"><a class="reference internal" href="api/ioh.iohcpp.problem.RealSingleObjective.html">RealSingleObjective</a></li>
 <li class="toctree-l7"><a class="reference internal" href="api/ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem.html">RealSingleObjectiveWrappedProblem</a></li>
+<li class="toctree-l7"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancy.html">StarDiscrepancy</a></li>
+<li class="toctree-l7"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
 </ul>
 </li>
 <li class="toctree-l6"><a class="reference internal" href="python/pbo.html#class-inheritance-diagram">Class Inheritance Diagram</a></li>
@@ -790,6 +804,8 @@ To get a 5-dimensional sphere function, with instance number 1, you can use the 
 <li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
 <li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.RealSingleObjective.html">RealSingleObjective</a></li>
 <li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem.html">RealSingleObjectiveWrappedProblem</a></li>
+<li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancy.html">StarDiscrepancy</a></li>
+<li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
 <li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.WModelLeadingOnes.html">WModelLeadingOnes</a></li>
 <li class="toctree-l6"><a class="reference internal" href="api/ioh.iohcpp.problem.WModelOneMax.html">WModelOneMax</a></li>
 </ul>

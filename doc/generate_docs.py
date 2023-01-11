@@ -108,8 +108,6 @@ def generate_sphinx_templates_from_xml(xmldir = "doc/build/xml", outdir = "doc/p
 
             nsdata['classes'] = classes if any(classes) else None
             nsdata['structs'] = structs if any(structs) else None
-
-
         
         if sections is not None:
             if isinstance(sections, (dict, collections.OrderedDict)):

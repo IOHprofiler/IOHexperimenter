@@ -1,13 +1,13 @@
 ## Quickstart
 
-Note that these instructions are for versions >= 0.3.5.
+Note that these instructions are for versions >= 0.3.6.
 
 ### Installation
 
 You can install the experimenter directly from pip:
 
 ```bash
-pip install ioh>=0.3.5
+pip install ioh>=0.3.6
 ```
 
 To verify the installation, you can use:
