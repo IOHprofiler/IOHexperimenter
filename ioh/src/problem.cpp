@@ -1066,7 +1066,21 @@ void define_star_discrepancy_problems(py::module &m)
             py::arg("n_variables") = 5,
             py::arg("n_samples") = 5,
             py::arg("sampler_type") = SamplerType::UNIFORM
-        );
+        )
+        .def_property_readonly("grid", [](const StarDiscrepancy& self) {
+            const auto grid = self.get_grid();
+            const auto n = grid.size(), m = grid[0].size();
+
+            py::array_t<double, py::array::c_style> arr({n, m});
+
+            auto ra = arr.mutable_unchecked();
+
+            for (size_t i = 0; i < n; i++)
+                for (size_t j = 0; j < m; j++)
+                    ra(i, j) = grid[i][j];
+
+            return arr;
+        });
 }
 
 void define_problem(py::module &m)

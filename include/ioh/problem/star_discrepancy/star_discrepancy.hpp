@@ -71,6 +71,11 @@ namespace ioh::problem
                     xi = sampler.next();
                 return res;
             }
+
+            //! Accessor for grid
+            [[nodiscard]] std::vector<std::vector<double>> get_grid() const {
+                return grid;
+            }
         };
     } // namespace star_discrepancy::real
 
