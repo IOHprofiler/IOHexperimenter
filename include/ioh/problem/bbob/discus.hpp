@@ -5,7 +5,8 @@
 namespace ioh::problem::bbob
 {
     //! Discuss function id 11
-    class Discus final : public BBOProblem<Discus>
+    template<typename P=BBOB>
+    class Discus final : public P, BBOProblem<Discus>
     {
     protected:
         //! Evaluation method
@@ -13,7 +14,7 @@ namespace ioh::problem::bbob
         {
             static const auto condition = 1.0e6;
             auto result = condition * x.at(0) * x.at(0);
-            for (auto i = 1; i < meta_data_.n_variables; ++i)
+            for (auto i = 1; i < this->meta_data_.n_variables; ++i)
                 result += x.at(i) * x.at(i);
             return result;
         }
@@ -21,8 +22,8 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
-            subtract(x, optimum_.x);
-            affine(x, transformation_state_.transformation_matrix, transformation_state_.transformation_base);
+            subtract(x, this->optimum_.x);
+            affine(x, this->transformation_state_.transformation_matrix, this->transformation_state_.transformation_base);
             oscillate(x);
             return x;
         }
@@ -35,8 +36,10 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         Discus(const int instance, const int n_variables) :
-            BBOProblem(11, instance, n_variables, "Discus")
+            P(11, instance, n_variables, "Discus")
         {
         }
     };
+
+    template class Discus<BBOB>;
 }

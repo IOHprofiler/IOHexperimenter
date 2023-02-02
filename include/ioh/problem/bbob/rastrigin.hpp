@@ -9,8 +9,8 @@ namespace ioh::problem::bbob
      * 
      * @tparam T type of the new rastrigin class
      */
-    template<typename T>
-    class RastriginBase: public BBOProblem<T>
+    template<typename P=BBOB>
+    class RastriginBase: public P
     {
     protected:
         //! Evaluation method
@@ -49,14 +49,15 @@ namespace ioh::problem::bbob
          * @param n_variables the problem dimension
          * @param name the name of the problem
          */
-        RastriginBase(const int problem_id, const int instance, const int n_variables,  const std::string& name ) :
-            BBOProblem<T>(problem_id, instance, n_variables, name)
+        RastriginBase(const int problem_id, const int instance, const int n_variables,  const std::string& name) :
+            P(problem_id, instance, n_variables, name)
         {
         }
     };
 
     //! Rastrigin problem id 3
-    class Rastrigin final: public RastriginBase<Rastrigin>
+    template<typename P = BBOB>
+    class Rastrigin final: public RastriginBase<P>, BBOProblem<Rastrigin>
     {
     public:
         /**
@@ -66,10 +67,9 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem 
          */
         Rastrigin(const int instance, const int n_variables) :
-            RastriginBase(3, instance, n_variables, "Rastrigin")
+            RastriginBase<P>(3, instance, n_variables, "Rastrigin")
         {
         }
     };
-
-
+    template class Rastrigin<BBOB>;   
 }

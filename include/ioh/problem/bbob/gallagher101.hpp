@@ -4,17 +4,9 @@
 
 namespace ioh::problem::bbob
 {
-    
-    
-
-    
-    /**
-     * @brief CTRP base class for Gallagher problems
-     * 
-     * @tparam T type of the gallagher problem
-     */
-    template <typename T>
-    class Gallagher : public BBOProblem<T>
+    //! Gallagher Base
+    template <typename P>
+    class Gallagher : public P
     {
         //! Peak struct
         struct Peak
@@ -54,7 +46,6 @@ namespace ioh::problem::bbob
         double factor_;
 
     protected:
-        
         //! Evaluation method
         double evaluate(const std::vector<double> &x) override
         {
@@ -122,7 +113,7 @@ namespace ioh::problem::bbob
         Gallagher(const int problem_id, const int instance, const int n_variables, const std::string &name,
                   const int number_of_peaks, const double b = 10., const double c = 5.0,
                   double max_condition = sqrt(1000.)) :
-            BBOProblem<T>(problem_id, instance, n_variables, name),
+            P(problem_id, instance, n_variables, name),
             x_transformation_(n_variables, std::vector<double>(number_of_peaks)),
             peaks_(Peak::get_peaks(number_of_peaks, n_variables, this->transformation_state_.seed, max_condition)),
             factor_(-0.5 / static_cast<double>(n_variables))
@@ -148,7 +139,8 @@ namespace ioh::problem::bbob
     };
 
     //! Gallaher 101 problem id 21
-    class Gallagher101 final : public Gallagher<Gallagher101>
+    template<typename P = BBOB>
+    class Gallagher101 final : public Gallagher<P>, BBOProblem<Gallagher101>
     {
     public:
         /**
@@ -158,8 +150,10 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         Gallagher101(const int instance, const int n_variables):
-            Gallagher(21, instance, n_variables, "Gallagher101", 101, 10., 5.0)
+            Gallagher<P>(21, instance, n_variables, "Gallagher101", 101, 10., 5.0)
         {
         }
     };
+
+    template class Gallagher101<BBOB>;
 }

@@ -9,8 +9,8 @@ namespace ioh::problem::bbob
      * 
      * @tparam T type of the new Rosenbrock class
      */
-    template<typename T>
-    class RosenbrockBase : public BBOProblem<T>
+    template <typename P=BBOB>
+    class RosenbrockBase : public P
     {
         double factor_;
         std::vector<double> negative_one_;
@@ -47,7 +47,7 @@ namespace ioh::problem::bbob
          * @param name the name of the problem
          */
         RosenbrockBase(const int problem_id, const int instance, const int n_variables, const std::string& name) :
-            BBOProblem<T>(problem_id, instance, n_variables, name),
+            P(problem_id, instance, n_variables, name),
             factor_(std::max(1.0, std::sqrt(n_variables) / 8.0)), negative_one_(n_variables, -1)
         {
         }
@@ -55,7 +55,8 @@ namespace ioh::problem::bbob
 
 
     //! Rosenbrock problem id 8
-    class Rosenbrock final: public RosenbrockBase<Rosenbrock>
+    template<typename P = BBOB>
+    class Rosenbrock final: public RosenbrockBase<P>, BBOProblem<Rosenbrock>
     {
     public:
         /**
@@ -65,12 +66,11 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         Rosenbrock(const int instance, const int n_variables) :
-            RosenbrockBase(8, instance, n_variables, "Rosenbrock")
+            RosenbrockBase<P>(8, instance, n_variables, "Rosenbrock")
         {
-            for (auto& e : optimum_.x)
+            for (auto& e : this->optimum_.x)
                 e *= 0.75;
         }
     };
-
-  
+    template class Rosenbrock<BBOB>;  
 }

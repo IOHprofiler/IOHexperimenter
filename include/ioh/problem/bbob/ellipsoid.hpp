@@ -9,8 +9,8 @@ namespace ioh::problem::bbob
      *
      * @tparam T type of the ellipsiod problem
      */
-    template <typename T>
-    class EllipsoidBase : public BBOProblem<T>
+    template <typename P=BBOB>
+    class EllipsoidBase : public P 
     {
     protected:
         //! Evaluation method
@@ -41,7 +41,7 @@ namespace ioh::problem::bbob
          * @param name the name of the problem
          */
         EllipsoidBase(const int problem_id, const int instance, const int n_variables, const std::string &name) :
-            BBOProblem<T>(problem_id, instance, n_variables, name)
+            P(problem_id, instance, n_variables, name)
 
         {
             static const auto condition = 1.0e6;
@@ -51,7 +51,8 @@ namespace ioh::problem::bbob
     };
 
     //! Ellipsiod problem id 2
-    class Ellipsoid final : public EllipsoidBase<Ellipsoid>
+    template<typename P = BBOB>
+    class Ellipsoid final : public EllipsoidBase<P>, BBOProblem<Ellipsoid>
     {
     public:
         /**
@@ -60,6 +61,8 @@ namespace ioh::problem::bbob
          * @param instance instance id
          * @param n_variables the dimension of the problem
          */
-        Ellipsoid(const int instance, const int n_variables) : EllipsoidBase(2, instance, n_variables, "Ellipsoid") {}
+        Ellipsoid(const int instance, const int n_variables) : EllipsoidBase<P>(2, instance, n_variables, "Ellipsoid") {}
     };
+
+    template class Ellipsoid<BBOB>;
 } // namespace ioh::problem::bbob

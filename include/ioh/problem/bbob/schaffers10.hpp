@@ -7,10 +7,9 @@ namespace ioh::problem::bbob
     /**
      * @brief CRTP base class for Schaffers Problem variants
      * 
-     * @tparam T type of the new Schaffers class
      */
-    template <typename T>
-    class Schaffers : public BBOProblem<T>
+    template <typename P>
+    class Schaffers : public P
     {
     protected:
         //! Condition of the problem
@@ -53,9 +52,9 @@ namespace ioh::problem::bbob
          */
         Schaffers(const int problem_id, const int instance, const int n_variables, const std::string &name,
                   const double condition) :
-            BBOProblem<T>(problem_id, instance, n_variables, name), condition_(condition)
+            P(problem_id, instance, n_variables, name), condition_(condition)
         {
-            this->enforce_bounds(10.0);
+            this->enforce_bounds(this->bounds_.weight * 10.0);
 
             for (auto i = 0; i < n_variables; ++i)
                 for (auto j = 0; j < n_variables; ++j)
@@ -66,7 +65,8 @@ namespace ioh::problem::bbob
     };
 
     //! Shaffers 10 problem id 17
-    class Schaffers10 final : public Schaffers<Schaffers10>
+    template<typename P = BBOB>
+    class Schaffers10 final : public Schaffers<P>, BBOProblem<Schaffers10>
     {
     public:
         /**
@@ -76,8 +76,9 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem 
          */
         Schaffers10(const int instance, const int n_variables) :
-            Schaffers(17, instance, n_variables, "Schaffers10", 10.0)
+            Schaffers<P>(17, instance, n_variables, "Schaffers10", 10.0)
         {
         }
     };
+    template class Schaffers10<BBOB>;
 }
