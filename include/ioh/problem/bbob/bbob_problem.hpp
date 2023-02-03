@@ -145,14 +145,14 @@ namespace ioh::problem
          *
          * @return the location of the optimum
          */
-        [[nodiscard]] Solution<double, double> calculate_optimum(const double box_size = 4.0) const
+        [[nodiscard]] Solution<double, double> calculate_optimum(const int box_size = 4) const
         {
             using namespace common::random::bbob2009;
 
             auto x =
                 uniform(meta_data_.n_variables, transformation_state_.seed + (1000000 * (meta_data_.problem_id == 12)));
 
-            const double double_box_size = box_size * 2.0;
+            const int double_box_size = box_size * 2;
             for (auto &xi : x)
             {
                 xi = double_box_size * floor(1e4 * xi) / 1e4 - box_size;
@@ -172,7 +172,7 @@ namespace ioh::problem
         template <typename... Args>
         SBOX(Args &&...args) : BBOB(std::forward<Args>(args)...)
         {
-            this->optimum_ = calculate_optimum(5.);
+            this->optimum_ = calculate_optimum(5);
             log_info_.optimum = this->optimum_;
             enforce_bounds(std::numeric_limits<double>::infinity());
         }

@@ -79,7 +79,7 @@ namespace ioh
          * @param str string to remove substr from
          * @param substr the substring to remove
          */
-        void erase_substring(std::string &str, const std::string &substr)
+        inline void erase_substring(std::string &str, const std::string &substr)
         {
             auto found_sub = str.find(substr);
             if (found_sub != std::string::npos)

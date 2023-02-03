@@ -145,6 +145,9 @@ namespace ioh::suite
             const int min_problem_id = *std::min_element(available_ids.begin(), available_ids.end());
             problem_ids_ = !problem_ids.empty() ? problem_ids : available_ids;
             
+            for(size_t i = 0; i < problem_ids_.size(); i++)
+                if (std::find(available_ids.begin(), available_ids.end(), problem_ids_[i]) == std::end(available_ids))
+                    problem_ids_.erase(problem_ids_.begin() + i--);
             
             for (const auto &problem_id : problem_ids_)
                 for (const auto &n_variables : dimensions)

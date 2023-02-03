@@ -64,3 +64,25 @@ TEST_F(BaseTest, problem_suite_sbox)
         EXPECT_NE((*problem)({0,0,0,0}), std::numeric_limits<double>::infinity());
 }
 
+
+TEST_F(BaseTest, sbox_can_create_problem)
+{
+    using namespace ioh::problem;
+    bbob::Sphere bbob(1, 2);
+    bbob::Sphere<SBOX> sbox(1, 2);
+
+    const auto x0 = std::vector<double>(2);
+    EXPECT_NE(bbob(x0), sbox(x0));
+    EXPECT_EQ(sbox.constraints().n(), 1);
+}
+
+TEST_F(BaseTest, sbox_can_create_shared_ptr_problem)
+{
+    using namespace ioh::problem;
+    auto bbob = std::make_shared<bbob::Sphere<BBOB>>(1, 2);
+    auto sbox = std::make_shared<bbob::Sphere<SBOX>>(1, 2);
+
+    const auto x0 = std::vector<double>(2);
+    EXPECT_NE((*bbob)(x0), (*sbox)(x0));
+    EXPECT_EQ(sbox->constraints().n(), 1);
+}

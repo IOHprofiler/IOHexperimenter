@@ -28,7 +28,7 @@ namespace ioh::problem::bbob
                                                const double max_condition)
             {
                 static const auto f0 = 1.1, f1 = 9.1, mc = 1000.;
-                static const auto divisor = static_cast<double>(n) - 2.;
+                const auto divisor = static_cast<double>(n) - 2.;
 
                 auto permutations = common::Permutation::sorted(n - 1, seed);
 
@@ -120,7 +120,6 @@ namespace ioh::problem::bbob
         {
             const auto random_numbers = common::random::bbob2009::uniform(
                 static_cast<size_t>(this->meta_data_.n_variables) * number_of_peaks, this->transformation_state_.seed);
-
 
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
             {

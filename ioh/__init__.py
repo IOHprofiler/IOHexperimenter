@@ -42,6 +42,8 @@ class ProblemType(enum.Enum):
     INTEGER = "IntegerSingleObjective"
 
     BBOB = "BBOB"
+    SBOX = "SBOX"
+
     PBO = "PBO"
     GRAPH = "GraphProblem"
 
