@@ -90,6 +90,7 @@ void define_suites(py::module &m)
     define_suite<Real, RealBase>(m, "Real");
     define_suite<BBOB, RealBase>(m, "BBOB");
     define_suite<SBOX, RealBase>(m, "SBOX");
+    define_suite<StarDiscrepancy, RealBase>(m, "StarDiscrepancy");
 
     using IntegerBase = Suite<ioh::problem::IntegerSingleObjective>;
     define_base_class<IntegerBase>(m, "IntegerBase");

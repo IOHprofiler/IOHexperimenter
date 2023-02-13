@@ -710,10 +710,10 @@ void define_pbo_problems(py::module &m)
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 }
 
-std::string to_lower(const std::string& s){
+std::string to_lower(const std::string &s)
+{
     auto res = s;
-    std::transform(res.begin(), res.end(), res.begin(),
-        [](unsigned char c){ return std::tolower(c); });
+    std::transform(res.begin(), res.end(), res.begin(), [](unsigned char c) { return std::tolower(c); });
     return res;
 }
 
@@ -1018,7 +1018,8 @@ void define_submodular_problems(py::module &m)
                         the dimensionality of the search space
             )pbdoc")
         .def_property_readonly_static(
-            "problems", [](py::object) { return ioh::common::Factory<GraphProblem, int, int>::instance().map(); }, "All registered problems");
+            "problems", [](py::object) { return ioh::common::Factory<GraphProblem, int, int>::instance().map(); },
+            "All registered problems");
 
 
     py::class_<MaxCut, GraphProblem, std::shared_ptr<MaxCut>>(m, "MaxCut", py::is_final(), "MaxCut function")
@@ -1083,20 +1084,62 @@ void define_star_discrepancy_problems(py::module &m)
     py::class_<StarDiscrepancy, RealSingleObjective, std::shared_ptr<StarDiscrepancy>>(m, "StarDiscrepancy")
         .def(py::init(&star_discrepancy_init), py::arg("instance") = 1, py::arg("n_variables") = 5,
              py::arg("n_samples") = 5, py::arg("sampler_type") = SamplerType::UNIFORM)
-        .def_property_readonly("grid", [](const StarDiscrepancy &self) {
-            const auto grid = self.get_grid();
-            const auto n = grid.size(), m = grid[0].size();
+        .def_property_readonly("grid",
+                               [](const StarDiscrepancy &self) {
+                                   const auto grid = self.get_grid();
+                                   const auto n = grid.size(), m = grid[0].size();
 
-            py::array_t<double, py::array::c_style> arr({n, m});
+                                   py::array_t<double, py::array::c_style> arr({n, m});
 
-            auto ra = arr.mutable_unchecked();
+                                   auto ra = arr.mutable_unchecked();
 
-            for (size_t i = 0; i < n; i++)
-                for (size_t j = 0; j < m; j++)
-                    ra(i, j) = grid[i][j];
+                                   for (size_t i = 0; i < n; i++)
+                                       for (size_t j = 0; j < m; j++)
+                                           ra(i, j) = grid[i][j];
 
-            return arr;
-        });
+                                   return arr;
+                               })
+        .def_static(
+            "create",
+            [](const std::string &name, int iid, int dim) {
+                return ioh::common::Factory<StarDiscrepancy, int, int>::instance().create(name, iid, dim);
+            },
+            py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
+            R"pbdoc(
+                Create a problem instance
+
+                Parameters
+                ----------
+                    problem_name: str
+                        a string indicating the problem name. 
+                    instance_id: int
+                        an integer identifier of the problem instance
+                    dimension: int
+                        the dimensionality of the search space
+            )pbdoc")
+
+        .def_static(
+            "create",
+            [](int id, int iid, int dim) {
+                return ioh::common::Factory<StarDiscrepancy, int, int>::instance().create(id, iid, dim);
+            },
+            py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
+            R"pbdoc(
+                Create a problem instance
+
+                Parameters
+                ----------
+                    problem_name: int
+                        a string indicating the problem name. 
+                    instance_id: int
+                        an integer identifier of the problem instance
+                    dimension: int
+                        the dimensionality of the search space
+            )pbdoc")
+        .def_property_readonly_static(
+            "problems", [](py::object) { return ioh::common::Factory<StarDiscrepancy, int, int>::instance().map(); },
+            "All registered problems");
+    ;
 }
 
 void define_problem(py::module &m)

@@ -316,6 +316,23 @@ namespace ioh::suite
         }
     };
 
+    struct StarDiscrepancy final : RealSuite<StarDiscrepancy>
+    {
+        /**
+         * @brief Construct a new StarDiscrepancy object
+         * 
+         * @param problem_ids List of problem ids
+         * @param instances List of problem instances (defaults to first instance)
+         * @param dimensions List of problem dimensions (defaults to 5D)
+         */
+        StarDiscrepancy(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
+             const std::vector<int> &dimensions = {5}) :
+            RealSuite(problem_ids, instances, dimensions, "SBOX", 10000, 10000,
+                      reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::star_discrepancy::real::StarDiscrepancy>::instance()))
+        {
+        }
+    };
+
     //! PBO suite
     struct PBO final : IntegerSuite<PBO>
     {
