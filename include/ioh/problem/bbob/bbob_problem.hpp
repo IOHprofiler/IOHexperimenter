@@ -39,6 +39,7 @@ namespace ioh::problem
             //! Second rotation matrix
             std::vector<std::vector<double>> second_rotation{};
 
+
             /**
              * @brief Construct a new Transformation State object
              *
@@ -113,6 +114,8 @@ namespace ioh::problem
         //! The current transformation state
         transformation_state_;
 
+        double box_size_;
+
         //! Default objective transform for BBOB
         double transform_objectives(const double y) override { return transformation::objective::shift(y, this->optimum_.y); }
 
@@ -129,7 +132,8 @@ namespace ioh::problem
         BBOB(const int problem_id, const int instance, const int n_variables, const std::string &name,
              const double condition = sqrt(10.0)) :
             RealSingleObjective(MetaData(problem_id, instance, name, n_variables), Bounds<double>(n_variables, -5, 5)),
-            transformation_state_(problem_id, instance, n_variables, condition)
+            transformation_state_(problem_id, instance, n_variables, condition),
+            box_size_(4.0)
         {
             this->optimum_ = calculate_optimum();
             log_info_.optimum = this->optimum_;
@@ -148,7 +152,7 @@ namespace ioh::problem
         [[nodiscard]] Solution<double, double> calculate_optimum(const int box_size = 4) const
         {
             using namespace common::random::bbob2009;
-
+            
             auto x =
                 uniform(meta_data_.n_variables, transformation_state_.seed + (1000000 * (meta_data_.problem_id == 12)));
 
@@ -173,6 +177,7 @@ namespace ioh::problem
         SBOX(Args &&...args) : BBOB(std::forward<Args>(args)...)
         {
             this->optimum_ = calculate_optimum(5);
+            box_size_ = 5.0;
             log_info_.optimum = this->optimum_;
             enforce_bounds(std::numeric_limits<double>::infinity());
         }

@@ -121,9 +121,10 @@ namespace ioh::problem::bbob
             const auto random_numbers = common::random::bbob2009::uniform(
                 static_cast<size_t>(this->meta_data_.n_variables) * number_of_peaks, this->transformation_state_.seed);
 
+            const double bound_scaler = this->box_size_ / 5.;
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
             {
-                this->optimum_.x[i] = 0.8 * (b * random_numbers[i] - c);
+                this->optimum_.x[i] = bound_scaler * (b * random_numbers[i] - c);
                 for (auto j = 0; j < number_of_peaks; ++j)
                 {
                     for (auto k = 0; k < this->meta_data_.n_variables; ++k)
@@ -131,7 +132,7 @@ namespace ioh::problem::bbob
                             b * random_numbers.at(static_cast<size_t>(j) * this->meta_data_.n_variables + k) - c
                         );
                     if (j == 0)
-                        x_transformation_[i][j] *= 0.8;
+                        x_transformation_[i][j] *= bound_scaler;
                 }
             }
         }
