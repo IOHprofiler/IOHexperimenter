@@ -2,9 +2,9 @@
 
 #include <chrono>
 #include <string>
-#include <fmt/format.h>
 
 #include "log.hpp"
+#include "format.hpp"
 
 namespace ioh
 {

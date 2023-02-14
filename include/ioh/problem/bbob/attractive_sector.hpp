@@ -4,18 +4,18 @@
 
 namespace ioh::problem::bbob
 {
-    //! Attractive Sector problem id = 2
-    class AttractiveSector final : public BBOProblem<AttractiveSector>
+    //! Attractive Sector problem id = 6
+    template<typename P=BBOB>
+    class AttractiveSector final: public P, BBOProblem<AttractiveSector>
     {
     protected:
-
         //! Evaluation method
         double evaluate(const std::vector<double> &x) override
         {
             using namespace transformation::objective;
             auto result =  0.0 ;
-            for (auto i = 0; i < meta_data_.n_variables; ++i)
-                result += x.at(i) * x.at(i) * (1. + 9999.0 * (optimum_.x.at(i) * x.at(i) > 0.0));
+            for (auto i = 0; i < this->meta_data_.n_variables; ++i)
+                result += x.at(i) * x.at(i) * (1. + 9999.0 * (this->optimum_.x.at(i) * x.at(i) > 0.0));
             return pow(oscillate(result), .9);
         }
         
@@ -23,8 +23,8 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
-            subtract(x, optimum_.x);
-            affine(x, transformation_state_.second_transformation_matrix, transformation_state_.transformation_base);
+            subtract(x, this->optimum_.x);
+            affine(x, this->transformation_state_.second_transformation_matrix, this->transformation_state_.transformation_base);
             return x;
         }
 
@@ -36,8 +36,10 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         AttractiveSector(const int instance, const int n_variables) :
-            BBOProblem(6, instance, n_variables, "AttractiveSector")
+            P(6, instance, n_variables, "AttractiveSector")
         {
+        
         }
-    };
+    };  
+    template class AttractiveSector<BBOB>;
 }

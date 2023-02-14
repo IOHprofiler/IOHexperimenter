@@ -5,7 +5,7 @@ namespace py = pybind11;
 
 void define_helper_classes(py::module& m);
 void define_problem(py::module& m);
-void define_suite(py::module& m);
+void define_suites(py::module& m);
 void define_logger(py::module& m);
 
 PYBIND11_MODULE(iohcpp, m) {
@@ -51,7 +51,7 @@ PYBIND11_MODULE(iohcpp, m) {
     define_helper_classes(m);
     define_logger(m_logger);
     define_problem(m_problem);
-    define_suite(m_suite);
+    define_suites(m_suite);
 
     m.attr("__version__") = "dev";
 }

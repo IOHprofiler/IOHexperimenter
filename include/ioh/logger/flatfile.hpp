@@ -1,8 +1,6 @@
 #pragma once
 
-#include <fmt/compile.h>
-#include <fmt/format.h>
-
+#include "ioh/common/format.hpp"
 #include "ioh/problem/single.hpp"
 
 namespace ioh::logger

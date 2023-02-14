@@ -1,14 +1,12 @@
 #include "../utils.hpp"
 
+#include "ioh/suite.hpp"
 #include "ioh/problem/star_discrepancy/star_discrepancy.hpp"
 
 TEST_F(BaseTest, test_real_star_discrepancy)
 {
     using namespace ioh::problem::star_discrepancy::real;
     const auto &problem_factory = ioh::problem::ProblemRegistry<StarDiscrepancy>::instance();
-
-    // for (auto &[id, name] : problem_factory.map())
-    //     std::cout << id << ", " << name << std::endl;
 
     EXPECT_EQ(problem_factory.ids().size(), 30);
 }
@@ -49,4 +47,18 @@ TEST_F(BaseTest, test_real_star_discrepancy_halton)
     EXPECT_EQ((*p2)({10, 10}), -std::numeric_limits<double>::infinity());
 
     EXPECT_NEAR((*p2)({0.9, 0.5}), 0.149, 1e-3);
+}
+
+TEST_F(BaseTest, test_real_star_suite){
+    using namespace ioh::suite;
+    StarDiscrepancy suite;
+    EXPECT_EQ(suite.size(), 30);
+
+    for (auto&problem: suite){
+        const auto x0 = std::vector<double>(problem->meta_data().n_variables, 0.);
+        const auto x10 = std::vector<double>(problem->meta_data().n_variables, 10.);
+        EXPECT_EQ((*problem)(x10), -std::numeric_limits<double>::infinity());
+        EXPECT_NE((*problem)(x0), -std::numeric_limits<double>::infinity());
+        EXPECT_EQ(problem->state().evaluations, 2);
+    }
 }

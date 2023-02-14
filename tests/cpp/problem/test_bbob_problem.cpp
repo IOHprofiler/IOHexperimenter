@@ -57,31 +57,32 @@ TEST_F(BaseTest, BBOBfitness_dimension20)
 
 TEST_F(BaseTest, problems_bbob4d)
 {
+    using namespace ioh::problem;
     using namespace ioh::problem::bbob;
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<AttractiveSector>(1, 4)), 38905.1446);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<BentCigar>(1, 4)), 43065603.7200);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<BuecheRastrigin>(1, 4)), -377.5170);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<DifferentPowers>(1, 4)), -28.6647);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Discus>(1, 4)), 633536.4945);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Ellipsoid>(1, 4)), 4670466.7111);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<EllipsoidRotated>(1, 4)), 4272872.0872);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Gallagher101>(1, 4)), 100.6898);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Gallagher21>(1, 4)), -924.8833);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<GriewankRosenBrock>(1, 4)), -92.2225);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Katsuura>(1, 4)), 21.7005);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<LinearSlope>(1, 4)), 75.4977);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<LunacekBiRastrigin>(1, 4)), 177.9893);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Rastrigin>(1, 4)), -351.7320);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<RastriginRotated>(1, 4)), 1880.5481);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Rosenbrock>(1, 4)), 3990.2021);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<RosenbrockRotated>(1, 4)), 2734.3342);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Schaffers10>(1, 4)), -3.8932);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Schaffers1000>(1, 4)), 39.4152);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Schwefel>(1, 4)), 6135.2508);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<SharpRidge>(1, 4)), 1304.6100);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Sphere>(1, 4)), 85.3339);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<StepEllipsoid>(1, 4)), 180.6339);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Weierstrass>(1, 4)), 192.2602);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<AttractiveSector<BBOB>>(1, 4)), 38905.1446);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<BentCigar<BBOB>>(1, 4)), 43065603.7200);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<BuecheRastrigin<BBOB>>(1, 4)), -377.5170);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<DifferentPowers<BBOB>>(1, 4)), -28.6647);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Discus<BBOB>>(1, 4)), 633536.4945);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Ellipsoid<BBOB>>(1, 4)), 4670466.7111);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<EllipsoidRotated<BBOB>>(1, 4)), 4272872.0872);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Gallagher101<BBOB>>(1, 4)), 100.6898);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Gallagher21<BBOB>>(1, 4)), -924.8833);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<GriewankRosenBrock<BBOB>>(1, 4)), -92.2225);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Katsuura<BBOB>>(1, 4)), 21.7005);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<LinearSlope<BBOB>>(1, 4)), 75.4977);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<LunacekBiRastrigin<BBOB>>(1, 4)), 177.9893);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Rastrigin<BBOB>>(1, 4)), -351.7320);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<RastriginRotated<BBOB>>(1, 4)), 1880.5481);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Rosenbrock<BBOB>>(1, 4)), 3990.2021);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<RosenbrockRotated<BBOB>>(1, 4)), 2734.3342);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Schaffers10<BBOB>>(1, 4)), -3.8932);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Schaffers1000<BBOB>>(1, 4)), 39.4152);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Schwefel<BBOB>>(1, 4)), 6135.2508);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<SharpRidge<BBOB>>(1, 4)), 1304.6100);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Sphere<BBOB>>(1, 4)), 85.3339);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<StepEllipsoid<BBOB>>(1, 4)), 180.6339);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Weierstrass<BBOB>>(1, 4)), 192.2602);
 }
 
 TEST_F(BaseTest, problems_bbob5d)

@@ -501,7 +501,8 @@ void define_helper_classes(py::module &m)
                       "The type of problem (maximization or minimization)")
         .def_readonly("n_variables", &MetaData::n_variables,
                       "The number of variables (dimension) of the current problem")
-        .def("__repr__", &MetaData::repr);
+        .def("__repr__", &MetaData::repr)
+        .def("__eq__", &MetaData::operator==);
 
     py::class_<ioh::logger::Info>(m, "LogInfo")
         .def(py::init<size_t, double, double, double, double, double, double, std::vector<double>, std::vector<double>,
@@ -617,7 +618,10 @@ void define_pbo_problems(py::module &m)
                         an integer identifier of the problem instance
                     dimension: int
                         the dimensionality of the search space
-            )pbdoc");
+            )pbdoc")
+        .def_property_readonly_static(
+            "problems", [](py::object) { return ioh::common::Factory<PBO, int, int>::instance().map(); },
+            "All registered problems");
 
     py::class_<pbo::OneMax, PBO, std::shared_ptr<pbo::OneMax>>(m, "OneMax", py::is_final(),
                                                                R"pbdoc(
@@ -706,10 +710,18 @@ void define_pbo_problems(py::module &m)
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 }
 
-void define_bbob_problems(py::module &m)
+std::string to_lower(const std::string &s)
 {
-    py::class_<BBOB, RealSingleObjective, std::shared_ptr<BBOB>>(m, "BBOB",
-                                                                 R"pbdoc(
+    auto res = s;
+    std::transform(res.begin(), res.end(), res.begin(), [](unsigned char c) { return std::tolower(c); });
+    return res;
+}
+
+template <typename P>
+void define_bbob_problems(py::module &mi, const std::string &name = "BBOB", const bool submodule = false)
+{
+    py::class_<P, RealSingleObjective, std::shared_ptr<P>>(mi, name.c_str(),
+                                                           R"pbdoc(
             Black-Box Optimization Benchmarking (BBOB) problem set.
 
             Contains 24 noiselessreal-valued test functions supported on [-5, 5]^n, where n is the dimensionality.
@@ -739,7 +751,7 @@ void define_bbob_problems(py::module &m)
         .def_static(
             "create",
             [](const std::string &name, int iid, int dim) {
-                return ioh::common::Factory<BBOB, int, int>::instance().create(name, iid, dim);
+                return ioh::common::Factory<P, int, int>::instance().create(name, iid, dim);
             },
             py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
             R"pbdoc(
@@ -757,9 +769,7 @@ void define_bbob_problems(py::module &m)
 
         .def_static(
             "create",
-            [](int id, int iid, int dim) {
-                return ioh::common::Factory<BBOB, int, int>::instance().create(id, iid, dim);
-            },
+            [](int id, int iid, int dim) { return ioh::common::Factory<P, int, int>::instance().create(id, iid, dim); },
             py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
             R"pbdoc(
                 Create a problem instance
@@ -772,62 +782,70 @@ void define_bbob_problems(py::module &m)
                         an integer identifier of the problem instance
                     dimension: int
                         the dimensionality of the search space
-            )pbdoc");
-    py::class_<bbob::Sphere, BBOB, std::shared_ptr<bbob::Sphere>>(m, "Sphere", py::is_final(), "Sphere function")
+            )pbdoc")
+        .def_property_readonly_static(
+            "problems", [](py::object) { return ioh::common::Factory<P, int, int>::instance().map(); },
+            "All registered problems");
+
+    auto m = mi;
+    if (submodule)
+        m = mi.def_submodule(to_lower(name).c_str(), fmt::format("module containing {} problems", name).c_str());
+
+    py::class_<bbob::Sphere<P>, P, std::shared_ptr<bbob::Sphere<P>>>(m, "Sphere", py::is_final(), "Sphere function")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::Ellipsoid, BBOB, std::shared_ptr<bbob::Ellipsoid>>(m, "Ellipsoid", py::is_final())
+    py::class_<bbob::Ellipsoid<P>, P, std::shared_ptr<bbob::Ellipsoid<P>>>(m, "Ellipsoid", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::Rastrigin, BBOB, std::shared_ptr<bbob::Rastrigin>>(m, "Rastrigin", py::is_final())
+    py::class_<bbob::Rastrigin<P>, P, std::shared_ptr<bbob::Rastrigin<P>>>(m, "Rastrigin", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::BuecheRastrigin, BBOB, std::shared_ptr<bbob::BuecheRastrigin>>(m, "BuecheRastrigin",
-                                                                                    py::is_final())
+    py::class_<bbob::BuecheRastrigin<P>, P, std::shared_ptr<bbob::BuecheRastrigin<P>>>(m, "BuecheRastrigin",
+                                                                                       py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::LinearSlope, BBOB, std::shared_ptr<bbob::LinearSlope>>(m, "LinearSlope", py::is_final())
+    py::class_<bbob::LinearSlope<P>, P, std::shared_ptr<bbob::LinearSlope<P>>>(m, "LinearSlope", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::AttractiveSector, BBOB, std::shared_ptr<bbob::AttractiveSector>>(m, "AttractiveSector",
-                                                                                      py::is_final())
+    py::class_<bbob::AttractiveSector<P>, P, std::shared_ptr<bbob::AttractiveSector<P>>>(m, "AttractiveSector",
+                                                                                         py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::StepEllipsoid, BBOB, std::shared_ptr<bbob::StepEllipsoid>>(m, "StepEllipsoid", py::is_final())
+    py::class_<bbob::StepEllipsoid<P>, P, std::shared_ptr<bbob::StepEllipsoid<P>>>(m, "StepEllipsoid", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::Rosenbrock, BBOB, std::shared_ptr<bbob::Rosenbrock>>(m, "Rosenbrock", py::is_final())
+    py::class_<bbob::Rosenbrock<P>, P, std::shared_ptr<bbob::Rosenbrock<P>>>(m, "Rosenbrock", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::RosenbrockRotated, BBOB, std::shared_ptr<bbob::RosenbrockRotated>>(m, "RosenbrockRotated",
-                                                                                        py::is_final())
+    py::class_<bbob::RosenbrockRotated<P>, P, std::shared_ptr<bbob::RosenbrockRotated<P>>>(m, "RosenbrockRotated",
+                                                                                           py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::EllipsoidRotated, BBOB, std::shared_ptr<bbob::EllipsoidRotated>>(m, "EllipsoidRotated",
-                                                                                      py::is_final())
+    py::class_<bbob::EllipsoidRotated<P>, P, std::shared_ptr<bbob::EllipsoidRotated<P>>>(m, "EllipsoidRotated",
+                                                                                         py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::Discus, BBOB, std::shared_ptr<bbob::Discus>>(m, "Discus", py::is_final())
+    py::class_<bbob::Discus<P>, P, std::shared_ptr<bbob::Discus<P>>>(m, "Discus", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::BentCigar, BBOB, std::shared_ptr<bbob::BentCigar>>(m, "BentCigar", py::is_final())
+    py::class_<bbob::BentCigar<P>, P, std::shared_ptr<bbob::BentCigar<P>>>(m, "BentCigar", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::SharpRidge, BBOB, std::shared_ptr<bbob::SharpRidge>>(m, "SharpRidge", py::is_final())
+    py::class_<bbob::SharpRidge<P>, P, std::shared_ptr<bbob::SharpRidge<P>>>(m, "SharpRidge", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::DifferentPowers, BBOB, std::shared_ptr<bbob::DifferentPowers>>(m, "DifferentPowers",
-                                                                                    py::is_final())
+    py::class_<bbob::DifferentPowers<P>, P, std::shared_ptr<bbob::DifferentPowers<P>>>(m, "DifferentPowers",
+                                                                                       py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::RastriginRotated, BBOB, std::shared_ptr<bbob::RastriginRotated>>(m, "RastriginRotated",
-                                                                                      py::is_final())
+    py::class_<bbob::RastriginRotated<P>, P, std::shared_ptr<bbob::RastriginRotated<P>>>(m, "RastriginRotated",
+                                                                                         py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::Weierstrass, BBOB, std::shared_ptr<bbob::Weierstrass>>(m, "Weierstrass", py::is_final())
+    py::class_<bbob::Weierstrass<P>, P, std::shared_ptr<bbob::Weierstrass<P>>>(m, "Weierstrass", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::Schaffers10, BBOB, std::shared_ptr<bbob::Schaffers10>>(m, "Schaffers10", py::is_final())
+    py::class_<bbob::Schaffers10<P>, P, std::shared_ptr<bbob::Schaffers10<P>>>(m, "Schaffers10", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::Schaffers1000, BBOB, std::shared_ptr<bbob::Schaffers1000>>(m, "Schaffers1000", py::is_final())
+    py::class_<bbob::Schaffers1000<P>, P, std::shared_ptr<bbob::Schaffers1000<P>>>(m, "Schaffers1000", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::GriewankRosenBrock, BBOB, std::shared_ptr<bbob::GriewankRosenBrock>>(m, "GriewankRosenBrock",
-                                                                                          py::is_final())
+    py::class_<bbob::GriewankRosenBrock<P>, P, std::shared_ptr<bbob::GriewankRosenBrock<P>>>(m, "GriewankRosenBrock",
+                                                                                             py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::Schwefel, BBOB, std::shared_ptr<bbob::Schwefel>>(m, "Schwefel", py::is_final())
+    py::class_<bbob::Schwefel<P>, P, std::shared_ptr<bbob::Schwefel<P>>>(m, "Schwefel", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::Gallagher101, BBOB, std::shared_ptr<bbob::Gallagher101>>(m, "Gallagher101", py::is_final())
+    py::class_<bbob::Gallagher101<P>, P, std::shared_ptr<bbob::Gallagher101<P>>>(m, "Gallagher101", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::Gallagher21, BBOB, std::shared_ptr<bbob::Gallagher21>>(m, "Gallagher21", py::is_final())
+    py::class_<bbob::Gallagher21<P>, P, std::shared_ptr<bbob::Gallagher21<P>>>(m, "Gallagher21", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::Katsuura, BBOB, std::shared_ptr<bbob::Katsuura>>(m, "Katsuura", py::is_final())
+    py::class_<bbob::Katsuura<P>, P, std::shared_ptr<bbob::Katsuura<P>>>(m, "Katsuura", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::LunacekBiRastrigin, BBOB, std::shared_ptr<bbob::LunacekBiRastrigin>>(m, "LunacekBiRastrigin",
-                                                                                          py::is_final())
+    py::class_<bbob::LunacekBiRastrigin<P>, P, std::shared_ptr<bbob::LunacekBiRastrigin<P>>>(m, "LunacekBiRastrigin",
+                                                                                             py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 }
 
@@ -998,7 +1016,10 @@ void define_submodular_problems(py::module &m)
                         an integer identifier of the problem instance
                     dimension: int
                         the dimensionality of the search space
-            )pbdoc");
+            )pbdoc")
+        .def_property_readonly_static(
+            "problems", [](py::object) { return ioh::common::Factory<GraphProblem, int, int>::instance().map(); },
+            "All registered problems");
 
 
     py::class_<MaxCut, GraphProblem, std::shared_ptr<MaxCut>>(m, "MaxCut", py::is_final(), "MaxCut function")
@@ -1061,32 +1082,71 @@ void define_star_discrepancy_problems(py::module &m)
 
 
     py::class_<StarDiscrepancy, RealSingleObjective, std::shared_ptr<StarDiscrepancy>>(m, "StarDiscrepancy")
-        .def(py::init(&star_discrepancy_init), 
-            py::arg("instance") = 1,
-            py::arg("n_variables") = 5,
-            py::arg("n_samples") = 5,
-            py::arg("sampler_type") = SamplerType::UNIFORM
-        )
-        .def_property_readonly("grid", [](const StarDiscrepancy& self) {
-            const auto grid = self.get_grid();
-            const auto n = grid.size(), m = grid[0].size();
+        .def(py::init(&star_discrepancy_init), py::arg("instance") = 1, py::arg("n_variables") = 5,
+             py::arg("n_samples") = 5, py::arg("sampler_type") = SamplerType::UNIFORM)
+        .def_property_readonly("grid",
+                               [](const StarDiscrepancy &self) {
+                                   const auto grid = self.get_grid();
+                                   const auto n = grid.size(), m = grid[0].size();
 
-            py::array_t<double, py::array::c_style> arr({n, m});
+                                   py::array_t<double, py::array::c_style> arr({n, m});
 
-            auto ra = arr.mutable_unchecked();
+                                   auto ra = arr.mutable_unchecked();
 
-            for (size_t i = 0; i < n; i++)
-                for (size_t j = 0; j < m; j++)
-                    ra(i, j) = grid[i][j];
+                                   for (size_t i = 0; i < n; i++)
+                                       for (size_t j = 0; j < m; j++)
+                                           ra(i, j) = grid[i][j];
 
-            return arr;
-        });
+                                   return arr;
+                               })
+        .def_static(
+            "create",
+            [](const std::string &name, int iid, int dim) {
+                return ioh::common::Factory<StarDiscrepancy, int, int>::instance().create(name, iid, dim);
+            },
+            py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
+            R"pbdoc(
+                Create a problem instance
+
+                Parameters
+                ----------
+                    problem_name: str
+                        a string indicating the problem name. 
+                    instance_id: int
+                        an integer identifier of the problem instance
+                    dimension: int
+                        the dimensionality of the search space
+            )pbdoc")
+
+        .def_static(
+            "create",
+            [](int id, int iid, int dim) {
+                return ioh::common::Factory<StarDiscrepancy, int, int>::instance().create(id, iid, dim);
+            },
+            py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
+            R"pbdoc(
+                Create a problem instance
+
+                Parameters
+                ----------
+                    problem_name: int
+                        a string indicating the problem name. 
+                    instance_id: int
+                        an integer identifier of the problem instance
+                    dimension: int
+                        the dimensionality of the search space
+            )pbdoc")
+        .def_property_readonly_static(
+            "problems", [](py::object) { return ioh::common::Factory<StarDiscrepancy, int, int>::instance().map(); },
+            "All registered problems");
+    ;
 }
 
 void define_problem(py::module &m)
 {
     define_problem_bases(m);
-    define_bbob_problems(m);
+    define_bbob_problems<ioh::problem::BBOB>(m);
+    define_bbob_problems<ioh::problem::SBOX>(m, "SBOX", true);
     define_pbo_problems(m);
     define_wmodels(m);
     define_submodular_problems(m);

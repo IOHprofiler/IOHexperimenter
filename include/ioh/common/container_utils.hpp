@@ -1,9 +1,9 @@
 #pragma once
 
 #include <algorithm>
-#include <string>
 #include <cmath>
 #include <map>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -22,17 +22,18 @@ namespace ioh
          * \param y vector to be checked
          * \return true if all elements of x == y
          */
-        template<typename T>
-        inline bool is_equal(const std::vector<T> &x, const std::vector<T> &y){
-            if(!(x.size() == y.size()))
+        template <typename T>
+        inline bool is_equal(const std::vector<T> &x, const std::vector<T> &y)
+        {
+            if (!(x.size() == y.size()))
                 return false;
 
-            for(size_t i=0; i < x.size(); i++)
+            for (size_t i = 0; i < x.size(); i++)
                 if (x[i] != y[i])
                     return false;
             return true;
         }
-        
+
         /**
          * \brief Checks a vector of doubles for nan values
          * \param x vector to be checked
@@ -71,6 +72,20 @@ namespace ioh
                     return true;
             return false;
         }
+
+        /**
+         * @brief Inplace remove substring from string
+         * 
+         * @param str string to remove substr from
+         * @param substr the substring to remove
+         */
+        inline void erase_substring(std::string &str, const std::string &substr)
+        {
+            auto found_sub = str.find(substr);
+            if (found_sub != std::string::npos)
+                str.erase(found_sub, substr.size());
+        }
+
 
         /**
          * \brief concatenates two vectors
@@ -136,8 +151,7 @@ namespace ioh
         inline std::vector<int> range(const int start, const int stop, const int step = 1)
         {
             std::vector<int> v((stop - start) / step);
-            std::generate(v.begin(), v.end(), [=, c = start - step]() mutable
-            {
+            std::generate(v.begin(), v.end(), [=, c = start - step]() mutable {
                 c += step;
                 return c;
             });
@@ -146,8 +160,8 @@ namespace ioh
 
         /**
          * @brief Helper to print the contents of iterator to stdout
-         * 
-         * @tparam Iterator 
+         *
+         * @tparam Iterator
          * @param x the iterators to print, for example a std::vector
          * @param del the delimeter between each element
          */
@@ -161,17 +175,18 @@ namespace ioh
             std::cout << std::endl;
         }
 
-        
+
         /**
          * \brief trim leading whitespace (in place)
          * \param s the string to trim
          */
         inline void ltrim(std::string &s)
         {
-            s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](const unsigned char ch) { return !std::isspace(ch); }));
+            s.erase(s.begin(),
+                    std::find_if(s.begin(), s.end(), [](const unsigned char ch) { return !std::isspace(ch); }));
         }
 
-      
+
         /**
          * \brief trim from end (in place)
          * \param s the string to trim

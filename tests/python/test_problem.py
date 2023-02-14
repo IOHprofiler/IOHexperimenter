@@ -160,7 +160,23 @@ class TestProblem(unittest.TestCase):
                         p = ioh.get_problem(int(fid), int(iid), dim, problem_type)
                         self.assertTrue(math.isclose(p(x), float(y), abs_tol = tol))
 
+    def test_sbox(self):
+        for pid, name in ioh.problem.SBOX.problems.items():
+            sbox = ioh.get_problem(pid, 1, 4, ioh.ProblemType.SBOX)
+            bbob = ioh.get_problem(pid, 1, 4, ioh.ProblemType.BBOB)
+            self.assertEqual(sbox.constraints.n(), 1)
+            self.assertEqual(sbox([10, 10, 10, 10]), float("inf"))
+            self.assertNotEqual(bbob([10, 10, 10, 10]), float("inf"))
+            self.assertAlmostEqual(bbob.optimum.y, sbox.optimum.y)
+            
+            if pid in (5, 9, 19, 20):
+                continue
+            self.assertFalse(all(bbob.optimum.x == sbox.optimum.y))
 
+    def test_sbox_suite(self):
+        suite = ioh.suite.SBOX(range(25))
+        self.assertEqual(len(suite), 24)
+        
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,7 +5,8 @@
 namespace ioh::problem::bbob
 {   
     //! Step ellipsiod problem id 7
-    class StepEllipsoid final : public BBOProblem<StepEllipsoid>
+    template<typename P=BBOB>
+    class StepEllipsoid final : public P, BBOProblem<StepEllipsoid>
     {
     protected:
         //! compute project of x
@@ -13,19 +14,19 @@ namespace ioh::problem::bbob
         {
             static const auto alpha = 10.0;
             auto x0 = 0.0;
-            for (auto i = 0; i < meta_data_.n_variables; ++i)
+            for (auto i = 0; i < this->meta_data_.n_variables; ++i)
             {
-                transformation_state_.transformation_base[i] = 0.0;
-                for (auto j = 0; j < meta_data_.n_variables; ++j)
-                    transformation_state_.transformation_base[i] += transformation_state_.conditions.at(i)
-                    * transformation_state_.second_rotation.at(i).at(j)
-                    * (x.at(j) - optimum_.x.at(j));
+                this->transformation_state_.transformation_base[i] = 0.0;
+                for (auto j = 0; j < this->meta_data_.n_variables; ++j)
+                    this->transformation_state_.transformation_base[i] += this->transformation_state_.conditions.at(i)
+                    * this->transformation_state_.second_rotation.at(i).at(j)
+                    * (x.at(j) - this->optimum_.x.at(j));
 
-                x0 = transformation_state_.transformation_base.at(0);
+                x0 = this->transformation_state_.transformation_base.at(0);
 
-                transformation_state_.transformation_base[i] = fabs(transformation_state_.transformation_base.at(i)) > .5
-                    ? floor(transformation_state_.transformation_base.at(i) + .5)
-                    : floor(alpha * transformation_state_.transformation_base.at(i) + .5) / alpha;
+                this->transformation_state_.transformation_base[i] = fabs(this->transformation_state_.transformation_base.at(i)) > .5
+                    ? floor(this->transformation_state_.transformation_base.at(i) + .5)
+                    : floor(alpha * this->transformation_state_.transformation_base.at(i) + .5) / alpha;
             }
             return x0;
         }
@@ -37,17 +38,17 @@ namespace ioh::problem::bbob
             auto penalty = 0.0;
             const auto x0 = compute_projection(x);
 
-            for (auto i = 0; i < meta_data_.n_variables; ++i)
+            for (auto i = 0; i < this->meta_data_.n_variables; ++i)
             {
                 const auto out_of_bounds = fabs(x.at(i)) - 5.0;
                 if (out_of_bounds > 0.0)
                     penalty += out_of_bounds * out_of_bounds;
 
                 auto projection_sum = 0.0;
-                for (auto j = 0; j < meta_data_.n_variables; ++j)
-                    projection_sum += transformation_state_.first_rotation[i][j] * transformation_state_.transformation_base[j];
+                for (auto j = 0; j < this->meta_data_.n_variables; ++j)
+                    projection_sum += this->transformation_state_.first_rotation[i][j] * this->transformation_state_.transformation_base[j];
 
-                result += pow(100., transformation_state_.exponents.at(i))
+                result += pow(100., this->transformation_state_.exponents.at(i))
                     * projection_sum * projection_sum;
             }
 
@@ -63,12 +64,13 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         StepEllipsoid(const int instance, const int n_variables) :
-            BBOProblem(7, instance, n_variables, "StepEllipsoid")
+            P(7, instance, n_variables, "StepEllipsoid")
         {
             static const auto condition = 100.;
-            for (auto i = 0; i < meta_data_.n_variables; ++i)
-                transformation_state_.conditions[i] = sqrt(pow(condition / 10.,
-                                                               transformation_state_.exponents.at(i)));
+            for (auto i = 0; i < this->meta_data_.n_variables; ++i)
+                this->transformation_state_.conditions[i] = sqrt(pow(condition / 10.,
+                                                               this->transformation_state_.exponents.at(i)));
         }
     };
+    template class StepEllipsoid<BBOB>;
 }

@@ -4,7 +4,8 @@
 namespace ioh::problem::bbob
 {
     //! Sphere function problem id 1
-    class Sphere final: public BBOProblem<Sphere>
+    template<typename P=BBOB>
+    class Sphere final: public P, BBOProblem<Sphere>
     {
     protected:
         //! Evaluation method
@@ -19,7 +20,7 @@ namespace ioh::problem::bbob
         //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            transformation::variables::subtract(x, optimum_.x);
+            transformation::variables::subtract(x, this->optimum_.x);
             return x;
         }
     public:
@@ -30,8 +31,10 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         Sphere(const int instance, const int n_variables) :
-            BBOProblem(1, instance, n_variables, "Sphere")
+            P(1, instance, n_variables, "Sphere")
         {
         }
     };
+
+    template class Sphere<BBOB>;
 }

@@ -145,7 +145,10 @@ namespace ioh::suite
             const int min_problem_id = *std::min_element(available_ids.begin(), available_ids.end());
             problem_ids_ = !problem_ids.empty() ? problem_ids : available_ids;
             
-
+            for(size_t i = 0; i < problem_ids_.size(); i++)
+                if (std::find(available_ids.begin(), available_ids.end(), problem_ids_[i]) == std::end(available_ids))
+                    problem_ids_.erase(problem_ids_.begin() + i--);
+            
             for (const auto &problem_id : problem_ids_)
                 for (const auto &n_variables : dimensions)
                     for (const auto &instance : instances)
@@ -292,6 +295,40 @@ namespace ioh::suite
              const std::vector<int> &dimensions = {5}) :
             RealSuite(problem_ids, instances, dimensions, "BBOB", 100, 100,
                       reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::BBOB>::instance()))
+        {
+        }
+    };
+
+    struct SBOX final : RealSuite<SBOX>
+    {
+        /**
+         * @brief Construct a new SBOX object
+         * 
+         * @param problem_ids List of problem ids
+         * @param instances List of problem instances (defaults to first instance)
+         * @param dimensions List of problem dimensions (defaults to 5D)
+         */
+        SBOX(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
+             const std::vector<int> &dimensions = {5}) :
+            RealSuite(problem_ids, instances, dimensions, "SBOX", 100, 100,
+                      reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::SBOX>::instance()))
+        {
+        }
+    };
+
+    struct StarDiscrepancy final : RealSuite<StarDiscrepancy>
+    {
+        /**
+         * @brief Construct a new StarDiscrepancy object
+         * 
+         * @param problem_ids List of problem ids
+         * @param instances List of problem instances (defaults to first instance)
+         * @param dimensions List of problem dimensions (defaults to 5D)
+         */
+        StarDiscrepancy(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
+             const std::vector<int> &dimensions = {5}) :
+            RealSuite(problem_ids, instances, dimensions, "SBOX", 10000, 10000,
+                      reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::star_discrepancy::real::StarDiscrepancy>::instance()))
         {
         }
     };

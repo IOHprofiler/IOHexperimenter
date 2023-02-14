@@ -42,14 +42,28 @@ class ProblemType(enum.Enum):
     INTEGER = "IntegerSingleObjective"
 
     BBOB = "BBOB"
+    STAR = "StarDiscrepancy"
+    SBOX = "SBOX"
+
     PBO = "PBO"
     GRAPH = "GraphProblem"
 
     def is_real(self):
-        return self in (ProblemType.REAL, ProblemType.BBOB,) 
+        return self in (
+                ProblemType.REAL, 
+                ProblemType.BBOB,
+                ProblemType.SBOX,
+                ProblemType.STAR,
+                ) 
     
     def is_single_objective(self):
         return True
+
+    @property
+    def problems(self):
+        base_problem = getattr(problem, self.value)
+        if base_problem:
+            return base_problem.problems
 
 
 def get_problem(

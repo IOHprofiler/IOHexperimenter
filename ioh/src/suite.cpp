@@ -57,18 +57,18 @@ void define_base_class(py::module &m, const std::string &name)
                 The name of the suite.
             )pbdoc")
         .def("__len__", &SuiteType::size)
-        .def(
-            "__iter__", [](SuiteType &s) { return py::make_iterator(s.begin(), s.end()); }, py::keep_alive<0, 1>());
+        .def("__iter__", [](SuiteType &s) { return py::make_iterator(s.begin(), s.end()); }, py::keep_alive<0, 1>())
+        ;
 }
 
 
-void define_suite(py::module &m)
-{
-    define_base_class<Suite<ioh::problem::RealSingleObjective>>(m, "RealBase");
+template<typename S, typename P>
+void define_suite(py::module &m, const std::string& name, const int default_dim = 5){
+    py::class_<S, P, std::shared_ptr<S>>(m, name.c_str(),
+    fmt::format(R"pbdoc(
+        Suite with {} functions included in IOH. 
 
-    py::class_<Real, Suite<ioh::problem::RealSingleObjective>, std::shared_ptr<Real>>(m, "Real",
-                                                                       R"pbdoc(
-        Suite with real-valued functions included in IOH. 
+        This class is an iterator for problems, you can define a set of problems to iterate over.
 
         Parameters
         ----------
@@ -78,86 +78,23 @@ void define_suite(py::module &m)
             A list of problem instances to include in this instantiation of the suite
         problem_ids: list[int]
             A list of problem dimensions to include in this instantiation of the suite          
-    )pbdoc")
+    )pbdoc", name).c_str())
         .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(), py::arg("problem_ids"),
-             py::arg("instances"), py::arg("dimensions"));
+             py::arg("instances") = std::vector<int>{1}, py::arg("dimensions") = std::vector<int>{default_dim});
+}
 
-    py::class_<BBOB, Suite<ioh::problem::RealSingleObjective>, std::shared_ptr<BBOB>>(m, "BBOB", R"pbdoc(
-            Suite with real-valued functions from BBOB single-objective benchmark.
+void define_suites(py::module &m)
+{
+    using RealBase = Suite<ioh::problem::RealSingleObjective>;
+    define_base_class<RealBase>(m, "RealBase");
+    define_suite<Real, RealBase>(m, "Real");
+    define_suite<BBOB, RealBase>(m, "BBOB");
+    define_suite<SBOX, RealBase>(m, "SBOX");
+    define_suite<StarDiscrepancy, RealBase>(m, "StarDiscrepancy");
 
-            Parameters
-            ----------
-            problem_ids: list[int]
-                A list of problems ids to include in this instantiation of the suite
-            instances: list[int]
-                A list of problem instances to include in this instantiation of the suite
-            problem_ids: list[int]
-                A list of problem dimensions to include in this instantiation of the suite   
-                      
-        )pbdoc")
-        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(),
-             py::arg("problem_ids") = std::vector<int>{}, py::arg("instances") = std::vector<int>{1},
-             py::arg("dimensions") = std::vector<int>{5});
-
-    define_base_class<Suite<ioh::problem::IntegerSingleObjective>>(m, "IntegerBase");
-
-    py::class_<Integer, Suite<ioh::problem::IntegerSingleObjective>, std::shared_ptr<Integer>>(m, "Integer",
-                                                                                R"pbdoc(
-            Suite with integer-valued functions included in IOH. 
-
-            Parameters
-            ----------
-            problem_ids: list[int]
-                A list of problems ids to include in this instantiation of the suite
-            instances: list[int]
-                A list of problem instances to include in this instantiation of the suite
-            problem_ids: list[int]
-                A list of problem dimensions to include in this instantiation of the suite          
-        )pbdoc")
-        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(), py::arg("problem_ids"),
-             py::arg("instances"), py::arg("dimensions"));
-
-    py::class_<PBO, Suite<ioh::problem::IntegerSingleObjective>, std::shared_ptr<PBO>>(m, "PBO",
-                                                                        R"pbdoc(
-            Suite with integer-valued functions from PBO single objective benchmark.
-
-            This class is an iterator for problems, you can define a set of problem/instance/dimension
-            combinations to iterate over.
-
-            Parameters
-            ----------
-            problem_ids: list[int]
-                A list of problems ids to include in this instantiation of the suite
-            instances: list[int]
-                A list of problem instances to include in this instantiation of the suite
-            problem_ids: list[int]
-                A list of problem dimensions to include in this instantiation of the suite          
-
-        )pbdoc")
-        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(),
-             py::arg("problem_ids") = std::vector<int>{}, py::arg("instances") = std::vector<int>{1},
-             py::arg("dimensions") = std::vector<int>{16});
-
-    py::class_<Submodular, Suite<ioh::problem::IntegerSingleObjective>, std::shared_ptr<Submodular>>(m, "Submodular",
-                                                                                      R"pbdoc(
-            Suite with integer-valued functions from Submodular single objective benchmark.
-
-            This class is an iterator for problems, you can define a set of problems to iterate over.
-
-            Note that although you can pass instances/dimension for in order to keep a standard API,
-            these options are ignored for this suite, only problem ids are considered.
-
-            Parameters
-            ----------
-            problem_ids: list[int]
-                A list of problems ids to include in this instantiation of the suite
-            instances: list[int]
-                A list of problem instances to include in this instantiation of the suite (ignored)
-            problem_ids: list[int]
-                A list of problem dimensions to include in this instantiation of the suite (ignored)         
-
-        )pbdoc")
-        .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(),
-             py::arg("problem_ids") = std::vector<int>{}, py::arg("instances") = std::vector<int>{1},
-             py::arg("dimensions") = std::vector<int>{1});
+    using IntegerBase = Suite<ioh::problem::IntegerSingleObjective>;
+    define_base_class<IntegerBase>(m, "IntegerBase");
+    define_suite<Integer, IntegerBase>(m, "Integer");
+    define_suite<PBO, IntegerBase>(m, "PBO", 16);
+    define_suite<Submodular, IntegerBase>(m, "Submodular", 1);
 }

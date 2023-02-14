@@ -5,7 +5,8 @@
 namespace ioh::problem::bbob
 {
     //! Bent Cigar problem id = 12
-    class BentCigar final : public BBOProblem<BentCigar>
+    template<typename P=BBOB>
+    class BentCigar final : public P, BBOProblem<BentCigar>
     {
     protected:
         //! Evaluation method
@@ -13,7 +14,7 @@ namespace ioh::problem::bbob
         {
             static const auto condition = 1.0e6;
             auto result = x.at(0) * x.at(0);
-            for (auto i = 1; i < meta_data_.n_variables; ++i)
+            for (auto i = 1; i < this->meta_data_.n_variables; ++i)
                 result += condition * x.at(i) * x.at(i);
             return result;
         }
@@ -22,10 +23,10 @@ namespace ioh::problem::bbob
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             using namespace transformation::variables;
-            subtract(x, optimum_.x);
-            affine(x, transformation_state_.transformation_matrix, transformation_state_.transformation_base);
+            subtract(x, this->optimum_.x);
+            affine(x, this->transformation_state_.transformation_matrix, this->transformation_state_.transformation_base);
             asymmetric(x, 0.5);
-            affine(x, transformation_state_.transformation_matrix, transformation_state_.transformation_base);
+            affine(x, this->transformation_state_.transformation_matrix, this->transformation_state_.transformation_base);
             return x;
         }
 
@@ -37,8 +38,10 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         BentCigar(const int instance, const int n_variables) :
-            BBOProblem(12, instance, n_variables, "BentCigar")
+            P(12, instance, n_variables, "BentCigar")
         {
         }
     };
+
+    template class BentCigar<BBOB>;
 }

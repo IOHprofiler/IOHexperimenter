@@ -1,13 +1,12 @@
 
 #pragma once
 
-#include <fmt/format.h>
-
 
 
 #include <string>
 #include <utility>
 #include "ioh/common/log.hpp"
+#include "ioh/common/format.hpp"
 
 #ifdef FSEXPERIMENTAL
 #define JSON_HAS_EXPERIMENTAL_FILESYSTEM 1
