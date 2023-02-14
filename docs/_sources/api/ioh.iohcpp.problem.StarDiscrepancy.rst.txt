@@ -12,6 +12,7 @@ StarDiscrepancy
 
       ~StarDiscrepancy.bounds
       ~StarDiscrepancy.constraints
+      ~StarDiscrepancy.grid
       ~StarDiscrepancy.log_info
       ~StarDiscrepancy.meta_data
       ~StarDiscrepancy.optimum
@@ -35,6 +36,7 @@ StarDiscrepancy
 
    .. autoattribute:: bounds
    .. autoattribute:: constraints
+   .. autoattribute:: grid
    .. autoattribute:: log_info
    .. autoattribute:: meta_data
    .. autoattribute:: optimum
