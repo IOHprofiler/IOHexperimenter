@@ -22,7 +22,7 @@
 * Advanced logging module that takes care of registering the data in a seamless manner.
 * Data format is compatible with [IOHanalyzer](https://github.com/IOHprofiler/IOHanalyzer).
 
-**Avaible Problem Suites:**
+**Available Problem Suites:**
 
 * BBOB (Single Objective Noiseless) (COCO)
 * SBOX-COST (COCO)
