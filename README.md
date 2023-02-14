@@ -22,6 +22,14 @@
 * Advanced logging module that takes care of registering the data in a seamless manner.
 * Data format is compatible with [IOHanalyzer](https://github.com/IOHprofiler/IOHanalyzer).
 
+**Avaible Problem Suites:**
+
+* BBOB (Single Objective Noiseless) (COCO)
+* SBOX-COST (COCO)
+* StarDiscrepancy
+* PBO
+* Submodular Graph Problems
+
 ## C++
 
 The complete API documentation, can be found [here](https://iohprofiler.github.io/IOHexperimenter/cpp), as well as a Getting-Started guide. In addition to the documentation, some example projects can be found in the [example](./example/) folder of this repository.
