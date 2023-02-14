@@ -74,7 +74,7 @@ f.state.evaluations
 
 ## Running an algorithm
 
-To showcase how to use these functions in combination with an optimization algorith, we define a simple random-search example wich accepts an argument of class IOH_function.
+To showcase how to use these functions in combination with an optimization algorithm, we define a simple random-search example wich accepts an argument of class IOH_function.
 
 ```python
 import numpy as np
@@ -143,7 +143,7 @@ l2.close()
 
 ### Tracking parameters
 
-If we want to track parameters of the algorithm, these variables need to be aviable on a object, i.e. as member variables on a class instance. In order to do this for the random search algorithm, we can do this be wrapping the function in a class.
+If we want to track parameters of the algorithm, these variables need to be available on a object, i.e. as member variables on a class instance. In order to do this for the random search algorithm, we can do this be wrapping the function in a class.
 
 ```python
 class RandomSearch:
