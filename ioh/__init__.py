@@ -49,7 +49,12 @@ class ProblemType(enum.Enum):
     GRAPH = "GraphProblem"
 
     def is_real(self):
-        return self in (ProblemType.REAL, ProblemType.BBOB, ProblemType.SBOX,) 
+        return self in (
+                ProblemType.REAL, 
+                ProblemType.BBOB,
+                ProblemType.SBOX,
+                ProblemType.STAR,
+                ) 
     
     def is_single_objective(self):
         return True
