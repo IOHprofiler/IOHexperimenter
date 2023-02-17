@@ -15,7 +15,7 @@ class TestProblem(unittest.TestCase):
         os.chdir(self.cwd)
         return super().tearDown()
 
-    @unittest.skipUnless(sys.platform != "win32")
+    @unittest.skipUnless(sys.platform != "win32", "windows tmp dir")
     def test_downloader(self):
         self.assertFalse(os.path.isdir(self.folder))
         os.chdir("/tmp")
