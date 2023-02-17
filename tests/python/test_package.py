@@ -20,7 +20,7 @@ class TestPackage(unittest.TestCase):
                 stderr=subprocess.PIPE
             )
             
-            self.assertEqual(result.returncode, 0)
+            self.assertEqual(result.returncode, 0, msg=result.stderr)
             
             source_dist, *_ = glob.glob(f"{tmpdirname}/*")
             self.assertTrue(os.path.isfile(source_dist))

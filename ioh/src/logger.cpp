@@ -44,6 +44,7 @@ public:
         if (py::hasattr(container_, attribute_.c_str()))
         {
             auto pyobj = container_.attr(attribute_.c_str()).ptr();
+
             if (pyobj != Py_None)
                 return std::make_optional<double>(PyFloat_AsDouble(pyobj));
         }
@@ -105,11 +106,13 @@ public:
     void call(const logger::Info &log_info) override { PYBIND11_OVERRIDE(void, WatcherType, call, log_info); }
 };
 
+
+
 // Python spec. implementation
 template<typename A>
 class PyAnalyzer : public PyWatcher<A>
 {
-    std::vector<std::unique_ptr<double>> double_ptrs_;
+    std::unordered_map<std::string, std::unique_ptr<double>> double_ptrs_;
     std::vector<std::unique_ptr<PyProperty>> prop_ptrs_;
 
 public:
@@ -119,6 +122,10 @@ public:
     virtual void close() override
     {
         AnalyzerType::close();
+    }
+
+    virtual ~PyAnalyzer() {
+        close();   
     }
 
     void add_run_attribute_python(const py::object &container, const std::string &name)
@@ -138,25 +145,88 @@ public:
     {
         auto ptr = std::make_unique<double>(value);
         AnalyzerType::add_run_attribute(name, ptr.get());
-        double_ptrs_.push_back(std::move(ptr));
+        double_ptrs_[name] = std::move(ptr);
     }
 
-    void set_run_attribute_python(const std::string &name, double value) { *(this->attributes_.run.at(name)) = value; }
+    void set_run_attribute_python(const std::string &name, double value) {
+        *(double_ptrs_.at(name)) = value;
+    }
 
     void set_run_attributes_python(const std::map<std::string, double> &attributes)
     {
-        double_ptrs_.clear();
         for (auto &[key, value] : attributes)
-            add_run_attribute_python(key, value);
+            set_run_attribute_python(key, value);
     }
 
-    void attach_problem(const problem::MetaData &problem) override
-    {
+    // void attach_problem(const problem::MetaData &problem) override
+    // {
+    //     std::cout << "attach_problem\n";
+    //     AnalyzerType::attach_problem(problem);
+    // }
+
+    virtual void handle_last_eval() override {
         for (auto& ptr : prop_ptrs_)
             set_run_attribute_python(ptr->name(), (*ptr)(logger::Info{}).value());
-        AnalyzerType::attach_problem(problem);
+        AnalyzerType::handle_last_eval();
     }
 };
+
+template<typename A>
+void define_analyzer(py::module &m)
+{
+    using namespace logger;
+    Triggers def_trigs{trigger::on_improvement};
+    Properties def_props{};
+    using PyAnalyzer = PyAnalyzer<A>;
+    py::class_<PyAnalyzer, Watcher, std::shared_ptr<PyAnalyzer>>(m, "Analyzer")
+        .def(py::init<Triggers, Properties, fs::path, std::string, std::string, std::string, bool>(),
+             py::arg("triggers") = def_trigs, py::arg("additional_properties") = def_props,
+             py::arg("root") = fs::current_path(), py::arg("folder_name") = "ioh_data",
+             py::arg("algorithm_name") = "algorithm_name", py::arg("algorithm_info") = "algorithm_info",
+             py::arg("store_positions") = false,
+             R"pbdoc(
+                A logger which stores all tracked properties to a file.
+
+                Parameters
+                ----------
+                triggers: list[Trigger]
+                    List of triggers, i.e. when to trigger logging
+                additional_properties: list[Property]
+                    The list of additional properties to keep track of (additional to the default properties for this logger type)
+                root: str = "./"
+                    The path to which to write the files
+                folder_name: str = "./"
+                    The name of the folder to which to write the files
+                algorithm_name: str = "algorithm_name"
+                    Optional name parameter for the algorithm to be added to the info files
+                algorithm_info: str = "algorithm_info"
+                    Optional info parameter for the algorithm to be added to the info files
+                store_positions: bool = false
+                    Boolean value which indicates whether to store the x-positions in the file
+            )pbdoc")
+        .def("add_experiment_attribute", &PyAnalyzer::add_experiment_attribute)
+        .def("set_experiment_attributes", &PyAnalyzer::set_experiment_attributes)
+
+        .def("add_run_attribute",
+             py::overload_cast<const std::string &, double>(&PyAnalyzer::add_run_attribute_python))
+        .def("add_run_attribute",
+             py::overload_cast<const py::object &, const std::string &>(&PyAnalyzer::add_run_attribute_python))
+        .def("add_run_attributes",
+             py::overload_cast<const py::object &, const std::vector<std::string> &>(
+                 &PyAnalyzer::add_run_attributes_python))
+        
+        .def("set_run_attributes", &PyAnalyzer::set_run_attributes_python) // takes a map<str, double>
+        .def("set_run_attribute", &PyAnalyzer::set_run_attribute_python)   // takes str, double>
+
+        .def_property_readonly("output_directory", &PyAnalyzer::output_directory)
+        .def("close", &PyAnalyzer::close)
+        .def("watch", py::overload_cast<Property &>(&PyAnalyzer::watch))
+        .def("watch", py::overload_cast<const py::object &, const std::string &>(&PyAnalyzer::watch))
+        .def("watch", py::overload_cast<const py::object &, const std::vector<std::string> &>(&PyAnalyzer::watch))
+        .def("__repr__",
+             [](const PyAnalyzer &f) { return fmt::format("<Analyzer {}>", f.output_directory().generic_string()); });
+}
+
 
 void define_triggers(py::module &m)
 {
@@ -182,6 +252,16 @@ void define_triggers(py::module &m)
 
     ;
     t.attr("ON_IMPROVEMENT") = py::cast(trigger::on_improvement);
+
+    py::class_<trigger::OnViolation, logger::Trigger, std::shared_ptr<trigger::OnViolation>>(
+        t, "OnViolation", "Trigger that evaluates to true when there is a contraint violation")
+        .def(py::init<>())
+        .def_readonly("violations", &trigger::OnViolation::violations)
+        .def(py::pickle([](const trigger::OnViolation &) { return py::make_tuple(); },
+                        [](py::tuple) { return trigger::OnViolation{}; }));
+
+    ;
+    t.attr("ON_VIOLATION") = py::cast(trigger::on_violation);
 
     py::class_<trigger::At, logger::Trigger, std::shared_ptr<trigger::At>>(t, "At")
         .def(py::init<std::set<size_t>>(), py::arg("time_points"),
@@ -400,58 +480,6 @@ void define_store(py::module &m)
         });
 }
 
-template<typename A>
-void define_analyzer(py::module &m)
-{
-    using namespace logger;
-    Triggers def_trigs{trigger::on_improvement};
-    Properties def_props{};
-    using PyAnalyzer = PyAnalyzer<A>;
-    py::class_<PyAnalyzer, Watcher, std::shared_ptr<PyAnalyzer>>(m, "Analyzer")
-        .def(py::init<Triggers, Properties, fs::path, std::string, std::string, std::string, bool>(),
-             py::arg("triggers") = def_trigs, py::arg("additional_properties") = def_props,
-             py::arg("root") = fs::current_path(), py::arg("folder_name") = "ioh_data",
-             py::arg("algorithm_name") = "algorithm_name", py::arg("algorithm_info") = "algorithm_info",
-             py::arg("store_positions") = false,
-             R"pbdoc(
-                A logger which stores all tracked properties to a file.
-
-                Parameters
-                ----------
-                triggers: list[Trigger]
-                    List of triggers, i.e. when to trigger logging
-                additional_properties: list[Property]
-                    The list of additional properties to keep track of (additional to the default properties for this logger type)
-                root: str = "./"
-                    The path to which to write the files
-                folder_name: str = "./"
-                    The name of the folder to which to write the files
-                algorithm_name: str = "algorithm_name"
-                    Optional name parameter for the algorithm to be added to the info files
-                algorithm_info: str = "algorithm_info"
-                    Optional info parameter for the algorithm to be added to the info files
-                store_positions: bool = false
-                    Boolean value which indicates whether to store the x-positions in the file
-            )pbdoc")
-        .def("add_experiment_attribute", &PyAnalyzer::add_experiment_attribute)
-        .def("set_experiment_attributes", &PyAnalyzer::set_experiment_attributes)
-        .def("add_run_attributes",
-             py::overload_cast<const std::string &, double>(&PyAnalyzer::add_run_attribute_python))
-        .def("add_run_attributes",
-             py::overload_cast<const py::object &, const std::string &>(&PyAnalyzer::add_run_attribute_python))
-        .def("add_run_attributes",
-             py::overload_cast<const py::object &, const std::vector<std::string> &>(
-                 &PyAnalyzer::add_run_attributes_python))
-        .def("set_run_attributes", &PyAnalyzer::set_run_attributes_python)
-        .def("set_run_attribute", &PyAnalyzer::set_run_attribute_python)
-        .def_property_readonly("output_directory", &PyAnalyzer::output_directory)
-        .def("close", &PyAnalyzer::close)
-        .def("watch", py::overload_cast<Property &>(&PyAnalyzer::watch))
-        .def("watch", py::overload_cast<const py::object &, const std::string &>(&PyAnalyzer::watch))
-        .def("watch", py::overload_cast<const py::object &, const std::vector<std::string> &>(&PyAnalyzer::watch))
-        .def("__repr__",
-             [](const PyAnalyzer &f) { return fmt::format("<Analyzer {}>", f.output_directory().generic_string()); });
-}
 
 template <typename T>
 void define_eah_scale(py::module &m, const std::string &name)

@@ -282,7 +282,7 @@ namespace ioh::problem::submodular
         //! Helper to load problems from a file
         //! Use if you want to manually load more graph based files
         template <typename... Args>
-        static void load_graph_instances(const fs::path &path)
+        static void load_graph_instances(const std::optional<fs::path> &path = std::nullopt)
         {
             for (auto &ci : InstanceBasedProblem::load_instances<ProblemType, int, int>(path))
             {

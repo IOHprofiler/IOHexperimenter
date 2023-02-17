@@ -1023,21 +1023,21 @@ void define_submodular_problems(py::module &m)
 
 
     py::class_<MaxCut, GraphProblem, std::shared_ptr<MaxCut>>(m, "MaxCut", py::is_final(), "MaxCut function")
-        .def_static("load_instances", &GraphProblemType<MaxCut>::load_graph_instances<int, int>);
+        .def_static("load_instances", &GraphProblemType<MaxCut>::load_graph_instances<int, int>, py::arg("path") = std::nullopt);
 
     // Don't allow these object to be created in from constructors in python
     py::class_<MaxCoverage, GraphProblem, std::shared_ptr<MaxCoverage>>(m, "MaxCoverage", py::is_final(),
                                                                         "MaxCoverage function")
-        .def_static("load_instances", &GraphProblemType<MaxCoverage>::load_graph_instances<int, int>);
+        .def_static("load_instances", &GraphProblemType<MaxCoverage>::load_graph_instances<int, int>, py::arg("path") = std::nullopt);
 
 
     py::class_<MaxInfluence, GraphProblem, std::shared_ptr<MaxInfluence>>(m, "MaxInfluence", py::is_final(),
                                                                           "MaxInfluence function")
-        .def_static("load_instances", &GraphProblemType<MaxInfluence>::load_graph_instances<int, int>);
+        .def_static("load_instances", &GraphProblemType<MaxInfluence>::load_graph_instances<int, int>, py::arg("path") = std::nullopt);
 
     py::class_<PackWhileTravel, GraphProblem, std::shared_ptr<PackWhileTravel>>(m, "PackWhileTravel", py::is_final(),
                                                                                 "PackWhileTravel function")
-        .def_static("load_instances", &GraphProblemType<PackWhileTravel>::load_graph_instances<int, int>);
+        .def_static("load_instances", &GraphProblemType<PackWhileTravel>::load_graph_instances<int, int>, py::arg("path") = std::nullopt);
 }
 
 enum class SamplerType

@@ -15,7 +15,7 @@ namespace ioh::logger
             template <typename T>
             struct Attribute : common::HasRepr
             {
-                
+
                 //! Name of the attribute
                 std::string name;
                 //! Value of the attribue
@@ -23,11 +23,12 @@ namespace ioh::logger
 
                 /**
                  * @brief Construct a new Attribute object
-                 * 
+                 *
                  * @param name name of the attribute
                  * @param value Value of the attribue
                  */
-                Attribute(const std::string &name, const T &value) : name(name), value(value) {}
+                Attribute(const std::string &name, const T &value) : name(name), value(value) {
+                }
 
                 std::string repr() const override { return fmt::format("\"{}\": {}", name, value); }
             };
@@ -61,7 +62,7 @@ namespace ioh::logger
 
                 /**
                  * @brief Construct a new Best Point object
-                 * 
+                 *
                  * @param evals At what eval was the point recorded
                  * @param point Value of the point
                  */
@@ -80,7 +81,7 @@ namespace ioh::logger
             //! Algorithm meta data
             struct AlgorithmInfo : common::HasRepr
             {
-                
+
                 //! Name of the algorithm
                 const std::string name;
 
@@ -89,7 +90,7 @@ namespace ioh::logger
 
                 /**
                  * @brief Construct a new Algorithm Info object
-                 * 
+                 *
                  * @param name Name of the algorithm
                  * @param info Extra string of algoritm information
                  */
@@ -115,7 +116,7 @@ namespace ioh::logger
 
                 /**
                  * @brief Construct a new Run Info object
-                 * 
+                 *
                  * @param instance  Instance id
                  * @param evals N evals
                  * @param bp best point
@@ -135,7 +136,7 @@ namespace ioh::logger
                                        (attributes.empty() ? "" : fmt::format(", {}", fmt::join(attributes, ", "))));
                 }
             };
-            
+
             //! Scenario meta data
             struct ScenarioInfo : common::HasRepr
             {
@@ -148,7 +149,7 @@ namespace ioh::logger
 
                 /**
                  * @brief Construct a new Scenario Info object
-                 * 
+                 *
                  * @param dimension Dimension
                  * @param data_file Data file
                  * @param runs Runs
@@ -173,7 +174,7 @@ namespace ioh::logger
             {
                 //! Suite name
                 const std::string suite;
-                //! problem 
+                //! problem
                 const problem::MetaData problem;
                 //! Algoritm meta data
                 const AlgorithmInfo algorithm;
@@ -188,9 +189,9 @@ namespace ioh::logger
 
                 /**
                  * @brief Construct a new Experiment Info object
-                 * 
+                 *
                  * @param suite suite name
-                 * @param problem problem 
+                 * @param problem problem
                  * @param algorithm Algoritm meta data
                  * @param attributes Attributes
                  * @param run_attribute_names Run attributes
@@ -212,7 +213,8 @@ namespace ioh::logger
                 std::string repr() const override
                 {
                     return fmt::format(
-                        "{{\n\t\"version\": \"{}\", \n\t\"suite\": \"{}\", \n\t\"function_id\": {}, \n\t\"function_name\": \"{}\", "
+                        "{{\n\t\"version\": \"{}\", \n\t\"suite\": \"{}\", \n\t\"function_id\": {}, "
+                        "\n\t\"function_name\": \"{}\", "
                         "\n\t\"maximization\": {}, "
                         "\n\t\"algorithm\": {{{}}},{}{}{}\n\t\"scenarios\": [\n\t\t{{{}}}\n\t]\n}}\n",
                         PROJECT_VER, suite, problem.problem_id, problem.name,
@@ -223,9 +225,9 @@ namespace ioh::logger
                         !run_attribute_names.empty()
                             ? fmt::format("\n\t\"run_attributes\": [\"{}\"],", fmt::join(run_attribute_names, "\", \""))
                             : "",
-                        !attribute_names.empty() ? fmt::format("\n\t\"attributes\": [\"{}\"],",
-                                                                     fmt::join(attribute_names, "\", \""))
-                                                       : "",
+                        !attribute_names.empty()
+                            ? fmt::format("\n\t\"attributes\": [\"{}\"],", fmt::join(attribute_names, "\", \""))
+                            : "",
                         fmt::join(dims, "},\n\t\t{"));
                 }
             };
@@ -255,10 +257,10 @@ namespace ioh::logger
             protected:
                 //! output path
                 const common::file::UniqueFolder path_;
-                
+
                 //! Algorithm meta data
                 const structures::AlgorithmInfo algorithm_;
-                
+
                 //! info file stream
                 std::ofstream info_stream_;
 
@@ -363,29 +365,25 @@ namespace ioh::logger
                  * @param attributes See: analyzer::Attributes.
                  */
                 Analyzer(const Triggers &triggers = {trigger::on_improvement},
-                         const Properties &additional_properties = {},
-                         const fs::path &root = fs::current_path(),
+                         const Properties &additional_properties = {}, const fs::path &root = fs::current_path(),
                          const std::string &folder_name = "ioh_data",
                          const std::string &algorithm_name = "algorithm_name",
-                         const std::string &algorithm_info = "algorithm_info",
-                         const bool store_positions = false,
-                         const bool use_old_data_format = true,
-                         const structures::Attributes &attributes = {}
-                ) :
+                         const std::string &algorithm_info = "algorithm_info", const bool store_positions = false,
+                         const bool use_old_data_format = true, const structures::Attributes &attributes = {}) :
                     FlatFile(triggers,
                              common::concatenate(use_old_data_format ? default_properties_old_ : default_properties_,
                                                  additional_properties),
-                             "", {},
-                             " ", "",
-                             "None", "\n", true, store_positions, {}),
+                             "", {}, " ", "", "None", "\n", true, store_positions, {}),
                     path_(root, folder_name), algorithm_(algorithm_name, algorithm_info), best_point_{},
                     attributes_(attributes), has_started_(false)
                 {
                 }
 
                 //! close data file
-                virtual void close() override {
-                    if (info_stream_.is_open()){
+                virtual void close() override
+                {
+                    if (info_stream_.is_open())
+                    {
                         handle_last_eval();
                         IOH_DBG(debug, "close info file")
                         info_stream_.close();
@@ -395,10 +393,7 @@ namespace ioh::logger
                     FlatFile::close();
                 }
 
-                virtual ~Analyzer()
-                {
-                    close();
-                }
+                virtual ~Analyzer() { close(); }
 
                 //! Part of public interface. Updates info file.
                 virtual void attach_problem(const problem::MetaData &problem) override
@@ -410,7 +405,8 @@ namespace ioh::logger
                     update_info_file(problem, fmt::format("{}/{}", dat_directory, dat_filename));
                     open_stream(dat_filename, path_ / dat_directory);
                     FlatFile::attach_problem(problem);
-                    best_point_ = {0, {std::vector<double>(problem.n_variables), problem.optimization_type.initial_value()}};
+                    best_point_ = {
+                        0, {std::vector<double>(problem.n_variables), problem.optimization_type.initial_value()}};
                     has_started_ = true;
                 }
 
@@ -427,20 +423,20 @@ namespace ioh::logger
                 virtual void call(const Info &log_info) override
                 {
                     IOH_DBG(debug, "Analyzer called");
-                    
+
                     FlatFile::call(log_info);
                     if (log_info.has_improved)
                         best_point_ = {log_info.evaluations, {log_info.x, log_info.raw_y}};
                     log_info_ = {};
                 }
 
-                #ifndef NDEBUG
+#ifndef NDEBUG
                 void reset() override
                 {
                     IOH_DBG(debug, "Analyzer reset");
                     FlatFile::reset();
                 }
-                #endif
+#endif
 
                 //! Watcher::watch is protected, so it can only be called before track_problem is called for the first
                 //! time.
@@ -490,14 +486,14 @@ namespace ioh::logger
                 static inline watch::TransformedY transformed_y_{R"#("current af(x)+b")#"};
                 static inline watch::TransformedYBest transformed_y_best_{R"#("best af(x)+b")#"};
                 static inline Properties default_properties_old_{evaluations_, current_y_, y_best_, transformed_y_,
-                                                             transformed_y_best_};
+                                                                 transformed_y_best_};
 
 
                 //! The only properties used by the analyzer (actually only raw_y is used)
                 static inline Properties default_properties_{watch::evaluations, watch::raw_y};
             };
         } // namespace v1
-        
+
         /* Version 1 */
         namespace v2
         {
@@ -539,12 +535,16 @@ namespace ioh::logger
                 }
 
                 //! Gets called after the last evaluation of a run
-                virtual void handle_new_dimension(const problem::MetaData &problem, const std::string &dat_path) override
+                virtual void handle_new_dimension(const problem::MetaData &problem,
+                                                  const std::string &dat_path) override
                 {
                     experiments_.at(current_filename_)
                         .dims.emplace_back(static_cast<size_t>(problem.n_variables), dat_path);
                 }
+                
+                bool closed = false;
 
+            protected:
                 //! Gets called when the current problem changes dimension
                 virtual void handle_last_eval() override
                 {
@@ -555,25 +555,29 @@ namespace ioh::logger
                             .runs.emplace_back(
                                 static_cast<size_t>(problem_.value().instance), evals_, best_point_,
                                 common::as_vector<std::string, double, structures::Attribute<double>>(attributes_.run));
+
                         if (log_info_.evaluations != 0)
                             FlatFile::call(log_info_);
                     }
                 }
 
-            protected:
                 //! Writes all data to the info file
+                
                 void close() override
                 {
-                    handle_last_eval(); // TODO: check if this doesn't cause duplicate writes
-                    for (const auto &[filename, exp] : experiments_)
-                    {
-                        info_stream_ = std::ofstream(path_ / filename);
-                        info_stream_ << fmt::format("{}", exp);
-                        info_stream_.close();
+                    if (!closed){
+                        closed = true;
+                        handle_last_eval(); 
+                        for (const auto &[filename, exp] : experiments_)
+                        {
+                            info_stream_ = std::ofstream(path_ / filename);
+                            info_stream_ << fmt::format("{}", exp);
+                            info_stream_.close();
+                        }
+                        if (!has_started_)
+                            fs::remove(output_directory());
+                        FlatFile::close();
                     }
-                    if (!has_started_)
-                        fs::remove(output_directory());
-                    FlatFile::close();                    
                 }
 
             public:
@@ -590,15 +594,13 @@ namespace ioh::logger
                  * @param attributes See: analyzer::Attributes.
                  */
                 Analyzer(const Triggers &triggers = {trigger::on_improvement},
-                         const Properties &additional_properties = {}, 
-                         const fs::path &root = fs::current_path(),
+                         const Properties &additional_properties = {}, const fs::path &root = fs::current_path(),
                          const std::string &folder_name = "ioh_data",
                          const std::string &algorithm_name = "algorithm_name",
                          const std::string &algorithm_info = "algorithm_info", const bool store_positions = false,
                          const structures::Attributes &attributes = {}) :
-                    v1::Analyzer(triggers, additional_properties, root, folder_name, algorithm_name,
-                                           algorithm_info, 
-                        store_positions, false, attributes)
+                    v1::Analyzer(triggers, additional_properties, root, folder_name, algorithm_name, algorithm_info,
+                                 store_positions, false, attributes)
                 {
                 }
 

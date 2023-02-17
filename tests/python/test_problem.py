@@ -27,6 +27,7 @@ class TestProblem(unittest.TestCase):
         for p in map(lambda x: x(1, 10), (wmodel, ioh.problem.WModelLeadingOnes, ioh.problem.WModelOneMax)):
             self.assertEqual(p([1] * 10), 10)
 
+
     def test_star_discrepancy(self):
         uniform = ioh.get_problem(30, 4, 2)
         self.assertAlmostEqual(uniform([.9, .5]), 0.25, 3)

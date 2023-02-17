@@ -277,6 +277,29 @@ namespace ioh
          */
         inline OnImprovement on_improvement; // Uncomment if one want a library.
 
+        //! Trigger when there is constraint violation
+        struct OnViolation: logger::Trigger {
+            //! Track the number of violations
+            int violations{};
+
+            //! Call interface
+            bool operator()(const logger::Info &log_info, const problem::MetaData&) override
+            {
+                bool violation = log_info.violations[0] != 0.;
+                IOH_DBG(debug, "trigger OnViolation called: " << violation);
+                violations += violation;
+                return violation;
+            }
+
+            //! Reset the violations counter
+            void reset() override {
+                violations = 0;
+            }
+        };
+
+        //! Log when there are violations
+        inline OnViolation on_violation;
+
         /** A trigger that fire at a regular interval.
          *
          * @ingroup Triggering

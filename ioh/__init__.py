@@ -10,6 +10,10 @@ import typing
 import shutil
 import copy
 import json
+
+import urllib.request
+import tarfile
+
  
 from .iohcpp import (
     problem,
@@ -34,6 +38,44 @@ from .iohcpp import (
 ProblemInstanceType = typing.Union[problem.RealSingleObjective, problem.IntegerSingleObjective]
 VariableType = typing.Union[int, float]
 ObjectiveType = typing.List[VariableType]
+
+
+def download_static_folder(warn = True):
+    '''Download static files from github. 
+
+    Required for Graph problems to be instantiated properly
+    '''
+
+    target = os.path.realpath("IOHexperimenter")
+    branch = "master"
+
+    if os.path.isdir(target) and warn:
+        warnings.warn(f"Attempting to download static folder but path {target} already exists. Skipping...")
+        return 
+    
+    os.makedirs(target)
+    github_static_folder = f"https://github.com/IOHprofiler/IOHexperimenter/blob/{branch}/static.tar.gz?raw=true" 
+
+    with urllib.request.urlopen(github_static_folder) as f:
+        thetarfile = tarfile.open(fileobj=f, mode="r|gz")
+        thetarfile.extractall(target)
+
+
+def load_graph_problems():
+    '''Helper to load Graph problems. '''
+
+    download_static_folder(False)
+
+    for problem_type in (
+        problem.MaxCut,
+        problem.MaxCoverage,
+        problem.MaxInfluence,
+        problem.PackWhileTravel
+    ):
+        problem_type.load_instances()
+
+    assert any(problem.GraphProblem.problems), "loading the graph files failed"
+
 
 class ProblemType(enum.Enum):
     """Enum for different problem types, values are class names"""
@@ -63,6 +105,8 @@ class ProblemType(enum.Enum):
     def problems(self):
         base_problem = getattr(problem, self.value)
         if base_problem:
+            if self is ProblemType.GRAPH and not any(base_problem.problems):
+                load_graph_problems()
             return base_problem.problems
 
 
@@ -110,6 +154,9 @@ def get_problem(
             raise ValueError(
                 f"{fid} is not registered for problem type: {problem_type}"
             )
+    
+        if problem_type is ProblemType.GRAPH and not any(base_problem.problems):
+            load_graph_problems()
         return base_problem.create(fid, instance, dimension)
 
     raise ValueError(f"Problem type {problem_type} is not supported")
