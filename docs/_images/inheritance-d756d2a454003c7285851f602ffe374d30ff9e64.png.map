@@ -1,0 +1,9 @@
+<map id="inheritance4c3307ecc3" name="inheritance4c3307ecc3">
+<area shape="rect" id="node1" href="../api/ioh.iohcpp.logger.trigger.Always.html#ioh.iohcpp.logger.trigger.Always" target="_top" title="Trigger that always evaluates to true" alt="" coords="331,5,403,31"/>
+<area shape="rect" id="node2" href="../api/ioh.iohcpp.logger.trigger.Trigger.html#ioh.iohcpp.logger.trigger.Trigger" target="_top" title="Base class for all Triggers" alt="" coords="183,129,255,155"/>
+<area shape="rect" id="node3" href="../api/ioh.iohcpp.logger.trigger.At.html#ioh.iohcpp.logger.trigger.At" target="_top" title="At" alt="" coords="331,55,403,80"/>
+<area shape="rect" id="node4" href="../api/ioh.iohcpp.logger.trigger.During.html#ioh.iohcpp.logger.trigger.During" target="_top" title="During" alt="" coords="331,104,403,129"/>
+<area shape="rect" id="node5" href="../api/ioh.iohcpp.logger.trigger.Each.html#ioh.iohcpp.logger.trigger.Each" target="_top" title="Each" alt="" coords="331,153,403,179"/>
+<area shape="rect" id="node6" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html#ioh.iohcpp.logger.trigger.OnImprovement" target="_top" title="Trigger that evaluates to true when improvement of the objective function is observed" alt="" coords="303,203,431,228"/>
+<area shape="rect" id="node7" href="../api/ioh.iohcpp.logger.trigger.OnViolation.html#ioh.iohcpp.logger.trigger.OnViolation" target="_top" title="Trigger that evaluates to true when there is a contraint violation" alt="" coords="317,252,416,277"/>
+</map>

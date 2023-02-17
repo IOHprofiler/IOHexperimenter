@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Combine" href="ioh.iohcpp.logger.Combine.html" /><link rel="prev" title="AbstractLogger" href="ioh.iohcpp.logger.AbstractLogger.html" />
 
     <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
-        <title>Analyzer - IOHExperimenter 0.3.6 documentation</title>
+        <title>Analyzer - IOHExperimenter 0.3.8 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -124,7 +124,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.6 documentation</div></a>
+      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.8 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -147,7 +147,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../contents.html">
   
   
-  <span class="sidebar-brand-text">IOHExperimenter 0.3.6 documentation</span>
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.8 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -366,6 +366,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.trigger.During.html">During</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.trigger.Each.html">Each</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.trigger.OnImprovement.html">OnImprovement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.trigger.OnViolation.html">OnViolation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.trigger.Trigger.html">Trigger</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.property.AbstractProperty.html">AbstractProperty</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.property.CurrentBestY.html">CurrentBestY</a></li>
@@ -447,7 +448,7 @@
 <h1>Analyzer<a class="headerlink" href="#analyzer" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ioh.iohcpp.logger.Analyzer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ioh.iohcpp.logger.</span></span><span class="sig-name descname"><span class="pre">Analyzer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self:</span> <span class="pre">ioh.iohcpp.logger.Analyzer,</span> <span class="pre">triggers:</span> <span class="pre">List[ioh.iohcpp.logger.trigger.Trigger]</span> <span class="pre">=</span> <span class="pre">[&lt;ioh.iohcpp.logger.trigger.OnImprovement</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f3078eecab0&gt;],</span> <span class="pre">additional_properties:</span> <span class="pre">List[ioh.iohcpp.logger.property.AbstractProperty]</span> <span class="pre">=</span> <span class="pre">[],</span> <span class="pre">root:</span> <span class="pre">ioh.iohcpp.logger.Path</span> <span class="pre">=</span> <span class="pre">&lt;ioh.iohcpp.logger.Path</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f3079012cb0&gt;,</span> <span class="pre">folder_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'ioh_data',</span> <span class="pre">algorithm_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'algorithm_name',</span> <span class="pre">algorithm_info:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'algorithm_info',</span> <span class="pre">store_positions:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.logger.Analyzer" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ioh.iohcpp.logger.</span></span><span class="sig-name descname"><span class="pre">Analyzer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self:</span> <span class="pre">ioh.iohcpp.logger.Analyzer,</span> <span class="pre">triggers:</span> <span class="pre">List[ioh.iohcpp.logger.trigger.Trigger]</span> <span class="pre">=</span> <span class="pre">[&lt;ioh.iohcpp.logger.trigger.OnImprovement</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0cdbbb40f0&gt;],</span> <span class="pre">additional_properties:</span> <span class="pre">List[ioh.iohcpp.logger.property.AbstractProperty]</span> <span class="pre">=</span> <span class="pre">[],</span> <span class="pre">root:</span> <span class="pre">ioh.iohcpp.logger.Path</span> <span class="pre">=</span> <span class="pre">&lt;ioh.iohcpp.logger.Path</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0cdbbb4730&gt;,</span> <span class="pre">folder_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'ioh_data',</span> <span class="pre">algorithm_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'algorithm_name',</span> <span class="pre">algorithm_info:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'algorithm_info',</span> <span class="pre">store_positions:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.logger.Analyzer" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ioh.iohcpp.logger.AbstractLogger.html#ioh.iohcpp.logger.AbstractLogger" title="ioh.iohcpp.logger.AbstractLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLogger</span></code></a></p>
 <p>A logger which stores all tracked properties to a file.</p>
 <dl class="field-list simple">
@@ -483,31 +484,34 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.add_experiment_attribute" title="ioh.iohcpp.logger.Analyzer.add_experiment_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_experiment_attribute</span></code></a>(self, arg0, arg1)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.add_run_attributes" title="ioh.iohcpp.logger.Analyzer.add_run_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_run_attributes</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.add_run_attribute" title="ioh.iohcpp.logger.Analyzer.add_run_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_run_attribute</span></code></a>(*args, **kwargs)</p></td>
 <td><p>Overloaded function.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.add_trigger" title="ioh.iohcpp.logger.Analyzer.add_trigger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_trigger</span></code></a>(self, arg0)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.add_run_attributes" title="ioh.iohcpp.logger.Analyzer.add_run_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_run_attributes</span></code></a>(self, arg0, arg1)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.add_trigger" title="ioh.iohcpp.logger.Analyzer.add_trigger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_trigger</span></code></a>(self, arg0)</p></td>
 <td><p>Add a trigger to the logger</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.call" title="ioh.iohcpp.logger.Analyzer.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a>(self, arg0)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.call" title="ioh.iohcpp.logger.Analyzer.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a>(self, arg0)</p></td>
 <td><p>Performs logging behaviour</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.close" title="ioh.iohcpp.logger.Analyzer.close"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code></a>(self)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.close" title="ioh.iohcpp.logger.Analyzer.close"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code></a>(self)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.reset" title="ioh.iohcpp.logger.Analyzer.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>(self)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.reset" title="ioh.iohcpp.logger.Analyzer.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>(self)</p></td>
 <td><p>Reset the state of the logger</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.set_experiment_attributes" title="ioh.iohcpp.logger.Analyzer.set_experiment_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_experiment_attributes</span></code></a>(self, arg0)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.set_experiment_attributes" title="ioh.iohcpp.logger.Analyzer.set_experiment_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_experiment_attributes</span></code></a>(self, arg0)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.set_run_attribute" title="ioh.iohcpp.logger.Analyzer.set_run_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_run_attribute</span></code></a>(self, arg0, arg1)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.set_run_attribute" title="ioh.iohcpp.logger.Analyzer.set_run_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_run_attribute</span></code></a>(self, arg0, arg1)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.set_run_attributes" title="ioh.iohcpp.logger.Analyzer.set_run_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_run_attributes</span></code></a>(self, arg0)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.set_run_attributes" title="ioh.iohcpp.logger.Analyzer.set_run_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_run_attributes</span></code></a>(self, arg0)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.watch" title="ioh.iohcpp.logger.Analyzer.watch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">watch</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer.watch" title="ioh.iohcpp.logger.Analyzer.watch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">watch</span></code></a>(*args, **kwargs)</p></td>
 <td><p>Overloaded function.</p></td>
 </tr>
 </tbody>
@@ -532,15 +536,19 @@
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ioh.iohcpp.logger.Analyzer.add_run_attributes">
-<span class="sig-name descname"><span class="pre">add_run_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.logger.Analyzer.add_run_attributes" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ioh.iohcpp.logger.Analyzer.add_run_attribute">
+<span class="sig-name descname"><span class="pre">add_run_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.logger.Analyzer.add_run_attribute" title="Permalink to this definition">#</a></dt>
 <dd><p>Overloaded function.</p>
 <ol class="arabic simple">
-<li><p>add_run_attributes(self: ioh.iohcpp.logger.Analyzer, arg0: str, arg1: float) -&gt; None</p></li>
-<li><p>add_run_attributes(self: ioh.iohcpp.logger.Analyzer, arg0: object, arg1: str) -&gt; None</p></li>
-<li><p>add_run_attributes(self: ioh.iohcpp.logger.Analyzer, arg0: object, arg1: List[str]) -&gt; None</p></li>
+<li><p>add_run_attribute(self: ioh.iohcpp.logger.Analyzer, arg0: str, arg1: float) -&gt; None</p></li>
+<li><p>add_run_attribute(self: ioh.iohcpp.logger.Analyzer, arg0: object, arg1: str) -&gt; None</p></li>
 </ol>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ioh.iohcpp.logger.Analyzer.add_run_attributes">
+<span class="sig-name descname"><span class="pre">add_run_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ioh.iohcpp.logger.Analyzer" title="ioh.iohcpp.logger.Analyzer"><span class="pre">ioh.iohcpp.logger.Analyzer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ioh.iohcpp.logger.Analyzer.add_run_attributes" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ioh.iohcpp.logger.Analyzer.add_trigger">

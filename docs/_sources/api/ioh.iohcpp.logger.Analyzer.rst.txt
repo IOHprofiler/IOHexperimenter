@@ -18,6 +18,7 @@ Analyzer
    .. autosummary::
 
       ~Analyzer.add_experiment_attribute
+      ~Analyzer.add_run_attribute
       ~Analyzer.add_run_attributes
       ~Analyzer.add_trigger
       ~Analyzer.call
@@ -36,6 +37,7 @@ Analyzer
    .. rubric:: Methods Documentation
 
    .. automethod:: add_experiment_attribute
+   .. automethod:: add_run_attribute
    .. automethod:: add_run_attributes
    .. automethod:: add_trigger
    .. automethod:: call

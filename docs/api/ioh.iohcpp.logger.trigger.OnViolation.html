@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="IntegerConstraintSet" href="ioh.iohcpp.IntegerConstraintSet.html" /><link rel="prev" title="IntegerBounds" href="ioh.iohcpp.IntegerBounds.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Trigger" href="ioh.iohcpp.logger.trigger.Trigger.html" /><link rel="prev" title="OnImprovement" href="ioh.iohcpp.logger.trigger.OnImprovement.html" />
 
     <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
-        <title>IntegerConstraint - IOHExperimenter 0.3.8 documentation</title>
+        <title>OnViolation - IOHExperimenter 0.3.8 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -220,12 +220,12 @@
 <li class="toctree-l3"><a class="reference internal" href="ioh.Experiment.html">Experiment</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current has-children"><a class="reference internal" href="../python/structures.html">Structures</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.AbstractIntegerConstraint.html">AbstractIntegerConstraint</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.AbstractRealConstraint.html">AbstractRealConstraint</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.ConstraintEnforcement.html">ConstraintEnforcement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.IntegerBounds.html">IntegerBounds</a></li>
-<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">IntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.IntegerConstraint.html">IntegerConstraint</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.IntegerConstraintSet.html">IntegerConstraintSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.IntegerSolution.html">IntegerSolution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.IntegerState.html">IntegerState</a></li>
@@ -360,13 +360,13 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../python/logger.html">Logging</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="../python/logger.html">Logging</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.trigger.Always.html">Always</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.trigger.At.html">At</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.trigger.During.html">During</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.trigger.Each.html">Each</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.trigger.OnImprovement.html">OnImprovement</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.trigger.OnViolation.html">OnViolation</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">OnViolation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.trigger.Trigger.html">Trigger</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.property.AbstractProperty.html">AbstractProperty</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ioh.iohcpp.logger.property.CurrentBestY.html">CurrentBestY</a></li>
@@ -444,23 +444,18 @@
           </label>
         </div>
         <article role="main">
-          <section id="integerconstraint">
-<h1>IntegerConstraint<a class="headerlink" href="#integerconstraint" title="Permalink to this heading">#</a></h1>
+          <section id="onviolation">
+<h1>OnViolation<a class="headerlink" href="#onviolation" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="ioh.iohcpp.IntegerConstraint">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ioh.iohcpp.</span></span><span class="sig-name descname"><span class="pre">IntegerConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self:</span> <span class="pre">ioh.iohcpp.IntegerConstraint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn:</span> <span class="pre">handle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enforced:</span> <span class="pre">ioh.iohcpp.ConstraintEnforcement</span> <span class="pre">=</span> <span class="pre">&lt;ConstraintEnforcement.SOFT:</span> <span class="pre">2&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.IntegerConstraint" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ioh.iohcpp.AbstractIntegerConstraint.html#ioh.iohcpp.AbstractIntegerConstraint" title="ioh.iohcpp.AbstractIntegerConstraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractIntegerConstraint</span></code></a></p>
+<dt class="sig sig-object py" id="ioh.iohcpp.logger.trigger.OnViolation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ioh.iohcpp.logger.trigger.</span></span><span class="sig-name descname"><span class="pre">OnViolation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ioh.iohcpp.logger.trigger.OnViolation" title="ioh.iohcpp.logger.trigger.OnViolation"><span class="pre">ioh.iohcpp.logger.trigger.OnViolation</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.logger.trigger.OnViolation" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ioh.iohcpp.logger.trigger.Trigger.html#ioh.iohcpp.logger.trigger.Trigger" title="ioh.iohcpp.logger.trigger.Trigger"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trigger</span></code></a></p>
+<p>Trigger that evaluates to true when there is a contraint violation</p>
 <p class="rubric">Attributes Summary</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.IntegerConstraint.enforced" title="ioh.iohcpp.IntegerConstraint.enforced"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enforced</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.IntegerConstraint.exponent" title="ioh.iohcpp.IntegerConstraint.exponent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exponent</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.IntegerConstraint.weight" title="ioh.iohcpp.IntegerConstraint.weight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weight</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.trigger.OnViolation.violations" title="ioh.iohcpp.logger.trigger.OnViolation.violations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">violations</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -470,22 +465,10 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.IntegerConstraint.__call__" title="ioh.iohcpp.IntegerConstraint.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a>(self, arg0, arg1)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.trigger.OnViolation.__call__" title="ioh.iohcpp.logger.trigger.OnViolation.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a>(self, arg0, arg1)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.IntegerConstraint.compute_violation" title="ioh.iohcpp.IntegerConstraint.compute_violation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_violation</span></code></a>(self, arg0)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.IntegerConstraint.is_feasible" title="ioh.iohcpp.IntegerConstraint.is_feasible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_feasible</span></code></a>(self, arg0)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.IntegerConstraint.penalize" title="ioh.iohcpp.IntegerConstraint.penalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">penalize</span></code></a>(self, arg0)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.IntegerConstraint.penalty" title="ioh.iohcpp.IntegerConstraint.penalty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">penalty</span></code></a>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.IntegerConstraint.violation" title="ioh.iohcpp.IntegerConstraint.violation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">violation</span></code></a>(self)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.logger.trigger.OnViolation.reset" title="ioh.iohcpp.logger.trigger.OnViolation.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>(self)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -493,49 +476,19 @@
 </div>
 <p class="rubric">Attributes Documentation</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="ioh.iohcpp.IntegerConstraint.enforced">
-<span class="sig-name descname"><span class="pre">enforced</span></span><a class="headerlink" href="#ioh.iohcpp.IntegerConstraint.enforced" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ioh.iohcpp.IntegerConstraint.exponent">
-<span class="sig-name descname"><span class="pre">exponent</span></span><a class="headerlink" href="#ioh.iohcpp.IntegerConstraint.exponent" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ioh.iohcpp.IntegerConstraint.weight">
-<span class="sig-name descname"><span class="pre">weight</span></span><a class="headerlink" href="#ioh.iohcpp.IntegerConstraint.weight" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ioh.iohcpp.logger.trigger.OnViolation.violations">
+<span class="sig-name descname"><span class="pre">violations</span></span><a class="headerlink" href="#ioh.iohcpp.logger.trigger.OnViolation.violations" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods Documentation</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="ioh.iohcpp.IntegerConstraint.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ioh.iohcpp.AbstractIntegerConstraint.html#ioh.iohcpp.AbstractIntegerConstraint" title="ioh.iohcpp.AbstractIntegerConstraint"><span class="pre">ioh.iohcpp.AbstractIntegerConstraint</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#ioh.iohcpp.IntegerConstraint.__call__" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ioh.iohcpp.logger.trigger.OnViolation.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ioh.iohcpp.logger.trigger.Trigger.html#ioh.iohcpp.logger.trigger.Trigger" title="ioh.iohcpp.logger.trigger.Trigger"><span class="pre">ioh.iohcpp.logger.trigger.Trigger</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ioh.iohcpp.LogInfo.html#ioh.iohcpp.LogInfo" title="ioh.iohcpp.LogInfo"><span class="pre">ioh.iohcpp.LogInfo</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ioh.iohcpp.MetaData.html#ioh.iohcpp.MetaData" title="ioh.iohcpp.MetaData"><span class="pre">ioh.iohcpp.MetaData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ioh.iohcpp.logger.trigger.OnViolation.__call__" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ioh.iohcpp.IntegerConstraint.compute_violation">
-<span class="sig-name descname"><span class="pre">compute_violation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ioh.iohcpp.AbstractIntegerConstraint.html#ioh.iohcpp.AbstractIntegerConstraint" title="ioh.iohcpp.AbstractIntegerConstraint"><span class="pre">ioh.iohcpp.AbstractIntegerConstraint</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ioh.iohcpp.IntegerConstraint.compute_violation" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ioh.iohcpp.IntegerConstraint.is_feasible">
-<span class="sig-name descname"><span class="pre">is_feasible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ioh.iohcpp.AbstractIntegerConstraint.html#ioh.iohcpp.AbstractIntegerConstraint" title="ioh.iohcpp.AbstractIntegerConstraint"><span class="pre">ioh.iohcpp.AbstractIntegerConstraint</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#ioh.iohcpp.IntegerConstraint.is_feasible" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ioh.iohcpp.IntegerConstraint.penalize">
-<span class="sig-name descname"><span class="pre">penalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ioh.iohcpp.AbstractIntegerConstraint.html#ioh.iohcpp.AbstractIntegerConstraint" title="ioh.iohcpp.AbstractIntegerConstraint"><span class="pre">ioh.iohcpp.AbstractIntegerConstraint</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#ioh.iohcpp.IntegerConstraint.penalize" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ioh.iohcpp.IntegerConstraint.penalty">
-<span class="sig-name descname"><span class="pre">penalty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ioh.iohcpp.AbstractIntegerConstraint.html#ioh.iohcpp.AbstractIntegerConstraint" title="ioh.iohcpp.AbstractIntegerConstraint"><span class="pre">ioh.iohcpp.AbstractIntegerConstraint</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#ioh.iohcpp.IntegerConstraint.penalty" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ioh.iohcpp.IntegerConstraint.violation">
-<span class="sig-name descname"><span class="pre">violation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ioh.iohcpp.AbstractIntegerConstraint.html#ioh.iohcpp.AbstractIntegerConstraint" title="ioh.iohcpp.AbstractIntegerConstraint"><span class="pre">ioh.iohcpp.AbstractIntegerConstraint</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#ioh.iohcpp.IntegerConstraint.violation" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ioh.iohcpp.logger.trigger.OnViolation.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ioh.iohcpp.logger.trigger.Trigger.html#ioh.iohcpp.logger.trigger.Trigger" title="ioh.iohcpp.logger.trigger.Trigger"><span class="pre">ioh.iohcpp.logger.trigger.Trigger</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ioh.iohcpp.logger.trigger.OnViolation.reset" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -547,23 +500,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="ioh.iohcpp.IntegerConstraintSet.html">
+          <a class="next-page" href="ioh.iohcpp.logger.trigger.Trigger.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">IntegerConstraintSet</div>
+                <div class="title">Trigger</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="ioh.iohcpp.IntegerBounds.html">
+          <a class="prev-page" href="ioh.iohcpp.logger.trigger.OnImprovement.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">IntegerBounds</div>
+                <div class="title">OnImprovement</div>
                 
               </div>
             </a>

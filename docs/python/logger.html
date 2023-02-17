@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Always" href="../api/ioh.iohcpp.logger.trigger.Always.html" /><link rel="prev" title="WModelOneMax" href="../api/ioh.iohcpp.problem.WModelOneMax.html" />
 
     <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
-        <title>Logging - IOHExperimenter 0.3.6 documentation</title>
+        <title>Logging - IOHExperimenter 0.3.8 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -124,7 +124,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.6 documentation</div></a>
+      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.8 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -147,7 +147,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../contents.html">
   
   
-  <span class="sidebar-brand-text">IOHExperimenter 0.3.6 documentation</span>
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.8 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -366,6 +366,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.During.html">During</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Each.html">Each</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html">OnImprovement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnViolation.html">OnViolation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Trigger.html">Trigger</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html">AbstractProperty</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentBestY.html">CurrentBestY</a></li>
@@ -470,7 +471,10 @@ a trigger evaluates to true, the logger logs data.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html#ioh.iohcpp.logger.trigger.OnImprovement" title="ioh.iohcpp.logger.trigger.OnImprovement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnImprovement</span></code></a>(self)</p></td>
 <td><p>Trigger that evaluates to true when improvement of the objective function is observed</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Trigger.html#ioh.iohcpp.logger.trigger.Trigger" title="ioh.iohcpp.logger.trigger.Trigger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trigger</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnViolation.html#ioh.iohcpp.logger.trigger.OnViolation" title="ioh.iohcpp.logger.trigger.OnViolation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnViolation</span></code></a>(self)</p></td>
+<td><p>Trigger that evaluates to true when there is a contraint violation</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Trigger.html#ioh.iohcpp.logger.trigger.Trigger" title="ioh.iohcpp.logger.trigger.Trigger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trigger</span></code></a></p></td>
 <td><p>Base class for all Triggers</p></td>
 </tr>
 </tbody>
@@ -479,14 +483,15 @@ a trigger evaluates to true, the logger logs data.</p>
 </section>
 <section id="class-inheritance-diagram">
 <h3>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this heading">#</a></h3>
-<div class="graphviz"><img src="../_images/inheritance-9c46d90eb86ee587a6b3944627fff593c6d5147c.png" alt="Inheritance diagram of ioh.iohcpp.logger.trigger.Always, ioh.iohcpp.logger.trigger.At, ioh.iohcpp.logger.trigger.During, ioh.iohcpp.logger.trigger.Each, ioh.iohcpp.logger.trigger.OnImprovement, ioh.iohcpp.logger.trigger.Trigger" usemap="#inheritance8fefb89218" class="inheritance graphviz" /></div>
-<map id="inheritance8fefb89218" name="inheritance8fefb89218">
+<div class="graphviz"><img src="../_images/inheritance-d756d2a454003c7285851f602ffe374d30ff9e64.png" alt="Inheritance diagram of ioh.iohcpp.logger.trigger.Always, ioh.iohcpp.logger.trigger.At, ioh.iohcpp.logger.trigger.During, ioh.iohcpp.logger.trigger.Each, ioh.iohcpp.logger.trigger.OnImprovement, ioh.iohcpp.logger.trigger.OnViolation, ioh.iohcpp.logger.trigger.Trigger" usemap="#inheritance4c3307ecc3" class="inheritance graphviz" /></div>
+<map id="inheritance4c3307ecc3" name="inheritance4c3307ecc3">
 <area shape="rect" id="node1" href="../api/ioh.iohcpp.logger.trigger.Always.html#ioh.iohcpp.logger.trigger.Always" target="_top" title="Trigger that always evaluates to true" alt="" coords="331,5,403,31"/>
-<area shape="rect" id="node2" href="../api/ioh.iohcpp.logger.trigger.Trigger.html#ioh.iohcpp.logger.trigger.Trigger" target="_top" title="Base class for all Triggers" alt="" coords="183,104,255,129"/>
+<area shape="rect" id="node2" href="../api/ioh.iohcpp.logger.trigger.Trigger.html#ioh.iohcpp.logger.trigger.Trigger" target="_top" title="Base class for all Triggers" alt="" coords="183,129,255,155"/>
 <area shape="rect" id="node3" href="../api/ioh.iohcpp.logger.trigger.At.html#ioh.iohcpp.logger.trigger.At" target="_top" title="At" alt="" coords="331,55,403,80"/>
 <area shape="rect" id="node4" href="../api/ioh.iohcpp.logger.trigger.During.html#ioh.iohcpp.logger.trigger.During" target="_top" title="During" alt="" coords="331,104,403,129"/>
 <area shape="rect" id="node5" href="../api/ioh.iohcpp.logger.trigger.Each.html#ioh.iohcpp.logger.trigger.Each" target="_top" title="Each" alt="" coords="331,153,403,179"/>
 <area shape="rect" id="node6" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html#ioh.iohcpp.logger.trigger.OnImprovement" target="_top" title="Trigger that evaluates to true when improvement of the objective function is observed" alt="" coords="303,203,431,228"/>
+<area shape="rect" id="node7" href="../api/ioh.iohcpp.logger.trigger.OnViolation.html#ioh.iohcpp.logger.trigger.OnViolation" target="_top" title="Trigger that evaluates to true when there is a contraint violation" alt="" coords="317,252,416,277"/>
 </map></section>
 </section>
 <section id="properties">

@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 import unittest
 
 class TestProblem(unittest.TestCase):
@@ -14,12 +15,13 @@ class TestProblem(unittest.TestCase):
         os.chdir(self.cwd)
         return super().tearDown()
 
+    @unittest.skipUnless(sys.platform != "win32")
     def test_downloader(self):
         self.assertFalse(os.path.isdir(self.folder))
         os.chdir("/tmp")
         import ioh
         self.assertTrue(any(ioh.ProblemType.GRAPH.problems))
-                
+
 
 if __name__ == "__main__":
     unittest.main()
