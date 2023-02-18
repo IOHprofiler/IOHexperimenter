@@ -54,7 +54,8 @@ If you have any questions, comments or suggestions, please don't hesitate contac
 
 When using IOHprofiler and parts thereof, please kindly cite this work as
 
-Carola Doerr, Hao Wang, Furong Ye, Sander van Rijn, Thomas Bäck: *IOHprofiler: A Benchmarking and Profiling Tool for Iterative Optimization Heuristics*, arXiv e-prints:1810.05281, 2018.
+Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck,
+*IOHexperimenter: Benchmarking Platform for Iterative Optimization Heuristics*, arXiv e-prints:2111.04077, 2021.
 
 ```bibtex
 @ARTICLE{IOHexperimenter,
