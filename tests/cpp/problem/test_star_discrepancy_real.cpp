@@ -52,7 +52,7 @@ TEST_F(BaseTest, test_real_star_discrepancy_halton)
 
 TEST_F(BaseTest, test_real_star_suite){
     using namespace ioh::suite;
-    StarDiscrepancy suite;
+    RealStarDiscrepancy suite;
     EXPECT_EQ(suite.size(), 30);
 
     for (auto&problem: suite){
