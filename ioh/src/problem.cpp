@@ -1023,21 +1023,25 @@ void define_submodular_problems(py::module &m)
 
 
     py::class_<MaxCut, GraphProblem, std::shared_ptr<MaxCut>>(m, "MaxCut", py::is_final(), "MaxCut function")
-        .def_static("load_instances", &GraphProblemType<MaxCut>::load_graph_instances<int, int>, py::arg("path") = std::nullopt);
+        .def_static("load_instances", &GraphProblemType<MaxCut>::load_graph_instances<int, int>,
+                    py::arg("path") = std::nullopt);
 
     // Don't allow these object to be created in from constructors in python
     py::class_<MaxCoverage, GraphProblem, std::shared_ptr<MaxCoverage>>(m, "MaxCoverage", py::is_final(),
                                                                         "MaxCoverage function")
-        .def_static("load_instances", &GraphProblemType<MaxCoverage>::load_graph_instances<int, int>, py::arg("path") = std::nullopt);
+        .def_static("load_instances", &GraphProblemType<MaxCoverage>::load_graph_instances<int, int>,
+                    py::arg("path") = std::nullopt);
 
 
     py::class_<MaxInfluence, GraphProblem, std::shared_ptr<MaxInfluence>>(m, "MaxInfluence", py::is_final(),
                                                                           "MaxInfluence function")
-        .def_static("load_instances", &GraphProblemType<MaxInfluence>::load_graph_instances<int, int>, py::arg("path") = std::nullopt);
+        .def_static("load_instances", &GraphProblemType<MaxInfluence>::load_graph_instances<int, int>,
+                    py::arg("path") = std::nullopt);
 
     py::class_<PackWhileTravel, GraphProblem, std::shared_ptr<PackWhileTravel>>(m, "PackWhileTravel", py::is_final(),
                                                                                 "PackWhileTravel function")
-        .def_static("load_instances", &GraphProblemType<PackWhileTravel>::load_graph_instances<int, int>, py::arg("path") = std::nullopt);
+        .def_static("load_instances", &GraphProblemType<PackWhileTravel>::load_graph_instances<int, int>,
+                    py::arg("path") = std::nullopt);
 }
 
 enum class SamplerType
@@ -1047,45 +1051,38 @@ enum class SamplerType
     HALTON
 };
 
-ioh::problem::star_discrepancy::real::StarDiscrepancy
-star_discrepancy_init(const int instance, const int n_variables, const int n_samples, const SamplerType sampler_type)
+template <typename T>
+T star_discrepancy_init(const int instance, const int n_variables, const int n_samples, const SamplerType sampler_type)
 {
-    using namespace ioh::problem::star_discrepancy::real;
     using namespace ioh::common::random::sampler;
 
     std::vector<std::vector<double>> grid;
     switch (sampler_type)
     {
     case SamplerType::UNIFORM:
-        grid = StarDiscrepancy::generate_grid<Uniform<double>>(instance, n_variables, n_samples);
+        grid = star_discrepancy::generate_grid<Uniform<double>>(instance, n_variables, n_samples);
         break;
     case SamplerType::HALTON:
-        grid = StarDiscrepancy::generate_grid<Halton>(instance, n_variables, n_samples);
+        grid = star_discrepancy::generate_grid<Halton>(instance, n_variables, n_samples);
         break;
     default:
     case SamplerType::SOBOL:
-        grid = StarDiscrepancy::generate_grid<Sobol>(instance, n_variables, n_samples);
+        grid = star_discrepancy::generate_grid<Sobol>(instance, n_variables, n_samples);
     }
-    return StarDiscrepancy(0, instance, n_variables, "StarDiscrepancy", grid);
+    const std::string py_name =
+        std::is_base_of_v<ioh::problem::RealSingleObjective, T> ? "RealStarDiscrepancy" : "IntegerStarDiscrepancy";
+    return T(0, instance, n_variables, py_name, grid);
 }
 
-void define_star_discrepancy_problems(py::module &m)
+
+template <typename T, typename P>
+void define_star_discrepancy_problem(py::module &m, const std::string &name)
 {
-    using namespace ioh::problem::star_discrepancy::real;
-    using namespace ioh::common::random::sampler;
-
-    py::enum_<SamplerType>(m, "StarDiscrepancySampler")
-        .value("UNIFORM", SamplerType::UNIFORM)
-        .value("HALTON", SamplerType::HALTON)
-        .value("SOBOL", SamplerType::SOBOL)
-        .export_values();
-
-
-    py::class_<StarDiscrepancy, RealSingleObjective, std::shared_ptr<StarDiscrepancy>>(m, "StarDiscrepancy")
-        .def(py::init(&star_discrepancy_init), py::arg("instance") = 1, py::arg("n_variables") = 5,
+    py::class_<T, P, std::shared_ptr<T>>(m, name.c_str())
+        .def(py::init(&star_discrepancy_init<T>), py::arg("instance") = 1, py::arg("n_variables") = 5,
              py::arg("n_samples") = 5, py::arg("sampler_type") = SamplerType::UNIFORM)
         .def_property_readonly("grid",
-                               [](const StarDiscrepancy &self) {
+                               [](const T &self) {
                                    const auto grid = self.get_grid();
                                    const auto n = grid.size(), m = grid[0].size();
 
@@ -1102,7 +1099,7 @@ void define_star_discrepancy_problems(py::module &m)
         .def_static(
             "create",
             [](const std::string &name, int iid, int dim) {
-                return ioh::common::Factory<StarDiscrepancy, int, int>::instance().create(name, iid, dim);
+                return ioh::common::Factory<T, int, int>::instance().create(name, iid, dim);
             },
             py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
             R"pbdoc(
@@ -1120,9 +1117,7 @@ void define_star_discrepancy_problems(py::module &m)
 
         .def_static(
             "create",
-            [](int id, int iid, int dim) {
-                return ioh::common::Factory<StarDiscrepancy, int, int>::instance().create(id, iid, dim);
-            },
+            [](int id, int iid, int dim) { return ioh::common::Factory<T, int, int>::instance().create(id, iid, dim); },
             py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
             R"pbdoc(
                 Create a problem instance
@@ -1137,9 +1132,25 @@ void define_star_discrepancy_problems(py::module &m)
                         the dimensionality of the search space
             )pbdoc")
         .def_property_readonly_static(
-            "problems", [](py::object) { return ioh::common::Factory<StarDiscrepancy, int, int>::instance().map(); },
+            "problems", [](py::object) { return ioh::common::Factory<T, int, int>::instance().map(); },
             "All registered problems");
     ;
+}
+
+
+void define_star_discrepancy_problems(py::module &m)
+{
+    using namespace ioh::problem::star_discrepancy;
+    using namespace ioh::common::random::sampler;
+
+    py::enum_<SamplerType>(m, "StarDiscrepancySampler")
+        .value("UNIFORM", SamplerType::UNIFORM)
+        .value("HALTON", SamplerType::HALTON)
+        .value("SOBOL", SamplerType::SOBOL)
+        .export_values();
+
+    define_star_discrepancy_problem<real::StarDiscrepancy, RealSingleObjective>(m, "RealStarDiscrepancy");
+    define_star_discrepancy_problem<integer::StarDiscrepancy, IntegerSingleObjective>(m, "IntegerStarDiscrepancy");
 }
 
 void define_problem(py::module &m)

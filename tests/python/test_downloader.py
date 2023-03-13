@@ -20,7 +20,7 @@ class TestProblem(unittest.TestCase):
         self.assertFalse(os.path.isdir(self.folder))
         os.chdir("/tmp")
         import ioh
-        self.assertTrue(any(ioh.ProblemType.GRAPH.problems))
+        self.assertTrue(any(ioh.ProblemClass.GRAPH.problems))
 
 
 if __name__ == "__main__":

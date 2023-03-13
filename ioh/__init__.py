@@ -1,4 +1,4 @@
-"""Python interface of IOH package. Includes several ease-of-use routines not available in C++."""
+'''Python interface of IOH package. Includes several ease-of-use routines not available in C++.'''
 
 import os
 import enum
@@ -35,7 +35,7 @@ from .iohcpp import (
 
 
 
-ProblemInstanceType = typing.Union[problem.RealSingleObjective, problem.IntegerSingleObjective]
+ProblemType = typing.Union[problem.RealSingleObjective, problem.IntegerSingleObjective]
 VariableType = typing.Union[int, float]
 ObjectiveType = typing.List[VariableType]
 
@@ -66,36 +66,37 @@ def load_graph_problems():
 
     download_static_folder(False)
 
-    for problem_type in (
+    for problem_class in (
         problem.MaxCut,
         problem.MaxCoverage,
         problem.MaxInfluence,
         problem.PackWhileTravel
     ):
-        problem_type.load_instances()
+        problem_class.load_instances()
 
     assert any(problem.GraphProblem.problems), "loading the graph files failed"
 
 
-class ProblemType(enum.Enum):
-    """Enum for different problem types, values are class names"""
+class ProblemClass(enum.Enum):
+    '''Enum for different problem types, values are class names'''
 
     REAL = "RealSingleObjective"
     INTEGER = "IntegerSingleObjective"
 
     BBOB = "BBOB"
-    STAR = "StarDiscrepancy"
+    STAR_REAL = "RealStarDiscrepancy"
     SBOX = "SBOX"
 
     PBO = "PBO"
     GRAPH = "GraphProblem"
+    STAR_INTEGER = "IntegerStarDiscrepancy"
 
     def is_real(self):
         return self in (
-                ProblemType.REAL, 
-                ProblemType.BBOB,
-                ProblemType.SBOX,
-                ProblemType.STAR,
+                ProblemClass.REAL, 
+                ProblemClass.BBOB,
+                ProblemClass.SBOX,
+                ProblemClass.STAR_REAL,
                 ) 
     
     def is_single_objective(self):
@@ -105,7 +106,7 @@ class ProblemType(enum.Enum):
     def problems(self):
         base_problem = getattr(problem, self.value)
         if base_problem:
-            if self is ProblemType.GRAPH and not any(base_problem.problems):
+            if self is ProblemClass.GRAPH and not any(base_problem.problems):
                 load_graph_problems()
             return base_problem.problems
 
@@ -114,9 +115,9 @@ def get_problem(
     fid: typing.Union[int, str],
     instance: int = 1,
     dimension: int = 5,
-    problem_type: ProblemType = ProblemType.REAL,
-) -> ProblemInstanceType:
-    """Instantiate a problem based on its function ID, dimension, instance and suite
+    problem_class: ProblemClass = ProblemClass.REAL,
+) -> ProblemType:
+    '''Instantiate a problem based on its function ID, dimension, instance and suite
 
     Parameters
     ----------
@@ -126,15 +127,15 @@ def get_problem(
         The instance ID of the problem
     dimension: int = 5
         The dimension (number of variables) of the problem
-    problem_type: ProblemType = ProblemType.REAL
+    problem_class: ProblemClass = ProblemClass.REAL
         The type of the problem.
 
-    """
-    if not isinstance(problem_type, ProblemType):
-        raise AttributeError(f"problem_type should be of type {ProblemType}")
+    '''
+    if not isinstance(problem_class, ProblemClass):
+        raise AttributeError(f"problem_class should be of type {ProblemClass}")
 
     if ( 
-        not problem_type.is_real()
+        not problem_class.is_real()
         and fid in [21, 23, "IsingTriangular", "NQueens"]
     ):
         if not math.sqrt(dimension).is_integer():
@@ -142,35 +143,35 @@ def get_problem(
                 "For this function, the dimension needs to be a perfect square!"
             )
     if (
-        problem_type.is_real()
+        problem_class.is_real()
         and fid in range(1, 25)
     ):
         if not dimension >= 2:
             raise ValueError("For BBOB functions the minimal dimension is 2")
 
-    base_problem = getattr(problem, problem_type.value)
+    base_problem = getattr(problem, problem_class.value)
     if base_problem:
         if fid not in (base_problem.problems.values() | base_problem.problems.keys()):
             raise ValueError(
-                f"{fid} is not registered for problem type: {problem_type}"
+                f"{fid} is not registered for problem type: {problem_class}"
             )
     
-        if problem_type is ProblemType.GRAPH and not any(base_problem.problems):
+        if problem_class is ProblemClass.GRAPH and not any(base_problem.problems):
             load_graph_problems()
         return base_problem.create(fid, instance, dimension)
 
-    raise ValueError(f"Problem type {problem_type} is not supported")
+    raise ValueError(f"Problem type {problem_class} is not supported")
 
 
 def wrap_problem(
     function: typing.Callable[[ObjectiveType], float],
     name: str = None,
-    problem_type: ProblemType = ProblemType.REAL,
+    problem_class: ProblemClass = ProblemClass.REAL,
     dimension: int = 5,
     instance: int = 1,
     optimization_type: OptimizationType = OptimizationType.MIN,
-    lb: VariableType = None,
-    ub: VariableType = None,
+    lb: VariableType = 0,
+    ub: VariableType = 1,
     transform_variables: typing.Callable[[ObjectiveType, int], ObjectiveType] = None,
     transform_objectives: typing.Callable[[float, int], float] = None,
     calculate_objective: typing.Callable[
@@ -178,8 +179,8 @@ def wrap_problem(
     ] = None,
     constraints: typing.List[typing.Union[IntegerConstraint, RealConstraint]] = None
 
-) -> ProblemInstanceType:
-    """Function to wrap a callable as an ioh function
+) -> ProblemType:
+    '''Function to wrap a callable as an ioh function
 
     Parameters
     ----------
@@ -188,7 +189,7 @@ def wrap_problem(
     name: str = None
         The name of the function. This can be used to create new instances of this function.
         Note, when not using unique names, this will override the previously wrapped functions.
-    problem_type: ProblemType = ProblemType.REAL
+    problem_class: ProblemClass = ProblemClass.REAL
         The type of the problem.
     dimension: int = 5
         The dimension (number of variables) of the problem
@@ -196,12 +197,10 @@ def wrap_problem(
         The instance ID of the problem
     optimization_type: OptimizationType = OptimizationType.MIN
         The type of optimization to do, maximization or minimization
-    lb: [int, float] = None
-        The lower bound of the constraint, should be the same type as problem_type. When left to None, this will set
-        to the lowest possible value for that type.
-    ub: [int, float] = None
-        The upper bound of the constraint, should be the same type as problem_type. When left to None, this will set
-        to the highest possible value for that type.
+    lb: [int, float] = 0
+        The lower bound of the constraint, should be the same type as problem_class. Defaults to 0
+    ub: [int, float] = 1
+        The upper bound of the constraint, should be the same type as problem_class. Defaults to 1
     transform_variables: fn(x: list) -> list = None
         A function to transform the elements of x, prior to calling the function.
     transform_objectives: fn(y: float) -> float = None
@@ -212,19 +211,19 @@ def wrap_problem(
         x and y values for the global optimum. Where x is the search space representation and y the target value.
     constraints: list[IntegerConstraint | RealConstraint] = None
         The constraints applied to the problem
-    """
-    if not isinstance(problem_type, ProblemType):
-        raise AttributeError(f"problem_type should be of type {ProblemType}")
+    '''
+    if not isinstance(problem_class, ProblemClass):
+        raise AttributeError(f"problem_class should be of type {ProblemClass}")
 
     if name is None:
         name = function.__name__
     
-    if not problem_type.is_single_objective():
+    if not problem_class.is_single_objective():
         raise ValueError(
-            f"Problem type {problem_type} is not supported."
+            f"Problem type {problem_class} is not supported."
         )
 
-    wrapper = problem.wrap_real_problem if problem_type.is_real() \
+    wrapper = problem.wrap_real_problem if problem_class.is_real() \
         else problem.wrap_integer_problem 
 
     wrapper(
@@ -238,33 +237,33 @@ def wrap_problem(
         calculate_objective,
         [] if constraints is None else constraints
     )
-    return get_problem(name, instance, dimension, problem_type)
+    return get_problem(name, instance, dimension, problem_class)
 
 
-def get_problem_id(problem_name: str, problem_type: ProblemType) -> int: 
-    """Get the problem id corresponding to a problem name of a given type
+def get_problem_id(problem_name: str, problem_class: ProblemClass) -> int: 
+    '''Get the problem id corresponding to a problem name of a given type
     
     Parameters
     ----------
     problem_name: str
         The name of the problem
-    problem_type: ProblemVariant
+    problem_class: ProblemClass
         The type of the problem
     
     Returns
     -------
     int: the id of the problem
-    """    
-    if not isinstance(problem_type, ProblemType):
-        raise AttributeError(f"problem_type should be of type {ProblemType}")
+    '''    
+    if not isinstance(problem_class, ProblemClass):
+        raise AttributeError(f"problem_class should be of type {ProblemClass}")
 
-    return {v: k for k, v in getattr(problem, problem_type.value).problems.items()}.get(
+    return {v: k for k, v in getattr(problem, problem_class.value).problems.items()}.get(
         problem_name
     )
 
 
 class Experiment:
-    """Class to help easily setup benchmarking experiments. """
+    '''Class to help easily setup benchmarking experiments. '''
 
     def __init__(
         self,
@@ -273,7 +272,7 @@ class Experiment:
         iids: typing.List[int],
         dims: typing.List[int],
         reps: int = 1,
-        problem_type: ProblemType = ProblemType.REAL,
+        problem_class: ProblemClass = ProblemClass.REAL,
         njobs: int = 1,
         logged: bool = True,
         logger_triggers: typing.List[logger.trigger.Trigger] = [
@@ -296,7 +295,7 @@ class Experiment:
         enforce_bounds: bool = False,
         old_logger: bool = True
     ):
-        """
+        '''
         Parameters
         ----------
             algorithm: typing.Any
@@ -311,7 +310,7 @@ class Experiment:
             reps: int = 1,
                 The number of independent repetitions for each problem, instance
                 dimension combination
-            problem_type: ProblemVariant = ProblemVariant.REAL
+            problem_class: ProblemClass = ProblemClass.REAL
                 The type of problems to test.
             njobs: int = 1
                 The number of parallel jobs, -1 assigns all available cpu's,
@@ -360,9 +359,9 @@ class Experiment:
             remove_data: bool = False
                 Whether to remove all the produced data, except for the .zip file
                 (when produced).
-        """
-        if not isinstance(problem_type, ProblemType):
-           raise AttributeError(f"problem_type should be of type {ProblemType}")
+        '''
+        if not isinstance(problem_class, ProblemClass):
+           raise AttributeError(f"problem_class should be of type {ProblemClass}")
 
         self.algorithm = algorithm
         self.logger_root = os.path.realpath(os.path.join(output_directory, folder_name))
@@ -381,7 +380,7 @@ class Experiment:
         self.dims = dims
         self.reps = reps
         self.logged = logged
-        self.problem_type = problem_type
+        self.problem_class = problem_class
         self.njobs = njobs if njobs != -1 else multiprocessing.cpu_count()
         self.experiment_attributes = experiment_attributes
         self.logged_attributes = logged_attributes
@@ -408,7 +407,7 @@ class Experiment:
 
 
     def evaluate(self, ii: int, job: typing.Tuple[int, int, int]):
-        """Evaluate a single function using self.algoritm.
+        '''Evaluate a single function using self.algoritm.
 
         Note that this functions makes a copy of the algorithm for each new problem
         instantiation.
@@ -419,9 +418,9 @@ class Experiment:
             Iterator id
         job[fid: int, iid: int, dim: int]
             The problem id, the instance id and the problem dimension
-        """
+        '''
         algorithm = copy.deepcopy(self.algorithm)
-        p = get_problem(*job, self.problem_type)
+        p = get_problem(*job, self.problem_class)
         if self.logged:
             logger_params = copy.deepcopy(self.logger_params)
             logger_params["folder_name"] += f"-tmp-{ii}"
@@ -439,14 +438,14 @@ class Experiment:
 
         self.apply(algorithm, p)
 
-    def apply(self, algorithm: any, problem: ProblemInstanceType):
-        """Apply a given algorithm to a problem"""
+    def apply(self, algorithm: any, problem: ProblemType):
+        '''Apply a given algorithm to a problem'''
         for _ in range(self.reps):
             algorithm(problem)
             problem.reset()
 
     def add_custom_problem(self, p: callable, name: str = None, **kwargs):
-        """Add a custom problem to the list of functions to be evaluated.
+        '''Add a custom problem to the list of functions to be evaluated.
 
         Parameters
         ---------
@@ -456,19 +455,19 @@ class Experiment:
 
         name: str
             An optional name of the the newly added function.
-        """
+        '''
 
         name = name or "CustomProblem"
 
-        if not self.problem_type.is_real():
+        if not self.problem_class.is_real():
             problem.wrap_integer_problem(p, name, **kwargs)
         else:
             problem.wrap_real_problem(p, name, **kwargs)
 
-        self.fids.append(get_problem_id(name, self.problem_type))
+        self.fids.append(get_problem_id(name, self.problem_class))
 
     def merge_output_to_single_folder(self, prefix: str, target_folder: str):
-        """Merges all ioh data folders into a single folder, having the same folder name prefix
+        '''Merges all ioh data folders into a single folder, having the same folder name prefix
 
         Parameters
         ----------
@@ -476,7 +475,7 @@ class Experiment:
             The prefix on which to select folders
         target_folder: str
             The target folder, i.e. the folder with the final output
-        """
+        '''
 
 
         def merge_info_file(target, source):                        
@@ -552,7 +551,7 @@ class Experiment:
                     os.removedirs(source_dat_folder)
 
     def merge_tmp_folders(self):
-        """Merges the output of the temporary folders of the experiment"""
+        '''Merges the output of the temporary folders of the experiment'''
 
         root = os.path.basename(self.logger_root)
         target, idx = self.logger_root, 1
@@ -564,12 +563,12 @@ class Experiment:
         self.merge_output_to_single_folder(root + "-tmp", target)
 
     def run(self):
-        """Alias for __call__"""
+        '''Alias for __call__'''
 
         return self()
 
     def __call__(self):
-        """Run the experiment"""
+        '''Run the experiment'''
 
         iterator = enumerate(itertools.product(self.fids, self.iids, self.dims), 1)
         if self.njobs != 1:

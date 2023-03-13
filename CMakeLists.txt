@@ -7,7 +7,7 @@ string(REGEX REPLACE "\n$" "" VERSION_STRING "${VERSION_STRING}")
 project(ioh    
     VERSION "${VERSION_STRING}"
     LANGUAGES CXX  
-)  
+)   
   
 add_compile_definitions(PROJECT_VER="${CMAKE_PROJECT_VERSION}")
 set(CMAKE_CXX_STANDARD 17)  

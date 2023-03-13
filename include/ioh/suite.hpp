@@ -316,7 +316,7 @@ namespace ioh::suite
         }
     };
 
-    struct StarDiscrepancy final : RealSuite<StarDiscrepancy>
+    struct RealStarDiscrepancy final : RealSuite<RealStarDiscrepancy>
     {
         /**
          * @brief Construct a new StarDiscrepancy object
@@ -325,9 +325,9 @@ namespace ioh::suite
          * @param instances List of problem instances (defaults to first instance)
          * @param dimensions List of problem dimensions (defaults to 5D)
          */
-        StarDiscrepancy(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
+        RealStarDiscrepancy(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
              const std::vector<int> &dimensions = {5}) :
-            RealSuite(problem_ids, instances, dimensions, "SBOX", 10000, 10000,
+            RealSuite(problem_ids, instances, dimensions, "RealStarDiscrepancy", 10000, 10000,
                       reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::star_discrepancy::real::StarDiscrepancy>::instance()))
         {
         }
@@ -368,6 +368,22 @@ namespace ioh::suite
                          reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::submodular::GraphProblem>::instance()))
         {
         }
+    };
 
+    struct IntegerStarDiscrepancy final : IntegerSuite<IntegerStarDiscrepancy>
+    {
+        /**
+         * @brief Construct a new StarDiscrepancy object
+         * 
+         * @param problem_ids List of problem ids
+         * @param instances List of problem instances (defaults to first instance)
+         * @param dimensions List of problem dimensions (defaults to 5D)
+         */
+        IntegerStarDiscrepancy(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
+             const std::vector<int> &dimensions = {5}) :
+            IntegerSuite(problem_ids, instances, dimensions, "IntegerStarDiscrepancy", 10000, 10000,
+                      reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::star_discrepancy::integer::StarDiscrepancy>::instance()))
+        {
+        }
     };
 } // namespace ioh::suite

@@ -36,14 +36,14 @@ These modules can then be used exactly as their c++ equivalent. However, for con
 To get a 5-dimensional sphere function, with instance number 1, you can use the following:
 
 ```python
-from ioh import get_problem, ProblemType
-f = get_problem("Sphere", 1, 5, ProblemType.BBOB)
+from ioh import get_problem, ProblemClass
+f = get_problem("Sphere", 1, 5, ProblemClass.BBOB)
 ```
 
 Instead of using the name of the function, you can also use their function number within their respecitve suite:
 
 ```python
-f1 = get_problem(1, 1, 5, ProblemType.PBO)
+f1 = get_problem(1, 1, 5, ProblemClass.PBO)
 ```
 
 With these problem-objects, the state, meta_data and contrainsts can easily be accessed:
@@ -108,7 +108,7 @@ l = logger.Analyzer(folder_name="temp")
 This can then be attached to the problem:
 
 ```python
-f = get_problem(1, 1, 5, ProblemType.BBOB)
+f = get_problem(1, 1, 5, ProblemClass.BBOB)
 ```
 
 ```python
@@ -213,7 +213,7 @@ from ioh import Experiment
 help(Experiment)
 ```
 
-This can be initialized using a suite (PBO or BBOB are available) by providing lists of function ids (or names), dimensions, instance ids and a number of independent repetitions as follows:
+This can be initialized using a problem class by providing lists of function ids (or names), dimensions, instance ids and a number of independent repetitions as follows:
 
 ```python
 exp = Experiment(
@@ -221,7 +221,7 @@ exp = Experiment(
     [1],                                # list of problem id's
     [1, 2],                             # list of problem instances
     [5],                                # list of problem dimensions
-    problem_type = ProblemType.BBOB,    # the problem type, function ids should correspond to problems of this type
+    problem_class = ProblemClass.BBOB,  # the problem type, function ids should correspond to problems of this type
     njobs = 1,                          # the number of parrellel jobs for running this experiment
     reps = 2,                           # the number of repetitions for each (id x instance x dim)
     logged_attributes = [               # list of the tracked variables, must be available on the algorithm instance (RandomSearch)

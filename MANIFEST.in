@@ -20,3 +20,4 @@ include external/clutchlog/clutchlog/clutchlog.h external/clutchlog/CMakeLists.t
 include doc/generate_docs.py doc/__init__.py
 include VERSION
 include pyproject.toml
+ 

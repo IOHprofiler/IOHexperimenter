@@ -75,7 +75,7 @@ namespace ioh
 
         /**
          * @brief Inplace remove substring from string
-         * 
+         *
          * @param str string to remove substr from
          * @param substr the substring to remove
          */
@@ -205,6 +205,32 @@ namespace ioh
         {
             ltrim(s);
             rtrim(s);
+        }
+
+        /**
+         * @brief Sort a 2D vector colwise (copy), assumes constant length rows
+         * 
+         * @tparam T the type of the vector elements
+         * @param vect the vector to be sorted
+         * @return std::vector<std::vector<T>> a copy of the vector with each column sorted 
+         */
+        template <typename T>
+        [[nodiscard]] std::vector<std::vector<T>> sort_colwise(const std::vector<std::vector<T>>& vect)
+        {
+            std::vector<std::vector<T>> target(vect.size(), std::vector<T>(vect[0].size()));
+
+            std::vector<T> t(vect.size());
+
+            for (size_t i = 0; i < vect[0].size(); i++)
+            {
+                for (size_t j = 0; j < t.size(); j++)
+                    t[j] = vect[j][i];
+
+                std::sort(t.begin(), t.end());
+                for (size_t j = 0; j < t.size(); j++)
+                    target[j][i] = t[j];
+            }
+            return target;
         }
 
 

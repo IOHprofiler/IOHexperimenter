@@ -1,7 +1,7 @@
 #include "../utils.hpp"
 
 #include "ioh/suite.hpp"
-#include "ioh/problem/star_discrepancy/star_discrepancy.hpp"
+#include "ioh/problem/star_discrepancy/real.hpp"
 
 TEST_F(BaseTest, test_real_star_discrepancy)
 {
@@ -10,6 +10,7 @@ TEST_F(BaseTest, test_real_star_discrepancy)
 
     EXPECT_EQ(problem_factory.ids().size(), 30);
 }
+
 
 TEST_F(BaseTest, test_real_star_discrepancy_uniform)
 {

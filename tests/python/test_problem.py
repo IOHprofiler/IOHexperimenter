@@ -17,30 +17,46 @@ class wmodel(ioh.problem.AbstractWModel):
 
 class TestProblem(unittest.TestCase):
     def test_get_problem(self):
-        self.assertIsInstance(ioh.get_problem(1, 1, 2, ioh.ProblemType.BBOB), ioh.problem.Sphere)
-        self.assertIsInstance(ioh.get_problem("Sphere", 1, 2, ioh.ProblemType.BBOB), ioh.problem.Sphere)
+        self.assertIsInstance(ioh.get_problem(1, 1, 2, ioh.ProblemClass.BBOB), ioh.problem.Sphere)
+        self.assertIsInstance(ioh.get_problem("Sphere", 1, 2, ioh.ProblemClass.BBOB), ioh.problem.Sphere)
         self.assertIsInstance(ioh.get_problem("Sphere", 1, 2), ioh.problem.Sphere)
-        self.assertIsInstance(ioh.get_problem(1, 1, 2, ioh.ProblemType.PBO), ioh.problem.OneMax)
-        self.assertIsInstance(ioh.get_problem("OneMax", 1, 2, ioh.ProblemType.PBO), ioh.problem.OneMax)
+        self.assertIsInstance(ioh.get_problem(1, 1, 2, ioh.ProblemClass.PBO), ioh.problem.OneMax)
+        self.assertIsInstance(ioh.get_problem("OneMax", 1, 2, ioh.ProblemClass.PBO), ioh.problem.OneMax)
 
     def test_wmodel(self):
         for p in map(lambda x: x(1, 10), (wmodel, ioh.problem.WModelLeadingOnes, ioh.problem.WModelOneMax)):
             self.assertEqual(p([1] * 10), 10)
 
 
-    def test_star_discrepancy(self):
-        uniform = ioh.get_problem(30, 4, 2)
+    def test_real_star_discrepancy(self):
+        uniform = ioh.get_problem(30, 4, 2, )
         self.assertAlmostEqual(uniform([.9, .5]), 0.25, 3)
         sobol = ioh.get_problem(40, 4, 2)
         self.assertAlmostEqual(sobol([.9, .5]), 0.0499, 3)
         halton = ioh.get_problem(50, 4, 2)
         self.assertAlmostEqual(halton([.9, .5]), 0.1499, 3)
 
-        random = ioh.problem.StarDiscrepancy(instance=69, n_variables=2, n_samples=9, 
+        random = ioh.problem.RealStarDiscrepancy(instance=69, n_variables=2, n_samples=9, 
             sampler_type=ioh.problem.StarDiscrepancySampler.HALTON)
         self.assertEqual(random([10, 10]), -float("inf"))
 
         self.assertAlmostEqual(random([.9, .5]), 0.0055, 3)
+
+    def test_integer_star_discrepancy(self):
+        uniform = ioh.get_problem(30, 4, 2, problem_class=ioh.ProblemClass.STAR_INTEGER)
+        self.assertAlmostEqual(uniform([9, 9]), 0.11825, 3)
+
+
+        sobol = ioh.get_problem(40, 4, 2, problem_class=ioh.ProblemClass.STAR_INTEGER)
+        self.assertAlmostEqual(sobol([9, 9]), 0.1797, 3)
+
+        halton = ioh.get_problem(50, 4, 2, problem_class=ioh.ProblemClass.STAR_INTEGER)
+        self.assertAlmostEqual(halton([9, 9]), 0.2222, 3)
+
+        random = ioh.problem.IntegerStarDiscrepancy(instance=69, n_variables=2, n_samples=10, 
+            sampler_type=ioh.problem.StarDiscrepancySampler.HALTON)
+        self.assertEqual(random([10, 10]), 0)
+        self.assertEqual(random([11, 11]), -float("inf"))
 
 
     def test_enforced_bounds(self):
@@ -60,12 +76,12 @@ class TestProblem(unittest.TestCase):
 
     def test_evaluation_bbob_problems(self):
         for fid in range(1,25):
-            f = ioh.get_problem(fid, 1 ,5, ioh.ProblemType.BBOB)
+            f = ioh.get_problem(fid, 1 ,5, ioh.ProblemClass.BBOB)
             self.assertGreater(f([0,0,0,0,0]), -1000)
 
     def test_evaluation_pbo_problems(self):
         for fid in range(1,26):
-            f = ioh.get_problem(fid, 1 ,4, ioh.ProblemType.PBO)
+            f = ioh.get_problem(fid, 1 ,4, ioh.ProblemClass.PBO)
             self.assertGreater(f([0,0,0,0]), -1000) 
 
     def test_has_submodular(self):
@@ -147,7 +163,7 @@ class TestProblem(unittest.TestCase):
                            "bbobfitness5.in", "bbobfitness20.in", ):
             with self.subTest(test_file=test_file):
                 suite, dim = test_file.split("fitness")
-                problem_type = ioh.ProblemType.PBO if suite == 'pbo' else ioh.ProblemType.BBOB
+                problem_class = ioh.ProblemClass.PBO if suite == 'pbo' else ioh.ProblemClass.BBOB
                 dim = int(dim[:-3])
                 dtype = float if suite == 'bbob' else int
                 tol = .01 if suite == 'bbob' else 0.000099
@@ -158,13 +174,13 @@ class TestProblem(unittest.TestCase):
                         if "," in x:
                             x = x.split(",")
                         x = list(map(dtype, x))
-                        p = ioh.get_problem(int(fid), int(iid), dim, problem_type)
+                        p = ioh.get_problem(int(fid), int(iid), dim, problem_class)
                         self.assertTrue(math.isclose(p(x), float(y), abs_tol = tol))
 
     def test_sbox(self):
         for pid, name in ioh.problem.SBOX.problems.items():
-            sbox = ioh.get_problem(pid, 1, 4, ioh.ProblemType.SBOX)
-            bbob = ioh.get_problem(pid, 1, 4, ioh.ProblemType.BBOB)
+            sbox = ioh.get_problem(pid, 1, 4, ioh.ProblemClass.SBOX)
+            bbob = ioh.get_problem(pid, 1, 4, ioh.ProblemClass.BBOB)
             self.assertEqual(sbox.constraints.n(), 1)
             self.assertEqual(sbox([10, 10, 10, 10]), float("inf"))
             self.assertNotEqual(bbob([10, 10, 10, 10]), float("inf"))
