@@ -1,36 +1,36 @@
-StarDiscrepancy
-===============
+RealStarDiscrepancy
+===================
 
 .. currentmodule:: ioh.iohcpp.problem
 
-.. autoclass:: StarDiscrepancy
+.. autoclass:: RealStarDiscrepancy
    :show-inheritance:
 
    .. rubric:: Attributes Summary
 
    .. autosummary::
 
-      ~StarDiscrepancy.bounds
-      ~StarDiscrepancy.constraints
-      ~StarDiscrepancy.grid
-      ~StarDiscrepancy.log_info
-      ~StarDiscrepancy.meta_data
-      ~StarDiscrepancy.optimum
-      ~StarDiscrepancy.problems
-      ~StarDiscrepancy.state
+      ~RealStarDiscrepancy.bounds
+      ~RealStarDiscrepancy.constraints
+      ~RealStarDiscrepancy.grid
+      ~RealStarDiscrepancy.log_info
+      ~RealStarDiscrepancy.meta_data
+      ~RealStarDiscrepancy.optimum
+      ~RealStarDiscrepancy.problems
+      ~RealStarDiscrepancy.state
 
    .. rubric:: Methods Summary
 
    .. autosummary::
 
-      ~StarDiscrepancy.__call__
-      ~StarDiscrepancy.add_constraint
-      ~StarDiscrepancy.attach_logger
-      ~StarDiscrepancy.create
-      ~StarDiscrepancy.detach_logger
-      ~StarDiscrepancy.enforce_bounds
-      ~StarDiscrepancy.remove_constraint
-      ~StarDiscrepancy.reset
+      ~RealStarDiscrepancy.__call__
+      ~RealStarDiscrepancy.add_constraint
+      ~RealStarDiscrepancy.attach_logger
+      ~RealStarDiscrepancy.create
+      ~RealStarDiscrepancy.detach_logger
+      ~RealStarDiscrepancy.enforce_bounds
+      ~RealStarDiscrepancy.remove_constraint
+      ~RealStarDiscrepancy.reset
 
    .. rubric:: Attributes Documentation
 

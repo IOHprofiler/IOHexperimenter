@@ -1,27 +1,27 @@
-StarDiscrepancy
-===============
+IntegerStarDiscrepancy
+======================
 
 .. currentmodule:: ioh.iohcpp.suite
 
-.. autoclass:: StarDiscrepancy
+.. autoclass:: IntegerStarDiscrepancy
    :show-inheritance:
 
    .. rubric:: Attributes Summary
 
    .. autosummary::
 
-      ~StarDiscrepancy.dimensions
-      ~StarDiscrepancy.instances
-      ~StarDiscrepancy.name
-      ~StarDiscrepancy.problem_ids
+      ~IntegerStarDiscrepancy.dimensions
+      ~IntegerStarDiscrepancy.instances
+      ~IntegerStarDiscrepancy.name
+      ~IntegerStarDiscrepancy.problem_ids
 
    .. rubric:: Methods Summary
 
    .. autosummary::
 
-      ~StarDiscrepancy.attach_logger
-      ~StarDiscrepancy.detach_logger
-      ~StarDiscrepancy.reset
+      ~IntegerStarDiscrepancy.attach_logger
+      ~IntegerStarDiscrepancy.detach_logger
+      ~IntegerStarDiscrepancy.reset
 
    .. rubric:: Attributes Documentation
 
