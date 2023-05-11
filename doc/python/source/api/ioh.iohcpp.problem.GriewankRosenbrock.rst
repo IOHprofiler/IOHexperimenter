@@ -1,35 +1,35 @@
-GriewankRosenBrock
+GriewankRosenbrock
 ==================
 
 .. currentmodule:: ioh.iohcpp.problem
 
-.. autoclass:: GriewankRosenBrock
+.. autoclass:: GriewankRosenbrock
    :show-inheritance:
 
    .. rubric:: Attributes Summary
 
    .. autosummary::
 
-      ~GriewankRosenBrock.bounds
-      ~GriewankRosenBrock.constraints
-      ~GriewankRosenBrock.log_info
-      ~GriewankRosenBrock.meta_data
-      ~GriewankRosenBrock.optimum
-      ~GriewankRosenBrock.problems
-      ~GriewankRosenBrock.state
+      ~GriewankRosenbrock.bounds
+      ~GriewankRosenbrock.constraints
+      ~GriewankRosenbrock.log_info
+      ~GriewankRosenbrock.meta_data
+      ~GriewankRosenbrock.optimum
+      ~GriewankRosenbrock.problems
+      ~GriewankRosenbrock.state
 
    .. rubric:: Methods Summary
 
    .. autosummary::
 
-      ~GriewankRosenBrock.__call__
-      ~GriewankRosenBrock.add_constraint
-      ~GriewankRosenBrock.attach_logger
-      ~GriewankRosenBrock.create
-      ~GriewankRosenBrock.detach_logger
-      ~GriewankRosenBrock.enforce_bounds
-      ~GriewankRosenBrock.remove_constraint
-      ~GriewankRosenBrock.reset
+      ~GriewankRosenbrock.__call__
+      ~GriewankRosenbrock.add_constraint
+      ~GriewankRosenbrock.attach_logger
+      ~GriewankRosenbrock.create
+      ~GriewankRosenbrock.detach_logger
+      ~GriewankRosenbrock.enforce_bounds
+      ~GriewankRosenbrock.remove_constraint
+      ~GriewankRosenbrock.reset
 
    .. rubric:: Attributes Documentation
 

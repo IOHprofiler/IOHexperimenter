@@ -1,8 +1,6 @@
 
 #pragma once
 
-
-
 #include <string>
 #include <utility>
 #include "ioh/common/log.hpp"
@@ -20,9 +18,10 @@ namespace fs = std::experimental::filesystem;
 namespace fs = std::filesystem;
 #endif
 
+#ifdef HAS_JSON
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
-
+#endif
 //! File namespace
 namespace ioh::common::file
 {
@@ -126,9 +125,6 @@ namespace ioh::common::file
         struct is_shared_ptr_string_constructible<std::shared_ptr<T>> : std::is_constructible<T, std::string>
         {
         };
-
-        
-
     } // namespace utils
 
 
@@ -151,6 +147,7 @@ namespace ioh::common::file
         tmp_dat_file.close();
     }
 
+#ifdef HAS_JSON
     /**
      * @brief Merge the files in tmp_folder into the target folder
      * 
@@ -212,6 +209,8 @@ namespace ioh::common::file
             }   
         }
     }
+#endif // DEBUG    
+    
     /**
      * @brief Get the file contents as string object
      *

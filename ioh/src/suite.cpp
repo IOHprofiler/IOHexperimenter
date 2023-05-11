@@ -57,15 +57,16 @@ void define_base_class(py::module &m, const std::string &name)
                 The name of the suite.
             )pbdoc")
         .def("__len__", &SuiteType::size)
-        .def("__iter__", [](SuiteType &s) { return py::make_iterator(s.begin(), s.end()); }, py::keep_alive<0, 1>())
-        ;
+        .def(
+            "__iter__", [](SuiteType &s) { return py::make_iterator(s.begin(), s.end()); }, py::keep_alive<0, 1>());
 }
 
 
-template<typename S, typename P>
-void define_suite(py::module &m, const std::string& name, const int default_dim = 5){
+template <typename S, typename P>
+void define_suite(py::module &m, const std::string &name, const int default_dim = 5)
+{
     py::class_<S, P, std::shared_ptr<S>>(m, name.c_str(),
-    fmt::format(R"pbdoc(
+                                         fmt::format(R"pbdoc(
         Suite with {} functions included in IOH. 
 
         This class is an iterator for problems, you can define a set of problems to iterate over.
@@ -78,7 +79,9 @@ void define_suite(py::module &m, const std::string& name, const int default_dim 
             A list of problem instances to include in this instantiation of the suite
         problem_ids: list[int]
             A list of problem dimensions to include in this instantiation of the suite          
-    )pbdoc", name).c_str())
+    )pbdoc",
+                                                     name)
+                                             .c_str())
         .def(py::init<std::vector<int>, std::vector<int>, std::vector<int>>(), py::arg("problem_ids"),
              py::arg("instances") = std::vector<int>{1}, py::arg("dimensions") = std::vector<int>{default_dim});
 }

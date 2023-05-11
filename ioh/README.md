@@ -1,13 +1,13 @@
 ## Quickstart
 
-Note that these instructions are for versions >= 0.3.6.
+Note that these instructions are for versions >= 0.3.10. The minimum required Python version is 3.6.
 
 ### Installation
 
 You can install the experimenter directly from pip:
 
 ```bash
-pip install ioh>=0.3.6
+pip install ioh>=0.3.10
 ```
 
 To verify the installation, you can use:
@@ -236,3 +236,6 @@ exp.run()
 ```
 
 To start analyzing this data, simply upload the zip 'data'-folder and upload it to the IOHanalyzer!
+
+For a more fully flegded tutorial, which goes a more into detail on adding custom problems/loggers and dealing with constraints,
+please find the file [example.ipynb](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/tutorial.ipynb) in our github repository.

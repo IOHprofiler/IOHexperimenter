@@ -11,13 +11,10 @@ API documentation
 -----------------
 
 .. toctree::
-   :maxdepth: 10
+   :maxdepth: 1
    
-   python/ioh.rst
-   python/structures.rst
    python/problem.rst
+   python/structures.rst
+   python/ioh.rst
    python/logger.rst
    python/suite.rst 
-   
-
-

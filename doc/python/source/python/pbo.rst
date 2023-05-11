@@ -12,7 +12,33 @@ Problems
     :inherited-members:
     :no-main-docstr:
     :no-heading:
-    :skip: wrap_integer_problem, wrap_real_problem, AbstractWModel, AttractiveSector, BBOB, BentCigar, BuecheRastrigin, DifferentPowers, Discus, Ellipsoid, EllipsoidRotated, Gallagher101, Gallagher21, GriewankRosenBrock, Integer, IntegerWrappedProblem, Katsuura, LinearSlope, LunacekBiRastrigin, Rastrigin, RastriginRotated, Real, RealWrappedProblem, Rosenbrock, RosenbrockRotated, Schaffers10, Schaffers1000, Schwefel, SharpRidge, Sphere, StepEllipsoid, WModelLeadingOnes, WModelOneMax, Weierstrass
+    :include: PBO
+    :include: OneMax
+    :include: LeadingOnes
+    :include: Linear
+    :include: OneMaxDummy1
+    :include: OneMaxDummy2
+    :include: OneMaxNeutrality
+    :include: OneMaxEpistasis
+    :include: OneMaxRuggedness1
+    :include: OneMaxRuggedness2
+    :include: OneMaxRuggedness3
+    :include: LeadingOnesDummy1
+    :include: LeadingOnesDummy2
+    :include: LeadingOnesNeutrality
+    :include: LeadingOnesEpistasis
+    :include: LeadingOnesRuggedness1
+    :include: LeadingOnesRuggedness2
+    :include: LeadingOnesRuggedness3
+    :include: LABS
+    :include: IsingRing
+    :include: IsingTorus
+    :include: IsingTriangular
+    :include: MIS
+    :include: NQueens
+    :include: ConcatenatedTrap
+    :include: NKLandscape
+   
 
 Reference
 ---------

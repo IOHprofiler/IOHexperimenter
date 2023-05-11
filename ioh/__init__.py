@@ -78,7 +78,8 @@ def load_graph_problems():
 
 
 class ProblemClass(enum.Enum):
-    '''Enum for different problem types, values are class names'''
+    '''Enum for different problem types, values are class names.
+    '''
 
     REAL = "RealSingleObjective"
     INTEGER = "IntegerSingleObjective"

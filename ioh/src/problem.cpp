@@ -105,9 +105,9 @@ void define_constraint(py::module &m, const std::string &name)
     using Class = Constraint<T>;
 
     py::class_<Class, PyConstraint<T>, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
-        .def_readwrite("enforced", &Class::enforced)
-        .def_readwrite("weight", &Class::weight)
-        .def_readwrite("exponent", &Class::exponent)
+        .def_readwrite("enforced", &Class::enforced, "The type of constraint enforcement applied.")
+        .def_readwrite("weight", &Class::weight, "The weight given to this constraint")
+        .def_readwrite("exponent", &Class::exponent, "The exponent for this constraint")
         .def("__call__", &Class::operator())
         .def("is_feasible", &Class::is_feasible)
         .def("compute_violation", &Class::compute_violation)
@@ -122,7 +122,15 @@ void define_constraintset(py::module &m, const std::string &name)
     using Class = ConstraintSet<T>;
 
     py::class_<Class, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<Constraints<T>>(), py::arg("constraints") = Constraints<T>{})
+        .def(py::init<Constraints<T>>(), py::arg("constraints") = Constraints<T>{},
+             R"pbdoc(
+                A set of constraints
+
+                Parameters
+                ----------
+                    constraints: list[Constraint]
+                        The list of constraints
+                )pbdoc")
         .def("add", &Class::add)
         .def("remove", &Class::remove)
         .def("penalize", &Class::penalize)
@@ -140,18 +148,33 @@ void define_functionalconstraint(py::module &m, const std::string &name)
     using Class = FunctionalConstraint<T>;
 
     py::class_<Class, Parent, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
-        .def(
-            // py::init<ConstraintFunction<T>, double, constraint::Enforced, std::string>(),
-            py::init(
-                [](py::handle f, const double w, const double ex, const constraint::Enforced e, const std::string &n) {
-                    register_python_fn(f);
-                    auto fn = [f](const std::vector<T> &x) {
-                        return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr());
-                    };
-                    return Class(fn, w, ex, e, n);
-                }),
-            py::arg("fn"), py::arg("weight") = 1.0, py::arg("exponent") = 1.0,
-            py::arg("enforced") = constraint::Enforced::SOFT, py::arg("name") = "")
+        .def(py::init(
+                 [](py::handle f, const double w, const double ex, const constraint::Enforced e, const std::string &n) {
+                     register_python_fn(f);
+                     auto fn = [f](const std::vector<T> &x) {
+                         return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr());
+                     };
+                     return Class(fn, w, ex, e, n);
+                 }),
+             py::arg("fn"), py::arg("weight") = 1.0, py::arg("exponent") = 1.0,
+             py::arg("enforced") = constraint::Enforced::SOFT,
+             py::arg("name") = ""
+                               R"pbdoc(
+                General Constraint, defined by a function
+
+                Parameters
+                ----------
+                    f: list -> float
+                        A function that computes the violation of a point
+                    weight: float
+                        The weight given to the violation when penalizing the objective function
+                    exponent: float
+                        The exponent given to the violation when penalizing the objective function
+                    enforced: ConstraintEnforcement
+                        whether the constraint should be enforced
+                    name: str
+                        name of the constraint                    
+            )pbdoc")
         .def("__repr__", &Class::repr);
 }
 
@@ -170,7 +193,7 @@ void define_bounds(py::module &m, const std::string &name)
         .def(py::init<std::vector<T>, std::vector<T>, constraint::Enforced>(), py::arg("lb"), py::arg("ub"),
              py::arg("enforced") = constraint::Enforced::NOT,
              R"pbdoc(
-                Create box constraints. 
+                Problem Bounds, defined as a Box Constraint
 
                 Parameters
                 ----------
@@ -185,7 +208,7 @@ void define_bounds(py::module &m, const std::string &name)
         .def(py::init<int, T, T, constraint::Enforced>(), py::arg("size"), py::arg("lb"), py::arg("ub"),
              py::arg("enforced") = constraint::Enforced::NOT,
              R"pbdoc(
-                Create box constraints. 
+                Problem Bounds, defined as a Box Constraint
 
                 Parameters
                 ----------
@@ -369,7 +392,7 @@ void define_base_class(py::module &m, const std::string &name)
         .def_property_readonly_static(
             "problems", [](py::object) { return Factory::instance().map(); }, "All registered problems")
         .def_property("log_info", &ProblemType::log_info, &ProblemType::set_log_info,
-                      "Check what data is being sent to the logger.")
+                      "The data is that being sent to the logger.")
         .def_property_readonly(
             "state", &ProblemType::state,
             "The current state of the optimization process containing, e.g., the current solution and the "
@@ -381,7 +404,6 @@ void define_base_class(py::module &m, const std::string &name)
                                "The optimum and its objective value for a problem instance")
         .def_property_readonly("bounds", &ProblemType::bounds, "The bounds of the problem.")
         .def_property_readonly("constraints", &ProblemType::constraints, "The constraints of the problem.")
-        .def_property("log_info", &ProblemType::log_info, &ProblemType::set_log_info)
         .def("add_constraint", &ProblemType::add_constraint, "add a constraint")
         .def("remove_constraint", &ProblemType::remove_constraint, "remove a constraint")
         .def("enforce_bounds", &ProblemType::enforce_bounds, py::arg("weight") = 1.,
@@ -659,7 +681,6 @@ void define_pbo_problems(py::module &m)
                                                                R"pbdoc(
             A Linear Function with Harmonic Weights:
             {0,1}^n → ℝ, x ↦ ∑_i i * x_i
-
         )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::OneMaxDummy1, PBO, std::shared_ptr<pbo::OneMaxDummy1>>(m, "OneMaxDummy1", py::is_final())
@@ -1098,7 +1119,21 @@ void define_star_discrepancy_problem(py::module &m, const std::string &name)
 {
     py::class_<T, P, std::shared_ptr<T>>(m, name.c_str())
         .def(py::init(&star_discrepancy_init<T>), py::arg("instance") = 1, py::arg("n_variables") = 5,
-             py::arg("n_samples") = 5, py::arg("sampler_type") = SamplerType::UNIFORM)
+             py::arg("n_samples") = 5, py::arg("sampler_type") = SamplerType::UNIFORM,
+             R"pbdoc(
+                Star Discrepancy Problems
+
+                Parameters
+                ----------
+                instance: int = 1
+                    The instance of the problem, will be used as seed for sampler
+                n_variables: int = 5
+                    The dimension of the problem
+                n_samples: int = 5
+                    The number of sampled points
+                sampler_type: StarDiscrepancySampler
+                    The type of sampler to use when sampling the points
+             )pbdoc")
         .def_property_readonly("grid",
                                [](const T &self) {
                                    const auto grid = self.get_grid();

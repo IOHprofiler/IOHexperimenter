@@ -10,6 +10,7 @@ project(ioh
 )   
   
 add_compile_definitions(PROJECT_VER="${CMAKE_PROJECT_VERSION}")
+add_compile_definitions(HAS_JSON)
 set(CMAKE_CXX_STANDARD 17)  
 set(EXTERNAL_DIR "${PROJECT_SOURCE_DIR}/external")
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH}) 

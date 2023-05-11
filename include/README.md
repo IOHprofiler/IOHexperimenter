@@ -22,6 +22,9 @@ If you want to change this directory, please use the following flag `cmake -DCMA
 
 If you want to change build options, check the output of `cmake -L` or use `cmake-gui` or `ccmake`.
 
+### Dependencies
+IOHexperimenter has a few dependencies, however, only the fmt/fmt library is required to compile the C++ backend. If you'd like to compile the source code without CMake, you need to provide the includes of fmt/fmt as an additional include directory, which can be found in the [external](https://github.com/IOHprofiler/IOHexperimenter/tree/master/external) folder of the repository.
+
 ### Usage
 
 To obtain a built-in problem, you could create a problem instance by passing the
