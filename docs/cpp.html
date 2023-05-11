@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="common" href="cpp/ioh_common.html" /><link rel="prev" title="IOHexperimenter" href="index.html" />
 
-    <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
-        <title>C++ - IOHExperimenter 0.3.8 documentation</title>
+    <!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+        <title>C++ - IOHExperimenter 0.3.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -124,7 +124,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="contents.html"><div class="brand">IOHExperimenter 0.3.8 documentation</div></a>
+      <a href="contents.html"><div class="brand">IOHExperimenter 0.3.9 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -147,10 +147,10 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="contents.html">
   
   
-  <span class="sidebar-brand-text">IOHExperimenter 0.3.8 documentation</span>
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.9 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -435,7 +435,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -462,11 +463,11 @@
 <li><p><a class="reference external" href="https://cmake.org">CMake</a>, version 3.15 or higher</p></li>
 </ul>
 <p>Please use the following commands to download, compile, and install this package:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt; git clone --recursive https://github.com/IOHprofiler/IOHexperimenter.git
-&gt; <span class="nb">cd</span> IOHexperimenter
-&gt; mkdir build
-&gt; <span class="nb">cd</span> build
-&gt; cmake .. <span class="o">&amp;&amp;</span> make install
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>&gt;<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/IOHprofiler/IOHexperimenter.git
+&gt;<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>IOHexperimenter
+&gt;<span class="w"> </span>mkdir<span class="w"> </span>build
+&gt;<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+&gt;<span class="w"> </span>cmake<span class="w"> </span>..<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>install
 </pre></div>
 </div>
 <p>which installs all header files to <code class="docutils literal notranslate"><span class="pre">/usr/local/include/ioh</span></code> by default.
@@ -477,7 +478,7 @@ If you want to change this directory, please use the following flag <code class=
 <h3>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h3>
 <p>To obtain a built-in problem, you could create a problem instance by passing the
 <em>instance id</em> and the <em>search dimension</em> to the constructor of the intended problem class, e.g.,</p>
-<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;ioh.hpp&quot;</span><span class="cp"></span>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;ioh.hpp&quot;</span>
 <span class="k">auto</span><span class="w"> </span><span class="n">om</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">pbo</span><span class="o">::</span><span class="n">OneMax</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span><span class="w"> </span><span class="c1">// PBO problem: instance 1, dim 10</span>
 <span class="k">auto</span><span class="w"> </span><span class="n">sp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">bbob</span><span class="o">::</span><span class="n">Sphere</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span><span class="w"> </span><span class="c1">// BBOB problem: instance 1, dim 5</span>
 </pre></div>
@@ -490,13 +491,13 @@ transforms for BBOB problems and scaling of objective values for PBO problems. P
 <li><p><a class="reference external" href="https://coco.gforge.inria.fr/downloads/download16.00/bbobdocfunctions.pdf">BBOB/COCO transformations</a></p></li>
 </ul>
 <p>Alternatively, we can also obtain a <code class="docutils literal notranslate"><span class="pre">std::shared_ptr</span></code> to a problem by using a problem registry of a given type. Using the registry, we can obtain problems by their name, which can be usefull in a dynamic setting:</p>
-<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">problem_factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">ProblemRegistry</span><span class="o">&lt;</span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">IntegerSingleObjective</span><span class="o">&gt;::</span><span class="n">instance</span><span class="p">();</span><span class="w"></span>
-<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">IntegerSingleObjective</span><span class="o">&gt;</span><span class="w"> </span><span class="n">om</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">problem_factory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;OneMax&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">problem_factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">ProblemRegistry</span><span class="o">&lt;</span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">IntegerSingleObjective</span><span class="o">&gt;::</span><span class="n">instance</span><span class="p">();</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">IntegerSingleObjective</span><span class="o">&gt;</span><span class="w"> </span><span class="n">om</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">problem_factory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;OneMax&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Problem</span></code> objects are callable objects, and a search point can be evaluated on a problem by passing it to the call operator of the problem, for example:</p>
-<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">x0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mf">1.</span><span class="p">,</span><span class="w"> </span><span class="mf">2.</span><span class="p">,</span><span class="w"> </span><span class="mf">3.</span><span class="p">,</span><span class="w"> </span><span class="mf">4.</span><span class="p">,</span><span class="w"> </span><span class="mf">5.</span><span class="p">};</span><span class="w"></span>
-<span class="kt">double</span><span class="w"> </span><span class="n">y0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sp</span><span class="p">(</span><span class="n">x0</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">x0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mf">1.</span><span class="p">,</span><span class="w"> </span><span class="mf">2.</span><span class="p">,</span><span class="w"> </span><span class="mf">3.</span><span class="p">,</span><span class="w"> </span><span class="mf">4.</span><span class="p">,</span><span class="w"> </span><span class="mf">5.</span><span class="p">};</span>
+<span class="kt">double</span><span class="w"> </span><span class="n">y0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sp</span><span class="p">(</span><span class="n">x0</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>For more advanced usage examples, please take a look at the example folder in the github repository. Some examples include:</p>
@@ -509,29 +510,29 @@ transforms for BBOB problems and scaling of objective values for PBO problems. P
 <section id="adding-new-problems">
 <h3>Adding new problems<a class="headerlink" href="#adding-new-problems" title="Permalink to this heading">#</a></h3>
 <p>We offer a very simple and convenient interface for integrating new benchmark problems/functions. First, you could define a new <code class="docutils literal notranslate"><span class="pre">test_problem</span></code> as you like. Note that the <code class="docutils literal notranslate"><span class="pre">&lt;vector&gt;</span></code> header is already imported in “ioh.hpp”.</p>
-<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">SingleObjective</span><span class="w"> </span><span class="nf">test_problem</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="p">)</span><span class="w"></span>
-<span class="p">{</span><span class="w"></span>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">SingleObjective</span><span class="w"> </span><span class="nf">test_problem</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="p">)</span>
+<span class="p">{</span>
 <span class="w">    </span><span class="c1">// the actual function body starts here</span>
 <span class="w">    </span><span class="c1">// ...</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Then, you only need to “wrap” this new function as follows:</p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">wrap_function</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">SingleObjective</span><span class="o">&gt;</span><span class="p">(</span><span class="w"></span>
-<span class="w">  </span><span class="o">&amp;</span><span class="n">test_problem</span><span class="p">,</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">wrap_function</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">SingleObjective</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">  </span><span class="o">&amp;</span><span class="n">test_problem</span><span class="p">,</span>
 <span class="w">  </span><span class="s">&quot;test_problem&quot;</span><span class="w"> </span><span class="c1">// name for the new function</span>
-<span class="p">);</span><span class="w"></span>
+<span class="p">);</span>
 </pre></div>
 </div>
 <p>After wrapping, we could create this <code class="docutils literal notranslate"><span class="pre">test_problem</span></code> from the problem factory. Note that,
 the instance id is ineffective in this approach since we haven’t implemented any transformations for the wrapped problem.</p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">ProblemRegistry</span><span class="o">&lt;</span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">RealSingleObjective</span><span class="o">&gt;::</span><span class="n">instance</span><span class="p">();</span><span class="w"></span>
-<span class="k">auto</span><span class="w"> </span><span class="n">new_problem_f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">ProblemRegistry</span><span class="o">&lt;</span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">RealSingleObjective</span><span class="o">&gt;::</span><span class="n">instance</span><span class="p">();</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">new_problem_f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span>
 <span class="w">  </span><span class="s">&quot;test_problem&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// create by name</span>
 <span class="w">  </span><span class="mi">1</span><span class="p">,</span><span class="w">               </span><span class="c1">// instance id</span>
 <span class="w">  </span><span class="mi">10</span><span class="w">               </span><span class="c1">// number of search variables</span>
-<span class="p">);</span><span class="w"></span>
+<span class="p">);</span>
 </pre></div>
 </div>
 <p>Alternatively, one might wish to create the new problem by subclassing the abstract problem class
@@ -542,44 +543,44 @@ This can be done by inheriting the corresponding problem registration class, whi
 <li><p><code class="docutils literal notranslate"><span class="pre">ioh::problem::RealSingleObjective</span></code> for continuous problems.</p></li>
 </ul>
 <p>In the below example, we show how to do this for pseudo-Boolean problems.</p>
-<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">NewBooleanProblem</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">RegisteredProblem</span><span class="o">&lt;</span><span class="n">NewBooleanProblem</span><span class="p">,</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">IntegerSingleObjective</span><span class="o">&gt;</span><span class="w"></span>
-<span class="p">{</span><span class="w"></span>
-<span class="k">protected</span><span class="o">:</span><span class="w"></span>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">NewBooleanProblem</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">RegisteredProblem</span><span class="o">&lt;</span><span class="n">NewBooleanProblem</span><span class="p">,</span><span class="w"> </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">IntegerSingleObjective</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="k">protected</span><span class="o">:</span>
 <span class="w">    </span><span class="c1">// [mandatory] The evaluate method is mandatory to implement</span>
-<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">evaluate</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">evaluate</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
 <span class="w">        </span><span class="c1">// the function body goes here</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">// [optional] If one wish to implement transformations on search variables</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">transform_variables</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">transform_variables</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">// [optional] If one wish to implement transformations on objective values</span>
-<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">transform_objectives</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">y</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">transform_objectives</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
 <span class="w">    </span><span class="c1">/// [mandatory] This constructor always take `instance` as input even</span>
 <span class="w">    </span><span class="c1">/// if it is ineffective by default. `instance` would be effective if and only if</span>
 <span class="w">    </span><span class="c1">/// at least one of `transform_objectives` and `transform_objectives` is implemented</span>
-<span class="w">    </span><span class="n">NewBooleanProblem</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">instance</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n_variables</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="n">RegisteredProblem</span><span class="p">(</span><span class="w"></span>
-<span class="w">          </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">MetaData</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="n">NewBooleanProblem</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">instance</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n_variables</span><span class="p">)</span><span class="w"> </span><span class="o">:</span>
+<span class="w">        </span><span class="n">RegisteredProblem</span><span class="p">(</span>
+<span class="w">          </span><span class="n">ioh</span><span class="o">::</span><span class="n">problem</span><span class="o">::</span><span class="n">MetaData</span><span class="p">(</span>
 <span class="w">            </span><span class="mi">1</span><span class="p">,</span><span class="w">                     </span><span class="c1">// problem id, which will be overwritten when registering this class in all pseudo-Boolean problems</span>
 <span class="w">            </span><span class="n">instance</span><span class="p">,</span><span class="w">              </span><span class="c1">// the instance id</span>
 <span class="w">            </span><span class="s">&quot;NewBooleanProblem&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1">// problem name</span>
 <span class="w">            </span><span class="n">n_variables</span><span class="w">           </span><span class="c1">// search dimensionality</span>
-<span class="w">            </span><span class="p">)</span><span class="w"></span>
-<span class="w">          </span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
+<span class="w">            </span><span class="p">)</span>
+<span class="w">          </span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
 </pre></div>
 </div>
 <p>Please check <a class="reference external" href="./example/problem_example.hpp">this example</a> for adding continuous problems in this manner.</p>
@@ -4532,9 +4533,7 @@ This can be done by inheriting the corresponding problem registration class, whi
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -4573,10 +4572,8 @@ This can be done by inheriting the corresponding problem registration class, whi
     </aside>
   </div>
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>
 </html>

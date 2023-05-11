@@ -1,5 +1,5 @@
 find_package(Doxygen REQUIRED)
-find_package(Sphinx REQUIRED)
+#find_package(Sphinx REQUIRED)
 
 #This will be the main output of our command
 set(DOXYGEN_INPUT_DIR ${PROJECT_SOURCE_DIR}/include)

@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Submodular" href="api/ioh.iohcpp.suite.Submodular.html" />
 
-    <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
-        <title>Server - IOHExperimenter 0.3.8 documentation</title>
+    <!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+        <title>Server - IOHExperimenter 0.3.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -124,7 +124,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="contents.html"><div class="brand">IOHExperimenter 0.3.8 documentation</div></a>
+      <a href="contents.html"><div class="brand">IOHExperimenter 0.3.9 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -147,10 +147,10 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="contents.html">
   
   
-  <span class="sidebar-brand-text">IOHExperimenter 0.3.8 documentation</span>
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.9 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -435,7 +435,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -464,7 +465,7 @@ encoded in JSON.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">ioh-server</span></code> is build along with IOHexperimenter if you enabled
 the <code class="docutils literal notranslate"><span class="pre">BUILD_SERVER</span></code> option.</p>
 <p>For example with:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>cmake -DBUILD_SERVER<span class="o">=</span>ON ..
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>-DBUILD_SERVER<span class="o">=</span>ON<span class="w"> </span>..
 </pre></div>
 </div>
 </section>
@@ -472,11 +473,11 @@ the <code class="docutils literal notranslate"><span class="pre">BUILD_SERVER</s
 <h3>Run<a class="headerlink" href="#run" title="Permalink to this heading">#</a></h3>
 <p>The server expects you to indicates the I/O named pipes FIFO.
 Under Linux, you would create them with:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>mkfifo query reply
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>mkfifo<span class="w"> </span>query<span class="w"> </span>reply
 </pre></div>
 </div>
 <p>You can then run the server with the default configuration as:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./server/ioh-server query reply
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./server/ioh-server<span class="w"> </span>query<span class="w"> </span>reply
 </pre></div>
 </div>
 <p>To set up the problem actually served, use the following options:</p>
@@ -487,12 +488,12 @@ Under Linux, you would create them with:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">-d</span></code>, <cite>–dimension arg</cite>:  Problem dimension (default: 1).</p></li>
 </ul>
 <p>For example:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ioh-server -t real -p Rosenbrock -i <span class="m">1</span> -d <span class="m">10</span> query reply
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ioh-server<span class="w"> </span>-t<span class="w"> </span>real<span class="w"> </span>-p<span class="w"> </span>Rosenbrock<span class="w"> </span>-i<span class="w"> </span><span class="m">1</span><span class="w"> </span>-d<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span>reply
 </pre></div>
 </div>
 <p>You can list the available problems using the <code class="docutils literal notranslate"><span class="pre">help-problems</span></code> option, but you
 need to indicate the type of problems (“integer” or “real”):</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ioh-server -t real --help-problems
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ioh-server<span class="w"> </span>-t<span class="w"> </span>real<span class="w"> </span>--help-problems
 </pre></div>
 </div>
 <p>More options are available, see <code class="docutils literal notranslate"><span class="pre">ioh-server</span> <span class="pre">--help</span></code>.</p>
@@ -535,17 +536,17 @@ server; or replies, from the problem (server) to the solver (client).</p>
 <p>A <code class="docutils literal notranslate"><span class="pre">call</span></code> query holds the solution to be evaluated by the objective function, in
 the form of an array of <code class="docutils literal notranslate"><span class="pre">number</span></code>.</p>
 <p>Example of a <code class="docutils literal notranslate"><span class="pre">call</span></code> query message:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;query_type&quot;</span><span class="p">:</span><span class="s2">&quot;call&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;solution&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;query_type&quot;</span><span class="p">:</span><span class="s2">&quot;call&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;solution&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>which would be answered by a reply similar to:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;reply_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">21</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;reply_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">21</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Optionaly, the <code class="docutils literal notranslate"><span class="pre">value</span></code> reply can send back the solution.</p>
@@ -653,21 +654,21 @@ To validate a message simply run: <a href="#id1"><span class="problematic" id="i
 <h3>Network gateway<a class="headerlink" href="#network-gateway" title="Permalink to this heading">#</a></h3>
 <p>If you want to expose such a service as a network server, just use socat.</p>
 <p>For example, to get <em>data</em> query from the network for <code class="docutils literal notranslate"><span class="pre">service1</span></code>:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>socat -v -u TCP-LISTEN:8423,reuseaddr PIPE:./query
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>socat<span class="w"> </span>-v<span class="w"> </span>-u<span class="w"> </span>TCP-LISTEN:8423,reuseaddr<span class="w"> </span>PIPE:./query
 </pre></div>
 </div>
 <p>You can test it by sending something on the connection:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="s2">&quot;Hello World!&quot;</span> &gt; /dev/tcp/127.0.0.1/8423
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Hello World!&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/tcp/127.0.0.1/8423
 </pre></div>
 </div>
 <p>Conversely, to send automatically back the answer to some server:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>socat -v -u PIPE:./reply TCP2:8424:host
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>socat<span class="w"> </span>-v<span class="w"> </span>-u<span class="w"> </span>PIPE:./reply<span class="w"> </span>TCP2:8424:host
 </pre></div>
 </div>
 <p>Be aware that <code class="docutils literal notranslate"><span class="pre">socat</span></code> will terminate as soon as it receives the end of the message.
 Thus, if you want to establish a permanent gate, you will have to use the <code class="docutils literal notranslate"><span class="pre">fork</span></code>
 option:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>socat TCP-LISTEN:8478,reuseaddr,fork PIPE:/./query
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>socat<span class="w"> </span>TCP-LISTEN:8478,reuseaddr,fork<span class="w"> </span>PIPE:/./query
 </pre></div>
 </div>
 </section>
@@ -703,9 +704,7 @@ option:</p>
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -758,10 +757,8 @@ option:</p>
     </aside>
   </div>
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>
 </html>

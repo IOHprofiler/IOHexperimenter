@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="v2" href="ioh_logger_analyzer_v2.html" /><link rel="prev" title="structures" href="ioh_logger_analyzer_structures.html" />
 
-    <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
-        <title>v1 - IOHExperimenter 0.3.8 documentation</title>
+    <!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+        <title>v1 - IOHExperimenter 0.3.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -124,7 +124,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.8 documentation</div></a>
+      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.9 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -147,10 +147,10 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../contents.html">
   
   
-  <span class="sidebar-brand-text">IOHExperimenter 0.3.8 documentation</span>
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.9 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -435,7 +435,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -455,258 +456,10 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h2>
 <section id="analyzer">
 <h3>Analyzer<a class="headerlink" href="#analyzer" title="Permalink to this heading">#</a></h3>
-<dl class="cpp class">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18AnalyzerE">
-<span id="_CPPv3N3ioh6logger8analyzer2v18AnalyzerE"></span><span id="_CPPv2N3ioh6logger8analyzer2v18AnalyzerE"></span><span id="ioh::logger::analyzer::v1::Analyzer"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Analyzer</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger8FlatFileE" title="ioh::logger::FlatFile"><span class="n"><span class="pre">FlatFile</span></span></a><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18AnalyzerE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>A logger that stores information in a format supported by the IOHAnalyzer platform. </p>
-<p>TODO: check if we log the last line <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">logger</span><span class="p">::</span><span class="n">Analyzer</span><span class="p">(</span>
-    <span class="p">{</span><span class="n">trigger</span><span class="p">::</span><span class="n">always</span><span class="p">},</span>
-    <span class="p">{</span><span class="n">watch</span><span class="p">::</span><span class="n">evaluations</span><span class="p">,</span> <span class="n">watch</span><span class="p">::</span><span class="n">transformed_y</span><span class="p">},</span>
-    <span class="s2">&quot;~/data&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;experiment_folder&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MyOptimizer&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Version 1.0&quot;</span>
-<span class="p">);</span>
-</pre></div>
-</div>
- </p>
-<p>Subclassed by <a class="reference internal" href="ioh_logger_analyzer_v2.html#classioh_1_1logger_1_1analyzer_1_1v2_1_1_analyzer"><span class="std std-ref">ioh::logger::analyzer::v2::Analyzer</span></a></p>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer8AnalyzerERK8TriggersRK10PropertiesRKN2fs4pathERKNSt6stringERKNSt6stringERKNSt6stringEKbKbRKN10structures10AttributesE">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer8AnalyzerERK8TriggersRK10PropertiesRKN2fs4pathERKNSt6stringERKNSt6stringERKNSt6stringEKbKbRKN10structures10AttributesE"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer8AnalyzerERK8TriggersRK10PropertiesRKN2fs4pathERKNSt6stringERKNSt6stringERKNSt6stringEKbKbRKN10structures10AttributesE"></span><span id="ioh::logger::analyzer::v1::Analyzer::Analyzer__TriggersCR.PropertiesCR.fs::pathCR.ssCR.ssCR.ssCR.bC.bC.structures::AttributesCR"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a6c104b3351dd3e3b2ca7e606c9b3e446"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Analyzer</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger8TriggersE" title="ioh::logger::Triggers"><span class="n"><span class="pre">Triggers</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">triggers</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="n"><span class="pre">trigger</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">on_improvement</span></span><span class="p"><span class="pre">}</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger10PropertiesE" title="ioh::logger::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">additional_properties</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">root</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">current_path</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">folder_name</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;ioh_data&quot;</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">algorithm_name</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;algorithm_name&quot;</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">algorithm_info</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;algorithm_info&quot;</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">store_positions</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">use_old_data_format</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">structures</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger_analyzer_structures.html#_CPPv4N3ioh6logger8analyzer10structures10AttributesE" title="ioh::logger::analyzer::structures::Attributes"><span class="n"><span class="pre">Attributes</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attributes</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer8AnalyzerERK8TriggersRK10PropertiesRKN2fs4pathERKNSt6stringERKNSt6stringERKNSt6stringEKbKbRKN10structures10AttributesE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p><a class="reference internal" href="ioh.html#classioh_1_1_logger"><span class="std std-ref">Logger</span></a> formatting data in a format supported by iohprofiler. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>triggers</strong> – When to fire a log event. </p></li>
-<li><p><strong>additional_properties</strong> – What to log. </p></li>
-<li><p><strong>root</strong> – Path in which to store the data. </p></li>
-<li><p><strong>folder_name</strong> – Name of folder in which to store data. Will be created as a subdirectory of <code class="docutils literal notranslate"><span class="pre">root</span></code>. </p></li>
-<li><p><strong>algorithm_name</strong> – The string separating fields. </p></li>
-<li><p><strong>algorithm_info</strong> – The string indicating a comment. </p></li>
-<li><p><strong>store_positions</strong> – Whether to store x positions in the logged data </p></li>
-<li><p><strong>use_old_data_format</strong> – Wheter to use the old data format </p></li>
-<li><p><strong>attributes</strong> – See: analyzer::Attributes. </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer5closeEv">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer5closeEv"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer5closeEv"></span><span id="ioh::logger::analyzer::v1::Analyzer::close"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1ad99605208d97ed3c358cf527e06a2fcd"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">close</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer5closeEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>close data file </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18AnalyzerD0Ev">
-<span id="_CPPv3N3ioh6logger8analyzer2v18AnalyzerD0Ev"></span><span id="_CPPv2N3ioh6logger8analyzer2v18AnalyzerD0Ev"></span><span id="ioh::logger::analyzer::v1::Analyzer::~Analyzer"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a7cd6928c7adba73db291fbab8be31963"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~Analyzer</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18AnalyzerD0Ev" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer14attach_problemERKN7problem8MetaDataE">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer14attach_problemERKN7problem8MetaDataE"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer14attach_problemERKN7problem8MetaDataE"></span><span id="ioh::logger::analyzer::v1::Analyzer::attach_problem__problem::MetaDataCR"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a3b75967d8f38599f5d04a2421d964ccd"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">attach_problem</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer14attach_problemERKN7problem8MetaDataE" title="ioh::logger::analyzer::v1::Analyzer::attach_problem::problem"><span class="n"><span class="pre">problem</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MetaData</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">problem</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer14attach_problemERKN7problem8MetaDataE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Part of public interface. Updates info file. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer3logERKN6logger4InfoE">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer3logERKN6logger4InfoE"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer3logERKN6logger4InfoE"></span><span id="ioh::logger::analyzer::v1::Analyzer::log__logger::InfoCR"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a19bdde12aacd72e46b007bdbeeaa514f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">log</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger4InfoE" title="ioh::logger::Info"><span class="n"><span class="pre">Info</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">log_info</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer3logERKN6logger4InfoE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Set log_info_ in order to check if the last line has been logged. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer4callERK4Info">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer4callERK4Info"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer4callERK4Info"></span><span id="ioh::logger::analyzer::v1::Analyzer::call__InfoCR"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a5debf08fdc4fe2e9daa6b775a7b45cb5"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">call</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger4InfoE" title="ioh::logger::Info"><span class="n"><span class="pre">Info</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">log_info</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer4callERK4Info" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>See: <a class="reference internal" href="ioh_logger.html#classioh_1_1logger_1_1_flat_file_1a12b800dbfae7c7c695190db34f85c6ef"><span class="std std-ref">logger::FlatFile::call</span></a>. Updates <code class="docutils literal notranslate"><span class="pre">best_point_</span></code> </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer5resetEv">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer5resetEv"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer5resetEv"></span><span id="ioh::logger::analyzer::v1::Analyzer::reset"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a0a6fc7cef324dcd63473e2617bc9de29"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reset</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer5resetEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Optional actions when the logger is detached from a suite/problem or the problem is reset. </p>
-<p>Useful if you want to flush data, for instance, and/or start a new run of the linked algorithm.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>You most probably don’t want to call this directly, but should call the Problem::reset() instead, which will call this anyway.</p>
+<p>doxygenclass: Cannot find file: /datanaco/yef/git/IOHexperimenter/doc/build/xml/index.xml</p>
 </div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If you override this function, do not forget to call the base class’ one. </p>
-</div>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer5watchERN6logger8PropertyE">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer5watchERN6logger8PropertyE"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer5watchERN6logger8PropertyE"></span><span id="ioh::logger::analyzer::v1::Analyzer::watch__logger::PropertyR"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1afd7e6e3d463dabf661be351c8ca5a81e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">watch</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger8PropertyE" title="ioh::logger::Property"><span class="n"><span class="pre">Property</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">property</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer5watchERN6logger8PropertyE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p><a class="reference internal" href="ioh_logger.html#classioh_1_1logger_1_1_watcher_1a240020d0031da1504eeac79eef0d94de"><span class="std std-ref">Watcher::watch</span></a> is protected, so it can only be called before track_problem is called for the first time. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer24add_experiment_attributeERKNSt6stringERKNSt6stringE">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer24add_experiment_attributeERKNSt6stringERKNSt6stringE"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer24add_experiment_attributeERKNSt6stringERKNSt6stringE"></span><span id="ioh::logger::analyzer::v1::Analyzer::add_experiment_attribute__ssCR.ssCR"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1afeb0d379f05ba6b52056e767e0c2d7f2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">add_experiment_attribute</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer24add_experiment_attributeERKNSt6stringERKNSt6stringE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Adds an experiment attribute. Can only be called before track_problem is called for the first time. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer25set_experiment_attributesERKN10structures9StringMapE">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer25set_experiment_attributesERKN10structures9StringMapE"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer25set_experiment_attributesERKN10structures9StringMapE"></span><span id="ioh::logger::analyzer::v1::Analyzer::set_experiment_attributes__structures::StringMapCR"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a908c9b6bed7568a59ec62449000ab9f0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_experiment_attributes</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">structures</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger_analyzer_structures.html#_CPPv4N3ioh6logger8analyzer10structures9StringMapE" title="ioh::logger::analyzer::structures::StringMap"><span class="n"><span class="pre">StringMap</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">map</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer25set_experiment_attributesERKN10structures9StringMapE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Sets experiment attributes. Can only be called before track_problem is called for the first time. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer17add_run_attributeERKNSt6stringEPd">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer17add_run_attributeERKNSt6stringEPd"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer17add_run_attributeERKNSt6stringEPd"></span><span id="ioh::logger::analyzer::v1::Analyzer::add_run_attribute__ssCR.doubleP"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a566ce7021f8246d2b4f89cf5e95ac2a3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">add_run_attribute</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">value</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer17add_run_attributeERKNSt6stringEPd" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Adds a new run attribute. Can only be called before track_problem is called for the first time. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer18set_run_attributesERKN10structures7dPtrMapE">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer18set_run_attributesERKN10structures7dPtrMapE"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer18set_run_attributesERKN10structures7dPtrMapE"></span><span id="ioh::logger::analyzer::v1::Analyzer::set_run_attributes__structures::dPtrMapCR"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a151e2c32c9fc670968271ce2952f7a53"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_run_attributes</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">structures</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger_analyzer_structures.html#_CPPv4N3ioh6logger8analyzer10structures7dPtrMapE" title="ioh::logger::analyzer::structures::dPtrMap"><span class="n"><span class="pre">dPtrMap</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">map</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer18set_run_attributesERKN10structures7dPtrMapE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Sets run attributes. Can only be called before track_problem is called for the first time. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer17set_run_attributeERKNSt6stringEPd">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer17set_run_attributeERKNSt6stringEPd"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer17set_run_attributeERKNSt6stringEPd"></span><span id="ioh::logger::analyzer::v1::Analyzer::set_run_attribute__ssCR.doubleP"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a77c56b7bb7d9d75f2791201019a72f64"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_run_attribute</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer17set_run_attributeERKNSt6stringEPd" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Sets the value for a single run attribute. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6logger8analyzer2v18Analyzer16output_directoryEv">
-<span id="_CPPv3NK3ioh6logger8analyzer2v18Analyzer16output_directoryEv"></span><span id="_CPPv2NK3ioh6logger8analyzer2v18Analyzer16output_directoryEv"></span><span id="ioh::logger::analyzer::v1::Analyzer::output_directoryC"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1af1b46e79410ffc9455159e6425856f13"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">output_directory</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4NK3ioh6logger8analyzer2v18Analyzer16output_directoryEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Accessor for output directory. </p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer18handle_new_problemERKN7problem8MetaDataE">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer18handle_new_problemERKN7problem8MetaDataE"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer18handle_new_problemERKN7problem8MetaDataE"></span><span id="ioh::logger::analyzer::v1::Analyzer::handle_new_problem__problem::MetaDataCR"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a34c6d20fd19749298f5c3e996378815a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">handle_new_problem</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer18handle_new_problemERKN7problem8MetaDataE" title="ioh::logger::analyzer::v1::Analyzer::handle_new_problem::problem"><span class="n"><span class="pre">problem</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MetaData</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">problem</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer18handle_new_problemERKN7problem8MetaDataE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Gets called when a new problem is attached. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer16handle_last_evalEv">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer16handle_last_evalEv"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer16handle_last_evalEv"></span><span id="ioh::logger::analyzer::v1::Analyzer::handle_last_eval"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a42723544ebbe513ac2c3473415dc2925"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">handle_last_eval</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer16handle_last_evalEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Gets called after the last evaluation of a run. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer20handle_new_dimensionERKN7problem8MetaDataERKNSt6stringE">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer20handle_new_dimensionERKN7problem8MetaDataERKNSt6stringE"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer20handle_new_dimensionERKN7problem8MetaDataERKNSt6stringE"></span><span id="ioh::logger::analyzer::v1::Analyzer::handle_new_dimension__problem::MetaDataCR.ssCR"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a79096a64b718f11271a1ad55f6a34233"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">handle_new_dimension</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer20handle_new_dimensionERKN7problem8MetaDataERKNSt6stringE" title="ioh::logger::analyzer::v1::Analyzer::handle_new_dimension::problem"><span class="n"><span class="pre">problem</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MetaData</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">problem</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dat_path</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer20handle_new_dimensionERKN7problem8MetaDataERKNSt6stringE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Gets called when the current problem changes dimension. </p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer5path_E">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer5path_E"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer5path_E"></span><span id="ioh::logger::analyzer::v1::Analyzer::path___common::file::UniqueFolderC"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a9aa41ce06763297cd8bc5d26333689db"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">common</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_common_file.html#_CPPv4N3ioh6common4file12UniqueFolderE" title="ioh::common::file::UniqueFolder"><span class="n"><span class="pre">UniqueFolder</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">path_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer5path_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>output path </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer10algorithm_E">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer10algorithm_E"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer10algorithm_E"></span><span id="ioh::logger::analyzer::v1::Analyzer::algorithm___structures::AlgorithmInfoC"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a6d8eb7180602161103ac595c8bd272c6"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">structures</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger_analyzer_structures.html#_CPPv4N3ioh6logger8analyzer10structures13AlgorithmInfoE" title="ioh::logger::analyzer::structures::AlgorithmInfo"><span class="n"><span class="pre">AlgorithmInfo</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">algorithm_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer10algorithm_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Algorithm meta data. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer12info_stream_E">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer12info_stream_E"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer12info_stream_E"></span><span id="ioh::logger::analyzer::v1::Analyzer::info_stream___std::ofstream"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1ab9e8a7d5ed9c665bd25fe3adad798055"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ofstream</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">info_stream_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer12info_stream_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>info file stream </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer11best_point_E">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer11best_point_E"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer11best_point_E"></span><span id="ioh::logger::analyzer::v1::Analyzer::best_point___structures::BestPoint"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1aa49c2f783b9db89237cc994a0705a484"></span><span class="n"><span class="pre">structures</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger_analyzer_structures.html#_CPPv4N3ioh6logger8analyzer10structures9BestPointE" title="ioh::logger::analyzer::structures::BestPoint"><span class="n"><span class="pre">BestPoint</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">best_point_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer11best_point_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Best point. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer11attributes_E">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer11attributes_E"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer11attributes_E"></span><span id="ioh::logger::analyzer::v1::Analyzer::attributes___structures::Attributes"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1adb9236af10723164d007cd9b99549701"></span><span class="n"><span class="pre">structures</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger_analyzer_structures.html#_CPPv4N3ioh6logger8analyzer10structures10AttributesE" title="ioh::logger::analyzer::structures::Attributes"><span class="n"><span class="pre">Attributes</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">attributes_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer11attributes_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Run/Experiment attribues. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer12has_started_E">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer12has_started_E"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer12has_started_E"></span><span id="ioh::logger::analyzer::v1::Analyzer::has_started___b"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1ae9f0d499ba07778459fd0757fb535be7"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">has_started_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer12has_started_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Has started logging? </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer9log_info_E">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer9log_info_E"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer9log_info_E"></span><span id="ioh::logger::analyzer::v1::Analyzer::log_info___logger::Info"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1afa42cc3d842e2ab0b61bc940100f3a0d"></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger4InfoE" title="ioh::logger::Info"><span class="n"><span class="pre">Info</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">log_info_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer9log_info_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Current log info. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer6evals_E">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer6evals_E"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer6evals_E"></span><span id="ioh::logger::analyzer::v1::Analyzer::evals___s"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a3489aac10e8450024b94450948bf1412"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evals_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer6evals_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Evals. </p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer16update_info_fileERKN7problem8MetaDataERKNSt6stringE">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer16update_info_fileERKN7problem8MetaDataERKNSt6stringE"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer16update_info_fileERKN7problem8MetaDataERKNSt6stringE"></span><span id="ioh::logger::analyzer::v1::Analyzer::update_info_file__problem::MetaDataCR.ssCR"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1adb5e6196446c95f27b8b13678320f06c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">update_info_file</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer16update_info_fileERKN7problem8MetaDataERKNSt6stringE" title="ioh::logger::analyzer::v1::Analyzer::update_info_file::problem"><span class="n"><span class="pre">problem</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MetaData</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">problem</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dat_path</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer16update_info_fileERKN7problem8MetaDataERKNSt6stringE" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer16guard_attributesERKNSt8functionIFvvEEE">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer16guard_attributesERKNSt8functionIFvvEEE"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer16guard_attributesERKNSt8functionIFvvEEE"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a5ea77ba44d72253b151232ba8f96ffe2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">guard_attributes</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">f</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer16guard_attributesERKNSt8functionIFvvEEE" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-attributes">Private Static Attributes</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp">
-<span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a52fcfc4a508a429bc0967892dc51bfac"></span><span class="sig-name descname"><span class="pre">static</span> <span class="pre">watch::Evaluations</span> <span class="pre">evaluations_</span>&#160;&#160; <span class="pre">=</span> <span class="pre">{R&quot;$(&quot;function</span> <span class="pre">evaluation&quot;)$&quot;}</span></span></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp">
-<span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1afddf41bfdaf43391d1ad88360901fb0c"></span><span class="sig-name descname"><span class="pre">static</span> <span class="pre">watch::RawY</span> <span class="pre">current_y_</span>&#160;&#160; <span class="pre">=</span> <span class="pre">{R&quot;$(&quot;current</span> <span class="pre">f(x)&quot;)$&quot;}</span></span></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp">
-<span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1aaae533752839d90b8615e2cb3fbd7fe6"></span><span class="sig-name descname"><span class="pre">static</span> <span class="pre">watch::RawYBest</span> <span class="pre">y_best_</span>&#160;&#160; <span class="pre">=</span> <span class="pre">{R&quot;$(&quot;best-so-far</span> <span class="pre">f(x)&quot;)$&quot;}</span></span></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp">
-<span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a3a7f0631256421630da8fab54970ef32"></span><span class="sig-name descname"><span class="pre">static</span> <span class="pre">watch::TransformedY</span> <span class="pre">transformed_y_</span>&#160;&#160; <span class="pre">=</span> <span class="pre">{R&quot;$(&quot;current</span> <span class="pre">af(x)+b&quot;)$&quot;}</span></span></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp">
-<span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a2b1f6f5f067d3f19baad7f4fd89ac937"></span><span class="sig-name descname"><span class="pre">static</span> <span class="pre">watch::TransformedYBest</span> <span class="pre">transformed_y_best_</span>&#160;&#160; <span class="pre">=</span> <span class="pre">{R&quot;$(&quot;best</span> <span class="pre">af(x)+b&quot;)$&quot;}</span></span></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer23default_properties_old_E">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer23default_properties_old_E"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer23default_properties_old_E"></span><span id="ioh::logger::analyzer::v1::Analyzer::default_properties_old___Properties"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a4fb72a1811c4855e98d41fb0f3540911"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger10PropertiesE" title="ioh::logger::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">default_properties_old_</span></span></span><span class="p"><span class="pre">{</span></span><span class="n"><span class="pre">evaluations_</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">current_y_</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">y_best_</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">transformed_y_</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">transformed_y_best_</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer23default_properties_old_E" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6logger8analyzer2v18Analyzer19default_properties_E">
-<span id="_CPPv3N3ioh6logger8analyzer2v18Analyzer19default_properties_E"></span><span id="_CPPv2N3ioh6logger8analyzer2v18Analyzer19default_properties_E"></span><span id="ioh::logger::analyzer::v1::Analyzer::default_properties___Properties"></span><span class="target" id="classioh_1_1logger_1_1analyzer_1_1v1_1_1_analyzer_1a5232dd3d78558f2264b5213ad83eb4b1"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger10PropertiesE" title="ioh::logger::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">default_properties_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer5watchERN6logger8PropertyE" title="ioh::logger::analyzer::v1::Analyzer::watch"><span class="n"><span class="pre">watch</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">evaluations</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer5watchERN6logger8PropertyE" title="ioh::logger::analyzer::v1::Analyzer::watch"><span class="n"><span class="pre">watch</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">raw_y</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3ioh6logger8analyzer2v18Analyzer19default_properties_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The only properties used by the analyzer (actually only raw_y is used) </p>
-</dd></dl>
-
-</div>
-</dd></dl>
-
 </section>
 </section>
 </section>
@@ -748,9 +501,7 @@
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -785,10 +536,8 @@
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>
 </html>

@@ -12,7 +12,7 @@ We have acknowledged and specified in our license file https://github.com/IOHpro
     :inherited-members:
     :no-main-docstr:
     :no-heading:
-    :skip: wrap_integer_problem, wrap_real_problem, AbstractWModel, ConcatenatedTrap,  Integer, IntegerWrappedProblem, IsingRing, IsingTorus, IsingTriangular, LABS, LeadingOnes, LeadingOnesDummy1, LeadingOnesDummy2, LeadingOnesEpistasis, LeadingOnesNeutrality, LeadingOnesRuggedness1, LeadingOnesRuggedness2, LeadingOnesRuggedness3, Linear,  MIS, NQueens, OneMax, OneMaxDummy1, OneMaxDummy2, OneMaxEpistasis, OneMaxNeutrality, OneMaxRuggedness1, OneMaxRuggedness2, OneMaxRuggedness3, PBO, RealWrappedProblem, WModelLeadingOnes, WModelOneMax
+    :skip: wrap_integer_problem, wrap_real_problem, AbstractWModel, ConcatenatedTrap,   MaxCut, MaxCoverage, MaxInfluence, Integer, IntegerWrappedProblem, IsingRing, IsingTorus, IsingTriangular, LABS, LeadingOnes, LeadingOnesDummy1, LeadingOnesDummy2, LeadingOnesEpistasis, LeadingOnesNeutrality, LeadingOnesRuggedness1, LeadingOnesRuggedness2, LeadingOnesRuggedness3, Linear,  MIS, NQueens, OneMax, OneMaxDummy1, OneMaxDummy2, OneMaxEpistasis, OneMaxNeutrality, OneMaxRuggedness1, OneMaxRuggedness2, OneMaxRuggedness3, PBO, RealWrappedProblem, WModelLeadingOnes, WModelOneMax
 
 Reference
 ---------

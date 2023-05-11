@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Python" href="../python.html" /><link rel="prev" title="watch" href="ioh_watch.html" />
 
-    <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
-        <title>ioh - IOHExperimenter 0.3.8 documentation</title>
+    <!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+        <title>ioh - IOHExperimenter 0.3.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -124,7 +124,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.8 documentation</div></a>
+      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.9 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -147,10 +147,10 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../contents.html">
   
   
-  <span class="sidebar-brand-text">IOHExperimenter 0.3.8 documentation</span>
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.9 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -435,7 +435,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -455,351 +456,17 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h2>
 <section id="experimenter">
 <h3>Experimenter<a class="headerlink" href="#experimenter" title="Permalink to this heading">#</a></h3>
-<dl class="cpp class">
-<dt class="sig sig-object cpp" id="_CPPv4I0EN3ioh12ExperimenterE">
-<span id="_CPPv3I0EN3ioh12ExperimenterE"></span><span id="_CPPv2I0EN3ioh12ExperimenterE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ProblemType</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classioh_1_1_experimenter"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Experimenter</span></span></span><a class="headerlink" href="#_CPPv4I0EN3ioh12ExperimenterE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>A Class used for running experiments. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ProblemType</strong> – The type of the problems used in the experiments, needs to be a subclass of <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_problem"><span class="std std-ref">ioh::problem::Problem</span></a>. </p>
-</dd>
-</dl>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
-<dl class="cpp type">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12Experimenter9AlgorithmE">
-<span id="_CPPv3N3ioh12Experimenter9AlgorithmE"></span><span id="_CPPv2N3ioh12Experimenter9AlgorithmE"></span><span class="target" id="classioh_1_1_experimenter_1a8f9a7c8491238bb05d94f8ca6f367554"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Algorithm</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh12ExperimenterE" title="ioh::Experimenter::ProblemType"><span class="n"><span class="pre">ProblemType</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh12Experimenter9AlgorithmE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>A typedef for an optimizer; a function which takes a <a class="reference internal" href="ioh_problem.html#classioh_1_1problem_1_1_problem"><span class="std std-ref">ioh::problem::Problem</span></a>. </p>
-</dd></dl>
-
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>doxygenclass: Cannot find file: /datanaco/yef/git/IOHexperimenter/doc/build/xml/index.xml</p>
 </div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12Experimenter12ExperimenterEv">
-<span id="_CPPv3N3ioh12Experimenter12ExperimenterEv"></span><span id="_CPPv2N3ioh12Experimenter12ExperimenterEv"></span><span id="ioh::Experimenter::Experimenter"></span><span class="target" id="classioh_1_1_experimenter_1aebf6d76ba683d10ed994f470c3175520"></span><span class="sig-name descname"><span class="n"><span class="pre">Experimenter</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N3ioh12Experimenter12ExperimenterEv" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12Experimenter12ExperimenterERK12Experimenter">
-<span id="_CPPv3N3ioh12Experimenter12ExperimenterERK12Experimenter"></span><span id="_CPPv2N3ioh12Experimenter12ExperimenterERK12Experimenter"></span><span id="ioh::Experimenter::Experimenter__ExperimenterCR"></span><span class="target" id="classioh_1_1_experimenter_1ac80e12a3703beae896550c2cff68ab15"></span><span class="sig-name descname"><span class="n"><span class="pre">Experimenter</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh12Experimenter12ExperimenterERK12Experimenter" title="ioh::Experimenter::Experimenter"><span class="n"><span class="pre">Experimenter</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N3ioh12Experimenter12ExperimenterERK12Experimenter" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12Experimenter12ExperimenterERRK12Experimenter">
-<span id="_CPPv3N3ioh12Experimenter12ExperimenterERRK12Experimenter"></span><span id="_CPPv2N3ioh12Experimenter12ExperimenterERRK12Experimenter"></span><span id="ioh::Experimenter::Experimenter__ExperimenterCRR"></span><span class="target" id="classioh_1_1_experimenter_1adf4b95a79b91e616797968913310835e"></span><span class="sig-name descname"><span class="n"><span class="pre">Experimenter</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh12Experimenter12ExperimenterERRK12Experimenter" title="ioh::Experimenter::Experimenter"><span class="n"><span class="pre">Experimenter</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N3ioh12Experimenter12ExperimenterERRK12Experimenter" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12ExperimenteraSERK12Experimenter">
-<span id="_CPPv3N3ioh12ExperimenteraSERK12Experimenter"></span><span id="_CPPv2N3ioh12ExperimenteraSERK12Experimenter"></span><span id="ioh::Experimenter::assign-operator__ExperimenterCR"></span><span class="target" id="classioh_1_1_experimenter_1a62d0a64a25eb58217ea4db7a3b1344e5"></span><a class="reference internal" href="#_CPPv4I0EN3ioh12ExperimenterE" title="ioh::Experimenter"><span class="n"><span class="pre">Experimenter</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh12ExperimenterE" title="ioh::Experimenter"><span class="n"><span class="pre">Experimenter</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N3ioh12ExperimenteraSERK12Experimenter" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12ExperimenteraSERRK12Experimenter">
-<span id="_CPPv3N3ioh12ExperimenteraSERRK12Experimenter"></span><span id="_CPPv2N3ioh12ExperimenteraSERRK12Experimenter"></span><span id="ioh::Experimenter::assign-operator__ExperimenterCRR"></span><span class="target" id="classioh_1_1_experimenter_1ac03170c898a8d37d9c5d1dc42a22ba15"></span><a class="reference internal" href="#_CPPv4I0EN3ioh12ExperimenterE" title="ioh::Experimenter"><span class="n"><span class="pre">Experimenter</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh12ExperimenterE" title="ioh::Experimenter"><span class="n"><span class="pre">Experimenter</span></span></a><span class="p"><span class="pre">&amp;</span></span><span class="p"><span class="pre">&amp;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">delete</span></span><a class="headerlink" href="#_CPPv4N3ioh12ExperimenteraSERRK12Experimenter" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12ExperimenterD0Ev">
-<span id="_CPPv3N3ioh12ExperimenterD0Ev"></span><span id="_CPPv2N3ioh12ExperimenterD0Ev"></span><span id="ioh::Experimenter::~Experimenter"></span><span class="target" id="classioh_1_1_experimenter_1a626995ba3e53f20a6647f050fa004a57"></span><span class="sig-name descname"><span class="n"><span class="pre">~Experimenter</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N3ioh12ExperimenterD0Ev" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12Experimenter12ExperimenterENSt10shared_ptrIN5suite5SuiteI11ProblemTypeEEEENSt10shared_ptrI6LoggerEE9AlgorithmKi">
-<span id="_CPPv3N3ioh12Experimenter12ExperimenterENSt10shared_ptrIN5suite5SuiteI11ProblemTypeEEEENSt10shared_ptrI6LoggerEE9AlgorithmKi"></span><span id="_CPPv2N3ioh12Experimenter12ExperimenterENSt10shared_ptrIN5suite5SuiteI11ProblemTypeEEEENSt10shared_ptrI6LoggerEE9AlgorithmKi"></span><span id="ioh::Experimenter::Experimenter__std::shared_ptr:suite::Suite:ProblemType::.std::shared_ptr:Logger:.Algorithm.iC"></span><span class="target" id="classioh_1_1_experimenter_1a70c3ae8f5291058f92df68108edabdb6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Experimenter</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh12Experimenter12ExperimenterENSt10shared_ptrIN5suite5SuiteI11ProblemTypeEEEENSt10shared_ptrI6LoggerEE9AlgorithmKi" title="ioh::Experimenter::Experimenter::suite"><span class="n"><span class="pre">suite</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Suite</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh12ExperimenterE" title="ioh::Experimenter::ProblemType"><span class="n"><span class="pre">ProblemType</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">suite</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh6LoggerE" title="ioh::Logger"><span class="n"><span class="pre">Logger</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">logger</span></span>, <a class="reference internal" href="#_CPPv4N3ioh12Experimenter9AlgorithmE" title="ioh::Experimenter::Algorithm"><span class="n"><span class="pre">Algorithm</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">algorithm</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">independent_runs</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh12Experimenter12ExperimenterENSt10shared_ptrIN5suite5SuiteI11ProblemTypeEEEENSt10shared_ptrI6LoggerEE9AlgorithmKi" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Constructs an <a class="reference internal" href="#classioh_1_1_experimenter"><span class="std std-ref">Experimenter</span></a> object from a Suite object and an <a class="reference internal" href="#classioh_1_1_logger"><span class="std std-ref">Logger</span></a> object. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>suite</strong> – A suite object </p></li>
-<li><p><strong>logger</strong> – A csv logger object </p></li>
-<li><p><strong>algorithm</strong> – a function pointer of type <a class="reference internal" href="#classioh_1_1_experimenter_1a8f9a7c8491238bb05d94f8ca6f367554"><span class="std std-ref">Algorithm</span></a> </p></li>
-<li><p><strong>independent_runs</strong> – the number of repetitions default = 1 </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12Experimenter3runEv">
-<span id="_CPPv3N3ioh12Experimenter3runEv"></span><span id="_CPPv2N3ioh12Experimenter3runEv"></span><span id="ioh::Experimenter::run"></span><span class="target" id="classioh_1_1_experimenter_1a9d4f1c41a63d7591fb2b967ead760458"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">run</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh12Experimenter3runEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Runs the experiment; Evaluates <code class="docutils literal notranslate"><span class="pre">algorithm_</span></code> on all problems X instances X dimensions, for N = independent_runs_ repeated runs. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12Experimenter16independent_runsEKi">
-<span id="_CPPv3N3ioh12Experimenter16independent_runsEKi"></span><span id="_CPPv2N3ioh12Experimenter16independent_runsEKi"></span><span id="ioh::Experimenter::independent_runs__iC"></span><span class="target" id="classioh_1_1_experimenter_1a705626dabc7c0e310a2b35d9da90151a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">independent_runs</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh12Experimenter16independent_runsEKi" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Set’s the number of independent runs to be used in <a class="reference internal" href="#classioh_1_1_experimenter_1a9d4f1c41a63d7591fb2b967ead760458"><span class="std std-ref">run</span></a>. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>n</strong> – The number of runs </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK3ioh12Experimenter16independent_runsEv">
-<span id="_CPPv3NK3ioh12Experimenter16independent_runsEv"></span><span id="_CPPv2NK3ioh12Experimenter16independent_runsEv"></span><span id="ioh::Experimenter::independent_runsC"></span><span class="target" id="classioh_1_1_experimenter_1a3d6af9968d0e969eb8737cd9566e566a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">independent_runs</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh12Experimenter16independent_runsEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Get’s the number of independent runs to be used in <a class="reference internal" href="#classioh_1_1_experimenter_1a9d4f1c41a63d7591fb2b967ead760458"><span class="std std-ref">run</span></a>. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK3ioh12Experimenter5suiteEv">
-<span id="_CPPv3NK3ioh12Experimenter5suiteEv"></span><span id="_CPPv2NK3ioh12Experimenter5suiteEv"></span><span id="ioh::Experimenter::suiteC"></span><span class="target" id="classioh_1_1_experimenter_1a539f890bd00774ded05969d95866048f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4NK3ioh12Experimenter5suiteEv" title="ioh::Experimenter::suite"><span class="n"><span class="pre">suite</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Suite</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh12ExperimenterE" title="ioh::Experimenter::ProblemType"><span class="n"><span class="pre">ProblemType</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">suite</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh12Experimenter5suiteEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Get method for <code class="docutils literal notranslate"><span class="pre">suite_</span></code> </p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Private <code class="docutils literal notranslate"><span class="pre">suite_</span></code> </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK3ioh12Experimenter6loggerEv">
-<span id="_CPPv3NK3ioh12Experimenter6loggerEv"></span><span id="_CPPv2NK3ioh12Experimenter6loggerEv"></span><span id="ioh::Experimenter::loggerC"></span><span class="target" id="classioh_1_1_experimenter_1a36abd2a7b7110a3d27f09e729c0c6a60"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh6LoggerE" title="ioh::Logger"><span class="n"><span class="pre">Logger</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">logger</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh12Experimenter6loggerEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Get method for. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Private </p>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12Experimenter6suite_E">
-<span id="_CPPv3N3ioh12Experimenter6suite_E"></span><span id="_CPPv2N3ioh12Experimenter6suite_E"></span><span id="ioh::Experimenter::suite___std::shared_ptr:suite::Suite:ProblemType::"></span><span class="target" id="classioh_1_1_experimenter_1a7ea6911a417cdd2e7e9dd72bf853c1ac"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4NK3ioh12Experimenter5suiteEv" title="ioh::Experimenter::suite"><span class="n"><span class="pre">suite</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Suite</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3ioh12ExperimenterE" title="ioh::Experimenter::ProblemType"><span class="n"><span class="pre">ProblemType</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">suite_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh12Experimenter6suite_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The benchmark suite used in the Experiment. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12Experimenter7logger_E">
-<span id="_CPPv3N3ioh12Experimenter7logger_E"></span><span id="_CPPv2N3ioh12Experimenter7logger_E"></span><span id="ioh::Experimenter::logger___std::shared_ptr:Logger:"></span><span class="target" id="classioh_1_1_experimenter_1a8305b7785937cfb26eadd9a978597845"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh6LoggerE" title="ioh::Logger"><span class="n"><span class="pre">Logger</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">logger_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh12Experimenter7logger_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>A pointer to the logger. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12Experimenter10algorithm_E">
-<span id="_CPPv3N3ioh12Experimenter10algorithm_E"></span><span id="_CPPv2N3ioh12Experimenter10algorithm_E"></span><span id="ioh::Experimenter::algorithm___Algorithm"></span><span class="target" id="classioh_1_1_experimenter_1a86551c0044ec9789a36af20ff528b67d"></span><a class="reference internal" href="#_CPPv4N3ioh12Experimenter9AlgorithmE" title="ioh::Experimenter::Algorithm"><span class="n"><span class="pre">Algorithm</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">algorithm_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh12Experimenter10algorithm_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>A function pointer of type <a class="reference internal" href="#classioh_1_1_experimenter_1a8f9a7c8491238bb05d94f8ca6f367554"><span class="std std-ref">Algorithm</span></a>. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12Experimenter17independent_runs_E">
-<span id="_CPPv3N3ioh12Experimenter17independent_runs_E"></span><span id="_CPPv2N3ioh12Experimenter17independent_runs_E"></span><span id="ioh::Experimenter::independent_runs___i"></span><span class="target" id="classioh_1_1_experimenter_1afd561d75cd469ba9a3d73142819a02f5"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">independent_runs_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><a class="headerlink" href="#_CPPv4N3ioh12Experimenter17independent_runs_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>The number of independent runs to be performed. </p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-friends">Friends</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh12ExperimenterlsERNSt7ostreamERK12Experimenter">
-<span id="_CPPv3N3ioh12ExperimenterlsERNSt7ostreamERK12Experimenter"></span><span id="_CPPv2N3ioh12ExperimenterlsERNSt7ostreamERK12Experimenter"></span><span id="ioh::Experimenter::lshift-operator__osR.ExperimenterCR"></span><span class="target" id="classioh_1_1_experimenter_1a3c733ee2724de64e6637ab8f5060f1c8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;&lt;</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">os</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3ioh12ExperimenterE" title="ioh::Experimenter"><span class="n"><span class="pre">Experimenter</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">obj</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh12ExperimenterlsERNSt7ostreamERK12Experimenter" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Prints a verbose representation of an <a class="reference internal" href="#classioh_1_1_experimenter"><span class="std std-ref">Experimenter</span></a> object to an output stream. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>os</strong> – The output stream </p></li>
-<li><p><strong>obj</strong> – The <a class="reference internal" href="#classioh_1_1_experimenter"><span class="std std-ref">Experimenter</span></a> object </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The output steam </p>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
-</dd></dl>
-
 </section>
 <section id="logger">
 <h3>Logger<a class="headerlink" href="#logger" title="Permalink to this heading">#</a></h3>
-<dl class="cpp class">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6LoggerE">
-<span id="_CPPv3N3ioh6LoggerE"></span><span id="_CPPv2N3ioh6LoggerE"></span><span id="ioh::Logger"></span><span class="target" id="classioh_1_1_logger"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Logger</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6LoggerE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Interface of loggers. </p>
-<p>A logger is a class that has a <code class="docutils literal notranslate"><span class="pre">log(log_info)</span></code> function called by the problem and hosts a set of Trigger that determine when a log event should be handled (or silently passed).</p>
-<p>
-By default, the <a class="reference internal" href="#classioh_1_1_logger"><span class="std std-ref">Logger</span></a> calls a log event if any of the triggers are fired, but you can use your own way to combine triggers if necessary.</p>
-<p>If you need to handle any property, consider sub-classing <a class="reference internal" href="ioh_logger.html#classioh_1_1logger_1_1_watcher"><span class="std std-ref">logger::Watcher</span></a>.</p>
-<p>If not, the design enforces your subclass to declare which property it needs. Then, you can easily access them by their name through <code class="docutils literal notranslate"><span class="pre">_properties.at(&quot;name&quot;)</span></code>. </p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Using the call functions without having been attached to a problem first will results in an assert failure.</p>
+<p>doxygenclass: Cannot find file: /datanaco/yef/git/IOHexperimenter/doc/build/xml/index.xml</p>
 </div>
-<p>Subclassed by <a class="reference internal" href="ioh_logger.html#classioh_1_1logger_1_1_combine"><span class="std std-ref">ioh::logger::Combine</span></a>, <a class="reference internal" href="ioh_logger.html#classioh_1_1logger_1_1_e_a_h"><span class="std std-ref">ioh::logger::EAH</span></a>, <a class="reference internal" href="ioh_logger.html#classioh_1_1logger_1_1_watcher"><span class="std std-ref">ioh::logger::Watcher</span></a></p>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger6LoggerENSt6vectorINSt17reference_wrapperIN6logger7TriggerEEEEENSt6vectorINSt17reference_wrapperIN6logger8PropertyEEEEE">
-<span id="_CPPv3N3ioh6Logger6LoggerENSt6vectorINSt17reference_wrapperIN6logger7TriggerEEEEENSt6vectorINSt17reference_wrapperIN6logger8PropertyEEEEE"></span><span id="_CPPv2N3ioh6Logger6LoggerENSt6vectorINSt17reference_wrapperIN6logger7TriggerEEEEENSt6vectorINSt17reference_wrapperIN6logger8PropertyEEEEE"></span><span id="ioh::Logger::Logger__std::vector:std::reference_wrapper:logger::Trigger::.std::vector:std::reference_wrapper:logger::Property::"></span><span class="target" id="classioh_1_1_logger_1adc467e91ffaea78f3f8748e20fce3794"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Logger</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">reference_wrapper</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger7TriggerE" title="ioh::logger::Trigger"><span class="n"><span class="pre">Trigger</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">triggers</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">reference_wrapper</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger8PropertyE" title="ioh::logger::Property"><span class="n"><span class="pre">Property</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">properties</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6Logger6LoggerENSt6vectorINSt17reference_wrapperIN6logger7TriggerEEEEENSt6vectorINSt17reference_wrapperIN6logger8PropertyEEEEE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Use this constructor if you just need to trigger a log event if ANY of the triggers are fired. </p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Do not pass references to members of your derived class, as this would pass a reference to an unitiliazed member, the base class constructor being always called first. Instead, use the empty <code class="docutils literal notranslate"><a class="reference internal" href="#classioh_1_1_logger_1ae7f676d96a2a2421bfe47ec4df8543d2"><span class="std std-ref"><span class="pre">Logger()</span></span></a></code> constructor and then add the triggers manually in your own constructor. </p>
-</div>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger6LoggerERN7trigger3SetENSt6vectorINSt17reference_wrapperIN6logger8PropertyEEEEE">
-<span id="_CPPv3N3ioh6Logger6LoggerERN7trigger3SetENSt6vectorINSt17reference_wrapperIN6logger8PropertyEEEEE"></span><span id="_CPPv2N3ioh6Logger6LoggerERN7trigger3SetENSt6vectorINSt17reference_wrapperIN6logger8PropertyEEEEE"></span><span id="ioh::Logger::Logger__trigger::SetR.std::vector:std::reference_wrapper:logger::Property::"></span><span class="target" id="classioh_1_1_logger_1ac2c0ab9c7b163d321fe98933b1ce5679"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Logger</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N3ioh6Logger7triggerERN6logger7TriggerE" title="ioh::Logger::trigger"><span class="n"><span class="pre">trigger</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Set</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">triggers</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">reference_wrapper</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger8PropertyE" title="ioh::logger::Property"><span class="n"><span class="pre">Property</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">properties</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6Logger6LoggerERN7trigger3SetENSt6vectorINSt17reference_wrapperIN6logger8PropertyEEEEE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Use this constructor if you want to combine triggers differently. </p>
-<p>You can for instance combine your triggers in a <a class="reference internal" href="ioh_trigger.html#structioh_1_1trigger_1_1_all"><span class="std std-ref">trigger::All</span></a>, so that the log event would be triggered only if ALL triggers are fired at once. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger6LoggerEv">
-<span id="_CPPv3N3ioh6Logger6LoggerEv"></span><span id="_CPPv2N3ioh6Logger6LoggerEv"></span><span id="ioh::Logger::Logger"></span><span class="target" id="classioh_1_1_logger_1ae7f676d96a2a2421bfe47ec4df8543d2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Logger</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6Logger6LoggerEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Use this constructor if you just need the interface without triggers or properties, for instance if you define default triggers/properties in your constructor. </p>
-<p>
-Used by <a class="reference internal" href="ioh_logger.html#classioh_1_1logger_1_1_combine"><span class="std std-ref">logger::Combine</span></a>, for instance. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If you manage your own default triggers/properties, use <code class="docutils literal notranslate"><span class="pre">_properties.insert_or_assign(name,</span> <span class="pre">std::ref(tp));</span></code> instead of classical access operators.</p>
-</div>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger7triggerERN6logger7TriggerE">
-<span id="_CPPv3N3ioh6Logger7triggerERN6logger7TriggerE"></span><span id="_CPPv2N3ioh6Logger7triggerERN6logger7TriggerE"></span><span id="ioh::Logger::trigger__logger::TriggerR"></span><span class="target" id="classioh_1_1_logger_1a6512e30b152073802eae818758054897"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">trigger</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger7TriggerE" title="ioh::logger::Trigger"><span class="n"><span class="pre">Trigger</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">when</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6Logger7triggerERN6logger7TriggerE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Add the given trigger to the list. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger3logERKN6logger4InfoE">
-<span id="_CPPv3N3ioh6Logger3logERKN6logger4InfoE"></span><span id="_CPPv2N3ioh6Logger3logERKN6logger4InfoE"></span><span id="ioh::Logger::log__logger::InfoCR"></span><span class="target" id="classioh_1_1_logger_1ae03591699913d7bc71cbb07f0c245f4e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">log</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger4InfoE" title="ioh::logger::Info"><span class="n"><span class="pre">Info</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">log_info</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6Logger3logERKN6logger4InfoE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Check if the logger should be triggered and if so, call <code class="docutils literal notranslate"><span class="pre">call(log_info)</span></code>. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger14attach_problemERKN7problem8MetaDataE">
-<span id="_CPPv3N3ioh6Logger14attach_problemERKN7problem8MetaDataE"></span><span id="_CPPv2N3ioh6Logger14attach_problemERKN7problem8MetaDataE"></span><span id="ioh::Logger::attach_problem__problem::MetaDataCR"></span><span class="target" id="classioh_1_1_logger_1a2be703d7bdcbdbfc636063a20d3eaa8e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">attach_problem</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3ioh6Logger14attach_problemERKN7problem8MetaDataE" title="ioh::Logger::attach_problem::problem"><span class="n"><span class="pre">problem</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MetaData</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">problem</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6Logger14attach_problemERKN7problem8MetaDataE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Starts a new session for the given problem/instance/dimension/run. </p>
-<p>This is called automatically by the Problem (or Suite) to which the <a class="reference internal" href="#classioh_1_1_logger"><span class="std std-ref">Logger</span></a> is attached, each time a change occurs (be it a new run, or a new problem instance).</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If you override this function, do not forget to call the base class’ one. </p>
-</div>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger12attach_suiteERKNSt6stringE">
-<span id="_CPPv3N3ioh6Logger12attach_suiteERKNSt6stringE"></span><span id="_CPPv2N3ioh6Logger12attach_suiteERKNSt6stringE"></span><span id="ioh::Logger::attach_suite__ssCR"></span><span class="target" id="classioh_1_1_logger_1aaa2ea621a3e45e9bce8ae691f62d91d8"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">attach_suite</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">suite_name</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N3ioh6Logger12attach_suiteERKNSt6stringE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Starts a new session for the given Suite name. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger4callERKN6logger4InfoE">
-<span id="_CPPv3N3ioh6Logger4callERKN6logger4InfoE"></span><span id="_CPPv2N3ioh6Logger4callERKN6logger4InfoE"></span><span id="ioh::Logger::call__logger::InfoCR"></span><span class="target" id="classioh_1_1_logger_1ac4b64a853b04f175ef22afadaa21b7d9"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">call</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger4InfoE" title="ioh::logger::Info"><span class="n"><span class="pre">Info</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">log_info</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N3ioh6Logger4callERKN6logger4InfoE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Main entry point, called everytime a Trigger is true. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger5resetEv">
-<span id="_CPPv3N3ioh6Logger5resetEv"></span><span id="_CPPv2N3ioh6Logger5resetEv"></span><span id="ioh::Logger::reset"></span><span class="target" id="classioh_1_1_logger_1a15ffee3436f277bdab243f219fb03d07"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reset</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6Logger5resetEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Optional actions when the logger is detached from a suite/problem or the problem is reset. </p>
-<p>Useful if you want to flush data, for instance, and/or start a new run of the linked algorithm.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>You most probably don’t want to call this directly, but should call the Problem::reset() instead, which will call this anyway.</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If you override this function, do not forget to call the base class’ one. </p>
-</div>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger5closeEv">
-<span id="_CPPv3N3ioh6Logger5closeEv"></span><span id="_CPPv2N3ioh6Logger5closeEv"></span><span id="ioh::Logger::close"></span><span class="target" id="classioh_1_1_logger_1a5cf34a39d2844429f286f55e566a9f50"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">close</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6Logger5closeEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Shutdown behaviour. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6LoggerD0Ev">
-<span id="_CPPv3N3ioh6LoggerD0Ev"></span><span id="_CPPv2N3ioh6LoggerD0Ev"></span><span id="ioh::Logger::~Logger"></span><span class="target" id="classioh_1_1_logger_1a20422c3dc6ae37d6f479ddae1ef8243f"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~Logger</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N3ioh6LoggerD0Ev" title="Permalink to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK3ioh6Logger7problemEv">
-<span id="_CPPv3NK3ioh6Logger7problemEv"></span><span id="_CPPv2NK3ioh6Logger7problemEv"></span><span id="ioh::Logger::problemC"></span><span class="target" id="classioh_1_1_logger_1a02ad8634b837cc9cbb73aa235661acde"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4NK3ioh6Logger7problemEv" title="ioh::Logger::problem"><span class="n"><span class="pre">problem</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MetaData</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">problem</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3ioh6Logger7problemEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Access the attached problem’s metadata. </p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger21consistent_propertiesEv">
-<span id="_CPPv3N3ioh6Logger21consistent_propertiesEv"></span><span id="_CPPv2N3ioh6Logger21consistent_propertiesEv"></span><span id="ioh::Logger::consistent_properties"></span><span class="target" id="classioh_1_1_logger_1a13a08b9c2fd26f6a528d8426db103244"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">consistent_properties</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6Logger21consistent_propertiesEv" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Check that there is no duplicated properties (only in Debug builds). </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger16store_propertiesERNSt6vectorINSt17reference_wrapperIN6logger8PropertyEEEEE">
-<span id="_CPPv3N3ioh6Logger16store_propertiesERNSt6vectorINSt17reference_wrapperIN6logger8PropertyEEEEE"></span><span id="_CPPv2N3ioh6Logger16store_propertiesERNSt6vectorINSt17reference_wrapperIN6logger8PropertyEEEEE"></span><span id="ioh::Logger::store_properties__std::vector:std::reference_wrapper:logger::Property::R"></span><span class="target" id="classioh_1_1_logger_1afdeade7916b2b4cfd6ddee656ccabfce"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">store_properties</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">reference_wrapper</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger8PropertyE" title="ioh::logger::Property"><span class="n"><span class="pre">Property</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">properties</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh6Logger16store_propertiesERNSt6vectorINSt17reference_wrapperIN6logger8PropertyEEEEE" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Convert a vector of properties in a map of {name =&gt; property}. </p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger4any_E">
-<span id="_CPPv3N3ioh6Logger4any_E"></span><span id="_CPPv2N3ioh6Logger4any_E"></span><span id="ioh::Logger::any___trigger::Any"></span><span class="target" id="classioh_1_1_logger_1a82a10691087262f9e47d39c6556302b3"></span><a class="reference internal" href="#_CPPv4N3ioh6Logger7triggerERN6logger7TriggerE" title="ioh::Logger::trigger"><span class="n"><span class="pre">trigger</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">any_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6Logger4any_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Default combination of triggers instance. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger9triggers_E">
-<span id="_CPPv3N3ioh6Logger9triggers_E"></span><span id="_CPPv2N3ioh6Logger9triggers_E"></span><span id="ioh::Logger::triggers___trigger::SetR"></span><span class="target" id="classioh_1_1_logger_1a0dc0fd8594c3792c7a9fed20d042350b"></span><a class="reference internal" href="#_CPPv4N3ioh6Logger7triggerERN6logger7TriggerE" title="ioh::Logger::trigger"><span class="n"><span class="pre">trigger</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Set</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">triggers_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6Logger9triggers_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Lower-level interface. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger8problem_E">
-<span id="_CPPv3N3ioh6Logger8problem_E"></span><span id="_CPPv2N3ioh6Logger8problem_E"></span><span id="ioh::Logger::problem___std::optional:problem::MetaData:"></span><span class="target" id="classioh_1_1_logger_1a84625105961e5dba1be2b44b6a9e306d"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4NK3ioh6Logger7problemEv" title="ioh::Logger::problem"><span class="n"><span class="pre">problem</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MetaData</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">problem_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6Logger8problem_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Access to the problem. </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger11properties_E">
-<span id="_CPPv3N3ioh6Logger11properties_E"></span><span id="_CPPv2N3ioh6Logger11properties_E"></span><span id="ioh::Logger::properties___std::map:ss.std::reference_wrapper:logger::Property::"></span><span class="target" id="classioh_1_1_logger_1ab7f4bddf73dc80874c6d6eab65770f93"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">reference_wrapper</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger8PropertyE" title="ioh::logger::Property"><span class="n"><span class="pre">Property</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">properties_</span></span></span><a class="headerlink" href="#_CPPv4N3ioh6Logger11properties_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>Map property names to property references. </p>
-<p>If your logger is handling any property, you can just iterate over them, if you need specific ones, you can call them by their name.</p>
-<p>This holds reference to optionals, so to get the actual value of a property, you should:<ol class="lowerroman simple">
-<li><p>use <code class="docutils literal notranslate"><span class="pre">at(…)</span></code> and not <code class="docutils literal notranslate"><span class="pre">operator[]</span></code>,</p></li>
-<li><p>use <code class="docutils literal notranslate"><span class="pre">get()</span></code> on the returned element,</p></li>
-<li><p>ensure that there actually is a valid value,</p></li>
-<li><p>use <code class="docutils literal notranslate"><span class="pre">value()</span></code> to get it. <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">With</span> <span class="n">its</span> <span class="n">name</span><span class="p">:</span>
-<span class="n">_properties</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
-<span class="o">//</span> <span class="n">If</span> <span class="n">your</span> <span class="n">iterating</span> <span class="n">over</span> <span class="n">the</span> <span class="nb">map</span><span class="p">:</span>
-<span class="k">for</span><span class="p">(</span><span class="n">auto</span><span class="o">&amp;</span> <span class="n">p</span> <span class="p">:</span> <span class="n">_properties</span><span class="p">)</span> <span class="p">{</span> <span class="n">p</span><span class="o">.</span><span class="n">second</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">value</span><span class="p">();}</span>
-</pre></div>
-</div>
-</p></li>
-</ol>
-</p>
-<p>You can directly test if the property actually has a valid value: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span><span class="n">_properties</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">())</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
-</pre></div>
-</div>
- </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3ioh6Logger18properties_vector_E">
-<span id="_CPPv3N3ioh6Logger18properties_vector_E"></span><span id="_CPPv2N3ioh6Logger18properties_vector_E"></span><span id="ioh::Logger::properties_vector___logger::Properties"></span><span class="target" id="classioh_1_1_logger_1ae4de0d05e98190299f0715f223511d3a"></span><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_logger.html#_CPPv4N3ioh6logger10PropertiesE" title="ioh::logger::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">properties_vector_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3ioh6Logger18properties_vector_E" title="Permalink to this definition">#</a><br /></dt>
-<dd><p>A vector with all the properties. </p>
-</dd></dl>
-
-</div>
-</dd></dl>
-
 </section>
 </section>
 </section>
@@ -841,9 +508,7 @@ Used by <a class="reference internal" href="ioh_logger.html#classioh_1_1logger_1
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -879,10 +544,8 @@ Used by <a class="reference internal" href="ioh_logger.html#classioh_1_1logger_1
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>
 </html>
