@@ -1,6 +1,6 @@
 import typing
 import enum
-from .iohcpp import IntegerSolution, OptimizationType, RealSolution
+from .iohcpp import IntegerSolution, OptimizationType, RealSolution, RealBounds, RealConstraint, IntegerBounds, IntegerConstraint
 
 from .iohcpp import problem as problem
 from .iohcpp import suite as suite

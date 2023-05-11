@@ -122,7 +122,7 @@ void define_constraintset(py::module &m, const std::string &name)
     using Class = ConstraintSet<T>;
 
     py::class_<Class, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<Constraints<T>>(), py::arg("constraints"))
+        .def(py::init<Constraints<T>>(), py::arg("constraints") = Constraints<T>{})
         .def("add", &Class::add)
         .def("remove", &Class::remove)
         .def("penalize", &Class::penalize)
@@ -168,7 +168,7 @@ void define_bounds(py::module &m, const std::string &name)
 
     py::class_<Class, Parent, std::shared_ptr<Class>>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<std::vector<T>, std::vector<T>, constraint::Enforced>(), py::arg("lb"), py::arg("ub"),
-             py::arg("enforced"),
+             py::arg("enforced") = constraint::Enforced::NOT,
              R"pbdoc(
                 Create box constraints. 
 
@@ -183,7 +183,7 @@ void define_bounds(py::module &m, const std::string &name)
                     
             )pbdoc")
         .def(py::init<int, T, T, constraint::Enforced>(), py::arg("size"), py::arg("lb"), py::arg("ub"),
-             py::arg("enforced"),
+             py::arg("enforced") = constraint::Enforced::NOT,
              R"pbdoc(
                 Create box constraints. 
 
@@ -262,7 +262,7 @@ class PyProblem : public P
     {
         if (opt.x.size() == static_cast<size_t>(n_variables))
             return opt;
-        return Solution<T, SingleObjective>(n_variables, ioh::common::OptimizationType(!is_minimization));
+        return Solution<T, SingleObjective>(n_variables, ioh::common::OptimizationType(is_minimization));
     }
 
 public:
@@ -274,10 +274,10 @@ public:
 
     explicit PyProblem(const std::string &name, const int n_variables = 5, const int instance = 1,
                        const bool is_minimization = true, Bounds<T> bounds = Bounds<T>(),
-                       const ConstraintSet<T> &constraints = {}, const Solution<T, SingleObjective> &optimum = {}) :
+                       const Constraints<T> &constraints = {}, const Solution<T, SingleObjective> &optimum = {}) :
         P(MetaData(instance, name, n_variables,
                    is_minimization ? ioh::common::OptimizationType::MIN : ioh::common::OptimizationType::MAX),
-          bounds, constraints, validate_optimum(optimum, n_variables, is_minimization))
+          bounds, ConstraintSet<T>(constraints), validate_optimum(optimum, n_variables, is_minimization))
     {
         auto registered = perform_registration();
     }
@@ -308,9 +308,9 @@ void define_base_class(py::module &m, const std::string &name)
     options.disable_function_signatures();
 
     py::class_<ProblemType, PyProblem, std::shared_ptr<ProblemType>>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<const std::string, int, int, bool, Bounds<T>, ConstraintSet<T>, Solution<T, SingleObjective>>(),
+        .def(py::init<const std::string, int, int, bool, Bounds<T>, Constraints<T>, Solution<T, SingleObjective>>(),
              py::arg("name"), py::arg("n_variables") = 5, py::arg("instance") = 1, py::arg("is_minimization") = true,
-             py::arg("bounds") = Bounds<T>(5), py::arg("constraints") = ConstraintSet<T>{},
+             py::arg("bounds") = Bounds<T>(5), py::arg("constraints") = Constraints<T>{},
              py::arg("optimum") = Solution<T, SingleObjective>{},
              fmt::format("Base class for {} problems", name).c_str())
         .def("reset", &ProblemType::reset,
