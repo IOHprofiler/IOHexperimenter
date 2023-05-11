@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="AttractiveSector" href="../api/ioh.iohcpp.problem.AttractiveSector.html" /><link rel="prev" title="StarDiscrepancySampler" href="../api/ioh.iohcpp.problem.StarDiscrepancySampler.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="AttractiveSector" href="../api/ioh.iohcpp.problem.AttractiveSector.html" /><link rel="prev" title="RealSingleObjective" href="../api/ioh.iohcpp.problem.RealSingleObjective.html" />
 
     <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
-        <title>BBOB - IOHExperimenter 0.3.8 documentation</title>
+        <title>BBOB &amp; SBOX - IOHExperimenter 0.3.10 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -124,7 +124,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.8 documentation</div></a>
+      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.10 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -147,7 +147,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../contents.html">
   
   
-  <span class="sidebar-brand-text">IOHExperimenter 0.3.8 documentation</span>
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.10 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -213,16 +213,89 @@
 </ul>
 </li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../python.html">Python</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="ioh.html">Utilities</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem.html">get_problem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.wrap_problem.html">wrap_problem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem_id.html">get_problem_id</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.Experiment.html">Experiment</a></li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="problem.html">Problem</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerSingleObjective.html">IntegerSingleObjective</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealSingleObjective.html">RealSingleObjective</a></li>
+<li class="toctree-l3 current has-children current-page"><a class="current reference internal" href="#">BBOB &amp; SBOX</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AttractiveSector.html">AttractiveSector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BBOB.html">BBOB</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BentCigar.html">BentCigar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BuecheRastrigin.html">BuecheRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.DifferentPowers.html">DifferentPowers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Discus.html">Discus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Ellipsoid.html">Ellipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.EllipsoidRotated.html">EllipsoidRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher101.html">Gallagher101</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher21.html">Gallagher21</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GriewankRosenbrock.html">GriewankRosenbrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Katsuura.html">Katsuura</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LinearSlope.html">LinearSlope</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html">LunacekBiRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rastrigin.html">Rastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RastriginRotated.html">RastriginRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rosenbrock.html">Rosenbrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RosenbrockRotated.html">RosenbrockRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SBOX.html">SBOX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers10.html">Schaffers10</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers1000.html">Schaffers1000</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schwefel.html">Schwefel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SharpRidge.html">SharpRidge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Sphere.html">Sphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.StepEllipsoid.html">StepEllipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Weierstrass.html">Weierstrass</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.AbstractIntegerConstraint.html">AbstractIntegerConstraint</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.AbstractRealConstraint.html">AbstractRealConstraint</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pbo.html">PBO</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.ConcatenatedTrap.html">ConcatenatedTrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingRing.html">IsingRing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTorus.html">IsingTorus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTriangular.html">IsingTriangular</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LABS.html">LABS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnes.html">LeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy1.html">LeadingOnesDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy2.html">LeadingOnesDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesEpistasis.html">LeadingOnesEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesNeutrality.html">LeadingOnesNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness1.html">LeadingOnesRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness2.html">LeadingOnesRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness3.html">LeadingOnesRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Linear.html">Linear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MIS.html">MIS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.NQueens.html">NQueens</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMax.html">OneMax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy1.html">OneMaxDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy2.html">OneMaxDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxEpistasis.html">OneMaxEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxNeutrality.html">OneMaxNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness1.html">OneMaxRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness2.html">OneMaxRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness3.html">OneMaxRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PBO.html">PBO</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="submodular.html">Submodular</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="star_discrepancy.html">Star Discrepancy</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerStarDiscrepancy.html">IntegerStarDiscrepancy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealStarDiscrepancy.html">RealStarDiscrepancy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AbstractWModel.html">AbstractWModel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelLeadingOnes.html">WModelLeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelOneMax.html">WModelOneMax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.ConstraintEnforcement.html">ConstraintEnforcement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerBounds.html">IntegerBounds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraint.html">IntegerConstraint</a></li>
@@ -239,132 +312,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealState.html">RealState</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current has-children"><a class="reference internal" href="problem.html">Problem</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerSingleObjective.html">IntegerSingleObjective</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerSingleObjectiveWrappedProblem.html">IntegerSingleObjectiveWrappedProblem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerStarDiscrepancy.html">IntegerStarDiscrepancy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealSingleObjective.html">RealSingleObjective</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem.html">RealSingleObjectiveWrappedProblem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealStarDiscrepancy.html">RealStarDiscrepancy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.SBOX.html">SBOX</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
-<li class="toctree-l3 current has-children current-page"><a class="current reference internal" href="#">BBOB</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AttractiveSector.html">AttractiveSector</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BBOB.html">BBOB</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BentCigar.html">BentCigar</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BuecheRastrigin.html">BuecheRastrigin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.DifferentPowers.html">DifferentPowers</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Discus.html">Discus</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Ellipsoid.html">Ellipsoid</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.EllipsoidRotated.html">EllipsoidRotated</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher101.html">Gallagher101</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher21.html">Gallagher21</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GriewankRosenBrock.html">GriewankRosenBrock</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerSingleObjective.html">IntegerSingleObjective</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerSingleObjectiveWrappedProblem.html">IntegerSingleObjectiveWrappedProblem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerStarDiscrepancy.html">IntegerStarDiscrepancy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Katsuura.html">Katsuura</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LinearSlope.html">LinearSlope</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html">LunacekBiRastrigin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rastrigin.html">Rastrigin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RastriginRotated.html">RastriginRotated</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealSingleObjective.html">RealSingleObjective</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem.html">RealSingleObjectiveWrappedProblem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealStarDiscrepancy.html">RealStarDiscrepancy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rosenbrock.html">Rosenbrock</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RosenbrockRotated.html">RosenbrockRotated</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SBOX.html">SBOX</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers10.html">Schaffers10</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers1000.html">Schaffers1000</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schwefel.html">Schwefel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SharpRidge.html">SharpRidge</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Sphere.html">Sphere</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.StepEllipsoid.html">StepEllipsoid</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Weierstrass.html">Weierstrass</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh.html">Utilities</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem.html">get_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.wrap_problem.html">wrap_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem_id.html">get_problem_id</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.Experiment.html">Experiment</a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pbo.html">PBO</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.ConcatenatedTrap.html">ConcatenatedTrap</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerSingleObjective.html">IntegerSingleObjective</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerSingleObjectiveWrappedProblem.html">IntegerSingleObjectiveWrappedProblem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerStarDiscrepancy.html">IntegerStarDiscrepancy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingRing.html">IsingRing</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTorus.html">IsingTorus</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTriangular.html">IsingTriangular</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LABS.html">LABS</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnes.html">LeadingOnes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy1.html">LeadingOnesDummy1</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy2.html">LeadingOnesDummy2</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesEpistasis.html">LeadingOnesEpistasis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesNeutrality.html">LeadingOnesNeutrality</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness1.html">LeadingOnesRuggedness1</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness2.html">LeadingOnesRuggedness2</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness3.html">LeadingOnesRuggedness3</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Linear.html">Linear</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MIS.html">MIS</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.NQueens.html">NQueens</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMax.html">OneMax</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy1.html">OneMaxDummy1</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy2.html">OneMaxDummy2</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxEpistasis.html">OneMaxEpistasis</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxNeutrality.html">OneMaxNeutrality</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness1.html">OneMaxRuggedness1</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness2.html">OneMaxRuggedness2</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness3.html">OneMaxRuggedness3</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PBO.html">PBO</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealSingleObjective.html">RealSingleObjective</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem.html">RealSingleObjectiveWrappedProblem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealStarDiscrepancy.html">RealStarDiscrepancy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SBOX.html">SBOX</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
-</ul>
-</li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AbstractWModel.html">AbstractWModel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html">GraphConstraint</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerSingleObjective.html">IntegerSingleObjective</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerSingleObjectiveWrappedProblem.html">IntegerSingleObjectiveWrappedProblem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerStarDiscrepancy.html">IntegerStarDiscrepancy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html">PWTConstraint</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealSingleObjective.html">RealSingleObjective</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem.html">RealSingleObjectiveWrappedProblem</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealStarDiscrepancy.html">RealStarDiscrepancy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SBOX.html">SBOX</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelLeadingOnes.html">WModelLeadingOnes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelOneMax.html">WModelOneMax</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="logger.html">Logging</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="logger.html">Logging</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Always.html">Always</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.At.html">At</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.During.html">During</a></li>
@@ -402,7 +357,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Store.html">Store</a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="suite.html">Suite</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="suite.html">Suite</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.BBOB.html">BBOB</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Integer.html">Integer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.IntegerStarDiscrepancy.html">IntegerStarDiscrepancy</a></li>
@@ -449,21 +404,12 @@
           </label>
         </div>
         <article role="main">
-          <section id="bbob">
-<h1>BBOB<a class="headerlink" href="#bbob" title="Permalink to this heading">#</a></h1>
+          <section id="bbob-sbox">
+<h1>BBOB &amp; SBOX<a class="headerlink" href="#bbob-sbox" title="Permalink to this heading">#</a></h1>
 <p>Black-Box Optimization Benchmarking (BBOB) problem set, which contains 24 noiseless real-valued test functions supported on [-5, 5]^n, where n is the dimensionality.</p>
 <p>These problems were orginally proposed by Hansen et. al. in [FinckHRA10] and was implemented as the core component of the COmparing Continous Optimizer (COCO) platform [HansenARMTB20].</p>
 <p>We took the implementation of those 24 functions in <a class="reference external" href="https://github.com/numbbo/coco/tree/master/code-experiments/src">https://github.com/numbbo/coco/tree/master/code-experiments/src</a> (v2.2) and adopted those to our framework.</p>
 <p>We have acknowledged and specified in our license file <a class="reference external" href="https://github.com/IOHprofiler/IOHexperimenter/blob/master/LICENSE.md">https://github.com/IOHprofiler/IOHexperimenter/blob/master/LICENSE.md</a> the usage and modification to the COCO/BBOB sources.</p>
-<section id="functions">
-<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">#</a></h2>
-<div class="table-wrapper autosummary longtable docutils container">
-<table class="autosummary longtable docutils align-default">
-<tbody>
-</tbody>
-</table>
-</div>
-</section>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h2>
 <div class="table-wrapper autosummary longtable docutils container">
@@ -499,47 +445,17 @@
 <tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher21.html#ioh.iohcpp.problem.Gallagher21" title="ioh.iohcpp.problem.Gallagher21"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Gallagher21</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphConstraint.html#ioh.iohcpp.problem.GraphConstraint" title="ioh.iohcpp.problem.GraphConstraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GraphConstraint</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.GriewankRosenbrock.html#ioh.iohcpp.problem.GriewankRosenbrock" title="ioh.iohcpp.problem.GriewankRosenbrock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GriewankRosenbrock</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html#ioh.iohcpp.problem.GraphProblem" title="ioh.iohcpp.problem.GraphProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GraphProblem</span></code></a></p></td>
-<td><p>Graph type problem</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.GriewankRosenBrock.html#ioh.iohcpp.problem.GriewankRosenBrock" title="ioh.iohcpp.problem.GriewankRosenBrock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GriewankRosenBrock</span></code></a>(self, instance, n_variables)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Katsuura.html#ioh.iohcpp.problem.Katsuura" title="ioh.iohcpp.problem.Katsuura"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Katsuura</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerSingleObjective.html#ioh.iohcpp.problem.IntegerSingleObjective" title="ioh.iohcpp.problem.IntegerSingleObjective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntegerSingleObjective</span></code></a></p></td>
-<td><p>Base class for IntegerSingleObjective problems</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerSingleObjectiveWrappedProblem.html#ioh.iohcpp.problem.IntegerSingleObjectiveWrappedProblem" title="ioh.iohcpp.problem.IntegerSingleObjectiveWrappedProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntegerSingleObjectiveWrappedProblem</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.LinearSlope.html#ioh.iohcpp.problem.LinearSlope" title="ioh.iohcpp.problem.LinearSlope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearSlope</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerStarDiscrepancy.html#ioh.iohcpp.problem.IntegerStarDiscrepancy" title="ioh.iohcpp.problem.IntegerStarDiscrepancy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntegerStarDiscrepancy</span></code></a>(self, instance, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html#ioh.iohcpp.problem.LunacekBiRastrigin" title="ioh.iohcpp.problem.LunacekBiRastrigin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LunacekBiRastrigin</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Katsuura.html#ioh.iohcpp.problem.Katsuura" title="ioh.iohcpp.problem.Katsuura"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Katsuura</span></code></a>(self, instance, n_variables)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.LinearSlope.html#ioh.iohcpp.problem.LinearSlope" title="ioh.iohcpp.problem.LinearSlope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearSlope</span></code></a>(self, instance, n_variables)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html#ioh.iohcpp.problem.LunacekBiRastrigin" title="ioh.iohcpp.problem.LunacekBiRastrigin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LunacekBiRastrigin</span></code></a>(self, instance, n_variables)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html#ioh.iohcpp.problem.MaxCoverage" title="ioh.iohcpp.problem.MaxCoverage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MaxCoverage</span></code></a></p></td>
-<td><p>MaxCoverage function</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html#ioh.iohcpp.problem.MaxCut" title="ioh.iohcpp.problem.MaxCut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MaxCut</span></code></a></p></td>
-<td><p>MaxCut function</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html#ioh.iohcpp.problem.MaxInfluence" title="ioh.iohcpp.problem.MaxInfluence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MaxInfluence</span></code></a></p></td>
-<td><p>MaxInfluence function</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.PWTConstraint.html#ioh.iohcpp.problem.PWTConstraint" title="ioh.iohcpp.problem.PWTConstraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWTConstraint</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html#ioh.iohcpp.problem.PackWhileTravel" title="ioh.iohcpp.problem.PackWhileTravel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PackWhileTravel</span></code></a></p></td>
-<td><p>PackWhileTravel function</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Rastrigin.html#ioh.iohcpp.problem.Rastrigin" title="ioh.iohcpp.problem.Rastrigin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rastrigin</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
@@ -547,41 +463,29 @@
 <tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.RastriginRotated.html#ioh.iohcpp.problem.RastriginRotated" title="ioh.iohcpp.problem.RastriginRotated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RastriginRotated</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.RealSingleObjective.html#ioh.iohcpp.problem.RealSingleObjective" title="ioh.iohcpp.problem.RealSingleObjective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RealSingleObjective</span></code></a></p></td>
-<td><p>Base class for RealSingleObjective problems</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem.html#ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem" title="ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RealSingleObjectiveWrappedProblem</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Rosenbrock.html#ioh.iohcpp.problem.Rosenbrock" title="ioh.iohcpp.problem.Rosenbrock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rosenbrock</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.RealStarDiscrepancy.html#ioh.iohcpp.problem.RealStarDiscrepancy" title="ioh.iohcpp.problem.RealStarDiscrepancy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RealStarDiscrepancy</span></code></a>(self, instance, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.RosenbrockRotated.html#ioh.iohcpp.problem.RosenbrockRotated" title="ioh.iohcpp.problem.RosenbrockRotated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RosenbrockRotated</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Rosenbrock.html#ioh.iohcpp.problem.Rosenbrock" title="ioh.iohcpp.problem.Rosenbrock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rosenbrock</span></code></a>(self, instance, n_variables)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.RosenbrockRotated.html#ioh.iohcpp.problem.RosenbrockRotated" title="ioh.iohcpp.problem.RosenbrockRotated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RosenbrockRotated</span></code></a>(self, instance, n_variables)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.SBOX.html#ioh.iohcpp.problem.SBOX" title="ioh.iohcpp.problem.SBOX"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SBOX</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.SBOX.html#ioh.iohcpp.problem.SBOX" title="ioh.iohcpp.problem.SBOX"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SBOX</span></code></a></p></td>
 <td><p>Black-Box Optimization Benchmarking (BBOB) problem set.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers10.html#ioh.iohcpp.problem.Schaffers10" title="ioh.iohcpp.problem.Schaffers10"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Schaffers10</span></code></a>(self, instance, n_variables)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers10.html#ioh.iohcpp.problem.Schaffers10" title="ioh.iohcpp.problem.Schaffers10"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Schaffers10</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers1000.html#ioh.iohcpp.problem.Schaffers1000" title="ioh.iohcpp.problem.Schaffers1000"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Schaffers1000</span></code></a>(self, instance, n_variables)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers1000.html#ioh.iohcpp.problem.Schaffers1000" title="ioh.iohcpp.problem.Schaffers1000"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Schaffers1000</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Schwefel.html#ioh.iohcpp.problem.Schwefel" title="ioh.iohcpp.problem.Schwefel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Schwefel</span></code></a>(self, instance, n_variables)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Schwefel.html#ioh.iohcpp.problem.Schwefel" title="ioh.iohcpp.problem.Schwefel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Schwefel</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.SharpRidge.html#ioh.iohcpp.problem.SharpRidge" title="ioh.iohcpp.problem.SharpRidge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SharpRidge</span></code></a>(self, instance, n_variables)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.SharpRidge.html#ioh.iohcpp.problem.SharpRidge" title="ioh.iohcpp.problem.SharpRidge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SharpRidge</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Sphere.html#ioh.iohcpp.problem.Sphere" title="ioh.iohcpp.problem.Sphere"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sphere</span></code></a>(self, instance, n_variables)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.Sphere.html#ioh.iohcpp.problem.Sphere" title="ioh.iohcpp.problem.Sphere"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sphere</span></code></a>(self, instance, n_variables)</p></td>
 <td><p>Sphere function</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.StarDiscrepancySampler.html#ioh.iohcpp.problem.StarDiscrepancySampler" title="ioh.iohcpp.problem.StarDiscrepancySampler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StarDiscrepancySampler</span></code></a>(self, value)</p></td>
-<td><p>Members:</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../api/ioh.iohcpp.problem.StepEllipsoid.html#ioh.iohcpp.problem.StepEllipsoid" title="ioh.iohcpp.problem.StepEllipsoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StepEllipsoid</span></code></a>(self, instance, n_variables)</p></td>
 <td><p></p></td>
@@ -595,49 +499,35 @@
 </section>
 <section id="class-inheritance-diagram">
 <h2>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this heading">#</a></h2>
-<div class="graphviz"><img src="../_images/inheritance-5183d62d47eecfcd53af5529457941bdb249bc49.png" alt="Inheritance diagram of ioh.iohcpp.problem.AttractiveSector, ioh.iohcpp.problem.BBOB, ioh.iohcpp.problem.BentCigar, ioh.iohcpp.problem.BuecheRastrigin, ioh.iohcpp.problem.DifferentPowers, ioh.iohcpp.problem.Discus, ioh.iohcpp.problem.Ellipsoid, ioh.iohcpp.problem.EllipsoidRotated, ioh.iohcpp.problem.Gallagher101, ioh.iohcpp.problem.Gallagher21, ioh.iohcpp.problem.GraphConstraint, ioh.iohcpp.problem.GraphProblem, ioh.iohcpp.problem.GriewankRosenBrock, ioh.iohcpp.problem.IntegerSingleObjective, ioh.iohcpp.problem.IntegerSingleObjectiveWrappedProblem, ioh.iohcpp.problem.IntegerStarDiscrepancy, ioh.iohcpp.problem.Katsuura, ioh.iohcpp.problem.LinearSlope, ioh.iohcpp.problem.LunacekBiRastrigin, ioh.iohcpp.problem.MaxCoverage, ioh.iohcpp.problem.MaxCut, ioh.iohcpp.problem.MaxInfluence, ioh.iohcpp.problem.PWTConstraint, ioh.iohcpp.problem.PackWhileTravel, ioh.iohcpp.problem.Rastrigin, ioh.iohcpp.problem.RastriginRotated, ioh.iohcpp.problem.RealSingleObjective, ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem, ioh.iohcpp.problem.RealStarDiscrepancy, ioh.iohcpp.problem.Rosenbrock, ioh.iohcpp.problem.RosenbrockRotated, ioh.iohcpp.problem.SBOX, ioh.iohcpp.problem.Schaffers10, ioh.iohcpp.problem.Schaffers1000, ioh.iohcpp.problem.Schwefel, ioh.iohcpp.problem.SharpRidge, ioh.iohcpp.problem.Sphere, ioh.iohcpp.problem.StarDiscrepancySampler, ioh.iohcpp.problem.StepEllipsoid, ioh.iohcpp.problem.Weierstrass" usemap="#inheritancef7e95dbda6" class="inheritance graphviz" /></div>
-<map id="inheritancef7e95dbda6" name="inheritancef7e95dbda6">
-<area shape="rect" id="node1" href="../api/ioh.iohcpp.AbstractIntegerConstraint.html#ioh.iohcpp.AbstractIntegerConstraint" target="_top" title="AbstractIntegerConstraint" alt="" coords="153,480,311,501"/>
-<area shape="rect" id="node14" href="../api/ioh.iohcpp.problem.GraphConstraint.html#ioh.iohcpp.problem.GraphConstraint" target="_top" title="GraphConstraint" alt="" coords="416,439,524,460"/>
-<area shape="rect" id="node26" href="../api/ioh.iohcpp.problem.PWTConstraint.html#ioh.iohcpp.problem.PWTConstraint" target="_top" title="PWTConstraint" alt="" coords="421,480,519,501"/>
-<area shape="rect" id="node5" href="../api/ioh.iohcpp.problem.RealSingleObjective.html#ioh.iohcpp.problem.RealSingleObjective" target="_top" title="RealSingleObjective" alt="" coords="168,789,296,810"/>
-<area shape="rect" id="node16" href="../api/ioh.iohcpp.problem.IntegerSingleObjective.html#ioh.iohcpp.problem.IntegerSingleObjective" target="_top" title="IntegerSingleObjective" alt="" coords="161,1016,304,1037"/>
-<area shape="rect" id="node40" href="../api/ioh.iohcpp.problem.StarDiscrepancySampler.html#ioh.iohcpp.problem.StarDiscrepancySampler" target="_top" title="Members:" alt="" coords="156,1057,309,1078"/>
-<area shape="rect" id="node3" href="../api/ioh.iohcpp.problem.AttractiveSector.html#ioh.iohcpp.problem.AttractiveSector" target="_top" title="AttractiveSector" alt="" coords="643,4,749,26"/>
-<area shape="rect" id="node4" href="../api/ioh.iohcpp.problem.BBOB.html#ioh.iohcpp.problem.BBOB" target="_top" title="Black&#45;Box Optimization Benchmarking (BBOB) problem set." alt="" coords="440,521,500,543"/>
-<area shape="rect" id="node6" href="../api/ioh.iohcpp.problem.BentCigar.html#ioh.iohcpp.problem.BentCigar" target="_top" title="BentCigar" alt="" coords="660,46,732,67"/>
-<area shape="rect" id="node7" href="../api/ioh.iohcpp.problem.BuecheRastrigin.html#ioh.iohcpp.problem.BuecheRastrigin" target="_top" title="BuecheRastrigin" alt="" coords="642,87,750,108"/>
-<area shape="rect" id="node8" href="../api/ioh.iohcpp.problem.DifferentPowers.html#ioh.iohcpp.problem.DifferentPowers" target="_top" title="DifferentPowers" alt="" coords="643,128,749,150"/>
-<area shape="rect" id="node9" href="../api/ioh.iohcpp.problem.Discus.html#ioh.iohcpp.problem.Discus" target="_top" title="Discus" alt="" coords="666,170,726,191"/>
-<area shape="rect" id="node10" href="../api/ioh.iohcpp.problem.Ellipsoid.html#ioh.iohcpp.problem.Ellipsoid" target="_top" title="Ellipsoid" alt="" coords="664,211,728,232"/>
-<area shape="rect" id="node11" href="../api/ioh.iohcpp.problem.EllipsoidRotated.html#ioh.iohcpp.problem.EllipsoidRotated" target="_top" title="EllipsoidRotated" alt="" coords="642,252,750,273"/>
-<area shape="rect" id="node12" href="../api/ioh.iohcpp.problem.Gallagher101.html#ioh.iohcpp.problem.Gallagher101" target="_top" title="Gallagher101" alt="" coords="650,294,742,315"/>
-<area shape="rect" id="node13" href="../api/ioh.iohcpp.problem.Gallagher21.html#ioh.iohcpp.problem.Gallagher21" target="_top" title="Gallagher21" alt="" coords="654,335,738,356"/>
-<area shape="rect" id="node17" href="../api/ioh.iohcpp.problem.GriewankRosenBrock.html#ioh.iohcpp.problem.GriewankRosenBrock" target="_top" title="GriewankRosenBrock" alt="" coords="628,376,764,397"/>
-<area shape="rect" id="node20" href="../api/ioh.iohcpp.problem.Katsuura.html#ioh.iohcpp.problem.Katsuura" target="_top" title="Katsuura" alt="" coords="663,417,729,439"/>
-<area shape="rect" id="node21" href="../api/ioh.iohcpp.problem.LinearSlope.html#ioh.iohcpp.problem.LinearSlope" target="_top" title="LinearSlope" alt="" coords="655,459,737,480"/>
-<area shape="rect" id="node22" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html#ioh.iohcpp.problem.LunacekBiRastrigin" target="_top" title="LunacekBiRastrigin" alt="" coords="635,500,757,521"/>
-<area shape="rect" id="node28" href="../api/ioh.iohcpp.problem.Rastrigin.html#ioh.iohcpp.problem.Rastrigin" target="_top" title="Rastrigin" alt="" coords="663,541,729,563"/>
-<area shape="rect" id="node29" href="../api/ioh.iohcpp.problem.RastriginRotated.html#ioh.iohcpp.problem.RastriginRotated" target="_top" title="RastriginRotated" alt="" coords="641,583,751,604"/>
-<area shape="rect" id="node32" href="../api/ioh.iohcpp.problem.Rosenbrock.html#ioh.iohcpp.problem.Rosenbrock" target="_top" title="Rosenbrock" alt="" coords="655,624,737,645"/>
-<area shape="rect" id="node33" href="../api/ioh.iohcpp.problem.RosenbrockRotated.html#ioh.iohcpp.problem.RosenbrockRotated" target="_top" title="RosenbrockRotated" alt="" coords="633,665,759,687"/>
-<area shape="rect" id="node35" href="../api/ioh.iohcpp.problem.Schaffers10.html#ioh.iohcpp.problem.Schaffers10" target="_top" title="Schaffers10" alt="" coords="655,707,737,728"/>
-<area shape="rect" id="node36" href="../api/ioh.iohcpp.problem.Schaffers1000.html#ioh.iohcpp.problem.Schaffers1000" target="_top" title="Schaffers1000" alt="" coords="648,748,744,769"/>
-<area shape="rect" id="node37" href="../api/ioh.iohcpp.problem.Schwefel.html#ioh.iohcpp.problem.Schwefel" target="_top" title="Schwefel" alt="" coords="662,789,730,810"/>
-<area shape="rect" id="node38" href="../api/ioh.iohcpp.problem.SharpRidge.html#ioh.iohcpp.problem.SharpRidge" target="_top" title="SharpRidge" alt="" coords="656,831,736,852"/>
-<area shape="rect" id="node39" href="../api/ioh.iohcpp.problem.Sphere.html#ioh.iohcpp.problem.Sphere" target="_top" title="Sphere function" alt="" coords="666,872,726,893"/>
-<area shape="rect" id="node41" href="../api/ioh.iohcpp.problem.StepEllipsoid.html#ioh.iohcpp.problem.StepEllipsoid" target="_top" title="StepEllipsoid" alt="" coords="651,913,741,934"/>
-<area shape="rect" id="node42" href="../api/ioh.iohcpp.problem.Weierstrass.html#ioh.iohcpp.problem.Weierstrass" target="_top" title="Weierstrass" alt="" coords="655,954,737,976"/>
-<area shape="rect" id="node30" href="../api/ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem.html#ioh.iohcpp.problem.RealSingleObjectiveWrappedProblem" target="_top" title="RealSingleObjectiveWrappedProblem" alt="" coords="359,748,581,769"/>
-<area shape="rect" id="node31" href="../api/ioh.iohcpp.problem.RealStarDiscrepancy.html#ioh.iohcpp.problem.RealStarDiscrepancy" target="_top" title="RealStarDiscrepancy" alt="" coords="404,789,536,810"/>
-<area shape="rect" id="node34" href="../api/ioh.iohcpp.problem.SBOX.html#ioh.iohcpp.problem.SBOX" target="_top" title="Black&#45;Box Optimization Benchmarking (BBOB) problem set." alt="" coords="440,831,500,852"/>
-<area shape="rect" id="node15" href="../api/ioh.iohcpp.problem.GraphProblem.html#ioh.iohcpp.problem.GraphProblem" target="_top" title="Graph type problem" alt="" coords="422,1016,518,1037"/>
-<area shape="rect" id="node23" href="../api/ioh.iohcpp.problem.MaxCoverage.html#ioh.iohcpp.problem.MaxCoverage" target="_top" title="MaxCoverage function" alt="" coords="649,996,743,1017"/>
-<area shape="rect" id="node24" href="../api/ioh.iohcpp.problem.MaxCut.html#ioh.iohcpp.problem.MaxCut" target="_top" title="MaxCut function" alt="" coords="666,1037,726,1058"/>
-<area shape="rect" id="node25" href="../api/ioh.iohcpp.problem.MaxInfluence.html#ioh.iohcpp.problem.MaxInfluence" target="_top" title="MaxInfluence function" alt="" coords="650,1078,742,1100"/>
-<area shape="rect" id="node27" href="../api/ioh.iohcpp.problem.PackWhileTravel.html#ioh.iohcpp.problem.PackWhileTravel" target="_top" title="PackWhileTravel function" alt="" coords="642,1120,750,1141"/>
-<area shape="rect" id="node18" href="../api/ioh.iohcpp.problem.IntegerSingleObjectiveWrappedProblem.html#ioh.iohcpp.problem.IntegerSingleObjectiveWrappedProblem" target="_top" title="IntegerSingleObjectiveWrappedProblem" alt="" coords="352,1057,588,1078"/>
-<area shape="rect" id="node19" href="../api/ioh.iohcpp.problem.IntegerStarDiscrepancy.html#ioh.iohcpp.problem.IntegerStarDiscrepancy" target="_top" title="IntegerStarDiscrepancy" alt="" coords="397,1098,543,1120"/>
+<div class="graphviz"><img src="../_images/inheritance-180c134cbb732d35cb279f041975f4ec0d394872.png" alt="Inheritance diagram of ioh.iohcpp.problem.AttractiveSector, ioh.iohcpp.problem.BBOB, ioh.iohcpp.problem.BentCigar, ioh.iohcpp.problem.BuecheRastrigin, ioh.iohcpp.problem.DifferentPowers, ioh.iohcpp.problem.Discus, ioh.iohcpp.problem.Ellipsoid, ioh.iohcpp.problem.EllipsoidRotated, ioh.iohcpp.problem.Gallagher101, ioh.iohcpp.problem.Gallagher21, ioh.iohcpp.problem.GriewankRosenbrock, ioh.iohcpp.problem.Katsuura, ioh.iohcpp.problem.LinearSlope, ioh.iohcpp.problem.LunacekBiRastrigin, ioh.iohcpp.problem.Rastrigin, ioh.iohcpp.problem.RastriginRotated, ioh.iohcpp.problem.Rosenbrock, ioh.iohcpp.problem.RosenbrockRotated, ioh.iohcpp.problem.SBOX, ioh.iohcpp.problem.Schaffers10, ioh.iohcpp.problem.Schaffers1000, ioh.iohcpp.problem.Schwefel, ioh.iohcpp.problem.SharpRidge, ioh.iohcpp.problem.Sphere, ioh.iohcpp.problem.StepEllipsoid, ioh.iohcpp.problem.Weierstrass" usemap="#inheritance08c83c75b5" class="inheritance graphviz" /></div>
+<map id="inheritance08c83c75b5" name="inheritance08c83c75b5">
+<area shape="rect" id="node1" href="../api/ioh.iohcpp.problem.AttractiveSector.html#ioh.iohcpp.problem.AttractiveSector" target="_top" title="AttractiveSector" alt="" coords="512,5,637,30"/>
+<area shape="rect" id="node2" href="../api/ioh.iohcpp.problem.BBOB.html#ioh.iohcpp.problem.BBOB" target="_top" title="Black&#45;Box Optimization Benchmarking (BBOB) problem set." alt="" coords="378,564,449,589"/>
+<area shape="rect" id="node4" href="../api/ioh.iohcpp.problem.BentCigar.html#ioh.iohcpp.problem.BentCigar" target="_top" title="BentCigar" alt="" coords="532,54,617,79"/>
+<area shape="rect" id="node5" href="../api/ioh.iohcpp.problem.BuecheRastrigin.html#ioh.iohcpp.problem.BuecheRastrigin" target="_top" title="BuecheRastrigin" alt="" coords="512,102,638,127"/>
+<area shape="rect" id="node6" href="../api/ioh.iohcpp.problem.DifferentPowers.html#ioh.iohcpp.problem.DifferentPowers" target="_top" title="DifferentPowers" alt="" coords="512,151,637,176"/>
+<area shape="rect" id="node7" href="../api/ioh.iohcpp.problem.Discus.html#ioh.iohcpp.problem.Discus" target="_top" title="Discus" alt="" coords="539,199,610,224"/>
+<area shape="rect" id="node8" href="../api/ioh.iohcpp.problem.Ellipsoid.html#ioh.iohcpp.problem.Ellipsoid" target="_top" title="Ellipsoid" alt="" coords="537,248,613,273"/>
+<area shape="rect" id="node9" href="../api/ioh.iohcpp.problem.EllipsoidRotated.html#ioh.iohcpp.problem.EllipsoidRotated" target="_top" title="EllipsoidRotated" alt="" coords="512,297,638,321"/>
+<area shape="rect" id="node10" href="../api/ioh.iohcpp.problem.Gallagher101.html#ioh.iohcpp.problem.Gallagher101" target="_top" title="Gallagher101" alt="" coords="521,345,628,370"/>
+<area shape="rect" id="node11" href="../api/ioh.iohcpp.problem.Gallagher21.html#ioh.iohcpp.problem.Gallagher21" target="_top" title="Gallagher21" alt="" coords="525,394,625,419"/>
+<area shape="rect" id="node12" href="../api/ioh.iohcpp.problem.GriewankRosenbrock.html#ioh.iohcpp.problem.GriewankRosenbrock" target="_top" title="GriewankRosenbrock" alt="" coords="496,442,653,467"/>
+<area shape="rect" id="node13" href="../api/ioh.iohcpp.problem.Katsuura.html#ioh.iohcpp.problem.Katsuura" target="_top" title="Katsuura" alt="" coords="535,491,614,516"/>
+<area shape="rect" id="node14" href="../api/ioh.iohcpp.problem.LinearSlope.html#ioh.iohcpp.problem.LinearSlope" target="_top" title="LinearSlope" alt="" coords="526,539,623,564"/>
+<area shape="rect" id="node15" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html#ioh.iohcpp.problem.LunacekBiRastrigin" target="_top" title="LunacekBiRastrigin" alt="" coords="503,588,647,613"/>
+<area shape="rect" id="node16" href="../api/ioh.iohcpp.problem.Rastrigin.html#ioh.iohcpp.problem.Rastrigin" target="_top" title="Rastrigin" alt="" coords="535,636,614,661"/>
+<area shape="rect" id="node17" href="../api/ioh.iohcpp.problem.RastriginRotated.html#ioh.iohcpp.problem.RastriginRotated" target="_top" title="RastriginRotated" alt="" coords="510,685,639,710"/>
+<area shape="rect" id="node19" href="../api/ioh.iohcpp.problem.Rosenbrock.html#ioh.iohcpp.problem.Rosenbrock" target="_top" title="Rosenbrock" alt="" coords="526,733,623,758"/>
+<area shape="rect" id="node20" href="../api/ioh.iohcpp.problem.RosenbrockRotated.html#ioh.iohcpp.problem.RosenbrockRotated" target="_top" title="RosenbrockRotated" alt="" coords="501,782,648,807"/>
+<area shape="rect" id="node22" href="../api/ioh.iohcpp.problem.Schaffers10.html#ioh.iohcpp.problem.Schaffers10" target="_top" title="Schaffers10" alt="" coords="526,831,623,855"/>
+<area shape="rect" id="node23" href="../api/ioh.iohcpp.problem.Schaffers1000.html#ioh.iohcpp.problem.Schaffers1000" target="_top" title="Schaffers1000" alt="" coords="518,879,631,904"/>
+<area shape="rect" id="node24" href="../api/ioh.iohcpp.problem.Schwefel.html#ioh.iohcpp.problem.Schwefel" target="_top" title="Schwefel" alt="" coords="535,928,615,953"/>
+<area shape="rect" id="node25" href="../api/ioh.iohcpp.problem.SharpRidge.html#ioh.iohcpp.problem.SharpRidge" target="_top" title="SharpRidge" alt="" coords="527,976,622,1001"/>
+<area shape="rect" id="node26" href="../api/ioh.iohcpp.problem.Sphere.html#ioh.iohcpp.problem.Sphere" target="_top" title="Sphere function" alt="" coords="539,1025,610,1050"/>
+<area shape="rect" id="node27" href="../api/ioh.iohcpp.problem.StepEllipsoid.html#ioh.iohcpp.problem.StepEllipsoid" target="_top" title="StepEllipsoid" alt="" coords="522,1073,627,1098"/>
+<area shape="rect" id="node28" href="../api/ioh.iohcpp.problem.Weierstrass.html#ioh.iohcpp.problem.Weierstrass" target="_top" title="Weierstrass" alt="" coords="526,1122,623,1147"/>
+<area shape="rect" id="node3" href="../api/ioh.iohcpp.problem.RealSingleObjective.html#ioh.iohcpp.problem.RealSingleObjective" target="_top" title="RealSingleObjective" alt="" coords="180,589,331,614"/>
+<area shape="rect" id="node21" href="../api/ioh.iohcpp.problem.SBOX.html#ioh.iohcpp.problem.SBOX" target="_top" title="Black&#45;Box Optimization Benchmarking (BBOB) problem set." alt="" coords="378,613,449,638"/>
 </map><section id="reference">
 <h3>Reference<a class="headerlink" href="#reference" title="Permalink to this heading">#</a></h3>
 <p>[HansenARMTB20] Nikolaus Hansen, Anne Auger, Raymond Ros, Olaf Mersmann,
@@ -664,14 +554,14 @@ Technical Report 2009/20, Research Center PPE, 2009. Updated February, 2010.</p>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="../api/ioh.iohcpp.problem.StarDiscrepancySampler.html">
+          <a class="prev-page" href="../api/ioh.iohcpp.problem.RealSingleObjective.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">StarDiscrepancySampler</div>
+                <div class="title">RealSingleObjective</div>
                 
               </div>
             </a>
@@ -707,8 +597,7 @@ Technical Report 2009/20, Research Center PPE, 2009. Updated February, 2010.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">BBOB</a><ul>
-<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#">BBOB &amp; SBOX</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#class-inheritance-diagram">Class Inheritance Diagram</a><ul>
 <li><a class="reference internal" href="#reference">Reference</a></li>

@@ -1,0 +1,6 @@
+<map id="inheritancef570deb96e" name="inheritancef570deb96e">
+<area shape="rect" id="node1" href="../api/ioh.iohcpp.problem.AbstractWModel.html#ioh.iohcpp.problem.AbstractWModel" target="_top" title="An abstract W&#45;model class. Please apply the WModelOneMax and WModelLeadingOnes classes." alt="" coords="401,31,531,56"/>
+<area shape="rect" id="node4" href="../api/ioh.iohcpp.problem.WModelLeadingOnes.html#ioh.iohcpp.problem.WModelLeadingOnes" target="_top" title="A W&#45;model problem built on LeadingOnes." alt="" coords="579,5,737,31"/>
+<area shape="rect" id="node5" href="../api/ioh.iohcpp.problem.WModelOneMax.html#ioh.iohcpp.problem.WModelOneMax" target="_top" title="A W&#45;model problem built on OneMax." alt="" coords="593,55,723,80"/>
+<area shape="rect" id="node2" href="../api/ioh.iohcpp.problem.IntegerSingleObjective.html#ioh.iohcpp.problem.IntegerSingleObjective" target="_top" title="IntegerSingleObjective" alt="" coords="183,31,353,56"/>
+</map>

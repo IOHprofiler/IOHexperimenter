@@ -1,0 +1,8 @@
+<map id="inheritance8d65a00182" name="inheritance8d65a00182">
+<area shape="rect" id="node1" href="../api/ioh.iohcpp.problem.GraphProblem.html#ioh.iohcpp.problem.GraphProblem" target="_top" title="Graph type problem" alt="" coords="401,80,516,105"/>
+<area shape="rect" id="node4" href="../api/ioh.iohcpp.problem.MaxCoverage.html#ioh.iohcpp.problem.MaxCoverage" target="_top" title="MaxCoverage function" alt="" coords="572,5,684,31"/>
+<area shape="rect" id="node5" href="../api/ioh.iohcpp.problem.MaxCut.html#ioh.iohcpp.problem.MaxCut" target="_top" title="MaxCut function" alt="" coords="592,55,664,80"/>
+<area shape="rect" id="node6" href="../api/ioh.iohcpp.problem.MaxInfluence.html#ioh.iohcpp.problem.MaxInfluence" target="_top" title="MaxInfluence function" alt="" coords="573,104,683,129"/>
+<area shape="rect" id="node7" href="../api/ioh.iohcpp.problem.PackWhileTravel.html#ioh.iohcpp.problem.PackWhileTravel" target="_top" title="PackWhileTravel function" alt="" coords="564,153,692,179"/>
+<area shape="rect" id="node2" href="../api/ioh.iohcpp.problem.IntegerSingleObjective.html#ioh.iohcpp.problem.IntegerSingleObjective" target="_top" title="IntegerSingleObjective" alt="" coords="183,80,353,105"/>
+</map>

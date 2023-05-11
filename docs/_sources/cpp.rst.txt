@@ -14,7 +14,7 @@ Logger Architecture
 API documentation
 ------------------
 .. toctree::
-    :maxdepth: 10
+    :maxdepth: 1
 
     cpp/ioh_common.rst
     cpp/ioh_logger.rst

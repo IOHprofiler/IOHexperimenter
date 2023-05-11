@@ -1,4 +1,4 @@
-BBOB
+BBOB & SBOX
 ============
 Black-Box Optimization Benchmarking (BBOB) problem set, which contains 24 noiseless real-valued test functions supported on [-5, 5]^n, where n is the dimensionality.
 
@@ -8,11 +8,38 @@ We took the implementation of those 24 functions in https://github.com/numbbo/co
 
 We have acknowledged and specified in our license file https://github.com/IOHprofiler/IOHexperimenter/blob/master/LICENSE.md the usage and modification to the COCO/BBOB sources.
 
+
 .. automodapi:: ioh.iohcpp.problem
     :inherited-members:
     :no-main-docstr:
     :no-heading:
-    :skip: wrap_integer_problem, wrap_real_problem, AbstractWModel, ConcatenatedTrap,  Integer, IntegerWrappedProblem, IsingRing, IsingTorus, IsingTriangular, LABS, LeadingOnes, LeadingOnesDummy1, LeadingOnesDummy2, LeadingOnesEpistasis, LeadingOnesNeutrality, LeadingOnesRuggedness1, LeadingOnesRuggedness2, LeadingOnesRuggedness3, Linear,  MIS, NQueens, OneMax, OneMaxDummy1, OneMaxDummy2, OneMaxEpistasis, OneMaxNeutrality, OneMaxRuggedness1, OneMaxRuggedness2, OneMaxRuggedness3, PBO, RealWrappedProblem, WModelLeadingOnes, WModelOneMax
+    :include: BBOB
+    :include: SBOX
+    :include: Sphere
+    :include: Ellipsoid
+    :include: Rastrigin
+    :include: BuecheRastrigin
+    :include: LinearSlope
+    :include: AttractiveSector
+    :include: StepEllipsoid
+    :include: Rosenbrock
+    :include: RosenbrockRotated
+    :include: EllipsoidRotated
+    :include: Discus
+    :include: BentCigar
+    :include: SharpRidge
+    :include: DifferentPowers
+    :include: RastriginRotated
+    :include: Weierstrass
+    :include: Schaffers10
+    :include: Schaffers1000
+    :include: GriewankRosenbrock
+    :include: Schwefel
+    :include: Gallagher101
+    :include: Gallagher21
+    :include: Katsuura
+    :include: LunacekBiRastrigin
+
 
 Reference
 ---------

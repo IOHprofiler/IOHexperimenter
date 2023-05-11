@@ -1,0 +1,9 @@
+<map id="inheritancea5a1d074c7" name="inheritancea5a1d074c7">
+<area shape="rect" id="node3" href="../api/ioh.iohcpp.problem.GraphConstraint.html#ioh.iohcpp.problem.GraphConstraint" target="_top" title="GraphConstraint" alt="" coords="420,31,548,56"/>
+<area shape="rect" id="node5" href="../api/ioh.iohcpp.problem.IntegerSingleObjective.html#ioh.iohcpp.problem.IntegerSingleObjective" target="_top" title="IntegerSingleObjective" alt="" coords="192,80,363,105"/>
+<area shape="rect" id="node4" href="../api/ioh.iohcpp.problem.GraphProblem.html#ioh.iohcpp.problem.GraphProblem" target="_top" title="Graph type problem" alt="" coords="427,80,541,105"/>
+<area shape="rect" id="node6" href="../api/ioh.iohcpp.problem.MaxCoverage.html#ioh.iohcpp.problem.MaxCoverage" target="_top" title="MaxCoverage function" alt="" coords="604,5,716,31"/>
+<area shape="rect" id="node7" href="../api/ioh.iohcpp.problem.MaxCut.html#ioh.iohcpp.problem.MaxCut" target="_top" title="MaxCut function" alt="" coords="624,55,696,80"/>
+<area shape="rect" id="node8" href="../api/ioh.iohcpp.problem.MaxInfluence.html#ioh.iohcpp.problem.MaxInfluence" target="_top" title="MaxInfluence function" alt="" coords="605,104,715,129"/>
+<area shape="rect" id="node9" href="../api/ioh.iohcpp.problem.PackWhileTravel.html#ioh.iohcpp.problem.PackWhileTravel" target="_top" title="PackWhileTravel function" alt="" coords="596,153,724,179"/>
+</map>
