@@ -245,25 +245,40 @@ class PyProblem : public P
     {
         auto meta_data = this->meta_data();
         auto bounds = this->bounds();
+        auto constraints = this->constraints();
+        auto optimum = this->optimum();
+
         auto &factory = ioh::common::Factory<P, int, int>::instance();
         factory.include(meta_data.name, meta_data.problem_id, [=](const int instance, const int n_variables) {
             return std::make_shared<PyProblem<P, T>>(MetaData(meta_data.problem_id, instance, meta_data.name,
                                                               n_variables, meta_data.optimization_type.type()),
-                                                     bounds.resize(n_variables));
+                                                     bounds.resize(n_variables), constraints, optimum);
         });
         return true;
     }
 
+    static Solution<T, SingleObjective> validate_optimum(const Solution<T, SingleObjective> &opt, const int n_variables,
+                                                         const bool is_minimization)
+    {
+        if (opt.x.size() == static_cast<size_t>(n_variables))
+            return opt;
+        return Solution<T, SingleObjective>(n_variables, ioh::common::OptimizationType(!is_minimization));
+    }
+
 public:
-    explicit PyProblem(const MetaData &meta_data, const Bounds<T> &bounds) : P(meta_data, bounds) {}
+    explicit PyProblem(const MetaData &meta_data, const Bounds<T> &bounds, const ConstraintSet<T> &constraints,
+                       const Solution<T, SingleObjective> &opt) :
+        P(meta_data, bounds, constraints, opt)
+    {
+    }
 
     explicit PyProblem(const std::string &name, const int n_variables = 5, const int instance = 1,
-                       const bool is_minimization = true, Bounds<T> bounds = Bounds<T>()) :
+                       const bool is_minimization = true, Bounds<T> bounds = Bounds<T>(),
+                       const ConstraintSet<T> &constraints = {}, const Solution<T, SingleObjective> &optimum = {}) :
         P(MetaData(instance, name, n_variables,
                    is_minimization ? ioh::common::OptimizationType::MIN : ioh::common::OptimizationType::MAX),
-          bounds)
+          bounds, constraints, validate_optimum(optimum, n_variables, is_minimization))
     {
-
         auto registered = perform_registration();
     }
 
@@ -293,8 +308,10 @@ void define_base_class(py::module &m, const std::string &name)
     options.disable_function_signatures();
 
     py::class_<ProblemType, PyProblem, std::shared_ptr<ProblemType>>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<const std::string, int, int, bool, Bounds<T>>(), py::arg("name"), py::arg("n_variables") = 5,
-             py::arg("instance") = 1, py::arg("is_minimization") = true, py::arg("bounds") = Bounds<T>(5),
+        .def(py::init<const std::string, int, int, bool, Bounds<T>, ConstraintSet<T>, Solution<T, SingleObjective>>(),
+             py::arg("name"), py::arg("n_variables") = 5, py::arg("instance") = 1, py::arg("is_minimization") = true,
+             py::arg("bounds") = Bounds<T>(5), py::arg("constraints") = ConstraintSet<T>{},
+             py::arg("optimum") = Solution<T, SingleObjective>{},
              fmt::format("Base class for {} problems", name).c_str())
         .def("reset", &ProblemType::reset,
              R"pbdoc(
@@ -497,8 +514,9 @@ void define_helper_classes(py::module &m)
         .def_readonly("instance", &MetaData::instance, "The instance number of the current problem")
         .def_readonly("problem_id", &MetaData::problem_id, "The id of the problem within its suite")
         .def_readonly("name", &MetaData::name, "The name of the current problem")
-        .def_readonly("optimization_type", &MetaData::optimization_type,
-                      "The type of problem (maximization or minimization)")
+        .def_property_readonly(
+            "optimization_type", [](const MetaData &meta) { return meta.optimization_type.type(); },
+            "The type of problem (maximization or minimization)")
         .def_readonly("n_variables", &MetaData::n_variables,
                       "The number of variables (dimension) of the current problem")
         .def("__repr__", &MetaData::repr)
@@ -833,7 +851,7 @@ void define_bbob_problems(py::module &mi, const std::string &name = "BBOB", cons
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<bbob::Schaffers1000<P>, P, std::shared_ptr<bbob::Schaffers1000<P>>>(m, "Schaffers1000", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<bbob::GriewankRosenBrock<P>, P, std::shared_ptr<bbob::GriewankRosenBrock<P>>>(m, "GriewankRosenBrock",
+    py::class_<bbob::GriewankRosenbrock<P>, P, std::shared_ptr<bbob::GriewankRosenbrock<P>>>(m, "GriewankRosenbrock",
                                                                                              py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<bbob::Schwefel<P>, P, std::shared_ptr<bbob::Schwefel<P>>>(m, "Schwefel", py::is_final())

@@ -43,7 +43,7 @@ namespace ioh::problem
                 meta_data, bounds, constraints,
                     Solution<T, SingleObjective>(meta_data.n_variables, meta_data.optimization_type.type()))
         {
-        }
+        }      
 
         //! Main call interface
         virtual double operator()(const std::vector<T> &x) override

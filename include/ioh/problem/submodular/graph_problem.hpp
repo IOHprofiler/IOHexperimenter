@@ -23,6 +23,10 @@ namespace ioh::problem::submodular
             //! File with constraint weights
             std::string constraint_weights;
 
+            // added by saba
+            //! File with constraint variances
+            std::string constraint_variances;
+
             //! The root path of the files
             fs::path root;
 
@@ -30,7 +34,8 @@ namespace ioh::problem::submodular
             bool is_edge = false;
 
             //! Fixed chance constraint
-            double chance_cons = 0.0;
+            // deleted by saba
+            //  double chance_cons = 0.0;
 
             //! Is digraph
             bool digraph = false;
@@ -45,21 +50,23 @@ namespace ioh::problem::submodular
             static Meta from_string(const std::string &definition)
             {
                 Meta meta;
-                std::string dp;
+
+                // changed by saba-----------------------------------------------------------------------------
+                //  std::string dp;
+                //  std::array<std::string *, 5> p{&meta.edge_file, &meta.edge_weights, &meta.vertex_weights,
+                //                                 &meta.constraint_weights, &dp};
+
                 std::array<std::string *, 5> p{&meta.edge_file, &meta.edge_weights, &meta.vertex_weights,
-                                               &meta.constraint_weights, &dp};
+                                               &meta.constraint_weights, &meta.constraint_variances};
+                //--------------------------------------------------------------------------------------------
+
                 std::stringstream ss(definition);
                 size_t i = 0;
                 while (std::getline(ss, *p[i++], '|') && (i < p.size()))
                     ;
-                try
-                {
-                    meta.chance_cons = std::stod(dp);
-                }
-                catch (...)
-                {
-                    meta.chance_cons = 0.0;
-                }
+
+
+
                 // default path for all files, change this in the if you want to use another
                 meta.root = common::file::utils::get_static_root();
                 return meta;
@@ -71,7 +78,7 @@ namespace ioh::problem::submodular
         {
             //! Meta data
             Meta meta;
-            
+
             //! Adjecency list
             std::vector<std::vector<std::pair<int, double>>> adjacency_list;
 
@@ -87,11 +94,18 @@ namespace ioh::problem::submodular
             //! Constraint weights
             std::vector<double> constraint_weights;
 
+
+            // added by saba------------------------------------------------------------------------------
+            std::vector<double> constraint_variances;
+            //--------------------------------------------------------------------------------------------
+
+            double chance_cons;
+
             //! Flag to denoted wheter the graph has been loaded in memory
             bool loaded = false;
 
             //! Constructor from meta data
-            Graph(const Meta &meta) : meta(meta) {}
+            Graph(const Meta &meta) : meta(meta), chance_cons(0.0) {}
 
 
             //! Constructor from string
@@ -100,8 +114,9 @@ namespace ioh::problem::submodular
             //! String representation
             [[nodiscard]] std::string repr() const override
             {
-                return fmt::format("<GraphInstance {} {} {} {}>", meta.edge_file, meta.edge_weights,
-                                   meta.vertex_weights, meta.constraint_weights);
+
+                return fmt::format("<GraphInstance {} {} {} {} {}>", meta.edge_file, meta.edge_weights,
+                                   meta.vertex_weights, meta.constraint_weights, meta.constraint_variances);
             }
 
 
@@ -152,15 +167,38 @@ namespace ioh::problem::submodular
                     constraint_weights = std::vector<double>(meta.is_edge ? edges.size() : meta.n_vertices, 1);
                 }
 
+                
+                if (!meta.constraint_variances.empty() && meta.constraint_variances != "NULL")
+                {
+                    try
+                    {
+                        chance_cons = std::stod(meta.constraint_variances);
+                        constraint_variances = std::vector<double>(meta.is_edge ? edges.size() : meta.n_vertices, 1.0);
+                    }
+                    catch (...)
+                    {
+                        chance_cons = 1.0;
+                        constraint_variances =
+                            ioh::common::file::as_numeric_vector<double>(meta.root / meta.constraint_variances);
+                    }
+                }
+                else
+                {
+                    constraint_variances = std::vector<double>(meta.is_edge ? edges.size() : meta.n_vertices, 1.0);
+                }
+
                 IOH_DBG(xdebug, "loaded graph problem");
                 IOH_DBG(xdebug, "number of edges:  " << edges.size());
                 IOH_DBG(xdebug, "number of vertices: " << meta.n_vertices);
                 IOH_DBG(xdebug, "number of edge_weights: " << edge_weights.size());
                 IOH_DBG(xdebug, "number of vertex_weights: " << vertex_weights.size());
                 IOH_DBG(xdebug, "number of constraints: " << constraint_weights.size());
+                // added by saba--------------------------------------------------------------
+                IOH_DBG(xdebug, "number of variances: " << constraint_variances.size());
+                //---------------------------------------------------------------------------
                 loaded = true;
             }
-            
+
             //! Accessor for dimension, loads the graph if it is not loaded
             int dimension()
             {
@@ -168,8 +206,6 @@ namespace ioh::problem::submodular
                     load();
                 return meta.is_edge ? static_cast<int>(edges.size()) : meta.n_vertices;
             }
-
-
         };
 
     } // namespace graph
@@ -177,45 +213,46 @@ namespace ioh::problem::submodular
     //! Specific constraints function for submodular problems
     struct GraphConstraint : Constraint<int>
     {
-        
+
         //! Shared ptr to the graph in memory
         std::shared_ptr<graph::Graph> graph;
 
         /**
          * @brief Construct a new Graph Constraint object
-         * 
+         *
          * @param graph A shared ptr to a graph
          */
-        GraphConstraint(const std::shared_ptr<graph::Graph> &graph) : 
-            Constraint(constraint::Enforced::HARD), graph(graph) {}
+        GraphConstraint(const std::shared_ptr<graph::Graph> &graph) :
+            Constraint(constraint::Enforced::HARD), graph(graph)
+        {
+        }
 
         /**
          * @brief Compute constraint violation
-         * 
+         *
          * @param x the candidate solution
          * @return true when there is constraint violation
          * @return false when there is no constraint violaton
          */
-        bool compute_violation(const std::vector<int>& x) override { 
-            
+        bool compute_violation(const std::vector<int> &x) override
+        {
+
             violation_ = 0;
-             
+
             int count = 0;
             for (size_t source = 0; source < x.size(); source++)
             {
-                violation_ += graph->constraint_weights[source] * x[source];
-                count += x[source];
-            }
 
-            violation_ += sqrt(count) * graph->meta.chance_cons;
+                violation_ += graph->constraint_weights[source] * x[source];
+                count += x[source] * graph->constraint_variances[source];
+            }
+            violation_ += sqrt(count) * graph->chance_cons;
             return violation_ > graph->meta.constraint_limit;
         }
 
         //! Compute the penalty by scaling the violotation
-        double penalty() const override {
-            return weight * pow(graph->meta.constraint_limit - violation(), exponent);
-        }
-        
+        double penalty() const override { return weight * pow(graph->meta.constraint_limit - violation(), exponent); }
+
         //! String representation
         std::string repr() const override { return fmt::format("<GraphConstraint {}>", violation()); }
     };
@@ -223,13 +260,13 @@ namespace ioh::problem::submodular
     //! Implementation of the Graph Problem
     struct GraphProblem : IntegerSingleObjective
     {
-        
+
         //! Shared ptr to the graph in memory
         std::shared_ptr<graph::Graph> graph;
 
         /**
          * @brief Construct a new Graph Problem object
-         * 
+         *
          * @param problem_id the id of the problem
          * @param instance the instance id
          * @param name the name of the problem
@@ -239,9 +276,7 @@ namespace ioh::problem::submodular
                      const std::shared_ptr<graph::Graph> &graph) :
             IntegerSingleObjective(
                 MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::MAX),
-                    Bounds<int>(graph->dimension()),
-                    ConstraintSet<int>(std::make_shared<GraphConstraint>(graph))    
-                ),
+                Bounds<int>(graph->dimension()), ConstraintSet<int>(std::make_shared<GraphConstraint>(graph))),
             graph(graph)
         {
         }
@@ -278,7 +313,7 @@ namespace ioh::problem::submodular
             }
             return constructors;
         }
-    
+
         //! Helper to load problems from a file
         //! Use if you want to manually load more graph based files
         template <typename... Args>
@@ -293,6 +328,6 @@ namespace ioh::problem::submodular
                 ioh::common::Factory<IntegerSingleObjective, Args...>::instance().include(name, std::get<1>(ci), c);
                 ioh::common::Factory<submodular::GraphProblem, Args...>::instance().include(name, std::get<1>(ci), c);
             }
-        }       
+        }
     };
 } // namespace ioh::problem::submodular

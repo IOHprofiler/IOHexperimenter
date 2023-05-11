@@ -27,6 +27,15 @@ class TestProblem(unittest.TestCase):
         for p in map(lambda x: x(1, 10), (wmodel, ioh.problem.WModelLeadingOnes, ioh.problem.WModelOneMax)):
             self.assertEqual(p([1] * 10), 10)
 
+    def test_can_access_optimization_type(self):
+        p = ioh.get_problem(1, 1, 2)
+        self.assertTrue(p.meta_data.optimization_type is not None)
+
+    def test_can_pass_optimum(self):
+        class A(ioh.problem.RealSingleObjective):
+            def __init__(self,) -> None:
+                super().__init__(*args, **kwargs)
+
 
     def test_real_star_discrepancy(self):
         uniform = ioh.get_problem(30, 4, 2, )
@@ -41,6 +50,9 @@ class TestProblem(unittest.TestCase):
         self.assertEqual(random([10, 10]), -float("inf"))
 
         self.assertAlmostEqual(random([.9, .5]), 0.0055, 3)
+
+        self.assertTrue(math.isnan(uniform.optimum.x[0]))
+        self.assertTrue(math.isinf(uniform.optimum.y))
 
     def test_integer_star_discrepancy(self):
         uniform = ioh.get_problem(30, 4, 2, problem_class=ioh.ProblemClass.STAR_INTEGER)

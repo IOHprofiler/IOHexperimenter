@@ -4,9 +4,9 @@
 
 namespace ioh::problem::bbob
 {
-    //! GriewankRosenBrock problem id 19
+    //! GriewankRosenbrock problem id 19
     template <typename P = BBOB>
-    class GriewankRosenBrock final : public P, BBOProblem<GriewankRosenBrock>
+    class GriewankRosenbrock final : public P, BBOProblem<GriewankRosenbrock>
     {
         std::vector<double> x_shift_;
 
@@ -41,8 +41,8 @@ namespace ioh::problem::bbob
          * @param instance instance id
          * @param n_variables the dimension of the problem
          */
-        GriewankRosenBrock(const int instance, const int n_variables) :
-            P(19, instance, n_variables, "GriewankRosenBrock"), x_shift_(n_variables, -0.5)
+        GriewankRosenbrock(const int instance, const int n_variables) :
+            P(19, instance, n_variables, "GriewankRosenbrock"), x_shift_(n_variables, -0.5)
         {
             const auto factor = std::max(1., sqrt(n_variables) / 8.);
 
@@ -58,5 +58,5 @@ namespace ioh::problem::bbob
             }
         }
     };
-    template class GriewankRosenBrock<BBOB>;
+    template class GriewankRosenbrock<BBOB>;
 } // namespace ioh::problem::bbob

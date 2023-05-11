@@ -8,7 +8,7 @@ from .iohcpp import logger as logger
 
 from typing import Any
 
-ProblemType = typing.Union[problem.Real, problem.Integer]
+ProblemType = typing.Union[problem.RealSingleObjective, problem.IntegerSingleObjective]
 VariableType = typing.Union[int, float]
 ObjectiveType = typing.List[VariableType]
 

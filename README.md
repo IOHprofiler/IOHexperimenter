@@ -32,11 +32,11 @@
 
 ## C++
 
-The complete API documentation, can be found [here](https://iohprofiler.github.io/IOHexperimenter/cpp), as well as a Getting-Started guide. In addition to the documentation, some example projects can be found in the [example](./example/) folder of this repository.
+The complete API documentation, can be found [here](https://iohprofiler.github.io/IOHexperimenter/cpp), as well as a Getting-Started guide. In addition to the documentation, some example projects can be found in the [example](https://github.com/IOHprofiler/IOHexperimenter/tree/master/example/) folder of this repository.
 
 ## Python
 
-The pip-version of IOHexperimenters python interface is available via [pip](https://pypi.org/project/ioh). A tutorial with python in the form of a jupyter notebook can be found in the example folder of [this repository](./example/tutorial.ipynb).
+The pip-version of IOHexperimenters python interface is available via [pip](https://pypi.org/project/ioh). A tutorial with python in the form of a jupyter notebook can be found in the example folder of [this repository](https://github.com/IOHprofiler/IOHexperimenter/tree/master/example/tutorial.ipynb).
 A Getting-Started guide and the full API documentation can be found [here](https://iohprofiler.github.io/IOHexperimenter/python).
 
 ## Contact

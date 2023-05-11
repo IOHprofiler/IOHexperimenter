@@ -68,7 +68,7 @@ TEST_F(BaseTest, problems_bbob4d)
     EXPECT_DOUBLE_EQ(test_eval(std::make_shared<EllipsoidRotated<BBOB>>(1, 4)), 4272872.0872);
     EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Gallagher101<BBOB>>(1, 4)), 100.6898);
     EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Gallagher21<BBOB>>(1, 4)), -924.8833);
-    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<GriewankRosenBrock<BBOB>>(1, 4)), -92.2225);
+    EXPECT_DOUBLE_EQ(test_eval(std::make_shared<GriewankRosenbrock<BBOB>>(1, 4)), -92.2225);
     EXPECT_DOUBLE_EQ(test_eval(std::make_shared<Katsuura<BBOB>>(1, 4)), 21.7005);
     EXPECT_DOUBLE_EQ(test_eval(std::make_shared<LinearSlope<BBOB>>(1, 4)), 75.4977);
     EXPECT_DOUBLE_EQ(test_eval(std::make_shared<LunacekBiRastrigin<BBOB>>(1, 4)), 177.9893);
