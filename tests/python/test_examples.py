@@ -1,26 +1,40 @@
 import os
 import traceback
 import json
+import sys
 import shutil
 import unittest
 import io
 from contextlib import redirect_stdout
+from functools import partial
 
-
-BASE_DIR = os.path.realpath(
-    os.path.join(os.path.dirname(__file__), "../../")
-)
+BASE_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), "../../"))
 GB = globals()
 LC = locals()
+
 
 def iter_notebook(filename):
     with open(filename) as fp:
         nb = json.load(fp)
 
-    for i, cell in enumerate(nb['cells'], 1):
-        if cell['cell_type'] == 'code':
-            source = ''.join(line for line in cell['source'] if not line.startswith('%'))
+    for i, cell in enumerate(nb["cells"], 1):
+        if cell["cell_type"] == "code":
+            source = "".join(
+                line for line in cell["source"] if not line.startswith("%")
+            )
             yield i, source
+
+
+def test_notebook_runner(self, notebook):
+    assert os.path.isfile(notebook)
+    for i, block in iter_notebook(notebook):
+        with io.StringIO() as buf, redirect_stdout(buf):
+            try:
+                exec(block, GB, LC)
+            except Exception as e:
+                assert (
+                    False
+                ), f"failed in {notebook} cell {i}.\n\nReason:\n{e}.\n\nBlock:\n{block}"
 
 
 class MetaTest(type):
@@ -29,22 +43,20 @@ class MetaTest(type):
         dirname = os.path.normpath(os.path.join(BASE_DIR, "example"))
         for f in filter(lambda x: x.endswith("ipynb"), os.listdir(dirname)):
             fname, *_ = os.path.basename(f).split(".")
-            notebook =  os.path.join(dirname, f)
-            def test_notebook_runner(self):
-                self.assertTrue(os.path.isfile(notebook))
-                for i, block in iter_notebook(notebook):
-                    with io.StringIO() as buf, redirect_stdout(buf):
-                        try:
-                            exec(block, GB, LC)
-                        except Exception as e:
-                            raise Exception(f"failed in cell {i}. Reasion {e}.\n{traceback.format_exc()}")
-            setattr(instance, f"test_notebook_{fname}", test_notebook_runner)
+            notebook = os.path.join(dirname, f)
+            setattr(
+                instance,
+                f"test_notebook_{fname}",
+                partial(test_notebook_runner, instance, notebook),
+            )
         return instance
+
 
 class TestExamples(unittest.TestCase, metaclass=MetaTest):
 
     """Examples test"""
-    # @unittest.skipUnless(sys.version_info.minor >= 7, "python version > 3.7")
+
+    @unittest.skipUnless(sys.version_info.minor >= 7, "python version > 3.7")
     def test_python_readme(self):
         try:
             fname = os.path.join(BASE_DIR, "ioh", "README.md")
@@ -55,11 +67,13 @@ class TestExamples(unittest.TestCase, metaclass=MetaTest):
                     for i, x in enumerate(data):
                         if x.startswith("python"):
                             block = x[6:].strip()
-                            if not 'help' in block:
+                            if not "help" in block:
                                 try:
                                     exec(block, GB, LC)
                                 except Exception as e:
-                                    raise Exception(f"failed in cell {i}. Reasion {e}.\n{traceback.format_exc()}")
+                                    raise Exception(
+                                        f"failed in cell {i}. Reasion {e}.\n{traceback.format_exc()}"
+                                    )
         except:
             raise
         finally:
@@ -69,7 +83,7 @@ class TestExamples(unittest.TestCase, metaclass=MetaTest):
             shutil.rmtree("ioh_data", ignore_errors=True)
             if os.path.exists("ioh_data.zip"):
                 os.remove("ioh_data.zip")
-                                
+
 
 if __name__ == "__main__":
     unittest.main()
