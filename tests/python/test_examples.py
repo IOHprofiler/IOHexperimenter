@@ -1,5 +1,5 @@
 import os
-import sys
+import traceback
 import json
 import shutil
 import unittest
@@ -37,14 +37,14 @@ class MetaTest(type):
                         try:
                             exec(block, GB, LC)
                         except Exception as e:
-                            raise RuntimeError(f"failed in cell {i}, reason:\n{e}")
+                            raise Exception(f"failed in cell {i}. Reasion {e}.\n{traceback.format_exc()}")
             setattr(instance, f"test_notebook_{fname}", test_notebook_runner)
         return instance
 
 class TestExamples(unittest.TestCase, metaclass=MetaTest):
 
     """Examples test"""
-    @unittest.skipUnless(sys.version_info.minor >= 7, "python version > 3.7")
+    # @unittest.skipUnless(sys.version_info.minor >= 7, "python version > 3.7")
     def test_python_readme(self):
         try:
             fname = os.path.join(BASE_DIR, "ioh", "README.md")
@@ -59,7 +59,7 @@ class TestExamples(unittest.TestCase, metaclass=MetaTest):
                                 try:
                                     exec(block, GB, LC)
                                 except Exception as e:
-                                    raise Exception(f"failed in cell {i}. Reasion {e}")
+                                    raise Exception(f"failed in cell {i}. Reasion {e}.\n{traceback.format_exc()}")
         except:
             raise
         finally:
