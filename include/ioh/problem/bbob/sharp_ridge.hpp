@@ -18,11 +18,11 @@ namespace ioh::problem::bbob
 
             auto result = 0.0;
             for (auto i = n_linear_dimensions_; i < this->meta_data_.n_variables; ++i)
-                result += x.at(i) * x.at(i);
+                result += x[i] * x[i];
 
             result = alpha * sqrt(result / n_linear_dimensions_);
             for (auto i = 0; i < n_linear_dimensions_; ++i)
-                result += x.at(i) * x.at(i) / n_linear_dimensions_;
+                result += x[i] * x[i] / n_linear_dimensions_;
 
             return result;
         }

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import shutil
 import sys
 import platform
 import subprocess
@@ -10,9 +11,14 @@ from setuptools.command.build_ext import build_ext
 from doc.generate_docs import main, generate_stubs
 
 
+
 DIR = os.path.realpath(os.path.dirname(__file__))
 with open(os.path.join(DIR, "VERSION")) as f:
     __version__ = f.read().strip()
+
+BUILD_DIR = os.path.join(DIR, "build")
+if os.path.exists(BUILD_DIR):
+    shutil.rmtree(BUILD_DIR)
 
 # Convert distutils Windows platform specifiers to CMake -A arguments
 PLAT_TO_CMAKE = {

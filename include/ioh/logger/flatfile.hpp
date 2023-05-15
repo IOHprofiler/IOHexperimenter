@@ -90,7 +90,7 @@ namespace ioh::logger
             if (!out_.is_open())
             {
                 IOH_DBG(debug, "will output data in " << output_directory_ / filename_)
-                out_ = std::ofstream(output_directory_ / filename_);
+                out_ = std::ofstream(output_directory_ / filename_, std::ofstream::out | std::ofstream::app);
                 requires_header_ = true;
             }
         }

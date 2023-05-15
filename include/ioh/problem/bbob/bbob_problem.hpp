@@ -65,8 +65,8 @@ namespace ioh::problem
                 for (auto i = 0; i < n_variables; ++i)
                     for (auto j = 0; j < n_variables; ++j)
                         for (auto k = 0; k < n_variables; ++k)
-                            second_transformation_matrix[i][j] += first_rotation.at(i).at(k) *
-                                pow(condition, exponents.at(k)) * second_rotation.at(k).at(j);
+                            second_transformation_matrix[i][j] += first_rotation[i][k] *
+                                pow(condition, exponents[k]) * second_rotation[k][j];
             }
 
             /**

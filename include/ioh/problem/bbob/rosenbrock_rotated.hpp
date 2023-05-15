@@ -36,8 +36,8 @@ namespace ioh::problem::bbob
                 for (auto j = 0; j < n_variables; ++j)
                 {
                     this->transformation_state_.second_transformation_matrix[i][j] = factor 
-                        * this->transformation_state_.second_rotation.at(i).at(j);
-                    sum += this->transformation_state_.second_rotation.at(j).at(i);
+                        * this->transformation_state_.second_rotation[i][j];
+                    sum += this->transformation_state_.second_rotation[j][i];
                 }
                 this->transformation_state_.transformation_base[i] = 0.5;
                 this->optimum_.x[i] = sum / (2. * factor);

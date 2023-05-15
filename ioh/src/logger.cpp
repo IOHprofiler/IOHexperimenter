@@ -158,11 +158,6 @@ public:
             set_run_attribute_python(key, value);
     }
 
-    // void attach_problem(const problem::MetaData &problem) override
-    // {
-    //     std::cout << "attach_problem\n";
-    //     AnalyzerType::attach_problem(problem);
-    // }
 
     virtual void handle_last_eval() override {
         for (auto& ptr : prop_ptrs_)
@@ -217,8 +212,7 @@ void define_analyzer(py::module &m)
         
         .def("set_run_attributes", &PyAnalyzer::set_run_attributes_python) // takes a map<str, double>
         .def("set_run_attribute", &PyAnalyzer::set_run_attribute_python)   // takes str, double>
-
-        .def_property_readonly("output_directory", &PyAnalyzer::output_directory)
+        .def_property_readonly("output_directory", [](const PyAnalyzer& self) {return self.output_directory().generic_string();})
         .def("close", &PyAnalyzer::close)
         .def("watch", py::overload_cast<Property &>(&PyAnalyzer::watch))
         .def("watch", py::overload_cast<const py::object &, const std::string &>(&PyAnalyzer::watch))

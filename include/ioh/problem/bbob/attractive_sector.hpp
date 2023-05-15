@@ -15,7 +15,7 @@ namespace ioh::problem::bbob
             using namespace transformation::objective;
             auto result =  0.0 ;
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
-                result += x.at(i) * x.at(i) * (1. + 9999.0 * (this->optimum_.x.at(i) * x.at(i) > 0.0));
+                result += x[i] * x[i] * (1. + 9999.0 * (this->optimum_.x[i] * x[i] > 0.0));
             return pow(oscillate(result), .9);
         }
         

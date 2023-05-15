@@ -140,6 +140,8 @@ namespace ioh
             
             //! Public call interface
             virtual R operator()(const std::vector<T> &x) = 0;
+            
+            virtual std::vector<R> operator()(const std::vector<std::vector<T>> &X) = 0;
 
             //! destructor
             virtual ~Problem() = default;

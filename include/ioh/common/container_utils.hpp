@@ -253,7 +253,7 @@ namespace ioh
                 std::vector<Permutation> permutations(n);
 
                 for (auto i = 0; i < n; ++i)
-                    permutations[i] = {random_numbers.at(i), i};
+                    permutations[i] = {random_numbers[i], i};
 
                 std::sort(permutations.begin(), permutations.end());
                 return permutations;

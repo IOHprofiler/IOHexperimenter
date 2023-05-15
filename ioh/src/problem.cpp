@@ -353,7 +353,7 @@ void define_base_class(py::module &m, const std::string &name)
              R"pbdoc(
                 Remove the specified logger from the problem.
             )pbdoc")
-        .def("__call__", &ProblemType::operator(),
+        .def("__call__", py::overload_cast<const std::vector<T>&>(&ProblemType::operator()),
              R"pbdoc(
                 Evaluate the problem.
 
@@ -361,6 +361,23 @@ void define_base_class(py::module &m, const std::string &name)
                 ----------
                     x: list
                         the search point to evaluate. It must be a 1-dimensional array/list whose length matches search space's dimensionality
+                Returns
+                -------
+                float
+                    The evaluated search point
+            )pbdoc")
+        .def("__call__", py::overload_cast<const std::vector<std::vector<T>>&>(&ProblemType::operator()),
+             R"pbdoc(
+                Evaluate the problem.
+
+                Parameters
+                ----------
+                    x: list[list]
+                        the search points to evaluate. It must be a 2-dimensional array/list whose length matches search space's dimensionality
+                Returns
+                -------
+                list[float]
+                    The evaluated search points
             )pbdoc")
         .def_static(
             "create",

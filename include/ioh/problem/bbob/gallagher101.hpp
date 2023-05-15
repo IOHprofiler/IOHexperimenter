@@ -55,12 +55,12 @@ namespace ioh::problem::bbob
 
             for (auto i = 0; i < this->meta_data_.n_variables; i++)
             {
-                const auto out_of_bounds = fabs(x.at(i)) - 5.;
+                const auto out_of_bounds = fabs(x[i]) - 5.;
                 if (out_of_bounds > 0.)
                     penalty += out_of_bounds * out_of_bounds;
 
                 x_transformed[i] = std::inner_product(x.begin(), x.end(),
-                                                      this->transformation_state_.second_rotation.at(i).begin(), 0.0);
+                                                      this->transformation_state_.second_rotation[i].begin(), 0.0);
             }
 #if defined(__GNUC__)
             #pragma GCC diagnostic push
@@ -74,7 +74,7 @@ namespace ioh::problem::bbob
                         x_transformed.begin(), x_transformed.end(), 0.0,
                         [&, j = 0](const double lhs, const double rhs) mutable
                         {
-                            return lhs + peaks_.at(i).scales.at(j) * pow(rhs - x_transformation_.at(j++).at(i), 2.0);
+                            return lhs + peaks_[i].scales[j] * pow(rhs - x_transformation_.at(j++)[i], 2.0);
                         });
                     i++;
                     return std::max(sum, peak.value * exp(factor_ * z));

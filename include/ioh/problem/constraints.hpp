@@ -246,7 +246,7 @@ namespace ioh::problem
          * @param i index
          * @return a reference to constraints[i]
         */
-        [[nodiscard]] ConstraintPtr<T> &operator[](size_t i) { return constraints.at(i); }
+        [[nodiscard]] ConstraintPtr<T> &operator[](size_t i) { return constraints[i]; }
 
         //! String representation
         [[nodiscard]] std::string repr() const override

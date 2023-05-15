@@ -18,15 +18,15 @@ namespace ioh::problem::bbob
             {
                 this->transformation_state_.transformation_base[i] = 0.0;
                 for (auto j = 0; j < this->meta_data_.n_variables; ++j)
-                    this->transformation_state_.transformation_base[i] += this->transformation_state_.conditions.at(i)
-                    * this->transformation_state_.second_rotation.at(i).at(j)
-                    * (x.at(j) - this->optimum_.x.at(j));
+                    this->transformation_state_.transformation_base[i] += this->transformation_state_.conditions[i]
+                    * this->transformation_state_.second_rotation[i][j]
+                    * (x[j] - this->optimum_.x[j]);
 
                 x0 = this->transformation_state_.transformation_base.at(0);
 
-                this->transformation_state_.transformation_base[i] = fabs(this->transformation_state_.transformation_base.at(i)) > .5
-                    ? floor(this->transformation_state_.transformation_base.at(i) + .5)
-                    : floor(alpha * this->transformation_state_.transformation_base.at(i) + .5) / alpha;
+                this->transformation_state_.transformation_base[i] = fabs(this->transformation_state_.transformation_base[i]) > .5
+                    ? floor(this->transformation_state_.transformation_base[i] + .5)
+                    : floor(alpha * this->transformation_state_.transformation_base[i] + .5) / alpha;
             }
             return x0;
         }
@@ -40,7 +40,7 @@ namespace ioh::problem::bbob
 
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
             {
-                const auto out_of_bounds = fabs(x.at(i)) - 5.0;
+                const auto out_of_bounds = fabs(x[i]) - 5.0;
                 if (out_of_bounds > 0.0)
                     penalty += out_of_bounds * out_of_bounds;
 
@@ -48,7 +48,7 @@ namespace ioh::problem::bbob
                 for (auto j = 0; j < this->meta_data_.n_variables; ++j)
                     projection_sum += this->transformation_state_.first_rotation[i][j] * this->transformation_state_.transformation_base[j];
 
-                result += pow(100., this->transformation_state_.exponents.at(i))
+                result += pow(100., this->transformation_state_.exponents[i])
                     * projection_sum * projection_sum;
             }
 
@@ -69,7 +69,7 @@ namespace ioh::problem::bbob
             static const auto condition = 100.;
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
                 this->transformation_state_.conditions[i] = sqrt(pow(condition / 10.,
-                                                               this->transformation_state_.exponents.at(i)));
+                                                               this->transformation_state_.exponents[i]));
         }
     };
     template class StepEllipsoid<BBOB>;

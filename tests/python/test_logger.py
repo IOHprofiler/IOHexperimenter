@@ -72,6 +72,42 @@ class TestLogger(unittest.TestCase):
         for t in (always, on_improvement, at, each, during):
             self.assertTrue(t(l, problem.meta_data))
 
+
+    def test_multiple_problems_in_sequence(self):
+        p1 = ioh.get_problem(1, 2, 5)
+        p2 = ioh.get_problem(2, 2, 5)
+        l = ioh.logger.Analyzer() 
+        for i in range(5):
+            for p in p1, p2:
+                p.attach_logger(l)
+                for _ in range(10):
+                    p([0] * 5)
+                p.reset()
+        
+        for p in p1, p2:
+            i = p.meta_data.problem_id
+            name = p.meta_data.name
+            meta = os.path.realpath(os.path.join("ioh_data", f"IOHprofiler_f{i}_{name}.json"))
+            data = os.path.realpath(os.path.join("ioh_data", f"data_f{i}_{name}", f"IOHprofiler_f{i}_DIM5.dat"))
+            self.assertTrue(os.path.isfile(meta))
+            self.assertTrue(os.path.isfile(data))
+            with open(meta) as f:
+                meta_data = json.load(f)
+                self.assertEqual(len(meta_data["scenarios"][0]["runs"]), 5)
+            with open(data) as f:
+                n_headers = 0
+                for line in f:
+                    if line.startswith("evaluations"):
+                        n_headers += 1
+                self.assertEqual(n_headers, 5)
+
+
+    def test_multiple_problems_has_info_file(self):
+        p1 = ioh.get_problem(1, 2, 5)
+        p2 = ioh.get_problem(2, 2, 5)
+        l = ioh.logger.Analyzer() 
+
+
     def tearDown(self) -> None:
         if os.path.isdir("ioh_data"):
             shutil.rmtree("ioh_data")

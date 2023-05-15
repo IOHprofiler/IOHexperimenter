@@ -21,8 +21,8 @@ namespace ioh::problem::bbob
             auto sum1 = 0.0, sum2 = 0.0;
 
             for (size_t i = 0; i < x.size() - 1; ++i) {
-                sum1 += pow(x.at(i) * x.at(i) - x.at(i + 1), 2.0);
-                sum2 += pow(x.at(i) - 1.0, 2.0);
+                sum1 += pow(x[i] * x[i] - x.at(i + 1), 2.0);
+                sum2 += pow(x[i] - 1.0, 2.0);
             }
             return 100.0 * sum1 + sum2 ;
         }

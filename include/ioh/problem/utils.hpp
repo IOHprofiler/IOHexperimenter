@@ -51,7 +51,7 @@ namespace ioh
 
                 for (auto i = 0; i < n_variables; i++)
                 {
-                    cum_sum += x.at(i);
+                    cum_sum += x[i];
                     if ((i + 1) % mu == 0 && i != 0)
                     {
                         new_variables.push_back(static_cast<int>(cum_sum >= mu / 2.0));

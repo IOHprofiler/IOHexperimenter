@@ -122,7 +122,7 @@ namespace ioh::problem::transformation
             const auto rx = common::random::pbo::uniform(n, seed);
 
             for (auto i = 0; i < n; ++i)
-                x[i] = objective::exclusive_or(x.at(i), static_cast<int>(2.0 * floor(1e4 * rx.at(i)) / 1e4));
+                x[i] = objective::exclusive_or(x[i], static_cast<int>(2.0 * floor(1e4 * rx[i]) / 1e4));
         }
 
         /**
@@ -141,7 +141,7 @@ namespace ioh::problem::transformation
 
             for (auto i = 0; i != n; ++i)
             {
-                const auto t = static_cast<int>(floor(rx.at(i) * n));
+                const auto t = static_cast<int>(floor(rx[i] * n));
                 const auto temp = index[0];
                 index[0] = index[t];
                 index[t] = temp;
@@ -167,13 +167,13 @@ namespace ioh::problem::transformation
 
             for (auto i = 0; i != n; ++i)
             {
-                const auto t = static_cast<int>(floor(rx.at(i) * n));
+                const auto t = static_cast<int>(floor(rx[i] * n));
                 const auto temp = index[0];
                 index[0] = index[t];
                 index[t] = temp;
             }
             for (auto i = 0; i < n; ++i)
-                x[index[i]] = x_1.at(i);
+                x[index[i]] = x_1[i];
             return x;
         }
 

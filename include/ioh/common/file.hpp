@@ -190,7 +190,7 @@ namespace ioh::common::file
                             auto tmp_run_data = tmp_dim_data["runs"];
                             for (size_t i = 0; i != tar_data["scenarios"].size(); ++i) {
                                 for (auto tmp_ins_data : tmp_run_data) {
-                                    if(tar_data["scenarios"].at(i)["dimension"] == dim) {
+                                    if(tar_data["scenarios"][i]["dimension"] == dim) {
                                     tar_data["scenarios"][i]["runs"] += tmp_ins_data;
                                     }
                                 }

@@ -20,7 +20,7 @@ namespace ioh
                     for (auto i = 0; i < meta_data_.n_variables; ++i)
                     {
                         const auto neighbors = x.at(modulo_ising_ring(i - 1, meta_data_.n_variables));
-                        result += static_cast<double>(x.at(i)) * neighbors + (1.0 - x.at(i)) * (1.0 - neighbors);
+                        result += static_cast<double>(x[i]) * neighbors + (1.0 - x[i]) * (1.0 - neighbors);
                     }
                     return result;
                 }
