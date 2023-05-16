@@ -236,15 +236,12 @@ namespace ioh::problem::submodular
          */
         bool compute_violation(const std::vector<int> &x) override
         {
-
             violation_ = 0;
-
-            int count = 0;
+            double count = 0.;
             for (size_t source = 0; source < x.size(); source++)
             {
-
                 violation_ += graph->constraint_weights[source] * x[source];
-                count += x[source] * graph->constraint_variances[source];
+                count += (double)x[source] * graph->constraint_variances[source];
             }
             violation_ += sqrt(count) * graph->chance_cons;
             return violation_ > graph->meta.constraint_limit;

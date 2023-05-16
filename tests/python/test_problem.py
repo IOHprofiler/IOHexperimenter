@@ -44,7 +44,7 @@ class TestProblem(unittest.TestCase):
         y = problem(X)
         self.assertIsInstance(y, list)
         self.assertEqual(len(y), n_samples)
-        self.assertEqual(problem.state_evaluations, n_samples)
+        self.assertEqual(problem.state.evaluations, n_samples)
         self.assertSetEqual(set(y), {80.88209408})
 
     def test_wmodel(self):

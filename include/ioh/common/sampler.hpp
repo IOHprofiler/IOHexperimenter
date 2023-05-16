@@ -31,7 +31,7 @@ namespace ioh::common::random::sampler
         static inline seed_type default_seed = 1993;
 
         Uniform(const size_t n, const seed_type seed = default_seed, const T lb = 0, const T ub = 1) :
-            Sampler<T>(n, seed, lb, ub), gen(seed), delta_g(gen.max() - gen.min()), delta(ub - lb)
+            Sampler<T>(n, seed, lb, ub), gen((std::mt19937::result_type)seed), delta_g(gen.max() - gen.min()), delta(ub - lb)
         {
         }
 
@@ -59,7 +59,7 @@ namespace ioh::common::random::sampler
 
         virtual std::vector<double> next() { 
             std::vector<double> data(n);
-            i8_sobol(n, &seed, data.data(), lb, ub);
+            i8_sobol((int)n, &seed, data.data(), lb, ub);
             return data;
         }
     };
