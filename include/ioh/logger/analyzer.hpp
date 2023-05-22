@@ -315,7 +315,7 @@ namespace ioh::logger
                     if (info_stream_.tellp() != 0)
                         info_stream_ << "\n";
 
-                    info_stream_ << "suite = \"" << current_suite_ << "\", funcId = " << problem.problem_id
+                    info_stream_ << "suite = \"" << suite_ << "\", funcId = " << problem.problem_id
                                  << ", funcName = \"" << problem.name << "\", DIM = " << problem.n_variables
                                  << ", maximization = \""
                                  << (problem.optimization_type == common::OptimizationType::MAX ? 'T' : 'F')
@@ -539,7 +539,7 @@ namespace ioh::logger
 
                     if (experiments_.find(current_filename_) == experiments_.end())
                         experiments_.insert({current_filename_,
-                                             {current_suite_, problem, algorithm_,
+                                             {suite_, problem, algorithm_,
                                               common::as_vector<str, str, sAttr>(attributes_.experiment),
                                               common::keys(attributes_.run), attribute_names()}});
                 }

@@ -37,6 +37,9 @@ namespace ioh {
         //! Access to the problem.
         std::optional<problem::MetaData> problem_;
 
+        //! Current suite
+        std::string suite_ = "unknown_suite";
+
         /** Map property names to property references.
          * 
          * If your logger is handling any property, you can just iterate over them,
@@ -189,11 +192,11 @@ namespace ioh {
             IOH_DBG(xdebug,"attach problem " << problem.problem_id)
             problem_ = problem;
         }
+        
+        //! Starts a new session for the given Suite name.
+        virtual void attach_suite(const std::string &suite_name) { suite_ = suite_name; }
 
     public:
-        //! Starts a new session for the given Suite name.
-        virtual void attach_suite(const std::string& suite_name) = 0;
-
         //! Main entry point, called everytime a Trigger is true.
         virtual void call(const logger::Info& log_info) = 0;
 
