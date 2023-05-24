@@ -21,7 +21,7 @@ namespace ioh::problem::bbob
             auto result = 0.0;
             for (size_t i = 0; i < static_cast<size_t>(this->meta_data_.n_variables) - 1; ++i)
             {
-                const auto z = pow(x.at(i), 2.0) + pow(x.at(i + 1), 2.0);
+                const auto z = pow(x[i], 2.0) + pow(x.at(i + 1), 2.0);
                 result += pow(z, 0.25) * (1.0 + pow(sin(50.0 * pow(z, 0.1)), 2.0));
             }
             return pow(result / (static_cast<double>(this->meta_data_.n_variables) - 1.0), 2.0);
@@ -59,8 +59,8 @@ namespace ioh::problem::bbob
             for (auto i = 0; i < n_variables; ++i)
                 for (auto j = 0; j < n_variables; ++j)
                     this->transformation_state_.second_transformation_matrix[i][j] =
-                        this->transformation_state_.second_rotation.at(i).at(j)
-                        * pow(sqrt(condition), this->transformation_state_.exponents.at(i));
+                        this->transformation_state_.second_rotation[i][j]
+                        * pow(sqrt(condition), this->transformation_state_.exponents[i]);
         }
     };
 

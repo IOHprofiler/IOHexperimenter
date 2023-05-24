@@ -141,9 +141,9 @@ namespace ioh::logger
             struct ScenarioInfo : common::HasRepr
             {
                 //! Dimension
-                const size_t dimension;
+                size_t dimension;
                 //! Data file
-                const std::string data_file;
+                std::string data_file;
                 //! Runs
                 std::vector<RunInfo> runs;
 
@@ -230,6 +230,12 @@ namespace ioh::logger
                             : "",
                         fmt::join(dims, "},\n\t\t{"));
                 }
+
+                void write(const fs::path& file_path) const {
+                    std::ofstream info_stream(file_path);
+                    info_stream << fmt::format("{}", *this);
+                    info_stream.close();
+                }
             };
 
         } // namespace structures
@@ -238,7 +244,7 @@ namespace ioh::logger
         namespace v1
         {
             /** A logger that stores information in a format supported by the IOHAnalyzer platform.
-             * TODO: check if we log the last line
+             *
              * @code
                 logger::Analyzer(
                     {trigger::always},
@@ -309,7 +315,7 @@ namespace ioh::logger
                     if (info_stream_.tellp() != 0)
                         info_stream_ << "\n";
 
-                    info_stream_ << "suite = \"" << current_suite_ << "\", funcId = " << problem.problem_id
+                    info_stream_ << "suite = \"" << suite_ << "\", funcId = " << problem.problem_id
                                  << ", funcName = \"" << problem.name << "\", DIM = " << problem.n_variables
                                  << ", maximization = \""
                                  << (problem.optimization_type == common::OptimizationType::MAX ? 'T' : 'F')
@@ -327,6 +333,10 @@ namespace ioh::logger
                     info_stream_ << "\n%\n" << dat_path;
                 }
 
+                virtual void flush_info_file() {
+                    info_stream_.flush();
+                }
+
             private:
                 void update_info_file(const problem::MetaData &problem, const std::string &dat_path)
                 {
@@ -340,7 +350,7 @@ namespace ioh::logger
                         problem.problem_id != problem_.value().problem_id)
                         handle_new_dimension(problem, dat_path);
 
-                    info_stream_.flush();
+                    flush_info_file();
                 }
 
                 void guard_attributes(const std::function<void()> &f)
@@ -516,7 +526,7 @@ namespace ioh::logger
                 {
                     std::vector<std::string> names;
                     for (size_t i = 0; i < properties_vector_.size(); i++)
-                        names.push_back(properties_vector_.at(i).get().name());
+                        names.push_back(properties_vector_[i].get().name());
                     return names;
                 }
 
@@ -529,7 +539,7 @@ namespace ioh::logger
 
                     if (experiments_.find(current_filename_) == experiments_.end())
                         experiments_.insert({current_filename_,
-                                             {current_suite_, problem, algorithm_,
+                                             {suite_, problem, algorithm_,
                                               common::as_vector<str, str, sAttr>(attributes_.experiment),
                                               common::keys(attributes_.run), attribute_names()}});
                 }
@@ -538,8 +548,16 @@ namespace ioh::logger
                 virtual void handle_new_dimension(const problem::MetaData &problem,
                                                   const std::string &dat_path) override
                 {
-                    experiments_.at(current_filename_)
-                        .dims.emplace_back(static_cast<size_t>(problem.n_variables), dat_path);
+                    auto& dims = experiments_.at(current_filename_).dims;
+                    for (size_t i = 0; i < dims.size(); i++){
+                        if ((int)dims[i].dimension == problem.n_variables){
+                            auto current = dims[i];
+                            dims.erase(dims.begin() + i);
+                            dims.push_back(current);
+                            return;
+                        }
+                    }   
+                    dims.emplace_back(static_cast<size_t>(problem.n_variables), dat_path);
                 }
                 
                 bool closed = false;
@@ -558,22 +576,18 @@ namespace ioh::logger
 
                         if (log_info_.evaluations != 0)
                             FlatFile::call(log_info_);
-                    }
+
+                        experiments_.at(current_filename_).write(path_ / current_filename_);
+                    }   
                 }
+                
 
                 //! Writes all data to the info file
-                
                 void close() override
                 {
                     if (!closed){
                         closed = true;
                         handle_last_eval(); 
-                        for (const auto &[filename, exp] : experiments_)
-                        {
-                            info_stream_ = std::ofstream(path_ / filename);
-                            info_stream_ << fmt::format("{}", exp);
-                            info_stream_.close();
-                        }
                         if (!has_started_)
                             fs::remove(output_directory());
                         FlatFile::close();

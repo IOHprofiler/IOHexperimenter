@@ -21,9 +21,9 @@ namespace ioh::problem::bbob
             {
                 double z = 0;
                 for (size_t j = 1; j < 33; ++j)
-                    z += fabs(this->transformation_state_.exponents.at(j) * x.at(i)
-                            - floor(this->transformation_state_.exponents.at(j) * x.at(i) + 0.5))
-                        / this->transformation_state_.exponents.at(j);
+                    z += fabs(this->transformation_state_.exponents[j] * x[i]
+                            - floor(this->transformation_state_.exponents[j] * x[i] + 0.5))
+                        / this->transformation_state_.exponents[j];
 
                 result *= pow(1.0 + (static_cast<double>(i) + 1) * z, exponent_);
             }

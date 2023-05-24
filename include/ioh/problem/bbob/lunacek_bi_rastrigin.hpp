@@ -27,13 +27,13 @@ namespace ioh::problem::bbob
 
             /* x_hat */
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
-                x_hat[i] = this->optimum_.x.at(i) > 0. ? 2. * x.at(i) : 2. * x.at(i) * -1;
+                x_hat[i] = this->optimum_.x[i] > 0. ? 2. * x[i] : 2. * x[i] * -1;
              
             /* affine transformation */
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
                 for (auto j = 0; j < this->meta_data_.n_variables; ++j)
-                    transformation_base[i] += this->transformation_state_.conditions.at(i)
-                        * this->transformation_state_.second_rotation.at(i).at(j) * (x_hat.at(j) - mu0);
+                    transformation_base[i] += this->transformation_state_.conditions[i]
+                        * this->transformation_state_.second_rotation[i][j] * (x_hat[j] - mu0);
 
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
             {
@@ -64,8 +64,8 @@ namespace ioh::problem::bbob
             const auto random_normal = common::random::bbob2009::normal(n_variables, this->transformation_state_.seed);
             for (auto i = 0; i < n_variables; ++i)
             {
-                this->optimum_.x[i] = random_normal.at(i) < 0.0 ? 0.5 * 2.5 * -1 : 0.5 * 2.5;
-                this->transformation_state_.conditions[i] = pow(sqrt(100.), this->transformation_state_.exponents.at(i));
+                this->optimum_.x[i] = random_normal[i] < 0.0 ? 0.5 * 2.5 * -1 : 0.5 * 2.5;
+                this->transformation_state_.conditions[i] = pow(sqrt(100.), this->transformation_state_.exponents[i]);
             }
         }
     };

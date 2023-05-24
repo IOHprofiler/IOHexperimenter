@@ -6,11 +6,11 @@ namespace ioh::problem
 {
     /**
      * @brief CRTP class for Single objective problems
-     * 
+     *
      * @tparam T the type of the problem
      */
     template <typename T>
-    class SingleObjectiveProblem: public Problem<T, SingleObjective>
+    class SingleObjectiveProblem : public Problem<T, SingleObjective>
     {
     public:
         /**
@@ -23,10 +23,12 @@ namespace ioh::problem
          */
         explicit SingleObjectiveProblem(MetaData meta_data, Bounds<T> bounds, ConstraintSet<T> constraints,
                                         Solution<T, SingleObjective> optimum) :
-            Problem<T, SingleObjective>(meta_data, bounds, constraints,
-                    State<T, SingleObjective>(
-                        {std::vector<T>(meta_data.n_variables, std::numeric_limits<T>::signaling_NaN()),
-                         meta_data.optimization_type.initial_value()}), optimum)
+            Problem<T, SingleObjective>(
+                meta_data, bounds, constraints,
+                State<T, SingleObjective>(
+                    {std::vector<T>(meta_data.n_variables, std::numeric_limits<T>::signaling_NaN()),
+                     meta_data.optimization_type.initial_value()}),
+                optimum)
         {
         }
 
@@ -41,21 +43,22 @@ namespace ioh::problem
                                         ConstraintSet<T> constraints = {}) :
             SingleObjectiveProblem(
                 meta_data, bounds, constraints,
-                    Solution<T, SingleObjective>(meta_data.n_variables, meta_data.optimization_type.type()))
+                Solution<T, SingleObjective>(meta_data.n_variables, meta_data.optimization_type.type()))
         {
-        }      
+        }
 
         //! Main call interface
         virtual double operator()(const std::vector<T> &x) override
         {
             if (!this->check_input(x))
                 return std::numeric_limits<double>::signaling_NaN();
-            
+
             this->state_.current.x = x;
             if (this->constraintset_.hard_violation(x))
             {
                 this->state_.current_internal.x = x;
-                this->state_.current_internal.y = this->constraintset_.penalize(this->meta_data_.optimization_type.initial_value());
+                this->state_.current_internal.y =
+                    this->constraintset_.penalize(this->meta_data_.optimization_type.initial_value());
                 this->state_.y_unconstrained = this->state_.current_internal.y;
                 this->state_.current.y = this->state_.current_internal.y;
             }
@@ -77,7 +80,18 @@ namespace ioh::problem
 
             return this->state_.current.y;
         }
+
+        virtual std::vector<double> operator()(const std::vector<std::vector<T>> &X) override
+        {
+            std::vector<double> y(X.size());
+            for (size_t i = 0; i < y.size(); i++)
+            {
+                y[i] = (*this)(X[i]);
+            }
+            return y;
+        }
     };
+
 
     //! Type def for Real problems
     using RealSingleObjective = SingleObjectiveProblem<double>;
@@ -85,7 +99,7 @@ namespace ioh::problem
     //! Type def for Integer problems
     using IntegerSingleObjective = SingleObjectiveProblem<int>;
 
-        /**
+    /**
      * @brief Wrapper class for new single objective problems
      *
      * @tparam T
@@ -139,19 +153,19 @@ namespace ioh::problem
          *
          */
         SingleObjectiveWrappedProblem(
-            ObjectiveFunction<T, SingleObjective> f, const std::string &name, const int n_variables, const int problem_id = 0,
-            const int instance_id = 0, const common::OptimizationType optimization_type = common::OptimizationType::MIN,
-            Bounds<T> bounds = {},
+            ObjectiveFunction<T, SingleObjective> f, const std::string &name, const int n_variables,
+            const int problem_id = 0, const int instance_id = 0,
+            const common::OptimizationType optimization_type = common::OptimizationType::MIN, Bounds<T> bounds = {},
             VariablesTransformationFunction<T> transform_variables_function = utils::identity<std::vector<T>, int>,
             ObjectiveTransformationFunction<SingleObjective> transform_objectives_function =
                 utils::identity<double, int>,
             std::optional<Solution<T, double>> objective = std::nullopt, ConstraintSet<T> constraints = {}) :
             SingleObjectiveProblem<T>(MetaData(problem_id, instance_id, name, n_variables, optimization_type), bounds,
                                       constraints,
-                       objective.value_or(Solution<T, SingleObjective>(n_variables, optimization_type))),
+                                      objective.value_or(Solution<T, SingleObjective>(n_variables, optimization_type))),
             function_(f), transform_variables_function_(transform_variables_function),
             transform_objectives_function_(transform_objectives_function)
         {
         }
-    };    
-}
+    };
+} // namespace ioh::problem

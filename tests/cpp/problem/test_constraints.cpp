@@ -9,20 +9,20 @@ TEST_F(BaseTest, BoxBBOBConstraint)
     using namespace ioh::problem::bbob;
 
     Sphere p(1, 1);
-    EXPECT_FLOAT_EQ((float)p({10.}), 174.48792f);
+    EXPECT_FLOAT_EQ((float)p(std::vector<double>{10.}), 174.48792f);
     EXPECT_FLOAT_EQ((float)p.constraints().violation(), 0.f);
 
     p.enforce_bounds(std::numeric_limits<double>::infinity());
-	EXPECT_EQ(p({10}), std::numeric_limits<double>::infinity());
+	EXPECT_EQ(p(std::vector<double>{10}), std::numeric_limits<double>::infinity());
     EXPECT_FLOAT_EQ((float)p.constraints().violation(), 25.f);
 	
-	EXPECT_EQ(p({-10}), std::numeric_limits<double>::infinity());
+	EXPECT_EQ(p(std::vector<double>{-10}), std::numeric_limits<double>::infinity());
     EXPECT_FLOAT_EQ((float)p.constraints().violation(), 25.f);
 
     // Hard penalty, return the value for penalty on violation, and don't call
     // internal evaluate function. So, y and all internally used values are expected to be the penalty
     p.enforce_bounds(1.0, ioh::problem::constraint::Enforced::HARD);
-    auto y = p({11});
+    auto y = p(std::vector<double>{11});
 
     EXPECT_EQ(y, p.constraints().penalty());
     EXPECT_EQ(p.state().current_internal.y, p.constraints().penalty());
@@ -30,7 +30,7 @@ TEST_F(BaseTest, BoxBBOBConstraint)
 
     // Return only penalize(y), default implementation of penalize(y) is y + p, so inf + p == inf
     p.enforce_bounds(1.0, ioh::problem::constraint::Enforced::OVERRIDE);
-    EXPECT_EQ(p({10}), std::numeric_limits<double>::infinity());
+    EXPECT_EQ(p(std::vector<double>{10}), std::numeric_limits<double>::infinity());
 
 }
 
@@ -40,10 +40,10 @@ TEST_F(BaseTest, BoundsAsConstraints) {
     Sphere p(1, 1);
 
     p.enforce_bounds(std::numeric_limits<double>::infinity());
-    EXPECT_EQ(p({10.}), std::numeric_limits<double>::infinity());
+    EXPECT_EQ(p(std::vector<double>{10.}), std::numeric_limits<double>::infinity());
     
     p.enforce_bounds(1.0);
-    EXPECT_FLOAT_EQ((float)p({10.}), (float)p.state().y_unconstrained + 25);
+    EXPECT_FLOAT_EQ((float)p(std::vector<double>{10.}), (float)p.state().y_unconstrained + 25);
 
     EXPECT_EQ(p.constraints().n(), 1);
 }
@@ -53,16 +53,16 @@ TEST_F(BaseTest, BoxPBOConstraint)
     using namespace ioh::problem::pbo;
 
     LeadingOnes p(1, 1);
-    EXPECT_FLOAT_EQ((float)p({1}), 1);
-    EXPECT_FLOAT_EQ((float)p({2}), 0);
+    EXPECT_FLOAT_EQ((float)p(std::vector<int>{1}), 1);
+    EXPECT_FLOAT_EQ((float)p(std::vector<int>{2}), 0);
     EXPECT_FLOAT_EQ((float)p.constraints().violation(), 0.f);
 
     p.enforce_bounds(-std::numeric_limits<double>::infinity());
 
-    EXPECT_EQ(p({2}), -std::numeric_limits<double>::infinity());
+    EXPECT_EQ(p(std::vector<int>{2}), -std::numeric_limits<double>::infinity());
     EXPECT_FLOAT_EQ((float)p.constraints().violation(), 1.f);
 
-    EXPECT_EQ(p({-2}), -std::numeric_limits<double>::infinity());
+    EXPECT_EQ(p(std::vector<int>{-2}), -std::numeric_limits<double>::infinity());
     EXPECT_FLOAT_EQ((float)p.constraints().violation(), 4.f);
 }
 

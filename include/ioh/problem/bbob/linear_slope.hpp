@@ -14,9 +14,9 @@ namespace ioh::problem::bbob
         {
             auto result = 0.0;
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
-                result += 5.0 * fabs(this->transformation_state_.conditions.at(i)) - this->transformation_state_.conditions.at(i) *
+                result += 5.0 * fabs(this->transformation_state_.conditions[i]) - this->transformation_state_.conditions[i] *
                 (
-                    x.at(i) * this->optimum_.x.at(i) < 25.0 ? x.at(i) : this->optimum_.x.at(i)
+                    x[i] * this->optimum_.x[i] < 25.0 ? x[i] : this->optimum_.x[i]
                 );
             return result;
         }
@@ -33,15 +33,15 @@ namespace ioh::problem::bbob
         {
             static const auto base = sqrt(100.0);
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
-                if (this->optimum_.x.at(i) < 0.0)
+                if (this->optimum_.x[i] < 0.0)
                 {
                     this->optimum_.x[i] = -5; // constraints_.lb.at(0);
-                    this->transformation_state_.conditions[i] = -pow(base, this->transformation_state_.exponents.at(i));
+                    this->transformation_state_.conditions[i] = -pow(base, this->transformation_state_.exponents[i]);
                 }
                 else
                 {
                     this->optimum_.x[i] = 5; //constraints_.ub.at(0);
-                    this->transformation_state_.conditions[i] = pow(base, this->transformation_state_.exponents.at(i));
+                    this->transformation_state_.conditions[i] = pow(base, this->transformation_state_.exponents[i]);
                 }
         }
     };

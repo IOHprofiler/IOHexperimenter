@@ -201,11 +201,11 @@ namespace ioh::common::random
                 random_number = generators[index];
                 generators[index] = seed;
 
-                x.at(i) = random_number / 2.147483647e9;
-                if (x.at(i) == 0.)
-                    x.at(i) = 1e-99;
+                x[i] = random_number / 2.147483647e9;
+                if (x[i] == 0.)
+                    x[i] = 1e-99;
 
-                x.at(i) = x.at(i) * (ub - lb) + lb;
+                x[i] = x[i] * (ub - lb) + lb;
             }
             return x;
         }
@@ -219,10 +219,10 @@ namespace ioh::common::random
 
             for (size_t i = 0; i < n; i++)
             {
-                x.at(i) = sqrt(-2 * std::log(uniform_random[i])) * cos(2 * IOH_PI * uniform_random[n + i]);
-                if (x.at(i) == 0.)
-                    x.at(i) = 1e-99;
-                x.at(i) = x.at(i) * (ub - lb) + lb;
+                x[i] = sqrt(-2 * std::log(uniform_random[i])) * cos(2 * IOH_PI * uniform_random[n + i]);
+                if (x[i] == 0.)
+                    x[i] = 1e-99;
+                x[i] = x[i] * (ub - lb) + lb;
             }
             return x;
         } // namespace random

@@ -56,12 +56,12 @@ namespace ioh::problem::bbob
             positive_offset_(n_variables)
         {
             for (auto i = 0; i < n_variables; ++i)
-                this->optimum_.x[i] = (negative_offset_.at(i) < 0.5 ? -1 : 1) * 0.5 * 4.2096874637;
+                this->optimum_.x[i] = (negative_offset_[i] < 0.5 ? -1 : 1) * 0.5 * 4.2096874637;
 
             for (auto i = 0; i < n_variables; ++i)
             {
-                negative_offset_[i] = -2 * fabs(this->optimum_.x.at(i));
-                positive_offset_[i] = 2 * fabs(this->optimum_.x.at(i));
+                negative_offset_[i] = -2 * fabs(this->optimum_.x[i]);
+                positive_offset_[i] = 2 * fabs(this->optimum_.x[i]);
             }
         }
     };

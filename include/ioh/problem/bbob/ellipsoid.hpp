@@ -18,7 +18,7 @@ namespace ioh::problem::bbob
         {
             auto result = x.at(0) * x.at(0);
             for (auto i = 1; i < this->meta_data_.n_variables; ++i)
-                result += this->transformation_state_.conditions.at(i) * x.at(i) * x.at(i);
+                result += this->transformation_state_.conditions[i] * x[i] * x[i];
             return result;
         }
 
@@ -46,7 +46,7 @@ namespace ioh::problem::bbob
         {
             static const auto condition = 1.0e6;
             for (auto i = 1; i < this->meta_data_.n_variables; ++i)
-                this->transformation_state_.conditions[i] = pow(condition, this->transformation_state_.exponents.at(i));
+                this->transformation_state_.conditions[i] = pow(condition, this->transformation_state_.exponents[i]);
         }
     };
 

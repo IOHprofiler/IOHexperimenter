@@ -15,7 +15,7 @@ namespace ioh::problem::bbob
             static const auto condition = 1.0e6;
             auto result = condition * x.at(0) * x.at(0);
             for (auto i = 1; i < this->meta_data_.n_variables; ++i)
-                result += x.at(i) * x.at(i);
+                result += x[i] * x[i];
             return result;
         }
         //! Variables transformation method

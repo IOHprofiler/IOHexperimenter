@@ -60,8 +60,7 @@ namespace ioh::logger
         //! Output stream
         std::ofstream out_;
 
-        //! Current suite
-        std::string current_suite_;
+       
         
         //! Current run
         size_t current_run_;
@@ -90,7 +89,7 @@ namespace ioh::logger
             if (!out_.is_open())
             {
                 IOH_DBG(debug, "will output data in " << output_directory_ / filename_)
-                out_ = std::ofstream(output_directory_ / filename_);
+                out_ = std::ofstream(output_directory_ / filename_, std::ofstream::out | std::ofstream::app);
                 requires_header_ = true;
             }
         }
@@ -126,12 +125,12 @@ namespace ioh::logger
                            (common_header_titles.empty() ? "" : sep_)),
             repeat_header_(repeat_header), store_positions_(store_positions), requires_header_(true),
             log_meta_data_(!common_header_titles.empty()), output_directory_(output_directory), filename_(filename),
-            current_suite_("unknown_suite"), current_run_(0), current_meta_data_{}
+            current_run_(0), current_meta_data_{}
         {
             assert(common_header_titles.empty() || common_header_titles.size() == 7);
         }
 
-        void attach_suite(const std::string &suite_name) override { current_suite_ = suite_name; }
+      
 
         void attach_problem(const problem::MetaData &problem) override
         {
@@ -214,7 +213,7 @@ namespace ioh::logger
             if (log_meta_data_)
             {
                 std::stringstream ss;
-                ss /* no sep */ << current_suite_;
+                ss /* no sep */ << suite_;
                 ss << sep_ << problem_.value().name;
                 ss << sep_ << problem_.value().problem_id;
                 ss << sep_ << problem_.value().instance;

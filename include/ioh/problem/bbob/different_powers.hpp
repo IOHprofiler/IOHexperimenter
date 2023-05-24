@@ -14,7 +14,7 @@ namespace ioh::problem::bbob
         {
             auto sum = 0.0;
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
-                sum += pow(fabs(x.at(i)), this->transformation_state_.exponents.at(i));
+                sum += pow(fabs(x[i]), this->transformation_state_.exponents[i]);
             return sqrt(sum);
         }
         //! Variables transformation method                         
@@ -37,7 +37,7 @@ namespace ioh::problem::bbob
             P(14, instance, n_variables, "DifferentPowers")
         {
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
-                this->transformation_state_.exponents[i] = 2.0 + 4.0 * this->transformation_state_.exponents.at(i);
+                this->transformation_state_.exponents[i] = 2.0 + 4.0 * this->transformation_state_.exponents[i];
         }
     };
     template class DifferentPowers<BBOB>;

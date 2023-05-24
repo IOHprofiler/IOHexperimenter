@@ -19,7 +19,7 @@ namespace ioh::problem::bbob
             auto result = 0.0;
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
                 for (size_t j = 0; j < ak_.size(); ++j)
-                    result += cos(2 * IOH_PI * (x.at(i) + 0.5) * bk_.at(j)) * ak_.at(j);
+                    result += cos(2 * IOH_PI * (x[i] + 0.5) * bk_[j]) * ak_[j];
 
             result = result / static_cast<double>(this->meta_data_.n_variables) - f0_;
             result = 10.0 * pow(result, 3.0);
@@ -54,7 +54,7 @@ namespace ioh::problem::bbob
             {
                 ak_[i] = pow(0.5, static_cast<double>(i));
                 bk_[i] = pow(3., static_cast<double>(i));
-                f0_ += ak_.at(i) * cos(2 * IOH_PI * bk_.at(i) * 0.5);
+                f0_ += ak_[i] * cos(2 * IOH_PI * bk_[i] * 0.5);
             }
         }
     };

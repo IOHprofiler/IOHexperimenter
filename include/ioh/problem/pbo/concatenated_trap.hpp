@@ -60,7 +60,7 @@ namespace ioh
             public:
                 /**
                  * \brief Construct a new Concatenated_Trap object. Definition refers to
-                 *https://doi.org/10.1007/978-3-030-58115-2_49
+                 * https://doi.org/10.1007/978-3-030-58115-2_49
                  *
                  * \param instance The instance number of a problem, which controls the transformation
                  * performed on the original problem.

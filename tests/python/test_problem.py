@@ -3,6 +3,8 @@ import unittest
 import math
 
 import ioh
+import numpy as np
+
 
 DATA_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "static"
@@ -32,6 +34,18 @@ class TestProblem(unittest.TestCase):
         self.assertIsInstance(
             ioh.get_problem("OneMax", 1, 2, ioh.ProblemClass.PBO), ioh.problem.OneMax
         )
+
+    def test_vectorized_eval(self):
+        n_samples = 5
+        dim = 2
+
+        problem = ioh.get_problem(1, 1, dim)
+        X = np.zeros((n_samples, dim))
+        y = problem(X)
+        self.assertIsInstance(y, list)
+        self.assertEqual(len(y), n_samples)
+        self.assertEqual(problem.state.evaluations, n_samples)
+        self.assertSetEqual(set(y), {80.88209408})
 
     def test_wmodel(self):
         for p in map(
