@@ -696,44 +696,95 @@ void define_pbo_problems(py::module &m)
             {0,1}^n → ℝ, x ↦ ∑_i i * x_i
         )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::OneMaxDummy1, PBO, std::shared_ptr<pbo::OneMaxDummy1>>(m, "OneMaxDummy1", py::is_final())
+    py::class_<pbo::OneMaxDummy1, PBO, std::shared_ptr<pbo::OneMaxDummy1>>(m, "OneMaxDummy1", py::is_final(),
+                                                                                            R"pbdoc(
+                A variant of OneMax applying the Dummy transformation of W-model. m = 0.5n.
+                Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
+            )pbdoc")
+
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::OneMaxDummy2, PBO, std::shared_ptr<pbo::OneMaxDummy2>>(m, "OneMaxDummy2", py::is_final())
+    py::class_<pbo::OneMaxDummy2, PBO, std::shared_ptr<pbo::OneMaxDummy2>>(m, "OneMaxDummy2", py::is_final(),
+                                                                            R"pbdoc(
+                A variant of OneMax applying the Dummy transformation of W-model. m = 0.9n.
+                Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
+            )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::OneMaxNeutrality, PBO, std::shared_ptr<pbo::OneMaxNeutrality>>(m, "OneMaxNeutrality",
-                                                                                   py::is_final())
+                                                                                   py::is_final(),
+                                                                                R"pbdoc(
+                A variant of OneMax applying the Neutrality transformation of W-model. \mu = 3.
+                Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
+                )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::OneMaxEpistasis, PBO, std::shared_ptr<pbo::OneMaxEpistasis>>(m, "OneMaxEpistasis", py::is_final())
+    py::class_<pbo::OneMaxEpistasis, PBO, std::shared_ptr<pbo::OneMaxEpistasis>>(m, "OneMaxEpistasis", py::is_final(),
+                                                                                R"pbdoc(
+                A variant of OneMax applying the Epistasis transformation of W-model. \nu = 4.
+                Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
+                )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::OneMaxRuggedness1, PBO, std::shared_ptr<pbo::OneMaxRuggedness1>>(m, "OneMaxRuggedness1",
-                                                                                     py::is_final())
+                                                                                     py::is_final(),
+                                                                                     R"pbdoc(
+                A variant of OneMax applying the first Ruggnedness transformation in https://doi.org/10.1016/j.asoc.2019.106027.
+                )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::OneMaxRuggedness2, PBO, std::shared_ptr<pbo::OneMaxRuggedness2>>(m, "OneMaxRuggedness2",
-                                                                                     py::is_final())
+                                                                                     py::is_final(),
+                                                                                     R"pbdoc(
+                A variant of OneMax applying the second Ruggnedness transformation in https://doi.org/10.1016/j.asoc.2019.106027.
+                )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::OneMaxRuggedness3, PBO, std::shared_ptr<pbo::OneMaxRuggedness3>>(m, "OneMaxRuggedness3",
-                                                                                     py::is_final())
+                                                                                     py::is_final(),
+                                                                                     R"pbdoc(
+                A variant of OneMax applying the third Ruggnedness transformation in https://doi.org/10.1016/j.asoc.2019.106027.
+                )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::LeadingOnesDummy1, PBO, std::shared_ptr<pbo::LeadingOnesDummy1>>(m, "LeadingOnesDummy1",
-                                                                                     py::is_final())
+                                                                                     py::is_final(),
+                                                                                      R"pbdoc(
+                A variant of LeadingOnes applying the Dummy transformation of W-model. m = 0.5n.
+                Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
+            )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::LeadingOnesDummy2, PBO, std::shared_ptr<pbo::LeadingOnesDummy2>>(m, "LeadingOnesDummy2",
-                                                                                     py::is_final())
+                                                                                     py::is_final(),
+                                                                                     R"pbdoc(
+                A variant of LeadingOnes applying the Dummy transformation of W-model. m = 0.9n.
+                Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
+            )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::LeadingOnesNeutrality, PBO, std::shared_ptr<pbo::LeadingOnesNeutrality>>(m, "LeadingOnesNeutrality",
-                                                                                             py::is_final())
+                                                                                             py::is_final(),
+                                                                                             R"pbdoc(
+                A variant of LeadingOnes applying the Neutrality transformation of W-model. \mu = 3.
+                Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
+                )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::LeadingOnesEpistasis, PBO, std::shared_ptr<pbo::LeadingOnesEpistasis>>(m, "LeadingOnesEpistasis",
-                                                                                           py::is_final())
+                                                                                           py::is_final(),
+                                                                                            R"pbdoc(
+                A variant of LeadingOnes applying the Epistasis transformation of W-model. \nu = 4.
+                Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
+                )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::LeadingOnesRuggedness1, PBO, std::shared_ptr<pbo::LeadingOnesRuggedness1>>(
-        m, "LeadingOnesRuggedness1", py::is_final())
+        m, "LeadingOnesRuggedness1", py::is_final(),
+        R"pbdoc(
+                A variant of LeadingOnes applying the first Ruggnedness transformation in https://doi.org/10.1016/j.asoc.2019.106027.
+                )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::LeadingOnesRuggedness2, PBO, std::shared_ptr<pbo::LeadingOnesRuggedness2>>(
-        m, "LeadingOnesRuggedness2", py::is_final())
+        m, "LeadingOnesRuggedness2", py::is_final(),
+        R"pbdoc(
+                A variant of LeadingOnes applying the second Ruggnedness transformation in https://doi.org/10.1016/j.asoc.2019.106027.
+                )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::LeadingOnesRuggedness3, PBO, std::shared_ptr<pbo::LeadingOnesRuggedness3>>(
-        m, "LeadingOnesRuggedness3", py::is_final())
+        m, "LeadingOnesRuggedness3", py::is_final(),
+        R"pbdoc(
+                A variant of LeadingOnes applying the third Ruggnedness transformation in https://doi.org/10.1016/j.asoc.2019.106027.
+                )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::LABS, PBO, std::shared_ptr<pbo::LABS>>(m, "LABS", py::is_final(),
                                                            R"pbdoc(
@@ -744,21 +795,52 @@ void define_pbo_problems(py::module &m)
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::IsingRing, PBO, std::shared_ptr<pbo::IsingRing>>(m, "IsingRing", py::is_final(),
                                                                      R"pbdoc(
-            Low Autocorrelation Binary Sequences (LABS):
-            x ↦ n^2 / 2∑_{k=1}^{n-1}(∑_{i=1}^{n−k}s_is_{i+k})^2, where s_i = 2x_i − 1
+            The Ising Spin Glass model arose in solid-state physics and statistical mechanics, aiming to 
+            describe simple interactions within many-particle systems. A compact form used here is 
+            x ↦ ∑_{{u,v} \in E}[x_ux_v - (1-x_u) (1-x_v)]. E is defined over a one-dimensional lattice.
+            Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.
 
         )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::IsingTorus, PBO, std::shared_ptr<pbo::IsingTorus>>(m, "IsingTorus", py::is_final())
+    py::class_<pbo::IsingTorus, PBO, std::shared_ptr<pbo::IsingTorus>>(m, "IsingTorus", py::is_final(),
+                                                                    R"pbdoc(
+            The Ising Spin Glass model arose in solid-state physics and statistical mechanics, aiming to 
+            describe simple interactions within many-particle systems. A compact form used here is 
+            x ↦ ∑_{{u,v} \in E}[x_ux_v - (1-x_u) (1-x_v)]. E is defined over a two-dimensional lattice.
+            Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.
+        )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::IsingTriangular, PBO, std::shared_ptr<pbo::IsingTriangular>>(m, "IsingTriangular", py::is_final())
+    py::class_<pbo::IsingTriangular, PBO, std::shared_ptr<pbo::IsingTriangular>>(m, "IsingTriangular", py::is_final(),
+                                                                    R"pbdoc(
+            The Ising Spin Glass model arose in solid-state physics and statistical mechanics, aiming to 
+            describe simple interactions within many-particle systems. A compact form used here is 
+            x ↦ ∑_{{u,v} \in E}[x_ux_v - (1-x_u) (1-x_v)]. E is defined over a three-dimensional lattice.
+            Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.
+        )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::MIS, PBO, std::shared_ptr<pbo::MIS>>(m, "MIS", py::is_final())
+    py::class_<pbo::MIS, PBO, std::shared_ptr<pbo::MIS>>(m, "MIS", py::is_final(),
+                                                        R"pbdoc(
+            The maximum independent vertex set (MIVS) formulated as 
+            x ↦ ∑_i x_i - n ∑_{i,j} x_i x_j e_{i,j}, where e_{i,j} = 1 if {i,j} \in E, otherwise e_{i,j} = 0.
+            Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.                       
+        )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::NQueens, PBO, std::shared_ptr<pbo::NQueens>>(m, "NQueens", py::is_final())
+    py::class_<pbo::NQueens, PBO, std::shared_ptr<pbo::NQueens>>(m, "NQueens", py::is_final(),
+                                                                R"pbdoc(
+            The N-queens problem (NQP) is defined as the task to place N queens on an N*N chessboard in such a 
+            way that they cannot attack each other.   
+            Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.                      
+        )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::ConcatenatedTrap, PBO, std::shared_ptr<pbo::ConcatenatedTrap>>(m, "ConcatenatedTrap",
-                                                                                   py::is_final())
+                                                                                   py::is_final(),
+                                                                                   R"pbdoc(
+        Concatenated Trap (CT) is defined by partitioning a bit-string into segments of length k and 
+        concatenating m = n/k trap functions that takes each segment as input. The trap function is 
+        defined as follows: f_trap(u) = 1 if the k number u of ones satisfies u = k and 
+        f_trap(u) = (k−1−u)/k otherwise. We use k = 5 in our experiments.
+        Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.
+        )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 }
 
