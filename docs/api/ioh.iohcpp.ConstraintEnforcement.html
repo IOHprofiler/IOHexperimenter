@@ -410,14 +410,14 @@
 <dt class="sig sig-object py" id="ioh.iohcpp.ConstraintEnforcement">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ioh.iohcpp.</span></span><span class="sig-name descname"><span class="pre">ConstraintEnforcement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ioh.iohcpp.ConstraintEnforcement" title="ioh.iohcpp.ConstraintEnforcement"><span class="pre">ioh.iohcpp.ConstraintEnforcement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.ConstraintEnforcement" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
-<p>Enum defining constraint handling strategies</p>
+<p>Enum defining constraint handling strategies.</p>
 <p>Members:</p>
 <blockquote>
-<div><p>NOT</p>
-<p>HIDDEN</p>
-<p>SOFT</p>
-<p>HARD</p>
-<p>OVERRIDE</p>
+<div><p>NOT : Do not calculate the constraint at all</p>
+<p>HIDDEN : Do not enforce, but still calculate to enable logging.</p>
+<p>SOFT : Penalize (y + p), but aggregate all the constraint penalties into a sum</p>
+<p>HARD : Penalize (p only), and if violation return only the penalty for this constraint in contraintset</p>
+<p>OVERRIDE : Penalize (p only), and if violation return the custom penalization function this constraint in contraintset</p>
 </div></blockquote>
 <p class="rubric">Attributes Summary</p>
 <div class="table-wrapper autosummary longtable docutils container">

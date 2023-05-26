@@ -410,7 +410,29 @@
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.PackWhileTravel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ioh.iohcpp.problem.</span></span><span class="sig-name descname"><span class="pre">PackWhileTravel</span></span><a class="headerlink" href="#ioh.iohcpp.problem.PackWhileTravel" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ioh.iohcpp.problem.GraphProblem.html#ioh.iohcpp.problem.GraphProblem" title="ioh.iohcpp.problem.GraphProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GraphProblem</span></code></a></p>
-<p>PackWhileTravel function</p>
+<p>Packing while traveling problems</p>
+<p>The packing while traveling (PWT) problem is a non-monotone submodular optimization problem which is
+obtained from the traveling thief problem (TTP) when the route is fixed.</p>
+<p>The input is given as n + 1 cities with distances di, 1 ≤ i ≤ n, from city i to city i + 1. Each city i, 1 ≤ i ≤ n,
+contains a set of items Mi ⊆ M, <a href="#id1"><span class="problematic" id="id2">|Mi|</span></a> = mi. Each item eij ∈ Mi, 1 ≤ j ≤ mi, has a positive integer profit pij and
+weight wij . A fixed route N = (1, 2, …, n + 1) is traveled by a vehicle with velocity v ∈ [vmin, vmax]. We denote by
+xij ∈ {0, 1} the variable indicating whether or not item eij is chosen in a solution
+x = (x11, x12, …, x1m1, x21, …, xnmn) ∈ {0, 1}^m, where m = SUM_{n}^{i=1} mi.
+The total benefit of selecting a subset of items selected by x is given as PWT(x) = P(x) − R · T(x),
+where P(x) is the total profit of the selected items and T(x) is the total travel time for the vehicle carrying the selected
+items. Formally, we have P(x) = Sum_{i=1}^n Sum_{j=1}^{mi} pij xij and
+T(x) = Sum_{i=1}^n di / (vmax − ν Sum_{k=1}^i Sum_{j=1}^{mk} wkj xkj
+Here, ν = (vmax−vmin) / B is a constant defined by the input parameters, where B is the capacity of the vehicle. The
+problem is already NP-hard without any additional constraints, but often considered with a typical knapsack
+constraint given as c(x) = Sum_{i=1}^n Sum_{j=1}^{mi} wij xij ≤ B.
+As fitness functions, we use g(x) = (f’(x), c(x)) with
+f’(x) = PWT(x) if c(x) ≤ B
+and f’(x) = B − c(x) − R · T(vmin) if c(x) &gt; B
+where T(vmin) = (1 / vmin) Sum_i=1}^n di is the travel time at speed vmin.</p>
+<p>[Neumann23] Neumann, Frank, Aneta Neumann, Chao Qian, Viet Anh Do, Jacob de Nobel, Diederick Vermetten,
+Saba Sadeghi Ahouei, Furong Ye, Hao Wang, and Thomas Bäck.
+“Benchmarking Algorithms for Submodular Optimization Problems Using IOHProfiler.”
+arXiv preprint arXiv:2302.01464 (2023).</p>
 <p class="rubric">Attributes Summary</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
@@ -459,7 +481,7 @@
 <td><p>Remove the specified logger from the problem.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.PackWhileTravel.enforce_bounds" title="ioh.iohcpp.problem.PackWhileTravel.enforce_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enforce_bounds</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Enforced the bounds (box-constraints) as constraint :param weight: :type weight: The weight for computing the penalty (can be infinity to have strict box-constraints) :param how: :type how: The enforcement strategy, should be one of the 'ioh.ConstraintEnforcement' options :param exponent: :type exponent: The exponent for scaling the contraint</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.PackWhileTravel.load_instances" title="ioh.iohcpp.problem.PackWhileTravel.load_instances"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_instances</span></code></a>([path])</p></td>
 <td><p></p></td>
@@ -523,6 +545,24 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>x</strong> (<em>list</em>) – the search point to evaluate. It must be a 1-dimensional array/list whose length matches search space’s dimensionality</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluated search point</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p>Evaluate the problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>list</em><em>[</em><em>list</em><em>]</em>) – the search points to evaluate. It must be a 2-dimensional array/list whose length matches search space’s dimensionality</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluated search points</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -591,7 +631,14 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.PackWhileTravel.enforce_bounds">
 <span class="sig-name descname"><span class="pre">enforce_bounds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.problem.PackWhileTravel.enforce_bounds" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Enforced the bounds (box-constraints) as constraint
+:param weight:
+:type weight: The weight for computing the penalty (can be infinity to have strict box-constraints)
+:param how:
+:type how: The enforcement strategy, should be one of the ‘ioh.ConstraintEnforcement’ options
+:param exponent:
+:type exponent: The exponent for scaling the contraint</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.PackWhileTravel.load_instances">

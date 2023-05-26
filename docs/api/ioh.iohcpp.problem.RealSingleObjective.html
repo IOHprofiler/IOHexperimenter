@@ -459,7 +459,7 @@
 <td><p>Remove the specified logger from the problem.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.RealSingleObjective.enforce_bounds" title="ioh.iohcpp.problem.RealSingleObjective.enforce_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enforce_bounds</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Enforced the bounds (box-constraints) as constraint :param weight: :type weight: The weight for computing the penalty (can be infinity to have strict box-constraints) :param how: :type how: The enforcement strategy, should be one of the 'ioh.ConstraintEnforcement' options :param exponent: :type exponent: The exponent for scaling the contraint</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.RealSingleObjective.remove_constraint" title="ioh.iohcpp.problem.RealSingleObjective.remove_constraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_constraint</span></code></a></p></td>
 <td><p>remove a constraint</p></td>
@@ -521,6 +521,24 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>x</strong> (<em>list</em>) – the search point to evaluate. It must be a 1-dimensional array/list whose length matches search space’s dimensionality</p>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluated search point</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p>Evaluate the problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>list</em><em>[</em><em>list</em><em>]</em>) – the search points to evaluate. It must be a 2-dimensional array/list whose length matches search space’s dimensionality</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluated search points</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -575,7 +593,14 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.RealSingleObjective.enforce_bounds">
 <span class="sig-name descname"><span class="pre">enforce_bounds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.problem.RealSingleObjective.enforce_bounds" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Enforced the bounds (box-constraints) as constraint
+:param weight:
+:type weight: The weight for computing the penalty (can be infinity to have strict box-constraints)
+:param how:
+:type how: The enforcement strategy, should be one of the ‘ioh.ConstraintEnforcement’ options
+:param exponent:
+:type exponent: The exponent for scaling the contraint</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.RealSingleObjective.remove_constraint">

@@ -410,6 +410,20 @@
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.RealStarDiscrepancy">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ioh.iohcpp.problem.</span></span><span class="sig-name descname"><span class="pre">RealStarDiscrepancy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self:</span> <span class="pre">ioh.iohcpp.problem.RealStarDiscrepancy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_variables:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampler_type:</span> <span class="pre">ioh.iohcpp.problem.StarDiscrepancySampler</span> <span class="pre">=</span> <span class="pre">&lt;StarDiscrepancySampler.UNIFORM:</span> <span class="pre">0&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.problem.RealStarDiscrepancy" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ioh.iohcpp.problem.RealSingleObjective.html#ioh.iohcpp.problem.RealSingleObjective" title="ioh.iohcpp.problem.RealSingleObjective"><code class="xref py py-class docutils literal notranslate"><span class="pre">RealSingleObjective</span></code></a></p>
+<p>Star-discrepancy problems</p>
+<p>The 𝐿_infinity star discrepancy is a measure for the regularity of a finite set
+of points taken from [0, 1)^d. Calculating this measure is challenging, and exact algorithm
+fall short even for relatively small grids. This suite provides access to a set of these problems
+to tackle the problem from an optimization perspective.</p>
+<p>There are two equivalent representations for these problems: Integer-based and Real-valued.</p>
+<p>For the Real-valued, the goal is to find the a point in [0,1)^d which minimizes the resulting discepancy directly.</p>
+<p>The Integer-valued version takes advantage of the fact that for each dimension, the optimium
+has a value matching an existing point int the grid. As such, the search for a point in the grid can
+be reduced to finding in each dimension the index of the coordinate, resulting in a search domain
+[0,n]^d, where n is the number of gridpoints.</p>
+<p>[Clement23] Clement, Francois, Diederick Vermetten, Jacob de Nobel, Alexandre Jesus,
+Luís Paquete, and Carola Doerr. “Computing Star Discrepancies with
+Numerical Black-Box Optimization Algorithms.”</p>
 <p>Star Discrepancy Problems</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -472,7 +486,7 @@
 <td><p>Remove the specified logger from the problem.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.RealStarDiscrepancy.enforce_bounds" title="ioh.iohcpp.problem.RealStarDiscrepancy.enforce_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enforce_bounds</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Enforced the bounds (box-constraints) as constraint :param weight: :type weight: The weight for computing the penalty (can be infinity to have strict box-constraints) :param how: :type how: The enforcement strategy, should be one of the 'ioh.ConstraintEnforcement' options :param exponent: :type exponent: The exponent for scaling the contraint</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.RealStarDiscrepancy.remove_constraint" title="ioh.iohcpp.problem.RealStarDiscrepancy.remove_constraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_constraint</span></code></a></p></td>
 <td><p>remove a constraint</p></td>
@@ -538,6 +552,24 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>x</strong> (<em>list</em>) – the search point to evaluate. It must be a 1-dimensional array/list whose length matches search space’s dimensionality</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluated search point</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p>Evaluate the problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>list</em><em>[</em><em>list</em><em>]</em>) – the search points to evaluate. It must be a 2-dimensional array/list whose length matches search space’s dimensionality</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluated search points</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -606,7 +638,14 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.RealStarDiscrepancy.enforce_bounds">
 <span class="sig-name descname"><span class="pre">enforce_bounds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.problem.RealStarDiscrepancy.enforce_bounds" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Enforced the bounds (box-constraints) as constraint
+:param weight:
+:type weight: The weight for computing the penalty (can be infinity to have strict box-constraints)
+:param how:
+:type how: The enforcement strategy, should be one of the ‘ioh.ConstraintEnforcement’ options
+:param exponent:
+:type exponent: The exponent for scaling the contraint</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.RealStarDiscrepancy.remove_constraint">
