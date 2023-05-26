@@ -410,6 +410,7 @@
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.LeadingOnesRuggedness2">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ioh.iohcpp.problem.</span></span><span class="sig-name descname"><span class="pre">LeadingOnesRuggedness2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ioh.iohcpp.problem.LeadingOnesRuggedness2" title="ioh.iohcpp.problem.LeadingOnesRuggedness2"><span class="pre">ioh.iohcpp.problem.LeadingOnesRuggedness2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.problem.LeadingOnesRuggedness2" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ioh.iohcpp.problem.PBO.html#ioh.iohcpp.problem.PBO" title="ioh.iohcpp.problem.PBO"><code class="xref py py-class docutils literal notranslate"><span class="pre">PBO</span></code></a></p>
+<p>A variant of LeadingOnes applying the second Ruggnedness transformation in <a class="reference external" href="https://doi.org/10.1016/j.asoc.2019.106027">https://doi.org/10.1016/j.asoc.2019.106027</a>.</p>
 <p class="rubric">Attributes Summary</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
@@ -458,7 +459,7 @@
 <td><p>Remove the specified logger from the problem.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.LeadingOnesRuggedness2.enforce_bounds" title="ioh.iohcpp.problem.LeadingOnesRuggedness2.enforce_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enforce_bounds</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Enforced the bounds (box-constraints) as constraint :param weight: :type weight: The weight for computing the penalty (can be infinity to have strict box-constraints) :param how: :type how: The enforcement strategy, should be one of the 'ioh.ConstraintEnforcement' options :param exponent: :type exponent: The exponent for scaling the contraint</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.LeadingOnesRuggedness2.remove_constraint" title="ioh.iohcpp.problem.LeadingOnesRuggedness2.remove_constraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_constraint</span></code></a></p></td>
 <td><p>remove a constraint</p></td>
@@ -519,6 +520,24 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>x</strong> (<em>list</em>) – the search point to evaluate. It must be a 1-dimensional array/list whose length matches search space’s dimensionality</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluated search point</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p>Evaluate the problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>list</em><em>[</em><em>list</em><em>]</em>) – the search points to evaluate. It must be a 2-dimensional array/list whose length matches search space’s dimensionality</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluated search points</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -587,7 +606,14 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.LeadingOnesRuggedness2.enforce_bounds">
 <span class="sig-name descname"><span class="pre">enforce_bounds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.problem.LeadingOnesRuggedness2.enforce_bounds" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Enforced the bounds (box-constraints) as constraint
+:param weight:
+:type weight: The weight for computing the penalty (can be infinity to have strict box-constraints)
+:param how:
+:type how: The enforcement strategy, should be one of the ‘ioh.ConstraintEnforcement’ options
+:param exponent:
+:type exponent: The exponent for scaling the contraint</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.LeadingOnesRuggedness2.remove_constraint">

@@ -410,7 +410,18 @@
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.MaxCoverage">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ioh.iohcpp.problem.</span></span><span class="sig-name descname"><span class="pre">MaxCoverage</span></span><a class="headerlink" href="#ioh.iohcpp.problem.MaxCoverage" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ioh.iohcpp.problem.GraphProblem.html#ioh.iohcpp.problem.GraphProblem" title="ioh.iohcpp.problem.GraphProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GraphProblem</span></code></a></p>
-<p>MaxCoverage function</p>
+<p>Max-Coverage problems</p>
+<p>The maximum coverage problem is a classical optimization problem on graphs. Given an undirected weighted
+graph G = (V, E, c) with costs c : V → R≥0 on the vertices. We denote by N(V’) =
+{vi | ∃e ∈ E : e ∩ V’ != ∧ e ∩ vi != ∅} the set of all nodes of V’ and their neighbors in G.
+For a given search point x ∈ {0, 1}^n where n = <a href="#id1"><span class="problematic" id="id2">|</span></a>V <a href="#id3"><span class="problematic" id="id4">|</span></a>, we have V’(x) = {vi | xi = 1} and
+c(x) = Sum_{v∈V 0(x)} c(v).</p>
+<p>In the deterministic setting, the goal is to maximize f(x) = <a href="#id5"><span class="problematic" id="id6">|N(V'(x))|</span></a>
+under the constraint that c(x) ≤ B holds.</p>
+<p>[Neumann23] Neumann, Frank, Aneta Neumann, Chao Qian, Viet Anh Do, Jacob de Nobel, Diederick Vermetten,
+Saba Sadeghi Ahouei, Furong Ye, Hao Wang, and Thomas Bäck.
+“Benchmarking Algorithms for Submodular Optimization Problems Using IOHProfiler.”
+arXiv preprint arXiv:2302.01464 (2023).</p>
 <p class="rubric">Attributes Summary</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
@@ -459,7 +470,7 @@
 <td><p>Remove the specified logger from the problem.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.MaxCoverage.enforce_bounds" title="ioh.iohcpp.problem.MaxCoverage.enforce_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enforce_bounds</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Enforced the bounds (box-constraints) as constraint :param weight: :type weight: The weight for computing the penalty (can be infinity to have strict box-constraints) :param how: :type how: The enforcement strategy, should be one of the 'ioh.ConstraintEnforcement' options :param exponent: :type exponent: The exponent for scaling the contraint</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ioh.iohcpp.problem.MaxCoverage.load_instances" title="ioh.iohcpp.problem.MaxCoverage.load_instances"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_instances</span></code></a>([path])</p></td>
 <td><p></p></td>
@@ -523,6 +534,24 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>x</strong> (<em>list</em>) – the search point to evaluate. It must be a 1-dimensional array/list whose length matches search space’s dimensionality</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluated search point</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p>Evaluate the problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>list</em><em>[</em><em>list</em><em>]</em>) – the search points to evaluate. It must be a 2-dimensional array/list whose length matches search space’s dimensionality</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluated search points</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -591,7 +620,14 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.MaxCoverage.enforce_bounds">
 <span class="sig-name descname"><span class="pre">enforce_bounds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ioh.iohcpp.problem.MaxCoverage.enforce_bounds" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Enforced the bounds (box-constraints) as constraint
+:param weight:
+:type weight: The weight for computing the penalty (can be infinity to have strict box-constraints)
+:param how:
+:type how: The enforcement strategy, should be one of the ‘ioh.ConstraintEnforcement’ options
+:param exponent:
+:type exponent: The exponent for scaling the contraint</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ioh.iohcpp.problem.MaxCoverage.load_instances">
