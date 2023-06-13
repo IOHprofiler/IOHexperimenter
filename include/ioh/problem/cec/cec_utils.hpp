@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ioh/problem/problem.hpp"
+#include "ioh/problem/single.hpp"
 #include "ioh/problem/transformation.hpp"
 
 #define INF 1.0e99

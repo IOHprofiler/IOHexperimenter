@@ -10,7 +10,7 @@ namespace ioh::problem
 
 
     //! CEC2022 base class
-    class CEC2022 : public Real
+    class CEC2022 : public RealSingleObjective
     {
     protected:
         int fn_;
@@ -33,15 +33,16 @@ namespace ioh::problem
          */
         CEC2022(const int problem_id, const int instance, const int n_variables,
                 const std::string &name) :
-            Real(MetaData(problem_id, instance, name, n_variables),
-                 Bounds<double>(n_variables, -100, 100))
+            RealSingleObjective(
+                MetaData(problem_id, instance, name, n_variables),
+                Bounds<double>(n_variables, -100, 100))
         {
             fn_ = problem_id;
             nx_ = n_variables;
             if (nx_ != 1)
                 loadCecData();
             // optimum_=0;
-            Solution<double> opt = Solution<double>(Os_, 0.);
+            Solution<double, double> opt = Solution<double, double>(Os_, 0.);
             optimum_ = opt;
             log_info_.optimum = optimum_;
         }
@@ -63,9 +64,10 @@ namespace ioh::problem
      * @tparam ProblemType The New BBOB problem class
      */
     template <typename ProblemType>
-    class CEC2022Problem : public CEC2022,
-                           AutomaticProblemRegistration<ProblemType, CEC2022>,
-                           AutomaticProblemRegistration<ProblemType, Real>
+    class CEC2022Problem
+        : public CEC2022,
+          AutomaticProblemRegistration<ProblemType, CEC2022>,
+          AutomaticProblemRegistration<ProblemType, RealSingleObjective>
     {
 
     public:
