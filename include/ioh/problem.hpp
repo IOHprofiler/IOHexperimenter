@@ -5,6 +5,7 @@
 #include "problem/single.hpp"
 #include "problem/wrap_function.hpp"
 #include "problem/bbob.hpp"
+#include "problem/cec.hpp"
 #include "problem/pbo.hpp"
 #include "problem/wmodel.hpp"
 #include "problem/submodular.hpp"
