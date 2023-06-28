@@ -1458,6 +1458,27 @@ void define_problem(py::module &m)
     define_wmodels(m);
     define_submodular_problems(m);
     define_star_discrepancy_problems(m);
+    
+    py::class_<ioh::problem::bbob::ManyAffine, ioh::problem::RealSingleObjective, std::shared_ptr<ioh::problem::bbob::ManyAffine>>(m, "ManyAffine")
+            .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"))
+            .def(
+                py::init<
+                    std::vector<double>, 
+                    std::array<double, 24>, 
+                    std::array<int, 24>, 
+                    int,
+                    std::array<double, 24>>(),
+                py::arg("xopt"),
+                py::arg("weights"),
+                py::arg("instances"),
+                py::arg("n_variables"),
+                py::arg("scale_factors") = ioh::problem::bbob::ManyAffine::default_scales)
+            .def_property_readonly("weights", &ioh::problem::bbob::ManyAffine::get_weights)
+            .def_property_readonly("instances", &ioh::problem::bbob::ManyAffine::get_instances)
+            .def_property_readonly("scale_factors", &ioh::problem::bbob::ManyAffine::get_scale_factors)
+            .def_property_readonly("sub_problems", &ioh::problem::bbob::ManyAffine::get_problems)
+            .def_property_readonly("function_values", &ioh::problem::bbob::ManyAffine::get_function_values)
+            ;
 
     py::module_::import("atexit").attr("register")(py::cpp_function([]() {
         // std::cout << "exiting gracefully...";

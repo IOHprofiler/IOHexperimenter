@@ -25,3 +25,4 @@
 #include "bbob/gallagher21.hpp"
 #include "bbob/katsuura.hpp"
 #include "bbob/lunacek_bi_rastrigin.hpp"
+#include "bbob/many_affine.hpp"
