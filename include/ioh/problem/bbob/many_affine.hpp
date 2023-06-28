@@ -4,7 +4,7 @@
 
 namespace ioh::problem::bbob
 {
-    namespace affine {
+    namespace many_affine {
         inline std::array<double, 24> get_weights(const int instance){
             auto weights = common::random::bbob2009::uniform(24, 2000 + instance, 0., 1.);
             
@@ -64,7 +64,7 @@ namespace ioh::problem::bbob
          */
         ManyAffine(const int instance, const int n_variables) :
             ManyAffine(common::random::bbob2009::uniform(n_variables, 1000 + instance, -4., 4.),
-                       affine::get_weights(instance),
+                       many_affine::get_weights(instance),
                        common::fill_array<int, 24>(instance), n_variables, ManyAffine::default_scales)
         {
         }
