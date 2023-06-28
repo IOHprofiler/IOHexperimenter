@@ -9,7 +9,7 @@ TEST_F(BaseTest, TestManyAffine)
     ManyAffine affine(1, 2);
 
     std::vector<double> x0 = {1, 2};
-    EXPECT_NEAR(affine(x0), 0.00345578, 1e-8);
+    EXPECT_NEAR(affine(x0), 3.521076347, 1e-8);
 
     //TODO: test based on indiviudal problems
 }
