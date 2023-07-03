@@ -228,8 +228,6 @@ namespace ioh
              */
             State(Solution<T, double> initial) : initial_solution(std::move(initial)) { reset(); }
 
-
-
             //! reset the state
             void reset()
             {

@@ -433,6 +433,10 @@ void define_base_class(py::module &m, const std::string &name)
                     how: The enforcement strategy, should be one of the 'ioh.ConstraintEnforcement' options
                     exponent: The exponent for scaling the contraint
                 )pbdoc")
+
+        .def("set_id", &ProblemType::set_id, py::arg("new_problem_id"), "update the problem id")
+        .def("set_instance", &ProblemType::set_instance, py::arg("new_instance"), "update the problem instance")
+        .def("set_name", &ProblemType::set_name, py::arg("new_name"),"update the problem name")
         .def("__repr__", [=](const ProblemType &p) {
             using namespace ioh::common;
             const auto meta_data = p.meta_data();
