@@ -1,0 +1,13 @@
+#!/usr/bin/env fish
+
+set fmt_include_path external/fmt/include
+set ioh_include_path include
+set Eigen_names_path external/eigen-3.4.0
+
+true
+and g++ -o ./build/example/evaluate_some_problems -g -std=c++17 \
+    -I$Eigen_names_path \
+    -I$fmt_include_path \
+    -I$ioh_include_path \
+    example/evaluate_some_problems.cpp
+and ./build/example/evaluate_some_problems
