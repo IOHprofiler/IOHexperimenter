@@ -54,19 +54,19 @@ namespace ioh::problem
         {
             // Load F_i_star.
             std::ostringstream F_i_star_filepathStream;
-            F_i_star_filepathStream << "input_data/F_i_star.txt";
+            F_i_star_filepathStream << "include/ioh/problem/cec/input_data/F_i_star.txt";
             std::string F_i_star_filepath = F_i_star_filepathStream.str();
             load_objective_shift(objective_shift, F_i_star_filepath, cec_function_identifier);
 
             // Load M.
             std::ostringstream M_filepathStream;
-            M_filepathStream << "input_data/M_" << cec_function_identifier << "_D" << n_variables << ".txt";
+            M_filepathStream << "include/ioh/problem/cec/input_data/M_" << cec_function_identifier << "_D" << n_variables << ".txt";
             std::string M_filepath = M_filepathStream.str();
             load_linear_transformation(linear_transformation, M_filepath);
 
             // Load o.
             std::ostringstream shift_data_filepathStream;
-            shift_data_filepathStream << "input_data/shift_data_" << cec_function_identifier << ".txt";
+            shift_data_filepathStream << "include/ioh/problem/cec/input_data/shift_data_" << cec_function_identifier << ".txt";
             std::string shift_data_filepath = shift_data_filepathStream.str();
             load_variables_shift(variables_shift, shift_data_filepath, n_variables);
         }
