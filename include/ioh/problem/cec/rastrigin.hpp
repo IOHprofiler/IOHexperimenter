@@ -23,8 +23,7 @@ namespace ioh::problem::cec
                 sum1 += cos(2.0 * IOH_PI * xi);
                 sum2 += xi * xi;
             }
-            if (std::isinf(sum2))
-                return sum2 ;
+            if (std::isinf(sum2)) { return sum2; }
 
             auto result = 10.0 * (static_cast<double>(x.size()) - sum1) + sum2;
             std::cout << "result: " << result << std::endl;
@@ -88,7 +87,7 @@ namespace ioh::problem::cec
                 4,
                 instance,
                 n_variables,
-                "CECRastrigin"
+                "CEC_Rastrigin"
             )
         {
             // The only reason we allow 1 dimension is
