@@ -7,7 +7,7 @@
 
 namespace ioh::problem::cec
 {
-    class Zakharov final : public CECProblem<Zakharov>
+    class Levy final : public CECProblem<Levy>
     {
         int objective_shift;
         Eigen::MatrixXd linear_transformation;
@@ -15,19 +15,29 @@ namespace ioh::problem::cec
 
     protected:
 
-        double evaluate(const std::vector<double> &x)
+        double evaluate(const std::vector<double> &x) override
         {
-            double sum1 = 0.0, sum2 = 0.0;
-            int i = 0;
+            int nx = x.size();
 
-            for (const auto &xi : x)
+            std::vector<double> w(nx);
+            for (size_t i = 0; i < nx; ++i)
             {
-                sum1 += xi * xi;
-                sum2 += 0.5 * (i+1) * xi;
-                i++;
+                w[i] = 1.0 + (x[i] - 0.0) / 4.0;
             }
 
-            double&& result = sum1 + pow(sum2, 2) + pow(sum2, 4);
+            double term1 = pow(sin(IOH_PI * w[0]), 2);
+            double term3 = pow(w[nx - 1] - 1, 2) * (1 + pow(sin(2 * IOH_PI * w[nx - 1]), 2));
+
+            double sum = 0.0;
+            for (size_t i = 0; i < nx - 1; ++i)
+            {
+                double wi = w[i];
+                double newv = pow(wi - 1, 2) * (1 + 10 * pow(sin(IOH_PI * wi + 1), 2));
+                sum += newv;
+            }
+
+            double result = term1 + sum + term3;
+
             std::cout << "result: " << result << std::endl;
 
             return result;
@@ -53,6 +63,10 @@ namespace ioh::problem::cec
             Eigen::VectorXd transformed_eigen = x_eigen - variables_shift_eigen;
             std::cout << "After subtraction (x - variables_shift): " << transformed_eigen.transpose() << std::endl;
 
+            // transformed = transformed * (5.12 / 100)
+            transformed_eigen *= 5.12 / 100;
+            std::cout << "After scaling (* 5.12 / 100): " << transformed_eigen.transpose() << std::endl;
+
             if (transformed_eigen.size() > 0)
             {
                 transformed_eigen = this->linear_transformation * transformed_eigen;
@@ -74,23 +88,18 @@ namespace ioh::problem::cec
 
         double transform_objectives(const double y) override
         {
-            std::cout << "Objective shift: " << this->objective_shift << std::endl;
-
-            auto&& transformed = y + this->objective_shift;
-            std::cout << "transformed: " << transformed << std::endl;
-
-            return transformed;
+            return y + this->objective_shift;
         }
 
     public:
 
-        Zakharov(const int instance, const int n_variables) :
+        Levy(const int instance, const int n_variables) :
             CECProblem
             (
-                1,
+                5,
                 instance,
                 n_variables,
-                "CEC_Zakharov"
+                "CEC_Levy"
             )
         {
             // The only reason we allow 1 dimension is
@@ -104,14 +113,7 @@ namespace ioh::problem::cec
                 throw std::invalid_argument(message.str());
             }
 
-            load_transformation_data
-            (
-                this->objective_shift,
-                this->linear_transformation,
-                this->variables_shift,
-                this->meta_data_.problem_id,
-                n_variables
-            );
+            load_transformation_data(this->objective_shift, this->linear_transformation, this->variables_shift, this->meta_data_.problem_id, n_variables);
 
             std::cout << "========================" << std::endl;
             std::cout << "Objective Shift: " << this->objective_shift << std::endl;
