@@ -1,4 +1,9 @@
 #include "ioh.hpp"
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <iomanip> // This is the new include
+#include <limits>
 #include "ioh/problem/cec.hpp"
 
 int main()
@@ -199,5 +204,21 @@ int main()
     zakharov_input = std::vector<double>{55, 11, 77, 8, 9, 2, 3, 4, 5, 6, 55, 66, 77, 8, 9, 2, 33, 4, 5, 6};
     zakharov_output = (*zakharov_instance)(zakharov_input);
     std::cout << "zakharov_output: " << zakharov_output << std::endl;
+    std::cout << "==========================" << std::endl << std::endl;
+
+
+
+    auto hybrid_function_1_instance_from_factory = problem_factory.create("CEC_HybridFunction1", 1, 2);
+    auto hybrid_function_1_input = std::vector<double>{55, 11};
+    auto hybrid_function_1_output = (*hybrid_function_1_instance_from_factory)(hybrid_function_1_input);
+    std::cout << std::fixed << std::setprecision(std::numeric_limits<double>::max_digits10);
+    std::cout << "CEC_HybridFunction1: " << hybrid_function_1_output << std::endl;
+    std::cout << "==========================" << std::endl << std::endl;
+
+    hybrid_function_1_instance_from_factory = problem_factory.create("CEC_HybridFunction1", 1, 10);
+    hybrid_function_1_input = std::vector<double>{55, 66, 77, 8, 9, 2, 3, 4, 5, 6};
+    hybrid_function_1_output = (*hybrid_function_1_instance_from_factory)(hybrid_function_1_input);
+    std::cout << std::fixed << std::setprecision(std::numeric_limits<double>::max_digits10);
+    std::cout << "CEC_HybridFunction1: " << hybrid_function_1_output << std::endl;
     std::cout << "==========================" << std::endl << std::endl;
 }
