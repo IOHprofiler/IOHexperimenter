@@ -18,6 +18,7 @@ namespace ioh::problem
 
         int objective_shift_;
         std::vector<double> variables_shift_;
+        std::vector<int> input_permutation_;
         std::vector<std::vector<double>> linear_transformation_;
 
         /**
@@ -60,8 +61,9 @@ namespace ioh::problem
             this->optimum_.x = this->variables_shift_;
 
             std::cout << "========================" << std::endl;
-            std::cout << "Objective Shift: " << this->objective_shift_ << std::endl;
-            std::cout << "Linear Transformation Matrix: " << std::endl;
+            std::cout << "Objective shift: " << this->objective_shift_ << std::endl;
+
+            std::cout << "Linear transformation matrix: " << std::endl;
             for (const auto& row : this->linear_transformation_)
             {
                 for (double val : row)
@@ -70,8 +72,16 @@ namespace ioh::problem
                 }
                 std::cout << std::endl;
             }
-            std::cout << "Variables Shift: ";
+
+            std::cout << "Variables shift: ";
             for (double value : this->variables_shift_)
+            {
+                std::cout << value << " ";
+            }
+            std::cout << std::endl;
+
+            std::cout << "Input permutation: ";
+            for (double value : this->input_permutation_)
             {
                 std::cout << value << " ";
             }
@@ -189,6 +199,38 @@ namespace ioh::problem
             shift_data_filepathStream << "include/ioh/problem/cec/input_data/shift_data_" << cec_function_identifier << ".txt";
             std::string shift_data_filepath = shift_data_filepathStream.str();
             load_variables_shift(variables_shift_, shift_data_filepath);
+
+            // Load S (only for hybrid functions).
+            std::ostringstream shuffle_data_filepathStream;
+            shuffle_data_filepathStream << "include/ioh/problem/cec/input_data/shuffle_data_" << cec_function_identifier << "_D" << n_variables << ".txt";
+            std::string shuffle_data_filepath = shuffle_data_filepathStream.str();
+            load_shuffle_data(shuffle_data_filepath);
+        }
+
+        void load_shuffle_data(const std::string& shuffle_filepath)
+        {
+            const int cec_function_identifier = this->meta_data_.problem_id;
+            const int n_variables = this->meta_data_.n_variables;
+
+            std::ifstream file(shuffle_filepath); // Open the file
+            if (!file.is_open())
+            {
+                std::cerr << "Failed to open the file: " << shuffle_filepath << ". Using the identity permutation on the input." << std::endl;
+                this->input_permutation_.resize(n_variables);
+                for(int i = 0; i < n_variables; ++i) { this->input_permutation_[i] = i + 1; }
+                return;
+            }
+
+            std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>()); // Read the file content
+
+            std::istringstream ss(content); // Initialize the stringstream with the file content
+
+            int value;
+            this->input_permutation_ = {};
+            while (ss >> value)
+            {
+                this->input_permutation_.push_back(value);
+            }
         }
 
         void load_objective_shift(const std::string& F_i_star_filepath)
@@ -196,7 +238,8 @@ namespace ioh::problem
             const int cec_function_identifier = this->meta_data_.problem_id;
 
             std::ifstream file(F_i_star_filepath); // Open the file
-            if (!file.is_open()) {
+            if (!file.is_open())
+            {
                 std::cerr << "Failed to open the file: " << F_i_star_filepath << std::endl;
                 return;
             }
@@ -208,11 +251,13 @@ namespace ioh::problem
             std::vector<int> shifts;
             int value;
 
-            while (ss >> value) {
+            while (ss >> value)
+            {
                 shifts.push_back(value);
             }
 
-            if (cec_function_identifier > 0 && cec_function_identifier <= shifts.size()) {
+            if (cec_function_identifier > 0 && cec_function_identifier <= shifts.size())
+            {
                 this->objective_shift_ = shifts[cec_function_identifier - 1];
                 return;
             }
