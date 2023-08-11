@@ -1,13 +1,27 @@
 #!/usr/bin/env fish
 
-set fmt_include_path external/fmt/include
-set ioh_include_path include
-set Eigen_names_path external/eigen-3.4.0
+# Set the directory paths for the project and its includes
+set project_dir "/home/dimitri/code/IOHexperimenter"
+set build_dir "$project_dir/build/tests"
+set include_dir "$project_dir/include"
+set external_dir "$project_dir/external"
+set tests_dir "$project_dir/tests/cpp"
 
-true
-and g++ -o ./build/example/evaluate_some_problems -g -std=c++17 \
-    -I$Eigen_names_path \
-    -I$fmt_include_path \
-    -I$ioh_include_path \
-    example/evaluate_some_problems.cpp
-and ./build/example/evaluate_some_problems
+# Navigate to the build/tests directory
+cd $build_dir
+
+# Compile using g++
+c++ -Wall -Wextra -pedantic -std=c++17 -lstdc++fs \
+    -I$include_dir \
+    -I$tests_dir \
+    -I$external_dir/fmt/include \
+    -I$external_dir/clutchlog \
+    -I$external_dir/json/include \
+    -isystem $external_dir/googletest/googletest/include \
+    -isystem $external_dir/googletest/googletest \
+    $tests_dir/problem/test_cec_problem.cpp \
+    $tests_dir/entrypoint.cpp \
+    -o test_cec_problem \
+    $build_dir/../lib/libgtest.a -lpthread
+
+./test_cec_problem

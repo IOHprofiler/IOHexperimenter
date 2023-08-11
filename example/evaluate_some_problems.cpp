@@ -1,3 +1,9 @@
+#include <cmath>
+#include <iomanip>
+#include <iostream>
+#include <limits>
+#include <vector>
+
 #include "ioh.hpp"
 #include <iostream>
 #include <vector>
@@ -8,6 +14,8 @@
 
 int main()
 {
+    std::cout.imbue(std::locale("en_US.utf8"));
+
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::RealSingleObjective>::instance();
 
     auto rosenbrock_instance_from_factory = problem_factory.create("CEC_Rosenbrock", 1, 2);
@@ -220,5 +228,19 @@ int main()
     hybrid_function_1_output = (*hybrid_function_1_instance_from_factory)(hybrid_function_1_input);
     std::cout << std::fixed << std::setprecision(std::numeric_limits<double>::max_digits10);
     std::cout << "CEC_HybridFunction1: " << hybrid_function_1_output << std::endl;
+    std::cout << "==========================" << std::endl << std::endl;
+
+    auto hybrid_function_2_instance_from_factory = problem_factory.create("CEC_HybridFunction2", 1, 10);
+    auto hybrid_function_2_input = std::vector<double>{55, 66, 77, 8, 9, 2, 3, 4, 5, 6};
+    auto hybrid_function_2_output = (*hybrid_function_2_instance_from_factory)(hybrid_function_2_input);
+    std::cout << std::fixed << std::setprecision(std::numeric_limits<double>::max_digits10);
+    std::cout << "CEC_HybridFunction2: " << hybrid_function_2_output << std::endl;
+    std::cout << "==========================" << std::endl << std::endl;
+
+    auto hybrid_function_3_instance_from_factory = problem_factory.create("CEC_HybridFunction3", 1, 10);
+    auto hybrid_function_3_input = std::vector<double>{55, 66, 77, 8, 9, 2, 3, 4, 5, 6};
+    auto hybrid_function_3_output = (*hybrid_function_3_instance_from_factory)(hybrid_function_3_input);
+    std::cout << std::fixed << std::setprecision(std::numeric_limits<double>::max_digits10);
+    std::cout << "CEC_HybridFunction3: " << hybrid_function_3_output << std::endl;
     std::cout << "==========================" << std::endl << std::endl;
 }

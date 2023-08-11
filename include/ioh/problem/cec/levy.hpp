@@ -10,7 +10,7 @@ namespace ioh::problem::cec
 
         double evaluate(const std::vector<double> &x) override
         {
-            int nx = x.size();
+            size_t nx = x.size();
 
             std::vector<double> w(nx);
             for (size_t i = 0; i < nx; ++i)
