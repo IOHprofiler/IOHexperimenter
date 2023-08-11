@@ -1,12 +1,5 @@
 #pragma once
 
-#include <filesystem>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <vector>
-
 #include "ioh/problem/single.hpp"
 #include "ioh/problem/transformation.hpp"
 
@@ -180,42 +173,42 @@ namespace ioh::problem
         void load_transformation_data()
         {
             const int n_variables = this->meta_data_.n_variables;
-            const int cec_function_identifier = this->meta_data_.problem_id;
+            const unsigned int cec_function_identifier = this->meta_data_.problem_id;
 
             // Load F_i_star.
-            std::ostringstream F_i_star_filepathStream;
-            F_i_star_filepathStream << "include/ioh/problem/cec/input_data/F_i_star.txt";
-            std::string F_i_star_filepath = F_i_star_filepathStream.str();
+            const auto F_i_star_filepath = ioh::common::file::utils::find_static_file("cec_transformations/F_i_star.txt");
             load_objective_shift(F_i_star_filepath);
 
             // Load M.
-            std::ostringstream M_filepathStream;
-            M_filepathStream << "include/ioh/problem/cec/input_data/M_" << cec_function_identifier << "_D" << n_variables << ".txt";
-            std::string M_filepath = M_filepathStream.str();
+            std::ostringstream M_suffix_stream;
+            M_suffix_stream << "cec_transformations/M_" << cec_function_identifier << "_D" << n_variables << ".txt";
+            std::string M_suffix_string = M_suffix_stream.str();
+            const auto M_filepath = ioh::common::file::utils::find_static_file(M_suffix_string);
             load_linear_transformation(linear_transformation_, M_filepath);
 
             // Load o.
-            std::ostringstream shift_data_filepathStream;
-            shift_data_filepathStream << "include/ioh/problem/cec/input_data/shift_data_" << cec_function_identifier << ".txt";
-            std::string shift_data_filepath = shift_data_filepathStream.str();
+            std::ostringstream shift_data_suffix_stream;
+            shift_data_suffix_stream << "cec_transformations/shift_data_" << cec_function_identifier << ".txt";
+            std::string shift_data_suffix_string = shift_data_suffix_stream.str();
+            const auto shift_data_filepath = ioh::common::file::utils::find_static_file(shift_data_suffix_string);
             load_variables_shift(variables_shift_, shift_data_filepath);
 
             // Load S (only for hybrid functions).
-            std::ostringstream shuffle_data_filepathStream;
-            shuffle_data_filepathStream << "include/ioh/problem/cec/input_data/shuffle_data_" << cec_function_identifier << "_D" << n_variables << ".txt";
-            std::string shuffle_data_filepath = shuffle_data_filepathStream.str();
+            std::ostringstream shuffle_data_suffix_stream;
+            shuffle_data_suffix_stream << "cec_transformations/shuffle_data_" << cec_function_identifier << "_D" << n_variables << ".txt";
+            std::string shuffle_data_suffix_string = shuffle_data_suffix_stream.str();
+            const auto shuffle_data_filepath = ioh::common::file::utils::find_static_file(shuffle_data_suffix_string);
             load_shuffle_data(shuffle_data_filepath);
         }
 
-        void load_shuffle_data(const std::string& shuffle_filepath)
+        void load_shuffle_data(const std::filesystem::path& shuffle_data_filepath)
         {
-            const int cec_function_identifier = this->meta_data_.problem_id;
             const int n_variables = this->meta_data_.n_variables;
 
-            std::ifstream file(shuffle_filepath); // Open the file
+            std::ifstream file(shuffle_data_filepath); // Open the file
             if (!file.is_open())
             {
-                std::cerr << "Failed to open the file: " << shuffle_filepath << ". Using the identity permutation on the input." << std::endl;
+                std::cerr << "Failed to open the file: " << shuffle_data_filepath << ". Using the identity permutation on the input." << std::endl;
                 this->input_permutation_.resize(n_variables);
                 for(int i = 0; i < n_variables; ++i) { this->input_permutation_[i] = i + 1; }
                 return;
@@ -233,9 +226,9 @@ namespace ioh::problem
             }
         }
 
-        void load_objective_shift(const std::string& F_i_star_filepath)
+        void load_objective_shift(const std::filesystem::path& F_i_star_filepath)
         {
-            const int cec_function_identifier = this->meta_data_.problem_id;
+            const unsigned int cec_function_identifier = this->meta_data_.problem_id;
 
             std::ifstream file(F_i_star_filepath); // Open the file
             if (!file.is_open())
@@ -265,7 +258,7 @@ namespace ioh::problem
             throw std::out_of_range("CEC function identifier out of range.");
         }
 
-        void load_linear_transformation(std::vector<std::vector<double>>& linear_transformation_, const std::string& M_filepath)
+        void load_linear_transformation(std::vector<std::vector<double>>& linear_transformation_, const std::filesystem::path& M_filepath)
         {
             std::ifstream file(M_filepath); // Open the file
 
@@ -294,7 +287,7 @@ namespace ioh::problem
             }
         }
 
-        void load_variables_shift(std::vector<double>& variables_shift_, const std::string& shift_data_filepath)
+        void load_variables_shift(std::vector<double>& variables_shift_, const std::filesystem::path& shift_data_filepath)
         {
             const int n_variables = this->meta_data_.n_variables;
 
