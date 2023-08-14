@@ -10,8 +10,10 @@ set tests_dir "$project_dir/tests/cpp"
 # Navigate to the build/tests directory
 cd $build_dir
 
+true
+
 # Compile using g++
-c++ -Wall -Wextra -pedantic -std=c++17 -lstdc++fs \
+and c++ -Wall -Wextra -pedantic -std=c++17 -lstdc++fs \
     -I$include_dir \
     -I$tests_dir \
     -I$external_dir/fmt/include \
@@ -24,4 +26,4 @@ c++ -Wall -Wextra -pedantic -std=c++17 -lstdc++fs \
     -o test_cec_problem \
     $build_dir/../lib/libgtest.a -lpthread
 
-./test_cec_problem
+and ./test_cec_problem
