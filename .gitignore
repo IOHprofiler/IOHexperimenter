@@ -191,4 +191,5 @@ py10/
 gsemo.cpp
 
 2022-SO-BO
-external/eigen-3.4.0
+!2022-SO-BO/CEC2022/C-Code/cec22_test_func.cpp
+!2022-SO-BO/CEC2022/C-Code/RUN
