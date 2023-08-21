@@ -18,11 +18,9 @@ namespace ioh::problem::cec
             std::vector<double> flat_data(total_size);
             size_t index = 0;
             for (const auto &row : this->linear_transformation_) { for (double val : row) { flat_data[index++] = val; } }
-            double *linear_transformation_raw = &flat_data[0];
-            int nx = x.size();
             double f;
 
-            levy_func(&x[0], &f, nx, &this->variables_shift_[0], linear_transformation_raw, 1, 1);
+            levy_func(x, f, this->variables_shift_, flat_data, 1, 1);
 
             return f;
         }
