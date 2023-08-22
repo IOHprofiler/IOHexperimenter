@@ -6,7 +6,7 @@
 // ===============================================================================================================================
 #define DEBUG
 #ifdef DEBUG
-#define LOG_FILE_NAME "debug_log.txt"
+#define LOG_FILE_NAME "cec_log.txt"
 
 #define LOG(message) do { \
     std::ofstream debug_log(LOG_FILE_NAME, std::ios::app); \
@@ -66,7 +66,9 @@ namespace ioh::problem
         {
             this->load_transformation_data();
 
-            LOG("========================" << std::endl);
+            // Copy the from-a-static-file-loaded variables shift into the Problem.Solution.optimum_ attribute.
+            this->optimum_.x = this->variables_shift_;
+
             LOG("Objective shift: " << this->objective_shift_ << std::endl);
             LOG("Linear transformation matrix: " << std::endl);
             for (const auto& row : this->linear_transformation_)
@@ -89,7 +91,6 @@ namespace ioh::problem
                 LOG(value << " ");
             }
             LOG(std::endl);
-            LOG("========================" << std::endl);
         }
 
         int get_problem_id()
@@ -167,7 +168,9 @@ namespace ioh::problem
         double transform_objectives(const double y) override
         {
             auto&& transformed = y + this->objective_shift_;
-            LOG("Evaluated " << this->meta_data_.name << " result: " << transformed << std::endl);
+            LOG("Transformed objective: " << transformed << std::endl);
+            LOG("================================================" << std::endl);
+
             return transformed;
         }
 
@@ -213,11 +216,22 @@ namespace ioh::problem
             load_variables_shift(variables_shift_, shift_data_filepath);
 
             // Load S (only for hybrid functions).
-            std::ostringstream shuffle_data_suffix_stream;
-            shuffle_data_suffix_stream << "cec_transformations/shuffle_data_" << cec_function_identifier << "_D" << n_variables << ".txt";
-            std::string shuffle_data_suffix_string = shuffle_data_suffix_stream.str();
-            const auto shuffle_data_filepath = ioh::common::file::utils::find_static_file(shuffle_data_suffix_string);
-            load_shuffle_data(shuffle_data_filepath);
+            if ((cec_function_identifier == 6 || cec_function_identifier == 7 || cec_function_identifier == 8) && (n_variables == 10 || n_variables == 20))
+            {
+                std::ostringstream shuffle_data_suffix_stream;
+                shuffle_data_suffix_stream << "cec_transformations/shuffle_data_" << cec_function_identifier << "_D" << n_variables << ".txt";
+                std::string shuffle_data_suffix_string = shuffle_data_suffix_stream.str();
+                const auto shuffle_data_filepath = ioh::common::file::utils::find_static_file(shuffle_data_suffix_string);
+                load_shuffle_data(shuffle_data_filepath);
+                LOG("loading");
+            }
+            else
+            {
+                // We fail the opening of a shuffle_data file,
+                // hereby loading the identity permutation.
+                load_shuffle_data({});
+                LOG("not loading");
+            }
         }
 
         void load_shuffle_data(const std::filesystem::path& shuffle_data_filepath)
