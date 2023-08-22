@@ -5,7 +5,7 @@
 */
 
 #include <iostream>
-#include "cec.hpp"
+#include "ioh/problem/cec.hpp"
 
 #include <stdio.h>
 #include <math.h>
@@ -743,7 +743,7 @@ void cf01 (double *x, double *f, int nx, double *Os,double *Mr,int r_flag) /* Co
   rosenbrock_func(x,&fit[i],nx,&Os[i*nx],&Mr[i*nx*nx],1,r_flag);
   fit[i]=10000*fit[i]/1e+4;
   i=1;
-  ellips_func(x,&fit[i],nx,&Os[i*nx],&Mr[i*nx*nx],1,r_flag);
+  ellips_func(x,&fit[i],nx,&Os[i*nx],&Mr[i*nx*nx],1,0);
   fit[i]=10000*fit[i]/1e+10;
   i=2;
   bent_cigar_func(x,&fit[i],nx,&Os[i*nx],&Mr[i*nx*nx],1,r_flag);
