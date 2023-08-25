@@ -11,30 +11,28 @@ namespace ioh::problem::cec
 
         double evaluate(const std::vector<double>& x) override
         {
-            // Copy the vector of vectors into ONE contiguous memory space.
-            size_t total_size = 0;
-            for (const auto &row : this->linear_transformation_) { total_size += row.size(); }
-            // Convert into a single contiguous block
-            std::vector<double> flat_data(total_size);
-            size_t index = 0;
-            for (const auto &row : this->linear_transformation_) { for (double val : row) { flat_data[index++] = val; } }
-            double f;
-
-            rosenbrock_func(x, f, this->variables_shift_, flat_data, 1, 1);
-
+            double&& f = rosenbrock_func(x);
             return f;
         }
 
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            return x;
+            std::vector<double> y(x.size()), z(x.size());
+
+            scale_and_rotate(x, z, y, this->variables_shift_, this->linear_transformation_, 2.048 / 100.0, 1, 1);
+
+            return z;
         }
 
     public:
 
+        inline static const int meta_problem_id = 2;
+        inline static const std::string meta_name = "CEC_Rosenbrock";
+
         Rosenbrock(const int instance, const int n_variables) :
-            CECProblem(2, instance, n_variables, "CEC_Rosenbrock")
+            CECProblem(meta_problem_id, instance, n_variables, meta_name)
         {
+            this->set_optimum();
         }
     };
 }

@@ -32,9 +32,13 @@ namespace ioh::problem::cec
 
     public:
 
+        inline static const int meta_problem_id = 8;
+        inline static const std::string meta_name = "CEC_HybridFunction3";
+
         HybridFunction3(const int instance, const int n_variables) :
-            CECProblem(8, instance, n_variables, "CEC_HybridFunction3")
+            CECProblem(meta_problem_id, instance, n_variables, meta_name)
         {
+            this->set_optimum();
         }
     };
 }

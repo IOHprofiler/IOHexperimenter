@@ -32,9 +32,13 @@ namespace ioh::problem::cec
 
     public:
 
+        inline static const int meta_problem_id = 12;
+        inline static const std::string meta_name = "CEC_CompositionFunction4";
+
         CompositionFunction4(const int instance, const int n_variables) :
-            CECProblem(12, instance, n_variables, "CEC_CompositionFunction4")
+            CECProblem(meta_problem_id, instance, n_variables, meta_name)
         {
+            this->set_optimum();
         }
     };
 }

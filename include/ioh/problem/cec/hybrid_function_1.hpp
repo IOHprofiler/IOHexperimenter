@@ -20,7 +20,7 @@ namespace ioh::problem::cec
             for (const auto &row : this->linear_transformation_) { for (double val : row) { flat_data[index++] = val; } }
             double f;
 
-            hf02(x, f, this->variables_shift_, flat_data, this->input_permutation_, 1, 1);
+            hf02(x, f, this->variables_shift_, this->linear_transformation_, this->input_permutation_, 1, 1);
 
             return f;
         }
@@ -32,9 +32,13 @@ namespace ioh::problem::cec
 
     public:
 
+        inline static const int meta_problem_id = 6;
+        inline static const std::string meta_name = "CEC_HybridFunction1";
+
         HybridFunction1(const int instance, const int n_variables) :
-            CECProblem(6, instance, n_variables, "CEC_HybridFunction1")
+            CECProblem(meta_problem_id, instance, n_variables, meta_name)
         {
+            this->set_optimum();
         }
     };
 }
