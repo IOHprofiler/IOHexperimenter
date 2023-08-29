@@ -21,20 +21,21 @@ TEST_F(BaseTest, CECProblem)
         auto x = string_to_vector_double(tmp[2]);
         auto f = stod(tmp[3]);
 
-        auto problem = problem_factory.create(func_id, ins_id, x.size());
-        auto y = (*problem)(x);
+        auto instance = problem_factory.create(func_id, ins_id, x.size());
+        auto y = (*instance)(x);
         EXPECT_LE(abs(y - f) / f, 1.0 / pow(10, 6 - log(10)))
             << "The fitness of function " << func_id << "( ins "
             << ins_id << " ) is " << f << " ( not " << y << ").";
     }
 }
 
-// TEST_F(BaseTest, xopt_equals_yopt_cec)
-// {
-//     const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC>::instance();
-//     for (const auto& name : problem_factory.names())
-//     {s
-//         auto problem = problem_factory.create(name, 1, 10);
-//         EXPECT_DOUBLE_EQ(problem->optimum().y, (*problem)(problem->optimum().x)) << *problem;
-//     }
-// }
+TEST_F(BaseTest, xopt_equals_yopt_cec)
+{
+    const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC>::instance();
+    for (const auto& name : problem_factory.names())
+    {
+        auto instance = problem_factory.create(name, 1, 10);
+        auto&& x = instance->optimum().x;
+        EXPECT_DOUBLE_EQ(instance->optimum().y, (*instance)(x)) << *instance;
+    }
+}
