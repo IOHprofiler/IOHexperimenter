@@ -1,38 +1,8 @@
 #pragma once
 
+#include "functions.hpp"
 #include "ioh/problem/single.hpp"
 #include "ioh/problem/transformation.hpp"
-
-// ===============================================================================================================================
-#define DEBUG
-#ifdef DEBUG
-#define LOG_FILE_NAME "cec_log.txt"
-
-#define LOG(message) do { \
-    std::ofstream debug_log(LOG_FILE_NAME, std::ios::app); \
-    auto now = std::chrono::system_clock::now(); \
-    std::time_t now_time = std::chrono::system_clock::to_time_t(now); \
-    debug_log << "[" << std::put_time(std::localtime(&now_time), "%Y-%m-%d %H:%M:%S") << "] " << message << std::endl; \
-    debug_log.close(); \
-} while(0)
-
-#else
-#define LOG(message) // Nothing
-#endif
-
-// Output stream operator for std::vector<double>
-std::ostream& operator<<(std::ostream& os, const std::vector<double>& vec) {
-    os << "[";
-    for (size_t i = 0; i < vec.size(); ++i) {
-        os << vec[i];
-        if (i != vec.size() - 1) {
-            os << ", ";
-        }
-    }
-    os << "]";
-    return os;
-}
-// ===============================================================================================================================
 
 namespace ioh::problem
 {
@@ -41,9 +11,9 @@ namespace ioh::problem
     public:
 
         int objective_shift_;
-        std::vector<double> variables_shift_;
+        std::vector<std::vector<double>> variables_shifts_;
         std::vector<int> input_permutation_;
-        std::vector<std::vector<double>> linear_transformation_;
+        std::vector<std::vector<std::vector<double>>> linear_transformations_;
 
         /**
          * @brief Construct a new CEC object.
@@ -66,31 +36,8 @@ namespace ioh::problem
         {
             this->load_transformation_data();
 
-            // Copy the from-a-static-file-loaded variables shift into the Problem.Solution.optimum_ attribute.
-            this->optimum_.x = this->variables_shift_;
-
-            LOG("Objective shift: " << this->objective_shift_ << std::endl);
-            LOG("Linear transformation matrix: " << std::endl);
-            for (const auto& row : this->linear_transformation_)
-            {
-                for (double val : row)
-                {
-                    LOG(val << " ");
-                }
-                LOG(std::endl);
-            }
-            LOG("Variables shift: ");
-            for (double value : this->variables_shift_)
-            {
-                LOG(value << " ");
-            }
-            LOG(std::endl);
-            LOG("Input permutation: ");
-            for (double value : this->input_permutation_)
-            {
-                LOG(value << " ");
-            }
-            LOG(std::endl);
+            // Copy the from-a-static-file-loaded variables shift into the Problem.Solution.optimum_ attribute
+            this->optimum_.x.assign(this->variables_shifts_[0].begin(), this->variables_shifts_[0].begin() + n_variables);
         }
 
         int get_problem_id()
@@ -100,77 +47,13 @@ namespace ioh::problem
 
         void set_optimum()
         {
-            const int n_variables = this->meta_data_.n_variables;
-            this->optimum_.x.assign(this->variables_shift_.begin(), this->variables_shift_.begin() + n_variables);
             this->optimum_.y = (*this)(this->optimum_.x);
-        }
-
-        std::vector<double> basic_transform(std::vector<double>& x, double factor, double addend)
-        {
-            LOG("Input Vector (x): ");
-            for (double val : x) {
-                LOG(val << " ");
-            }
-            LOG(std::endl);
-
-            // Subtract x and variables_shift_
-            std::vector<double> transformed(x.size());
-            for (size_t i = 0; i < x.size(); i++) {
-                transformed[i] = x[i] - variables_shift_[i];
-            }
-
-            LOG("After subtraction (x - variables_shift_): ");
-            for (double val : transformed) {
-                LOG(val << " ");
-            }
-            LOG(std::endl);
-
-            // Scale the transformed vector
-            for (size_t i = 0; i < transformed.size(); i++) {
-                transformed[i] *= factor;
-            }
-
-            LOG("After scaling (* " << factor << " ): ");
-            for (double val : transformed) {
-                LOG(val << " ");
-            }
-            LOG(std::endl);
-
-            if (!transformed.empty()) {
-                transformed = this->matVecMultiply(linear_transformation_, transformed);
-                LOG("After matrix transformation: ");
-                for (double val : transformed) {
-                    LOG(val << " ");
-                }
-                LOG(std::endl);
-            }
-
-            // Add 1 to every element
-            for (double& val : transformed) {
-                val += addend;
-            }
-
-            LOG("After adding " << addend << " to every element: ");
-            for (double val : transformed) {
-                LOG(val << " ");
-            }
-            LOG(std::endl);
-
-            LOG("Final Transformed Vector: ");
-            for (double val : transformed) {
-                LOG(val << " ");
-            }
-            LOG(std::endl);
-
-            return transformed;
+            LOG("this->optimum_.y: " << this->optimum_.y);
         }
 
         double transform_objectives(const double y) override
         {
             auto&& transformed = y + this->objective_shift_;
-            LOG("Transformed objective: " << transformed << std::endl);
-            LOG("================================================" << std::endl);
-
             return transformed;
         }
 
@@ -206,14 +89,14 @@ namespace ioh::problem
             M_suffix_stream << "cec_transformations/M_" << cec_function_identifier << "_D" << n_variables << ".txt";
             std::string M_suffix_string = M_suffix_stream.str();
             const auto M_filepath = ioh::common::file::utils::find_static_file(M_suffix_string);
-            load_linear_transformation(linear_transformation_, M_filepath);
+            load_linear_transformation(M_filepath);
 
             // Load o.
             std::ostringstream shift_data_suffix_stream;
             shift_data_suffix_stream << "cec_transformations/shift_data_" << cec_function_identifier << ".txt";
             std::string shift_data_suffix_string = shift_data_suffix_stream.str();
             const auto shift_data_filepath = ioh::common::file::utils::find_static_file(shift_data_suffix_string);
-            load_variables_shift(variables_shift_, shift_data_filepath);
+            load_variables_shift(shift_data_filepath);
 
             // Load S (only for hybrid functions).
             if ((cec_function_identifier == 6 || cec_function_identifier == 7 || cec_function_identifier == 8) && (n_variables == 10 || n_variables == 20))
@@ -223,14 +106,13 @@ namespace ioh::problem
                 std::string shuffle_data_suffix_string = shuffle_data_suffix_stream.str();
                 const auto shuffle_data_filepath = ioh::common::file::utils::find_static_file(shuffle_data_suffix_string);
                 load_shuffle_data(shuffle_data_filepath);
-                LOG("loading");
             }
             else
             {
-                // We fail the opening of a shuffle_data file,
-                // hereby loading the identity permutation.
-                load_shuffle_data({});
-                LOG("not loading");
+                // There is no specific permutation defined for these problems.
+                // Load the identity permutation.
+                this->input_permutation_.resize(n_variables);
+                for(int i = 0; i < n_variables; ++i) { this->input_permutation_[i] = i + 1; }
             }
         }
 
@@ -292,8 +174,9 @@ namespace ioh::problem
             throw std::out_of_range("CEC function identifier out of range.");
         }
 
-        void load_linear_transformation(std::vector<std::vector<double>>& linear_transformation_, const std::filesystem::path& M_filepath)
+        void load_linear_transformation(const std::filesystem::path& M_filepath)
         {
+            const size_t n_variables = this->meta_data_.n_variables;
             std::ifstream file(M_filepath); // Open the file
 
             if (!file.is_open())
@@ -303,6 +186,7 @@ namespace ioh::problem
             }
 
             std::string line;
+            std::vector<std::vector<double>> matrix; // Temporary storage for a single matrix
 
             // Read each line
             while (std::getline(file, line))
@@ -317,16 +201,31 @@ namespace ioh::problem
                     row.push_back(value);
                 }
 
-                linear_transformation_.push_back(row);
+                matrix.push_back(row);
+
+                // If we've filled a full matrix, add it to linear_transformations_
+                // and reset the temporary matrix storage
+                if (matrix.size() == n_variables)
+                {
+                    this->linear_transformations_.push_back(matrix);
+                    matrix.clear();
+                }
+            }
+
+            // Check if there's a partial matrix left and handle accordingly
+            if (!matrix.empty())
+            {
+                LOG("WARNING: Incomplete matrix detected. It will be discarded.");
             }
         }
 
-        void load_variables_shift(std::vector<double>& variables_shift_, const std::filesystem::path& shift_data_filepath)
+        void load_variables_shift(const std::filesystem::path& shift_data_filepath)
         {
             const int n_variables = this->meta_data_.n_variables;
             std::ifstream file(shift_data_filepath); // Open the file
 
-            if (!file.is_open()) {
+            if (!file.is_open())
+            {
                 LOG("Failed to open the file: " << shift_data_filepath << std::endl);
                 return;
             }
@@ -339,10 +238,21 @@ namespace ioh::problem
                 double value;
                 int count = 0; // To keep track of number of values read from the current line
 
+                std::vector<double> current_line_values; // Temp vector to store values of the current line
                 while (ss >> value && count < n_variables)
-                { // Parse the tokens and convert to double
-                    variables_shift_.push_back(value);
+                {
+                    // Parse the tokens and convert to double
+                    current_line_values.push_back(value);
+                    ++count;
                 }
+
+                this->variables_shifts_.push_back(current_line_values); // Add the current line values to the main vector
+            }
+
+            // Ensure that there is at least one vector inside variables_shifts_
+            if (this->variables_shifts_.empty())
+            {
+                LOG("ERROR: No vectors were loaded into variables_shifts_");
             }
         }
     };

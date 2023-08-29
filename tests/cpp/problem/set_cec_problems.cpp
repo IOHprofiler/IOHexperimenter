@@ -4,12 +4,52 @@
 
 */
 
+#include <algorithm>
+#include <chrono>
+#include <cmath>
+#include <ctime>
+#include <fstream>
+#include <iomanip>
 #include <iostream>
-#include "ioh/problem/cec.hpp"
-
-#include <stdio.h>
-#include <math.h>
 #include <malloc.h>
+#include <math.h>
+#include <numeric>
+#include <stdio.h>
+#include <vector>
+
+// ===============================================================================================================================
+#define DEBUG
+#ifdef DEBUG
+#define LOG_FILE_NAME "cec_training_log.txt"
+
+#define LOG(message)                                                           \
+  do {                                                                         \
+    std::ofstream debug_log(LOG_FILE_NAME, std::ios::app);                     \
+    auto now = std::chrono::system_clock::now();                               \
+    std::time_t now_time = std::chrono::system_clock::to_time_t(now);          \
+    debug_log << "["                                                           \
+              << std::put_time(std::localtime(&now_time), "%Y-%m-%d %H:%M:%S") \
+              << "] " << message << std::endl;                                 \
+    debug_log.close();                                                         \
+  } while (0)
+
+#else
+#define LOG(message) // Nothing
+#endif
+
+// Output stream operator for std::vector<double>
+std::ostream &operator<<(std::ostream &os, const std::vector<double> &vec) {
+  os << "[";
+  for (size_t i = 0; i < vec.size(); ++i) {
+    os << vec[i];
+    if (i != vec.size() - 1) {
+      os << ", ";
+    }
+  }
+  os << "]";
+  return os;
+}
+// ===============================================================================================================================
 
 #define INF 1.0e99
 #define EPS 1.0e-14
@@ -974,168 +1014,43 @@ void cf_cal(double *x, double *f, int nx, double *Os,double * delta,double * bia
   free(w);
 }
 
-
-
-
-void cec_function (int func_num, double *x, double *f, int nx, double *OShift,double *M,int *SS)
+int main(void)
 {
-switch(func_num)
-    {
-    case 1:
-      zakharov_func(&x[0],&f[0],nx,OShift,M,1,1);
-      f[0]+=300.0;
-      break;
-    case 2:
-      rosenbrock_func(&x[0],&f[0],nx,OShift,M,1,1);
-      f[0]+=400.0;
-      break;
-    case 3:
-      schaffer_F7_func(&x[0],&f[0],nx,OShift,M,1,1);
-      f[0]+=600.0;
-      break;
-    case 4:
-            step_rastrigin_func(&x[0],&f[0],nx,OShift,M,1,1);
-      f[0]+=800.0;
-      break;
-    case 5:
-      levy_func(&x[0],&f[0],nx,OShift,M,1,1);
-      f[0]+=900.0;
-      break;
-    case 6:
-      hf02(&x[0],&f[0],nx,OShift,M,SS,1,1);
-      f[0]+=1800.0;
-      break;
-    case 7:
-      hf10(&x[0],&f[0],nx,OShift,M,SS,1,1);
-      f[0]+=2000.0;
-      break;
-    case 8:
-      hf06(&x[0],&f[0],nx,OShift,M,SS,1,1);
-      f[0]+=2200.0;
-      break;
-    case 9:
-      cf01(&x[0],&f[0],nx,OShift,M,1);
-      f[0]+=2300.0;
-      break;
-    case 10:
-      cf02(&x[0],&f[0],nx,OShift,M,1);
-      f[0]+=2400.0;
-      break;
-        case 11:
-            cf06(&x[0],&f[0],nx,OShift,M,1);
-      f[0]+=2600.0;
-      break;
-        case 12:
-            cf07(&x[0],&f[0],nx,OShift,M,1);
-      f[0]+=2700.0;
-      break;
-    default:
-      printf("\nError: There are only 10 test functions in this test suite!\n");
-      f[0] = 0.0;
-      break;
-    }
-}
-
-
-
-
-
-
-
-
-class FactoryBase {
-public:
-    virtual std::shared_ptr<ioh::problem::CEC> create(int problem_id, int size) const = 0;
-};
-
-template <typename T>
-class Factory : public FactoryBase {
-public:
-    virtual std::shared_ptr<ioh::problem::CEC> create(int problem_id, int size) const override {
-        return std::make_shared<T>(problem_id, size);
-    }
-};
-
-using FunctionPtr = void(*)(double*, double*, int, double*, double*, int);
-
-struct FactoryFunctionPair {
-    std::unique_ptr<FactoryBase> factory;
-    FunctionPtr function;
-
-    FactoryFunctionPair(std::unique_ptr<FactoryBase> f, FunctionPtr func)
-        : factory(std::move(f)), function(func) {}
-};
-
-int main()
-{
-  std::vector<std::vector<double>> data = {
-        {1, 2, 5, 3, 22, 2, 2, 7, 6, 5, 5, 4, 34, 1, 2, -13, 4, 5, 6, 7},
-        {1, 2, 5, 3, 22, 44, 9, 7, 6, 5, 5, 4, 34, 1, 2, 3, 4, 5, 6, 7},
-        {1, 2, 5, 3, 22, 44, 9, 71, 6, 3, 5, 4, 34, 1, -2, 3, 4, 5, 6, 7},
-        {1, 2, 5, 3, 22, 44, -9, 7, 6, -12},
-        {1, 2, 5, 3, 22, 44, 9, 7, 6, 5},
-        {1, 2, 55, 3, 1, -14, 9, 70, 55, 1},
-        {-10, 21},
-        {0, -22},
-        {2, 31}
-    };
-
-        std::vector<FactoryFunctionPair> factoryFunctionPairs;
-
-    factoryFunctionPairs.emplace_back(std::make_unique<Factory<ioh::problem::cec::Zakharov>>(), cf02);
-    factoryFunctionPairs.emplace_back(std::make_unique<Factory<ioh::problem::cec::Rosenbrock>>(), cf02);
-    factoryFunctionPairs.emplace_back(std::make_unique<Factory<ioh::problem::cec::ExpandedSchafferF7>>(), cf02);
-    factoryFunctionPairs.emplace_back(std::make_unique<Factory<ioh::problem::cec::Rastrigin>>(), cf02);
-    factoryFunctionPairs.emplace_back(std::make_unique<Factory<ioh::problem::cec::Levy>>(), cf02);
-    factoryFunctionPairs.emplace_back(std::make_unique<Factory<ioh::problem::cec::HybridFunction1>>(), cf02);
-    factoryFunctionPairs.emplace_back(std::make_unique<Factory<ioh::problem::cec::HybridFunction2>>(), cf02);
-    factoryFunctionPairs.emplace_back(std::make_unique<Factory<ioh::problem::cec::HybridFunction3>>(), cf02);
-    factoryFunctionPairs.emplace_back(std::make_unique<Factory<ioh::problem::cec::CompositionFunction1>>(), cf01);
-    factoryFunctionPairs.emplace_back(std::make_unique<Factory<ioh::problem::cec::CompositionFunction2>>(), cf02);
-    factoryFunctionPairs.emplace_back(std::make_unique<Factory<ioh::problem::cec::CompositionFunction3>>(), cf06);
-    factoryFunctionPairs.emplace_back(std::make_unique<Factory<ioh::problem::cec::CompositionFunction4>>(), cf07);
-
-    for (const auto& pair : factoryFunctionPairs)
+  std::vector<std::vector<double>> data =
   {
-      for (auto &instance_input : data)
-      {
-        if (dynamic_cast<Factory<ioh::problem::cec::HybridFunction2>*>(pair.factory.get()) && instance_input.size() == 2) {
-        continue;
-      }
+    {1, 2, 5, 3, 22, 2, 2, 7, 6, 5, 5, 4, 34, 1, 2, -13, 4, 5, 6, 7},
+    {1, 2, 5, 3, 22, 44, 9, 7, 6, 5, 5, 4, 34, 1, 2, 3, 4, 5, 6, 7},
+    {1, 2, 5, 3, 22, 44, 9, 71, 6, 3, 5, 4, 34, 1, -2, 3, 4, 5, 6, 7},
+    {1, 2, 5, 3, 22, 44, -9, 7, 6, -12},
+    {1, 2, 5, 3, 22, 44, 9, 7, 6, 5},
+    {1, 2, 55, 3, 1, -14, 9, 70, 55, 1},
+    {-10, 21},
+    {0, -22},
+    {2, 31}
+  };
 
-      auto instance = pair.factory->create(1, instance_input.size());
-        auto problem_id = instance->get_problem_id();
-
-      size_t total_size = 0;
-      for (const auto &row : instance->linear_transformation_) { total_size += row.size(); }
-      std::vector<double> flat_data(total_size);
-      size_t index = 0;
-      for (const auto &row : instance->linear_transformation_) { for (double val : row) { flat_data[index++] = val; } }
-      double *linear_transformation_raw = &flat_data[0];
-
-      double f;
+  for (int func_num = 1; func_num <= 12; ++func_num)
+  {
+    for (auto &instance_input : data)
+    {
       int nx = instance_input.size();
-      y=(double *)malloc(sizeof(double)  *  nx);
-      z=(double *)malloc(sizeof(double)  *  nx);
-    cec_function(problem_id, &instance_input[0], &f, nx, &instance->variables_shift_[0], linear_transformation_raw, &instance->input_permutation_[0]);
-      free(z);
-      free(y);
+      if (nx == 2 && (func_num == 6 || func_num == 7 || func_num == 8)) { continue; }
 
-        // Create the log message
-        std::stringstream ss;
-        ss << "EXAMPLE: " << problem_id << " 1 ";
-        for (double val : instance_input) {
-            ss << val << ",";
-        }
-        // Remove the trailing comma
-        std::string s = ss.str();
-        s.pop_back();
-        s += " " + std::to_string(f);
+      double *f = (double *)malloc(sizeof(double) * 1);
+      cec22_test_func(instance_input.data(), f, nx, 1, func_num);
 
-        // Assuming you're using spdlog
-        LOG(s);
+      std::stringstream ss;
+      ss << "EXAMPLE: " << func_num << " 1 ";
+      for (double val : instance_input)
+      {
+        ss << val << ",";
       }
+      std::string s = ss.str();
+      s.pop_back();
+      s += " " + std::to_string(f[0]);
+      LOG(s);
     }
+  }
 
   return 0;
 }

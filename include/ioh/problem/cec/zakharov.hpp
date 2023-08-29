@@ -1,7 +1,6 @@
 #pragma once
 
 #include "cec_problem.hpp"
-#include "functions.hpp"
 
 namespace ioh::problem::cec
 {
@@ -19,7 +18,7 @@ namespace ioh::problem::cec
         {
             std::vector<double> y(x.size()), z(x.size());
 
-            scale_and_rotate(x, z, y, this->variables_shift_, this->linear_transformation_, 1.0, 1, 1);
+            scale_and_rotate(x, z, y, this->variables_shifts_[0], this->linear_transformations_[0], 1.0, 1, 1);
 
             return z;
         }
