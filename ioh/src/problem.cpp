@@ -869,6 +869,92 @@ void define_pbo_problems(py::module &m)
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 }
 
+void define_cec_problems(py::module &m)
+{
+    py::class_<CEC, RealSingleObjective, std::shared_ptr<CEC>>(
+        m,
+        "CEC",
+        R"pbdoc(
+            Functions from the CEC 2022 conference.
+        )pbdoc"
+    )
+    .def_static(
+        "create",
+        [](const std::string &name, int iid, int dim) {
+            return ioh::common::Factory<CEC, int, int>::instance().create(name, iid, dim);
+        },
+        py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
+        R"pbdoc(
+            Create a problem instance
+
+            Parameters
+            ----------
+                problem_name: str
+                    a string indicating the problem name.
+                instance_id: int
+                    an integer identifier of the problem instance
+                dimension: int
+                    the dimensionality of the search space
+        )pbdoc")
+    .def_static(
+        "create",
+        [](int id, int iid, int dim) {
+            return ioh::common::Factory<CEC, int, int>::instance().create(id, iid, dim);
+        },
+        py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
+        R"pbdoc(
+            Create a problem instance
+
+            Parameters
+            ----------
+                problem_id: int
+                    a number indicating the problem numeric identifier.
+                instance_id: int
+                    an integer identifier of the problem instance
+                dimension: int
+                    the dimensionality of the search space
+        )pbdoc")
+    .def_property_readonly_static(
+        "problems", [](py::object) { return ioh::common::Factory<CEC, int, int>::instance().map(); },
+        "All registered problems");
+
+    py::class_<cec::Zakharov, CEC, std::shared_ptr<cec::Zakharov>>(m, "CEC_Zakharov", py::is_final())
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+
+    py::class_<cec::Rosenbrock, CEC, std::shared_ptr<cec::Rosenbrock>>(m, "CEC_Rosenbrock", py::is_final())
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+
+    py::class_<cec::ExpandedSchafferF7, CEC, std::shared_ptr<cec::ExpandedSchafferF7>>(m, "CEC_ExpandedSchafferF7", py::is_final())
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+
+    py::class_<cec::Rastrigin, CEC, std::shared_ptr<cec::Rastrigin>>(m, "CEC_Rastrigin", py::is_final())
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+
+    py::class_<cec::Levy, CEC, std::shared_ptr<cec::Levy>>(m, "CEC_Levy", py::is_final())
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+
+    py::class_<cec::HybridFunction1, CEC, std::shared_ptr<cec::HybridFunction1>>(m, "CEC_HybridFunction1", py::is_final())
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+
+    py::class_<cec::HybridFunction2, CEC, std::shared_ptr<cec::HybridFunction2>>(m, "CEC_HybridFunction2", py::is_final())
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+
+    py::class_<cec::HybridFunction3, CEC, std::shared_ptr<cec::HybridFunction3>>(m, "CEC_HybridFunction3", py::is_final())
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+
+    py::class_<cec::CompositionFunction1, CEC, std::shared_ptr<cec::CompositionFunction1>>(m, "CompositionFunction1", py::is_final())
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+
+    py::class_<cec::CompositionFunction2, CEC, std::shared_ptr<cec::CompositionFunction2>>(m, "CompositionFunction2", py::is_final())
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+
+    py::class_<cec::CompositionFunction3, CEC, std::shared_ptr<cec::CompositionFunction3>>(m, "CompositionFunction3", py::is_final())
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+
+    py::class_<cec::CompositionFunction4, CEC, std::shared_ptr<cec::CompositionFunction4>>(m, "CompositionFunction4", py::is_final())
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+}
+
 std::string to_lower(const std::string &s)
 {
     auto res = s;
@@ -1463,6 +1549,7 @@ void define_problem(py::module &m)
     define_bbob_problems<ioh::problem::BBOB>(m);
     define_bbob_problems<ioh::problem::SBOX>(m, "SBOX", true);
     define_pbo_problems(m);
+    define_cec_problems(m);
     define_wmodels(m);
     define_submodular_problems(m);
     define_star_discrepancy_problems(m);

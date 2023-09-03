@@ -1,0 +1,15 @@
+channels:
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - pip:
+    - cmake
+    - colored
+    - jupyter
+    - mypy
+    - ninja
+    - pybind11
+    - setuptools
+    - wheel
+    - xmltodict

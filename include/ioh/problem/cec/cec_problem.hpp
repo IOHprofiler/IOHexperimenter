@@ -34,19 +34,19 @@ namespace ioh::problem
             const std::string &name
         ) : RealSingleObjective(MetaData(problem_id, instance, name, n_variables), Bounds<double>(n_variables, -100, 100))
         {
+            if (!(n_variables == 2 || n_variables == 10 || n_variables == 20)) { return; }
+
             this->load_transformation_data();
 
             // Copy the from-a-static-file-loaded variables shift into the Problem.Solution.optimum_ attribute
             this->optimum_.x.assign(this->variables_shifts_[0].begin(), this->variables_shifts_[0].begin() + n_variables);
         }
 
-        int get_problem_id()
-        {
-            return this->meta_data_.problem_id;
-        }
-
         void set_optimum()
         {
+            const int n_variables = this->meta_data_.n_variables;
+            if (!(n_variables == 2 || n_variables == 10 || n_variables == 20)) { return; }
+
             this->optimum_.y = (*this)(this->optimum_.x);
             LOG("this->optimum_.y: " << this->optimum_.y);
         }
@@ -76,9 +76,10 @@ namespace ioh::problem
 
         //! Handler for reading all static data
         void load_transformation_data()
-        {
+    {
             const int n_variables = this->meta_data_.n_variables;
-            const unsigned int cec_function_identifier = this->meta_data_.problem_id;
+
+            const unsigned int cec_function_identifier = this->meta_data_.problem_id - 1000;
 
             // Load F_i_star.
             const auto F_i_star_filepath = ioh::common::file::utils::find_static_file("cec_transformations/F_i_star.txt");
@@ -144,7 +145,7 @@ namespace ioh::problem
 
         void load_objective_shift(const std::filesystem::path& F_i_star_filepath)
         {
-            const unsigned int cec_function_identifier = this->meta_data_.problem_id;
+            const unsigned int cec_function_identifier = this->meta_data_.problem_id - 1000;
 
             std::ifstream file(F_i_star_filepath); // Open the file
             if (!file.is_open())
