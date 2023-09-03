@@ -25,7 +25,7 @@ namespace ioh::problem::cec
 
     public:
 
-        inline static const int meta_problem_id = 3;
+        inline static const int meta_problem_id = 1003;
         inline static const std::string meta_name = "CEC_ExpandedSchafferF7";
 
         ExpandedSchafferF7(const int instance, const int n_variables) :

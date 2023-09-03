@@ -158,3 +158,12 @@ lint C++-17 code
 # put the .clang-format file in the same directory
 clang-format -i -style=llvm functions.hpp
 ```
+
+Test Python bindings
+```sh
+conda activate ./.conda_environment
+pip install -e .
+ipython3
+from ioh import problem
+help(problem)
+```

@@ -79,7 +79,7 @@ namespace ioh::problem::cec
 
     public:
 
-        inline static const int meta_problem_id = 6;
+        inline static const int meta_problem_id = 1006;
         inline static const std::string meta_name = "CEC_HybridFunction1";
 
         HybridFunction1(const int instance, const int n_variables) :

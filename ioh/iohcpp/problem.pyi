@@ -96,6 +96,9 @@ class AttractiveSector(BBOB):
 class BBOB(RealSingleObjective):
     ...
 
+class CEC(RealSingleObjective):
+    ...
+
 class BentCigar(BBOB):
     def __init__(self, instance: int, n_variables: int) -> None: ...
 

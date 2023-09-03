@@ -29,19 +29,6 @@
 #else
 #define LOG(message) // Nothing
 #endif
-
-// Output stream operator for std::vector<double>
-std::ostream &operator<<(std::ostream &os, const std::vector<double> &vec) {
-  os << "[";
-  for (size_t i = 0; i < vec.size(); ++i) {
-    os << vec[i];
-    if (i != vec.size() - 1) {
-      os << ", ";
-    }
-  }
-  os << "]";
-  return os;
-}
 // ===============================================================================================================================
 
 namespace ioh::problem::cec {
@@ -99,11 +86,9 @@ inline void scale_and_rotate(const std::vector<double> &x,
   }
 }
 
-inline double rastrigin(const std::vector<double> &z)
-{
-  double&& result =
-      std::accumulate(z.begin(), z.end(), 0.0, [](double acc, double value)
-      {
+inline double rastrigin(const std::vector<double> &z) {
+  double &&result =
+      std::accumulate(z.begin(), z.end(), 0.0, [](double acc, double value) {
         return acc + (value * value - 10.0 * std::cos(2.0 * PI * value) + 10.0);
       });
   return result;

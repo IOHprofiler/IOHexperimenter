@@ -21,7 +21,7 @@ namespace ioh::problem::cec
 
     public:
 
-        inline static const int meta_problem_id = 10;
+        inline static const int meta_problem_id = 1010;
         inline static const std::string meta_name = "CEC_CompositionFunction2";
 
         CompositionFunction2(const int instance, const int n_variables) :

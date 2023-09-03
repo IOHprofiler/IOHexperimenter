@@ -25,7 +25,7 @@ namespace ioh::problem::cec
 
     public:
 
-        inline static const int meta_problem_id = 5;
+        inline static const int meta_problem_id = 1005;
         inline static const std::string meta_name = "CEC_Levy";
 
         Levy(const int instance, const int n_variables) :
