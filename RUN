@@ -13,6 +13,7 @@ true
 # cmake ..
 # make install
 # ln -fs (pwd)/static/cec_transformations build/tests/input_data
+# ipython3 tests/python/test_cec_functions.py
 
 # The following line puts the debug log file and the test_cec_problem executable file
 # under the build/ tree.
