@@ -1,5 +1,6 @@
 #include "../utils.hpp"
 #include "ioh/problem/cec.hpp"
+#include "ioh/problem/cec/cec_problem.hpp"
 
 TEST_F(BaseTest, CECProblem)
 {
@@ -25,5 +26,20 @@ TEST_F(BaseTest, CECProblem)
         EXPECT_LE(abs(y - f) / f, 1.0 / pow(10, 6 - log(10)))
             << "The fitness of function " << func_id << "( ins "
             << ins_id << " ) is " << f << " ( not " << y << ").";
+    }
+}
+
+TEST_F(BaseTest, xopt_equals_yopt_cec)
+{
+    const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC>::instance();
+    for (const auto& name : problem_factory.names())
+    {
+        auto problem = problem_factory.create(name, 1, 10);
+
+        // Calling this from the constructor results in an SIGSEGV, because the object has not been fully initialized yet.
+        // And there is no other appropriate place.
+        problem->set_optimum();
+
+        EXPECT_DOUBLE_EQ(problem->optimum().y, (*problem)(problem->optimum().x)) << *problem;
     }
 }

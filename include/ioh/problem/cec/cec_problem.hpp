@@ -3,7 +3,7 @@
 #include "ioh/problem/single.hpp"
 #include "ioh/problem/transformation.hpp"
 
-// Check if DEBUG is defined
+// ===============================================================================================================================
 #define DEBUG
 #ifdef DEBUG
 #define LOG_FILE_NAME "debug_log.txt"
@@ -19,6 +19,20 @@
 #else
 #define LOG(message) // Nothing
 #endif
+
+// Output stream operator for std::vector<double>
+std::ostream& operator<<(std::ostream& os, const std::vector<double>& vec) {
+    os << "[";
+    for (size_t i = 0; i < vec.size(); ++i) {
+        os << vec[i];
+        if (i != vec.size() - 1) {
+            os << ", ";
+        }
+    }
+    os << "]";
+    return os;
+}
+// ===============================================================================================================================
 
 namespace ioh::problem
 {
@@ -48,31 +62,12 @@ namespace ioh::problem
             const int instance,
             const int n_variables,
             const std::string &name
-        ) : RealSingleObjective
-            (
-                MetaData(problem_id, instance, name, n_variables),
-                Bounds<double>(n_variables, -100, 100)
-            )
+        ) : RealSingleObjective(MetaData(problem_id, instance, name, n_variables), Bounds<double>(n_variables, -100, 100))
         {
-            // The only reason we allow 1 dimension is
-            // because of code in line include/ioh/common/factory.hpp:207
-            if (n_variables == 1) { return; }
-
-            if (n_variables != 2 && n_variables != 10 && n_variables != 20)
-            {
-                std::ostringstream message;
-                message << "Error: n_variables should be 2, 10, or 20. Provided n_variables: " << n_variables;
-                throw std::invalid_argument(message.str());
-            }
-
             this->load_transformation_data();
-
-            // Copy the from-a-static-file-loaded variables shift into the Problem.Solution.optimum_ attribute.
-            this->optimum_.x = this->variables_shift_;
 
             LOG("========================" << std::endl);
             LOG("Objective shift: " << this->objective_shift_ << std::endl);
-
             LOG("Linear transformation matrix: " << std::endl);
             for (const auto& row : this->linear_transformation_)
             {
@@ -82,14 +77,12 @@ namespace ioh::problem
                 }
                 LOG(std::endl);
             }
-
             LOG("Variables shift: ");
             for (double value : this->variables_shift_)
             {
                 LOG(value << " ");
             }
             LOG(std::endl);
-
             LOG("Input permutation: ");
             for (double value : this->input_permutation_)
             {
@@ -99,8 +92,16 @@ namespace ioh::problem
             LOG("========================" << std::endl);
         }
 
-        int get_problem_id() {
+        int get_problem_id()
+        {
             return this->meta_data_.problem_id;
+        }
+
+        void set_optimum()
+        {
+            const int n_variables = this->meta_data_.n_variables;
+            this->optimum_.x.assign(this->variables_shift_.begin(), this->variables_shift_.begin() + n_variables);
+            this->optimum_.y = (*this)(this->optimum_.x);
         }
 
         std::vector<double> basic_transform(std::vector<double>& x, double factor, double addend)
@@ -166,8 +167,7 @@ namespace ioh::problem
         double transform_objectives(const double y) override
         {
             auto&& transformed = y + this->objective_shift_;
-            LOG("Transformed objective: " << transformed << std::endl);
-
+            LOG("Evaluated " << this->meta_data_.name << " result: " << transformed << std::endl);
             return transformed;
         }
 

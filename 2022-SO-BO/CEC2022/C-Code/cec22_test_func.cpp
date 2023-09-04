@@ -498,7 +498,7 @@ void schaffer_F7_func (double *x, double *f, int nx, double *Os,double *Mr,int s
     int i;
   double tmp;
     f[0] = 0.0;
-  sr_func (x, z, nx, Os, Mr, 1.0, s_flag, r_flag); /* shift and rotate */
+  sr_func (x, z, nx, Os, Mr, 0.5/100, s_flag, r_flag); /* shift and rotate */
   for (i=0; i<nx-1; i++)
   {
     z[i]=pow(y[i]*y[i]+y[i+1]*y[i+1],0.5);
@@ -530,7 +530,7 @@ void levy_func (double *x, double *f, int nx, double *Os,double *Mr, int s_flag,
 {
     int i;
   f[0] = 0.0;
-  sr_func (x, z, nx, Os, Mr,1.0, s_flag, r_flag); /* shift and rotate */
+  sr_func (x, z, nx, Os, Mr,5.12/100, s_flag, r_flag); /* shift and rotate */
 
   double *w;
   w=(double *)malloc(sizeof(double)  *  nx);
