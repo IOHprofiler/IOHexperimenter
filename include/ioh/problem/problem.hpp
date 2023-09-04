@@ -226,6 +226,33 @@ namespace ioh
                 constraintset_.remove(c);
                 log_info_.allocate(optimum_, constraintset_);
             }
+            
+            //! Call this method after updating any fields on meta_data_
+            void updated_metadata() {
+                if (logger_ != nullptr){
+                    if(state_.evaluations != 0)
+                        IOH_DBG(warning, "Updated meta_data with logger attached and already evaluated problem. State will be reset.")
+                    reset();
+                }
+            }
+            
+            //! Accessor for problem id
+            void set_id(const int new_id) {
+                meta_data_.problem_id = new_id;
+                updated_metadata();
+            }
+
+            //! Accessor for problem instance
+            void set_instance(const int new_instance){
+                meta_data_.instance = new_instance;
+                updated_metadata();
+            }
+
+            //! Accessor for problem name
+            void set_name(const std::string& new_name){
+                meta_data_.name = new_name;
+                updated_metadata();
+            }
 
             //! Stream operator
             friend std::ostream &operator<<(std::ostream &os, const Problem &obj)

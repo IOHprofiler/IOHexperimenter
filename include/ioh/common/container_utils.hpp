@@ -232,7 +232,37 @@ namespace ioh
             }
             return target;
         }
-
+        /**
+         * @brief Makes an array and fills it with a specific value
+         * 
+         * @tparam T the type of the elements
+         * @tparam N the number of elements
+         * @param value the value
+         * @return std::array<T, N> the filled array
+         */
+        template<typename T, size_t N>
+        std::array<T, N> fill_array(const T value){
+            std::array<T, N> array {};
+            for(auto &e: array)
+                e = value;
+            return array;
+        }
+        /**
+         * @brief Convert vector into a std::array
+         * 
+         * @tparam T the type of the elements   
+         * @tparam N the number of elements
+         * @param v the vector to convert from
+         * @return std::array<T, N> the array
+         */
+        template<typename T, size_t N>
+        std::array<T, N> from_vector(const std::vector<T>& v){
+            std::array<T, N> array {};
+            for (size_t i = 0; i < std::min(N, v.size()); i++){
+                array[i] = v[i];
+            }
+            return array;
+        }
 
         //! Permutation struct
         struct Permutation
