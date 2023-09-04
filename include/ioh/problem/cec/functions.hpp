@@ -107,7 +107,7 @@ void levy_func (const double *x, double *f, int nx, double *Os,double *Mr, int s
     int i;
     f[0] = 0.0;
     double* y = (double *)malloc(sizeof(double) * nx);
-    sr_func (x, z, y, nx, Os, Mr,1.0, s_flag, r_flag); /* shift and rotate */
+    sr_func (x, z, y, nx, Os, Mr,5.12/100, s_flag, r_flag); /* shift and rotate */
     free(y);
 
     double *w;
@@ -371,7 +371,7 @@ void schaffer_F7_func(const double *x, double *f,  double*y, int nx, double *Os,
     double y_squared_i, y_squared_i_plus_1, sum_y_squared;
     double z_rooted, tmp_squared, value_to_add_to_f0;
 
-    sr_func (x, z, y, nx, Os, Mr, 1.0, s_flag, r_flag);
+    sr_func (x, z, y, nx, Os, Mr, 0.5/100, s_flag, r_flag);
     LOG("[schaffer_F7_func] Completed sr_func execution.");
 
     // Log x, y, and z values before the loop
