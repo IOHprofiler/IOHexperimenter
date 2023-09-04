@@ -167,3 +167,16 @@ ipython3
 from ioh import problem
 help(problem)
 ```
+
+```sh
+sudo apt install doxygen
+
+conda activate ./.conda_environment
+pip install breathe xmltodict sphinx sphinx-automodapi furo
+
+cd /home/dimitri/code/IOHexperimenter/build
+cmake -DBUILD_DOCS=ON ..
+make doc
+cd ..
+ipython3 doc/generate_docs.py
+```
