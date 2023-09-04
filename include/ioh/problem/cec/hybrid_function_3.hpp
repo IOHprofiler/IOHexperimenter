@@ -74,9 +74,11 @@ namespace ioh::problem::cec
             for (const auto &row : this->linear_transformation_) { for (double val : row) { flat_data[index++] = val; } }
             double *linear_transformation_raw = &flat_data[0];
             double* z = (double *)malloc(sizeof(double) * nx);
-            sr_func (&x[0], z, nx, &this->variables_shift_[0], linear_transformation_raw, 1.0, 1, 1);
+            double* y = (double *)malloc(sizeof(double) * nx);
+            sr_func (&x[0], z, y, nx, &this->variables_shift_[0], linear_transformation_raw, 1.0, 1, 1);
             std::vector<double> z_vector(z, z + nx);
             free(z);
+            free(y);
             return z_vector;
         }
 

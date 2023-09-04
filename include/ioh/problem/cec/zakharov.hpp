@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cec_problem.hpp"
+#include "functions.hpp"
 
 namespace ioh::problem::cec
 {
@@ -8,40 +9,33 @@ namespace ioh::problem::cec
     {
     protected:
 
-double evaluate(const std::vector<double> &x)
-{
-    double sum1 = 0.0, sum2 = 0.0;
-    int i = 0;
+        double evaluate(const std::vector<double>& x) override
+        {
+            // Copy the vector of vectors into ONE contiguous memory space.
+            size_t total_size = 0;
+            for (const auto &row : this->linear_transformation_) { total_size += row.size(); }
+            // Convert into a single contiguous block
+            std::vector<double> flat_data(total_size);
+            size_t index = 0;
+            for (const auto &row : this->linear_transformation_) { for (double val : row) { flat_data[index++] = val; } }
+            double *linear_transformation_raw = &flat_data[0];
+            int nx = x.size();
+            double f;
 
-    LOG("Zakharov");
+            zakharov_func(&x[0], &f, nx, &this->variables_shift_[0], linear_transformation_raw, 1, 1);
 
-    for (const auto &xi : x)
-    {
-        sum1 += xi * xi;
-        sum2 += 0.5 * (i+1) * xi;
-
-        LOG("Iteration: " << i << ", Current xi: " << xi << ", sum1: " << sum1 << ", sum2: " << sum2);
-
-        i++;
-    }
-
-    double result = sum1 + pow(sum2, 2) + pow(sum2, 4);
-    LOG("Final Result: " << result);
-
-    return result;
-}
-
+            return f;
+        }
 
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            auto&& transformed_variables = this->basic_transform(x, 1, 0);
-            return transformed_variables;
+            return x;
         }
 
     public:
 
         Zakharov(const int instance, const int n_variables) :
-            CECProblem (1, instance, n_variables, "CEC_Zakharov")
+            CECProblem(1, instance, n_variables, "CEC_Zakharov")
         {
         }
     };

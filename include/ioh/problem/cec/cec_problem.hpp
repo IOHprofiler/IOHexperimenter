@@ -99,6 +99,10 @@ namespace ioh::problem
             LOG("========================" << std::endl);
         }
 
+        int get_problem_id() {
+            return this->meta_data_.problem_id;
+        }
+
         std::vector<double> basic_transform(std::vector<double>& x, double factor, double addend)
         {
             LOG("Input Vector (x): ");
@@ -161,8 +165,6 @@ namespace ioh::problem
 
         double transform_objectives(const double y) override
         {
-            LOG("Objective shift: " << this->objective_shift_ << std::endl);
-
             auto&& transformed = y + this->objective_shift_;
             LOG("Transformed objective: " << transformed << std::endl);
 

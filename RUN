@@ -12,6 +12,8 @@ cd $build_dir
 
 true
 
+and rm -f ./debug_log.txt
+
 # Compile using g++
 and c++ -Wall -Wextra -pedantic -std=c++17 -lstdc++fs \
     -I$include_dir \
