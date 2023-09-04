@@ -23,8 +23,6 @@ namespace ioh::problem::cec
                 result += 100.0 * tmp1 * tmp1 + tmp2 * tmp2;
             }
 
-            std::cout << "result: " << result << std::endl;
-
             return result;
         }
 

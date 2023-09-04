@@ -19,7 +19,6 @@ namespace ioh::problem::cec
             if (std::isinf(sum2)) { return sum2; }
 
             auto result = 10.0 * (static_cast<double>(x.size()) - sum1) + sum2;
-            std::cout << "result: " << result << std::endl;
 
             return result;
         }

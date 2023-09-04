@@ -27,8 +27,6 @@ namespace ioh::problem::cec
             temp2 = 1.0 + 0.001 * (x[nx - 1] * x[nx - 1] + x[0] * x[0]);
             result += 0.5 + (temp1 - 0.5) / (temp2 * temp2);
 
-            std::cout << "result: " << result << std::endl;
-
             return result;
         }
 
