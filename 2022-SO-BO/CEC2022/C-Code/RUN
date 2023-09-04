@@ -1,0 +1,12 @@
+#!/usr/bin/env fish
+
+# Set the directory paths for the project and its includes
+set project_dir "/home/dimitri/code/IOHexperimenter"
+set build_dir "$project_dir/build/tests"
+set include_dir "$project_dir/include"
+set external_dir "$project_dir/external"
+set tests_dir "$project_dir/tests/cpp"
+
+and rm -f ./cec22_test_func
+and g++ -o ./cec22_test_func -Wall -Wextra -pedantic -std=c++17 -lstdc++fs -std=gnu++17 -I$external_dir/fmt/include cec22_test_func.cpp
+and ./cec22_test_func

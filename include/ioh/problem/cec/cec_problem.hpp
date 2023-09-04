@@ -307,6 +307,7 @@ namespace ioh::problem
 
         void load_variables_shift(std::vector<double>& variables_shift_, const std::filesystem::path& shift_data_filepath)
         {
+            const int n_variables = this->meta_data_.n_variables;
             std::ifstream file(shift_data_filepath); // Open the file
 
             if (!file.is_open()) {
@@ -316,12 +317,13 @@ namespace ioh::problem
 
             std::string line;
 
-            if (std::getline(file, line))
+            while (std::getline(file, line))
             {
                 std::istringstream ss(line);
                 double value;
+                int count = 0; // To keep track of number of values read from the current line
 
-                while (ss >> value)
+                while (ss >> value && count < n_variables)
                 { // Parse the tokens and convert to double
                     variables_shift_.push_back(value);
                 }

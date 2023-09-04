@@ -31,8 +31,6 @@ namespace ioh::problem::cec
 
             double result = term1 + sum + term3;
 
-            std::cout << "result: " << result << std::endl;
-
             return result;
         }
 
