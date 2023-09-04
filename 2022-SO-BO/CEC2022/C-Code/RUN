@@ -7,6 +7,7 @@ set include_dir "$project_dir/include"
 set external_dir "$project_dir/external"
 set tests_dir "$project_dir/tests/cpp"
 
-and rm -f ./cec22_test_func
-and g++ -o ./cec22_test_func -Wall -Wextra -pedantic -std=c++17 -lstdc++fs -std=gnu++17 -I$external_dir/fmt/include cec22_test_func.cpp
+and rm -f ./cec22_test_func ./debug_log.txt
+and g++ -g -o ./cec22_test_func -Wall -Wextra -pedantic -std=c++17 -lstdc++fs -std=gnu++17 -I$external_dir/fmt/include cec22_test_func.cpp
 and ./cec22_test_func
+

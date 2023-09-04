@@ -5,7 +5,7 @@
 
 namespace ioh::problem::cec
 {
-    class Rosenbrock final : public CECProblem<Rosenbrock>
+    class ExpandedSchafferF7 final : public CECProblem<ExpandedSchafferF7>
     {
     protected:
 
@@ -22,7 +22,11 @@ namespace ioh::problem::cec
             int nx = x.size();
             double f;
 
-            rosenbrock_func(&x[0], &f, nx, &this->variables_shift_[0], linear_transformation_raw, 1, 1);
+            // this function will write to the memory location
+            // pointed to by x
+            double* y=(double *)malloc(sizeof(double)  *  nx);
+            schaffer_F7_func(&x[0], &f, y, nx, &this->variables_shift_[0], linear_transformation_raw, 1, 1);
+            free(y);
 
             return f;
         }
@@ -34,8 +38,8 @@ namespace ioh::problem::cec
 
     public:
 
-        Rosenbrock(const int instance, const int n_variables) :
-            CECProblem(2, instance, n_variables, "CEC_Rosenbrock")
+        ExpandedSchafferF7(const int instance, const int n_variables) :
+            CECProblem(3, instance, n_variables, "CEC_ExpandedSchafferF7")
         {
         }
     };

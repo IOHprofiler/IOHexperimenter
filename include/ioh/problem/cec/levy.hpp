@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cec_problem.hpp"
+#include "functions.hpp"
 
 namespace ioh::problem::cec
 {
@@ -8,36 +9,27 @@ namespace ioh::problem::cec
     {
     protected:
 
-        double evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double>& x) override
         {
-            size_t nx = x.size();
+            // Copy the vector of vectors into ONE contiguous memory space.
+            size_t total_size = 0;
+            for (const auto &row : this->linear_transformation_) { total_size += row.size(); }
+            // Convert into a single contiguous block
+            std::vector<double> flat_data(total_size);
+            size_t index = 0;
+            for (const auto &row : this->linear_transformation_) { for (double val : row) { flat_data[index++] = val; } }
+            double *linear_transformation_raw = &flat_data[0];
+            int nx = x.size();
+            double f;
 
-            std::vector<double> w(nx);
-            for (size_t i = 0; i < nx; ++i)
-            {
-                w[i] = 1.0 + (x[i] - 0.0) / 4.0;
-            }
+            levy_func(&x[0], &f, nx, &this->variables_shift_[0], linear_transformation_raw, 1, 1);
 
-            double term1 = pow(sin(IOH_PI * w[0]), 2);
-            double term3 = pow(w[nx - 1] - 1, 2) * (1 + pow(sin(2 * IOH_PI * w[nx - 1]), 2));
-
-            double sum = 0.0;
-            for (size_t i = 0; i < nx - 1; ++i)
-            {
-                double wi = w[i];
-                double newv = pow(wi - 1, 2) * (1 + 10 * pow(sin(IOH_PI * wi + 1), 2));
-                sum += newv;
-            }
-
-            double result = term1 + sum + term3;
-
-            return result;
+            return f;
         }
 
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            auto&& transformed_variables = this->basic_transform(x, 5.12 / 100, 0);
-            return transformed_variables;
+            return x;
         }
 
     public:
