@@ -1,12 +1,18 @@
 #!/usr/bin/env fish
 
 # Set the directory paths for the project and its includes
-set build_dir "$HOME/code/IOHexperimenter/build/tests"
-set include_dir "$HOME/code/IOHexperimenter/include"
-set external_dir "$HOME/code/IOHexperimenter/external"
-set tests_dir "$HOME/code/IOHexperimenter/tests/cpp"
+set build_dir (pwd)"/build/tests"
+set include_dir (pwd)"/include"
+set external_dir (pwd)"/external"
+set tests_dir (pwd)"/tests/cpp"
 
 true
+
+# mkdir build
+# cd build
+# cmake ..
+# make install
+# ln -fs (pwd)/static/cec_transformations build/tests/input_data
 
 # The following line puts the debug log file and the test_cec_problem executable file
 # under the build/ tree.
