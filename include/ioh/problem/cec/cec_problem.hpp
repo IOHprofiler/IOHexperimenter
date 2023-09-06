@@ -38,7 +38,6 @@ namespace ioh::problem
 
             this->load_transformation_data();
 
-            // Copy the from-a-static-file-loaded variables shift into the Problem.Solution.optimum_ attribute
             this->optimum_.x.assign(this->variables_shifts_[0].begin(), this->variables_shifts_[0].begin() + n_variables);
         }
 
