@@ -8,9 +8,9 @@ namespace ioh::problem::cec
     {
     protected:
 
-        double evaluate(const std::vector<double>& x) override
+        double evaluate(const std::vector<double>& z) override
         {
-            double&& f = rastrigin(x);
+            double&& f = rastrigin(z);
             return f;
         }
 

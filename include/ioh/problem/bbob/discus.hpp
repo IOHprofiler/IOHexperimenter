@@ -10,13 +10,10 @@ namespace ioh::problem::bbob
     {
     protected:
         //! Evaluation method
-        double evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &z) override
         {
-            static const auto condition = 1.0e6;
-            auto result = condition * x.at(0) * x.at(0);
-            for (auto i = 1; i < this->meta_data_.n_variables; ++i)
-                result += x[i] * x[i];
-            return result;
+            double&& value = discus_func(z);
+            return value;
         }
         //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
