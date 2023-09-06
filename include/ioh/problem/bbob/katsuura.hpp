@@ -14,21 +14,10 @@ namespace ioh::problem::bbob
     protected:
 
         //! Evaluation method
-        double evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &z) override
         {
-            auto result = 1.0;
-            for (auto i = 0; i < this->meta_data_.n_variables; ++i)
-            {
-                double z = 0;
-                for (size_t j = 1; j < 33; ++j)
-                    z += fabs(this->transformation_state_.exponents[j] * x[i]
-                            - floor(this->transformation_state_.exponents[j] * x[i] + 0.5))
-                        / this->transformation_state_.exponents[j];
-
-                result *= pow(1.0 + (static_cast<double>(i) + 1) * z, exponent_);
-            }
-            result = factor_ * (-1. + result);
-            return result;
+            double&& value = katsuura_func(z);
+            return value;
         }
 
         //! Variables transformation method

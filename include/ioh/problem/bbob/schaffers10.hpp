@@ -16,15 +16,10 @@ namespace ioh::problem::bbob
         double condition_;
 
         //! Evaluation method
-        double evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &z) override
         {
-            auto result = 0.0;
-            for (size_t i = 0; i < static_cast<size_t>(this->meta_data_.n_variables) - 1; ++i)
-            {
-                const auto z = pow(x[i], 2.0) + pow(x.at(i + 1), 2.0);
-                result += pow(z, 0.25) * (1.0 + pow(sin(50.0 * pow(z, 0.1)), 2.0));
-            }
-            return pow(result / (static_cast<double>(this->meta_data_.n_variables) - 1.0), 2.0);
+            double&& value = schaffer_F7_func(z);
+            return value;
         }
 
         //! Variables transformation method

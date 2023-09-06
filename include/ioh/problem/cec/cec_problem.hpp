@@ -1,6 +1,6 @@
 #pragma once
 
-#include "functions.hpp"
+#include "ioh/problem/functions.hpp"
 #include "ioh/problem/single.hpp"
 #include "ioh/problem/transformation.hpp"
 

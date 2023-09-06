@@ -31,7 +31,7 @@
 #endif
 // ===============================================================================================================================
 
-namespace ioh::problem::cec {
+namespace ioh::problem {
 constexpr double INF = 1.0e99;
 constexpr double EPS = 1.0e-14;
 constexpr double E = 2.7182818284590452353602874713526625;
@@ -87,7 +87,7 @@ inline void scale_and_rotate(const std::vector<double> &x,
 }
 
 inline double rastrigin(const std::vector<double> &z) {
-  double &&result =
+  double result =
       std::accumulate(z.begin(), z.end(), 0.0, [](double acc, double value) {
         return acc + (value * value - 10.0 * std::cos(2.0 * PI * value) + 10.0);
       });
@@ -96,7 +96,7 @@ inline double rastrigin(const std::vector<double> &z) {
 
 inline double rosenbrock_func(const std::vector<double> &z) {
   std::vector<double> z_copy(z);
-  double &&result = 0.0;
+  double result = 0.0;
   z_copy[0] += 1.0;
   for (size_t i = 0; i < z_copy.size() - 1; ++i) {
     z_copy[i + 1] += 1.0;
@@ -192,10 +192,11 @@ inline double hgbat(const std::vector<double> &z) {
 
 inline double bent_cigar_func(const std::vector<double> &z)
 {
+  static const auto condition = 1.0e6;
   double result = z[0] * z[0];
   for (size_t i = 1; i < z.size(); ++i)
   {
-    result += std::pow(10.0, 6.0) * z[i] * z[i];
+    result += condition * z[i] * z[i];
   }
   return result;
 }
@@ -323,15 +324,14 @@ inline double ellips_func(const std::vector<double> &z)
 
 inline double discus_func(const std::vector<double> &z)
 {
-  constexpr double MULTIPLIER = std::pow(10.0, 6.0);
+  static const auto condition = 1.0e6;
   auto nx = z.size();
-
-  double result = MULTIPLIER * z[0] * z[0];
+  double value = condition * z[0] * z[0];
   for (size_t i = 1; i < nx; ++i)
   {
-    result += z[i] * z[i];
+    value += z[i] * z[i];
   }
-  return result;
+  return value;
 }
 
 inline void escaffer6_func(const std::vector<double> &x, double &f,
@@ -713,4 +713,4 @@ inline double cf07(const std::vector<double> &x,
   return f;
 }
 
-} // namespace ioh::problem::cec
+} // namespace ioh::problem

@@ -14,19 +14,10 @@ namespace ioh::problem::bbob
     {
     protected:
         //! Evaluation method
-        double evaluate(const std::vector<double> &x) override
+        double evaluate(const std::vector<double> &z) override
         {
-            auto sum1 = 0.0, sum2 = 0.0;
-
-            for (const auto xi : x)
-            {
-                sum1 += cos(2.0 * IOH_PI * xi);
-                sum2 += xi * xi;
-            }
-            if (std::isinf(sum2))
-                return sum2 ;
-
-            return 10.0 * (static_cast<double>(x.size()) - sum1) + sum2;
+            double&& value = rastrigin(z);
+            return value;
         }
 
         //! Variables transformation method
