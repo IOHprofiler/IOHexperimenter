@@ -34,8 +34,12 @@ TEST_F(BaseTest, xopt_equals_yopt_cec)
     const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC>::instance();
     for (const auto& name : problem_factory.names())
     {
-        auto instance = problem_factory.create(name, 1, 10);
-        auto&& x = instance->optimum().x;
-        EXPECT_DOUBLE_EQ(instance->optimum().y, (*instance)(x)) << *instance;
+        // Any function's, but the composition function's, optimum is defined.
+        if (!(name == "CEC_CompositionFunction1" || name == "CEC_CompositionFunction2" || name == "CEC_CompositionFunction3" || name == "CEC_CompositionFunction4"))
+        {
+            auto instance = problem_factory.create(name, 1, 10);
+            auto&& x = instance->optimum().x;
+            EXPECT_DOUBLE_EQ(instance->optimum().y, (*instance)(x)) << *instance;
+        }
     }
 }
