@@ -639,31 +639,26 @@ inline double cf06(const std::vector<double> &x,
 
   escaffer6_func(x, fit[0], Os[0], Mr[0], 1, r_flag);
   fit[0] *= 10000 / 2e+7;
-  LOG("[cf06] fit[0]: " << fit[0]);
 
   std::vector<double> schwefel_func_z(nx);
   std::vector<double> schwefel_func_y(nx);
   scale_and_rotate(x, schwefel_func_z, schwefel_func_y, Os[1], Mr[1], 1000.0 / 100.0, 1, r_flag);
   fit[1] = schwefel_func(schwefel_func_z);
-  LOG("[cf06] fit[1]: " << fit[1]);
 
   griewank_func(x, fit[2], Os[2], Mr[2], 1, r_flag);
   fit[2] *= 1000 / 100;
-  LOG("[cf06] fit[2]: " << fit[2]);
 
   std::vector<double> rosenbrock_func_z(nx);
   std::vector<double> rosenbrock_func_y(nx);
   scale_and_rotate(x, rosenbrock_func_z, rosenbrock_func_y, Os[3], Mr[3],
                    2.048 / 100.0, 1, r_flag);
   fit[3] = rosenbrock_func(rosenbrock_func_z);
-  LOG("[cf06] fit[3]: " << fit[3]);
 
   std::vector<double> rastrigin_z(nx);
   std::vector<double> rastrigin_y(nx);
   scale_and_rotate(x, rastrigin_z, rastrigin_y, Os[4], Mr[4], 5.12 / 100.0, 1, r_flag);
   fit[4] = rastrigin(rastrigin_z);
   fit[4] *= 10000 / 1e+3;
-  LOG("[cf06] fit[4]: " << fit[4]);
 
   double f = cf_cal(x, Os, delta, bias, fit);
   return f;
