@@ -47,7 +47,6 @@ namespace ioh::problem
             if (!(n_variables == 2 || n_variables == 10 || n_variables == 20)) { return; }
 
             this->optimum_.y = (*this)(this->optimum_.x);
-            LOG("this->optimum_.y: " << this->optimum_.y);
         }
 
         double transform_objectives(const double y) override
@@ -75,28 +74,74 @@ namespace ioh::problem
 
         //! Handler for reading all static data
         void load_transformation_data()
-    {
+        {
             const int n_variables = this->meta_data_.n_variables;
-
             const unsigned int cec_function_identifier = this->meta_data_.problem_id - 1000;
 
             // Load F_i_star.
-            const auto F_i_star_filepath = ioh::common::file::utils::find_static_file("cec_transformations/F_i_star.txt");
-            load_objective_shift(F_i_star_filepath);
+            const std::string F_i_star_suffix_string = "cec_transformations/F_i_star.txt";
+            try
+            {
+                const char* ioh_resources_cstr = std::getenv("IOH_RESOURCES");
+                if (ioh_resources_cstr == nullptr)
+                {
+                    throw std::runtime_error("Point the environment variable IOH_RESOURCES to the static/ folder of IOHexperimenter.");
+                }
+
+                std::string ioh_resources_path(ioh_resources_cstr);
+                const auto F_i_star_filepath = ioh_resources_path + "/" + F_i_star_suffix_string;
+                load_objective_shift(F_i_star_filepath);
+            }
+            catch (const std::runtime_error& e)
+            {
+                LOG("Could not open file " << F_i_star_suffix_string << " | " << e.what());
+                std::exit(EXIT_FAILURE);
+            }
 
             // Load M.
             std::ostringstream M_suffix_stream;
             M_suffix_stream << "cec_transformations/M_" << cec_function_identifier << "_D" << n_variables << ".txt";
             std::string M_suffix_string = M_suffix_stream.str();
-            const auto M_filepath = ioh::common::file::utils::find_static_file(M_suffix_string);
-            load_linear_transformation(M_filepath);
+            try
+            {
+                const char* ioh_resources_cstr = std::getenv("IOH_RESOURCES");
+                if (ioh_resources_cstr == nullptr)
+                {
+                    throw std::runtime_error("Point the environment variable IOH_RESOURCES to the static/ folder of IOHexperimenter.");
+                }
+
+                std::string ioh_resources_path(ioh_resources_cstr);
+                const auto M_filepath = ioh_resources_path + "/" + M_suffix_string;
+                load_linear_transformation(M_filepath);
+            }
+            catch (const std::runtime_error& e)
+            {
+                LOG("Could not open file " << M_suffix_string << " | " << e.what());
+                std::exit(EXIT_FAILURE);
+            }
 
             // Load o.
             std::ostringstream shift_data_suffix_stream;
             shift_data_suffix_stream << "cec_transformations/shift_data_" << cec_function_identifier << ".txt";
             std::string shift_data_suffix_string = shift_data_suffix_stream.str();
-            const auto shift_data_filepath = ioh::common::file::utils::find_static_file(shift_data_suffix_string);
-            load_variables_shift(shift_data_filepath);
+
+            try
+            {
+                const char* ioh_resources_cstr = std::getenv("IOH_RESOURCES");
+                if (ioh_resources_cstr == nullptr)
+                {
+                    throw std::runtime_error("Point the environment variable IOH_RESOURCES to the static/ folder of IOHexperimenter.");
+                }
+
+                std::string ioh_resources_path(ioh_resources_cstr);
+                const auto shift_data_filepath = ioh_resources_path + "/" + shift_data_suffix_string;
+                load_variables_shift(shift_data_filepath);
+            }
+            catch (const std::runtime_error& e)
+            {
+                LOG("Could not open file " << shift_data_suffix_string << " | " << e.what());
+                std::exit(EXIT_FAILURE);
+            }
 
             // Load S (only for hybrid functions).
             if ((cec_function_identifier == 6 || cec_function_identifier == 7 || cec_function_identifier == 8) && (n_variables == 10 || n_variables == 20))
@@ -104,8 +149,24 @@ namespace ioh::problem
                 std::ostringstream shuffle_data_suffix_stream;
                 shuffle_data_suffix_stream << "cec_transformations/shuffle_data_" << cec_function_identifier << "_D" << n_variables << ".txt";
                 std::string shuffle_data_suffix_string = shuffle_data_suffix_stream.str();
-                const auto shuffle_data_filepath = ioh::common::file::utils::find_static_file(shuffle_data_suffix_string);
-                load_shuffle_data(shuffle_data_filepath);
+
+                try
+                {
+                    const char* ioh_resources_cstr = std::getenv("IOH_RESOURCES");
+                    if (ioh_resources_cstr == nullptr)
+                    {
+                        throw std::runtime_error("Point the environment variable IOH_RESOURCES to the static/ folder of IOHexperimenter.");
+                    }
+
+                    std::string ioh_resources_path(ioh_resources_cstr);
+                    const auto shuffle_data_filepath = ioh_resources_path + "/" + shuffle_data_suffix_string;
+                    load_shuffle_data(shuffle_data_filepath);
+                }
+                catch (const std::runtime_error& e)
+                {
+                    LOG("Could not open file " << shuffle_data_suffix_string << " | " << e.what());
+                    std::exit(EXIT_FAILURE);
+                }
             }
             else
             {
@@ -118,15 +179,10 @@ namespace ioh::problem
 
         void load_shuffle_data(const std::filesystem::path& shuffle_data_filepath)
         {
-            const int n_variables = this->meta_data_.n_variables;
-
             std::ifstream file(shuffle_data_filepath); // Open the file
             if (!file.is_open())
             {
-                LOG("Failed to open the file: " << shuffle_data_filepath << ". Using the identity permutation on the input." << std::endl);
-                this->input_permutation_.resize(n_variables);
-                for(int i = 0; i < n_variables; ++i) { this->input_permutation_[i] = i + 1; }
-                return;
+                throw std::runtime_error("Static path: \"" + shuffle_data_filepath.string() + "\"");
             }
 
             // Read the file content
@@ -149,8 +205,7 @@ namespace ioh::problem
             std::ifstream file(F_i_star_filepath); // Open the file
             if (!file.is_open())
             {
-                LOG("Failed to open the file: " << F_i_star_filepath << std::endl);
-                return;
+                throw std::runtime_error("Static path: \"" + F_i_star_filepath.string() + "\"");
             }
 
             std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>()); // Read the file content
@@ -181,8 +236,7 @@ namespace ioh::problem
 
             if (!file.is_open())
             {
-                LOG("Failed to open the file: " << M_filepath << std::endl);
-                return;
+                throw std::runtime_error("Static path: \"" + M_filepath.string() + "\"");
             }
 
             std::string line;
@@ -216,6 +270,7 @@ namespace ioh::problem
             if (!matrix.empty())
             {
                 LOG("WARNING: Incomplete matrix detected. It will be discarded.");
+                std::exit(EXIT_FAILURE);
             }
         }
 
@@ -226,8 +281,7 @@ namespace ioh::problem
 
             if (!file.is_open())
             {
-                LOG("Failed to open the file: " << shift_data_filepath << std::endl);
-                return;
+                throw std::runtime_error("Static path: \"" + shift_data_filepath.string() + "\"");
             }
 
             std::string line;
@@ -253,6 +307,7 @@ namespace ioh::problem
             if (this->variables_shifts_.empty())
             {
                 LOG("ERROR: No vectors were loaded into variables_shifts_");
+                std::exit(EXIT_FAILURE);
             }
         }
     };

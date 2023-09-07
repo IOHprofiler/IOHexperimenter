@@ -8,12 +8,12 @@ set tests_dir (pwd)"/tests/cpp"
 
 true
 
-# mkdir build
-# cd build
-# cmake ..
-# make install
-# ln -fs (pwd)/static/cec_transformations build/tests/input_data
-# ipython3 tests/python/test_cec_functions.py
+for line in (cat .env)
+  set -x (echo $line | cut -d '=' -f 1) (echo $line | cut -d '=' -f 2-)
+end
+# set -u IOH_RESOURCES
+
+# and ipython3 tests/python/test_cec_functions.py
 
 # The following line puts the debug log file and the test_cec_problem executable file
 # under the build/ tree.
@@ -22,35 +22,35 @@ cd $build_dir
 and rm -f ./cec_test_log.txt ./cec_training_log.txt
 
 and c++ -Wall -Wextra -pedantic -std=c++17 -lstdc++fs \
-    -I$include_dir \
-    -I$tests_dir \
-    -I$external_dir/fmt/include \
-    -I$external_dir/clutchlog \
-    -I$external_dir/json/include \
-    -isystem $external_dir/googletest/googletest/include \
-    -isystem $external_dir/googletest/googletest \
-    $tests_dir/problem/test_cec_problem.cpp \
-    $tests_dir/entrypoint.cpp \
-    -o test_cec_problem \
-    $build_dir/../lib/libgtest.a -lpthread
+  -I$include_dir \
+  -I$tests_dir \
+  -I$external_dir/fmt/include \
+  -I$external_dir/clutchlog \
+  -I$external_dir/json/include \
+  -isystem $external_dir/googletest/googletest/include \
+  -isystem $external_dir/googletest/googletest \
+  $tests_dir/problem/test_cec_problem.cpp \
+  $tests_dir/entrypoint.cpp \
+  -o test_cec_problem \
+  $build_dir/../lib/libgtest.a -lpthread
 and c++ -Wall -Wextra -pedantic -std=c++17 -lstdc++fs \
-    -I$include_dir \
-    -I$tests_dir \
-    -I$external_dir/fmt/include \
-    -I$external_dir/clutchlog \
-    -I$external_dir/json/include \
-    -isystem $external_dir/googletest/googletest/include \
-    -isystem $external_dir/googletest/googletest \
-    -Wall \
-    -Wextra \
-    -pedantic \
-    -std=c++17 \
-    -lstdc++fs \
-    -std=gnu++17 \
-    -I$external_dir/fmt/include \
-    $tests_dir/problem/set_cec_problems.cpp \
-    -o ./set_cec_problems \
-    $build_dir/../lib/libgtest.a -lpthread
+  -I$include_dir \
+  -I$tests_dir \
+  -I$external_dir/fmt/include \
+  -I$external_dir/clutchlog \
+  -I$external_dir/json/include \
+  -isystem $external_dir/googletest/googletest/include \
+  -isystem $external_dir/googletest/googletest \
+  -Wall \
+  -Wextra \
+  -pedantic \
+  -std=c++17 \
+  -lstdc++fs \
+  -std=gnu++17 \
+  -I$external_dir/fmt/include \
+  $tests_dir/problem/set_cec_problems.cpp \
+  -o ./set_cec_problems \
+  $build_dir/../lib/libgtest.a -lpthread
 
 and ./set_cec_problems
 and ./test_cec_problem

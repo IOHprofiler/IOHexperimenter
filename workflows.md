@@ -180,3 +180,14 @@ make doc
 cd ..
 ipython3 doc/generate_docs.py
 ```
+
+```sh
+git submodule
+git submodule init
+git submodule update
+
+. INSTALL
+conda activate ./.conda_environment
+pip install -e .
+ipython3 tests/python/test_cec_functions.py
+```
