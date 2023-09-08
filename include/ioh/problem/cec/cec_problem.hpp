@@ -34,7 +34,20 @@ namespace ioh::problem
             const std::string &name
         ) : RealSingleObjective(MetaData(problem_id, instance, name, n_variables), Bounds<double>(n_variables, -100, 100))
         {
-            if (!(n_variables == 2 || n_variables == 10 || n_variables == 20)) { return; }
+            // Temporary work around this code: `const auto meta = T(1, 1).meta_data()`
+            if (n_variables == 1) { return; }
+
+            if (!(n_variables == 2 || n_variables == 10 || n_variables == 20))
+            {
+                LOG("[CEC] Problem ID: " << problem_id << " | Invalid n_variables: " << n_variables);
+                std::exit(EXIT_FAILURE);
+            }
+
+            if ((problem_id == 1006 || problem_id == 1007 || problem_id == 1008) && n_variables == 2)
+            {
+                LOG("[CEC] Problem ID: " << problem_id << " | Invalid n_variables: " << n_variables);
+                std::exit(EXIT_FAILURE);
+            }
 
             this->load_transformation_data();
 
@@ -43,8 +56,17 @@ namespace ioh::problem
 
         void set_optimum()
         {
+            const int problem_id = this->meta_data_.problem_id;
             const int n_variables = this->meta_data_.n_variables;
-            if (!(n_variables == 2 || n_variables == 10 || n_variables == 20)) { return; }
+
+            // Temporary work around this code: `const auto meta = T(1, 1).meta_data()`
+            if (n_variables == 1) { return; }
+
+            if (!(n_variables == 2 || n_variables == 10 || n_variables == 20))
+            {
+                LOG("[set_optimum] Problem ID: " << problem_id << " | Invalid n_variables: " << n_variables);
+                std::exit(EXIT_FAILURE);
+            }
 
             this->optimum_.y = (*this)(this->optimum_.x);
         }
@@ -53,23 +75,6 @@ namespace ioh::problem
         {
             auto&& transformed = y + this->objective_shift_;
             return transformed;
-        }
-
-        // Matrix-vector multiplication function
-        std::vector<double> matVecMultiply(const std::vector<std::vector<double>>& mat, const std::vector<double>& vec)
-        {
-            int rows = mat.size();
-            int cols = vec.size();
-            std::vector<double> result(rows, 0.0);
-
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < cols; j++)
-                {
-                    result[i] += mat[i][j] * vec[j];
-                }
-            }
-            return result;
         }
 
         //! Handler for reading all static data

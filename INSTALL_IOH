@@ -2,9 +2,10 @@
 
 true
 
-and mkdir build
-and cd build
+and rm -rf build/
+and mkdir build/
+and cd build/
 and cmake ..
 and make install
 
-and ln -fs (pwd)/static/cec_transformations build/tests/input_data
+ln -fs (pwd)/static/cec_transformations build/tests/input_data
