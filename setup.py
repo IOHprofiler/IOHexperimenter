@@ -151,6 +151,9 @@ setup(
     packages=find_packages(),
     package_dir={"IOHexperimenter": "ioh"},
     include_package_data=True,
+    package_data={
+        "IOHexperimenter": ["static/*"],
+    },
     exclude_package_data={"": ["src/*", "*CMakeLists.txt", "*README.md"]},
     ext_modules=[iohcpp],
     cmdclass={"build_ext": CMakeBuild},

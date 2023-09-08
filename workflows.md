@@ -183,16 +183,14 @@ ipython3 doc/generate_docs.py
 
 ```sh
 true
+git clone git@github.com-Habimm:Habimm/IOHexperimenter.git
+cd IOHexperimenter
 and git submodule
 and git submodule init
 and git submodule update
 and . INSTALL
 and conda activate ./.conda_environment
-and pip install -e .
-and echo "IOH_RESOURCES=/home/dimitri/code/IOHexperimenter/static" > .env
-for line in (cat .env)
-  and set -x (echo $line | cut -d '=' -f 1) (echo $line | cut -d '=' -f 2-)
-end
+and pip install .
 and ipython3 /home/dimitri/code/IOHexperimenter/tests/python/test_cec_functions.py
 ```
 
@@ -205,4 +203,14 @@ Step 4: Install ioh package.
 Step 5: Create .env file with a path to the static/ folder.
 Step 6: Source .env.
 Step 7: Run Python script.
+```
+
+```sh
+echo "IOH_RESOURCES=/home/dimitri/code/IOHexperimenter/static" > .env
+for line in (cat .env)
+  set -x (echo $line | cut -d '=' -f 1) (echo $line | cut -d '=' -f 2-)
+end
+```
+
+```sh
 ```
