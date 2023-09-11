@@ -213,4 +213,14 @@ end
 ```
 
 ```sh
+true
+and git clone git@github.com-Habimm:Habimm/IOHexperimenter.git
+and cd IOHexperimenter
+and git submodule
+and git submodule init
+and git submodule update
+./INSTALL_IOH
+and ln -fs (pwd)/static/cec_transformations build/tests/input_data
+and echo "IOH_RESOURCES=/home/dimitri/code/IOHexperimenter/static" > .env
+and ./RUN
 ```
