@@ -1,6 +1,9 @@
 #pragma once
 
-#include "problem/transformation.hpp"
+#include "problem/bbob.hpp"
+#include "problem/cec.hpp"
+#include "problem/dynamic_bin_val.hpp"
+#include "problem/pbo.hpp"
 #include "problem/problem.hpp"
 #include "problem/single.hpp"
 #include "problem/wrap_function.hpp"
