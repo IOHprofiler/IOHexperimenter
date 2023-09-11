@@ -43,52 +43,52 @@ namespace ioh::problem::cec
 
             std::vector<double> z(x.size());
             std::vector<double> y(x.size());
-            scale_and_rotate(x, z, y, Os, Mr, 1.0, 1, 1);
+            ioh::problem::transformation::scale_and_rotate(x, z, y, Os, Mr, 1.0, 1, 1);
 
             for (size_t i = 0; i < x.size(); ++i) {
                 y[i] = z[S[i] - 1];
             }
 
-            std::vector<double> katsuura_func_x(y.begin() + G[0], y.begin() + G[0] + G_nx[0]);
-            std::vector<double> katsuura_func_z(katsuura_func_x.size());
-            std::vector<double> katsuura_func_y(katsuura_func_x.size());
-            scale_and_rotate(katsuura_func_x, katsuura_func_z, katsuura_func_y, Os, Mr, 5.0 / 100.0, 0, 0);
+            std::vector<double> katsuura_x(y.begin() + G[0], y.begin() + G[0] + G_nx[0]);
+            std::vector<double> katsuura_z(katsuura_x.size());
+            std::vector<double> katsuura_y(katsuura_x.size());
+            ioh::problem::transformation::scale_and_rotate(katsuura_x, katsuura_z, katsuura_y, Os, Mr, 5.0 / 100.0, 0, 0);
 
-            std::vector<double> happycat_func_x(y.begin() + G[1], y.begin() + G[1] + G_nx[1]);
-            std::vector<double> happycat_func_z(happycat_func_x.size());
-            std::vector<double> happycat_func_y(happycat_func_x.size());
-            scale_and_rotate(happycat_func_x, happycat_func_z, happycat_func_y, Os, Mr, 5.0 / 100.0, 0, 0);
+            std::vector<double> happycat_x(y.begin() + G[1], y.begin() + G[1] + G_nx[1]);
+            std::vector<double> happycat_z(happycat_x.size());
+            std::vector<double> happycat_y(happycat_x.size());
+            ioh::problem::transformation::scale_and_rotate(happycat_x, happycat_z, happycat_y, Os, Mr, 5.0 / 100.0, 0, 0);
 
-            std::vector<double> grie_rosen_func_x(y.begin() + G[2], y.begin() + G[2] + G_nx[2]);
-            std::vector<double> grie_rosen_func_z(grie_rosen_func_x.size());
-            std::vector<double> grie_rosen_func_y(grie_rosen_func_x.size());
-            scale_and_rotate(grie_rosen_func_x, grie_rosen_func_z, grie_rosen_func_y, Os, Mr, 5.0 / 100.0, 0, 0);
+            std::vector<double> grie_rosen_x(y.begin() + G[2], y.begin() + G[2] + G_nx[2]);
+            std::vector<double> grie_rosen_z(grie_rosen_x.size());
+            std::vector<double> grie_rosen_y(grie_rosen_x.size());
+            ioh::problem::transformation::scale_and_rotate(grie_rosen_x, grie_rosen_z, grie_rosen_y, Os, Mr, 5.0 / 100.0, 0, 0);
 
-            std::vector<double> schwefel_func_x(y.begin() + G[3], y.begin() + G[3] + G_nx[3]);
-            std::vector<double> schwefel_func_z(schwefel_func_x.size());
-            std::vector<double> schwefel_func_y(schwefel_func_x.size());
-            scale_and_rotate(schwefel_func_x, schwefel_func_z, schwefel_func_y, Os, Mr, 1000.0 / 100.0, 0, 0);
+            std::vector<double> schwefel_x(y.begin() + G[3], y.begin() + G[3] + G_nx[3]);
+            std::vector<double> schwefel_z(schwefel_x.size());
+            std::vector<double> schwefel_y(schwefel_x.size());
+            ioh::problem::transformation::scale_and_rotate(schwefel_x, schwefel_z, schwefel_y, Os, Mr, 1000.0 / 100.0, 0, 0);
 
-            std::vector<double> ackley_func_x(y.begin() + G[4], y.begin() + G[4] + G_nx[4]);
-            std::vector<double> ackley_func_z(ackley_func_x.size());
-            std::vector<double> ackley_func_y(ackley_func_x.size());
-            scale_and_rotate(ackley_func_x, ackley_func_z, ackley_func_y, Os, Mr, 1.0, 0, 0);
+            std::vector<double> ackley_x(y.begin() + G[4], y.begin() + G[4] + G_nx[4]);
+            std::vector<double> ackley_z(ackley_x.size());
+            std::vector<double> ackley_y(ackley_x.size());
+            ioh::problem::transformation::scale_and_rotate(ackley_x, ackley_z, ackley_y, Os, Mr, 1.0, 0, 0);
 
             std::vector<double> prepared_y;
 
             prepared_y.reserve(
-                katsuura_func_z.size() \
-                + happycat_func_z.size() \
-                + grie_rosen_func_z.size() \
-                + schwefel_func_z.size() \
-                + ackley_func_z.size() \
+                katsuura_z.size() \
+                + happycat_z.size() \
+                + grie_rosen_z.size() \
+                + schwefel_z.size() \
+                + ackley_z.size() \
             );
 
-            prepared_y.insert(prepared_y.end(), katsuura_func_z.begin(), katsuura_func_z.end());
-            prepared_y.insert(prepared_y.end(), happycat_func_z.begin(), happycat_func_z.end());
-            prepared_y.insert(prepared_y.end(), grie_rosen_func_z.begin(), grie_rosen_func_z.end());
-            prepared_y.insert(prepared_y.end(), schwefel_func_z.begin(), schwefel_func_z.end());
-            prepared_y.insert(prepared_y.end(), ackley_func_z.begin(), ackley_func_z.end());
+            prepared_y.insert(prepared_y.end(), katsuura_z.begin(), katsuura_z.end());
+            prepared_y.insert(prepared_y.end(), happycat_z.begin(), happycat_z.end());
+            prepared_y.insert(prepared_y.end(), grie_rosen_z.begin(), grie_rosen_z.end());
+            prepared_y.insert(prepared_y.end(), schwefel_z.begin(), schwefel_z.end());
+            prepared_y.insert(prepared_y.end(), ackley_z.begin(), ackley_z.end());
 
             return prepared_y;
         }

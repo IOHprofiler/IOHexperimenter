@@ -10,6 +10,8 @@
 #include <numeric>
 #include <vector>
 
+#include "ioh/problem/transformation.hpp"
+
 // ===============================================================================================================================
 #define DEBUG
 #ifdef DEBUG
@@ -37,55 +39,6 @@ constexpr double EPS = 1.0e-14;
 constexpr double E = 2.7182818284590452353602874713526625;
 constexpr double PI = 3.1415926535897932384626433832795029;
 
-inline void shiftfunc(const std::vector<double> &x, std::vector<double> &xshift,
-                      const std::vector<double> &Os) {
-  for (size_t i = 0; i < x.size(); ++i) {
-    xshift[i] = x[i] - Os[i];
-  }
-}
-
-inline void rotatefunc(const std::vector<double> &x, std::vector<double> &xrot,
-                       const std::vector<std::vector<double>> &Mr) {
-  for (size_t i = 0; i < x.size(); ++i) {
-    xrot[i] = 0;
-    for (size_t j = 0; j < x.size(); ++j) {
-      xrot[i] += x[j] * Mr[i][j];
-    }
-  }
-}
-
-inline void scale_and_rotate(const std::vector<double> &x,
-                             std::vector<double> &sr_x, std::vector<double> &y,
-                             const std::vector<double> &Os,
-                             const std::vector<std::vector<double>> &Mr,
-                             double sh_rate, bool s_flag, bool r_flag) {
-  if (s_flag) {
-    if (r_flag) {
-      shiftfunc(x, y, Os);
-      for (size_t i = 0; i < x.size(); ++i) {
-        y[i] *= sh_rate;
-      }
-      rotatefunc(y, sr_x, Mr);
-    } else {
-      shiftfunc(x, sr_x, Os);
-      for (size_t i = 0; i < x.size(); ++i) {
-        sr_x[i] *= sh_rate;
-      }
-    }
-  } else {
-    if (r_flag) {
-      for (size_t i = 0; i < x.size(); ++i) {
-        y[i] = x[i] * sh_rate;
-      }
-      rotatefunc(y, sr_x, Mr);
-    } else {
-      for (size_t i = 0; i < x.size(); ++i) {
-        sr_x[i] = x[i] * sh_rate;
-      }
-    }
-  }
-}
-
 inline double rastrigin(const std::vector<double> &z) {
   double result =
       std::accumulate(z.begin(), z.end(), 0.0, [](double acc, double value) {
@@ -94,7 +47,7 @@ inline double rastrigin(const std::vector<double> &z) {
   return result;
 }
 
-inline double rosenbrock_func(const std::vector<double> &z) {
+inline double rosenbrock(const std::vector<double> &z) {
   std::vector<double> z_copy(z);
   double result = 0.0;
   z_copy[0] += 1.0;
@@ -107,7 +60,7 @@ inline double rosenbrock_func(const std::vector<double> &z) {
   return result;
 }
 
-inline double levy_func(const std::vector<double> &z) {
+inline double levy(const std::vector<double> &z) {
   std::vector<double> w(z.size());
 
   for (size_t i = 0; i < z.size(); ++i) {
@@ -130,7 +83,7 @@ inline double levy_func(const std::vector<double> &z) {
   return result;
 }
 
-inline double zakharov_func(const std::vector<double> &x) {
+inline double zakharov(const std::vector<double> &x) {
   double sum1 = std::inner_product(x.begin(), x.end(), x.begin(), 0.0);
   size_t i = 0; // Declare i outside the lambda.
   double sum2 = std::accumulate(x.begin(), x.end(), 0.0,
@@ -144,7 +97,7 @@ inline double zakharov_func(const std::vector<double> &x) {
   return result;
 }
 
-inline double schaffer_F7_func(const std::vector<double> &y) {
+inline double schaffer_F7(const std::vector<double> &y) {
   std::vector<double> z(y.size());
   double tmp;
 
@@ -190,7 +143,7 @@ inline double hgbat(const std::vector<double> &z) {
   return result;
 }
 
-inline double bent_cigar_func(const std::vector<double> &z)
+inline double bent_cigar(const std::vector<double> &z)
 {
   static const auto condition = 1.0e6;
   double result = z[0] * z[0];
@@ -201,7 +154,7 @@ inline double bent_cigar_func(const std::vector<double> &z)
   return result;
 }
 
-inline double katsuura_func(const std::vector<double> &z) {
+inline double katsuura(const std::vector<double> &z) {
   double tmp3 = std::pow(static_cast<double>(z.size()), 1.2);
 
   double &&result = std::accumulate(
@@ -221,7 +174,7 @@ inline double katsuura_func(const std::vector<double> &z) {
   return result;
 }
 
-inline double ackley_func(const std::vector<double> &z) {
+inline double ackley(const std::vector<double> &z) {
   const double sum1 =
       z.empty() ? 0.0
                 : -0.2 * std::sqrt(std::inner_product(z.begin(), z.end(),
@@ -240,7 +193,7 @@ inline double ackley_func(const std::vector<double> &z) {
   return result;
 }
 
-inline double schwefel_func(const std::vector<double> &z) {
+inline double schwefel(const std::vector<double> &z) {
   std::vector<double> z_copy(z);
 
   double result = 0.0;
@@ -267,7 +220,7 @@ inline double schwefel_func(const std::vector<double> &z) {
   return result;
 }
 
-inline double happycat_func(const std::vector<double> &z)
+inline double happycat(const std::vector<double> &z)
 {
   const double alpha = 1.0 / 8.0;
   double r2 = 0.0;
@@ -285,7 +238,7 @@ inline double happycat_func(const std::vector<double> &z)
   return f;
 }
 
-inline double grie_rosen_func(const std::vector<double> &z)
+inline double grie_rosen(const std::vector<double> &z)
 {
   std::vector<double> z_copy(z);
 
@@ -308,7 +261,7 @@ inline double grie_rosen_func(const std::vector<double> &z)
   return f;
 }
 
-inline double ellips_func(const std::vector<double> &z)
+inline double ellips(const std::vector<double> &z)
 {
   constexpr double BASE = 10.0;
   constexpr double EXPONENT_SCALE = 6.0;
@@ -322,7 +275,7 @@ inline double ellips_func(const std::vector<double> &z)
   return result;
 }
 
-inline double discus_func(const std::vector<double> &z)
+inline double discus(const std::vector<double> &z)
 {
   static const auto condition = 1.0e6;
   auto nx = z.size();
@@ -334,14 +287,14 @@ inline double discus_func(const std::vector<double> &z)
   return value;
 }
 
-inline void escaffer6_func(const std::vector<double> &x, double &f,
+inline void escaffer6(const std::vector<double> &x, double &f,
                            const std::vector<double> &Os,
                            const std::vector<std::vector<double>> &Mr,
                            int s_flag, int r_flag) {
   std::vector<double> z(x.size());
   std::vector<double> y(x.size());
 
-  scale_and_rotate(x, z, y, Os, Mr, 1.0, s_flag, r_flag);
+  ioh::problem::transformation::scale_and_rotate(x, z, y, Os, Mr, 1.0, s_flag, r_flag);
 
   f = 0.0;
 
@@ -360,14 +313,14 @@ inline void escaffer6_func(const std::vector<double> &x, double &f,
   f += 0.5 + (temp1 - 0.5) / (temp2 * temp2);
 }
 
-inline void griewank_func(const std::vector<double> &x, double &f,
+inline void griewank(const std::vector<double> &x, double &f,
                           const std::vector<double> &Os,
                           const std::vector<std::vector<double>> &Mr,
                           int s_flag, int r_flag) {
   std::vector<double> z(x.size());
   std::vector<double> y(x.size());
 
-  scale_and_rotate(x, z, y, Os, Mr, 600.0 / 100.0, s_flag, r_flag);
+  ioh::problem::transformation::scale_and_rotate(x, z, y, Os, Mr, 600.0 / 100.0, s_flag, r_flag);
 
   double s =
       std::accumulate(z.begin(), z.end(), 0.0,
@@ -402,8 +355,8 @@ inline double hf02(const std::vector<double> &prepared_y)
     G[i] = G[i - 1] + G_nx[i - 1];
   }
 
-  std::vector<double> bent_cigar_func_z(prepared_y.begin() + G[0], prepared_y.begin() + G[0] + G_nx[0]);
-  fit[0] = bent_cigar_func(bent_cigar_func_z);
+  std::vector<double> bent_cigar_z(prepared_y.begin() + G[0], prepared_y.begin() + G[0] + G_nx[0]);
+  fit[0] = bent_cigar(bent_cigar_z);
 
   std::vector<double> hgbat_z(prepared_y.begin() + G[1], prepared_y.begin() + G[1] + G_nx[1]);
   fit[1] = hgbat(hgbat_z);
@@ -441,20 +394,20 @@ inline double hf10(const std::vector<double> &prepared_y) {
   std::vector<double> hgbat_z(prepared_y.begin() + G[0], prepared_y.begin() + G[0] + G_nx[0]);
   fit[0] = hgbat(hgbat_z);
 
-  std::vector<double> katsuura_func_z(prepared_y.begin() + G[1], prepared_y.begin() + G[1] + G_nx[1]);
-  fit[1] = katsuura_func(katsuura_func_z);
+  std::vector<double> katsuura_z(prepared_y.begin() + G[1], prepared_y.begin() + G[1] + G_nx[1]);
+  fit[1] = katsuura(katsuura_z);
 
-  std::vector<double> ackley_func_z(prepared_y.begin() + G[2], prepared_y.begin() + G[2] + G_nx[2]);
-  fit[2] = ackley_func(ackley_func_z);
+  std::vector<double> ackley_z(prepared_y.begin() + G[2], prepared_y.begin() + G[2] + G_nx[2]);
+  fit[2] = ackley(ackley_z);
 
   std::vector<double> rastrigin_z(prepared_y.begin() + G[3], prepared_y.begin() + G[3] + G_nx[3]);
   fit[3] = rastrigin(rastrigin_z);
 
-  std::vector<double> schwefel_func_z(prepared_y.begin() + G[4], prepared_y.begin() + G[4] + G_nx[4]);
-  fit[4] = schwefel_func(schwefel_func_z);
+  std::vector<double> schwefel_z(prepared_y.begin() + G[4], prepared_y.begin() + G[4] + G_nx[4]);
+  fit[4] = schwefel(schwefel_z);
 
   std::vector<double> schaffer_y(prepared_y.begin() + G[5], prepared_y.begin() + G[5] + G_nx[5]);
-  fit[5] = schaffer_F7_func(schaffer_y);
+  fit[5] = schaffer_F7(schaffer_y);
 
   double &&f = std::accumulate(fit.begin(), fit.end(), 0.0);
   return f;
@@ -483,20 +436,20 @@ inline double hf06(const std::vector<double> &prepared_y)
     G[i] = G[i - 1] + G_nx[i - 1];
   }
 
-  std::vector<double> katsuura_func_z(prepared_y.begin() + G[0], prepared_y.begin() + G[0] + G_nx[0]);
-  fit[0] = katsuura_func(katsuura_func_z);
+  std::vector<double> katsuura_z(prepared_y.begin() + G[0], prepared_y.begin() + G[0] + G_nx[0]);
+  fit[0] = katsuura(katsuura_z);
 
-  std::vector<double> happycat_func_z(prepared_y.begin() + G[1], prepared_y.begin() + G[1] + G_nx[1]);
-  fit[1] = happycat_func(happycat_func_z);
+  std::vector<double> happycat_z(prepared_y.begin() + G[1], prepared_y.begin() + G[1] + G_nx[1]);
+  fit[1] = happycat(happycat_z);
 
-  std::vector<double> grie_rosen_func_z(prepared_y.begin() + G[2], prepared_y.begin() + G[2] + G_nx[2]);
-  fit[2] = grie_rosen_func(grie_rosen_func_z);
+  std::vector<double> grie_rosen_z(prepared_y.begin() + G[2], prepared_y.begin() + G[2] + G_nx[2]);
+  fit[2] = grie_rosen(grie_rosen_z);
 
-  std::vector<double> schwefel_func_z(prepared_y.begin() + G[3], prepared_y.begin() + G[3] + G_nx[3]);
-  fit[3] = schwefel_func(schwefel_func_z);
+  std::vector<double> schwefel_z(prepared_y.begin() + G[3], prepared_y.begin() + G[3] + G_nx[3]);
+  fit[3] = schwefel(schwefel_z);
 
-  std::vector<double> ackley_func_z(prepared_y.begin() + G[4], prepared_y.begin() + G[4] + G_nx[4]);
-  fit[4] = ackley_func(ackley_func_z);
+  std::vector<double> ackley_z(prepared_y.begin() + G[4], prepared_y.begin() + G[4] + G_nx[4]);
+  fit[4] = ackley(ackley_z);
 
   double f = std::accumulate(fit.begin(), fit.end(), 0.0);
   return f;
@@ -561,34 +514,34 @@ inline double cf01(
 
   int nx = x.size();
 
-  std::vector<double> rosenbrock_func_z(nx);
-  std::vector<double> rosenbrock_func_y(nx);
-  scale_and_rotate(x, rosenbrock_func_z, rosenbrock_func_y, Os[0], Mr[0], 2.048 / 100.0, 1, r_flag);
-  fit[0] = rosenbrock_func(rosenbrock_func_z);
+  std::vector<double> rosenbrock_z(nx);
+  std::vector<double> rosenbrock_y(nx);
+  ioh::problem::transformation::scale_and_rotate(x, rosenbrock_z, rosenbrock_y, Os[0], Mr[0], 2.048 / 100.0, 1, r_flag);
+  fit[0] = rosenbrock(rosenbrock_z);
   fit[0] = 10000 * fit[0] / 1e+4;
 
-  std::vector<double> ellips_func_z(nx);
-  std::vector<double> ellips_func_y(nx);
-  scale_and_rotate(x, ellips_func_z, ellips_func_y, Os[1], Mr[1], 1.0, 1, 0);
-  fit[1] = ellips_func(ellips_func_z);
+  std::vector<double> ellips_z(nx);
+  std::vector<double> ellips_y(nx);
+  ioh::problem::transformation::scale_and_rotate(x, ellips_z, ellips_y, Os[1], Mr[1], 1.0, 1, 0);
+  fit[1] = ellips(ellips_z);
   fit[1] = 10000 * fit[1] / 1e+10;
 
-  std::vector<double> bent_cigar_func_z(nx);
-  std::vector<double> bent_cigar_func_y(nx);
-  scale_and_rotate(x, bent_cigar_func_z, bent_cigar_func_y, Os[2], Mr[2], 1.0, 1, r_flag);
-  fit[2] = bent_cigar_func(bent_cigar_func_z);
+  std::vector<double> bent_cigar_z(nx);
+  std::vector<double> bent_cigar_y(nx);
+  ioh::problem::transformation::scale_and_rotate(x, bent_cigar_z, bent_cigar_y, Os[2], Mr[2], 1.0, 1, r_flag);
+  fit[2] = bent_cigar(bent_cigar_z);
   fit[2] = 10000 * fit[2] / 1e+30;
 
-  std::vector<double> discus_func_z(nx);
-  std::vector<double> discus_func_y(nx);
-  scale_and_rotate(x, discus_func_z, discus_func_y, Os[3], Mr[3], 1.0, 1, r_flag);
-  fit[3] = discus_func(discus_func_z);
+  std::vector<double> discus_z(nx);
+  std::vector<double> discus_y(nx);
+  ioh::problem::transformation::scale_and_rotate(x, discus_z, discus_y, Os[3], Mr[3], 1.0, 1, r_flag);
+  fit[3] = discus(discus_z);
   fit[3] = 10000 * fit[3] / 1e+10;
 
-  std::vector<double> ellips_func_2_z(nx);
-  std::vector<double> ellips_func_2_y(nx);
-  scale_and_rotate(x, ellips_func_2_z, ellips_func_2_y, Os[4], Mr[4], 1.0, 1, 0);
-  fit[4] = ellips_func(ellips_func_2_z);
+  std::vector<double> ellips_2_z(nx);
+  std::vector<double> ellips_2_y(nx);
+  ioh::problem::transformation::scale_and_rotate(x, ellips_2_z, ellips_2_y, Os[4], Mr[4], 1.0, 1, 0);
+  fit[4] = ellips(ellips_2_z);
   fit[4] = 10000 * fit[4] / 1e+10;
 
   double f = cf_cal(x, Os, deltas, biases, fit);
@@ -606,19 +559,19 @@ inline double cf02(const std::vector<double> &x,
 
   std::vector<double> fit(3);
 
-  std::vector<double> schwefel_func_z(nx);
-  std::vector<double> schwefel_func_y(nx);
-  scale_and_rotate(x, schwefel_func_z, schwefel_func_y, Os[0], Mr[0], 1000.0 / 100.0, 1, 0);
-  fit[0] = schwefel_func(schwefel_func_z);
+  std::vector<double> schwefel_z(nx);
+  std::vector<double> schwefel_y(nx);
+  ioh::problem::transformation::scale_and_rotate(x, schwefel_z, schwefel_y, Os[0], Mr[0], 1000.0 / 100.0, 1, 0);
+  fit[0] = schwefel(schwefel_z);
 
   std::vector<double> rastrigin_z(nx);
   std::vector<double> rastrigin_y(nx);
-  scale_and_rotate(x, rastrigin_z, rastrigin_y, Os[1], Mr[1], 5.12 / 100.0, 1, r_flag);
+  ioh::problem::transformation::scale_and_rotate(x, rastrigin_z, rastrigin_y, Os[1], Mr[1], 5.12 / 100.0, 1, r_flag);
   fit[1] = rastrigin(rastrigin_z);
 
   std::vector<double> hgbat_z(nx);
   std::vector<double> hgbat_y(nx);
-  scale_and_rotate(x, hgbat_z, hgbat_y, Os[2], Mr[2], 5.0 / 100.0, 1, r_flag);
+  ioh::problem::transformation::scale_and_rotate(x, hgbat_z, hgbat_y, Os[2], Mr[2], 5.0 / 100.0, 1, r_flag);
   fit[2] = hgbat(hgbat_z);
 
   double f = cf_cal(x, Os, delta, bias, fit);
@@ -637,26 +590,26 @@ inline double cf06(const std::vector<double> &x,
 
   std::vector<double> fit(5);
 
-  escaffer6_func(x, fit[0], Os[0], Mr[0], 1, r_flag);
+  escaffer6(x, fit[0], Os[0], Mr[0], 1, r_flag);
   fit[0] *= 10000 / 2e+7;
 
-  std::vector<double> schwefel_func_z(nx);
-  std::vector<double> schwefel_func_y(nx);
-  scale_and_rotate(x, schwefel_func_z, schwefel_func_y, Os[1], Mr[1], 1000.0 / 100.0, 1, r_flag);
-  fit[1] = schwefel_func(schwefel_func_z);
+  std::vector<double> schwefel_z(nx);
+  std::vector<double> schwefel_y(nx);
+  ioh::problem::transformation::scale_and_rotate(x, schwefel_z, schwefel_y, Os[1], Mr[1], 1000.0 / 100.0, 1, r_flag);
+  fit[1] = schwefel(schwefel_z);
 
-  griewank_func(x, fit[2], Os[2], Mr[2], 1, r_flag);
+  griewank(x, fit[2], Os[2], Mr[2], 1, r_flag);
   fit[2] *= 1000 / 100;
 
-  std::vector<double> rosenbrock_func_z(nx);
-  std::vector<double> rosenbrock_func_y(nx);
-  scale_and_rotate(x, rosenbrock_func_z, rosenbrock_func_y, Os[3], Mr[3],
+  std::vector<double> rosenbrock_z(nx);
+  std::vector<double> rosenbrock_y(nx);
+  ioh::problem::transformation::scale_and_rotate(x, rosenbrock_z, rosenbrock_y, Os[3], Mr[3],
                    2.048 / 100.0, 1, r_flag);
-  fit[3] = rosenbrock_func(rosenbrock_func_z);
+  fit[3] = rosenbrock(rosenbrock_z);
 
   std::vector<double> rastrigin_z(nx);
   std::vector<double> rastrigin_y(nx);
-  scale_and_rotate(x, rastrigin_z, rastrigin_y, Os[4], Mr[4], 5.12 / 100.0, 1, r_flag);
+  ioh::problem::transformation::scale_and_rotate(x, rastrigin_z, rastrigin_y, Os[4], Mr[4], 5.12 / 100.0, 1, r_flag);
   fit[4] = rastrigin(rastrigin_z);
   fit[4] *= 10000 / 1e+3;
 
@@ -676,32 +629,32 @@ inline double cf07(const std::vector<double> &x,
 
   std::vector<double> hgbat_z(nx);
   std::vector<double> hgbat_y(nx);
-  scale_and_rotate(x, hgbat_z, hgbat_y, Os[0], Mr[0], 5.0 / 100.0, 1, r_flag);
+  ioh::problem::transformation::scale_and_rotate(x, hgbat_z, hgbat_y, Os[0], Mr[0], 5.0 / 100.0, 1, r_flag);
   fit[0] = hgbat(hgbat_z);
   fit[0] *= 10000 / 1000;
 
   std::vector<double> rastrigin_z(nx);
   std::vector<double> rastrigin_y(nx);
-  scale_and_rotate(x, rastrigin_z, rastrigin_y, Os[1], Mr[1], 5.12 / 100.0, 1, r_flag);
+  ioh::problem::transformation::scale_and_rotate(x, rastrigin_z, rastrigin_y, Os[1], Mr[1], 5.12 / 100.0, 1, r_flag);
   fit[1] = rastrigin(rastrigin_z);
   fit[1] *= 10000 / 1e+3;
 
-  std::vector<double> schwefel_func_z(nx);
-  std::vector<double> schwefel_func_y(nx);
-  scale_and_rotate(x, schwefel_func_z, schwefel_func_y, Os[2], Mr[2], 1000.0 / 100.0, 1, r_flag);
-  fit[2] = schwefel_func(schwefel_func_z);
+  std::vector<double> schwefel_z(nx);
+  std::vector<double> schwefel_y(nx);
+  ioh::problem::transformation::scale_and_rotate(x, schwefel_z, schwefel_y, Os[2], Mr[2], 1000.0 / 100.0, 1, r_flag);
+  fit[2] = schwefel(schwefel_z);
   fit[2] *= 10000 / 4e+3;
 
-  // bent_cigar_func(x, fit[3], Os[3], Mr[3], 1, r_flag);
+  // bent_cigar(x, fit[3], Os[3], Mr[3], 1, r_flag);
   // fit[3] *= 10000 / 1e+30;
 
-  std::vector<double> ellips_func_z(nx);
-  std::vector<double> ellips_func_y(nx);
-  scale_and_rotate(x, ellips_func_z, ellips_func_y, Os[4], Mr[4], 1.0, 1, r_flag);
-  fit[4] = ellips_func(ellips_func_z);
+  std::vector<double> ellips_z(nx);
+  std::vector<double> ellips_y(nx);
+  ioh::problem::transformation::scale_and_rotate(x, ellips_z, ellips_y, Os[4], Mr[4], 1.0, 1, r_flag);
+  fit[4] = ellips(ellips_z);
   fit[4] *= 10000 / 1e+10;
 
-  escaffer6_func(x, fit[5], Os[5], Mr[5], 1, r_flag);
+  escaffer6(x, fit[5], Os[5], Mr[5], 1, r_flag);
   fit[5] *= 10000 / 2e+7;
 
   double f = cf_cal(x, Os, delta, bias, fit);

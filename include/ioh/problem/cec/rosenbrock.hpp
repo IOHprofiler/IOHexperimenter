@@ -10,7 +10,7 @@ namespace ioh::problem::cec
 
         double evaluate(const std::vector<double>& x) override
         {
-            double&& f = rosenbrock_func(x);
+            double f = rosenbrock(x);
             return f;
         }
 
@@ -18,7 +18,7 @@ namespace ioh::problem::cec
         {
             std::vector<double> y(x.size()), z(x.size());
 
-            scale_and_rotate(x, z, y, this->variables_shifts_[0], this->linear_transformations_[0], 2.048 / 100.0, 1, 1);
+            ioh::problem::transformation::scale_and_rotate(x, z, y, this->variables_shifts_[0], this->linear_transformations_[0], 2.048 / 100.0, 1, 1);
 
             return z;
         }

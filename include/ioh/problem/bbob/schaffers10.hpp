@@ -18,7 +18,7 @@ namespace ioh::problem::bbob
         //! Evaluation method
         double evaluate(const std::vector<double> &z) override
         {
-            double&& value = schaffer_F7_func(z);
+            double&& value = schaffer_F7(z);
             return value;
         }
 
