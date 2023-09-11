@@ -191,6 +191,7 @@ and git submodule update
 and . INSTALL
 and conda activate ./.conda_environment
 and pip install .
+and cd ~
 and ipython3 /home/dimitri/code/IOHexperimenter/tests/python/test_cec_functions.py
 ```
 
@@ -219,8 +220,8 @@ and cd IOHexperimenter
 and git submodule
 and git submodule init
 and git submodule update
-./INSTALL_IOH
-and ln -fs (pwd)/static/cec_transformations build/tests/input_data
+and ./INSTALL_IOH
+ln -fs (pwd)/static/cec_transformations build/tests/input_data
 and echo "IOH_RESOURCES=/home/dimitri/code/IOHexperimenter/static" > .env
 and ./RUN
 ```
