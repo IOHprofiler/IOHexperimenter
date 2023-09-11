@@ -16,7 +16,7 @@ namespace ioh::problem::bbob
         //! Evaluation method
         double evaluate(const std::vector<double> &z) override
         {
-            double&& value = rastrigin(z);
+            double value = rastrigin(z);
             return value;
         }
 

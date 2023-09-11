@@ -16,7 +16,7 @@ namespace ioh::problem::bbob
         //! Evaluation method
         double evaluate(const std::vector<double> &z) override
         {
-            double&& value = katsuura(z);
+            double value = katsuura(z);
             return value;
         }
 

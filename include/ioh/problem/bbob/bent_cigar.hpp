@@ -12,7 +12,7 @@ namespace ioh::problem::bbob
         //! Evaluation method
         double evaluate(const std::vector<double> &z) override
         {
-            double&& value = bent_cigar(z);
+            double value = bent_cigar(z);
             return value;
         }
 

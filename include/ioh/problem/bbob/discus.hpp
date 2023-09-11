@@ -12,7 +12,7 @@ namespace ioh::problem::bbob
         //! Evaluation method
         double evaluate(const std::vector<double> &z) override
         {
-            double&& value = discus(z);
+            double value = discus(z);
             return value;
         }
         //! Variables transformation method
