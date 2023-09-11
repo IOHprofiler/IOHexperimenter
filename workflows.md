@@ -225,3 +225,9 @@ ln -fs (pwd)/static/cec_transformations build/tests/input_data
 and echo "IOH_RESOURCES=/home/dimitri/code/IOHexperimenter/static" > .env
 and ./RUN
 ```
+
+```sh
+./INSTALL_IOH
+ln -fs (pwd)/static/cec_transformations build/tests/input_data
+./RUN
+```
