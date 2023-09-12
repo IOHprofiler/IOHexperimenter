@@ -12,11 +12,25 @@
 
 #include "ioh/problem/transformation.hpp"
 
-// ===============================================================================================================================
+/**
+ * @def DEBUG
+ * Enables logging functionality throughout the code when defined.
+ */
 #define DEBUG
+
 #ifdef DEBUG
+
+/**
+ * @def LOG_FILE_NAME
+ * Defines the name of the log file where debug messages will be written to.
+ */
 #define LOG_FILE_NAME "cec_test_log.txt"
 
+/**
+ * @def LOG
+ * Macro to log messages to a file with a timestamp.
+ * @param message The message to log.
+ */
 #define LOG(message)                                                           \
   do {                                                                         \
     std::ofstream debug_log(LOG_FILE_NAME, std::ios::app);                     \
@@ -29,16 +43,51 @@
   } while (0)
 
 #else
+
+/**
+ * @def LOG
+ * Stub for LOG macro when DEBUG is not defined.
+ * @param message The message parameter is ignored.
+ */
 #define LOG(message) // Nothing
 #endif
-// ===============================================================================================================================
 
+/**
+ * @namespace ioh::problem
+ * Namespace where the various problem functions are defined.
+ */
 namespace ioh::problem {
+
+/**
+ * @var INF
+ * Defines a very large number representing infinity.
+ */
 constexpr double INF = 1.0e99;
+
+/**
+ * @var EPS
+ * Defines a small number used to prevent division by zero and other numerical instabilities.
+ */
 constexpr double EPS = 1.0e-14;
+
+/**
+ * @var E
+ * The mathematical constant e.
+ */
 constexpr double E = 2.7182818284590452353602874713526625;
+
+/**
+ * @var PI
+ * The mathematical constant pi.
+ */
 constexpr double PI = 3.1415926535897932384626433832795029;
 
+/**
+ * @fn double rastrigin(const std::vector<double>& z)
+ * @brief Computes the Rastrigin function for a given input vector.
+ * @param z Input vector.
+ * @return Function value at input z.
+ */
 inline double rastrigin(const std::vector<double> &z) {
   double result =
       std::accumulate(z.begin(), z.end(), 0.0, [](double acc, double value) {
@@ -47,6 +96,14 @@ inline double rastrigin(const std::vector<double> &z) {
   return result;
 }
 
+/**
+ * @brief Calculates the Rosenbrock function value for the input vector.
+ *
+ * The Rosenbrock function is commonly used for optimization algorithms testing. It is defined over an n-dimensional space. The function is computed as the sum of squares of sequential elements, with a particular transformation applied to each element before the computation.
+ *
+ * @param z A constant reference to a vector of doubles, which represents the input to the function.
+ * @return The computed Rosenbrock function value.
+ */
 inline double rosenbrock(const std::vector<double> &z) {
   std::vector<double> z_copy(z);
   double result = 0.0;
@@ -60,6 +117,14 @@ inline double rosenbrock(const std::vector<double> &z) {
   return result;
 }
 
+/**
+ * @brief Computes the Levy function value given an input vector.
+ *
+ * The Levy function is well known in the optimization domain, defined with a combination of sine and cosine operations along with polynomial expressions. The function calculates various terms separately which contribute to the final Levy function value.
+ *
+ * @param z A constant reference to a vector of doubles representing the input to the function.
+ * @return The calculated Levy function value based on the input vector.
+ */
 inline double levy(const std::vector<double> &z) {
   std::vector<double> w(z.size());
 
@@ -83,6 +148,14 @@ inline double levy(const std::vector<double> &z) {
   return result;
 }
 
+/**
+ * @brief Calculates the Zakharov function value for a given input vector.
+ *
+ * The Zakharov function is used frequently in optimization problems. It involves calculating two summation terms based on the input vector, which are then used to compute the final function value.
+ *
+ * @param x A constant reference to a vector of doubles representing the input to the function.
+ * @return The calculated Zakharov function value for the given input vector.
+ */
 inline double zakharov(const std::vector<double> &x) {
   double sum1 = std::inner_product(x.begin(), x.end(), x.begin(), 0.0);
   size_t i = 0; // Declare i outside the lambda.
@@ -219,6 +292,24 @@ inline double schwefel(const std::vector<double> &z) {
   result += 4.189828872724338e+002 * z_copy.size();
   return result;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 inline double happycat(const std::vector<double> &z)
 {
