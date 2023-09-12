@@ -876,6 +876,66 @@ std::string to_lower(const std::string &s)
     return res;
 }
 
+
+void define_dynamic_bin_val_problem(py::module &m)
+{
+    py::class_<DynamicBinVal, IntegerSingleObjective, std::shared_ptr<DynamicBinVal>>
+    (
+        m,
+        "DynamicBinVal",
+        R"pbdoc(
+            Dynamic BinVal. Details: https://link.springer.com/article/10.1007/s42979-022-01203-z
+        )pbdoc"
+    )
+    .def_static
+    (
+        "create",
+        [](const std::string &name, int iid, int dim)
+        {
+            return ioh::common::Factory<DynamicBinVal, int, int>::instance().create(name, iid, dim);
+        },
+        py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
+        R"pbdoc(
+            Create a problem instance
+
+            Parameters
+            ----------
+                problem_name: str
+                    a string indicating the problem name.
+                instance_id: int
+                    an integer identifier of the problem instance
+                dimension: int
+                    the dimensionality of the search space
+        )pbdoc"
+    )
+    .def_static
+    (
+        "create",
+        [](int id, int iid, int dim) {
+            return ioh::common::Factory<DynamicBinVal, int, int>::instance().create(id, iid, dim);
+        },
+        py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
+        R"pbdoc(
+            Create a problem instance
+
+            Parameters
+            ----------
+                problem_id: int
+                    a number indicating the problem numeric identifier.
+                instance_id: int
+                    an integer identifier of the problem instance
+                dimension: int
+                    the dimensionality of the search space
+        )pbdoc"
+    )
+    .def_property_readonly_static
+    (
+        "problems", [](py::object) { return ioh::common::Factory<DynamicBinVal, int, int>::instance().map(); },
+        "All registered problems"
+    )
+    .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+}
+
 template <typename P>
 void define_bbob_problems(py::module &mi, const std::string &name = "BBOB", const bool submodule = false)
 {
