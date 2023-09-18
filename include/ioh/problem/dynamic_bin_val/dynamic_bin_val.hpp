@@ -6,6 +6,11 @@
 
 #pragma once
 
+#include <algorithm>
+#include <iostream>
+#include <random>
+#include <vector>
+
 #include "ioh/problem/single.hpp"
 #include "ioh/problem/transformation.hpp"
 
@@ -32,6 +37,7 @@ namespace ioh::problem
 
         int timestep; /**< The current timestep in the dynamic binary value problem scenario. */
         std::vector<int> weights; /**< A vector of weights used in the evaluation of the problem. */
+        std::mt19937 g{12345};
 
         /**
          * @brief Constructs a new instance of DynamicBinVal.
@@ -56,6 +62,16 @@ namespace ioh::problem
             {
                 this->weights[i] = this->weights[i-1] * 2;
             }
+        }
+
+        int step()
+        {
+            this->timestep += 1;
+
+            // Now permute the weights with each other uniformly at random
+            std::shuffle(this->weights.begin(), this->weights.end(), this->g);
+
+            return this->timestep;
         }
 
     protected:
