@@ -2,8 +2,10 @@
 
 # Set the directory paths for the project and its includes
 set build_dir (pwd)"/build/tests"
-set include_dir (pwd)"/include"
+set c_implementation_cec_transformations_folder (pwd)"/build/tests/input_data"
 set external_dir (pwd)"/external"
+set include_dir (pwd)"/include"
+set ioh_cec_transformations_folder (pwd)"/static/cec_transformations"
 set tests_dir (pwd)"/tests/cpp"
 
 true
@@ -52,5 +54,8 @@ and c++ -Wall -Wextra -pedantic -std=c++17 -lstdc++fs \
   -o ./set_cec_problems \
   $build_dir/../lib/libgtest.a -lpthread
 
+and rm -f $c_implementation_cec_transformations_folder
+and ln -s $ioh_cec_transformations_folder $c_implementation_cec_transformations_folder
 and ./set_cec_problems
+
 and ./test_cec_problem

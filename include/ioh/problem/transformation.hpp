@@ -274,39 +274,45 @@ inline void z_hat(std::vector<double> &x, const std::vector<double> &xopt) {
   for (size_t i = 1; i < x.size(); ++i)
     x[i] = temp_x[i] + 0.25 * (temp_x[i - 1] - 2.0 * fabs(xopt[i - 1]));
 }
-} // namespace variables
 
-inline void shiftfunc(const std::vector<double> &x, std::vector<double> &xshift,
-                      const std::vector<double> &Os) {
-  for (size_t i = 0; i < x.size(); ++i) {
-    xshift[i] = x[i] - Os[i];
-  }
-}
-
-inline void rotatefunc(const std::vector<double> &x, std::vector<double> &xrot,
-                       const std::vector<std::vector<double>> &Mr) {
-  for (size_t i = 0; i < x.size(); ++i) {
-    xrot[i] = 0;
-    for (size_t j = 0; j < x.size(); ++j) {
-      xrot[i] += x[j] * Mr[i][j];
-    }
-  }
-}
-
+/**
+ * @brief Performs a series of transformations on the input vector `x`, including scaling and either rotation or affine transformation, based on the flags provided.
+ *
+ * This function is a part of the IOHexperimenter's problem transformations module, which is used to apply various transformations on optimization problem variables. The function takes an input vector `x` and applies a series of transformations including scaling and either rotation (using a rotation matrix `Mr`) or an affine transformation. The transformed vector is stored in `sr_x`.
+ *
+ * @param x A constant reference to the input vector that needs to be transformed. It represents the raw variables of the optimization problem.
+ * @param sr_x A reference to the vector where the final transformed variables will be stored. This vector is expected to be initialized with the same size as `x`.
+ * @param y A reference to a vector used as a temporary storage during the transformation process. This vector is expected to be initialized with the same size as `x`.
+ * @param Os A constant reference to a vector used in the subtract transformation. It represents the offset values for each variable in `x`.
+ * @param Mr A constant reference to a 2D vector representing the rotation matrix or the matrix used in the affine transformation.
+ * @param sh_rate A double representing the scaling factor applied to each variable in `x` during the scaling transformation.
+ * @param s_flag A boolean flag indicating whether the scaling transformation should be applied. If true, scaling is applied; otherwise, it is skipped.
+ * @param r_flag A boolean flag indicating whether the rotation or affine transformation should be applied. If true, rotation or affine transformation is applied; otherwise, it is skipped.
+ *
+ * @note The function uses the `subtract` and `affine` functions for the subtract and affine transformations, respectively.
+ * @note The `b` vector is initialized to a zero vector as it is used in the affine transformation to add a constant vector to `x`, but in this case, it acts as a no-op.
+ *
+ * @return void
+ */
 inline void scale_and_rotate(const std::vector<double> &x,
                              std::vector<double> &sr_x, std::vector<double> &y,
                              const std::vector<double> &Os,
                              const std::vector<std::vector<double>> &Mr,
                              double sh_rate, bool s_flag, bool r_flag) {
+  std::vector<double> b(x.size(), 0.0);  // Create a zero vector for the affine transformation
   if (s_flag) {
     if (r_flag) {
-      shiftfunc(x, y, Os);
+      y = x;  // Copy x to y before calling subtract
+      subtract(y, Os);  // Replaced shiftfunc with subtract
       for (size_t i = 0; i < x.size(); ++i) {
         y[i] *= sh_rate;
       }
-      rotatefunc(y, sr_x, Mr);
+      std::vector<double> y_copy = y;  // Create a copy of y to preserve the original values
+      affine(y_copy, Mr, b);  // Replaced rotatefunc with affine
+      sr_x = y_copy;  // Copy the result back to sr_x
     } else {
-      shiftfunc(x, sr_x, Os);
+      sr_x = x;  // Copy x to sr_x before calling subtract
+      subtract(sr_x, Os);  // Replaced shiftfunc with subtract
       for (size_t i = 0; i < x.size(); ++i) {
         sr_x[i] *= sh_rate;
       }
@@ -316,7 +322,9 @@ inline void scale_and_rotate(const std::vector<double> &x,
       for (size_t i = 0; i < x.size(); ++i) {
         y[i] = x[i] * sh_rate;
       }
-      rotatefunc(y, sr_x, Mr);
+      std::vector<double> y_copy = y;  // Create a copy of y to preserve the original values
+      affine(y_copy, Mr, b);  // Replaced rotatefunc with affine
+      sr_x = y_copy;  // Copy the result back to sr_x
     } else {
       for (size_t i = 0; i < x.size(); ++i) {
         sr_x[i] = x[i] * sh_rate;
@@ -324,4 +332,6 @@ inline void scale_and_rotate(const std::vector<double> &x,
     }
   }
 }
+
+} // namespace variables
 } // namespace ioh::problem::transformation

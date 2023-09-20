@@ -7,5 +7,3 @@ and mkdir build/
 and cd build/
 and cmake ..
 and make install
-
-ln -fs (pwd)/static/cec_transformations build/tests/input_data

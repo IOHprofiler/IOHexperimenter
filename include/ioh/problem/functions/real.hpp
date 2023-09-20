@@ -170,6 +170,14 @@ inline double zakharov(const std::vector<double> &x) {
   return result;
 }
 
+/**
+ * @brief Computes the Schaffer F7 function value for the input vector.
+ *
+ * The Schaffer F7 function is a well-known benchmark function in the field of optimization. It is characterized by a rugged landscape with many local minima, making it a challenging problem for optimization algorithms. This function takes a vector input and computes the function value using a series of mathematical operations including square roots, sine functions, and power functions.
+ *
+ * @param y Input vector containing the coordinates in the domain space.
+ * @return The function value at the point specified by the input vector, which represents a point in the solution space of the Schaffer F7 function.
+ */
 inline double schaffer_F7(const std::vector<double> &y) {
   std::vector<double> z(y.size());
   double tmp;
@@ -197,6 +205,14 @@ inline double schaffer_F7(const std::vector<double> &y) {
   return result;
 }
 
+/**
+ * @brief Computes the HGBat function value for the input vector.
+ *
+ * The HGBat function is a complex, high-dimensional optimization problem characterized by a bat-shaped landscape. It is used to evaluate the performance of optimization algorithms. This function performs a series of mathematical operations including power and square root functions on the input vector to compute the function value.
+ *
+ * @param z Input vector containing the coordinates in the domain space.
+ * @return The function value at the point specified by the input vector, representing a point in the solution space of the HGBat function.
+ */
 inline double hgbat(const std::vector<double> &z) {
   std::vector<double> z_copy(z);
 
@@ -216,6 +232,14 @@ inline double hgbat(const std::vector<double> &z) {
   return result;
 }
 
+/**
+ * @brief Computes the Bent Cigar function value for the input vector.
+ *
+ * The Bent Cigar function is a unimodal function used in optimization problems. It is characterized by a narrow, curved valley. The function is known for its steepness and is used to test the performance of optimization algorithms in locating the global minimum amidst steep gradients.
+ *
+ * @param z Input vector containing the coordinates in the domain space.
+ * @return The function value at the point specified by the input vector, representing a point in the solution space of the Bent Cigar function.
+ */
 inline double bent_cigar(const std::vector<double> &z)
 {
   static const auto condition = 1.0e6;
@@ -227,6 +251,14 @@ inline double bent_cigar(const std::vector<double> &z)
   return result;
 }
 
+/**
+ * @brief Computes the Katsuura function value for the input vector.
+ *
+ * The Katsuura function is a non-separable, scalable function used in optimization problems. It is characterized by a large number of local minima and a single global minimum, making it a challenging problem for optimization algorithms. This function performs a series of mathematical operations including power and trigonometric functions on the input vector to compute the function value.
+ *
+ * @param z Input vector containing the coordinates in the domain space.
+ * @return The function value at the point specified by the input vector, representing a point in the solution space of the Katsuura function.
+ */
 inline double katsuura(const std::vector<double> &z) {
   double tmp3 = std::pow(static_cast<double>(z.size()), 1.2);
 
@@ -247,6 +279,14 @@ inline double katsuura(const std::vector<double> &z) {
   return result;
 }
 
+/**
+ * @brief Computes the Ackley function value for the input vector.
+ *
+ * The Ackley function is a widely used benchmark function in optimization, characterized by a nearly flat outer region and a large hole at the centre. The function is known for its complex oscillating behavior, which is used to evaluate the performance of optimization algorithms in navigating complex landscapes.
+ *
+ * @param z Input vector containing the coordinates in the domain space.
+ * @return The function value at the point specified by the input vector, representing a point in the solution space of the Ackley function.
+ */
 inline double ackley(const std::vector<double> &z) {
   const double sum1 =
       z.empty() ? 0.0
@@ -266,6 +306,14 @@ inline double ackley(const std::vector<double> &z) {
   return result;
 }
 
+/**
+ * @brief Computes the Schwefel function value for the input vector.
+ *
+ * The Schwefel function is a complex, non-linear, multimodal function characterized by a large number of local minima, making it a challenging problem for optimization algorithms. This function performs a series of mathematical operations including sine functions and power functions on the input vector to compute the function value.
+ *
+ * @param z Input vector containing the coordinates in the domain space.
+ * @return The function value at the point specified by the input vector, representing a point in the solution space of the Schwefel function.
+ */
 inline double schwefel(const std::vector<double> &z) {
   std::vector<double> z_copy(z);
 
@@ -293,24 +341,15 @@ inline double schwefel(const std::vector<double> &z) {
   return result;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @brief Computes the HappyCat function value for the input vector.
+ *
+ * The HappyCat function is a non-convex function used in optimization problems. It has a bowl-shaped surface with a global minimum.
+ * This implementation calculates the HappyCat function value given a vector of input values.
+ *
+ * @param z Input vector containing the coordinates in the domain space.
+ * @return The function value at the point specified by the input vector.
+ */
 inline double happycat(const std::vector<double> &z)
 {
   const double alpha = 1.0 / 8.0;
@@ -329,6 +368,15 @@ inline double happycat(const std::vector<double> &z)
   return f;
 }
 
+/**
+ * @brief Computes the Griewank-Rosenbrock function value for the input vector.
+ *
+ * The Griewank-Rosenbrock function is a complex, multimodal function often used in optimization problem testing. It combines characteristics of both the Griewank and Rosenbrock functions.
+ * This function evaluates the Griewank-Rosenbrock function at a point in the domain space specified by the input vector.
+ *
+ * @param z Input vector containing the coordinates in the domain space.
+ * @return The function value at the point specified by the input vector.
+ */
 inline double grie_rosen(const std::vector<double> &z)
 {
   std::vector<double> z_copy(z);
@@ -352,6 +400,15 @@ inline double grie_rosen(const std::vector<double> &z)
   return f;
 }
 
+/**
+ * @brief Computes the Ellips function value for the input vector.
+ *
+ * The Ellips function is a scalable function used in optimization problems, characterized by its elliptic contours. It is used to test the performance of optimization algorithms, especially in high-dimensional spaces.
+ * This function calculates the Ellips function value at a point specified by the input vector.
+ *
+ * @param z Input vector containing the coordinates in the domain space.
+ * @return The function value at the point specified by the input vector.
+ */
 inline double ellips(const std::vector<double> &z)
 {
   constexpr double BASE = 10.0;
@@ -366,6 +423,15 @@ inline double ellips(const std::vector<double> &z)
   return result;
 }
 
+/**
+ * @brief Computes the Discus function value for the input vector.
+ *
+ * The Discus function is a unimodal function used in optimization problems. It is characterized by a very steep descent towards the global minimum, which is surrounded by a flat area.
+ * This function calculates the Discus function value at a point specified by the input vector.
+ *
+ * @param z Input vector containing the coordinates in the domain space.
+ * @return The function value at the point specified by the input vector.
+ */
 inline double discus(const std::vector<double> &z)
 {
   static const auto condition = 1.0e6;
@@ -378,6 +444,18 @@ inline double discus(const std::vector<double> &z)
   return value;
 }
 
+/**
+ * @brief Computes the Escaffer6 function value for the input vector.
+ *
+ * The Escaffer6 function, also known as the Expanded Scaffer's F6 function, is a non-convex function characterized by a large number of local minima, making it a challenging problem for optimization algorithms. This implementation also includes transformations such as scaling and rotation to further complicate the optimization landscape.
+ *
+ * @param x Input vector containing the coordinates in the domain space.
+ * @param f Reference to a double where the function value will be stored.
+ * @param Os Transformation vector used in the function computation.
+ * @param Mr Rotation matrix used in the function computation.
+ * @param s_flag Scaling flag used in the transformation.
+ * @param r_flag Rotation flag used in the transformation.
+ */
 inline void escaffer6(const std::vector<double> &x, double &f,
                            const std::vector<double> &Os,
                            const std::vector<std::vector<double>> &Mr,
@@ -385,7 +463,7 @@ inline void escaffer6(const std::vector<double> &x, double &f,
   std::vector<double> z(x.size());
   std::vector<double> y(x.size());
 
-  ioh::problem::transformation::scale_and_rotate(x, z, y, Os, Mr, 1.0, s_flag, r_flag);
+  ioh::problem::transformation::variables::scale_and_rotate(x, z, y, Os, Mr, 1.0, s_flag, r_flag);
 
   f = 0.0;
 
@@ -404,6 +482,18 @@ inline void escaffer6(const std::vector<double> &x, double &f,
   f += 0.5 + (temp1 - 0.5) / (temp2 * temp2);
 }
 
+/**
+ * @brief Computes the Griewank function value for the input vector.
+ *
+ * The Griewank function is a non-convex function often used in the evaluation of optimization algorithms. It is known for its large search space and numerous local minima, which pose a challenge for optimization algorithms. This implementation includes transformations such as scaling and rotation.
+ *
+ * @param x Input vector containing the coordinates in the domain space.
+ * @param f Reference to a double where the function value will be stored.
+ * @param Os Transformation vector used in the function computation.
+ * @param Mr Rotation matrix used in the function computation.
+ * @param s_flag Scaling flag used in the transformation.
+ * @param r_flag Rotation flag used in the transformation.
+ */
 inline void griewank(const std::vector<double> &x, double &f,
                           const std::vector<double> &Os,
                           const std::vector<std::vector<double>> &Mr,
@@ -411,7 +501,7 @@ inline void griewank(const std::vector<double> &x, double &f,
   std::vector<double> z(x.size());
   std::vector<double> y(x.size());
 
-  ioh::problem::transformation::scale_and_rotate(x, z, y, Os, Mr, 600.0 / 100.0, s_flag, r_flag);
+  ioh::problem::transformation::variables::scale_and_rotate(x, z, y, Os, Mr, 600.0 / 100.0, s_flag, r_flag);
 
   double s =
       std::accumulate(z.begin(), z.end(), 0.0,
@@ -425,6 +515,14 @@ inline void griewank(const std::vector<double> &x, double &f,
   f = 1.0 + s / 4000.0 - p;
 }
 
+/**
+ * @brief Computes the hf02 function value for the input vector.
+ *
+ * The hf02 function is a hybrid function that combines several benchmark functions to create a complex, multimodal landscape. It is used to evaluate the performance of optimization algorithms in navigating complex, high-dimensional spaces.
+ *
+ * @param prepared_y Input vector containing the coordinates in the domain space.
+ * @return The function value at the point specified by the input vector.
+ */
 inline double hf02(const std::vector<double> &prepared_y)
 {
   int nx = prepared_y.size();
@@ -462,6 +560,14 @@ inline double hf02(const std::vector<double> &prepared_y)
   return f;
 }
 
+/**
+ * @brief Computes the hf10 function value for the input vector.
+ *
+ * The hf10 function is a hybrid function that combines several benchmark functions to create a complex, multimodal landscape. It is used to evaluate the performance of optimization algorithms in navigating complex, high-dimensional spaces. This function integrates various benchmark functions including hgbat, katsuura, ackley, rastrigin, schwefel, and schaffer_F7.
+ *
+ * @param prepared_y Input vector containing the coordinates in the domain space.
+ * @return The function value at the point specified by the input vector.
+ */
 inline double hf10(const std::vector<double> &prepared_y) {
   const int cf_num = 6;
   std::vector<double> fit(cf_num, 0.0);
@@ -504,6 +610,14 @@ inline double hf10(const std::vector<double> &prepared_y) {
   return f;
 }
 
+/**
+ * @brief Computes the hf06 function value for the input vector.
+ *
+ * The hf06 function is another hybrid function that integrates several benchmark functions to create a challenging optimization landscape characterized by multiple local minima and a global minimum. It is utilized to test the robustness and efficiency of optimization algorithms.
+ *
+ * @param prepared_y Input vector containing the coordinates in the domain space.
+ * @return The function value at the point specified by the input vector.
+ */
 inline double hf06(const std::vector<double> &prepared_y)
 {
   const int cf_num = 5;
@@ -546,6 +660,18 @@ inline double hf06(const std::vector<double> &prepared_y)
   return f;
 }
 
+/**
+ * @brief Computes the cf_cal function value for the input vector.
+ *
+ * The cf_cal function is a helper function used in the computation of composite functions in optimization problems. It calculates the weighted sum of several function values, which is a common approach in creating hybrid functions to test optimization algorithms.
+ *
+ * @param x Input vector containing the coordinates in the domain space.
+ * @param Os Transformation vectors used in the function computation.
+ * @param delta Delta values used in the function computation.
+ * @param bias Bias values used in the function computation.
+ * @param fit Vector to store individual function values.
+ * @return The weighted sum of function values.
+ */
 inline double cf_cal(const std::vector<double> &x,
                      const std::vector<std::vector<double>> &Os,
                      const std::vector<double> &delta,
@@ -592,6 +718,17 @@ inline double cf_cal(const std::vector<double> &x,
   return f;
 }
 
+/**
+ * @brief Computes the cf01 function value for the input vector.
+ *
+ * The cf01 function is a composite function that integrates several benchmark functions with transformations such as scaling and rotation. It is used to create a complex optimization landscape to evaluate the performance of optimization algorithms.
+ *
+ * @param x Input vector containing the coordinates in the domain space.
+ * @param Os Transformation vectors used in the function computation.
+ * @param Mr Rotation matrices used in the function computation.
+ * @param r_flag Rotation flag used in the transformation.
+ * @return The function value at the point specified by the input vector.
+ */
 inline double cf01(
   const std::vector<double> &x,
   const std::vector<std::vector<double>> &Os,
@@ -607,31 +744,31 @@ inline double cf01(
 
   std::vector<double> rosenbrock_z(nx);
   std::vector<double> rosenbrock_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, rosenbrock_z, rosenbrock_y, Os[0], Mr[0], 2.048 / 100.0, 1, r_flag);
+  ioh::problem::transformation::variables::scale_and_rotate(x, rosenbrock_z, rosenbrock_y, Os[0], Mr[0], 2.048 / 100.0, 1, r_flag);
   fit[0] = rosenbrock(rosenbrock_z);
   fit[0] = 10000 * fit[0] / 1e+4;
 
   std::vector<double> ellips_z(nx);
   std::vector<double> ellips_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, ellips_z, ellips_y, Os[1], Mr[1], 1.0, 1, 0);
+  ioh::problem::transformation::variables::scale_and_rotate(x, ellips_z, ellips_y, Os[1], Mr[1], 1.0, 1, 0);
   fit[1] = ellips(ellips_z);
   fit[1] = 10000 * fit[1] / 1e+10;
 
   std::vector<double> bent_cigar_z(nx);
   std::vector<double> bent_cigar_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, bent_cigar_z, bent_cigar_y, Os[2], Mr[2], 1.0, 1, r_flag);
+  ioh::problem::transformation::variables::scale_and_rotate(x, bent_cigar_z, bent_cigar_y, Os[2], Mr[2], 1.0, 1, r_flag);
   fit[2] = bent_cigar(bent_cigar_z);
   fit[2] = 10000 * fit[2] / 1e+30;
 
   std::vector<double> discus_z(nx);
   std::vector<double> discus_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, discus_z, discus_y, Os[3], Mr[3], 1.0, 1, r_flag);
+  ioh::problem::transformation::variables::scale_and_rotate(x, discus_z, discus_y, Os[3], Mr[3], 1.0, 1, r_flag);
   fit[3] = discus(discus_z);
   fit[3] = 10000 * fit[3] / 1e+10;
 
   std::vector<double> ellips_2_z(nx);
   std::vector<double> ellips_2_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, ellips_2_z, ellips_2_y, Os[4], Mr[4], 1.0, 1, 0);
+  ioh::problem::transformation::variables::scale_and_rotate(x, ellips_2_z, ellips_2_y, Os[4], Mr[4], 1.0, 1, 0);
   fit[4] = ellips(ellips_2_z);
   fit[4] = 10000 * fit[4] / 1e+10;
 
@@ -639,6 +776,17 @@ inline double cf01(
   return f;
 }
 
+/**
+ * @brief Computes the cf02 function value for the input vector.
+ *
+ * Similar to cf01, the cf02 function is a composite function that integrates several benchmark functions with transformations to create a challenging optimization landscape. It is utilized to test the performance of optimization algorithms in complex, high-dimensional spaces.
+ *
+ * @param x Input vector containing the coordinates in the domain space.
+ * @param Os Transformation vectors used in the function computation.
+ * @param Mr Rotation matrices used in the function computation.
+ * @param r_flag Rotation flag used in the transformation.
+ * @return The function value at the point specified by the input vector.
+ */
 inline double cf02(const std::vector<double> &x,
           const std::vector<std::vector<double>> &Os,
           const std::vector<std::vector<std::vector<double>>> &Mr,
@@ -652,24 +800,34 @@ inline double cf02(const std::vector<double> &x,
 
   std::vector<double> schwefel_z(nx);
   std::vector<double> schwefel_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, schwefel_z, schwefel_y, Os[0], Mr[0], 1000.0 / 100.0, 1, 0);
+  ioh::problem::transformation::variables::scale_and_rotate(x, schwefel_z, schwefel_y, Os[0], Mr[0], 1000.0 / 100.0, 1, 0);
   fit[0] = schwefel(schwefel_z);
 
   std::vector<double> rastrigin_z(nx);
   std::vector<double> rastrigin_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, rastrigin_z, rastrigin_y, Os[1], Mr[1], 5.12 / 100.0, 1, r_flag);
+  ioh::problem::transformation::variables::scale_and_rotate(x, rastrigin_z, rastrigin_y, Os[1], Mr[1], 5.12 / 100.0, 1, r_flag);
   fit[1] = rastrigin(rastrigin_z);
 
   std::vector<double> hgbat_z(nx);
   std::vector<double> hgbat_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, hgbat_z, hgbat_y, Os[2], Mr[2], 5.0 / 100.0, 1, r_flag);
+  ioh::problem::transformation::variables::scale_and_rotate(x, hgbat_z, hgbat_y, Os[2], Mr[2], 5.0 / 100.0, 1, r_flag);
   fit[2] = hgbat(hgbat_z);
 
   double f = cf_cal(x, Os, delta, bias, fit);
   return f;
 }
 
-
+/**
+ * @brief Computes the cf06 function value for the input vector.
+ *
+ * The cf06 function is a composite function that combines several benchmark functions with transformations to create a complex optimization landscape. It is used to evaluate the performance of optimization algorithms in navigating complex, high-dimensional spaces.
+ *
+ * @param x Input vector containing the coordinates in the domain space.
+ * @param Os Transformation vectors used in the function computation.
+ * @param Mr Rotation matrices used in the function computation.
+ * @param r_flag Rotation flag used in the transformation.
+ * @return The function value at the point specified by the input vector.
+ */
 inline double cf06(const std::vector<double> &x,
           const std::vector<std::vector<double>> &Os,
           const std::vector<std::vector<std::vector<double>>> &Mr,
@@ -686,7 +844,7 @@ inline double cf06(const std::vector<double> &x,
 
   std::vector<double> schwefel_z(nx);
   std::vector<double> schwefel_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, schwefel_z, schwefel_y, Os[1], Mr[1], 1000.0 / 100.0, 1, r_flag);
+  ioh::problem::transformation::variables::scale_and_rotate(x, schwefel_z, schwefel_y, Os[1], Mr[1], 1000.0 / 100.0, 1, r_flag);
   fit[1] = schwefel(schwefel_z);
 
   griewank(x, fit[2], Os[2], Mr[2], 1, r_flag);
@@ -694,13 +852,13 @@ inline double cf06(const std::vector<double> &x,
 
   std::vector<double> rosenbrock_z(nx);
   std::vector<double> rosenbrock_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, rosenbrock_z, rosenbrock_y, Os[3], Mr[3],
+  ioh::problem::transformation::variables::scale_and_rotate(x, rosenbrock_z, rosenbrock_y, Os[3], Mr[3],
                    2.048 / 100.0, 1, r_flag);
   fit[3] = rosenbrock(rosenbrock_z);
 
   std::vector<double> rastrigin_z(nx);
   std::vector<double> rastrigin_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, rastrigin_z, rastrigin_y, Os[4], Mr[4], 5.12 / 100.0, 1, r_flag);
+  ioh::problem::transformation::variables::scale_and_rotate(x, rastrigin_z, rastrigin_y, Os[4], Mr[4], 5.12 / 100.0, 1, r_flag);
   fit[4] = rastrigin(rastrigin_z);
   fit[4] *= 10000 / 1e+3;
 
@@ -708,6 +866,17 @@ inline double cf06(const std::vector<double> &x,
   return f;
 }
 
+/**
+ * @brief Computes the cf07 function value for the input vector.
+ *
+ * The cf07 function is a composite function that integrates several benchmark functions with transformations to create a challenging optimization landscape. It is utilized to test the robustness and efficiency of optimization algorithms in complex, high-dimensional spaces.
+ *
+ * @param x Input vector containing the coordinates in the domain space.
+ * @param Os Transformation vectors used in the function computation.
+ * @param Mr Rotation matrices used in the function computation.
+ * @param r_flag Rotation flag used in the transformation.
+ * @return The function value at the point specified by the input vector.
+ */
 inline double cf07(const std::vector<double> &x,
           const std::vector<std::vector<double>> &Os,
           const std::vector<std::vector<std::vector<double>>> &Mr,
@@ -720,19 +889,19 @@ inline double cf07(const std::vector<double> &x,
 
   std::vector<double> hgbat_z(nx);
   std::vector<double> hgbat_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, hgbat_z, hgbat_y, Os[0], Mr[0], 5.0 / 100.0, 1, r_flag);
+  ioh::problem::transformation::variables::scale_and_rotate(x, hgbat_z, hgbat_y, Os[0], Mr[0], 5.0 / 100.0, 1, r_flag);
   fit[0] = hgbat(hgbat_z);
   fit[0] *= 10000 / 1000;
 
   std::vector<double> rastrigin_z(nx);
   std::vector<double> rastrigin_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, rastrigin_z, rastrigin_y, Os[1], Mr[1], 5.12 / 100.0, 1, r_flag);
+  ioh::problem::transformation::variables::scale_and_rotate(x, rastrigin_z, rastrigin_y, Os[1], Mr[1], 5.12 / 100.0, 1, r_flag);
   fit[1] = rastrigin(rastrigin_z);
   fit[1] *= 10000 / 1e+3;
 
   std::vector<double> schwefel_z(nx);
   std::vector<double> schwefel_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, schwefel_z, schwefel_y, Os[2], Mr[2], 1000.0 / 100.0, 1, r_flag);
+  ioh::problem::transformation::variables::scale_and_rotate(x, schwefel_z, schwefel_y, Os[2], Mr[2], 1000.0 / 100.0, 1, r_flag);
   fit[2] = schwefel(schwefel_z);
   fit[2] *= 10000 / 4e+3;
 
@@ -741,7 +910,7 @@ inline double cf07(const std::vector<double> &x,
 
   std::vector<double> ellips_z(nx);
   std::vector<double> ellips_y(nx);
-  ioh::problem::transformation::scale_and_rotate(x, ellips_z, ellips_y, Os[4], Mr[4], 1.0, 1, r_flag);
+  ioh::problem::transformation::variables::scale_and_rotate(x, ellips_z, ellips_y, Os[4], Mr[4], 1.0, 1, r_flag);
   fit[4] = ellips(ellips_z);
   fit[4] *= 10000 / 1e+10;
 

@@ -6,25 +6,23 @@
 
 namespace ioh::problem
 {
-    class CEC : public RealSingleObjective
-    {
+    /// \brief The CEC class represents a problem in the CEC benchmark suite.
+    /// It inherits from the RealSingleObjective class and contains methods to load transformation data from static files and apply transformations to problem variables and objectives.
+    class CEC : public RealSingleObjective    {
     public:
 
-        int objective_shift_;
-        std::vector<std::vector<double>> variables_shifts_;
-        std::vector<int> input_permutation_;
-        std::vector<std::vector<std::vector<double>>> linear_transformations_;
+        int objective_shift_; ///< The shift value applied to the objective function to transform it.
+        std::vector<std::vector<double>> variables_shifts_; ///< A collection of shift values applied to the problem variables during transformation.
+        std::vector<int> input_permutation_; ///< A permutation vector applied to the input variables during transformation.
+        std::vector<std::vector<std::vector<double>>> linear_transformations_; ///< A collection of matrices representing linear transformations applied to the problem variables.
 
         /**
-         * @brief Construct a new CEC object.
+         * @brief Constructs a new CEC problem instance.
          *
-         * @param problem_id The id of the problem (should be unique)
-         * @param instance The instance of the problem (ignored for cec for now)
-         *                 IGNORED, because the instance id is used as a random seed in BBOB problems,
-         *                 but we employ no randomness in CEC,
-         *                 since we take all transformation data from static files
-         * @param n_variables the dimension of the problem (the size of the search space, how many x varables)
-         * @param name the name of the problem (should be unique)
+         * @param problem_id Unique identifier for the problem.
+         * @param instance The instance number of the problem (currently ignored for CEC problems).
+         * @param n_variables The number of variables in the problem, representing the dimensionality of the search space.
+         * @param name A unique name for the problem.
          */
         CEC
         (
@@ -54,6 +52,7 @@ namespace ioh::problem
             this->optimum_.x.assign(this->variables_shifts_[0].begin(), this->variables_shifts_[0].begin() + n_variables);
         }
 
+        /// \brief Sets the optimum value for the problem based on the current transformation data.
         void set_optimum()
         {
             const int problem_id = this->meta_data_.problem_id;
@@ -71,13 +70,19 @@ namespace ioh::problem
             this->optimum_.y = (*this)(this->optimum_.x);
         }
 
+        /**
+         * @brief Transforms the objective function value using the current objective shift value.
+         *
+         * @param y The original objective function value.
+         * @return The transformed objective function value.
+         */
         double transform_objectives(const double y) override
         {
             auto&& transformed = y + this->objective_shift_;
             return transformed;
         }
 
-        //! Handler for reading all static data
+        /// \brief Loads the transformation data from static files based on the problem ID and the number of variables.
         void load_transformation_data()
         {
             const int n_variables = this->meta_data_.n_variables;
@@ -154,6 +159,11 @@ namespace ioh::problem
             }
         }
 
+        /**
+         * @brief Loads the shuffle data from a file and stores it in the input_permutation_ member variable.
+         *
+         * @param shuffle_data_filepath The path to the file containing the shuffle data.
+         */
         void load_shuffle_data(const std::filesystem::path& shuffle_data_filepath)
         {
             std::ifstream file(shuffle_data_filepath); // Open the file
@@ -175,6 +185,11 @@ namespace ioh::problem
             }
         }
 
+        /**
+         * @brief Loads the objective shift data from a file and stores it in the objective_shift_ member variable.
+         *
+         * @param F_i_star_filepath The path to the file containing the objective shift data.
+         */
         void load_objective_shift(const std::filesystem::path& F_i_star_filepath)
         {
             const unsigned int cec_function_identifier = this->meta_data_.problem_id - 1000;
@@ -208,6 +223,11 @@ namespace ioh::problem
             throw std::out_of_range("CEC function identifier out of range.");
         }
 
+        /**
+         * @brief Loads the linear transformation data from a file and stores it in the linear_transformations_ member variable.
+         *
+         * @param M_filepath The path to the file containing the linear transformation data.
+         */
         void load_linear_transformation(const std::filesystem::path& M_filepath)
         {
             const size_t n_variables = this->meta_data_.n_variables;
@@ -253,6 +273,11 @@ namespace ioh::problem
             }
         }
 
+        /**
+         * @brief Loads the variables shift data from a file and stores it in the variables_shifts_ member variable.
+         *
+         * @param shift_data_filepath The path to the file containing the variables shift data.
+         */
         void load_variables_shift(const std::filesystem::path& shift_data_filepath)
         {
             const int n_variables = this->meta_data_.n_variables;
@@ -292,10 +317,10 @@ namespace ioh::problem
     };
 
     /**
-     * @brief CRTP class for CEC problems. Inherit from this class when defining new CEC problems.
-     * This is needed for storing stuff in the hash maps.
+     * @brief A template class for creating new CEC problems.
+     * Inherit from this class when defining new CEC problems to enable automatic registration in hash maps.
      *
-     * @tparam ProblemType The New BBOB problem class
+     * @tparam ProblemType The class representing the new CEC problem.
      */
     template <typename ProblemType>
     struct CECProblem : public CEC,
@@ -303,6 +328,6 @@ namespace ioh::problem
                         AutomaticProblemRegistration<ProblemType, RealSingleObjective>
     {
     public:
-        using CEC::CEC;
+        using CEC::CEC; ///< Inherits the constructor of the CEC class.
     };
 } // namespace ioh::problem

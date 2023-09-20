@@ -4,16 +4,22 @@
 
 namespace ioh::problem::cec
 {
+    /// \brief HybridFunction3 class that inherits from CECProblem.
     class HybridFunction3 final : public CECProblem<HybridFunction3>
     {
     protected:
-
+        /// \brief Evaluates the function with the transformed variables.
+        /// \param prepared_y The transformed variables.
+        /// \return The evaluation result.
         double evaluate(const std::vector<double>& prepared_y) override
         {
             double f = hf06(prepared_y);
             return f;
         }
 
+        /// \brief Transforms the input variables.
+        /// \param x The input variables.
+        /// \return The transformed variables.
         std::vector<double> transform_variables(std::vector<double> x) override
         {
             auto&& Os = this->variables_shifts_[0];
@@ -43,7 +49,7 @@ namespace ioh::problem::cec
 
             std::vector<double> z(x.size());
             std::vector<double> y(x.size());
-            ioh::problem::transformation::scale_and_rotate(x, z, y, Os, Mr, 1.0, 1, 1);
+            ioh::problem::transformation::variables::scale_and_rotate(x, z, y, Os, Mr, 1.0, 1, 1);
 
             for (size_t i = 0; i < x.size(); ++i) {
                 y[i] = z[S[i] - 1];
@@ -52,27 +58,27 @@ namespace ioh::problem::cec
             std::vector<double> katsuura_x(y.begin() + G[0], y.begin() + G[0] + G_nx[0]);
             std::vector<double> katsuura_z(katsuura_x.size());
             std::vector<double> katsuura_y(katsuura_x.size());
-            ioh::problem::transformation::scale_and_rotate(katsuura_x, katsuura_z, katsuura_y, Os, Mr, 5.0 / 100.0, 0, 0);
+            ioh::problem::transformation::variables::scale_and_rotate(katsuura_x, katsuura_z, katsuura_y, Os, Mr, 5.0 / 100.0, 0, 0);
 
             std::vector<double> happycat_x(y.begin() + G[1], y.begin() + G[1] + G_nx[1]);
             std::vector<double> happycat_z(happycat_x.size());
             std::vector<double> happycat_y(happycat_x.size());
-            ioh::problem::transformation::scale_and_rotate(happycat_x, happycat_z, happycat_y, Os, Mr, 5.0 / 100.0, 0, 0);
+            ioh::problem::transformation::variables::scale_and_rotate(happycat_x, happycat_z, happycat_y, Os, Mr, 5.0 / 100.0, 0, 0);
 
             std::vector<double> grie_rosen_x(y.begin() + G[2], y.begin() + G[2] + G_nx[2]);
             std::vector<double> grie_rosen_z(grie_rosen_x.size());
             std::vector<double> grie_rosen_y(grie_rosen_x.size());
-            ioh::problem::transformation::scale_and_rotate(grie_rosen_x, grie_rosen_z, grie_rosen_y, Os, Mr, 5.0 / 100.0, 0, 0);
+            ioh::problem::transformation::variables::scale_and_rotate(grie_rosen_x, grie_rosen_z, grie_rosen_y, Os, Mr, 5.0 / 100.0, 0, 0);
 
             std::vector<double> schwefel_x(y.begin() + G[3], y.begin() + G[3] + G_nx[3]);
             std::vector<double> schwefel_z(schwefel_x.size());
             std::vector<double> schwefel_y(schwefel_x.size());
-            ioh::problem::transformation::scale_and_rotate(schwefel_x, schwefel_z, schwefel_y, Os, Mr, 1000.0 / 100.0, 0, 0);
+            ioh::problem::transformation::variables::scale_and_rotate(schwefel_x, schwefel_z, schwefel_y, Os, Mr, 1000.0 / 100.0, 0, 0);
 
             std::vector<double> ackley_x(y.begin() + G[4], y.begin() + G[4] + G_nx[4]);
             std::vector<double> ackley_z(ackley_x.size());
             std::vector<double> ackley_y(ackley_x.size());
-            ioh::problem::transformation::scale_and_rotate(ackley_x, ackley_z, ackley_y, Os, Mr, 1.0, 0, 0);
+            ioh::problem::transformation::variables::scale_and_rotate(ackley_x, ackley_z, ackley_y, Os, Mr, 1.0, 0, 0);
 
             std::vector<double> prepared_y;
 
@@ -94,10 +100,14 @@ namespace ioh::problem::cec
         }
 
     public:
-
+        /// \brief Meta problem ID.
         inline static const int meta_problem_id = 1008;
+        /// \brief Meta name of the problem.
         inline static const std::string meta_name = "CEC_HybridFunction3";
 
+        /// \brief Constructor of the HybridFunction3 class.
+        /// \param instance The instance number of the problem.
+        /// \param n_variables The number of variables.
         HybridFunction3(const int instance, const int n_variables) :
             CECProblem(meta_problem_id, instance, n_variables, meta_name)
         {
