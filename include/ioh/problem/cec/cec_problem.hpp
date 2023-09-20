@@ -87,14 +87,7 @@ namespace ioh::problem
             const std::string F_i_star_suffix_string = "cec_transformations/F_i_star.txt";
             try
             {
-                const char* ioh_resources_cstr = std::getenv("IOH_RESOURCES");
-                if (ioh_resources_cstr == nullptr)
-                {
-                    throw std::runtime_error("Point the environment variable IOH_RESOURCES to the static/ folder of IOHexperimenter.");
-                }
-
-                std::string ioh_resources_path(ioh_resources_cstr);
-                const auto F_i_star_filepath = ioh_resources_path + "/" + F_i_star_suffix_string;
+                const auto F_i_star_filepath = common::file::utils::find_static_file(F_i_star_suffix_string);
                 load_objective_shift(F_i_star_filepath);
             }
             catch (const std::runtime_error& e)
@@ -109,14 +102,7 @@ namespace ioh::problem
             std::string M_suffix_string = M_suffix_stream.str();
             try
             {
-                const char* ioh_resources_cstr = std::getenv("IOH_RESOURCES");
-                if (ioh_resources_cstr == nullptr)
-                {
-                    throw std::runtime_error("Point the environment variable IOH_RESOURCES to the static/ folder of IOHexperimenter.");
-                }
-
-                std::string ioh_resources_path(ioh_resources_cstr);
-                const auto M_filepath = ioh_resources_path + "/" + M_suffix_string;
+                const auto M_filepath = common::file::utils::find_static_file(M_suffix_string);
                 load_linear_transformation(M_filepath);
             }
             catch (const std::runtime_error& e)
@@ -132,14 +118,7 @@ namespace ioh::problem
 
             try
             {
-                const char* ioh_resources_cstr = std::getenv("IOH_RESOURCES");
-                if (ioh_resources_cstr == nullptr)
-                {
-                    throw std::runtime_error("Point the environment variable IOH_RESOURCES to the static/ folder of IOHexperimenter.");
-                }
-
-                std::string ioh_resources_path(ioh_resources_cstr);
-                const auto shift_data_filepath = ioh_resources_path + "/" + shift_data_suffix_string;
+                const auto shift_data_filepath = common::file::utils::find_static_file(shift_data_suffix_string);
                 load_variables_shift(shift_data_filepath);
             }
             catch (const std::runtime_error& e)
@@ -157,14 +136,7 @@ namespace ioh::problem
 
                 try
                 {
-                    const char* ioh_resources_cstr = std::getenv("IOH_RESOURCES");
-                    if (ioh_resources_cstr == nullptr)
-                    {
-                        throw std::runtime_error("Point the environment variable IOH_RESOURCES to the static/ folder of IOHexperimenter.");
-                    }
-
-                    std::string ioh_resources_path(ioh_resources_cstr);
-                    const auto shuffle_data_filepath = ioh_resources_path + "/" + shuffle_data_suffix_string;
+                    const auto shuffle_data_filepath = common::file::utils::find_static_file(shuffle_data_suffix_string);
                     load_shuffle_data(shuffle_data_filepath);
                 }
                 catch (const std::runtime_error& e)
@@ -210,6 +182,8 @@ namespace ioh::problem
             std::ifstream file(F_i_star_filepath); // Open the file
             if (!file.is_open())
             {
+                // ASSUME: This code will never be reached,
+                // because common::file::utils::find_static_file only returns existing paths.
                 throw std::runtime_error("Static path: \"" + F_i_star_filepath.string() + "\"");
             }
 

@@ -4,16 +4,18 @@
 
 TEST_F(BaseTest, CECProblem)
 {
-    const char* ioh_resources_cstr = std::getenv("IOH_RESOURCES");
-    if (ioh_resources_cstr == nullptr)
+    std::ifstream infile;
+    try
     {
-        LOG("Could not load cec_problem.in. Point the environment variable IOH_RESOURCES to the static/ folder of IOHexperimenter.");
+        const auto file_path = ioh::common::file::utils::find_static_file("cec_problem.in");
+        infile.open(file_path.c_str());
+        ASSERT_TRUE(infile.is_open());
+    }
+    catch (const std::runtime_error& e)
+    {
+        LOG("Could not load cec_problem.in. " << e.what());
         std::exit(EXIT_FAILURE);
     }
-    std::string ioh_resources_path(ioh_resources_cstr);
-    const auto file_name = ioh_resources_path + "/cec_problem.in";
-    std::ifstream infile(file_name.c_str());
-    ASSERT_TRUE(infile.is_open());
 
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC>::instance();
     std::string s;

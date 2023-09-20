@@ -81,19 +81,13 @@ namespace ioh::common::file
          */
         inline fs::path get_static_root()
         {
-            const auto static_root = fs::path("IOHexperimenter") / fs::path("static");
-            fs::path root;
-            for (const auto &e : fs::current_path())
+            const char* env_var = std::getenv("IOH_RESOURCES");
+            if (env_var == nullptr)
             {
-                root /= e;
-                if (exists(root / static_root))
-                {
-                    root = root / static_root;
-                    return root;
-                }
+                throw std::runtime_error("Point the environment variable IOH_RESOURCES to the static/ folder of IOHexperimenter.");
             }
-            IOH_DBG(warning, "could static root");
-            return {};
+
+            return fs::path(env_var);
         }
 
 
@@ -109,12 +103,11 @@ namespace ioh::common::file
 
             if (!exists(file))
             {
-                IOH_DBG(warning, "could not find file: " << filename);
-                return {};
+                IOH_DBG(warning, "Static path: \"" + file.string() + "\"");
+                throw std::runtime_error("Static path: \"" + file.string() + "\"");
             }
             return file;
         }
-
 
         //! Helper type for detecting shared ptr of which the element type can be constructed from a string
         template <typename T>
