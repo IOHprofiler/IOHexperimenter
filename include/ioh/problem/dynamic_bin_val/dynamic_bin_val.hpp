@@ -37,7 +37,7 @@ namespace ioh::problem
 
         int timestep; /**< The current timestep in the dynamic binary value problem scenario. */
         std::vector<int> weights; /**< A vector of weights used in the evaluation of the problem. */
-        std::mt19937 g{12345};
+        std::mt19937 random_generator;
 
         /**
          * @brief Constructs a new instance of DynamicBinVal.
@@ -49,7 +49,8 @@ namespace ioh::problem
         (
             MetaData(10001, 1, "DynamicBinVal", n_variables, common::OptimizationType::MAX),
             Bounds<int>(n_variables, 0, 1)
-        )
+        ),
+        random_generator(instance)
         {
             if (n_variables == 1) { return; }
 
@@ -69,7 +70,7 @@ namespace ioh::problem
             this->timestep += 1;
 
             // Now permute the weights with each other uniformly at random
-            std::shuffle(this->weights.begin(), this->weights.end(), this->g);
+            std::shuffle(this->weights.begin(), this->weights.end(), this->random_generator);
 
             return this->timestep;
         }
