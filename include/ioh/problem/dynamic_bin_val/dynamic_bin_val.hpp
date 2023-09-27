@@ -36,7 +36,7 @@ namespace ioh::problem
     public:
 
         int timestep; /**< The current timestep in the dynamic binary value problem scenario. */
-        std::vector<int> weights; /**< A vector of weights used in the evaluation of the problem. */
+        std::vector<double> weights; /**< A vector of weights used in the evaluation of the problem. */
         std::mt19937 random_generator;
 
         /**
@@ -45,23 +45,23 @@ namespace ioh::problem
          * @param n_variables The dimension of the problem, representing the size of the search space and
          *                    indicating the number of variables in the problem.
          */
-        DynamicBinVal(const int instance, const int n_variables) : IntegerSingleObjective
-        (
-            MetaData(10001, 1, "DynamicBinVal", n_variables, common::OptimizationType::MAX),
-            Bounds<int>(n_variables, 0, 1)
-        ),
-        random_generator(instance)
+        DynamicBinVal(const int instance, const int n_variables) :
+            IntegerSingleObjective
+            (
+                MetaData(10001, 1, "DynamicBinVal", n_variables, common::OptimizationType::MAX),
+                Bounds<int>(n_variables, 0, 1)
+            ),
+            random_generator(instance)
         {
             if (n_variables == 1) { return; }
 
             this->timestep = 0;
 
-            // Initialize the weights vector with powers of two
+            // Initialize the weights vector with random numbers between 0 and 1
             this->weights.resize(n_variables);
-            this->weights[0] = 1;
-            for(int i = 1; i < n_variables; ++i)
+            for(int i = 0; i < n_variables; ++i)
             {
-                this->weights[i] = this->weights[i-1] * 2;
+                this->weights[i] = std::generate_canonical<double, 10>(this->random_generator);
             }
         }
 
@@ -69,8 +69,11 @@ namespace ioh::problem
         {
             this->timestep += 1;
 
-            // Now permute the weights with each other uniformly at random
-            std::shuffle(this->weights.begin(), this->weights.end(), this->random_generator);
+            // Reinitialize the weights with random numbers between 0 and 1 after shuffling
+            for(size_t i = 0; i < this->weights.size(); ++i)
+            {
+                this->weights[i] = std::generate_canonical<double, 10>(this->random_generator);
+            }
 
             return this->timestep;
         }
@@ -85,13 +88,13 @@ namespace ioh::problem
          */
         double evaluate(const std::vector<int> &x) override
         {
-            int value = 0; // Initialize value to 0 to calculate it based on the weights and x
+            double value = 0;
             for(size_t i = 0; i < x.size(); ++i)
             {
                 value += x[i] * this->weights[i];
             }
 
-            return static_cast<double>(value);
+            return value;
         }
     };
 } // namespace ioh::problem
