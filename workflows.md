@@ -423,3 +423,61 @@ Install the project...
 -- Installing: /usr/local/lib/cmake/ioh/ioh-config-version.cmake
 -- Installing: /usr/local/lib/cmake/ioh/ioh-targets.cmake
 ```
+
+```sh
+ssh mesu
+
+module add cmake/3.22
+module add gcc/11.2
+
+git clone git@github.com:IOHprofiler/IOHexperimenter.git
+git checkout dynamic-bin-val
+cd IOHexperimenter
+git submodule
+git submodule init
+git submodule update
+mkdir build
+cd build
+cmake ..
+```
+
+Using clang rather than gcc as a compiler:
+```sh
+module add cmake/3.22
+module add gcc/11.2
+module add LLVM/clang-llvm-10.0
+
+wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+sudo add-apt-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-10 main"
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 15CF4D18AF4F7421
+sudo apt update
+sudo apt install clang-10 lldb-10 lld-10
+
+sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-10 100
+sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-10 100
+sudo update-alternatives --config clang
+sudo update-alternatives --config clang++
+CC=clang CXX=clang++ cmake -DCMAKE_CXX_FLAGS="-stdlib=libc++" -DCMAKE_INSTALL_PREFIX=IOHexperimenter ..
+
+make install
+```
+
+```sh
+ssh mesu
+
+module add cmake/3.22
+module add gcc/11.2
+module add LLVM/clang-llvm-10.0
+
+git clone git@github.com:IOHprofiler/IOHexperimenter.git
+git checkout dynamic-bin-val
+cd IOHexperimenter
+git submodule
+git submodule init
+git submodule update
+mkdir build
+cd build
+CC=clang CXX=clang++ cmake -DCMAKE_CXX_FLAGS="-stdlib=libc++" -DCMAKE_INSTALL_PREFIX=IOHexperimenter ..
+
+make install
+```
