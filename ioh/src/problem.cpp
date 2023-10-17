@@ -223,11 +223,13 @@ void define_bounds(py::module &m, const std::string &name)
             )pbdoc"
 
              )
-        .def_property_readonly(
+        .def_property(
             "ub", [](const Class &c) { return py::array(c.ub.size(), c.ub.data()); },
+                  [](Class &c, const std::vector<T>& vec) { c.ub = vec;},
             "The upper bound (box constraint)")
-        .def_property_readonly(
+        .def_property(
             "lb", [](const Class &c) { return py::array(c.lb.size(), c.lb.data()); },
+                  [](Class &c, const std::vector<T>& vec) { c.lb = vec;},
             "The lower bound (box constraint)")
         .def("__repr__", &Class::repr)
         .def("compute_violation", &Class::compute_violation,
