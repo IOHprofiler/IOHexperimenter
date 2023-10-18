@@ -466,6 +466,7 @@ make install
 ssh mesu
 
 module add cmake/3.22
+module add conda3-2023.02
 module add gcc/11.2
 module add LLVM/clang-llvm-10.0
 
@@ -480,4 +481,27 @@ cd build
 CC=clang CXX=clang++ cmake -DCMAKE_CXX_FLAGS="-stdlib=libc++" -DCMAKE_INSTALL_PREFIX=IOHexperimenter ..
 
 make install
+```
+
+If clang does not work because of an error with "linker":
+```sh
+sudo apt install libc++-dev libc++abi-dev
+```
+
+```sh
+CC=clang CXX=clang++ cmake -DCMAKE_CXX_FLAGS="-stdlib=libc++" -DCMAKE_INSTALL_PREFIX=IOHexperimenter ..
+CC=clang CXX=clang++ pip install .
+```
+
+```sh
+ln -fs /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /home/dimitri/code/IOHexperimenter/.conda_environment/lib/libstdc++.so.6
+```
+
+```sh
+conda activate base
+rm -rf ./.conda_environment
+conda env create --prefix ./.conda_environment --file conda.yaml
+conda activate ./.conda_environment
+
+pip install .
 ```
