@@ -506,3 +506,22 @@ conda activate ./.conda_environment
 
 pip install .
 ```
+
+Sometimes, it might happen that you're trying to clone a git repo, but nothing happens.
+```sh
+(base) rusind@mesu2:~/IOHexperimenter> git clone https://github.com/tobiasvandriessel/problem-generator.git
+Cloning into 'problem-generator'...
+(base) rusind@mesu2:~/IOHexperimenter>
+```
+
+In this, case just close the connection to the ssh server and open a new one:
+```sh
+# Connection to mesu.dsi.upmc.fr closed.
+
+#  >> connected as rusind on mesu2
+```
+
+```sh
+ipython3 setup.py bdist_wheel
+pip install ./dist/ioh-0.3.11-cp39-cp39-linux_x86_64.whl
+```
