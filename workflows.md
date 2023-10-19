@@ -491,6 +491,7 @@ sudo apt install libc++-dev libc++abi-dev
 ```sh
 CC=clang CXX=clang++ cmake -DCMAKE_CXX_FLAGS="-stdlib=libc++" -DCMAKE_INSTALL_PREFIX=IOHexperimenter ..
 CC=clang CXX=clang++ pip install .
+CC=clang CXX=clang++ cmake -DCMAKE_INSTALL_PREFIX=IOHexperimenter ..
 ```
 
 ```sh
