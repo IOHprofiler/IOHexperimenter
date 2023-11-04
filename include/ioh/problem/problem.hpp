@@ -209,7 +209,7 @@ namespace ioh
             [[nodiscard]] State<T, R> state() const { return state_; }
 
             //! Accessor for `bounds_`
-            [[nodiscard]] Bounds<T> bounds() { return bounds_; }
+            [[nodiscard]] Bounds<T>& bounds() { return bounds_; }
 
             //! Accessor for `constraintset_`
             [[nodiscard]] ConstraintSet<T>& constraints() { return constraintset_; }    
