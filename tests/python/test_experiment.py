@@ -46,6 +46,7 @@ class TestExperiment(unittest.TestCase):
             ],
             enforce_bounds=True,
             store_positions=True,
+            old_logger=True
         )
 
         def a_problem(x):
