@@ -289,21 +289,20 @@ namespace ioh
             OnDeltaImprovement(const double delta, const double best_so_far): delta(delta), best_so_far(best_so_far) {
             }
             
-            /** @returns true if a log event is to be triggered given the passed state. */
-            virtual bool operator()(const logger::Info &log_info, const problem::MetaData &pb_info){
-                if (best_so_far == std::numeric_limits<double>::signaling_NaN()){
+            bool operator()(const logger::Info &log_info, const problem::MetaData &pb_info) override {
+                if (std::isnan(best_so_far)){
                     best_so_far = log_info.y;
                     return true;
                 }
 
-                if (pb_info.optimization_type(best_so_far, log_info.y) && std::abs(best_so_far - log_info.y) > delta) {
+                if (pb_info.optimization_type(log_info.y, best_so_far) && std::abs(best_so_far - log_info.y) > delta) {
                     best_so_far = log_info.y;
                     return true;
                 }                
                 return false;
             };
 
-            virtual void reset() {
+            void reset() override {
                 best_so_far = std::numeric_limits<double>::signaling_NaN();
             }
         };
