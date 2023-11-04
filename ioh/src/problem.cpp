@@ -461,7 +461,9 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
            std::optional<double> ub, std::optional<py::handle> tx, std::optional<py::handle> ty,
            std::optional<py::handle> co, Constraints<T> cs) {
             register_python_fn(f);
-            auto of = [f](const std::vector<T> &x) { return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr()); };
+            auto of = [f](const std::vector<T> &x) { 
+                return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr()); 
+            };
 
             auto ptx = [tx](std::vector<T> x, const int iid) {
                 if (tx)

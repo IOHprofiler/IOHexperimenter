@@ -277,6 +277,37 @@ namespace ioh
          */
         inline OnImprovement on_improvement; // Uncomment if one want a library.
 
+
+        struct OnDeltaImprovement: logger::Trigger {
+            double delta;
+            double best_so_far;
+
+            OnDeltaImprovement(const double delta = 1e-10): delta(delta) {
+                reset();
+            }
+
+            OnDeltaImprovement(const double delta, const double best_so_far): delta(delta), best_so_far(best_so_far) {
+            }
+            
+            /** @returns true if a log event is to be triggered given the passed state. */
+            virtual bool operator()(const logger::Info &log_info, const problem::MetaData &pb_info){
+                if (best_so_far == std::numeric_limits<double>::signaling_NaN()){
+                    best_so_far = log_info.y;
+                    return true;
+                }
+
+                if (pb_info.optimization_type(best_so_far, log_info.y) && std::abs(best_so_far - log_info.y) > delta) {
+                    best_so_far = log_info.y;
+                    return true;
+                }                
+                return false;
+            };
+
+            virtual void reset() {
+                best_so_far = std::numeric_limits<double>::signaling_NaN();
+            }
+        };
+
         //! Trigger when there is constraint violation
         struct OnViolation: logger::Trigger {
             //! Track the number of violations

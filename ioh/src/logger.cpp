@@ -9,17 +9,17 @@
 namespace py = pybind11;
 using namespace ioh;
 
-// Trampoline 
+// Trampoline
 struct AbstractProperty : logger::Property
 {
-    AbstractProperty(const std::string& name): logger::Property(name) {}
+    AbstractProperty(const std::string &name) : logger::Property(name) {}
 
     std::string call_to_string(const logger::Info &log_info, const std::string &nan = "") const override
     {
         PYBIND11_OVERRIDE(std::string, logger::Property, call_to_string, log_info, nan);
     }
 
-    std::optional<double> operator()(const logger::Info & info) const override
+    std::optional<double> operator()(const logger::Info &info) const override
     {
         PYBIND11_OVERRIDE_PURE_NAME(std::optional<double>, logger::Property, "__call__", operator(), info);
     }
@@ -52,18 +52,22 @@ public:
     }
 };
 
-// Trampoline 
-struct AbstractWatcher: logger::Watcher {
+// Trampoline
+struct AbstractWatcher : logger::Watcher
+{
 
     using logger::Watcher::Watcher;
 
-    void attach_problem(const problem::MetaData& problem) override {
+    void attach_problem(const problem::MetaData &problem) override
+    {
         PYBIND11_OVERRIDE(void, logger::Watcher, attach_problem, problem);
     }
-    void attach_suite(const std::string& suite_name) override {
+    void attach_suite(const std::string &suite_name) override
+    {
         PYBIND11_OVERRIDE_PURE(void, logger::Watcher, attach_suite, suite_name);
     }
-    void call(const logger::Info& log_info) override {
+    void call(const logger::Info &log_info) override
+    {
         PYBIND11_OVERRIDE_PURE_NAME(void, logger::Watcher, "__call__", call, log_info);
     }
 };
@@ -82,7 +86,7 @@ public:
 
     void watch(const py::object &container, const std::string &attribute)
     {
-        auto p = std::make_unique<PyProperty>(container, attribute); 
+        auto p = std::make_unique<PyProperty>(container, attribute);
         watch(*p);
         property_ptrs_.push_back(std::move(p));
     }
@@ -107,9 +111,8 @@ public:
 };
 
 
-
 // Python spec. implementation
-template<typename A>
+template <typename A>
 class PyAnalyzer : public PyWatcher<A>
 {
     std::unordered_map<std::string, std::unique_ptr<double>> double_ptrs_;
@@ -119,14 +122,9 @@ public:
     using AnalyzerType = PyWatcher<A>;
     using AnalyzerType::AnalyzerType;
 
-    virtual void close() override
-    {
-        AnalyzerType::close();
-    }
+    virtual void close() override { AnalyzerType::close(); }
 
-    virtual ~PyAnalyzer() {
-        close();   
-    }
+    virtual ~PyAnalyzer() { close(); }
 
     void add_run_attribute_python(const py::object &container, const std::string &name)
     {
@@ -148,9 +146,7 @@ public:
         double_ptrs_[name] = std::move(ptr);
     }
 
-    void set_run_attribute_python(const std::string &name, double value) {
-        *(double_ptrs_.at(name)) = value;
-    }
+    void set_run_attribute_python(const std::string &name, double value) { *(double_ptrs_.at(name)) = value; }
 
     void set_run_attributes_python(const std::map<std::string, double> &attributes)
     {
@@ -159,14 +155,15 @@ public:
     }
 
 
-    virtual void handle_last_eval() override {
-        for (auto& ptr : prop_ptrs_)
+    virtual void handle_last_eval() override
+    {
+        for (auto &ptr : prop_ptrs_)
             set_run_attribute_python(ptr->name(), (*ptr)(logger::Info{}).value());
         AnalyzerType::handle_last_eval();
     }
 };
 
-template<typename A>
+template <typename A>
 void define_analyzer(py::module &m)
 {
     using namespace logger;
@@ -202,17 +199,17 @@ void define_analyzer(py::module &m)
         .def("add_experiment_attribute", &PyAnalyzer::add_experiment_attribute)
         .def("set_experiment_attributes", &PyAnalyzer::set_experiment_attributes)
 
-        .def("add_run_attribute",
-             py::overload_cast<const std::string &, double>(&PyAnalyzer::add_run_attribute_python))
+        .def("add_run_attribute", py::overload_cast<const std::string &, double>(&PyAnalyzer::add_run_attribute_python))
         .def("add_run_attribute",
              py::overload_cast<const py::object &, const std::string &>(&PyAnalyzer::add_run_attribute_python))
         .def("add_run_attributes",
              py::overload_cast<const py::object &, const std::vector<std::string> &>(
                  &PyAnalyzer::add_run_attributes_python))
-        
+
         .def("set_run_attributes", &PyAnalyzer::set_run_attributes_python) // takes a map<str, double>
-        .def("set_run_attribute", &PyAnalyzer::set_run_attribute_python)   // takes str, double>
-        .def_property_readonly("output_directory", [](const PyAnalyzer& self) {return self.output_directory().generic_string();})
+        .def("set_run_attribute", &PyAnalyzer::set_run_attribute_python) // takes str, double>
+        .def_property_readonly("output_directory",
+                               [](const PyAnalyzer &self) { return self.output_directory().generic_string(); })
         .def("close", &PyAnalyzer::close)
         .def("watch", py::overload_cast<Property &>(&PyAnalyzer::watch))
         .def("watch", py::overload_cast<const py::object &, const std::string &>(&PyAnalyzer::watch))
@@ -246,6 +243,18 @@ void define_triggers(py::module &m)
 
     ;
     t.attr("ON_IMPROVEMENT") = py::cast(trigger::on_improvement);
+
+    py::class_<trigger::OnDeltaImprovement, logger::Trigger, std::shared_ptr<trigger::OnDeltaImprovement>>(
+        t, "OnDeltaImprovement",
+        "Trigger that evaluates to true when improvement of the objective function is observed of at least greater "
+        "than delta")
+        .def(py::init<double>(), py::arg("delta") = 1e-10)
+        .def(py::pickle([](const trigger::OnDeltaImprovement  &t) { return py::make_tuple(t.delta, t.best_so_far); },
+                        [](py::tuple t) {
+                            return trigger::OnDeltaImprovement{t[0].cast<double>(), t[1].cast<double>()};
+                        }));
+
+    ;
 
     py::class_<trigger::OnViolation, logger::Trigger, std::shared_ptr<trigger::OnViolation>>(
         t, "OnViolation", "Trigger that evaluates to true when there is a contraint violation")
@@ -307,8 +316,9 @@ void define_triggers(py::module &m)
                         [](py::tuple t) { return trigger::During{t[0].cast<std::set<std::pair<size_t, size_t>>>()}; }));
 }
 
-template<typename P>
-void define_property(py::module &m, std::string name, P predef){
+template <typename P>
+void define_property(py::module &m, std::string name, P predef)
+{
 
     py::class_<P, logger::Property, std::shared_ptr<P>>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
@@ -317,7 +327,7 @@ void define_property(py::module &m, std::string name, P predef){
                         [](py::tuple t) {
                             return P{t[0].cast<std::string>(), t[1].cast<std::string>()};
                         }));
-    
+
     std::transform(name.begin(), name.end(), name.begin(), ::toupper);
     m.attr(name.c_str()) = py::cast(predef);
 }
@@ -378,8 +388,8 @@ void define_bases(py::module &m)
         .def_property_readonly("problem", &Logger::problem, "Reference to the currently attached problem");
 
     using namespace logger;
-    py::class_<Watcher, AbstractWatcher, Logger, std::shared_ptr<Watcher>>(m, "AbstractLogger",
-                                                          "Base class for loggers which track properties")
+    py::class_<Watcher, AbstractWatcher, Logger, std::shared_ptr<Watcher>>(
+        m, "AbstractLogger", "Base class for loggers which track properties")
         .def(py::init<Triggers, Properties>(), py::arg("triggers") = Triggers{}, py::arg("properties") = Properties{})
         .def("watch", &Watcher::watch);
 }
