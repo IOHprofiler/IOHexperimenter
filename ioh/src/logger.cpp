@@ -249,6 +249,8 @@ void define_triggers(py::module &m)
         "Trigger that evaluates to true when improvement of the objective function is observed of at least greater "
         "than delta")
         .def(py::init<double>(), py::arg("delta") = 1e-10)
+        .def_readwrite("delta", &trigger::OnDeltaImprovement::delta)
+        .def_readonly("best_so_far", &trigger::OnDeltaImprovement::best_so_far)
         .def(py::pickle([](const trigger::OnDeltaImprovement  &t) { return py::make_tuple(t.delta, t.best_so_far); },
                         [](py::tuple t) {
                             return trigger::OnDeltaImprovement{t[0].cast<double>(), t[1].cast<double>()};
