@@ -294,7 +294,7 @@ class Experiment:
         zip_output: bool = True,
         remove_data: bool = False,
         enforce_bounds: bool = False,
-        old_logger: bool = True
+        old_logger: bool = False
     ):
         '''
         Parameters

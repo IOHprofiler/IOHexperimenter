@@ -47,29 +47,27 @@ namespace ioh::problem
         {
         }
 
-        //! Main call interface
-        virtual double operator()(const std::vector<T> &x) override
+        void evaluate_for_state(const std::vector<T> &x, State<T, SingleObjective> &state)
         {
-            if (!this->check_input(x))
-                return std::numeric_limits<double>::signaling_NaN();
-
-            this->state_.current.x = x;
+            state.current.x = x;
             if (this->constraintset_.hard_violation(x))
             {
-                this->state_.current_internal.x = x;
-                this->state_.current_internal.y =
+                state.current_internal.x = x;
+                state.current_internal.y =
                     this->constraintset_.penalize(this->meta_data_.optimization_type.initial_value());
-                this->state_.y_unconstrained = this->state_.current_internal.y;
-                this->state_.current.y = this->state_.current_internal.y;
+                state.y_unconstrained = state.current_internal.y;
+                state.current.y = state.current_internal.y;
             }
             else
             {
-                this->state_.current_internal.x = this->transform_variables(x);
-                this->state_.current_internal.y = this->evaluate(this->state_.current_internal.x);
-                this->state_.y_unconstrained = this->transform_objectives(this->state_.current_internal.y);
-                this->state_.current.y = this->constraintset_.penalize(this->state_.y_unconstrained);
+                state.current_internal.x = this->transform_variables(x);
+                state.current_internal.y = this->evaluate(state.current_internal.x);
+                state.y_unconstrained = this->transform_objectives(state.current_internal.y);
+                state.current.y = this->constraintset_.penalize(state.y_unconstrained);
             }
+        }
 
+        void update_state_and_log() {
             this->state_.update(this->meta_data_, this->optimum_);
 
             if (this->logger_ != nullptr)
@@ -77,19 +75,70 @@ namespace ioh::problem
                 this->log_info_.update(this->state_, this->constraintset_);
                 this->logger_->log(this->log_info());
             }
+        }
+
+
+        //! Main call interface
+        virtual double operator()(const std::vector<T> &x) override
+        {
+            if (!this->check_input(x))
+                return std::numeric_limits<double>::signaling_NaN();
+
+            evaluate_for_state(x, this->state_);
+            update_state_and_log();
 
             return this->state_.current.y;
         }
 
+
+#if defined(_OPENMP)
+        virtual std::vector<double> operator()(const std::vector<std::vector<T>> &X) override
+        {
+
+            const size_t n = X.size();
+            std::vector<int> checked(n, 0);
+            std::vector<State<T, SingleObjective>> states(n, this->state_);
+
+            //------------------------------------ //
+            //-----------[threaded code]---------- //
+            //------------------------------------ //
+
+            #pragma omp parallel for
+            for (size_t i = 0; i < n; i++)
+            {
+                if (this->check_input(X[i])) {
+                    evaluate_for_state(X[i], states[i]);
+                    checked[i] = 1;
+                }                
+            }
+            //------------------------------------ //
+
+            std::vector<double> y(n);
+            for (size_t i = 0; i < n; i++)
+            {
+                if(checked[i]) {
+                    this->state_.current.x = states[i].current.x;
+                    this->state_.current_internal.x = states[i].current_internal.x;
+                    this->state_.current_internal.y = states[i].current_internal.y;
+                    this->state_.y_unconstrained = states[i].y_unconstrained;
+                    this->state_.current.y = states[i].current.y; 
+                    update_state_and_log();
+                    y[i] = states[i].current.y;
+                } else{
+                    y[i] = std::numeric_limits<double>::signaling_NaN();
+                }
+            }
+            return y;
+        }
+#else
         virtual std::vector<double> operator()(const std::vector<std::vector<T>> &X) override
         {
             std::vector<double> y(X.size());
             for (size_t i = 0; i < y.size(); i++)
-            {
                 y[i] = (*this)(X[i]);
-            }
             return y;
         }
+#endif
     };
 
 
