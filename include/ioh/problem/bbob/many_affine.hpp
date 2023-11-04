@@ -8,6 +8,26 @@ namespace ioh::problem::bbob
         inline std::array<double, 24> get_weights(const int instance){
             auto weights = common::random::bbob2009::uniform(24, 2000 + instance, 0., 1.);
             
+            // Make the two largest weights larger than 0.85.
+            // There shall be at least two functions being combined.
+            size_t max1_i = 0, max2_i = 0;
+            double max1 = -1;
+            double max2 = -2;
+            for (size_t i = 0; i != weights.size(); ++i) {
+                if(weights[i] > max1) {
+                    max2 = max1;
+                    max2_i = max1_i;
+
+                    max1 = weights[i];
+                    max1_i = i;
+                } else if (weights[i] > max2) {
+                    max2 = weights[i];
+                    max2_i = i;
+                }
+            }
+            weights[max1_i] = weights[max1_i] > 0.85 ? weights[max1_i] : 0.85;
+            weights[max2_i] = weights[max2_i] > 0.85 ? weights[max2_i] : 0.85;
+
             auto sum = 0.;
             for (auto &wi: weights){
                 if (wi >= 0.85){
