@@ -83,7 +83,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension used
          */
         ManyAffine(const int instance, const int n_variables) :
-            ManyAffine(common::random::bbob2009::uniform(n_variables, 1000 + instance, -4., 4.),
+            ManyAffine(common::random::bbob2009::uniform(n_variables, 1000 + instance, -5., 5.),
                        many_affine::get_weights(instance),
                        common::fill_array<int, 24>(instance), n_variables, ManyAffine::default_scales)
         {
