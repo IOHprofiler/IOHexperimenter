@@ -26,6 +26,7 @@ namespace fs = std::filesystem;
 #include <execinfo.h> // execinfo
 #include <stdlib.h>   // getenv
 #include <libgen.h>   // basename
+#include <iterator>
 #define CLUTCHLOG_HAVE_UNIX_SYSINFO 1
 #else
 #define CLUTCHLOG_HAVE_UNIX_SYSINFO 0
