@@ -5,5 +5,5 @@ true
 and rm -rf build/
 and mkdir build/
 and cd build/
-and cmake ..
+and cmake -DCMAKE_INSTALL_PREFIX=IOHexperimenter ..
 and IOH_RESOURCES=/home/dimitri/code/IOHexperimenter/static make install
