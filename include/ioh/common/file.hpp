@@ -84,10 +84,10 @@ namespace ioh::common::file
             const char* env_var = std::getenv("IOH_RESOURCES");
             if (env_var == nullptr)
             {
-                throw std::runtime_error("Point the environment variable IOH_RESOURCES to the static/ folder of IOHexperimenter.");
+                return fs::canonical(fs::current_path() / ".." / ".." / "static");
             }
 
-            return fs::path(env_var);
+            return fs::canonical(env_var);
         }
 
 
