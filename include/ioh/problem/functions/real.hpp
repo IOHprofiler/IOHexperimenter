@@ -12,25 +12,8 @@
 
 #include "ioh/problem/transformation.hpp"
 
-/**
- * @def DEBUG
- * Enables logging functionality throughout the code when defined.
- */
-#define DEBUG
-
-#ifdef DEBUG
-
-/**
- * @def LOG_FILE_NAME
- * Defines the name of the log file where debug messages will be written to.
- */
 #define LOG_FILE_NAME "cec_test_log.txt"
 
-/**
- * @def LOG
- * Macro to log messages to a file with a timestamp.
- * @param message The message to log.
- */
 #define LOG(message)                                                           \
   do {                                                                         \
     std::ofstream debug_log(LOG_FILE_NAME, std::ios::app);                     \
@@ -41,16 +24,6 @@
               << "] " << message << std::endl;                                 \
     debug_log.close();                                                         \
   } while (0)
-
-#else
-
-/**
- * @def LOG
- * Stub for LOG macro when DEBUG is not defined.
- * @param message The message parameter is ignored.
- */
-#define LOG(message) // Nothing
-#endif
 
 /**
  * @namespace ioh::problem
