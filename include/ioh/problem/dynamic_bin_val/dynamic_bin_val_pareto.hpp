@@ -23,6 +23,8 @@ namespace ioh::problem
      * @brief This class serves to represent dynamic binary value problems within the context of Iterative
      *        Optimization Heuristics (IOH).
      *
+     *        DynamicBinValPareto: takes a value from (1 - U) ** (-10) where U is uniformly distributed from [0, 1] for each weight at each timestep
+
      *        Inheriting functionalities from the IntegerSingleObjective, it also integrates functionalities
      *        for automatic registration of the problem type into various data structures. This facilitates
      *        easier management and retrieval of problem instances, while encapsulating characteristics and

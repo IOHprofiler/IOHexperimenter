@@ -22,6 +22,8 @@ namespace ioh::problem
      * @brief This class serves to represent dynamic binary value problems within the context of Iterative
      *        Optimization Heuristics (IOH).
      *
+     *        DynamicBinValPowersOfTwo: takes a value among the powers 2**1, 2**2, 2**3, ..., 2**31 / n_variables for each weight at each timestep
+     *
      *        Inheriting functionalities from the IntegerSingleObjective, it also integrates functionalities
      *        for automatic registration of the problem type into various data structures. This facilitates
      *        easier management and retrieval of problem instances, while encapsulating characteristics and
