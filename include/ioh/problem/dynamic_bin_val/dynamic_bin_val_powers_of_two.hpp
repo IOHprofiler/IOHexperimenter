@@ -1,6 +1,6 @@
 /**
- * @file dynamic_bin_val.hpp
- * @brief Contains the declaration of the DynamicBinVal class, which represents dynamic binary value
+ * @file dynamic_bin_val_powers_of_two.hpp
+ * @brief Contains the declaration of the DynamicBinValPowersOfTwo class, which represents dynamic binary value
  *        problems in the context of IOH.
  */
 
@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <math.h>
 #include <random>
 #include <vector>
 
@@ -17,7 +18,7 @@
 namespace ioh::problem
 {
     /**
-     * @class DynamicBinVal
+     * @class DynamicBinValPowersOfTwo
      * @brief This class serves to represent dynamic binary value problems within the context of Iterative
      *        Optimization Heuristics (IOH).
      *
@@ -28,27 +29,27 @@ namespace ioh::problem
      *        timestep and weights, which are crucial in depicting the dynamic aspects and unique features
      *        of these problem instances.
      */
-    class DynamicBinVal : public
+    class DynamicBinValPowersOfTwo : public
         IntegerSingleObjective,
-        AutomaticProblemRegistration<DynamicBinVal, DynamicBinVal>,
-        AutomaticProblemRegistration<DynamicBinVal, IntegerSingleObjective>
+        AutomaticProblemRegistration<DynamicBinValPowersOfTwo, DynamicBinValPowersOfTwo>,
+        AutomaticProblemRegistration<DynamicBinValPowersOfTwo, IntegerSingleObjective>
     {
     public:
 
-        int timestep; /**< The current timestep in the dynamic binary value problem scenario. */
-        std::vector<double> weights; /**< A vector of weights used in the evaluation of the problem. */
+        int timestep;                   /**< The current timestep in the dynamic binary value problem scenario. */
+        std::vector<int> weights;       /**< A vector of weights used in the evaluation of the problem. */
         std::mt19937 random_generator;
 
         /**
-         * @brief Constructs a new instance of DynamicBinVal.
+         * @brief Constructs a new instance of DynamicBinValPowersOfTwo.
          *
          * @param n_variables The dimension of the problem, representing the size of the search space and
          *                    indicating the number of variables in the problem.
          */
-        DynamicBinVal(const int instance, const int n_variables) :
+        DynamicBinValPowersOfTwo(const int instance, const int n_variables) :
             IntegerSingleObjective
             (
-                MetaData(10001, 1, "DynamicBinVal", n_variables, common::OptimizationType::MAX),
+                MetaData(10002, instance, "DynamicBinValPowersOfTwo", n_variables, common::OptimizationType::MAX),
                 Bounds<int>(n_variables, 0, 1)
             ),
             random_generator(instance)
@@ -59,9 +60,15 @@ namespace ioh::problem
 
             // Initialize the weights vector with random numbers between 0 and 1
             this->weights.resize(n_variables);
-            for(int i = 0; i < n_variables; ++i)
+
+            int subtract_bits = log2(this->weights.size());
+            std::uniform_int_distribution<> uniform_int_distribution(1, 31 - subtract_bits - 1);
+
+            // Reinitialize the weights with random numbers between 0 and 1 after shuffling
+            for(size_t i = 0; i < this->weights.size(); ++i)
             {
-                this->weights[i] = std::generate_canonical<double, 10>(this->random_generator);
+                int exponent = uniform_int_distribution(this->random_generator);
+                this->weights[i] = pow(2, exponent);
             }
         }
 
@@ -69,10 +76,14 @@ namespace ioh::problem
         {
             this->timestep += 1;
 
+            int subtract_bits = log2(this->weights.size());
+            std::uniform_int_distribution<> uniform_int_distribution(1, 31 - subtract_bits - 1);
+
             // Reinitialize the weights with random numbers between 0 and 1 after shuffling
             for(size_t i = 0; i < this->weights.size(); ++i)
             {
-                this->weights[i] = std::generate_canonical<double, 10>(this->random_generator);
+                int exponent = uniform_int_distribution(this->random_generator);
+                this->weights[i] = pow(2, exponent);
             }
 
             return this->timestep;
