@@ -1,26 +1,17 @@
 #!/usr/bin/env fish
 
-# Set the directory paths for the project and its includes
 set build_dir (pwd)"/build/tests"
 set include_dir (pwd)"/include"
 set external_dir (pwd)"/external"
 set tests_dir (pwd)"/tests/cpp"
 
-true
-
 for line in (cat .env)
   set -x (echo $line | cut -d '=' -f 1) (echo $line | cut -d '=' -f 2-)
 end
-# set -u IOH_RESOURCES
 
-# and ipython3 tests/python/test_cec_functions.py
-
-# The following line puts the debug log file and the binval executable file
-# under the build/ tree.
-cd $build_dir
-
+true
+and cd $build_dir
 and rm -f ./test.log
-
 and c++ -Wall -Wextra -pedantic -std=c++17 -lstdc++fs \
   -I$include_dir \
   -I$tests_dir \
@@ -32,5 +23,4 @@ and c++ -Wall -Wextra -pedantic -std=c++17 -lstdc++fs \
   $tests_dir/problem/binval.cpp \
   -o binval \
   $build_dir/../lib/libgtest.a -lpthread
-
 and ./binval
