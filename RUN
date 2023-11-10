@@ -19,7 +19,7 @@ end
 # under the build/ tree.
 cd $build_dir
 
-and rm -f ./cec_test_log.txt ./cec_training_log.txt
+and rm -f ./test.log
 
 and c++ -Wall -Wextra -pedantic -std=c++17 -lstdc++fs \
   -I$include_dir \
