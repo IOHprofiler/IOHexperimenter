@@ -4,6 +4,18 @@
 #include "ioh/problem/single.hpp"
 #include "ioh/problem/transformation.hpp"
 
+#ifdef FSEXPERIMENTAL
+#define JSON_HAS_EXPERIMENTAL_FILESYSTEM 1
+#undef JSON_HAS_FILESYSTEM
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#else
+#undef JSON_HAS_EXPERIMENTAL_FILESYSTEM
+#define JSON_HAS_FILESYSTEM 1
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
+
 namespace ioh::problem
 {
     /// \brief The CEC class represents a problem in the CEC benchmark suite.
@@ -164,7 +176,7 @@ namespace ioh::problem
          *
          * @param shuffle_data_filepath The path to the file containing the shuffle data.
          */
-        void load_shuffle_data(const std::filesystem::path& shuffle_data_filepath)
+        void load_shuffle_data(const fs::path& shuffle_data_filepath)
         {
             std::ifstream file(shuffle_data_filepath); // Open the file
             if (!file.is_open())
@@ -190,7 +202,7 @@ namespace ioh::problem
          *
          * @param F_i_star_filepath The path to the file containing the objective shift data.
          */
-        void load_objective_shift(const std::filesystem::path& F_i_star_filepath)
+        void load_objective_shift(const fs::path& F_i_star_filepath)
         {
             const unsigned int cec_function_identifier = this->meta_data_.problem_id - 1000;
 
@@ -228,7 +240,7 @@ namespace ioh::problem
          *
          * @param M_filepath The path to the file containing the linear transformation data.
          */
-        void load_linear_transformation(const std::filesystem::path& M_filepath)
+        void load_linear_transformation(const fs::path& M_filepath)
         {
             const size_t n_variables = this->meta_data_.n_variables;
             std::ifstream file(M_filepath); // Open the file
@@ -278,7 +290,7 @@ namespace ioh::problem
          *
          * @param shift_data_filepath The path to the file containing the variables shift data.
          */
-        void load_variables_shift(const std::filesystem::path& shift_data_filepath)
+        void load_variables_shift(const fs::path& shift_data_filepath)
         {
             const int n_variables = this->meta_data_.n_variables;
             std::ifstream file(shift_data_filepath); // Open the file
