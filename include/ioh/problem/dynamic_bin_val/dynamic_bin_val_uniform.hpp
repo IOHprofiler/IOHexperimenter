@@ -40,6 +40,7 @@ namespace ioh::problem
         int timestep; /**< The current timestep in the dynamic binary value problem scenario. */
         std::vector<double> weights; /**< A vector of weights used in the evaluation of the problem. */
         std::mt19937 random_generator;
+        std::vector<int> transformed_x;
 
         /**
          * @brief Constructs a new instance of DynamicBinValUniform.
@@ -65,6 +66,11 @@ namespace ioh::problem
             {
                 this->weights[i] = std::generate_canonical<double, 10>(this->random_generator);
             }
+
+            this->transformed_x = std::vector<int>(n_variables, 1);
+            this->optimum_.y = transform_objectives(0);
+            transform_variables(this->transformed_x);
+            this->optimum_.x = this->transformed_x;
         }
 
         int step()
@@ -82,20 +88,25 @@ namespace ioh::problem
 
     protected:
 
-        /**
-         * @brief Evaluates the problem instance using the given input vector.
-         *
-         * @param x The input vector which represents a potential solution to the problem.
-         * @return The evaluation result as a double value.
-         */
         double evaluate(const std::vector<int> &x) override
         {
-            double value = 0;
-            for(size_t i = 0; i < x.size(); ++i)
-            {
-                value += x[i] * this->weights[i];
-            }
+            return std::accumulate(x.begin(), x.end(), 0.0);
+        }
 
+        std::vector<int> transform_variables(std::vector<int> x) override
+        {
+            transformation::variables::random_flip(x, this->meta_data_.instance);
+            this->transformed_x = x;
+            return x;
+        }
+
+        double transform_objectives(const double y) override
+        {
+            double value = 0;
+            for(size_t i = 0; i < this->transformed_x.size(); ++i)
+            {
+                value += this->transformed_x[i] * this->weights[i];
+            }
             return value;
         }
     };

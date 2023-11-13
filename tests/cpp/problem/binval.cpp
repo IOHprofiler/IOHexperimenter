@@ -17,8 +17,8 @@
 
 int main()
 {
-  const auto &dyn_problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinValPareto>::instance();
-  auto d = dyn_problem_factory.create(10002, 1, 5);
+  const auto &dyn_problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinValUniform>::instance();
+  auto d = dyn_problem_factory.create(10001, 1, 5);
   auto x = std::vector<int>{1, 0, 1, 1, 1};
   double value = (*d)(x);
 
