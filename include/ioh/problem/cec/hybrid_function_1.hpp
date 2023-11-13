@@ -43,7 +43,6 @@ namespace ioh::problem::cec
             int nx = x.size();
             std::vector<double> z(nx);
             std::vector<double> y(nx);
-            std::vector<double> fit(cf_num);
             std::vector<int> G(cf_num);
             std::vector<int> G_nx(cf_num);
             std::vector<double> Gp = {0.4, 0.4, 0.2};

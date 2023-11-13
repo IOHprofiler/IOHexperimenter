@@ -153,7 +153,6 @@ inline double zakharov(const std::vector<double> &x) {
  */
 inline double schaffer_F7(const std::vector<double> &y) {
   std::vector<double> z(y.size());
-  double tmp;
 
   double result = 0;
   for (size_t i = 0; i < z.size() - 1; ++i) {
@@ -163,7 +162,7 @@ inline double schaffer_F7(const std::vector<double> &y) {
 
     auto pow_val = std::pow(z[i], 0.2);
 
-    tmp = std::sin(50.0 * pow_val);
+    double tmp = std::sin(50.0 * pow_val);
 
     auto tmp_squared = tmp * tmp;
 

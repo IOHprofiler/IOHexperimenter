@@ -27,7 +27,6 @@ namespace ioh::problem::cec
             auto&& S = this->input_permutation_;
 
             const int cf_num = 5;
-            std::vector<double> fit(cf_num, 0);
             std::vector<int> G_nx(cf_num);
             std::vector<int> G(cf_num);
             std::vector<double> Gp = {0.3, 0.2, 0.2, 0.1, 0.2};

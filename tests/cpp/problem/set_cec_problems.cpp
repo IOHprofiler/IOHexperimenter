@@ -105,7 +105,7 @@ int ini_flag,n_flag,func_flag,*SS;
 void cec22_test_func(double *x, double *f, int nx, int mx,int func_num)
 {
 
-    int cf_num=12,i,j;
+    int cf_num=12,i;
     if (func_num<1||func_num>12)
     {
       printf("\nError: Test function %d is not defined.\n", func_num);
@@ -127,9 +127,9 @@ void cec22_test_func(double *x, double *f, int nx, int mx,int func_num)
     free(y);
     free(z);
     free(x_bound);
-    y=(double *)malloc(sizeof(double)  *  nx);
-    z=(double *)malloc(sizeof(double)  *  nx);
-    x_bound=(double *)malloc(sizeof(double)  *  nx);
+    y = static_cast<double*>(malloc(nx * sizeof(double)));
+    z = static_cast<double*>(malloc(nx * sizeof(double)));
+    x_bound = static_cast<double*>(malloc(nx * sizeof(double)));
     for (i=0; i<nx; i++)
       x_bound[i]=100.0;
 
@@ -151,7 +151,7 @@ void cec22_test_func(double *x, double *f, int nx, int mx,int func_num)
     }
     if (func_num<9)
     {
-      M=(double*)malloc(nx*nx*sizeof(double));
+      M = static_cast<double*>(malloc(nx * nx * sizeof(double)));
       if (M==NULL)
         printf("\nError: there is insufficient memory available!\n");
       for (i=0; i<nx*nx; i++)
@@ -161,7 +161,7 @@ void cec22_test_func(double *x, double *f, int nx, int mx,int func_num)
     }
     else
     {
-      M=(double*)malloc(cf_num*nx*nx*sizeof(double));
+      M = static_cast<double*>(malloc(cf_num * nx * nx * sizeof(double)));
       if (M==NULL)
         printf("\nError: there is insufficient memory available!\n");
       for (i=0; i<cf_num*nx*nx; i++)
@@ -181,7 +181,7 @@ void cec22_test_func(double *x, double *f, int nx, int mx,int func_num)
 
     if (func_num<9)
     {
-      OShift=(double *)malloc(nx*sizeof(double));
+      OShift = static_cast<double*>(malloc(nx * sizeof(double)));
       if (OShift==NULL)
       printf("\nError: there is insufficient memory available!\n");
       for(i=0;i<nx;i++)
@@ -192,19 +192,19 @@ void cec22_test_func(double *x, double *f, int nx, int mx,int func_num)
     else
     {
             //OShift=(double *)malloc(nx*sizeof(double));
-      OShift=(double *)malloc(nx*cf_num*sizeof(double));
+      OShift = static_cast<double*>(malloc(nx * cf_num * sizeof(double)));
       if (OShift==NULL)
       printf("\nError: there is insufficient memory available!\n");
       for(i=0;i<cf_num-1;i++)
       {
-        for (j=0;j<nx;j++)
+        for (int j=0;j<nx;j++)
         {
           fscanf(fpt,"%lf",&OShift[i*nx+j]);
 
         }
         fscanf(fpt,"%*[^\n]%*c");
       }
-      for (j=0;j<nx;j++)
+      for (int j=0;j<nx;j++)
       {
         fscanf(fpt,"%lf",&OShift[nx*(cf_num-1)+j]);
 
@@ -224,7 +224,7 @@ void cec22_test_func(double *x, double *f, int nx, int mx,int func_num)
       {
         printf("\n Error: Cannot open shuffle_data_%d_D%d.txt for reading \n", func_num, nx);
       }
-      SS=(int *)malloc(nx*sizeof(int));
+      SS = static_cast<int*>(malloc(nx * sizeof(int)));
       if (SS==NULL)
         printf("\nError: there is insufficient memory available!\n");
       for(i=0;i<nx;i++)
@@ -346,15 +346,14 @@ void discus_func (double *x, double *f, int nx, double *Os,double *Mr, int s_fla
 void rosenbrock_func (double *x, double *f, int nx, double *Os,double *Mr,int s_flag, int r_flag) /* Rosenbrock's */
 {
     int i;
-  double tmp1,tmp2;
   f[0] = 0.0;
   sr_func (x, z, nx, Os, Mr, 2.048/100.0, s_flag, r_flag); /* shift and rotate */
   z[0] += 1.0;//shift to orgin
   for (i=0; i<nx-1; i++)
   {
     z[i+1] += 1.0;//shift to orgin
-    tmp1=z[i]*z[i]-z[i+1];
-    tmp2=z[i]-1.0;
+    double tmp1=z[i]*z[i]-z[i+1];
+    double tmp2=z[i]-1.0;
     f[0] += 100.0*tmp1*tmp1 +tmp2*tmp2;
   }
 }
@@ -536,13 +535,12 @@ void hgbat_func (double *x, double *f, int nx, double *Os,double *Mr,int s_flag,
 void schaffer_F7_func (double *x, double *f, int nx, double *Os,double *Mr,int s_flag, int r_flag) /* Schwefel's 1.2  */
 {
     int i;
-  double tmp;
     f[0] = 0.0;
   sr_func (x, z, nx, Os, Mr, 0.5/100, s_flag, r_flag); /* shift and rotate */
   for (i=0; i<nx-1; i++)
   {
     z[i]=pow(y[i]*y[i]+y[i+1]*y[i+1],0.5);
-    tmp=sin(50.0*pow(z[i],0.2));
+    double tmp=sin(50.0*pow(z[i],0.2));
     f[0] += pow(z[i],0.5)+pow(z[i],0.5)*tmp*tmp ;
   }
   f[0] = f[0]*f[0]/(nx-1)/(nx-1);
@@ -573,7 +571,7 @@ void levy_func (double *x, double *f, int nx, double *Os,double *Mr, int s_flag,
   sr_func (x, z, nx, Os, Mr,5.12/100, s_flag, r_flag); /* shift and rotate */
 
   double *w;
-  w=(double *)malloc(sizeof(double)  *  nx);
+  w = static_cast<double*>(malloc(sizeof(double) * nx));
 
   for (i=0; i<nx; i++)
   {
@@ -616,19 +614,19 @@ void zakharov_func (double *x, double *f, int nx, double *Os,double *Mr, int s_f
 void katsuura_func (double *x, double *f, int nx, double *Os,double *Mr,int s_flag, int r_flag) /* Katsuura  */
 {
     int i,j;
-  double temp,tmp1,tmp2,tmp3;
+  double tmp1;
   f[0]=1.0;
-  tmp3=pow(1.0*nx,1.2);
+  double tmp3=pow(1.0*nx,1.2);
 
   sr_func (x, z, nx, Os, Mr, 5.0/100.0, s_flag, r_flag); /* shift and rotate */
 
     for (i=0; i<nx; i++)
   {
-    temp=0.0;
+    double temp=0.0;
     for (j=1; j<=32; j++)
     {
       tmp1=pow(2.0,j);
-      tmp2=tmp1*z[i];
+      double tmp2=tmp1*z[i];
       temp += fabs(tmp2-floor(tmp2+0.5))/tmp1;
     }
     f[0] *= pow(1.0+(i+1)*temp,10.0/tmp3);
@@ -979,7 +977,7 @@ void cf_cal(double *x, double *f, int nx, double *Os,double * delta,double * bia
   int i,j;
   double *w;
   double w_max=0,w_sum=0;
-  w=(double *)malloc(cf_num * sizeof(double));
+  w = static_cast<double*>(malloc(cf_num * sizeof(double))); // Re-allocation for w
   for (i=0; i<cf_num; i++)
   {
     fit[i]+=bias[i];
@@ -1036,7 +1034,7 @@ int main(void)
       int nx = instance_input.size();
       if (nx == 2 && (func_num == 6 || func_num == 7 || func_num == 8)) { continue; }
 
-      double *f = (double *)malloc(sizeof(double) * 1);
+      double* f = static_cast<double*>(malloc(sizeof(double)));
       cec22_test_func(instance_input.data(), f, nx, 1, func_num);
 
       std::stringstream ss;

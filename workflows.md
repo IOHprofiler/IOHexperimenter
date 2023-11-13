@@ -1,5 +1,3 @@
-
-
 You might get this error message:
 ```sh
 CMake Error at CMakeLists.txt:52 (add_subdirectory):
@@ -76,7 +74,7 @@ g++ -o one_max -g -std=c++17 -I$fmt_include_path -I$ioh_include_path one_max.cpp
 ```
 
 g++ version
-```
+```sh
 g++ 9.4.0
 ```
 
