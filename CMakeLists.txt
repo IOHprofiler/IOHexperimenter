@@ -51,6 +51,46 @@ if(EXISTS "${STATIC_DIR}")
 else()
     message(STATUS "STATIC directory DOES NOT EXIST :((( at ${STATIC_DIR}")
 endif()
+
+
+
+# Check if the IOHexperimenter directory exists and list its contents
+if(EXISTS "${PROJECT_SOURCE_DIR}")
+    file(GLOB IOHEXPERIMENTER_CONTENTS "${PROJECT_SOURCE_DIR}/*")
+    message(STATUS "Listing contents of IOHexperimenter:")
+    foreach(FILE ${IOHEXPERIMENTER_CONTENTS})
+        message(STATUS "  ${FILE}")
+    endforeach()
+else()
+    message(STATUS "IOHexperimenter directory DOES NOT EXIST at ${PROJECT_SOURCE_DIR}")
+endif()
+
+
+
+# Check if the IOHexperimenter directory exists and list its contents
+if(EXISTS "${PROJECT_SOURCE_DIR}/IOHexperimenter")
+    file(GLOB IOHEXPERIMENTER_CONTENTS "${PROJECT_SOURCE_DIR}/IOHexperimenter/*")
+    message(STATUS "Listing contents of IOHexperimenter:")
+    foreach(FILE ${IOHEXPERIMENTER_CONTENTS})
+        message(STATUS "  ${FILE}")
+    endforeach()
+else()
+    message(STATUS "IOHexperimenter directory DOES NOT EXIST at ${PROJECT_SOURCE_DIR}/IOHexperimenter")
+endif()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
  
 # Define project targets.
