@@ -96,11 +96,7 @@ namespace ioh::common::file
             }
         }
 
-        /**
-         * @brief Get the absolute path of IOHexperimenter/static
-         *
-         * @return fs::path the absolute path of IOHexperimenter/static
-         */
+
         inline void print_environment_variables()
         {
             for (char** env = environ; *env != nullptr; ++env)
@@ -110,10 +106,13 @@ namespace ioh::common::file
             }
         }
 
-        inline fs::path get_static_root()
+        /**
+         * @brief Get the absolute path of IOHexperimenter/static
+         *
+         * @return fs::path the absolute path of IOHexperimenter/static
+         */
+        fs::path get_static_root()
         {
-            const char* env_var = std::getenv("IOH_RESOURCES");
-
             // Print the contents of the current, previous, and the one before previous directories
             print_directory_contents(fs::current_path());
             print_directory_contents(fs::current_path() / "..");
@@ -122,12 +121,17 @@ namespace ioh::common::file
             // Print environment variables to stdout and stderr
             print_environment_variables();
 
-            if (env_var == nullptr)
+            const char* github_workspace = std::getenv("GITHUB_WORKSPACE");
+            if (github_workspace != nullptr)
             {
+                // If GITHUB_WORKSPACE is set, append "static/" and return the canonical path
+                return fs::canonical(fs::path(github_workspace) / "static");
+            }
+            else
+            {
+                // If GITHUB_WORKSPACE is not set, return the canonical path of "../../static"
                 return fs::canonical(fs::current_path() / ".." / ".." / "static");
             }
-
-            return fs::canonical(env_var);
         }
 
         /**
