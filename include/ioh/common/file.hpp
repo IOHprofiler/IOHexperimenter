@@ -74,6 +74,25 @@ namespace ioh::common::file
             operator std::string() const { return data; }
         };
 
+        inline void print_directory_contents(const fs::path& dir_path)
+        {
+            try
+            {
+                if (fs::exists(dir_path) && fs::is_directory(dir_path))
+                {
+                    for (const auto& entry : fs::directory_iterator(dir_path))
+                    {
+                        std::cout << entry.path() << std::endl;
+                        std::cerr << entry.path() << std::endl;
+                    }
+                }
+            }
+            catch (const fs::filesystem_error& e)
+            {
+                std::cerr << "Filesystem error: " << e.what() << std::endl;
+            }
+        }
+
         /**
          * @brief Get the absolute path of IOHexperimenter/static
          *
@@ -82,6 +101,12 @@ namespace ioh::common::file
         inline fs::path get_static_root()
         {
             const char* env_var = std::getenv("IOH_RESOURCES");
+
+            // Print the contents of the current, previous, and the one before previous directories
+            print_directory_contents(fs::current_path());
+            print_directory_contents(fs::current_path() / "..");
+            print_directory_contents(fs::current_path() / ".." / "..");
+
             if (env_var == nullptr)
             {
                 return fs::canonical(fs::current_path() / ".." / ".." / "static");
@@ -89,7 +114,6 @@ namespace ioh::common::file
 
             return fs::canonical(env_var);
         }
-
 
         /**
          * @brief Finds a file located in the static folder of this repository
