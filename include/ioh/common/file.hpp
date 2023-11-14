@@ -111,7 +111,7 @@ namespace ioh::common::file
          *
          * @return fs::path the absolute path of IOHexperimenter/static
          */
-        fs::path get_static_root()
+        inline fs::path get_static_root()
         {
             // Print the contents of the current, previous, and the one before previous directories
             print_directory_contents(fs::current_path());
