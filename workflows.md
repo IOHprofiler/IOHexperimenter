@@ -229,3 +229,9 @@ and ./RUN
 ln -fs (pwd)/static/cec_transformations build/tests/input_data
 ./RUN
 ```
+
+In GitHub Actions we have the following useful environment variables:
+```sh
+GITHUB_WORKSPACE=/home/runner/work/IOHexperimenter/IOHexperimenter
+RUNNER_WORKSPACE=/Users/runner/work/IOHexperimenter
+```
