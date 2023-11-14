@@ -1,10 +1,11 @@
 
 #pragma once
 
+#include "ioh/common/format.hpp"
+#include "ioh/common/log.hpp"
+#include <cstdlib>
 #include <string>
 #include <utility>
-#include "ioh/common/log.hpp"
-#include "ioh/common/format.hpp"
 
 #ifdef FSEXPERIMENTAL
 #define JSON_HAS_EXPERIMENTAL_FILESYSTEM 1
@@ -17,6 +18,8 @@ namespace fs = std::experimental::filesystem;
 #include <filesystem>
 namespace fs = std::filesystem;
 #endif
+
+extern char** environ;  // Declaration for the environment variables
 
 #ifdef HAS_JSON
 #include <nlohmann/json.hpp>
@@ -98,6 +101,15 @@ namespace ioh::common::file
          *
          * @return fs::path the absolute path of IOHexperimenter/static
          */
+        inline void print_environment_variables()
+        {
+            for (char** env = environ; *env != nullptr; ++env)
+            {
+                std::cout << *env << std::endl;
+                std::cerr << *env << std::endl;
+            }
+        }
+
         inline fs::path get_static_root()
         {
             const char* env_var = std::getenv("IOH_RESOURCES");
@@ -106,6 +118,9 @@ namespace ioh::common::file
             print_directory_contents(fs::current_path());
             print_directory_contents(fs::current_path() / "..");
             print_directory_contents(fs::current_path() / ".." / "..");
+
+            // Print environment variables to stdout and stderr
+            print_environment_variables();
 
             if (env_var == nullptr)
             {
