@@ -16,7 +16,16 @@ DIR = os.path.realpath(os.path.dirname(__file__))
 with open(os.path.join(DIR, "VERSION")) as f:
     __version__ = f.read().strip()
 
-BUILD_DIR = os.path.join(DIR, "build")
+# Check if RUNNER_WORKSPACE environment variable exists
+runner_workspace = os.environ.get('RUNNER_WORKSPACE')
+if runner_workspace:
+    # If RUNNER_WORKSPACE exists, append 'build' to its value to form BUILD_DIR
+    BUILD_DIR = os.path.join(runner_workspace, 'build')
+else:
+    # If RUNNER_WORKSPACE does not exist, use the default BUILD_DIR
+    DIR = os.path.realpath(os.path.dirname(__file__))
+    BUILD_DIR = os.path.join(DIR, "build")
+
 if os.path.exists(BUILD_DIR):
     shutil.rmtree(BUILD_DIR)
 
