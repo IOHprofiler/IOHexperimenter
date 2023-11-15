@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "ioh/common/format.hpp"
@@ -18,8 +17,6 @@ namespace fs = std::experimental::filesystem;
 #include <filesystem>
 namespace fs = std::filesystem;
 #endif
-
-extern char** environ;  // Declaration for the environment variables
 
 #ifdef HAS_JSON
 #include <nlohmann/json.hpp>
@@ -77,35 +74,6 @@ namespace ioh::common::file
             operator std::string() const { return data; }
         };
 
-        inline void print_directory_contents(const fs::path& dir_path)
-        {
-            try
-            {
-                if (fs::exists(dir_path) && fs::is_directory(dir_path))
-                {
-                    for (const auto& entry : fs::directory_iterator(dir_path))
-                    {
-                        std::cout << entry.path() << std::endl;
-                        std::cerr << entry.path() << std::endl;
-                    }
-                }
-            }
-            catch (const fs::filesystem_error& e)
-            {
-                std::cerr << "Filesystem error: " << e.what() << std::endl;
-            }
-        }
-
-
-        inline void print_environment_variables()
-        {
-            for (char** env = environ; *env != nullptr; ++env)
-            {
-                std::cout << *env << std::endl;
-                std::cerr << *env << std::endl;
-            }
-        }
-
         /**
          * @brief Get the absolute path of IOHexperimenter/static
          *
@@ -113,14 +81,6 @@ namespace ioh::common::file
          */
         inline fs::path get_static_root()
         {
-            // Print the contents of the current, previous, and the one before previous directories
-            print_directory_contents(fs::current_path());
-            print_directory_contents(fs::current_path() / "..");
-            print_directory_contents(fs::current_path() / ".." / "..");
-
-            // Print environment variables to stdout and stderr
-            print_environment_variables();
-
             const char* github_workspace = std::getenv("GITHUB_WORKSPACE");
             if (github_workspace != nullptr)
             {
