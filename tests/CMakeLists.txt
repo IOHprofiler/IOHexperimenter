@@ -42,6 +42,12 @@ if(NOT ENABLE_MKLANDSCAPE_PROBLEMS)
     list(REMOVE_ITEM SOURCES "${MKLANDSCAPE_CPP}")
 endif()
 
+# Define the path to the test file to be excluded
+set(TEST_CEC_FUNCTIONS_PY "${CMAKE_CURRENT_SOURCE_DIR}/tests/python/test_cec_functions.py")
+
+# Remove the test_cec_functions.py as we don't want to compile it
+list(REMOVE_ITEM SOURCES "${TEST_CEC_FUNCTIONS_PY}")
+
 register_test(test_${PROJECT_NAME} "${SOURCES}")
 
 # Add test for each file seperately
