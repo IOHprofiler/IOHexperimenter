@@ -6,7 +6,7 @@
 namespace ioh::problem::cec
 {
     /// The Rastrigin class represents the Rastrigin optimization problem, inheriting necessary functionalities from the CECProblem template class.
-    class Rastrigin final : public CECProblem<Rastrigin>
+    class CEC_Rastrigin final : public CECProblem<CEC_Rastrigin>
     {
     protected:
 
@@ -42,7 +42,7 @@ namespace ioh::problem::cec
         /// Constructor initializing the Rastrigin problem with given instance number and variable count.
         /// @param instance Instance number for the problem.
         /// @param n_variables Number of variables for the problem.
-        Rastrigin(const int instance, const int n_variables) :
+        CEC_Rastrigin(const int instance, const int n_variables) :
             CECProblem(meta_problem_id, instance, n_variables, meta_name)
         {
             this->set_optimum();

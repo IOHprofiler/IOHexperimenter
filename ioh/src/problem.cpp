@@ -921,13 +921,13 @@ void define_cec_problems(py::module &m)
     py::class_<cec::Zakharov, CEC, std::shared_ptr<cec::Zakharov>>(m, "CEC_Zakharov", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::Rosenbrock, CEC, std::shared_ptr<cec::Rosenbrock>>(m, "CEC_Rosenbrock", py::is_final())
+    py::class_<cec::CEC_Rosenbrock, CEC, std::shared_ptr<cec::CEC_Rosenbrock>>(m, "CEC_Rosenbrock", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
     py::class_<cec::ExpandedSchafferF7, CEC, std::shared_ptr<cec::ExpandedSchafferF7>>(m, "CEC_ExpandedSchafferF7", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::Rastrigin, CEC, std::shared_ptr<cec::Rastrigin>>(m, "CEC_Rastrigin", py::is_final())
+    py::class_<cec::CEC_Rastrigin, CEC, std::shared_ptr<cec::CEC_Rastrigin>>(m, "CEC_Rastrigin", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
     py::class_<cec::Levy, CEC, std::shared_ptr<cec::Levy>>(m, "CEC_Levy", py::is_final())
