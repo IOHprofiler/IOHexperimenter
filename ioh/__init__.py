@@ -152,13 +152,14 @@ def get_problem(
 
     base_problem = getattr(problem, problem_class.value)
     if base_problem:
+        if problem_class is ProblemClass.GRAPH and not any(base_problem.problems):
+            load_graph_problems()
+
         if fid not in (base_problem.problems.values() | base_problem.problems.keys()):
             raise ValueError(
                 f"{fid} is not registered for problem type: {problem_class}"
             )
-    
-        if problem_class is ProblemClass.GRAPH and not any(base_problem.problems):
-            load_graph_problems()
+
         return base_problem.create(fid, instance, dimension)
 
     raise ValueError(f"Problem type {problem_class} is not supported")
