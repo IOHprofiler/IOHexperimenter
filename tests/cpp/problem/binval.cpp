@@ -19,36 +19,38 @@ int main()
 {
   const auto &dyn_problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinValUniform>::instance();
   auto d = dyn_problem_factory.create(10001, 1, 5);
-  auto x = std::vector<int>{1, 0, 1, 1, 1};
-  double value = (*d)(x);
 
-  LOG("[DynamicBinVal]" << "d->timestep: " << d->timestep << " | Value: " << value);
-  for(long unsigned int i = 0; i < d->weights.size(); ++i)
-  {
-    LOG("[DynamicBinVal]" << "d->weights[" << i << "]: " << d->weights[i]);
+  // Create a list of bitstrings
+  std::vector<std::vector<int>> bitstrings = {
+    {1, 0, 1, 1, 1},
+    {0, 1, 0, 1, 1},
+    {1, 1, 0, 0, 1},
+    {0, 0, 0, 1, 0},
+    {1, 0, 0, 0, 1}
+  };
+
+  // Log the original order of bitstrings
+  LOG("Original order of bitstrings:");
+  for(const auto &bits : bitstrings) {
+    std::string bitstring;
+    for(int bit : bits) {
+      bitstring += std::to_string(bit);
+    }
+    LOG(bitstring);
   }
 
-  d->step();
-  value = (*d)(x);
-  LOG("[DynamicBinVal]" << "d->timestep: " << d->timestep << " | Value: " << value);
-  for(long unsigned int i = 0; i < d->weights.size(); ++i)
-  {
-    LOG("[DynamicBinVal]" << "d->weights[" << i << "]: " << d->weights[i]);
+  // Sort the bitstrings
+  d->rank(bitstrings);
+
+  // Log the sorted order of bitstrings
+  LOG("Sorted order of bitstrings:");
+  for(const auto &bits : bitstrings) {
+    std::string bitstring;
+    for(int bit : bits) {
+      bitstring += std::to_string(bit);
+    }
+    LOG(bitstring);
   }
 
-  d->step();
-  value = (*d)(x);
-  LOG("[DynamicBinVal]" << "d->timestep: " << d->timestep << " | Value: " << value);
-  for(long unsigned int i = 0; i < d->weights.size(); ++i)
-  {
-    LOG("[DynamicBinVal]" << "d->weights[" << i << "]: " << d->weights[i]);
-  }
-
-  d->step();
-  value = (*d)(x);
-  LOG("[DynamicBinVal]" << "d->timestep: " << d->timestep << " | Value: " << value);
-  for(long unsigned int i = 0; i < d->weights.size(); ++i)
-  {
-    LOG("[DynamicBinVal]" << "d->weights[" << i << "]: " << d->weights[i]);
-  }
+  return 0;
 }
