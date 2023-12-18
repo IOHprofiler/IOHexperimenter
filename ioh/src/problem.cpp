@@ -1514,14 +1514,13 @@ void define_dynamic_bin_val_problem(py::module &m)
         "All registered problems"
     )
     .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"))
-    .def(
-        "step", &DynamicBinValUniform::step, R"pbdoc(
-            Step the dynamic binary value problem forward by one timestep, and permute the weights randomly.
+    .def("step", &DynamicBinValUniform::step, R"pbdoc(
+        Step the dynamic binary value problem forward by one timestep, and permute the weights randomly.
 
-            Returns
-            -------
-            int
-                The current timestep after the step.
+        Returns
+        -------
+        int
+            The current timestep after the step.
         )pbdoc"
     );
 
@@ -1594,6 +1593,7 @@ void define_dynamic_bin_val_problem(py::module &m)
     );
 
 
+
     py::class_<DynamicBinValPareto, IntegerSingleObjective, std::shared_ptr<DynamicBinValPareto>>
     (
         m,
@@ -1657,6 +1657,101 @@ void define_dynamic_bin_val_problem(py::module &m)
             -------
             int
                 The current timestep after the step.
+        )pbdoc"
+    );
+
+
+
+    py::class_<DynamicBinValRanking, IntegerSingleObjective, std::shared_ptr<DynamicBinValRanking>>
+    (
+        m,
+        "DynamicBinValRanking",
+        R"pbdoc(
+            Dynamic BinVal. Details: https://link.springer.com/article/10.1007/s42979-022-01203-z
+        )pbdoc"
+    )
+    .def_static
+    (
+        "create",
+        [](const std::string &name, int iid, int dim)
+        {
+            return ioh::common::Factory<DynamicBinValRanking, int, int>::instance().create(name, iid, dim);
+        },
+        py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
+        R"pbdoc(
+            Create a problem instance
+
+            Parameters
+            ----------
+                problem_name: str
+                    a string indicating the problem name.
+                instance_id: int
+                    an integer identifier of the problem instance
+                dimension: int
+                    the dimensionality of the search space
+        )pbdoc"
+    )
+    .def_static
+    (
+        "create",
+        [](int id, int iid, int dim) {
+            return ioh::common::Factory<DynamicBinValRanking, int, int>::instance().create(id, iid, dim);
+        },
+        py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
+        R"pbdoc(
+            Create a problem instance
+
+            Parameters
+            ----------
+                problem_id: int
+                    a number indicating the problem numeric identifier.
+                instance_id: int
+                    an integer identifier of the problem instance
+                dimension: int
+                    the dimensionality of the search space
+        )pbdoc"
+    )
+    .def_property_readonly_static
+    (
+        "problems", [](py::object) { return ioh::common::Factory<DynamicBinValRanking, int, int>::instance().map(); },
+        "All registered problems"
+    )
+    .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"))
+    .def(
+        "step", &DynamicBinValRanking::step, R"pbdoc(
+            Step the dynamic binary value problem forward by one timestep, and permute the weights randomly.
+
+            Returns
+            -------
+            int
+                The current timestep after the step.
+        )pbdoc"
+    )
+    .def("rank", &DynamicBinValRanking::rank, R"pbdoc(
+        Sort a list of bitstrings in lexicographical order in-place.
+
+        Parameters
+        ----------
+        bitstrings : list
+            A list of bitstrings to sort.
+        )pbdoc"
+    )
+    .def("get_comparison_ordering", &DynamicBinValRanking::get_comparison_ordering, R"pbdoc(
+        Get the current comparison ordering vector.
+
+        Returns
+        -------
+        list of int
+            The current state of the comparison ordering vector.
+        )pbdoc"
+    )
+    .def("get_timestep", &DynamicBinValRanking::get_timestep, R"pbdoc(
+        Get the current timestep.
+
+        Returns
+        -------
+        int
+            The current state of the timestep.
         )pbdoc"
     );
 }

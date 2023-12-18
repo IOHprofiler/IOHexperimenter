@@ -421,3 +421,43 @@ print("DynamicBinValPareto [0, 1, 0, 0, 0]:", dynamic_bin_val([0, 1, 0, 0, 0]))
 print("DynamicBinValPareto [0, 0, 1, 0, 0]:", dynamic_bin_val([0, 0, 1, 0, 0]))
 print("DynamicBinValPareto [0, 0, 0, 1, 0]:", dynamic_bin_val([0, 0, 0, 1, 0]))
 print("DynamicBinValPareto [0, 0, 0, 0, 1]:", dynamic_bin_val([0, 0, 0, 0, 1]))
+
+
+
+
+
+
+from ioh import get_problem, ProblemClass
+f1 = get_problem(10004, 1, 5, ProblemClass.INTEGER)
+f1.step()
+f1.step()
+f1.step()
+ranked = f1.rank([
+  [1, 0, 0, 0, 1],
+  [0, 1, 0, 0, 1],
+  [1, 1, 1, 0, 1],
+  [1, 1, 0, 1, 1],
+  [0, 0, 1, 1, 0],
+  [1, 0, 1, 1, 0],
+  [1, 1, 0, 0, 1],
+  [1, 1, 0, 0, 0],
+])
+
+should_be = [
+  [1, 1, 0, 0, 1],
+  [1, 1, 0, 1, 1],
+  [1, 1, 0, 0, 0],
+  [0, 1, 0, 0, 1],
+  [1, 0, 0, 0, 1],
+  [1, 1, 1, 0, 1],
+  [1, 0, 1, 1, 0],
+  [0, 0, 1, 1, 0],
+]
+
+print(f1.get_timestep())
+print(f1.optimum)
+print(f1.get_comparison_ordering())
+print("ranked", ranked)
+print("ranked correctly?", ranked == should_be)
+
+
