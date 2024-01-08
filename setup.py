@@ -28,6 +28,11 @@ PLAT_TO_CMAKE = {
     "win-arm64": "ARM64",
 }
 
+# g++ does not compile on the cluster MeSU:
+os.environ["CC"] = "clang"
+os.environ["CXX"] = "clang++"
+os.environ["CXXFLAGS"] = "-stdlib=libc++"
+
 if platform.system() == "Darwin":
     os.environ["CC"] = "clang"
     os.environ["CXX"] = "clang"
@@ -76,6 +81,10 @@ class CMakeBuild(build_ext):
             "-DBUILD_DOCS={}".format("ON" if MAKE_DOCS else "OFF"),
             "-DBUILD_EXAMPLE=OFF",
             "-DCMAKE_BUILD_TYPE={}".format(cfg),  # not used on MSVC, but no harm
+
+            # Add these lines:
+            "-DCMAKE_CXX_FLAGS=-stdlib=libc++",
+            "-DCMAKE_INSTALL_PREFIX=IOHexperimenter",
         ]
         build_args = []
 

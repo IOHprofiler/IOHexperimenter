@@ -32,6 +32,10 @@ endfunction()
 # Add all tests in single executable
 file(GLOB SOURCES cpp/*/*.cpp)
 
+# Remove binval.cpp as we don't want to compile it
+set(BINVALS_CPP "${CMAKE_CURRENT_SOURCE_DIR}/cpp/problem/binval.cpp")
+list(REMOVE_ITEM SOURCES "${BINVALS_CPP}")
+
 # Remove MKLandscape if it is not enablecd
 if(NOT ENABLE_MKLANDSCAPE_PROBLEMS)
     get_filename_component(MKLANDSCAPE_CPP ${CMAKE_CURRENT_SOURCE_DIR}/cpp/problem/test_mklandscape_problem.cpp ABSOLUTE)

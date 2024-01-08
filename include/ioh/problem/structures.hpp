@@ -243,11 +243,17 @@ namespace ioh
             void update(const MetaData &meta_data, const Solution<T, double> &objective)
             {
                 ++evaluations;
+
+                has_improved = meta_data.optimization_type(current_internal.y, current_best_internal.y);
+                if (has_improved)
+                {
+                    current_best_internal = current_internal;
+                }
+
                 has_improved = meta_data.optimization_type(current.y, current_best.y);
                 if (has_improved)
                 {
                     y_unconstrained_best = y_unconstrained;
-                    current_best_internal = current_internal;
                     current_best = current;
 
                     if (objective.y == current.y)
