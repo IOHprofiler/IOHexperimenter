@@ -17,8 +17,8 @@
 
 int main()
 {
-  const auto &dyn_problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinValUniform>::instance();
-  auto d = dyn_problem_factory.create(10001, 1, 5);
+  const auto &dyn_problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinValRanking>::instance();
+  auto d = dyn_problem_factory.create(10004, 1, 5);
 
   // Create a list of bitstrings
   std::vector<std::vector<int>> bitstrings = {
@@ -40,16 +40,20 @@ int main()
   }
 
   // Sort the bitstrings
-  d->rank(bitstrings);
+  std::vector<std::vector<int>> sorted_bitstrings = d->rank(bitstrings);
+  std::vector<int> indices = d->rank_indices(bitstrings);
 
-  // Log the sorted order of bitstrings
-  LOG("Sorted order of bitstrings:");
-  for(const auto &bits : bitstrings) {
-    std::string bitstring;
-    for(int bit : bits) {
-      bitstring += std::to_string(bit);
-    }
-    LOG(bitstring);
+  // Log the sorted order of sorted_bitstrings
+  LOG("Sorted order of sorted_bitstrings:");
+  for (size_t i = 0; i < sorted_bitstrings.size(); ++i) {
+      const auto& bits = sorted_bitstrings[i];
+      std::string bitstring;
+      for (int bit : bits) {
+          bitstring += std::to_string(bit);
+      }
+
+      // Log the corresponding index from the indices vector
+      LOG("Bitstring: " + bitstring + " | Original Index: " + std::to_string(indices[i]));
   }
 
   return 0;

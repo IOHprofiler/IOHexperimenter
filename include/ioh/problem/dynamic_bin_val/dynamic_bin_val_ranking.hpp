@@ -115,6 +115,38 @@ namespace ioh::problem
             return sorted_bitstrings;
         }
 
+        /**
+         * @brief Returns the indices of the given bitstrings sorted lexicographically based on the ranking permutation.
+         *
+         * This function generates a list of indices representing the order in which the bitstrings would be sorted.
+         * It uses the same comparison criteria as the rank function, but instead of sorting the bitstrings themselves,
+         * it sorts their indices. This is useful for understanding the original positions of the bitstrings in the sorted order.
+         *
+         * @param bitstrings The list of bitstrings for which the sorted indices are to be obtained.
+         * @return A vector of indices indicating the sorted order of the bitstrings.
+         */
+        std::vector<int> rank_indices(const std::vector<std::vector<int>>& bitstrings)
+        {
+            // Create an index list from 0 to n-1
+            std::vector<int> indices(bitstrings.size());
+            std::iota(indices.begin(), indices.end(), 0);
+
+            // Comparator using the comparison_ordering and optimum_.x from 'this' object
+            auto comparator = [this, &bitstrings](int i, int j) {
+                for (int index : this->comparison_ordering) {
+                    if (bitstrings[i][index] != bitstrings[j][index]) {
+                        return this->optimum_.x[index] == 1 ? bitstrings[i][index] > bitstrings[j][index] : bitstrings[i][index] < bitstrings[j][index];
+                    }
+                }
+                return false;
+            };
+
+            // Sort the indices based on the comparator
+            std::sort(indices.begin(), indices.end(), comparator);
+
+            return indices;
+        }
+
         const std::vector<int>& get_comparison_ordering() const
         {
             return comparison_ordering;
@@ -128,16 +160,24 @@ namespace ioh::problem
     protected:
 
         /**
-         * @brief Evaluates a given solution vector.
+         * @brief Evaluates the fitness of a bitstring for the OneMax problem.
          *
-         * This function is not used.
+         * The OneMax problem aims to maximize the number of 1s in a binary string. This function calculates
+         * the fitness of a given binary vector by summing its elements. Since the vector contains only 0s and 1s,
+         * this sum is equivalent to counting the number of 1s in the vector, which is the desired fitness measure
+         * for the OneMax problem.
          *
-         * @param x Solution vector to be evaluated.
-         * @return Evaluation result as a double.
+         * @param x The binary vector to be evaluated.
+         * @return The fitness score, which is the sum of elements in the vector (number of 1s).
          */
         double evaluate(const std::vector<int> &x) override
         {
-            return 0;
+            // Sum the elements of the vector x
+            int sum = std::accumulate(x.begin(), x.end(), 0);
+
+            // The evaluation function returns the sum, equivalent to the count of 1s
+            return static_cast<double>(sum);
         }
+
     };
 } // namespace ioh::problem

@@ -462,5 +462,14 @@ print("DYNAMIC BIN VAL WITH RANKING")
 print("dynamic_bin_val_with_ranking.get_timestep()", dynamic_bin_val_with_ranking.get_timestep())
 print("dynamic_bin_val_with_ranking.optimum", dynamic_bin_val_with_ranking.optimum)
 print("dynamic_bin_val_with_ranking.get_comparison_ordering()", dynamic_bin_val_with_ranking.get_comparison_ordering())
+
+indices = dynamic_bin_val_with_ranking.rank_indices(unranked)
+sorted_by_indices = [unranked[ind] for ind in indices]
+
+print("indices", indices)
+print("sorted_by_indices", sorted_by_indices)
+
+print("dynamic_bin_val_with_ranking(unranked[0])", dynamic_bin_val_with_ranking(unranked[0]))
+
 print("ranked", ranked)
 print("ranked correctly?", ranked == should_be)

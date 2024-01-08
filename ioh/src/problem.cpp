@@ -1736,6 +1736,15 @@ void define_dynamic_bin_val_problem(py::module &m)
             A list of bitstrings to sort.
         )pbdoc"
     )
+    .def("rank_indices", &DynamicBinValRanking::rank_indices, R"pbdoc(
+        Sort a list of bitstrings in lexicographical order in-place.
+
+        Parameters
+        ----------
+        bitstrings : list
+            A list of bitstrings to sort.
+        )pbdoc"
+    )
     .def("get_comparison_ordering", &DynamicBinValRanking::get_comparison_ordering, R"pbdoc(
         Get the current comparison ordering vector.
 
