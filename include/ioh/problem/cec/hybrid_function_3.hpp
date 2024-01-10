@@ -4,8 +4,8 @@
 
 namespace ioh::problem::cec
 {
-    /// \brief HybridFunction3 class that inherits from CECProblem.
-    class HybridFunction3 final : public CECProblem<HybridFunction3>
+    /// \brief CEC_HybridFunction3 class that inherits from CECProblem.
+    class CEC_HybridFunction3 final : public CECProblem<CEC_HybridFunction3>
     {
     protected:
         /// \brief Evaluates the function with the transformed variables.
@@ -104,10 +104,10 @@ namespace ioh::problem::cec
         /// \brief Meta name of the problem.
         inline static const std::string meta_name = "CEC_HybridFunction3";
 
-        /// \brief Constructor of the HybridFunction3 class.
+        /// \brief Constructor of the CEC_HybridFunction3 class.
         /// \param instance The instance number of the problem.
         /// \param n_variables The number of variables.
-        HybridFunction3(const int instance, const int n_variables) :
+        CEC_HybridFunction3(const int instance, const int n_variables) :
             CECProblem(meta_problem_id, instance, n_variables, meta_name)
         {
             this->set_optimum();

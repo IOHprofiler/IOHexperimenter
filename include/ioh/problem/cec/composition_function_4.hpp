@@ -5,7 +5,7 @@
 namespace ioh::problem::cec
 {
     /// \brief Class representing the fourth composition function in the CEC benchmark suite.
-    class CompositionFunction4 final : public CECProblem<CompositionFunction4>
+    class CEC_CompositionFunction4 final : public CECProblem<CEC_CompositionFunction4>
     {
     protected:
 
@@ -38,12 +38,12 @@ namespace ioh::problem::cec
         inline static const std::string meta_name = "CEC_CompositionFunction4"; ///< The unique name for this problem.
 
         /**
-         * @brief Constructs a CompositionFunction4 instance.
+         * @brief Constructs a CEC_CompositionFunction4 instance.
          *
          * @param instance The instance number of the problem.
          * @param n_variables The number of variables in the problem.
          */
-        CompositionFunction4(const int instance, const int n_variables) :
+        CEC_CompositionFunction4(const int instance, const int n_variables) :
             CECProblem(meta_problem_id, instance, n_variables, meta_name)
         {
             this->set_optimum();

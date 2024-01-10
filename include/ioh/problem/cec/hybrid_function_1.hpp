@@ -5,12 +5,12 @@
 //! Namespace encapsulating all elements of the IOHexperimenter project
 namespace ioh::problem::cec
 {
-    //! A class representing the HybridFunction1 problem, derived from the CECProblem class.
+    //! A class representing the CEC_HybridFunction1 problem, derived from the CECProblem class.
     /*!
      * This class represents a specific optimization problem which is a hybrid of several other functions.
      * It overrides the evaluate and transform_variables methods to provide the specific implementation for this problem.
      */
-    class HybridFunction1 final : public CECProblem<HybridFunction1>
+    class CEC_HybridFunction1 final : public CECProblem<CEC_HybridFunction1>
     {
     protected:
 
@@ -103,14 +103,14 @@ namespace ioh::problem::cec
         //! A constant representing the name of this problem.
         inline static const std::string meta_name = "CEC_HybridFunction1";
 
-        //! Constructor for the HybridFunction1 class.
+        //! Constructor for the CEC_HybridFunction1 class.
         /*!
-         * Initializes a new instance of the HybridFunction1 class, setting up the problem with the specified instance and number of variables.
+         * Initializes a new instance of the CEC_HybridFunction1 class, setting up the problem with the specified instance and number of variables.
          *
          * \param instance The instance number of the problem.
          * \param n_variables The number of variables for the problem.
          */
-        HybridFunction1(const int instance, const int n_variables) :
+        CEC_HybridFunction1(const int instance, const int n_variables) :
             CECProblem(meta_problem_id, instance, n_variables, meta_name)
         {
             this->set_optimum();
