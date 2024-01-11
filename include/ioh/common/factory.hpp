@@ -87,6 +87,9 @@ namespace ioh::common
             std::free(demangled_name);
         }
 #endif
+
+        std::cout << "factory.hpp OUTPUT name: " << name << std::endl;
+        std::cerr << "factory.hpp OUTPUT name: " << name << std::endl;
         return name;
     }
 
