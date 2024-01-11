@@ -273,6 +273,8 @@ class PyProblem : public P
         auto constraints = this->constraints();
         auto optimum = this->optimum();
 
+        std::cerr << "PyProblem meta_data.name: " << meta_data.name << std::endl;
+
         auto &factory = ioh::common::Factory<P, int, int>::instance();
         factory.include(meta_data.name, meta_data.problem_id, [=](const int instance, const int n_variables) {
             return std::make_shared<PyProblem<P, T>>(MetaData(meta_data.problem_id, instance, meta_data.name,

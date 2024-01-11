@@ -21,8 +21,6 @@
 #include "container_utils.hpp"
 #include "file.hpp"
 
-
-
 namespace ioh::problem
 {
     //! Defintion interface of problems that are defined in static files
@@ -88,8 +86,6 @@ namespace ioh::common
         }
 #endif
 
-        std::cout << "factory.hpp OUTPUT name: " << name << std::endl;
-        std::cerr << "factory.hpp OUTPUT name: " << name << std::endl;
         return name;
     }
 
@@ -106,6 +102,7 @@ namespace ioh::common
         name = name.substr(name.find_last_of(' ') + 1);
         name = name.substr(name.find_last_of("::") + 1);
         name = name.substr(0, name.find_first_of(">"));
+
         return name;
     }
 
@@ -136,17 +133,15 @@ namespace ioh::common
         {
             const auto already_defined = name_map.find(name) != std::end(name_map);
 
-            // Enhanced assertion message
-            assert(name.c_str());
+            // Check if the name is empty and ignore it if so
+            if (name.empty()) {
+                std::cerr << "Ignoring attempt to include an entry with an empty name.";
+                return; // Exit the function early
+            }
 
             if (already_defined) {
-                std::string error_message = "Error: The name '" + name + "' has already been defined in the factory.";
-
-                // Output the error message to both std::cerr and std::cout
-                std::cerr << error_message << std::endl;
-                std::cout << error_message << std::endl;
-
-                assert(!already_defined && name.c_str());
+                std::cerr << "Warning: The name '" << name << "' has already been defined in the factory.";
+                return; // Exit the function early
             }
 
             name_map[name] = std::move(creator);
@@ -278,6 +273,7 @@ namespace ioh::common
             {
                 const auto id = std::get<1>(ci);
                 const auto name = std::get<2>(ci).value_or(fmt::format("{}{}", class_name<T>(), id));
+
 
                 factory.include(name, id, [c = std::get<0>(ci)](Args &&...params) {
                     return std::make_unique<T>(c(std::forward<Args>(params)...));

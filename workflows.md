@@ -235,3 +235,55 @@ In GitHub Actions we have the following useful environment variables:
 GITHUB_WORKSPACE=/home/runner/work/IOHexperimenter/IOHexperimenter
 RUNNER_WORKSPACE=/Users/runner/work/IOHexperimenter
 ```
+
+
+
+```sh
+sudo apt install doxygen
+
+conda activate ./.conda_environment
+pip install breathe xmltodict sphinx sphinx-automodapi furo
+
+cd /home/dimitri/code/IOHexperimenter/build
+
+cmake -DBUILD_DOCS=ON ..
+
+wine "/home/dimitri/.wine/drive_c/Program Files/CMake/bin/cmake.exe" -DBUILD_DOCS=ON ..
+make doc
+cd ..
+ipython3 doc/generate_docs.py
+```
+
+
+
+
+Build everything:
+```sh
+git clone git@github.com:Habimm/IOHexperimenter.git
+cd IOHexperimenter
+git submodule
+git submodule init
+git submodule update
+mkdir build
+cd build
+
+cmake -DCMAKE_INSTALL_PREFIX=./IOHexperimenter_headers ..
+
+wine "/home/dimitri/.wine/drive_c/Program Files/CMake/bin/cmake.exe" -DBUILD_DOCS=ON ..
+
+wine "/home/dimitri/.wine/drive_c/Program Files/CMake/bin/cmake.exe" -DCMAKE_TOOLCHAIN_FILE=/home/dimitri/code/IOHexperimenter/mingw-w64-toolchain.cmake -DBUILD_DOCS=ON ..
+
+cmake -DCMAKE_TOOLCHAIN_FILE=/home/dimitri/code/IOHexperimenter/mingw-w64-toolchain.cmake -DCMAKE_INSTALL_PREFIX=./IOHexperimenter_headers ..
+
+sudo make install
+```
+
+Build everything:
+```sh
+cd /home/dimitri/code/IOHexperimenter
+sudo rm -rf build
+mkdir build
+cd build
+cmake -DCMAKE_TOOLCHAIN_FILE=/home/dimitri/code/IOHexperimenter/mingw-w64-toolchain.cmake -DCMAKE_INSTALL_PREFIX=./IOHexperimenter_headers ..
+sudo make install
+```

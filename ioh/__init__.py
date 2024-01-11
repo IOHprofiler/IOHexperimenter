@@ -161,7 +161,7 @@ def get_problem(
             )
 
     if fid in [1006, 1007, 1008] and dimension not in [10, 20]:
-        raise ValueError(f"For function {fid}, dimension needs to be either 10 or 20!")
+        raise ValueError(f"For CEC 2022 function {fid}, dimension needs to be either 10 or 20!")
 
     if problem_class == ProblemClass.CEC and dimension not in [2, 10, 20]:
         raise ValueError(f"For CEC 2022 function {fid}, dimension needs to be either 2 or 10 or 20!")
