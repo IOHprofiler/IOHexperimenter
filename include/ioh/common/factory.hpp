@@ -134,6 +134,8 @@ namespace ioh::common
             const auto already_defined = name_map.find(name) != std::end(name_map);
 
             // Enhanced assertion message
+            assert(name.c_str());
+
             if (already_defined) {
                 std::string error_message = "Error: The name '" + name + "' has already been defined in the factory.";
 
