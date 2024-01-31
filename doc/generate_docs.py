@@ -10,7 +10,7 @@ BASE_DIR = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
 unit_template = '''{name}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygen{dtype}:: {ns}::{name}
-'''
+''' 
 
 namespace_template = '''
 Namespaces
