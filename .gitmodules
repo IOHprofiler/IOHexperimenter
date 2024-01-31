@@ -17,6 +17,6 @@
 	url = https://github.com/nlohmann/json.git
 [submodule "external/MkLandscape"]
 	path = external/MkLandscape
-        url = https://github.com/tobiasvandriessel/problem-generator.git
-        branch = main
+    url = https://github.com/tobiasvandriessel/problem-generator.git
+    branch = main
 
