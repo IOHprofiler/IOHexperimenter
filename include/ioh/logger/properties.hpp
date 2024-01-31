@@ -111,9 +111,9 @@ namespace ioh
              * \param nan The value to log when there is no data.
              * \return a string representation of the properties' data
              */
-            [[nodiscard]] virtual void call_to_string(std::string &output, 
-                                                      const logger::Info &log_info,
-                                                      const std::string &nan = ""
+            virtual void call_to_string(std::string &output, 
+                                        const logger::Info &log_info,
+                                        const std::string &nan = ""
 
             ) const
             {

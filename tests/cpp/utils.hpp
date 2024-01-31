@@ -78,7 +78,7 @@ inline void compare_file_with_string(const fs::path& path, const std::string& ex
 class BaseTest: public ::testing::Test
 {
 public:
-    inline static clutchlog::level log_level_ = clutchlog::level::warning;
+    // inline static clutchlog::level log_level_ = clutchlog::level::warning;
     inline static std::optional<int> log_depth_ = std::nullopt;
     inline static std::optional<std::string> log_file_ = std::nullopt;
 protected:

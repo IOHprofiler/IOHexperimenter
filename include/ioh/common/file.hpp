@@ -423,7 +423,7 @@ namespace ioh::common::file
 
     struct Writer
     {
-        virtual void open(const fs::path &new_path) = 0;
+        virtual void open(const fs::path &) = 0;
         virtual void close() = 0;
         virtual bool is_open() = 0;
         virtual void write(const std::string &) = 0;
@@ -434,7 +434,7 @@ namespace ioh::common::file
         size_t chars_written;
         NoWriter(): is_open_(false), chars_written(0) {}
 
-        void open(const fs::path &new_path) override {
+        void open(const fs::path &) override {
             is_open_ = true;
         }
         void close() override {

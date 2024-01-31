@@ -775,7 +775,10 @@ class clutchlog
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4716)
+#endif
         static clutchlog& logger() { }
+#ifdef _MSC_VER
+#pragma warning(pop)
 #endif
         enum level {critical=0, error=1, warning=2, progress=3, note=4, info=5, debug=6, xdebug=7};
         class fmt {
@@ -837,12 +840,14 @@ class clutchlog
 #ifndef _MSC_VER
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
         void location(
                 const std::string&,
                 const std::string& in_function=".*",
                 const std::string& in_line=".*"
             )
         { }
+#ifndef _MSC_VER        
 #pragma GCC diagnostic pop
 #endif
         void style(level, fmt) { }
@@ -850,7 +855,10 @@ class clutchlog
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4716)
+#endif
         level level_of(const std::string) { }
+#ifndef _MSC_VER        
+#pragma GCC diagnostic pop
 #endif
     public:
         std::string replace(
@@ -901,9 +909,6 @@ class clutchlog
             ) const
         { }
 };
-#ifndef _MSC_VER
-#pragma GCC diagnostic pop
-#endif
 #endif // WITH_CLUTCHLOG
 
 #endif // __CLUTCHLOG_H__

@@ -2,16 +2,16 @@
 
 void BaseTest::SetUp()
 {
-    auto &log = clutchlog::logger();
-    log.threshold(log_level_);
+//     auto &log = clutchlog::logger();
+//     log.threshold(log_level_);
 
-    if (log_file_.has_value())
-        log.file(log_file_.value());
+//     if (log_file_.has_value())
+//         log.file(log_file_.value());
 
-#if CLUTCHLOG_HAVE_UNIX_SYSINFO == 1
-    if (log_depth_.has_value())
-        log.depth(log_depth_.value());
-#endif
+// #if CLUTCHLOG_HAVE_UNIX_SYSINFO == 1
+//     if (log_depth_.has_value())
+//         log.depth(log_depth_.value());
+// #endif
 }   
 
 int main(int argc, char** argv) {	
@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
     // Allows to adjust the debugging log parameters for all tests.
     // Binaries will expect the log level, then the depth level, then the file scope regexp.
     if(argc > 1) {
-        BaseTest::log_level_ = clutchlog::logger().level_of(argv[1]);
+        // BaseTest::log_level_ = clutchlog::logger().level_of(argv[1]);
         if(argc > 2) {
             // TODO we could also handle function and/or line regexp.
             // Maybe it's useless for tests, so it's not handled for the moment.

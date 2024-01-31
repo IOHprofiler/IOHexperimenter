@@ -152,7 +152,9 @@ class TestLogger(unittest.TestCase):
         c = ioh.RealSolution([0], 1)
         l = ioh.LogInfo(0, 1, 1, 1, 1, 1, 1, [0],[0],[0], c)
         a = P("x")
-        self.assertEqual(int(a(l)), int(float(a.call_to_string(l, "na"))))
+        x = ""
+        a.call_to_string(x, l, "na")
+        self.assertEqual(int(a(l)), int(float(x)))
         
 
 if __name__ == "__main__":
