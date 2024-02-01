@@ -55,16 +55,6 @@ class TestExperiment(unittest.TestCase):
         exp.add_custom_problem(a_problem, "Name")
         pid = ioh.get_problem_id("Name", ioh.ProblemClass.REAL)
 
-        print("ioh.problem.RealSingleObjective.problems")
-        print(ioh.problem.RealSingleObjective.problems)
-        print("ioh.problem.IntegerSingleObjective.problems")
-        print(ioh.problem.IntegerSingleObjective.problems)
-        print("ioh.problem.CEC.problems")
-        print(ioh.problem.CEC.problems)
-        print("exp.fids", exp.fids)
-        print("exp.iids", exp.iids)
-        print("exp.dims", exp.dims)
-
         exp()
 
         info_files = {f'IOHprofiler_f{pid}_Name.info', 'IOHprofiler_f1_Sphere.info'}

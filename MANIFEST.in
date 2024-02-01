@@ -16,7 +16,7 @@ graft external/json/include
 graft external/json/cmake
 include external/json/CMakeLists.txt
 
-include external/clutchlog/clutchlog/clutchlog.h external/clutchlog/CMakeLists.txt
+include include/ioh/common/clutchlog.h
 include doc/generate_docs.py doc/__init__.py
 include VERSION
 include pyproject.toml

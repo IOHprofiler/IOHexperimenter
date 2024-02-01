@@ -273,8 +273,6 @@ class PyProblem : public P
         auto constraints = this->constraints();
         auto optimum = this->optimum();
 
-        std::cerr << "PyProblem meta_data.name: " << meta_data.name << std::endl;
-
         auto &factory = ioh::common::Factory<P, int, int>::instance();
         factory.include(meta_data.name, meta_data.problem_id, [=](const int instance, const int n_variables) {
             return std::make_shared<PyProblem<P, T>>(MetaData(meta_data.problem_id, instance, meta_data.name,
@@ -921,39 +919,6 @@ void define_cec_problems(py::module &m)
         "All registered problems");
 
     py::class_<cec::CEC_Zakharov, CEC, std::shared_ptr<cec::CEC_Zakharov>>(m, "CEC_Zakharov", py::is_final())
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-
-    py::class_<cec::CEC_Rosenbrock, CEC, std::shared_ptr<cec::CEC_Rosenbrock>>(m, "CEC_Rosenbrock", py::is_final())
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-
-    py::class_<cec::CEC_ExpandedSchafferF7, CEC, std::shared_ptr<cec::CEC_ExpandedSchafferF7>>(m, "CEC_ExpandedSchafferF7", py::is_final())
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-
-    py::class_<cec::CEC_Rastrigin, CEC, std::shared_ptr<cec::CEC_Rastrigin>>(m, "CEC_Rastrigin", py::is_final())
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-
-    py::class_<cec::CEC_Levy, CEC, std::shared_ptr<cec::CEC_Levy>>(m, "CEC_Levy", py::is_final())
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-
-    py::class_<cec::CEC_HybridFunction1, CEC, std::shared_ptr<cec::CEC_HybridFunction1>>(m, "CEC_HybridFunction1", py::is_final())
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-
-    py::class_<cec::CEC_HybridFunction2, CEC, std::shared_ptr<cec::CEC_HybridFunction2>>(m, "CEC_HybridFunction2", py::is_final())
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-
-    py::class_<cec::CEC_HybridFunction3, CEC, std::shared_ptr<cec::CEC_HybridFunction3>>(m, "CEC_HybridFunction3", py::is_final())
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-
-    py::class_<cec::CEC_CompositionFunction1, CEC, std::shared_ptr<cec::CEC_CompositionFunction1>>(m, "CompositionFunction1", py::is_final())
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-
-    py::class_<cec::CEC_CompositionFunction2, CEC, std::shared_ptr<cec::CEC_CompositionFunction2>>(m, "CompositionFunction2", py::is_final())
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-
-    py::class_<cec::CEC_CompositionFunction3, CEC, std::shared_ptr<cec::CEC_CompositionFunction3>>(m, "CompositionFunction3", py::is_final())
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-
-    py::class_<cec::CEC_CompositionFunction4, CEC, std::shared_ptr<cec::CEC_CompositionFunction4>>(m, "CompositionFunction4", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 }
 

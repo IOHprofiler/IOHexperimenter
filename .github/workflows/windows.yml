@@ -13,18 +13,11 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9.x"]
-        architecture: [x86]
-
+        architecture: [x64]
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: true    
-
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      with:
-        detached: true
-
     - name: Set up Python
       uses: actions/setup-python@v2
       with:

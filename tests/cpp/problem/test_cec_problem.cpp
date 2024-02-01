@@ -33,17 +33,6 @@ TEST_F(BaseTest, CECProblem)
         std::exit(EXIT_FAILURE);
     }
 
-    const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC>::instance();
-
-    std::cerr << "Registered Names in Problem Factory:" << std::endl;
-    for (const auto& name : problem_factory.names()) {
-        std::cerr << name << std::endl;
-    }
-    std::cout << "Registered IDs in Problem Factory:" << std::endl;
-    for (const auto& id : problem_factory.ids()) {
-        std::cerr << id << std::endl;
-    }
-
     std::string s;
     while (getline(infile, s))
     {
@@ -70,7 +59,6 @@ TEST_F(BaseTest, xopt_equals_yopt_cec)
         1006, 1007, 1008, 1009, 1010,
         1011, 1012
     };
-    const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC>::instance();
     for (const auto& enumerated_meta_problem_id : cec_problem_ids)
     {
         // Any function's, but the composition function's, optimum is defined.
