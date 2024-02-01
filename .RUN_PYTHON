@@ -2,5 +2,5 @@
 
 true
 and conda activate ./.conda_environment/
-and cd ~
+and cd /home/dimitri/code/IOHexperimenter/tests/python/
 and ipython3
