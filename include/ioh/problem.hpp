@@ -1,6 +1,7 @@
 #pragma once
 
 #include "problem/transformation.hpp"
+#include "problem/cec.hpp"
 #include "problem/problem.hpp"
 #include "problem/single.hpp"
 #include "problem/wrap_function.hpp"
