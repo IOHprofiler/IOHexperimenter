@@ -205,7 +205,7 @@ namespace ioh::common
         static FactoryID get_id(const std::vector<int> &)
         {
             const auto meta = T(1, 1).meta_data();
-            return {meta.problem_id, meta.name};
+            return {meta.problem_id, meta.name + "IdGetter<true>"};
         }
     };
 
