@@ -205,7 +205,19 @@ namespace ioh::common
         static FactoryID get_id(const std::vector<int> &)
         {
             const auto meta = T(1, 1).meta_data();
-            return {meta.problem_id, meta.name + "IdGetter<true>"};
+
+            /*
+            * On Windows, meta.name might be empty or equal to "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00".
+            * See: https://github.com/IOHprofiler/IOHexperimenter/actions/runs/7747003611/job/21126505708?pr=198
+            * So, we avoid meta.name in favor of class_name<T>().
+            */
+
+            std::string problem_name = meta.name;
+            if (meta.problem_id > 1000)
+            {
+                problem_name = class_name<T>();
+            }
+            return {meta.problem_id, problem_name};
         }
     };
 
