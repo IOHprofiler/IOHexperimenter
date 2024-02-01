@@ -1,0 +1,9 @@
+cmake==3.27.7
+colored==2.2.3
+jupyter==1.0.0
+m2r2==0.3.3.post2
+mypy==1.6.1
+nbconvert==6.5.4
+numpy==1.26.3
+pybind11==2.11.1
+xmltodict==0.13.0
