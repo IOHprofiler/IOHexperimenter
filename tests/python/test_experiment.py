@@ -49,9 +49,6 @@ class TestExperiment(unittest.TestCase):
             old_logger=True
         )
 
-        print("ioh.problem.RealSingleObjective.problems")
-        print(ioh.problem.RealSingleObjective.problems)
-
         def a_problem(x):
             return 0.0
             
