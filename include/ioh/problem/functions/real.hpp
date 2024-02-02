@@ -12,7 +12,7 @@
 
 #include "ioh/problem/transformation.hpp"
 
-#define LOG_FILE_NAME "cec_test_log.txt"
+#define LOG_FILE_NAME "IOHexperimenter.log"
 
 #define LOG(message)                                                           \
   do {                                                                         \

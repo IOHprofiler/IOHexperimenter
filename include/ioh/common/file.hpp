@@ -1,10 +1,10 @@
-
 #pragma once
 
+#include "ioh/common/format.hpp"
+#include "ioh/common/log.hpp"
+#include <cstdlib> // for std::getenv, std::exit and EXIT_FAILURE
 #include <string>
 #include <utility>
-#include "ioh/common/log.hpp"
-#include "ioh/common/format.hpp"
 
 #ifdef FSEXPERIMENTAL
 #define JSON_HAS_EXPERIMENTAL_FILESYSTEM 1
@@ -22,6 +22,20 @@ namespace fs = std::filesystem;
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 #endif
+
+#define LOG_FILE_NAME "IOHexperimenter.log"
+
+#define LOG(message)                                                           \
+  do {                                                                         \
+    std::ofstream debug_log(LOG_FILE_NAME, std::ios::app);                     \
+    auto now = std::chrono::system_clock::now();                               \
+    std::time_t now_time = std::chrono::system_clock::to_time_t(now);          \
+    debug_log << "["                                                           \
+              << std::put_time(std::localtime(&now_time), "%Y-%m-%d %H:%M:%S") \
+              << "] " << message << std::endl;                                 \
+    debug_log.close();                                                         \
+  } while (0)
+
 //! File namespace
 namespace ioh::common::file
 {
@@ -77,25 +91,36 @@ namespace ioh::common::file
         /**
          * @brief Get the absolute path of IOHexperimenter/static
          *
+         * This function attempts to find the absolute path based on environment variables.
+         * It first checks if 'IOH_RESOURCES' is set and uses it if available.
+         * If 'IOH_RESOURCES' is not set, it then checks 'GITHUB_WORKSPACE'.
+         * If neither are set, it logs an error and returns a placeholder path.
+         *
          * @return fs::path the absolute path of IOHexperimenter/static
          */
         inline fs::path get_static_root()
         {
-            const auto static_root = fs::path("IOHexperimenter") / fs::path("static");
-            fs::path root;
-            for (const auto &e : fs::current_path())
+            // First, try to use the IOH_RESOURCES environment variable
+            const char* ioh_resources = std::getenv("IOH_RESOURCES");
+            if (ioh_resources != nullptr)
             {
-                root /= e;
-                if (exists(root / static_root))
-                {
-                    root = root / static_root;
-                    return root;
-                }
+                // If IOH_RESOURCES is set, return its value as a filesystem path
+                return fs::canonical(fs::path(ioh_resources));
             }
-            IOH_DBG(warning, "could static root");
-            return {};
-        }
 
+            // If IOH_RESOURCES is not set, fall back to GITHUB_WORKSPACE
+            const char* github_workspace = std::getenv("GITHUB_WORKSPACE");
+            if (github_workspace != nullptr)
+            {
+                // If GITHUB_WORKSPACE is set, append "static/" and return the canonical path
+                return fs::canonical(fs::path(github_workspace) / "static");
+            }
+
+            // If neither IOH_RESOURCES nor GITHUB_WORKSPACE are set, log an error and return a placeholder
+            LOG("[get_static_root] Error: Neither IOH_RESOURCES nor GITHUB_WORKSPACE environment variables are set.");
+            std::exit(EXIT_FAILURE);
+            // No return statement.
+        }
 
         /**
          * @brief Finds a file located in the static folder of this repository
