@@ -190,4 +190,11 @@ py10/
 
 gsemo.cpp
 
+.BUILD_CPP
+.BUILD_PYTHON
+.conda.yaml
 .conda_environment/
+.pip.txt
+.RUN_CPP
+.RUN_PYTHON
+.workflows.md
