@@ -142,6 +142,40 @@ namespace ioh
         }
 
         /**
+         * \brief Transform a vector to a square matrix
+         * \tparam T The type of the matrix
+         * \param v the vector to be transformed
+         * \return the matrix
+         */
+        template<typename T>
+        std::vector<std::vector<T>> to_matrix(const std::vector<T>& v)
+        {
+            const size_t n = std::sqrt(v.size());
+            return to_matrix(v, n, n);
+        }
+
+        /**
+         * \brief  Transform a vector to a matrix
+         * \tparam T The type of the matrix
+         * \param v the vector to be transformed
+         * \param n the number of rows
+         * \param m the number of columns
+         * \return the matrix
+         */
+        template <typename T>
+        std::vector<std::vector<T>> to_matrix(const std::vector<T> &v, const size_t n, const size_t m)
+        {
+            if (n * m != v.size())
+                throw std::invalid_argument("Cannot reshape vector into matrix of n * m");
+
+            std::vector<std::vector<T>> res(n);
+
+            for (size_t i = 0; i < n; i++)
+                std::copy(v.begin() + (i * m), v.begin() + (i * m) + m, std::back_inserter(res[i]));
+            return res;
+        }
+
+        /**
          * \brief Returns a range of integers
          * \param start start of the range
          * \param stop end of the range

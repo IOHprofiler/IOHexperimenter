@@ -23,18 +23,6 @@ namespace fs = std::filesystem;
 using json = nlohmann::json;
 #endif
 
-#define LOG_FILE_NAME "IOHexperimenter.log"
-
-#define LOG(message)                                                           \
-  do {                                                                         \
-    std::ofstream debug_log(LOG_FILE_NAME, std::ios::app);                     \
-    auto now = std::chrono::system_clock::now();                               \
-    std::time_t now_time = std::chrono::system_clock::to_time_t(now);          \
-    debug_log << "["                                                           \
-              << std::put_time(std::localtime(&now_time), "%Y-%m-%d %H:%M:%S") \
-              << "] " << message << std::endl;                                 \
-    debug_log.close();                                                         \
-  } while (0)
 
 //! File namespace
 namespace ioh::common::file
@@ -117,9 +105,8 @@ namespace ioh::common::file
             }
 
             // If neither IOH_RESOURCES nor GITHUB_WORKSPACE are set, log an error and return a placeholder
-            LOG("[get_static_root] Error: Neither IOH_RESOURCES nor GITHUB_WORKSPACE environment variables are set.");
-            std::exit(EXIT_FAILURE);
-            // No return statement.
+            std::cerr << "[get_static_root] Error: Neither IOH_RESOURCES nor GITHUB_WORKSPACE environment variables "
+                         "are set.\n";
         }
 
         /**
@@ -181,11 +168,12 @@ namespace ioh::common::file
      * @param tmp_dat_file_path 
      * @param tar_dat_file_path 
      */
-    inline void merge_dat_file(const std::string tmp_dat_file_path, const std::string tar_dat_file_path) {
+    inline void merge_dat_file(const std::string &tmp_dat_file_path, const std::string &tar_dat_file_path) {
         std::ofstream tar_dat_file(tar_dat_file_path,std::ios_base::app);
         std::ifstream tmp_dat_file(tmp_dat_file_path);
-        std::string tmp_line;
-        if (tar_dat_file.is_open() && tmp_dat_file.is_open()) {
+        if (tar_dat_file.is_open() && tmp_dat_file.is_open())
+        {
+            std::string tmp_line;
             while (getline(tmp_dat_file,tmp_line)) {
                 tar_dat_file << tmp_line << std::endl;
             }

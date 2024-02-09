@@ -1,21 +1,11 @@
 #include "../utils.hpp"
 #include "ioh/problem/cec.hpp"
-#include "ioh/problem/cec/cec_problem.hpp"
 
 TEST_F(BaseTest, CECProblem)
 {
     std::ifstream infile;
-    try
-    {
-        const auto file_path = ioh::common::file::utils::find_static_file("cec_problem.in");
-        infile.open(file_path.c_str());
-        ASSERT_TRUE(infile.is_open());
-    }
-    catch (const std::runtime_error& e)
-    {
-        LOG("Could not load cec_problem.in. " << e.what());
-        std::exit(EXIT_FAILURE);
-    }
+    const auto file_path = ioh::common::file::utils::find_static_file("cec_problem.in");
+    infile.open(file_path.c_str());
 
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC>::instance();
     std::string s;

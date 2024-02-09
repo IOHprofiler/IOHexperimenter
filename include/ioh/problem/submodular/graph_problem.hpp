@@ -40,7 +40,7 @@ namespace ioh::problem::submodular
             //! Is digraph
             bool digraph = false;
 
-            //! Maximum value of the contraint
+            //! Maximum value of the constraint
             double constraint_limit = std::numeric_limits<double>::infinity();
 
             //! The number of vertices
@@ -79,7 +79,7 @@ namespace ioh::problem::submodular
             //! Meta data
             Meta meta;
 
-            //! Adjecency list
+            //! Adjacency list
             std::vector<std::vector<std::pair<int, double>>> adjacency_list;
 
             //! Edge list
