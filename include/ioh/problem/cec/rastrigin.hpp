@@ -9,11 +9,10 @@ namespace ioh::problem::cec
     class CEC_Rastrigin final : public CECProblem<CEC_Rastrigin>
     {
     protected:
-
         /// Computes the Rastrigin objective function value at the given point.
         /// @param z A vector representing a point in the search space.
         /// @return The objective function value at the input point.
-        double evaluate(const std::vector<double>& z) override
+        double evaluate(const std::vector<double> &z) override
         {
             double f = rastrigin(z);
             return f;
@@ -26,7 +25,8 @@ namespace ioh::problem::cec
         {
             std::vector<double> y(x.size()), z(x.size());
 
-            ioh::problem::transformation::variables::scale_and_rotate(x, z, y, this->variables_shifts_[0], this->linear_transformations_[0], 5.12 / 100.0, 1, 1);
+            transformation::variables::scale_and_rotate(x, z, y, this->variables_shifts_[0],
+                                                        this->linear_transformations_[0], 5.12 / 100.0, true, true);
 
             return z;
         }
@@ -38,7 +38,6 @@ namespace ioh::problem::cec
         CEC_Rastrigin(const int instance, const int n_variables) :
             CECProblem(1004, instance, n_variables, "CEC_Rastrigin")
         {
-            this->set_optimum();
         }
     };
 }

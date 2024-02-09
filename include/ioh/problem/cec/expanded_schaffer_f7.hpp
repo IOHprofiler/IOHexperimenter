@@ -9,11 +9,10 @@ namespace ioh::problem::cec
     class CEC_ExpandedSchafferF7 final : public CECProblem<CEC_ExpandedSchafferF7>
     {
     protected:
-
         /// Computes the Schaffer F7 objective function value at the given point.
         /// @param y A vector representing a point in the search space.
         /// @return The objective function value at the input point.
-        double evaluate(const std::vector<double>& y) override
+        double evaluate(const std::vector<double> &y) override
         {
             double f = schaffer(y);
             return f;
@@ -26,20 +25,19 @@ namespace ioh::problem::cec
         {
             std::vector<double> y(x.size()), z(x.size());
 
-            ioh::problem::transformation::variables::scale_and_rotate(x, z, y, this->variables_shifts_[0], this->linear_transformations_[0], 0.5 / 100.0, 1, 1);
+            transformation::variables::scale_and_rotate(x, z, y, this->variables_shifts_[0],
+                                                        this->linear_transformations_[0], 0.5 / 100.0, true, true);
 
             return y;
         }
 
     public:
-
         /// Constructor initializing the Expanded Schaffer F7 problem with given instance number and variable count.
         /// @param instance Instance number for the problem.
         /// @param n_variables Number of variables for the problem.
         CEC_ExpandedSchafferF7(const int instance, const int n_variables) :
             CECProblem(1003, instance, n_variables, "CEC_ExpandedSchafferF7")
         {
-            this->set_optimum();
         }
     };
 }

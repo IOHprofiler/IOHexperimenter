@@ -2,21 +2,28 @@
 
 #include "ioh/problem/functions/real.hpp"
 #include "ioh/problem/single.hpp"
-#include "ioh/problem/transformation.hpp"
-
 
 
 namespace ioh::problem
 {
     /// \brief The CEC class represents a problem in the CEC benchmark suite.
     /// It inherits from the RealSingleObjective class and contains methods to load transformation data from static files and apply transformations to problem variables and objectives.
-    class CEC : public RealSingleObjective    {
-    public:
+    class CEC: public RealSingleObjective
+    {
+    protected:
+        //! The shift value applied to the objective function to transform it.
+        int objective_shift_;
 
-        int objective_shift_; ///< The shift value applied to the objective function to transform it.
-        std::vector<std::vector<double>> variables_shifts_; ///< A collection of shift values applied to the problem variables during transformation.
-        std::vector<int> input_permutation_; ///< A permutation vector applied to the input variables during transformation.
-        std::vector<std::vector<std::vector<double>>> linear_transformations_; ///< A collection of matrices representing linear transformations applied to the problem variables.
+        //! A collection of shift values applied to the problem variables during transformation.
+        std::vector<std::vector<double>> variables_shifts_;
+
+        //! A permutation vector applied to the input variables during transformation.
+        std::vector<int> input_permutation_;
+
+        //! A collection of matrices representing linear transformations applied to the problem variables.
+        std::vector<std::vector<std::vector<double>>> linear_transformations_;
+        
+    public:
 
         /**
          * @brief Constructs a new CEC problem instance.
@@ -32,7 +39,9 @@ namespace ioh::problem
             const int instance,
             const int n_variables,
             const std::string &name
-        ) : RealSingleObjective(MetaData(problem_id, instance, name, n_variables), Bounds<double>(n_variables, -100, 100))
+            ) :
+            RealSingleObjective(MetaData(problem_id, instance, name, n_variables),
+                                Bounds<double>(n_variables, -100, 100))
         {
             // Temporary work around this code: `const auto meta = T(1, 1).meta_data()`
             if (n_variables == 1) { return; }
@@ -51,25 +60,10 @@ namespace ioh::problem
 
             this->load_transformation_data();
 
-            this->optimum_.x.assign(this->variables_shifts_[0].begin(), this->variables_shifts_[0].begin() + n_variables);
-        }
+            this->optimum_.x.assign(this->variables_shifts_[0].begin(),
+                                    this->variables_shifts_[0].begin() + n_variables);
 
-        /// \brief Sets the optimum value for the problem based on the current transformation data.
-        void set_optimum()
-        {
-            const int problem_id = this->meta_data_.problem_id;
-            const int n_variables = this->meta_data_.n_variables;
-
-            // Temporary work around this code: `const auto meta = T(1, 1).meta_data()`
-            if (n_variables == 1) { return; }
-
-            if (!(n_variables == 2 || n_variables == 10 || n_variables == 20))
-            {
-                LOG("[set_optimum] Problem ID: " << problem_id << " | Invalid n_variables: " << n_variables);
-                std::exit(EXIT_FAILURE);
-            }
-
-            this->optimum_.y = (*this)(this->optimum_.x);
+            this->optimum_.y = this->objective_shift_;
         }
 
         /**
@@ -80,7 +74,7 @@ namespace ioh::problem
          */
         double transform_objectives(const double y) override
         {
-            auto&& transformed = y + this->objective_shift_;
+            auto &&transformed = y + this->objective_shift_;
             return transformed;
         }
 
@@ -97,7 +91,7 @@ namespace ioh::problem
                 const auto F_i_star_filepath = common::file::utils::find_static_file(F_i_star_suffix_string);
                 load_objective_shift(F_i_star_filepath);
             }
-            catch (const std::runtime_error& e)
+            catch (const std::runtime_error &e)
             {
                 LOG("Could not open file " << F_i_star_suffix_string << " | " << e.what());
                 std::exit(EXIT_FAILURE);
@@ -112,7 +106,7 @@ namespace ioh::problem
                 const auto M_filepath = common::file::utils::find_static_file(M_suffix_string);
                 load_linear_transformation(M_filepath);
             }
-            catch (const std::runtime_error& e)
+            catch (const std::runtime_error &e)
             {
                 LOG("Could not open file " << M_suffix_string << " | " << e.what());
                 std::exit(EXIT_FAILURE);
@@ -128,25 +122,28 @@ namespace ioh::problem
                 const auto shift_data_filepath = common::file::utils::find_static_file(shift_data_suffix_string);
                 load_variables_shift(shift_data_filepath);
             }
-            catch (const std::runtime_error& e)
+            catch (const std::runtime_error &e)
             {
                 LOG("Could not open file " << shift_data_suffix_string << " | " << e.what());
                 std::exit(EXIT_FAILURE);
             }
 
             // Load S (only for hybrid functions).
-            if ((cec_function_identifier == 6 || cec_function_identifier == 7 || cec_function_identifier == 8) && (n_variables == 10 || n_variables == 20))
+            if ((cec_function_identifier == 6 || cec_function_identifier == 7 || cec_function_identifier == 8) && (
+                n_variables == 10 || n_variables == 20))
             {
                 std::ostringstream shuffle_data_suffix_stream;
-                shuffle_data_suffix_stream << "cec_transformations/shuffle_data_" << cec_function_identifier << "_D" << n_variables << ".txt";
+                shuffle_data_suffix_stream << "cec_transformations/shuffle_data_" << cec_function_identifier << "_D" <<
+                    n_variables << ".txt";
                 std::string shuffle_data_suffix_string = shuffle_data_suffix_stream.str();
 
                 try
                 {
-                    const auto shuffle_data_filepath = common::file::utils::find_static_file(shuffle_data_suffix_string);
+                    const auto shuffle_data_filepath =
+                        common::file::utils::find_static_file(shuffle_data_suffix_string);
                     load_shuffle_data(shuffle_data_filepath);
                 }
-                catch (const std::runtime_error& e)
+                catch (const std::runtime_error &e)
                 {
                     LOG("Could not open file " << shuffle_data_suffix_string << " | " << e.what());
                     std::exit(EXIT_FAILURE);
@@ -157,7 +154,7 @@ namespace ioh::problem
                 // There is no specific permutation defined for these problems.
                 // Load the identity permutation.
                 this->input_permutation_.resize(n_variables);
-                for(int i = 0; i < n_variables; ++i) { this->input_permutation_[i] = i + 1; }
+                for (int i = 0; i < n_variables; ++i) { this->input_permutation_[i] = i + 1; }
             }
         }
 
@@ -166,7 +163,7 @@ namespace ioh::problem
          *
          * @param shuffle_data_filepath The path to the file containing the shuffle data.
          */
-        void load_shuffle_data(const fs::path& shuffle_data_filepath)
+        void load_shuffle_data(const fs::path &shuffle_data_filepath)
         {
             std::ifstream file(shuffle_data_filepath); // Open the file
             if (!file.is_open())
@@ -192,7 +189,7 @@ namespace ioh::problem
          *
          * @param F_i_star_filepath The path to the file containing the objective shift data.
          */
-        void load_objective_shift(const fs::path& F_i_star_filepath)
+        void load_objective_shift(const fs::path &F_i_star_filepath)
         {
             const unsigned int cec_function_identifier = this->meta_data_.problem_id - 1000;
 
@@ -204,7 +201,8 @@ namespace ioh::problem
                 throw std::runtime_error("Static path: \"" + F_i_star_filepath.string() + "\"");
             }
 
-            std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>()); // Read the file content
+            std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            // Read the file content
 
             std::istringstream ss(content); // Initialize the stringstream with the file content
 
@@ -230,7 +228,7 @@ namespace ioh::problem
          *
          * @param M_filepath The path to the file containing the linear transformation data.
          */
-        void load_linear_transformation(const fs::path& M_filepath)
+        void load_linear_transformation(const fs::path &M_filepath)
         {
             const size_t n_variables = this->meta_data_.n_variables;
             std::ifstream file(M_filepath); // Open the file
@@ -280,7 +278,7 @@ namespace ioh::problem
          *
          * @param shift_data_filepath The path to the file containing the variables shift data.
          */
-        void load_variables_shift(const fs::path& shift_data_filepath)
+        void load_variables_shift(const fs::path &shift_data_filepath)
         {
             const int n_variables = this->meta_data_.n_variables;
             std::ifstream file(shift_data_filepath); // Open the file
@@ -306,7 +304,8 @@ namespace ioh::problem
                     ++count;
                 }
 
-                this->variables_shifts_.push_back(current_line_values); // Add the current line values to the main vector
+                this->variables_shifts_.push_back(current_line_values);
+                // Add the current line values to the main vector
             }
 
             // Ensure that there is at least one vector inside variables_shifts_

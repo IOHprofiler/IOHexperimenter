@@ -9,12 +9,11 @@ namespace ioh::problem::cec
     class CEC_Rosenbrock final : public CECProblem<CEC_Rosenbrock>
     {
     protected:
-
         /// Evaluates the objective function for the Rosenbrock problem.
         /// The Rosenbrock function is computed at the given point in the search space and returned.
         /// @param x A vector representing a point in the search space.
         /// @return The value of the Rosenbrock function at point x.
-        double evaluate(const std::vector<double>& x) override
+        double evaluate(const std::vector<double> &x) override
         {
             double f = rosenbrock(x);
             return f;
@@ -28,7 +27,8 @@ namespace ioh::problem::cec
         {
             std::vector<double> y(x.size()), z(x.size());
 
-            ioh::problem::transformation::variables::scale_and_rotate(x, z, y, this->variables_shifts_[0], this->linear_transformations_[0], 2.048 / 100.0, 1, 1);
+            transformation::variables::scale_and_rotate(x, z, y, this->variables_shifts_[0],
+                                                        this->linear_transformations_[0], 2.048 / 100.0, true, true);
 
             return z;
         }
@@ -37,10 +37,9 @@ namespace ioh::problem::cec
         /// Constructs a Rosenbrock problem instance with specified number of variables and instance identifier.
         /// @param instance An integer representing the specific problem instance number.
         /// @param n_variables An integer representing the number of variables for this problem.
-            CEC_Rosenbrock(const int instance, const int n_variables) :
+        CEC_Rosenbrock(const int instance, const int n_variables) :
             CECProblem(1002, instance, n_variables, "CEC_Rosenbrock")
         {
-            this->set_optimum();
         }
     };
 }

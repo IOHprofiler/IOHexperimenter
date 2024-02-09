@@ -11,7 +11,7 @@ namespace ioh::problem::cec
         /// \brief Evaluates the function with the transformed variables.
         /// \param prepared_y The transformed variables.
         /// \return The evaluation result.
-        double evaluate(const std::vector<double>& prepared_y) override
+        double evaluate(const std::vector<double> &prepared_y) override
         {
             double f = hf10(prepared_y);
             return f;
@@ -22,11 +22,11 @@ namespace ioh::problem::cec
         /// \return The transformed variables.
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            auto&& Os = this->variables_shifts_[0];
-            auto&& Mr = this->linear_transformations_[0];
-            auto&& S = this->input_permutation_;
+            auto &&Os = this->variables_shifts_[0];
+            auto &&Mr = this->linear_transformations_[0];
+            auto &&S = this->input_permutation_;
 
-            const int cf_num = 6;
+            constexpr int cf_num = 6;
             std::vector<double> z(x.size());
             std::vector<double> y(x.size());
             std::vector<int> G_nx(cf_num);
@@ -48,7 +48,7 @@ namespace ioh::problem::cec
                 G[i] = G[i - 1] + G_nx[i - 1];
             }
 
-            ioh::problem::transformation::variables::scale_and_rotate(x, z, y, Os, Mr, 1.0, 1, 1);
+            transformation::variables::scale_and_rotate(x, z, y, Os, Mr, 1.0, true, true);
 
             for (int i = 0; i < nx; i++)
             {
@@ -58,30 +58,33 @@ namespace ioh::problem::cec
             std::vector<double> hgbat_x(y.begin() + G[0], y.begin() + G[0] + G_nx[0]);
             std::vector<double> hgbat_z(hgbat_x.size());
             std::vector<double> hgbat_y(hgbat_x.size());
-            ioh::problem::transformation::variables::scale_and_rotate(hgbat_x, hgbat_z, hgbat_y, Os, Mr, 5.0 / 100.0, 0, 0);
+            transformation::variables::scale_and_rotate(hgbat_x, hgbat_z, hgbat_y, Os, Mr, 5.0 / 100.0, false, false);
 
             std::vector<double> katsuura_x(y.begin() + G[1],
-            y.begin() + G[1] + G_nx[1]);
+                                           y.begin() + G[1] + G_nx[1]);
             std::vector<double> katsuura_z(katsuura_x.size());
             std::vector<double> katsuura_y(katsuura_x.size());
-            ioh::problem::transformation::variables::scale_and_rotate(katsuura_x, katsuura_z, katsuura_y, Os, Mr, 5.0 / 100.0, 0, 0);
+            transformation::variables::scale_and_rotate(katsuura_x, katsuura_z, katsuura_y, Os, Mr, 5.0 / 100.0, false,
+                                                        false);
 
             std::vector<double> ackley_x(y.begin() + G[2],
-            y.begin() + G[2] + G_nx[2]);
+                                         y.begin() + G[2] + G_nx[2]);
             std::vector<double> ackley_z(ackley_x.size());
             std::vector<double> ackley_y(ackley_x.size());
-            ioh::problem::transformation::variables::scale_and_rotate(ackley_x, ackley_z, ackley_y, Os, Mr, 1.0, 0, 0);
+            transformation::variables::scale_and_rotate(ackley_x, ackley_z, ackley_y, Os, Mr, 1.0, false, false);
 
             std::vector<double> rastrigin_x(y.begin() + G[3], y.begin() + G[3] + G_nx[3]);
             std::vector<double> rastrigin_z(rastrigin_x.size());
             std::vector<double> rastrigin_y(rastrigin_x.size());
-            ioh::problem::transformation::variables::scale_and_rotate(rastrigin_x, rastrigin_z, rastrigin_y, Os, Mr, 5.12 / 100.0, 0, 0);
+            transformation::variables::scale_and_rotate(rastrigin_x, rastrigin_z, rastrigin_y, Os, Mr, 5.12 / 100.0,
+                                                        false, false);
 
             std::vector<double> schwefel_x(y.begin() + G[4],
-            y.begin() + G[4] + G_nx[4]);
+                                           y.begin() + G[4] + G_nx[4]);
             std::vector<double> schwefel_z(schwefel_x.size());
             std::vector<double> schwefel_y(schwefel_x.size());
-            ioh::problem::transformation::variables::scale_and_rotate(schwefel_x, schwefel_z, schwefel_y, Os, Mr, 1000.0 / 100.0, 0, 0);
+            transformation::variables::scale_and_rotate(schwefel_x, schwefel_z, schwefel_y, Os, Mr, 1000.0 / 100.0,
+                                                        false, false);
 
             std::vector<double> schaffer_y(y.begin(), y.begin() + G_nx[5]);
 
@@ -89,13 +92,13 @@ namespace ioh::problem::cec
 
             // Start by reserving space for efficiency
             prepared_y.reserve(
-                hgbat_z.size() \
-                + katsuura_z.size() \
-                + ackley_z.size() \
-                + rastrigin_z.size() \
-                + schwefel_z.size() \
-                + schaffer_y.size() \
-            );
+                hgbat_z.size()
+                + katsuura_z.size()
+                + ackley_z.size()
+                + rastrigin_z.size()
+                + schwefel_z.size()
+                + schaffer_y.size()
+                );
 
             prepared_y.insert(prepared_y.end(), hgbat_z.begin(), hgbat_z.end());
             prepared_y.insert(prepared_y.end(), katsuura_z.begin(), katsuura_z.end());
@@ -114,7 +117,6 @@ namespace ioh::problem::cec
         CEC_HybridFunction2(const int instance, const int n_variables) :
             CECProblem(1007, instance, n_variables, "CEC_HybridFunction2")
         {
-            this->set_optimum();
         }
     };
 }

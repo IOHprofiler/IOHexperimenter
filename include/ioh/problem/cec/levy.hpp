@@ -9,11 +9,10 @@ namespace ioh::problem::cec
     class CEC_Levy final : public CECProblem<CEC_Levy>
     {
     protected:
-
         /// Computes the CEC_Levy objective function value at the given point.
         /// @param z A vector representing a point in the search space.
         /// @return The objective function value at the input point.
-        double evaluate(const std::vector<double>& z) override
+        double evaluate(const std::vector<double> &z) override
         {
             double f = levy(z);
             return f;
@@ -26,19 +25,19 @@ namespace ioh::problem::cec
         {
             std::vector<double> y(x.size()), z(x.size());
 
-            ioh::problem::transformation::variables::scale_and_rotate(x, z, y, this->variables_shifts_[0], this->linear_transformations_[0], 5.12 / 100.0, 1, 1);
+            transformation::variables::scale_and_rotate(x, z, y, this->variables_shifts_[0],
+                                                        this->linear_transformations_[0], 5.12 / 100.0, true, true);
 
             return z;
         }
 
     public:
-
         /// Constructor initializing the CEC_Levy problem with given instance number and variable count.
         /// @param instance Instance number for the problem.
         /// @param n_variables Number of variables for the problem.
-        CEC_Levy(const int instance, const int n_variables) : CECProblem(1005, instance, n_variables, "CEC_Levy")
+        CEC_Levy(const int instance, const int n_variables) :
+            CECProblem(1005, instance, n_variables, "CEC_Levy")
         {
-            this->set_optimum();
         }
     };
 }
