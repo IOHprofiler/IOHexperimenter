@@ -198,3 +198,5 @@ gsemo.cpp
 .RUN_CPP
 .RUN_PYTHON
 .workstory.md
+
+external/
