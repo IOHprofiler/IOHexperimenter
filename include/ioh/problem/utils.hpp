@@ -102,7 +102,7 @@ namespace ioh
                 return new_variables;
             }
 
-            inline double ruggedness1(const double y, const int number_of_variables)
+            inline double ruggedness1(double y, int number_of_variables)
             {
                 double ruggedness_y;
                 const auto s = static_cast<double>(number_of_variables);
@@ -126,7 +126,7 @@ namespace ioh
                 return ruggedness_y;
             }
 
-            inline double ruggedness2(const double y, const int number_of_variables)
+            inline double ruggedness2(double y, int number_of_variables)
             {
                 double ruggedness_y;
                 const auto tempy = static_cast<int>(y + 0.5);
@@ -179,16 +179,16 @@ namespace ioh
                 return ruggedness_fitness;
             }
 
-            // Following is the w-model source code from Raphael's work, which refer the source code of Thomas Weise.
-            inline void layer_neutrality_compute(const std::vector<int> &x_in, std::vector<int> &x_out, const int mu)
+            // Following is the w-model soure code from Raphael's work, which refer the source code of Thomas Weise.
+            inline void layer_neutrality_compute(const std::vector<int> xIn, std::vector<int> &xOut, const int mu)
             {
                 const auto thresholdFor1 = (mu >> 1) + (mu & 1);
                 int temp;
-                const auto dim = static_cast<int>(x_in.size());
+                const auto dim = static_cast<int>(xIn.size());
                 const auto temp_dim = dim / mu;
-                if (static_cast<int>(x_out.size()) != temp_dim)
+                if (static_cast<int>(xOut.size()) != temp_dim)
                 {
-                    x_out.resize(temp_dim);
+                    xOut.resize(temp_dim);
                 }
                 auto i = 0;
                 auto j = 0;
@@ -196,7 +196,7 @@ namespace ioh
                 auto flush = mu;
                 while (i < dim && j < temp_dim)
                 {
-                    if (x_in[i] == 1)
+                    if (xIn[i] == 1)
                     {
                         ones += 1;
                     }
@@ -212,7 +212,7 @@ namespace ioh
                         {
                             temp = 0;
                         }
-                        x_out[j] = temp;
+                        xOut[j] = temp;
                         j += 1;
                         ones = 0;
                     }
@@ -264,9 +264,9 @@ namespace ioh
                 epistasis_compute(x, epistasis_x, block_size);
             }
 
-            inline int max_gamma(const int q) { return static_cast<int>(q * (q - 1) >> 1); }
+            inline int max_gamma(int q) { return static_cast<int>(q * (q - 1) >> 1); }
 
-            inline std::vector<int> ruggedness_raw(const int gamma, const int q)
+            inline std::vector<int> ruggedness_raw(int gamma, int q)
             {
                 int i, j, start;
                 std::vector<int> r(q + 1, 0);
@@ -327,7 +327,7 @@ namespace ioh
                 return r2;
             }
 
-            inline int ruggedness_translate(const int gamma, const int q)
+            inline int ruggedness_translate(int gamma, int q)
             {
                 int j, k;
 
@@ -354,8 +354,11 @@ namespace ioh
             }
 
             //! Helper function which forwards its first argument
-            template<typename T, typename... Args>
-            T identity(T p, Args &&...) {return p;}
+            template <typename T, typename... Args>
+            T identity(T p, Args &&...)
+            {
+                return p;
+            }
 
         } // namespace utils
     } // namespace problem
