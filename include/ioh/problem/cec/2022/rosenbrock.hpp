@@ -15,8 +15,7 @@ namespace ioh::problem::cec
         /// @return The value of the Rosenbrock function at point x.
         double evaluate(const std::vector<double> &x) override
         {
-            double f = rosenbrock(x);
-            return f;
+            return rosenbrock(x);
         }
 
         /// Transforms the variables using specific scale and rotate operations as defined for the Rosenbrock problem.

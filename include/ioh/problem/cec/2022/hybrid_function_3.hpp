@@ -8,12 +8,61 @@ namespace ioh::problem::cec
     class CEC_HybridFunction3 final : public CECProblem<CEC_HybridFunction3>
     {
     protected:
-        /// \brief Evaluates the function with the transformed variables.
-        /// \param prepared_y The transformed variables.
-        /// \return The evaluation result.
-        double evaluate(const std::vector<double> &prepared_y) override
+        /**
+         * @brief Computes the hf06 function value for the input vector.
+         *
+         * The hf06 function is another hybrid function that integrates several benchmark functions to create a
+         * challenging optimization landscape characterized by multiple local minima and a global minimum. It is
+         * utilized to test the robustness and efficiency of optimization algorithms.
+         *
+         * @param x Input vector containing the coordinates in the domain space.
+         * @return The function value at the point specified by the input vector.
+         */
+        double evaluate(const std::vector<double> &x) override
         {
-            return hf06(prepared_y);
+            constexpr int cf_num = 5;
+            std::vector<double> fit(cf_num, 0);
+            std::vector<int> g_nx(cf_num);
+            std::vector<int> g(cf_num);
+            const std::vector<double> gp = {0.3, 0.2, 0.2, 0.1, 0.2};
+            const int nx = static_cast<int>(x.size());
+
+            int tmp = 0;
+            for (int i = 0; i < cf_num - 1; ++i)
+            {
+                g_nx[i] = static_cast<int>(std::ceil(gp[i] * nx));
+                tmp += g_nx[i];
+            }
+
+            g_nx[cf_num - 1] = nx - tmp;
+            if (g_nx[cf_num - 1] < 0)
+            {
+                g_nx[cf_num - 1] = 0;
+            }
+
+            g[0] = 0;
+            for (int i = 1; i < cf_num; ++i)
+            {
+                g[i] = g[i - 1] + g_nx[i - 1];
+            }
+
+            const std::vector<double> katsuura_z(x.begin() + g[0], x.begin() + g[0] + g_nx[0]);
+            fit[0] = katsuura(katsuura_z);
+
+            const std::vector<double> happycat_z(x.begin() + g[1], x.begin() + g[1] + g_nx[1]);
+            fit[1] = happycat(happycat_z);
+
+            const std::vector<double> griewank_rosenbrock_z(x.begin() + g[2],
+                                                            x.begin() + g[2] + g_nx[2]);
+            fit[2] = griewank_rosenbrock(griewank_rosenbrock_z);
+
+            const std::vector<double> schwefel_z(x.begin() + g[3], x.begin() + g[3] + g_nx[3]);
+            fit[3] = schwefel(schwefel_z);
+
+            const std::vector<double> ackley_z(x.begin() + g[4], x.begin() + g[4] + g_nx[4]);
+            fit[4] = ackley(ackley_z);
+
+            return std::accumulate(fit.begin(), fit.end(), 0.0);
         }
 
         /// \brief Transforms the input variables.

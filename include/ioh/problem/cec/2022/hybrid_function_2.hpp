@@ -8,12 +8,58 @@ namespace ioh::problem::cec
     class CEC_HybridFunction2 final : public CECProblem<CEC_HybridFunction2>
     {
     protected:
-        /// \brief Evaluates the function with the transformed variables.
-        /// \param prepared_y The transformed variables.
-        /// \return The evaluation result.
-        double evaluate(const std::vector<double> &prepared_y) override
+        /**
+         * @brief Computes the hf06 function value for the input vector.
+         *
+         * The hf06 function is another hybrid function that integrates several benchmark functions to create a
+         * challenging optimization landscape characterized by multiple local minima and a global minimum. It is
+         * utilized to test the robustness and efficiency of optimization algorithms.
+         *
+         * @param prepared_y Input vector containing the coordinates in the domain space.
+         * @return The function value at the point specified by the input vector.
+         */
+        double evaluate(const std::vector<double> &x) override
         {
-            double f = hf10(prepared_y);
+            constexpr int cf_num = 6;
+            std::vector<double> fit(cf_num, 0.0);
+            std::vector<int> g_nx(cf_num);
+            std::vector<int> g(cf_num);
+            const std::vector<double> gp = {0.1, 0.2, 0.2, 0.2, 0.1, 0.2};
+            const int nx = static_cast<int>(x.size());
+
+            int tmp = 0;
+            for (int i = 0; i < cf_num - 1; i++)
+            {
+                g_nx[i] = static_cast<int>(std::ceil(gp[i] * nx));
+                tmp += g_nx[i];
+            }
+            g_nx[cf_num - 1] = nx - tmp;
+
+            g[0] = 0;
+            for (int i = 1; i < cf_num; i++)
+            {
+                g[i] = g[i - 1] + g_nx[i - 1];
+            }
+
+            const std::vector<double> hgbat_z(x.begin() + g[0], x.begin() + g[0] + g_nx[0]);
+            fit[0] = hgbat(hgbat_z);
+
+            const std::vector<double> katsuura_z(x.begin() + g[1], x.begin() + g[1] + g_nx[1]);
+            fit[1] = katsuura(katsuura_z);
+
+            const std::vector<double> ackley_z(x.begin() + g[2], x.begin() + g[2] + g_nx[2]);
+            fit[2] = ackley(ackley_z);
+
+            const std::vector<double> rastrigin_z(x.begin() + g[3], x.begin() + g[3] + g_nx[3]);
+            fit[3] = rastrigin(rastrigin_z);
+
+            const std::vector<double> schwefel_z(x.begin() + g[4], x.begin() + g[4] + g_nx[4]);
+            fit[4] = schwefel(schwefel_z);
+
+            const std::vector<double> schaffer_y(x.begin() + g[5], x.begin() + g[5] + g_nx[5]);
+            fit[5] = schaffer(schaffer_y);
+
+            double &&f = std::accumulate(fit.begin(), fit.end(), 0.0);
             return f;
         }
 

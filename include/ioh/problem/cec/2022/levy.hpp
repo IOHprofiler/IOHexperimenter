@@ -14,8 +14,7 @@ namespace ioh::problem::cec
         /// @return The objective function value at the input point.
         double evaluate(const std::vector<double> &z) override
         {
-            double f = levy(z);
-            return f;
+            return levy(z);
         }
 
         /// Performs a defined transformation on the input variables to make them suitable for the CEC_Levy problem evaluation.

@@ -14,14 +14,53 @@ namespace ioh::problem::cec
     class CEC_HybridFunction1 final : public CECProblem<CEC_HybridFunction1>
     {
     protected:
-        //! Evaluates the objective function on the transformed input.
-        /*!
-         * \param prepared_y A vector of transformed variables.
-         * \return The value of the objective function evaluated at the point represented by prepared_y.
+        /**
+         * @brief Computes the hf02 function value for the input vector.
+         *
+         * The hf02 function is a hybrid function that combines several benchmark functions to create a complex,
+         * multimodal landscape. It is used to evaluate the performance of optimization algorithms in navigating
+         * complex, high-dimensional spaces.
+         *
+         * @param x Input vector containing the coordinates in the domain space.
+         * @return The function value at the point specified by the input vector.
          */
-        double evaluate(const std::vector<double> &prepared_y) override
+        double evaluate(const std::vector<double> &x) override
         {
-            double f = hf02(prepared_y);
+            const int nx = static_cast<int>(x.size());
+            constexpr int cf_num = 3;
+            std::vector<double> fit(cf_num);
+            std::vector<int> g(cf_num);
+            std::vector<int> g_nx(cf_num);
+            const std::vector<double> gp = {0.4, 0.4, 0.2};
+
+            int tmp = 0;
+            for (int i = 0; i < cf_num - 1; ++i)
+            {
+                g_nx[i] = static_cast<int>(std::ceil(gp[i] * nx));
+                tmp += g_nx[i];
+            }
+            g_nx[cf_num - 1] = nx - tmp;
+
+            g[0] = 0;
+            for (int i = 1; i < cf_num; ++i)
+            {
+                g[i] = g[i - 1] + g_nx[i - 1];
+            }
+
+            const std::vector<double> bent_cigar_z(x.begin() + g[0], x.begin() + g[0] + g_nx[0]);
+            fit[0] = bent_cigar(bent_cigar_z);
+
+            const std::vector<double> hgbat_z(x.begin() + g[1], x.begin() + g[1] + g_nx[1]);
+            fit[1] = hgbat(hgbat_z);
+
+            const std::vector<double> rastrigin_z(x.begin() + g[2], x.begin() + g[2] + g_nx[2]);
+            fit[2] = rastrigin(rastrigin_z);
+
+            double &&f = 0.0;
+            for (const auto &val : fit)
+            {
+                f += val;
+            }
             return f;
         }
 

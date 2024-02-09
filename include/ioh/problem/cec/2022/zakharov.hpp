@@ -15,8 +15,7 @@ namespace ioh::problem::cec
         /// @return The objective function value at point x.
         double evaluate(const std::vector<double> &x) override
         {
-            double f = zakharov(x);
-            return f;
+            return zakharov(x);
         }
 
         /// Transforms the variables using scale and rotate operations.

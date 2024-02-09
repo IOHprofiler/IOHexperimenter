@@ -6,6 +6,71 @@
 
 namespace ioh::problem
 {
+    namespace cec
+    {
+        /**
+         * @brief Computes the cf_cal function value for the input vector.
+         *
+         * The cf_cal function is a helper function used in the computation of composite functions in optimization
+         * problems. It calculates the weighted sum of several function values, which is a common approach in creating
+         * hybrid functions to test optimization algorithms.
+         *
+         * @param x Input vector containing the coordinates in the domain space.
+         * @param os Transformation vectors used in the function computation.
+         * @param delta Delta values used in the function computation.
+         * @param bias Bias values used in the function computation.
+         * @param fit Vector to store individual function values.
+         * @return The weighted sum of function values.
+         */
+        inline double cf_cal(const std::vector<double> &x, const std::vector<std::vector<double>> &os,
+                             const std::vector<double> &delta, const std::vector<double> &bias,
+                             std::vector<double> &fit)
+        {
+            const int nx = static_cast<int>(x.size());
+            const int cf_num = static_cast<int>(fit.size());
+
+            std::vector<double> w(cf_num);
+            double w_max = 0.0;
+            double w_sum = 0.0;
+
+            for (int i = 0; i < cf_num; i++)
+            {
+                fit[i] += bias[i];
+                w[i] = 0.0;
+
+                for (int j = 0; j < nx; j++)
+                {
+                    w[i] += std::pow(x[j] - os[i][j], 2.0);
+                }
+
+                if (abs(w[i]) > 0.)
+                    w[i] = std::pow(1.0 / w[i], 0.5) * std::exp(-w[i] / (2.0 * nx * std::pow(delta[i], 2.0)));
+                else
+                    w[i] = std::numeric_limits<double>::infinity();
+
+                w_max = std::max(w_max, w[i]);
+            }
+
+            for (const auto &weight : w)
+            {
+                w_sum += weight;
+            }
+
+            if (!(abs(w_max) > 0))
+            {
+                std::fill(w.begin(), w.end(), 1.0);
+                w_sum = cf_num;
+            }
+
+            double f = 0.0;
+            for (int i = 0; i < cf_num; i++)
+            {
+                f += (w[i] / w_sum) * fit[i];
+            }
+            return f;
+        }
+    }
+
     const inline std::string CEC_FOLDER = "cec_transformations/2022/";
 
 

@@ -14,8 +14,7 @@ namespace ioh::problem::cec
         /// @return The objective function value at the input point.
         double evaluate(const std::vector<double> &z) override
         {
-            double f = rastrigin(z);
-            return f;
+            return rastrigin(z);
         }
 
         /// Performs a defined transformation on the input variables to make them suitable for the Rastrigin problem evaluation.

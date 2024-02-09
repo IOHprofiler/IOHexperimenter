@@ -14,8 +14,7 @@ namespace ioh::problem::cec
         /// @return The objective function value at the input point.
         double evaluate(const std::vector<double> &y) override
         {
-            double f = schaffer(y);
-            return f;
+            return schaffer(y);
         }
 
         /// Performs a defined transformation on the input variables to make them suitable for the Expanded Schaffer F7 problem evaluation.
