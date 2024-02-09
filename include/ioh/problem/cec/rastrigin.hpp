@@ -32,18 +32,11 @@ namespace ioh::problem::cec
         }
 
     public:
-
-        /// Unique identifier for the Rastrigin problem in the CEC benchmark suite.
-        inline static const int meta_problem_id = 1004;
-
-        /// String name assigned to the Rastrigin problem in the CEC benchmark suite.
-        inline static const std::string meta_name = "CEC_Rastrigin";
-
         /// Constructor initializing the Rastrigin problem with given instance number and variable count.
         /// @param instance Instance number for the problem.
         /// @param n_variables Number of variables for the problem.
         CEC_Rastrigin(const int instance, const int n_variables) :
-            CECProblem(meta_problem_id, instance, n_variables, meta_name)
+            CECProblem(1004, instance, n_variables, "CEC_Rastrigin")
         {
             this->set_optimum();
         }

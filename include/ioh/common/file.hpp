@@ -98,7 +98,7 @@ namespace ioh::common::file
          *
          * @return fs::path the absolute path of IOHexperimenter/static
          */
-        inline fs::path get_static_root()
+        inline fs::path get_static_root_by_env()
         {
             // First, try to use the IOH_RESOURCES environment variable
             const char* ioh_resources = std::getenv("IOH_RESOURCES");
@@ -120,6 +120,28 @@ namespace ioh::common::file
             LOG("[get_static_root] Error: Neither IOH_RESOURCES nor GITHUB_WORKSPACE environment variables are set.");
             std::exit(EXIT_FAILURE);
             // No return statement.
+        }
+
+        /**
+         * @brief Get the absolute path of IOHexperimenter/static
+         *
+         * @return fs::path the absolute path of IOHexperimenter/static
+         */
+        inline fs::path get_static_root()
+        {
+            const auto static_root = fs::path("IOHexperimenter") / fs::path("static");
+            fs::path root;
+            for (const auto &e : fs::current_path())
+            {
+                root /= e;
+                if (exists(root / static_root))
+                {
+                    root = root / static_root;
+                    return root;
+                }
+            }
+            IOH_DBG(warning, "could static root");
+            return {};
         }
 
         /**

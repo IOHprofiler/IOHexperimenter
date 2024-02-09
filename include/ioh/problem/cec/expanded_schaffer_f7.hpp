@@ -15,7 +15,7 @@ namespace ioh::problem::cec
         /// @return The objective function value at the input point.
         double evaluate(const std::vector<double>& y) override
         {
-            double f = schaffer_F7(y);
+            double f = schaffer(y);
             return f;
         }
 
@@ -33,17 +33,11 @@ namespace ioh::problem::cec
 
     public:
 
-        /// Unique identifier for the Expanded Schaffer F7 problem in the CEC benchmark suite.
-        inline static const int meta_problem_id = 1003;
-
-        /// String name assigned to the Expanded Schaffer F7 problem in the CEC benchmark suite.
-        inline static const std::string meta_name = "CEC_ExpandedSchafferF7";
-
         /// Constructor initializing the Expanded Schaffer F7 problem with given instance number and variable count.
         /// @param instance Instance number for the problem.
         /// @param n_variables Number of variables for the problem.
         CEC_ExpandedSchafferF7(const int instance, const int n_variables) :
-            CECProblem(meta_problem_id, instance, n_variables, meta_name)
+            CECProblem(1003, instance, n_variables, "CEC_ExpandedSchafferF7")
         {
             this->set_optimum();
         }

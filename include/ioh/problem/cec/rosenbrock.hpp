@@ -34,18 +34,11 @@ namespace ioh::problem::cec
         }
 
     public:
-
-        /// A static constant representing the unique identifier for the Rosenbrock problem in the CEC benchmark suite.
-        inline static const int meta_problem_id = 1002;
-
-        /// A static constant representing the name assigned to the Rosenbrock problem in the CEC benchmark suite.
-        inline static const std::string meta_name = "CEC_Rosenbrock";
-
         /// Constructs a Rosenbrock problem instance with specified number of variables and instance identifier.
         /// @param instance An integer representing the specific problem instance number.
         /// @param n_variables An integer representing the number of variables for this problem.
-        CEC_Rosenbrock(const int instance, const int n_variables) :
-            CECProblem(meta_problem_id, instance, n_variables, meta_name)
+            CEC_Rosenbrock(const int instance, const int n_variables) :
+            CECProblem(1002, instance, n_variables, "CEC_Rosenbrock")
         {
             this->set_optimum();
         }

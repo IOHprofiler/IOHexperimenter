@@ -10,11 +10,11 @@ project(ioh
 )   
   
 add_compile_definitions(PROJECT_VER="${CMAKE_PROJECT_VERSION}")
-add_compile_definitions(HAS_JSON) 
+
 set(CMAKE_CXX_STANDARD 17)  
 set(EXTERNAL_DIR "${PROJECT_SOURCE_DIR}/external")
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH}) 
- 
+  
 option(BUILD_PYTHON_PACKAGE "Whether to build Python package" OFF)
 option(BUILD_TESTS "Whether to build test cases with gtest" ON)
 option(BUILD_EXAMPLE "Whether to build examples" ON)  
@@ -40,9 +40,7 @@ endif()
 #     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 #     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 #     set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-# endif()
-
- 
+# endif() 
  
 # Define project targets.
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
@@ -59,13 +57,13 @@ include_directories(${EXTERNAL_DIR}/fmt/include/)
 add_subdirectory(${EXTERNAL_DIR}/fmt)
 target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
 
-include_directories(${EXTERNAL_DIR}/clutchlog)
-
 # Add Json lib 
-set(JSON_Install OFF CACHE INTERNAL "")
-add_subdirectory(${EXTERNAL_DIR}/json)
-target_link_libraries(ioh INTERFACE nlohmann_json::nlohmann_json)
-
+if(EXISTS ${EXTERNAL_DIR}/json/CMakeLists.txt)
+    add_compile_definitions(HAS_JSON)
+    set(JSON_Install OFF CACHE INTERNAL "")
+    add_subdirectory(${EXTERNAL_DIR}/json)
+    target_link_libraries(ioh INTERFACE nlohmann_json::nlohmann_json)
+endif()
 
 if(ENABLE_MKLANDSCAPE_PROBLEMS)
 
@@ -124,7 +122,7 @@ write_basic_package_version_file(
 # Define installation rules.
 include(GNUInstallDirs)
 
-install(TARGETS ioh fmt-header-only nlohmann_json
+install(TARGETS ioh fmt-header-only
     EXPORT ioh-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

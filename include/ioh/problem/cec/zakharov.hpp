@@ -34,18 +34,11 @@ namespace ioh::problem::cec
         }
 
     public:
-
-        /// A static constant representing the unique ID assigned to the CEC_Zakharov problem in the CEC benchmark suite.
-        inline static const int meta_problem_id = 1001;
-
-        /// A static constant representing the name assigned to the CEC_Zakharov problem in the CEC benchmark suite.
-        inline static const std::string meta_name = "CEC_Zakharov";
-
         /// Constructs a CEC_Zakharov problem instance.
         /// @param instance An integer representing the problem instance number.
         /// @param n_variables An integer representing the number of variables for the problem.
         CEC_Zakharov(const int instance, const int n_variables) :
-            CECProblem(meta_problem_id, instance, n_variables, meta_name)
+            CECProblem(1001, instance, n_variables, "CEC_Zakharov")
         {
             this->set_optimum();
         }

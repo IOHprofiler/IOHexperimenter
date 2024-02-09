@@ -33,17 +33,10 @@ namespace ioh::problem::cec
 
     public:
 
-        /// Unique identifier for the CEC_Levy problem in the CEC benchmark suite.
-        inline static const int meta_problem_id = 1005;
-
-        /// String name assigned to the CEC_Levy problem in the CEC benchmark suite.
-        inline static const std::string meta_name = "CEC_Levy";
-
         /// Constructor initializing the CEC_Levy problem with given instance number and variable count.
         /// @param instance Instance number for the problem.
         /// @param n_variables Number of variables for the problem.
-        CEC_Levy(const int instance, const int n_variables) :
-            CECProblem(meta_problem_id, instance, n_variables, meta_name)
+        CEC_Levy(const int instance, const int n_variables) : CECProblem(1005, instance, n_variables, "CEC_Levy")
         {
             this->set_optimum();
         }

@@ -96,13 +96,6 @@ namespace ioh::problem::cec
         }
 
     public:
-
-        //! A constant representing the ID of this problem in the meta-problem series.
-        inline static const int meta_problem_id = 1006;
-
-        //! A constant representing the name of this problem.
-        inline static const std::string meta_name = "CEC_HybridFunction1";
-
         //! Constructor for the CEC_HybridFunction1 class.
         /*!
          * Initializes a new instance of the CEC_HybridFunction1 class, setting up the problem with the specified instance and number of variables.
@@ -111,7 +104,7 @@ namespace ioh::problem::cec
          * \param n_variables The number of variables for the problem.
          */
         CEC_HybridFunction1(const int instance, const int n_variables) :
-            CECProblem(meta_problem_id, instance, n_variables, meta_name)
+            CECProblem(1006, instance, n_variables, "CEC_HybridFunction1")
         {
             this->set_optimum();
         }
