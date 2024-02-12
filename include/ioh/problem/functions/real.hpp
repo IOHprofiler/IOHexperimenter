@@ -408,30 +408,12 @@ namespace ioh::problem
         return value;
     }
 
-    /**
-     * The Expanded Schaffer's F6 function, is a non-convex function characterized
-     * by a large number of local minima, making it a challenging problem for optimization algorithms. This
-     * implementation also includes transformations such as scaling and rotation to further complicate the optimization
-     * landscape.
-     *
-     * @param x Input vector containing the coordinates in the domain space.
-     * @param f Reference to a double where the function value will be stored.
-     * @param os Transformation vector used in the function computation.
-     * @param mr Rotation matrix used in the function computation.
-     * @param s_flag Scaling flag used in the transformation.
-     * @param r_flag Rotation flag used in the transformation.
-     */
-    inline void expanded_schaffer_f6(const std::vector<double> &x, double &f, const std::vector<double> &os,
-                          const std::vector<std::vector<double>> &mr, const int s_flag, const int r_flag)
+
+    inline double expanded_schaffer(const std::vector<double>& z)
     {
-        std::vector<double> z(x.size());
-        std::vector<double> y(x.size());
+        double f = 0.0;
 
-        transformation::variables::scale_and_rotate(x, z, y, os, mr, 1.0, s_flag, r_flag);
-
-        f = 0.0;
-
-        for (size_t i = 0; i < x.size() - 1; i++)
+        for (size_t i = 0; i < z.size() - 1; i++)
         {
             double temp1 = sin(sqrt(z[i] * z[i] + z[i + 1] * z[i + 1]));
             temp1 *= temp1;
@@ -445,6 +427,93 @@ namespace ioh::problem
 
         const double temp2 = 1.0 + 0.001 * (z.back() * z.back() + z.front() * z.front());
         f += 0.5 + (temp1 - 0.5) / (temp2 * temp2);
+        return f;
+    }
+
+    // inline double schaffer(const std::vector<double> &y)
+    // {
+    //     std::vector<double> z(y.size());
+    //
+    //     double result = 0;
+    //     for (size_t i = 0; i < z.size() - 1; ++i)
+    //     {
+    //         const auto y_squared_sum = y[i] * y[i] + y[i + 1] * y[i + 1];
+    //
+    //         z[i] = std::sqrt(y_squared_sum);
+    //
+    //         const auto pow_val = std::pow(z[i], 0.2);
+    //
+    //         const double tmp = std::sin(50.0 * pow_val);
+    //
+    //         const auto tmp_squared = tmp * tmp;
+    //
+    //         const auto z_rooted = std::sqrt(z[i]);
+    //
+    //         const auto val_addition = z_rooted * tmp_squared;
+    //
+    //         result += z_rooted + val_addition;
+    //     }
+    //     const int n = static_cast<int>(y.size()) - 1;
+    //     result = result * result / n / n;
+    //     return result;
+    // }
+
+
+    inline double griewank(const std::vector<double>& z)
+    {
+        const double s = std::accumulate(z.begin(), z.end(), 0.0,
+                                         [](const double sum, const double val) { return sum + val * val; });
+
+        double p = 1.0;
+        for (size_t i = 0; i < z.size(); i++)
+        {
+            p *= cos(z[i] / sqrt(1.0 + static_cast<int>(i)));
+        }
+
+        return 1.0 + s / 4000.0 - p;
+    }
+
+
+
+
+    /**
+     * The Expanded Schaffer's F6 function, is a non-convex function characterized
+     * by a large number of local minima, making it a challenging problem for optimization algorithms. This
+     * implementation also includes transformations such as scaling and rotation to further complicate the optimization
+     * landscape.
+     *
+     * @param x Input vector containing the coordinates in the domain space.
+     * @param f Reference to a double where the function value will be stored.
+     * @param os Transformation vector used in the function computation.
+     * @param mr Rotation matrix used in the function computation.
+     * @param s_flag Scaling flag used in the transformation.
+     * @param r_flag Rotation flag used in the transformation.
+     */
+    inline void expanded_schaffer_f6_void(const std::vector<double> &x, double &f, const std::vector<double> &os,
+                          const std::vector<std::vector<double>> &mr, const int s_flag, const int r_flag)
+    {
+        std::vector<double> z(x.size());
+        std::vector<double> y(x.size());
+        
+        transformation::variables::scale_and_rotate(x, z, y, os, mr, 1.0, s_flag, r_flag);
+
+        f = 0.0;
+
+        for (size_t i = 0; i < z.size() - 1; i++)
+        {
+            double temp1 = sin(sqrt(z[i] * z[i] + z[i + 1] * z[i + 1]));
+            temp1 *= temp1;
+
+            const double temp2 = 1.0 + 0.001 * (z[i] * z[i] + z[i + 1] * z[i + 1]);
+            f += 0.5 + (temp1 - 0.5) / (temp2 * temp2);
+        }
+
+        double temp1 = sin(sqrt(z.back() * z.back() + z.front() * z.front()));
+        temp1 *= temp1;
+
+        const double temp2 = 1.0 + 0.001 * (z.back() * z.back() + z.front() * z.front());
+        f += 0.5 + (temp1 - 0.5) / (temp2 * temp2);
+        // return f;
     }
 
     /**
@@ -461,23 +530,26 @@ namespace ioh::problem
      * @param s_flag Scaling flag used in the transformation.
      * @param r_flag Rotation flag used in the transformation.
      */
-    inline void griewank(const std::vector<double> &x, double &f, const std::vector<double> &os,
-                         const std::vector<std::vector<double>> &mr, const int s_flag, const int r_flag)
+    inline void griewank_void(const std::vector<double> &x, double &f, const std::vector<double> &os,
+        const std::vector<std::vector<double>> &mr, const int s_flag, const int r_flag)
     {
         std::vector<double> z(x.size());
         std::vector<double> y(x.size());
-
+        
         transformation::variables::scale_and_rotate(x, z, y, os, mr, 600.0 / 100.0, s_flag, r_flag);
 
         const double s = std::accumulate(z.begin(), z.end(), 0.0, [](const double sum, const double val) { return sum + val * val; });
 
         double p = 1.0;
-        for (size_t i = 0; i < x.size(); i++)
+        for (size_t i = 0; i < z.size(); i++)
         {
             p *= cos(z[i] / sqrt(1.0 + static_cast<int>(i)));
         }
 
         f = 1.0 + s / 4000.0 - p;
     }
+
+
+    using RealFunction = std::function<double(std::vector<double>)>;
  
 } // namespace ioh::problem

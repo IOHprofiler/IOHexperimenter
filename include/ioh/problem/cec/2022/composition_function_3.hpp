@@ -16,38 +16,16 @@ namespace ioh::problem::cec2022
          */
         double evaluate(const std::vector<double> &x) override
         {
-            const int nx = static_cast<int>(x.size());
-            const std::vector<double> delta = {20, 20, 30, 30, 20};
-            const std::vector<double> bias = {0, 200, 300, 400, 200};
-
-            std::vector<double> fit(5);
-
-            expanded_schaffer_f6(x, fit[0], this->variables_shifts_[0], this->linear_transformations_[0], 1, true);
-            fit[0] *= 10000.0 / 2e+7;
-
-            std::vector<double> schwefel_z(nx);
-            std::vector<double> schwefel_y(nx);
-            transformation::variables::scale_and_rotate(x, schwefel_z, schwefel_y, this->variables_shifts_[1], this->linear_transformations_[1], 1000.0 / 100.0, true,
-                                                        true);
-            fit[1] = schwefel(schwefel_z);
-
-            griewank(x, fit[2], this->variables_shifts_[2], this->linear_transformations_[2], 1, true);
-            fit[2] *= 1000.0 / 100;
-
-            std::vector<double> rosenbrock_z(nx);
-            std::vector<double> rosenbrock_y(nx);
-            transformation::variables::scale_and_rotate(x, rosenbrock_z, rosenbrock_y, this->variables_shifts_[3], this->linear_transformations_[3], 2.048 / 100.0,
-                                                        true, true);
-            fit[3] = rosenbrock(rosenbrock_z);
-
-            std::vector<double> rastrigin_z(nx);
-            std::vector<double> rastrigin_y(nx);
-            transformation::variables::scale_and_rotate(x, rastrigin_z, rastrigin_y, this->variables_shifts_[4], this->linear_transformations_[4], 5.12 / 100.0, true,
-                                                        true);
-            fit[4] = rastrigin(rastrigin_z);
-            fit[4] *= 10000.0 / 1e+3;
-
-            return cf_cal(x, this->variables_shifts_, delta, bias, fit);
+            const std::vector<double> deltas = {20, 20, 30, 30, 20};
+            const std::vector<double> biases = {0, 200, 300, 400, 200};
+            const std::vector<double> sh_rates = {1, 10.0, 6.0, 2.048 / 100.0, 5.12 / 100.0};
+            const std::vector<bool> s_flags = {true, true, true, true, true};
+            const std::vector<bool> r_flags = {true, true, true, true, true};
+            const std::vector<double> f_scale = {2e+7, 1e+4, 1e+3, 1e+4, 1e+3};
+            const std::vector<RealFunction> functions = {expanded_schaffer, schwefel, griewank, rosenbrock,
+                                                         rastrigin};
+            return calculate_composite(x, this->variables_shifts_, this->linear_transformations_, deltas, biases,
+                                       sh_rates, s_flags, r_flags, f_scale, functions);
         }
 
     public:

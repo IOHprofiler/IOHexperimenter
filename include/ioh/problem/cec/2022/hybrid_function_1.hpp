@@ -26,42 +26,7 @@ namespace ioh::problem::cec2022
          */
         double evaluate(const std::vector<double> &x) override
         {
-            const int nx = static_cast<int>(x.size());
-            constexpr int cf_num = 3;
-            std::vector<double> fit(cf_num);
-            std::vector<int> g(cf_num);
-            std::vector<int> g_nx(cf_num);
-            const std::vector<double> gp = {0.4, 0.4, 0.2};
-
-            int tmp = 0;
-            for (int i = 0; i < cf_num - 1; ++i)
-            {
-                g_nx[i] = static_cast<int>(std::ceil(gp[i] * nx));
-                tmp += g_nx[i];
-            }
-            g_nx[cf_num - 1] = nx - tmp;
-
-            g[0] = 0;
-            for (int i = 1; i < cf_num; ++i)
-            {
-                g[i] = g[i - 1] + g_nx[i - 1];
-            }
-
-            const std::vector<double> bent_cigar_z(x.begin() + g[0], x.begin() + g[0] + g_nx[0]);
-            fit[0] = bent_cigar(bent_cigar_z);
-
-            const std::vector<double> hgbat_z(x.begin() + g[1], x.begin() + g[1] + g_nx[1]);
-            fit[1] = hgbat(hgbat_z);
-
-            const std::vector<double> rastrigin_z(x.begin() + g[2], x.begin() + g[2] + g_nx[2]);
-            fit[2] = rastrigin(rastrigin_z);
-
-            double &&f = 0.0;
-            for (const auto &val : fit)
-            {
-                f += val;
-            }
-            return f;
+            return calculate_hybrid(x, {0.4, 0.4, 0.2}, {1, 5.0 / 100.0, 5.12 / 100.0}, {bent_cigar, hgbat, rastrigin});
         }
 
         //! Transforms the input variables according to the problem's specific transformations.
@@ -75,65 +40,17 @@ namespace ioh::problem::cec2022
          */
         std::vector<double> transform_variables(std::vector<double> x) override
         {
-            auto &&Os = this->variables_shifts_[0];
-            auto &&Mr = this->linear_transformations_[0];
-            auto &&S = this->input_permutation_;
+            std::vector<double> z(x.size());
+            std::vector<double> y(x.size());
 
-            constexpr int cf_num = 3;
-            int nx = x.size();
-            std::vector<double> z(nx);
-            std::vector<double> y(nx);
-            std::vector<int> G(cf_num);
-            std::vector<int> G_nx(cf_num);
-            std::vector<double> Gp = {0.4, 0.4, 0.2};
+            transformation::variables::scale_and_rotate(x, z, y, this->variables_shifts_[0],
+                                                        this->linear_transformations_[0], 1.0, true, true);
 
-            int tmp = 0;
-            for (int i = 0; i < cf_num - 1; ++i)
+            for (size_t i = 0; i < x.size(); ++i)
             {
-                G_nx[i] = std::ceil(Gp[i] * nx);
-                tmp += G_nx[i];
+                y[i] = z[this->input_permutation_[i] - 1];
             }
-            G_nx[cf_num - 1] = nx - tmp;
-
-            G[0] = 0;
-            for (int i = 1; i < cf_num; ++i)
-            {
-                G[i] = G[i - 1] + G_nx[i - 1];
-            }
-
-            transformation::variables::scale_and_rotate(x, z, y, Os, Mr, 1.0, true, true);
-
-            for (int i = 0; i < nx; ++i)
-            {
-                y[i] = z[S[i] - 1];
-            }
-
-            std::vector<double> bent_cigar_x(y.begin() + G[0], y.begin() + G[0] + G_nx[0]);
-            std::vector<double> bent_cigar_z(bent_cigar_x.size());
-            std::vector<double> bent_cigar_y(bent_cigar_x.size());
-            transformation::variables::scale_and_rotate(bent_cigar_x, bent_cigar_z, bent_cigar_y, Os, Mr, 1.0, false,
-                                                        false);
-
-            std::vector<double> hgbat_x(y.begin() + G[1], y.begin() + G[1] + G_nx[1]);
-            std::vector<double> hgbat_z(hgbat_x.size());
-            std::vector<double> hgbat_y(hgbat_x.size());
-            transformation::variables::scale_and_rotate(hgbat_x, hgbat_z, hgbat_y, Os, Mr, 5.0 / 100.0, false, false);
-
-            std::vector<double> rastrigin_x(y.begin() + G[2], y.begin() + G[2] + G_nx[2]);
-            std::vector<double> rastrigin_z(rastrigin_x.size());
-            std::vector<double> rastrigin_y(rastrigin_x.size());
-            transformation::variables::scale_and_rotate(rastrigin_x, rastrigin_z, rastrigin_y, Os, Mr, 5.12 / 100.0,
-                                                        false, false);
-
-            std::vector<double> prepared_y;
-
-            prepared_y.reserve(bent_cigar_z.size() + hgbat_z.size() + rastrigin_z.size());
-
-            prepared_y.insert(prepared_y.end(), bent_cigar_z.begin(), bent_cigar_z.end());
-            prepared_y.insert(prepared_y.end(), hgbat_z.begin(), hgbat_z.end());
-            prepared_y.insert(prepared_y.end(), rastrigin_z.begin(), rastrigin_z.end());
-
-            return prepared_y;
+            return y;
         }
 
     public:

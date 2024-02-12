@@ -9,65 +9,109 @@ namespace ioh::problem
     namespace cec2022
     {
         /**
-         * @brief Computes the cf_cal function value for the input vector.
-         *
-         * The cf_cal function is a helper function used in the computation of composite functions in optimization
+         * \brief The calculate_composite function is a helper function used in the computation of composite functions in optimization
          * problems. It calculates the weighted sum of several function values, which is a common approach in creating
          * hybrid functions to test optimization algorithms.
          *
-         * @param x Input vector containing the coordinates in the domain space.
-         * @param os Transformation vectors used in the function computation.
-         * @param delta Delta values used in the function computation.
-         * @param bias Bias values used in the function computation.
-         * @param fit Vector to store individual function values.
-         * @return The weighted sum of function values.
+         * \param x Input vector containing the coordinates in the domain space
+         * \param os Transformation vectors used in the function computation.
+         * \param lt Transformation matrices
+         * \param deltas 
+         * \param biases 
+         * \param sh_rates 
+         * \param s_flags 
+         * \param r_flags 
+         * \param f_scale 
+         * \param functions the list of functions 
+         * \return The weighted sum of function values.
          */
-        inline double cf_cal(const std::vector<double> &x, const std::vector<std::vector<double>> &os,
-                             const std::vector<double> &delta, const std::vector<double> &bias,
-                             std::vector<double> &fit)
+        inline double calculate_composite(
+            const std::vector<double> &x, 
+            const std::vector<std::vector<double>> &os,
+            const std::vector<std::vector<std::vector<double>>>& lt,
+            const std::vector<double> &deltas, 
+            const std::vector<double> &biases,
+            const std::vector<double> &sh_rates,
+            const std::vector<bool>& s_flags,
+            const std::vector<bool> &r_flags,
+            const std::vector<double>& f_scale, 
+            const std::vector<RealFunction>& functions
+        )
         {
             const int nx = static_cast<int>(x.size());
-            const int cf_num = static_cast<int>(fit.size());
 
-            std::vector<double> w(cf_num);
+            std::vector<double> fit(deltas.size());
+            std::vector<double> w(fit.size(), 0.0);
             double w_max = 0.0;
             double w_sum = 0.0;
 
-            for (int i = 0; i < cf_num; i++)
+            for (size_t i = 0; i < fit.size(); i++)
             {
-                fit[i] += bias[i];
-                w[i] = 0.0;
+                std::vector<double> z(x.size());
+                std::vector<double> y(x.size());
+                transformation::variables::scale_and_rotate(x, z, y, os[i], lt[i], sh_rates[i], s_flags[i],
+                                                            r_flags[i]);
+                fit[i] = 10000 * functions[i](z) / f_scale[i];
 
-                for (int j = 0; j < nx; j++)
-                {
+
+                fit[i] += biases[i];
+
+                for (size_t j = 0; j < x.size(); j++)
                     w[i] += std::pow(x[j] - os[i][j], 2.0);
-                }
 
-                if (abs(w[i]) > 0)
-                    w[i] = std::pow(1.0 / w[i], 0.5) * std::exp(-w[i] / (2.0 * nx * std::pow(delta[i], 2.0)));
-                else
-                    w[i] = 1.0e99; //std ::numeric_limits<double>::infinity();
-                
+                w[i] = abs(w[i]) > 0
+                    ? std::pow(1.0 / w[i], 0.5) * std::exp(-w[i] / (2.0 * nx * std::pow(deltas[i], 2.0)))
+                    : 1.0e99;
+
                 w_max = std::max(w_max, w[i]);
-            }
-
-            for (const auto &weight : w)
-            {
-                w_sum += weight;
+                w_sum += w[i];
             }
 
             if (!(abs(w_max) > 0))
             {
                 std::fill(w.begin(), w.end(), 1.0);
-                w_sum = cf_num;
+                w_sum = static_cast<double>(fit.size());
             }
 
             double f = 0.0;
-            for (int i = 0; i < cf_num; i++)
-            {
+            for (size_t i = 0; i < fit.size(); i++)
                 f += (w[i] / w_sum) * fit[i];
-            }
+
             return f;
+        }
+
+
+        /**
+         * \brief Calculate Hybrid function, were each of the `functions' is evaluated on
+         * a portion of the search variables, defined in `fractions'.
+         *
+         * \param x The search variables
+         * \param fractions the proportion of variables to execute each function on
+         * \param scales scaling applied to each function
+         * \param functions the list of functions 
+         * \return the fitness 
+         */
+        inline double calculate_hybrid(
+            const std::vector<double> &x, 
+            const std::vector<double> &fractions,
+            const std::vector<double> &scales,
+            const std::vector<RealFunction> &functions
+        )
+        {
+            const int nx = static_cast<int>(x.size());
+            int loc = 0, i = 0;
+            double fit = 0;
+            while (loc < nx)
+            {
+                const int ng = static_cast<int>(std::ceil(fractions[i] * nx));
+                const int next_loc = std::min(nx, ng + loc);
+                std::vector<double> z(x.begin() + loc, x.begin() + next_loc);
+                transformation::variables::scale(z, scales[i]);
+                fit += functions[i++](z);
+                loc += ng;
+            }
+            return fit;
+
         }
     }
 
@@ -191,13 +235,15 @@ namespace ioh::problem
                                 Bounds<double>(n_variables, -100, 100)),
             input_permutation_(std::vector<int>(n_variables, 0))
         {
-            if (n_variables == 1) return; 
+            if (n_variables == 1)
+                return;
 
             if (
                 !(n_variables == 2 || n_variables == 10 || n_variables == 20) ||
                 ((problem_id == 1006 || problem_id == 1007 || problem_id == 1008) && n_variables == 2))
             {
-                std::cerr << fmt::format("[CEC2022] Problem ID: {} | Invalid n_variables: {}\n", problem_id, n_variables);
+                std::cerr << fmt::format("[CEC2022] Problem ID: {} | Invalid n_variables: {}\n", problem_id,
+                                         n_variables);
             }
 
             load_transformation_data();
@@ -232,8 +278,8 @@ namespace ioh::problem
      */
     template <typename ProblemType>
     struct CEC2022Problem : CEC2022,
-                        AutomaticProblemRegistration<ProblemType, CEC2022>,
-                        AutomaticProblemRegistration<ProblemType, RealSingleObjective>
+                            AutomaticProblemRegistration<ProblemType, CEC2022>,
+                            AutomaticProblemRegistration<ProblemType, RealSingleObjective>
     {
         using CEC2022::CEC2022; ///< Inherits the constructor of the CEC2022 class.
     };
