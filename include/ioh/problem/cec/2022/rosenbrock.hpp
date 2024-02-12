@@ -3,10 +3,10 @@
 #include "cec_problem.hpp"
 
 /// Namespace enclosing the Implementation of Rosenbrock problem which is a part of CEC benchmark problems.
-namespace ioh::problem::cec
+namespace ioh::problem::cec2022
 {
     /// The Rosenbrock class encapsulates the Rosenbrock optimization problem, inheriting functionalities from the template class CECProblem.
-    class CEC_Rosenbrock final : public CECProblem<CEC_Rosenbrock>
+    class Rosenbrock final : public CEC2022Problem<Rosenbrock>
     {
     protected:
         /// Evaluates the objective function for the Rosenbrock problem.
@@ -36,8 +36,8 @@ namespace ioh::problem::cec
         /// Constructs a Rosenbrock problem instance with specified number of variables and instance identifier.
         /// @param instance An integer representing the specific problem instance number.
         /// @param n_variables An integer representing the number of variables for this problem.
-        CEC_Rosenbrock(const int instance, const int n_variables) :
-            CECProblem(1002, instance, n_variables, "CEC_Rosenbrock")
+        Rosenbrock(const int instance, const int n_variables) :
+            CEC2022Problem(1002, instance, n_variables, "CEC2022Rosenbrock")
         {
         }
     };

@@ -3,10 +3,10 @@
 #include "cec_problem.hpp"
 
 /// Namespace encapsulating the CEC benchmark problems, here particularly defining the Expanded Schaffer F7 problem class.
-namespace ioh::problem::cec
+namespace ioh::problem::cec2022
 {
-    /// The CEC_ExpandedSchafferF7 class represents the Expanded Schaffer F7 optimization problem, inheriting necessary functionalities from the CECProblem template class.
-    class CEC_ExpandedSchafferF7 final : public CECProblem<CEC_ExpandedSchafferF7>
+    /// The ExpandedSchafferF7 class represents the Expanded Schaffer F7 optimization problem, inheriting necessary functionalities from the CECProblem template class.
+    class ExpandedSchafferF7 final : public CEC2022Problem<ExpandedSchafferF7>
     {
     protected:
         /// Computes the Schaffer F7 objective function value at the given point.
@@ -34,8 +34,8 @@ namespace ioh::problem::cec
         /// Constructor initializing the Expanded Schaffer F7 problem with given instance number and variable count.
         /// @param instance Instance number for the problem.
         /// @param n_variables Number of variables for the problem.
-        CEC_ExpandedSchafferF7(const int instance, const int n_variables) :
-            CECProblem(1003, instance, n_variables, "CEC_ExpandedSchafferF7")
+        ExpandedSchafferF7(const int instance, const int n_variables) :
+            CEC2022Problem(1003, instance, n_variables, "CEC2022ExpandedSchafferF7")
         {
         }
     };

@@ -3,15 +3,15 @@
 #include "cec_problem.hpp"
 
 //! Namespace encapsulating all elements of the IOHexperimenter project
-namespace ioh::problem::cec
+namespace ioh::problem::cec2022
 {
-    //! A class representing the CEC_HybridFunction1 problem, derived from the CECProblem class.
+    //! A class representing the HybridFunction1 problem, derived from the CECProblem class.
     /*!
      * This class represents a specific optimization problem which is a hybrid of several other functions.
      * It overrides the evaluate and transform_variables methods to provide the specific implementation for this
      * problem.
      */
-    class CEC_HybridFunction1 final : public CECProblem<CEC_HybridFunction1>
+    class HybridFunction1 final : public CEC2022Problem<HybridFunction1>
     {
     protected:
         /**
@@ -137,17 +137,17 @@ namespace ioh::problem::cec
         }
 
     public:
-        //! Constructor for the CEC_HybridFunction1 class.
+        //! Constructor for the HybridFunction1 class.
         /*!
-         * Initializes a new instance of the CEC_HybridFunction1 class, setting up the problem with the specified
+         * Initializes a new instance of the HybridFunction1 class, setting up the problem with the specified
          * instance and number of variables.
          *
          * \param instance The instance number of the problem.
          * \param n_variables The number of variables for the problem.
          */
-        CEC_HybridFunction1(const int instance, const int n_variables) :
-            CECProblem(1006, instance, n_variables, "CEC_HybridFunction1")
+        HybridFunction1(const int instance, const int n_variables) :
+            CEC2022Problem(1006, instance, n_variables, "CEC2022HybridFunction1")
         {
         }
     };
-} // namespace ioh::problem::cec
+} // namespace ioh::problem::cec2022

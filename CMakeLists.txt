@@ -21,7 +21,7 @@ option(BUILD_EXAMPLE "Whether to build examples" ON)
 option(BUILD_DOCS "Build docs" OFF)    
 option(BUILD_SERVER "Whether to build the objective function server" OFF) 
 option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF) # Turn this option ON if you plan to test MK-landscape problems.
- 
+  
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /bigobj")
 endif()   
@@ -58,7 +58,8 @@ add_subdirectory(${EXTERNAL_DIR}/fmt)
 target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
 
 # Add Json lib 
-if(EXISTS ${EXTERNAL_DIR}/json/CMakeLists.txt)
+if(BUILD_SERVER AND EXISTS ${EXTERNAL_DIR}/json/CMakeLists.txt)
+    set(INCLUDE_JSON true)
     add_compile_definitions(HAS_JSON)
     set(JSON_Install OFF CACHE INTERNAL "")
     add_subdirectory(${EXTERNAL_DIR}/json)
@@ -122,12 +123,22 @@ write_basic_package_version_file(
 # Define installation rules.
 include(GNUInstallDirs)
 
-install(TARGETS ioh fmt-header-only
+
+if (DEFINED INCLUDE_JSON)
+install(TARGETS ioh fmt-header-only nlohmann_json
     EXPORT ioh-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+) 
+else()
+install(TARGETS ioh fmt-header-only 
+    EXPORT ioh-targets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+) 
+endif()
 
 install(DIRECTORY include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}

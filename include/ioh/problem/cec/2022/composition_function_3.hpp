@@ -2,10 +2,10 @@
 
 #include "cec_problem.hpp"
 
-namespace ioh::problem::cec
+namespace ioh::problem::cec2022
 {
     /// \brief Class representing the third composition function in the CEC benchmark suite.
-    class CEC_CompositionFunction3 final : public CECProblem<CEC_CompositionFunction3>
+    class CompositionFunction3 final : public CEC2022Problem<CompositionFunction3>
     {
     protected:
         /**
@@ -50,17 +50,6 @@ namespace ioh::problem::cec
             return cf_cal(x, this->variables_shifts_, delta, bias, fit);
         }
 
-        /**
-         * @brief Transforms the input variables based on the current transformation data.
-         *
-         * @param x The original input variables.
-         * @return The transformed input variables.
-         */
-        std::vector<double> transform_variables(std::vector<double> x) override
-        {
-            return x;
-        }
-
     public:
         /**
          * @brief Constructs a CEC_CompositionFunction3 instance.
@@ -68,8 +57,8 @@ namespace ioh::problem::cec
          * @param instance The instance number of the problem.
          * @param n_variables The number of variables in the problem.
          */
-        CEC_CompositionFunction3(const int instance, const int n_variables) :
-            CECProblem(1011, instance, n_variables, "CEC_CompositionFunction3")
+        CompositionFunction3(const int instance, const int n_variables) :
+            CEC2022Problem(1011, instance, n_variables, "CEC2022CompositionFunction3")
         {
         }
     };

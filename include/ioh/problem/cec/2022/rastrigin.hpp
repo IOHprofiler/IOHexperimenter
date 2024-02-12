@@ -3,10 +3,10 @@
 #include "cec_problem.hpp"
 
 /// Namespace encapsulating the CEC benchmark problems, here particularly defining the Rastrigin problem class.
-namespace ioh::problem::cec
+namespace ioh::problem::cec2022
 {
     /// The Rastrigin class represents the Rastrigin optimization problem, inheriting necessary functionalities from the CECProblem template class.
-    class CEC_Rastrigin final : public CECProblem<CEC_Rastrigin>
+    class Rastrigin final : public CEC2022Problem<Rastrigin>
     {
     protected:
         /// Computes the Rastrigin objective function value at the given point.
@@ -34,8 +34,7 @@ namespace ioh::problem::cec
         /// Constructor initializing the Rastrigin problem with given instance number and variable count.
         /// @param instance Instance number for the problem.
         /// @param n_variables Number of variables for the problem.
-        CEC_Rastrigin(const int instance, const int n_variables) :
-            CECProblem(1004, instance, n_variables, "CEC_Rastrigin")
+        Rastrigin(const int instance, const int n_variables) : CEC2022Problem(1004, instance, n_variables, "CEC2022Rastrigin")
         {
         }
     };

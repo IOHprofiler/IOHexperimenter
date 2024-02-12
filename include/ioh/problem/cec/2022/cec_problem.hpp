@@ -6,7 +6,7 @@
 
 namespace ioh::problem
 {
-    namespace cec
+    namespace cec2022
     {
         /**
          * @brief Computes the cf_cal function value for the input vector.
@@ -74,9 +74,9 @@ namespace ioh::problem
     const inline std::string CEC_FOLDER = "cec_transformations/2022/";
 
 
-    /// \brief The CEC class represents a problem in the CEC benchmark suite.
+    /// \brief The CEC2022 class represents a problem in the CEC2022 benchmark suite.
     /// It inherits from the RealSingleObjective class and contains methods to load transformation data from static files and apply transformations to problem variables and objectives.
-    class CEC : public RealSingleObjective
+    class CEC2022 : public RealSingleObjective
     {
         /// \brief Loads the transformation data from static files based on the problem ID and the number of variables.
         void load_transformation_data()
@@ -105,7 +105,7 @@ namespace ioh::problem
                 return;
             }
 
-            throw std::out_of_range("CEC function identifier out of range.");
+            throw std::out_of_range("CEC2022 function identifier out of range.");
         }
 
         /**
@@ -180,7 +180,7 @@ namespace ioh::problem
          * @param n_variables The number of variables in the problem, representing the dimensionality of the search space.
          * @param name A unique name for the problem.
          */
-        CEC
+        CEC2022
         (
             const int problem_id,
             const int instance,
@@ -197,7 +197,7 @@ namespace ioh::problem
                 !(n_variables == 2 || n_variables == 10 || n_variables == 20) ||
                 ((problem_id == 1006 || problem_id == 1007 || problem_id == 1008) && n_variables == 2))
             {
-                std::cerr << fmt::format("[CEC] Problem ID: {} | Invalid n_variables: {}\n", problem_id, n_variables);
+                std::cerr << fmt::format("[CEC2022] Problem ID: {} | Invalid n_variables: {}\n", problem_id, n_variables);
             }
 
             load_transformation_data();
@@ -214,6 +214,14 @@ namespace ioh::problem
             return transformation::objective::shift(y, optimum_.y);
         }
 
+        /**
+         * @brief Transforms the input variables based on the current transformation data.
+         *
+         * @param x The original input variables.
+         * @return The transformed input variables.
+         */
+        std::vector<double> transform_variables(std::vector<double> x) override { return x; }
+
 
     };
 
@@ -224,10 +232,10 @@ namespace ioh::problem
      * @tparam ProblemType The class representing the new CEC problem.
      */
     template <typename ProblemType>
-    struct CECProblem : CEC,
-                        AutomaticProblemRegistration<ProblemType, CEC>,
+    struct CEC2022Problem : CEC2022,
+                        AutomaticProblemRegistration<ProblemType, CEC2022>,
                         AutomaticProblemRegistration<ProblemType, RealSingleObjective>
     {
-        using CEC::CEC; ///< Inherits the constructor of the CEC class.
+        using CEC2022::CEC2022; ///< Inherits the constructor of the CEC2022 class.
     };
 } // namespace ioh::problem

@@ -2,10 +2,10 @@
 
 #include "cec_problem.hpp"
 
-namespace ioh::problem::cec
+namespace ioh::problem::cec2022
 {
-    /// \brief CEC_HybridFunction2 class that inherits from CECProblem.
-    class CEC_HybridFunction2 final : public CECProblem<CEC_HybridFunction2>
+    /// \brief HybridFunction2 class that inherits from CECProblem.
+    class HybridFunction2 final : public CEC2022Problem<HybridFunction2>
     {
     protected:
         /**
@@ -157,11 +157,11 @@ namespace ioh::problem::cec
         }
 
     public:
-        /// \brief Constructor of the CEC_HybridFunction2 class.
+        /// \brief Constructor of the HybridFunction2 class.
         /// \param instance The instance number of the problem.
         /// \param n_variables The number of variables.
-        CEC_HybridFunction2(const int instance, const int n_variables) :
-            CECProblem(1007, instance, n_variables, "CEC_HybridFunction2")
+        HybridFunction2(const int instance, const int n_variables) :
+            CEC2022Problem(1007, instance, n_variables, "CEC2022HybridFunction2")
         {
         }
     };
