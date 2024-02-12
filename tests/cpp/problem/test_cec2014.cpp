@@ -1,5 +1,5 @@
 #include "../utils.hpp"
-#include "ioh/problem/cec/2022.hpp"
+#include "ioh/problem/cec.hpp"
 
 TEST_F(BaseTest, CECProblem)
 {
@@ -32,8 +32,12 @@ TEST_F(BaseTest, xopt_equals_yopt_cec)
     const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC2022>::instance();
     for (const auto& name : problem_factory.names())
     {
-        auto instance = problem_factory.create(name, 1, 10);
-        const auto y = (*instance)(instance->optimum().x);
-        EXPECT_DOUBLE_EQ(instance->optimum().y, y) << *instance;
+        // Any function's, but the composition function's, optimum is defined.
+        if (!(name == "CEC2022CompositionFunction1" || name == "CEC2022CompositionFunction2" || name == "CEC2022CompositionFunction3" || name == "CEC2022CompositionFunction4"))
+        {
+            auto instance = problem_factory.create(name, 1, 10);
+            auto&& x = instance->optimum().x;
+            EXPECT_DOUBLE_EQ(instance->optimum().y, (*instance)(x)) << *instance;
+        }
     }
 }

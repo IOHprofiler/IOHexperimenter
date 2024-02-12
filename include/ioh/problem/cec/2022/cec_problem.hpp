@@ -43,11 +43,11 @@ namespace ioh::problem
                     w[i] += std::pow(x[j] - os[i][j], 2.0);
                 }
 
-                if (abs(w[i]) > 0.)
+                if (abs(w[i]) > 0)
                     w[i] = std::pow(1.0 / w[i], 0.5) * std::exp(-w[i] / (2.0 * nx * std::pow(delta[i], 2.0)));
                 else
-                    w[i] = std::numeric_limits<double>::infinity();
-
+                    w[i] = 1.0e99; //std ::numeric_limits<double>::infinity();
+                
                 w_max = std::max(w_max, w[i]);
             }
 
@@ -201,6 +201,7 @@ namespace ioh::problem
             }
 
             load_transformation_data();
+
         }
 
         /**
@@ -221,8 +222,6 @@ namespace ioh::problem
          * @return The transformed input variables.
          */
         std::vector<double> transform_variables(std::vector<double> x) override { return x; }
-
-
     };
 
     /**
