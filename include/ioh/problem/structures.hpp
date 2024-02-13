@@ -244,14 +244,14 @@ namespace ioh
             {
                 ++evaluations;
 
-                has_improved = meta_data.optimization_type(current_internal.y, current_best_internal.y);
-                if (has_improved)
+                bool has_internal_improved = meta_data.optimization_type(current_internal.y, current_best_internal.y);
+                if (has_internal_improved)
                 {
                     current_best_internal = current_internal;
                 }
 
-                has_improved = meta_data.optimization_type(current.y, current_best.y);
-                if (has_improved)
+                bool has_external_improved = meta_data.optimization_type(current.y, current_best.y);
+                if (has_external_improved)
                 {
                     y_unconstrained_best = y_unconstrained;
                     current_best = current;
@@ -259,6 +259,8 @@ namespace ioh
                     if (objective.y == current.y)
                         optimum_found = true;
                 }
+
+                has_improved = has_internal_improved || has_external_improved;
             }
 
             std::string repr() const override
