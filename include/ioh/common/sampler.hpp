@@ -40,7 +40,7 @@ namespace ioh::common::random::sampler
         {
             std::vector<T> res(this->n);
             for (size_t i = 0; i < this->n; i++)
-                res[i] = (delta_ * (static_cast<T>(gen_()) / static_cast<T>(delta_g_))) + this->lb;
+                res[i] = static_cast<T>((delta_ * (static_cast<double>(gen_()) / static_cast<double>(delta_g_))) + this->lb);
             return res;
         }
 

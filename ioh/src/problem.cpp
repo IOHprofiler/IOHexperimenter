@@ -157,9 +157,8 @@ void define_functionalconstraint(py::module &m, const std::string &name)
                      return Class(fn, w, ex, e, n);
                  }),
              py::arg("fn"), py::arg("weight") = 1.0, py::arg("exponent") = 1.0,
-             py::arg("enforced") = constraint::Enforced::SOFT,
-             py::arg("name") = "",
-                               R"pbdoc(
+             py::arg("enforced") = constraint::Enforced::SOFT, py::arg("name") = "",
+             R"pbdoc(
                 General Constraint, defined by a function
 
                 Parameters
@@ -225,12 +224,10 @@ void define_bounds(py::module &m, const std::string &name)
              )
         .def_property(
             "ub", [](const Class &c) { return py::array(c.ub.size(), c.ub.data()); },
-                  [](Class &c, const std::vector<T>& vec) { c.ub = vec;},
-            "The upper bound (box constraint)")
+            [](Class &c, const std::vector<T> &vec) { c.ub = vec; }, "The upper bound (box constraint)")
         .def_property(
             "lb", [](const Class &c) { return py::array(c.lb.size(), c.lb.data()); },
-                  [](Class &c, const std::vector<T>& vec) { c.lb = vec;},
-            "The lower bound (box constraint)")
+            [](Class &c, const std::vector<T> &vec) { c.lb = vec; }, "The lower bound (box constraint)")
         .def("__repr__", &Class::repr)
         .def("compute_violation", &Class::compute_violation,
              R"pbdoc(
@@ -355,7 +352,7 @@ void define_base_class(py::module &m, const std::string &name)
              R"pbdoc(
                 Remove the specified logger from the problem.
             )pbdoc")
-        .def("__call__", py::overload_cast<const std::vector<T>&>(&ProblemType::operator()),
+        .def("__call__", py::overload_cast<const std::vector<T> &>(&ProblemType::operator()),
              R"pbdoc(
                 Evaluate the problem.
 
@@ -368,7 +365,7 @@ void define_base_class(py::module &m, const std::string &name)
                 float
                     The evaluated search point
             )pbdoc")
-        .def("__call__", py::overload_cast<const std::vector<std::vector<T>>&>(&ProblemType::operator()),
+        .def("__call__", py::overload_cast<const std::vector<std::vector<T>> &>(&ProblemType::operator()),
              R"pbdoc(
                 Evaluate the problem.
 
@@ -426,8 +423,8 @@ void define_base_class(py::module &m, const std::string &name)
         .def("add_constraint", &ProblemType::add_constraint, "add a constraint")
         .def("remove_constraint", &ProblemType::remove_constraint, "remove a constraint")
         .def("enforce_bounds", &ProblemType::enforce_bounds, py::arg("weight") = 1.,
-             py::arg("how") = constraint::Enforced::SOFT, py::arg("exponent") = 1., 
-            R"pbdoc(
+             py::arg("how") = constraint::Enforced::SOFT, py::arg("exponent") = 1.,
+             R"pbdoc(
                 Enforced the bounds (box-constraints) as constraint
                 Parameters
                 ----------
@@ -438,7 +435,7 @@ void define_base_class(py::module &m, const std::string &name)
 
         .def("set_id", &ProblemType::set_id, py::arg("new_problem_id"), "update the problem id")
         .def("set_instance", &ProblemType::set_instance, py::arg("new_instance"), "update the problem instance")
-        .def("set_name", &ProblemType::set_name, py::arg("new_name"),"update the problem name")
+        .def("set_name", &ProblemType::set_name, py::arg("new_name"), "update the problem name")
         .def("__repr__", [=](const ProblemType &p) {
             using namespace ioh::common;
             const auto meta_data = p.meta_data();
@@ -461,9 +458,7 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
            std::optional<double> ub, std::optional<py::handle> tx, std::optional<py::handle> ty,
            std::optional<py::handle> co, Constraints<T> cs) {
             register_python_fn(f);
-            auto of = [f](const std::vector<T> &x) { 
-                return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr()); 
-            };
+            auto of = [f](const std::vector<T> &x) { return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr()); };
 
             auto ptx = [tx](std::vector<T> x, const int iid) {
                 if (tx)
@@ -531,16 +526,16 @@ void define_helper_classes(py::module &m)
 
     py::enum_<ioh::problem::constraint::Enforced>(m, "ConstraintEnforcement",
                                                   "Enum defining constraint handling strategies.")
-        .value("NOT", ioh::problem::constraint::Enforced::NOT, 
-                "Do not calculate the constraint at all")
-        .value("HIDDEN", ioh::problem::constraint::Enforced::HIDDEN, 
-                "Do not enforce, but still calculate to enable logging.")
+        .value("NOT", ioh::problem::constraint::Enforced::NOT, "Do not calculate the constraint at all")
+        .value("HIDDEN", ioh::problem::constraint::Enforced::HIDDEN,
+               "Do not enforce, but still calculate to enable logging.")
         .value("SOFT", ioh::problem::constraint::Enforced::SOFT,
                "Penalize (y + p), but aggregate all the constraint penalties into a sum ")
         .value("HARD", ioh::problem::constraint::Enforced::HARD,
                "Penalize (p only), and if violation return only the penalty for this constraint in contraintset")
         .value("OVERRIDE", ioh::problem::constraint::Enforced::OVERRIDE,
-               "Penalize (p only), and if violation return the custom penalization function this constraint in contraintset")
+               "Penalize (p only), and if violation return the custom penalization function this constraint in "
+               "contraintset")
         .export_values();
 
     define_solution<double, double>(m, "RealSolution");
@@ -722,27 +717,27 @@ void define_pbo_problems(py::module &m)
         )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::OneMaxDummy1, PBO, std::shared_ptr<pbo::OneMaxDummy1>>(m, "OneMaxDummy1", py::is_final(),
-                                                                                            R"pbdoc(
+                                                                           R"pbdoc(
                 A variant of OneMax applying the Dummy transformation of W-model. m = 0.5n.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
             )pbdoc")
 
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::OneMaxDummy2, PBO, std::shared_ptr<pbo::OneMaxDummy2>>(m, "OneMaxDummy2", py::is_final(),
-                                                                            R"pbdoc(
+                                                                           R"pbdoc(
                 A variant of OneMax applying the Dummy transformation of W-model. m = 0.9n.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
             )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::OneMaxNeutrality, PBO, std::shared_ptr<pbo::OneMaxNeutrality>>(m, "OneMaxNeutrality",
                                                                                    py::is_final(),
-                                                                                R"pbdoc(
+                                                                                   R"pbdoc(
                 A variant of OneMax applying the Neutrality transformation of W-model. \mu = 3.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
                 )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::OneMaxEpistasis, PBO, std::shared_ptr<pbo::OneMaxEpistasis>>(m, "OneMaxEpistasis", py::is_final(),
-                                                                                R"pbdoc(
+                                                                                 R"pbdoc(
                 A variant of OneMax applying the Epistasis transformation of W-model. \nu = 4.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
                 )pbdoc")
@@ -767,7 +762,7 @@ void define_pbo_problems(py::module &m)
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::LeadingOnesDummy1, PBO, std::shared_ptr<pbo::LeadingOnesDummy1>>(m, "LeadingOnesDummy1",
                                                                                      py::is_final(),
-                                                                                      R"pbdoc(
+                                                                                     R"pbdoc(
                 A variant of LeadingOnes applying the Dummy transformation of W-model. m = 0.5n.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
             )pbdoc")
@@ -788,7 +783,7 @@ void define_pbo_problems(py::module &m)
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::LeadingOnesEpistasis, PBO, std::shared_ptr<pbo::LeadingOnesEpistasis>>(m, "LeadingOnesEpistasis",
                                                                                            py::is_final(),
-                                                                                            R"pbdoc(
+                                                                                           R"pbdoc(
                 A variant of LeadingOnes applying the Epistasis transformation of W-model. \nu = 4.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
                 )pbdoc")
@@ -828,7 +823,7 @@ void define_pbo_problems(py::module &m)
         )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::IsingTorus, PBO, std::shared_ptr<pbo::IsingTorus>>(m, "IsingTorus", py::is_final(),
-                                                                    R"pbdoc(
+                                                                       R"pbdoc(
             The Ising Spin Glass model arose in solid-state physics and statistical mechanics, aiming to 
             describe simple interactions within many-particle systems. A compact form used here is 
             x ↦ ∑_{{u,v} \in E}[x_ux_v - (1-x_u) (1-x_v)]. E is defined over a two-dimensional lattice.
@@ -836,7 +831,7 @@ void define_pbo_problems(py::module &m)
         )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::IsingTriangular, PBO, std::shared_ptr<pbo::IsingTriangular>>(m, "IsingTriangular", py::is_final(),
-                                                                    R"pbdoc(
+                                                                                 R"pbdoc(
             The Ising Spin Glass model arose in solid-state physics and statistical mechanics, aiming to 
             describe simple interactions within many-particle systems. A compact form used here is 
             x ↦ ∑_{{u,v} \in E}[x_ux_v - (1-x_u) (1-x_v)]. E is defined over a three-dimensional lattice.
@@ -844,14 +839,14 @@ void define_pbo_problems(py::module &m)
         )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::MIS, PBO, std::shared_ptr<pbo::MIS>>(m, "MIS", py::is_final(),
-                                                        R"pbdoc(
+                                                         R"pbdoc(
             The maximum independent vertex set (MIVS) formulated as 
             x ↦ ∑_i x_i - n ∑_{i,j} x_i x_j e_{i,j}, where e_{i,j} = 1 if {i,j} \in E, otherwise e_{i,j} = 0.
             Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.                       
         )pbdoc")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<pbo::NQueens, PBO, std::shared_ptr<pbo::NQueens>>(m, "NQueens", py::is_final(),
-                                                                R"pbdoc(
+                                                                 R"pbdoc(
             The N-queens problem (NQP) is defined as the task to place N queens on an N*N chessboard in such a 
             way that they cannot attack each other.   
             Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.                      
@@ -1009,22 +1004,19 @@ void define_bbob_problems(py::module &mi, const std::string &name = "BBOB", cons
 }
 
 
-void define_cec_problems(py::module &m)
+void define_cec2022_problems(py::module &m)
 {
-    py::class_<CEC, RealSingleObjective, std::shared_ptr<CEC>>(
-        m,
-        "CEC",
-        R"pbdoc(
-            Functions from the CEC 2022 conference.
-        )pbdoc"
-    )
-    .def_static(
-        "create",
-        [](const std::string &name, int iid, int dim) {
-            return ioh::common::Factory<CEC, int, int>::instance().create(name, iid, dim);
-        },
-        py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
-        R"pbdoc(
+    py::class_<CEC2022, RealSingleObjective, std::shared_ptr<CEC2022>>(m, "CEC2022",
+                                                               R"pbdoc(
+            Functions from the CEC2022 2022 conference.
+        )pbdoc")
+        .def_static(
+            "create",
+            [](const std::string &name, int iid, int dim) {
+                return ioh::common::Factory<CEC2022, int, int>::instance().create(name, iid, dim);
+            },
+            py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
+            R"pbdoc(
             Create a problem instance
 
             Parameters
@@ -1036,13 +1028,13 @@ void define_cec_problems(py::module &m)
                 dimension: int
                     the dimensionality of the search space
         )pbdoc")
-    .def_static(
-        "create",
-        [](int id, int iid, int dim) {
-            return ioh::common::Factory<CEC, int, int>::instance().create(id, iid, dim);
-        },
-        py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
-        R"pbdoc(
+        .def_static(
+            "create",
+            [](int id, int iid, int dim) {
+                return ioh::common::Factory<CEC2022, int, int>::instance().create(id, iid, dim);
+            },
+            py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
+            R"pbdoc(
             Create a problem instance
 
             Parameters
@@ -1054,44 +1046,52 @@ void define_cec_problems(py::module &m)
                 dimension: int
                     the dimensionality of the search space
         )pbdoc")
-    .def_property_readonly_static(
-        "problems", [](py::object) { return ioh::common::Factory<CEC, int, int>::instance().map(); },
-        "All registered problems");
+        .def_property_readonly_static(
+            "problems", [](py::object) { return ioh::common::Factory<CEC2022, int, int>::instance().map(); },
+            "All registered problems");
 
-    py::class_<cec::CEC_Zakharov, CEC, std::shared_ptr<cec::CEC_Zakharov>>(m, "CEC_Zakharov", py::is_final())
+    py::class_<cec::CEC2022Zakharov, CEC2022, std::shared_ptr<cec::CEC2022Zakharov>>(m, "CEC2022Zakharov", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC_Rosenbrock, CEC, std::shared_ptr<cec::CEC_Rosenbrock>>(m, "CEC_Rosenbrock", py::is_final())
+    py::class_<cec::CEC2022Rosenbrock, CEC2022, std::shared_ptr<cec::CEC2022Rosenbrock>>(m, "CEC2022Rosenbrock", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC_ExpandedSchafferF7, CEC, std::shared_ptr<cec::CEC_ExpandedSchafferF7>>(m, "CEC_ExpandedSchafferF7", py::is_final())
+    py::class_<cec::CEC2022SchafferF7, CEC2022, std::shared_ptr<cec::CEC2022SchafferF7>>(
+        m, "CEC2022SchafferF7", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC_Rastrigin, CEC, std::shared_ptr<cec::CEC_Rastrigin>>(m, "CEC_Rastrigin", py::is_final())
+    py::class_<cec::CEC2022Rastrigin, CEC2022, std::shared_ptr<cec::CEC2022Rastrigin>>(m, "CEC2022Rastrigin", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC_Levy, CEC, std::shared_ptr<cec::CEC_Levy>>(m, "CEC_Levy", py::is_final())
+    py::class_<cec::CEC2022Levy, CEC2022, std::shared_ptr<cec::CEC2022Levy>>(m, "CEC2022Levy", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC_HybridFunction1, CEC, std::shared_ptr<cec::CEC_HybridFunction1>>(m, "CEC_HybridFunction1", py::is_final())
+    py::class_<cec::CEC2022HybridFunction1, CEC2022, std::shared_ptr<cec::CEC2022HybridFunction1>>(m, "CEC2022HybridFunction1",
+                                                                                         py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC_HybridFunction2, CEC, std::shared_ptr<cec::CEC_HybridFunction2>>(m, "CEC_HybridFunction2", py::is_final())
+    py::class_<cec::CEC2022HybridFunction2, CEC2022, std::shared_ptr<cec::CEC2022HybridFunction2>>(m, "CEC2022HybridFunction2",
+                                                                                         py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC_HybridFunction3, CEC, std::shared_ptr<cec::CEC_HybridFunction3>>(m, "CEC_HybridFunction3", py::is_final())
+    py::class_<cec::CEC2022HybridFunction3, CEC2022, std::shared_ptr<cec::CEC2022HybridFunction3>>(m, "CEC2022HybridFunction3",
+                                                                                         py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC_CompositionFunction1, CEC, std::shared_ptr<cec::CEC_CompositionFunction1>>(m, "CompositionFunction1", py::is_final())
+    py::class_<cec::CEC2022CompositionFunction1, CEC2022, std::shared_ptr<cec::CEC2022CompositionFunction1>>(
+        m, "CompositionFunction1", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC_CompositionFunction2, CEC, std::shared_ptr<cec::CEC_CompositionFunction2>>(m, "CompositionFunction2", py::is_final())
+    py::class_<cec::CEC2022CompositionFunction2, CEC2022, std::shared_ptr<cec::CEC2022CompositionFunction2>>(
+        m, "CompositionFunction2", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC_CompositionFunction3, CEC, std::shared_ptr<cec::CEC_CompositionFunction3>>(m, "CompositionFunction3", py::is_final())
+    py::class_<cec::CEC2022CompositionFunction3, CEC2022, std::shared_ptr<cec::CEC2022CompositionFunction3>>(
+        m, "CompositionFunction3", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC_CompositionFunction4, CEC, std::shared_ptr<cec::CEC_CompositionFunction4>>(m, "CompositionFunction4", py::is_final())
+    py::class_<cec::CEC2022CompositionFunction4, CEC2022, std::shared_ptr<cec::CEC2022CompositionFunction4>>(
+        m, "CompositionFunction4", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 }
 
@@ -1225,8 +1225,8 @@ void define_submodular_problems(py::module &m)
 
 
     py::class_<GraphProblem, IntegerSingleObjective, std::shared_ptr<GraphProblem>>(m, "GraphProblem",
-                                                                                    "Graph type problem", 
-        R"pbdoc(
+                                                                                    "Graph type problem",
+                                                                                    R"pbdoc(
             Graph-based problems (submodular problems)
              
             These submodular problems are all based on an underlying graph structure. 
@@ -1299,8 +1299,7 @@ void define_submodular_problems(py::module &m)
             "Benchmarking Algorithms for Submodular Optimization Problems Using IOHProfiler." 
             arXiv preprint arXiv:2302.01464 (2023).
 
-        )pbdoc" 
-        )
+        )pbdoc")
         .def_static("load_instances", &GraphProblemType<MaxCut>::load_graph_instances<int, int>,
                     py::arg("path") = std::nullopt);
 
@@ -1533,8 +1532,8 @@ void define_star_discrepancy_problems(py::module &m)
     using namespace ioh::problem::star_discrepancy;
     using namespace ioh::common::random::sampler;
 
-    py::enum_<SamplerType>(m, "StarDiscrepancySampler", 
-        "Methods which can be used to sample the initial grids for the star discrepancy problems")
+    py::enum_<SamplerType>(m, "StarDiscrepancySampler",
+                           "Methods which can be used to sample the initial grids for the star discrepancy problems")
         .value("UNIFORM", SamplerType::UNIFORM)
         .value("HALTON", SamplerType::HALTON)
         .value("SOBOL", SamplerType::SOBOL)
@@ -1550,31 +1549,22 @@ void define_problem(py::module &m)
     define_bbob_problems<ioh::problem::BBOB>(m);
     define_bbob_problems<ioh::problem::SBOX>(m, "SBOX", true);
     define_pbo_problems(m);
-    define_cec_problems(m);
+    define_cec2022_problems(m);
     define_wmodels(m);
     define_submodular_problems(m);
     define_star_discrepancy_problems(m);
-    
-    py::class_<ioh::problem::bbob::ManyAffine, ioh::problem::RealSingleObjective, std::shared_ptr<ioh::problem::bbob::ManyAffine>>(m, "ManyAffine")
-            .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"))
-            .def(
-                py::init<
-                    std::vector<double>, 
-                    std::array<double, 24>, 
-                    std::array<int, 24>, 
-                    int,
-                    std::array<double, 24>>(),
-                py::arg("xopt"),
-                py::arg("weights"),
-                py::arg("instances"),
-                py::arg("n_variables"),
-                py::arg("scale_factors") = ioh::problem::bbob::ManyAffine::default_scales)
-            .def_property_readonly("weights", &ioh::problem::bbob::ManyAffine::get_weights)
-            .def_property_readonly("instances", &ioh::problem::bbob::ManyAffine::get_instances)
-            .def_property_readonly("scale_factors", &ioh::problem::bbob::ManyAffine::get_scale_factors)
-            .def_property_readonly("sub_problems", &ioh::problem::bbob::ManyAffine::get_problems)
-            .def_property_readonly("function_values", &ioh::problem::bbob::ManyAffine::get_function_values)
-            ;
+
+    py::class_<ioh::problem::bbob::ManyAffine, ioh::problem::RealSingleObjective,
+               std::shared_ptr<ioh::problem::bbob::ManyAffine>>(m, "ManyAffine")
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"))
+        .def(py::init<std::vector<double>, std::array<double, 24>, std::array<int, 24>, int, std::array<double, 24>>(),
+             py::arg("xopt"), py::arg("weights"), py::arg("instances"), py::arg("n_variables"),
+             py::arg("scale_factors") = ioh::problem::bbob::ManyAffine::default_scales)
+        .def_property_readonly("weights", &ioh::problem::bbob::ManyAffine::get_weights)
+        .def_property_readonly("instances", &ioh::problem::bbob::ManyAffine::get_instances)
+        .def_property_readonly("scale_factors", &ioh::problem::bbob::ManyAffine::get_scale_factors)
+        .def_property_readonly("sub_problems", &ioh::problem::bbob::ManyAffine::get_problems)
+        .def_property_readonly("function_values", &ioh::problem::bbob::ManyAffine::get_function_values);
 
     py::module_::import("atexit").attr("register")(py::cpp_function([]() {
         // std::cout << "exiting gracefully...";
