@@ -23,7 +23,7 @@ namespace ioh
          * \return true if all elements of x == y
          */
         template <typename T>
-        inline bool is_equal(const std::vector<T> &x, const std::vector<T> &y)
+        bool is_equal(const std::vector<T> &x, const std::vector<T> &y)
         {
             if (!(x.size() == y.size()))
                 return false;
@@ -150,8 +150,8 @@ namespace ioh
         template<typename T>
         std::vector<std::vector<T>> to_matrix(const std::vector<T>& v)
         {
-            const size_t n = std::sqrt(v.size());
-            return to_matrix(v, n, n);
+            const size_t n = static_cast<size_t>(std::sqrt(v.size()));
+            return to_matrix<T>(v, n, n);
         }
 
         /**

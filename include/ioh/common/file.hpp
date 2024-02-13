@@ -86,6 +86,11 @@ namespace ioh::common::file
          *
          * @return fs::path the absolute path of IOHexperimenter/static
          */
+
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#endif
         inline fs::path get_static_root_by_env()
         {
             // First, try to use the IOH_RESOURCES environment variable
@@ -108,7 +113,9 @@ namespace ioh::common::file
             std::cerr << "[get_static_root] Error: Neither IOH_RESOURCES nor GITHUB_WORKSPACE environment variables "
                          "are set.\n";
         }
-
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
         /**
          * @brief Get the absolute path of IOHexperimenter/static
          *

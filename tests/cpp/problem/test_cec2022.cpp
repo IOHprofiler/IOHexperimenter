@@ -1,7 +1,7 @@
 #include "../utils.hpp"
 #include "ioh/problem/cec/2022.hpp"
 
-TEST_F(BaseTest, CECProblem)
+TEST_F(BaseTest, test_cec2022)
 {
     std::ifstream infile;
     const auto file_path = ioh::common::file::utils::find_static_file("cec_problem2022.in");
@@ -19,7 +19,7 @@ TEST_F(BaseTest, CECProblem)
         auto x = string_to_vector_double(tmp[2]);
         auto f = stod(tmp[3]);
 
-        auto instance = problem_factory.create(func_id, ins_id, x.size());
+        auto instance = problem_factory.create(func_id, ins_id, static_cast<int>(x.size()));
         auto y = (*instance)(x);
         EXPECT_LE(abs(y - f) / f, 1.0 / pow(10, 6 - log(10)))
             << "The fitness of function " << func_id << "( ins "
@@ -27,7 +27,7 @@ TEST_F(BaseTest, CECProblem)
     }
 }
 
-TEST_F(BaseTest, xopt_equals_yopt_cec)
+TEST_F(BaseTest, xopt_equals_yopt_cec2022)
 {
     const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC2022>::instance();
     for (const auto& name : problem_factory.names())

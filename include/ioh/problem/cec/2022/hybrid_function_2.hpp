@@ -39,7 +39,7 @@ namespace ioh::problem::cec2022
             {
                 y[i] = z[this->input_permutation_[i] - 1];
             }
-            
+             
             const int n = static_cast<int>(x.size());
             int n_shaffer = n;
             for (const auto gp : {0.1, 0.2, 0.2, 0.2, 0.1})
