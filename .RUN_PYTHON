@@ -1,0 +1,6 @@
+#!/usr/bin/env fish
+
+true
+and conda activate ./.conda_environment/
+and cd /home/dimitri/code/IOHexperimenter/tests/python/
+and ipython3
