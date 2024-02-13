@@ -9,3 +9,4 @@
 #include "2013/shubert.hpp"
 #include "2013/vincent.hpp"
 #include "2013/modified_rastrigin.hpp"
+#include "2013/composition.hpp"

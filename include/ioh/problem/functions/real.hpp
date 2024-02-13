@@ -430,34 +430,6 @@ namespace ioh::problem
         return f;
     }
 
-    // inline double schaffer(const std::vector<double> &y)
-    // {
-    //     std::vector<double> z(y.size());
-    //
-    //     double result = 0;
-    //     for (size_t i = 0; i < z.size() - 1; ++i)
-    //     {
-    //         const auto y_squared_sum = y[i] * y[i] + y[i + 1] * y[i + 1];
-    //
-    //         z[i] = std::sqrt(y_squared_sum);
-    //
-    //         const auto pow_val = std::pow(z[i], 0.2);
-    //
-    //         const double tmp = std::sin(50.0 * pow_val);
-    //
-    //         const auto tmp_squared = tmp * tmp;
-    //
-    //         const auto z_rooted = std::sqrt(z[i]);
-    //
-    //         const auto val_addition = z_rooted * tmp_squared;
-    //
-    //         result += z_rooted + val_addition;
-    //     }
-    //     const int n = static_cast<int>(y.size()) - 1;
-    //     result = result * result / n / n;
-    //     return result;
-    // }
-
 
     inline double griewank(const std::vector<double>& z)
     {
@@ -474,81 +446,37 @@ namespace ioh::problem
     }
 
 
-
-
-    /**
-     * The Expanded Schaffer's F6 function, is a non-convex function characterized
-     * by a large number of local minima, making it a challenging problem for optimization algorithms. This
-     * implementation also includes transformations such as scaling and rotation to further complicate the optimization
-     * landscape.
-     *
-     * @param x Input vector containing the coordinates in the domain space.
-     * @param f Reference to a double where the function value will be stored.
-     * @param os Transformation vector used in the function computation.
-     * @param mr Rotation matrix used in the function computation.
-     * @param s_flag Scaling flag used in the transformation.
-     * @param r_flag Rotation flag used in the transformation.
-     */
-    inline void expanded_schaffer_f6_void(const std::vector<double> &x, double &f, const std::vector<double> &os,
-                          const std::vector<std::vector<double>> &mr, const int s_flag, const int r_flag)
+    inline double weierstrass(const std::vector<double>& x)
     {
-        std::vector<double> z(x.size());
-        std::vector<double> y(x.size());
-        
-        transformation::variables::scale_and_rotate(x, z, y, os, mr, 1.0, s_flag, r_flag);
+        constexpr int k_max(20);
+        constexpr double a(0.5), b(3.0);
+        const int dim = static_cast<int>(x.size());
 
-        f = 0.0;
+        double result(0.0), sum(0.0), sum2(0.0);
 
-        for (size_t i = 0; i < z.size() - 1; i++)
+        for (int j = 0; j <= k_max; ++j)
+            sum2 += pow(a, j) * cos(2.0 * IOH_PI * pow(b, j) * (0.5));
+
+        for (int i = 0; i < dim; ++i)
         {
-            double temp1 = sin(sqrt(z[i] * z[i] + z[i + 1] * z[i + 1]));
-            temp1 *= temp1;
-
-            const double temp2 = 1.0 + 0.001 * (z[i] * z[i] + z[i + 1] * z[i + 1]);
-            f += 0.5 + (temp1 - 0.5) / (temp2 * temp2);
+            sum = 0.0;
+            for (int j = 0; j <= k_max; ++j)
+            {
+                sum += pow(a, j) * cos(2.0 * IOH_PI * pow(b, j) * (x[i] + 0.5));
+            }
+            result += sum;
         }
-
-        double temp1 = sin(sqrt(z.back() * z.back() + z.front() * z.front()));
-        temp1 *= temp1;
-
-        const double temp2 = 1.0 + 0.001 * (z.back() * z.back() + z.front() * z.front());
-        f += 0.5 + (temp1 - 0.5) / (temp2 * temp2);
-        // return f;
+        return result - sum2 * dim;
     }
 
-    /**
-     * @brief Computes the Griewank function value for the input vector.
-     *
-     * The Griewank function is a non-convex function often used in the evaluation of optimization algorithms. It is
-     * known for its large search space and numerous local minima, which pose a challenge for optimization algorithms.
-     * This implementation includes transformations such as scaling and rotation.
-     *
-     * @param x Input vector containing the coordinates in the domain space.
-     * @param f Reference to a double where the function value will be stored.
-     * @param os Transformation vector used in the function computation.
-     * @param mr Rotation matrix used in the function computation.
-     * @param s_flag Scaling flag used in the transformation.
-     * @param r_flag Rotation flag used in the transformation.
-     */
-    inline void griewank_void(const std::vector<double> &x, double &f, const std::vector<double> &os,
-        const std::vector<std::vector<double>> &mr, const int s_flag, const int r_flag)
+
+    inline double sphere(const std::vector<double> &x)
     {
-        std::vector<double> z(x.size());
-        std::vector<double> y(x.size());
-        
-        transformation::variables::scale_and_rotate(x, z, y, os, mr, 600.0 / 100.0, s_flag, r_flag);
-
-        const double s = std::accumulate(z.begin(), z.end(), 0.0, [](const double sum, const double val) { return sum + val * val; });
-
-        double p = 1.0;
-        for (size_t i = 0; i < z.size(); i++)
-        {
-            p *= cos(z[i] / sqrt(1.0 + static_cast<int>(i)));
-        }
-
-        f = 1.0 + s / 4000.0 - p;
+        double res = 0;
+        for (auto &xi : x)
+            res += xi * xi;
+        return res;
     }
-
 
     using RealFunction = std::function<double(std::vector<double>)>;
 

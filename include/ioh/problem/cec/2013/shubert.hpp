@@ -26,8 +26,8 @@ namespace ioh::problem
             }
 
         public:
-            Shubert(const int problem_id, const int instance, const int n_variables) :
-                CEC2013Problem(problem_id, instance, n_variables, "CEC2013Shubert", -10.0, 10.0, static_cast<int>(std::pow(n_variables * 3, 3)))
+            Shubert(const int problem_id, const std::string& name, const int n_variables) :
+                CEC2013Problem(problem_id, 1, n_variables, name, -10.0, 10.0, static_cast<int>(std::pow(n_variables * 3, 3)))
             {
             }
         };
@@ -38,8 +38,8 @@ namespace ioh::problem
     inline InstanceBasedProblem::Constructors<cec2013::Shubert, int, int>
     InstanceBasedProblem::load_instances<cec2013::Shubert>(const std::optional<fs::path> &definitions_file)
     {
-        return {{[](int, int) { return cec2013::Shubert(1106, 1, 2); }, 1106, std::nullopt},
-                {[](int, int) { return cec2013::Shubert(1108, 1, 3); }, 1108, std::nullopt}
+        return {{[](int, int) { return cec2013::Shubert(1106, "CEC2013Shubert2D", 2); }, 1106, std::nullopt},
+                {[](int, int) { return cec2013::Shubert(1108, "CEC2013Shubert3D", 3); }, 1108, std::nullopt}
         };
     }
 

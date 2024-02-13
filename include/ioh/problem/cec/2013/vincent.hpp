@@ -21,8 +21,8 @@ namespace ioh::problem
             }
 
         public:
-            Vincent(const int problem_id, const int instance, const int n_variables) :
-                CEC2013Problem(problem_id, instance, n_variables, "CEC2013Vincent", 0.25, 10.0, static_cast<int>(std::pow(6, n_variables)))
+            Vincent(const int problem_id, const std::string &name, const int n_variables) :
+                CEC2013Problem(problem_id, 1, n_variables, name, 0.25, 10.0, static_cast<int>(std::pow(6, n_variables)))
             {
             }
         };
@@ -33,8 +33,8 @@ namespace ioh::problem
     inline InstanceBasedProblem::Constructors<cec2013::Vincent, int, int>
     InstanceBasedProblem::load_instances<cec2013::Vincent>(const std::optional<fs::path> &definitions_file)
     {
-        return {{[](int, int) { return cec2013::Vincent(1106, 1, 2); }, 1107, std::nullopt},
-                {[](int, int) { return cec2013::Vincent(1108, 1, 3); }, 1109, std::nullopt}
+        return {{[](int, int) { return cec2013::Vincent(1106, "CEC2013Vincent2D", 2); }, 1107, std::nullopt},
+                {[](int, int) { return cec2013::Vincent(1108, "CEC2013Vincent3D", 3); }, 1109, std::nullopt}
         };
     }
 

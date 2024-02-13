@@ -178,6 +178,19 @@ namespace ioh
         }
 
         /**
+         * \brief Create an identity n x n matrix
+         * \param n the size of the matrix
+         * \return an identity matrix
+         */
+        inline std::vector<std::vector<double>> eye(const size_t n)
+        {
+            auto res = std::vector<std::vector<double>>(n, std::vector<double>(n, 0.0));
+            for (size_t i = 0; i < n; i++)
+                res[i][i] = 1;
+            return res;
+        }
+
+        /**
          * \brief Returns a range of integers
          * \param start start of the range
          * \param stop end of the range

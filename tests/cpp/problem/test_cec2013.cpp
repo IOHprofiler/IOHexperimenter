@@ -35,18 +35,14 @@ TEST_F(BaseTest, test_cec2013)
             << ins_id << " ) is " << f << " ( not " << y << ").";
     }
 }
-//
+
 // TEST_F(BaseTest, xopt_equals_yopt_cec2014)
 // {
-//     const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC2022>::instance();
-//     for (const auto& name : problem_factory.names())
+//     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC2022>::instance();
+//     for (const auto &name : problem_factory.names())
 //     {
-//         // Any function's, but the composition function's, optimum is defined.
-//         if (!(name == "CEC2022CompositionFunction1" || name == "CEC2022CompositionFunction2" || name == "CEC2022CompositionFunction3" || name == "CEC2022CompositionFunction4"))
-//         {
-//             auto instance = problem_factory.create(name, 1, 10);
-//             auto&& x = instance->optimum().x;
-//             EXPECT_DOUBLE_EQ(instance->optimum().y, (*instance)(x)) << *instance;
-//         }
+//         auto instance = problem_factory.create(name, 1, 10);
+//         const auto y = (*instance)(instance->optimum().x);
+//         EXPECT_DOUBLE_EQ(instance->optimum().y, y) << *instance;
 //     }
 // }
