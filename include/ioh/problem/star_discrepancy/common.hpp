@@ -62,7 +62,7 @@ namespace ioh::problem::star_discrepancy
     /**
      * @brief Loader for default instances
      * 
-     * @tparam T the type of StarDicrepancy method (TODO: check for proper interface)
+     * @tparam T the type of StarDiscrepancy method (TODO: check for proper interface)
      * @return InstanceBasedProblem::Constructors<T, int, int> 
      */
     template <typename T>

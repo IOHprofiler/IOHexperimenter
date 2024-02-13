@@ -22,7 +22,7 @@
 
 namespace ioh::problem
 {
-    //! Defintion interface of problems that are defined in static files
+    //! Definition interface of problems that are defined in static files
     struct InstanceBasedProblem
     {
         /**

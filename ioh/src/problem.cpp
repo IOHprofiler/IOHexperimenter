@@ -1050,48 +1050,48 @@ void define_cec2022_problems(py::module &m)
             "problems", [](py::object) { return ioh::common::Factory<CEC2022, int, int>::instance().map(); },
             "All registered problems");
 
-    py::class_<cec::CEC2022Zakharov, CEC2022, std::shared_ptr<cec::CEC2022Zakharov>>(m, "CEC2022Zakharov", py::is_final())
+    py::class_<cec2022::Zakharov, CEC2022, std::shared_ptr<cec2022::Zakharov>>(m, "CEC2022Zakharov", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC2022Rosenbrock, CEC2022, std::shared_ptr<cec::CEC2022Rosenbrock>>(m, "CEC2022Rosenbrock", py::is_final())
+    py::class_<cec2022::Rosenbrock, CEC2022, std::shared_ptr<cec2022::Rosenbrock>>(m, "CEC2022Rosenbrock", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC2022SchafferF7, CEC2022, std::shared_ptr<cec::CEC2022SchafferF7>>(
+    py::class_<cec2022::SchafferF7, CEC2022, std::shared_ptr<cec2022::SchafferF7>>(
         m, "CEC2022SchafferF7", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC2022Rastrigin, CEC2022, std::shared_ptr<cec::CEC2022Rastrigin>>(m, "CEC2022Rastrigin", py::is_final())
+    py::class_<cec2022::Rastrigin, CEC2022, std::shared_ptr<cec2022::Rastrigin>>(m, "CEC2022Rastrigin", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC2022Levy, CEC2022, std::shared_ptr<cec::CEC2022Levy>>(m, "CEC2022Levy", py::is_final())
+    py::class_<cec2022::Levy, CEC2022, std::shared_ptr<cec2022::Levy>>(m, "CEC2022Levy", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC2022HybridFunction1, CEC2022, std::shared_ptr<cec::CEC2022HybridFunction1>>(m, "CEC2022HybridFunction1",
+    py::class_<cec2022::HybridFunction1, CEC2022, std::shared_ptr<cec2022::HybridFunction1>>(m, "CEC2022HybridFunction1",
                                                                                          py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC2022HybridFunction2, CEC2022, std::shared_ptr<cec::CEC2022HybridFunction2>>(m, "CEC2022HybridFunction2",
+    py::class_<cec2022::HybridFunction2, CEC2022, std::shared_ptr<cec2022::HybridFunction2>>(m, "CEC2022HybridFunction2",
                                                                                          py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC2022HybridFunction3, CEC2022, std::shared_ptr<cec::CEC2022HybridFunction3>>(m, "CEC2022HybridFunction3",
+    py::class_<cec2022::HybridFunction3, CEC2022, std::shared_ptr<cec2022::HybridFunction3>>(m, "CEC2022HybridFunction3",
                                                                                          py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC2022CompositionFunction1, CEC2022, std::shared_ptr<cec::CEC2022CompositionFunction1>>(
-        m, "CompositionFunction1", py::is_final())
+    py::class_<cec2022::CompositionFunction1, CEC2022, std::shared_ptr<cec2022::CompositionFunction1>>(
+        m, "CEC2022CompositionFunction1", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC2022CompositionFunction2, CEC2022, std::shared_ptr<cec::CEC2022CompositionFunction2>>(
-        m, "CompositionFunction2", py::is_final())
+    py::class_<cec2022::CompositionFunction2, CEC2022, std::shared_ptr<cec2022::CompositionFunction2>>(
+        m, "CEC2022CompositionFunction2", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC2022CompositionFunction3, CEC2022, std::shared_ptr<cec::CEC2022CompositionFunction3>>(
-        m, "CompositionFunction3", py::is_final())
+    py::class_<cec2022::CompositionFunction3, CEC2022, std::shared_ptr<cec2022::CompositionFunction3>>(
+        m, "CEC2022CompositionFunction3", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 
-    py::class_<cec::CEC2022CompositionFunction4, CEC2022, std::shared_ptr<cec::CEC2022CompositionFunction4>>(
-        m, "CompositionFunction4", py::is_final())
+    py::class_<cec2022::CompositionFunction4, CEC2022, std::shared_ptr<cec2022::CompositionFunction4>>(
+        m, "CEC2022CompositionFunction4", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
 }
 

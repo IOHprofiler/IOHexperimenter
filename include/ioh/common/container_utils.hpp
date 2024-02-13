@@ -141,18 +141,7 @@ namespace ioh
             return values;
         }
 
-        /**
-         * \brief Transform a vector to a square matrix
-         * \tparam T The type of the matrix
-         * \param v the vector to be transformed
-         * \return the matrix
-         */
-        template<typename T>
-        std::vector<std::vector<T>> to_matrix(const std::vector<T>& v)
-        {
-            const size_t n = static_cast<size_t>(std::sqrt(v.size()));
-            return to_matrix<T>(v, n, n);
-        }
+     
 
         /**
          * \brief  Transform a vector to a matrix
@@ -173,6 +162,19 @@ namespace ioh
             for (size_t i = 0; i < n; i++)
                 std::copy(v.begin() + (i * m), v.begin() + (i * m) + m, std::back_inserter(res[i]));
             return res;
+        }
+
+        /**
+         * \brief Transform a vector to a square matrix
+         * \tparam T The type of the matrix
+         * \param v the vector to be transformed
+         * \return the matrix
+         */
+        template <typename T>
+        std::vector<std::vector<T>> to_matrix(const std::vector<T> &v)
+        {
+            const size_t n = static_cast<size_t>(std::sqrt(v.size()));
+            return to_matrix<T>(v, n, n);
         }
 
         /**
