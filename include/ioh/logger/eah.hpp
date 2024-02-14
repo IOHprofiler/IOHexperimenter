@@ -61,6 +61,8 @@ namespace ioh
                     assert(0 < _size);
                 }
 
+                virtual ~Scale() = default; // Virtual destructor
+
                 /** Minimum value on the axis. */
                 R min() const { return _min; }
 

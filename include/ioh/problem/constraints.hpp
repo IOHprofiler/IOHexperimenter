@@ -51,6 +51,8 @@ namespace ioh::problem
             violation_(0.), is_feasible_(true), enforced(enforced), weight(weight), exponent(exponent) 
         {
         }
+
+        virtual ~Constraint() = default; // Virtual destructor
         
         /**
          * @brief apply the constraint, and return a (potentially) penalized value for y
