@@ -15,7 +15,7 @@ namespace ioh::problem
                 double result = 0;
 
                 for (const auto &xi : x)
-                    result += std::sin(10 * std::log(xi)) / x.size();
+                    result += std::sin(10 * std::log(xi)) / static_cast<double>(x.size());
 
                 return result;
             }
@@ -24,6 +24,8 @@ namespace ioh::problem
             Vincent(const int problem_id, const std::string &name, const int n_variables) :
                 CEC2013Problem(problem_id, 1, n_variables, name, 0.25, 10.0, static_cast<int>(std::pow(6, n_variables)))
             {
+                optimum_.x = std::vector<double>(n_variables, 1.0/3.0);
+                optimum_.y = evaluate(optimum_.x);
             }
         };
     } // namespace cec2013

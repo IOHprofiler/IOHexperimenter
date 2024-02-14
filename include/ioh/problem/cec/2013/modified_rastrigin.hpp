@@ -21,6 +21,8 @@ namespace ioh::problem
             ModifiedRastrigin(const int instance, const int n_variables) :
                 CEC2013Problem(1110, instance, n_variables, "CEC2013ModifiedRastrigin", 0, 1, 12)
             {
+                optimum_.x = {0.5, 0.375};
+                optimum_.y = {-2.0};
             }
         };
     } // namespace cec2013

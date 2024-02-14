@@ -13,13 +13,11 @@ namespace ioh::problem
             double evaluate(const std::vector<double> &x) override
             {
                 double result = 1;
-                for (size_t i = 0; i < x.size(); i++)
+                for (const double& xi : x)
                 {
                     double soma = 0.0;
                     for (int j = 1; j < 6; j++)
-                    {
-                        soma = soma + (j * std::cos((j + 1) * x[i] + j));   
-                    }
+                        soma = soma + (j * std::cos((j + 1) * xi + j));   
                     result *= soma;
                 }
                 return -result;
@@ -29,6 +27,11 @@ namespace ioh::problem
             Shubert(const int problem_id, const std::string& name, const int n_variables) :
                 CEC2013Problem(problem_id, 1, n_variables, name, -10.0, 10.0, static_cast<int>(std::pow(n_variables * 3, 3)))
             {
+                optimum_.x = {-0.8, -1.4251};
+                if (n_variables == 3)
+                    optimum_.x.push_back(-0.8);
+                optimum_.y = evaluate(optimum_.x);
+                
             }
         };
     } // namespace cec2013

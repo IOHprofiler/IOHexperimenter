@@ -478,6 +478,35 @@ namespace ioh::problem
         return res;
     }
 
+    inline double fef8_f2(const std::vector<double> &xx)
+    {
+        double result(0.0);
+        double x(0), y(0), f(0), f2(0);
+        const int dim = static_cast<int>(xx.size());
+
+        for (int i = 0; i < dim - 1; ++i)
+        {
+            x = xx[i] + 1;
+            y = xx[i + 1] + 1;
+
+            f2 = 100.0 * (x * x - y) * (x * x - y) + (1.0 - x) * (1.0 - x);
+            f = 1.0 + f2 * f2 / 4000.0 - cos(f2);
+
+            result += f;
+        }
+        /* do not forget the (dim-1,0) case! */
+        x = xx[dim - 1] + 1;
+        y = xx[0] + 1;
+
+        f2 = 100.0 * (x * x - y) * (x * x - y) + (1.0 - x) * (1.0 - x);
+        f = 1.0 + f2 * f2 / 4000.0 - cos(f2);
+
+        result += f;
+
+        return result;
+    }
+    
+
     using RealFunction = std::function<double(std::vector<double>)>;
 
 

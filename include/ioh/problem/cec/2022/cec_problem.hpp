@@ -143,7 +143,7 @@ namespace ioh::problem
             const static auto shifts_file = common::file::utils::find_static_file(CEC_FOLDER + "F_i_star.txt");
             const static auto shifts = common::file::as_numeric_vector<double>(shifts_file);
 
-            if (cec_function_identifier > 0 && cec_function_identifier <= shifts.size())
+            if (cec_function_identifier > 0 && cec_function_identifier <= static_cast<int>(shifts.size()))
             {
                 optimum_.y = shifts[cec_function_identifier - 1];
                 return;

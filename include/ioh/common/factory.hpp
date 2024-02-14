@@ -35,9 +35,14 @@ namespace ioh::problem
         template <typename T, typename... Args>
         using Constructor = std::function<T(Args &&...)>;
 
+        //! Shorthand for tuple used in constructor list
+        template <typename T, typename... Args>
+        using ConstructorTuple = std::tuple<Constructor<T, Args...>, int, std::optional<std::string>>;
+
+
         //! A vector of constructors-id pairs
         template <typename T, typename... Args>
-        using Constructors = std::vector<std::tuple<Constructor<T, Args...>, int, std::optional<std::string>>>;
+        using Constructors = std::vector<ConstructorTuple<T, Args...>>;
 
         /**
          * @brief Method to load instances

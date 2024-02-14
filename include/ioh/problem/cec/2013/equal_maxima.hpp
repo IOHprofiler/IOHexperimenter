@@ -20,6 +20,8 @@ namespace ioh::problem
             EqualMaxima(const int instance, const int n_variables) :
                 CEC2013Problem(1102, instance, n_variables, "CEC2013EqualMaxima", 0, 1, 5)
             {
+                optimum_.x = {0.1};
+                optimum_.y = {1.0};
             }
         };
     } // namespace cec2013

@@ -21,6 +21,8 @@ namespace ioh::problem
             Himmelblau(const int instance, const int n_variables) :
                 CEC2013Problem(1104, instance, n_variables, "CEC2013Himmelblau", -6, 6, 4)
             {
+                optimum_.x = {3.0, 2.0};
+                optimum_.y = {200.0};
             }
         };
     } // namespace cec2013
