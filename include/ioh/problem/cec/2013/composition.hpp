@@ -42,8 +42,8 @@ namespace ioh::problem
                     weight[i] = sum == 0.0 ? 1.0 / static_cast<double>(n_optima) : weight[i] / sum;
             }
 
-            std::vector<double> transform_to_z(const std::vector<double> &x, const size_t index,
-                                               const bool shift = true) const
+            [[nodiscard]] std::vector<double> transform_to_z(const std::vector<double> &x, const size_t index,
+                                                             const bool shift = true) const
             {
                 auto z = x;
                 auto tmp = x;
