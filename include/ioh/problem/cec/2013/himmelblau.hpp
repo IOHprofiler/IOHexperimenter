@@ -30,7 +30,7 @@ namespace ioh::problem
 
     template <>
     inline InstanceBasedProblem::Constructors<cec2013::Himmelblau, int, int>
-    InstanceBasedProblem::load_instances<cec2013::Himmelblau>(const std::optional<fs::path> &definitions_file)
+    InstanceBasedProblem::load_instances<cec2013::Himmelblau>(const std::optional<fs::path> &)
     {
         return {{[](int, int) { return cec2013::Himmelblau(1, 2); }, 1104, std::nullopt}};
     }

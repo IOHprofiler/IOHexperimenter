@@ -39,7 +39,7 @@ namespace ioh::problem
 
     template <>
     inline InstanceBasedProblem::Constructors<cec2013::Shubert, int, int>
-    InstanceBasedProblem::load_instances<cec2013::Shubert>(const std::optional<fs::path> &definitions_file)
+    InstanceBasedProblem::load_instances<cec2013::Shubert>(const std::optional<fs::path> &)
     {
         return {{[](int, int) { return cec2013::Shubert(1106, "CEC2013Shubert2D", 2); }, 1106, std::nullopt},
                 {[](int, int) { return cec2013::Shubert(1108, "CEC2013Shubert3D", 3); }, 1108, std::nullopt}

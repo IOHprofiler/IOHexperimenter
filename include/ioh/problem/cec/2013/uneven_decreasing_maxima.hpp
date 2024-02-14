@@ -31,7 +31,7 @@ namespace ioh::problem
 
     template <>
     inline InstanceBasedProblem::Constructors<cec2013::UnevenEqualMaxima, int, int>
-    InstanceBasedProblem::load_instances<cec2013::UnevenEqualMaxima>(const std::optional<fs::path> &definitions_file)
+    InstanceBasedProblem::load_instances<cec2013::UnevenEqualMaxima>(const std::optional<fs::path> &)
     {
         return {{[](int, int) { return cec2013::UnevenEqualMaxima(1, 1); }, 1103, std::nullopt}};
     }

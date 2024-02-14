@@ -173,7 +173,7 @@ namespace ioh::problem
 
     template <>
     inline InstanceBasedProblem::Constructors<cec2013::CompositionFunction, int, int>
-    InstanceBasedProblem::load_instances<cec2013::CompositionFunction>(const std::optional<fs::path> &definitions_file)
+    InstanceBasedProblem::load_instances<cec2013::CompositionFunction>(const std::optional<fs::path> &)
     {
         const static auto optima_file =
             common::file::utils::find_static_file(fmt::format("{}optima.dat", cec2013::DATA_FOLDER));

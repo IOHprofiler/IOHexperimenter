@@ -46,7 +46,7 @@ namespace ioh::problem
 
     template <>
     inline InstanceBasedProblem::Constructors<cec2013::FivePeaks, int, int>
-    InstanceBasedProblem::load_instances<cec2013::FivePeaks>(const std::optional<fs::path> &definitions_file)
+    InstanceBasedProblem::load_instances<cec2013::FivePeaks>(const std::optional<fs::path> &)
     {
         return {{[](int, int) { return cec2013::FivePeaks(1, 1); }, 1101, std::nullopt}};
     }

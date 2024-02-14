@@ -29,7 +29,7 @@ namespace ioh::problem
 
     template <>
     inline InstanceBasedProblem::Constructors<cec2013::EqualMaxima, int, int>
-    InstanceBasedProblem::load_instances<cec2013::EqualMaxima>(const std::optional<fs::path> &definitions_file)
+    InstanceBasedProblem::load_instances<cec2013::EqualMaxima>(const std::optional<fs::path> &)
     {
         return {{[](int, int) { return cec2013::EqualMaxima(1, 1); }, 1102, std::nullopt}};
     }

@@ -24,9 +24,9 @@ namespace ioh::problem
          */
         std::vector<double> transform_variables(std::vector<double> x) override { return x; }
 
+    public:
         //! Number of global optima
         size_t n_optima;
-    public:
         /**
          * @brief Constructs a new CEC problem instance.
          *

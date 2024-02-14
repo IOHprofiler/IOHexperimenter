@@ -1053,14 +1053,14 @@ void define_cec2013_problems(py::module &m)
 
     using namespace cec2013;
 
-    py::class_<EqualMaxima, CEC2022, std::shared_ptr<EqualMaxima>>(m, "EqualMaxima", py::is_final());
-    py::class_<FivePeaks, CEC2022, std::shared_ptr<FivePeaks>>(m, "FivePeaks", py::is_final());
-    py::class_<ModifiedRastrigin, CEC2022, std::shared_ptr<ModifiedRastrigin>>(m, "ModifiedRastrigin", py::is_final());
-    py::class_<Shubert, CEC2022, std::shared_ptr<Shubert>>(m, "Shubert", py::is_final());
-    py::class_<SixHumpCamelback, CEC2022, std::shared_ptr<SixHumpCamelback>>(m, "SixHumpCamelback", py::is_final());
-    py::class_<UnevenEqualMaxima, CEC2022, std::shared_ptr<UnevenEqualMaxima>>(m, "UnevenEqualMaxima", py::is_final());
-    py::class_<Vincent, CEC2022, std::shared_ptr<Vincent>>(m, "Vincent", py::is_final());
-    py::class_<CompositionFunction, CEC2022, std::shared_ptr<CompositionFunction>>(m, "CEC2013CompositionFunction", py::is_final());
+    py::class_<EqualMaxima, CEC2013, std::shared_ptr<EqualMaxima>>(m, "EqualMaxima", py::is_final());
+    py::class_<FivePeaks, CEC2013, std::shared_ptr<FivePeaks>>(m, "FivePeaks", py::is_final());
+    py::class_<ModifiedRastrigin, CEC2013, std::shared_ptr<ModifiedRastrigin>>(m, "ModifiedRastrigin", py::is_final());
+    py::class_<Shubert, CEC2013, std::shared_ptr<Shubert>>(m, "Shubert", py::is_final());
+    py::class_<SixHumpCamelback, CEC2013, std::shared_ptr<SixHumpCamelback>>(m, "SixHumpCamelback", py::is_final());
+    py::class_<UnevenEqualMaxima, CEC2013, std::shared_ptr<UnevenEqualMaxima>>(m, "UnevenEqualMaxima", py::is_final());
+    py::class_<Vincent, CEC2013, std::shared_ptr<Vincent>>(m, "Vincent", py::is_final());
+    py::class_<CompositionFunction, CEC2013, std::shared_ptr<CompositionFunction>>(m, "CEC2013CompositionFunction", py::is_final());
 }
 
 void define_cec2022_problems(py::module &m)
@@ -1609,6 +1609,7 @@ void define_problem(py::module &m)
     define_bbob_problems<ioh::problem::BBOB>(m);
     define_bbob_problems<ioh::problem::SBOX>(m, "SBOX", true);
     define_pbo_problems(m);
+    define_cec2013_problems(m);
     define_cec2022_problems(m);
     define_wmodels(m);
     define_submodular_problems(m);

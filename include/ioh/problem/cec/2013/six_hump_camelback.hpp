@@ -35,7 +35,7 @@ namespace ioh::problem
 
     template <>
     inline InstanceBasedProblem::Constructors<cec2013::SixHumpCamelback, int, int>
-    InstanceBasedProblem::load_instances<cec2013::SixHumpCamelback>(const std::optional<fs::path> &definitions_file)
+    InstanceBasedProblem::load_instances<cec2013::SixHumpCamelback>(const std::optional<fs::path> &)
     {
         return {{[](int, int) { return cec2013::SixHumpCamelback(1, 2); }, 1105, std::nullopt}};
     }
