@@ -112,6 +112,11 @@ namespace ioh::problem
 
             std::sort(sorted_bitstrings.begin(), sorted_bitstrings.end(), comparator);
 
+            // This is to update the evaluations count and best solution seen so far.
+            for (auto& bitstring : bitstrings) {
+                (*this)(bitstring);
+            }
+
             return sorted_bitstrings;
         }
 
@@ -143,6 +148,11 @@ namespace ioh::problem
 
             // Sort the indices based on the comparator
             std::sort(indices.begin(), indices.end(), comparator);
+
+            // This is to update the evaluations count and best solution seen so far.
+            for (auto& bitstring : bitstrings) {
+                (*this)(bitstring);
+            }
 
             return indices;
         }
