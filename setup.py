@@ -31,8 +31,7 @@ PLAT_TO_CMAKE = {
 if platform.system() == "Darwin":
     os.environ["CC"] = "clang"
     os.environ["CXX"] = "clang"
-    os.environ["ARCHFLAGS"] = "-std=c++14"
-    os.environ["CXXFLAGS"] = "-mmacosx-version-min=10.15"
+    os.environ["ARCHFLAGS"] = "-std=c++17"
 
 BASE_DIR = os.path.realpath(os.path.dirname(__file__))
 MAKE_DOCS = os.environ.get("MAKE_DOCS")
@@ -77,6 +76,7 @@ class CMakeBuild(build_ext):
             "-DBUILD_DOCS={}".format("ON" if MAKE_DOCS else "OFF"),
             "-DBUILD_EXAMPLE=OFF",
             "-DCMAKE_BUILD_TYPE={}".format(cfg),  # not used on MSVC, but no harm
+            "-DCMAKE_OSX_DEPLOYMENT_TARGET=10.15",
         ]
         build_args = []
 
@@ -130,7 +130,7 @@ class CMakeBuild(build_ext):
         )
 
 
-if MAKE_DOCS:
+if MAKE_DOCS:-DCMAKE_OSX_DEPLOYMENT_TARGET=10.15
     try:
         atexit.register(main)
     except:
