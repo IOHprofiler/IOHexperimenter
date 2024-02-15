@@ -31,7 +31,7 @@ PLAT_TO_CMAKE = {
 if platform.system() == "Darwin":
     os.environ["CC"] = "clang"
     os.environ["CXX"] = "clang"
-    os.environ["ARCHFLAGS"] = "-std=c++14"
+    os.environ["ARCHFLAGS"] = "-std=c++14 -mmacosx-version-min=10.15"
 
 BASE_DIR = os.path.realpath(os.path.dirname(__file__))
 MAKE_DOCS = os.environ.get("MAKE_DOCS")
