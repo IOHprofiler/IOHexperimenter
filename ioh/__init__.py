@@ -104,6 +104,9 @@ class ProblemClass(enum.Enum):
     GRAPH = "GraphProblem"
     STAR_INTEGER = "IntegerStarDiscrepancy"
 
+    CEC2013 = "CEC2013"
+    CEC2022 = "CEC2022"
+
     def is_real(self):
         return self in (
                 ProblemClass.REAL, 

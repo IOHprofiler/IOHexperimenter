@@ -20,7 +20,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.16.5
         env: 
           CIBW_SKIP: pp*
-
       - uses: actions/upload-artifact@v4
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
