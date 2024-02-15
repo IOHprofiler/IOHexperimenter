@@ -30,6 +30,9 @@ Rosenbrock
       ~Rosenbrock.enforce_bounds
       ~Rosenbrock.remove_constraint
       ~Rosenbrock.reset
+      ~Rosenbrock.set_id
+      ~Rosenbrock.set_instance
+      ~Rosenbrock.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ Rosenbrock
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

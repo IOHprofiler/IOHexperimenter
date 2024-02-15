@@ -30,6 +30,9 @@ IsingTriangular
       ~IsingTriangular.enforce_bounds
       ~IsingTriangular.remove_constraint
       ~IsingTriangular.reset
+      ~IsingTriangular.set_id
+      ~IsingTriangular.set_instance
+      ~IsingTriangular.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ IsingTriangular
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

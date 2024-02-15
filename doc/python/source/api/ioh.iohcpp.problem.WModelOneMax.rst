@@ -30,6 +30,9 @@ WModelOneMax
       ~WModelOneMax.enforce_bounds
       ~WModelOneMax.remove_constraint
       ~WModelOneMax.reset
+      ~WModelOneMax.set_id
+      ~WModelOneMax.set_instance
+      ~WModelOneMax.set_name
       ~WModelOneMax.wmodel_evaluate
 
    .. rubric:: Attributes Documentation
@@ -52,4 +55,7 @@ WModelOneMax
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name
    .. automethod:: wmodel_evaluate

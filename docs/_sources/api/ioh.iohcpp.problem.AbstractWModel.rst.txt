@@ -30,6 +30,9 @@ AbstractWModel
       ~AbstractWModel.enforce_bounds
       ~AbstractWModel.remove_constraint
       ~AbstractWModel.reset
+      ~AbstractWModel.set_id
+      ~AbstractWModel.set_instance
+      ~AbstractWModel.set_name
       ~AbstractWModel.wmodel_evaluate
 
    .. rubric:: Attributes Documentation
@@ -52,4 +55,7 @@ AbstractWModel
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name
    .. automethod:: wmodel_evaluate

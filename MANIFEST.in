@@ -6,7 +6,7 @@ include CMakeLists.txt *.md ioh/CMakeLists.txt
 graft external/fmt/include
 graft external/fmt/src
 graft external/fmt/support/cmake
-include external/fmt/CMakeLists.txt external/fmt/*.rst
+include external/fmt/CMakeLists.txt external/fmt/*.rst external/fmt/*.md
 
 graft external/pybind11/include
 graft external/pybind11/tools

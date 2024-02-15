@@ -30,6 +30,9 @@ IsingTorus
       ~IsingTorus.enforce_bounds
       ~IsingTorus.remove_constraint
       ~IsingTorus.reset
+      ~IsingTorus.set_id
+      ~IsingTorus.set_instance
+      ~IsingTorus.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ IsingTorus
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

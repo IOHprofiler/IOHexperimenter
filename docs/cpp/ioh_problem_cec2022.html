@@ -1,0 +1,1337 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="constraint" href="ioh_problem_constraint.html" /><link rel="prev" title="cec2013" href="ioh_problem_cec2013.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+        <title>cec2022 - IOHExperimenter 0.3.14 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../contents.html"><div class="brand">IOHExperimenter 0.3.14 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../contents.html">
+  
+  
+  <span class="sidebar-brand-text">IOHExperimenter 0.3.14 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">IOHexperimenter</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../cpp.html">C++</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of C++</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh_common.html">common</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of common</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_common_file.html">file</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of file</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_file_utils.html">utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_common_random.html">random</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of random</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_random_bbob2009.html">bbob2009</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_random_pbo.html">pbo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_common_random_sampler.html">sampler</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="ioh_logger.html">logger</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of logger</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_logger_analyzer.html">analyzer</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of analyzer</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_structures.html">structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_v1.html">v1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_logger_analyzer_v2.html">v2</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_logger_eaf.html">eaf</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_logger_eah.html">eah</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of eah</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="ioh_logger_eah_stat.html">stat</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of stat</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="ioh_logger_eah_stat_Distribution.html">Distribution</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ioh_logger_eah_stat_under_curve.html">under_curve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="ioh_problem.html">problem</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of problem</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_problem_bbob.html">bbob</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of bbob</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_bbob_many_affine.html">many_affine</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_cec2013.html">cec2013</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">cec2022</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_constraint.html">constraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_pbo.html">pbo</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_problem_star_discrepancy.html">star_discrepancy</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of star_discrepancy</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_star_discrepancy_integer.html">integer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_star_discrepancy_real.html">real</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_problem_submodular.html">submodular</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of submodular</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_submodular_graph.html">graph</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_submodular_pwt.html">pwt</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ioh_problem_transformation.html">transformation</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of transformation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_transformation_objective.html">objective</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ioh_problem_transformation_variables.html">variables</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ioh_problem_wmodel.html">wmodel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_suite.html">suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_trigger.html">trigger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh_watch.html">watch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioh.html">ioh</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python.html">Python</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of Python</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/problem.html">Problem</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of Problem</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerSingleObjective.html">IntegerSingleObjective</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealSingleObjective.html">RealSingleObjective</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/bbob.html">BBOB &amp; SBOX</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of BBOB &amp; SBOX</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AttractiveSector.html">AttractiveSector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BBOB.html">BBOB</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BentCigar.html">BentCigar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.BuecheRastrigin.html">BuecheRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.DifferentPowers.html">DifferentPowers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Discus.html">Discus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Ellipsoid.html">Ellipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.EllipsoidRotated.html">EllipsoidRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher101.html">Gallagher101</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Gallagher21.html">Gallagher21</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GriewankRosenbrock.html">GriewankRosenbrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Katsuura.html">Katsuura</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LinearSlope.html">LinearSlope</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LunacekBiRastrigin.html">LunacekBiRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rastrigin.html">Rastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RastriginRotated.html">RastriginRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Rosenbrock.html">Rosenbrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RosenbrockRotated.html">RosenbrockRotated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SBOX.html">SBOX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers10.html">Schaffers10</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schaffers1000.html">Schaffers1000</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Schwefel.html">Schwefel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SharpRidge.html">SharpRidge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Sphere.html">Sphere</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.StepEllipsoid.html">StepEllipsoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Weierstrass.html">Weierstrass</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/pbo.html">PBO</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of PBO</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.ConcatenatedTrap.html">ConcatenatedTrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingRing.html">IsingRing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTorus.html">IsingTorus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IsingTriangular.html">IsingTriangular</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LABS.html">LABS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnes.html">LeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy1.html">LeadingOnesDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesDummy2.html">LeadingOnesDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesEpistasis.html">LeadingOnesEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesNeutrality.html">LeadingOnesNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness1.html">LeadingOnesRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness2.html">LeadingOnesRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.LeadingOnesRuggedness3.html">LeadingOnesRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Linear.html">Linear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MIS.html">MIS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.NQueens.html">NQueens</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMax.html">OneMax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy1.html">OneMaxDummy1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxDummy2.html">OneMaxDummy2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxEpistasis.html">OneMaxEpistasis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxNeutrality.html">OneMaxNeutrality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness1.html">OneMaxRuggedness1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness2.html">OneMaxRuggedness2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.OneMaxRuggedness3.html">OneMaxRuggedness3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PBO.html">PBO</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/submodular.html">Submodular</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of Submodular</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.GraphProblem.html">GraphProblem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCoverage.html">MaxCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxCut.html">MaxCut</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.MaxInfluence.html">MaxInfluence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.PackWhileTravel.html">PackWhileTravel</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/star_discrepancy.html">Star Discrepancy</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of Star Discrepancy</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.IntegerStarDiscrepancy.html">IntegerStarDiscrepancy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.RealStarDiscrepancy.html">RealStarDiscrepancy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.StarDiscrepancySampler.html">StarDiscrepancySampler</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/wmodel.html">WModel</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle navigation of WModel</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.AbstractWModel.html">AbstractWModel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelLeadingOnes.html">WModelLeadingOnes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.WModelOneMax.html">WModelOneMax</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/cec2013.html">CEC 2013</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle navigation of CEC 2013</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2013.html">CEC2013</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2013CompositionFunction.html">CEC2013CompositionFunction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.EqualMaxima.html">EqualMaxima</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.FivePeaks.html">FivePeaks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.ModifiedRastrigin.html">ModifiedRastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Shubert.html">Shubert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.SixHumpCamelback.html">SixHumpCamelback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.UnevenEqualMaxima.html">UnevenEqualMaxima</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.Vincent.html">Vincent</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python/cec2022.html">CEC 2022</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle navigation of CEC 2022</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2022.html">CEC2022</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2022CompositionFunction1.html">CEC2022CompositionFunction1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2022CompositionFunction2.html">CEC2022CompositionFunction2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2022CompositionFunction3.html">CEC2022CompositionFunction3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2022CompositionFunction4.html">CEC2022CompositionFunction4</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2022HybridFunction1.html">CEC2022HybridFunction1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2022HybridFunction2.html">CEC2022HybridFunction2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2022HybridFunction3.html">CEC2022HybridFunction3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2022Levy.html">CEC2022Levy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2022Rastrigin.html">CEC2022Rastrigin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2022Rosenbrock.html">CEC2022Rosenbrock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2022SchafferF7.html">CEC2022SchafferF7</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/ioh.iohcpp.problem.CEC2022Zakharov.html">CEC2022Zakharov</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/structures.html">Structures</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle navigation of Structures</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.ConstraintEnforcement.html">ConstraintEnforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerBounds.html">IntegerBounds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraint.html">IntegerConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerConstraintSet.html">IntegerConstraintSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerSolution.html">IntegerSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.IntegerState.html">IntegerState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.LogInfo.html">LogInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.MetaData.html">MetaData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.OptimizationType.html">OptimizationType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealBounds.html">RealBounds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealConstraint.html">RealConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealConstraintSet.html">RealConstraintSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealSolution.html">RealSolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.RealState.html">RealState</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/ioh.html">Utilities</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle navigation of Utilities</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem.html">get_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.wrap_problem.html">wrap_problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.get_problem_id.html">get_problem_id</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.Experiment.html">Experiment</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/logger.html">Logging</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle navigation of Logging</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Always.html">Always</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.At.html">At</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.During.html">During</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Each.html">Each</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnDeltaImprovement.html">OnDeltaImprovement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnImprovement.html">OnImprovement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.OnViolation.html">OnViolation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.trigger.Trigger.html">Trigger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.AbstractProperty.html">AbstractProperty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentBestY.html">CurrentBestY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CurrentY.html">CurrentY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Evaluations.html">Evaluations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Penalty.html">Penalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Property.html">Property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawY.html">RawY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RawYBest.html">RawYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedY.html">TransformedY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TransformedYBest.html">TransformedYBest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.Violation.html">Violation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENTBESTY.html">CURRENTBESTY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.CURRENTY.html">CURRENTY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.EVALUATIONS.html">EVALUATIONS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.PENALTY.html">PENALTY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAWY.html">RAWY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.RAWYBEST.html">RAWYBEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMEDY.html">TRANSFORMEDY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.TRANSFORMEDYBEST.html">TRANSFORMEDYBEST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.property.VIOLATION.html">VIOLATION</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.AbstractLogger.html">AbstractLogger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Analyzer.html">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Combine.html">Combine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAF.html">EAF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.EAH.html">EAH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.FlatFile.html">FlatFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Logger.html">Logger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.logger.Store.html">Store</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python/suite.html">Suite</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle navigation of Suite</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.BBOB.html">BBOB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Integer.html">Integer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.IntegerStarDiscrepancy.html">IntegerStarDiscrepancy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.PBO.html">PBO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Real.html">Real</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.RealStarDiscrepancy.html">RealStarDiscrepancy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.SBOX.html">SBOX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/ioh.iohcpp.suite.Submodular.html">Submodular</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../server.html">Server</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="cec2022">
+<h1>cec2022<a class="headerlink" href="#cec2022" title="Link to this heading">#</a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<section id="compositionfunction1">
+<h3>CompositionFunction1<a class="headerlink" href="#compositionfunction1" title="Link to this heading">#</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202220CompositionFunction1E">
+<span id="_CPPv3N3ioh7problem7cec202220CompositionFunction1E"></span><span id="_CPPv2N3ioh7problem7cec202220CompositionFunction1E"></span><span id="ioh::problem::cec2022::CompositionFunction1"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_composition_function1"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CompositionFunction1</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4I0EN3ioh7problem14CEC2022ProblemE" title="ioh::problem::CEC2022Problem"><span class="n"><span class="pre">CEC2022Problem</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction1E" title="ioh::problem::cec2022::CompositionFunction1"><span class="n"><span class="pre">CompositionFunction1</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction1E" title="Link to this definition">#</a><br /></dt>
+<dd><p>Class representing the first composition function in the CEC benchmark suite. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202220CompositionFunction120CompositionFunction1EKiKi">
+<span id="_CPPv3N3ioh7problem7cec202220CompositionFunction120CompositionFunction1EKiKi"></span><span id="_CPPv2N3ioh7problem7cec202220CompositionFunction120CompositionFunction1EKiKi"></span><span id="ioh::problem::cec2022::CompositionFunction1::CompositionFunction1__iC.iC"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_composition_function1_1a8151ac605e37a8bd8b51010153b2040c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CompositionFunction1</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">instance</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_variables</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction120CompositionFunction1EKiKi" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructs a CEC_CompositionFunction1 instance. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The instance number of the problem. </p></li>
+<li><p><strong>n_variables</strong> – The number of variables in the problem. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202220CompositionFunction18evaluateERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202220CompositionFunction18evaluateERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202220CompositionFunction18evaluateERKNSt6vectorIdEE"></span><span id="ioh::problem::cec2022::CompositionFunction1::evaluate__std::vector:double:CR"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_composition_function1_1aff72b76a2e94621f536582aa0728de63"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction18evaluateERKNSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Evaluates the objective function for the given input vector. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – The input vector. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The objective function value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="compositionfunction2">
+<h3>CompositionFunction2<a class="headerlink" href="#compositionfunction2" title="Link to this heading">#</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202220CompositionFunction2E">
+<span id="_CPPv3N3ioh7problem7cec202220CompositionFunction2E"></span><span id="_CPPv2N3ioh7problem7cec202220CompositionFunction2E"></span><span id="ioh::problem::cec2022::CompositionFunction2"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_composition_function2"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CompositionFunction2</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4I0EN3ioh7problem14CEC2022ProblemE" title="ioh::problem::CEC2022Problem"><span class="n"><span class="pre">CEC2022Problem</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction2E" title="ioh::problem::cec2022::CompositionFunction2"><span class="n"><span class="pre">CompositionFunction2</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction2E" title="Link to this definition">#</a><br /></dt>
+<dd><p>Class representing the second composition function in the CEC benchmark suite. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202220CompositionFunction220CompositionFunction2EKiKi">
+<span id="_CPPv3N3ioh7problem7cec202220CompositionFunction220CompositionFunction2EKiKi"></span><span id="_CPPv2N3ioh7problem7cec202220CompositionFunction220CompositionFunction2EKiKi"></span><span id="ioh::problem::cec2022::CompositionFunction2::CompositionFunction2__iC.iC"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_composition_function2_1ac7e351790e8438f50081d61f0c8047bd"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CompositionFunction2</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">instance</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_variables</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction220CompositionFunction2EKiKi" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructs a CEC_CompositionFunction2 instance. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The instance number of the problem. </p></li>
+<li><p><strong>n_variables</strong> – The number of variables in the problem. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202220CompositionFunction28evaluateERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202220CompositionFunction28evaluateERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202220CompositionFunction28evaluateERKNSt6vectorIdEE"></span><span id="ioh::problem::cec2022::CompositionFunction2::evaluate__std::vector:double:CR"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_composition_function2_1ac65f58730cad37e6ff47c2c6f92ee1da"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction28evaluateERKNSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Evaluates the objective function for the given input vector. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – The input vector. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The objective function value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="compositionfunction3">
+<h3>CompositionFunction3<a class="headerlink" href="#compositionfunction3" title="Link to this heading">#</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202220CompositionFunction3E">
+<span id="_CPPv3N3ioh7problem7cec202220CompositionFunction3E"></span><span id="_CPPv2N3ioh7problem7cec202220CompositionFunction3E"></span><span id="ioh::problem::cec2022::CompositionFunction3"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_composition_function3"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CompositionFunction3</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4I0EN3ioh7problem14CEC2022ProblemE" title="ioh::problem::CEC2022Problem"><span class="n"><span class="pre">CEC2022Problem</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction3E" title="ioh::problem::cec2022::CompositionFunction3"><span class="n"><span class="pre">CompositionFunction3</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction3E" title="Link to this definition">#</a><br /></dt>
+<dd><p>Class representing the third composition function in the CEC benchmark suite. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202220CompositionFunction320CompositionFunction3EKiKi">
+<span id="_CPPv3N3ioh7problem7cec202220CompositionFunction320CompositionFunction3EKiKi"></span><span id="_CPPv2N3ioh7problem7cec202220CompositionFunction320CompositionFunction3EKiKi"></span><span id="ioh::problem::cec2022::CompositionFunction3::CompositionFunction3__iC.iC"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_composition_function3_1acf3fa50ba7e2f1e88a27ed70495d1ec4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CompositionFunction3</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">instance</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_variables</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction320CompositionFunction3EKiKi" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructs a CEC_CompositionFunction3 instance. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The instance number of the problem. </p></li>
+<li><p><strong>n_variables</strong> – The number of variables in the problem. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202220CompositionFunction38evaluateERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202220CompositionFunction38evaluateERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202220CompositionFunction38evaluateERKNSt6vectorIdEE"></span><span id="ioh::problem::cec2022::CompositionFunction3::evaluate__std::vector:double:CR"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_composition_function3_1aab5cd2cc1efb2d007aa9097533a07db3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction38evaluateERKNSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Evaluates the objective function for the given input vector. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – The input vector. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The objective function value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="compositionfunction4">
+<h3>CompositionFunction4<a class="headerlink" href="#compositionfunction4" title="Link to this heading">#</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202220CompositionFunction4E">
+<span id="_CPPv3N3ioh7problem7cec202220CompositionFunction4E"></span><span id="_CPPv2N3ioh7problem7cec202220CompositionFunction4E"></span><span id="ioh::problem::cec2022::CompositionFunction4"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_composition_function4"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CompositionFunction4</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4I0EN3ioh7problem14CEC2022ProblemE" title="ioh::problem::CEC2022Problem"><span class="n"><span class="pre">CEC2022Problem</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction4E" title="ioh::problem::cec2022::CompositionFunction4"><span class="n"><span class="pre">CompositionFunction4</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction4E" title="Link to this definition">#</a><br /></dt>
+<dd><p>Class representing the fourth composition function in the CEC benchmark suite. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202220CompositionFunction420CompositionFunction4EKiKi">
+<span id="_CPPv3N3ioh7problem7cec202220CompositionFunction420CompositionFunction4EKiKi"></span><span id="_CPPv2N3ioh7problem7cec202220CompositionFunction420CompositionFunction4EKiKi"></span><span id="ioh::problem::cec2022::CompositionFunction4::CompositionFunction4__iC.iC"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_composition_function4_1a755061a8ded27ce9c89dfdb070f964aa"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CompositionFunction4</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">instance</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_variables</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction420CompositionFunction4EKiKi" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructs a CEC_CompositionFunction4 instance. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The instance number of the problem. </p></li>
+<li><p><strong>n_variables</strong> – The number of variables in the problem. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202220CompositionFunction48evaluateERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202220CompositionFunction48evaluateERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202220CompositionFunction48evaluateERKNSt6vectorIdEE"></span><span id="ioh::problem::cec2022::CompositionFunction4::evaluate__std::vector:double:CR"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_composition_function4_1abef2810416fb897c2002f4857e8f156d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction48evaluateERKNSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Evaluates the objective function for the given input vector. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – The input vector. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The objective function value. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="hybridfunction1">
+<h3>HybridFunction1<a class="headerlink" href="#hybridfunction1" title="Link to this heading">#</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202215HybridFunction1E">
+<span id="_CPPv3N3ioh7problem7cec202215HybridFunction1E"></span><span id="_CPPv2N3ioh7problem7cec202215HybridFunction1E"></span><span id="ioh::problem::cec2022::HybridFunction1"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_hybrid_function1"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HybridFunction1</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4I0EN3ioh7problem14CEC2022ProblemE" title="ioh::problem::CEC2022Problem"><span class="n"><span class="pre">CEC2022Problem</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction1E" title="ioh::problem::cec2022::HybridFunction1"><span class="n"><span class="pre">HybridFunction1</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202215HybridFunction1E" title="Link to this definition">#</a><br /></dt>
+<dd><p>A class representing the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_hybrid_function1"><span class="std std-ref">HybridFunction1</span></a> problem, derived from the CECProblem class. </p>
+<p>This class represents a specific optimization problem which is a hybrid of several other functions. It overrides the evaluate and transform_variables methods to provide the specific implementation for this problem. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202215HybridFunction115HybridFunction1EKiKi">
+<span id="_CPPv3N3ioh7problem7cec202215HybridFunction115HybridFunction1EKiKi"></span><span id="_CPPv2N3ioh7problem7cec202215HybridFunction115HybridFunction1EKiKi"></span><span id="ioh::problem::cec2022::HybridFunction1::HybridFunction1__iC.iC"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_hybrid_function1_1a024612fc9752719df9a92b2da0de1922"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HybridFunction1</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">instance</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_variables</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202215HybridFunction115HybridFunction1EKiKi" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructor for the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_hybrid_function1"><span class="std std-ref">HybridFunction1</span></a> class. </p>
+<p>Initializes a new instance of the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_hybrid_function1"><span class="std std-ref">HybridFunction1</span></a> class, setting up the problem with the specified instance and number of variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The instance number of the problem. </p></li>
+<li><p><strong>n_variables</strong> – The number of variables for the problem. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202215HybridFunction18evaluateERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202215HybridFunction18evaluateERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202215HybridFunction18evaluateERKNSt6vectorIdEE"></span><span id="ioh::problem::cec2022::HybridFunction1::evaluate__std::vector:double:CR"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_hybrid_function1_1aff48ad700f8154588b491ac4029f785c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202215HybridFunction18evaluateERKNSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Computes the hf02 function value for the input vector. </p>
+<p>The hf02 function is a hybrid function that combines several benchmark functions to create a complex, multimodal landscape. It is used to evaluate the performance of optimization algorithms in navigating complex, high-dimensional spaces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – Input vector containing the coordinates in the domain space. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The function value at the point specified by the input vector. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202215HybridFunction119transform_variablesENSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202215HybridFunction119transform_variablesENSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202215HybridFunction119transform_variablesENSt6vectorIdEE"></span><span id="ioh::problem::cec2022::HybridFunction1::transform_variables__std::vector:double:"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_hybrid_function1_1a4f8704545e5057f4cfb3c132a796643d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">transform_variables</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202215HybridFunction119transform_variablesENSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Transforms the input variables according to the problem’s specific transformations. </p>
+<p>This method applies several transformations to the input variables, including scaling, rotation, and permutation. It then divides the transformed variables into several groups and applies additional transformations to each group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – A vector of input variables. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vector of transformed variables, ready to be evaluated by the objective function. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="hybridfunction2">
+<h3>HybridFunction2<a class="headerlink" href="#hybridfunction2" title="Link to this heading">#</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202215HybridFunction2E">
+<span id="_CPPv3N3ioh7problem7cec202215HybridFunction2E"></span><span id="_CPPv2N3ioh7problem7cec202215HybridFunction2E"></span><span id="ioh::problem::cec2022::HybridFunction2"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_hybrid_function2"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HybridFunction2</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4I0EN3ioh7problem14CEC2022ProblemE" title="ioh::problem::CEC2022Problem"><span class="n"><span class="pre">CEC2022Problem</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction2E" title="ioh::problem::cec2022::HybridFunction2"><span class="n"><span class="pre">HybridFunction2</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202215HybridFunction2E" title="Link to this definition">#</a><br /></dt>
+<dd><p><a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_hybrid_function2"><span class="std std-ref">HybridFunction2</span></a> class that inherits from CECProblem. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202215HybridFunction215HybridFunction2EKiKi">
+<span id="_CPPv3N3ioh7problem7cec202215HybridFunction215HybridFunction2EKiKi"></span><span id="_CPPv2N3ioh7problem7cec202215HybridFunction215HybridFunction2EKiKi"></span><span id="ioh::problem::cec2022::HybridFunction2::HybridFunction2__iC.iC"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_hybrid_function2_1aba2b1e2e2865812c41e26ad4d2910f62"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HybridFunction2</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">instance</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_variables</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202215HybridFunction215HybridFunction2EKiKi" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructor of the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_hybrid_function2"><span class="std std-ref">HybridFunction2</span></a> class. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The instance number of the problem. </p></li>
+<li><p><strong>n_variables</strong> – The number of variables. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202215HybridFunction28evaluateERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202215HybridFunction28evaluateERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202215HybridFunction28evaluateERKNSt6vectorIdEE"></span><span id="ioh::problem::cec2022::HybridFunction2::evaluate__std::vector:double:CR"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_hybrid_function2_1a8f6f97296d3efdc6e30f11ca9bc660e2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202215HybridFunction28evaluateERKNSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Computes the hf06 function value for the input vector. </p>
+<p>The hf06 function is another hybrid function that integrates several benchmark functions to create a challenging optimization landscape characterized by multiple local minima and a global minimum. It is utilized to test the robustness and efficiency of optimization algorithms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prepared_y</strong> – Input vector containing the coordinates in the domain space. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The function value at the point specified by the input vector. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202215HybridFunction219transform_variablesENSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202215HybridFunction219transform_variablesENSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202215HybridFunction219transform_variablesENSt6vectorIdEE"></span><span id="ioh::problem::cec2022::HybridFunction2::transform_variables__std::vector:double:"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_hybrid_function2_1a4d0487a1d848701001ea196e32b80cbc"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">transform_variables</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202215HybridFunction219transform_variablesENSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Transforms the input variables. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – The input variables. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The transformed variables. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="hybridfunction3">
+<h3>HybridFunction3<a class="headerlink" href="#hybridfunction3" title="Link to this heading">#</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202215HybridFunction3E">
+<span id="_CPPv3N3ioh7problem7cec202215HybridFunction3E"></span><span id="_CPPv2N3ioh7problem7cec202215HybridFunction3E"></span><span id="ioh::problem::cec2022::HybridFunction3"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_hybrid_function3"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HybridFunction3</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4I0EN3ioh7problem14CEC2022ProblemE" title="ioh::problem::CEC2022Problem"><span class="n"><span class="pre">CEC2022Problem</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction3E" title="ioh::problem::cec2022::HybridFunction3"><span class="n"><span class="pre">HybridFunction3</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202215HybridFunction3E" title="Link to this definition">#</a><br /></dt>
+<dd><p><a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_hybrid_function3"><span class="std std-ref">HybridFunction3</span></a> class that inherits from CECProblem. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202215HybridFunction315HybridFunction3EKiKi">
+<span id="_CPPv3N3ioh7problem7cec202215HybridFunction315HybridFunction3EKiKi"></span><span id="_CPPv2N3ioh7problem7cec202215HybridFunction315HybridFunction3EKiKi"></span><span id="ioh::problem::cec2022::HybridFunction3::HybridFunction3__iC.iC"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_hybrid_function3_1a0eede54456d1d709b4b6c108b48b3036"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HybridFunction3</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">instance</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_variables</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202215HybridFunction315HybridFunction3EKiKi" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructor of the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_hybrid_function3"><span class="std std-ref">HybridFunction3</span></a> class. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The instance number of the problem. </p></li>
+<li><p><strong>n_variables</strong> – The number of variables. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202215HybridFunction38evaluateERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202215HybridFunction38evaluateERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202215HybridFunction38evaluateERKNSt6vectorIdEE"></span><span id="ioh::problem::cec2022::HybridFunction3::evaluate__std::vector:double:CR"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_hybrid_function3_1aa708466d2f0cd05f3caec867f146bee4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202215HybridFunction38evaluateERKNSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Computes the hf06 function value for the input vector. </p>
+<p>The hf06 function is another hybrid function that integrates several benchmark functions to create a challenging optimization landscape characterized by multiple local minima and a global minimum. It is utilized to test the robustness and efficiency of optimization algorithms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – Input vector containing the coordinates in the domain space. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The function value at the point specified by the input vector. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202215HybridFunction319transform_variablesENSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202215HybridFunction319transform_variablesENSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202215HybridFunction319transform_variablesENSt6vectorIdEE"></span><span id="ioh::problem::cec2022::HybridFunction3::transform_variables__std::vector:double:"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_hybrid_function3_1afb1b6f50d7eecff877b490e0553c871e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">transform_variables</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202215HybridFunction319transform_variablesENSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Transforms the input variables. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – The input variables. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The transformed variables. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="levy">
+<h3>Levy<a class="headerlink" href="#levy" title="Link to this heading">#</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec20224LevyE">
+<span id="_CPPv3N3ioh7problem7cec20224LevyE"></span><span id="_CPPv2N3ioh7problem7cec20224LevyE"></span><span id="ioh::problem::cec2022::Levy"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_levy"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Levy</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4I0EN3ioh7problem14CEC2022ProblemE" title="ioh::problem::CEC2022Problem"><span class="n"><span class="pre">CEC2022Problem</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20224LevyE" title="ioh::problem::cec2022::Levy"><span class="n"><span class="pre">Levy</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec20224LevyE" title="Link to this definition">#</a><br /></dt>
+<dd><p>The <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_levy"><span class="std std-ref">Levy</span></a> class represents the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_levy"><span class="std std-ref">Levy</span></a> optimization problem, inheriting necessary functionalities from the CECProblem template class. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec20224Levy4LevyEKiKi">
+<span id="_CPPv3N3ioh7problem7cec20224Levy4LevyEKiKi"></span><span id="_CPPv2N3ioh7problem7cec20224Levy4LevyEKiKi"></span><span id="ioh::problem::cec2022::Levy::Levy__iC.iC"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_levy_1a572527fed7e4cdd9d86ee1999c1211c0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Levy</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">instance</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_variables</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec20224Levy4LevyEKiKi" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructor initializing the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_levy"><span class="std std-ref">Levy</span></a> problem with given instance number and variable count. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – Instance number for the problem. </p></li>
+<li><p><strong>n_variables</strong> – Number of variables for the problem. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec20224Levy8evaluateERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec20224Levy8evaluateERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec20224Levy8evaluateERKNSt6vectorIdEE"></span><span id="ioh::problem::cec2022::Levy::evaluate__std::vector:double:CR"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_levy_1ac8693deb04eb1826862c4f6f560fdf9c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">z</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec20224Levy8evaluateERKNSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Computes the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_levy"><span class="std std-ref">Levy</span></a> objective function value at the given point. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> – A vector representing a point in the search space. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The objective function value at the input point. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec20224Levy19transform_variablesENSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec20224Levy19transform_variablesENSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec20224Levy19transform_variablesENSt6vectorIdEE"></span><span id="ioh::problem::cec2022::Levy::transform_variables__std::vector:double:"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_levy_1a9b714f4c69e75f9ad9b76a2e4ddce391"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">transform_variables</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec20224Levy19transform_variablesENSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Performs a defined transformation on the input variables to make them suitable for the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_levy"><span class="std std-ref">Levy</span></a> problem evaluation. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – A vector of input variables. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vector containing the transformed variables. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="rastrigin">
+<h3>Rastrigin<a class="headerlink" href="#rastrigin" title="Link to this heading">#</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec20229RastriginE">
+<span id="_CPPv3N3ioh7problem7cec20229RastriginE"></span><span id="_CPPv2N3ioh7problem7cec20229RastriginE"></span><span id="ioh::problem::cec2022::Rastrigin"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_rastrigin"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Rastrigin</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4I0EN3ioh7problem14CEC2022ProblemE" title="ioh::problem::CEC2022Problem"><span class="n"><span class="pre">CEC2022Problem</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20229RastriginE" title="ioh::problem::cec2022::Rastrigin"><span class="n"><span class="pre">Rastrigin</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec20229RastriginE" title="Link to this definition">#</a><br /></dt>
+<dd><p>The <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_rastrigin"><span class="std std-ref">Rastrigin</span></a> class represents the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_rastrigin"><span class="std std-ref">Rastrigin</span></a> optimization problem, inheriting necessary functionalities from the CECProblem template class. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec20229Rastrigin9RastriginEKiKi">
+<span id="_CPPv3N3ioh7problem7cec20229Rastrigin9RastriginEKiKi"></span><span id="_CPPv2N3ioh7problem7cec20229Rastrigin9RastriginEKiKi"></span><span id="ioh::problem::cec2022::Rastrigin::Rastrigin__iC.iC"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_rastrigin_1ac07b53acfcac348eb51b38cf7be7704c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Rastrigin</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">instance</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_variables</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec20229Rastrigin9RastriginEKiKi" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructor initializing the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_rastrigin"><span class="std std-ref">Rastrigin</span></a> problem with given instance number and variable count. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – Instance number for the problem. </p></li>
+<li><p><strong>n_variables</strong> – Number of variables for the problem. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec20229Rastrigin8evaluateERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec20229Rastrigin8evaluateERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec20229Rastrigin8evaluateERKNSt6vectorIdEE"></span><span id="ioh::problem::cec2022::Rastrigin::evaluate__std::vector:double:CR"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_rastrigin_1aea08155a744a7c39b1a66e79604e1f39"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">z</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec20229Rastrigin8evaluateERKNSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Computes the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_rastrigin"><span class="std std-ref">Rastrigin</span></a> objective function value at the given point. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>z</strong> – A vector representing a point in the search space. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The objective function value at the input point. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec20229Rastrigin19transform_variablesENSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec20229Rastrigin19transform_variablesENSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec20229Rastrigin19transform_variablesENSt6vectorIdEE"></span><span id="ioh::problem::cec2022::Rastrigin::transform_variables__std::vector:double:"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_rastrigin_1ac0daa156fc4d85bba8785bf77da24c83"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">transform_variables</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec20229Rastrigin19transform_variablesENSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Performs a defined transformation on the input variables to make them suitable for the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_rastrigin"><span class="std std-ref">Rastrigin</span></a> problem evaluation. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – A vector of input variables. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vector containing the transformed variables. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="rosenbrock">
+<h3>Rosenbrock<a class="headerlink" href="#rosenbrock" title="Link to this heading">#</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202210RosenbrockE">
+<span id="_CPPv3N3ioh7problem7cec202210RosenbrockE"></span><span id="_CPPv2N3ioh7problem7cec202210RosenbrockE"></span><span id="ioh::problem::cec2022::Rosenbrock"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_rosenbrock"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Rosenbrock</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4I0EN3ioh7problem14CEC2022ProblemE" title="ioh::problem::CEC2022Problem"><span class="n"><span class="pre">CEC2022Problem</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202210RosenbrockE" title="ioh::problem::cec2022::Rosenbrock"><span class="n"><span class="pre">Rosenbrock</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202210RosenbrockE" title="Link to this definition">#</a><br /></dt>
+<dd><p>The <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_rosenbrock"><span class="std std-ref">Rosenbrock</span></a> class encapsulates the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_rosenbrock"><span class="std std-ref">Rosenbrock</span></a> optimization problem, inheriting functionalities from the template class CECProblem. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202210Rosenbrock10RosenbrockEKiKi">
+<span id="_CPPv3N3ioh7problem7cec202210Rosenbrock10RosenbrockEKiKi"></span><span id="_CPPv2N3ioh7problem7cec202210Rosenbrock10RosenbrockEKiKi"></span><span id="ioh::problem::cec2022::Rosenbrock::Rosenbrock__iC.iC"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_rosenbrock_1a10c5ebf5177a0224cdc352bc67a39c26"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Rosenbrock</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">instance</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_variables</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202210Rosenbrock10RosenbrockEKiKi" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructs a <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_rosenbrock"><span class="std std-ref">Rosenbrock</span></a> problem instance with specified number of variables and instance identifier. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – An integer representing the specific problem instance number. </p></li>
+<li><p><strong>n_variables</strong> – An integer representing the number of variables for this problem. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202210Rosenbrock8evaluateERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202210Rosenbrock8evaluateERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202210Rosenbrock8evaluateERKNSt6vectorIdEE"></span><span id="ioh::problem::cec2022::Rosenbrock::evaluate__std::vector:double:CR"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_rosenbrock_1a728cda1fe7d138b3209c5959de69d9e0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202210Rosenbrock8evaluateERKNSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Evaluates the objective function for the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_rosenbrock"><span class="std std-ref">Rosenbrock</span></a> problem. </p>
+<p>The <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_rosenbrock"><span class="std std-ref">Rosenbrock</span></a> function is computed at the given point in the search space and returned. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – A vector representing a point in the search space. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value of the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_rosenbrock"><span class="std std-ref">Rosenbrock</span></a> function at point x. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202210Rosenbrock19transform_variablesENSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202210Rosenbrock19transform_variablesENSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202210Rosenbrock19transform_variablesENSt6vectorIdEE"></span><span id="ioh::problem::cec2022::Rosenbrock::transform_variables__std::vector:double:"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_rosenbrock_1a9ecf53921898f65170f345dd7ab65988"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">transform_variables</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202210Rosenbrock19transform_variablesENSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Transforms the variables using specific scale and rotate operations as defined for the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_rosenbrock"><span class="std std-ref">Rosenbrock</span></a> problem. </p>
+<p>This function performs necessary transformations on the input variables to suit the problem’s specific requirements. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – A vector of input variables. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vector of transformed variables which are more suited for evaluation in the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_rosenbrock"><span class="std std-ref">Rosenbrock</span></a> problem context. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="schafferf7">
+<h3>SchafferF7<a class="headerlink" href="#schafferf7" title="Link to this heading">#</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202210SchafferF7E">
+<span id="_CPPv3N3ioh7problem7cec202210SchafferF7E"></span><span id="_CPPv2N3ioh7problem7cec202210SchafferF7E"></span><span id="ioh::problem::cec2022::SchafferF7"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_schaffer_f7"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SchafferF7</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4I0EN3ioh7problem14CEC2022ProblemE" title="ioh::problem::CEC2022Problem"><span class="n"><span class="pre">CEC2022Problem</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202210SchafferF7E" title="ioh::problem::cec2022::SchafferF7"><span class="n"><span class="pre">SchafferF7</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202210SchafferF7E" title="Link to this definition">#</a><br /></dt>
+<dd><p>The <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_schaffer_f7"><span class="std std-ref">SchafferF7</span></a> class represents the Expanded Schaffer F7 optimization problem, inheriting necessary functionalities from the CECProblem template class. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202210SchafferF710SchafferF7EKiKi">
+<span id="_CPPv3N3ioh7problem7cec202210SchafferF710SchafferF7EKiKi"></span><span id="_CPPv2N3ioh7problem7cec202210SchafferF710SchafferF7EKiKi"></span><span id="ioh::problem::cec2022::SchafferF7::SchafferF7__iC.iC"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_schaffer_f7_1a10d48c5bcfec5ddd05faf1371a57de7d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SchafferF7</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">instance</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_variables</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202210SchafferF710SchafferF7EKiKi" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructor initializing the Schaffer F7 problem with given instance number and variable count. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – Instance number for the problem. </p></li>
+<li><p><strong>n_variables</strong> – Number of variables for the problem. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202210SchafferF78evaluateERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202210SchafferF78evaluateERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202210SchafferF78evaluateERKNSt6vectorIdEE"></span><span id="ioh::problem::cec2022::SchafferF7::evaluate__std::vector:double:CR"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_schaffer_f7_1aaa6d317383fabbf390e6ea405abf7e56"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">y</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202210SchafferF78evaluateERKNSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Computes the Schaffer F7 objective function value at the given point. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>y</strong> – A vector representing a point in the search space. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The objective function value at the input point. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202210SchafferF719transform_variablesENSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec202210SchafferF719transform_variablesENSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec202210SchafferF719transform_variablesENSt6vectorIdEE"></span><span id="ioh::problem::cec2022::SchafferF7::transform_variables__std::vector:double:"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_schaffer_f7_1a2bcaf308dcbc27b3032a50696eb09eaa"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">transform_variables</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202210SchafferF719transform_variablesENSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Performs a defined transformation on the input variables to make them suitable for the Expanded Schaffer F7 problem evaluation. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – A vector of input variables. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vector containing the transformed variables. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="zakharov">
+<h3>Zakharov<a class="headerlink" href="#zakharov" title="Link to this heading">#</a></h3>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec20228ZakharovE">
+<span id="_CPPv3N3ioh7problem7cec20228ZakharovE"></span><span id="_CPPv2N3ioh7problem7cec20228ZakharovE"></span><span id="ioh::problem::cec2022::Zakharov"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_zakharov"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Zakharov</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4I0EN3ioh7problem14CEC2022ProblemE" title="ioh::problem::CEC2022Problem"><span class="n"><span class="pre">CEC2022Problem</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20228ZakharovE" title="ioh::problem::cec2022::Zakharov"><span class="n"><span class="pre">Zakharov</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec20228ZakharovE" title="Link to this definition">#</a><br /></dt>
+<dd><p><a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_zakharov"><span class="std std-ref">Zakharov</span></a> class inherits from the template CECProblem with <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_zakharov"><span class="std std-ref">Zakharov</span></a> as the template parameter. </p>
+<p>This class encapsulates the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_zakharov"><span class="std std-ref">Zakharov</span></a> problem for the CEC benchmark suite. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec20228Zakharov8ZakharovEKiKi">
+<span id="_CPPv3N3ioh7problem7cec20228Zakharov8ZakharovEKiKi"></span><span id="_CPPv2N3ioh7problem7cec20228Zakharov8ZakharovEKiKi"></span><span id="ioh::problem::cec2022::Zakharov::Zakharov__iC.iC"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_zakharov_1a8362cffd2e2656f164a4297ff1ddfa11"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Zakharov</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">instance</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">n_variables</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec20228Zakharov8ZakharovEKiKi" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructs a <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_zakharov"><span class="std std-ref">Zakharov</span></a> problem instance. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – An integer representing the problem instance number. </p></li>
+<li><p><strong>n_variables</strong> – An integer representing the number of variables for the problem. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec20228Zakharov8evaluateERKNSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec20228Zakharov8evaluateERKNSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec20228Zakharov8evaluateERKNSt6vectorIdEE"></span><span id="ioh::problem::cec2022::Zakharov::evaluate__std::vector:double:CR"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_zakharov_1a2aadfa767fbac36c60cc1e205270761f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec20228Zakharov8evaluateERKNSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Evaluates the objective function for the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_zakharov"><span class="std std-ref">Zakharov</span></a> problem. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – A vector representing a point in the search space. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The objective function value at point x. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec20228Zakharov19transform_variablesENSt6vectorIdEE">
+<span id="_CPPv3N3ioh7problem7cec20228Zakharov19transform_variablesENSt6vectorIdEE"></span><span id="_CPPv2N3ioh7problem7cec20228Zakharov19transform_variablesENSt6vectorIdEE"></span><span id="ioh::problem::cec2022::Zakharov::transform_variables__std::vector:double:"></span><span class="target" id="classioh_1_1problem_1_1cec2022_1_1_zakharov_1a7d68763db1ae5f77e419e377ba7af061"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">transform_variables</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec20228Zakharov19transform_variablesENSt6vectorIdEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Transforms the variables using scale and rotate operations. </p>
+<p>It modifies the input variables to suit the problem’s specific transformation requirements. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – A vector of input variables. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A transformed vector of variables which are suitable for the <a class="reference internal" href="#classioh_1_1problem_1_1cec2022_1_1_zakharov"><span class="std std-ref">Zakharov</span></a> problem. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<section id="calculate-composite">
+<h3>calculate_composite<a class="headerlink" href="#calculate-composite" title="Link to this heading">#</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202219calculate_compositeERKNSt6vectorIdEERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorINSt6vectorIdEEEEEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIbEERKNSt6vectorIbEERKNSt6vectorIdEERKNSt6vectorI12RealFunctionEE">
+<span id="_CPPv3N3ioh7problem7cec202219calculate_compositeERKNSt6vectorIdEERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorINSt6vectorIdEEEEEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIbEERKNSt6vectorIbEERKNSt6vectorIdEERKNSt6vectorI12RealFunctionEE"></span><span id="_CPPv2N3ioh7problem7cec202219calculate_compositeERKNSt6vectorIdEERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorINSt6vectorIdEEEEEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIbEERKNSt6vectorIbEERKNSt6vectorIdEERKNSt6vectorI12RealFunctionEE"></span><span id="ioh::problem::cec2022::calculate_composite__std::vector:double:CR.std::vector:std::vector:double::CR.std::vector:std::vector:std::vector:double:::CR.std::vector:double:CR.std::vector:double:CR.std::vector:double:CR.std::vector:b:CR.std::vector:b:CR.std::vector:double:CR.std::vector:RealFunction:CR"></span><span class="target" id="namespaceioh_1_1problem_1_1cec2022_1a4db53047f3df541315ff25c5ccc6b4da"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">cec2022</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">calculate_composite</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">os</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">lt</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">deltas</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">biases</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">sh_rates</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">s_flags</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">r_flags</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">f_scale</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4N3ioh7problem12RealFunctionE" title="ioh::problem::RealFunction"><span class="n"><span class="pre">RealFunction</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">functions</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202219calculate_compositeERKNSt6vectorIdEERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorINSt6vectorIdEEEEEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIbEERKNSt6vectorIbEERKNSt6vectorIdEERKNSt6vectorI12RealFunctionEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>The calculate_composite function is a helper function used in the computation of composite functions in optimization problems. </p>
+<p>It calculates the weighted sum of several function values, which is a common approach in creating hybrid functions to test optimization algorithms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – Input vector containing the coordinates in the domain space </p></li>
+<li><p><strong>os</strong> – Transformation vectors used in the function computation. </p></li>
+<li><p><strong>lt</strong> – Transformation matrices </p></li>
+<li><p><strong>deltas</strong> – </p></li>
+<li><p><strong>biases</strong> – </p></li>
+<li><p><strong>sh_rates</strong> – </p></li>
+<li><p><strong>s_flags</strong> – </p></li>
+<li><p><strong>r_flags</strong> – </p></li>
+<li><p><strong>f_scale</strong> – </p></li>
+<li><p><strong>functions</strong> – the list of functions </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The weighted sum of function values. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="calculate-hybrid">
+<h3>calculate_hybrid<a class="headerlink" href="#calculate-hybrid" title="Link to this heading">#</a></h3>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3ioh7problem7cec202216calculate_hybridERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorI12RealFunctionEE">
+<span id="_CPPv3N3ioh7problem7cec202216calculate_hybridERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorI12RealFunctionEE"></span><span id="_CPPv2N3ioh7problem7cec202216calculate_hybridERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorI12RealFunctionEE"></span><span id="ioh::problem::cec2022::calculate_hybrid__std::vector:double:CR.std::vector:double:CR.std::vector:double:CR.std::vector:RealFunction:CR"></span><span class="target" id="namespaceioh_1_1problem_1_1cec2022_1a40bdf09ddcd1df8d0c5dfcf0b2aefcfe"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">ioh</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">cec2022</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">calculate_hybrid</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">x</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">fractions</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">scales</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="ioh_problem.html#_CPPv4N3ioh7problem12RealFunctionE" title="ioh::problem::RealFunction"><span class="n"><span class="pre">RealFunction</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">functions</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3ioh7problem7cec202216calculate_hybridERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorI12RealFunctionEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Calculate Hybrid function, were each of the functions is evaluated on a portion of the search variables, defined in fractions. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – The search variables </p></li>
+<li><p><strong>fractions</strong> – the proportion of variables to execute each function on </p></li>
+<li><p><strong>scales</strong> – scaling applied to each function </p></li>
+<li><p><strong>functions</strong> – the list of functions </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the fitness </p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="ioh_problem_constraint.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">constraint</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="ioh_problem_cec2013.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">cec2013</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, Jacob de Nobel, Furong Ye, Diederick Vermetten, Hao Wang, Carola Doerr and Thomas Bäck
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">cec2022</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#compositionfunction1">CompositionFunction1</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction1E"><code class="docutils literal notranslate"><span class="pre">CompositionFunction1</span></code></a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction120CompositionFunction1EKiKi"><code class="docutils literal notranslate"><span class="pre">CompositionFunction1::CompositionFunction1()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction18evaluateERKNSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">CompositionFunction1::evaluate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#compositionfunction2">CompositionFunction2</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction2E"><code class="docutils literal notranslate"><span class="pre">CompositionFunction2</span></code></a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction220CompositionFunction2EKiKi"><code class="docutils literal notranslate"><span class="pre">CompositionFunction2::CompositionFunction2()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction28evaluateERKNSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">CompositionFunction2::evaluate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#compositionfunction3">CompositionFunction3</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction3E"><code class="docutils literal notranslate"><span class="pre">CompositionFunction3</span></code></a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction320CompositionFunction3EKiKi"><code class="docutils literal notranslate"><span class="pre">CompositionFunction3::CompositionFunction3()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction38evaluateERKNSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">CompositionFunction3::evaluate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#compositionfunction4">CompositionFunction4</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction4E"><code class="docutils literal notranslate"><span class="pre">CompositionFunction4</span></code></a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction420CompositionFunction4EKiKi"><code class="docutils literal notranslate"><span class="pre">CompositionFunction4::CompositionFunction4()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202220CompositionFunction48evaluateERKNSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">CompositionFunction4::evaluate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hybridfunction1">HybridFunction1</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction1E"><code class="docutils literal notranslate"><span class="pre">HybridFunction1</span></code></a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction115HybridFunction1EKiKi"><code class="docutils literal notranslate"><span class="pre">HybridFunction1::HybridFunction1()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction18evaluateERKNSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">HybridFunction1::evaluate()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction119transform_variablesENSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">HybridFunction1::transform_variables()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hybridfunction2">HybridFunction2</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction2E"><code class="docutils literal notranslate"><span class="pre">HybridFunction2</span></code></a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction215HybridFunction2EKiKi"><code class="docutils literal notranslate"><span class="pre">HybridFunction2::HybridFunction2()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction28evaluateERKNSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">HybridFunction2::evaluate()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction219transform_variablesENSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">HybridFunction2::transform_variables()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hybridfunction3">HybridFunction3</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction3E"><code class="docutils literal notranslate"><span class="pre">HybridFunction3</span></code></a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction315HybridFunction3EKiKi"><code class="docutils literal notranslate"><span class="pre">HybridFunction3::HybridFunction3()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction38evaluateERKNSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">HybridFunction3::evaluate()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202215HybridFunction319transform_variablesENSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">HybridFunction3::transform_variables()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#levy">Levy</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20224LevyE"><code class="docutils literal notranslate"><span class="pre">Levy</span></code></a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20224Levy4LevyEKiKi"><code class="docutils literal notranslate"><span class="pre">Levy::Levy()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20224Levy8evaluateERKNSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">Levy::evaluate()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20224Levy19transform_variablesENSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">Levy::transform_variables()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rastrigin">Rastrigin</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20229RastriginE"><code class="docutils literal notranslate"><span class="pre">Rastrigin</span></code></a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20229Rastrigin9RastriginEKiKi"><code class="docutils literal notranslate"><span class="pre">Rastrigin::Rastrigin()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20229Rastrigin8evaluateERKNSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">Rastrigin::evaluate()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20229Rastrigin19transform_variablesENSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">Rastrigin::transform_variables()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rosenbrock">Rosenbrock</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202210RosenbrockE"><code class="docutils literal notranslate"><span class="pre">Rosenbrock</span></code></a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202210Rosenbrock10RosenbrockEKiKi"><code class="docutils literal notranslate"><span class="pre">Rosenbrock::Rosenbrock()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202210Rosenbrock8evaluateERKNSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">Rosenbrock::evaluate()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202210Rosenbrock19transform_variablesENSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">Rosenbrock::transform_variables()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#schafferf7">SchafferF7</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202210SchafferF7E"><code class="docutils literal notranslate"><span class="pre">SchafferF7</span></code></a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202210SchafferF710SchafferF7EKiKi"><code class="docutils literal notranslate"><span class="pre">SchafferF7::SchafferF7()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202210SchafferF78evaluateERKNSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">SchafferF7::evaluate()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202210SchafferF719transform_variablesENSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">SchafferF7::transform_variables()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#zakharov">Zakharov</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20228ZakharovE"><code class="docutils literal notranslate"><span class="pre">Zakharov</span></code></a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20228Zakharov8ZakharovEKiKi"><code class="docutils literal notranslate"><span class="pre">Zakharov::Zakharov()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20228Zakharov8evaluateERKNSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">Zakharov::evaluate()</span></code></a></li>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec20228Zakharov19transform_variablesENSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">Zakharov::transform_variables()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#calculate-composite">calculate_composite</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202219calculate_compositeERKNSt6vectorIdEERKNSt6vectorINSt6vectorIdEEEERKNSt6vectorINSt6vectorINSt6vectorIdEEEEEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIbEERKNSt6vectorIbEERKNSt6vectorIdEERKNSt6vectorI12RealFunctionEE"><code class="docutils literal notranslate"><span class="pre">calculate_composite()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#calculate-hybrid">calculate_hybrid</a><ul>
+<li><a class="reference internal" href="#_CPPv4N3ioh7problem7cec202216calculate_hybridERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorIdEERKNSt6vectorI12RealFunctionEE"><code class="docutils literal notranslate"><span class="pre">calculate_hybrid()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=6307bca3"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    </body>
+</html>

@@ -30,6 +30,9 @@ NQueens
       ~NQueens.enforce_bounds
       ~NQueens.remove_constraint
       ~NQueens.reset
+      ~NQueens.set_id
+      ~NQueens.set_instance
+      ~NQueens.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ NQueens
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

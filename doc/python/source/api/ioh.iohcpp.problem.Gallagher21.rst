@@ -30,6 +30,9 @@ Gallagher21
       ~Gallagher21.enforce_bounds
       ~Gallagher21.remove_constraint
       ~Gallagher21.reset
+      ~Gallagher21.set_id
+      ~Gallagher21.set_instance
+      ~Gallagher21.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ Gallagher21
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

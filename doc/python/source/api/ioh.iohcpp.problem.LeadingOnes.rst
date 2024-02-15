@@ -30,6 +30,9 @@ LeadingOnes
       ~LeadingOnes.enforce_bounds
       ~LeadingOnes.remove_constraint
       ~LeadingOnes.reset
+      ~LeadingOnes.set_id
+      ~LeadingOnes.set_instance
+      ~LeadingOnes.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ LeadingOnes
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

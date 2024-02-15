@@ -31,6 +31,9 @@ MaxInfluence
       ~MaxInfluence.load_instances
       ~MaxInfluence.remove_constraint
       ~MaxInfluence.reset
+      ~MaxInfluence.set_id
+      ~MaxInfluence.set_instance
+      ~MaxInfluence.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -53,3 +56,6 @@ MaxInfluence
    .. automethod:: load_instances
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

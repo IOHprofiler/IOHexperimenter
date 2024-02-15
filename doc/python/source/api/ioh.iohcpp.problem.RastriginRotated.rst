@@ -30,6 +30,9 @@ RastriginRotated
       ~RastriginRotated.enforce_bounds
       ~RastriginRotated.remove_constraint
       ~RastriginRotated.reset
+      ~RastriginRotated.set_id
+      ~RastriginRotated.set_instance
+      ~RastriginRotated.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ RastriginRotated
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

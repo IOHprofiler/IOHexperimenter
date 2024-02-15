@@ -30,6 +30,9 @@ LinearSlope
       ~LinearSlope.enforce_bounds
       ~LinearSlope.remove_constraint
       ~LinearSlope.reset
+      ~LinearSlope.set_id
+      ~LinearSlope.set_instance
+      ~LinearSlope.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ LinearSlope
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

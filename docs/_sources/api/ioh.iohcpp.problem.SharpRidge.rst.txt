@@ -30,6 +30,9 @@ SharpRidge
       ~SharpRidge.enforce_bounds
       ~SharpRidge.remove_constraint
       ~SharpRidge.reset
+      ~SharpRidge.set_id
+      ~SharpRidge.set_instance
+      ~SharpRidge.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ SharpRidge
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

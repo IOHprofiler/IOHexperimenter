@@ -30,6 +30,9 @@ ConcatenatedTrap
       ~ConcatenatedTrap.enforce_bounds
       ~ConcatenatedTrap.remove_constraint
       ~ConcatenatedTrap.reset
+      ~ConcatenatedTrap.set_id
+      ~ConcatenatedTrap.set_instance
+      ~ConcatenatedTrap.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ ConcatenatedTrap
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

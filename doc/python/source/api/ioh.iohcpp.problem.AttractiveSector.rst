@@ -30,6 +30,9 @@ AttractiveSector
       ~AttractiveSector.enforce_bounds
       ~AttractiveSector.remove_constraint
       ~AttractiveSector.reset
+      ~AttractiveSector.set_id
+      ~AttractiveSector.set_instance
+      ~AttractiveSector.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ AttractiveSector
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

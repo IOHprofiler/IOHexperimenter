@@ -30,6 +30,9 @@ LABS
       ~LABS.enforce_bounds
       ~LABS.remove_constraint
       ~LABS.reset
+      ~LABS.set_id
+      ~LABS.set_instance
+      ~LABS.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ LABS
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name
