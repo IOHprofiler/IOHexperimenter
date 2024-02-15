@@ -31,7 +31,8 @@ PLAT_TO_CMAKE = {
 if platform.system() == "Darwin":
     os.environ["CC"] = "clang"
     os.environ["CXX"] = "clang"
-    os.environ["ARCHFLAGS"] = "-std=c++14 -mmacosx-version-min=10.15"
+    os.environ["ARCHFLAGS"] = "-std=c++14"
+    os.environ["CXXFLAGS"] = "-mmacosx-version-min=10.15"
 
 BASE_DIR = os.path.realpath(os.path.dirname(__file__))
 MAKE_DOCS = os.environ.get("MAKE_DOCS")
@@ -63,6 +64,8 @@ class CMakeBuild(build_ext):
         # CMake lets you override the generator - we need to check this.
         # Can be set with Conda-Build, for example.
         cmake_generator = os.environ.get("CMAKE_GENERATOR", "")
+
+        -mmacosx-version-min=10.15
 
         # Set Python_EXECUTABLE instead if you use PYBIND11_FINDPYTHON
         # EXAMPLE_VERSION_INFO shows you how to pass a value into the C++ code
