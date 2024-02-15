@@ -30,6 +30,9 @@ PBO
       ~PBO.enforce_bounds
       ~PBO.remove_constraint
       ~PBO.reset
+      ~PBO.set_id
+      ~PBO.set_instance
+      ~PBO.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ PBO
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

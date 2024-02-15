@@ -76,8 +76,8 @@ namespace ioh::problem
              * @param n_variables the dimension of the problem
              * @return std::vector<std::vector<double>> the rotation
              */
-            [[nodiscard]] std::vector<std::vector<double>> compute_rotation(const long rotation_seed,
-                                                                            const int n_variables) const
+            [[nodiscard]] static std::vector<std::vector<double>> compute_rotation(const long rotation_seed,
+                                                                                   const int n_variables)
             {
                 const auto random_vector =
                     common::random::bbob2009::normal(static_cast<size_t>(n_variables) * n_variables, rotation_seed);

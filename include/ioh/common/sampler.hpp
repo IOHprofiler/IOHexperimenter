@@ -31,22 +31,23 @@ namespace ioh::common::random::sampler
         static inline seed_type default_seed = 1993;
 
         Uniform(const size_t n, const seed_type seed = default_seed, const T lb = 0, const T ub = 1) :
-            Sampler<T>(n, seed, lb, ub), gen((std::mt19937::result_type)seed), delta_g(gen.max() - gen.min()), delta(ub - lb)
+            Sampler<T>(n, seed, lb, ub), gen_(static_cast<std::mt19937::result_type>(seed)), delta_g_(std::mt19937::max() -
+                std::mt19937::min()), delta_(ub - lb)
         {
         }
 
-        virtual std::vector<T> next()
+        virtual std::vector<T> next() override
         {
             std::vector<T> res(this->n);
             for (size_t i = 0; i < this->n; i++)
-                res[i] = (delta * (static_cast<double>(gen()) / delta_g)) + this->lb;
+                res[i] = static_cast<T>((delta_ * (static_cast<double>(gen_()) / static_cast<double>(delta_g_))) + this->lb);
             return res;
         }
 
     private:
-        std::mt19937 gen;
-        size_t delta_g;
-        T delta;
+        std::mt19937 gen_;
+        size_t delta_g_;
+        T delta_;
     };
 
 
@@ -57,9 +58,9 @@ namespace ioh::common::random::sampler
         {
         }
 
-        virtual std::vector<double> next() { 
+        virtual std::vector<double> next() override { 
             std::vector<double> data(n);
-            i8_sobol((int)n, &seed, data.data(), lb, ub);
+            i8_sobol(static_cast<int>(n), &seed, data.data(), lb, ub);
             return data;
         }
     };
@@ -75,7 +76,7 @@ namespace ioh::common::random::sampler
             primes.resize(n);
         }
         
-        virtual std::vector<double> next()
+        virtual std::vector<double> next() override
         {
             std::vector<double> data(n);
 
@@ -114,12 +115,12 @@ namespace ioh::common::random::sampler
                 return primes;
             }
 
-            inline double next_seq(int index, int base) const
-            {
+        static double next_seq(int index, const int base)
+        {
                 double y = 1., x = 0.;
                 while (index > 0)
                 {
-                    auto dm = divmod(index, base);
+                    const auto dm = divmod(index, base);
                     index = dm.first;
                     y *= static_cast<double>(base);
                     x += static_cast<double>(dm.second) / y;

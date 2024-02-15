@@ -33,3 +33,7 @@ get_static_root
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenfunction:: ioh::common::file::utils::get_static_root
 
+get_static_root_by_env
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::common::file::utils::get_static_root_by_env
+

@@ -232,22 +232,29 @@ class TestProblem(unittest.TestCase):
             "pbofitness100.in",
             "bbobfitness5.in",
             "bbobfitness20.in",
+            "cec_problem2013.in",
+            "cec_problem2022.in",
         ):
             with self.subTest(test_file=test_file):
-                suite, dim = test_file.split("fitness")
+                is_integer = 'pbo' in test_file
                 problem_class = (
-                    ioh.ProblemClass.PBO if suite == "pbo" else ioh.ProblemClass.BBOB
+                    ioh.ProblemClass.INTEGER if is_integer else ioh.ProblemClass.REAL
                 )
-                dim = int(dim[:-3])
-                dtype = float if suite == "bbob" else int
-                tol = 0.01 if suite == "bbob" else 0.000099
+                dtype = int if is_integer else float
+                tol = 0.000099 if is_integer else 0.01
 
                 with open(os.path.join(DATA_DIR, test_file)) as f:
                     for line in f:
                         fid, iid, x, y = line.split()
                         if "," in x:
                             x = x.split(",")
-                        x = list(map(dtype, x))
+
+                        if "." in x:
+                            x = [float(x)]
+                            dim = 1
+                        else:
+                            x = list(map(dtype, x))
+                            dim = len(x)
                         p = ioh.get_problem(int(fid), int(iid), dim, problem_class)
                         self.assertTrue(math.isclose(p(x), float(y), abs_tol=tol))
 

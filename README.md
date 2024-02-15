@@ -18,6 +18,7 @@
 * [W-model](https://dl.acm.org/doi/abs/10.1145/3205651.3208240?casa_token=S4U_Pi9f6MwAAAAA:U9ztNTPwmupT8K3GamWZfBL7-8fqjxPtr_kprv51vdwA-REsp0EyOFGa99BtbANb0XbqyrVg795hIw) problem sets constructed on OneMax and LeadingOnes.
 * Integration of the [Tree Decomposition (TD) Mk Landscapes](https://github.com/tobiasvandriessel/problem-generator) problems.
 * Submodular optimization problems, as seen in the [GECCO '22 workshop](https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php).
+* Several benchmark suites from the CEC conference.
 * Flexible interface for adding new suites and problems.
 * Advanced logging module that takes care of registering the data in a seamless manner.
 * Data format is compatible with [IOHanalyzer](https://github.com/IOHprofiler/IOHanalyzer).
@@ -29,6 +30,8 @@
 * StarDiscrepancy
 * PBO
 * Submodular Graph Problems
+* CEC 2013 Special Session and Competition on Niching Methods for Multimodal Function Optimization
+* CEC 2022 Special Session and Competition on Single Objective Bound Constrained Numerical Optimization
 
 ## C++
 

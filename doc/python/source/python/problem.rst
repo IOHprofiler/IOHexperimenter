@@ -21,3 +21,5 @@ Problem Types
     submodular.rst
     star_discrepancy.rst
     wmodel.rst
+    cec2013.rst
+    cec2022.rst

@@ -30,6 +30,9 @@ LeadingOnesRuggedness3
       ~LeadingOnesRuggedness3.enforce_bounds
       ~LeadingOnesRuggedness3.remove_constraint
       ~LeadingOnesRuggedness3.reset
+      ~LeadingOnesRuggedness3.set_id
+      ~LeadingOnesRuggedness3.set_instance
+      ~LeadingOnesRuggedness3.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ LeadingOnesRuggedness3
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

@@ -30,6 +30,9 @@ Ellipsoid
       ~Ellipsoid.enforce_bounds
       ~Ellipsoid.remove_constraint
       ~Ellipsoid.reset
+      ~Ellipsoid.set_id
+      ~Ellipsoid.set_instance
+      ~Ellipsoid.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ Ellipsoid
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

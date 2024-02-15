@@ -48,7 +48,7 @@ namespace ioh::problem
     /**
      * @brief Template instantiation for real::StarDiscrepancy problems.
      *
-     * @return InstanceBasedProblem::Constructors<real::StarDiscrepancy, int, int> a vector of contructor
+     * @return InstanceBasedProblem::Constructors<real::StarDiscrepancy, int, int> a vector of constructor
      * functions
      */
     template <>

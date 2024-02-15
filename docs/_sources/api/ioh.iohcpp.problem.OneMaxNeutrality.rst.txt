@@ -30,6 +30,9 @@ OneMaxNeutrality
       ~OneMaxNeutrality.enforce_bounds
       ~OneMaxNeutrality.remove_constraint
       ~OneMaxNeutrality.reset
+      ~OneMaxNeutrality.set_id
+      ~OneMaxNeutrality.set_instance
+      ~OneMaxNeutrality.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ OneMaxNeutrality
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

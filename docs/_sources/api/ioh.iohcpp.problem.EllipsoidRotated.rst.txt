@@ -30,6 +30,9 @@ EllipsoidRotated
       ~EllipsoidRotated.enforce_bounds
       ~EllipsoidRotated.remove_constraint
       ~EllipsoidRotated.reset
+      ~EllipsoidRotated.set_id
+      ~EllipsoidRotated.set_instance
+      ~EllipsoidRotated.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ EllipsoidRotated
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

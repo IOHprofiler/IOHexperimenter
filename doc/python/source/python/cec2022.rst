@@ -1,0 +1,22 @@
+CEC 2022
+========
+
+Benchmark Functions for CEC 2022' Special Session and Competition on Single Objective Bound Constrained Numerical Optimization
+
+.. automodapi:: ioh.iohcpp.problem
+    :inherited-members:
+    :no-main-docstr:
+    :no-heading:
+    :include: CEC2022
+    :include: CEC2022Zakharov
+    :include: CEC2022Rosenbrock
+    :include: CEC2022SchafferF7
+    :include: CEC2022Rastrigin
+    :include: CEC2022Levy
+    :include: CEC2022HybridFunction1
+    :include: CEC2022HybridFunction2
+    :include: CEC2022HybridFunction3
+    :include: CEC2022CompositionFunction1
+    :include: CEC2022CompositionFunction2
+    :include: CEC2022CompositionFunction3
+    :include: CEC2022CompositionFunction4

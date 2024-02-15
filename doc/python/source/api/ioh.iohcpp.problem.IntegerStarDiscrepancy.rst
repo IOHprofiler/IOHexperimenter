@@ -31,6 +31,9 @@ IntegerStarDiscrepancy
       ~IntegerStarDiscrepancy.enforce_bounds
       ~IntegerStarDiscrepancy.remove_constraint
       ~IntegerStarDiscrepancy.reset
+      ~IntegerStarDiscrepancy.set_id
+      ~IntegerStarDiscrepancy.set_instance
+      ~IntegerStarDiscrepancy.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -53,3 +56,6 @@ IntegerStarDiscrepancy
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

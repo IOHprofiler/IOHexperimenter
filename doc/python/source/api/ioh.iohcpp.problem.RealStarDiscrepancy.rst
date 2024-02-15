@@ -31,6 +31,9 @@ RealStarDiscrepancy
       ~RealStarDiscrepancy.enforce_bounds
       ~RealStarDiscrepancy.remove_constraint
       ~RealStarDiscrepancy.reset
+      ~RealStarDiscrepancy.set_id
+      ~RealStarDiscrepancy.set_instance
+      ~RealStarDiscrepancy.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -53,3 +56,6 @@ RealStarDiscrepancy
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

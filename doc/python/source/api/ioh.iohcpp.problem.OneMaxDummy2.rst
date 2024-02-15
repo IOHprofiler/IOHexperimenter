@@ -30,6 +30,9 @@ OneMaxDummy2
       ~OneMaxDummy2.enforce_bounds
       ~OneMaxDummy2.remove_constraint
       ~OneMaxDummy2.reset
+      ~OneMaxDummy2.set_id
+      ~OneMaxDummy2.set_instance
+      ~OneMaxDummy2.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ OneMaxDummy2
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

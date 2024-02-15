@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ioh/problem/utils.hpp"
 #include "ioh/problem/structures.hpp"
+#include "ioh/problem/utils.hpp"
 
 /* Transformation namespace */
 namespace ioh::problem::transformation
@@ -14,7 +14,10 @@ namespace ioh::problem::transformation
          * \param x2 second operand
          * \return the result of xor
          */
-        inline int exclusive_or(const int x1, const int x2) { return static_cast<int>(x1 != x2);}
+        inline int exclusive_or(const int x1, const int x2)
+        {
+            return x1 != x2;
+        }
 
         /**
          * \brief Shift a double y with a given offset
@@ -45,7 +48,8 @@ namespace ioh::problem::transformation
                 const auto log_y = log(fabs(y)) / factor;
                 if (y > 0)
                     return pow(exp(log_y + 0.49 * (sin(log_y) + sin(0.79 * log_y))), factor);
-                return -pow(exp(log_y + 0.49 * (sin(0.55 * log_y) + sin(0.31 * log_y))), factor);
+                return -pow(exp(log_y + 0.49 * (sin(0.55 * log_y) + sin(0.31 * log_y))),
+                            factor);
             }
             return y;
         }
@@ -53,31 +57,27 @@ namespace ioh::problem::transformation
         using Transformation = std::function<double(double, double)>;
 
         /**
-         * \brief applies a given transformation method t(double y, double a) with a random number for a.
-         * \param t A transformation method
-         * \param y the raw y value
-         * \param seed the seed for the uniform random number generator
-         * \param lb the lower bound for the random number
-         * \param ub the upper bound for the random number
-         * \return the transformed y value
+         * \brief applies a given transformation method t(double y, double a) with a
+         * random number for a. \param t A transformation method \param y the raw y
+         * value \param seed the seed for the uniform random number generator \param lb
+         * the lower bound for the random number \param ub the upper bound for the
+         * random number \return the transformed y value
          */
-        inline double uniform(const Transformation &t, const double y, const int seed, const double lb, const double ub)
+        inline double uniform(const Transformation &t, const double y, const int seed,
+                              const double lb, const double ub)
         {
             const auto scalar = common::random::pbo::uniform(1, seed, lb, ub).at(0);
             return t(y, scalar);
         }
 
         /**
-         * \brief penalizes the objective value for x when it is out of bounds, weighed by a constant factor
-         * \param x the object in the search space
-         * \param lb the lower bound
-         * \param ub the upper bound
-         * \param factor the weight
-         * \param y the raw y value
-         * \return the penalized y value
+         * \brief penalizes the objective value for x when it is out of bounds, weighed
+         * by a constant factor \param x the object in the search space \param lb the
+         * lower bound \param ub the upper bound \param factor the weight \param y the
+         * raw y value \return the penalized y value
          */
-        inline double penalize(const std::vector<double> &x, const double lb, const double ub, const double factor,
-                               const double y)
+        inline double penalize(const std::vector<double> &x, const double lb,
+                               const double ub, const double factor, const double y)
         {
             auto penalty = 0.0;
             for (const auto xi : x)
@@ -93,26 +93,29 @@ namespace ioh::problem::transformation
         }
 
         ///**
-        // * \brief penalizes the objective value for x when it is out of bounds, weighed by a constant factor
+        // * \brief penalizes the objective value for x when it is out of bounds,
+        // weighed by a constant factor
         // * \param x the object in the search space
         // * \param constraint the bounds of the problem
         // * \param factor the weight
         // * \param y the raw y value
         // * \return the penalized y value
         // */
-        //template <typename T>
-        //double penalize(const std::vector<double> &x, const BoxConstraint<T> constraint, const double factor,
+        // template <typename T>
+        // double penalize(const std::vector<double> &x, const BoxConstraint<T>
+        // constraint, const double factor,
         //                const double y)
         //{
-        //    return penalize(x, static_cast<double>(constraint.lb.at(0)), static_cast<double>(constraint.ub.at(0)),
+        //    return penalize(x, static_cast<double>(constraint.lb.at(0)),
+        //    static_cast<double>(constraint.ub.at(0)),
         //                    factor, y);
         //}
-    }
+    } // namespace objective
 
     namespace variables
     {
         /**
-         * \brief randomly flips a bit 
+         * \brief randomly flips a bit
          * \param x raw variables
          * \param seed seed for the random flip
          */
@@ -122,7 +125,8 @@ namespace ioh::problem::transformation
             const auto rx = common::random::pbo::uniform(n, seed);
 
             for (auto i = 0; i < n; ++i)
-                x[i] = objective::exclusive_or(x[i], static_cast<int>(2.0 * floor(1e4 * rx[i]) / 1e4));
+                x[i] = objective::exclusive_or(
+                    x[i], static_cast<int>(2.0 * floor(1e4 * rx[i]) / 1e4));
         }
 
         /**
@@ -150,13 +154,13 @@ namespace ioh::problem::transformation
                 x[i] = copy_x.at(index[i]);
         }
 
-
         /**
          * \brief reset x from x_1 whose elements were randomly reordered from x
          * \param x_1 the reordered variables
          * \param seed seed for the random flip
          */
-        inline std::vector<int> random_reorder_reset(const std::vector<int> &x_1, const int seed)
+        inline std::vector<int> random_reorder_reset(const std::vector<int> &x_1,
+                                                     const int seed)
         {
             std::vector<int> x(x_1.size());
             std::vector<int> index(x_1.size());
@@ -183,7 +187,8 @@ namespace ioh::problem::transformation
          * \param m transformation matrix
          * \param b transformation vector
          */
-        inline void affine(std::vector<double> &x, const std::vector<std::vector<double>> &m,
+        inline void affine(std::vector<double> &x,
+                           const std::vector<std::vector<double>> &m,
                            const std::vector<double> &b)
         {
             auto temp_x = x;
@@ -207,7 +212,6 @@ namespace ioh::problem::transformation
                 if (x[i] > 0.0)
                     x[i] = pow(x[i], 1.0 + beta * i / n_eff * sqrt(x[i]));
         }
-
 
         /**
          * \brief brs transformation on x
@@ -248,7 +252,6 @@ namespace ioh::problem::transformation
                 xi = objective::oscillate(xi, alpha);
         }
 
-
         /**
          * \brief scale x by a scalar
          * \param x raw variables
@@ -265,7 +268,8 @@ namespace ioh::problem::transformation
          * \param x raw variables
          * \param offset a vector of offsets for each xi
          */
-        inline void subtract(std::vector<double> &x, const std::vector<double> &offset)
+        inline void subtract(std::vector<double> &x,
+                             const std::vector<double> &offset)
         {
             for (auto i = 0; i < static_cast<int>(x.size()); ++i)
                 x[i] = x[i] - offset[i];
@@ -295,5 +299,79 @@ namespace ioh::problem::transformation
             for (size_t i = 1; i < x.size(); ++i)
                 x[i] = temp_x[i] + 0.25 * (temp_x[i - 1] - 2.0 * fabs(xopt[i - 1]));
         }
-    }
-}
+
+        /**
+         * @brief Performs a series of transformations on the input vector `x`, including scaling and either rotation or affine transformation, based on the flags provided.
+         *
+         * This function is a part of the IOHexperimenter's problem transformations module, which is used to apply various transformations on optimization problem variables. The function takes an input vector `x` and applies a series of transformations including scaling and either rotation (using a rotation matrix `mr`) or an affine transformation. The transformed vector is stored in `sr_x`.
+         *
+         * @param x A constant reference to the input vector that needs to be transformed. It represents the raw variables of the optimization problem.
+         * @param sr_x A reference to the vector where the final transformed variables will be stored. This vector is expected to be initialized with the same size as `x`.
+         * @param y A reference to a vector used as a temporary storage during the transformation process. This vector is expected to be initialized with the same size as `x`.
+         * @param os A constant reference to a vector used in the subtract transformation. It represents the offset values for each variable in `x`.
+         * @param mr A constant reference to a 2D vector representing the rotation matrix or the matrix used in the affine transformation.
+         * @param sh_rate A double representing the scaling factor applied to each variable in `x` during the scaling transformation.
+         * @param s_flag A boolean flag indicating whether the scaling transformation should be applied. If true, scaling is applied; otherwise, it is skipped.
+         * @param r_flag A boolean flag indicating whether the rotation or affine transformation should be applied. If true, rotation or affine transformation is applied; otherwise, it is skipped.
+         *
+         * @note The function uses the `subtract` and `affine` functions for the subtract and affine transformations, respectively.
+         * @note The `b` vector is initialized to a zero vector as it is used in the affine transformation to add a constant vector to `x`, but in this case, it acts as a no-op.
+         *
+         * @return void
+         */
+        inline void scale_and_rotate(const std::vector<double> &x,
+                                     std::vector<double> &sr_x, std::vector<double> &y,
+                                     const std::vector<double> &os,
+                                     const std::vector<std::vector<double>> &mr,
+                                     const double sh_rate, const bool s_flag, const bool r_flag)
+        {
+
+            std::vector<double> b(x.size(), 0.0); // Create a zero vector for the affine transformation
+            if (s_flag)
+            {
+                if (r_flag)
+                {
+                    y = x; // Copy x to y before calling subtract
+                    subtract(y, os); // Replaced shiftfunc with subtract
+                    for (size_t i = 0; i < x.size(); ++i)
+                    {
+                        y[i] *= sh_rate;
+                    }
+                    std::vector<double> y_copy = y; // Create a copy of y to preserve the original values
+                    affine(y_copy, mr, b); // Replaced rotatefunc with affine
+                    sr_x = y_copy; // Copy the result back to sr_x
+                }
+                else
+                {
+                    sr_x = x; // Copy x to sr_x before calling subtract
+                    subtract(sr_x, os); // Replaced shiftfunc with subtract
+                    for (size_t i = 0; i < x.size(); ++i)
+                    {
+                        sr_x[i] *= sh_rate;
+                    }
+                }
+            }
+            else
+            {
+                if (r_flag)
+                {
+                    for (size_t i = 0; i < x.size(); ++i)
+                    {
+                        y[i] = x[i] * sh_rate;
+                    }
+                    std::vector<double> y_copy = y; // Create a copy of y to preserve the original values
+                    affine(y_copy, mr, b); // Replaced rotatefunc with affine
+                    sr_x = y_copy; // Copy the result back to sr_x
+                }
+                else
+                {
+                    for (size_t i = 0; i < x.size(); ++i)
+                    {
+                        sr_x[i] = x[i] * sh_rate;
+                    }
+                }
+            }
+        }
+
+    } // namespace variables
+} // namespace ioh::problem::transformation

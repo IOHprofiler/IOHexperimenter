@@ -9,17 +9,18 @@ Namespaces
 
     ioh_common_random_bbob2009.rst
     ioh_common_random_pbo.rst
+    ioh_common_random_sampler.rst
 
 
 Functions
 --------------------------------
+GENERATOR
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenfunction:: ioh::common::random::GENERATOR
+
 doubles
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenfunction:: ioh::common::random::doubles
-
-gen
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenfunction:: ioh::common::random::gen
 
 integer
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -43,7 +44,7 @@ seed
 
 Variables
 --------------------------------
-rd
+RD
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenvariable:: ioh::common::random::rd
+.. doxygenvariable:: ioh::common::random::RD
 

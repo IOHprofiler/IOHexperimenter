@@ -14,7 +14,21 @@ import json
 import urllib.request
 import tarfile
 
- 
+# Set the path to the static/ directory.
+# NEEDED for C++ code to load transformation details for CEC functions.
+# The static/ directory is installed together with the "pip install" command.
+# WARNING: The os.environ should be manipulated before any package from .iohcpp is imported!
+# =================================================================================================
+# Get the directory containing the __init__.py file
+package_directory = os.path.dirname(__file__)
+
+# Construct the path to the static/ directory
+static_directory = os.path.join(package_directory, 'static')
+
+# Set the IOH_RESOURCES environment variable to the path to the static/ directory
+os.environ['IOH_RESOURCES'] = static_directory
+# =================================================================================================
+
 from .iohcpp import (
     problem,
     suite, 
@@ -32,8 +46,6 @@ from .iohcpp import (
     MetaData,
     LogInfo,
 )
-
-
 
 ProblemType = typing.Union[problem.RealSingleObjective, problem.IntegerSingleObjective]
 VariableType = typing.Union[int, float]

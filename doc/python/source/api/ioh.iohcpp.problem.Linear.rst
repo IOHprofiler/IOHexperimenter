@@ -30,6 +30,9 @@ Linear
       ~Linear.enforce_bounds
       ~Linear.remove_constraint
       ~Linear.reset
+      ~Linear.set_id
+      ~Linear.set_instance
+      ~Linear.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ Linear
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

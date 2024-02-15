@@ -1,10 +1,10 @@
-
 #pragma once
 
+#include "ioh/common/format.hpp"
+#include "ioh/common/log.hpp"
+#include <cstdlib> // for std::getenv, std::exit and EXIT_FAILURE
 #include <string>
 #include <utility>
-#include "ioh/common/log.hpp"
-#include "ioh/common/format.hpp"
 
 #ifdef FSEXPERIMENTAL
 #define JSON_HAS_EXPERIMENTAL_FILESYSTEM 1
@@ -22,6 +22,8 @@ namespace fs = std::filesystem;
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 #endif
+
+
 //! File namespace
 namespace ioh::common::file
 {
@@ -77,6 +79,46 @@ namespace ioh::common::file
         /**
          * @brief Get the absolute path of IOHexperimenter/static
          *
+         * This function attempts to find the absolute path based on environment variables.
+         * It first checks if 'IOH_RESOURCES' is set and uses it if available.
+         * If 'IOH_RESOURCES' is not set, it then checks 'GITHUB_WORKSPACE'.
+         * If neither are set, it logs an error and returns a placeholder path.
+         *
+         * @return fs::path the absolute path of IOHexperimenter/static
+         */
+
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#endif
+        inline fs::path get_static_root_by_env()
+        {
+            // First, try to use the IOH_RESOURCES environment variable
+            const char* ioh_resources = std::getenv("IOH_RESOURCES");
+            if (ioh_resources != nullptr)
+            {
+                // If IOH_RESOURCES is set, return its value as a filesystem path
+                return fs::canonical(fs::path(ioh_resources));
+            }
+
+            // If IOH_RESOURCES is not set, fall back to GITHUB_WORKSPACE
+            const char* github_workspace = std::getenv("GITHUB_WORKSPACE");
+            if (github_workspace != nullptr)
+            {
+                // If GITHUB_WORKSPACE is set, append "static/" and return the canonical path
+                return fs::canonical(fs::path(github_workspace) / "static");
+            }
+
+            // If neither IOH_RESOURCES nor GITHUB_WORKSPACE are set, log an error and return a placeholder
+            std::cerr << "[get_static_root] Error: Neither IOH_RESOURCES nor GITHUB_WORKSPACE environment variables "
+                         "are set.\n";
+        }
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+        /**
+         * @brief Get the absolute path of IOHexperimenter/static
+         *
          * @return fs::path the absolute path of IOHexperimenter/static
          */
         inline fs::path get_static_root()
@@ -95,7 +137,6 @@ namespace ioh::common::file
             IOH_DBG(warning, "could static root");
             return {};
         }
-
 
         /**
          * @brief Finds a file located in the static folder of this repository
@@ -134,11 +175,12 @@ namespace ioh::common::file
      * @param tmp_dat_file_path 
      * @param tar_dat_file_path 
      */
-    inline void merge_dat_file(const std::string tmp_dat_file_path, const std::string tar_dat_file_path) {
+    inline void merge_dat_file(const std::string &tmp_dat_file_path, const std::string &tar_dat_file_path) {
         std::ofstream tar_dat_file(tar_dat_file_path,std::ios_base::app);
         std::ifstream tmp_dat_file(tmp_dat_file_path);
-        std::string tmp_line;
-        if (tar_dat_file.is_open() && tmp_dat_file.is_open()) {
+        if (tar_dat_file.is_open() && tmp_dat_file.is_open())
+        {
+            std::string tmp_line;
             while (getline(tmp_dat_file,tmp_line)) {
                 tar_dat_file << tmp_line << std::endl;
             }
