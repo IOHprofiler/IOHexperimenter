@@ -130,7 +130,7 @@ class CMakeBuild(build_ext):
         )
 
 
-if MAKE_DOCS:-DCMAKE_OSX_DEPLOYMENT_TARGET=10.15
+if MAKE_DOCS:
     try:
         atexit.register(main)
     except:
