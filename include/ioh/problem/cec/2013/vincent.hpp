@@ -35,8 +35,8 @@ namespace ioh::problem
     inline InstanceBasedProblem::Constructors<cec2013::Vincent, int, int>
     InstanceBasedProblem::load_instances<cec2013::Vincent>(const std::optional<fs::path> &)
     {
-        return {{[](int, int) { return cec2013::Vincent(1106, "CEC2013Vincent2D", 2); }, 1107, std::nullopt},
-                {[](int, int) { return cec2013::Vincent(1108, "CEC2013Vincent3D", 3); }, 1109, std::nullopt}
+        return {{[](int, int) { return cec2013::Vincent(1107, "CEC2013Vincent2D", 2); }, 1107, std::nullopt},
+                {[](int, int) { return cec2013::Vincent(1109, "CEC2013Vincent3D", 3); }, 1109, std::nullopt}
         };
     }
 
