@@ -24,7 +24,7 @@ namespace ioh::problem
 
         public:
             SixHumpCamelback(const int instance, const int n_variables) :
-                CEC2013Problem(1105, instance, n_variables, "CEC2013SixHumpCamelback", -1.9, 1.9, 2)
+                CEC2013Problem(1105, instance, n_variables, "CEC2013SixHumpCamelback", -1.9, 1.9, 2, .5)
             {
                 optimum_.x = {0.0898, -0.7126};
                 optimum_.y = evaluate(optimum_.x);

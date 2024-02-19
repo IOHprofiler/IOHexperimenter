@@ -105,6 +105,75 @@ namespace ioh::common::random
         return x;
     }
 
+    /*
+     * @brief distribution which in compbination with mt19997 produces the same
+     * random numbers for gcc and msvc
+     */
+    template <typename T = double>
+    struct uniform
+    {
+        /**
+         * @brief Generate a random uniform number in the closed interval [-1, 1]
+         *
+         * @tparam G the type of the generator
+         * @param gen the generator instance
+         * @return T the random number
+         */
+        template <typename G>
+        T operator()(G &gen)
+        {
+            return static_cast<T>(2.0 * gen() - gen.min()) / gen.max() - gen.min() - 1;
+        }
+    };
+
+    /**
+     * @brief Box-Muller random normal number generator. Ensures similar numbers generated
+     * on different operating systems.
+     */
+    template <typename T = double>
+    struct normal
+    {
+        T mu;
+        T sigma;
+        
+        normal(const T mu, const T sigma): mu(mu), sigma(sigma) {}
+        normal(): normal(0.0, 1.0) {}
+
+        /**
+         * @brief Generate a standard normal random number with mean 0 and std dev 1.
+         *
+         * @tparam G the type of the generator
+         * @param gen the generator instance
+         * @return T the random number
+         */
+        template <typename G>
+        T operator()(G &gen)
+        {
+            static uniform<double> rng;
+            static T r1, r2;
+            static bool generate = true;
+
+            if (generate)
+            {
+                T u1 = std::abs(rng(gen));
+                T u2 = std::abs(rng(gen));
+                const T root_log_u1 = std::sqrt(-2.0 * std::log(u1));
+                const T two_pi_u2 = 2.0 * M_PI * u2;
+                r1 = (sigma * (root_log_u1 * std::sin(two_pi_u2))) + mu;
+                r2 = (sigma * (root_log_u1 * std::cos(two_pi_u2))) + mu;
+
+                generate = false;
+                return r1;
+            }
+            else
+            {
+                generate = true;
+                return r2;
+            }
+            
+        }
+    };
+
     namespace pbo
     {
 

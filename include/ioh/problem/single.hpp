@@ -12,6 +12,15 @@ namespace ioh::problem
     template <typename T>
     class SingleObjectiveProblem : public Problem<T, SingleObjective>
     {
+    private:
+        //! Noise level
+        double sigma_noise_ = 0.0;
+
+        //! Noise sampler (standard normal samples)
+        common::random::normal<double> noise_sampler_{};
+
+        //! Inversion multiplier
+        double inverter_ = 1.0;
     public:
         /**
          * @brief Construct a new Problem object
@@ -28,7 +37,9 @@ namespace ioh::problem
                 State<T, SingleObjective>(
                     {std::vector<T>(meta_data.n_variables, std::numeric_limits<T>::signaling_NaN()),
                      meta_data.optimization_type.initial_value()}),
-                optimum)
+                optimum)//,
+                // sigma_noise_(0.0),
+                // noise_sampler_{},
         {
         }
 
@@ -64,6 +75,13 @@ namespace ioh::problem
                 state.current_internal.y = this->evaluate(state.current_internal.x);
                 state.y_unconstrained = this->transform_objectives(state.current_internal.y);
                 state.current.y = this->constraintset_.penalize(state.y_unconstrained);
+            }   
+
+            state.current.y *= inverter_;
+
+            if (std::abs(sigma_noise_) > 0) {
+                const double noise = sigma_noise_ * noise_sampler_(common::random::GENERATOR);
+                state.current.y += std::abs(noise) * state.current.y;
             }
         }
 
@@ -90,6 +108,28 @@ namespace ioh::problem
             return this->state_.current.y;
         }
 
+        //! Accessor for sigma_noise_
+        double get_noise_level() const {
+            return sigma_noise_;
+        }
+
+        //! Accessor for sigma_noise_
+        void set_noise_level(const double sigma_noise) {
+            sigma_noise_ = sigma_noise;
+        }
+        //! Convert function from minimization to maximization or from maximization to minization
+        void invert() {
+            inverter_ *= -1.0;
+            if (!std::isnan(this->optimum_.y))
+                this->optimum_.y *= -1.0;
+
+            if (this->meta_data_.optimization_type == common::OptimizationType::MAX){
+                this->meta_data_.optimization_type = common::FOptimizationType(common::OptimizationType::MIN);
+            } else{
+                this->meta_data_.optimization_type = common::FOptimizationType(common::OptimizationType::MAX);   
+            }
+            this->reset();
+        }
 
 #if defined(_OPENMP)
         virtual std::vector<double> operator()(const std::vector<std::vector<T>> &X) override

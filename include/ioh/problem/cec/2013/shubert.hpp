@@ -25,7 +25,7 @@ namespace ioh::problem
 
         public:
             Shubert(const int problem_id, const std::string& name, const int n_variables) :
-                CEC2013Problem(problem_id, 1, n_variables, name, -10.0, 10.0, static_cast<int>(std::pow(n_variables * 3, 3)))
+                CEC2013Problem(problem_id, 1, n_variables, name, -10.0, 10.0, static_cast<int>(std::pow(n_variables * 3, 3)), 0.5)
             {
                 optimum_.x = {-0.8, -1.4251};
                 if (n_variables == 3)

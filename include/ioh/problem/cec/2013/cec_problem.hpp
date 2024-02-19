@@ -27,6 +27,9 @@ namespace ioh::problem
     public:
         //! Number of global optima
         size_t n_optima;
+        //! The minimal distance between each optima
+        double rho;
+
         /**
          * @brief Constructs a new CEC problem instance.
          *
@@ -36,13 +39,14 @@ namespace ioh::problem
          * @param lb The lower bound of the problem
          * @param ub The lower bound of the problem
          * @param n_optima The number of global optima
+         * @param rho The minimal distance between each optima
          * space.
          * @param name A unique name for the problem.
          */
-        CEC2013(const int problem_id, const int instance, const int n_variables, const std::string &name, const double lb, const double ub, const size_t n_optima) :
+        CEC2013(const int problem_id, const int instance, const int n_variables, const std::string &name, const double lb, const double ub, const size_t n_optima, const double rho = 0.01) :
             RealSingleObjective(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::MAX),
                                 Bounds<double>(n_variables, lb, ub)),
-            n_optima(n_optima)
+            n_optima(n_optima), rho(rho)
         {
         }  
     };
