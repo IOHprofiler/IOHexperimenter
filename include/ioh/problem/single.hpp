@@ -123,6 +123,7 @@ namespace ioh::problem
             if (!std::isnan(this->optimum_.y))
                 this->optimum_.y *= -1.0;
 
+            this->state_.invert();
             if (this->meta_data_.optimization_type == common::OptimizationType::MAX){
                 this->meta_data_.optimization_type = common::FOptimizationType(common::OptimizationType::MIN);
             } else{

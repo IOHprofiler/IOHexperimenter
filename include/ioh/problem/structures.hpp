@@ -239,6 +239,10 @@ namespace ioh
                 has_improved = false;
             }
 
+            void invert(){
+                initial_solution.y = -initial_solution.y;
+            }
+
             //! Update the state
             void update(const MetaData &meta_data, const Solution<T, double> &objective)
             {
