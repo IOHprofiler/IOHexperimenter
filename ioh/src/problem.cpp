@@ -1658,7 +1658,9 @@ void define_dynamic_bin_val_problem(py::module &m)
             int
                 The current timestep after the step.
         )pbdoc"
-    );
+    )
+    .def("get_pareto_shape", &DynamicBinValPareto::get_pareto_shape, "")
+    .def("get_pareto_upper_bound", &DynamicBinValPareto::get_pareto_upper_bound, "");
 
 
 
