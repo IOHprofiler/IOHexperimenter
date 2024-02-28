@@ -17,7 +17,7 @@ end
 
 # and ipython3 tests/python/test_cec_functions.py
 
-# The following line puts the debug log file and the test_cec_problem executable file
+# The following line puts the debug log file and the binval executable file
 # under the build/ tree.
 cd $build_dir
 
@@ -31,12 +31,11 @@ and c++ -Wall -Wextra -pedantic -std=c++17 -lstdc++fs \
   -I$external_dir/json/include \
   -isystem $external_dir/googletest/googletest/include \
   -isystem $external_dir/googletest/googletest \
-  $tests_dir/problem/test_cec_problem.cpp \
-  $tests_dir/entrypoint.cpp \
-  -o test_cec_problem \
+  $tests_dir/problem/binval.cpp \
+  -o binval \
   $build_dir/../lib/libgtest.a -lpthread
 
 and rm -f $c_implementation_cec_transformations_folder
 and ln -s $ioh_cec_transformations_folder $c_implementation_cec_transformations_folder
 
-and ./test_cec_problem
+and ./binval

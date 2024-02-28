@@ -2,6 +2,11 @@
 
 #include "ioh/problem/dynamic_bin_val.hpp"
 
+#include <iostream>
+#include <vector>
+#include <random>
+#include <algorithm>
+
 #define LOG_FILE_NAME "test.log"
 
 #define LOG(message)                                                           \
@@ -15,46 +20,102 @@
     debug_log.close();                                                         \
   } while (0)
 
-int main()
-{
-  const auto &dyn_problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinValRanking>::instance();
-  auto d = dyn_problem_factory.create(10004, 1, 5);
+int main() {
+    const int population_size = 50;
+    const int num_variables = 50;
+    const int max_iterations = 10000;
+    const double mutation_rate = 0.01;
+    std::default_random_engine generator;
+    std::uniform_real_distribution<double> distribution(0.0, 1.0);
 
-  // Create a list of bitstrings
-  std::vector<std::vector<int>> bitstrings = {
-    {1, 0, 1, 1, 1},
-    {0, 1, 0, 1, 1},
-    {1, 1, 0, 0, 1},
-    {0, 0, 0, 1, 0},
-    {1, 0, 0, 0, 1}
-  };
+    // Create an instance of DynamicBinValPareto
+    ioh::problem::DynamicBinValPareto problem(1, num_variables);
 
-  // Log the original order of bitstrings
-  LOG("Original order of bitstrings:");
-  for(const auto &bits : bitstrings) {
-    std::string bitstring;
-    for(int bit : bits) {
-      bitstring += std::to_string(bit);
+    // Initialize population
+    std::vector<std::vector<int>> population(population_size, std::vector<int>(num_variables));
+    for (auto &individual : population) {
+        for (auto &gene : individual) {
+            gene = distribution(generator) < 0.5 ? 0 : 1;
+        }
     }
-    LOG(bitstring);
-  }
 
-  // Sort the bitstrings
-  std::vector<std::vector<int>> sorted_bitstrings = d->rank(bitstrings);
-  std::vector<int> indices = d->rank_indices(bitstrings);
+    // Main GA loop
+    for (int iteration = 0; iteration < max_iterations; ++iteration) {
 
-  // Log the sorted order of sorted_bitstrings
-  LOG("Sorted order of sorted_bitstrings:");
-  for (size_t i = 0; i < sorted_bitstrings.size(); ++i) {
-      const auto& bits = sorted_bitstrings[i];
-      std::string bitstring;
-      for (int bit : bits) {
-          bitstring += std::to_string(bit);
+      if (iteration < 2)
+      {
+
+        std::vector<int> best_individual = population[0];
+        double best_fitness = problem(population[0]);
+        std::cout << "Best Solution: ";
+        for (int gene : best_individual) {
+        std::cout << gene << " ";
+        }
+        std::cout << "\n iteration: " << iteration << "\n";
+        std::cout << "\nBest Fitness: " << best_fitness << "\n";
+
+        std::cout << "\n best_individual.state(): " << problem.state() << "\n";
       }
 
-      // Log the corresponding index from the indices vector
-      LOG("Bitstring: " + bitstring + " | Original Index: " + std::to_string(indices[i]));
-  }
+        // Evaluate population
+        std::vector<double> fitness(population_size);
+        for (int i = 0; i < population_size; ++i) {
+            fitness[i] = problem(population[i]);
+        }
 
-  return 0;
+        // Selection (tournament selection)
+        std::vector<std::vector<int>> mating_pool;
+        for (int i = 0; i < population_size; ++i) {
+            int a = std::uniform_int_distribution<>(0, population_size - 1)(generator);
+            int b = std::uniform_int_distribution<>(0, population_size - 1)(generator);
+            mating_pool.push_back(fitness[a] > fitness[b] ? population[a] : population[b]);
+        }
+
+        // Crossover (uniform crossover)
+        for (int i = 0; i < population_size; i += 2) {
+            for (int j = 0; j < num_variables; ++j) {
+                if (distribution(generator) < 0.5) {
+                    std::swap(mating_pool[i][j], mating_pool[i+1][j]);
+                }
+            }
+        }
+
+        // Mutation
+        for (auto &individual : mating_pool) {
+            for (auto &gene : individual) {
+                if (distribution(generator) < mutation_rate) {
+                    gene = 1 - gene; // Flip the gene
+                }
+            }
+        }
+
+        // Replace the old population with the new population
+        population = mating_pool;
+    }
+
+    // Find the best solution in the final population
+    double best_fitness = problem(population[0]);
+    std::vector<int> best_individual = population[0];
+    for (int i = 1; i < population_size; ++i) {
+        double current_fitness = problem(population[i]);
+        if (current_fitness > best_fitness) {
+            best_fitness = current_fitness;
+            best_individual = population[i];
+        }
+    }
+
+    // Output the best solution
+    std::cout << "Best Solution: ";
+    for (int gene : best_individual) {
+        std::cout << gene << " ";
+    }
+    std::cout << "\nBest Fitness: " << best_fitness << "\n";
+
+    std::cout << "\n best_individual.state(): " << problem.state() << "\n";
+    std::cout << "\n best_individual.state().current_best_internal: " << problem.state().current_best_internal << "\n";
+    std::cout << "\n best_individual.state().current_best: " << problem.state().current_best << "\n";
+    std::cout << "\n best_individual.state().current_internal: " << problem.state().current_internal << "\n";
+    std::cout << "\n best_individual.state().current: " << problem.state().current << "\n";
+
+    return 0;
 }
