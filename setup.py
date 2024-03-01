@@ -11,7 +11,6 @@ from setuptools.command.build_ext import build_ext
 from doc.generate_docs import main, generate_stubs
 
 
-
 DIR = os.path.realpath(os.path.dirname(__file__))
 with open(os.path.join(DIR, "VERSION")) as f:
     __version__ = f.read().strip()
