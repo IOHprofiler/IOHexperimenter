@@ -219,6 +219,12 @@ namespace ioh
             //! Tracks whether the last update has caused an improvement
             bool has_improved;
 
+            //! The value of additive noise
+            double y_noise;
+
+            //! The y value without additive noise
+            double y_noiseless;
+
             State() = default;
 
             /**
@@ -237,6 +243,8 @@ namespace ioh
                 y_unconstrained = y_unconstrained_best = initial_solution.y;
                 optimum_found = false;
                 has_improved = false;
+                y_noise = 0.;
+                y_noiseless = 0.;
             }
 
             void invert(){

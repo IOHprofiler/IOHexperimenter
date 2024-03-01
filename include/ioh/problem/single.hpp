@@ -78,10 +78,18 @@ namespace ioh::problem
             }   
 
             state.current.y *= inverter_;
+            state.y_noiseless = state.current.y;
 
-            if (std::abs(sigma_noise_) > 0) {
-                const double noise = sigma_noise_ * noise_sampler_(common::random::GENERATOR);
-                state.current.y += std::abs(noise) * state.current.y;
+            if (std::abs(sigma_noise_) > 0) { 
+                // This noise model is stupid af
+                const double noise_level = std::abs(sigma_noise_ * noise_sampler_(common::random::GENERATOR));
+                const double delta_y = (state.y_noiseless - this->optimum_.y);
+                state.y_noise = delta_y * noise_level;
+
+                if (this->meta_data_.optimization_type == common::OptimizationType::MIN)
+                    state.current.y += state.y_noise;
+                else
+                    state.current.y -= state.y_noise;
             }
         }
 
