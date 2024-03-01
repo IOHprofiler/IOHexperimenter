@@ -293,8 +293,7 @@ void define_problem_bases(py::module &m)
 }
 
 
-template <typename P>
-void define_bbob_problems(py::module &mi, const std::string &name = "BBOB", const bool submodule = false);
+void define_bbob(py::module &m);
 void define_pbo_problems(py::module &m);
 void define_cec2013_problems(py::module &m);
 void define_cec2022_problems(py::module &m);
@@ -306,8 +305,8 @@ void define_many_affine(py::module &m);
 void define_problem(py::module &m)
 {
     define_problem_bases(m);
-    define_bbob_problems<ioh::problem::BBOB>(m);
-    define_bbob_problems<ioh::problem::SBOX>(m, "SBOX", true);
+
+    define_bbob(m);
     define_pbo_problems(m);
     define_cec2013_problems(m);
     define_cec2022_problems(m);

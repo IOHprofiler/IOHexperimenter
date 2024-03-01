@@ -463,3 +463,8 @@ void define_many_affine(py::module& m){
         .def_property_readonly("sub_problems", &ioh::problem::bbob::ManyAffine::get_problems)
         .def_property_readonly("function_values", &ioh::problem::bbob::ManyAffine::get_function_values);
 }
+
+void define_bbob(py::module& m){
+    define_bbob_problems<ioh::problem::BBOB>(m);
+    define_bbob_problems<ioh::problem::SBOX>(m, "SBOX", true);
+}
