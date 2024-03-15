@@ -40,7 +40,6 @@ namespace ioh::problem
     public:
 
         double pareto_shape;                            // Alpha parameter for the Pareto distribution
-        double pareto_upper_bound;
         int timestep;                                   /**< The current timestep in the dynamic binary value problem scenario. */
         std::default_random_engine random_generator;
         std::vector<double> weights;             /**< A vector of weights used in the evaluation of the problem. */
@@ -68,9 +67,6 @@ namespace ioh::problem
                 )
             ),
             pareto_shape(0.1),
-            pareto_upper_bound(
-                static_cast<double>(std::numeric_limits<double>::max()) / static_cast<double>(n_variables)
-            ),
             timestep(0),
             random_generator(instance)
         {
@@ -86,7 +82,7 @@ namespace ioh::problem
 
                 // Calculate the weight using the power-law distribution inversion formula
                 // Truncate the distribution to prevent overflow when weights are summed
-                auto pareto_distributed = std::min(std::pow(1.0 - uniform_sample, -1.0 / pareto_shape), pareto_upper_bound);
+                auto pareto_distributed = std::pow(1.0 - uniform_sample, -1.0 / pareto_shape);
                 this->weights[i] = static_cast<double>(pareto_distributed);
             }
 
@@ -105,7 +101,7 @@ namespace ioh::problem
             for(size_t i = 0; i < this->weights.size(); ++i)
             {
                 double uniform_sample = distribution(this->random_generator);
-                auto pareto_distributed = std::min(std::pow(1.0 - uniform_sample, -1.0 / pareto_shape), pareto_upper_bound);
+                auto pareto_distributed = std::pow(1.0 - uniform_sample, -1.0 / pareto_shape);
                 this->weights[i] = static_cast<double>(pareto_distributed);
             }
 
@@ -120,11 +116,6 @@ namespace ioh::problem
         const double get_pareto_shape() const
         {
             return pareto_shape;
-        }
-
-        const double get_pareto_upper_bound() const
-        {
-            return pareto_upper_bound;
         }
 
     protected:
