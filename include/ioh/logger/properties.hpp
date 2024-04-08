@@ -137,7 +137,7 @@ namespace ioh
         struct Evaluations : public logger::Property
         {
             //! Constructor.
-            Evaluations(const std::string& name = "evaluations", const std::string &format = "{:g}") :
+            Evaluations(const std::string& name = "evaluations", const std::string &format = "{:d}") :
                 logger::Property(name, format)
             {
             }
