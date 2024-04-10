@@ -194,3 +194,4 @@ gsemo.cpp
 .conda_environment
 concepts
 tests/python/nevergrad.benchmark.Experiment/
+.deploy/conda_environment/
