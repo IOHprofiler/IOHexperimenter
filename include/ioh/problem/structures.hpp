@@ -250,6 +250,7 @@ namespace ioh
                     current_best_internal = current_internal;
                 }
 
+                // This calls the operator() of a class. See: include/ioh/common/optimization_type.hpp:64
                 bool has_external_improved = meta_data.optimization_type(current.y, current_best.y);
                 if (has_external_improved)
                 {
@@ -257,10 +258,12 @@ namespace ioh
                     current_best = current;
 
                     if (objective.y == current.y)
+                    {
                         optimum_found = true;
+                    }
                 }
 
-                has_improved = has_internal_improved || has_external_improved;
+                has_improved = has_internal_improved;
             }
 
             std::string repr() const override
