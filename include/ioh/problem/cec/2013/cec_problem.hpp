@@ -27,8 +27,12 @@ namespace ioh::problem
     public:
         //! Number of global optima
         size_t n_optima;
+
         //! The minimal distance between each optima
         double rho;
+
+        //! Vector containing all global optima to the problem
+        std::vector<Solution<double, SingleObjective>> optima;
 
         /**
          * @brief Constructs a new CEC problem instance.
@@ -38,16 +42,19 @@ namespace ioh::problem
          * @param n_variables The number of variables in the problem, representing the dimensionality of the search
          * @param lb The lower bound of the problem
          * @param ub The lower bound of the problem
-         * @param n_optima The number of global optima
+         * @param opts The vector with all optima to a problem
          * @param rho The minimal distance between each optima
          * space.
          * @param name A unique name for the problem.
          */
-        CEC2013(const int problem_id, const int instance, const int n_variables, const std::string &name, const double lb, const double ub, const size_t n_optima, const double rho = 0.01) :
+        CEC2013(const int problem_id, const int instance, const int n_variables, const std::string &name, const double lb, const double ub, const std::vector<Solution<double, SingleObjective>>& opts, const double rho = 0.01) :
             RealSingleObjective(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::MAX),
                                 Bounds<double>(n_variables, lb, ub)),
-            n_optima(n_optima), rho(rho)
+            n_optima(opts.size()),
+            rho(rho),
+            optima(opts)
         {
+            optimum_ = optima[0];
         }  
     };
 

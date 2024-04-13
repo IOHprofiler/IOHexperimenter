@@ -7,7 +7,6 @@ namespace ioh::problem
 {
     namespace cec2013
     {
-
         class EqualMaxima final : public CEC2013Problem<EqualMaxima>
         {
         protected:
@@ -18,10 +17,14 @@ namespace ioh::problem
 
         public:
             EqualMaxima(const int instance, const int n_variables) :
-                CEC2013Problem(1102, instance, n_variables, "CEC2013EqualMaxima", 0, 1, 5)
+                CEC2013Problem(1102, instance, n_variables, "CEC2013EqualMaxima", 0, 1, {
+                    {{0.1}, 1.0},
+                    {{0.3}, 1.0},
+                    {{0.5}, 1.0},
+                    {{0.7}, 1.0},
+                    {{0.9}, 1.0},
+                })
             {
-                optimum_.x = {0.1};
-                optimum_.y = {1.0};
             }
         };
     } // namespace cec2013

@@ -190,7 +190,6 @@ namespace ioh::problem
 #endif
     };
 
-
     //! Type def for Real problems
     using RealSingleObjective = SingleObjectiveProblem<double>;
 

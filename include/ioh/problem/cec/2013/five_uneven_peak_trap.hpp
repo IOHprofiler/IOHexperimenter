@@ -35,10 +35,11 @@ namespace ioh::problem
 
         public:
             FivePeaks(const int instance, const int n_variables) :
-                CEC2013Problem(1101, instance, n_variables, "CEC2013FivePeaks", 0, 30, 2)
+                CEC2013Problem(1101, instance, n_variables, "CEC2013FivePeaks", 0, 30, {
+                    {{0.}, 200.0},
+                    {{30}, 200.0},
+                })
             {
-                optimum_.x = {0.0};
-                optimum_.y = {200.0};
             }
         };
     } // namespace cec2013

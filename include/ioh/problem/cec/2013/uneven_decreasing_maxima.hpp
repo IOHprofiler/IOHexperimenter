@@ -19,10 +19,10 @@ namespace ioh::problem
 
         public:
             UnevenEqualMaxima(const int instance, const int n_variables) :
-                CEC2013Problem(1103, instance, n_variables, "CEC2013UnevenEqualMaxima", 0, 1, 1)
+                CEC2013Problem(1103, instance, n_variables, "CEC2013UnevenEqualMaxima", 0, 1, {
+                    {{0.07969978}, 0.999999828},
+                })
             {
-                optimum_.x = {0.08};
-                optimum_.y = evaluate(optimum_.x);
             }
 
         };
