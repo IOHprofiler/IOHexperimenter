@@ -11,7 +11,7 @@ namespace ioh::problem
         class FivePeaks final : public CEC2013Problem<FivePeaks>
         {
         protected:
-            double evaluate(const std::vector<double> &z) override
+            double inner_evaluate(const std::vector<double> &z) override
             {
                 const double x = z[0];
                 if (x >= 0 and x < 2.50)

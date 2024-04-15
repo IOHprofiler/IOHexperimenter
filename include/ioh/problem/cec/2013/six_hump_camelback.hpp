@@ -11,7 +11,7 @@ namespace ioh::problem
         class SixHumpCamelback final : public CEC2013Problem<SixHumpCamelback>
         {
         protected:
-            double evaluate(const std::vector<double> &x) override
+            double inner_evaluate(const std::vector<double> &x) override
             {
                 const double x2 = std::pow(x[0], 2);
                 const double x4 = std::pow(x[0], 4);

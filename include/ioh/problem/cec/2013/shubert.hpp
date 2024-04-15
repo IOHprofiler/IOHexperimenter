@@ -67,7 +67,7 @@ namespace ioh::problem
         class Shubert final : public CEC2013Problem<Shubert>
         {
         protected:
-            double evaluate(const std::vector<double> &x) override { return shubert::shubert(x); }
+            double inner_evaluate(const std::vector<double> &x) override { return shubert::shubert(x); }
 
         public:
             Shubert(const int problem_id, const std::string &name, const int n_variables, const std::vector<Solution<double, SingleObjective>>& opts) :

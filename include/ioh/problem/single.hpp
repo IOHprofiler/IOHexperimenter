@@ -126,7 +126,7 @@ namespace ioh::problem
             sigma_noise_ = sigma_noise;
         }
         //! Convert function from minimization to maximization or from maximization to minization
-        void invert() {
+        virtual void invert() {
             inverter_ *= -1.0;
             if (!std::isnan(this->optimum_.y))
                 this->optimum_.y *= -1.0;

@@ -11,7 +11,7 @@ namespace ioh::problem
         class Himmelblau final : public CEC2013Problem<Himmelblau>
         {
         protected:
-            double evaluate(const std::vector<double> &x) override
+            double inner_evaluate(const std::vector<double> &x) override
             {
                 return 200 - std::pow(std::pow(x[0], 2) + x[1] - 11, 2) - std::pow(x[0] + std::pow(x[1], 2) - 7, 2);
 

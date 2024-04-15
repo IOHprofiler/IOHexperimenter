@@ -195,7 +195,11 @@ void define_cec2013_problems(py::module &m)
             "problems", [](py::object) { return ioh::common::Factory<CEC2013, int, int>::instance().map(); },
             "All registered problems")
         .def_readonly("n_optima", &CEC2013::n_optima)
-        .def_readonly("rho", &CEC2013::rho);
+        .def_readonly("optima", &CEC2013::optima)
+        .def_readonly("single_global_optimum", &CEC2013::single_global_optimum)
+        .def_readonly("sphere_limit", &CEC2013::sphere_limit)
+        .def_readonly("rho", &CEC2013::rho)
+        .def("set_optimum", &CEC2013::set_optimum, py::arg("i"), py::arg("single_global") = true);
 
     using namespace cec2013;
 

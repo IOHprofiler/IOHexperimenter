@@ -11,7 +11,7 @@ namespace ioh::problem
         class UnevenEqualMaxima final : public CEC2013Problem<UnevenEqualMaxima>
         {
         protected:
-            double evaluate(const std::vector<double> &z) override
+            double inner_evaluate(const std::vector<double> &z) override
             {
                 return std::exp(-2.0 * std::log(2) * std::pow((z[0] - 0.08) / 0.854, 2)) *
                     std::pow(std::sin(5 * IOH_PI * (std::pow(z[0], 0.75) - 0.05)), 6);

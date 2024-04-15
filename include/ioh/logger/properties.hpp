@@ -147,6 +147,15 @@ namespace ioh
                 // This should always be accessible, so the optional will always contain the variable.
                 return std::make_optional(static_cast<double>(log_info.evaluations));
             }
+
+            [[nodiscard]] std::string call_to_string(const logger::Info &log_info,
+                                                             const std::string &nan = "") const override
+            {
+                auto opt = (*this)(log_info);
+                if (opt)
+                    return fmt::format(format(), static_cast<int>(opt.value()));
+                return nan;
+            }
         };
         /** Number of evaluations of the objective function called by the solver.
          *

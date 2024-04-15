@@ -24,6 +24,30 @@ namespace ioh::problem
          */
         std::vector<double> transform_variables(std::vector<double> x) override { return x; }
 
+        /**
+         * @brief calls inner evaluate and adds a single sphere function to the location if
+         * single_global_optimum is true;
+         * 
+         * @param x The original input variables.
+         * @return the objective function value
+        */
+        double evaluate(const std::vector<double> &x) override {
+            const double inner = inner_evaluate(x);
+
+            if (single_global_optimum)
+            {
+                auto x_sphere = x;
+                transformation::variables::subtract(x_sphere, this->optimum_.x);
+                const double flat_sphere = std::min(sphere(x_sphere), sphere_limit);
+
+                return inner - flat_sphere;
+            }                
+            return inner;
+        }
+
+        //! Should be override in child classes like evaluate
+        virtual double inner_evaluate(const std::vector<double> &x) = 0;
+
     public:
         //! Number of global optima
         size_t n_optima;
@@ -33,6 +57,12 @@ namespace ioh::problem
 
         //! Vector containing all global optima to the problem
         std::vector<Solution<double, SingleObjective>> optima;
+
+        //! Denotes whether the optimum is enfored (a sphere function added to the location of the optimum)
+        bool single_global_optimum;
+
+        //! The maximum value that gets added to by a sphere function whenever a single global optimum is selected
+        double sphere_limit = 0.01;
 
         /**
          * @brief Constructs a new CEC problem instance.
@@ -52,10 +82,33 @@ namespace ioh::problem
                                 Bounds<double>(n_variables, lb, ub)),
             n_optima(opts.size()),
             rho(rho),
-            optima(opts)
+            optima(opts),
+            single_global_optimum(false)
         {
             optimum_ = optima[0];
         }  
+
+        void set_optimum(const size_t i, bool single_global = true) 
+        {
+            const double y_opt = optimum_.y;
+            const size_t selected_opt = i % n_optima;
+
+            optimum_ = optima[selected_opt];
+            optimum_.y = y_opt;
+            single_global_optimum = single_global;
+
+            for (size_t j = 0; j < n_optima; j++)
+            {
+                if(selected_opt == j) continue;
+                optima[j].y = y_opt - sphere_limit;
+            }
+        }
+
+        void invert() override {
+            RealSingleObjective::invert();
+            for(auto& sol: optima)
+                sol.y *= -1;
+        }
     };
 
     /**

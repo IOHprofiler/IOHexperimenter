@@ -40,7 +40,7 @@ namespace ioh::problem
         class Vincent final : public CEC2013Problem<Vincent>
         {
         protected:
-            double evaluate(const std::vector<double> &x) override
+            double inner_evaluate(const std::vector<double> &x) override
             {
                 double result = 0;
 
@@ -52,10 +52,8 @@ namespace ioh::problem
 
         public:
             Vincent(const int problem_id, const std::string &name, const int n_variables) :
-                CEC2013Problem(problem_id, 1, n_variables, name, 0.25, 10.0, vincent::get_optima(n_variables), 0.2)
+                CEC2013Problem(problem_id, 1, n_variables, name, 0.25, 10.0, vincent::get_optima(n_variables), 0.19)
             {
-                // optimum_.x = std::vector<double>(n_variables, 1.0/3.0);
-                // optimum_.y = evaluate(optimum_.x);
             }
         };
     } // namespace cec2013

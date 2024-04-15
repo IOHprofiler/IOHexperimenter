@@ -10,7 +10,7 @@ namespace ioh::problem
         class EqualMaxima final : public CEC2013Problem<EqualMaxima>
         {
         protected:
-            double evaluate(const std::vector<double> &z) override
+            double inner_evaluate(const std::vector<double> &z) override
             {
                 return std::pow(std::sin(5.0 * IOH_PI * z[0]), 6);
             }

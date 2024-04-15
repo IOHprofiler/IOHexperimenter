@@ -66,7 +66,7 @@ namespace ioh::problem
             }
 
         protected:
-            double evaluate(const std::vector<double> &x) override
+            double inner_evaluate(const std::vector<double> &x) override
             {
                 calculate_weights(x);
 

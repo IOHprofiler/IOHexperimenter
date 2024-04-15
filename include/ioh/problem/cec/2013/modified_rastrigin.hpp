@@ -11,7 +11,7 @@ namespace ioh::problem
         class ModifiedRastrigin final : public CEC2013Problem<ModifiedRastrigin>
         {
         protected:
-            double evaluate(const std::vector<double> &x) override
+            double inner_evaluate(const std::vector<double> &x) override
             {
                 return -((10.0 + 9.0 * std::cos(2.0 * IOH_PI * 3.0 * x[0])) +
                          (10.0 + 9.0 * std::cos(2.0 * IOH_PI * 4.0 * x[1])));
