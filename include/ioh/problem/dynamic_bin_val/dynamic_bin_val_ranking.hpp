@@ -162,7 +162,7 @@ namespace ioh::problem
             return comparison_ordering;
         }
 
-        const int get_timestep() const
+        int get_timestep() const
         {
             return timestep;
         }

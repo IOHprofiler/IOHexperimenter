@@ -113,7 +113,7 @@ namespace ioh::problem
             return this->timestep;
         }
 
-        const double get_pareto_shape() const
+        double get_pareto_shape() const
         {
             return pareto_shape;
         }
@@ -132,7 +132,7 @@ namespace ioh::problem
             return x;
         }
 
-        double transform_objectives(const double y) override
+        double transform_objectives(const double /* y */) override
         {
             double value = 0.0;
             for(size_t i = 0; i < this->transformed_x.size(); ++i)
