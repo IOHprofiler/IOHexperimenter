@@ -70,9 +70,6 @@ void define_state(py::module &m, const std::string &name)
         .def_readonly("y_unconstrained_best", &Class::y_unconstrained_best, "The current best unconstrained value.")
         .def_readonly("has_improved", &Class::has_improved,
                       "Whether the last call to problem has caused global improvement.")
-
-        .def_readonly("y_noise", &Class::y_noise, "the current additive noise")
-        .def_readonly("y_noiseless", &Class::y_noiseless, "the current additive noise")
         .def("__repr__", &Class::repr);
 }
 
@@ -366,6 +363,4 @@ void define_helper_classes(py::module &m)
         .def_readonly("objective", &ioh::logger::Info::optimum, "The best possible fitness value")
         .def_readonly("has_improved", &ioh::logger::Info::has_improved,
                       "Whether the last call to problem has caused global improvement.")
-        .def_readonly("y_noise", &ioh::logger::Info::y_noise, "the current additive noise")
-        .def_readonly("y_noiseless", &ioh::logger::Info::y_noiseless, "the current additive noise");
 }

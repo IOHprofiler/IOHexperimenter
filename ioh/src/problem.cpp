@@ -200,8 +200,6 @@ void define_base_class(py::module &m, const std::string &name)
         .def("set_id", &ProblemType::set_id, py::arg("new_problem_id"), "update the problem id")
         .def("set_instance", &ProblemType::set_instance, py::arg("new_instance"), "update the problem instance")
         .def("set_name", &ProblemType::set_name, py::arg("new_name"), "update the problem name")
-        .def("get_noise_level", &ProblemType::get_noise_level)
-        .def("set_noise_level", &ProblemType::set_noise_level, py::arg("sigma_noise"))
         .def("invert", &ProblemType::invert)
         .def("__repr__", [=](const ProblemType &p) {
             using namespace ioh::common;

@@ -12,13 +12,6 @@ namespace ioh::problem
     template <typename T>
     class SingleObjectiveProblem : public Problem<T, SingleObjective>
     {
-    private:
-        //! Noise level
-        double sigma_noise_ = 0.0;
-
-        //! Noise sampler (standard normal samples)
-        common::random::normal<double> noise_sampler_{};
-
         //! Inversion multiplier
         double inverter_ = 1.0;
     public:
@@ -37,14 +30,12 @@ namespace ioh::problem
                 State<T, SingleObjective>(
                     {std::vector<T>(meta_data.n_variables, std::numeric_limits<T>::signaling_NaN()),
                      meta_data.optimization_type.initial_value()}),
-                optimum)//,
-                // sigma_noise_(0.0),
-                // noise_sampler_{},
+                optimum)
         {
         }
 
         /**
-         * @brief Construct a new Problem object with an unkown solution
+         * @brief Construct a new Problem object with an unknown solution
          *
          * @param meta_data meta data for the problem
          * @param bounds the bounds to the problem
@@ -76,21 +67,7 @@ namespace ioh::problem
                 state.y_unconstrained = this->transform_objectives(state.current_internal.y);
                 state.current.y = this->constraintset_.penalize(state.y_unconstrained);
             }   
-
             state.current.y *= inverter_;
-            state.y_noiseless = state.current.y;
-
-            if (std::abs(sigma_noise_) > 0) { 
-                // This noise model is stupid af
-                const double noise_level = std::abs(sigma_noise_ * noise_sampler_(common::random::GENERATOR));
-                const double delta_y = (state.y_noiseless - this->optimum_.y);
-                state.y_noise = delta_y * noise_level;
-
-                if (this->meta_data_.optimization_type == common::OptimizationType::MIN)
-                    state.current.y += state.y_noise;
-                else
-                    state.current.y -= state.y_noise;
-            }
         }
 
         void update_state_and_log() {
@@ -105,7 +82,7 @@ namespace ioh::problem
 
 
         //! Main call interface
-        virtual double operator()(const std::vector<T> &x) override
+        double operator()(const std::vector<T> &x) override
         {
             if (!this->check_input(x))
                 return std::numeric_limits<double>::signaling_NaN();
@@ -116,15 +93,6 @@ namespace ioh::problem
             return this->state_.current.y;
         }
 
-        //! Accessor for sigma_noise_
-        double get_noise_level() const {
-            return sigma_noise_;
-        }
-
-        //! Accessor for sigma_noise_
-        void set_noise_level(const double sigma_noise) {
-            sigma_noise_ = sigma_noise;
-        }
         //! Convert function from minimization to maximization or from maximization to minization
         virtual void invert() {
             inverter_ *= -1.0;

@@ -10,7 +10,7 @@ namespace ioh::problem
         namespace vincent {
             inline std::vector<Solution<double, SingleObjective>> get_optima(const int dimension) 
             {
-                const constexpr std::array<double, 6> coords {
+                const static std::array<double, 6> coords {
                     std::exp((IOH_PI * -2) / 5.0 - IOH_PI / 20.0),
                     std::exp((IOH_PI * -1) / 5.0 - IOH_PI / 20.0),
                     std::exp((IOH_PI * 0) / 5.0 - IOH_PI / 20.0),

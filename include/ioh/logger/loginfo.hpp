@@ -62,12 +62,6 @@ namespace ioh {
             //! Single objective check whether state-update has caused an improvement
             bool has_improved;
 
-             //! The value of additive noise
-            double y_noise;
-
-            //! The y value without additive noise
-            double y_noiseless;
-
 
             /**
             * @brief update the log info based on the constraint and state of the problem
@@ -106,9 +100,6 @@ namespace ioh {
                 x = std::vector<double>(state.current.x.begin(), state.current.x.end());
 
                 has_improved = state.has_improved;    
-
-                y_noise = state.y_noise;  
-                y_noiseless = state.y_noiseless;
             }
 
             /**
