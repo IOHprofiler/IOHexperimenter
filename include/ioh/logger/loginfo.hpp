@@ -66,7 +66,7 @@ namespace ioh {
             /**
             * @brief update the log info based on the constraint and state of the problem
             * 
-            * @tparam the type of the problem
+            * @tparam T the type of the problem
             * @param state the state of the problem
             * @param constraintset the set of constraints for the problem
             */
@@ -105,7 +105,7 @@ namespace ioh {
             /**
              * @brief allocate static (during a run) values for the log info
              *
-             * @tparam the type of the problem
+             * @tparam T the type of the problem
              * @param opt the optimum of the problem
              * @param constraintset the set of constraints for the problem
              */

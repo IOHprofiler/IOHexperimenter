@@ -14,8 +14,10 @@ namespace ioh::problem
          * @param y The original objective function value.
          * @return The transformed objective function value.
          */
-        double transform_objectives(const double y) override { return y; }
-
+        double transform_objectives(const double y) override
+        {
+            return transformation::objective::shift(y, this->optimum_.y);
+        }
         /**
          * @brief Transforms the input variables based on the current transformation data.
          *
@@ -32,8 +34,8 @@ namespace ioh::problem
          * @return the objective function value
         */
         double evaluate(const std::vector<double> &x) override {
-            const double inner = inner_evaluate(x);
-
+            const double inner = inner_evaluate(x) - this->optimum_.y;
+            
             if (single_global_optimum)
             {
                 auto x_sphere = x;
@@ -58,7 +60,7 @@ namespace ioh::problem
         //! Vector containing all global optima to the problem
         std::vector<Solution<double, SingleObjective>> optima;
 
-        //! Denotes whether the optimum is enfored (a sphere function added to the location of the optimum)
+        //! Denotes whether the optimum is enforced (a sphere function added to the location of the optimum)
         bool single_global_optimum;
 
         //! The maximum value that gets added to by a sphere function whenever a single global optimum is selected
@@ -88,7 +90,7 @@ namespace ioh::problem
             optimum_ = optima[0];
         }  
 
-        void set_optimum(const size_t i, bool single_global = true) 
+        void set_optimum(const size_t i, const bool single_global = true) 
         {
             const double y_opt = optimum_.y;
             const size_t selected_opt = i % n_optima;

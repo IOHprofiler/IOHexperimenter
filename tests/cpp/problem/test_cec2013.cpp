@@ -47,17 +47,30 @@ TEST_F(BaseTest, inversion_logic)
         EXPECT_EQ(instance->meta_data().optimization_type, ioh::common::OptimizationType::MAX);
         instance->invert();
         EXPECT_EQ(instance->meta_data().optimization_type, ioh::common::OptimizationType::MIN);
-        
+
         EXPECT_NEAR(instance->optimum().y, -y_opt, 1e-8) << *instance;
 
-        for (const auto sol: instance->optima)
+        for (const auto sol : instance->optima)
         {
             const auto y = (*instance)(sol.x);
             EXPECT_NEAR(instance->optimum().y, y, 1e-8) << *instance;
             EXPECT_NEAR(y_opt, -y, 1e-8) << *instance;
         }
     }
+}
 
+TEST_F(BaseTest, test_raw_y_cec2013)
+{
+    const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC2013>::instance();
+    for (const auto &name : problem_factory.names())
+    {
+        auto instance = problem_factory.create(name, 1, 10);
+        const auto y = (*instance)(instance->optimum().x);
+        EXPECT_NEAR(instance->optimum().y, y, 1e-8) << *instance;
+        EXPECT_NEAR(instance->state().current_internal.y, 0.0, 1e-8) << *instance;
+        EXPECT_NEAR(instance->state().current.y, instance->optimum().y, 1e-8) << *instance;
+        EXPECT_NEAR(instance->log_info().raw_y, 0.0, 1e-8) << *instance;
+    }
 }
 
 TEST_F(BaseTest, xopt_equals_yopt_cec2013)
