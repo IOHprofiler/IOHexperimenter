@@ -108,7 +108,7 @@ namespace ioh::common::file
                     return root;
                 }
             }
-            IOH_DBG(warning, "could static root");
+            IOH_DBG(warning, "couldn't set static root");
             return {};
         }
 
