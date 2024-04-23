@@ -10,7 +10,7 @@ void test_star_discrepancy(std::shared_ptr<StarDiscrepancy> p, const double expe
 {
     EXPECT_EQ((*p)({11, 11}), -std::numeric_limits<double>::infinity());
     EXPECT_NEAR((*p)({9, 9}), expected, 1e-4);
-    EXPECT_NEAR((*p)({10, 10}), 0, 1e-4);
+    EXPECT_NEAR((*p)({10, 10}), 0.0, 1e-4);
 }
 
 
@@ -58,7 +58,7 @@ TEST_F(BaseTest, test_integer_star_suite)
         const auto n = dynamic_cast<StarDiscrepancy *>(problem.get())->get_grid().size();
         const auto xn = std::vector<int>(problem->meta_data().n_variables, n);
         const auto xn1 = std::vector<int>(problem->meta_data().n_variables, n + 1);
-        EXPECT_NEAR((*problem)(xn), 0, 1e-3);
+        EXPECT_NEAR((*problem)(xn), 0.0, 1e-3);
         EXPECT_EQ((*problem)(xn1), -std::numeric_limits<double>::infinity());
         EXPECT_EQ(problem->state().evaluations, 2);
     }

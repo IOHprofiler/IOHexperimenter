@@ -184,7 +184,7 @@ namespace ioh::common::random::sampler
         long long int j;
         long long int j2;
         long long int k;
-        long long int l;
+        long long int l = 0;
         static long long int lastq[DIM_MAX2];
         long long int m;
         static long long int maxcol;

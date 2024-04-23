@@ -11,7 +11,7 @@ namespace ioh::problem
         class Himmelblau final : public CEC2013Problem<Himmelblau>
         {
         protected:
-            double evaluate(const std::vector<double> &x) override
+            double inner_evaluate(const std::vector<double> &x) override
             {
                 return 200 - std::pow(std::pow(x[0], 2) + x[1] - 11, 2) - std::pow(x[0] + std::pow(x[1], 2) - 7, 2);
 
@@ -19,10 +19,13 @@ namespace ioh::problem
 
         public:
             Himmelblau(const int instance, const int n_variables) :
-                CEC2013Problem(1104, instance, n_variables, "CEC2013Himmelblau", -6, 6, 4)
+                CEC2013Problem(1104, instance, n_variables, "CEC2013Himmelblau", -6, 6, {
+                    {{3, 2}, 200.0},
+                    {{-2.805118, 3.131312}, 200.0},
+                    {{-3.779310, -3.283186}, 200.0},
+                    {{3.584428, -1.848126}, 200.0},
+                })
             {
-                optimum_.x = {3.0, 2.0};
-                optimum_.y = {200.0};
             }
         };
     } // namespace cec2013

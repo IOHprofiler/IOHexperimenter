@@ -66,7 +66,7 @@ namespace ioh {
             /**
             * @brief update the log info based on the constraint and state of the problem
             * 
-            * @tparam the type of the problem
+            * @tparam T the type of the problem
             * @param state the state of the problem
             * @param constraintset the set of constraints for the problem
             */
@@ -99,13 +99,13 @@ namespace ioh {
 
                 x = std::vector<double>(state.current.x.begin(), state.current.x.end());
 
-                has_improved = state.has_improved;        
+                has_improved = state.has_improved;    
             }
 
             /**
              * @brief allocate static (during a run) values for the log info
              *
-             * @tparam the type of the problem
+             * @tparam T the type of the problem
              * @param opt the optimum of the problem
              * @param constraintset the set of constraints for the problem
              */

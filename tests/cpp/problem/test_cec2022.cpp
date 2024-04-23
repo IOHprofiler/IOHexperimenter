@@ -27,6 +27,21 @@ TEST_F(BaseTest, test_cec2022)
     }
 }
 
+TEST_F(BaseTest, test_raw_y_cec2022)
+{
+    const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC2022>::instance();
+    for (const auto &name : problem_factory.names())
+    {
+        auto instance = problem_factory.create(name, 1, 10);
+        const auto y = (*instance)(instance->optimum().x);
+        EXPECT_NEAR(instance->optimum().y, y, 1e-8) << *instance;
+        EXPECT_NEAR(instance->state().current_internal.y, 0.0, 1e-8) << *instance;
+        EXPECT_NEAR(instance->state().current.y, instance->optimum().y, 1e-8) << *instance;
+        EXPECT_NEAR(instance->log_info().raw_y, 0.0, 1e-8) << *instance;
+    }
+}
+
+
 TEST_F(BaseTest, xopt_equals_yopt_cec2022)
 {
     const auto& problem_factory = ioh::problem::ProblemRegistry<ioh::problem::CEC2022>::instance();

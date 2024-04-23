@@ -4,6 +4,7 @@
 #include <cmath>
 #include <numeric>
 #include <vector>
+#include <functional>
 
 #include "ioh/problem/transformation.hpp"
 

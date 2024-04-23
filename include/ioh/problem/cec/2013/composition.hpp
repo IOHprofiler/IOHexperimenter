@@ -13,14 +13,14 @@ namespace ioh::problem
         {
             void calculate_weights(const std::vector<double> &x)
             {
-                double maxi = weight[0];
+                double maxi = 0.0;
                 size_t max_index(0);
 
                 for (size_t i = 0; i < n_optima; ++i)
                 {
                     double sum = 0.0;
                     for (size_t j = 0; j < x.size(); ++j)
-                        sum += (x[j] - optima[i][j]) * (x[j] - optima[i][j]);
+                        sum += (x[j] - optima[i].x[j]) * (x[j] - optima[i].x[j]);
 
                     weight[i] = exp(-sum / (2.0 * static_cast<double>(x.size()) * sigmas[i] * sigmas[i]));
 
@@ -50,8 +50,9 @@ namespace ioh::problem
 
                 for (size_t i = 0; i < z.size(); ++i)
                 {
-                    const double xi = x[i] - (optima[index][i] * shift);
+                    const double xi = x[i] - (optima[index].x[i] * shift);
                     tmp[i] = xi / lambdas[index];
+
                 }
                 for (size_t i = 0; i < z.size(); ++i)
                 {
@@ -65,10 +66,10 @@ namespace ioh::problem
             }
 
         protected:
-            double evaluate(const std::vector<double> &x) override
+            double inner_evaluate(const std::vector<double> &x) override
             {
                 calculate_weights(x);
-                
+
                 double result = 0;
                 for (size_t i = 0; i < n_optima; i++)
                 {
@@ -82,13 +83,13 @@ namespace ioh::problem
 
         public:
             CompositionFunction(const int problem_id, const std::string &name, const int n_variables,
-                                const std::vector<std::vector<double>> &optima,
+                                const std::vector<Solution<double, SingleObjective>>& opts,
                                 const std::vector<std::vector<std::vector<double>>> &transformations,
                                 const std::vector<RealFunction> &functions, const std::vector<double> &sigmas,
                                 const std::vector<double> &lambdas) :
-                CEC2013Problem(problem_id, 1, n_variables, name, -5.0, 5.0, optima.size()),
-                optima(optima), transformations(transformations), functions(functions), sigmas(sigmas),
-                lambdas(lambdas), weight(optima.size(), 0.0), f_max(n_optima)
+                CEC2013Problem(problem_id, 1, n_variables, name, -5.0, 5.0, opts),
+                transformations(transformations), functions(functions), sigmas(sigmas),
+                lambdas(lambdas), weight(opts.size(), 0.0), f_max(n_optima)
             {
                 const auto x5 = std::vector<double>(meta_data().n_variables, 5.);
                 for (size_t i = 0; i < n_optima; ++i)
@@ -96,11 +97,8 @@ namespace ioh::problem
                     const auto z = transform_to_z(x5, i, false);
                     f_max[i] = functions[i](z);
                 }
-                optimum_.x.assign(optima[0].begin(), optima[0].begin() + meta_data_.n_variables);
-                optimum_.y = 0.0;
             }
 
-            std::vector<std::vector<double>> optima;
             std::vector<std::vector<std::vector<double>>> transformations;
             std::vector<RealFunction> functions;
             std::vector<double> sigmas;
@@ -110,13 +108,17 @@ namespace ioh::problem
         };
     } // namespace cec2013
 
-    inline std::vector<std::vector<double>> select_optima(std::vector<std::vector<double>> optima,
+    inline std::vector<Solution<double, SingleObjective>> select_optima(std::vector<std::vector<double>> optima,
                                                           const size_t n_optima, const size_t dimension)
     {
+        std::vector<Solution<double, SingleObjective>> result;
         optima.resize(n_optima);
         for (auto &opt : optima)
+        {
             opt.resize(dimension);
-        return optima;
+            result.emplace_back(opt, 0.0);
+        }
+        return result;
     }
 
     inline std::vector<std::vector<std::vector<double>>> get_identity_matrices(const size_t n_optima,

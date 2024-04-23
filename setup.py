@@ -11,7 +11,6 @@ from setuptools.command.build_ext import build_ext
 from doc.generate_docs import main, generate_stubs
 
 
-
 DIR = os.path.realpath(os.path.dirname(__file__))
 with open(os.path.join(DIR, "VERSION")) as f:
     __version__ = f.read().strip()
@@ -27,6 +26,11 @@ PLAT_TO_CMAKE = {
     "win-arm32": "ARM",
     "win-arm64": "ARM64",
 }
+
+# Avoid memory issues with high number of jobs on g++ on smaller machines
+if platform.system() == "Linux" and "CMAKE_BUILD_PARALLEL_LEVEL" not in os.environ:
+    os.environ["CMAKE_BUILD_PARALLEL_LEVEL"] = "4"
+
 
 if platform.system() == "Darwin":
     os.environ["CC"] = "clang"
@@ -113,6 +117,7 @@ class CMakeBuild(build_ext):
         # Set CMAKE_BUILD_PARALLEL_LEVEL to control the parallel build level
         # across all generators.
         if "CMAKE_BUILD_PARALLEL_LEVEL" not in os.environ:
+
             # self.parallel is a Python 3 only way to set parallel jobs by hand
             # using -j in the build_ext call, not supported by pip or PyPA-build.
             if hasattr(self, "parallel") and self.parallel:

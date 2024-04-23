@@ -109,6 +109,8 @@ class ProblemClass(enum.Enum):
 
     def is_real(self):
         return self in (
+                ProblemClass.CEC2013,
+                ProblemClass.CEC2022,
                 ProblemClass.REAL, 
                 ProblemClass.BBOB,
                 ProblemClass.SBOX,

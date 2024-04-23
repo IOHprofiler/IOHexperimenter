@@ -11,7 +11,7 @@ namespace ioh::problem
         class SixHumpCamelback final : public CEC2013Problem<SixHumpCamelback>
         {
         protected:
-            double evaluate(const std::vector<double> &x) override
+            double inner_evaluate(const std::vector<double> &x) override
             {
                 const double x2 = std::pow(x[0], 2);
                 const double x4 = std::pow(x[0], 4);
@@ -24,10 +24,11 @@ namespace ioh::problem
 
         public:
             SixHumpCamelback(const int instance, const int n_variables) :
-                CEC2013Problem(1105, instance, n_variables, "CEC2013SixHumpCamelback", -1.9, 1.9, 2)
+                CEC2013Problem(1105, instance, n_variables, "CEC2013SixHumpCamelback", -1.9, 1.9, {
+                    {{0.0898, -0.7126}, 1.03162842},
+                    {{-0.0898, 0.7126}, 1.03162842},
+                }, .5)
             {
-                optimum_.x = {0.0898, -0.7126};
-                optimum_.y = evaluate(optimum_.x);
             }
         };
     } // namespace cec2013
