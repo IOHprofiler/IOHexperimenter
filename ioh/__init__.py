@@ -20,13 +20,13 @@ import tarfile
 # WARNING: The os.environ should be manipulated before any package from .iohcpp is imported!
 # =================================================================================================
 # Get the directory containing the __init__.py file
-package_directory = os.path.dirname(__file__)
+# package_directory = os.path.dirname(__file__)
 
 # Construct the path to the static/ directory
-static_directory = os.path.join(package_directory, 'static')
+# static_directory = os.path.join(package_directory, 'static')
 
 # Set the IOH_RESOURCES environment variable to the path to the static/ directory
-os.environ['IOH_RESOURCES'] = static_directory
+# os.environ['IOH_RESOURCES'] = static_directory
 # =================================================================================================
 
 from .iohcpp import (
