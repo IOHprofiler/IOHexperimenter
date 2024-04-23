@@ -1,8 +1,0 @@
-#!/usr/bin/env fish
-
-true
-and rm -rf build/
-and mkdir build/
-and cd build/
-and cmake -DCMAKE_C_COMPILER=gcc-9 -DCMAKE_CXX_COMPILER=g++-9 -DCMAKE_INSTALL_PREFIX=IOHexperimenter ..
-and make install
