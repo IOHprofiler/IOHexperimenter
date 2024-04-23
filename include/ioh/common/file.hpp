@@ -78,51 +78,25 @@ namespace ioh::common::file
 
         /**
          * @brief Get the absolute path of IOHexperimenter/static
-         *
          * This function attempts to find the absolute path based on environment variables.
-         * It first checks if 'IOH_RESOURCES' is set and uses it if available.
-         * If 'IOH_RESOURCES' is not set, it then checks 'GITHUB_WORKSPACE'.
-         * If neither are set, it logs an error and returns a placeholder path.
-         *
-         * @return fs::path the absolute path of IOHexperimenter/static
-         */
-
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable : 4996)
-#endif
-        inline fs::path get_static_root_by_env()
-        {
-            // First, try to use the IOH_RESOURCES environment variable
-            const char* ioh_resources = std::getenv("IOH_RESOURCES");
-            if (ioh_resources != nullptr)
-            {
-                // If IOH_RESOURCES is set, return its value as a filesystem path
-                return fs::canonical(fs::path(ioh_resources));
-            }
-
-            // If IOH_RESOURCES is not set, fall back to GITHUB_WORKSPACE
-            const char* github_workspace = std::getenv("GITHUB_WORKSPACE");
-            if (github_workspace != nullptr)
-            {
-                // If GITHUB_WORKSPACE is set, append "static/" and return the canonical path
-                return fs::canonical(fs::path(github_workspace) / "static");
-            }
-
-            // If neither IOH_RESOURCES nor GITHUB_WORKSPACE are set, log an error and return a placeholder
-            std::cerr << "[get_static_root] Error: Neither IOH_RESOURCES nor GITHUB_WORKSPACE environment variables "
-                         "are set.\n";
-        }
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
-        /**
-         * @brief Get the absolute path of IOHexperimenter/static
+         * It first checks if 'IOH_RESOURCES' is set and uses it if available. Otherwise, it
+         * defaults to the location of static as found in the repository.
          *
          * @return fs::path the absolute path of IOHexperimenter/static
          */
         inline fs::path get_static_root()
         {
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#endif
+            if (const char *ioh_resources = std::getenv("IOH_RESOURCES"); ioh_resources != nullptr)
+            {
+                return fs::canonical(fs::path(ioh_resources));
+            }
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
             const auto static_root = fs::path("IOHexperimenter") / fs::path("static");
             fs::path root;
             for (const auto &e : fs::current_path())
