@@ -1,7 +1,6 @@
 #pragma once
 
 #include "problem.hpp"
-#include "src/gtest-internal-inl.h"
 
 namespace ioh::problem
 {
