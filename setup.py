@@ -28,11 +28,6 @@ PLAT_TO_CMAKE = {
     "win-arm64": "ARM64",
 }
 
-# g++ does not compile on the cluster MeSU:
-os.environ["CC"] = "clang"
-os.environ["CXX"] = "clang++"
-os.environ["CXXFLAGS"] = "-stdlib=libc++"
-
 if platform.system() == "Darwin":
     os.environ["CC"] = "clang"
     os.environ["CXX"] = "clang"
