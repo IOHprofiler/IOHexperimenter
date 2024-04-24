@@ -34,7 +34,7 @@ namespace ioh::problem
          * @return the objective function value
         */
         double evaluate(const std::vector<double> &x) override {
-            const double inner = inner_evaluate(x) - this->optimum_.y;
+            const double inner = this->optimum_.y - inner_evaluate(x);
             
             if (single_global_optimum)
             {
