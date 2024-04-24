@@ -15,10 +15,6 @@ dPtrMap
 
 Structs
 --------------------------------
-AlgorithmInfo
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenstruct:: ioh::logger::analyzer::structures::AlgorithmInfo
-
 Attribute
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: ioh::logger::analyzer::structures::Attribute
@@ -31,9 +27,9 @@ BestPoint
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: ioh::logger::analyzer::structures::BestPoint
 
-ExperimentInfo
+AlgorithmInfo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenstruct:: ioh::logger::analyzer::structures::ExperimentInfo
+.. doxygenstruct:: ioh::logger::analyzer::structures::AlgorithmInfo
 
 RunInfo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -42,4 +38,8 @@ RunInfo
 ScenarioInfo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: ioh::logger::analyzer::structures::ScenarioInfo
+
+ExperimentInfo
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenstruct:: ioh::logger::analyzer::structures::ExperimentInfo
 

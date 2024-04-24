@@ -30,6 +30,9 @@ LeadingOnesNeutrality
       ~LeadingOnesNeutrality.enforce_bounds
       ~LeadingOnesNeutrality.remove_constraint
       ~LeadingOnesNeutrality.reset
+      ~LeadingOnesNeutrality.set_id
+      ~LeadingOnesNeutrality.set_instance
+      ~LeadingOnesNeutrality.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ LeadingOnesNeutrality
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

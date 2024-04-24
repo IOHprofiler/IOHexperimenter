@@ -31,6 +31,9 @@ MaxCut
       ~MaxCut.load_instances
       ~MaxCut.remove_constraint
       ~MaxCut.reset
+      ~MaxCut.set_id
+      ~MaxCut.set_instance
+      ~MaxCut.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -53,3 +56,6 @@ MaxCut
    .. automethod:: load_instances
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

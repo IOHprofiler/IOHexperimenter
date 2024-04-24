@@ -30,6 +30,9 @@ RealSingleObjective
       ~RealSingleObjective.enforce_bounds
       ~RealSingleObjective.remove_constraint
       ~RealSingleObjective.reset
+      ~RealSingleObjective.set_id
+      ~RealSingleObjective.set_instance
+      ~RealSingleObjective.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ RealSingleObjective
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

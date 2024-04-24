@@ -30,6 +30,9 @@ OneMaxEpistasis
       ~OneMaxEpistasis.enforce_bounds
       ~OneMaxEpistasis.remove_constraint
       ~OneMaxEpistasis.reset
+      ~OneMaxEpistasis.set_id
+      ~OneMaxEpistasis.set_instance
+      ~OneMaxEpistasis.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ OneMaxEpistasis
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

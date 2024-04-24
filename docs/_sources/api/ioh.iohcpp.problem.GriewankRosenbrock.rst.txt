@@ -30,6 +30,9 @@ GriewankRosenbrock
       ~GriewankRosenbrock.enforce_bounds
       ~GriewankRosenbrock.remove_constraint
       ~GriewankRosenbrock.reset
+      ~GriewankRosenbrock.set_id
+      ~GriewankRosenbrock.set_instance
+      ~GriewankRosenbrock.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ GriewankRosenbrock
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

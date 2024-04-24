@@ -30,6 +30,9 @@ Schaffers1000
       ~Schaffers1000.enforce_bounds
       ~Schaffers1000.remove_constraint
       ~Schaffers1000.reset
+      ~Schaffers1000.set_id
+      ~Schaffers1000.set_instance
+      ~Schaffers1000.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ Schaffers1000
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

@@ -30,6 +30,9 @@ BuecheRastrigin
       ~BuecheRastrigin.enforce_bounds
       ~BuecheRastrigin.remove_constraint
       ~BuecheRastrigin.reset
+      ~BuecheRastrigin.set_id
+      ~BuecheRastrigin.set_instance
+      ~BuecheRastrigin.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ BuecheRastrigin
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

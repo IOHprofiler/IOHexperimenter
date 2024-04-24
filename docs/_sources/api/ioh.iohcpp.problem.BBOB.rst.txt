@@ -30,6 +30,9 @@ BBOB
       ~BBOB.enforce_bounds
       ~BBOB.remove_constraint
       ~BBOB.reset
+      ~BBOB.set_id
+      ~BBOB.set_instance
+      ~BBOB.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ BBOB
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

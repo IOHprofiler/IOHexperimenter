@@ -30,6 +30,9 @@ Discus
       ~Discus.enforce_bounds
       ~Discus.remove_constraint
       ~Discus.reset
+      ~Discus.set_id
+      ~Discus.set_instance
+      ~Discus.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ Discus
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

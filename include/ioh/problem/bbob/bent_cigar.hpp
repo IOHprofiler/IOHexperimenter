@@ -5,14 +5,14 @@
 namespace ioh::problem::bbob
 {
     //! Bent Cigar problem id = 12
-    template<typename P=BBOB>
+    template <typename P=BBOB>
     class BentCigar final : public P, BBOProblem<BentCigar>
     {
     protected:
         //! Evaluation method
         double evaluate(const std::vector<double> &x) override
         {
-            static const auto condition = 1.0e6;
+            static constexpr auto condition = 1.0e6;
             auto result = x.at(0) * x.at(0);
             for (auto i = 1; i < this->meta_data_.n_variables; ++i)
                 result += condition * x[i] * x[i];
@@ -24,9 +24,11 @@ namespace ioh::problem::bbob
         {
             using namespace transformation::variables;
             subtract(x, this->optimum_.x);
-            affine(x, this->transformation_state_.transformation_matrix, this->transformation_state_.transformation_base);
+            affine(x, this->transformation_state_.transformation_matrix,
+                   this->transformation_state_.transformation_base);
             asymmetric(x, 0.5);
-            affine(x, this->transformation_state_.transformation_matrix, this->transformation_state_.transformation_base);
+            affine(x, this->transformation_state_.transformation_matrix,
+                   this->transformation_state_.transformation_base);
             return x;
         }
 

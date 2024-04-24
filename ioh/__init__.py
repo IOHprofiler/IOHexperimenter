@@ -14,7 +14,21 @@ import json
 import urllib.request
 import tarfile
 
- 
+# Set the path to the static/ directory.
+# NEEDED for C++ code to load transformation details for CEC functions.
+# The static/ directory is installed together with the "pip install" command.
+# WARNING: The os.environ should be manipulated before any package from .iohcpp is imported!
+# =================================================================================================
+# Get the directory containing the __init__.py file
+# package_directory = os.path.dirname(__file__)
+
+# Construct the path to the static/ directory
+# static_directory = os.path.join(package_directory, 'static')
+
+# Set the IOH_RESOURCES environment variable to the path to the static/ directory
+# os.environ['IOH_RESOURCES'] = static_directory
+# =================================================================================================
+
 from .iohcpp import (
     problem,
     suite, 
@@ -32,8 +46,6 @@ from .iohcpp import (
     MetaData,
     LogInfo,
 )
-
-
 
 ProblemType = typing.Union[problem.RealSingleObjective, problem.IntegerSingleObjective]
 VariableType = typing.Union[int, float]
@@ -92,8 +104,13 @@ class ProblemClass(enum.Enum):
     GRAPH = "GraphProblem"
     STAR_INTEGER = "IntegerStarDiscrepancy"
 
+    CEC2013 = "CEC2013"
+    CEC2022 = "CEC2022"
+
     def is_real(self):
         return self in (
+                ProblemClass.CEC2013,
+                ProblemClass.CEC2022,
                 ProblemClass.REAL, 
                 ProblemClass.BBOB,
                 ProblemClass.SBOX,
@@ -152,13 +169,14 @@ def get_problem(
 
     base_problem = getattr(problem, problem_class.value)
     if base_problem:
+        if problem_class is ProblemClass.GRAPH and not any(base_problem.problems):
+            load_graph_problems()
+
         if fid not in (base_problem.problems.values() | base_problem.problems.keys()):
             raise ValueError(
                 f"{fid} is not registered for problem type: {problem_class}"
             )
-    
-        if problem_class is ProblemClass.GRAPH and not any(base_problem.problems):
-            load_graph_problems()
+
         return base_problem.create(fid, instance, dimension)
 
     raise ValueError(f"Problem type {problem_class} is not supported")

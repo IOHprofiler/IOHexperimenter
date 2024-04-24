@@ -5,17 +5,13 @@ pwt
 
 Structs
 --------------------------------
-Item
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenstruct:: ioh::problem::submodular::pwt::Item
-
 Point
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: ioh::problem::submodular::pwt::Point
 
-PWTConstraint
+Item
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. doxygenstruct:: ioh::problem::submodular::pwt::PWTConstraint
+.. doxygenstruct:: ioh::problem::submodular::pwt::Item
 
 TTPData
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -24,4 +20,8 @@ TTPData
 TTPGraph
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. doxygenstruct:: ioh::problem::submodular::pwt::TTPGraph
+
+PWTConstraint
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. doxygenstruct:: ioh::problem::submodular::pwt::PWTConstraint
 

@@ -354,8 +354,11 @@ namespace ioh
             }
 
             //! Helper function which forwards its first argument
-            template<typename T, typename... Args>
-            T identity(T p, Args &&...) {return p;}
+            template <typename T, typename... Args>
+            T identity(T p, Args &&...)
+            {
+                return p;
+            }
 
         } // namespace utils
     } // namespace problem

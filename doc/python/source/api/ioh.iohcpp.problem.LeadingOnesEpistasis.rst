@@ -30,6 +30,9 @@ LeadingOnesEpistasis
       ~LeadingOnesEpistasis.enforce_bounds
       ~LeadingOnesEpistasis.remove_constraint
       ~LeadingOnesEpistasis.reset
+      ~LeadingOnesEpistasis.set_id
+      ~LeadingOnesEpistasis.set_instance
+      ~LeadingOnesEpistasis.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ LeadingOnesEpistasis
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

@@ -23,7 +23,7 @@ namespace ioh
          * \return true if all elements of x == y
          */
         template <typename T>
-        inline bool is_equal(const std::vector<T> &x, const std::vector<T> &y)
+        bool is_equal(const std::vector<T> &x, const std::vector<T> &y)
         {
             if (!(x.size() == y.size()))
                 return false;
@@ -139,6 +139,55 @@ namespace ioh
             for (const auto &[first, second] : m)
                 values.emplace_back(first, *second);
             return values;
+        }
+
+     
+
+        /**
+         * \brief  Transform a vector to a matrix
+         * \tparam T The type of the matrix
+         * \param v the vector to be transformed
+         * \param n the number of rows
+         * \param m the number of columns
+         * \return the matrix
+         */
+        template <typename T>
+        std::vector<std::vector<T>> to_matrix(const std::vector<T> &v, const size_t n, const size_t m)
+        {
+            if (n * m != v.size())
+                throw std::invalid_argument("Cannot reshape vector into matrix of n * m");
+
+            std::vector<std::vector<T>> res(n);
+
+            for (size_t i = 0; i < n; i++)
+                std::copy(v.begin() + (i * m), v.begin() + (i * m) + m, std::back_inserter(res[i]));
+            return res;
+        }
+
+        /**
+         * \brief Transform a vector to a square matrix
+         * \tparam T The type of the matrix
+         * \param v the vector to be transformed
+         * \return the matrix
+         */
+        template <typename T>
+        std::vector<std::vector<T>> to_matrix(const std::vector<T> &v)
+        {
+            const size_t n = static_cast<size_t>(std::sqrt(v.size()));
+            return to_matrix<T>(v, n, n);
+        }
+
+        /**
+         * \brief Create an identity n x n matrix
+         * \param n the size of the matrix
+         * \return an identity matrix
+         */
+        inline std::vector<std::vector<double>> eye(const size_t n)
+        {
+            auto res = std::vector<std::vector<double>>(n, std::vector<double>(n, 0.0));
+            for (size_t i = 0; i < n; i++)
+                res[i][i] = 1;
+            return res;
         }
 
         /**

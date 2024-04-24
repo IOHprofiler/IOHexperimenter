@@ -30,6 +30,9 @@ SBOX
       ~SBOX.enforce_bounds
       ~SBOX.remove_constraint
       ~SBOX.reset
+      ~SBOX.set_id
+      ~SBOX.set_instance
+      ~SBOX.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ SBOX
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

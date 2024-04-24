@@ -30,6 +30,9 @@ DifferentPowers
       ~DifferentPowers.enforce_bounds
       ~DifferentPowers.remove_constraint
       ~DifferentPowers.reset
+      ~DifferentPowers.set_id
+      ~DifferentPowers.set_instance
+      ~DifferentPowers.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ DifferentPowers
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

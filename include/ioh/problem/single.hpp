@@ -12,6 +12,8 @@ namespace ioh::problem
     template <typename T>
     class SingleObjectiveProblem : public Problem<T, SingleObjective>
     {
+        //! Inversion multiplier
+        double inverter_ = 1.0;
     public:
         /**
          * @brief Construct a new Problem object
@@ -33,7 +35,7 @@ namespace ioh::problem
         }
 
         /**
-         * @brief Construct a new Problem object with an unkown solution
+         * @brief Construct a new Problem object with an unknown solution
          *
          * @param meta_data meta data for the problem
          * @param bounds the bounds to the problem
@@ -64,22 +66,23 @@ namespace ioh::problem
                 state.current_internal.y = this->evaluate(state.current_internal.x);
                 state.y_unconstrained = this->transform_objectives(state.current_internal.y);
                 state.current.y = this->constraintset_.penalize(state.y_unconstrained);
-            }
+            }   
+            state.current.y *= inverter_;
         }
 
         void update_state_and_log() {
             this->state_.update(this->meta_data_, this->optimum_);
+            this->log_info_.update(this->state_, this->constraintset_);
 
             if (this->logger_ != nullptr)
             {
-                this->log_info_.update(this->state_, this->constraintset_);
                 this->logger_->log(this->log_info());
             }
         }
 
 
         //! Main call interface
-        virtual double operator()(const std::vector<T> &x) override
+        double operator()(const std::vector<T> &x) override
         {
             if (!this->check_input(x))
                 return std::numeric_limits<double>::signaling_NaN();
@@ -90,6 +93,20 @@ namespace ioh::problem
             return this->state_.current.y;
         }
 
+        //! Convert function from minimization to maximization or from maximization to minimization
+        virtual void invert() {
+            inverter_ *= -1.0;
+            if (!std::isnan(this->optimum_.y))
+                this->optimum_.y *= -1.0;
+
+            this->state_.invert();
+            if (this->meta_data_.optimization_type == common::OptimizationType::MAX){
+                this->meta_data_.optimization_type = common::FOptimizationType(common::OptimizationType::MIN);
+            } else{
+                this->meta_data_.optimization_type = common::FOptimizationType(common::OptimizationType::MAX);   
+            }
+            this->reset();
+        }
 
 #if defined(_OPENMP)
         virtual std::vector<double> operator()(const std::vector<std::vector<T>> &X) override
@@ -140,7 +157,6 @@ namespace ioh::problem
         }
 #endif
     };
-
 
     //! Type def for Real problems
     using RealSingleObjective = SingleObjectiveProblem<double>;

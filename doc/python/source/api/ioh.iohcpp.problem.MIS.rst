@@ -30,6 +30,9 @@ MIS
       ~MIS.enforce_bounds
       ~MIS.remove_constraint
       ~MIS.reset
+      ~MIS.set_id
+      ~MIS.set_instance
+      ~MIS.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ MIS
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

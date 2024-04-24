@@ -30,6 +30,9 @@ Weierstrass
       ~Weierstrass.enforce_bounds
       ~Weierstrass.remove_constraint
       ~Weierstrass.reset
+      ~Weierstrass.set_id
+      ~Weierstrass.set_instance
+      ~Weierstrass.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ Weierstrass
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

@@ -30,6 +30,9 @@ IsingRing
       ~IsingRing.enforce_bounds
       ~IsingRing.remove_constraint
       ~IsingRing.reset
+      ~IsingRing.set_id
+      ~IsingRing.set_instance
+      ~IsingRing.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ IsingRing
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name

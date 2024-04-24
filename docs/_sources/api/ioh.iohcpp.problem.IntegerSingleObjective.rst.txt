@@ -30,6 +30,9 @@ IntegerSingleObjective
       ~IntegerSingleObjective.enforce_bounds
       ~IntegerSingleObjective.remove_constraint
       ~IntegerSingleObjective.reset
+      ~IntegerSingleObjective.set_id
+      ~IntegerSingleObjective.set_instance
+      ~IntegerSingleObjective.set_name
 
    .. rubric:: Attributes Documentation
 
@@ -51,3 +54,6 @@ IntegerSingleObjective
    .. automethod:: enforce_bounds
    .. automethod:: remove_constraint
    .. automethod:: reset
+   .. automethod:: set_id
+   .. automethod:: set_instance
+   .. automethod:: set_name
