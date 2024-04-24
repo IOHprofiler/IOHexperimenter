@@ -1,15 +1,15 @@
 #pragma once
 
-#include "problem/bbob.hpp"
-#include "problem/bbob.hpp"
 #include "problem/dynamic_bin_val.hpp"
-#include "problem/pbo.hpp"
-#include "problem/pbo.hpp"
+#include "problem/transformation.hpp"
+#include "problem/cec.hpp"
 #include "problem/problem.hpp"
 #include "problem/single.hpp"
-#include "problem/submodular.hpp"
-#include "problem/wmodel.hpp"
 #include "problem/wrap_function.hpp"
+#include "problem/bbob.hpp"
+#include "problem/pbo.hpp"
+#include "problem/wmodel.hpp"
+#include "problem/submodular.hpp"
 
 #ifdef USING_MKLANDSCAPE
 #include "problem/mklandscape/cliqueTreeC.hpp"
