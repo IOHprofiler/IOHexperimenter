@@ -57,18 +57,17 @@ inline std::vector<double> string_to_vector_double(const std::string &s)
     return x;
 }
 
-inline std::vector<int> string_to_vector_int(const std::string &s)
-{
+inline std::vector<int> string_to_vector_int(const std::string &s) {
     std::vector<int> x;
-    size_t i = 0;
-    while (i != s.size())
-    {
-        x.push_back(s[i] - '0');
-        i++;
+    std::stringstream ss(s);
+    std::string item;
+    while (getline(ss, item, ',')) {
+        if (!item.empty()) {
+            x.push_back(stoi(item));
+        }
     }
     return x;
 }
-
 
 inline void compare_file_with_string(const fs::path& path, const std::string& expected){
     const std::string got = ioh::common::file::as_string(path);
