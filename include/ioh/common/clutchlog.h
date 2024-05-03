@@ -765,8 +765,13 @@ class clutchlog
 
 // Equivalent class with empty methods, will be optimized out
 // while allowing to actually have calls implemented without WITH_CLUTCHLOG guards.
+#if !defined(_MSC_VER)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wreturn-type"
+#else
+#pragma warning(push)
+#pragma warning(disable : 4716)
+#endif
 class clutchlog
 {
     public:
@@ -828,16 +833,19 @@ class clutchlog
         void file(std::string) {}
         void func(std::string) {}
         void line(std::string) {}
-
+#if !defined(_MSC_VER)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
         void location(
                 const std::string&,
                 const std::string& in_function=".*",
                 const std::string& in_line=".*"
             )
         { }
+#if !defined(_MSC_VER)
 #pragma GCC diagnostic pop
+#endif
         void style(level, fmt) { }
         fmt style(level) const { }
         level level_of(const std::string) { }
@@ -890,7 +898,11 @@ class clutchlog
             ) const
         { }
 };
+#if !defined(_MSC_VER)
 #pragma GCC diagnostic pop
+#else
+#pragma warning(pop)
+#endif
 #endif // WITH_CLUTCHLOG
 
 #endif // __CLUTCHLOG_H__

@@ -52,7 +52,6 @@ namespace ioh::problem
                 {
                     const double xi = x[i] - (optima[index].x[i] * shift);
                     tmp[i] = xi / lambdas[index];
-
                 }
                 for (size_t i = 0; i < z.size(); ++i)
                 {
@@ -83,13 +82,13 @@ namespace ioh::problem
 
         public:
             CompositionFunction(const int problem_id, const std::string &name, const int n_variables,
-                                const std::vector<Solution<double, SingleObjective>>& opts,
+                                const std::vector<Solution<double, SingleObjective>> &opts,
                                 const std::vector<std::vector<std::vector<double>>> &transformations,
                                 const std::vector<RealFunction> &functions, const std::vector<double> &sigmas,
                                 const std::vector<double> &lambdas) :
                 CEC2013Problem(problem_id, 1, n_variables, name, -5.0, 5.0, opts),
-                transformations(transformations), functions(functions), sigmas(sigmas),
-                lambdas(lambdas), weight(opts.size(), 0.0), f_max(n_optima)
+                transformations(transformations), functions(functions), sigmas(sigmas), lambdas(lambdas),
+                weight(opts.size(), 0.0), f_max(n_optima)
             {
                 const auto x5 = std::vector<double>(meta_data().n_variables, 5.);
                 for (size_t i = 0; i < n_optima; ++i)
@@ -109,7 +108,7 @@ namespace ioh::problem
     } // namespace cec2013
 
     inline std::vector<Solution<double, SingleObjective>> select_optima(std::vector<std::vector<double>> optima,
-                                                          const size_t n_optima, const size_t dimension)
+                                                                        const size_t n_optima, const size_t dimension)
     {
         std::vector<Solution<double, SingleObjective>> result;
         optima.resize(n_optima);
@@ -179,6 +178,9 @@ namespace ioh::problem
     {
         const static auto optima_file =
             common::file::utils::find_static_file(fmt::format("{}optima.dat", cec2013::DATA_FOLDER));
+
+        // if (!fs::is_regular_file(optima_file))
+            // return {};
 
         const auto optima = common::to_matrix(common::file::as_numeric_vector<double>(optima_file), 10, 100);
 

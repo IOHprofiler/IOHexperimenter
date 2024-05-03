@@ -301,6 +301,7 @@ namespace ioh::problem::submodular
             Constructors<ProblemType, int, int> constructors;
 
             const auto root_path = path.parent_path();
+
             auto graphs = common::file::as_text_vector<std::shared_ptr<G>>(path);
             int i = ProblemType::default_id;
             for (auto &graph : graphs)
