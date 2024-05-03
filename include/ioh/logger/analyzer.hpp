@@ -353,7 +353,7 @@ namespace ioh::logger
                     flush_info_file();
                 }
 
-                void guard_attributes(const std::function<void()> &f)
+                void guard_attributes(const std::function<void()> &f) const
                 {
                     if (!has_started_)
                         return f();
@@ -361,7 +361,7 @@ namespace ioh::logger
                 }
 
             public:
-                /** Logger formatting data in a format supported by iohprofiler.
+                /** Logger formatting data in a format supported by ioh profiler.
                  *
                  * @param triggers When to fire a log event.
                  * @param additional_properties What to log.
@@ -371,10 +371,10 @@ namespace ioh::logger
                  * @param algorithm_name The string separating fields.
                  * @param algorithm_info The string indicating a comment.
                  * @param store_positions Whether to store x positions in the logged data
-                 * @param use_old_data_format Wheter to use the old data format
+                 * @param use_old_data_format Whether to use the old data format
                  * @param attributes See: analyzer::Attributes.
                  */
-                Analyzer(const Triggers &triggers = {trigger::on_improvement},
+                Analyzer(const Triggers &triggers = {trigger::on_delta_improvement},
                          const Properties &additional_properties = {}, const fs::path &root = fs::current_path(),
                          const std::string &folder_name = "ioh_data",
                          const std::string &algorithm_name = "algorithm_name",

@@ -11,12 +11,12 @@ namespace ioh::problem
             inline std::vector<Solution<double, SingleObjective>> get_optima(const int dimension) 
             {
                 const static std::array<double, 6> coords {
-                    std::exp((IOH_PI * -2) / 5.0 - IOH_PI / 20.0),
-                    std::exp((IOH_PI * -1) / 5.0 - IOH_PI / 20.0),
-                    std::exp((IOH_PI * 0) / 5.0 - IOH_PI / 20.0),
-                    std::exp((IOH_PI * 1) / 5.0 - IOH_PI / 20.0),
-                    std::exp((IOH_PI * 2) / 5.0 - IOH_PI / 20.0),
-                    std::exp((IOH_PI * 3) / 5.0 - IOH_PI / 20.0),
+                    std::exp((1.0 / 20.0) * (IOH_PI + 4.0 * IOH_PI * -2)),
+                    std::exp((1.0 / 20.0) * (IOH_PI + 4.0 * IOH_PI * -1)),
+                    std::exp((1.0 / 20.0) * (IOH_PI + 4.0 * IOH_PI * -0)),
+                    std::exp((1.0 / 20.0) * (IOH_PI + 4.0 * IOH_PI * 1)),
+                    std::exp((1.0 / 20.0) * (IOH_PI + 4.0 * IOH_PI * 2)),
+                    std::exp((1.0 / 20.0) * (IOH_PI + 4.0 * IOH_PI * 3)),
                 };
                 
                 std::vector<Solution<double, SingleObjective>> result;
@@ -24,14 +24,14 @@ namespace ioh::problem
                 {
                     for (const auto ci : coords)
                         for (const auto cj : coords)
-                            result.emplace_back(std::vector<double>({ci, cj}), -1.0);
+                            result.emplace_back(std::vector<double>({ci, cj}), 1.0);
                 }
                 else if (dimension == 3)
                 {
                     for (const auto ci : coords)
                         for (const auto cj : coords)
                             for (const auto ck : coords)
-                                result.emplace_back(std::vector<double>({ci, cj, ck}), -1.0);
+                                result.emplace_back(std::vector<double>({ci, cj, ck}), 1.0);
                 }
                 return result;
             }

@@ -74,10 +74,10 @@ namespace ioh {
         //! Check that there is no duplicated properties (only in Debug builds).
         bool consistent_properties()
         {
-            if(properties_.size() <= 0) {return false;}
+            if(properties_.empty()) {return false;}
 
-            for(auto iw = std::begin(properties_); iw != std::end(properties_); iw++) {
-                auto inext = iw; inext++;
+            for(auto iw = std::begin(properties_); iw != std::end(properties_); ++iw) {
+                auto inext = iw; ++inext;
                 if(inext == std::end(properties_)) { break; }
                 // Search only in toward the end, to avoid useless double checks.
                 if(std::find_if(inext,std::end(properties_),
@@ -167,7 +167,7 @@ namespace ioh {
                 throw std::runtime_error("Logger has not been attached to a problem.");
             }
 
-            assert(properties_.size() > 0);
+            assert(!properties_.empty());
             assert(triggers_.size() > 0);
             if(triggers_(log_info, problem_.value())) {
                 IOH_DBG(debug, "logger triggered")

@@ -46,6 +46,8 @@ void define_triggers(py::module &m)
 
     ;
 
+    t.attr("ON_DELTA_IMPROVEMENT") = py::cast(trigger::on_delta_improvement);
+
     py::class_<trigger::OnViolation, logger::Trigger, std::shared_ptr<trigger::OnViolation>>(
         t, "OnViolation", "Trigger that evaluates to true when there is a contraint violation")
         .def(py::init<>()) 

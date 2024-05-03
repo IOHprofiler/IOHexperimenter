@@ -185,7 +185,7 @@ template <typename A>
 void define_analyzer(py::module &m)
 {
     using namespace logger;
-    Triggers def_trigs{trigger::on_improvement};
+    Triggers def_trigs{trigger::on_delta_improvement};
     Properties def_props{};
     using PyAnalyzer = PyAnalyzer<A>;
     py::class_<PyAnalyzer, Watcher, std::shared_ptr<PyAnalyzer>>(m, "Analyzer")

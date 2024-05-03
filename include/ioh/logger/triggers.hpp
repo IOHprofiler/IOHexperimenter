@@ -153,7 +153,7 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        struct Any : public Set
+        struct Any final : public Set
         {
 
             /** Empty constructor
@@ -191,7 +191,7 @@ namespace ioh
          */
         inline Any &any(logger::Triggers triggers)
         {
-            auto t = new Any(triggers);
+            const auto t = new Any(triggers);
             return *t;
         }
 
@@ -199,7 +199,7 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        struct All : public Set
+        struct All final : public Set
         {
 
             /** Empty constructor.
@@ -237,7 +237,7 @@ namespace ioh
          */
         inline All &all(logger::Triggers triggers)
         {
-            auto t = new All(triggers);
+            const auto t = new All(triggers);
             return *t;
         }
 
@@ -245,7 +245,7 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        struct Always : public logger::Trigger
+        struct Always final : public logger::Trigger
         {
             bool operator()(const logger::Info &, const problem::MetaData &) override
             {
@@ -263,7 +263,7 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        struct OnImprovement : logger::Trigger
+        struct OnImprovement final : logger::Trigger
         {
             bool operator()(const logger::Info &log_info, const problem::MetaData&) override
             {
@@ -278,11 +278,11 @@ namespace ioh
         inline OnImprovement on_improvement; // Uncomment if one want a library.
 
 
-        struct OnDeltaImprovement: logger::Trigger {
+        struct OnDeltaImprovement final : logger::Trigger {
             double delta;
             double best_so_far;
 
-            OnDeltaImprovement(const double delta = 1e-10): delta(delta) {
+            explicit OnDeltaImprovement(const double delta = 1e-10): delta(delta) {
                 reset();
             }
 
@@ -300,22 +300,28 @@ namespace ioh
                     return true;
                 }                
                 return false;
-            };
+            }
 
             void reset() override {
                 best_so_far = std::numeric_limits<double>::signaling_NaN();
             }
         };
 
+        /** Do log only if the transformed best objective function value found so far has strictly improved by delta
+         *
+         * @ingroup Triggers
+         */
+        inline OnDeltaImprovement on_delta_improvement;
+
         //! Trigger when there is constraint violation
-        struct OnViolation: logger::Trigger {
+        struct OnViolation final : logger::Trigger {
             //! Track the number of violations
             int violations{};
 
             //! Call interface
             bool operator()(const logger::Info &log_info, const problem::MetaData&) override
             {
-                bool violation = log_info.violations[0] != 0.;
+                const bool violation = log_info.violations[0] != 0.;
                 IOH_DBG(debug, "trigger OnViolation called: " << violation);
                 violations += violation;
                 return violation;
@@ -334,7 +340,7 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        class Each : public logger::Trigger
+        class Each final : public logger::Trigger
         {
         protected:
             //! Period of time between triggers.
@@ -381,7 +387,7 @@ namespace ioh
          */
         inline Each &each(const size_t interval, const size_t starting_at = 0)
         {
-            auto t = new Each(interval, starting_at);
+            const auto t = new Each(interval, starting_at);
             return *t;
         }
 
@@ -389,7 +395,7 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        class At : public logger::Trigger
+        class At final : public logger::Trigger
         {
         protected:
             //! Set of times at which to trigger events.
@@ -430,7 +436,7 @@ namespace ioh
          */
         inline At &at(const std::set<size_t> time_points)
         {
-            auto t = new At(time_points);
+            const auto t = new At(time_points);
             return *t;
         }
 
@@ -441,7 +447,7 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        class During : public logger::Trigger
+        class During final : public logger::Trigger
         {
         protected:
             //! Time ranges during which events are triggered.
@@ -505,7 +511,7 @@ namespace ioh
          */
         inline During &during(const std::set<std::pair<size_t, size_t>> time_ranges)
         {
-            auto t = new During(time_ranges);
+            const auto t = new During(time_ranges);
             return *t;
         }
 

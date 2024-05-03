@@ -12,6 +12,7 @@ namespace ioh::problem
     template <typename T>
     class SingleObjectiveProblem : public Problem<T, SingleObjective>
     {
+    protected:
         //! Inversion multiplier
         double inverter_ = 1.0;
     public:
@@ -64,10 +65,9 @@ namespace ioh::problem
             {
                 state.current_internal.x = this->transform_variables(x);
                 state.current_internal.y = this->evaluate(state.current_internal.x);
-                state.y_unconstrained = this->transform_objectives(state.current_internal.y);
+                state.y_unconstrained = this->transform_objectives(inverter_ * state.current_internal.y);
                 state.current.y = this->constraintset_.penalize(state.y_unconstrained);
             }   
-            state.current.y *= inverter_;
         }
 
         void update_state_and_log() {
