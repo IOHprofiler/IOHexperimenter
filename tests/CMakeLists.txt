@@ -15,7 +15,7 @@ function(register_test test_name test_sources)
         # link_directories(${EXTERNAL_DIR}/mklandscape/target/debug)
         #ToDo: Updating when problem_generator project is updated.
             target_link_libraries(${test_name} PRIVATE ${PROJECT_NAME} gtest problem_generator_lib)
-        else()
+        else() 
             target_link_libraries(${test_name} PRIVATE ${PROJECT_NAME} gtest)
         endif()
     else()
