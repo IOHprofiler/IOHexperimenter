@@ -11,53 +11,14 @@
 
 #define GENERATE_TEST_DYNAMIC_BIN_VAL true
 
-
-
 TEST_F(BaseTest, test_dynamic_bin_val)
 {
   std::ifstream infile;
   const auto file_path = ioh::common::file::utils::find_static_file("dynamic_bin_val.in");
   infile.open(file_path.c_str());
 
-  const auto json_file_path = ioh::common::file::utils::find_static_file("dynamic_bin_val_rank.in");
-  std::ifstream rank_file(json_file_path);
-  if (!rank_file.is_open()) {
-    FAIL() << "Error: Unable to open JSON file for reading.";
-    return;
-  }
-
-  std::string line;
-  while (std::getline(rank_file, line)) {
-    std::istringstream iss(line);
-    int problem_id, instance, number_of_timesteps;
-    std::string bitstrings_str, ranks_str;
-
-    // Read problem_id, instance, number_of_timesteps from the input line
-    iss >> problem_id >> instance >> number_of_timesteps;
-
-    // Read the bitstrings and ranks as strings
-    iss >> bitstrings_str >> ranks_str;
-
-    // Convert string representations of vectors of vectors into actual data structures
-    std::vector<std::vector<int>> input_bitstrings = parse_vector_of_vectors(bitstrings_str);
-    std::vector<std::vector<int>> ideal_ranked_bitstrings = parse_vector_of_vectors(ranks_str);
-
-    ASSERT_EQ(problem_id, 10'004) << "Problem ID is not 10'004.";
-
-    int n_variables = input_bitstrings[0].size();
-    auto landscape = std::make_shared<ioh::problem::DynamicBinValRanking>(instance, n_variables);
-
-    for (int i = 0; i < number_of_timesteps; ++i) {
-      landscape->step();
-    }
-
-    auto real_ranked_bitstrings = landscape->rank(input_bitstrings);
-
-    EXPECT_TRUE(are_vectors_of_vectors_equal(ideal_ranked_bitstrings, real_ranked_bitstrings));
-  }
-
   std::string s;
-  while (getline(infile, s))
+  while (std::getline(infile, s))
   {
     auto tmp = split(s, " ");
     if (tmp.empty()) { continue; }
@@ -65,23 +26,50 @@ TEST_F(BaseTest, test_dynamic_bin_val)
     auto problem_id = stoi(tmp[0]);
     auto instance = stoi(tmp[1]);
     auto number_of_timesteps = stoi(tmp[2]);
-    auto x = string_to_vector_int(tmp[3]);
-    auto f = stod(tmp[4]);
 
-    const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinVal>::instance();
-    int n_variables = x.size();
-    auto landscape = problem_factory.create(problem_id, instance, n_variables);
+    auto operation_name = tmp[3];
+    if (operation_name == "operator()")
+    {
+      auto x = string_to_vector_int(tmp[4]);
+      auto f = stod(tmp[5]);
 
-    for (int i = 0; i < number_of_timesteps; ++i) {
-      landscape->step();
+      const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinVal>::instance();
+      int n_variables = x.size();
+      auto landscape = problem_factory.create(problem_id, instance, n_variables);
+
+      for (int i = 0; i < number_of_timesteps; ++i) {
+        landscape->step();
+      }
+
+      auto y = (*landscape)(x);
+
+      if (f == 0.0) {
+          EXPECT_NEAR(y, 0.0, 1.0 / pow(10, 6 - log(10)));
+      } else {
+          EXPECT_NEAR(y, f, 1.0 / pow(10, 6 - log(10)));
+      }
     }
+    else if (operation_name == "rank")
+    {
+      auto bitstrings_str = tmp[4];
+      auto ranks_str = tmp[5];
 
-    auto y = (*landscape)(x);
+      // Convert string representations of vectors of vectors into actual data structures
+      std::vector<std::vector<int>> input_bitstrings = parse_vector_of_vectors(bitstrings_str);
+      std::vector<std::vector<int>> ideal_ranked_bitstrings = parse_vector_of_vectors(ranks_str);
 
-    if (f == 0.0) {
-        EXPECT_NEAR(y, 0.0, 1.0 / pow(10, 6 - log(10)));
-    } else {
-        EXPECT_NEAR(y, f, 1.0 / pow(10, 6 - log(10)));
+      ASSERT_EQ(problem_id, 10'004) << "Problem ID is not 10'004.";
+
+      int n_variables = input_bitstrings[0].size();
+      auto landscape = std::make_shared<ioh::problem::DynamicBinValRanking>(instance, n_variables);
+
+      for (int i = 0; i < number_of_timesteps; ++i) {
+        landscape->step();
+      }
+
+      auto real_ranked_bitstrings = landscape->rank(input_bitstrings);
+
+      EXPECT_TRUE(are_vectors_of_vectors_equal(ideal_ranked_bitstrings, real_ranked_bitstrings));
     }
   }
 }
@@ -98,14 +86,11 @@ TEST_F(BaseTest, generate_test_dynamic_bin_val)
   const int generator_seed = 42;
   std::default_random_engine generator(generator_seed);
 
-  // Specify the file path
   const auto static_root = ioh::common::file::utils::get_static_root();
   const auto file_path = static_root / "generated_dynamic_bin_val.in";
-  const auto json_file_path = static_root / "generated_dynamic_bin_val_rank.in";
 
   // Open the file for writing
   std::ofstream outfile(file_path);
-  std::ofstream rank_file(json_file_path);
 
   for (int problem_id : problem_ids) {
     for (int instance : instances) {
@@ -134,7 +119,7 @@ TEST_F(BaseTest, generate_test_dynamic_bin_val)
             // Output results directly during test execution
             outfile << std::fixed << std::setprecision(5);
             outfile << landscape->meta_data().problem_id << " " << instance << " " << number_of_timesteps
-                    << " " << x_str << " " << y << std::endl;
+                    << " operator() " << x_str << " " << y << std::endl;
 
             if (landscape->meta_data().problem_id == 10'004) {
               for (int num_ranked_bitstrings : sequence_of_num_of_ranked_bitstrings) {
@@ -148,7 +133,7 @@ TEST_F(BaseTest, generate_test_dynamic_bin_val)
 
                 ranked_bitstrings = std::dynamic_pointer_cast<ioh::problem::DynamicBinValRanking>(landscape)->rank(input_bitstrings);
 
-                rank_file << problem_id << " " << instance << " " << number_of_timesteps << " "
+                outfile << problem_id << " " << instance << " " << number_of_timesteps << " rank "
                   << format_vector_of_vectors(input_bitstrings) << " " << format_vector_of_vectors(ranked_bitstrings) << std::endl;
               }
             }
@@ -158,7 +143,6 @@ TEST_F(BaseTest, generate_test_dynamic_bin_val)
     }
   }
 
-  rank_file.close();
   outfile.close();
 }
 #endif
