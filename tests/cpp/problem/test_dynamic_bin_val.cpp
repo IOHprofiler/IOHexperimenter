@@ -10,7 +10,7 @@
 #include <sstream>
 #include <vector>
 
-#define GENERATE_TEST_DYNAMIC_BIN_VAL false
+#define GENERATE_TEST_DYNAMIC_BIN_VAL true
 
 
 
@@ -37,9 +37,10 @@ TEST_F(BaseTest, test_dynamic_bin_val)
     std::vector<std::vector<int>> input_bitstrings = scenario["bitstrings"];
     std::vector<std::vector<int>> ideal_ranked_bitstrings = scenario["rank"];
 
-    ASSERT_EQ(problem_id, 10004) << "Problem ID is not 10004.";
+    ASSERT_EQ(problem_id, 10'004) << "Problem ID is not 10'004.";
 
-    auto landscape = std::make_shared<ioh::problem::DynamicBinValRanking>(instance, input_bitstrings[0].size());
+    int n_variables = input_bitstrings[0].size();
+    auto landscape = std::make_shared<ioh::problem::DynamicBinValRanking>(instance, n_variables);
 
     for (int i = 0; i < number_of_timesteps; ++i) {
       landscape->step();
@@ -49,10 +50,6 @@ TEST_F(BaseTest, test_dynamic_bin_val)
 
     EXPECT_TRUE(are_vectors_of_vectors_equal(ideal_ranked_bitstrings, real_ranked_bitstrings));
   }
-
-
-
-
 
   std::string s;
   while (getline(infile, s))
@@ -82,14 +79,12 @@ TEST_F(BaseTest, test_dynamic_bin_val)
         EXPECT_NEAR(y, f, 1.0 / pow(10, 6 - log(10)));
     }
   }
-
-
 }
 
 #if GENERATE_TEST_DYNAMIC_BIN_VAL
 TEST_F(BaseTest, generate_test_dynamic_bin_val)
 {
-  std::vector<int> problem_ids = {10001, 10002, 10003, 10004};
+  std::vector<int> problem_ids = {10'001, 10'002, 10'003, 10'004};
   std::vector<int> instances = {1, 2, 55, 667};
   std::vector<int> n_variables = {2, 3, 50};
   std::vector<int> numbers_of_timesteps = {0, 7, 22, 34};
@@ -112,129 +107,52 @@ TEST_F(BaseTest, generate_test_dynamic_bin_val)
       for (int n_variables : n_variables) {
         for (int number_of_timesteps : numbers_of_timesteps) {
           for (int rep = 0; rep < repetitions; ++rep) {
-            switch (problem_id) {
-              case 10001: {
-                auto landscape = std::make_shared<ioh::problem::DynamicBinValUniform>(instance, n_variables);
 
-                  std::vector<int> x(n_variables);
-                  std::uniform_int_distribution<int> distribution(0, 1);
-                  std::generate(x.begin(), x.end(), [&]() { return distribution(generator); });
+            const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinVal>::instance();
+            auto landscape = problem_factory.create(problem_id, instance, n_variables);
 
-                  for (int i = 0; i < number_of_timesteps; ++i) {
-                    landscape->step();
-                  }
+            std::vector<int> x(n_variables);
+            std::uniform_int_distribution<int> distribution(0, 1);
+            std::generate(x.begin(), x.end(), [&]() { return distribution(generator); });
 
-                  double y = (*landscape)(x);
+            for (int i = 0; i < number_of_timesteps; ++i) {
+              landscape->step();
+            }
 
-                  std::ostringstream oss;
-                  std::copy(x.begin(), x.end(), std::ostream_iterator<int>(oss, ","));
-                  std::string x_str = oss.str();
-                  x_str.pop_back(); // Remove the trailing comma
+            double y = (*landscape)(x);
 
-                  // Output results directly during test execution
-                  outfile << std::fixed << std::setprecision(5);
-                  outfile << landscape->meta_data().problem_id << " " << instance << " " << number_of_timesteps
-                          << " " << x_str << " " << y << std::endl;
-              } break;
+            std::ostringstream oss;
+            std::copy(x.begin(), x.end(), std::ostream_iterator<int>(oss, ","));
+            std::string x_str = oss.str();
+            x_str.pop_back(); // Remove the trailing comma
 
-              case 10002: {
-                auto landscape = std::make_shared<ioh::problem::DynamicBinValPowersOfTwo>(instance, n_variables);
+            // Output results directly during test execution
+            outfile << std::fixed << std::setprecision(5);
+            outfile << landscape->meta_data().problem_id << " " << instance << " " << number_of_timesteps
+                    << " " << x_str << " " << y << std::endl;
 
-                  std::vector<int> x(n_variables);
-                  std::uniform_int_distribution<int> distribution(0, 1);
-                  std::generate(x.begin(), x.end(), [&]() { return distribution(generator); });
-
-                  for (int i = 0; i < number_of_timesteps; ++i) {
-                    landscape->step();
-                  }
-
-                  double y = (*landscape)(x);
-
-                  std::ostringstream oss;
-                  std::copy(x.begin(), x.end(), std::ostream_iterator<int>(oss, ","));
-                  std::string x_str = oss.str();
-                  x_str.pop_back(); // Remove the trailing comma
-
-                  // Output results directly during test execution
-                  outfile << std::fixed << std::setprecision(5);
-                  outfile << landscape->meta_data().problem_id << " " << instance << " " << number_of_timesteps
-                          << " " << x_str << " " << y << std::endl;
-              } break;
-
-              case 10003: {
-                auto landscape = std::make_shared<ioh::problem::DynamicBinValPareto>(instance, n_variables);
-
-                  std::vector<int> x(n_variables);
-                  std::uniform_int_distribution<int> distribution(0, 1);
-                  std::generate(x.begin(), x.end(), [&]() { return distribution(generator); });
-
-                  for (int i = 0; i < number_of_timesteps; ++i) {
-                    landscape->step();
-                  }
-
-                  double y = (*landscape)(x);
-
-                  std::ostringstream oss;
-                  std::copy(x.begin(), x.end(), std::ostream_iterator<int>(oss, ","));
-                  std::string x_str = oss.str();
-                  x_str.pop_back(); // Remove the trailing comma
-
-                  // Output results directly during test execution
-                  outfile << std::fixed << std::setprecision(5);
-                  outfile << landscape->meta_data().problem_id << " " << instance << " " << number_of_timesteps
-                          << " " << x_str << " " << y << std::endl;
-              } break;
-
-              case 10004: {
-                  auto landscape = std::make_shared<ioh::problem::DynamicBinValRanking>(instance, n_variables);
-
-                    std::vector<int> x(n_variables);
-                    std::uniform_int_distribution<int> distribution(0, 1);
-                    std::generate(x.begin(), x.end(), [&]() { return distribution(generator); });
-
-                    for (int i = 0; i < number_of_timesteps; ++i) {
-                      landscape->step();
-                    }
-
-                    double y = (*landscape)(x);
-
-                    std::ostringstream oss;
-                    std::copy(x.begin(), x.end(), std::ostream_iterator<int>(oss, ","));
-                    std::string x_str = oss.str();
-                    x_str.pop_back(); // Remove the trailing comma
-
-                    // Output results directly during test execution
-                    outfile << std::fixed << std::setprecision(5);
-                    outfile << landscape->meta_data().problem_id << " " << instance << " " << number_of_timesteps
-                            << " " << x_str << " " << y << std::endl;
-
-                for (int num_ranked_bitstrings : sequence_of_num_of_ranked_bitstrings) {
-                  std::vector<std::vector<int>> input_bitstrings;
-                  std::vector<std::vector<int>> ranked_bitstrings;
-                  for (int i = 0; i < num_ranked_bitstrings; ++i) {
-                    std::vector<int> input_bitstring(n_variables);
-                    std::generate(input_bitstring.begin(), input_bitstring.end(), [&]() { return distribution(generator); });
-                    input_bitstrings.push_back(input_bitstring);
-                  }
-
-                  ranked_bitstrings = landscape->rank(input_bitstrings);
-
-                  nlohmann::json scenario = {
-                    {"problem_id", problem_id},
-                    {"instance", instance},
-                    {"number_of_timesteps", number_of_timesteps},
-                    {"bitstrings", input_bitstrings},
-                    {"rank", ranked_bitstrings}
-                  };
-
-                  json_file << scenario.dump() + "\n";
+            if (landscape->meta_data().problem_id == 10'004) {
+              for (int num_ranked_bitstrings : sequence_of_num_of_ranked_bitstrings) {
+                std::vector<std::vector<int>> input_bitstrings;
+                std::vector<std::vector<int>> ranked_bitstrings;
+                for (int i = 0; i < num_ranked_bitstrings; ++i) {
+                  std::vector<int> input_bitstring(n_variables);
+                  std::generate(input_bitstring.begin(), input_bitstring.end(), [&]() { return distribution(generator); });
+                  input_bitstrings.push_back(input_bitstring);
                 }
 
-              } break;
+                ranked_bitstrings = std::dynamic_pointer_cast<ioh::problem::DynamicBinValRanking>(landscape)->rank(input_bitstrings);
 
-              default:
-                FAIL() << "Unknown problem ID: " << problem_id;
-                continue;
+                nlohmann::json scenario = {
+                  {"problem_id", problem_id},
+                  {"instance", instance},
+                  {"number_of_timesteps", number_of_timesteps},
+                  {"bitstrings", input_bitstrings},
+                  {"rank", ranked_bitstrings}
+                };
+
+                json_file << scenario.dump() + "\n";
+              }
             }
           }
         }
@@ -245,4 +163,4 @@ TEST_F(BaseTest, generate_test_dynamic_bin_val)
   json_file.close();
   outfile.close();
 }
-#endif // GENERATE_TEST_DYNAMIC_BIN_VAL
+#endif
