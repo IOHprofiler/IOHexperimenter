@@ -1,70 +1,25 @@
-/**
- * @file dynamic_bin_val_powers_of_two.hpp
- * @brief Contains the declaration of the DynamicBinValPareto class, which represents dynamic binary value
- *        problems in the context of IOH.
- */
-
 #pragma once
 
-#include <algorithm>
-#include <iostream>
-#include <limits>
-#include <math.h>
-#include <random>
-#include <vector>
-
-#include "ioh/problem/single.hpp"
-#include "ioh/problem/transformation.hpp"
+#include "dynamic_bin_val.hpp"
 
 namespace ioh::problem
 {
-    /**
-     * @class DynamicBinValPareto
-     * @brief This class serves to represent dynamic binary value problems within the context of Iterative
-     *        Optimization Heuristics (IOH).
-     *
-     *        DynamicBinValPareto: takes a value from (1 - U) ** (-10) where U is uniformly distributed from [0, 1] for each weight at each timestep
-
-     *        Inheriting functionalities from the IntegerSingleObjective, it also integrates functionalities
-     *        for automatic registration of the problem type into various data structures. This facilitates
-     *        easier management and retrieval of problem instances, while encapsulating characteristics and
-     *        behaviours specific to dynamic binary value problems. It holds vital data members such as
-     *        timestep and weights, which are crucial in depicting the dynamic aspects and unique features
-     *        of these problem instances.
-     */
-    class DynamicBinValPareto : public
-        IntegerSingleObjective,
-        AutomaticProblemRegistration<DynamicBinValPareto, DynamicBinValPareto>,
-        AutomaticProblemRegistration<DynamicBinValPareto, IntegerSingleObjective>
+    class DynamicBinValPareto final : public DynamicBinValProblem<DynamicBinValPareto>
     {
     public:
 
-        double pareto_shape;                            // Alpha parameter for the Pareto distribution
-        int timestep;                                   /**< The current timestep in the dynamic binary value problem scenario. */
+        double pareto_shape;
+        int timestep;
         std::default_random_engine random_generator;
-        std::vector<double> weights;             /**< A vector of weights used in the evaluation of the problem. */
+        std::vector<double> weights;
         std::vector<int> transformed_x;
 
-        /**
-         * @brief Constructs a new instance of DynamicBinValPareto.
-         *
-         * @param n_variables The dimension of the problem, representing the size of the search space and
-         *                    indicating the number of variables in the problem.
-         */
         DynamicBinValPareto(const int instance, const int n_variables) :
-            IntegerSingleObjective(
-                MetaData(
-                    10003,
-                    instance,
-                    "DynamicBinValPareto",
-                    n_variables,
-                    common::OptimizationType::MAX
-                ),
-                Bounds<int>(
-                    n_variables,
-                    0,
-                    1
-                )
+            DynamicBinValProblem(
+                10'003,
+                instance,
+                n_variables,
+                "DynamicBinValPareto"
             ),
             pareto_shape(0.1),
             timestep(0),
@@ -92,7 +47,7 @@ namespace ioh::problem
             this->optimum_.x = this->transformed_x;
         }
 
-        int step()
+        int step() override
         {
             this->timestep += 1;
 
@@ -142,4 +97,4 @@ namespace ioh::problem
             return value;
         }
     };
-} // namespace ioh::problem
+}

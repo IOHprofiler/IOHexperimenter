@@ -27,6 +27,12 @@ TEST_F(BaseTest, test_dynamic_bin_val)
     return;
   }
 
+  const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinVal>::instance();
+  for (const auto &name : problem_factory.names())
+  {
+    std::cout << "name: " << name << std::endl;
+  }
+
   std::string line;
   while (std::getline(json_file, line)) {
     nlohmann::json scenario = nlohmann::json::parse(line);
