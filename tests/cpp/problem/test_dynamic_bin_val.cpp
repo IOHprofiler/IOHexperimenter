@@ -27,12 +27,6 @@ TEST_F(BaseTest, test_dynamic_bin_val)
     return;
   }
 
-  const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinVal>::instance();
-  for (const auto &name : problem_factory.names())
-  {
-    std::cout << "name: " << name << std::endl;
-  }
-
   std::string line;
   while (std::getline(json_file, line)) {
     nlohmann::json scenario = nlohmann::json::parse(line);
@@ -56,6 +50,10 @@ TEST_F(BaseTest, test_dynamic_bin_val)
     EXPECT_TRUE(are_vectors_of_vectors_equal(ideal_ranked_bitstrings, real_ranked_bitstrings));
   }
 
+
+
+
+
   std::string s;
   while (getline(infile, s))
   {
@@ -68,44 +66,12 @@ TEST_F(BaseTest, test_dynamic_bin_val)
     auto x = comma_separated_string_to_vector_int(tmp[3]);
     auto f = stod(tmp[4]);
 
-    std::shared_ptr<ioh::problem::IntegerSingleObjective> landscape;
+    const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinVal>::instance();
+    int n_variables = x.size();
+    auto landscape = problem_factory.create(problem_id, instance, n_variables);
 
-    switch (problem_id) {
-      case 10001:
-        landscape = std::make_shared<ioh::problem::DynamicBinValUniform>(instance, x.size());
-
-        for (int i = 0; i < number_of_timesteps; ++i) {
-          std::dynamic_pointer_cast<ioh::problem::DynamicBinValUniform>(landscape)->step();
-        }
-
-        break;
-      case 10002:
-        landscape = std::make_shared<ioh::problem::DynamicBinValPowersOfTwo>(instance, x.size());
-
-        for (int i = 0; i < number_of_timesteps; ++i) {
-          std::dynamic_pointer_cast<ioh::problem::DynamicBinValPowersOfTwo>(landscape)->step();
-        }
-
-        break;
-      case 10003:
-        landscape = std::make_shared<ioh::problem::DynamicBinValPareto>(instance, x.size());
-
-        for (int i = 0; i < number_of_timesteps; ++i) {
-          std::dynamic_pointer_cast<ioh::problem::DynamicBinValPareto>(landscape)->step();
-        }
-
-        break;
-      case 10004:
-        landscape = std::make_shared<ioh::problem::DynamicBinValRanking>(instance, x.size());
-
-        for (int i = 0; i < number_of_timesteps; ++i) {
-          std::dynamic_pointer_cast<ioh::problem::DynamicBinValRanking>(landscape)->step();
-        }
-
-        break;
-      default:
-        FAIL() << "Unknown problem ID: " << problem_id;
-        continue;
+    for (int i = 0; i < number_of_timesteps; ++i) {
+      landscape->step();
     }
 
     auto y = (*landscape)(x);
@@ -115,8 +81,9 @@ TEST_F(BaseTest, test_dynamic_bin_val)
     } else {
         EXPECT_NEAR(y, f, 1.0 / pow(10, 6 - log(10)));
     }
-
   }
+
+
 }
 
 #if GENERATE_TEST_DYNAMIC_BIN_VAL
