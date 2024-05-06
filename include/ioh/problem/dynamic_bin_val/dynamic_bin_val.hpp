@@ -10,8 +10,6 @@
 #include "ioh/problem/single.hpp"
 #include "ioh/problem/transformation.hpp"
 
-
-
 namespace ioh::problem
 {
     class DynamicBinVal : public IntegerSingleObjective

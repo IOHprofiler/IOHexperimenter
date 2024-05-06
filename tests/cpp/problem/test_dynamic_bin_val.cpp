@@ -1,4 +1,3 @@
-#include "../json.hpp"
 #include "../utils.hpp"
 #include "ioh/problem/dynamic_bin_val.hpp"
 
@@ -20,22 +19,28 @@ TEST_F(BaseTest, test_dynamic_bin_val)
   const auto file_path = ioh::common::file::utils::find_static_file("dynamic_bin_val.in");
   infile.open(file_path.c_str());
 
-  const auto json_file_path = ioh::common::file::utils::find_static_file("dynamic_bin_val_rank.json");
-  std::ifstream json_file(json_file_path);
-  if (!json_file.is_open()) {
+  const auto json_file_path = ioh::common::file::utils::find_static_file("dynamic_bin_val_rank.in");
+  std::ifstream rank_file(json_file_path);
+  if (!rank_file.is_open()) {
     FAIL() << "Error: Unable to open JSON file for reading.";
     return;
   }
 
   std::string line;
-  while (std::getline(json_file, line)) {
-    nlohmann::json scenario = nlohmann::json::parse(line);
+  while (std::getline(rank_file, line)) {
+    std::istringstream iss(line);
+    int problem_id, instance, number_of_timesteps;
+    std::string bitstrings_str, ranks_str;
 
-    int problem_id = scenario["problem_id"];
-    int instance = scenario["instance"];
-    int number_of_timesteps = scenario["number_of_timesteps"];
-    std::vector<std::vector<int>> input_bitstrings = scenario["bitstrings"];
-    std::vector<std::vector<int>> ideal_ranked_bitstrings = scenario["rank"];
+    // Read problem_id, instance, number_of_timesteps from the input line
+    iss >> problem_id >> instance >> number_of_timesteps;
+
+    // Read the bitstrings and ranks as strings
+    iss >> bitstrings_str >> ranks_str;
+
+    // Convert string representations of vectors of vectors into actual data structures
+    std::vector<std::vector<int>> input_bitstrings = parse_vector_of_vectors(bitstrings_str);
+    std::vector<std::vector<int>> ideal_ranked_bitstrings = parse_vector_of_vectors(ranks_str);
 
     ASSERT_EQ(problem_id, 10'004) << "Problem ID is not 10'004.";
 
@@ -60,7 +65,7 @@ TEST_F(BaseTest, test_dynamic_bin_val)
     auto problem_id = stoi(tmp[0]);
     auto instance = stoi(tmp[1]);
     auto number_of_timesteps = stoi(tmp[2]);
-    auto x = comma_separated_string_to_vector_int(tmp[3]);
+    auto x = string_to_vector_int(tmp[3]);
     auto f = stod(tmp[4]);
 
     const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinVal>::instance();
@@ -96,11 +101,11 @@ TEST_F(BaseTest, generate_test_dynamic_bin_val)
   // Specify the file path
   const auto static_root = ioh::common::file::utils::get_static_root();
   const auto file_path = static_root / "generated_dynamic_bin_val.in";
-  const auto json_file_path = static_root / "generated_dynamic_bin_val_rank.json";
+  const auto json_file_path = static_root / "generated_dynamic_bin_val_rank.in";
 
   // Open the file for writing
   std::ofstream outfile(file_path);
-  std::ofstream json_file(json_file_path);
+  std::ofstream rank_file(json_file_path);
 
   for (int problem_id : problem_ids) {
     for (int instance : instances) {
@@ -121,10 +126,10 @@ TEST_F(BaseTest, generate_test_dynamic_bin_val)
 
             double y = (*landscape)(x);
 
-            std::ostringstream oss;
-            std::copy(x.begin(), x.end(), std::ostream_iterator<int>(oss, ","));
-            std::string x_str = oss.str();
-            x_str.pop_back(); // Remove the trailing comma
+            std::string x_str;
+            for (int bit : x) {
+              x_str += std::to_string(bit);
+            }
 
             // Output results directly during test execution
             outfile << std::fixed << std::setprecision(5);
@@ -143,15 +148,8 @@ TEST_F(BaseTest, generate_test_dynamic_bin_val)
 
                 ranked_bitstrings = std::dynamic_pointer_cast<ioh::problem::DynamicBinValRanking>(landscape)->rank(input_bitstrings);
 
-                nlohmann::json scenario = {
-                  {"problem_id", problem_id},
-                  {"instance", instance},
-                  {"number_of_timesteps", number_of_timesteps},
-                  {"bitstrings", input_bitstrings},
-                  {"rank", ranked_bitstrings}
-                };
-
-                json_file << scenario.dump() + "\n";
+                rank_file << problem_id << " " << instance << " " << number_of_timesteps << " "
+                  << format_vector_of_vectors(input_bitstrings) << " " << format_vector_of_vectors(ranked_bitstrings) << std::endl;
               }
             }
           }
@@ -160,7 +158,7 @@ TEST_F(BaseTest, generate_test_dynamic_bin_val)
     }
   }
 
-  json_file.close();
+  rank_file.close();
   outfile.close();
 }
 #endif

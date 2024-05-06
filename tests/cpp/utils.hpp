@@ -69,6 +69,45 @@ inline std::vector<int> string_to_vector_int(const std::string &s)
     return x;
 }
 
+// Helper function to parse a string representation of a vector of vectors
+inline std::vector<std::vector<int>> parse_vector_of_vectors(const std::string& vec_str) {
+  std::vector<std::vector<int>> result;
+  std::istringstream vec_stream(vec_str.substr(1, vec_str.size() - 2)); // Strip the outer brackets
+  std::string subvec_str;
+
+  while (std::getline(vec_stream, subvec_str, ']')) {
+    std::vector<int> subvec;
+    std::replace(subvec_str.begin(), subvec_str.end(), '[', ' ');
+    std::replace(subvec_str.begin(), subvec_str.end(), ',', ' ');
+    std::istringstream subvec_stream(subvec_str);
+    int num;
+    while (subvec_stream >> num) {
+      subvec.push_back(num);
+    }
+    if (!subvec.empty()) {
+      result.push_back(subvec);
+    }
+    vec_stream.get(); // Skip the comma after ']'
+  }
+  return result;
+}
+
+inline std::string format_vector_of_vectors(const std::vector<std::vector<int>>& vec) {
+  std::ostringstream oss;
+  oss << "[";
+  for (size_t i = 0; i < vec.size(); ++i) {
+    if (i != 0) oss << ",";
+    oss << "[";
+    for (size_t j = 0; j < vec[i].size(); ++j) {
+      if (j != 0) oss << ",";
+      oss << vec[i][j];
+    }
+    oss << "]";
+  }
+  oss << "]";
+  return oss.str();
+}
+
 // Function to check if two vectors of vectors of integers are the same
 inline bool are_vectors_of_vectors_equal(const std::vector<std::vector<int>>& vec1, const std::vector<std::vector<int>>& vec2) {
     if (vec1.size() != vec2.size()) {
@@ -80,18 +119,6 @@ inline bool are_vectors_of_vectors_equal(const std::vector<std::vector<int>>& ve
         }
     }
     return true;
-}
-
-inline std::vector<int> comma_separated_string_to_vector_int(const std::string &s) {
-    std::vector<int> x;
-    std::stringstream ss(s);
-    std::string item;
-    while (getline(ss, item, ',')) {
-        if (!item.empty()) {
-            x.push_back(stoi(item));
-        }
-    }
-    return x;
 }
 
 inline void compare_file_with_string(const fs::path& path, const std::string& expected){

@@ -5,13 +5,7 @@
 
 #pragma once
 
-#include <algorithm>
-#include <iostream>
-#include <random>
-#include <vector>
-
-#include "ioh/problem/single.hpp"
-#include "ioh/problem/transformation.hpp"
+#include "dynamic_bin_val.hpp"
 
 namespace ioh::problem
 {
