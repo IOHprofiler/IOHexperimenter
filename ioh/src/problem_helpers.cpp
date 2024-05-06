@@ -55,7 +55,7 @@ void define_state(py::module &m, const std::string &name)
         .def_readonly("evaluations", &Class::evaluations, "The number of times the problem has been evaluated so far.")
         .def_readonly("optimum_found", &Class::optimum_found,
                       "Boolean value indicating whether final_target_found optimum of a given problem has been found.")
-        .def_readonly("final_target_found", &Class::optimum_found,
+        .def_readonly("final_target_found", &Class::final_target_found,
                       "Boolean value indicating whether the final target of a given problem has been found.")
         .def_readonly("current_best_internal", &Class::current_best_internal,
                       "The internal representation of the best so far solution. "

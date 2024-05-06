@@ -3,8 +3,8 @@
 #include "ioh/common/container_utils.hpp"
 #include "ioh/common/factory.hpp"
 #include "ioh/logger/loggers.hpp"
-#include "ioh/problem/structures.hpp"
 #include "ioh/problem/constraints.hpp"
+#include "ioh/problem/structures.hpp"
 #include "ioh/problem/utils.hpp"
 
 namespace ioh
@@ -26,10 +26,10 @@ namespace ioh
             MetaData meta_data_;
 
             //! The problem bounds
-            Bounds<T> bounds_;            
-            
-            //! The associated constraints constriants 
-            ConstraintSet<T> constraintset_; //TODO check interop with wrap problem
+            Bounds<T> bounds_;
+
+            //! The associated constraints constriants
+            ConstraintSet<T> constraintset_; // TODO check interop with wrap problem
 
             //! The Problem state
             State<T, R> state_;
@@ -94,7 +94,7 @@ namespace ioh
 
                 if (common::all_finite(x))
                     return true;
-            
+
                 if (common::has_nan(x))
                 {
                     IOH_DBG(warning, "The solution contains NaN.")
@@ -123,24 +123,22 @@ namespace ioh
             using Type = T;
 
             //! The current ReturnType
-            using ReturnType = R; 
+            using ReturnType = R;
 
             //! Default constructor
             Problem(MetaData meta_data, Bounds<T> bounds, ConstraintSet<T> constraintset, State<T, R> state,
                     Solution<T, R> optimum) :
                 meta_data_(std::move(meta_data)),
-                bounds_(std::move(bounds)), 
-                constraintset_(std::move(constraintset)),
-                state_(std::move(state)),
+                bounds_(std::move(bounds)), constraintset_(std::move(constraintset)), state_(std::move(state)),
                 optimum_(std::move(optimum))
             {
                 bounds_.fit(meta_data_.n_variables);
                 log_info_.allocate(optimum_, constraintset_);
             }
-            
+
             //! Public call interface
             virtual R operator()(const std::vector<T> &x) = 0;
-            
+
             virtual std::vector<R> operator()(const std::vector<std::vector<T>> &X) = 0;
 
             //! destructor
@@ -161,7 +159,7 @@ namespace ioh
             [[nodiscard]] const logger::Info &log_info() const { return log_info_; }
 
             //! Accessor for current log info
-            void set_log_info(const logger::Info& info) { log_info_ = info; }
+            void set_log_info(const logger::Info &info) { log_info_ = info; }
 
             //! Attach a logger
             void attach_logger(Logger &logger)
@@ -179,25 +177,30 @@ namespace ioh
             }
             /**
              * @brief Enforced the bounds(box-constraints) as constraint
-             * 
+             *
              * @param weight The weight for computing the penalty
              * @param how The constraint::Enforced strategy
              * @param exponent the exponent for scaling the contraint
              */
-            void enforce_bounds(const double weight = 1.0, const constraint::Enforced enforced = constraint::Enforced::SOFT, const double exponent = 1.0)
+            void enforce_bounds(const double weight = 1.0,
+                                const constraint::Enforced enforced = constraint::Enforced::SOFT,
+                                const double exponent = 1.0)
             {
-                for (auto &ci : constraintset_.constraints) {
+                for (auto &ci : constraintset_.constraints)
+                {
                     auto ptr = std::dynamic_pointer_cast<Bounds<T>>(ci);
-                    if (ptr && *ptr == bounds_){
+                    if (ptr && *ptr == bounds_)
+                    {
                         remove_constraint(ptr);
                         break;
-                    }                       
+                    }
                 }
                 bounds_.enforced = enforced;
                 bounds_.weight = weight;
                 bounds_.exponent = exponent;
-                add_constraint(std::make_shared<Bounds<T>>(bounds_.lb, bounds_.ub, bounds_.enforced, bounds_.weight, bounds_.exponent));
-            }          
+                add_constraint(std::make_shared<Bounds<T>>(bounds_.lb, bounds_.ub, bounds_.enforced, bounds_.weight,
+                                                           bounds_.exponent));
+            }
 
             //! Accessor for `meta_data_`
             [[nodiscard]] MetaData meta_data() const { return meta_data_; }
@@ -209,13 +212,14 @@ namespace ioh
             [[nodiscard]] State<T, R> state() const { return state_; }
 
             //! Accessor for `bounds_`
-            [[nodiscard]] Bounds<T>& bounds() { return bounds_; }
+            [[nodiscard]] Bounds<T> &bounds() { return bounds_; }
 
             //! Accessor for `constraintset_`
-            [[nodiscard]] ConstraintSet<T>& constraints() { return constraintset_; }    
+            [[nodiscard]] ConstraintSet<T> &constraints() { return constraintset_; }
 
             //! Alias for constraints().add
-            void add_constraint(const ConstraintPtr<T> &c) { 
+            void add_constraint(const ConstraintPtr<T> &c)
+            {
                 constraintset_.add(c);
                 log_info_.allocate(optimum_, constraintset_);
             }
@@ -226,30 +230,37 @@ namespace ioh
                 constraintset_.remove(c);
                 log_info_.allocate(optimum_, constraintset_);
             }
-            
+
             //! Call this method after updating any fields on meta_data_
-            void updated_metadata() {
-                if (logger_ != nullptr){
-                    if(state_.evaluations != 0)
-                        IOH_DBG(warning, "Updated meta_data with logger attached and already evaluated problem. State will be reset.")
+            void updated_metadata()
+            {
+                if (logger_ != nullptr)
+                {
+                    if (state_.evaluations != 0)
+                        IOH_DBG(warning,
+                                "Updated meta_data with logger attached and already evaluated problem. State will be "
+                                "reset.")
                     reset();
                 }
             }
-            
+
             //! Accessor for problem id
-            void set_id(const int new_id) {
+            void set_id(const int new_id)
+            {
                 meta_data_.problem_id = new_id;
                 updated_metadata();
             }
 
             //! Accessor for problem instance
-            void set_instance(const int new_instance){
+            void set_instance(const int new_instance)
+            {
                 meta_data_.instance = new_instance;
                 updated_metadata();
             }
 
             //! Accessor for problem name
-            void set_name(const std::string& new_name){
+            void set_name(const std::string &new_name)
+            {
                 meta_data_.name = new_name;
                 updated_metadata();
             }
@@ -264,9 +275,8 @@ namespace ioh
             //! Stream operator
             friend std::ostream &operator<<(std::ostream &os, const Problem &obj)
             {
-                return os << "Problem(\n\t" << obj.meta_data_ << "\n\t" << obj.bounds_ << "\n\t"
-                          << obj.constraintset_  << "\n\t" << obj.state_ << "\n\t" 
-                          << obj.optimum_ << "\n)";
+                return os << "Problem(\n\t" << obj.meta_data_ << "\n\t" << obj.bounds_ << "\n\t" << obj.constraintset_
+                          << "\n\t" << obj.state_ << "\n\t" << obj.optimum_ << "\n)";
             }
         };
 
@@ -307,11 +317,11 @@ namespace ioh
 
 
         /**
-        * @brief CRTP class for automatically registering problems in the apropriate factory.
-        * you should inherit from this class when defining new real problems.
-        * @tparam ProblemType The new problem type
-        * @tparam ParentType The parent problem type
-        */
+         * @brief CRTP class for automatically registering problems in the apropriate factory.
+         * you should inherit from this class when defining new real problems.
+         * @tparam ProblemType The new problem type
+         * @tparam ParentType The parent problem type
+         */
         template <typename ProblemType, typename ParentType>
         struct RegisteredProblem : ParentType, AutomaticProblemRegistration<ProblemType, ParentType>
         {
@@ -343,7 +353,7 @@ namespace ioh
          *
          * @tparam R the returntype of the problem
          */
-        template<typename R>
+        template <typename R>
         using ObjectiveTransformationFunction = std::function<R(const double, const int)>;
 
 
