@@ -22,13 +22,11 @@ TEST_F(BaseTest, TestDoubleSphere)
     EXPECT_EQ(instance_d1(instance_d1.optimum().x), instance_d1.optimum().y);
     EXPECT_EQ(instance_d1({instance_d1.u2(), instance_d1.u2()}), instance_d1.optimum().y + 2.0);
 
-    DoubleSphere instance_s0(2, 0., .2);
+    const DoubleSphere instance_s0(2, 0., .2);
+    EXPECT_LT(instance_s0.u2(), -2.5);
 
-    std::cout << instance_s0.u2() << std::endl;
-
-     DoubleSphere instance_s1(2, 0., 1.5);
-
-    std::cout << instance_s1.u2() << std::endl;
+    const DoubleSphere instance_s1(2, 0., 1.5);
+    EXPECT_GT(instance_s1.u2(), -2.5);
 }
 
 
