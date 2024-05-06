@@ -92,6 +92,35 @@ inline std::vector<std::vector<int>> parse_vector_of_vectors(const std::string& 
   return result;
 }
 
+// Helper function to parse a string representation of a vector of integers
+inline std::vector<int> parse_vector(const std::string& vec_str) {
+  std::vector<int> result;
+  std::istringstream vec_stream(vec_str.substr(1, vec_str.size() - 2)); // Strip the outer brackets
+  std::string num_str;
+  while (std::getline(vec_stream, num_str, ',')) {
+    std::istringstream num_stream(num_str);
+    int num;
+    while (num_stream >> num) {
+      result.push_back(num);
+    }
+  }
+  return result;
+}
+
+// Helper function to create a string representation of a vector of integers
+inline std::string vector_to_string(const std::vector<int>& vec) {
+  std::ostringstream result;
+  result << '[';
+  for (size_t i = 0; i < vec.size(); ++i) {
+    result << vec[i];
+    if (i != vec.size() - 1) {
+      result << ",";
+    }
+  }
+  result << ']';
+  return result.str();
+}
+
 inline std::string format_vector_of_vectors(const std::vector<std::vector<int>>& vec) {
   std::ostringstream oss;
   oss << "[";
@@ -119,6 +148,19 @@ inline bool are_vectors_of_vectors_equal(const std::vector<std::vector<int>>& ve
         }
     }
     return true;
+}
+
+// Function to check if two vectors of integers are equal at each position
+inline bool are_vectors_equal(const std::vector<int>& vec1, const std::vector<int>& vec2) {
+  if (vec1.size() != vec2.size()) {
+    return false;
+  }
+  for (size_t i = 0; i < vec1.size(); ++i) {
+    if (vec1[i] != vec2[i]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 inline void compare_file_with_string(const fs::path& path, const std::string& expected){

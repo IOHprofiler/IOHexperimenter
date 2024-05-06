@@ -71,6 +71,29 @@ TEST_F(BaseTest, test_dynamic_bin_val)
 
       EXPECT_TRUE(are_vectors_of_vectors_equal(ideal_ranked_bitstrings, real_ranked_bitstrings));
     }
+    else if (operation_name == "rank_indices")
+    {
+      auto bitstrings_str = tmp[4];
+      auto ranks_str = tmp[5];
+
+      // Convert string representations of vectors of vectors into actual data structures
+      std::vector<std::vector<int>> input_bitstrings = parse_vector_of_vectors(bitstrings_str);
+      std::vector<int> ideal_ranking_indices = parse_vector(ranks_str);
+
+      ASSERT_EQ(problem_id, 10'004) << "Problem ID is not 10'004.";
+
+      int n_variables = input_bitstrings[0].size();
+      auto landscape = std::make_shared<ioh::problem::DynamicBinValRanking>(instance, n_variables);
+
+      for (int i = 0; i < number_of_timesteps; ++i) {
+        landscape->step();
+      }
+
+      auto real_ranking_indices = landscape->rank_indices(input_bitstrings);
+
+      EXPECT_TRUE(are_vectors_equal(ideal_ranking_indices, real_ranking_indices));
+    }
+
   }
 }
 
@@ -124,17 +147,20 @@ TEST_F(BaseTest, generate_test_dynamic_bin_val)
             if (landscape->meta_data().problem_id == 10'004) {
               for (int num_ranked_bitstrings : sequence_of_num_of_ranked_bitstrings) {
                 std::vector<std::vector<int>> input_bitstrings;
-                std::vector<std::vector<int>> ranked_bitstrings;
                 for (int i = 0; i < num_ranked_bitstrings; ++i) {
                   std::vector<int> input_bitstring(n_variables);
                   std::generate(input_bitstring.begin(), input_bitstring.end(), [&]() { return distribution(generator); });
                   input_bitstrings.push_back(input_bitstring);
                 }
 
-                ranked_bitstrings = std::dynamic_pointer_cast<ioh::problem::DynamicBinValRanking>(landscape)->rank(input_bitstrings);
+                std::vector<std::vector<int>> ranked_bitstrings = std::dynamic_pointer_cast<ioh::problem::DynamicBinValRanking>(landscape)->rank(input_bitstrings);
+                std::vector<int> ranking_indices = std::dynamic_pointer_cast<ioh::problem::DynamicBinValRanking>(landscape)->rank_indices(input_bitstrings);
 
                 outfile << problem_id << " " << instance << " " << number_of_timesteps << " rank "
                   << format_vector_of_vectors(input_bitstrings) << " " << format_vector_of_vectors(ranked_bitstrings) << std::endl;
+
+                outfile << problem_id << " " << instance << " " << number_of_timesteps << " rank_indices "
+                  << format_vector_of_vectors(input_bitstrings) << " " << vector_to_string(ranking_indices) << std::endl;
               }
             }
           }
