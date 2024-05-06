@@ -11,7 +11,7 @@
 
 #define GENERATE_TEST_DYNAMIC_BIN_VAL true
 
-TEST_F(BaseTest, test_dynamic_bin_val)
+TEST_F(BaseTest, test_dynamic_bin_val_operator_call)
 {
   std::ifstream infile;
   const auto file_path = ioh::common::file::utils::find_static_file("dynamic_bin_val.in");
@@ -49,7 +49,27 @@ TEST_F(BaseTest, test_dynamic_bin_val)
           EXPECT_NEAR(y, f, 1.0 / pow(10, 6 - log(10)));
       }
     }
-    else if (operation_name == "rank")
+  }
+}
+
+TEST_F(BaseTest, test_dynamic_bin_val_rank)
+{
+  std::ifstream infile;
+  const auto file_path = ioh::common::file::utils::find_static_file("dynamic_bin_val.in");
+  infile.open(file_path.c_str());
+
+  std::string s;
+  while (std::getline(infile, s))
+  {
+    auto tmp = split(s, " ");
+    if (tmp.empty()) { continue; }
+
+    auto problem_id = stoi(tmp[0]);
+    auto instance = stoi(tmp[1]);
+    auto number_of_timesteps = stoi(tmp[2]);
+
+    auto operation_name = tmp[3];
+    if (operation_name == "rank")
     {
       auto bitstrings_str = tmp[4];
       auto ranks_str = tmp[5];
@@ -71,7 +91,27 @@ TEST_F(BaseTest, test_dynamic_bin_val)
 
       EXPECT_TRUE(are_vectors_of_vectors_equal(ideal_ranked_bitstrings, real_ranked_bitstrings));
     }
-    else if (operation_name == "rank_indices")
+  }
+}
+
+TEST_F(BaseTest, test_dynamic_bin_val_rank_indices)
+{
+  std::ifstream infile;
+  const auto file_path = ioh::common::file::utils::find_static_file("dynamic_bin_val.in");
+  infile.open(file_path.c_str());
+
+  std::string s;
+  while (std::getline(infile, s))
+  {
+    auto tmp = split(s, " ");
+    if (tmp.empty()) { continue; }
+
+    auto problem_id = stoi(tmp[0]);
+    auto instance = stoi(tmp[1]);
+    auto number_of_timesteps = stoi(tmp[2]);
+
+    auto operation_name = tmp[3];
+    if (operation_name == "rank_indices")
     {
       auto bitstrings_str = tmp[4];
       auto ranks_str = tmp[5];
@@ -93,7 +133,6 @@ TEST_F(BaseTest, test_dynamic_bin_val)
 
       EXPECT_TRUE(are_vectors_equal(ideal_ranking_indices, real_ranking_indices));
     }
-
   }
 }
 
