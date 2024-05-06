@@ -12,18 +12,7 @@
 
 #define GENERATE_TEST_DYNAMIC_BIN_VAL false
 
-// Function to check if two vectors of vectors of integers are the same
-bool areVectorsOfVectorsEqual(const std::vector<std::vector<int>>& vec1, const std::vector<std::vector<int>>& vec2) {
-    if (vec1.size() != vec2.size()) {
-        return false;
-    }
-    for (size_t i = 0; i < vec1.size(); ++i) {
-        if (vec1[i] != vec2[i]) {
-            return false;
-        }
-    }
-    return true;
-}
+
 
 TEST_F(BaseTest, test_dynamic_bin_val)
 {
@@ -58,7 +47,7 @@ TEST_F(BaseTest, test_dynamic_bin_val)
 
     auto real_ranked_bitstrings = landscape->rank(input_bitstrings);
 
-    EXPECT_TRUE(areVectorsOfVectorsEqual(ideal_ranked_bitstrings, real_ranked_bitstrings));
+    EXPECT_TRUE(are_vectors_of_vectors_equal(ideal_ranked_bitstrings, real_ranked_bitstrings));
   }
 
   std::string s;
@@ -70,7 +59,7 @@ TEST_F(BaseTest, test_dynamic_bin_val)
     auto problem_id = stoi(tmp[0]);
     auto instance = stoi(tmp[1]);
     auto number_of_timesteps = stoi(tmp[2]);
-    auto x = string_to_vector_int(tmp[3]);
+    auto x = comma_separated_string_to_vector_int(tmp[3]);
     auto f = stod(tmp[4]);
 
     std::shared_ptr<ioh::problem::IntegerSingleObjective> landscape;
