@@ -119,7 +119,7 @@ namespace ioh
             [[nodiscard]] virtual R transform_objectives(const R y) { return y; }
 
         public:
-            //! The current type held within the instance.
+            //! The current type held within the instance.x
             using Type = T;
 
             //! The current ReturnType
@@ -251,6 +251,13 @@ namespace ioh
             //! Accessor for problem name
             void set_name(const std::string& new_name){
                 meta_data_.name = new_name;
+                updated_metadata();
+            }
+
+            //! Accessor for problem target
+            void set_final_target(const double new_target)
+            {
+                meta_data_.final_target = new_target;
                 updated_metadata();
             }
 

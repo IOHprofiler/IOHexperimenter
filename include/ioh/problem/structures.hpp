@@ -12,12 +12,12 @@ namespace ioh
 {
     namespace problem
     {
-        //! Typedef for single objective problems       
+        //! Typedef for single objective problems
         using SingleObjective = double;
 
         //! Typedef for mutliobjective problems
         using MultiObjective = std::vector<double>;
-                
+
         //! struct of problem meta data
         struct MetaData : common::HasRepr
         {
@@ -39,6 +39,9 @@ namespace ioh
             //! problem dimension
             int n_variables{};
 
+            //! Final target
+            double final_target;
+
             /**
              * @brief Construct a new Meta Data object
              *
@@ -47,12 +50,14 @@ namespace ioh
              * @param name the name of the problem
              * @param n_variables the dimension of the problem
              * @param optimization_type optimization type
+             * @param final_target the final target to be reached for the function
              */
             MetaData(const int problem_id, const int instance, std::string name, const int n_variables,
-                     const common::OptimizationType optimization_type = common::OptimizationType::MIN) :
+                     const common::OptimizationType optimization_type = common::OptimizationType::MIN,
+                     const double final_target = 1e-8) :
                 instance(instance),
                 problem_id(problem_id), name(std::move(name)), optimization_type{optimization_type},
-                n_variables(n_variables)
+                n_variables(n_variables), final_target(final_target)
             {
             }
 
@@ -63,10 +68,12 @@ namespace ioh
              * @param name the name of the problem
              * @param n_variables the dimension of the problem
              * @param optimization_type optimization type
+             * @param final_target the final target to be reached for the function
              */
             MetaData(const int instance, const std::string &name, const int n_variables,
-                     const common::OptimizationType optimization_type = common::OptimizationType::MIN) :
-                MetaData(0, instance, name, n_variables, optimization_type)
+                     const common::OptimizationType optimization_type = common::OptimizationType::MIN,
+                     const double final_target = 1e-8) :
+                MetaData(0, instance, name, n_variables, optimization_type, final_target)
             {
             }
 
@@ -80,17 +87,16 @@ namespace ioh
             //! comparison operator
             bool operator!=(const MetaData &other) const { return not(*this == other); }
 
-            std::string repr() const override
+            [[nodiscard]] std::string repr() const override
             {
                 return fmt::format("<MetaData: {} id: {} iid: {} dim: {}>", name, problem_id, instance, n_variables);
             }
         };
 
 
-        
         template <typename T, typename R>
         struct Solution;
-        
+
         //! Solution object
         template <typename T>
         struct Solution<T, SingleObjective> : common::HasRepr
@@ -147,7 +153,7 @@ namespace ioh
              * @param x variables
              * @param y objective values
              */
-            Solution(const std::vector<T> &x, const std::vector<double>& y) : x(x), y(y) {}
+            Solution(const std::vector<T> &x, const std::vector<double> &y) : x(x), y(y) {}
 
             //! Default constructible
             Solution() = default;
@@ -159,7 +165,7 @@ namespace ioh
                     y[0] != std::numeric_limits<double>::infinity() and
                     y[0] != -std::numeric_limits<double>::infinity();
             }
-            
+
             //! Equality operator
             bool operator==(const Solution<T, MultiObjective> &other) const
             {
@@ -179,7 +185,6 @@ namespace ioh
             }
         };
 
-      
 
         template <typename T, typename R>
         struct State;
@@ -197,6 +202,9 @@ namespace ioh
 
             //! Is optimum found?
             bool optimum_found = false;
+
+            //! final target found?
+            bool final_target_found = false;
 
             //! Current best x-transformed, y-raw w. constraints applied
             Solution<T, double> current_best_internal{};
@@ -237,11 +245,10 @@ namespace ioh
                 y_unconstrained = y_unconstrained_best = initial_solution.y;
                 optimum_found = false;
                 has_improved = false;
+                final_target_found = false;
             }
 
-            void invert(){
-                initial_solution.y = -initial_solution.y;
-            }
+            void invert() { initial_solution.y = -initial_solution.y; }
 
             //! Update the state
             void update(const MetaData &meta_data, const Solution<T, double> &objective)
@@ -254,25 +261,28 @@ namespace ioh
                     current_best_internal = current_internal;
                     current_best = current;
 
-                    if (objective.y == current.y)
+                    if (std::abs(objective.y - current.y) < std::numeric_limits<double>::epsilon())
                         optimum_found = true;
+
+                    if (std::abs(objective.y - current.y) < meta_data.final_target)
+                        final_target_found = true;
                 }
             }
 
             std::string repr() const override
             {
-                return fmt::format("<State evaluations: {} optimum_found: {} current_best: {}>", evaluations,
-                                   optimum_found, current_best);
+                return fmt::format("<State evaluations: {} final_target_found: {} current_best: {}>", evaluations,
+                                   final_target_found, current_best);
             }
         };
 
 
-         //! Problem State`
+        //! Problem State`
         template <typename T>
         struct State<T, MultiObjective> : common::HasRepr
         {
         private:
-            //Solution<T, double> initial_solution;
+            // Solution<T, double> initial_solution;
 
         public:
             //! Current number of evaluations
@@ -280,24 +290,22 @@ namespace ioh
 
             //! Is optimum found?
             bool optimum_found = false;
-            
+
             std::string repr() const override
             {
-                return fmt::format("<State evaluations: {} optimum_found: {}>", evaluations,
-                                   optimum_found);
+                return fmt::format("<State evaluations: {} optimum_found: {}>", evaluations, optimum_found);
             }
 
             //! Update the state
-            void update(const MetaData &meta_data, const Solution<T, MultiObjective> &objective) { }
-            
+            void update(const MetaData &meta_data, const Solution<T, MultiObjective> &objective) {}
+
             //! Reset the state
-            void reset() {
+            void reset()
+            {
                 evaluations = 0;
                 optimum_found = false;
             }
         };
-
-
 
 
     } // namespace problem

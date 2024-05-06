@@ -21,7 +21,7 @@ function(register_test test_name test_sources)
     else()
         target_link_libraries(${test_name} PRIVATE ${PROJECT_NAME} gtest)
     endif()
-    gtest_discover_tests(${test_name})
+    gtest_discover_tests(${test_name}) 
     target_include_directories(${test_name} PRIVATE cpp)
     target_link_libraries(${test_name} PRIVATE ${PROJECT_NAME} gtest)
 
