@@ -57,7 +57,32 @@ inline std::vector<double> string_to_vector_double(const std::string &s)
     return x;
 }
 
-inline std::vector<int> string_to_vector_int(const std::string &s) {
+inline std::vector<int> string_to_vector_int(const std::string &s)
+{
+    std::vector<int> x;
+    size_t i = 0;
+    while (i != s.size())
+    {
+        x.push_back(s[i] - '0');
+        i++;
+    }
+    return x;
+}
+
+// Function to check if two vectors of vectors of integers are the same
+inline bool are_vectors_of_vectors_equal(const std::vector<std::vector<int>>& vec1, const std::vector<std::vector<int>>& vec2) {
+    if (vec1.size() != vec2.size()) {
+        return false;
+    }
+    for (size_t i = 0; i < vec1.size(); ++i) {
+        if (vec1[i] != vec2[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+inline std::vector<int> comma_separated_string_to_vector_int(const std::string &s) {
     std::vector<int> x;
     std::stringstream ss(s);
     std::string item;
