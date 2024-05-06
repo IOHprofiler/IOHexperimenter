@@ -24,7 +24,7 @@ namespace ioh::problem
 
             inline std::vector<Solution<double, SingleObjective>> get_optima(const int dimension)
             {
-                const constexpr std::array<double, 6> coords = {-7.08350641, -0.8003211,  5.48286421,
+                constexpr std::array<double, 6> coords = {-7.08350641, -0.8003211,  5.48286421,
                                                                 -7.70831374, -1.42512843, 4.85805688};
                 
 
@@ -58,8 +58,7 @@ namespace ioh::problem
                         }
                     }
                 }
-                const size_t n_exp_optima = static_cast<size_t>(dimension * std::pow(3, dimension));
-                assert(n_exp_optima == result.size());
+                assert(static_cast<size_t>(dimension * std::pow(3, dimension)) == result.size());
                 return result;
             }
         } // namespace shubert
