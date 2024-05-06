@@ -282,7 +282,7 @@ void define_helper_classes(py::module &m)
     py::class_<MetaData>(m, "MetaData")
         .def(py::init<int, int, std::string, int, ioh::common::OptimizationType, double>(), py::arg("problem_id"),
              py::arg("instance"), py::arg("name"), py::arg("n_variables"), py::arg("optimization_type"),
-             py::arg("final_target") = 1e-8
+             py::arg("final_target") = 1e-8,
              R"pbdoc(
                 Problem meta data. Contains static information about problems, such as their name and id. 
 
