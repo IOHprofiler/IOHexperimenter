@@ -22,10 +22,7 @@ namespace ioh::problem
      * It inherits from IntegerSingleObjective and includes additional functionalities for dynamic problems.
      * This class encapsulates the unique dynamic features such as changing optimum and comparison order over time.
      */
-    class DynamicBinValRanking : public
-        IntegerSingleObjective,
-        AutomaticProblemRegistration<DynamicBinValRanking, DynamicBinValRanking>,
-        AutomaticProblemRegistration<DynamicBinValRanking, IntegerSingleObjective>
+    class DynamicBinValRanking final : public DynamicBinValProblem<DynamicBinValRanking>
     {
     public:
 
@@ -52,10 +49,11 @@ namespace ioh::problem
          *                    indicating the number of variables in the problem.
          */
         DynamicBinValRanking(const int instance, const int n_variables) :
-            IntegerSingleObjective
-            (
-                MetaData(10004, instance, "DynamicBinValRanking", n_variables, common::OptimizationType::MAX),
-                Bounds<int>(n_variables, 0, 1)
+            DynamicBinValProblem(
+                10'004,
+                instance,
+                n_variables,
+                "DynamicBinValRanking"
             ),
             random_generator(instance),
             comparison_ordering(n_variables)
@@ -73,10 +71,11 @@ namespace ioh::problem
             this->timestep = 0;
         }
 
-        void step()
+        int step() override
         {
             std::shuffle(comparison_ordering.begin(), comparison_ordering.end(), this->random_generator);
             this->timestep += 1;
+            return this->timestep;
         }
 
         /**

@@ -31,10 +31,7 @@ namespace ioh::problem
      *        timestep and weights, which are crucial in depicting the dynamic aspects and unique features
      *        of these problem instances.
      */
-    class DynamicBinValPowersOfTwo : public
-        IntegerSingleObjective,
-        AutomaticProblemRegistration<DynamicBinValPowersOfTwo, DynamicBinValPowersOfTwo>,
-        AutomaticProblemRegistration<DynamicBinValPowersOfTwo, IntegerSingleObjective>
+    class DynamicBinValPowersOfTwo final : public DynamicBinValProblem<DynamicBinValPowersOfTwo>
     {
     public:
 
@@ -50,10 +47,11 @@ namespace ioh::problem
          *                    indicating the number of variables in the problem.
          */
         DynamicBinValPowersOfTwo(const int instance, const int n_variables) :
-            IntegerSingleObjective
-            (
-                MetaData(10002, instance, "DynamicBinValPowersOfTwo", n_variables, common::OptimizationType::MAX),
-                Bounds<int>(n_variables, 0, 1)
+            DynamicBinValProblem(
+                10'002,
+                instance,
+                n_variables,
+                "DynamicBinValPowersOfTwo"
             ),
             random_generator(instance)
         {
@@ -80,7 +78,7 @@ namespace ioh::problem
             this->optimum_.x = this->transformed_x;
         }
 
-        int step()
+        int step() override
         {
             this->timestep += 1;
 

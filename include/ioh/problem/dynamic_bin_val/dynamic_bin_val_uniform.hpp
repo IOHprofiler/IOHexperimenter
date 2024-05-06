@@ -30,10 +30,7 @@ namespace ioh::problem
      *        timestep and weights, which are crucial in depicting the dynamic aspects and unique features
      *        of these problem instances.
      */
-    class DynamicBinValUniform : public
-        IntegerSingleObjective,
-        AutomaticProblemRegistration<DynamicBinValUniform, DynamicBinValUniform>,
-        AutomaticProblemRegistration<DynamicBinValUniform, IntegerSingleObjective>
+    class DynamicBinValUniform final : public DynamicBinValProblem<DynamicBinValUniform>
     {
     public:
 
@@ -49,10 +46,11 @@ namespace ioh::problem
          *                    indicating the number of variables in the problem.
          */
         DynamicBinValUniform(const int instance, const int n_variables) :
-            IntegerSingleObjective
-            (
-                MetaData(10001, instance, "DynamicBinValUniform", n_variables, common::OptimizationType::MAX),
-                Bounds<int>(n_variables, 0, 1)
+            DynamicBinValProblem(
+                10'001,
+                instance,
+                n_variables,
+                "DynamicBinValUniform"
             ),
             random_generator(instance)
         {
@@ -73,7 +71,7 @@ namespace ioh::problem
             this->optimum_.x = this->transformed_x;
         }
 
-        int step()
+        int step() override
         {
             this->timestep += 1;
 
