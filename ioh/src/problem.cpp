@@ -299,6 +299,7 @@ void define_wmodels(py::module &m);
 void define_submodular_problems(py::module &m);
 void define_star_discrepancy_problems(py::module &m);
 void define_many_affine(py::module &m);
+void define_funnel(py::module &m);
 
 void define_problem(py::module &m)
 {
@@ -312,6 +313,7 @@ void define_problem(py::module &m)
     define_submodular_problems(m);
     define_star_discrepancy_problems(m);
     define_many_affine(m);  
+    define_funnel(m);  
 
     py::module_::import("atexit").attr("register")(py::cpp_function([]() {
         for (const auto fn : WRAPPED_FUNCTIONS)

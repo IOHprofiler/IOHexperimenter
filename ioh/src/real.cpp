@@ -210,7 +210,8 @@ void define_cec2013_problems(py::module &m)
     py::class_<SixHumpCamelback, CEC2013, std::shared_ptr<SixHumpCamelback>>(m, "SixHumpCamelback", py::is_final());
     py::class_<UnevenEqualMaxima, CEC2013, std::shared_ptr<UnevenEqualMaxima>>(m, "UnevenEqualMaxima", py::is_final());
     py::class_<Vincent, CEC2013, std::shared_ptr<Vincent>>(m, "Vincent", py::is_final());
-    py::class_<CompositionFunction, CEC2013, std::shared_ptr<CompositionFunction>>(m, "CEC2013CompositionFunction", py::is_final());
+    py::class_<CompositionFunction, CEC2013, std::shared_ptr<CompositionFunction>>(m, "CEC2013CompositionFunction",
+                                                                                   py::is_final());
 }
 
 void define_cec2022_problems(py::module &m)
@@ -454,7 +455,8 @@ void define_star_discrepancy_problems(py::module &m)
     define_star_discrepancy_problem<integer::StarDiscrepancy, IntegerSingleObjective>(m, "IntegerStarDiscrepancy");
 }
 
-void define_many_affine(py::module& m){
+void define_many_affine(py::module &m)
+{
     py::class_<ioh::problem::bbob::ManyAffine, ioh::problem::RealSingleObjective,
                std::shared_ptr<ioh::problem::bbob::ManyAffine>>(m, "ManyAffine")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"))
@@ -468,7 +470,28 @@ void define_many_affine(py::module& m){
         .def_property_readonly("function_values", &ioh::problem::bbob::ManyAffine::get_function_values);
 }
 
-void define_bbob(py::module& m){
+
+void define_funnel(py::module &m)
+{
+    using namespace ioh::problem;
+    py::class_<funnel::DoubleFunnel, RealSingleObjective, std::shared_ptr<funnel::DoubleFunnel>>(m, "DoubleFunnel")
+        .def_property_readonly("d", &funnel::DoubleFunnel::d)
+        .def_property_readonly("s", &funnel::DoubleFunnel::s)
+        .def_property_readonly("u1", &funnel::DoubleFunnel::u1)
+        .def_property_readonly("u2", &funnel::DoubleFunnel::u2);
+
+
+    py::class_<funnel::DoubleSphere, RealSingleObjective, std::shared_ptr<funnel::DoubleSphere>>(m, "DoubleSphere")
+        .def(py::init<int, double, double>(), py::arg("n_variables"), py::arg("d") = 0.0, py::arg("s") = 1.0);
+
+
+    py::class_<funnel::DoubleRastrigin, RealSingleObjective, std::shared_ptr<funnel::DoubleRastrigin>>(
+        m, "DoubleRastrigin")
+        .def(py::init<int, double, double>(), py::arg("n_variables"), py::arg("d") = 0.0, py::arg("s") = 1.0);
+}
+
+void define_bbob(py::module &m)
+{
     define_bbob_problems<ioh::problem::BBOB>(m);
     define_bbob_problems<ioh::problem::SBOX>(m, "SBOX", true);
 }
