@@ -481,11 +481,11 @@ void define_funnel(py::module &m)
         .def_property_readonly("u2", &funnel::DoubleFunnel::u2);
 
 
-    py::class_<funnel::DoubleSphere, RealSingleObjective, std::shared_ptr<funnel::DoubleSphere>>(m, "DoubleSphere")
+    py::class_<funnel::DoubleSphere, funnel::DoubleFunnel, std::shared_ptr<funnel::DoubleSphere>>(m, "DoubleSphere")
         .def(py::init<int, double, double>(), py::arg("n_variables"), py::arg("d") = 0.0, py::arg("s") = 1.0);
 
 
-    py::class_<funnel::DoubleRastrigin, RealSingleObjective, std::shared_ptr<funnel::DoubleRastrigin>>(
+    py::class_<funnel::DoubleRastrigin, funnel::DoubleFunnel, std::shared_ptr<funnel::DoubleRastrigin>>(
         m, "DoubleRastrigin")
         .def(py::init<int, double, double>(), py::arg("n_variables"), py::arg("d") = 0.0, py::arg("s") = 1.0);
 }
