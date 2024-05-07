@@ -9,7 +9,12 @@
 #include <sstream>
 #include <vector>
 
-#define GENERATE_TEST_DYNAMIC_BIN_VAL true
+#define GENERATE_TEST_DYNAMIC_BIN_VAL false
+
+// Helper function to check if the operation name is valid
+bool is_valid_operation(const std::string& operation_name) {
+  return operation_name == "operator_call" || operation_name == "rank" || operation_name == "rank_indices";
+}
 
 TEST_F(BaseTest, test_dynamic_bin_val_operator_call)
 {
@@ -28,7 +33,8 @@ TEST_F(BaseTest, test_dynamic_bin_val_operator_call)
     auto number_of_timesteps = stoi(tmp[2]);
 
     auto operation_name = tmp[3];
-    if (operation_name == "operator()")
+    ASSERT_TRUE(is_valid_operation(operation_name)) << "Invalid operation name: " << operation_name;
+    if (operation_name == "operator_call")
     {
       auto x = string_to_vector_int(tmp[4]);
       auto f = stod(tmp[5]);
@@ -69,6 +75,7 @@ TEST_F(BaseTest, test_dynamic_bin_val_rank)
     auto number_of_timesteps = stoi(tmp[2]);
 
     auto operation_name = tmp[3];
+    ASSERT_TRUE(is_valid_operation(operation_name)) << "Invalid operation name: " << operation_name;
     if (operation_name == "rank")
     {
       auto bitstrings_str = tmp[4];
@@ -111,6 +118,7 @@ TEST_F(BaseTest, test_dynamic_bin_val_rank_indices)
     auto number_of_timesteps = stoi(tmp[2]);
 
     auto operation_name = tmp[3];
+    ASSERT_TRUE(is_valid_operation(operation_name)) << "Invalid operation name: " << operation_name;
     if (operation_name == "rank_indices")
     {
       auto bitstrings_str = tmp[4];
@@ -181,7 +189,7 @@ TEST_F(BaseTest, generate_test_dynamic_bin_val)
             // Output results directly during test execution
             outfile << std::fixed << std::setprecision(5);
             outfile << landscape->meta_data().problem_id << " " << instance << " " << number_of_timesteps
-                    << " operator() " << x_str << " " << y << std::endl;
+                    << " operator_call " << x_str << " " << y << std::endl;
 
             if (landscape->meta_data().problem_id == 10'004) {
               for (int num_ranked_bitstrings : sequence_of_num_of_ranked_bitstrings) {
