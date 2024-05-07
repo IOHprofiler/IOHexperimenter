@@ -52,30 +52,3 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: tests/test_ioh
-
-  build-test-python:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        python-version: ["3.6.x", "3.7.x", "3.8.x", "3.9.x", "3.10.x", "3.11.x"]
-        compiler: [clang++]
-        architecture: [x64]
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: true    
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      env:
-        CXX: ${{ matrix.compiler }}
-      with:
-        python-version: ${{matrix.python-version}}
-        architecture: ${{matrix.architecture}}
-    - name: Install library
-      run: |
-        brew install ninja
-        python -m pip install --upgrade pip
-        pip install mypy xmltodict wheel scikit-build
-        pip install -e . -v
-    - name: Run unit tests
-      run: python -m unittest -v

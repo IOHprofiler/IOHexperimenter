@@ -76,7 +76,7 @@ namespace ioh::problem
 
         int step() override
         {
-            // using std::shuffle results in different behaviour on Windows versus. on Ubuntu.
+            // Using std::shuffle results in different behaviour on Windows versus on Ubuntu.
             portable_shuffle(comparison_ordering, this->random_generator);
             this->timestep += 1;
             return this->timestep;
