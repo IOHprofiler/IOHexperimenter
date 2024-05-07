@@ -9,6 +9,15 @@
 
 namespace ioh::problem
 {
+    template <typename RandomGenerator>
+    void portable_shuffle(std::vector<int>& array, RandomGenerator& generator) {
+      for (size_t i = array.size() - 1; i > 0; --i) {
+        std::uniform_int_distribution<size_t> distribution(0, i);
+        size_t j = distribution(generator);
+        std::swap(array[i], array[j]);
+      }
+    }
+
     /**
      * @class DynamicBinValRanking
      * @brief Represents dynamic binary value problems in Iterative Optimization Heuristics (IOH).
@@ -67,7 +76,8 @@ namespace ioh::problem
 
         int step() override
         {
-            std::shuffle(comparison_ordering.begin(), comparison_ordering.end(), this->random_generator);
+            // using std::shuffle results in different behaviour on Windows versus. on Ubuntu.
+            portable_shuffle(comparison_ordering, this->random_generator);
             this->timestep += 1;
             return this->timestep;
         }
