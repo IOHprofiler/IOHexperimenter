@@ -101,7 +101,10 @@ TEST_F(BaseTest, test_dynamic_bin_val_rank)
 
       auto real_ranked_bitstrings = landscape->rank(input_bitstrings);
 
-      EXPECT_TRUE(are_vectors_of_vectors_equal(ideal_ranked_bitstrings, real_ranked_bitstrings));
+      EXPECT_TRUE(are_vectors_of_vectors_equal(ideal_ranked_bitstrings, real_ranked_bitstrings))
+          << "Expected and actual ranked bitstrings do not match. Expected: "
+          << format_vector_of_vectors(ideal_ranked_bitstrings)
+          << ", Actual: " << format_vector_of_vectors(real_ranked_bitstrings);
     }
   }
 }
@@ -144,7 +147,10 @@ TEST_F(BaseTest, test_dynamic_bin_val_rank_indices)
 
       auto real_ranking_indices = landscape->rank_indices(input_bitstrings);
 
-      EXPECT_TRUE(are_vectors_equal(ideal_ranking_indices, real_ranking_indices));
+      EXPECT_TRUE(are_vectors_equal(ideal_ranking_indices, real_ranking_indices))
+        << "Expected and actual ranked bitstrings do not match. Expected: "
+        << vector_to_string(ideal_ranking_indices)
+        << ", Actual: " << vector_to_string(real_ranking_indices);
     }
   }
 }
