@@ -8,6 +8,17 @@
 #include "ioh/common/log.hpp"
 #include "ioh/common/file.hpp"
 
+// Function to print the contents of a vector of doubles
+inline void print_vector(const std::vector<double>& weights) {
+  std::cout << "Vector contents: [";
+  for (size_t i = 0; i < weights.size(); ++i) {
+    std::cout << weights[i];
+    if (i != weights.size() - 1) {
+      std::cout << ", ";
+    }
+  }
+  std::cout << "]" << std::endl;
+}
 
 inline void expect_vector_eq(const std::vector<int> &x, const std::vector<int> &y)
 {

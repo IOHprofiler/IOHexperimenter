@@ -43,6 +43,11 @@ TEST_F(BaseTest, test_dynamic_bin_val_operator_call)
       int n_variables = x.size();
       auto landscape = problem_factory.create(problem_id, instance, n_variables);
 
+      if (problem_id == 10'003)
+      {
+        print_vector(std::dynamic_pointer_cast<ioh::problem::DynamicBinValPareto>(landscape)->weights);
+      }
+
       for (int i = 0; i < number_of_timesteps; ++i) {
         landscape->step();
       }
