@@ -43,11 +43,6 @@ TEST_F(BaseTest, test_dynamic_bin_val_operator_call)
       int n_variables = x.size();
       auto landscape = problem_factory.create(problem_id, instance, n_variables);
 
-      if (problem_id == 10'003)
-      {
-        print_vector(std::dynamic_pointer_cast<ioh::problem::DynamicBinValPareto>(landscape)->weights);
-      }
-
       for (int i = 0; i < number_of_timesteps; ++i) {
         landscape->step();
       }
@@ -101,10 +96,13 @@ TEST_F(BaseTest, test_dynamic_bin_val_rank)
 
       auto real_ranked_bitstrings = landscape->rank(input_bitstrings);
 
+      ;
+
       EXPECT_TRUE(are_vectors_of_vectors_equal(ideal_ranked_bitstrings, real_ranked_bitstrings))
           << "Expected and actual ranked bitstrings do not match. Expected: "
           << format_vector_of_vectors(ideal_ranked_bitstrings)
-          << ", Actual: " << format_vector_of_vectors(real_ranked_bitstrings);
+          << ", Actual: " << format_vector_of_vectors(real_ranked_bitstrings)
+          << ", comparison ordering: " << format_vector(landscape->comparison_ordering);
     }
   }
 }

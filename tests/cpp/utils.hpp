@@ -8,16 +8,23 @@
 #include "ioh/common/log.hpp"
 #include "ioh/common/file.hpp"
 
-// Function to print the contents of a vector of doubles
-inline void print_vector(const std::vector<double>& weights) {
-  std::cout << "Vector contents: [";
-  for (size_t i = 0; i < weights.size(); ++i) {
-    std::cout << weights[i];
-    if (i != weights.size() - 1) {
-      std::cout << ", ";
+#include <sstream>
+#include <vector>
+#include <string>
+
+// Template function to create a string representation of the contents of a vector
+template<typename T>
+inline std::string format_vector(const std::vector<T>& vec) {
+  std::stringstream ss;
+  ss << "[";
+  for (size_t i = 0; i < vec.size(); ++i) {
+    ss << vec[i];
+    if (i != vec.size() - 1) {
+      ss << ", ";
     }
   }
-  std::cout << "]" << std::endl;
+  ss << "]";
+  return ss.str();
 }
 
 inline void expect_vector_eq(const std::vector<int> &x, const std::vector<int> &y)
