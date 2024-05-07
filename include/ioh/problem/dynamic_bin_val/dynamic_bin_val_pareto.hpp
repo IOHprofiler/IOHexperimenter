@@ -10,7 +10,7 @@ namespace ioh::problem
 
         double pareto_shape;
         int timestep;
-        std::default_random_engine random_generator;
+        std::mt19937 random_generator;
         std::vector<double> weights;
         std::vector<int> transformed_x;
 

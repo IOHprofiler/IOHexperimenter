@@ -9,7 +9,7 @@
 #include <sstream>
 #include <vector>
 
-#define GENERATE_TEST_DYNAMIC_BIN_VAL false
+#define GENERATE_TEST_DYNAMIC_BIN_VAL true
 
 // Helper function to check if the operation name is valid
 bool is_valid_operation(const std::string& operation_name) {
