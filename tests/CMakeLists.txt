@@ -30,31 +30,32 @@ function(register_test test_name test_sources)
 endfunction()
 
 # Add all tests in single executable
-file(GLOB SOURCES cpp/*/*.cpp)
-
-# Filter out files that start with 'generate_'
-foreach(SOURCE_FILE ${ALL_SOURCES})
-    get_filename_component(FILE_NAME ${SOURCE_FILE} NAME)
-    if(FILE_NAME MATCHES "^generate_.*")
-        list(REMOVE_ITEM ALL_SOURCES "${SOURCE_FILE}")
-    endif()
-endforeach()
+# Remove files from the 'generators/' directory from being added to general test sources
+file(GLOB_RECURSE ALL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/cpp/*/*.cpp")
+file(GLOB GENERATOR_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/cpp/generators/*.cpp")
+list(REMOVE_ITEM ALL_SOURCES ${GENERATOR_SOURCES})
 
 # Remove MKLandscape if it is not enablecd
 if(NOT ENABLE_MKLANDSCAPE_PROBLEMS)
     get_filename_component(MKLANDSCAPE_CPP ${CMAKE_CURRENT_SOURCE_DIR}/cpp/problem/test_mklandscape_problem.cpp ABSOLUTE)
-    list(REMOVE_ITEM SOURCES "${MKLANDSCAPE_CPP}")
+    list(REMOVE_ITEM ALL_SOURCES "${MKLANDSCAPE_CPP}")
 endif()
 
-register_test(test_${PROJECT_NAME} "${SOURCES}")
+# Loop through each .cpp file in the generators/ directory
+foreach(GENERATOR_SOURCE ${GENERATOR_SOURCES})
+    # Extract the filename without the directory path and extension
+    get_filename_component(GENERATOR_TARGET_NAME "${GENERATOR_SOURCE}" NAME_WE)
+
+    # Define the executable for each source file
+    add_executable(${GENERATOR_TARGET_NAME} ${GENERATOR_SOURCE})
+    target_include_directories(${GENERATOR_TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/cpp)
+    target_link_libraries(${GENERATOR_TARGET_NAME} PRIVATE ${PROJECT_NAME} gtest)
+endforeach()
+
+register_test(test_${PROJECT_NAME} "${ALL_SOURCES}")
 
 # Add test for each file seperately
-foreach(test_source ${SOURCES}) 
+foreach(test_source ${ALL_SOURCES})
     get_filename_component(test_fname "${test_source}" NAME_WE)
     register_test(${test_fname} "${test_source}")
 endforeach()
-
-# Define new executable for generating test cases
-add_executable(generate_test_cases ${CMAKE_CURRENT_SOURCE_DIR}/cpp/problem/generate_test_dynamic_bin_val.cpp)
-target_include_directories(generate_test_cases PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/cpp)
-target_link_libraries(generate_test_cases PRIVATE ${PROJECT_NAME} gtest)
