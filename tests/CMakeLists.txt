@@ -45,3 +45,8 @@ foreach(test_source ${SOURCES})
     get_filename_component(test_fname "${test_source}" NAME_WE)
     register_test(${test_fname} "${test_source}")
 endforeach()
+
+# Define new executable for generating test cases
+add_executable(generate_test_cases ${CMAKE_CURRENT_SOURCE_DIR}/cpp/problem/generate_test_dynamic_bin_val.cpp)
+target_include_directories(generate_test_cases PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/cpp)
+target_link_libraries(generate_test_cases PRIVATE ${PROJECT_NAME} gtest)
