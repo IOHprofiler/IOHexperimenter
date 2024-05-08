@@ -32,6 +32,14 @@ endfunction()
 # Add all tests in single executable
 file(GLOB SOURCES cpp/*/*.cpp)
 
+# Filter out files that start with 'generate_'
+foreach(SOURCE_FILE ${ALL_SOURCES})
+    get_filename_component(FILE_NAME ${SOURCE_FILE} NAME)
+    if(FILE_NAME MATCHES "^generate_.*")
+        list(REMOVE_ITEM ALL_SOURCES "${SOURCE_FILE}")
+    endif()
+endforeach()
+
 # Remove MKLandscape if it is not enablecd
 if(NOT ENABLE_MKLANDSCAPE_PROBLEMS)
     get_filename_component(MKLANDSCAPE_CPP ${CMAKE_CURRENT_SOURCE_DIR}/cpp/problem/test_mklandscape_problem.cpp ABSOLUTE)
