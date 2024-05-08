@@ -10,8 +10,7 @@
 
 namespace ioh::problem
 {
-
-
+    constexpr long max_long_value = 4282876139L;
 
     // Template function to create a string representation of the contents of a vector
     template<typename T>
@@ -75,7 +74,7 @@ namespace ioh::problem
 
             int subtract_bits = static_cast<int>(log2(static_cast<double>(this->weights.size())));
             // Generate random exponent values using the fully qualified `uniform` function
-            auto seed = this->random_generator();
+            auto seed = (this->random_generator() & max_long_value);
             auto random_exponents = ioh::common::random::pbo::uniform(this->weights.size(), seed, 1, 31 - subtract_bits - 1);
 
             // Reinitialize the weights with powers of two, using the generated exponent values
@@ -91,6 +90,7 @@ namespace ioh::problem
             this->optimum_.x = this->transformed_x;
 
 
+            std::cout << "max_long_value" << max_long_value << std::endl;
             std::cout << "instance" << instance << std::endl;
             std::cout << seed << std::endl;
             std::cout << subtract_bits << std::endl;
@@ -106,7 +106,7 @@ namespace ioh::problem
 
             int subtract_bits = static_cast<int>(log2(static_cast<double>(this->weights.size())));
             // Use the `uniform` function to generate values in a range suitable for exponents
-            auto seed = this->random_generator();
+            auto seed = (this->random_generator() & max_long_value);
             auto random_exponents = ioh::common::random::pbo::uniform(this->weights.size(), seed, 1, 31 - subtract_bits - 1);
 
             // Reinitialize the weights with powers of 2 using the generated exponent values
