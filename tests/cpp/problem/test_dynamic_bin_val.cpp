@@ -94,8 +94,6 @@ TEST_F(BaseTest, test_dynamic_bin_val_rank)
 
       auto real_ranked_bitstrings = landscape->rank(input_bitstrings);
 
-      ;
-
       EXPECT_TRUE(are_vectors_of_vectors_equal(ideal_ranked_bitstrings, real_ranked_bitstrings))
           << "Expected and actual ranked bitstrings do not match. Expected: "
           << format_vector_of_vectors(ideal_ranked_bitstrings)
