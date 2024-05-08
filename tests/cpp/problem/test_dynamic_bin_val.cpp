@@ -47,11 +47,6 @@ TEST_F(BaseTest, test_dynamic_bin_val_operator_call)
 
       auto y = (*landscape)(x);
 
-      if (problem_id == 10'002)
-      {
-        std::cout << format_vector(std::dynamic_pointer_cast<ioh::problem::DynamicBinValPowersOfTwo>(landscape)->weights) << std::endl;
-      }
-
       if (f == 0.0) {
         EXPECT_NEAR(y, 0.0, 1.0 / pow(10, 6 - log(10)))
           << problem_id << " " << instance << " " << number_of_timesteps << " "

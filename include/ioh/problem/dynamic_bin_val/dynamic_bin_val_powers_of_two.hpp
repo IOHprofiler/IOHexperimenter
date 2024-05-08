@@ -10,6 +10,24 @@
 
 namespace ioh::problem
 {
+
+
+
+    // Template function to create a string representation of the contents of a vector
+    template<typename T>
+    inline std::string format_vector(const std::vector<T>& vec) {
+      std::stringstream ss;
+      ss << "[";
+      for (size_t i = 0; i < vec.size(); ++i) {
+        ss << vec[i];
+        if (i != vec.size() - 1) {
+          ss << ", ";
+        }
+      }
+      ss << "]";
+      return ss.str();
+    }
+
     /**
      * @class DynamicBinValPowersOfTwo
      * @brief This class serves to represent dynamic binary value problems within the context of Iterative
@@ -63,7 +81,7 @@ namespace ioh::problem
             for(size_t i = 0; i < this->weights.size(); ++i)
             {
                 int exponent = static_cast<int>(std::round(random_exponents[i])); // Round to nearest integer
-                this->weights[i] = static_cast<int>(pow(2, static_cast<double>(exponent)));
+                this->weights[i] = 1 << exponent;
             }
 
             this->transformed_x = std::vector<int>(n_variables, 1);
@@ -85,7 +103,15 @@ namespace ioh::problem
             for (size_t i = 0; i < this->weights.size(); ++i)
             {
                 int exponent = static_cast<int>(std::round(random_exponents[i])); // Round to nearest integer
-                this->weights[i] = static_cast<int>(pow(2, static_cast<double>(exponent)));
+                this->weights[i] = 1 << exponent;
+            }
+
+            if (this->timestep == 7)
+            {
+                std::cout << subtract_bits << std::endl;
+                std::cout << this->weights.size() << std::endl;
+                std::cout << format_vector(random_exponents) << std::endl;
+                std::cout << format_vector(this->weights) << std::endl;
             }
 
             return this->timestep;
