@@ -86,15 +86,6 @@ namespace ioh::problem
             this->optimum_.y = transform_objectives(0);
             transform_variables(this->transformed_x);
             this->optimum_.x = this->transformed_x;
-
-
-            std::cout << "max_long_value" << max_long_value << std::endl;
-            std::cout << "instance" << instance << std::endl;
-            std::cout << seed << std::endl;
-            std::cout << subtract_bits << std::endl;
-            std::cout << this->weights.size() << std::endl;
-            std::cout << format_vector(random_exponents) << std::endl;
-            std::cout << format_vector(this->weights) << std::endl;
         }
 
 
@@ -113,12 +104,6 @@ namespace ioh::problem
                 int exponent = static_cast<int>(std::round(random_exponents[i])); // Round to nearest integer
                 this->weights[i] = 1 << exponent;
             }
-
-            std::cout << seed << std::endl;
-            std::cout << subtract_bits << std::endl;
-            std::cout << this->weights.size() << std::endl;
-            std::cout << format_vector(random_exponents) << std::endl;
-            std::cout << format_vector(this->weights) << std::endl;
 
             return this->timestep;
         }
