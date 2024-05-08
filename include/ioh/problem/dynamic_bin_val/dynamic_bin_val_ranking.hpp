@@ -197,14 +197,14 @@ namespace ioh::problem
          */
         double evaluate(const std::vector<int> &x) override
         {
-          // XOR the elements of the vector x with optimum_.x, then sum them
-          int sum = 0;
-          for (size_t i = 0; i < x.size(); ++i) {
+            // XOR the elements of the vector x with optimum_.x, then sum them
+            int sum = 0;
+            for (size_t i = 0; i < x.size(); ++i) {
             sum += 1 - (x[i] ^ this->optimum_.x[i]);
-          }
+            }
 
-          // The evaluation function returns the sum
-          return static_cast<double>(sum);
+            // The evaluation function returns the sum
+            return static_cast<double>(sum);
         }
 
     };

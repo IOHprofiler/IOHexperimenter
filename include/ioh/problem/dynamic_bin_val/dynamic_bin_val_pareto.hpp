@@ -29,11 +29,12 @@ namespace ioh::problem
 
             this->weights.resize(n_variables);
 
-            std::uniform_real_distribution<double> distribution(0.0, 0.75);
+            // Generate uniform random doubles between 0.0 and 0.75
+            auto uniform_samples = ioh::common::random::pbo::uniform(this->weights.size(), this->random_generator(), 0.0, 0.75);
 
             for(size_t i = 0; i < this->weights.size(); ++i)
             {
-                double uniform_sample = distribution(this->random_generator);
+                double uniform_sample = uniform_samples[i];
 
                 // Calculate the weight using the power-law distribution inversion formula
                 // Truncate the distribution to prevent overflow when weights are summed
@@ -51,12 +52,14 @@ namespace ioh::problem
         {
             this->timestep += 1;
 
-            std::uniform_real_distribution<double> distribution(0.0, 0.75);
+            // Generate uniform random doubles between 0.0 and 0.75 using the fully qualified `uniform` function
+            auto uniform_samples = ioh::common::random::pbo::uniform(this->weights.size(), this->random_generator(), 0.0, 0.75);
 
             for(size_t i = 0; i < this->weights.size(); ++i)
             {
-                double uniform_sample = distribution(this->random_generator);
-                auto pareto_distributed = std::pow(1.0 - uniform_sample, -1.0 / pareto_shape);
+                double uniform_sample = uniform_samples[i];
+                // Transform the uniform sample to a Pareto distribution
+                double pareto_distributed = std::pow(1.0 - uniform_sample, -1.0 / pareto_shape);
                 this->weights[i] = static_cast<double>(pareto_distributed);
             }
 

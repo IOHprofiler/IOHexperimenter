@@ -52,16 +52,17 @@ namespace ioh::problem
 
             this->timestep = 0;
 
-            // Initialize the weights vector with random numbers between 0 and 1
+            // Initialize the weights vector
             this->weights.resize(n_variables);
 
             int subtract_bits = log2(this->weights.size());
-            std::uniform_int_distribution<> uniform_int_distribution(1, 31 - subtract_bits - 1);
+            // Generate random exponent values using the fully qualified `uniform` function
+            auto random_exponents = ioh::common::random::pbo::uniform(this->weights.size(), this->random_generator(), 1, 31 - subtract_bits - 1);
 
-            // Reinitialize the weights with random numbers between 0 and 1 after shuffling
+            // Reinitialize the weights with powers of two, using the generated exponent values
             for(size_t i = 0; i < this->weights.size(); ++i)
             {
-                int exponent = uniform_int_distribution(this->random_generator);
+                int exponent = static_cast<int>(std::round(random_exponents[i])); // Round to nearest integer
                 this->weights[i] = pow(2, exponent);
             }
 
@@ -71,17 +72,19 @@ namespace ioh::problem
             this->optimum_.x = this->transformed_x;
         }
 
+
         int step() override
         {
             this->timestep += 1;
 
             int subtract_bits = log2(this->weights.size());
-            std::uniform_int_distribution<> uniform_int_distribution(1, 31 - subtract_bits - 1);
+            // Use the `uniform` function to generate values in a range suitable for exponents
+            auto random_exponents = ioh::common::random::pbo::uniform(this->weights.size(), this->random_generator(), 1, 31 - subtract_bits - 1);
 
-            // Reinitialize the weights with random numbers between 0 and 1 after shuffling
-            for(size_t i = 0; i < this->weights.size(); ++i)
+            // Reinitialize the weights with powers of 2 using the generated exponent values
+            for (size_t i = 0; i < this->weights.size(); ++i)
             {
-                int exponent = uniform_int_distribution(this->random_generator);
+                int exponent = static_cast<int>(std::round(random_exponents[i])); // Round to nearest integer
                 this->weights[i] = pow(2, exponent);
             }
 
