@@ -10,12 +10,32 @@
 namespace ioh::problem
 {
     template <typename RandomGenerator>
-    void portable_shuffle(std::vector<int>& array, RandomGenerator& generator) {
-      for (size_t i = array.size() - 1; i > 0; --i) {
-        std::uniform_int_distribution<size_t> distribution(0, i);
-        size_t j = distribution(generator);
-        std::swap(array[i], array[j]);
-      }
+    void portable_shuffle(std::vector<int>& array, RandomGenerator& generator)
+    {
+        struct LCG {
+            uint64_t state;
+            LCG(uint64_t seed) : state(seed) {}
+
+            uint64_t next() {
+                // Coefficients for a Linear Congruential Generator
+                // These values are from Numerical Recipes
+                state = state * 1664525 + 1013904223;
+                return state;
+            }
+
+            size_t operator()(size_t n) {
+                // Generate a random number in [0, n-1]
+                return next() % n;
+            }
+        };
+
+        LCG lcg(generator()); // Initialize LCG with a seed from the external generator
+
+        // Shuffle logic using LCG
+        for (size_t i = array.size() - 1; i > 0; --i) {
+            size_t j = lcg(i + 1); // Generate a random index in [0, i]
+            std::swap(array[i], array[j]);
+        }
     }
 
     /**
