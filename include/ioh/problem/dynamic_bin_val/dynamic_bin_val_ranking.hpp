@@ -74,10 +74,14 @@ namespace ioh::problem
             std::iota(comparison_ordering.begin(), comparison_ordering.end(), 0);
 
             this->optimum_.x = std::vector<int>(n_variables);
-            std::uniform_int_distribution<> distrib(0, 1);
-            for (int& value : this->optimum_.x) {
-                value = distrib(this->random_generator);
+
+            // Generate random doubles in the range [0, 1] and convert them to integers (0 or 1).
+            auto random_values = ioh::common::random::pbo::uniform(n_variables, this->random_generator(), 0, 1);
+            for (int i = 0; i < n_variables; ++i)
+            {
+                this->optimum_.x[i] = static_cast<int>(random_values[i] + 0.5); // Round to nearest integer
             }
+
             this->optimum_.y = this->evaluate(this->optimum_.x);
             this->timestep = 0;
         }
