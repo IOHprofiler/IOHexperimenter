@@ -1,4 +1,4 @@
-name: MacOS
+name: Ubuntu
 
 on: [push]
 
@@ -9,24 +9,35 @@ env:
 
 jobs:
   build-test-cpp:
-    runs-on: macos-12
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         rust: [stable, nightly]
-        compiler: [clang++] 
+        compiler: [g++-10, g++-9, g++-8, g++-7] 
 
     steps:
     - uses: actions/checkout@v2
       with:
         rust-version: ${{ matrix.rust }}
         submodules: true
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install doxygen python3-setuptools python3-dev python3-wheel -y 
+        pip3 install wheel
     
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
       # We'll use this as our working directory for all subsequent commands
       env:
         CXX: ${{ matrix.compiler }}
-      run: cmake -E make_directory ${{runner.workspace}}/build
+      run: |
+        sudo apt-get update
+        sudo apt-get install ${{ matrix.compiler }} -y
+        git submodule status
+        cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
@@ -54,11 +65,11 @@ jobs:
       run: tests/test_ioh
 
   build-test-python:
-    runs-on: macos-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         python-version: ["3.6.x", "3.7.x", "3.8.x", "3.9.x", "3.10.x", "3.11.x"]
-        compiler: [clang++]
+        compiler: [g++-10]
         architecture: [x64]
     steps:
     - uses: actions/checkout@v2
@@ -73,7 +84,8 @@ jobs:
         architecture: ${{matrix.architecture}}
     - name: Install library
       run: |
-        brew install ninja
+        sudo apt-get update -y
+        sudo apt-get install ninja-build -y
         python -m pip install --upgrade pip
         pip install mypy xmltodict wheel scikit-build
         pip install -e . -v
