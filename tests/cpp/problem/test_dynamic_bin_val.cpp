@@ -48,9 +48,13 @@ TEST_F(BaseTest, test_dynamic_bin_val_operator_call)
       auto y = (*landscape)(x);
 
       if (f == 0.0) {
-          EXPECT_NEAR(y, 0.0, 1.0 / pow(10, 6 - log(10)));
+        EXPECT_NEAR(y, 0.0, 1.0 / pow(10, 6 - log(10)))
+          << problem_id << " " << instance << " " << number_of_timesteps << " "
+          << operation_name << " " << concatenate_vector(x) << " " << f;
       } else {
-          EXPECT_NEAR(y, f, 1.0 / pow(10, 6 - log(10)));
+        EXPECT_NEAR(y, f, 1.0 / pow(10, 6 - log(10)))
+          << problem_id << " " << instance << " " << number_of_timesteps << " "
+          << operation_name << " " << concatenate_vector(x) << " " << f;
       }
     }
   }

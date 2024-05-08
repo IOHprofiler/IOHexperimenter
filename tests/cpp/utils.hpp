@@ -155,6 +155,14 @@ inline std::string format_vector_of_vectors(const std::vector<std::vector<int>>&
   return oss.str();
 }
 
+inline std::string concatenate_vector(const std::vector<int>& v) {
+  std::string result;
+  for (int num : v) {
+    result += std::to_string(num);
+  }
+  return result;
+}
+
 // Function to check if two vectors of vectors of integers are the same
 inline bool are_vectors_of_vectors_equal(const std::vector<std::vector<int>>& vec1, const std::vector<std::vector<int>>& vec2) {
     if (vec1.size() != vec2.size()) {
