@@ -30,7 +30,7 @@ namespace ioh::problem
             this->weights.resize(n_variables);
 
             // Generate uniform random doubles between 0.0 and 0.75
-            auto uniform_samples = ioh::common::random::pbo::uniform(this->weights.size(), this->random_generator(), 0.0, 0.75);
+            auto uniform_samples = ioh::common::random::pbo::uniform(this->weights.size(), this->random_generator() & max_long_value, 0.0, 0.75);
 
             for(size_t i = 0; i < this->weights.size(); ++i)
             {
@@ -53,7 +53,7 @@ namespace ioh::problem
             this->timestep += 1;
 
             // Generate uniform random doubles between 0.0 and 0.75 using the fully qualified `uniform` function
-            auto uniform_samples = ioh::common::random::pbo::uniform(this->weights.size(), this->random_generator(), 0.0, 0.75);
+            auto uniform_samples = ioh::common::random::pbo::uniform(this->weights.size(), this->random_generator() & max_long_value, 0.0, 0.75);
 
             for(size_t i = 0; i < this->weights.size(); ++i)
             {

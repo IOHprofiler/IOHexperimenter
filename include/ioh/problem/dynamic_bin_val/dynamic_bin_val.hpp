@@ -12,6 +12,10 @@
 
 namespace ioh::problem
 {
+    // NOTE: It's important to give `seed` the type uint64_t instead of long;
+    //   otherwise not the same pseudo-random numbers will be generated from the seed between Ubuntu and Windows.
+    constexpr long max_long_value = 1782677537L;
+
     class DynamicBinVal : public IntegerSingleObjective
     {
     public:

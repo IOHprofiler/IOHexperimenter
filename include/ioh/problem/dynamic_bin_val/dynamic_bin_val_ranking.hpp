@@ -16,7 +16,7 @@ namespace ioh::problem
         size_t n = array.size();
         if (n > 1) {
             // Generate random numbers between 0 and n-1 using the uniform function
-            auto rand_values = ioh::common::random::pbo::uniform(n - 1, generator(), 0, static_cast<double>(n - 1));
+            auto rand_values = ioh::common::random::pbo::uniform(n - 1, generator() & max_long_value, 0, static_cast<double>(n - 1));
 
             for (size_t i = n - 1; i > 0; --i) {
                 // Convert generated double to an index within the valid range
@@ -76,7 +76,7 @@ namespace ioh::problem
             this->optimum_.x = std::vector<int>(n_variables);
 
             // Generate random doubles in the range [0, 1] and convert them to integers (0 or 1).
-            auto random_values = ioh::common::random::pbo::uniform(n_variables, this->random_generator(), 0, 1);
+            auto random_values = ioh::common::random::pbo::uniform(n_variables, this->random_generator() & max_long_value, 0, 1);
             for (int i = 0; i < n_variables; ++i)
             {
                 this->optimum_.x[i] = static_cast<int>(random_values[i] + 0.5); // Round to nearest integer
