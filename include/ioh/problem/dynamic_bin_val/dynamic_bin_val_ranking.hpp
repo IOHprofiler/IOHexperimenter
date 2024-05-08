@@ -14,7 +14,7 @@ namespace ioh::problem
     {
         struct LCG {
             uint64_t state;
-            LCG(uint64_t seed) : state(seed) {}
+            explicit LCG(uint64_t seed) : state(seed) {}
 
             uint64_t next() {
                 // Coefficients for a Linear Congruential Generator
