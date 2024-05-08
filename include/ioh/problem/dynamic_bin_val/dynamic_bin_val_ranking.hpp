@@ -9,32 +9,20 @@
 
 namespace ioh::problem
 {
+    // Redefined portable_shuffle using the uniform function for generating random indices
     template <typename RandomGenerator>
     void portable_shuffle(std::vector<int>& array, RandomGenerator& generator)
     {
-        struct LCG {
-            uint64_t state;
-            explicit LCG(uint64_t seed) : state(seed) {}
+        size_t n = array.size();
+        if (n > 1) {
+            // Generate random numbers between 0 and n-1 using the uniform function
+            auto rand_values = ioh::common::random::pbo::uniform(n - 1, generator(), 0, static_cast<double>(n - 1));
 
-            uint64_t next() {
-                // Coefficients for a Linear Congruential Generator
-                // These values are from Numerical Recipes
-                state = state * 1664525 + 1013904223;
-                return state;
+            for (size_t i = n - 1; i > 0; --i) {
+                // Convert generated double to an index within the valid range
+                size_t j = static_cast<size_t>(rand_values[i - 1]);
+                std::swap(array[i], array[j]);
             }
-
-            size_t operator()(size_t n) {
-                // Generate a random number in [0, n-1]
-                return next() % n;
-            }
-        };
-
-        LCG lcg(generator()); // Initialize LCG with a seed from the external generator
-
-        // Shuffle logic using LCG
-        for (size_t i = array.size() - 1; i > 0; --i) {
-            size_t j = lcg(i + 1); // Generate a random index in [0, i]
-            std::swap(array[i], array[j]);
         }
     }
 
