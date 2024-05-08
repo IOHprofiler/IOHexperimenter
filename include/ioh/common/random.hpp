@@ -254,7 +254,7 @@ namespace ioh::common::random
             // Initialize the seed and generator
             for (auto i = 39; i >= 0; i--)
             {
-                seed = lcg_rand(seed);
+                seed = static_cast<int>(lcg_rand(seed));
                 if (i < 32)
                     generators[i] = seed;
             }
@@ -267,7 +267,7 @@ namespace ioh::common::random
             {
                 const auto index = static_cast<int>(floor(random_number / 67108865.0));
 
-                seed = lcg_rand(seed);
+                seed = static_cast<int>(lcg_rand(seed));
                 random_number = generators[index];
                 generators[index] = seed;
 
@@ -283,7 +283,7 @@ namespace ioh::common::random
         inline std::vector<double> normal(const size_t n, const long seed, const double lb = 0, const double ub = 1)
         {
             assert(2 * n < 6000);
-            const auto uniform_random = uniform(2 * n, seed);
+            const auto uniform_random = uniform(2 * n, static_cast<int>(seed));
 
             std::vector<double> x(n);
 

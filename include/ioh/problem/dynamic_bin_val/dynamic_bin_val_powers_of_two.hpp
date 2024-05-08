@@ -55,7 +55,7 @@ namespace ioh::problem
             // Initialize the weights vector
             this->weights.resize(n_variables);
 
-            int subtract_bits = log2(this->weights.size());
+            int subtract_bits = static_cast<int>(log2(static_cast<double>(this->weights.size())));
             // Generate random exponent values using the fully qualified `uniform` function
             auto random_exponents = ioh::common::random::pbo::uniform(this->weights.size(), this->random_generator(), 1, 31 - subtract_bits - 1);
 
@@ -63,7 +63,7 @@ namespace ioh::problem
             for(size_t i = 0; i < this->weights.size(); ++i)
             {
                 int exponent = static_cast<int>(std::round(random_exponents[i])); // Round to nearest integer
-                this->weights[i] = pow(2, exponent);
+                this->weights[i] = static_cast<int>(pow(2, static_cast<double>(exponent)));
             }
 
             this->transformed_x = std::vector<int>(n_variables, 1);
@@ -77,7 +77,7 @@ namespace ioh::problem
         {
             this->timestep += 1;
 
-            int subtract_bits = log2(this->weights.size());
+            int subtract_bits = static_cast<int>(log2(static_cast<double>(this->weights.size())));
             // Use the `uniform` function to generate values in a range suitable for exponents
             auto random_exponents = ioh::common::random::pbo::uniform(this->weights.size(), this->random_generator(), 1, 31 - subtract_bits - 1);
 
@@ -85,7 +85,7 @@ namespace ioh::problem
             for (size_t i = 0; i < this->weights.size(); ++i)
             {
                 int exponent = static_cast<int>(std::round(random_exponents[i])); // Round to nearest integer
-                this->weights[i] = pow(2, exponent);
+                this->weights[i] = static_cast<int>(pow(2, static_cast<double>(exponent)));
             }
 
             return this->timestep;

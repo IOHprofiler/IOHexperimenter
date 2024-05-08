@@ -282,7 +282,7 @@ namespace ioh::problem::transformation
          */
         inline void random_sign_flip(std::vector<double> &x, const long seed)
         {
-            const auto random_numbers = common::random::bbob2009::uniform(x.size(), seed);
+            const auto random_numbers = common::random::bbob2009::uniform(x.size(), static_cast<int>(seed));
             for (size_t i = 0; i < x.size(); ++i)
                 if (random_numbers[i] < 0.5)
                     x[i] = -x[i];
