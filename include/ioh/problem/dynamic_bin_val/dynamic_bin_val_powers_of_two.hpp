@@ -10,7 +10,7 @@
 
 namespace ioh::problem
 {
-    constexpr long max_long_value = 4282876139L;
+    constexpr long max_long_value = 1782677537L;
 
     // Template function to create a string representation of the contents of a vector
     template<typename T>
