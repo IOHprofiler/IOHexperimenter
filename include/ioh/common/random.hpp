@@ -185,10 +185,10 @@ namespace ioh::common::random
          * \param lb lower bound for the random numbers
          * \param ub upper bound for the random numbers
          */
-        inline std::vector<double> uniform(const size_t &n, long seed, const double lb = 0, const double ub = 1)
+        inline std::vector<double> uniform(const size_t &n, uint64_t seed, const double lb = 0, const double ub = 1)
         {
             auto rand_vec = std::vector<double>(n);
-            long rand_seed[32] = {};
+            uint64_t rand_seed[32] = {};
 
             for (auto i = 39; i >= 0; --i)
             {
