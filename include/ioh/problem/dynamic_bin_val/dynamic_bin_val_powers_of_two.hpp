@@ -75,7 +75,8 @@ namespace ioh::problem
 
             int subtract_bits = static_cast<int>(log2(static_cast<double>(this->weights.size())));
             // Generate random exponent values using the fully qualified `uniform` function
-            auto random_exponents = ioh::common::random::pbo::uniform(this->weights.size(), this->random_generator(), 1, 31 - subtract_bits - 1);
+            auto seed = this->random_generator();
+            auto random_exponents = ioh::common::random::pbo::uniform(this->weights.size(), seed, 1, 31 - subtract_bits - 1);
 
             // Reinitialize the weights with powers of two, using the generated exponent values
             for(size_t i = 0; i < this->weights.size(); ++i)
@@ -88,6 +89,14 @@ namespace ioh::problem
             this->optimum_.y = transform_objectives(0);
             transform_variables(this->transformed_x);
             this->optimum_.x = this->transformed_x;
+
+
+            std::cout << "instance" << instance << std::endl;
+            std::cout << seed << std::endl;
+            std::cout << subtract_bits << std::endl;
+            std::cout << this->weights.size() << std::endl;
+            std::cout << format_vector(random_exponents) << std::endl;
+            std::cout << format_vector(this->weights) << std::endl;
         }
 
 
@@ -97,7 +106,8 @@ namespace ioh::problem
 
             int subtract_bits = static_cast<int>(log2(static_cast<double>(this->weights.size())));
             // Use the `uniform` function to generate values in a range suitable for exponents
-            auto random_exponents = ioh::common::random::pbo::uniform(this->weights.size(), this->random_generator(), 1, 31 - subtract_bits - 1);
+            auto seed = this->random_generator();
+            auto random_exponents = ioh::common::random::pbo::uniform(this->weights.size(), seed, 1, 31 - subtract_bits - 1);
 
             // Reinitialize the weights with powers of 2 using the generated exponent values
             for (size_t i = 0; i < this->weights.size(); ++i)
@@ -106,13 +116,11 @@ namespace ioh::problem
                 this->weights[i] = 1 << exponent;
             }
 
-            if (this->timestep == 7)
-            {
-                std::cout << subtract_bits << std::endl;
-                std::cout << this->weights.size() << std::endl;
-                std::cout << format_vector(random_exponents) << std::endl;
-                std::cout << format_vector(this->weights) << std::endl;
-            }
+            std::cout << seed << std::endl;
+            std::cout << subtract_bits << std::endl;
+            std::cout << this->weights.size() << std::endl;
+            std::cout << format_vector(random_exponents) << std::endl;
+            std::cout << format_vector(this->weights) << std::endl;
 
             return this->timestep;
         }
