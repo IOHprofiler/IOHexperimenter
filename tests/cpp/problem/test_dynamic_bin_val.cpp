@@ -38,7 +38,7 @@ TEST_F(BaseTest, test_dynamic_bin_val_operator_call)
       auto f = stod(tmp[5]);
 
       const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::DynamicBinVal>::instance();
-      int n_variables = x.size();
+      int n_variables = static_cast<int>(x.size());
       auto landscape = problem_factory.create(problem_id, instance, n_variables);
 
       for (int i = 0; i < number_of_timesteps; ++i) {
@@ -46,6 +46,11 @@ TEST_F(BaseTest, test_dynamic_bin_val_operator_call)
       }
 
       auto y = (*landscape)(x);
+
+      if (problem_id == 10'002)
+      {
+        std::cout << format_vector(std::dynamic_pointer_cast<ioh::problem::DynamicBinValPowersOfTwo>(landscape)->weights) << std::endl;
+      }
 
       if (f == 0.0) {
         EXPECT_NEAR(y, 0.0, 1.0 / pow(10, 6 - log(10)))
@@ -89,7 +94,7 @@ TEST_F(BaseTest, test_dynamic_bin_val_rank)
 
       ASSERT_EQ(problem_id, 10'004) << "Problem ID is not 10'004.";
 
-      int n_variables = input_bitstrings[0].size();
+      int n_variables = static_cast<int>(input_bitstrings[0].size());
       auto landscape = std::make_shared<ioh::problem::DynamicBinValRanking>(instance, n_variables);
 
       for (int i = 0; i < number_of_timesteps; ++i) {
@@ -136,7 +141,7 @@ TEST_F(BaseTest, test_dynamic_bin_val_rank_indices)
 
       ASSERT_EQ(problem_id, 10'004) << "Problem ID is not 10'004.";
 
-      int n_variables = input_bitstrings[0].size();
+      int n_variables = static_cast<int>(input_bitstrings[0].size());
       auto landscape = std::make_shared<ioh::problem::DynamicBinValRanking>(instance, n_variables);
 
       for (int i = 0; i < number_of_timesteps; ++i) {
