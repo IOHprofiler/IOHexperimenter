@@ -16,7 +16,7 @@ namespace ioh::problem
         struct TransformationState
         {
             //! The seed
-            long seed;
+            unsigned long seed;
 
             //! A vector with exponents
             std::vector<double> exponents{};

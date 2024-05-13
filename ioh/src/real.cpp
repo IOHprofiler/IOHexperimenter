@@ -541,7 +541,6 @@ void define_dynamic_bin_val_problem(py::module &m)
         .def_property_readonly_static(
             "problems", [](py::object) { return ioh::common::Factory<DynamicBinVal, int, int>::instance().map(); },
             "All registered problems")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"))
         .def("step", &DynamicBinVal::step, R"pbdoc(
             Step the dynamic binary value problem forward by one timestep, and permute the weights randomly.
 
@@ -563,7 +562,7 @@ void define_dynamic_bin_val_problem(py::module &m)
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<Pareto, DynamicBinVal, std::shared_ptr<Pareto>>(m, "DynamicBinValPareto", doc)
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"))
-        .def_property_readonly("pareto_shape", &DynamicBinValPareto::get_pareto_shape);
+        .def_property_readonly("pareto_shape", &Pareto::get_pareto_shape);
 
     py::class_<Ranking, DynamicBinVal, std::shared_ptr<Ranking>>(m, "DynamicBinValRanking", doc)
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"))

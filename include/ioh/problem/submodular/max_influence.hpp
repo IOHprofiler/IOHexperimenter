@@ -46,7 +46,7 @@ namespace ioh::problem
 
                 for (size_t i = 0; i < x.size(); i++)
                 {
-                    is_activated[i] = x[i];
+                    is_activated[i] = static_cast<uint8_t>(x[i]);
                     if (x[i] != 0)
                         visits.push(i);
                 }

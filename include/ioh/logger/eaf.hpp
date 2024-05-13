@@ -1019,7 +1019,7 @@ namespace logger {
 
                 }
                 assert(nb_runs > 0);
-                return v / (nb_runs * (error_max-error_min) * (evals_max-evals_min));
+                return v / (static_cast<double>(nb_runs) * (error_max-error_min) * static_cast<double>(evals_max-evals_min));
             }
 
             /** Computes the absolute "hypervolume" of the whole empirical attainement function.

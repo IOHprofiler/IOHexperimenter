@@ -208,7 +208,7 @@ namespace ioh
                 {
                     assert(this->_min <= x);
                     assert(x <= this->max()); // FIXME do we want that?
-                    if (x >= this->max())
+                    if (x >= static_cast<double>(this->max()))
                     {
                         return this->size() - 1;
                     }
@@ -283,7 +283,7 @@ namespace ioh
                 {
                     assert(this->_min <= x);
                     assert(x <= this->max()); // FIXME do we want that?
-                    if (x >= this->max())
+                    if (x >= static_cast<double>(this->max()))
                     {
                         return this->size() - 1;
                     }
@@ -549,8 +549,8 @@ namespace ioh
                 }
 
                 // If this target is worst than the domain.
-                if (evaluations.value() < _range_evals.min() || _range_evals.max() < evaluations.value()
-                    || err < _range_error.min() || _range_error.max() < err)
+                if (evaluations.value() < static_cast<double>(_range_evals.min()) || static_cast<double>(_range_evals.max()) < evaluations.value()
+                    || err < static_cast<double>(_range_error.min()) || static_cast<double>(_range_error.max()) < err)
                 {
                     // Discard it.
                     // FIXME we should use a more generic debug log system
@@ -1105,10 +1105,10 @@ namespace ioh
                                 assert(0 <= w_proba and w_proba <= 1);
                                 // Within the loop because widths of buckets vary for log ranges.
                                 const double w_error = (range_error.bounds(i).second - range_error.bounds(i).first) /
-                                    range_error.length();
+                                    static_cast<double>(range_error.length());
                                 assert(0 <= w_error and w_error <= 1);
                                 const double w_evals = (range_evals.bounds(j).second - range_evals.bounds(j).first) /
-                                    range_evals.length();
+                                    static_cast<double>(range_evals.length());
                                 assert(0 <= w_evals and w_evals <= 1);
                                 // TODO allow to multiply by a weight each axis?
                                 res = op(res, w_proba * w_error * w_evals);
