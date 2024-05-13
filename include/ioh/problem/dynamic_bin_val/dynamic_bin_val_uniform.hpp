@@ -28,11 +28,7 @@ namespace ioh::problem::dynamic_bin_val
     protected:
         void update_weights() override
         {
-            // Reinitialize the weights with random numbers between 0 and 1 after shuffling
-            for (size_t i = 0; i < this->weights.size(); ++i)
-            {
-                this->weights[i] = std::generate_canonical<double, 10>(this->random_generator.gen);
-            }
+            this->weights = common::random::pbo::uniform(meta_data_.n_variables, this->random_generator());
         }
 
     public:

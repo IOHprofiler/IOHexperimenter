@@ -53,7 +53,7 @@ namespace ioh::problem
                                    Bounds<int>(n_variables, 0, 1)),
             time_step(-1), random_generator(instance), weights(n_variables)
         {
-            this->optimum_.x = std::vector<int>(this->weights.size(), 1);
+            this->optimum_.x.assign(meta_data_.n_variables, 1);
             transformation::variables::random_flip(this->optimum_.x, this->meta_data_.instance);
         }
 

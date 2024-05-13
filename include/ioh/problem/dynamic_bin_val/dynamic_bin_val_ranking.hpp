@@ -66,7 +66,7 @@ namespace ioh::problem::dynamic_bin_val
             this->optimum_.x = std::vector<int>(n_variables);
 
             // Generate random doubles in the range [0, 1] and convert them to integers (0 or 1).
-            const auto random_values = common::random::pbo::uniform(n_variables, this->random_generator(), 0, 1);
+            const auto random_values = common::random::pbo::uniform(n_variables, this->random_generator());
             for (int i = 0; i < n_variables; ++i)
                 this->optimum_.x[i] = std::lround(random_values[i]); // Round to nearest integer
 

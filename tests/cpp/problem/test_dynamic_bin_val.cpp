@@ -7,6 +7,9 @@
 #include <random>
 #include <vector>
 
+
+const static char *TEST_FILE = "dynamic_bin_val.in";
+
 // Helper function to check if the operation name is valid
 bool is_valid_operation(const std::string &operation_name)
 {
@@ -29,7 +32,7 @@ TEST_F(BaseTest, test_dynamic_bin_val_xopt_equals_yopt)
 TEST_F(BaseTest, test_dynamic_bin_val_operator_call)
 {
     std::ifstream infile;
-    const auto file_path = ioh::common::file::utils::find_static_file("dynamic_bin_val.in");
+    const auto file_path = ioh::common::file::utils::find_static_file(TEST_FILE);
     infile.open(file_path.c_str());
 
     std::string s;
@@ -82,7 +85,7 @@ TEST_F(BaseTest, test_dynamic_bin_val_operator_call)
 TEST_F(BaseTest, test_dynamic_bin_val_rank)
 {
     std::ifstream infile;
-    const auto file_path = ioh::common::file::utils::find_static_file("dynamic_bin_val.in");
+    const auto file_path = ioh::common::file::utils::find_static_file(TEST_FILE);
     infile.open(file_path.c_str());
 
     std::string s;
@@ -112,7 +115,7 @@ TEST_F(BaseTest, test_dynamic_bin_val_rank)
             ASSERT_EQ(problem_id, 10'004) << "Problem ID is not 10'004.";
 
             int n_variables = static_cast<int>(input_bitstrings[0].size());
-            auto landscape = std::make_shared<ioh::problem::DynamicBinValRanking>(instance, n_variables);
+            auto landscape = std::make_shared<ioh::problem::dynamic_bin_val::Ranking>(instance, n_variables);
 
             for (int i = 0; i < number_of_timesteps; ++i)
             {
@@ -163,7 +166,7 @@ TEST_F(BaseTest, test_dynamic_bin_val_rank_indices)
             ASSERT_EQ(problem_id, 10'004) << "Problem ID is not 10'004.";
 
             int n_variables = static_cast<int>(input_bitstrings[0].size());
-            auto landscape = std::make_shared<ioh::problem::DynamicBinValRanking>(instance, n_variables);
+            auto landscape = std::make_shared<ioh::problem::dynamic_bin_val::Ranking>(instance, n_variables);
 
             for (int i = 0; i < number_of_timesteps; ++i)
             {
