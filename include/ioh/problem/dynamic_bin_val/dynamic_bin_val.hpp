@@ -1,12 +1,5 @@
 #pragma once
 
-#include <algorithm>
-#include <iostream>
-#include <limits>
-#include <math.h>
-#include <random>
-#include <vector>
-
 #include "ioh/problem/single.hpp"
 #include "ioh/problem/transformation.hpp"
 

@@ -7,14 +7,14 @@
 
 #include "dynamic_bin_val.hpp"
 
-namespace ioh::problem
+namespace ioh::problem::dynamic_bin_val
 {
     /**
-     * @class DynamicBinValPowersOfTwo
+     * @class PowersOfTwo
      * @brief This class serves to represent dynamic binary value problems within the context of Iterative
      *        Optimization Heuristics (IOH).
      *
-     *        DynamicBinValPowersOfTwo: takes a value among the powers 2**1, 2**2, 2**3, ..., 2**31 / n_variables for
+     *        PowersOfTwo: takes a value among the powers 2**1, 2**2, 2**3, ..., 2**31 / n_variables for
      * each weight at each time_step
      *
      *        Inheriting functionalities from the IntegerSingleObjective, it also integrates functionalities
@@ -24,7 +24,7 @@ namespace ioh::problem
      *        time_step and weights, which are crucial in depicting the dynamic aspects and unique features
      *        of these problem instances.
      */
-    class DynamicBinValPowersOfTwo final : public DynamicBinValProblem<DynamicBinValPowersOfTwo>
+    class PowersOfTwo final : public DynamicBinValProblem<PowersOfTwo>
     {
     protected:
         void update_weights() override
@@ -47,7 +47,7 @@ namespace ioh::problem
          * @param n_variables The dimension of the problem, representing the size of the search space and
          *                    indicating the number of variables in the problem.
          */
-        DynamicBinValPowersOfTwo(const int instance, const int n_variables) :
+        PowersOfTwo(const int instance, const int n_variables) :
             DynamicBinValProblem(10'002, instance, n_variables, "DynamicBinValPowersOfTwo")
         {
             step();

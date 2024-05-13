@@ -1,13 +1,12 @@
+#pragma once
 /**
  * @file dynamic_bin_val_ranking.hpp
  * @brief Declaration of DynamicBinValRanking class for dynamic binary value problems in IOH context.
  */
 
-#pragma once
-
 #include "dynamic_bin_val.hpp"
 
-namespace ioh::problem
+namespace ioh::problem::dynamic_bin_val
 {
     // Redefined portable_shuffle using the uniform function for generating random indices
     template <typename RandomGenerator>
@@ -29,13 +28,13 @@ namespace ioh::problem
     }
 
     /**
-     * @class DynamicBinValRanking
+     * @class Ranking
      * @brief Represents dynamic binary value problems in Iterative Optimization Heuristics (IOH).
      *
      * It inherits from IntegerSingleObjective and includes additional functionalities for dynamic problems.
      * This class encapsulates the unique dynamic features such as changing optimum and comparison order over time.
      */
-    class DynamicBinValRanking final : public DynamicBinValProblem<DynamicBinValRanking>
+    class Ranking final : public DynamicBinValProblem<Ranking>
     {
     public:
         /**
@@ -58,7 +57,7 @@ namespace ioh::problem
          * @param n_variables The dimension of the problem, representing the size of the search space and
          *                    indicating the number of variables in the problem.
          */
-        DynamicBinValRanking(const int instance, const int n_variables) :
+        Ranking(const int instance, const int n_variables) :
             DynamicBinValProblem(10'004, instance, n_variables, "DynamicBinValRanking"),
             comparison_ordering(n_variables)
         {

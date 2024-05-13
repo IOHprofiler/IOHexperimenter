@@ -2,9 +2,9 @@
 
 #include "dynamic_bin_val.hpp"
 
-namespace ioh::problem
+namespace ioh::problem::dynamic_bin_val
 {
-    class DynamicBinValPareto final : public DynamicBinValProblem<DynamicBinValPareto>
+    class Pareto final : public DynamicBinValProblem<Pareto>
     {
         double pareto_shape_;
 
@@ -28,7 +28,7 @@ namespace ioh::problem
          * @param n_variables The dimension of the problem, representing the size of the search space and
          *                    indicating the number of variables in the problem.
          */
-        DynamicBinValPareto(const int instance, const int n_variables) :
+        Pareto(const int instance, const int n_variables) :
             DynamicBinValProblem(10'003, instance, n_variables, "DynamicBinValPareto"), pareto_shape_(0.1)
         {
             step();          

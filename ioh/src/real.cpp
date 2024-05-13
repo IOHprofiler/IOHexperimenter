@@ -495,3 +495,100 @@ void define_bbob(py::module &m)
     define_bbob_problems<ioh::problem::BBOB>(m);
     define_bbob_problems<ioh::problem::SBOX>(m, "SBOX", true);
 }
+
+
+void define_dynamic_bin_val_problem(py::module &m)
+{
+    using namespace ioh::problem::dynamic_bin_val;
+
+    py::class_<DynamicBinVal, IntegerSingleObjective, std::shared_ptr<DynamicBinVal>>(m, "DynamicBinVal")
+        .def_static(
+            "create",
+            [](const std::string &name, int iid, int dim) {
+                return ioh::common::Factory<DynamicBinVal, int, int>::instance().create(name, iid, dim);
+            },
+            py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
+            R"pbdoc(
+                Create a problem instance
+
+                Parameters
+                ----------
+                    problem_name: str
+                        a string indicating the problem name.
+                    instance_id: int
+                        an integer identifier of the problem instance
+                    dimension: int
+                        the dimensionality of the search space
+        )pbdoc")
+        .def_static(
+            "create",
+            [](int id, int iid, int dim) {
+                return ioh::common::Factory<DynamicBinVal, int, int>::instance().create(id, iid, dim);
+            },
+            py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
+            R"pbdoc(
+                Create a problem instance
+
+                Parameters
+                ----------
+                    problem_id: int
+                        a number indicating the problem numeric identifier.
+                    instance_id: int
+                        an integer identifier of the problem instance
+                    dimension: int
+                        the dimensionality of the search space
+        )pbdoc")
+        .def_property_readonly_static(
+            "problems", [](py::object) { return ioh::common::Factory<DynamicBinVal, int, int>::instance().map(); },
+            "All registered problems")
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"))
+        .def("step", &DynamicBinVal::step, R"pbdoc(
+            Step the dynamic binary value problem forward by one timestep, and permute the weights randomly.
+
+            Returns
+            -------
+            int
+                The current timestep after the step.
+        )pbdoc")
+        .def_readonly("time_step", &DynamicBinVal::time_step)
+        .def_readonly("weights", &DynamicBinVal::weights)
+        ;
+
+    const auto doc =
+        R"pbdoc(Dynamic BinVal. Details: https://link.springer.com/article/10.1007/s42979-022-01203-z )pbdoc";
+    
+    py::class_<Uniform, DynamicBinVal, std::shared_ptr<Uniform>>(m, "DynamicBinValUniform", doc)
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+    py::class_<PowersOfTwo, DynamicBinVal, std::shared_ptr<PowersOfTwo>>(m, "DynamicBinValPowersOfTwo", doc)
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+    py::class_<Pareto, DynamicBinVal, std::shared_ptr<Pareto>>(m, "DynamicBinValPareto", doc)
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"))
+        .def_property_readonly("pareto_shape", &DynamicBinValPareto::get_pareto_shape);
+
+    py::class_<Ranking, DynamicBinVal, std::shared_ptr<Ranking>>(m, "DynamicBinValRanking", doc)
+        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"))
+        .def("rank", &Ranking::rank, R"pbdoc(
+            Sort a list of bitstrings in lexicographical order in-place.
+
+            Parameters
+            ----------
+            bitstrings : list
+                A list of bitstrings to sort.
+        )pbdoc")
+        .def("rank_indices", &Ranking::rank_indices, R"pbdoc(
+            Sort a list of bitstrings in lexicographical order in-place.
+
+            Parameters
+            ----------
+            bitstrings : list
+                A list of bitstrings to sort.
+        )pbdoc")
+        .def("get_comparison_ordering", &Ranking::get_comparison_ordering, R"pbdoc(
+            Get the current comparison ordering vector.
+
+            Returns
+            -------
+            list of int
+                The current state of the comparison ordering vector.
+        )pbdoc");
+}
