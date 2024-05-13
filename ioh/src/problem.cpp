@@ -200,6 +200,7 @@ void define_base_class(py::module &m, const std::string &name)
         .def("set_id", &ProblemType::set_id, py::arg("new_problem_id"), "update the problem id")
         .def("set_instance", &ProblemType::set_instance, py::arg("new_instance"), "update the problem instance")
         .def("set_name", &ProblemType::set_name, py::arg("new_name"), "update the problem name")
+        .def("set_final_target", &ProblemType::set_final_target, py::arg("new_target"), "update the final target")
         .def("invert", &ProblemType::invert)
         .def("__repr__", [=](const ProblemType &p) {
             using namespace ioh::common;
@@ -299,6 +300,7 @@ void define_wmodels(py::module &m);
 void define_submodular_problems(py::module &m);
 void define_star_discrepancy_problems(py::module &m);
 void define_many_affine(py::module &m);
+void define_funnel(py::module &m);
 
 void define_problem(py::module &m)
 {
@@ -312,6 +314,7 @@ void define_problem(py::module &m)
     define_submodular_problems(m);
     define_star_discrepancy_problems(m);
     define_many_affine(m);  
+    define_funnel(m);  
 
     py::module_::import("atexit").attr("register")(py::cpp_function([]() {
         for (const auto fn : WRAPPED_FUNCTIONS)

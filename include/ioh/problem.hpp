@@ -9,6 +9,7 @@
 #include "problem/pbo.hpp"
 #include "problem/wmodel.hpp"
 #include "problem/submodular.hpp"
+#include "problem/funnel.hpp"
 
 #ifdef USING_MKLANDSCAPE
 #include "problem/mklandscape/cliqueTreeC.hpp"
@@ -16,3 +17,4 @@
 
 #include "problem/star_discrepancy/real.hpp"
 #include "problem/star_discrepancy/integer.hpp"
+

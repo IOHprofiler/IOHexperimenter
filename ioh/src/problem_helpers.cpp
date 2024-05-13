@@ -54,7 +54,9 @@ void define_state(py::module &m, const std::string &name)
             )pbdoc")
         .def_readonly("evaluations", &Class::evaluations, "The number of times the problem has been evaluated so far.")
         .def_readonly("optimum_found", &Class::optimum_found,
-                      "Boolean value indicating whether the optimum of a given problem has been found.")
+                      "Boolean value indicating whether final_target_found optimum of a given problem has been found.")
+        .def_readonly("final_target_found", &Class::final_target_found,
+                      "Boolean value indicating whether the final target of a given problem has been found.")
         .def_readonly("current_best_internal", &Class::current_best_internal,
                       "The internal representation of the best so far solution. "
                       "See `current_internal` for a short explanation on the meaning of 'internal'")
@@ -278,8 +280,9 @@ void define_helper_classes(py::module &m)
 
 
     py::class_<MetaData>(m, "MetaData")
-        .def(py::init<int, int, std::string, int, ioh::common::OptimizationType>(), py::arg("problem_id"),
+        .def(py::init<int, int, std::string, int, ioh::common::OptimizationType, double>(), py::arg("problem_id"),
              py::arg("instance"), py::arg("name"), py::arg("n_variables"), py::arg("optimization_type"),
+             py::arg("final_target") = 1e-8,
              R"pbdoc(
                 Problem meta data. Contains static information about problems, such as their name and id. 
 
@@ -294,7 +297,9 @@ void define_helper_classes(py::module &m)
                 n_variables: int
                     The problem dimensionality
                 optimization_type: OptimizationType
-                    Enum value, denoting if this is a maximization or minimization problem    
+                    Enum value, denoting if this is a maximization or minimization problem
+                final_target: float
+                    The final target of the function    
                
             )pbdoc")
         .def_readonly("instance", &MetaData::instance, "The instance number of the current problem")
@@ -305,6 +310,7 @@ void define_helper_classes(py::module &m)
             "The type of problem (maximization or minimization)")
         .def_readonly("n_variables", &MetaData::n_variables,
                       "The number of variables (dimension) of the current problem")
+        .def_readonly("final_target", &MetaData::final_target)
         .def("__repr__", &MetaData::repr)
         .def("__eq__", &MetaData::operator==);
 
