@@ -141,6 +141,7 @@ namespace ioh::problem
         void load_objective_shift(const int cec_function_identifier)
         {
             const static auto shifts_file = common::file::utils::find_static_file(CEC_FOLDER + "F_i_star.txt");
+
             const static auto shifts = common::file::as_numeric_vector<double>(shifts_file);
 
             if (cec_function_identifier > 0 && cec_function_identifier <= static_cast<int>(shifts.size()))
@@ -161,6 +162,7 @@ namespace ioh::problem
         {
             const auto linear_transformation_file = common::file::utils::find_static_file(
                 fmt::format("{}M_{:d}_D{:d}.txt", CEC_FOLDER, cec_function_identifier, meta_data_.n_variables));
+
             const auto transformation_vector = common::file::as_numeric_vector<double>(linear_transformation_file);
             const int matrix_size = meta_data_.n_variables * meta_data_.n_variables;
 
@@ -181,6 +183,7 @@ namespace ioh::problem
         {
             const auto shift_data_filepath = common::file::utils::find_static_file(
                 fmt::format("{}shift_data_{}.txt", CEC_FOLDER, cec_function_identifier));
+
             const auto shift_data = common::file::as_numeric_vector<double>(shift_data_filepath);
 
             variables_shifts_ = common::to_matrix(shift_data, shift_data.size() / 100, 100);

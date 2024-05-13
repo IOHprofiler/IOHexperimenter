@@ -155,7 +155,10 @@ namespace ioh
         std::vector<std::vector<T>> to_matrix(const std::vector<T> &v, const size_t n, const size_t m)
         {
             if (n * m != v.size())
-                throw std::invalid_argument("Cannot reshape vector into matrix of n * m");
+                throw std::invalid_argument(
+                    "ioh::common::to_matrix: " + 
+                    fmt::format("Cannot reshape vector of size {} into matrix of shape {} * {}", v.size(), n, m)
+                );
 
             std::vector<std::vector<T>> res(n);
 

@@ -43,12 +43,12 @@ namespace ioh::problem::bbob
         }
     }
     
-    class ManyAffine : public RealSingleObjective
+    class ManyAffine final : public RealSingleObjective
     {
     public:
-        static inline const std::array<double, 24> default_scales{11.,  17.5, 12.3, 12.6, 11.5, 15.3, 12.1, 15.3,
-                                                                  15.2, 17.4, 13.4, 20.4, 12.9, 10.4, 12.3, 10.3,
-                                                                  9.8,  10.6, 10.,  14.7, 10.7, 10.8, 9.,   12.1};
+        static inline constexpr std::array<double, 24> default_scales{11.,  17.5, 12.3, 12.6, 11.5, 15.3, 12.1, 15.3,
+                                                                      15.2, 17.4, 13.4, 20.4, 12.9, 10.4, 12.3, 10.3,
+                                                                      9.8,  10.6, 10.,  14.7, 10.7, 10.8, 9.,   12.1};
 
         /**
          * @brief Construct a new Many Affine object, requires weights and instances to be specified
@@ -64,11 +64,11 @@ namespace ioh::problem::bbob
                    const std::array<double, 24> &scale_factors) :
             RealSingleObjective(MetaData(0, instances[0], "ManyAffine", n_variables),
                                 Bounds<double>(n_variables, -5, 5)),
-            weights(weights), instances(instances), scale_factors(scale_factors), problems{}, function_values{}
+            weights_(weights), instances_(instances), scale_factors_(scale_factors), problems_{}, function_values_{}
         {
             const auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::BBOB>::instance();
             for (int fid = 1; fid < 25; fid++)
-                problems[fid - 1] = problem_factory.create(fid, instances[fid - 1], n_variables);
+                problems_[fid - 1] = problem_factory.create(fid, instances[fid - 1], n_variables);
 
             this->optimum_.x = xopt;
             this->optimum_.y = evaluate(xopt);
@@ -99,16 +99,16 @@ namespace ioh::problem::bbob
                 std::vector<double> x0 = x;
                 for (size_t i = 0; i < x.size(); i++)
                 {
-                    x0[i] = x[i] + problems[fi]->optimum().x[i] - this->optimum_.x[i];
+                    x0[i] = x[i] + problems_[fi]->optimum().x[i] - this->optimum_.x[i];
                 }
                 // evaluate and shift by yopt
-                double f0 = (*problems[fi])(x0)-problems[fi]->optimum().y;
+                double f0 = (*problems_[fi])(x0)-problems_[fi]->optimum().y;
                 // clamp to finite
                 f0 = std::min(std::max(f0, 1e-12), 1e20);
                 // apply scaling
-                f0 = (std::log10(f0) + 8) / scale_factors[fi];
+                f0 = (std::log10(f0) + 8) / scale_factors_[fi];
                 // apply weights
-                f0 = f0 * weights[fi];
+                f0 = f0 * weights_[fi];
                 result += f0;
         }
             // convert to base 10
@@ -117,27 +117,34 @@ namespace ioh::problem::bbob
         }
 
     private:
-        std::array<double, 24> weights;
-        std::array<int, 24> instances;
-        std::array<double, 24> scale_factors;
-        std::array<std::shared_ptr<ioh::problem::BBOB>, 24> problems;
-        std::array<double, 24> function_values;
+        std::array<double, 24> weights_;
+        std::array<int, 24> instances_;
+        std::array<double, 24> scale_factors_;
+        std::array<std::shared_ptr<ioh::problem::BBOB>, 24> problems_;
+        std::array<double, 24> function_values_;
 
     public:
-        std::array<double, 24> get_weights(){
-            return weights;
+        [[nodiscard]] std::array<double, 24> get_weights() const
+        {
+            return weights_;
         }
-        std::array<int, 24> get_instances(){
-            return instances;
+
+        [[nodiscard]] std::array<int, 24> get_instances() const
+        {
+            return instances_;
         }
-        std::array<double, 24> get_scale_factors(){
-            return scale_factors;
+
+        [[nodiscard]] std::array<double, 24> get_scale_factors() const
+        {
+            return scale_factors_;
         }
         std::array<std::shared_ptr<ioh::problem::BBOB>, 24> get_problems(){
-            return problems;
+            return problems_;
         }
-        std::array<double, 24> get_function_values(){
-            return function_values;
+
+        [[nodiscard]] std::array<double, 24> get_function_values() const
+        {
+            return function_values_;
         }
     };
 } // namespace ioh::problem::bbob

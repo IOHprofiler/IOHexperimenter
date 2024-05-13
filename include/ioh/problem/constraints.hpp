@@ -332,13 +332,13 @@ namespace ioh::problem
         }
 
         //! Return resize version of BoxConstraint
-        BoxConstraint<T> resize(const int s) const
+        [[nodiscard]] BoxConstraint<T> resize(const int s) const
         {
             return BoxConstraint<T>(std::vector<T>(s, lb.at(0)), std::vector<T>(s, ub.at(0)));
         }
 
         //! String representation
-        std::string repr() const override { return fmt::format("<BoxConstraint lb: [{}] ub: [{}]>", lb, ub); }
+        [[nodiscard]] std::string repr() const override { return fmt::format("<BoxConstraint lb: [{}] ub: [{}]>", lb, ub); }
 
 
         bool operator==(const BoxConstraint<T>& other) const {

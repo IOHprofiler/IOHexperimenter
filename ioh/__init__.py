@@ -15,18 +15,28 @@ import urllib.request
 import tarfile
 
 # Set the path to the static/ directory.
-# NEEDED for C++ code to load transformation details for CEC functions.
+# NEEDED for C++ code to load transformation details for several functions.
 # The static/ directory is installed together with the "pip install" command.
 # WARNING: The os.environ should be manipulated before any package from .iohcpp is imported!
 # =================================================================================================
 # Get the directory containing the __init__.py file
-# package_directory = os.path.dirname(__file__)
+package_directory = os.path.realpath(os.path.dirname(__file__))
 
 # Construct the path to the static/ directory
-# static_directory = os.path.join(package_directory, 'static')
+static_directory = os.path.join(package_directory, 'static')
 
 # Set the IOH_RESOURCES environment variable to the path to the static/ directory
-# os.environ['IOH_RESOURCES'] = static_directory
+if os.environ.get('IOH_RESOURCES') is None:
+    os.environ['IOH_RESOURCES'] = static_directory
+    
+# Raise informative error
+if not os.path.isdir(os.environ['IOH_RESOURCES']):
+    raise ImportError(
+        f"static directory not found. Please manually set the environment variable IOH_RESOURCES "
+        f"to the path of the unpacked static.tar.gz (see: "
+        f"https://github.com/IOHprofiler/IOHexperimenter/blob/master/static.tar.gz)"
+    )        
+    
 # =================================================================================================
 
 from .iohcpp import (

@@ -90,7 +90,7 @@ namespace ioh::common::file
 #pragma warning(push)
 #pragma warning(disable : 4996)
 #endif
-            if (const char *ioh_resources = std::getenv("IOH_RESOURCES"); ioh_resources != nullptr)
+            if (const char *ioh_resources = std::getenv("IOH_RESOURCES"))
             {
                 return fs::canonical(fs::path(ioh_resources));
             }
@@ -123,10 +123,7 @@ namespace ioh::common::file
             auto file = get_static_root() / filename;
 
             if (!exists(file))
-            {
-                IOH_DBG(warning, "could not find file: " << filename);
-                return {};
-            }
+                throw std::runtime_error(fmt::format("Could not find static file: {}", filename));
             return file;
         }
 

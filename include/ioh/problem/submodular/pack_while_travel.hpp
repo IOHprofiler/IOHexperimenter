@@ -22,7 +22,7 @@ namespace ioh::problem
                  * @param other Another point
                  * @return double Euclidian distance
                  */
-                double distance(const Point &other) const
+                [[nodiscard]] double distance(const Point &other) const
                 {
                     return std::ceil(std::sqrt(std::pow(x - other.x, 2) + std::pow(y - other.y, 2)));
                 }
@@ -211,12 +211,12 @@ namespace ioh::problem
                 }
 
                 //! Penalty function, scales violation
-                double penalty() const override {
+                [[nodiscard]] double penalty() const override {
                     return weight * pow(graph->ttp_data.capacity - violation_ + graph->ttp_data.penalty, exponent);   
                 }
                 
                 //! String representation
-                std::string repr() const override { return fmt::format("<PWTConstraint {}>", violation()); }
+                [[nodiscard]] std::string repr() const override { return fmt::format("<PWTConstraint {}>", violation()); }
             };
         } // namespace pwt
 

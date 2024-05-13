@@ -16,8 +16,9 @@ namespace ioh::problem
          */
         double transform_objectives(const double y) override
         {
-            return transformation::objective::shift(y, this->optimum_.y);
+            return transformation::objective::shift(-y, this->optimum_.y);
         }
+
         /**
          * @brief Transforms the input variables based on the current transformation data.
          *
@@ -34,7 +35,8 @@ namespace ioh::problem
          * @return the objective function value
         */
         double evaluate(const std::vector<double> &x) override {
-            const double inner = inner_evaluate(x) - this->optimum_.y;
+            const double inner = (inverter_ * this->optimum_.y) - inner_evaluate(x);
+
             
             if (single_global_optimum)
             {
@@ -42,7 +44,7 @@ namespace ioh::problem
                 transformation::variables::subtract(x_sphere, this->optimum_.x);
                 const double flat_sphere = std::min(sphere(x_sphere), sphere_limit);
 
-                return inner - flat_sphere;
+                return inner + flat_sphere;
             }                
             return inner;
         }

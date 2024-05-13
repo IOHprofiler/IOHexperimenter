@@ -248,10 +248,10 @@ namespace ioh::problem::submodular
         }
 
         //! Compute the penalty by scaling the violotation
-        double penalty() const override { return weight * pow(graph->meta.constraint_limit - violation(), exponent); }
+        [[nodiscard]] double penalty() const override { return weight * pow(graph->meta.constraint_limit - violation(), exponent); }
 
         //! String representation
-        std::string repr() const override { return fmt::format("<GraphConstraint {}>", violation()); }
+        [[nodiscard]] std::string repr() const override { return fmt::format("<GraphConstraint {}>", violation()); }
     };
 
     //! Implementation of the Graph Problem
@@ -301,6 +301,7 @@ namespace ioh::problem::submodular
             Constructors<ProblemType, int, int> constructors;
 
             const auto root_path = path.parent_path();
+
             auto graphs = common::file::as_text_vector<std::shared_ptr<G>>(path);
             int i = ProblemType::default_id;
             for (auto &graph : graphs)
