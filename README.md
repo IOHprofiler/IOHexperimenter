@@ -22,6 +22,9 @@
 * Flexible interface for adding new suites and problems.
 * Advanced logging module that takes care of registering the data in a seamless manner.
 * Data format is compatible with [IOHanalyzer](https://github.com/IOHprofiler/IOHanalyzer).
+* Dynamic BinVal functions ([paper](https://link.springer.com/article/10.1007/s42979-022-01203-z))
+* Double funnel functions ([paper](https://link.springer.com/chapter/10.1007/978-3-540-87700-4_50))
+
 
 **Available Problem Suites:**
 
