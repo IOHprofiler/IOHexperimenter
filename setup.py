@@ -154,7 +154,7 @@ setup(
     description="The experimenter for Iterative Optimization Heuristics",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=find_packages(),
+    packages=find_packages(exclude=['ioh.iohcpp', 'ioh.iohcpp.*']),
     package_dir={"IOHexperimenter": "ioh"},
     include_package_data=True,
     exclude_package_data={"": ["src/*", "*CMakeLists.txt", "*README.md"]},

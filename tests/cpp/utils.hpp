@@ -8,6 +8,24 @@
 #include "ioh/common/log.hpp"
 #include "ioh/common/file.hpp"
 
+#include <sstream>
+#include <vector>
+#include <string>
+
+// Template function to create a string representation of the contents of a vector
+template<typename T>
+inline std::string format_vector(const std::vector<T>& vec) {
+  std::stringstream ss;
+  ss << "[";
+  for (size_t i = 0; i < vec.size(); ++i) {
+    ss << vec[i];
+    if (i != vec.size() - 1) {
+      ss << ", ";
+    }
+  }
+  ss << "]";
+  return ss.str();
+}
 
 inline void expect_vector_eq(const std::vector<int> &x, const std::vector<int> &y)
 {
@@ -69,6 +87,107 @@ inline std::vector<int> string_to_vector_int(const std::string &s)
     return x;
 }
 
+// Helper function to parse a string representation of a vector of vectors
+inline std::vector<std::vector<int>> parse_vector_of_vectors(const std::string& vec_str) {
+  std::vector<std::vector<int>> result;
+  std::istringstream vec_stream(vec_str.substr(1, vec_str.size() - 2)); // Strip the outer brackets
+  std::string subvec_str;
+
+  while (std::getline(vec_stream, subvec_str, ']')) {
+    std::vector<int> subvec;
+    std::replace(subvec_str.begin(), subvec_str.end(), '[', ' ');
+    std::replace(subvec_str.begin(), subvec_str.end(), ',', ' ');
+    std::istringstream subvec_stream(subvec_str);
+    int num;
+    while (subvec_stream >> num) {
+      subvec.push_back(num);
+    }
+    if (!subvec.empty()) {
+      result.push_back(subvec);
+    }
+    vec_stream.get(); // Skip the comma after ']'
+  }
+  return result;
+}
+
+// Helper function to parse a string representation of a vector of integers
+inline std::vector<int> parse_vector(const std::string& vec_str) {
+  std::vector<int> result;
+  std::istringstream vec_stream(vec_str.substr(1, vec_str.size() - 2)); // Strip the outer brackets
+  std::string num_str;
+  while (std::getline(vec_stream, num_str, ',')) {
+    std::istringstream num_stream(num_str);
+    int num;
+    while (num_stream >> num) {
+      result.push_back(num);
+    }
+  }
+  return result;
+}
+
+// Helper function to create a string representation of a vector of integers
+inline std::string vector_to_string(const std::vector<int>& vec) {
+  std::ostringstream result;
+  result << '[';
+  for (size_t i = 0; i < vec.size(); ++i) {
+    result << vec[i];
+    if (i != vec.size() - 1) {
+      result << ",";
+    }
+  }
+  result << ']';
+  return result.str();
+}
+
+inline std::string format_vector_of_vectors(const std::vector<std::vector<int>>& vec) {
+  std::ostringstream oss;
+  oss << "[";
+  for (size_t i = 0; i < vec.size(); ++i) {
+    if (i != 0) oss << ",";
+    oss << "[";
+    for (size_t j = 0; j < vec[i].size(); ++j) {
+      if (j != 0) oss << ",";
+      oss << vec[i][j];
+    }
+    oss << "]";
+  }
+  oss << "]";
+  return oss.str();
+}
+
+inline std::string concatenate_vector(const std::vector<int>& v) {
+  std::string result;
+  for (int num : v) {
+    result += std::to_string(num);
+  }
+  return result;
+}
+
+// Function to check if two vectors of vectors of integers are the same
+inline bool are_vectors_of_vectors_equal(const std::vector<std::vector<int>>& vec1, const std::vector<std::vector<int>>& vec2) {
+    if (vec1.size() != vec2.size()) {
+        return false;
+    }
+    for (size_t i = 0; i < vec1.size(); ++i) {
+        if (vec1[i] != vec2[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Function to check if two vectors of integers are equal at each position
+inline bool are_vectors_equal(const std::vector<int>& vec1, const std::vector<int>& vec2) {
+  if (vec1.size() != vec2.size()) {
+    return false;
+  }
+  for (size_t i = 0; i < vec1.size(); ++i) {
+    if (vec1[i] != vec2[i]) {
+      return false;
+    }
+  }
+  return true;
+}
 
 inline void compare_file_with_string(const fs::path& path, const std::string& expected){
     const std::string got = ioh::common::file::as_string(path);

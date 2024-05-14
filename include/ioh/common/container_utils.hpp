@@ -329,7 +329,7 @@ namespace ioh
             bool operator<(const Permutation &b) const { return value < b.value; }
 
             //! sort a set of random permutations
-            static std::vector<Permutation> sorted(const int n, const int seed)
+            static std::vector<Permutation> sorted(const int n, const unsigned long seed)
             {
                 const auto random_numbers = random::bbob2009::uniform(n, seed);
                 std::vector<Permutation> permutations(n);

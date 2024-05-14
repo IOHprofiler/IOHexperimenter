@@ -124,22 +124,25 @@ namespace ioh::problem::bbob
         std::array<double, 24> function_values_;
 
     public:
-        std::array<double, 24> get_weights() const
+        [[nodiscard]] std::array<double, 24> get_weights() const
         {
             return weights_;
         }
-        std::array<int, 24> get_instances() const
+
+        [[nodiscard]] std::array<int, 24> get_instances() const
         {
             return instances_;
         }
-        std::array<double, 24> get_scale_factors() const
+
+        [[nodiscard]] std::array<double, 24> get_scale_factors() const
         {
             return scale_factors_;
         }
         std::array<std::shared_ptr<ioh::problem::BBOB>, 24> get_problems(){
             return problems_;
         }
-        std::array<double, 24> get_function_values() const
+
+        [[nodiscard]] std::array<double, 24> get_function_values() const
         {
             return function_values_;
         }

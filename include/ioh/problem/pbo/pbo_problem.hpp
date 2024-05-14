@@ -33,7 +33,7 @@ namespace ioh::problem
         }
 
         //! Optimum before transformation
-        std::vector<int> reset_transform_variables(std::vector<int> x)
+        [[nodiscard]] std::vector<int> reset_transform_variables(std::vector<int> x) const
         {
             if (meta_data_.instance > 1 && meta_data_.instance <= 50)
                 transformation::variables::random_flip(x, meta_data_.instance);

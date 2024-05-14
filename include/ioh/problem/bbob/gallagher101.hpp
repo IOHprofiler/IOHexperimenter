@@ -14,7 +14,7 @@ namespace ioh::problem::bbob
             double value;
             std::vector<double> scales;
 
-            Peak(const double value, const int seed, const int n_variables, const double condition) :
+            Peak(const double value, const unsigned long seed, const int n_variables, const double condition) :
                 value(value), scales(n_variables)
             {
                 auto permutations = common::Permutation::sorted(n_variables, seed);
@@ -24,7 +24,7 @@ namespace ioh::problem::bbob
                             static_cast<double>(permutations[i].index) / (static_cast<double>(n_variables) - 1.) - 0.5);
             }
 
-            static std::vector<Peak> get_peaks(const int n, const int n_variables, const int seed,
+            static std::vector<Peak> get_peaks(const int n, const int n_variables, const unsigned long seed,
                                                const double max_condition)
             {
                 static const auto f0 = 1.1, f1 = 9.1, mc = 1000.;

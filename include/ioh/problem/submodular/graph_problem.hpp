@@ -248,10 +248,10 @@ namespace ioh::problem::submodular
         }
 
         //! Compute the penalty by scaling the violotation
-        double penalty() const override { return weight * pow(graph->meta.constraint_limit - violation(), exponent); }
+        [[nodiscard]] double penalty() const override { return weight * pow(graph->meta.constraint_limit - violation(), exponent); }
 
         //! String representation
-        std::string repr() const override { return fmt::format("<GraphConstraint {}>", violation()); }
+        [[nodiscard]] std::string repr() const override { return fmt::format("<GraphConstraint {}>", violation()); }
     };
 
     //! Implementation of the Graph Problem

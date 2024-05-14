@@ -51,6 +51,8 @@ namespace ioh::problem
             violation_(0.), is_feasible_(true), enforced(enforced), weight(weight), exponent(exponent) 
         {
         }
+
+        virtual ~Constraint() = default; // Virtual destructor
         
         /**
          * @brief apply the constraint, and return a (potentially) penalized value for y
@@ -330,13 +332,13 @@ namespace ioh::problem
         }
 
         //! Return resize version of BoxConstraint
-        BoxConstraint<T> resize(const int s) const
+        [[nodiscard]] BoxConstraint<T> resize(const int s) const
         {
             return BoxConstraint<T>(std::vector<T>(s, lb.at(0)), std::vector<T>(s, ub.at(0)));
         }
 
         //! String representation
-        std::string repr() const override { return fmt::format("<BoxConstraint lb: [{}] ub: [{}]>", lb, ub); }
+        [[nodiscard]] std::string repr() const override { return fmt::format("<BoxConstraint lb: [{}] ub: [{}]>", lb, ub); }
 
 
         bool operator==(const BoxConstraint<T>& other) const {

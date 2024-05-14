@@ -301,15 +301,17 @@ void define_submodular_problems(py::module &m);
 void define_star_discrepancy_problems(py::module &m);
 void define_many_affine(py::module &m);
 void define_funnel(py::module &m);
+void define_dynamic_bin_val_problem(py::module &m);
+
 
 void define_problem(py::module &m)
 {
     define_problem_bases(m);
-
     define_bbob(m);
     define_pbo_problems(m);
     define_cec2013_problems(m);
     define_cec2022_problems(m);
+    define_dynamic_bin_val_problem(m);
     define_wmodels(m);
     define_submodular_problems(m);
     define_star_discrepancy_problems(m);

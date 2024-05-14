@@ -1,5 +1,6 @@
 #pragma once
 
+#include "problem/dynamic_bin_val.hpp"
 #include "problem/transformation.hpp"
 #include "problem/cec.hpp"
 #include "problem/problem.hpp"
