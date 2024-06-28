@@ -4,6 +4,7 @@ requires = [
     "wheel",
     "cmake",
     "mypy",
+    "numpy<=2.0.0"
     "pybind11",
     "ninja",
     "xmltodict",
