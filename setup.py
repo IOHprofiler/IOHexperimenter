@@ -174,5 +174,5 @@ setup(
     ],
     license="BSD",
     url="https://iohprofiler.github.io/IOHexperimenter",
-    install_requires=["numpy<=2.0.0"]
+    install_requires=["numpy<2.0.0"]
 )
