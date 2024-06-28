@@ -283,7 +283,7 @@ namespace ioh::common::random
         inline std::vector<double> normal(const size_t n, const unsigned long seed, const double lb = 0, const double ub = 1)
         {
             assert(2 * n < 6000);
-            const auto uniform_random = uniform(2 * n, static_cast<int>(seed));
+            const auto uniform_random = uniform(2 * n, seed);
 
             std::vector<double> x(n);
 

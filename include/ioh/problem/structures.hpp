@@ -256,13 +256,16 @@ namespace ioh
                 ++evaluations;
 
                 const bool has_internal_improved = meta_data.optimization_type(current_internal.y, current_best_internal.y);
-                if (has_internal_improved)
+                has_improved = meta_data.optimization_type(current.y, current_best.y);
+
+                // TODO: Clean this up; dont use the meta data like this
+                if (meta_data.problem_id >= 10'000 && meta_data.problem_id <= 10'004 && has_internal_improved)
                 {
                     current_best_internal = current_internal;
                 }
 
                 // This calls the operator() of a class. See: include/ioh/common/optimization_type.hpp:64
-                if (meta_data.optimization_type(current.y, current_best.y))
+                if (has_improved)
                 {
                     y_unconstrained_best = y_unconstrained;
                     current_best_internal = current_internal;
@@ -274,8 +277,6 @@ namespace ioh
                     if (std::abs(objective.y - current.y) < meta_data.final_target)
                         final_target_found = true;
                 }
-
-                has_improved = has_internal_improved;
             }
 
             [[nodiscard]] std::string repr() const override
