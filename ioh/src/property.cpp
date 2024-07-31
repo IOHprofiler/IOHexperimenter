@@ -42,7 +42,7 @@ void define_properties(py::module &m)
                                                                                       "Base class for all Properties")
         .def(py::init<std::string>())
         .def("__call__", &logger::Property::operator())
-        .def("name", &logger::Property::name)
+        .def_property("name", &logger::Property::name, &logger::Property::set_name)
         .def("call_to_string", &logger::Property::call_to_string);
 
 

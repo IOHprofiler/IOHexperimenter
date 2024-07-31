@@ -101,8 +101,6 @@ public:
         for (auto &[key, value] : attributes)
             set_run_attribute_python(key, value);
     }
-
-
     virtual void handle_last_eval() override
     {
         for (auto &ptr : prop_ptrs_)
@@ -124,7 +122,8 @@ void define_bases(py::module &m)
     py::class_<Watcher, AbstractWatcher, Logger, std::shared_ptr<Watcher>>(
         m, "AbstractLogger", "Base class for loggers which track properties")
         .def(py::init<Triggers, Properties>(), py::arg("triggers") = Triggers{}, py::arg("properties") = Properties{})
-        .def("watch", &Watcher::watch);
+        .def("watch", &Watcher::watch)
+        .def("attach_problem", &Watcher::attach_problem, py::arg("problem"), "attach a problem (MetaData) to a logger");
 }
 
 void define_flatfile(py::module &m)

@@ -69,7 +69,7 @@ namespace ioh
         {
         protected:
             //! Unique name for the logged property.
-            const std::string name_;
+            std::string name_;
 
             //! format specification for fmt
             const std::string format_;
@@ -100,6 +100,9 @@ namespace ioh
 
             //! Configured format accessor.
             std::string format() const { return format_; }
+            
+            //! Accessor for name
+            void set_name(const std::string& name) {name_ = name;}
 
             //! Destructor.
             virtual ~Property() = default;
