@@ -11,6 +11,7 @@
 #include "problem/wmodel.hpp"
 #include "problem/submodular.hpp"
 #include "problem/funnel.hpp"
+#include "problem/multi.hpp"
 
 #ifdef USING_MKLANDSCAPE
 #include "problem/mklandscape/cliqueTreeC.hpp"

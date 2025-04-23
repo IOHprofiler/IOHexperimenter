@@ -7,6 +7,7 @@
 #include "ioh/common/log.hpp"
 #include "ioh/common/optimization_type.hpp"
 #include "ioh/common/repr.hpp"
+#include "ioh/common/pareto.hpp"
 
 namespace ioh
 {
@@ -154,6 +155,15 @@ namespace ioh
              * @param y objective values
              */
             Solution(const std::vector<T> &x, const std::vector<double> &y) : x(x), y(y) {}
+            
+            //! Shorthand constructor for use with unknown optimum
+            Solution(const int n_variables, const int n_objectives, const common::OptimizationType optimization_type) :
+                x(std::vector<T>(n_variables, std::numeric_limits<T>::signaling_NaN())),
+                y(std::vector<double>(n_objectives, optimization_type == common::OptimizationType::MIN 
+                    ? -std::numeric_limits<double>::infinity() 
+                    : std::numeric_limits<double>::infinity()))
+            {
+            }
 
             //! Default constructible
             Solution() = default;
@@ -293,6 +303,41 @@ namespace ioh
         {
         private:
             // Solution<T, double> initial_solution;
+            std::vector<Solution<T, MultiObjective>> initial_pareto_front_ {};
+
+            int pareto_order(
+                const Solution<T, MultiObjective> &a, 
+                const std::vector<Solution<T, MultiObjective>> &current_pareto_front,
+                common::FOptimizationType optimization_type
+            )
+            {
+                bool better = true;
+                bool worse = true;
+                for (const auto &b : current_pareto_front)
+                {
+                    if(!common::pareto::dominates(a.y, b.y, optimization_type))
+                    {
+                        better = false;
+                    }
+                    if (!common::pareto::dominates(b.y, a.y, optimization_type))
+                    {
+                        worse = false;
+                    }
+                }
+                if(better && !worse)
+                {
+                    return 1; // a is better
+                }
+                else if(!better && worse)
+                {
+                    return -1; // a is worse
+                }
+                else
+                {
+                    return 0; // a is equal
+                }
+            }
+            
 
         public:
             //! Current number of evaluations
@@ -300,20 +345,89 @@ namespace ioh
 
             //! Is optimum found?
             bool optimum_found = false;
+            
+            bool has_improved = false;
+            bool final_target_found = false;
+
+
+            //! Current x-raw, y-transformed w. constraints applied
+            Solution<T, MultiObjective> current{};
+
+            std::vector<Solution<T, MultiObjective>> pareto_front{};
+           
+            State() = default;
+
+            State(Solution<T, MultiObjective> initial){ 
+                initial_pareto_front_.push_back(initial);
+                reset(); 
+            }
 
             [[nodiscard]] std::string repr() const override
             {
-                return fmt::format("<State evaluations: {} optimum_found: {}>", evaluations, optimum_found);
+                return fmt::format("<State evaluations: {} optimum_found: {} pareto_front: [{}]>", 
+                                   evaluations, 
+                                   optimum_found, 
+                                   fmt::join(pareto_front, ", "));
             }
 
             //! Update the state
-            void update(const MetaData &meta_data, const Solution<T, MultiObjective> &objective) {}
+            void update(const MetaData &meta_data, const Solution<T, MultiObjective> &objective) {
+                ++evaluations;
+
+                // //use pareto front here
+                const int pareto_order = this->pareto_order(current, pareto_front, meta_data.optimization_type);
+                if (pareto_order == 1)
+                {
+                    pareto_front = {current};
+                    has_improved = true;
+                }
+                else if (pareto_order == 0)
+                {
+                    // Remove all solutions in the pareto front that are dominated by the current solution
+                    pareto_front.erase(
+                        std::remove_if(
+                            pareto_front.begin(), pareto_front.end(),
+                            [this, &meta_data](const Solution<T, MultiObjective> &solution) {
+                                return common::pareto::dominates(this->current.y, solution.y, meta_data.optimization_type);
+                            }),
+                        pareto_front.end());
+
+                    // Add the current solution to the pareto front
+                    pareto_front.push_back(current);
+                    
+                    has_improved = true;
+                }
+                
+
+
+                // // This calls the operator() of a class. See: include/ioh/common/optimization_type.hpp:64
+                if (has_improved)
+                {
+                    if (common::pareto::vector_difference(objective.y, current.y) < std::numeric_limits<double>::epsilon())
+                        optimum_found = true;
+
+                    if (common::pareto::vector_difference(objective.y, current.y) < meta_data.final_target)
+                        final_target_found = true;
+                }
+            }
+            
+            void invert() { 
+
+                for (auto &solution : initial_pareto_front_) {
+                    for (auto &value : solution.y) {
+                        value = -value;
+                    }
+                }
+            }
 
             //! Reset the state
             void reset()
             {
                 evaluations = 0;
+                pareto_front = initial_pareto_front_;
                 optimum_found = false;
+                has_improved = false;
+                final_target_found = false;
             }
         };
 

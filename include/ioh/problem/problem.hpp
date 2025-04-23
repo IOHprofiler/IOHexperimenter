@@ -133,7 +133,7 @@ namespace ioh
                 optimum_(std::move(optimum))
             {
                 bounds_.fit(meta_data_.n_variables);
-                log_info_.allocate(optimum_, constraintset_);
+                // log_info_.allocate(optimum_, constraintset_);
             }
 
             //! Public call interface
@@ -221,14 +221,14 @@ namespace ioh
             void add_constraint(const ConstraintPtr<T> &c)
             {
                 constraintset_.add(c);
-                log_info_.allocate(optimum_, constraintset_);
+                // log_info_.allocate(optimum_, constraintset_);
             }
 
             //! Alias for constraints().remove
             void remove_constraint(const ConstraintPtr<T> &c)
             {
                 constraintset_.remove(c);
-                log_info_.allocate(optimum_, constraintset_);
+                // log_info_.allocate(optimum_, constraintset_);
             }
 
             //! Call this method after updating any fields on meta_data_
@@ -354,7 +354,7 @@ namespace ioh
          * @tparam R the returntype of the problem
          */
         template <typename R>
-        using ObjectiveTransformationFunction = std::function<R(const double, const int)>;
+        using ObjectiveTransformationFunction = std::function<R(const R, const int)>;
 
 
         /**
