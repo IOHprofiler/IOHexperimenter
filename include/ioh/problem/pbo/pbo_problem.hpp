@@ -52,7 +52,7 @@ namespace ioh::problem
          * @param name the name of the problem
          */
         PBO(const int problem_id, const int instance, const int n_variables, const std::string &name) :
-            IntegerSingleObjective(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::MAX),
+            IntegerSingleObjective(MetaData(problem_id, instance, name, n_variables, 1, common::OptimizationType::MAX),
                     Bounds<int>(n_variables, 0, 1))
         {
         }

@@ -62,7 +62,7 @@ namespace ioh::problem::bbob
         ManyAffine(const std::vector<double> &xopt, const std::array<double, 24> &weights,
                    const std::array<int, 24> &instances, const int n_variables,
                    const std::array<double, 24> &scale_factors) :
-            RealSingleObjective(MetaData(0, instances[0], "ManyAffine", n_variables),
+            RealSingleObjective(MetaData(0, instances[0], "ManyAffine", n_variables, 1),
                                 Bounds<double>(n_variables, -5, 5)),
             weights_(weights), instances_(instances), scale_factors_(scale_factors), problems_{}, function_values_{}
         {

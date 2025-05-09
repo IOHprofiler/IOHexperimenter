@@ -405,7 +405,7 @@ namespace ioh
          * @ingroup Loggers
          * @ingroup EAH
          */
-        class EAH : public Logger
+        class EAH : public Logger<ioh::problem::SingleObjective>
         {
         protected:
             /** Internal types  @{ */
@@ -499,7 +499,7 @@ namespace ioh
             //! Initialize on the given problem.
             void attach_problem(const problem::MetaData &problem) override
             {
-                Logger::attach_problem(problem);
+                Logger<ioh::problem::SingleObjective>::attach_problem(problem);
                 _current.pb = problem.problem_id;
                 _current.dim = problem.n_variables;
                 _current.ins = problem.instance;
@@ -511,7 +511,7 @@ namespace ioh
 
             /** Actually store information about the last evaluation.
              */
-            void call(const Info &log_info) override
+            void call(const Info<ioh::problem::SingleObjective> &log_info) override
             {
                 if (!_current.is_tracked)
                 {
@@ -782,10 +782,10 @@ namespace ioh
             *
             * Because it fits the algorithmics.
             */
-            trigger::OnImprovement _on_improvement;
+            trigger::OnImprovement<ioh::problem::SingleObjective> _on_improvement;
 
             //! Property watching the number of evaluations.
-            watch::Evaluations _evaluations;
+            watch::Evaluations<ioh::problem::SingleObjective> _evaluations;
 
             //! Property watching the objective function value.
             watch::CurrentBestY _y_best;

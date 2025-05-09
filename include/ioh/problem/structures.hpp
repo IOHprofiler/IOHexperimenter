@@ -40,6 +40,9 @@ namespace ioh
             //! problem dimension
             int n_variables{};
 
+            //! problem objectives
+            int n_objectives{};
+
             //! Final target
             double final_target;
 
@@ -53,12 +56,17 @@ namespace ioh
              * @param optimization_type optimization type
              * @param final_target the final target to be reached for the function
              */
-            MetaData(const int problem_id, const int instance, std::string name, const int n_variables,
+            MetaData(const int problem_id, const int instance, std::string name,
+                     const int n_variables, const int n_objectives,
                      const common::OptimizationType optimization_type = common::OptimizationType::MIN,
                      const double final_target = 1e-8) :
                 instance(instance),
-                problem_id(problem_id), name(std::move(name)), optimization_type{optimization_type},
-                n_variables(n_variables), final_target(final_target)
+                problem_id(problem_id), 
+                name(std::move(name)), 
+                optimization_type{optimization_type},
+                n_variables(n_variables), 
+                n_objectives(n_objectives),
+                final_target(final_target)
             {
             }
 
@@ -71,10 +79,11 @@ namespace ioh
              * @param optimization_type optimization type
              * @param final_target the final target to be reached for the function
              */
-            MetaData(const int instance, const std::string &name, const int n_variables,
+            MetaData(const int instance, const std::string &name, 
+                     const int n_variables, const int n_objectives,
                      const common::OptimizationType optimization_type = common::OptimizationType::MIN,
                      const double final_target = 1e-8) :
-                MetaData(0, instance, name, n_variables, optimization_type, final_target)
+                MetaData(0, instance, name, n_variables, n_objectives, optimization_type, final_target)
             {
             }
 
@@ -82,7 +91,7 @@ namespace ioh
             bool operator==(const MetaData &other) const
             {
                 return instance == other.instance and problem_id == other.problem_id and name == other.name and
-                    optimization_type == other.optimization_type and n_variables == other.n_variables;
+                    optimization_type == other.optimization_type and n_variables == other.n_variables and n_objectives == other.n_objectives;
             }
 
             //! comparison operator
@@ -90,7 +99,7 @@ namespace ioh
 
             [[nodiscard]] std::string repr() const override
             {
-                return fmt::format("<MetaData: {} id: {} iid: {} dim: {}>", name, problem_id, instance, n_variables);
+                return fmt::format("<MetaData: {} id: {} iid: {} dim: {} obj: {}>", name, problem_id, instance, n_variables, n_objectives);
             }
         };
 
@@ -123,6 +132,13 @@ namespace ioh
                                                                      : std::numeric_limits<double>::infinity()}
             {
             }
+            Solution(const int n_variables, const int n_objectives, const common::OptimizationType optimization_type) :
+                x(std::vector<T>(n_variables, std::numeric_limits<T>::signaling_NaN())),
+                y{optimization_type == common::OptimizationType::MIN ? -std::numeric_limits<double>::infinity()
+                                                                     : std::numeric_limits<double>::infinity()}
+            {
+            }
+
 
             //! Default Constructible
             Solution() = default;

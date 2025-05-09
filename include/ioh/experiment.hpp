@@ -32,7 +32,7 @@ namespace ioh
         /**
          * \brief A pointer to the logger.
          */
-        std::shared_ptr<Logger> logger_;
+        std::shared_ptr<Logger<ioh::problem::SingleObjective>> logger_;
 
         /**
          * \brief A function pointer of type \ref Algorithm
@@ -59,7 +59,7 @@ namespace ioh
          * \param algorithm a function pointer of type \ref Algorithm
          * \param independent_runs the number of repetitions default = 1
          */
-        Experimenter(std::shared_ptr<suite::Suite<ProblemType>> suite, std::shared_ptr<Logger> logger,
+        Experimenter(std::shared_ptr<suite::Suite<ProblemType>> suite, std::shared_ptr<Logger<ioh::problem::SingleObjective>> logger,
                      Algorithm algorithm = nullptr, const int independent_runs = 1) :
             suite_(std::move(suite)),
             logger_(std::move(logger)), algorithm_(algorithm), independent_runs_(independent_runs)
@@ -105,7 +105,7 @@ namespace ioh
          * \brief Get method for
          * \return Private 
          */
-        [[nodiscard]] std::shared_ptr<Logger> logger() const { return logger_; }
+        [[nodiscard]] std::shared_ptr<Logger<ioh::problem::SingleObjective>> logger() const { return logger_; }
 
         /**
          * \brief Prints a verbose representation of an Experimenter object to an output stream.

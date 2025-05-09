@@ -24,7 +24,11 @@ namespace ioh {
 #ifdef _MSC_VER
 #pragma warning(disable : 26495)
 #endif
-        struct Info
+        template <typename R>
+        struct Info;
+
+        template <>
+        struct Info<ioh::problem::SingleObjective>
         {
             //! Number of evaluations of the objective function so far.
             size_t evaluations;
@@ -70,8 +74,8 @@ namespace ioh {
             * @param state the state of the problem
             * @param constraintset the set of constraints for the problem
             */
-            template<typename T>
-            void update(const problem::State<T, double>& state, const problem::ConstraintSet<T>& constraintset)
+            template <typename T>
+            void update(const problem::State<T, ioh::problem::SingleObjective>& state, const problem::ConstraintSet<T>& constraintset)
             {
                 evaluations = static_cast<size_t>(state.evaluations);
 
@@ -87,18 +91,16 @@ namespace ioh {
                 y = state.current.y;
                 y_best = state.current_best.y;
 
-                // constraint values
                 violations[0] = constraintset.violation();
                 penalties[0] = constraintset.penalty();
-
+                
                 for (size_t i = 0; i < constraintset.n(); i++)
                 {
                     violations[i + 1] = constraintset.constraints[i]->violation();
                     penalties[i + 1] = constraintset.constraints[i]->penalty();
                 }
-
+                
                 x = std::vector<double>(state.current.x.begin(), state.current.x.end());
-
                 has_improved = state.has_improved;    
             }
 
@@ -109,8 +111,8 @@ namespace ioh {
              * @param opt the optimum of the problem
              * @param constraintset the set of constraints for the problem
              */
-            template<typename T>
-            void allocate(const problem::Solution<T, double> &opt, const problem::ConstraintSet<T> &constraintset)
+            template <typename T>
+            void allocate(const problem::Solution<T, ioh::problem::SingleObjective> &opt, const problem::ConstraintSet<T> &constraintset)
             {
                 optimum.x = std::vector<double>(opt.x.begin(), opt.x.end());
                 optimum.y = opt.y;
@@ -118,6 +120,77 @@ namespace ioh {
                 penalties = std::vector<double>(constraintset.n() + 1, 0.0);
             }
         };
+
+        template <>
+        struct Info<ioh::problem::MultiObjective>
+        {
+            //! Number of evaluations of the objective function so far.
+            size_t evaluations;
+
+         
+            //! The current value
+            std::vector<ioh::problem::Solution<double, ioh::problem::MultiObjective>> pareto_front{};
+            //! Current search space variables
+            std::vector<double> x;
+            std::vector<double> y;
+            //! Constraint violations, first element is total violation by ContraintSet
+            std::vector<double> violations;            
+
+            //! Applied penalties by constraint, first element is total penalty applied by ContraintSet
+            std::vector<double> penalties;
+            
+            //! Optimum to the current problem instance, with the corresponding transformed objective function value.
+            problem::Solution<double, ioh::problem::MultiObjective> optimum; 
+
+            //! Single objective check whether state-update has caused an improvement
+            bool has_improved;
+
+
+            /**
+            * @brief update the log info based on the constraint and state of the problem
+            * 
+            * @tparam T the type of the problem
+            * @param state the state of the problem
+            * @param constraintset the set of constraints for the problem
+            */
+            template <typename T>
+            void update(const problem::State<T, ioh::problem::MultiObjective>& state, const problem::ConstraintSet<T>& constraintset)
+            {
+                evaluations = static_cast<size_t>(state.evaluations);
+
+                pareto_front = std::vector<ioh::problem::Solution<double, ioh::problem::MultiObjective>>(state.pareto_front.begin(), state.pareto_front.end());
+                y = std::vector<double>(state.current.y.begin(), state.current.y.end());
+                x = std::vector<double>(state.current.x.begin(), state.current.x.end());
+                violations[0] = constraintset.violation();
+                penalties[0] = constraintset.penalty();
+                
+                for (size_t i = 0; i < constraintset.n(); i++)
+                {
+                    violations[i + 1] = constraintset.constraints[i]->violation();
+                    penalties[i + 1] = constraintset.constraints[i]->penalty();
+                }
+                
+                
+                has_improved = state.has_improved;    
+            }
+
+            /**
+             * @brief allocate static (during a run) values for the log info
+             *
+             * @tparam T the type of the problem
+             * @param opt the optimum of the problem
+             * @param constraintset the set of constraints for the problem
+             */
+            template <typename T>
+            void allocate(const problem::Solution<T, ioh::problem::MultiObjective> &opt, const problem::ConstraintSet<T> &constraintset)
+            {
+                optimum.x = std::vector<double>(opt.x.begin(), opt.x.end());
+                optimum.y = std::vector<double>(opt.y.begin(), opt.y.end());
+                violations = std::vector<double>(constraintset.n() + 1, 0.0);
+                penalties = std::vector<double>(constraintset.n() + 1, 0.0);
+            }
+        };
+
 #ifdef _MSC_VER  
 #pragma warning(default : 26495)
 #endif

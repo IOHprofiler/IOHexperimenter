@@ -65,6 +65,7 @@ namespace ioh
          *
          * @ingroup Logging
          */
+        template <typename R>
         class Property
         {
         protected:
@@ -93,7 +94,7 @@ namespace ioh
              * @param log_info The current problem state data.
              * @returns An optional that holds a `double` if the variable is available, `std::nullopt` else.
              */
-            virtual std::optional<double> operator()(const logger::Info &log_info) const = 0;
+            virtual std::optional<double> operator()(const logger::Info<R> &log_info) const = 0;
 
             //! Configured name accessor.
             std::string name() const { return name_; }
@@ -113,7 +114,7 @@ namespace ioh
              * \param nan The value to log when there is no data.
              * \return a string representation of the properties' data
              */
-            [[nodiscard]] virtual std::string call_to_string(const logger::Info &log_info,
+            [[nodiscard]] virtual std::string call_to_string(const logger::Info<R> &log_info,
                                                              const std::string &nan = "") const
             {
                 auto opt = (*this)(log_info);
@@ -126,7 +127,8 @@ namespace ioh
         /**
          * \brief convenience typedef for a vector of properties
          */
-        using Properties = std::vector<std::reference_wrapper<Property>>;
+        template <typename R>
+        using Properties = std::vector<std::reference_wrapper<Property<R>>>;
     } // namespace logger
 
     /** Properties that can be watched by loggers. */
@@ -137,26 +139,27 @@ namespace ioh
          *
          * @ingroup Logging
          */
-        struct Evaluations : public logger::Property
+        template <typename R>
+        struct Evaluations : public logger::Property<R>
         {
             //! Constructor.
             Evaluations(const std::string& name = "evaluations", const std::string &format = "{:d}") :
-                logger::Property(name, format)
+                logger::Property<R>(name, format)
             {
             }
             //! Main call interface.
-            std::optional<double> operator()(const logger::Info &log_info) const override
+            std::optional<double> operator()(const logger::Info<R> &log_info) const override
             {
                 // This should always be accessible, so the optional will always contain the variable.
                 return std::make_optional(static_cast<double>(log_info.evaluations));
             }
 
-            [[nodiscard]] std::string call_to_string(const logger::Info &log_info,
+            [[nodiscard]] std::string call_to_string(const logger::Info<R> &log_info,
                                                              const std::string &nan = "") const override
             {
                 auto opt = (*this)(log_info);
                 if (opt)
-                    return fmt::format(format(), static_cast<int>(opt.value()));
+                    return fmt::format(this->format(), static_cast<int>(opt.value()));
                 return nan;
             }
         };
@@ -164,21 +167,22 @@ namespace ioh
          *
          * @ingroup Properties
          */
-        inline Evaluations evaluations; 
+        template <typename R>
+        inline Evaluations<R> evaluations; 
 
         /** A property that access the cyrrent objective value, without transformation.
          *
          * @ingroup Logging
          */
-        struct RawY : public logger::Property
+        struct RawY : public logger::Property<problem::SingleObjective>
         {
             //! Constructor.
             RawY(const std::string name = "raw_y", const std::string &format = logger::DEFAULT_DOUBLE_FORMAT) :
-                logger::Property(name, format)
+                logger::Property<problem::SingleObjective>(name, format)
             {
             }
             //! Main call interface.
-            std::optional<double> operator()(const logger::Info &log_info) const override
+            std::optional<double> operator()(const logger::Info<problem::SingleObjective> &log_info) const override
             {
                 if(abs(log_info.raw_y) == std::numeric_limits<double>::infinity()){
                     return {};
@@ -191,21 +195,22 @@ namespace ioh
          *
          * @ingroup Properties
          */
+        
         inline RawY raw_y; 
 
         /** A property that access the best value so far, without transformation.
          *
          * @ingroup Logging
          */
-        struct RawYBest : public logger::Property
+        struct RawYBest : public logger::Property<problem::SingleObjective>
         {
             //! Constructor.
             RawYBest(const std::string name = "raw_y_best", const std::string &format = logger::DEFAULT_DOUBLE_FORMAT) :
-                logger::Property(name, format)
+                logger::Property<problem::SingleObjective>(name, format)
             {
             }
             //! Main call interface.
-            std::optional<double> operator()(const logger::Info &log_info) const override
+            std::optional<double> operator()(const logger::Info<problem::SingleObjective> &log_info) const override
             {
                 return std::make_optional(log_info.raw_y_best);
             }
@@ -220,15 +225,15 @@ namespace ioh
          *
          * @ingroup Logging
          */
-        struct TransformedY : public logger::Property
+        struct TransformedY : public logger::Property<problem::SingleObjective>
         {
             //! Constructor.
             //! Main call interface.
             TransformedY(const std::string name = "transformed_y", const std::string &format = logger::DEFAULT_DOUBLE_FORMAT) :
-                logger::Property(name, format)
+                logger::Property<problem::SingleObjective>(name, format)
             {
             }
-            std::optional<double> operator()(const logger::Info &log_info) const override
+            std::optional<double> operator()(const logger::Info<problem::SingleObjective> &log_info) const override
             {
                 return std::make_optional(log_info.transformed_y);
             }
@@ -243,15 +248,15 @@ namespace ioh
          *
          * @ingroup Logging
          */
-        struct TransformedYBest : public logger::Property
+        struct TransformedYBest : public logger::Property<problem::SingleObjective>
         {
             //! Constructor.
             TransformedYBest(const std::string name = "transformed_y_best", const std::string &format = logger::DEFAULT_DOUBLE_FORMAT) :
-                logger::Property(name, format)
+                logger::Property<problem::SingleObjective>(name, format)
             {
             }
             //! Main call interface.
-            std::optional<double> operator()(const logger::Info &log_info) const override
+            std::optional<double> operator()(const logger::Info<problem::SingleObjective> &log_info) const override
             {
                 return std::make_optional(log_info.transformed_y_best);
             }
@@ -266,15 +271,15 @@ namespace ioh
          *
          * @ingroup Logging
          */
-        struct CurrentY : public logger::Property
+        struct CurrentY : public logger::Property<problem::SingleObjective>
         {
             //! Constructor.
             //! Main call interface.
             CurrentY(const std::string name = "current_y", const std::string &format = logger::DEFAULT_DOUBLE_FORMAT) :
-                logger::Property(name, format)
+                logger::Property<problem::SingleObjective>(name, format)
             {
             }
-            std::optional<double> operator()(const logger::Info &log_info) const override
+            std::optional<double> operator()(const logger::Info<problem::SingleObjective> &log_info) const override
             {
                 return std::make_optional(log_info.y);
             }
@@ -290,16 +295,16 @@ namespace ioh
          *
          * @ingroup Logging
          */
-        struct CurrentBestY : public logger::Property
+        struct CurrentBestY : public logger::Property<problem::SingleObjective>
         {
             //! Constructor.
             //! Main call interface.
             CurrentBestY(const std::string name = "current_y_best",
                          const std::string &format = logger::DEFAULT_DOUBLE_FORMAT) :
-                logger::Property(name, format)
+                logger::Property<problem::SingleObjective>(name, format)
             {
             }
-            std::optional<double> operator()(const logger::Info &log_info) const override
+            std::optional<double> operator()(const logger::Info<problem::SingleObjective> &log_info) const override
             {
                 return std::make_optional(log_info.y_best);
             }
@@ -315,7 +320,8 @@ namespace ioh
          *
          * @ingroup Logging
          */
-        struct Violation : public logger::Property
+        template <typename R>
+        struct Violation : public logger::Property<R>
         {
             //! Constructor.
             //! Main call interface.
@@ -323,11 +329,11 @@ namespace ioh
                       const std::string &format = logger::DEFAULT_DOUBLE_FORMAT,
                       const size_t ci = 0
                 ) :
-                logger::Property(name, format),
+                logger::Property<R>(name, format),
                 ci(ci)
             {
             }
-            std::optional<double> operator()(const logger::Info &log_info) const override
+            std::optional<double> operator()(const logger::Info<R> &log_info) const override
             {
                 return std::make_optional(log_info.violations[ci]);
             }
@@ -336,19 +342,21 @@ namespace ioh
                 //! Index of the constraint to be logged
                 size_t ci;
         };
-
+        
         /** Objective function value for this call, without transformation.
          *
          * @ingroup Properties
          */
-        inline Violation violation;
+        template <typename R>
+        inline Violation<R> violation;
 
 
         /** A property that accesses the current constraint penalty
          *
          * @ingroup Logging
          */
-        struct Penalty : public logger::Property
+        template <typename R>
+        struct Penalty : public logger::Property<R>
         {
             //! Constructor.
             //! Main call interface.
@@ -356,12 +364,13 @@ namespace ioh
                     const std::string &format = logger::DEFAULT_DOUBLE_FORMAT,
                     const size_t ci = 0
                 ) :
-                logger::Property(name, format),
+                logger::Property<R>(name, format),
                 ci(ci)
             {
             }
-            std::optional<double> operator()(const logger::Info &log_info) const override
+            std::optional<double> operator()(const logger::Info<R> &log_info) const override
             {
+
                 return std::make_optional(log_info.penalties[ci]);
             }
 
@@ -374,7 +383,8 @@ namespace ioh
          *
          * @ingroup Properties
          */
-        inline Penalty penalty;
+        template <typename R>
+        inline Penalty<R> penalty;
 
         /** A property that access a referenced variable.
          *
@@ -382,8 +392,8 @@ namespace ioh
          *
          * @ingroup Logging
          */
-        template <class T>
-        class Reference : public logger::Property
+        template <class T, typename R>
+        class Reference : public logger::Property<R>
         {
         protected:
             //! The managed reference.
@@ -397,12 +407,12 @@ namespace ioh
              * @param format a fmt::format specification
              */
             Reference(const std::string name, const T &variable, const std::string &format = logger::DEFAULT_DOUBLE_FORMAT) :
-                logger::Property(name, format), _variable(variable)
+                logger::Property<R>(name, format), _variable(variable)
             {
             }
 
             //! Main call interface.
-            std::optional<double> operator()(const logger::Info &) const override
+            std::optional<double> operator()(const logger::Info<R> &) const override
             {
                 return std::make_optional(static_cast<double>(_variable));
             }
@@ -415,10 +425,10 @@ namespace ioh
          *
          * @ingroup Properties
          */
-        template <class T>
-        Reference<T> &reference(const std::string name, const T &variable, const std::string &format = logger::DEFAULT_DOUBLE_FORMAT)
+        template <class T, typename R>
+        Reference<T,R> &reference(const std::string name, const T &variable, const std::string &format = logger::DEFAULT_DOUBLE_FORMAT)
         {
-            auto p = new Reference<T>(name, variable, format);
+            auto p = new Reference<T,R>(name, variable, format);
             return *p;
         }
 
@@ -428,8 +438,8 @@ namespace ioh
          *
          * @ingroup Logging
          */
-        template <class T>
-        class Pointer : public logger::Property
+        template <class T, typename R>
+        class Pointer : public logger::Property<R>
         {
         protected:
             //! The managed variable.
@@ -443,13 +453,13 @@ namespace ioh
              * @param format a fmt::format specification
              */
             Pointer(const std::string name, const T *const variable, const std::string &format = logger::DEFAULT_DOUBLE_FORMAT) :
-                logger::Property(name, format), _variable(variable)
+                logger::Property<R>(name, format), _variable(variable)
             {
                 assert(variable != nullptr);
             }
 
             //! Main call interface.
-            std::optional<double> operator()(const logger::Info &) const override
+            std::optional<double> operator()(const logger::Info<R> &) const override
             {
                 return std::make_optional(static_cast<double>(*_variable));
             }
@@ -462,10 +472,10 @@ namespace ioh
          *
          * @ingroup Properties
          */
-        template <class T>
-        Pointer<T> &address(const std::string name, const T *const variable, const std::string &format = logger::DEFAULT_DOUBLE_FORMAT)
+        template <class T, typename R>
+        Pointer<T,R> &address(const std::string name, const T *const variable, const std::string &format = logger::DEFAULT_DOUBLE_FORMAT)
         {
-            auto p = new Pointer<T>(name, variable, format);
+            auto p = new Pointer<T,R>(name, variable, format);
             return *p;
         }
 
@@ -480,8 +490,8 @@ namespace ioh
          *
          * @ingroup Logging
          */
-        template <class T>
-        class PointerReference : public logger::Property
+        template <class T, typename R>
+        class PointerReference : public logger::Property<R>
         {
         public:
             //! Typedef for the ptr
@@ -514,7 +524,7 @@ namespace ioh
              * @param format a fmt::format specification
              */
             PointerReference(const std::string name, ConstRefType ref_ptr_var, const std::string &format = logger::DEFAULT_DOUBLE_FORMAT) :
-                logger::Property(name, format), _ref_ptr_var(ref_ptr_var)
+                logger::Property<R>(name, format), _ref_ptr_var(ref_ptr_var)
             {
                 if (_ref_ptr_var != nullptr)
                 {
@@ -524,7 +534,7 @@ namespace ioh
             }
 
             //! Main call interface.
-            std::optional<double> operator()(const logger::Info &) const override
+            std::optional<double> operator()(const logger::Info<R> &) const override
             {
                 if (_ref_ptr_var != nullptr)
                 {
@@ -555,11 +565,11 @@ namespace ioh
          *
          * @ingroup Properties
          */
-        template <class T>
-        PointerReference<T> &pointer(const std::string name, const T *const &variable,
+        template <class T, typename R>
+        PointerReference<T,R> &pointer(const std::string name, const T *const &variable,
                                      const std::string &format = logger::DEFAULT_DOUBLE_FORMAT)
         {
-            auto p = new PointerReference<T>(name, variable, format);
+            auto p = new PointerReference<T,R>(name, variable, format);
             return *p;
         }
     } // namespace watch
@@ -567,12 +577,12 @@ namespace ioh
 
 
 //! formatter for properties
-template <>
-struct fmt::formatter<std::reference_wrapper<ioh::logger::Property>> : formatter<std::string>
+template <typename R>
+struct fmt::formatter<std::reference_wrapper<ioh::logger::Property<R>>> : formatter<std::string>
 {
     template <typename FormatContext>
     //! Format call interface
-    auto format(const std::reference_wrapper<ioh::logger::Property> &a, FormatContext &ctx) const
+    auto format(const std::reference_wrapper<ioh::logger::Property<R>> &a, FormatContext &ctx) const
     {
         return formatter<std::string>::format(a.get().name(), ctx);
     }

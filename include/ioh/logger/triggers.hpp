@@ -65,12 +65,13 @@ namespace ioh
          *
          * @ingroup Triggering
          */
+        template<typename R>
         struct Trigger
         {
 
             /** @returns true if a log event is to be triggered given the passed state. */
-            virtual bool operator()(const logger::Info &log_info, const problem::MetaData &pb_info) = 0;
-
+            virtual bool operator()(const logger::Info<R> &log_info, const problem::MetaData &pb_info) = 0;
+            
             /** Reset any internal state.
              *
              * @note This is called when the logger is attached to a new problem/run/etc.
@@ -85,7 +86,8 @@ namespace ioh
         /**
          * \brief convenience typedef for a vector of triggers
          */
-        using Triggers = std::vector<std::reference_wrapper<Trigger>>;
+        template <typename R>
+        using Triggers = std::vector<std::reference_wrapper<Trigger<R>>>;
 
     } // namespace logger
 
@@ -102,11 +104,12 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        class Set : public logger::Trigger
+        template<typename R>
+        class Set : public logger::Trigger<R>
         {
         protected:
             //! Managed triggers.
-            logger::Triggers triggers_;
+            logger::Triggers<R> triggers_;
 
         public:
             /** Empty constructor
@@ -120,7 +123,7 @@ namespace ioh
              *
              * @param triggers the managed triggers.
              */
-            Set(logger::Triggers triggers) : triggers_(triggers) {}
+            Set(logger::Triggers<R> triggers) : triggers_(triggers) {}
 
             // virtual bool operator()(const logger::Info& log_info, const problem::MetaData& pb_info) = 0;
 
@@ -135,16 +138,16 @@ namespace ioh
             }
 
             //! Add a trigger to the set.
-            void push_back(logger::Trigger &trigger) { triggers_.push_back(std::ref(trigger)); }
+            void push_back(logger::Trigger<R> &trigger) { triggers_.push_back(std::ref(trigger)); }
 
             //! Add a trigger to the set.
-            void insert(logger::Trigger &trigger) { triggers_.push_back(std::ref(trigger)); }
+            void insert(logger::Trigger<R> &trigger) { triggers_.push_back(std::ref(trigger)); }
 
             //! Get the number of managed triggers.
             size_t size() { return triggers_.size(); }
 
             //! Get a copy of the triggers
-            [[nodiscard]] logger::Triggers triggers() const { return triggers_; }
+            [[nodiscard]] logger::Triggers<R> triggers() const { return triggers_; }
         };
 
         /** Combine several triggers in a single one with a logical "or".
@@ -153,27 +156,28 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        struct Any final : public Set
+        template<typename R>
+        struct Any final : public Set<R>
         {
 
             /** Empty constructor
              *
              * @warning You should probably not use this one.
              */
-            Any() : Set() {}
+            Any() : Set<R>() {}
 
             /** Constructor
              *
              * @param triggers the managed triggers.
              */
-            Any(logger::Triggers triggers) : Set(triggers) {}
+            Any(logger::Triggers<R> triggers) : Set<R>(triggers) {}
 
             /** Triggered if ANY the managed triggers are triggered. */
-            virtual bool operator()(const logger::Info &log_info, const problem::MetaData &pb_info) override
+            virtual bool operator()(const logger::Info<R> &log_info, const problem::MetaData &pb_info) override
             {
                 IOH_DBG(debug, "trigger Any called");
-                assert(!triggers_.empty());
-                for (auto &trigger : triggers_)
+                assert(!this->triggers_.empty());
+                for (auto &trigger : this->triggers_)
                 {
                     if (trigger(log_info, pb_info))
                     {
@@ -189,9 +193,10 @@ namespace ioh
          *
          * @ingroup Triggers
          */
-        inline Any &any(logger::Triggers triggers)
+        template<typename R>
+        inline Any<R> &any(logger::Triggers<R> triggers)
         {
-            const auto t = new Any(triggers);
+            const auto t = new Any<R>(triggers);
             return *t;
         }
 
@@ -199,27 +204,28 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        struct All final : public Set
+        template<typename R>
+        struct All final : public Set<R>
         {
 
             /** Empty constructor.
              *
              * @warning You should probably not use this one directly.
              */
-            All() : Set() {}
+            All() : Set<R>() {}
 
             /** Constructor
              *
              * @param triggers the set of Trigger to manage.
              */
-            All(logger::Triggers triggers) : Set(triggers) {}
+            All(logger::Triggers<R> triggers) : Set<R>(triggers) {}
 
             /** Triggered if ALL the managed triggers are triggered. */
-            virtual bool operator()(const logger::Info &log_info, const problem::MetaData &pb_info) override
+            virtual bool operator()(const logger::Info<R> &log_info, const problem::MetaData &pb_info) override
             {
                 IOH_DBG(debug, "trigger All called");
-                assert(triggers_.size() > 0);
-                for (auto &trigger : triggers_)
+                assert(this->triggers_.size() > 0);
+                for (auto &trigger : this->triggers_)
                 {
                     if (not trigger(log_info, pb_info))
                     {
@@ -235,7 +241,8 @@ namespace ioh
          *
          * @ingroup Triggers
          */
-        inline All &all(logger::Triggers triggers)
+        template<typename R>
+        inline All<R> &all(logger::Triggers<R> triggers)
         {
             const auto t = new All(triggers);
             return *t;
@@ -245,9 +252,10 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        struct Always final : public logger::Trigger
+        template<typename R>
+        struct Always final : public logger::Trigger<R>
         {
-            bool operator()(const logger::Info &, const problem::MetaData &) override
+            bool operator()(const logger::Info<R> &, const problem::MetaData &) override
             {
                 IOH_DBG(debug, "always triggered")
                 return true;
@@ -257,15 +265,17 @@ namespace ioh
          *
          * @ingroup Triggers
          */
-        inline Always always; // Uncomment if one want a library.
+        template<typename R>
+        inline Always<R> always; // Uncomment if one want a library.
 
         /** A trigger that react to a strict improvement of the best transformed value.
          *
          * @ingroup Triggering
          */
-        struct OnImprovement final : logger::Trigger
+        template<typename R>
+        struct OnImprovement final : logger::Trigger<R>
         {
-            bool operator()(const logger::Info &log_info, const problem::MetaData&) override
+            bool operator()(const logger::Info<R> &log_info, const problem::MetaData&) override
             {
                 IOH_DBG(debug, "trigger OnImprovement called: " << log_info.has_improved);
                 return log_info.has_improved;
@@ -275,10 +285,11 @@ namespace ioh
          *
          * @ingroup Triggers
          */
-        inline OnImprovement on_improvement; // Uncomment if one want a library.
+        template<typename R>
+        inline OnImprovement<R> on_improvement; // Uncomment if one want a library.
 
-
-        struct OnDeltaImprovement final : logger::Trigger {
+        template<typename R>
+        struct OnDeltaImprovement final : logger::Trigger<R> {
             double delta;
             double best_so_far;
 
@@ -289,17 +300,18 @@ namespace ioh
             OnDeltaImprovement(const double delta, const double best_so_far): delta(delta), best_so_far(best_so_far) {
             }
             
-            bool operator()(const logger::Info &log_info, const problem::MetaData &pb_info) override {
-                if (std::isnan(best_so_far)){
-                    best_so_far = log_info.y;
-                    return true;
-                }
+            bool operator()(const logger::Info<R> &log_info, const problem::MetaData &pb_info) override {
+                // if (std::isnan(best_so_far)){
+                //     best_so_far = log_info.y;
+                //     return true;
+                // }
 
-                if (pb_info.optimization_type(log_info.y, best_so_far) && std::abs(best_so_far - log_info.y) > delta) {
-                    best_so_far = log_info.y;
-                    return true;
-                }                
-                return false;
+                // if (pb_info.optimization_type(log_info.y, best_so_far) && std::abs(best_so_far - log_info.y) > delta) {
+                //     best_so_far = log_info.y;
+                //     return true;
+                // }                
+                // return false;
+                return true;
             }
 
             void reset() override {
@@ -311,15 +323,17 @@ namespace ioh
          *
          * @ingroup Triggers
          */
-        inline OnDeltaImprovement on_delta_improvement;
+        template<typename R>
+        inline OnDeltaImprovement<R> on_delta_improvement;
 
         //! Trigger when there is constraint violation
-        struct OnViolation final : logger::Trigger {
+        template<typename R>
+        struct OnViolation final : logger::Trigger<R> {
             //! Track the number of violations
             int violations{};
 
             //! Call interface
-            bool operator()(const logger::Info &log_info, const problem::MetaData&) override
+            bool operator()(const logger::Info<R> &log_info, const problem::MetaData&) override
             {
                 const bool violation = log_info.violations[0] != 0.;
                 IOH_DBG(debug, "trigger OnViolation called: " << violation);
@@ -334,13 +348,15 @@ namespace ioh
         };
 
         //! Log when there are violations
-        inline OnViolation on_violation;
+        template<typename R>
+        inline OnViolation<R> on_violation;
 
         /** A trigger that fire at a regular interval.
          *
          * @ingroup Triggering
          */
-        class Each final : public logger::Trigger
+        template<typename R> 
+        class Each final : public logger::Trigger<R>
         {
         protected:
             //! Period of time between triggers.
@@ -364,7 +380,7 @@ namespace ioh
             size_t starting_at() const { return _starting_at; }
 
             //! Main call interface.
-            bool operator()(const logger::Info &log_info, const problem::MetaData &) override
+            bool operator()(const logger::Info<R> &log_info, const problem::MetaData &) override
             {
                 IOH_DBG(debug, "trigger Each called");
                 if ((log_info.evaluations - _starting_at) % _interval == 0)
@@ -385,7 +401,8 @@ namespace ioh
          *
          * @ingroup Triggers
          */
-        inline Each &each(const size_t interval, const size_t starting_at = 0)
+        template<typename R>
+        inline Each<R> &each(const size_t interval, const size_t starting_at = 0)
         {
             const auto t = new Each(interval, starting_at);
             return *t;
@@ -395,7 +412,8 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        class At final : public logger::Trigger
+        template<typename R>
+        class At final : public logger::Trigger<R>
         {
         protected:
             //! Set of times at which to trigger events.
@@ -415,7 +433,7 @@ namespace ioh
             std::set<size_t> time_points() const { return _time_points; }
 
             //! Main call interface.
-            bool operator()(const logger::Info &log_info, const problem::MetaData &) override
+            bool operator()(const logger::Info<R> &log_info, const problem::MetaData &) override
             {
                 IOH_DBG(debug, "trigger At called");
                 if (matches(log_info.evaluations))
@@ -434,9 +452,10 @@ namespace ioh
          *
          * @ingroup Triggers
          */
-        inline At &at(const std::set<size_t> time_points)
+        template<typename R>
+        inline At<R> &at(const std::set<size_t> time_points)
         {
-            const auto t = new At(time_points);
+            const auto t = new At<R>(time_points);
             return *t;
         }
 
@@ -447,7 +466,8 @@ namespace ioh
          *
          * @ingroup Triggering
          */
-        class During final : public logger::Trigger
+        template<typename R>   
+        class During final : public logger::Trigger<R>
         {
         protected:
             //! Time ranges during which events are triggered.
@@ -487,7 +507,7 @@ namespace ioh
             std::set<std::pair<size_t, size_t>> time_ranges() const { return _time_ranges; }
 
             //! Main call interface.
-            bool operator()(const logger::Info &log_info, const problem::MetaData &) override
+            bool operator()(const logger::Info<R> &log_info, const problem::MetaData &) override
             {
                 IOH_DBG(debug, "trigger During called");
                 if (matches(log_info.evaluations))
@@ -509,9 +529,10 @@ namespace ioh
          *
          * @ingroup Triggers
          */
-        inline During &during(const std::set<std::pair<size_t, size_t>> time_ranges)
+        template<typename R>
+        inline During<R> &during(const std::set<std::pair<size_t, size_t>> time_ranges)
         {
-            const auto t = new During(time_ranges);
+            const auto t = new During<R>(time_ranges);
             return *t;
         }
 

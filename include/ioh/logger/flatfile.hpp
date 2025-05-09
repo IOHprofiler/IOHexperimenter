@@ -21,7 +21,8 @@ namespace ioh::logger
      *
      * @ingroup Loggers
      */
-    class FlatFile : public Watcher
+    template <typename R>
+    class FlatFile : public Watcher<R>
     {
     protected:
         //! Seperator
@@ -110,8 +111,8 @@ namespace ioh::logger
          * @param common_header_titles Seven strings to print in the header for the common problem meta data (property
          * names are automatically printed after).
          */
-        FlatFile(std::vector<std::reference_wrapper<Trigger>> triggers,
-                 std::vector<std::reference_wrapper<Property>> properties, const std::string &filename = "IOH.dat",
+        FlatFile(std::vector<std::reference_wrapper<Trigger<R>>> triggers,
+                 std::vector<std::reference_wrapper<Property<R>>> properties, const std::string &filename = "IOH.dat",
                  const fs::path &output_directory = fs::current_path(), const std::string &separator = "\t",
                  const std::string &comment = "# ", const std::string &no_value = "None",
                  const std::string &end_of_line = "\n", const bool repeat_header = false,
@@ -119,7 +120,7 @@ namespace ioh::logger
                  const std::vector<std::string> &common_header_titles = {"suite_name", "problem_name", "problem_id",
                                                                          "problem_instance", "optimization_type",
                                                                          "dimension", "run"}) :
-            Watcher(triggers, properties),
+            Watcher<R>(triggers, properties),
             sep_(separator), com_(comment), eol_(end_of_line), nan_(no_value),
             common_header_(format("{}", fmt::join(common_header_titles.begin(), common_header_titles.end(), sep_)) +
                            (common_header_titles.empty() ? "" : sep_)),
@@ -135,7 +136,7 @@ namespace ioh::logger
         void attach_problem(const problem::MetaData &problem) override
         {
             // If this is a new problem.
-            if (!problem_.has_value() or problem_.value() != problem)
+            if (!this->problem_.has_value() or this->problem_.value() != problem)
             {
                 IOH_DBG(xdebug, "reset run counter")
                 current_run_ = 0; // Then reset the run counter.
@@ -146,20 +147,25 @@ namespace ioh::logger
                 current_run_++; // Then it's a new run.
             }
 
-            Logger::attach_problem(problem);
+            Logger<R>::attach_problem(problem);
             open_stream(filename_, output_directory_);
 
             requires_header_ = requires_header_ or repeat_header_;
             cache_meta_data();
         }
 
-        void call(const Info &log_info) override
+        void call(const Info<R> &log_info) override
         {
             IOH_DBG(debug, "FlatFile called");
             if (requires_header_)
             {
                 IOH_DBG(xdebug, "print header")
-                out_ << com_ + common_header_ + format("{}", fmt::join(properties_vector_, sep_));
+                
+                out_ << com_ + common_header_ + format("{}", fmt::join(this->properties_vector_, sep_));
+                if constexpr (std::is_same_v<R, problem::MultiObjective>){
+                    for (size_t i = 0; i < log_info.y.size(); i++)
+                        out_ << sep_ << "y" << i;
+                }
                 if (store_positions_)
                     for (size_t i = 0; i < log_info.x.size(); i++)
                         out_ << sep_ << "x" << i;
@@ -172,22 +178,24 @@ namespace ioh::logger
             
             IOH_DBG(xdebug, "print watched properties")
             
-            for (auto p = properties_vector_.begin(); p != properties_vector_.end();){
-                out_ << p->get().call_to_string(log_info, nan_) << (++p != properties_vector_.end() ? sep_ : "");
+            for (auto p = this->properties_vector_.begin(); p != this->properties_vector_.end();){
+                out_ << p->get().call_to_string(log_info, nan_) << (++p != this->properties_vector_.end() ? sep_ : "");
             }
-
+            if constexpr (std::is_same_v<R, problem::MultiObjective>){
+                out_ << sep_ << format("{:f}", fmt::join(log_info.y, this->sep_));
+            }
             if (store_positions_)
-                out_ << sep_ << format("{:f}", fmt::join(log_info.x, sep_));
+                out_ << sep_ << format("{:f}", fmt::join(log_info.x, this->sep_));
 
             out_ << eol_;
             out_.flush();
         }
 
         //! Accessor for output directory
-        virtual fs::path output_directory() const { return output_directory_; }
+        virtual fs::path output_directory() const { return this->output_directory_; }
 
         //! Accessor for filename
-        std::string filename() const { return filename_; }
+        std::string filename() const { return this->filename_; }
 
         //! close data file
         virtual void close() override {
@@ -213,12 +221,12 @@ namespace ioh::logger
             if (log_meta_data_)
             {
                 std::stringstream ss;
-                ss /* no sep */ << suite_;
-                ss << sep_ << problem_.value().name;
-                ss << sep_ << problem_.value().problem_id;
-                ss << sep_ << problem_.value().instance;
-                ss << sep_ << (problem_.value().optimization_type == common::OptimizationType::MIN ? "min" : "max");
-                ss << sep_ << problem_.value().n_variables;
+                ss /* no sep */ << this->suite_;
+                ss << sep_ << this->problem_.value().name;
+                ss << sep_ << this->problem_.value().problem_id;
+                ss << sep_ << this->problem_.value().instance;
+                ss << sep_ << (this->problem_.value().optimization_type == common::OptimizationType::MIN ? "min" : "max");
+                ss << sep_ << this->problem_.value().n_variables;
                 ss << sep_ << current_run_;
                 current_meta_data_ = ss.str();
             }

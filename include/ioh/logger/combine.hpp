@@ -33,18 +33,18 @@ namespace ioh::logger
      *
      * @ingroup Loggers
      */
-    class Combine final : public Logger
+    class Combine final : public Logger<ioh::problem::SingleObjective>
     {
     protected:
         //! Store the managed loggers.
-        std::vector<std::reference_wrapper<Logger>> _loggers;
+        std::vector<std::reference_wrapper<Logger<ioh::problem::SingleObjective>>> _loggers;
 
     public:
 
         /** Takes at least one mandatory logger,
          * because an empty instance would be illogical.
          */
-        explicit Combine(Logger& logger)
+        explicit Combine(Logger<ioh::problem::SingleObjective>& logger)
          : Logger()
          , _loggers(1, logger)
         { }
@@ -56,7 +56,7 @@ namespace ioh::logger
             LoggerCombine loggers({log_ecdf, log_csv});
          * @endcode
          */
-        explicit Combine(std::vector<std::reference_wrapper<Logger>> loggers)
+        explicit Combine(std::vector<std::reference_wrapper<Logger<ioh::problem::SingleObjective>>> loggers)
         : Logger()
         , _loggers(std::move(loggers))
         {
@@ -65,7 +65,7 @@ namespace ioh::logger
 
         /** Add another logger to the list.
          */
-        void append(Logger& logger)
+        void append(Logger<ioh::problem::SingleObjective>& logger)
         {
             _loggers.push_back(logger);
         }
@@ -81,7 +81,7 @@ namespace ioh::logger
 
         void attach_problem(const problem::MetaData& problem) override
         {
-            Logger::attach_problem(problem);
+            Logger<ioh::problem::SingleObjective>::attach_problem(problem);
             for(auto& logger : _loggers) {
                 logger.get().attach_problem(problem);
             }
@@ -90,7 +90,7 @@ namespace ioh::logger
         // We override the high-level interface because a Combine has no properties or triggers.
         // Hence, we cannot use the Logger's implementation, which check for existing ones.
         // So here, we just proxy to sub-loggers' `log` method to do it.
-        void log(const logger::Info &logger_info) override
+        void log(const logger::Info<ioh::problem::SingleObjective> &logger_info) override
         {
             IOH_DBG(debug,"call sub-loggers...")
             for(auto &logger : _loggers) {
@@ -100,7 +100,7 @@ namespace ioh::logger
         }
 
         // Given that we override `log`, this should never be called.
-        void call(const logger::Info &/*logger_info*/) override
+        void call(const logger::Info<ioh::problem::SingleObjective> &/*logger_info*/) override
         {
             IOH_DBG(error,"this interface should not be called from here")
             throw std::runtime_error("logger::Combine::call should not be called directly.");
@@ -109,7 +109,7 @@ namespace ioh::logger
         void reset() override
         {
             IOH_DBG(debug, "reset combined loggers");
-            Logger::reset();
+            Logger<ioh::problem::SingleObjective>::reset();
             for(auto& logger : _loggers) {
                 logger.get().reset();
             }

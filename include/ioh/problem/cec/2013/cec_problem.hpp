@@ -82,7 +82,7 @@ namespace ioh::problem
          * @param name A unique name for the problem.
          */
         CEC2013(const int problem_id, const int instance, const int n_variables, const std::string &name, const double lb, const double ub, const std::vector<Solution<double, SingleObjective>>& opts, const double rho = 0.01) :
-            RealSingleObjective(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::MAX),
+            RealSingleObjective(MetaData(problem_id, instance, name, n_variables, 1, common::OptimizationType::MAX),
                                 Bounds<double>(n_variables, lb, ub)),
             n_optima(opts.size()),
             rho(rho),

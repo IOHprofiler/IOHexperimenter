@@ -38,7 +38,8 @@ namespace ioh::logger {
      *
      * @ingroup Loggers
      */
-    class Store : public Watcher {
+    template <typename R>
+    class Store : public Watcher<R> {
         public:
             /** @name Data structure types
              * Convenience naming for the underlying nested data structure.
@@ -121,7 +122,7 @@ namespace ioh::logger {
             }
 
             /** Access a property value with a Cursor and the Property itself. */
-            Value at(const Cursor& current, const Property& property)
+            Value at(const Cursor& current, const Property<R>& property)
             {
                 return data(current).at(property.name());
             }
@@ -141,9 +142,9 @@ namespace ioh::logger {
             
         public:
             /** The logger::Store should at least track one logger::Property, or else it makes no sense to use it. */
-            Store(std::vector<std::reference_wrapper<logger::Trigger >> triggers,
-                  std::vector<std::reference_wrapper<logger::Property>> Attributes)
-            : Watcher(triggers, Attributes)
+            Store(std::vector<std::reference_wrapper<logger::Trigger<R> >> triggers,
+                  std::vector<std::reference_wrapper<logger::Property<R>>> Attributes)
+            : Watcher<R>(triggers, Attributes)
             { }
 
             /** Track a problem/instance/dimension and/or create a new run.
@@ -155,7 +156,7 @@ namespace ioh::logger {
              */
             virtual void attach_problem(const problem::MetaData& problem) override
             {
-                Logger::attach_problem(problem);
+                Logger<R>::attach_problem(problem);
                 
                 _current.pb         = problem.problem_id;
                 _current.dim        = problem.n_variables;
@@ -176,7 +177,7 @@ namespace ioh::logger {
             }
 
             /** Atomic log action. */
-            virtual void call(const logger::Info& log_info) override
+            virtual void call(const logger::Info<R>& log_info) override
             {
                 // Get the Attributes list at the current cursor.
                 Attributes& att = current_attributes();
@@ -193,6 +194,7 @@ namespace ioh::logger {
      *
      * @ingroup Logging
      */
-    using Default = Store;
+    template <typename R>
+    using Default = Store<R>;
 
 } // ioh::logger

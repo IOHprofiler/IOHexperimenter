@@ -38,10 +38,10 @@ namespace ioh
             Solution<T, R> optimum_;
 
             //! A pointer to the attached logger
-            Logger *logger_{};
+            Logger<R> *logger_{};
 
             //! The current log info
-            logger::Info log_info_;
+            logger::Info<R> log_info_;
 
             /**
              * @brief Method for checking the input given to the problem has the correct dimension
@@ -133,7 +133,7 @@ namespace ioh
                 optimum_(std::move(optimum))
             {
                 bounds_.fit(meta_data_.n_variables);
-                // log_info_.allocate(optimum_, constraintset_);
+                log_info_.allocate(optimum_, constraintset_);
             }
 
             //! Public call interface
@@ -156,13 +156,13 @@ namespace ioh
             }
 
             //! Accessor for current log info
-            [[nodiscard]] const logger::Info &log_info() const { return log_info_; }
+            [[nodiscard]] const logger::Info<R> &log_info() const { return log_info_; }
 
             //! Accessor for current log info
-            void set_log_info(const logger::Info &info) { log_info_ = info; }
+            void set_log_info(const logger::Info<R> &info) { log_info_ = info; }
 
             //! Attach a logger
-            void attach_logger(Logger &logger)
+            void attach_logger(Logger<R> &logger)
             {
                 logger_ = &logger;
                 logger_->attach_problem(meta_data_);
@@ -221,14 +221,14 @@ namespace ioh
             void add_constraint(const ConstraintPtr<T> &c)
             {
                 constraintset_.add(c);
-                // log_info_.allocate(optimum_, constraintset_);
+                log_info_.allocate(optimum_, constraintset_);
             }
 
             //! Alias for constraints().remove
             void remove_constraint(const ConstraintPtr<T> &c)
             {
                 constraintset_.remove(c);
-                // log_info_.allocate(optimum_, constraintset_);
+                log_info_.allocate(optimum_, constraintset_);
             }
 
             //! Call this method after updating any fields on meta_data_

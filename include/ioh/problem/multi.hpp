@@ -16,7 +16,6 @@ namespace ioh::problem
         //! Inversion multiplier
         double inverter_ = 1.0;
     public:
-        int n_objectives_ = 0;
 
         /**
          * @brief Construct a new Problem object with an unknown solution
@@ -26,7 +25,6 @@ namespace ioh::problem
          * @param constraints a set of constraint for the problem
          */
         explicit MultiObjectiveProblem(
-                int n_objectives, 
                 MetaData meta_data, 
                 Bounds<T> bounds,
                 ConstraintSet<T> constraints,
@@ -38,7 +36,7 @@ namespace ioh::problem
                 constraints,
                 State<T, MultiObjective>(Solution<T, MultiObjective>(
                     std::vector<T>(meta_data.n_variables, std::numeric_limits<T>::signaling_NaN()),
-                    std::vector<T>(n_objectives, meta_data.optimization_type.initial_value())
+                    std::vector<T>(meta_data.n_objectives, meta_data.optimization_type.initial_value())
                 )),
                 optimum
             )
@@ -46,19 +44,17 @@ namespace ioh::problem
         }
 
         explicit MultiObjectiveProblem(
-                int n_objectives, 
                 MetaData meta_data, 
                 Bounds<T> bounds = Bounds<T>(),
                 ConstraintSet<T> constraints = {}
             ) :
             MultiObjectiveProblem(
-                n_objectives,
                 meta_data, 
                 bounds, 
                 constraints,
                 Solution<T, MultiObjective>(
                     meta_data.n_variables, 
-                    n_objectives, 
+                    meta_data.n_objectives, 
                     meta_data.optimization_type.type()
                 )
             )
@@ -72,7 +68,7 @@ namespace ioh::problem
             state.current.x = x;
             if (this->constraintset_.hard_violation(x))
             {
-                for (size_t i = 0; i < this->n_objectives_; ++i)
+                for (size_t i = 0; i < this->meta_data_.n_objectives; ++i)
                 {
                     state.current.y[i] =
                         this->constraintset_.penalize(this->meta_data_.optimization_type.initial_value());
@@ -98,7 +94,7 @@ namespace ioh::problem
 
         void update_state_and_log() {
             this->state_.update(this->meta_data_, this->optimum_);
-            // this->log_info_.update(this->state_, this->constraintset_);
+            this->log_info_.update(this->state_, this->constraintset_);
 
             if (this->logger_ != nullptr)
             {
@@ -111,7 +107,7 @@ namespace ioh::problem
         std::vector<double> operator()(const std::vector<T> &x) override
         {
             if (!this->check_input(x))
-                return std::vector<double>(this->n_objectives_, std::numeric_limits<double>::signaling_NaN());
+                return std::vector<double>(this->meta_data_.n_objectives, std::numeric_limits<double>::signaling_NaN());
             std::cout<<"()"<<std::endl;
             evaluate_for_state(x, this->state_);
             update_state_and_log();
@@ -246,8 +242,7 @@ namespace ioh::problem
             ConstraintSet<T> constraints = {}
         ) :
             MultiObjectiveProblem<T>(
-                n_objectives,
-                MetaData(problem_id, instance_id, name, n_variables, optimization_type), 
+                MetaData(problem_id, instance_id, name, n_variables, n_objectives, optimization_type), 
                 bounds,
                 constraints,
                 objective.value_or(

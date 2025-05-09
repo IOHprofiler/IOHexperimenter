@@ -41,7 +41,7 @@ namespace ioh::problem
              */
             StarDiscrepancy(const int problem_id, const int instance, const int n_variables, const std::string &name,
                             const Grid &grid) :
-                IntegerSingleObjective(MetaData{problem_id, instance, name, n_variables, common::OptimizationType::MAX},
+                IntegerSingleObjective(MetaData{problem_id, instance, name, n_variables, 1, common::OptimizationType::MAX},
                                        Bounds<int>{n_variables, 0, static_cast<int>(grid.size())}),
                 grid(grid), internal_grid(ioh::common::sort_colwise(grid)), dx(n_variables)
             {

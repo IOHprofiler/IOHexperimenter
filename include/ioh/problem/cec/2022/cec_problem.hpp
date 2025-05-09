@@ -234,7 +234,7 @@ namespace ioh::problem
             const int n_variables,
             const std::string &name
             ) :
-            RealSingleObjective(MetaData(problem_id, instance, name, n_variables),
+            RealSingleObjective(MetaData(problem_id, instance, name, n_variables, 1),
                                 Bounds<double>(n_variables, -100, 100)),
             input_permutation_(std::vector<int>(n_variables, 0))
         {

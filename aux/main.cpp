@@ -58,7 +58,8 @@ int main() {
         objective_transform,
         ioh::problem::Solution<double, ioh::problem::MultiObjective>({0,0}, {0,0})
     );
-    
+    const auto logger = std::make_shared<ioh::logger::MultiAnalyzer>();
+    problem.attach_logger(*logger);
     std::cout << problem.meta_data() << std::endl;
     std::cout << problem.state().repr() << std::endl;
 
@@ -110,11 +111,11 @@ int main() {
     std::cout << problem.state().repr() << std::endl;
 
 
-    result = problem({0.0, 0.0});
-    for (const auto &val : result) {
-        std::cout << val << " ";
-    }
-    std::cout << std::endl;
-    std::cout << problem.state().repr() << std::endl;
+    // result = problem({0.0, 0.0});
+    // for (const auto &val : result) {
+    //     std::cout << val << " ";
+    // }
+    // std::cout << std::endl;
+    // std::cout << problem.state().repr() << std::endl;
     return 0;
 }

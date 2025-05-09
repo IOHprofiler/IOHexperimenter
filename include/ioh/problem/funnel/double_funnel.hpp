@@ -36,7 +36,7 @@ namespace ioh::problem::funnel
          * @param s the size of the suboptimal basin (smaller values increase the size of the suboptimal basin)
          */
         DoubleFunnel(const int n_variables, const std::string &name, const double d = 0.0, const double s = 1.0) :
-            RealSingleObjective(MetaData(0, 1, name, n_variables), Bounds<double>(n_variables, -5, 5), {},
+            RealSingleObjective(MetaData(0, 1, name, n_variables, 1), Bounds<double>(n_variables, -5, 5), {},
                                 {std::vector<double>(n_variables, 2.5), 0.0}),
             d_(d), s_(s), u1_(2.5), u2_(-std::sqrt((std::pow(2.5, 2.0) - d) / s))
         {

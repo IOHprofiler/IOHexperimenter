@@ -131,7 +131,7 @@ namespace ioh::problem
          */
         BBOB(const int problem_id, const int instance, const int n_variables, const std::string &name,
              const double condition = sqrt(10.0)) :
-            RealSingleObjective(MetaData(problem_id, instance, name, n_variables), Bounds<double>(n_variables, -5, 5)),
+            RealSingleObjective(MetaData(problem_id, instance, name, n_variables, 1), Bounds<double>(n_variables, -5, 5)),
             transformation_state_(problem_id, instance, n_variables, condition),
             box_size_(4.0)
         {

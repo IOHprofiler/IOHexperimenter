@@ -109,7 +109,7 @@ namespace ioh::suite
         std::vector<int> dimensions_;
 
         //! Attached logger
-        Logger *logger_{};
+        Logger<ioh::problem::SingleObjective> *logger_{};
 
         //! Check if parameter is within bounds
         [[nodiscard]] int check_parameter(const int parameter, const int ub, const int lb = 1) const
@@ -170,7 +170,7 @@ namespace ioh::suite
         }
 
         //! Attach a logger
-        void attach_logger(Logger &logger)
+        void attach_logger(Logger<ioh::problem::SingleObjective> &logger)
         {
             logger_ = &logger;
             logger_->attach_suite(name());

@@ -170,7 +170,7 @@ namespace logger {
                       practice.}
         }
      */
-    class EAF : public Logger {
+    class EAF : public Logger<ioh::problem::SingleObjective> {
     public:
         /** @name Data structure types
          * Convenience naming for the underlying nested data structure.
@@ -254,7 +254,7 @@ namespace logger {
         /** Attach to a problem. */
         void attach_problem(const problem::MetaData& problem) override
         {
-            Logger::attach_problem(problem);
+            Logger<ioh::problem::SingleObjective>::attach_problem(problem);
 
             _current.pb  = problem.problem_id;
             _current.dim = problem.n_variables;
@@ -283,7 +283,7 @@ namespace logger {
         }
 
         /** Process a log event. */
-        void call(const logger::Info& log_info) override
+        void call(const logger::Info<ioh::problem::SingleObjective>& log_info) override
         {
             IOH_DBG(debug, "EAF called after improvement")
             // Access the properties that were instantiated in the constructor.
@@ -313,7 +313,7 @@ namespace logger {
         void reset() override
         {
             IOH_DBG(debug, "EAF reset")
-            Logger::reset();
+            Logger<ioh::problem::SingleObjective>::reset();
 #ifndef NDEBUG
             if(_current_problem_type == common::OptimizationType::MIN) {
                 _current_best =  std::numeric_limits<double>::infinity();
@@ -358,10 +358,10 @@ namespace logger {
         *
         * Because it fits the algorithmics.
         */
-        trigger::OnImprovement _on_improvement;
+        trigger::OnImprovement<ioh::problem::SingleObjective> _on_improvement;
 
         //! Property watching the number of evaluations.
-        watch::Evaluations _evaluations;
+        watch::Evaluations<ioh::problem::SingleObjective> _evaluations;
 
         //! Property watching the objective function value.
         watch::CurrentBestY _y_best;

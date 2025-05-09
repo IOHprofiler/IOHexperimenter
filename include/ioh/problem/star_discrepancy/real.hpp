@@ -33,7 +33,7 @@ namespace ioh::problem
              */
             StarDiscrepancy(const int problem_id, const int instance, const int n_variables, const std::string &name,
                             const Grid &grid) :
-                RealSingleObjective(MetaData{problem_id, instance, name, n_variables, common::OptimizationType::MAX},
+                RealSingleObjective(MetaData{problem_id, instance, name, n_variables, 1, common::OptimizationType::MAX},
                                     Bounds<double>{n_variables, 0., 1.}),
                 grid(grid)
             {
