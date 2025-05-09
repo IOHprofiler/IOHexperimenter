@@ -11,7 +11,7 @@ TEST_F(BaseTest, store_data_consistency)
     auto nb_runs = 2;
 
     suite::BBOB suite({1, 2}, {1, 2}, {3, 10}); // problems, instances, dimensions
-    logger::Store logger({trigger::always},{watch::transformed_y});
+    logger::Store<problem::SingleObjective> logger({trigger::always<problem::SingleObjective>},{watch::transformed_y});
 
     suite.attach_logger(logger);
 
@@ -45,14 +45,17 @@ TEST_F(BaseTest, issue94)
 
 
     double* nullp = nullptr;
-    EXPECT_DEBUG_DEATH( watch::Pointer nope("Nope", nullp), "");
+    EXPECT_DEBUG_DEATH(
+        (watch::Pointer<double, problem::SingleObjective>("Nope", nullptr)),
+        ""
+    );
 
     double* p_transient_att = nullptr;
-    watch::PointerReference attpr("Att_PtrRef", p_transient_att);
+    watch::PointerReference<double, ioh::problem::SingleObjective> attpr("Att_PtrRef", p_transient_att);
     IOH_DBG(xdebug, "@ " << attpr.ref_ptr_var() << " -> " << p_transient_att);
     
-    trigger::Always always;
-    logger::Store logger({always},{attpr});
+    trigger::Always<problem::SingleObjective> always;
+    logger::Store<problem::SingleObjective> logger({always},{attpr});
     suite.attach_logger(logger);
 
     double my_attribute = 100;
@@ -81,11 +84,11 @@ TEST_F(BaseTest, issue94)
         }
     }
 
-    logger::Store::Cursor first_eval(suite.name(), /*pb*/1, /*dim*/3, /*ins*/1, /*run*/0, /*eval*/0);
+    logger::Store<problem::SingleObjective>::Cursor first_eval(suite.name(), /*pb*/1, /*dim*/3, /*ins*/1, /*run*/0, /*eval*/0);
 
     ASSERT_EQ(logger.at(first_eval, attpr), std::nullopt);
     
-    logger::Store::Cursor last_eval(suite.name(), /*pb*/2, /*dim*/3, /*ins*/1, /*run*/1, /*eval*/sample_size-1);
+    logger::Store<problem::SingleObjective>::Cursor last_eval(suite.name(), /*pb*/2, /*dim*/3, /*ins*/1, /*run*/1, /*eval*/sample_size-1);
     ASSERT_EQ(logger.at(last_eval, attpr).value(), my_attribute-1);
 }
 
@@ -99,21 +102,24 @@ TEST_F(BaseTest, store_properties)
     suite::BBOB suite({1, 2}, {1, 2}, {3, 10}); // problems, instances, dimensions
 
     double my_attribute = 0;
-    watch::Reference attr("Att_reference", my_attribute);
-    watch::Pointer   attp("Att_pointer"  ,&my_attribute);
+    watch::Reference<double,problem::SingleObjective> attr("Att_reference", my_attribute);
+    watch::Pointer<double,problem::SingleObjective>   attp("Att_pointer"  ,&my_attribute);
 
     double* nullp = nullptr;
-    EXPECT_DEBUG_DEATH( watch::Pointer nope("Nope", nullp), "");
+    EXPECT_DEBUG_DEATH(
+        (watch::Pointer<double, problem::SingleObjective>("Nope", nullptr)),
+        ""
+    );
 
     double* p_transient_att = nullptr;
-    watch::PointerReference attpr("Att_PtrRef", p_transient_att);
+    watch::PointerReference<double,problem::SingleObjective> attpr("Att_PtrRef", p_transient_att);
     
-    trigger::Always always;
-    watch::Evaluations evaluations;
+    trigger::Always<problem::SingleObjective> always;
+    watch::Evaluations<problem::SingleObjective> evaluations;
     watch::RawYBest raw_y_best;
     watch::TransformedY transformed_y;
     watch::TransformedYBest transformed_y_best;
-    logger::Store logger({always},{evaluations, raw_y_best, transformed_y, transformed_y_best, attr, attp, attpr});
+    logger::Store<problem::SingleObjective> logger({always},{evaluations, raw_y_best, transformed_y, transformed_y_best, attr, attp, attpr});
     suite.attach_logger(logger);
 
     for (const auto &pb : suite) {
@@ -131,7 +137,7 @@ TEST_F(BaseTest, store_properties)
         }
     }
 
-    logger::Store::Cursor first_eval(suite.name(), /*pb*/1, /*dim*/3, /*ins*/1, /*run*/0, /*eval*/0);
+    logger::Store<problem::SingleObjective>::Cursor first_eval(suite.name(), /*pb*/1, /*dim*/3, /*ins*/1, /*run*/0, /*eval*/0);
     auto evals = logger.at(first_eval, evaluations);
     ASSERT_NE(evals, std::nullopt);
     EXPECT_GT(evals, 0);
@@ -143,7 +149,7 @@ TEST_F(BaseTest, store_properties)
     ASSERT_EQ(logger.at(first_eval, attp ).value(), 0);
     ASSERT_EQ(logger.at(first_eval, attr ).value(), 0);
 
-    logger::Store::Cursor last_eval(suite.name(), /*pb*/2, /*dim*/10, /*ins*/2, /*run*/nb_runs-1, /*eval*/sample_size-1);
+    logger::Store<problem::SingleObjective>::Cursor last_eval(suite.name(), /*pb*/2, /*dim*/10, /*ins*/2, /*run*/nb_runs-1, /*eval*/sample_size-1);
     ASSERT_EQ(logger.at(last_eval, attp ).value(), my_attribute-1);
     ASSERT_EQ(logger.at(last_eval, attr ).value(), my_attribute-1);
     ASSERT_EQ(logger.at(last_eval, attpr).value(), my_attribute-1);

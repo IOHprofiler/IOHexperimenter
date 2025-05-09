@@ -87,6 +87,48 @@ namespace ioh
             {
             }
 
+            /**
+             * @brief Construct a new Meta Data object
+             *
+             * @param problem_id The id of the problem
+             * @param instance The instance of the problem
+             * @param name the name of the problem
+             * @param n_variables the dimension of the problem
+             * @param optimization_type optimization type
+             * @param final_target the final target to be reached for the function
+             */
+             MetaData(const int problem_id, const int instance, std::string name,
+                const int n_variables,
+                const common::OptimizationType optimization_type = common::OptimizationType::MIN,
+                const double final_target = 1e-8) :
+                instance(instance),
+                problem_id(problem_id), 
+                name(std::move(name)), 
+                optimization_type{optimization_type},
+                n_variables(n_variables), 
+                n_objectives(1),
+                final_target(final_target)
+            {
+            }
+
+            /**
+            * @brief Construct a new Meta Data object
+            *
+            * @param instance The instance of the problem
+            * @param name the name of the problem
+            * @param n_variables the dimension of the problem
+            * @param optimization_type optimization type
+            * @param final_target the final target to be reached for the function
+            */
+            MetaData(const int instance, const std::string &name, 
+                const int n_variables, 
+                const common::OptimizationType optimization_type = common::OptimizationType::MIN,
+                const double final_target = 1e-8) :
+                MetaData(0, instance, name, n_variables, optimization_type, final_target)
+            {
+            }
+
+
             //! comparison operator
             bool operator==(const MetaData &other) const
             {

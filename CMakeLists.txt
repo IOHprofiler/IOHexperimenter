@@ -170,9 +170,9 @@ export(PACKAGE ioh)
  
 
 # Add subdirectories to build.
-# if(BUILD_TESTS) 
-#     add_subdirectory(tests)
-# endif()
+if(BUILD_TESTS) 
+    add_subdirectory(tests)
+endif()
 
 # if(BUILD_EXAMPLE)
 #     add_subdirectory(example)

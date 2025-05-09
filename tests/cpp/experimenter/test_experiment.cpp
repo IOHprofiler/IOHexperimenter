@@ -24,8 +24,8 @@ TEST_F(BaseTest, experiment_bbob)
 	const std::vector<int> dims = {2, 10};
 	
 	const auto suite  = std::make_shared<suite::BBOB>(pbs, ins, dims);
-	const auto logger = std::make_shared<logger::Store>(
-		logger::Triggers{trigger::always}, logger::Properties{watch::raw_y_best});
+	const auto logger = std::make_shared<logger::Store<problem::SingleObjective>>(
+		logger::Triggers<problem::SingleObjective>{trigger::always<problem::SingleObjective>}, logger::Properties<problem::SingleObjective>{watch::raw_y_best});
     auto experiment = Experimenter<problem::RealSingleObjective>(suite, logger, real_random_search, 10);
 
 	EXPECT_EQ(experiment.independent_runs(), 10);

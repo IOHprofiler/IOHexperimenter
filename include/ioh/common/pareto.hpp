@@ -6,7 +6,7 @@ namespace ioh::common::pareto
 {
             
     /** Functions to detemrine if a solution is dominated, dominate or is part of pareto front*/
-    bool dominates( const std::vector<double> &a, const std::vector<double> &b, FOptimizationType optimization_type)
+    inline bool dominates( const std::vector<double> &a, const std::vector<double> &b, FOptimizationType optimization_type)
     {
         
         bool better = false;
@@ -19,7 +19,7 @@ namespace ioh::common::pareto
     }
 
 
-    bool vector_difference( const std::vector<double> &a, const std::vector<double> &b)
+    inline bool vector_difference( const std::vector<double> &a, const std::vector<double> &b)
     {
         double max_difference = 0.0;
         for (size_t i = 0; i < a.size(); ++i)

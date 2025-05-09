@@ -7,7 +7,7 @@ inline ioh::logger::Analyzer get_logger(const std::string &folder_name = "logger
     /// Instantiate a logger.
     using namespace ioh;
     return logger::Analyzer(
-        {trigger::on_improvement}, // trigger when the objective value improves
+        {trigger::on_improvement<ioh::problem::SingleObjective>}, // trigger when the objective value improves
         {},                        // no additional properties 
         fs::current_path(),        // path to store data
         folder_name,               // name of the folder in path, which will be newly created
@@ -89,8 +89,8 @@ inline void logger_with_custom_parameters_example()
     logger.add_run_attribute("run_id", &run_id);
     
     // Add additional parameters, stored as columns in the data 
-    logger.watch(ioh::watch::address("x0", x.data()));
-    logger.watch(ioh::watch::address("x1", x.data() + 1));
+    logger.watch(ioh::watch::address<double, ioh::problem::SingleObjective>("x0", x.data()));
+    logger.watch(ioh::watch::address<double, ioh::problem::SingleObjective>("x1", x.data() + 1));
 
     problem.attach_logger(logger);
 

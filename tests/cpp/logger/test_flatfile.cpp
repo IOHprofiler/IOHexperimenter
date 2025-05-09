@@ -12,10 +12,10 @@ TEST_F(BaseTest, logger_flatfile)
     auto p1 = problem::bbob::Sphere(1, 4);
     auto p2 = problem::bbob::AttractiveSector(1, 4);
 
-    trigger::Always always;
+    trigger::Always<problem::SingleObjective> always;
     watch::TransformedY transformed_y;
     {
-        auto logger = logger::FlatFile( {always}, {transformed_y}, "IOH.dat", "." );
+        auto logger = logger::FlatFile<problem::SingleObjective>( {always}, {transformed_y}, "IOH.dat", "." );
 
         const int runs = 3;
         const int samples = 3;
