@@ -111,8 +111,8 @@ namespace ioh::logger
          * @param common_header_titles Seven strings to print in the header for the common problem meta data (property
          * names are automatically printed after).
          */
-        FlatFile(std::vector<std::reference_wrapper<Trigger<R>>> triggers,
-                 std::vector<std::reference_wrapper<Property<R>>> properties, const std::string &filename = "IOH.dat",
+        FlatFile(std::vector<std::reference_wrapper<Trigger>> triggers,
+                 std::vector<std::reference_wrapper<Property>> properties, const std::string &filename = "IOH.dat",
                  const fs::path &output_directory = fs::current_path(), const std::string &separator = "\t",
                  const std::string &comment = "# ", const std::string &no_value = "None",
                  const std::string &end_of_line = "\n", const bool repeat_header = false,

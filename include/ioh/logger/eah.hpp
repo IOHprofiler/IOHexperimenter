@@ -782,10 +782,10 @@ namespace ioh
             *
             * Because it fits the algorithmics.
             */
-            trigger::OnImprovement<ioh::problem::SingleObjective> _on_improvement;
+            trigger::OnImprovement _on_improvement;
 
             //! Property watching the number of evaluations.
-            watch::Evaluations<ioh::problem::SingleObjective> _evaluations;
+            watch::Evaluations _evaluations;
 
             //! Property watching the objective function value.
             watch::CurrentBestY _y_best;

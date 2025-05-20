@@ -389,8 +389,8 @@ namespace ioh::logger
                     * @param use_old_data_format Whether to use the old data format
                     * @param attributes See: analyzer::Attributes.
                     */
-                    BaseAnalyzer(const Triggers<R> &triggers = {trigger::on_delta_improvement<R>},
-                                const Properties<R> &properties = {}, 
+                    BaseAnalyzer(const Triggers &triggers = {trigger::on_delta_improvement},
+                                const Properties &properties = {}, 
                                 const fs::path &root = fs::current_path(),
                                 const std::string &folder_name = "ioh_data",
                                 const std::string &algorithm_name = "algorithm_name",
@@ -461,7 +461,7 @@ namespace ioh::logger
 
                     //! Watcher::watch is protected, so it can only be called before track_problem is called for the first
                     //! time.
-                    virtual void watch(logger::Property<R> &property) override
+                    virtual void watch(logger::Property &property) override
                     {
                         guard_attributes([&]() { FlatFile<R>::watch(property); });
                     }
@@ -599,8 +599,8 @@ namespace ioh::logger
                  * @param store_positions Whether to store x positions in the logged data
                  * @param attributes See: analyzer::Attributes.
                  */
-                 BaseAnalyzer(const Triggers<R> &triggers = {trigger::on_improvement<R>},
-                         const Properties<R> &additional_properties = {}, 
+                 BaseAnalyzer(const Triggers &triggers = {trigger::on_improvement},
+                         const Properties &additional_properties = {}, 
                          const fs::path &root = fs::current_path(),
                          const std::string &folder_name = "ioh_data",
                          const std::string &algorithm_name = "algorithm_name",
@@ -643,8 +643,8 @@ namespace ioh::logger
                 * @param use_old_data_format Whether to use the old data format
                 * @param attributes See: analyzer::Attributes.
                 */
-                Analyzer(const Triggers<problem::SingleObjective> &triggers = {trigger::on_delta_improvement<problem::SingleObjective>},
-                        const Properties<problem::SingleObjective> &additional_properties = {}, 
+                Analyzer(const Triggers &triggers = {trigger::on_delta_improvement},
+                        const Properties &additional_properties = {}, 
                         const fs::path &root = fs::current_path(),
                         const std::string &folder_name = "ioh_data",
                         const std::string &algorithm_name = "algorithm_name",
@@ -699,13 +699,13 @@ namespace ioh::logger
 
             private:
 
-                static inline watch::Evaluations<problem::SingleObjective> evaluations_{R"#("function evaluation")#"};
+                static inline watch::Evaluations evaluations_{R"#("function evaluation")#"};
                 static inline watch::RawY current_y_{R"#("current f(x)")#"};
                 static inline watch::RawYBest y_best_{R"#("best-so-far f(x)")#"};
                 static inline watch::TransformedY transformed_y_{R"#("current af(x)+b")#"};
                 static inline watch::TransformedYBest transformed_y_best_{R"#("best af(x)+b")#"};
 
-                static inline Properties<problem::SingleObjective> default_properties_old_ = {
+                static inline Properties default_properties_old_ = {
                     evaluations_,
                     current_y_,
                     y_best_,
@@ -713,8 +713,8 @@ namespace ioh::logger
                     transformed_y_best_
                 };
 
-                static inline Properties<problem::SingleObjective> default_properties_ = {
-                    watch::evaluations<problem::SingleObjective>,
+                static inline Properties default_properties_ = {
+                    watch::evaluations,
                     watch::raw_y
                 };
         
@@ -724,8 +724,8 @@ namespace ioh::logger
         {
             
             public:
-                MultiAnalyzer(const Triggers<problem::MultiObjective> &triggers = {trigger::on_improvement<problem::MultiObjective>},
-                            const Properties<problem::MultiObjective> &additional_properties = {}, 
+                MultiAnalyzer(const Triggers &triggers = {trigger::on_improvement},
+                            const Properties &additional_properties = {}, 
                             const fs::path &root = fs::current_path(),
                             const std::string &folder_name = "ioh_data",
                             const std::string &algorithm_name = "algorithm_name",
@@ -778,8 +778,8 @@ namespace ioh::logger
             
 
             private:
-                static inline Properties<problem::MultiObjective> default_properties_ = {
-                    watch::evaluations<problem::MultiObjective>,
+                static inline Properties default_properties_ = {
+                    watch::evaluations,
                 };
                 
         };

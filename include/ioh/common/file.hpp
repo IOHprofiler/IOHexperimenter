@@ -121,7 +121,7 @@ namespace ioh::common::file
         inline fs::path find_static_file(const std::string &filename)
         {
             auto file = get_static_root() / filename;
-
+            std::cout<<"File: "<<file<<std::endl;
             if (!exists(file))
                 throw std::runtime_error(fmt::format("Could not find static file: {}", filename));
             return file;

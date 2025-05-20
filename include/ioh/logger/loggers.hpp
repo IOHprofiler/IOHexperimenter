@@ -30,10 +30,10 @@ namespace ioh {
     class Logger {
     protected:
         //! Default combination of triggers instance.
-        trigger::Any<R> any_;
+        trigger::Any any_;
         
         //! Lower-level interface.
-        trigger::Set<R>& triggers_;
+        trigger::Set& triggers_;
 
         //! Access to the problem.
         std::optional<problem::MetaData> problem_;
@@ -65,10 +65,10 @@ namespace ioh {
          */
         // We need references because we have container of instances of various classes.
         // As all share a common interface, we can have a container of references of this base class.
-        std::map<std::string,std::reference_wrapper<logger::Property<R>>> properties_;
+        std::map<std::string,std::reference_wrapper<logger::Property>> properties_;
         
         //! A vector with all the properties
-        logger::Properties<R> properties_vector_{}; 
+        logger::Properties properties_vector_{}; 
         // TODO: check why we use a map here, and not a vector, with a map we cannot control order        
 
 #ifndef NDEBUG
@@ -92,7 +92,7 @@ namespace ioh {
 #endif
 
         //! Convert a vector of properties in a map of {name => property}.
-        void store_properties(std::vector<std::reference_wrapper<logger::Property<R>>>& properties)
+        void store_properties(std::vector<std::reference_wrapper<logger::Property>>& properties)
         {
             for(auto& p : properties) {
                 // operator[] of an std::map<K,T> requires that T be default-constructible.
@@ -112,8 +112,8 @@ namespace ioh {
          *          Instead, use the empty `Logger()` constructor and then
          *          add the triggers manually in your own constructor.
          */
-        Logger(std::vector<std::reference_wrapper<logger::Trigger<R> >> triggers,
-               std::vector<std::reference_wrapper<logger::Property<R>>> properties)
+        Logger(std::vector<std::reference_wrapper<logger::Trigger>> triggers,
+               std::vector<std::reference_wrapper<logger::Property>> properties)
         : any_(triggers)
         , triggers_(any_)
         , problem_(std::nullopt)
@@ -128,8 +128,8 @@ namespace ioh {
          * so that the log event would be triggered only if ALL triggers
          * are fired at once.
          */
-        Logger(trigger::Set<R>& triggers,
-               std::vector<std::reference_wrapper<logger::Property<R>>> properties)
+        Logger(trigger::Set& triggers,
+               std::vector<std::reference_wrapper<logger::Property>> properties)
         : any_()
         , triggers_(triggers)
         , problem_(std::nullopt)
@@ -152,7 +152,7 @@ namespace ioh {
         Logger() : any_(), triggers_(any_), problem_(std::nullopt), properties_() {}
 
         /** Add the given trigger to the list. */
-        void trigger(logger::Trigger<R>& when)
+        void trigger(logger::Trigger& when)
         {
             triggers_.push_back(when);
         }
@@ -248,8 +248,8 @@ namespace ioh {
              *          Instead, use the empty `Watcher()` constructor and then
              *          add the properties manually in your own constructor.
              */
-            Watcher(std::vector<std::reference_wrapper<logger::Trigger<R> >> when,
-                    std::vector<std::reference_wrapper<logger::Property<R>>> what)
+            Watcher(std::vector<std::reference_wrapper<logger::Trigger>> when,
+                    std::vector<std::reference_wrapper<logger::Property>> what)
             : Logger<R>(when,what)
             { }
 
@@ -259,8 +259,8 @@ namespace ioh {
              * so that the log event would be triggered only if ALL triggers
              * are fired at once.
              */
-            Watcher(trigger::Set<R>& when,
-                   std::vector<std::reference_wrapper<logger::Property<R>>> what)
+            Watcher(trigger::Set& when,
+                   std::vector<std::reference_wrapper<logger::Property>> what)
             : Logger<R>(when,what)
             { }
 
@@ -275,7 +275,7 @@ namespace ioh {
 
             //! Adds a property to be logged.
             // This essentially just expose _properties.push_back with some checks.
-            virtual void watch(logger::Property<R>& property)
+            virtual void watch(logger::Property& property)
             {
                 IOH_DBG(debug,"watch property " << property.name())
                 // Assert that the Property is not already tracked.

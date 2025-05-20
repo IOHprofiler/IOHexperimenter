@@ -39,7 +39,7 @@ void example_submodular_suite_with_logging()
     const int repetition = 10;
 
     // Logger for storing data
-    auto b = ioh::logger::Analyzer({ioh::trigger::on_improvement<ioh::problem::SingleObjective>}, {}, // no additional properties
+    auto b = ioh::logger::Analyzer({ioh::trigger::on_improvement}, {}, // no additional properties
                                    fs::current_path(), // path to store data
                                    "example_log"); // folder to store data
     suite.attach_logger(b);

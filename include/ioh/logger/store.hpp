@@ -122,7 +122,7 @@ namespace ioh::logger {
             }
 
             /** Access a property value with a Cursor and the Property itself. */
-            Value at(const Cursor& current, const Property<R>& property)
+            Value at(const Cursor& current, const Property& property)
             {
                 return data(current).at(property.name());
             }
@@ -142,8 +142,8 @@ namespace ioh::logger {
             
         public:
             /** The logger::Store should at least track one logger::Property, or else it makes no sense to use it. */
-            Store(std::vector<std::reference_wrapper<logger::Trigger<R> >> triggers,
-                  std::vector<std::reference_wrapper<logger::Property<R>>> Attributes)
+            Store(std::vector<std::reference_wrapper<logger::Trigger>> triggers,
+                  std::vector<std::reference_wrapper<logger::Property>> Attributes)
             : Watcher<R>(triggers, Attributes)
             { }
 

@@ -1,6 +1,8 @@
 # Ignore C++ build artifacts.
 build
 build/
+aux
+aux/
 out/
 *.a
 *.o
