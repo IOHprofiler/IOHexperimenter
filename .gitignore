@@ -1,8 +1,7 @@
 # Ignore C++ build artifacts.
 build
 build/
-aux
-aux/
+
 out/
 *.a
 *.o
@@ -197,3 +196,5 @@ gsemo.cpp
 concepts
 tests/python/nevergrad.benchmark.Experiment/
 .deploy/conda_environment/
+aux
+aux/
