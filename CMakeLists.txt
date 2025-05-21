@@ -174,17 +174,17 @@ if(BUILD_TESTS)
     add_subdirectory(tests)
 endif()
 
-# if(BUILD_EXAMPLE)
-#     add_subdirectory(example)
-# endif()
+if(BUILD_EXAMPLE)
+    add_subdirectory(example)
+endif()
 
 # if(BUILD_DOCS)
 #     add_subdirectory(doc)
 # endif()
 
-# if(BUILD_PYTHON_PACKAGE)
-#     add_subdirectory(ioh)
-# endif()
+if(BUILD_PYTHON_PACKAGE)
+    add_subdirectory(ioh)
+endif()
 
 # if(BUILD_SERVER)
 #     include_directories(${EXTERNAL_DIR}/cxxopts/include/)
