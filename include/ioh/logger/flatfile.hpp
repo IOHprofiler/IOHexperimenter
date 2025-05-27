@@ -133,7 +133,7 @@ namespace ioh::logger
 
       
 
-        void attach_problem(const problem::MetaData &problem) override
+        virtual void attach_problem(const problem::MetaData &problem) override
         {
             // If this is a new problem.
             if (!this->problem_.has_value() or this->problem_.value() != problem)
@@ -154,7 +154,7 @@ namespace ioh::logger
             cache_meta_data();
         }
 
-        void call(const Info<R> &log_info) override
+        virtual void call(const Info<R> &log_info) override
         {
             IOH_DBG(debug, "FlatFile called");
             if (requires_header_)

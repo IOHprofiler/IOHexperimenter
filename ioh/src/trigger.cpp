@@ -12,7 +12,12 @@ void define_triggers(py::module &m)
     py::module t = m.def_submodule("trigger");
 
     py::class_<logger::Trigger, std::shared_ptr<logger::Trigger>>(t, "Trigger", "Base class for all Triggers")
-        .def("__call__", &logger::Trigger::operator())
+        .def("__call__", [](logger::Trigger& self, const logger::Info<double>& info, const problem::MetaData& meta) {
+            return self(info, meta);
+        })
+        .def("__call__", [](logger::Trigger& self, const logger::Info<std::vector<double>>& info, const problem::MetaData& meta) {
+            return self(info, meta);
+        })
         .def("reset", &logger::Trigger::reset);
 
     py::class_<trigger::Always, logger::Trigger, std::shared_ptr<trigger::Always>>(

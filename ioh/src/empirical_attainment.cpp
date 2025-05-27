@@ -40,7 +40,7 @@ void define_eah(py::module &m)
     define_eah_scale<double>(eah, "RealScale");
     define_eah_scale<size_t>(eah, "IntegerScale");
 
-    py::class_<EAH, Logger, std::shared_ptr<EAH>>(m, "EAH", "Emperical Attainment Histogram Logger")
+    py::class_<EAH, Logger<double>, std::shared_ptr<EAH>>(m, "EAH", "Emperical Attainment Histogram Logger")
         .def(py::init<double, double, size_t, size_t, size_t, size_t>(), py::arg("error_min"), py::arg("error_max"),
              py::arg("error_buckets"), py::arg("evals_min"), py::arg("evals_max"), py::arg("evals_buckets"))
         .def(py::init<eah::LinearScale<double> &, eah::LinearScale<size_t> &>(), py::arg("error_scale"),
@@ -71,7 +71,7 @@ void define_eaf(py::module &m)
         .def("__repr__",
              [](const eaf::RunPoint &p) { return fmt::format("<RunPoint {} {} {}>", p.qual, p.time, p.run); });
 
-    py::class_<EAF, Logger, std::shared_ptr<EAF>>(m, "EAF", "Emperical Attainment Function Logger")
+    py::class_<EAF, Logger<double>, std::shared_ptr<EAF>>(m, "EAF", "Emperical Attainment Function Logger")
         .def(py::init<>())
         .def_property_readonly("data", py::overload_cast<>(&EAF::data, py::const_))
         .def("at", [](EAF &f, std::string suite_name, int pb, int dim, int inst, size_t run) {

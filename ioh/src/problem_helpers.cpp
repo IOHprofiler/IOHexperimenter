@@ -8,6 +8,8 @@
 namespace py = pybind11;
 using namespace ioh::problem;
 
+
+
 template <typename T, typename R>
 void define_solution(py::module &m, const std::string &name)
 {
@@ -17,7 +19,7 @@ void define_solution(py::module &m, const std::string &name)
     options.disable_function_signatures();
 
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<std::vector<T>, double>(), py::arg("x"), py::arg("y"),
+        .def(py::init<std::vector<T>, R>(), py::arg("x"), py::arg("y"),
              R"pbdoc(
             A Solution object, which is a container for a search point and its corresponding fitness value.
 
@@ -25,7 +27,7 @@ void define_solution(py::module &m, const std::string &name)
             ----------
             x: list
                 the search point in a search space, e.g., R^d or {0,1}^d
-            y: float
+            y: float | list
                 the corresponding objective value of `x`, i.e., y = f(x)
 
         )pbdoc")
@@ -37,11 +39,11 @@ void define_solution(py::module &m, const std::string &name)
         .def("__repr__", &Class::repr);
 }
 
-template <typename T, typename R>
+template <typename T>
 void define_state(py::module &m, const std::string &name)
 {
-    using Class = State<T, R>;
-    using Class2 = Solution<T, R>;
+    using Class = State<T, double>;
+    using Class2 = Solution<T, double>;
     py::class_<Class>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<Class2>(), py::arg("initial"),
              R"pbdoc(
@@ -74,6 +76,37 @@ void define_state(py::module &m, const std::string &name)
                       "Whether the last call to problem has caused global improvement.")
         .def("__repr__", &Class::repr);
 }
+
+template <typename T>
+void define_multi_state(py::module &m, const std::string &name)
+{
+    using Class = State<T, std::vector<double>>;
+    using Class2 = Solution<T, std::vector<double>>;
+    py::class_<Class>(m, name.c_str(), py::buffer_protocol())
+        .def(py::init<Class2>(), py::arg("initial"),
+             R"pbdoc(
+                A state of a problem. Contains metrics such as the number of evaluations, and the current best value.
+
+                Parameters
+                ----------
+                initial: Solution
+                    an object to initialize the state, which contains a placeholder for a solution to an optimization problem. 
+            )pbdoc")
+        .def_readonly("evaluations", &Class::evaluations, "The number of times the problem has been evaluated so far.")
+        .def_readonly("optimum_found", &Class::optimum_found,
+                      "Boolean value indicating whether final_target_found optimum of a given problem has been found.")
+        .def_readonly("final_target_found", &Class::final_target_found,
+                      "Boolean value indicating whether the final target of a given problem has been found.")
+        .def_readonly("current", &Class::current,
+                      "The internal representation of the current solution.")
+        .def_readonly("pareto_front", &Class::pareto_front,
+                      "The internal representation of the current pareto front.")
+        .def_readonly("has_improved", &Class::has_improved,
+                      "Whether the last call to problem has caused global improvement.")
+        .def("__repr__", &Class::repr);
+}
+
+
 
 
 template <typename T>
@@ -273,15 +306,18 @@ void define_helper_classes(py::module &m)
 
     define_solution<double, double>(m, "RealSolution");
     define_solution<int, double>(m, "IntegerSolution");
+    define_solution<double, std::vector<double>>(m, "MultiRealSolution");
+    define_solution<int, std::vector<double>>(m, "MultiIntegerSolution");
     define_constraint_types<int>(m, "Integer");
     define_constraint_types<double>(m, "Real");
-    define_state<double, double>(m, "RealState");
-    define_state<int, double>(m, "IntegerState");
-
+    define_state<double>(m, "RealState");
+    define_state<int>(m, "IntegerState");
+    define_multi_state<double>(m, "MultiRealState");
+    define_multi_state<int>(m, "MultiIntegerState");
 
     py::class_<MetaData>(m, "MetaData")
-        .def(py::init<int, int, std::string, int, ioh::common::OptimizationType, double>(), py::arg("problem_id"),
-             py::arg("instance"), py::arg("name"), py::arg("n_variables"), py::arg("optimization_type"),
+        .def(py::init<int, int, std::string, int, int, ioh::common::OptimizationType, double>(), py::arg("problem_id"),
+             py::arg("instance"), py::arg("name"), py::arg("n_variables"), py::arg("n_objectives"), py::arg("optimization_type"),
              py::arg("final_target") = 1e-8,
              R"pbdoc(
                 Problem meta data. Contains static information about problems, such as their name and id. 
@@ -296,6 +332,8 @@ void define_helper_classes(py::module &m)
                     The name of the problem
                 n_variables: int
                     The problem dimensionality
+                n_objectives: int
+                    The number of objectives of the problem
                 optimization_type: OptimizationType
                     Enum value, denoting if this is a maximization or minimization problem
                 final_target: float
@@ -310,11 +348,17 @@ void define_helper_classes(py::module &m)
             "The type of problem (maximization or minimization)")
         .def_readonly("n_variables", &MetaData::n_variables,
                       "The number of variables (dimension) of the current problem")
+        .def_readonly("n_objectives", &MetaData::n_objectives,
+                      "The number of objectives of the current problem")
         .def_readonly("final_target", &MetaData::final_target)
         .def("__repr__", &MetaData::repr)
         .def("__eq__", &MetaData::operator==);
+    
 
-    py::class_<ioh::logger::Info>(m, "LogInfo")
+    using SingleObjectiveInfo = ioh::logger::Info<double>;
+    using MultiObjectiveInfo = ioh::logger::Info<std::vector<double>>;
+
+    py::class_<SingleObjectiveInfo>(m, "LogInfo")
         .def(py::init<size_t, double, double, double, double, double, double, std::vector<double>, std::vector<double>,
                       std::vector<double>, Solution<double, double>, bool>(),
              py::arg("evaluations"), py::arg("raw_y"), py::arg("raw_y_best"), py::arg("transformed_y"),
@@ -351,22 +395,75 @@ void define_helper_classes(py::module &m)
                     Whether the evaluation has caused an improvement in the objective value
 
             )pbdoc")
-        .def_readonly("evaluations", &ioh::logger::Info::evaluations,
+        .def_readonly("evaluations", &SingleObjectiveInfo::evaluations,
                       "The number of function evaluations performed on the current problem so far")
+        .def_readonly("raw_y", &SingleObjectiveInfo::raw_y)
+        .def_readonly("raw_y_best", &SingleObjectiveInfo::raw_y_best)
 
-        .def_readonly("raw_y", &ioh::logger::Info::raw_y)
-        .def_readonly("raw_y_best", &ioh::logger::Info::raw_y_best)
+        .def_readonly("transformed_y", &SingleObjectiveInfo::transformed_y)
+        .def_readonly("transformed_y_best", &SingleObjectiveInfo::transformed_y_best)
 
-        .def_readonly("transformed_y", &ioh::logger::Info::transformed_y)
-        .def_readonly("transformed_y_best", &ioh::logger::Info::transformed_y_best)
+        .def_readonly("y", &SingleObjectiveInfo::y)
+        .def_readonly("y_best", &SingleObjectiveInfo::y_best)
 
-        .def_readonly("y", &ioh::logger::Info::y)
-        .def_readonly("y_best", &ioh::logger::Info::y_best)
-
-        .def_readonly("x", &ioh::logger::Info::x)
-        .def_readonly("violations", &ioh::logger::Info::violations)
-        .def_readonly("penalties", &ioh::logger::Info::penalties)
-        .def_readonly("objective", &ioh::logger::Info::optimum, "The best possible fitness value")
-        .def_readonly("has_improved", &ioh::logger::Info::has_improved,
+        .def_readonly("x", &SingleObjectiveInfo::x)
+        .def_readonly("violations", &SingleObjectiveInfo::violations)
+        .def_readonly("penalties", &SingleObjectiveInfo::penalties)
+        .def_readonly("objective", &SingleObjectiveInfo::optimum, "The best possible fitness value")
+        .def_readonly("has_improved", &SingleObjectiveInfo::has_improved,
                       "Whether the last call to problem has caused global improvement.");
+
+    py::class_<MultiObjectiveInfo>(m, "LogMultiInfo")
+        .def(py::init<
+                size_t,                                                    // evaluations
+                std::vector<Solution<double, std::vector<double>>>,        // pareto_front
+                std::vector<double>,                                       // y
+                std::vector<double>,                                       // x
+                std::vector<double>,                                       // violations
+                std::vector<double>,                                       // penalties
+                Solution<double, std::vector<double>>,                     // optimum
+                bool                                                       // has_improved (default = false)
+            >(),
+            py::arg("evaluations"),
+            py::arg("pareto_front"),
+            py::arg("y"),
+            py::arg("x"),
+            py::arg("violations"),
+            py::arg("penalties"),
+            py::arg("optimum"),
+            py::arg("has_improved") = false,
+            R"pbdoc(
+                LogInfo struct. Gets passed to the call method of a logger when it is invoked. 
+
+                Parameters
+                ----------
+                evaluations: int
+                    The current number of evaluations
+                pareto_front: list<Solution>
+                    The current pareto front
+                y: np.npdarray | list
+                    The transformed current fitness value with constraints applied
+                x: np.npdarray | list
+                    The current solution passed to problem
+                violation: np.npdarray | list
+                    The current solution constraint violations
+                penalties: np.npdarray | list
+                    The current solution constraint penalties
+                optimum: list<solution>
+                    The optimum solution for the problem
+                has_improved: bool = True
+                    Whether the evaluation has caused an improvement in the objective value
+
+            )pbdoc")
+        .def_readonly("evaluations", &MultiObjectiveInfo::evaluations,
+                    "The number of function evaluations performed on the current problem so far")
+        .def_readonly("pareto_front", &MultiObjectiveInfo::pareto_front,
+                    "The current pareto front")
+        .def_readonly("y", &MultiObjectiveInfo::y)
+        .def_readonly("x", &MultiObjectiveInfo::x)
+        .def_readonly("violations", &MultiObjectiveInfo::violations)
+        .def_readonly("penalties", &MultiObjectiveInfo::penalties)
+        .def_readonly("objective", &MultiObjectiveInfo::optimum, "The best possible fitness value")
+        .def_readonly("has_improved", &MultiObjectiveInfo::has_improved,
+                    "Whether the last call to problem has caused global improvement.");
 }

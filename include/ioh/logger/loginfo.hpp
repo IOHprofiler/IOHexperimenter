@@ -158,7 +158,16 @@ namespace ioh {
             {
                 evaluations = static_cast<size_t>(state.evaluations);
 
-                pareto_front = std::vector<ioh::problem::Solution<double, ioh::problem::MultiObjective>>(state.pareto_front.begin(), state.pareto_front.end());
+                pareto_front.clear();
+                std::transform(
+                    state.pareto_front.begin(), state.pareto_front.end(),
+                    std::back_inserter(pareto_front),
+                    [](const ioh::problem::Solution<T, ioh::problem::MultiObjective>& sol) {
+                        return ioh::problem::Solution<double, ioh::problem::MultiObjective>(
+                            std::vector<double>(sol.x.begin(), sol.x.end()),
+                            std::vector<double>(sol.y.begin(), sol.y.end())
+                        );
+                    });
                 y = std::vector<double>(state.current.y.begin(), state.current.y.end());
                 x = std::vector<double>(state.current.x.begin(), state.current.x.end());
                 violations[0] = constraintset.violation();

@@ -25,7 +25,19 @@ public:
 
     py::object container() const { return container_; }
 
-    std::optional<double> operator()(const logger::Info &) const override
+    std::optional<double> operator()(const logger::Info<ioh::problem::SingleObjective> &) const override
+    {
+        if (py::hasattr(container_, attribute_.c_str()))
+        {
+            auto pyobj = container_.attr(attribute_.c_str()).ptr();
+
+            if (pyobj != Py_None)
+                return std::make_optional<double>(PyFloat_AsDouble(pyobj));
+        }
+        return {};
+    }
+
+    std::optional<double> operator()(const logger::Info<ioh::problem::MultiObjective> &) const override
     {
         if (py::hasattr(container_, attribute_.c_str()))
         {

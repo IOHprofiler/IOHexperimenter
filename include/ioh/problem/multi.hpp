@@ -36,7 +36,7 @@ namespace ioh::problem
                 constraints,
                 State<T, MultiObjective>(Solution<T, MultiObjective>(
                     std::vector<T>(meta_data.n_variables, std::numeric_limits<T>::signaling_NaN()),
-                    std::vector<T>(meta_data.n_objectives, meta_data.optimization_type.initial_value())
+                    std::vector<double>(meta_data.n_objectives, meta_data.optimization_type.initial_value())
                 )),
                 optimum
             )
@@ -186,11 +186,12 @@ namespace ioh::problem
 #endif
     };
 
-//     //! Type def for Real problems
-//     using RealSingleObjective = SingleObjectiveProblem<double>;
+    //! Type def for Real problems
+    using RealMultiObjective = MultiObjectiveProblem<double>;
 
-//     //! Type def for Integer problems
-//     using IntegerSingleObjective = SingleObjectiveProblem<int>;
+    //! Type def for Integer problems
+    using IntegerMultiObjective = MultiObjectiveProblem<int>;
+
 
     /**
      * @brief Wrapper class for new single objective problems

@@ -50,7 +50,7 @@ namespace ioh
              * @param log_info The logging information for a multi-objective problem.
              * @return An empty optional.
              */
-            std::optional<double> operator()(const logger::Info<problem::MultiObjective> &log_info) const override
+            std::optional<double> operator()(const logger::Info<problem::MultiObjective> &) const override
             {
                 return {};
             }
