@@ -108,7 +108,6 @@ namespace ioh::problem
         {
             if (!this->check_input(x))
                 return std::vector<double>(this->meta_data_.n_objectives, std::numeric_limits<double>::signaling_NaN());
-            std::cout<<"()"<<std::endl;
             evaluate_for_state(x, this->state_);
             update_state_and_log();
 

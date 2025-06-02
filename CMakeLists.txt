@@ -21,7 +21,8 @@ option(BUILD_EXAMPLE "Whether to build examples" ON)
 option(BUILD_DOCS "Build docs" OFF)    
 option(BUILD_SERVER "Whether to build the objective function server" OFF) 
 option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF) # Turn this option ON if you plan to test MK-landscape problems.
-  
+option(ENABLE_COVERAGE "Enable coverage reporting" ON)
+
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /bigobj")
 endif()    
@@ -89,7 +90,13 @@ if(ENABLE_MKLANDSCAPE_PROBLEMS)
     
     add_compile_definitions(MK_COMPILED)
 endif()
-
+if(ENABLE_COVERAGE)
+    message(STATUS "Building with coverage instrumentation.")
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        add_compile_options(--coverage -O0 -g)
+        add_link_options(--coverage)
+    endif()
+endif()
 
 target_include_directories(ioh
 INTERFACE

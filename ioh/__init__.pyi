@@ -1,6 +1,16 @@
 import typing
 import enum
-from .iohcpp import IntegerSolution, OptimizationType, RealSolution, RealBounds, RealConstraint, IntegerBounds, IntegerConstraint
+from .iohcpp import (
+    IntegerSolution,
+    OptimizationType,
+    RealSolution,
+    RealBounds,
+    RealConstraint,
+    IntegerBounds,
+    IntegerConstraint,
+    MultiIntegerSolution,
+    MultiRealSolution,
+)
 
 from .iohcpp import problem as problem
 from .iohcpp import suite as suite
@@ -8,7 +18,7 @@ from .iohcpp import logger as logger
 
 from typing import Any
 
-ProblemType = typing.Union[problem.RealSingleObjective, problem.IntegerSingleObjective]
+ProblemType = typing.Union[problem.RealSingleObjective, problem.IntegerSingleObjective, problem.RealMultiObjective, problem.IntegerMultiObjective]
 VariableType = typing.Union[int, float]
 ObjectiveType = typing.List[VariableType]
 
@@ -17,6 +27,9 @@ class ProblemClass(enum.Enum):
 
     REAL = "RealSingleObjective"
     INTEGER = "IntegerSingleObjective"
+    MULTI_REAL = "RealMultiObjective"
+    MULTI_INTEGER = "IntegerMultiObjective"
+
 
     BBOB = "BBOB"
     STAR_REAL = "RealStarDiscrepancy"

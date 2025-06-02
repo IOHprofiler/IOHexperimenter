@@ -1,7 +1,7 @@
 #pragma once
 
 #include "single.hpp"
-
+#include "multi.hpp"
 namespace ioh::problem
 {
     /**
@@ -24,57 +24,58 @@ namespace ioh::problem
      */
     template <typename T, typename R>
     void wrap_function(ObjectiveFunction<T, R> f, const std::string &name,
-                       const common::OptimizationType optimization_type = common::OptimizationType::MIN,
-                       const std::optional<T> lb = std::nullopt, const std::optional<T> ub = std::nullopt,
-                       std::optional<VariablesTransformationFunction<T>> transform_variables_function = std::nullopt,
-                       std::optional<ObjectiveTransformationFunction<R>> transform_objectives_function = std::nullopt,
-                       std::optional<CalculateObjectiveFunction<T, R>> calculate_optimum = std::nullopt,
-                       ConstraintSet<T> constraints = {})
+                    const common::OptimizationType optimization_type = common::OptimizationType::MIN,
+                    const std::optional<T> lb = std::nullopt, const std::optional<T> ub = std::nullopt,
+                    std::optional<VariablesTransformationFunction<T>> transform_variables_function = std::nullopt,
+                    std::optional<ObjectiveTransformationFunction<R>> transform_objectives_function = std::nullopt,
+                    std::optional<CalculateObjectiveFunction<T, R>> calculate_optimum = std::nullopt,
+                    ConstraintSet<T> constraints = {})
     {
-
-        if (std::is_same<R, SingleObjective>::value)
+        if constexpr (std::is_same_v<R, double>)
         {
             auto &factory = ProblemFactoryType<SingleObjectiveProblem<T>>::instance();
-
             int id = factory.check_or_get_next_available(1, name);
-
             auto bounds = BoxConstraint<T>(1, lb.value_or(std::numeric_limits<T>::lowest()),
-                                           ub.value_or(std::numeric_limits<T>::max()));
-
+                                        ub.value_or(std::numeric_limits<T>::max()));
             auto tx = transform_variables_function.value_or(utils::identity<std::vector<T>, int>);
             auto ty = transform_objectives_function.value_or(utils::identity<double, int>);
 
             factory.include(name, id,
-                            [f, name, id, optimization_type, bounds, tx, ty, calculate_optimum,
-                             constraints](const int iid, const int dim) {
-                                auto optimum = calculate_optimum ? calculate_optimum.value()(iid, dim)
-                                                                 : Solution<T, double>(dim, optimization_type);
+                [f, name, id, optimization_type, bounds, tx, ty, calculate_optimum, constraints](const int iid, const int dim) {
+                    auto optimum = calculate_optimum ? calculate_optimum.value()(iid, dim)
+                                                    : Solution<T, double>(dim, optimization_type);
 
-                                return std::make_unique<SingleObjectiveWrappedProblem<T>>(
-                                    f, name, dim, id, iid, optimization_type, bounds, tx, ty, optimum, constraints);
-                            });
+                    return std::make_unique<SingleObjectiveWrappedProblem<T>>(
+                        f, name, dim, id, iid, optimization_type, bounds, tx, ty, optimum, constraints);
+                });
+        }
+        else if constexpr (std::is_same_v<R, std::vector<double>>)
+        {
+            auto &factory = ProblemFactoryType<MultiObjectiveProblem<T>>::instance();
+            int id = factory.check_or_get_next_available(1, name);
+            auto bounds = BoxConstraint<T>(1, lb.value_or(std::numeric_limits<T>::lowest()),
+                                        ub.value_or(std::numeric_limits<T>::max()));
+            auto tx = transform_variables_function.value_or(utils::identity<std::vector<T>, int>);
+            auto ty = transform_objectives_function.value_or(utils::identity<std::vector<double>, int>);
+
+            factory.include(name, id,
+                [f, name, id, optimization_type, bounds, tx, ty, calculate_optimum, constraints](const int iid, const int dim) {
+                    int input_dim = dim;
+                    std::vector<T> dummy_input(dim, T{});
+                    std::vector<double> output = f(dummy_input);
+                    int output_dim = static_cast<int>(output.size());
+
+                    auto optimum = calculate_optimum ? calculate_optimum.value()(iid, dim)
+                                                    : Solution<T, std::vector<double>>(input_dim, output_dim, optimization_type);
+
+                    return std::make_unique<MultiObjectiveWrappedProblem<T>>(
+                        f, name, input_dim, output_dim, id, iid, optimization_type, bounds, tx, ty, optimum, constraints);
+                });
         }
         else
         {
-            // auto &factory = ProblemFactoryType<MultiObjectiveProblem<T>>::instance();
-
-            // int id = factory.check_or_get_next_available(1, name);
-
-            // auto bounds = BoxConstraint<T>(1, lb.value_or(std::numeric_limits<T>::lowest()),
-            //                                ub.value_or(std::numeric_limits<T>::max()));
-
-            // auto tx = transform_variables_function.value_or(utils::identity<std::vector<T>, int>);
-            // auto ty = transform_objectives_function.value_or(utils::identity<std::vector<double>, int>);
-
-            // factory.include(name, id,
-            //                 [f, name, id, optimization_type, bounds, tx, ty, calculate_optimum,
-            //                  constraints](const int iid, const int dim) {
-            //                     auto optimum = calculate_optimum ? calculate_optimum.value()(iid, dim)
-            //                                                      : Solution<T, double>(dim, optimization_type);
-
-            //                     return std::make_unique<MultiObjectiveWrappedProblem<T>>(
-            //                         f, name, dim, id, iid, optimization_type, bounds, tx, ty, optimum, constraints);
-            //                 });
+            static_assert(sizeof(R) == 0, "Unsupported objective return type!");
         }
     }
+
 }

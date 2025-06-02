@@ -526,6 +526,107 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
     );
 }
 
+
+template <typename T>
+void define_wrapper_multi_functions(py::module &m, const std::string &class_name, const std::string &function_name)
+{
+    using WrappedProblem = MultiObjectiveWrappedProblem<T>;
+    py::class_<WrappedProblem, MultiObjectiveProblem<T>, std::shared_ptr<WrappedProblem>>(m, class_name.c_str(),
+                                                                                          py::buffer_protocol());
+
+    m.def(
+        function_name.c_str(),
+        [](py::handle f, const std::string &name, ioh::common::OptimizationType t, std::optional<double> lb,
+           std::optional<double> ub, std::optional<py::handle> tx, std::optional<py::handle> ty,
+           std::optional<py::handle> co, Constraints<T> cs) {
+            register_python_fn(f);
+
+            auto of = [f](const std::vector<T> &x) {
+                py::object result = f(py::array(x.size(), x.data()));
+                return result.cast<std::vector<double>>();
+            };
+
+            auto ptx = [tx](std::vector<T> x, const int iid) {
+                if (tx)
+                {
+                    static bool r = register_python_fn(tx.value());
+                    py::list px = (tx.value()(py::array(x.size(), x.data()), iid));
+                    if (px.size() == x.size())
+                        return px.cast<std::vector<T>>();
+                    else
+                        py::module_::import("warnings")
+                            .attr("warn")(fmt::format("Variable transformation function returned an iterable of "
+                                                      "invalid length ({} != {}). Transformation is disabled.",
+                                                      px.size(), x.size()));
+                }
+                return x;
+            };
+
+            auto pty = [ty](std::vector<double> y, const int iid) {
+                if (ty)
+                {
+                    static bool r = register_python_fn(ty.value());
+                    py::object result = ty.value()(py::array(y.size(), y.data()), iid);
+                    std::vector<double> yt = result.cast<std::vector<double>>();
+                    if (yt.size() == y.size())
+                        return yt;
+                    else
+                        py::module_::import("warnings")
+                            .attr("warn")(fmt::format("Objective transformation function returned an iterable of "
+                                                      "invalid length ({} != {}). Transformation is disabled.",
+                                                      yt.size(), y.size()));
+                }
+                return y;
+            };
+
+            auto pco = [f, co, t](const int iid, const int dim) {
+                if (co)
+                {
+                    static bool r = register_python_fn(co.value());
+                    py::object xt = co.value()(iid, dim);
+                    if (py::isinstance<py::iterable>(xt) && xt.cast<py::tuple>().size() == 2)
+                    {
+                        py::tuple args = xt;
+                        py::list x = args[0];
+                        py::list y = args[1];
+                        // Compute output dimension from y
+                        int output_dim = y.size();
+                        // Use output_dim instead of n_objectives
+                        return Solution<T, MultiObjective>(x.cast<std::vector<T>>(), y.cast<std::vector<double>>());
+                    }
+                    return xt.cast<Solution<T, MultiObjective>>();
+                }
+                // If co is not provided, fall back to dim and 1 objective
+                // Try to compute n_objectives by calling f with a dummy input
+                int output_dim = 1;
+                if (f) {
+                    // Create a dummy input vector of size dim
+                    std::vector<T> dummy_x(dim, 0);
+                    py::object result = f(py::array(dummy_x.size(), dummy_x.data()));
+                    if (py::isinstance<py::iterable>(result)) {
+                        try {
+                            std::vector<double> y = result.cast<std::vector<double>>();
+                            output_dim = static_cast<int>(y.size());
+                        } catch (...) {
+                            // fallback to 1 if cast fails
+                        }
+                    }
+                }
+                return Solution<T, MultiObjective>(dim, output_dim, t);
+            };
+            
+
+            wrap_function<T, std::vector<double>>(of, name, t, lb, ub, ptx, pty, pco, cs);
+        },
+        py::arg("f"), py::arg("name"), py::arg("optimization_type") = ioh::common::OptimizationType::MIN,
+        py::arg("lb") = std::nullopt, py::arg("ub") = std::nullopt, py::arg("transform_variables") = std::nullopt,
+        py::arg("transform_objectives") = std::nullopt, py::arg("calculate_objective") = std::nullopt,
+        py::arg("constraints") = Constraints<T>()
+    );
+}
+
+
+
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop
 #endif
@@ -539,6 +640,8 @@ void define_problem_bases(py::module &m)
     define_multi_base_class<IntegerMultiObjective, int>(m, "IntegerMultiObjective");
     define_wrapper_functions<double>(m, "RealSingleObjectiveWrappedProblem", "wrap_real_problem");
     define_wrapper_functions<int>(m, "IntegerSingleObjectiveWrappedProblem", "wrap_integer_problem");
+    define_wrapper_multi_functions<double>(m, "RealMultiObjectiveWrappedProblem", "wrap_real_multi_problem");
+    define_wrapper_multi_functions<int>(m, "IntegerMultiObjectiveWrappedProblem", "wrap_integer_multi_problem");
 }
 
 

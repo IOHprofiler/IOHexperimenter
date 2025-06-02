@@ -46,6 +46,8 @@ from .iohcpp import (
     OptimizationType,
     RealSolution,
     IntegerSolution,
+    MultiRealSolution,
+    MultiIntegerSolution,
     IntegerBounds,
     RealBounds,
     IntegerConstraint,
@@ -106,6 +108,9 @@ class ProblemClass(enum.Enum):
     REAL = "RealSingleObjective"
     INTEGER = "IntegerSingleObjective"
 
+    MULTI_REAL = "RealMultiObjective"
+    MULTI_INTEGER = "IntegerMultiObjective"
+
     BBOB = "BBOB"
     STAR_REAL = "RealStarDiscrepancy"
     SBOX = "SBOX"
@@ -128,6 +133,12 @@ class ProblemClass(enum.Enum):
                 ) 
     
     def is_single_objective(self):
+        if(self in (
+            ProblemClass.MULTI_REAL,
+            ProblemClass.MULTI_INTEGER,
+            )):
+            return False
+
         return True
 
     @property
@@ -161,21 +172,21 @@ def get_problem(
     '''
     if not isinstance(problem_class, ProblemClass):
         raise AttributeError(f"problem_class should be of type {ProblemClass}")
-
-    if ( 
-        not problem_class.is_real()
-        and fid in [21, 23, "IsingTriangular", "NQueens"]
-    ):
-        if not math.sqrt(dimension).is_integer():
-            raise ValueError(
-                "For this function, the dimension needs to be a perfect square!"
-            )
-    if (
-        problem_class.is_real()
-        and fid in range(1, 25)
-    ):
-        if not dimension >= 2:
-            raise ValueError("For BBOB functions the minimal dimension is 2")
+    if(problem_class.is_single_objective()):
+        if ( 
+            not problem_class.is_real()
+            and fid in [21, 23, "IsingTriangular", "NQueens"]
+        ):
+            if not math.sqrt(dimension).is_integer():
+                raise ValueError(
+                    "For this function, the dimension needs to be a perfect square!"
+                )
+        if (
+            problem_class.is_real()
+            and fid in range(1, 25)
+        ):
+            if not dimension >= 2:
+                raise ValueError("For BBOB functions the minimal dimension is 2")
 
     base_problem = getattr(problem, problem_class.value)
     if base_problem:
@@ -186,7 +197,6 @@ def get_problem(
             raise ValueError(
                 f"{fid} is not registered for problem type: {problem_class}"
             )
-
         return base_problem.create(fid, instance, dimension)
 
     raise ValueError(f"Problem type {problem_class} is not supported")
