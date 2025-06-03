@@ -130,6 +130,7 @@ class ProblemClass(enum.Enum):
                 ProblemClass.BBOB,
                 ProblemClass.SBOX,
                 ProblemClass.STAR_REAL,
+                ProblemClass.MULTI_REAL
                 ) 
     
     def is_single_objective(self):
@@ -257,14 +258,13 @@ def wrap_problem(
     if name is None:
         name = function.__name__
     
-    if not problem_class.is_single_objective():
-        raise ValueError(
-            f"Problem type {problem_class} is not supported."
-        )
-
-    wrapper = problem.wrap_real_problem if problem_class.is_real() \
-        else problem.wrap_integer_problem 
-
+    wrapper = None
+    if(problem_class.is_single_objective()):
+        wrapper = problem.wrap_real_problem if problem_class.is_real() \
+            else problem.wrap_integer_problem 
+    else:
+        wrapper = problem.wrap_real_multi_problem if problem_class.is_real() \
+            else problem.wrap_integer_multi_problem 
     wrapper(
         function,
         name,
