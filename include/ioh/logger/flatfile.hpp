@@ -227,6 +227,7 @@ namespace ioh::logger
                 ss << sep_ << this->problem_.value().instance;
                 ss << sep_ << (this->problem_.value().optimization_type == common::OptimizationType::MIN ? "min" : "max");
                 ss << sep_ << this->problem_.value().n_variables;
+                ss << sep_ << this->problem_.value().n_objectives;
                 ss << sep_ << current_run_;
                 current_meta_data_ = ss.str();
             }

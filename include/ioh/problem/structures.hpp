@@ -363,37 +363,44 @@ namespace ioh
             // Solution<T, double> initial_solution;
             std::vector<Solution<T, MultiObjective>> initial_pareto_front_ {};
 
-            int pareto_order(
+            std::vector<Solution<T, MultiObjective>> add_to_pareto(
                 const Solution<T, MultiObjective> &a, 
                 const std::vector<Solution<T, MultiObjective>> &current_pareto_front,
                 common::FOptimizationType optimization_type
             )
             {
-                bool better = true;
-                bool worse = true;
+                has_improved = false; // reset has_improved
+                bool is_dominated = false;
+                std::vector<Solution<T, MultiObjective>> new_pareto_front;
                 for (const auto &b : current_pareto_front)
                 {
-                    if(!common::pareto::dominates(a.y, b.y, optimization_type))
+                    if(common::pareto::dominates(b.y, a.y, optimization_type))
                     {
-                        better = false;
+                        is_dominated = true; // a is dominated by b, so we do not add it to the new pareto front
+                        break;
                     }
-                    if (!common::pareto::dominates(b.y, a.y, optimization_type))
+                    else if (common::pareto::dominates(a.y, b.y, optimization_type))
                     {
-                        worse = false;
+                        continue; // b is dominated by a, so we do not add it to the new pareto front
                     }
+                    else
+                    {
+                        new_pareto_front.push_back(b); // b is not dominated by a, so we keep it
+                    }
+                   
                 }
-                if(better && !worse)
+                
+                if (!is_dominated)
                 {
-                    return 1; // a is better
-                }
-                else if(!better && worse)
-                {
-                    return -1; // a is worse
+                    new_pareto_front.push_back(a); // a is not dominated by any b, so we add it to the new pareto front
+                    has_improved = true; 
                 }
                 else
                 {
-                    return 0; // a is equal
+                    new_pareto_front = current_pareto_front; // a is dominated, so we keep the current pareto front
+                   
                 }
+                return new_pareto_front;
             }
             
 
@@ -432,32 +439,8 @@ namespace ioh
             void update(const MetaData &meta_data, const Solution<T, MultiObjective> &objective) {
                 ++evaluations;
 
-                // //use pareto front here
-                const int pareto_order = this->pareto_order(current, pareto_front, meta_data.optimization_type);
-                if (pareto_order == 1)
-                {
-                    pareto_front = {current};
-                    has_improved = true;
-                }
-                else if (pareto_order == 0)
-                {
-                    // Remove all solutions in the pareto front that are dominated by the current solution
-                    pareto_front.erase(
-                        std::remove_if(
-                            pareto_front.begin(), pareto_front.end(),
-                            [this, &meta_data](const Solution<T, MultiObjective> &solution) {
-                                return common::pareto::dominates(this->current.y, solution.y, meta_data.optimization_type);
-                            }),
-                        pareto_front.end());
-
-                    // Add the current solution to the pareto front
-                    pareto_front.push_back(current);
-                    
-                    has_improved = true;
-                }
+                pareto_front = add_to_pareto(current, pareto_front, meta_data.optimization_type);
                 
-
-
                 // // This calls the operator() of a class. See: include/ioh/common/optimization_type.hpp:64
                 if (has_improved)
                 {

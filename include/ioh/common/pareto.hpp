@@ -5,17 +5,34 @@
 namespace ioh::common::pareto
 {
             
-    /** Functions to detemrine if a solution is dominated, dominate or is part of pareto front*/
+    
     inline bool dominates( const std::vector<double> &a, const std::vector<double> &b, FOptimizationType optimization_type)
     {
         
-        bool better = false;
+        bool dominates = true;
         for (size_t i = 0; i < a.size(); ++i)
         {
-            if (optimization_type(b[i], a[i])) return false;
-            if (optimization_type(a[i], b[i])) better = true;
+            if (!optimization_type(a[i], b[i])) 
+            {
+                dominates = false;
+                break;
+            }
         }
-        return better;
+
+        if (dominates)
+        {
+            for (size_t i = 0; i < a.size(); ++i)
+            {
+                if (a[i] != b[i])
+                {
+                    return true; // a dominates b if at least one objective is strictly better
+                }
+            }
+        }
+
+
+
+        return dominates;
     }
 
 

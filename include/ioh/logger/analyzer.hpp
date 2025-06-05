@@ -157,6 +157,7 @@ namespace ioh::logger
             {
                 //! Dimension
                 size_t dimension;
+                size_t objectives;
                 //! Data file
                 std::string data_file;
                 //! Runs
@@ -169,17 +170,21 @@ namespace ioh::logger
                  * @param data_file Data file
                  * @param runs Runs
                  */
-                ScenarioInfo(const size_t dimension, const std::string &data_file,
+                ScenarioInfo(const size_t dimension,
+                             const size_t objectives,
+                             const std::string &data_file,
                              const std::vector<RunInfo<R>> runs = {}) :
                     dimension(dimension),
-                    data_file(data_file), runs(runs)
+                    objectives(objectives),
+                    data_file(data_file), 
+                    runs(runs)
                 {
                 }
 
                 std::string repr() const override
                 {
                     return fmt::format(
-                        "\"dimension\": {},\n\t\t\"path\": \"{}\",\n\t\t\"runs\": [\n\t\t\t{{{}}}\n\t\t]", dimension,
+                        "\"dimension\": {},\n\t\t\"objectives\": {},\n\t\t\"path\": \"{}\",\n\t\t\"runs\": [\n\t\t\t{{{}}}\n\t\t]", dimension, objectives,
                         data_file, fmt::join(runs, "},\n\t\t\t{"));
                 }
             };
@@ -549,7 +554,7 @@ namespace ioh::logger
                             return;
                         }
                     }   
-                    dims.emplace_back(static_cast<size_t>(problem.n_variables), dat_path);
+                    dims.emplace_back(static_cast<size_t>(problem.n_variables),static_cast<size_t>(problem.n_objectives), dat_path);
                 }
                 
                 bool closed = false;
