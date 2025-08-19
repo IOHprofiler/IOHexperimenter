@@ -28,3 +28,16 @@ example_graphs/example_graph0|NULL|NULL|example_graphs/example_graph0_c_linear|4
 example_graphs/example_graph1|NULL|NULL|example_graphs/example_graph1_c_linear|42.9193
 example_graphs/example_graph2|NULL|NULL|example_graphs/example_graph2_c_linear|42.9193
 example_graphs/example_graph3|NULL|NULL|example_graphs/example_graph3_c_linear|42.9193
+
+example_graphs/GECCO2025/graphs/2100-impcol-d-n=435|NULL|NULL|example_graphs/GECCO2025/2100-ea-fga/bestweights.txt|example_graphs/GECCO2025/2100-ea-fga/bestvariances.txt
+example_graphs/GECCO2025/graphs/2100-impcol-d-n=435|NULL|NULL|example_graphs/GECCO2025/2100-ea-ghc/bestweights.txt|example_graphs/GECCO2025/2100-ea-ghc/bestvariances.txt
+example_graphs/GECCO2025/graphs/2101-lp-recipe-n=205|NULL|NULL|example_graphs/GECCO2025/2101-ea-fga/bestweights.txt|example_graphs/GECCO2025/2101-ea-fga/bestvariances.txt
+example_graphs/GECCO2025/graphs/2101-lp-recipe-n=205|NULL|NULL|example_graphs/GECCO2025/2101-ea-ghc/bestweights.txt|example_graphs/GECCO2025/2101-ea-ghc/bestvariances.txt
+example_graphs/GECCO2025/graphs/2102-ca-netscience-n=379|NULL|NULL|example_graphs/GECCO2025/2102-ea-fga/bestweights.txt|example_graphs/GECCO2025/2102-ea-fga/bestvariances.txt
+example_graphs/GECCO2025/graphs/2102-ca-netscience-n=379|NULL|NULL|example_graphs/GECCO2025/2102-ea-ghc/bestweights.txt|example_graphs/GECCO2025/2102-ea-ghc/bestvariances.txt
+example_graphs/GECCO2025/graphs/2103-lp-agg-n=615|NULL|NULL|example_graphs/GECCO2025/2103-ea-fga/bestweights.txt|example_graphs/GECCO2025/2103-ea-fga/bestvariances.txt
+example_graphs/GECCO2025/graphs/2103-lp-agg-n=615|NULL|NULL|example_graphs/GECCO2025/2103-ea-ghc/bestweights.txt|example_graphs/GECCO2025/2103-ea-ghc/bestvariances.txt
+example_graphs/GECCO2025/graphs/2104-can-715-n=715|NULL|NULL|example_graphs/GECCO2025/2104-ea-fga/bestweights.txt|example_graphs/GECCO2025/2104-ea-fga/bestvariances.txt
+example_graphs/GECCO2025/graphs/2104-can-715-n=715|NULL|NULL|example_graphs/GECCO2025/2104-ea-ghc/bestweights.txt|example_graphs/GECCO2025/2104-ea-ghc/bestvariances.txt
+example_graphs/GECCO2025/graphs/2105-random graph-n=500|NULL|NULL|example_graphs/GECCO2025/2105-ea-fga/bestweights.txt|example_graphs/GECCO2025/2105-ea-fga/bestvariances.txt
+example_graphs/GECCO2025/graphs/2105-random graph-n=500|NULL|NULL|example_graphs/GECCO2025/2105-ea-ghc/bestweights.txt|example_graphs/GECCO2025/2105-ea-ghc/bestvariances.txt

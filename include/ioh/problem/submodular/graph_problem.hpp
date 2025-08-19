@@ -122,7 +122,7 @@ namespace ioh::problem::submodular
 
             //! Load method
             virtual void load()
-            {
+            {   
                 const auto contents = common::file::as_text_vector(meta.root / meta.edge_file);
                 meta.digraph = static_cast<bool>(std::stoi(contents[0]));
 
@@ -319,6 +319,7 @@ namespace ioh::problem::submodular
         {
             for (auto &ci : InstanceBasedProblem::load_instances<ProblemType, int, int>(path))
             {
+                
                 const auto name = fmt::format("{}{}", ioh::common::class_name<ProblemType>(), std::get<1>(ci));
                 auto c = [c = std::get<0>(ci)](Args &&...params) {
                     return std::make_unique<ProblemType>(c(std::forward<Args>(params)...));
