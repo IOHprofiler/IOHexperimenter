@@ -25,7 +25,7 @@ def iter_notebook(filename):
             yield i, source
 
 
-def test_notebook_runner(self, notebook):
+def _run_notebook(self, notebook):
     assert os.path.isfile(notebook)
     for i, block in iter_notebook(notebook):
         with io.StringIO() as buf, redirect_stdout(buf):
@@ -47,7 +47,7 @@ class MetaTest(type):
             setattr(
                 instance,
                 f"test_notebook_{fname}",
-                partial(test_notebook_runner, instance, notebook),
+                partial(_run_notebook, instance, notebook),
             )
         return instance
 
