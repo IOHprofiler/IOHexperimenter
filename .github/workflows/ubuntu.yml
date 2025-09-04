@@ -1,6 +1,13 @@
 name: Ubuntu
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -68,7 +75,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        python-version: ["3.6.x", "3.7.x", "3.8.x", "3.9.x", "3.10.x", "3.11.x"]
+        python-version: ["3.9.x", "3.10.x", "3.11.x","3.12.x", "3.13.x"]
         compiler: [g++-10]
         architecture: [x64]
     steps:

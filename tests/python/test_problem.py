@@ -54,9 +54,10 @@ class TestProblem(unittest.TestCase):
         ):
             self.assertEqual(p([1] * 10), 10)
 
-    def test_can_access_optimization_type(self): 
+    def test_can_access_optimization_type(self):
         p = ioh.get_problem(1, 1, 2)
         self.assertTrue(p.meta_data.optimization_type is not None)
+
 
     def test_class_based_problem(self):
         class A(ioh.problem.RealSingleObjective):
