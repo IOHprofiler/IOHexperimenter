@@ -80,6 +80,7 @@ class TestProblem(unittest.TestCase):
 
         setattr(a, "evaluate", lambda x:sum(xi == 1 for xi in x))
         self.assertEqual(a([0, 0]), 0)
+        self.assertEqual(a([0, 1]), 1)
         self.assertFalse(a.state.optimum_found)
         self.assertEqual(a([1, 1]), 2)
         self.assertTrue(a.state.optimum_found)
