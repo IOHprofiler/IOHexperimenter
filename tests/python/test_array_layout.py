@@ -72,3 +72,7 @@ class TestArrayLayout(unittest.TestCase):
         self.assertTrue(np.all(bounds.lb == np.array([-1, 0])))
         self.assertTrue(np.all(bounds.ub == np.array([1, 2])))
 
+    def test_copied_arrays(self):
+        suite = ioh.suite.BBOB(range(1, 5))
+        self.assertListEqual(list(suite.problem_ids), list(range(1, 5)))
+

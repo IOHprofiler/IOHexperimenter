@@ -3,7 +3,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-
+#include "numpy.hpp"
 #include "ioh.hpp"
 
 namespace py = pybind11;
@@ -32,9 +32,7 @@ static void define_base_class(py::module &m, const std::string &name)
             "problem_ids",
             [](const SuiteType &c) {
                 const auto problem_ids = c.problem_ids();
-                py::array_t<int> arr(problem_ids.size());
-                std::copy(problem_ids.begin(), problem_ids.end(), arr.mutable_data());
-                return arr;
+                return make_array(problem_ids);
             },
             R"pbdoc(
                 The list of all problems ids contained in the current suite.
@@ -43,9 +41,7 @@ static void define_base_class(py::module &m, const std::string &name)
             "dimensions",
             [](const SuiteType &c) {
                 const auto dimensions = c.dimensions();
-                py::array_t<int> arr(dimensions.size());
-                std::copy(dimensions.begin(), dimensions.end(), arr.mutable_data());
-                return arr;
+                return make_array(dimensions);
             },
             R"pbdoc(
                 The list of all problems ids contained in the current suite.
@@ -54,9 +50,7 @@ static void define_base_class(py::module &m, const std::string &name)
             "instances",
             [](const SuiteType &c) {
                 const auto instances = c.instances();
-                py::array_t<int> arr(instances.size());
-                std::copy(instances.begin(), instances.end(), arr.mutable_data());
-                return arr;
+                return make_array(instances);
             },
             R"pbdoc(
                 The list of all instance ids contained in the current suite.

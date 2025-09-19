@@ -4,6 +4,7 @@
 #include <pybind11/stl.h>
 
 #include "ioh.hpp"
+#include "numpy.hpp"
 
 namespace py = pybind11;
 using namespace ioh::problem;
@@ -229,28 +230,15 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
             
             auto of = [f](const std::vector<T> &x) {
                 py::gil_scoped_acquire gil;                      
-
-                py::array_t<T> arr(
-                    {static_cast<ssize_t>(x.size())},            
-                    {static_cast<ssize_t>(sizeof(T))},           
-                    static_cast<const T*>(x.data())              // const -> read-only
-                );
-                return py::cast<double>(f(arr));
+                return py::cast<double>(f(make_array(x)));
             };
 
             auto ptx = [tx](std::vector<T> x, const int iid) {
                 if (tx)
                 {
                     static bool r = register_python_fn(tx.value());
-                    
-                    auto base = py::capsule(x.data(), [](void*){/* no free */});
-                    py::array_t<T> arr(
-                        { static_cast<py::ssize_t>(x.size()) },
-                        { static_cast<py::ssize_t>(sizeof(T)) },
-                        x.data(),
-                        base
-                    );
-                    py::list px = py::cast<py::list>(tx.value()(arr, iid));
+                    py::gil_scoped_acquire gil;   
+                    py::list px = py::cast<py::list>(tx.value()(make_mutable_array(x), iid));
                         
                     if (px.size() == x.size())
                         return px.cast<std::vector<T>>();

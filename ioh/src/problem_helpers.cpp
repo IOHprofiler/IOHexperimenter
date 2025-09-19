@@ -4,6 +4,7 @@
 #include <pybind11/stl.h>
 
 #include "ioh.hpp"
+#include "numpy.hpp"
 
 namespace py = pybind11;
 using namespace ioh::problem;
@@ -32,14 +33,7 @@ void define_solution(py::module &m, const std::string &name)
         .def_property(
             "x",
             [](const Class &c) {
-                auto base = py::capsule(c.x.data(), [](void*){/* no free */});
-                py::array_t<T> arr(
-                    {static_cast<ssize_t>(c.x.size())}, 
-                    {static_cast<ssize_t>(sizeof(T))},
-                    c.x.data(),
-                    base
-                );
-                return arr;
+                return make_mutable_array(c.x);
             },
             [](Class &self, const std::vector<T> &x) { self.x = x; },
             "The search point in a search space, e.g., R^d or {0,1}^d")
@@ -94,13 +88,7 @@ struct PyConstraint : Constraint<T>
     bool compute_violation(const std::vector<T> &x) override
     {
         py::gil_scoped_acquire gil;                      
-
-        py::array_t<T> arr(
-            {static_cast<ssize_t>(x.size())},            
-            {static_cast<ssize_t>(sizeof(T))},           
-            static_cast<const T*>(x.data())              // const -> read-only
-        );
-        PYBIND11_OVERRIDE_PURE(bool, Constraint<T>, compute_violation, arr);
+        PYBIND11_OVERRIDE_PURE(bool, Constraint<T>, compute_violation, make_array(x));
     }
 
     [[nodiscard]] std::string repr() const override { return "<AbstractConstraint>"; }
@@ -163,13 +151,7 @@ void define_functionalconstraint(py::module &m, const std::string &name)
                      register_python_fn(f);
                      auto fn = [f](const std::vector<T> &x) {
                         py::gil_scoped_acquire gil;                      
-
-                        py::array_t<T> arr(
-                            {static_cast<ssize_t>(x.size())},            
-                            {static_cast<ssize_t>(sizeof(T))},           
-                            static_cast<const T*>(x.data())              // const -> read-only
-                        );
-                        return py::cast<double>(f(arr));
+                        return py::cast<double>(f(make_array(x)));
                      };
                      return Class(fn, w, ex, e, n);
                  }),
@@ -242,28 +224,14 @@ void define_bounds(py::module &m, const std::string &name)
         .def_property(
             "ub",
             [](const Class &c) {
-                auto base = py::capsule(c.ub.data(), [](void*){/* no free */});
-                py::array_t<T> arr(
-                    {static_cast<ssize_t>(c.ub.size())}, 
-                    {static_cast<ssize_t>(sizeof(T))},
-                    c.ub.data(),
-                    base
-                );
-                return arr;
+                return make_array(c.ub);
             },
             [](Class &c, const std::vector<T> &vec) { c.ub = vec; },
             "The upper bound (box constraint)")
         .def_property(
             "lb",
             [](const Class &c) {
-                auto base = py::capsule(c.lb.data(), [](void*){/* no free */});
-                py::array_t<T> arr(
-                    {static_cast<ssize_t>(c.lb.size())}, 
-                    {static_cast<ssize_t>(sizeof(T))},
-                    c.lb.data(),
-                    base
-                );
-                return arr;
+                return make_array(c.lb);
             },
             [](Class &c, const std::vector<T> &vec) { c.lb = vec; },
             "The lower bound (box constraint)")
