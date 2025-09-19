@@ -47,4 +47,28 @@ class TestArrayLayout(unittest.TestCase):
             y = p(v)
             self.assertEqual(y, sum(v+1))
 
-            
+    def test_solution(self):
+        sol = ioh.RealSolution([0, 1], 1)
+        self.assertTrue(np.all(sol.x == np.array([0,1])))
+
+        # Modify
+        sol.x[0] = 1
+        self.assertTrue(np.all(sol.x == np.array([1,1])))
+
+
+    def test_constraint(self):
+        def cons(x):
+            """If x[1] == 1, the constraint is violated."""
+            v = float(x[1] == 1)
+            return v
+        
+        c = ioh.RealConstraint(cons, 25.0)
+        self.assertFalse(c.is_feasible([0, 1]))
+        self.assertTrue(c.is_feasible([1, 0]))
+
+    def test_bounds(self):
+        bounds = ioh.RealBounds([-1, 0], [1, 2])
+
+        self.assertTrue(np.all(bounds.lb == np.array([-1, 0])))
+        self.assertTrue(np.all(bounds.ub == np.array([1, 2])))
+
