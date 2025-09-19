@@ -211,6 +211,8 @@ void define_base_class(py::module &m, const std::string &name)
 }
 
 
+
+
 template <typename T>
 void define_wrapper_functions(py::module &m, const std::string &class_name, const std::string &function_name)
 {
@@ -224,16 +226,32 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
            std::optional<double> ub, std::optional<py::handle> tx, std::optional<py::handle> ty,
            std::optional<py::handle> co, Constraints<T> cs) {
             register_python_fn(f);
+            
             auto of = [f](const std::vector<T> &x) {
-                return PyFloat_AsDouble(f(py::array_t<T>(x.size(), x.data())).ptr());
+                py::gil_scoped_acquire gil;                      
+
+                py::array_t<T> arr(
+                    {static_cast<ssize_t>(x.size())},            
+                    {static_cast<ssize_t>(sizeof(T))},           
+                    static_cast<const T*>(x.data())              // const -> read-only
+                );
+                return py::cast<double>(f(arr));
             };
 
             auto ptx = [tx](std::vector<T> x, const int iid) {
                 if (tx)
                 {
                     static bool r = register_python_fn(tx.value());
-                    py::list px =
-                        (tx.value()(py::array_t<T>(x.size(), x.data()), iid));
+                    
+                    auto base = py::capsule(x.data(), [](void*){/* no free */});
+                    py::array_t<T> arr(
+                        { static_cast<py::ssize_t>(x.size()) },
+                        { static_cast<py::ssize_t>(sizeof(T)) },
+                        x.data(),
+                        base
+                    );
+                    py::list px = py::cast<py::list>(tx.value()(arr, iid));
+                        
                     if (px.size() == x.size())
                         return px.cast<std::vector<T>>();
                     else
