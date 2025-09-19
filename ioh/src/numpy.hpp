@@ -13,8 +13,8 @@ py::array_t<T> make_mutable_array(const std::vector<T>& x)
 {
     auto base = py::capsule(x.data(), [](void*){/* no free */});
     py::array_t<T> arr(
-        {static_cast<ssize_t>(x.size())}, 
-        {static_cast<ssize_t>(sizeof(T))},
+        {static_cast<size_t>(x.size())}, 
+        {static_cast<size_t>(sizeof(T))},
         x.data(),
         base
     );
@@ -25,8 +25,8 @@ template<typename T>
 py::array_t<T> make_array(const std::vector<T>& x)
 {
     py::array_t<T> arr(
-        {static_cast<ssize_t>(x.size())}, 
-        {static_cast<ssize_t>(sizeof(T))},
+        {static_cast<size_t>(x.size())}, 
+        {static_cast<size_t>(sizeof(T))},
         static_cast<const T*>(x.data())
     );
     return arr;
