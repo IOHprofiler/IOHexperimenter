@@ -30,7 +30,10 @@ void define_solution(py::module &m, const std::string &name)
 
         )pbdoc")
         .def_property(
-            "x", [](const Class &c) { return py::array(c.x.size(), c.x.data()); },
+            "x",
+            [](const Class &c) {
+                return py::array_t<T>(c.x.size(), c.x.data(), py::cast(c));
+            },
             [](Class &self, const std::vector<T> &x) { self.x = x; },
             "The search point in a search space, e.g., R^d or {0,1}^d")
         .def_readonly("y", &Class::y, "The corresponding objective value of `x`, i.e., y = f(x)")
@@ -83,7 +86,8 @@ struct PyConstraint : Constraint<T>
 
     bool compute_violation(const std::vector<T> &x) override
     {
-        PYBIND11_OVERRIDE_PURE(bool, Constraint<T>, compute_violation, py::array(x.size(), x.data()));
+        PYBIND11_OVERRIDE_PURE(bool, Constraint<T>, compute_violation,
+                               py::array_t<T>(x.size(), x.data()));
     }
 
     [[nodiscard]] std::string repr() const override { return "<AbstractConstraint>"; }
@@ -145,7 +149,8 @@ void define_functionalconstraint(py::module &m, const std::string &name)
                  [](py::handle f, const double w, const double ex, const constraint::Enforced e, const std::string &n) {
                      register_python_fn(f);
                      auto fn = [f](const std::vector<T> &x) {
-                         return PyFloat_AsDouble(f(py::array(x.size(), x.data())).ptr());
+                         return PyFloat_AsDouble(
+                             f(py::array_t<T>(x.size(), x.data())).ptr());
                      };
                      return Class(fn, w, ex, e, n);
                  }),
@@ -216,11 +221,19 @@ void define_bounds(py::module &m, const std::string &name)
 
              )
         .def_property(
-            "ub", [](const Class &c) { return py::array(c.ub.size(), c.ub.data()); },
-            [](Class &c, const std::vector<T> &vec) { c.ub = vec; }, "The upper bound (box constraint)")
+            "ub",
+            [](const Class &c) {
+                return py::array_t<T>(c.ub.size(), c.ub.data(), py::cast(c));
+            },
+            [](Class &c, const std::vector<T> &vec) { c.ub = vec; },
+            "The upper bound (box constraint)")
         .def_property(
-            "lb", [](const Class &c) { return py::array(c.lb.size(), c.lb.data()); },
-            [](Class &c, const std::vector<T> &vec) { c.lb = vec; }, "The lower bound (box constraint)")
+            "lb",
+            [](const Class &c) {
+                return py::array_t<T>(c.lb.size(), c.lb.data(), py::cast(c));
+            },
+            [](Class &c, const std::vector<T> &vec) { c.lb = vec; },
+            "The lower bound (box constraint)")
         .def("__repr__", &Class::repr)
         .def("compute_violation", &Class::compute_violation,
              R"pbdoc(
