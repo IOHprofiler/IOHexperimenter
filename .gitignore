@@ -9,7 +9,7 @@ out/
 *.dll
 *.pyd
 
-
+aux/
 # Ignore Vagrant runtime files.
 
 .vagrant/

@@ -360,6 +360,28 @@ void define_submodular_problems(py::module &m)
     py::class_<pwt::PWTConstraint, Constraint<int>, std::shared_ptr<pwt::PWTConstraint>>(m, "PWTConstraint")
         .def("__repr__", &pwt::PWTConstraint::repr);
 
+    py::class_<graph::Meta>(m, "GraphMeta", "Graph metadata")
+        .def_readonly("edge_file", &graph::Meta::edge_file, "File with edge data")
+        .def_readonly("edge_weights", &graph::Meta::edge_weights, "File with edge weights")
+        .def_readonly("vertex_weights", &graph::Meta::vertex_weights, "File with vertex weights")
+        .def_readonly("constraint_weights", &graph::Meta::constraint_weights, "File with constraint weights")
+        .def_readonly("constraint_variances", &graph::Meta::constraint_variances, "File with constraint variances")
+        .def_readonly("is_edge", &graph::Meta::is_edge, "Edge type flag")
+        .def_readonly("digraph", &graph::Meta::digraph, "Is digraph flag")
+        .def_readonly("constraint_limit", &graph::Meta::constraint_limit, "Maximum value of the constraint")
+        .def_readonly("n_vertices", &graph::Meta::n_vertices, "Number of vertices");
+
+    py::class_<graph::Graph, std::shared_ptr<graph::Graph>>(m, "Graph", "Graph data structure")
+        .def("__repr__", &graph::Graph::repr)
+        .def("dimension", &graph::Graph::dimension, "Get the dimension of the graph")
+        .def_readonly("meta", &graph::Graph::meta, "Graph metadata")
+        .def_readonly("loaded", &graph::Graph::loaded, "Whether the graph is loaded in memory")
+        .def_readonly("adjacency_list", &graph::Graph::adjacency_list, "Adjacency list representation of the graph")
+        .def_readonly("edges", &graph::Graph::edges, "Edge list representation of the graph")
+        .def_readonly("constraint_weights", &graph::Graph::constraint_weights, "Constraint weights")
+        .def_readonly("constraint_variances", &graph::Graph::constraint_variances, "Constraint variances")
+        .def_readonly("edge_weights", &graph::Graph::edge_weights, "Edge weights")
+        .def_readonly("vertex_weights", &graph::Graph::vertex_weights, "Vertex weights");
 
     py::class_<GraphProblem, IntegerSingleObjective, std::shared_ptr<GraphProblem>>(m, "GraphProblem",
                                                                                     "Graph type problem",
@@ -415,8 +437,8 @@ void define_submodular_problems(py::module &m)
             )pbdoc")
         .def_property_readonly_static(
             "problems", [](py::object) { return ioh::common::Factory<GraphProblem, int, int>::instance().map(); },
-            "All registered problems");
-
+            "All registered problems")      
+        .def_property_readonly("graph", [](const GraphProblem& self) { return self.graph; }, "The underlying graph structure");
 
     py::class_<MaxCut, GraphProblem, std::shared_ptr<MaxCut>>(m, "MaxCut", py::is_final(), R"pbdoc(
             Max-Cut problems
