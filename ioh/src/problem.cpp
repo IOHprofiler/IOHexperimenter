@@ -237,9 +237,9 @@ void define_wrapper_functions(py::module &m, const std::string &class_name, cons
                 if (tx)
                 {
                     static bool r = register_python_fn(tx.value());
-                    py::gil_scoped_acquire gil;   
-                    py::list px = py::cast<py::list>(tx.value()(make_mutable_array(x), iid));
-                        
+                    py::gil_scoped_acquire gil;
+                    py::list px = py::cast<py::list>(tx.value()(make_mutable_array(x, py::cast(&x)), iid));
+
                     if (px.size() == x.size())
                         return px.cast<std::vector<T>>();
                     else

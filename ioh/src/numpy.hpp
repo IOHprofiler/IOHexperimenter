@@ -9,17 +9,16 @@ namespace py = pybind11;
 
 
 template<typename T>
-py::array_t<T> make_mutable_array(const std::vector<T>& x)
+py::array_t<T> make_mutable_array(std::vector<T>& v, py::object owner)
 {
-    auto base = py::capsule(x.data(), [](void*){/* no free */});
-    py::array_t<T> arr(
-        {static_cast<size_t>(x.size())}, 
-        {static_cast<size_t>(sizeof(T))},
-        x.data(),
-        base
+    return py::array_t<T>(
+        {v.size()},      // shape
+        {sizeof(T)},     // stride
+        v.data(),        // pointer
+        owner            // keep the parent (e.g. Solution) alive
     );
-    return arr;
 }
+
 
 template<typename T>
 py::array_t<T> make_array(const std::vector<T>& x)
