@@ -32,7 +32,7 @@ void define_solution(py::module &m, const std::string &name)
         )pbdoc")
         .def_property(
             "x",
-            [](const Class &c) {
+            [](Class &c) {
                 return make_mutable_array(c.x, py::cast(&c));
             },
             [](Class &self, const std::vector<T> &x) { self.x = x; },
