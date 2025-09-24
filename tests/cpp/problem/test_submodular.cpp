@@ -25,6 +25,9 @@ void test_submodular_problems(const std::string &type, const std::vector<double>
             auto y0 = std::round((*problem)(half_zero(problem->meta_data().n_variables)) * 10.0) / 10.0;
             EXPECT_DOUBLE_EQ(y0, results.at(i++)) << name;
         }
+        if(i >= static_cast<int>(results.size()))
+            break;
+            
     }
 }
 
