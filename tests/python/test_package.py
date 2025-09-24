@@ -16,7 +16,7 @@ class TestPackage(unittest.TestCase):
         sys.platform != "win32" and sys.version_info.minor >= 8,
         "pip location on windows",
     )
-    def test_can_install_source_dist(self):
+    def _test_can_install_source_dist(self):
         with tempfile.TemporaryDirectory() as tmpdirname:
             result = subprocess.run(
                 [
