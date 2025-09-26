@@ -32,8 +32,8 @@ void define_solution(py::module &m, const std::string &name)
         )pbdoc")
         .def_property(
             "x",
-            [](const Class &c) {
-                return make_array(c.x);
+            [](Class &c) {
+                return make_mutable_array(c.x, py::cast(&c));
             },
             [](Class &self, const std::vector<T> &x) { self.x = x; },
             "The search point in a search space, e.g., R^d or {0,1}^d")

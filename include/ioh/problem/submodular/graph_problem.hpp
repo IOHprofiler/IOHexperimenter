@@ -26,6 +26,7 @@ namespace ioh::problem::submodular
             // added by saba
             //! File with constraint variances
             std::string constraint_variances;
+        
 
             //! The root path of the files
             fs::path root;
@@ -71,6 +72,8 @@ namespace ioh::problem::submodular
                 meta.root = common::file::utils::get_static_root();
                 return meta;
             }
+
+            
         };
 
         //! Abstraction of graph data
@@ -273,7 +276,7 @@ namespace ioh::problem::submodular
                      const std::shared_ptr<graph::Graph> &graph) :
             IntegerSingleObjective(
                 MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::MAX),
-                Bounds<int>(graph->dimension()), ConstraintSet<int>(std::make_shared<GraphConstraint>(graph))),
+                Bounds<int>(graph->dimension(),0,1), ConstraintSet<int>(std::make_shared<GraphConstraint>(graph))),
             graph(graph)
         {
         }
