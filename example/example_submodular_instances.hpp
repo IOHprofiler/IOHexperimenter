@@ -45,6 +45,7 @@ void example_submodular_suite_with_logging()
     suite.attach_logger(b);
     for (const auto &problem : suite)
     {
+        
         std::cout << (*problem).meta_data() << std::endl;
         for (auto i = 0; i < repetition; i++)
         {

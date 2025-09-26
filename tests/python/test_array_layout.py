@@ -48,14 +48,23 @@ class TestArrayLayout(unittest.TestCase):
             self.assertEqual(y, sum(v+1))
 
     def test_solution(self):
-        sol = ioh.RealSolution([0, 1], 1)
-        self.assertTrue(np.all(sol.x == np.array([0,1])))
+        for n in range(2, 25, 2):
+            val = np.random.normal(size=n)
+            sol = ioh.RealSolution(val, 1)
+            self.assertTrue(np.all(sol.x == val))
+            self.assertTrue(np.all(ioh.RealSolution(val, 1).x == val))
+            
+        for n in range(2, 25, 2):
+            val = np.random.randint(-100, 100, size=n)
+            sol = ioh.IntegerSolution(val, 1)
+            self.assertTrue(np.all(sol.x == val))
+            self.assertTrue(np.all(ioh.IntegerSolution(val, 1).x == val))
 
-        # Modify
-        sol.x[0] = 1
-        self.assertTrue(np.all(sol.x == np.array([1,1])))
-
-
+    def test_optimum(self):
+        problem = ioh.get_problem(1, instance=1, dimension=5, problem_class=ioh.ProblemClass.PBO)
+        self.assertTrue(np.all(np.ones(5) == problem.optimum.x))
+        
+    
     def test_constraint(self):
         def cons(x):
             """If x[1] == 1, the constraint is violated."""
