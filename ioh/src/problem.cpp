@@ -1,12 +1,5 @@
-#include <pybind11/functional.h>
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+#include "pch.hpp"
 
-#include "ioh.hpp"
-#include "numpy.hpp"
-
-namespace py = pybind11;
 using namespace ioh::problem;
 
 static std::vector<py::handle> WRAPPED_FUNCTIONS;
@@ -17,7 +10,6 @@ bool register_python_fn(py::handle f)
     WRAPPED_FUNCTIONS.push_back(f);
     return true;
 }
-
 
 
 #if defined(__GNUC__)

@@ -1,12 +1,4 @@
-#include <pybind11/functional.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <utility>
-#include "ioh.hpp"
-
-namespace py = pybind11;
-using namespace ioh;
-
+#include "pch.hpp"
 
 template <typename T>
 void define_eah_scale(py::module &m, const std::string &name)

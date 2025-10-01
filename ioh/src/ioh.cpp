@@ -1,7 +1,4 @@
-#include <pybind11/pybind11.h>
-#include "ioh.hpp"
-
-namespace py = pybind11;
+#include "pch.hpp"
 
 void define_helper_classes(py::module& m);
 void define_problem(py::module& m);

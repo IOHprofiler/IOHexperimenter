@@ -1,10 +1,14 @@
 #pragma once
 
+#include <utility>
+
 #include <fmt/ranges.h>
+
 #include <pybind11/functional.h>
+#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include <utility>
+
 #include "ioh.hpp"
 
 
@@ -37,3 +41,26 @@ public:
         return {};
     }
 };
+
+template<typename T>
+py::array_t<T> make_mutable_array(std::vector<T>& v, py::object owner)
+{
+    return py::array_t<T>(
+        {v.size()},      // shape
+        {sizeof(T)},     // stride
+        v.data(),        // pointer
+        owner            // keep the parent (e.g. Solution) alive
+    );
+}
+
+
+template<typename T>
+py::array_t<T> make_array(const std::vector<T>& x)
+{
+    py::array_t<T> arr(
+        {static_cast<size_t>(x.size())}, 
+        {static_cast<size_t>(sizeof(T))},
+        static_cast<const T*>(x.data())
+    );
+    return arr;
+}

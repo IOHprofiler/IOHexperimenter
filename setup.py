@@ -5,6 +5,9 @@ import sys
 import platform
 import subprocess
 import atexit
+import multiprocessing
+from distutils.spawn import find_executable
+
 from setuptools import setup, Extension, find_packages 
 from setuptools.command.build_ext import build_ext
 
@@ -29,10 +32,10 @@ PLAT_TO_CMAKE = {
 
 # Avoid memory issues with high number of jobs on g++ on smaller machines
 if platform.system() == "Linux" and "CMAKE_BUILD_PARALLEL_LEVEL" not in os.environ:
-    os.environ["CMAKE_BUILD_PARALLEL_LEVEL"] = "4"
+    os.environ["CMAKE_BUILD_PARALLEL_LEVEL"] = str(int(multiprocessing.cpu_count()*0.8))
 
 
-if platform.system() == "Darwin":
+if platform.system() == "Darwin" or find_executable("clang") is not None:
     os.environ["CC"] = "clang"
     os.environ["CXX"] = "clang"
     os.environ["ARCHFLAGS"] = "-std=c++17"

@@ -1,4 +1,6 @@
-#include "pyproperty.hpp"
+#include "pch.hpp"
+
+using namespace ioh::logger;
 
 // Trampoline
 struct AbstractProperty : logger::Property

@@ -1,11 +1,4 @@
-#include <pybind11/functional.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <utility>
-#include "ioh.hpp"
-
-namespace py = pybind11;
-using namespace ioh;
+#include "pch.hpp"
 
 void define_triggers(py::module &m)
 {
