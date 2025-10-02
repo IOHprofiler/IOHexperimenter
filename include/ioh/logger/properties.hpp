@@ -518,9 +518,9 @@ namespace ioh
             {
                 if (_ref_ptr_var != nullptr)
                 {
-                    // IOH_DBG(debug, "PointerReference "  name << " @ " << ref_ptr_var << " == " << static_cast<double>(*ref_ptr_var));
+                    // // IOH_DBG(debug, "PointerReference "  name << " @ " << ref_ptr_var << " == " << static_cast<double>(*ref_ptr_var));
                 }
-                // IOH_DBG(debug, "PointerReference " << name << " @ " << ref_ptr_var << " == nullptr");
+                // // IOH_DBG(debug, "PointerReference " << name << " @ " << ref_ptr_var << " == nullptr");
             }
 
             //! Main call interface.
@@ -528,10 +528,10 @@ namespace ioh
             {
                 if (_ref_ptr_var != nullptr)
                 {
-                    // IOH_DBG(debug, "PointerReference " << name() << " @ " << _ref_ptr_var << " == " << static_cast<double>(*_ref_ptr_var));
+                    // // IOH_DBG(debug, "PointerReference " << name() << " @ " << _ref_ptr_var << " == " << static_cast<double>(*_ref_ptr_var));
                     return std::make_optional(static_cast<double>(*_ref_ptr_var));
                 }
-                // IOH_DBG(debug, "PointerReference " << name() << " @ " << _ref_ptr_var << " == nullopt");
+                // // IOH_DBG(debug, "PointerReference " << name() << " @ " << _ref_ptr_var << " == nullopt");
                 return std::nullopt;
             }
 

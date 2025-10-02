@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {   
     //! Step ellipsiod problem id 7
     template<typename P=BBOB>
-    class StepEllipsoid final : public P, BBOProblem<StepEllipsoid>
+    class StepEllipsoid final : public P//, BBOProblem<StepEllipsoid>
     {
     protected:
         //! compute project of x

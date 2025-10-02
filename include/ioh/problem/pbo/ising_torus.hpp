@@ -8,7 +8,7 @@ namespace ioh
         namespace pbo
         {
             //! IsingTorus problem id 20
-            class IsingTorus final : public PBOProblem<IsingTorus>
+            class IsingTorus final : public PBO //PBOProblem<IsingTorus>
             {
                 static size_t modulo_ising_torus(const size_t x, const size_t n)
                 {
@@ -26,7 +26,7 @@ namespace ioh
 
                     if (floor(sqrt(double_n)) != sqrt(double_n))
                     {
-                        IOH_DBG(error,"Number of parameters in the Ising square problem must be a square number")
+                        // IOH_DBG(error,"Number of parameters in the Ising square problem must be a square number")
                         assert(floor(sqrt(double_n)) == sqrt(double_n));
                     }
 
@@ -54,7 +54,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 IsingTorus(const int instance, const int n_variables) :
-                    PBOProblem(20, instance, n_variables, "IsingTorus")
+                    PBO(20, instance, n_variables, "IsingTorus")
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

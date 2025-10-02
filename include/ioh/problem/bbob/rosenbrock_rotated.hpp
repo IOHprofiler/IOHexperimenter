@@ -7,7 +7,7 @@ namespace ioh::problem::bbob
 {
     //! Rotated Rosenbrock function 9
     template<typename P = BBOB>
-    class RosenbrockRotated final :  public RosenbrockBase<P>, BBOProblem<RosenbrockRotated>
+    class RosenbrockRotated final :  public RosenbrockBase<P>//, BBOProblem<RosenbrockRotated>
     {
     protected:
         //! Variables transformation method

@@ -264,10 +264,10 @@ namespace logger {
             _current.run      = runs.size(); // De facto next run id.
 
 
-            IOH_DBG(note, "Attach to: pb=" << _current.pb << ", dim=" << _current.dim << ", ins=" << _current.ins << ", run=" << _current.run)
+            // IOH_DBG(note, "Attach to: pb=" << _current.pb << ", dim=" << _current.dim << ", ins=" << _current.ins << ", run=" << _current.run)
 #ifndef NDEBUG
             if(_has_problem_type and _current_problem_type.type() != problem.optimization_type.type()) {
-                IOH_DBG(warning, "different types of problems are mixed, you will not be able to compute levels")
+                // IOH_DBG(warning, "different types of problems are mixed, you will not be able to compute levels")
             }
 #endif
             _current_problem_type = problem.optimization_type;
@@ -285,7 +285,7 @@ namespace logger {
         /** Process a log event. */
         void call(const logger::Info& log_info) override
         {
-            IOH_DBG(debug, "EAF called after improvement")
+            // IOH_DBG(debug, "EAF called after improvement")
             // Access the properties that were instantiated in the constructor.
             const std::optional<double> y_best      = properties_.at(_y_best.name()).get()(log_info);
             const std::optional<double> evaluations = properties_.at(_evaluations.name()).get()(log_info);
@@ -294,7 +294,7 @@ namespace logger {
             assert(evaluations);
 
             // If trigger::on_improvement does its job, we always have an improvement here.
-            IOH_DBG(debug, "y_best=" << y_best.value()
+            // IOH_DBG(debug, "y_best=" << y_best.value()
                 <<  (_current_problem_type == common::OptimizationType::MIN ? " <" : " >")
                 << " current_best=" << _current_best << " ?");
             
@@ -312,7 +312,7 @@ namespace logger {
         /** Reset the state. */
         void reset() override
         {
-            IOH_DBG(debug, "EAF reset")
+            // IOH_DBG(debug, "EAF reset")
             Logger::reset();
 #ifndef NDEBUG
             if(_current_problem_type == common::OptimizationType::MIN) {
@@ -518,7 +518,7 @@ namespace logger {
                     } } } } }
                     
                     const size_t nb_runs = fronts.size();
-                    IOH_DBG(note, nb_runs << " runs in the EAF logger")
+                    // IOH_DBG(note, nb_runs << " runs in the EAF logger")
                     assert(nb_runs > 0);
 
                     // Copy and sort data.
@@ -536,7 +536,7 @@ namespace logger {
                             data_qual.push_back(eaf::RunPoint(p.time, p.qual, run));
                         } 
                     }
-                    IOH_DBG(note, total_nb_points << " front points in the EAF logger")
+                    // IOH_DBG(note, total_nb_points << " front points in the EAF logger")
 
                     // Sort the two sets of data.
                     std::sort(std::begin(data_time),std::end(data_time),  ascending_time); // Time always ascend.
@@ -558,7 +558,7 @@ namespace logger {
 
                     // The algorithm.
                     for(const size_t level : _attlevels) {
-                        IOH_DBG(debug, "Parse level " << level)
+                        // IOH_DBG(debug, "Parse level " << level)
                         eaf::Front eaf;
                         size_t it = 0; // current time index
                         size_t iq = 0; // current qual index
@@ -578,7 +578,7 @@ namespace logger {
                         eaf::Front level_front;
 
                         do { // while it < total and iq < total
-                            IOH_DBG(debug, "> Parse ascending time from " << it << " (time=" << data_time[it].time << ")" )
+                            // IOH_DBG(debug, "> Parse ascending time from " << it << " (time=" << data_time[it].time << ")" )
 
                             // Until the desired attainment level is reached.
                             while(it < total_nb_points-1 and
@@ -593,12 +593,12 @@ namespace logger {
                                     attained[run]++;
                                 } // it.qual <= iq.qual
                             } // while it < total_nb_points
-                            IOH_DBG(debug, "> Reached level at " << it)
+                            // IOH_DBG(debug, "> Reached level at " << it)
                             // IOH_DBG_DUMP(xdebug, attained, "attained_right_{n}.dat");
 
                             if(nb_attained >= level) {
-                                IOH_DBG(debug, ">> Level is to be saved")
-                                IOH_DBG(debug, ">> Parse descending qual from " << iq << " (qual=" << data_qual[iq].qual << ")")
+                                // IOH_DBG(debug, ">> Level is to be saved")
+                                // IOH_DBG(debug, ">> Parse descending qual from " << iq << " (qual=" << data_qual[iq].qual << ")")
                                 // Until the desired attainment level is no longer reached.
                                 do { // while nb_attained >= level and iq < total
 
@@ -622,11 +622,11 @@ namespace logger {
                                         assert(iq-1 < total_nb_points);
                                     } while(iq < total_nb_points and data_qual[iq].qual == data_qual[iq-1].qual);
                                 } while(nb_attained >= level and iq < total_nb_points);
-                                IOH_DBG(debug, ">> Reached level at " << iq)
+                                // IOH_DBG(debug, ">> Reached level at " << iq)
                                 // assert(nb_attained < level);
                                 assert(it < total_nb_points);
                                 assert(iq-1 < total_nb_points);
-                                IOH_DBG(debug, ">> Front level point: (time=" << data_time[it].time << ",qual=" << data_qual[iq-1].qual << ")")
+                                // IOH_DBG(debug, ">> Front level point: (time=" << data_time[it].time << ",qual=" << data_qual[iq-1].qual << ")")
                                 level_front.push_back( eaf::RunPoint(
                                         data_time[it].time,
                                         data_qual[iq-1].qual,
@@ -637,23 +637,23 @@ namespace logger {
                         } while(it < total_nb_points-1 and iq < total_nb_points);
 
                         // Save this level.
-                        IOH_DBG(note, "> Level " << level << " has " << level_front.size() << " points")
+                        // IOH_DBG(note, "> Level " << level << " has " << level_front.size() << " points")
                         assert(level_front.size() > 0);
                         assert(levels.find(level) == std::end(levels));
                         levels[level] = level_front;
 #ifndef NDEBUG
-                            IOH_DBG(xdebug,">> Involved runs:")
-                            IOH_DBG(xdebug,">>> " << level_front[0].run)
+                            // IOH_DBG(xdebug,">> Involved runs:")
+                            // IOH_DBG(xdebug,">>> " << level_front[0].run)
                             for(size_t i = 1; i < level_front.size(); ++i) {
                                 if(level_front[i].run != level_front[i-1].run) {
-                                    IOH_DBG(xdebug,">>> " << level_front[i].run)
+                                    // IOH_DBG(xdebug,">>> " << level_front[i].run)
                                 }
                                 assert(level_front[i].run == level_front[i-1].run);
                             }
 #endif
                     } // l in levels
 
-                    IOH_DBG(note, "Ended with " << levels.size() << " levels")
+                    // IOH_DBG(note, "Ended with " << levels.size() << " levels")
                     assert(levels.size() > 0);
                     assert(levels.size() <= nb_runs);
                     return levels;
@@ -768,7 +768,7 @@ namespace logger {
                 
                 /** Constructor without a nadir reference point. */
                 NadirStat(const common::OptimizationType optim_type, const double shift_qual = 1e-6) : _has_nadir(false), _nadir(), _is_better{optim_type}, _shift_qual(shift_qual) {
-                    IOH_DBG(note, "NadirStat without a nadir");
+                    // IOH_DBG(note, "NadirStat without a nadir");
                 }
 
                 /** Constructor with a nadir reference point.
@@ -803,7 +803,7 @@ namespace logger {
                             if(candidate_nadir.time > nadir_time) { nadir_time = candidate_nadir.time; }
                             if(_is_better(nadir_qual, candidate_nadir.qual)) { nadir_qual = candidate_nadir.qual; }
                         }
-                        IOH_DBG(debug,"Estimated nadir: (time=" << nadir_time+epsil_time << ",qual=" << nadir_qual+epsil_qual << ")" );
+                        // IOH_DBG(debug,"Estimated nadir: (time=" << nadir_time+epsil_time << ",qual=" << nadir_qual+epsil_qual << ")" );
                         _nadir = eaf::Point(nadir_qual+epsil_qual, nadir_time+epsil_time);
                         _has_nadir = true;
                     }
@@ -836,7 +836,7 @@ namespace logger {
                         for(auto [level,front] : levels) {
                             results[level] = surface(front);
                         }
-                        IOH_DBG(debug,"Surfaces of " << levels.size() << " levels");
+                        // IOH_DBG(debug,"Surfaces of " << levels.size() << " levels");
                         assert(results.size() == levels.size());
                         return results;
                     }
@@ -855,7 +855,7 @@ namespace logger {
                      */
                     double surface(eaf::Front front) const
                     {
-                        IOH_DBG(xdebug,"Front of size: " << front.size());
+                        // IOH_DBG(xdebug,"Front of size: " << front.size());
                         assert(_has_nadir);
                         double n_qual = _nadir.qual;
                         double surface = 0;
@@ -872,7 +872,7 @@ namespace logger {
                             n_qual = p.qual;
                             assert(surface > 0);
                         }
-                        IOH_DBG(xdebug, "Surface of front = " << surface);
+                        // IOH_DBG(xdebug, "Surface of front = " << surface);
                         return surface;
                     }
             };
@@ -916,7 +916,7 @@ namespace logger {
 
                     double call(const eaf::Levels::Type& levels) override
                     {
-                        IOH_DBG(debug, "Volume of " << levels.size() << " levels");
+                        // IOH_DBG(debug, "Volume of " << levels.size() << " levels");
                         Surfaces s(this->_is_better.type(), _nadir);
                         // Do not compute surfaces right here to avoid two loops on levels instead of one.
 
@@ -926,16 +926,16 @@ namespace logger {
                             const auto fsurf = s.surface(front);
 #ifndef NDEBUG
                                 if(fsurf == 0) {
-                                    IOH_DBG(warning, "Level " << level << " has a null surface.");
+                                    // IOH_DBG(warning, "Level " << level << " has a null surface.");
                                 }
 #endif
                             volume += fsurf * (static_cast<double>(level) - prev_level);
                             prev_level = static_cast<int>(level);
                         }
-                        IOH_DBG(debug, "Volume = " << volume);
+                        // IOH_DBG(debug, "Volume = " << volume);
 #ifndef NDEBUG
                             if(volume == 0) {
-                                IOH_DBG(warning, "Null volume, if some front have single points, set a nadir point.");
+                                // IOH_DBG(warning, "Null volume, if some front have single points, set a nadir point.");
                             }
 #endif
                         return volume;

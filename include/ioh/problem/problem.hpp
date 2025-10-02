@@ -54,12 +54,12 @@ namespace ioh
             {
                 if (x.empty())
                 {
-                    IOH_DBG(warning, "The solution is empty.")
+                    // IOH_DBG(warning, "The solution is empty.")
                     return false;
                 }
                 if (x.size() != static_cast<size_t>(meta_data_.n_variables))
                 {
-                    IOH_DBG(warning, "The dimension of solution is incorrect.")
+                    // IOH_DBG(warning, "The dimension of solution is incorrect.")
                     return false;
                 }
                 return true;
@@ -97,15 +97,15 @@ namespace ioh
 
                 if (common::has_nan(x))
                 {
-                    IOH_DBG(warning, "The solution contains NaN.")
+                    // IOH_DBG(warning, "The solution contains NaN.")
                     return false;
                 }
                 if (common::has_inf(x))
                 {
-                    IOH_DBG(warning, "The solution contains Inf.")
+                    // IOH_DBG(warning, "The solution contains Inf.")
                     return false;
                 }
-                IOH_DBG(warning, "The solution contains invalid values.")
+                // IOH_DBG(warning, "The solution contains invalid values.")
                 return false;
             }
 
@@ -237,9 +237,9 @@ namespace ioh
                 if (logger_ != nullptr)
                 {
                     if (state_.evaluations != 0)
-                        IOH_DBG(warning,
-                                "Updated meta_data with logger attached and already evaluated problem. State will be "
-                                "reset.")
+                        // IOH_DBG(warning,
+                                // "Updated meta_data with logger attached and already evaluated problem. State will be "
+                                // "reset.")
                     reset();
                 }
             }

@@ -8,7 +8,7 @@ namespace ioh::problem
     namespace cec2013
     {
 
-        class UnevenEqualMaxima final : public CEC2013Problem<UnevenEqualMaxima>
+        class UnevenEqualMaxima final : public CEC2013 // CEC2013Problem<UnevenEqualMaxima>
         {
         protected:
             double inner_evaluate(const std::vector<double> &z) override
@@ -19,7 +19,7 @@ namespace ioh::problem
 
         public:
             UnevenEqualMaxima(const int instance, const int n_variables) :
-                CEC2013Problem(1103, instance, n_variables, "CEC2013UnevenEqualMaxima", 0, 1, {
+                CEC2013(1103, instance, n_variables, "CEC2013UnevenEqualMaxima", 0, 1, {
                     {{0.07969978}, 0.999999828},
                 })
             {
@@ -29,11 +29,11 @@ namespace ioh::problem
     } // namespace cec2013
 
 
-    template <>
-    inline InstanceBasedProblem::Constructors<cec2013::UnevenEqualMaxima, int, int>
-    InstanceBasedProblem::load_instances<cec2013::UnevenEqualMaxima>(const std::optional<fs::path> &)
-    {
-        return {{[](int, int) { return cec2013::UnevenEqualMaxima(1, 1); }, 1103, std::nullopt}};
-    }
+    // template <>
+    // inline InstanceBasedProblem::Constructors<cec2013::UnevenEqualMaxima, int, int>
+    // InstanceBasedProblem::load_instances<cec2013::UnevenEqualMaxima>(const std::optional<fs::path> &)
+    // {
+    //     return {{[](int, int) { return cec2013::UnevenEqualMaxima(1, 1); }, 1103, std::nullopt}};
+    // }
 
 } // namespace ioh::problem

@@ -8,7 +8,7 @@ namespace ioh
         namespace pbo
         {
             //! IsingRing problem id 19
-            class IsingRing final: public PBOProblem<IsingRing>
+            class IsingRing final: public PBO //PBOProblem<IsingRing>
             {
                 static int modulo_ising_ring(const int x, const int n){ return (x % n + n) % n; }
             protected:
@@ -35,7 +35,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 IsingRing(const int instance, const int n_variables) :
-                    PBOProblem(19, instance, n_variables, "IsingRing")
+                    PBO(19, instance, n_variables, "IsingRing")
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

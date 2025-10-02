@@ -9,7 +9,7 @@ namespace ioh
         namespace pbo
         {
             //! IsingTriangular problem id 21
-            class IsingTriangular final: public PBOProblem<IsingTriangular>
+            class IsingTriangular final: public PBO //PBOProblem<IsingTriangular>
             {
                 static size_t modulo_ising_triangular(const size_t x, const size_t n) { return (x % n + n) % n; }
             protected:
@@ -49,7 +49,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 IsingTriangular(const int instance, const int n_variables) :
-                    PBOProblem(21, instance, n_variables, "IsingTriangular")
+                    PBO(21, instance, n_variables, "IsingTriangular")
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

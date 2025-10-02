@@ -520,12 +520,12 @@ namespace ioh
                         optimum.y != -std::numeric_limits<double>::infinity());
                     if (_current.has_opt)
                     {
-                        IOH_DBG(debug, "Problem has known optimum, will compute the EAH of the error.")
+                        // IOH_DBG(debug, "Problem has known optimum, will compute the EAH of the error.")
                         _current.opt = log_info.optimum.y;
                     }
                     else
                     {
-                        IOH_DBG(debug, "Problem has no known optimum, will compute the absolute EAH.")
+                        // IOH_DBG(debug, "Problem has no known optimum, will compute the absolute EAH.")
                     }
                     init_eah(_current);
                 }

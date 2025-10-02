@@ -8,7 +8,7 @@ namespace ioh
         namespace pbo
         {
             //! MIS problem id 22
-            class MIS final : public PBOProblem<MIS>
+            class MIS final : public PBO// PBOProblem<MIS>
             {
                 int number_of_variables_even_;
 
@@ -59,7 +59,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 MIS(const int instance, const int n_variables) :
-                    PBOProblem(22, instance, n_variables, "MIS"),
+                    PBO(22, instance, n_variables, "MIS"),
                     number_of_variables_even_(n_variables % 2 != 0 ? n_variables - 1 : n_variables)
                 {
                     optimum_.y = number_of_variables_even_ % 4 == 0

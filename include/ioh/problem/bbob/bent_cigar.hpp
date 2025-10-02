@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! Bent Cigar problem id = 12
     template <typename P=BBOB>
-    class BentCigar final : public P, BBOProblem<BentCigar>
+    class BentCigar final : public P//, BBOProblem<BentCigar>
     {
     protected:
         //! Evaluation method

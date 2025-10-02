@@ -127,7 +127,7 @@ namespace ioh
             /** Propagate the reset event to all managed triggers. */
             virtual void reset() override
             {
-                IOH_DBG(debug, "reset triggers in Set");
+                // IOH_DBG(debug, "reset triggers in Set");
                 for (auto &trigger : triggers_)
                 {
                     trigger.get().reset();
@@ -171,17 +171,17 @@ namespace ioh
             /** Triggered if ANY the managed triggers are triggered. */
             virtual bool operator()(const logger::Info &log_info, const problem::MetaData &pb_info) override
             {
-                IOH_DBG(debug, "trigger Any called");
+                // IOH_DBG(debug, "trigger Any called");
                 assert(!triggers_.empty());
                 for (auto &trigger : triggers_)
                 {
                     if (trigger(log_info, pb_info))
                     {
-                        IOH_DBG(debug, "any triggered")
+                        // IOH_DBG(debug, "any triggered")
                         return true;
                     }
                 }
-                IOH_DBG(xdebug, "not any triggered")
+                // IOH_DBG(xdebug, "not any triggered")
                 return false;
             }
         };
@@ -217,17 +217,17 @@ namespace ioh
             /** Triggered if ALL the managed triggers are triggered. */
             virtual bool operator()(const logger::Info &log_info, const problem::MetaData &pb_info) override
             {
-                IOH_DBG(debug, "trigger All called");
+                // IOH_DBG(debug, "trigger All called");
                 assert(triggers_.size() > 0);
                 for (auto &trigger : triggers_)
                 {
                     if (not trigger(log_info, pb_info))
                     {
-                        IOH_DBG(xdebug, "not all triggered")
+                        // IOH_DBG(xdebug, "not all triggered")
                         return false;
                     }
                 }
-                IOH_DBG(debug, "all triggered")
+                // IOH_DBG(debug, "all triggered")
                 return true;
             }
         };
@@ -249,7 +249,7 @@ namespace ioh
         {
             bool operator()(const logger::Info &, const problem::MetaData &) override
             {
-                IOH_DBG(debug, "always triggered")
+                // IOH_DBG(debug, "always triggered")
                 return true;
             }
         };
@@ -267,7 +267,7 @@ namespace ioh
         {
             bool operator()(const logger::Info &log_info, const problem::MetaData&) override
             {
-                IOH_DBG(debug, "trigger OnImprovement called: " << log_info.has_improved);
+                // IOH_DBG(debug, "trigger OnImprovement called: " << log_info.has_improved);
                 return log_info.has_improved;
             }
         };
@@ -322,7 +322,7 @@ namespace ioh
             bool operator()(const logger::Info &log_info, const problem::MetaData&) override
             {
                 const bool violation = log_info.violations[0] != 0.;
-                IOH_DBG(debug, "trigger OnViolation called: " << violation);
+                // IOH_DBG(debug, "trigger OnViolation called: " << violation);
                 violations += violation;
                 return violation;
             }
@@ -366,15 +366,15 @@ namespace ioh
             //! Main call interface.
             bool operator()(const logger::Info &log_info, const problem::MetaData &) override
             {
-                IOH_DBG(debug, "trigger Each called");
+                // IOH_DBG(debug, "trigger Each called");
                 if ((log_info.evaluations - _starting_at) % _interval == 0)
                 {
-                    IOH_DBG(debug, "each triggered " << log_info.evaluations)
+                    // IOH_DBG(debug, "each triggered " << log_info.evaluations)
                     return true;
                 }
                 else
                 {
-                    IOH_DBG(xdebug, "each not triggered " << log_info.evaluations)
+                    // IOH_DBG(xdebug, "each not triggered " << log_info.evaluations)
                     return false;
                 }
             }
@@ -417,15 +417,15 @@ namespace ioh
             //! Main call interface.
             bool operator()(const logger::Info &log_info, const problem::MetaData &) override
             {
-                IOH_DBG(debug, "trigger At called");
+                // IOH_DBG(debug, "trigger At called");
                 if (matches(log_info.evaluations))
                 {
-                    IOH_DBG(debug, "triggered at " << log_info.evaluations)
+                    // IOH_DBG(debug, "triggered at " << log_info.evaluations)
                     return true;
                 }
                 else
                 {
-                    IOH_DBG(xdebug, "not triggered at " << log_info.evaluations)
+                    // IOH_DBG(xdebug, "not triggered at " << log_info.evaluations)
                     return false;
                 }
             }
@@ -489,15 +489,15 @@ namespace ioh
             //! Main call interface.
             bool operator()(const logger::Info &log_info, const problem::MetaData &) override
             {
-                IOH_DBG(debug, "trigger During called");
+                // IOH_DBG(debug, "trigger During called");
                 if (matches(log_info.evaluations))
                 {
-                    IOH_DBG(debug, "triggered during " << log_info.evaluations)
+                    // IOH_DBG(debug, "triggered during " << log_info.evaluations)
                     return true;
                 }
                 else
                 {
-                    IOH_DBG(xdebug, "not triggered during " << log_info.evaluations)
+                    // IOH_DBG(xdebug, "not triggered during " << log_info.evaluations)
                     return false;
                 }
             }

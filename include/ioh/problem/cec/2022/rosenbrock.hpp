@@ -6,7 +6,7 @@
 namespace ioh::problem::cec2022
 {
     /// The Rosenbrock class encapsulates the Rosenbrock optimization problem, inheriting functionalities from the template class CECProblem.
-    class Rosenbrock final : public CEC2022Problem<Rosenbrock>
+    class Rosenbrock final : public CEC2022 // CEC2022Problem<Rosenbrock>
     {
     protected:
         /// Evaluates the objective function for the Rosenbrock problem.
@@ -37,7 +37,7 @@ namespace ioh::problem::cec2022
         /// @param instance An integer representing the specific problem instance number.
         /// @param n_variables An integer representing the number of variables for this problem.
         Rosenbrock(const int instance, const int n_variables) :
-            CEC2022Problem(1002, instance, n_variables, "CEC2022Rosenbrock")
+            CEC2022(1002, instance, n_variables, "CEC2022Rosenbrock")
         {
         }
     };

@@ -9,7 +9,7 @@ namespace ioh
         namespace pbo
         {
             //! OneMaxRuggedness2 problem id 9
-            class OneMaxRuggedness2 final: public PBOProblem<OneMaxRuggedness2>
+            class OneMaxRuggedness2 final: public PBO // PBOProblem<OneMaxRuggedness2>
             {
             protected:
                 //! Evaluation method
@@ -31,7 +31,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 OneMaxRuggedness2(const int instance, const int n_variables) :
-                    PBOProblem(9, instance, n_variables, "OneMaxRuggedness2")
+                    PBO(9, instance, n_variables, "OneMaxRuggedness2")
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

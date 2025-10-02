@@ -11,7 +11,7 @@ namespace ioh::problem::cec2022
      * It overrides the evaluate and transform_variables methods to provide the specific implementation for this
      * problem.
      */
-    class HybridFunction1 final : public CEC2022Problem<HybridFunction1>
+    class HybridFunction1 final : public CEC2022 // CEC2022Problem<HybridFunction1>
     {
     protected:
         /**
@@ -63,7 +63,7 @@ namespace ioh::problem::cec2022
          * \param n_variables The number of variables for the problem.
          */
         HybridFunction1(const int instance, const int n_variables) :
-            CEC2022Problem(1006, instance, n_variables, "CEC2022HybridFunction1")
+            CEC2022(1006, instance, n_variables, "CEC2022HybridFunction1")
         {
         }
     };

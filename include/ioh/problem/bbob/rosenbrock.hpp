@@ -56,7 +56,7 @@ namespace ioh::problem::bbob
 
     //! Rosenbrock problem id 8
     template<typename P = BBOB>
-    class Rosenbrock final: public RosenbrockBase<P>, BBOProblem<Rosenbrock>
+    class Rosenbrock final: public RosenbrockBase<P>//, BBOProblem<Rosenbrock>
     {
     public:
         /**

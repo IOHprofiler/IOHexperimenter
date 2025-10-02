@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! Rotated Rastrigin problem id 15
     template<typename P = BBOB>
-    class RastriginRotated final : public RastriginBase<P>, BBOProblem<RastriginRotated>
+    class RastriginRotated final : public RastriginBase<P>//, BBOProblem<RastriginRotated>
     {
     protected:
         //! Variables transformation method

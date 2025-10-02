@@ -190,14 +190,14 @@ namespace ioh::problem::submodular
                     constraint_variances = std::vector<double>(meta.is_edge ? edges.size() : meta.n_vertices, 1.0);
                 }
 
-                IOH_DBG(xdebug, "loaded graph problem");
-                IOH_DBG(xdebug, "number of edges:  " << edges.size());
-                IOH_DBG(xdebug, "number of vertices: " << meta.n_vertices);
-                IOH_DBG(xdebug, "number of edge_weights: " << edge_weights.size());
-                IOH_DBG(xdebug, "number of vertex_weights: " << vertex_weights.size());
-                IOH_DBG(xdebug, "number of constraints: " << constraint_weights.size());
+                // IOH_DBG(xdebug, "loaded graph problem");
+                // IOH_DBG(xdebug, "number of edges:  " << edges.size());
+                // IOH_DBG(xdebug, "number of vertices: " << meta.n_vertices);
+                // IOH_DBG(xdebug, "number of edge_weights: " << edge_weights.size());
+                // IOH_DBG(xdebug, "number of vertex_weights: " << vertex_weights.size());
+                // IOH_DBG(xdebug, "number of constraints: " << constraint_weights.size());
                 // added by saba--------------------------------------------------------------
-                IOH_DBG(xdebug, "number of variances: " << constraint_variances.size());
+                // IOH_DBG(xdebug, "number of variances: " << constraint_variances.size());
                 //---------------------------------------------------------------------------
                 loaded = true;
             }
@@ -282,54 +282,54 @@ namespace ioh::problem::submodular
         }
     };
 
-    //! Graph Problem Type
-    template <typename ProblemType>
-    struct GraphProblemType : GraphProblem,
-                              InstanceBasedProblem,
-                              AutomaticProblemRegistration<ProblemType, IntegerSingleObjective>,
-                              AutomaticProblemRegistration<ProblemType, GraphProblem>
-    {
-        using GraphProblem::GraphProblem;
+    // //! Graph Problem Type
+    // template <typename ProblemType>
+    // struct GraphProblemType : GraphProblem,
+    //                           InstanceBasedProblem,
+    //                           AutomaticProblemRegistration<ProblemType, IntegerSingleObjective>,
+    //                           AutomaticProblemRegistration<ProblemType, GraphProblem>
+    // {
+    //     using GraphProblem::GraphProblem;
 
-        /**
-         * @brief Get the constructors used in explicit specialization of load_isntances method if
-         * InstanceBasedProblem
-         *
-         * @param path
-         * @return InstanceBasedProblem::Constructors<ProblemType, int, int>
-         */
-        template <typename G = graph::Graph>
-        static Constructors<ProblemType, int, int> get_constructors(const fs::path &path)
-        {
-            Constructors<ProblemType, int, int> constructors;
+    //     /**
+    //      * @brief Get the constructors used in explicit specialization of load_isntances method if
+    //      * InstanceBasedProblem
+    //      *
+    //      * @param path
+    //      * @return InstanceBasedProblem::Constructors<ProblemType, int, int>
+    //      */
+    //     template <typename G = graph::Graph>
+    //     static Constructors<ProblemType, int, int> get_constructors(const fs::path &path)
+    //     {
+    //         Constructors<ProblemType, int, int> constructors;
 
-            const auto root_path = path.parent_path();
+    //         const auto root_path = path.parent_path();
 
-            auto graphs = common::file::as_text_vector<std::shared_ptr<G>>(path);
-            int i = ProblemType::default_id;
-            for (auto &graph : graphs)
-            {
-                graph->meta.root = root_path;
-                constructors.push_back({[graph, i](int, int) { return ProblemType(i, 1, graph); }, i++, std::nullopt});
-            }
-            return constructors;
-        }
+    //         auto graphs = common::file::as_text_vector<std::shared_ptr<G>>(path);
+    //         int i = ProblemType::default_id;
+    //         for (auto &graph : graphs)
+    //         {
+    //             graph->meta.root = root_path;
+    //             constructors.push_back({[graph, i](int, int) { return ProblemType(i, 1, graph); }, i++, std::nullopt});
+    //         }
+    //         return constructors;
+    //     }
 
-        //! Helper to load problems from a file
-        //! Use if you want to manually load more graph based files
-        template <typename... Args>
-        static void load_graph_instances(const std::optional<fs::path> &path = std::nullopt)
-        {
-            for (auto &ci : InstanceBasedProblem::load_instances<ProblemType, int, int>(path))
-            {
+    //     //! Helper to load problems from a file
+    //     //! Use if you want to manually load more graph based files
+    //     template <typename... Args>
+    //     static void load_graph_instances(const std::optional<fs::path> &path = std::nullopt)
+    //     {
+    //         for (auto &ci : InstanceBasedProblem::load_instances<ProblemType, int, int>(path))
+    //         {
                 
-                const auto name = fmt::format("{}{}", ioh::common::class_name<ProblemType>(), std::get<1>(ci));
-                auto c = [c = std::get<0>(ci)](Args &&...params) {
-                    return std::make_unique<ProblemType>(c(std::forward<Args>(params)...));
-                };
-                ioh::common::Factory<IntegerSingleObjective, Args...>::instance().include(name, std::get<1>(ci), c);
-                ioh::common::Factory<submodular::GraphProblem, Args...>::instance().include(name, std::get<1>(ci), c);
-            }
-        }
-    };
+    //             const auto name = fmt::format("{}{}", ioh::common::class_name<ProblemType>(), std::get<1>(ci));
+    //             auto c = [c = std::get<0>(ci)](Args &&...params) {
+    //                 return std::make_unique<ProblemType>(c(std::forward<Args>(params)...));
+    //             };
+    //             ioh::common::Factory<IntegerSingleObjective, Args...>::instance().include(name, std::get<1>(ci), c);
+    //             ioh::common::Factory<submodular::GraphProblem, Args...>::instance().include(name, std::get<1>(ci), c);
+    //         }
+    //     }
+    // };
 } // namespace ioh::problem::submodular

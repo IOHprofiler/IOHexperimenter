@@ -7,7 +7,7 @@ namespace ioh::problem::cec2022
 {
     /// Zakharov class inherits from the template CECProblem with Zakharov as the template parameter.
     /// This class encapsulates the Zakharov problem for the CEC benchmark suite.
-    class Zakharov final : public CEC2022Problem<Zakharov>
+    class Zakharov final : public CEC2022 // CEC2022Problem<Zakharov>
     {
     protected:
         /// Evaluates the objective function for the Zakharov problem.
@@ -36,7 +36,7 @@ namespace ioh::problem::cec2022
         /// Constructs a Zakharov problem instance.
         /// @param instance An integer representing the problem instance number.
         /// @param n_variables An integer representing the number of variables for the problem.
-        Zakharov(const int instance, const int n_variables) : CEC2022Problem(1001, instance, n_variables, "CEC2022Zakharov")
+        Zakharov(const int instance, const int n_variables) : CEC2022(1001, instance, n_variables, "CEC2022Zakharov")
         {
         }
     };

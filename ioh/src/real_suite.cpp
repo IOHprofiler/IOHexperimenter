@@ -1,6 +1,5 @@
 #include "pch.hpp"
 
-using namespace ioh::suite;
 
 std::string make_docstring(const std::string &name);
 
@@ -69,10 +68,10 @@ static void define_suite(py::module &m, const std::string &name, const int defau
 
 void define_real_suite(py::module &m)
 {
-    using RealBase = Suite<ioh::problem::RealSingleObjective>;
+    using RealBase = suite::Suite<ioh::problem::RealSingleObjective>;
     define_base_class<RealBase>(m, "RealBase");
-    define_suite<Real, RealBase>(m, "Real");
-    define_suite<BBOB, RealBase>(m, "BBOB");
-    define_suite<SBOX, RealBase>(m, "SBOX");
-    define_suite<RealStarDiscrepancy, RealBase>(m, "RealStarDiscrepancy");
+    define_suite<suite::Real, RealBase>(m, "Real");
+    define_suite<suite::BBOB, RealBase>(m, "BBOB");
+    define_suite<suite::SBOX, RealBase>(m, "SBOX");
+    define_suite<suite::RealStarDiscrepancy, RealBase>(m, "RealStarDiscrepancy");
 }

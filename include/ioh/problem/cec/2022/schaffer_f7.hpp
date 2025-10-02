@@ -6,7 +6,7 @@
 namespace ioh::problem::cec2022
 {
     /// The SchafferF7 class represents the Expanded Schaffer F7 optimization problem, inheriting necessary functionalities from the CECProblem template class.
-    class SchafferF7 final : public CEC2022Problem<SchafferF7>
+    class SchafferF7 final : public CEC2022 // CEC2022Problem<SchafferF7>
     {
     protected:
         /// Computes the Schaffer F7 objective function value at the given point.
@@ -35,7 +35,7 @@ namespace ioh::problem::cec2022
         /// @param instance Instance number for the problem.
         /// @param n_variables Number of variables for the problem.
         SchafferF7(const int instance, const int n_variables) :
-            CEC2022Problem(1003, instance, n_variables, "CEC2022SchafferF7")
+            CEC2022(1003, instance, n_variables, "CEC2022SchafferF7")
         {
         }
     };

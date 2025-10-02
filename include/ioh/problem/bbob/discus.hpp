@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! Discuss function id 11
     template<typename P=BBOB>
-    class Discus final : public P, BBOProblem<Discus>
+    class Discus final : public P//, BBOProblem<Discus>
     {
     protected:
         //! Evaluation method

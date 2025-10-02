@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! Weierstrass problem id 16
     template<typename P=BBOB>
-    class Weierstrass final : public P, BBOProblem<Weierstrass>
+    class Weierstrass final : public P//, BBOProblem<Weierstrass>
     {
         double f0_;
         std::vector<double> ak_;

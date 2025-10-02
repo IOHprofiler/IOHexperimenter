@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! Linear Slope problem id 5
     template<typename P=BBOB>
-    class LinearSlope final : public P, BBOProblem<LinearSlope>
+    class LinearSlope final : public P//, BBOProblem<LinearSlope>
     {
     protected:
         //! Evaluation method

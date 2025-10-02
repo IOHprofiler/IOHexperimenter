@@ -452,9 +452,9 @@ void define_submodular_problems(py::module &m)
             "Benchmarking Algorithms for Submodular Optimization Problems Using IOHProfiler." 
             arXiv preprint arXiv:2302.01464 (2023).
 
-        )pbdoc")
-        .def_static("load_instances", &GraphProblemType<MaxCut>::load_graph_instances<int, int>,
-                    py::arg("path") = std::nullopt);
+        )pbdoc");
+        // .def_static("load_instances", &GraphProblemType<MaxCut>::load_graph_instances<int, int>,
+        //             py::arg("path") = std::nullopt);
 
     // Don't allow these object to be created in from constructors in python
     py::class_<MaxCoverage, GraphProblem, std::shared_ptr<MaxCoverage>>(m, "MaxCoverage", py::is_final(),
@@ -477,9 +477,9 @@ void define_submodular_problems(py::module &m)
             "Benchmarking Algorithms for Submodular Optimization Problems Using IOHProfiler." 
             arXiv preprint arXiv:2302.01464 (2023).
 
-        )pbdoc")
-        .def_static("load_instances", &GraphProblemType<MaxCoverage>::load_graph_instances<int, int>,
-                    py::arg("path") = std::nullopt);
+        )pbdoc");
+        // .def_static("load_instances", &GraphProblemType<MaxCoverage>::load_graph_instances<int, int>,
+        //             py::arg("path") = std::nullopt);
 
 
     py::class_<MaxInfluence, GraphProblem, std::shared_ptr<MaxInfluence>>(m, "MaxInfluence", py::is_final(),
@@ -508,9 +508,9 @@ void define_submodular_problems(py::module &m)
             Saba Sadeghi Ahouei, Furong Ye, Hao Wang, and Thomas Bäck. 
             "Benchmarking Algorithms for Submodular Optimization Problems Using IOHProfiler." 
             arXiv preprint arXiv:2302.01464 (2023).
-        )pbdoc")
-        .def_static("load_instances", &GraphProblemType<MaxInfluence>::load_graph_instances<int, int>,
-                    py::arg("path") = std::nullopt);
+        )pbdoc");
+        // .def_static("load_instances", &GraphProblemType<MaxInfluence>::load_graph_instances<int, int>,
+        //             py::arg("path") = std::nullopt);
 
     py::class_<PackWhileTravel, GraphProblem, std::shared_ptr<PackWhileTravel>>(m, "PackWhileTravel", py::is_final(),
                                                                                 R"pbdoc(
@@ -543,7 +543,7 @@ void define_submodular_problems(py::module &m)
             Saba Sadeghi Ahouei, Furong Ye, Hao Wang, and Thomas Bäck. 
             "Benchmarking Algorithms for Submodular Optimization Problems Using IOHProfiler." 
             arXiv preprint arXiv:2302.01464 (2023).
-        )pbdoc")
-        .def_static("load_instances", &GraphProblemType<PackWhileTravel>::load_graph_instances<int, int>,
-                    py::arg("path") = std::nullopt);
+        )pbdoc");
+        // .def_static("load_instances", &GraphProblemType<PackWhileTravel>::load_graph_instances<int, int>,
+        //             py::arg("path") = std::nullopt);
 }

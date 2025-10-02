@@ -92,9 +92,9 @@ namespace ioh::logger
         // So here, we just proxy to sub-loggers' `log` method to do it.
         void log(const logger::Info &logger_info) override
         {
-            IOH_DBG(debug,"call sub-loggers...")
+            // IOH_DBG(debug,"call sub-loggers...")
             for(auto &logger : _loggers) {
-                IOH_DBG(debug,"call sublogger")
+                // IOH_DBG(debug,"call sublogger")
                 logger.get().log(logger_info);
             }
         }
@@ -102,13 +102,13 @@ namespace ioh::logger
         // Given that we override `log`, this should never be called.
         void call(const logger::Info &/*logger_info*/) override
         {
-            IOH_DBG(error,"this interface should not be called from here")
+            // IOH_DBG(error,"this interface should not be called from here")
             throw std::runtime_error("logger::Combine::call should not be called directly.");
         }
 
         void reset() override
         {
-            IOH_DBG(debug, "reset combined loggers");
+            // IOH_DBG(debug, "reset combined loggers");
             Logger::reset();
             for(auto& logger : _loggers) {
                 logger.get().reset();

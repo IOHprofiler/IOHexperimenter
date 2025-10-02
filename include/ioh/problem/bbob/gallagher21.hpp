@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! Gallagher 21 problem id 22
     template<typename P = BBOB>
-    class Gallagher21 final : public Gallagher<P>, BBOProblem<Gallagher21>
+    class Gallagher21 final : public Gallagher<P>//, BBOProblem<Gallagher21>
     {
     public:
         /**

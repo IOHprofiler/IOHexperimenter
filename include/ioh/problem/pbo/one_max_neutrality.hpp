@@ -9,7 +9,7 @@ namespace ioh
         namespace pbo
         {
             //! OneMaxNeutrality problem id 6
-            class OneMaxNeutrality final: public PBOProblem<OneMaxNeutrality>
+            class OneMaxNeutrality final: public PBO // PBOProblem<OneMaxNeutrality>
             {
             protected:
                 //! Evaluation method
@@ -32,7 +32,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 OneMaxNeutrality(const int instance, const int n_variables) :
-                    PBOProblem(6, instance, n_variables, "OneMaxNeutrality")
+                    PBO(6, instance, n_variables, "OneMaxNeutrality")
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

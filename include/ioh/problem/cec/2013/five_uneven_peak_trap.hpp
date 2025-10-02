@@ -8,7 +8,7 @@ namespace ioh::problem
     namespace cec2013
     {
 
-        class FivePeaks final : public CEC2013Problem<FivePeaks>
+        class FivePeaks final : public CEC2013 // CEC2013Problem<FivePeaks>
         {
         protected:
             double inner_evaluate(const std::vector<double> &z) override
@@ -35,7 +35,7 @@ namespace ioh::problem
 
         public:
             FivePeaks(const int instance, const int n_variables) :
-                CEC2013Problem(1101, instance, n_variables, "CEC2013FivePeaks", 0, 30, {
+                CEC2013(1101, instance, n_variables, "CEC2013FivePeaks", 0, 30, {
                     {{0.}, 200.0},
                     {{30}, 200.0},
                 })
@@ -45,12 +45,12 @@ namespace ioh::problem
     } // namespace cec2013
 
 
-    template <>
-    inline InstanceBasedProblem::Constructors<cec2013::FivePeaks, int, int>
-    InstanceBasedProblem::load_instances<cec2013::FivePeaks>(const std::optional<fs::path> &)
-    {
-        return {{[](int, int) { return cec2013::FivePeaks(1, 1); }, 1101, std::nullopt}};
-    }
+    // template <>
+    // inline InstanceBasedProblem::Constructors<cec2013::FivePeaks, int, int>
+    // InstanceBasedProblem::load_instances<cec2013::FivePeaks>(const std::optional<fs::path> &)
+    // {
+    //     return {{[](int, int) { return cec2013::FivePeaks(1, 1); }, 1101, std::nullopt}};
+    // }
 
 
 } // namespace ioh::problem

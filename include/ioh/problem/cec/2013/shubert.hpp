@@ -63,26 +63,26 @@ namespace ioh::problem
             }
         } // namespace shubert
 
-        class Shubert final : public CEC2013Problem<Shubert>
+        class Shubert final : public CEC2013 // CEC2013Problem<Shubert>
         {
         protected:
             double inner_evaluate(const std::vector<double> &x) override { return shubert::shubert(x); }
 
         public:
             Shubert(const int problem_id, const std::string &name, const int n_variables, const std::vector<Solution<double, SingleObjective>>& opts) :
-                CEC2013Problem(problem_id, 1, n_variables, name, -10.0, 10.0, opts, 0.5)
+                CEC2013(problem_id, 1, n_variables, name, -10.0, 10.0, opts, 0.5)
             {
             }
         };
     } // namespace cec2013
 
 
-    template <>
-    inline InstanceBasedProblem::Constructors<cec2013::Shubert, int, int>
-    InstanceBasedProblem::load_instances<cec2013::Shubert>(const std::optional<fs::path> &)
-    {
-        return {{[](int, int) { return cec2013::Shubert(1106, "CEC2013Shubert2D", 2, cec2013::shubert::get_optima(2)); }, 1106, std::nullopt},
-                {[](int, int) { return cec2013::Shubert(1108, "CEC2013Shubert3D", 3, cec2013::shubert::get_optima(3)); }, 1108, std::nullopt}};
-    }
+    // template <>
+    // inline InstanceBasedProblem::Constructors<cec2013::Shubert, int, int>
+    // InstanceBasedProblem::load_instances<cec2013::Shubert>(const std::optional<fs::path> &)
+    // {
+    //     return {{[](int, int) { return cec2013::Shubert(1106, "CEC2013Shubert2D", 2, cec2013::shubert::get_optima(2)); }, 1106, std::nullopt},
+    //             {[](int, int) { return cec2013::Shubert(1108, "CEC2013Shubert3D", 3, cec2013::shubert::get_optima(3)); }, 1108, std::nullopt}};
+    // }
 
 } // namespace ioh::problem

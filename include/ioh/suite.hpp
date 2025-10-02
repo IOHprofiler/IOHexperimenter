@@ -116,7 +116,7 @@ namespace ioh::suite
         {
             if (parameter < lb || parameter > ub)
             {
-                IOH_DBG(error, "Parameter value " << parameter << " is out of bounds")
+                // IOH_DBG(error, "Parameter value " << parameter << " is out of bounds")
                 assert(lb <= parameter and parameter <= ub);
             }
             return parameter;
@@ -233,15 +233,15 @@ namespace ioh::suite
 
     //! Base class for Real suites
     template <class Derived>
-    struct RealSuite : Suite<problem::RealSingleObjective>, AutomaticSuiteRegistration<Derived, problem::RealSingleObjective>
+    struct RealSuite : Suite<problem::RealSingleObjective>//, AutomaticSuiteRegistration<Derived, problem::RealSingleObjective>
     {
         using Suite<problem::RealSingleObjective>::Suite;
     };
 
     //! Base class for Integer suites
     template <class Derived>
-    struct IntegerSuite : Suite<problem::IntegerSingleObjective>,
-                          AutomaticSuiteRegistration<Derived, problem::IntegerSingleObjective>
+    struct IntegerSuite : Suite<problem::IntegerSingleObjective>//,
+                          //AutomaticSuiteRegistration<Derived, problem::IntegerSingleObjective>
     {
         using Suite<problem::IntegerSingleObjective>::Suite;
     };

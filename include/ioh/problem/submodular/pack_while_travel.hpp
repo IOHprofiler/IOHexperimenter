@@ -171,9 +171,9 @@ namespace ioh::problem
                     meta.is_edge = false;
                     meta.n_vertices = ttp_data.n_items;
 
-                    IOH_DBG(xdebug, "loaded pwt graph problem");
-                    IOH_DBG(xdebug, "number of vertices: " << meta.n_vertices);
-                    IOH_DBG(xdebug, "number of items: " << ttp_data.items.size());
+                    // IOH_DBG(xdebug, "loaded pwt graph problem");
+                    // IOH_DBG(xdebug, "number of vertices: " << meta.n_vertices);
+                    // IOH_DBG(xdebug, "number of items: " << ttp_data.items.size());
                     loaded = true;
                 }
             };
@@ -221,7 +221,7 @@ namespace ioh::problem
         } // namespace pwt
 
         //! PWT problem definition
-        struct PackWhileTravel final : GraphProblemType<PackWhileTravel>
+        struct PackWhileTravel final : GraphProblem // GraphProblemType<PackWhileTravel>
         {
             //! PackWhileTravel problems start with problem ids starting from this id
             static inline int default_id = 2300;
@@ -233,7 +233,7 @@ namespace ioh::problem
              * @param graph the graph object on which to operate
              */
             PackWhileTravel(const int problem_id, const int, const std::shared_ptr<pwt::TTPGraph> &graph) :
-                GraphProblemType(problem_id, 1, fmt::format("PackWhileTravel{}", problem_id), graph)
+                GraphProblem(problem_id, 1, fmt::format("PackWhileTravel{}", problem_id), graph)
             {
                 constraintset_[0] = std::make_shared<pwt::PWTConstraint>(graph);
             }
@@ -266,19 +266,19 @@ namespace ioh::problem
         };
     } // namespace submodular
 
-    /**
-     * @brief Template instantiation for pwt problems.
-     * Ensures loading of PWT problems in the factory, using the correct files.
-     * 
-     * @param definitions_file optional file name
-     * @return InstanceBasedProblem::Constructors<submodular::PackWhileTravel, int, int> a vector of contructor functions
-     */
-    template <>
-    inline InstanceBasedProblem::Constructors<submodular::PackWhileTravel, int, int>
-    InstanceBasedProblem::load_instances<submodular::PackWhileTravel>(const std::optional<fs::path> &definitions_file)
-    {
-        using namespace submodular;
-        return GraphProblemType<PackWhileTravel>::get_constructors<pwt::TTPGraph>(
-            definitions_file.value_or(common::file::utils::find_static_file("example_list_pwt")));
-    }
+    // /**
+    //  * @brief Template instantiation for pwt problems.
+    //  * Ensures loading of PWT problems in the factory, using the correct files.
+    //  * 
+    //  * @param definitions_file optional file name
+    //  * @return InstanceBasedProblem::Constructors<submodular::PackWhileTravel, int, int> a vector of contructor functions
+    //  */
+    // template <>
+    // inline InstanceBasedProblem::Constructors<submodular::PackWhileTravel, int, int>
+    // InstanceBasedProblem::load_instances<submodular::PackWhileTravel>(const std::optional<fs::path> &definitions_file)
+    // {
+    //     using namespace submodular;
+    //     return GraphProblemType<PackWhileTravel>::get_constructors<pwt::TTPGraph>(
+    //         definitions_file.value_or(common::file::utils::find_static_file("example_list_pwt")));
+    // }
 } // namespace ioh::problem

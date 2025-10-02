@@ -52,7 +52,7 @@ namespace ioh::problem::bbob
 
     //! Ellipsiod problem id 2
     template<typename P = BBOB>
-    class Ellipsoid final : public EllipsoidBase<P>, BBOProblem<Ellipsoid>
+    class Ellipsoid final : public EllipsoidBase<P>//, BBOProblem<Ellipsoid>
     {
     public:
         /**

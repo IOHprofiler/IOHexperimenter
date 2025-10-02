@@ -5,7 +5,7 @@ namespace ioh::problem::bbob
 {
     //! Sphere function problem id 1
     template<typename P=BBOB>
-    class Sphere final: public P, BBOProblem<Sphere>
+    class Sphere final: public P////, BBOProblem<Sphere>
     {
     protected:
         //! Evaluation method

@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! Attractive Sector problem id = 6
     template<typename P=BBOB>
-    class AttractiveSector final: public P, BBOProblem<AttractiveSector>
+    class AttractiveSector final: public P//, BBOProblem<AttractiveSector>
     {
     protected:
         //! Evaluation method

@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! Katsuura problem id 23
     template<typename P=BBOB>
-    class Katsuura final : public P, BBOProblem<Katsuura>
+    class Katsuura final : public P//, BBOProblem<Katsuura>
     {
         double exponent_;
         double factor_;

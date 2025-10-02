@@ -7,10 +7,11 @@ namespace ioh::problem
 {
     namespace star_discrepancy::integer
     {
-        class StarDiscrepancy : public IntegerSingleObjective,
-                                InstanceBasedProblem,
-                                AutomaticProblemRegistration<StarDiscrepancy, IntegerSingleObjective>,
-                                AutomaticProblemRegistration<StarDiscrepancy, StarDiscrepancy>
+        class StarDiscrepancy : public IntegerSingleObjective
+        // ,
+        //                         InstanceBasedProblem,
+        //                         AutomaticProblemRegistration<StarDiscrepancy, IntegerSingleObjective>,
+        //                         AutomaticProblemRegistration<StarDiscrepancy, StarDiscrepancy>
 
         {
             //! The sampled points
@@ -54,17 +55,17 @@ namespace ioh::problem
         };
     } // namespace star_discrepancy::integer
 
-    /**
-     * @brief Template instantiation for integer::StarDiscrepancy problems.
-     *
-     * @return InstanceBasedProblem::Constructors<integer::StarDiscrepancy, int, int> a vector of contructor
-     * functions
-     */
-    template <>
-    inline InstanceBasedProblem::Constructors<star_discrepancy::integer::StarDiscrepancy, int, int>
-    InstanceBasedProblem::load_instances<star_discrepancy::integer::StarDiscrepancy>(const std::optional<fs::path> &)
-    {
-        return star_discrepancy::load_default_instances<star_discrepancy::integer::StarDiscrepancy>();
-    }
+    // /**
+    //  * @brief Template instantiation for integer::StarDiscrepancy problems.
+    //  *
+    //  * @return InstanceBasedProblem::Constructors<integer::StarDiscrepancy, int, int> a vector of contructor
+    //  * functions
+    //  */
+    // template <>
+    // inline InstanceBasedProblem::Constructors<star_discrepancy::integer::StarDiscrepancy, int, int>
+    // InstanceBasedProblem::load_instances<star_discrepancy::integer::StarDiscrepancy>(const std::optional<fs::path> &)
+    // {
+    //     return star_discrepancy::load_default_instances<star_discrepancy::integer::StarDiscrepancy>();
+    // }
 
 } // namespace ioh::problem

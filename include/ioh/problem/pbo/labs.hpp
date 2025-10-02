@@ -8,7 +8,7 @@ namespace ioh
         namespace pbo
         {
             //! LABS
-            class LABS final : public PBOProblem<LABS>
+            class LABS final : public PBO //PBOProblem<LABS>
             {
                 static double correlation(const std::vector<int>& x, const int n, int k)
                 {
@@ -42,7 +42,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 LABS(const int instance, const int n_variables) : 
-                PBOProblem(18, instance, n_variables, "LABS") {
+                PBO(18, instance, n_variables, "LABS") {
 
                 }
             };

@@ -140,7 +140,7 @@ namespace ioh::problem::bbob
 
     //! Gallaher 101 problem id 21
     template<typename P = BBOB>
-    class Gallagher101 final : public Gallagher<P>, BBOProblem<Gallagher101>
+    class Gallagher101 final : public Gallagher<P>//, BBOProblem<Gallagher101>
     {
     public:
         /**

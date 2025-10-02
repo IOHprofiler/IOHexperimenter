@@ -7,10 +7,11 @@ namespace ioh::problem
 {
     namespace star_discrepancy::real
     {
-        class StarDiscrepancy : public RealSingleObjective,
-                                InstanceBasedProblem,
-                                AutomaticProblemRegistration<StarDiscrepancy, RealSingleObjective>,
-                                AutomaticProblemRegistration<StarDiscrepancy, StarDiscrepancy>
+        class StarDiscrepancy : public RealSingleObjective
+        // ,
+        //                         InstanceBasedProblem,
+        //                         AutomaticProblemRegistration<StarDiscrepancy, RealSingleObjective>,
+        //                         AutomaticProblemRegistration<StarDiscrepancy, StarDiscrepancy>
 
         {
             Grid grid;
@@ -45,18 +46,18 @@ namespace ioh::problem
         };
     } // namespace star_discrepancy::real
 
-    /**
-     * @brief Template instantiation for real::StarDiscrepancy problems.
-     *
-     * @return InstanceBasedProblem::Constructors<real::StarDiscrepancy, int, int> a vector of constructor
-     * functions
-     */
-    template <>
-    inline InstanceBasedProblem::Constructors<star_discrepancy::real::StarDiscrepancy, int, int>
-    InstanceBasedProblem::load_instances<star_discrepancy::real::StarDiscrepancy>(const std::optional<fs::path> &)
-    {
-        return star_discrepancy::load_default_instances<star_discrepancy::real::StarDiscrepancy>();
-    }
+    // /**
+    //  * @brief Template instantiation for real::StarDiscrepancy problems.
+    //  *
+    //  * @return InstanceBasedProblem::Constructors<real::StarDiscrepancy, int, int> a vector of constructor
+    //  * functions
+    //  */
+    // template <>
+    // inline InstanceBasedProblem::Constructors<star_discrepancy::real::StarDiscrepancy, int, int>
+    // InstanceBasedProblem::load_instances<star_discrepancy::real::StarDiscrepancy>(const std::optional<fs::path> &)
+    // {
+    //     return star_discrepancy::load_default_instances<star_discrepancy::real::StarDiscrepancy>();
+    // }
 
 
 } // namespace ioh::problem

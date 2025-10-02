@@ -8,7 +8,7 @@ namespace ioh::problem
     namespace cec2013
     {
 
-        class Himmelblau final : public CEC2013Problem<Himmelblau>
+        class Himmelblau final : public CEC2013 // CEC2013Problem<Himmelblau>
         {
         protected:
             double inner_evaluate(const std::vector<double> &x) override
@@ -19,7 +19,7 @@ namespace ioh::problem
 
         public:
             Himmelblau(const int instance, const int n_variables) :
-                CEC2013Problem(1104, instance, n_variables, "CEC2013Himmelblau", -6, 6, {
+                CEC2013(1104, instance, n_variables, "CEC2013Himmelblau", -6, 6, {
                     {{3, 2}, 200.0},
                     {{-2.805118, 3.131312}, 200.0},
                     {{-3.779310, -3.283186}, 200.0},
@@ -31,11 +31,11 @@ namespace ioh::problem
     } // namespace cec2013
 
 
-    template <>
-    inline InstanceBasedProblem::Constructors<cec2013::Himmelblau, int, int>
-    InstanceBasedProblem::load_instances<cec2013::Himmelblau>(const std::optional<fs::path> &)
-    {
-        return {{[](int, int) { return cec2013::Himmelblau(1, 2); }, 1104, std::nullopt}};
-    }
+    // template <>
+    // inline InstanceBasedProblem::Constructors<cec2013::Himmelblau, int, int>
+    // InstanceBasedProblem::load_instances<cec2013::Himmelblau>(const std::optional<fs::path> &)
+    // {
+    //     return {{[](int, int) { return cec2013::Himmelblau(1, 2); }, 1104, std::nullopt}};
+    // }
 
 } // namespace ioh::problem

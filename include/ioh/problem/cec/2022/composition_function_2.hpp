@@ -5,7 +5,7 @@
 namespace ioh::problem::cec2022
 {
     /// \brief Class representing the second composition function in the CEC benchmark suite.
-    class CompositionFunction2 final : public CEC2022Problem<CompositionFunction2>
+    class CompositionFunction2 final : public CEC2022 // CEC2022Problem<CompositionFunction2>
     {
     protected:
         /**
@@ -37,7 +37,7 @@ namespace ioh::problem::cec2022
          * @param n_variables The number of variables in the problem.
          */
         CompositionFunction2(const int instance, const int n_variables) :
-            CEC2022Problem(1010, instance, n_variables, "CEC2022CompositionFunction2")
+            CEC2022(1010, instance, n_variables, "CEC2022CompositionFunction2")
         {
         }
     };

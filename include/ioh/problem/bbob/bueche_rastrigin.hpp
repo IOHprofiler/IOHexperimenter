@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! BuecheRastrigin problem id 4
     template<typename P = BBOB>
-    class BuecheRastrigin final : public RastriginBase<P>, BBOProblem<BuecheRastrigin>
+    class BuecheRastrigin final : public RastriginBase<P>//, BBOProblem<BuecheRastrigin>
     {
     protected:
         //! Variables transformation method

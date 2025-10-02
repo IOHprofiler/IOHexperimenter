@@ -7,7 +7,7 @@ namespace ioh::problem
     namespace submodular
     {
         //! Max Coverage problem definition
-        struct MaxCoverage final : GraphProblemType<MaxCoverage>
+        struct MaxCoverage final : GraphProblem // GraphProblemType<MaxCoverage>
         {
             //! MaxCoverage problems start with problem ids starting from this id
             static inline int default_id = 2100;
@@ -22,7 +22,7 @@ namespace ioh::problem
              * @param graph the graph object on which to operate
              */
             MaxCoverage(const int problem_id, const int, const std::shared_ptr<graph::Graph> &graph) :
-                GraphProblemType(problem_id, 1, fmt::format("MaxCoverage{}", problem_id), graph),
+                GraphProblem(problem_id, 1, fmt::format("MaxCoverage{}", problem_id), graph),
                 is_covered(std::vector<uint8_t>(graph->dimension(), 0))
             {
             }   
@@ -57,22 +57,22 @@ namespace ioh::problem
         };
     } // namespace submodular
 
-    /**
-     * @brief Template instantiation for pwt problems.
-     * Ensures loading of PWT problems in the factory, using the correct files.
-     * 
-     * @param definitions_file optional file name
-     * @return InstanceBasedProblem::Constructors<submodular::PackWhileTravel, int, int> a vector of contructor functions
-     */
-    template <>
-    inline InstanceBasedProblem::Constructors<submodular::MaxCoverage, int, int>
-    InstanceBasedProblem::load_instances<submodular::MaxCoverage>(
-        const std::optional<fs::path> &definitions_file)
-    {
-        using namespace submodular;
-        return GraphProblemType<MaxCoverage>::get_constructors(
-            definitions_file.value_or(common::file::utils::find_static_file("example_list_maxcoverage")));
-    }
+    // /**
+    //  * @brief Template instantiation for pwt problems.
+    //  * Ensures loading of PWT problems in the factory, using the correct files.
+    //  * 
+    //  * @param definitions_file optional file name
+    //  * @return InstanceBasedProblem::Constructors<submodular::PackWhileTravel, int, int> a vector of contructor functions
+    //  */
+    // template <>
+    // inline InstanceBasedProblem::Constructors<submodular::MaxCoverage, int, int>
+    // InstanceBasedProblem::load_instances<submodular::MaxCoverage>(
+    //     const std::optional<fs::path> &definitions_file)
+    // {
+    //     using namespace submodular;
+    //     return GraphProblemType<MaxCoverage>::get_constructors(
+    //         definitions_file.value_or(common::file::utils::find_static_file("example_list_maxcoverage")));
+    // }
 
 
 } // namespace ioh::problem

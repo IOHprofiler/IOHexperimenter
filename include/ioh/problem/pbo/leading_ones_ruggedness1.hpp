@@ -9,7 +9,7 @@ namespace ioh
         namespace pbo
         {
             //! LeadingOnesRuggedness1 problem id 15
-            class LeadingOnesRuggedness1 final: public PBOProblem<LeadingOnesRuggedness1>
+            class LeadingOnesRuggedness1 final: public PBO//PBOProblem<LeadingOnesRuggedness1>
             {
 
             protected:
@@ -35,7 +35,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 LeadingOnesRuggedness1(const int instance, const int n_variables) :
-                    PBOProblem(15, instance, n_variables, "LeadingOnesRuggedness1")
+                    PBO(15, instance, n_variables, "LeadingOnesRuggedness1")
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

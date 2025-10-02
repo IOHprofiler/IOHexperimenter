@@ -7,7 +7,7 @@ namespace ioh::problem::bbob
 {
     //! Sharp ridge function problem id 13
     template<typename P=BBOB>
-    class SharpRidge final : public P, BBOProblem<SharpRidge>
+    class SharpRidge final : public P//, BBOProblem<SharpRidge>
     {
         int n_linear_dimensions_;
     protected:

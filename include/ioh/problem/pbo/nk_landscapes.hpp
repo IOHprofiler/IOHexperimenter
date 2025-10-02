@@ -8,7 +8,7 @@ namespace ioh
         namespace pbo
         {
             //! NKLandscapes problem id 25
-            class NKLandscapes final: public PBOProblem<NKLandscapes>
+            class NKLandscapes final: public PBO //PBOProblem<NKLandscapes>
             {
                 std::vector<std::vector<double>> f_;
                 std::vector<std::vector<int>> e_;
@@ -20,7 +20,7 @@ namespace ioh
                     k_ = k;
                     if (k > n)
                     {
-                        IOH_DBG(error,"NK_Landscapes, k > n")
+                        // IOH_DBG(error,"NK_Landscapes, k > n")
                         assert(k<=n);
                     }
                     for (auto i = 0; i != n; ++i)
@@ -88,7 +88,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 NKLandscapes(const int instance, const int n_variables) :
-                    PBOProblem(25, instance, n_variables, "NKLandscapes")
+                    PBO(25, instance, n_variables, "NKLandscapes")
                 {
                     set_n_k(n_variables, k_);
                 }

@@ -1,7 +1,5 @@
 #include "pch.hpp"
 
-using namespace ioh::suite;
-
 std::string make_docstring(const std::string &name);
 
 template <typename SuiteType>
@@ -68,10 +66,10 @@ static void define_suite(py::module &m, const std::string &name, const int defau
 
 void define_integer_suite(py::module &m)
 {
-    using IntegerBase = Suite<ioh::problem::IntegerSingleObjective>;
+    using IntegerBase = suite::Suite<ioh::problem::IntegerSingleObjective>;
     define_base_class<IntegerBase>(m, "IntegerBase");
-    define_suite<Integer, IntegerBase>(m, "Integer");
-    define_suite<PBO, IntegerBase>(m, "PBO", 16);
-    define_suite<Submodular, IntegerBase>(m, "Submodular", 1);
-    define_suite<IntegerStarDiscrepancy, IntegerBase>(m, "IntegerStarDiscrepancy");
+    define_suite<suite::Integer, IntegerBase>(m, "Integer");
+    define_suite<suite::PBO, IntegerBase>(m, "PBO", 16);
+    define_suite<suite::Submodular, IntegerBase>(m, "Submodular", 1);
+    define_suite<suite::IntegerStarDiscrepancy, IntegerBase>(m, "IntegerStarDiscrepancy");
 }

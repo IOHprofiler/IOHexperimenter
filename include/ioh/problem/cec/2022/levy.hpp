@@ -6,7 +6,7 @@
 namespace ioh::problem::cec2022
 {
     /// The Levy class represents the Levy optimization problem, inheriting necessary functionalities from the CECProblem template class.
-    class Levy final : public CEC2022Problem<Levy>
+    class Levy final : public CEC2022 // CEC2022Problem<Levy>
     {
     protected:
         /// Computes the Levy objective function value at the given point.
@@ -34,7 +34,8 @@ namespace ioh::problem::cec2022
         /// Constructor initializing the Levy problem with given instance number and variable count.
         /// @param instance Instance number for the problem.
         /// @param n_variables Number of variables for the problem.
-        Levy(const int instance, const int n_variables) : CEC2022Problem(1005, instance, n_variables, "CEC2022Levy")
+        Levy(const int instance, const int n_variables) : 
+            CEC2022(1005, instance, n_variables, "CEC2022Levy")
         {
         }
     };

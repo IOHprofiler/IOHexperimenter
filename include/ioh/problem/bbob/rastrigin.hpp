@@ -57,7 +57,7 @@ namespace ioh::problem::bbob
 
     //! Rastrigin problem id 3
     template<typename P = BBOB>
-    class Rastrigin final: public RastriginBase<P>, BBOProblem<Rastrigin>
+    class Rastrigin final: public RastriginBase<P>//, BBOProblem<Rastrigin>
     {
     public:
         /**

@@ -34,7 +34,7 @@ namespace ioh::problem::dynamic_bin_val
      * It inherits from IntegerSingleObjective and includes additional functionalities for dynamic problems.
      * This class encapsulates the unique dynamic features such as changing optimum and comparison order over time.
      */
-    class Ranking final : public DynamicBinValProblem<Ranking>
+    class Ranking final : public DynamicBinVal // DynamicBinValProblem<Ranking>
     {
     public:
         /**
@@ -58,7 +58,7 @@ namespace ioh::problem::dynamic_bin_val
          *                    indicating the number of variables in the problem.
          */
         Ranking(const int instance, const int n_variables) :
-            DynamicBinValProblem(10'004, instance, n_variables, "DynamicBinValRanking"),
+            DynamicBinVal(10'004, instance, n_variables, "DynamicBinValRanking"),
             comparison_ordering(n_variables)
         {
             std::iota(comparison_ordering.begin(), comparison_ordering.end(), 0);

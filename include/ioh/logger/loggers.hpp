@@ -160,8 +160,8 @@ namespace ioh {
         // This is virtual because logger::Combine needs to bypass the default behaviour.
         virtual void log(const logger::Info& log_info)
         {
-            IOH_DBG(debug, "log event");
-            IOH_DBG(debug,"log raw_y_best=" << log_info.raw_y_best << " => y=" << log_info.y << " / y_best=" << log_info.y_best)
+            // IOH_DBG(debug, "log event");
+            // IOH_DBG(debug,"log raw_y_best=" << log_info.raw_y_best << " => y=" << log_info.y << " / y_best=" << log_info.y_best)
             assert(problem_.has_value()); // For Debug builds.
             if(not problem_) { // For Release builds.
                 throw std::runtime_error("Logger has not been attached to a problem.");
@@ -170,12 +170,12 @@ namespace ioh {
             assert(!properties_.empty());
             assert(triggers_.size() > 0);
             if(triggers_(log_info, problem_.value())) {
-                IOH_DBG(debug, "logger triggered")
+                // IOH_DBG(debug, "logger triggered")
                 call(log_info);
             }
 #ifndef NDEBUG
             else {
-                IOH_DBG(debug, "logger not triggered");
+                // IOH_DBG(debug, "logger not triggered");
             }
 #endif
         }
@@ -189,7 +189,7 @@ namespace ioh {
          */
         virtual void attach_problem(const problem::MetaData& problem)
         {
-            IOH_DBG(xdebug,"attach problem " << problem.problem_id)
+            // IOH_DBG(xdebug,"attach problem " << problem.problem_id)
             problem_ = problem;
         }
         
@@ -212,7 +212,7 @@ namespace ioh {
          */
         virtual void reset()
         {
-            IOH_DBG(debug,"reset logger")
+            // IOH_DBG(debug,"reset logger")
             triggers_.reset();
         }
 
@@ -271,7 +271,7 @@ namespace ioh {
             // This essentially just expose _properties.push_back with some checks.
             virtual void watch(logger::Property& property)
             {
-                IOH_DBG(debug,"watch property " << property.name())
+                // IOH_DBG(debug,"watch property " << property.name())
                 // Assert that the Property is not already tracked.
                 assert(std::find_if(std::begin(properties_),std::end(properties_),
                                     [&property](const auto rwp){return property.name() == rwp.second.get().name();}

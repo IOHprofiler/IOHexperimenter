@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! Schefel problem id 20
     template<typename P=BBOB>
-    class Schwefel final : public P, BBOProblem<Schwefel>
+    class Schwefel final : public P//, BBOProblem<Schwefel>
     {
         std::vector<double> negative_offset_;
         std::vector<double> positive_offset_;

@@ -81,14 +81,14 @@ namespace ioh::logger
                 output_directory_ = output_directory;
                 if (not exists(output_directory_))
                 {
-                    IOH_DBG(debug, "some directories do not exist in " << output_directory_ << ", try to create them")
+                    // IOH_DBG(debug, "some directories do not exist in " << output_directory_ << ", try to create them")
                     create_directories(output_directory_);
                 }
                 out_.close();
             }
             if (!out_.is_open())
             {
-                IOH_DBG(debug, "will output data in " << output_directory_ / filename_)
+                // IOH_DBG(debug, "will output data in " << output_directory_ / filename_)
                 out_ = std::ofstream(output_directory_ / filename_, std::ofstream::out | std::ofstream::app);
                 requires_header_ = true;
             }
@@ -137,12 +137,12 @@ namespace ioh::logger
             // If this is a new problem.
             if (!problem_.has_value() or problem_.value() != problem)
             {
-                IOH_DBG(xdebug, "reset run counter")
+                // IOH_DBG(xdebug, "reset run counter")
                 current_run_ = 0; // Then reset the run counter.
             }
             else
             {
-                IOH_DBG(xdebug, "increment run counter")
+                // IOH_DBG(xdebug, "increment run counter")
                 current_run_++; // Then it's a new run.
             }
 
@@ -155,10 +155,10 @@ namespace ioh::logger
 
         void call(const Info &log_info) override
         {
-            IOH_DBG(debug, "FlatFile called");
+            // IOH_DBG(debug, "FlatFile called");
             if (requires_header_)
             {
-                IOH_DBG(xdebug, "print header")
+                // IOH_DBG(xdebug, "print header")
                 out_ << com_ + common_header_ + format("{}", fmt::join(properties_vector_, sep_));
                 if (store_positions_)
                     for (size_t i = 0; i < log_info.x.size(); i++)
@@ -167,10 +167,10 @@ namespace ioh::logger
                 requires_header_ = false;
             }
 
-            IOH_DBG(xdebug, "print problem meta data")
+            // IOH_DBG(xdebug, "print problem meta data")
             out_ << current_meta_data_;
             
-            IOH_DBG(xdebug, "print watched properties")
+            // IOH_DBG(xdebug, "print watched properties")
             
             for (auto p = properties_vector_.begin(); p != properties_vector_.end();){
                 out_ << p->get().call_to_string(log_info, nan_) << (++p != properties_vector_.end() ? sep_ : "");
@@ -192,7 +192,7 @@ namespace ioh::logger
         //! close data file
         virtual void close() override {
             if (out_.is_open()){
-                IOH_DBG(debug, "close data file")
+                // IOH_DBG(debug, "close data file")
                 out_.close();
             }
         }

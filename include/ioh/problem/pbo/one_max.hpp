@@ -9,7 +9,7 @@ namespace ioh
         namespace pbo
         {
             //! OneMax problem id 1
-            class OneMax final: public PBOProblem<OneMax>
+            class OneMax final: public PBO /// PBOProblem<OneMax>
             {
             protected:
                 //! Evaluation method
@@ -27,7 +27,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 OneMax(const int instance, const int n_variables) :
-                    PBOProblem(1, instance, n_variables, "OneMax")
+                    PBO(1, instance, n_variables, "OneMax")
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

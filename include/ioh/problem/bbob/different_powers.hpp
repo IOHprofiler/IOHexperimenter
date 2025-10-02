@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! Different powers problem id 14
     template<typename P=BBOB>
-    class DifferentPowers final : public P, BBOProblem<DifferentPowers>
+    class DifferentPowers final : public P//, BBOProblem<DifferentPowers>
     {
     protected:
         //! Evaluation method

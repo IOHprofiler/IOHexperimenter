@@ -357,7 +357,7 @@ namespace ioh::logger
                 {
                     if (!has_started_)
                         return f();
-                    IOH_DBG(warning, "cannot change attributes after experiment has started")
+                    // IOH_DBG(warning, "cannot change attributes after experiment has started")
                 }
 
             public:
@@ -395,7 +395,7 @@ namespace ioh::logger
                     if (info_stream_.is_open())
                     {
                         handle_last_eval();
-                        IOH_DBG(debug, "close info file")
+                        // IOH_DBG(debug, "close info file")
                         info_stream_.close();
                     }
                     if (!has_started_)
@@ -423,7 +423,7 @@ namespace ioh::logger
                 //! Set log_info_ in order to check if the last line has been logged
                 virtual void log(const logger::Info &log_info) override
                 {
-                    IOH_DBG(debug, "Analyzer log");
+                    // IOH_DBG(debug, "Analyzer log");
                     log_info_ = log_info;
                     evals_ = log_info.evaluations;
                     FlatFile::log(log_info);
@@ -432,7 +432,7 @@ namespace ioh::logger
                 //! See: logger::FlatFile::call. Updates `best_point_`
                 virtual void call(const Info &log_info) override
                 {
-                    IOH_DBG(debug, "Analyzer called");
+                    // IOH_DBG(debug, "Analyzer called");
 
                     FlatFile::call(log_info);
                     if (log_info.has_improved)
@@ -443,7 +443,7 @@ namespace ioh::logger
 #ifndef NDEBUG
                 void reset() override
                 {
-                    IOH_DBG(debug, "Analyzer reset");
+                    // IOH_DBG(debug, "Analyzer reset");
                     FlatFile::reset();
                 }
 #endif

@@ -24,7 +24,7 @@ namespace ioh::problem::dynamic_bin_val
      *        time_step and weights, which are crucial in depicting the dynamic aspects and unique features
      *        of these problem instances.
      */
-    class PowersOfTwo final : public DynamicBinValProblem<PowersOfTwo>
+    class PowersOfTwo final : public DynamicBinVal //DynamicBinValProblem<PowersOfTwo>
     {
     protected:
         void update_weights() override
@@ -48,7 +48,7 @@ namespace ioh::problem::dynamic_bin_val
          *                    indicating the number of variables in the problem.
          */
         PowersOfTwo(const int instance, const int n_variables) :
-            DynamicBinValProblem(10'002, instance, n_variables, "DynamicBinValPowersOfTwo")
+            DynamicBinVal(10'002, instance, n_variables, "DynamicBinValPowersOfTwo")
         {
             step();
         }

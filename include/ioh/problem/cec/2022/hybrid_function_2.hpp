@@ -5,7 +5,7 @@
 namespace ioh::problem::cec2022
 {
     /// \brief HybridFunction2 class that inherits from CECProblem.
-    class HybridFunction2 final : public CEC2022Problem<HybridFunction2>
+    class HybridFunction2 final : public CEC2022 // CEC2022Problem<HybridFunction2>
     {
     protected:
         /**
@@ -61,7 +61,7 @@ namespace ioh::problem::cec2022
         /// \param instance The instance number of the problem.
         /// \param n_variables The number of variables.
         HybridFunction2(const int instance, const int n_variables) :
-            CEC2022Problem(1007, instance, n_variables, "CEC2022HybridFunction2")
+            CEC2022(1007, instance, n_variables, "CEC2022HybridFunction2")
         {
         }
     };

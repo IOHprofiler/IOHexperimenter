@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! Rotated ellipsoid problem id 10
     template<typename P = BBOB>
-    class EllipsoidRotated final : public EllipsoidBase<P>, BBOProblem<EllipsoidRotated>
+    class EllipsoidRotated final : public EllipsoidBase<P>//, BBOProblem<EllipsoidRotated>
     {
     protected:
         //! Transoform variables method

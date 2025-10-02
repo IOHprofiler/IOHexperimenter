@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! LunacekBiRastrigin problem id 24
     template<typename P=BBOB>
-    class LunacekBiRastrigin final : public P, BBOProblem<LunacekBiRastrigin>
+    class LunacekBiRastrigin final : public P//, BBOProblem<LunacekBiRastrigin>
     {
     protected:
         //! Evaluation method

@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! Shaffers 1000 problem id 18
     template<typename P=BBOB>
-    class Schaffers1000 final: public Schaffers<P>, BBOProblem<Schaffers1000>
+    class Schaffers1000 final: public Schaffers<P>//, BBOProblem<Schaffers1000>
     {
     public:
         /**

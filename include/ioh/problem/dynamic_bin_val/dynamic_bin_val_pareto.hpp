@@ -4,7 +4,7 @@
 
 namespace ioh::problem::dynamic_bin_val
 {
-    class Pareto final : public DynamicBinValProblem<Pareto>
+    class Pareto final : public DynamicBinVal // DynamicBinValProblem<Pareto>
     {
         double pareto_shape_;
 
@@ -29,7 +29,7 @@ namespace ioh::problem::dynamic_bin_val
          *                    indicating the number of variables in the problem.
          */
         Pareto(const int instance, const int n_variables) :
-            DynamicBinValProblem(10'003, instance, n_variables, "DynamicBinValPareto"), pareto_shape_(0.1)
+            DynamicBinVal(10'003, instance, n_variables, "DynamicBinValPareto"), pareto_shape_(0.1)
         {
             step();          
         }

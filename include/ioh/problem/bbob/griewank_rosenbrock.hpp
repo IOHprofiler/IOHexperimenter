@@ -6,7 +6,7 @@ namespace ioh::problem::bbob
 {
     //! GriewankRosenbrock problem id 19
     template <typename P = BBOB>
-    class GriewankRosenbrock final : public P, BBOProblem<GriewankRosenbrock>
+    class GriewankRosenbrock final : public P//, BBOProblem<GriewankRosenbrock>
     {
         std::vector<double> x_shift_;
 

@@ -9,7 +9,7 @@ namespace ioh
         namespace pbo
         {
             //! LeadingOnesNeutrality problem id 13
-            class LeadingOnesNeutrality final: public PBOProblem<LeadingOnesNeutrality>
+            class LeadingOnesNeutrality final: public PBO //PBOProblem<LeadingOnesNeutrality>
             {
             protected:
                 //! Evaluation method
@@ -35,7 +35,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 LeadingOnesNeutrality(const int instance, const int n_variables) :
-                    PBOProblem(13, instance, n_variables, "LeadingOnesNeutrality")
+                    PBO(13, instance, n_variables, "LeadingOnesNeutrality")
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

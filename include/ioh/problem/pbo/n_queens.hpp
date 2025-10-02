@@ -9,7 +9,7 @@ namespace ioh
         namespace pbo
         {
             //! NQueens problem id 23
-            class NQueens final: public PBOProblem<NQueens>
+            class NQueens final: public PBO // PBOProblem<NQueens>
             {
             protected:
                 //! Evaluation method
@@ -26,7 +26,7 @@ namespace ioh
                     const auto c = static_cast<float>(n_queens);
 
                     if (floor(sqrt(static_cast<double>(meta_data_.n_variables))) != sqrt(static_cast<double>(meta_data_.n_variables))) {
-                        IOH_DBG(error,"Number of parameters in the N Queen problem must be a square number")
+                        // IOH_DBG(error,"Number of parameters in the N Queen problem must be a square number")
                         assert(floor(sqrt(static_cast<double>(meta_data_.n_variables))) == sqrt(static_cast<double>(meta_data_.n_variables)));
                     }
 
@@ -103,7 +103,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 NQueens(const int instance, const int n_variables) : 
-                PBOProblem(23, instance, n_variables, "NQueens") 
+                PBO(23, instance, n_variables, "NQueens") 
                 {
                     assert(sqrt(n_variables) - floor(sqrt(n_variables)) == 0);
                     optimum_.y = {sqrt(n_variables)};
