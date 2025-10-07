@@ -86,7 +86,6 @@ void define_bbob_problems(py::module &mi, const std::string &name = "BBOB", cons
 
     py::class_<bbob::Sphere<P>, P, std::shared_ptr<bbob::Sphere<P>>>(m, "Sphere", py::is_final(), "Sphere function")
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-        
     py::class_<bbob::Ellipsoid<P>, P, std::shared_ptr<bbob::Ellipsoid<P>>>(m, "Ellipsoid", py::is_final())
         .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
     py::class_<bbob::Rastrigin<P>, P, std::shared_ptr<bbob::Rastrigin<P>>>(m, "Rastrigin", py::is_final())
