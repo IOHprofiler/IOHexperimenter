@@ -1,8 +1,42 @@
-add_subdirectory(${EXTERNAL_DIR}/pybind11 build)
+# add_subdirectory(${EXTERNAL_DIR}/pybind11 build)
 
+if (CMAKE_VERSION VERSION_LESS 3.18)
+  set(DEV_MODULE Development)
+else()
+  set(DEV_MODULE Development.Module)
+endif()
+  
+find_package(Python 3.8 COMPONENTS Interpreter ${DEV_MODULE} REQUIRED)
+
+if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
+
+execute_process(
+  COMMAND "${Python_EXECUTABLE}" -m nanobind --cmake_dir
+  OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE nanobind_ROOT)
+
+find_package(nanobind CONFIG REQUIRED)
 
 file(GLOB SOURCES src/*.cpp)
-pybind11_add_module(iohcpp ${SOURCES})
+nanobind_add_module(iohcpp 
+    src/empirical_attainment.cpp
+    # src/integer.cpp
+    # src/integer_suite.cpp
+    src/ioh.cpp
+    src/pch.cpp
+    # src/logger.cpp
+    src/problem.cpp
+    src/problem_helpers.cpp
+    # src/property.cpp
+    # src/real.cpp
+    # src/real_suite.cpp
+    # src/suite.cpp
+    # src/suite_helpers.cpp
+    src/trigger.cpp
+)
+
 
 target_link_libraries(iohcpp PRIVATE ${PROJECT_NAME})  
 target_compile_definitions(iohcpp PRIVATE VERSION_INFO=${EXAMPLE_VERSION_INFO})

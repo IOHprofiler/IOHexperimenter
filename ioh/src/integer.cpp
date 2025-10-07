@@ -3,9 +3,9 @@
 using namespace ioh::problem;
 
 
-void define_pbo_problems(py::module &m)
+void define_pbo_problems(nb::module_ &m)
 {
-    py::class_<PBO, IntegerSingleObjective, std::shared_ptr<PBO>>(m, "PBO",
+    nb::class_<PBO, IntegerSingleObjective, std::shared_ptr<PBO>>(m, "PBO",
                                                                   R"pbdoc(
             Pseudo-Boolean Optimization (PBO) problem set.
             
@@ -30,7 +30,7 @@ void define_pbo_problems(py::module &m)
             [](const std::string &name, int iid, int dim) {
                 return ioh::common::Factory<PBO, int, int>::instance().create(name, iid, dim);
             },
-            py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
+            nb::arg("problem_name"), nb::arg("instance_id"), nb::arg("dimension"),
             R"pbdoc(
                 Create a problem instance
 
@@ -48,7 +48,7 @@ void define_pbo_problems(py::module &m)
             [](int id, int iid, int dim) {
                 return ioh::common::Factory<PBO, int, int>::instance().create(id, iid, dim);
             },
-            py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
+            nb::arg("problem_id"), nb::arg("instance_id"), nb::arg("dimension"),
             R"pbdoc(
                 Create a problem instance
 
@@ -61,128 +61,128 @@ void define_pbo_problems(py::module &m)
                     dimension: int
                         the dimensionality of the search space
             )pbdoc")
-        .def_property_readonly_static(
-            "problems", [](py::object) { return ioh::common::Factory<PBO, int, int>::instance().map(); },
+        .def_prop_ro_static(
+            "problems", [](nb::object) { return ioh::common::Factory<PBO, int, int>::instance().map(); },
             "All registered problems");
 
-    py::class_<pbo::OneMax, PBO, std::shared_ptr<pbo::OneMax>>(m, "OneMax", py::is_final(),
+    nb::class_<pbo::OneMax, PBO, std::shared_ptr<pbo::OneMax>>(m, "OneMax", nb::is_final(),
                                                                R"pbdoc(
             OneMax:
             {0,1}^n → [0..n], x ↦ ∑_{i=1}^n x_i.
 
         )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::LeadingOnes, PBO, std::shared_ptr<pbo::LeadingOnes>>(m, "LeadingOnes", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::LeadingOnes, PBO, std::shared_ptr<pbo::LeadingOnes>>(m, "LeadingOnes", nb::is_final(),
                                                                          R"pbdoc(
             LeadingOnes:
             {0,1}^n → [0..n], x ↦ max{i∈[0..n] ∣ ∀j≤i: x_j=1}
 
         )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::Linear, PBO, std::shared_ptr<pbo::Linear>>(m, "Linear", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::Linear, PBO, std::shared_ptr<pbo::Linear>>(m, "Linear", nb::is_final(),
                                                                R"pbdoc(
             A Linear Function with Harmonic Weights:
             {0,1}^n → ℝ, x ↦ ∑_i i * x_i
         )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::OneMaxDummy1, PBO, std::shared_ptr<pbo::OneMaxDummy1>>(m, "OneMaxDummy1", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::OneMaxDummy1, PBO, std::shared_ptr<pbo::OneMaxDummy1>>(m, "OneMaxDummy1", nb::is_final(),
                                                                            R"pbdoc(
                 A variant of OneMax applying the Dummy transformation of W-model. m = 0.5n.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
             )pbdoc")
 
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::OneMaxDummy2, PBO, std::shared_ptr<pbo::OneMaxDummy2>>(m, "OneMaxDummy2", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::OneMaxDummy2, PBO, std::shared_ptr<pbo::OneMaxDummy2>>(m, "OneMaxDummy2", nb::is_final(),
                                                                            R"pbdoc(
                 A variant of OneMax applying the Dummy transformation of W-model. m = 0.9n.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
             )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::OneMaxNeutrality, PBO, std::shared_ptr<pbo::OneMaxNeutrality>>(m, "OneMaxNeutrality",
-                                                                                   py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::OneMaxNeutrality, PBO, std::shared_ptr<pbo::OneMaxNeutrality>>(m, "OneMaxNeutrality",
+                                                                                   nb::is_final(),
                                                                                    R"pbdoc(
                 A variant of OneMax applying the Neutrality transformation of W-model. \mu = 3.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
                 )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::OneMaxEpistasis, PBO, std::shared_ptr<pbo::OneMaxEpistasis>>(m, "OneMaxEpistasis", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::OneMaxEpistasis, PBO, std::shared_ptr<pbo::OneMaxEpistasis>>(m, "OneMaxEpistasis", nb::is_final(),
                                                                                  R"pbdoc(
                 A variant of OneMax applying the Epistasis transformation of W-model. \nu = 4.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
                 )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::OneMaxRuggedness1, PBO, std::shared_ptr<pbo::OneMaxRuggedness1>>(m, "OneMaxRuggedness1",
-                                                                                     py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::OneMaxRuggedness1, PBO, std::shared_ptr<pbo::OneMaxRuggedness1>>(m, "OneMaxRuggedness1",
+                                                                                     nb::is_final(),
                                                                                      R"pbdoc(
                 A variant of OneMax applying the first Ruggnedness transformation in https://doi.org/10.1016/j.asoc.2019.106027.
                 )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::OneMaxRuggedness2, PBO, std::shared_ptr<pbo::OneMaxRuggedness2>>(m, "OneMaxRuggedness2",
-                                                                                     py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::OneMaxRuggedness2, PBO, std::shared_ptr<pbo::OneMaxRuggedness2>>(m, "OneMaxRuggedness2",
+                                                                                     nb::is_final(),
                                                                                      R"pbdoc(
                 A variant of OneMax applying the second Ruggnedness transformation in https://doi.org/10.1016/j.asoc.2019.106027.
                 )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::OneMaxRuggedness3, PBO, std::shared_ptr<pbo::OneMaxRuggedness3>>(m, "OneMaxRuggedness3",
-                                                                                     py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::OneMaxRuggedness3, PBO, std::shared_ptr<pbo::OneMaxRuggedness3>>(m, "OneMaxRuggedness3",
+                                                                                     nb::is_final(),
                                                                                      R"pbdoc(
                 A variant of OneMax applying the third Ruggnedness transformation in https://doi.org/10.1016/j.asoc.2019.106027.
                 )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::LeadingOnesDummy1, PBO, std::shared_ptr<pbo::LeadingOnesDummy1>>(m, "LeadingOnesDummy1",
-                                                                                     py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::LeadingOnesDummy1, PBO, std::shared_ptr<pbo::LeadingOnesDummy1>>(m, "LeadingOnesDummy1",
+                                                                                     nb::is_final(),
                                                                                      R"pbdoc(
                 A variant of LeadingOnes applying the Dummy transformation of W-model. m = 0.5n.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
             )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::LeadingOnesDummy2, PBO, std::shared_ptr<pbo::LeadingOnesDummy2>>(m, "LeadingOnesDummy2",
-                                                                                     py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::LeadingOnesDummy2, PBO, std::shared_ptr<pbo::LeadingOnesDummy2>>(m, "LeadingOnesDummy2",
+                                                                                     nb::is_final(),
                                                                                      R"pbdoc(
                 A variant of LeadingOnes applying the Dummy transformation of W-model. m = 0.9n.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
             )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::LeadingOnesNeutrality, PBO, std::shared_ptr<pbo::LeadingOnesNeutrality>>(m, "LeadingOnesNeutrality",
-                                                                                             py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::LeadingOnesNeutrality, PBO, std::shared_ptr<pbo::LeadingOnesNeutrality>>(m, "LeadingOnesNeutrality",
+                                                                                             nb::is_final(),
                                                                                              R"pbdoc(
                 A variant of LeadingOnes applying the Neutrality transformation of W-model. \mu = 3.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
                 )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::LeadingOnesEpistasis, PBO, std::shared_ptr<pbo::LeadingOnesEpistasis>>(m, "LeadingOnesEpistasis",
-                                                                                           py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::LeadingOnesEpistasis, PBO, std::shared_ptr<pbo::LeadingOnesEpistasis>>(m, "LeadingOnesEpistasis",
+                                                                                           nb::is_final(),
                                                                                            R"pbdoc(
                 A variant of LeadingOnes applying the Epistasis transformation of W-model. \nu = 4.
                 Details can be found in https://doi.org/10.1016/j.asoc.2019.106027.
                 )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::LeadingOnesRuggedness1, PBO, std::shared_ptr<pbo::LeadingOnesRuggedness1>>(
-        m, "LeadingOnesRuggedness1", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::LeadingOnesRuggedness1, PBO, std::shared_ptr<pbo::LeadingOnesRuggedness1>>(
+        m, "LeadingOnesRuggedness1", nb::is_final(),
         R"pbdoc(
                 A variant of LeadingOnes applying the first Ruggnedness transformation in https://doi.org/10.1016/j.asoc.2019.106027.
                 )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::LeadingOnesRuggedness2, PBO, std::shared_ptr<pbo::LeadingOnesRuggedness2>>(
-        m, "LeadingOnesRuggedness2", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::LeadingOnesRuggedness2, PBO, std::shared_ptr<pbo::LeadingOnesRuggedness2>>(
+        m, "LeadingOnesRuggedness2", nb::is_final(),
         R"pbdoc(
                 A variant of LeadingOnes applying the second Ruggnedness transformation in https://doi.org/10.1016/j.asoc.2019.106027.
                 )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::LeadingOnesRuggedness3, PBO, std::shared_ptr<pbo::LeadingOnesRuggedness3>>(
-        m, "LeadingOnesRuggedness3", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::LeadingOnesRuggedness3, PBO, std::shared_ptr<pbo::LeadingOnesRuggedness3>>(
+        m, "LeadingOnesRuggedness3", nb::is_final(),
         R"pbdoc(
                 A variant of LeadingOnes applying the third Ruggnedness transformation in https://doi.org/10.1016/j.asoc.2019.106027.
                 )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::LABS, PBO, std::shared_ptr<pbo::LABS>>(m, "LABS", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::LABS, PBO, std::shared_ptr<pbo::LABS>>(m, "LABS", nb::is_final(),
                                                            R"pbdoc(
             Low Autocorrelation Binary Sequences (LABS):
             x ↦ n^2 / 2∑_{k=1}^{n-1}(∑_{i=1}^{n−k}s_is_{i+k})^2, where s_i = 2x_i − 1
 
         )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::IsingRing, PBO, std::shared_ptr<pbo::IsingRing>>(m, "IsingRing", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::IsingRing, PBO, std::shared_ptr<pbo::IsingRing>>(m, "IsingRing", nb::is_final(),
                                                                      R"pbdoc(
             The Ising Spin Glass model arose in solid-state physics and statistical mechanics, aiming to 
             describe simple interactions within many-particle systems. A compact form used here is 
@@ -190,39 +190,39 @@ void define_pbo_problems(py::module &m)
             Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.
 
         )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::IsingTorus, PBO, std::shared_ptr<pbo::IsingTorus>>(m, "IsingTorus", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::IsingTorus, PBO, std::shared_ptr<pbo::IsingTorus>>(m, "IsingTorus", nb::is_final(),
                                                                        R"pbdoc(
             The Ising Spin Glass model arose in solid-state physics and statistical mechanics, aiming to 
             describe simple interactions within many-particle systems. A compact form used here is 
             x ↦ ∑_{{u,v} \in E}[x_ux_v - (1-x_u) (1-x_v)]. E is defined over a two-dimensional lattice.
             Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.
         )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::IsingTriangular, PBO, std::shared_ptr<pbo::IsingTriangular>>(m, "IsingTriangular", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::IsingTriangular, PBO, std::shared_ptr<pbo::IsingTriangular>>(m, "IsingTriangular", nb::is_final(),
                                                                                  R"pbdoc(
             The Ising Spin Glass model arose in solid-state physics and statistical mechanics, aiming to 
             describe simple interactions within many-particle systems. A compact form used here is 
             x ↦ ∑_{{u,v} \in E}[x_ux_v - (1-x_u) (1-x_v)]. E is defined over a three-dimensional lattice.
             Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.
         )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::MIS, PBO, std::shared_ptr<pbo::MIS>>(m, "MIS", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::MIS, PBO, std::shared_ptr<pbo::MIS>>(m, "MIS", nb::is_final(),
                                                          R"pbdoc(
             The maximum independent vertex set (MIVS) formulated as 
             x ↦ ∑_i x_i - n ∑_{i,j} x_i x_j e_{i,j}, where e_{i,j} = 1 if {i,j} \in E, otherwise e_{i,j} = 0.
             Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.                       
         )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::NQueens, PBO, std::shared_ptr<pbo::NQueens>>(m, "NQueens", py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::NQueens, PBO, std::shared_ptr<pbo::NQueens>>(m, "NQueens", nb::is_final(),
                                                                  R"pbdoc(
             The N-queens problem (NQP) is defined as the task to place N queens on an N*N chessboard in such a 
             way that they cannot attack each other.   
             Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.                      
         )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
-    py::class_<pbo::ConcatenatedTrap, PBO, std::shared_ptr<pbo::ConcatenatedTrap>>(m, "ConcatenatedTrap",
-                                                                                   py::is_final(),
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
+    nb::class_<pbo::ConcatenatedTrap, PBO, std::shared_ptr<pbo::ConcatenatedTrap>>(m, "ConcatenatedTrap",
+                                                                                   nb::is_final(),
                                                                                    R"pbdoc(
         Concatenated Trap (CT) is defined by partitioning a bit-string into segments of length k and 
         concatenating m = n/k trap functions that takes each segment as input. The trap function is 
@@ -230,7 +230,7 @@ void define_pbo_problems(py::module &m)
         f_trap(u) = (k−1−u)/k otherwise. We use k = 5 in our experiments.
         Details can be found in  https://doi.org/10.1016/j.asoc.2019.106027.
         )pbdoc")
-        .def(py::init<int, int>(), py::arg("instance"), py::arg("n_variables"));
+        .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 }
 
 
@@ -249,9 +249,9 @@ public:
     using WModel::WModel::wmodel_evaluate;
 };
 
-void define_wmodels(py::module &m)
+void define_wmodels(nb::module_ &m)
 {
-    py::class_<WModel, WModelTrampoline, IntegerSingleObjective, std::shared_ptr<WModel>>(m, "AbstractWModel",
+    nb::class_<WModel, WModelTrampoline, IntegerSingleObjective, std::shared_ptr<WModel>>(m, "AbstractWModel",
                                                                                           R"pbdoc(
             An abstract W-model class. Please apply the WModelOneMax and WModelLeadingOnes classes.
              
@@ -277,12 +277,12 @@ void define_wmodels(py::module &m)
             Applied Soft Computing, 88: 106027, 2020 
 
         )pbdoc")
-        .def(py::init<int, int, int, std::string, double, int, int, int>(), py::arg("problem_id"), py::arg("instance"),
-             py::arg("n_variables"), py::arg("name"), py::arg("dummy_select_rate") = 0.0,
-             py::arg("epistasis_block_size") = 0, py::arg("neutrality_mu") = 0, py::arg("ruggedness_gamma") = 0)
+        .def(nb::init<int, int, int, std::string, double, int, int, int>(), nb::arg("problem_id"), nb::arg("instance"),
+             nb::arg("n_variables"), nb::arg("name"), nb::arg("dummy_select_rate") = 0.0,
+             nb::arg("epistasis_block_size") = 0, nb::arg("neutrality_mu") = 0, nb::arg("ruggedness_gamma") = 0)
         .def("wmodel_evaluate", &WModelPublisher::wmodel_evaluate);
 
-    py::class_<wmodel::WModelLeadingOnes, WModel, std::shared_ptr<wmodel::WModelLeadingOnes>>(m, "WModelLeadingOnes",
+    nb::class_<wmodel::WModelLeadingOnes, WModel, std::shared_ptr<wmodel::WModelLeadingOnes>>(m, "WModelLeadingOnes",
                                                                                               R"pbdoc(
             A W-model problem built on LeadingOnes.
              
@@ -308,11 +308,11 @@ void define_wmodels(py::module &m)
             Applied Soft Computing, 88: 106027, 2020 
 
         )pbdoc")
-        .def(py::init<int, int, double, int, int, int>(), py::arg("instance"), py::arg("n_variables"),
-             py::arg("dummy_select_rate") = 0.0, py::arg("epistasis_block_size") = 0, py::arg("neutrality_mu") = 0,
-             py::arg("ruggedness_gamma") = 0);
+        .def(nb::init<int, int, double, int, int, int>(), nb::arg("instance"), nb::arg("n_variables"),
+             nb::arg("dummy_select_rate") = 0.0, nb::arg("epistasis_block_size") = 0, nb::arg("neutrality_mu") = 0,
+             nb::arg("ruggedness_gamma") = 0);
 
-    py::class_<wmodel::WModelOneMax, WModel, std::shared_ptr<wmodel::WModelOneMax>>(m, "WModelOneMax",
+    nb::class_<wmodel::WModelOneMax, WModel, std::shared_ptr<wmodel::WModelOneMax>>(m, "WModelOneMax",
                                                                                     R"pbdoc(
             A W-model problem built on OneMax.
              
@@ -338,46 +338,46 @@ void define_wmodels(py::module &m)
             Applied Soft Computing, 88: 106027, 2020 
 
         )pbdoc")
-        .def(py::init<int, int, double, int, int, int>(), py::arg("instance"), py::arg("n_variables"),
-             py::arg("dummy_select_rate") = 0.0, py::arg("epistasis_block_size") = 0, py::arg("neutrality_mu") = 0,
-             py::arg("ruggedness_gamma") = 0);
+        .def(nb::init<int, int, double, int, int, int>(), nb::arg("instance"), nb::arg("n_variables"),
+             nb::arg("dummy_select_rate") = 0.0, nb::arg("epistasis_block_size") = 0, nb::arg("neutrality_mu") = 0,
+             nb::arg("ruggedness_gamma") = 0);
 }
 
-void define_submodular_problems(py::module &m)
+void define_submodular_problems(nb::module_ &m)
 {
     using namespace ioh::problem;
     using namespace submodular;
 
-    py::class_<GraphConstraint, Constraint<int>, std::shared_ptr<GraphConstraint>>(m, "GraphConstraint")
+    nb::class_<GraphConstraint, Constraint<int>, std::shared_ptr<GraphConstraint>>(m, "GraphConstraint")
         .def("__repr__", &GraphConstraint::repr);
 
-    py::class_<pwt::PWTConstraint, Constraint<int>, std::shared_ptr<pwt::PWTConstraint>>(m, "PWTConstraint")
+    nb::class_<pwt::PWTConstraint, Constraint<int>, std::shared_ptr<pwt::PWTConstraint>>(m, "PWTConstraint")
         .def("__repr__", &pwt::PWTConstraint::repr);
 
-    py::class_<graph::Meta>(m, "GraphMeta", "Graph metadata")
-        .def_readonly("edge_file", &graph::Meta::edge_file, "File with edge data")
-        .def_readonly("edge_weights", &graph::Meta::edge_weights, "File with edge weights")
-        .def_readonly("vertex_weights", &graph::Meta::vertex_weights, "File with vertex weights")
-        .def_readonly("constraint_weights", &graph::Meta::constraint_weights, "File with constraint weights")
-        .def_readonly("constraint_variances", &graph::Meta::constraint_variances, "File with constraint variances")
-        .def_readonly("is_edge", &graph::Meta::is_edge, "Edge type flag")
-        .def_readonly("digraph", &graph::Meta::digraph, "Is digraph flag")
-        .def_readonly("constraint_limit", &graph::Meta::constraint_limit, "Maximum value of the constraint")
-        .def_readonly("n_vertices", &graph::Meta::n_vertices, "Number of vertices");
+    nb::class_<graph::Meta>(m, "GraphMeta", "Graph metadata")
+        .def_ro("edge_file", &graph::Meta::edge_file, "File with edge data")
+        .def_ro("edge_weights", &graph::Meta::edge_weights, "File with edge weights")
+        .def_ro("vertex_weights", &graph::Meta::vertex_weights, "File with vertex weights")
+        .def_ro("constraint_weights", &graph::Meta::constraint_weights, "File with constraint weights")
+        .def_ro("constraint_variances", &graph::Meta::constraint_variances, "File with constraint variances")
+        .def_ro("is_edge", &graph::Meta::is_edge, "Edge type flag")
+        .def_ro("digraph", &graph::Meta::digraph, "Is digraph flag")
+        .def_ro("constraint_limit", &graph::Meta::constraint_limit, "Maximum value of the constraint")
+        .def_ro("n_vertices", &graph::Meta::n_vertices, "Number of vertices");
 
-    py::class_<graph::Graph, std::shared_ptr<graph::Graph>>(m, "Graph", "Graph data structure")
+    nb::class_<graph::Graph, std::shared_ptr<graph::Graph>>(m, "Graph", "Graph data structure")
         .def("__repr__", &graph::Graph::repr)
         .def("dimension", &graph::Graph::dimension, "Get the dimension of the graph")
-        .def_readonly("meta", &graph::Graph::meta, "Graph metadata")
-        .def_readonly("loaded", &graph::Graph::loaded, "Whether the graph is loaded in memory")
-        .def_readonly("adjacency_list", &graph::Graph::adjacency_list, "Adjacency list representation of the graph")
-        .def_readonly("edges", &graph::Graph::edges, "Edge list representation of the graph")
-        .def_readonly("constraint_weights", &graph::Graph::constraint_weights, "Constraint weights")
-        .def_readonly("constraint_variances", &graph::Graph::constraint_variances, "Constraint variances")
-        .def_readonly("edge_weights", &graph::Graph::edge_weights, "Edge weights")
-        .def_readonly("vertex_weights", &graph::Graph::vertex_weights, "Vertex weights");
+        .def_ro("meta", &graph::Graph::meta, "Graph metadata")
+        .def_ro("loaded", &graph::Graph::loaded, "Whether the graph is loaded in memory")
+        .def_ro("adjacency_list", &graph::Graph::adjacency_list, "Adjacency list representation of the graph")
+        .def_ro("edges", &graph::Graph::edges, "Edge list representation of the graph")
+        .def_ro("constraint_weights", &graph::Graph::constraint_weights, "Constraint weights")
+        .def_ro("constraint_variances", &graph::Graph::constraint_variances, "Constraint variances")
+        .def_ro("edge_weights", &graph::Graph::edge_weights, "Edge weights")
+        .def_ro("vertex_weights", &graph::Graph::vertex_weights, "Vertex weights");
 
-    py::class_<GraphProblem, IntegerSingleObjective, std::shared_ptr<GraphProblem>>(m, "GraphProblem",
+    nb::class_<GraphProblem, IntegerSingleObjective, std::shared_ptr<GraphProblem>>(m, "GraphProblem",
                                                                                     "Graph type problem",
                                                                                     R"pbdoc(
             Graph-based problems (submodular problems)
@@ -397,7 +397,7 @@ void define_submodular_problems(py::module &m)
             [](const std::string &name, int iid, int dim) {
                 return ioh::common::Factory<GraphProblem, int, int>::instance().create(name, iid, dim);
             },
-            py::arg("problem_name"), py::arg("instance_id"), py::arg("dimension"),
+            nb::arg("problem_name"), nb::arg("instance_id"), nb::arg("dimension"),
             R"pbdoc(
                 Create a problem instance
 
@@ -416,7 +416,7 @@ void define_submodular_problems(py::module &m)
             [](int id, int iid, int dim) {
                 return ioh::common::Factory<GraphProblem, int, int>::instance().create(id, iid, dim);
             },
-            py::arg("problem_id"), py::arg("instance_id"), py::arg("dimension"),
+            nb::arg("problem_id"), nb::arg("instance_id"), nb::arg("dimension"),
             R"pbdoc(
                 Create a problem instance
 
@@ -429,12 +429,12 @@ void define_submodular_problems(py::module &m)
                     dimension: int
                         the dimensionality of the search space
             )pbdoc")
-        .def_property_readonly_static(
-            "problems", [](py::object) { return ioh::common::Factory<GraphProblem, int, int>::instance().map(); },
+        .def_prop_ro_static(
+            "problems", [](nb::object) { return ioh::common::Factory<GraphProblem, int, int>::instance().map(); },
             "All registered problems")      
-        .def_property_readonly("graph", [](const GraphProblem& self) { return self.graph; }, "The underlying graph structure");
+        .def_prop_ro("graph", [](const GraphProblem& self) { return self.graph; }, "The underlying graph structure");
 
-    py::class_<MaxCut, GraphProblem, std::shared_ptr<MaxCut>>(m, "MaxCut", py::is_final(), R"pbdoc(
+    nb::class_<MaxCut, GraphProblem, std::shared_ptr<MaxCut>>(m, "MaxCut", nb::is_final(), R"pbdoc(
             Max-Cut problems
              
             The maximum cut problem is a classical NP-hard problem and can be defined as follows. Given an undirected
@@ -454,10 +454,10 @@ void define_submodular_problems(py::module &m)
 
         )pbdoc");
         // .def_static("load_instances", &GraphProblemType<MaxCut>::load_graph_instances<int, int>,
-        //             py::arg("path") = std::nullopt);
+        //             nb::arg("path") = std::nullopt);
 
     // Don't allow these object to be created in from constructors in python
-    py::class_<MaxCoverage, GraphProblem, std::shared_ptr<MaxCoverage>>(m, "MaxCoverage", py::is_final(),
+    nb::class_<MaxCoverage, GraphProblem, std::shared_ptr<MaxCoverage>>(m, "MaxCoverage", nb::is_final(),
                                                                         R"pbdoc(
             Max-Coverage problems
              
@@ -479,10 +479,10 @@ void define_submodular_problems(py::module &m)
 
         )pbdoc");
         // .def_static("load_instances", &GraphProblemType<MaxCoverage>::load_graph_instances<int, int>,
-        //             py::arg("path") = std::nullopt);
+        //             nb::arg("path") = std::nullopt);
 
 
-    py::class_<MaxInfluence, GraphProblem, std::shared_ptr<MaxInfluence>>(m, "MaxInfluence", py::is_final(),
+    nb::class_<MaxInfluence, GraphProblem, std::shared_ptr<MaxInfluence>>(m, "MaxInfluence", nb::is_final(),
                                                                           R"pbdoc(
             Max-Influence problems
              
@@ -510,9 +510,9 @@ void define_submodular_problems(py::module &m)
             arXiv preprint arXiv:2302.01464 (2023).
         )pbdoc");
         // .def_static("load_instances", &GraphProblemType<MaxInfluence>::load_graph_instances<int, int>,
-        //             py::arg("path") = std::nullopt);
+        //             nb::arg("path") = std::nullopt);
 
-    py::class_<PackWhileTravel, GraphProblem, std::shared_ptr<PackWhileTravel>>(m, "PackWhileTravel", py::is_final(),
+    nb::class_<PackWhileTravel, GraphProblem, std::shared_ptr<PackWhileTravel>>(m, "PackWhileTravel", nb::is_final(),
                                                                                 R"pbdoc(
             Packing while traveling problems
              
@@ -545,5 +545,5 @@ void define_submodular_problems(py::module &m)
             arXiv preprint arXiv:2302.01464 (2023).
         )pbdoc");
         // .def_static("load_instances", &GraphProblemType<PackWhileTravel>::load_graph_instances<int, int>,
-        //             py::arg("path") = std::nullopt);
+        //             nb::arg("path") = std::nullopt);
 }

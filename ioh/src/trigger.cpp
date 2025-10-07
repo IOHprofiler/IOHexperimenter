@@ -1,58 +1,56 @@
 #include "pch.hpp"
 
-void define_triggers(py::module &m)
+void define_triggers(nb::module_ &m)
 {
-    py::module t = m.def_submodule("trigger");
+    nb::module_ t = m.def_submodule("trigger");
 
-    py::class_<logger::Trigger, std::shared_ptr<logger::Trigger>>(t, "Trigger", "Base class for all Triggers")
+    nb::class_<logger::Trigger>(t, "Trigger", "Base class for all Triggers")
         .def("__call__", &logger::Trigger::operator())
         .def("reset", &logger::Trigger::reset);
 
-    py::class_<trigger::Always, logger::Trigger, std::shared_ptr<trigger::Always>>(
-        t, "Always", "Trigger that always evaluates to true")
-        .def(py::init<>())
-        .def(py::pickle([](const trigger::Always &) { return py::make_tuple(); },
-                        [](py::tuple) { return trigger::Always{}; }));
+    nb::class_<trigger::Always, logger::Trigger>(t, "Always", "Trigger that always evaluates to true")
+        .def(nb::init<>())
+        .def("__getstate__", [](const trigger::Always &) { return nb::make_tuple(); })
+        .def("__setstate__", [](nb::tuple) { return trigger::Always{}; });
 
-    t.attr("ALWAYS") = py::cast(trigger::always);
+    t.attr("ALWAYS") = nb::cast(trigger::always);
 
-    py::class_<trigger::OnImprovement, logger::Trigger, std::shared_ptr<trigger::OnImprovement>>(
+    nb::class_<trigger::OnImprovement, logger::Trigger>(
         t, "OnImprovement", "Trigger that evaluates to true when improvement of the objective function is observed")
-        .def(py::init<>())
-        .def(py::pickle([](const trigger::OnImprovement &) { return py::make_tuple(); },
-                        [](py::tuple) { return trigger::OnImprovement{}; }));
+        .def(nb::init<>())
+        .def("__getstate__", [](const trigger::OnImprovement &) { return nb::make_tuple(); })
+        .def("__setstate__", [](nb::tuple) { return trigger::OnImprovement{}; });
 
     ;
-    t.attr("ON_IMPROVEMENT") = py::cast(trigger::on_improvement);
+    t.attr("ON_IMPROVEMENT") = nb::cast(trigger::on_improvement);
 
-    py::class_<trigger::OnDeltaImprovement, logger::Trigger, std::shared_ptr<trigger::OnDeltaImprovement>>(
+    nb::class_<trigger::OnDeltaImprovement, logger::Trigger>(
         t, "OnDeltaImprovement",
         "Trigger that evaluates to true when improvement of the objective function is observed of at least greater "
         "than delta")
-        .def(py::init<double>(), py::arg("delta") = 1e-10)
-        .def_readwrite("delta", &trigger::OnDeltaImprovement::delta)
-        .def_readonly("best_so_far", &trigger::OnDeltaImprovement::best_so_far)
-        .def(py::pickle([](const trigger::OnDeltaImprovement  &t) { return py::make_tuple(t.delta, t.best_so_far); },
-                        [](py::tuple t) {
-                            return trigger::OnDeltaImprovement{t[0].cast<double>(), t[1].cast<double>()};
-                        }));
+        .def(nb::init<double>(), nb::arg("delta") = 1e-10)
+        .def_rw("delta", &trigger::OnDeltaImprovement::delta)
+        .def_ro("best_so_far", &trigger::OnDeltaImprovement::best_so_far)
+        .def("__getstate__",
+             [](const trigger::OnDeltaImprovement &t) { return nb::make_tuple(t.delta, t.best_so_far); })
+        .def("__setstate__",
+             [](nb::tuple t) { return trigger::OnDeltaImprovement{nb::cast<double>(t[0]), nb::cast<double>(t[1])}; });
 
     ;
 
-    t.attr("ON_DELTA_IMPROVEMENT") = py::cast(trigger::on_delta_improvement);
+    t.attr("ON_DELTA_IMPROVEMENT") = nb::cast(trigger::on_delta_improvement);
 
-    py::class_<trigger::OnViolation, logger::Trigger, std::shared_ptr<trigger::OnViolation>>(
+    nb::class_<trigger::OnViolation, logger::Trigger>(
         t, "OnViolation", "Trigger that evaluates to true when there is a contraint violation")
-        .def(py::init<>()) 
-        .def_readonly("violations", &trigger::OnViolation::violations)
-        .def(py::pickle([](const trigger::OnViolation &) { return py::make_tuple(); },
-                        [](py::tuple) { return trigger::OnViolation{}; }));
-
+        .def(nb::init<>())
+        .def_ro("violations", &trigger::OnViolation::violations)
+        .def("__getstate__", [](const trigger::OnViolation &) { return nb::make_tuple(); })
+        .def("__setstate__", [](nb::tuple) { return trigger::OnViolation{}; });
     ;
-    t.attr("ON_VIOLATION") = py::cast(trigger::on_violation);
+    t.attr("ON_VIOLATION") = nb::cast(trigger::on_violation);
 
-    py::class_<trigger::At, logger::Trigger, std::shared_ptr<trigger::At>>(t, "At")
-        .def(py::init<std::set<size_t>>(), py::arg("time_points"),
+    nb::class_<trigger::At, logger::Trigger>(t, "At")
+        .def(nb::init<std::set<size_t>>(), nb::arg("time_points"),
              R"pbdoc(
                 Trigger that evaluates to true at specific time points
 
@@ -61,12 +59,12 @@ void define_triggers(py::module &m)
                 time_points: list[int]
                     The time points at which to trigger
             )pbdoc")
-        .def_property_readonly("time_points", &trigger::At::time_points)
-        .def(py::pickle([](const trigger::At &t) { return py::make_tuple(t.time_points()); },
-                        [](py::tuple t) { return trigger::At{t[0].cast<std::set<size_t>>()}; }));
+        .def_prop_ro("time_points", &trigger::At::time_points)
+        .def("__getstate__", [](const trigger::At &t) { return nb::make_tuple(t.time_points()); })
+        .def("__setstate__", [](nb::tuple t) { return trigger::At{nb::cast<std::set<size_t>>(t[0])}; });
 
-    py::class_<trigger::Each, logger::Trigger, std::shared_ptr<trigger::Each>>(t, "Each")
-        .def(py::init<size_t, size_t>(), py::arg("interval"), py::arg("starting_at") = 0,
+    nb::class_<trigger::Each, logger::Trigger>(t, "Each")
+        .def(nb::init<size_t, size_t>(), nb::arg("interval"), nb::arg("starting_at") = 0,
              R"pbdoc(
                 Trigger that evaluates to true at a given interval
 
@@ -77,15 +75,14 @@ void define_triggers(py::module &m)
                 starting_at: int
                     The starting time of the interval, defaults to 0.
             )pbdoc")
-        .def_property_readonly("interval", &trigger::Each::interval)
-        .def_property_readonly("starting_at", &trigger::Each::starting_at)
-        .def(py::pickle([](const trigger::Each &t) { return py::make_tuple(t.interval(), t.starting_at()); },
-                        [](py::tuple t) {
-                            return trigger::Each{t[0].cast<size_t>(), t[1].cast<size_t>()};
-                        }));
+        .def_prop_ro("interval", &trigger::Each::interval)
+        .def_prop_ro("starting_at", &trigger::Each::starting_at)
+        .def("__getstate__", [](const trigger::Each &t) { return nb::make_tuple(t.interval(), t.starting_at()); })
+        .def("__setstate__", [](nb::tuple t) { return trigger::Each{nb::cast<size_t>(t[0]), nb::cast<size_t>(t[1])}; });
 
-    py::class_<trigger::During, logger::Trigger, std::shared_ptr<trigger::During>>(t, "During")
-        .def(py::init<std::set<std::pair<size_t, size_t>>>(), py::arg("time_ranges"),
+
+    nb::class_<trigger::During, logger::Trigger>(t, "During")
+        .def(nb::init<std::set<std::pair<size_t, size_t>>>(), nb::arg("time_ranges"),
              R"pbdoc(
                 Trigger that evaluates to true during a given interval.
 
@@ -96,7 +93,8 @@ void define_triggers(py::module &m)
             )pbdoc"
 
              )
-        .def_property_readonly("time_ranges", &trigger::During::time_ranges)
-        .def(py::pickle([](const trigger::During &t) { return py::make_tuple(t.time_ranges()); },
-                        [](py::tuple t) { return trigger::During{t[0].cast<std::set<std::pair<size_t, size_t>>>()}; }));
+        .def_prop_ro("time_ranges", &trigger::During::time_ranges)
+        .def("__getstate__", [](const trigger::During &t) { return nb::make_tuple(t.time_ranges()); })
+        .def("__setstate__",
+             [](nb::tuple t) { return trigger::During{nb::cast<std::set<std::pair<size_t, size_t>>>(t[0])}; });
 }

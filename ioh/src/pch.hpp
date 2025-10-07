@@ -3,35 +3,35 @@
 #include <utility>
 
 #include <fmt/ranges.h>
-
-#include <pybind11/functional.h>
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/ndarray.h>
+#include <nanobind/trampoline.h>
+#include <nanobind/make_iterator.h>
+#include <nanobind/stl/vector.h>
 
 #include "ioh.hpp"
 
+namespace nb = nanobind;
 
-namespace py = pybind11;
 using namespace ioh;
 
 // Python spec. implementation
 class PyProperty : public ioh::logger::Property 
 {
-    const py::object container_;
+    const nb::object container_;
     const std::string attribute_;
 
 public:
-    PyProperty(const py::object &container, const std::string &attribute) :
+    PyProperty(const nb::object &container, const std::string &attribute) :
         Property(attribute), container_(container), attribute_(attribute)
     {
     }
 
-    py::object container() const { return container_; }
+    nb::object container() const { return container_; }
 
     std::optional<double> operator()(const logger::Info &) const override
     {
-        if (py::hasattr(container_, attribute_.c_str()))
+        if (nb::hasattr(container_, attribute_.c_str()))
         {
             auto pyobj = container_.attr(attribute_.c_str()).ptr();
 
@@ -43,24 +43,29 @@ public:
 };
 
 template<typename T>
-py::array_t<T> make_mutable_array(std::vector<T>& v, py::object owner)
-{
-    return py::array_t<T>(
-        {v.size()},      // shape
-        {sizeof(T)},     // stride
-        v.data(),        // pointer
-        owner            // keep the parent (e.g. Solution) alive
-    );
-}
-
+using Array1D = nb::ndarray<nb::numpy, T, nb::ndim<1>>;
 
 template<typename T>
-py::array_t<T> make_array(const std::vector<T>& x)
+Array1D<T> make_array(const std::vector<T>& x)
 {
-    py::array_t<T> arr(
-        {static_cast<size_t>(x.size())}, 
-        {static_cast<size_t>(sizeof(T))},
-        static_cast<const T*>(x.data())
-    );
-    return arr;
+    // auto* vp = new std::vector<T>(std::move(x));
+    // nb::capsule owner(vp, [](void* p) noexcept {
+    //     delete static_cast<std::vector<T>*>(p);
+    // });
+    
+    // nb::gil_scoped_acquire();
+    // return Array1D<T> (x.data(), {x.size()}, owner);
+    return {};
+}
+
+template<typename T>
+Array1D<T> make_mutable_array(std::vector<T>& v, nb::object owner)
+{
+    // nb::gil_scoped_acquire();
+    // return Array1D<T>(
+    //     v.data(), 
+    //     {v.size()},
+    //     owner
+    // ).cast();
+    return make_array(v);
 }

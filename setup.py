@@ -36,8 +36,8 @@ if platform.system() == "Linux" and "CMAKE_BUILD_PARALLEL_LEVEL" not in os.envir
 
 
 if platform.system() == "Darwin" or find_executable("clang") is not None:
-    os.environ["CC"] = "clang"
-    os.environ["CXX"] = "clang"
+    os.environ["CC"] = "clang++"
+    os.environ["CXX"] = "clang++"
     os.environ["ARCHFLAGS"] = "-std=c++17"
 
 BASE_DIR = os.path.realpath(os.path.dirname(__file__))
@@ -172,6 +172,7 @@ setup(
         "cmake",
         "mypy",
         "pybind11",
+        "nanobind",
         "ninja",
         "xmltodict",
     ],

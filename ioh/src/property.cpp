@@ -21,35 +21,35 @@ struct AbstractProperty : logger::Property
 
 
 template <typename P>
-void define_property(py::module &m, std::string name, P predef)
+void define_property(nb::module_ &m, std::string name, P predef)
 {
 
-    py::class_<P, logger::Property, std::shared_ptr<P>>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
+    nb::class_<P, logger::Property, std::shared_ptr<P>>(m, name.c_str())
+        .def(nb::init<std::string, std::string>(), nb::arg("name"), nb::arg("format"),
              ("Property which tracks the " + name).c_str())
-        .def(py::pickle([](const P &t) { return py::make_tuple(t.name(), t.format()); },
-                        [](py::tuple t) {
+        .def(nb::pickle([](const P &t) { return nb::make_tuple(t.name(), t.format()); },
+                        [](nb::tuple t) {
                             return P{t[0].cast<std::string>(), t[1].cast<std::string>()};
                         }));
 
     std::transform(name.begin(), name.end(), name.begin(), ::toupper);
-    m.attr(name.c_str()) = py::cast(predef);
+    m.attr(name.c_str()) = nb::cast(predef);
 }
 
-void define_properties(py::module &m)
+void define_properties(nb::module_ &m)
 {
-    py::module t = m.def_submodule("property");
+    nb::module_ t = m.def_submodule("property");
 
-    py::class_<logger::Property, AbstractProperty, std::shared_ptr<logger::Property>>(t, "AbstractProperty",
+    nb::class_<logger::Property, AbstractProperty, std::shared_ptr<logger::Property>>(t, "AbstractProperty",
                                                                                       "Base class for all Properties")
-        .def(py::init<std::string>())
+        .def(nb::init<std::string>())
         .def("__call__", &logger::Property::operator())
-        .def_property("name", &logger::Property::name, &logger::Property::set_name)
+        .def_prop_rw("name", &logger::Property::name, &logger::Property::set_name)
         .def("call_to_string", &logger::Property::call_to_string);
 
 
-    py::class_<PyProperty, logger::Property, std::shared_ptr<PyProperty>>(t, "Property")
-        .def(py::init<py::object, std::string>(), py::arg("container"), py::arg("attribute"),
+    nb::class_<PyProperty, logger::Property, std::shared_ptr<PyProperty>>(t, "Property")
+        .def(nb::init<nb::object, std::string>(), nb::arg("container"), nb::arg("attribute"),
              R"pbdoc(
                 Wrapper for properties with a Python container
 
@@ -63,9 +63,9 @@ void define_properties(py::module &m)
 
              )
         .def("call_to_string", &PyProperty::call_to_string)
-        .def(py::pickle([](const PyProperty &t) { return py::make_tuple(t.container(), t.name()); },
-                        [](py::tuple t) {
-                            return PyProperty{t[0].cast<py::object>(), t[1].cast<std::string>()};
+        .def(nb::pickle([](const PyProperty &t) { return nb::make_tuple(t.container(), t.name()); },
+                        [](nb::tuple t) {
+                            return PyProperty{t[0].cast<nb::object>(), t[1].cast<std::string>()};
                         }));
 
     define_property<watch::Evaluations>(t, "Evaluations", watch::evaluations);
