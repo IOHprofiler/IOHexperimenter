@@ -6,7 +6,6 @@ requires = [
     "mypy",
     "numpy>=2.0",
     "nanobind",
-    "pybind11",
     "ninja",
     "xmltodict",
 ]

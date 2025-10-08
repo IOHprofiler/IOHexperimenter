@@ -171,7 +171,6 @@ setup(
         "wheel",
         "cmake",
         "mypy",
-        "pybind11",
         "nanobind",
         "ninja",
         "xmltodict",
