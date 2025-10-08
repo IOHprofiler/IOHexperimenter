@@ -7,19 +7,17 @@ struct AbstractWatcher : logger::Watcher
 {
     NB_TRAMPOLINE(logger::Watcher, 3);
     
-    // using logger::Watcher::Watcher;
-
     void attach_problem(const problem::MetaData &problem) override
     {
         NB_OVERRIDE(attach_problem, problem);
     }
     void attach_suite(const std::string &suite_name) override
     {
-        NB_OVERRIDE(attach_suite, suite_name);
+        NB_OVERRIDE_PURE(attach_suite, suite_name);
     }
     void call(const logger::Info &log_info) override
     {
-        NB_OVERRIDE(call, log_info);
+        NB_OVERRIDE_PURE_NAME("__call__", call, log_info);
     }
 };
 
@@ -31,9 +29,16 @@ protected:
     std::vector<std::unique_ptr<PyProperty>> property_ptrs_;
 
 public:
+    PyWatcher(const PyWatcher&) = delete;
+    PyWatcher& operator=(const PyWatcher&) = delete;
+    PyWatcher(PyWatcher&&) noexcept = default;
+    PyWatcher& operator=(PyWatcher&&) noexcept = default;
+
     NB_TRAMPOLINE(WatcherType, 4);
 
-    void watch(logger::Property &property) override { NB_OVERRIDE(watch, property); }
+    void watch(logger::Property &property) override { 
+        NB_OVERRIDE(watch, property); 
+    }
 
     void watch(const nb::object &container, const std::string &attribute)
     {
@@ -128,19 +133,40 @@ void define_bases(nb::module_ &m)
         .def("attach_problem", &Watcher::attach_problem, nb::arg("problem"), "attach a problem (MetaData) to a logger");
 }
 
+
+template<typename T>
+nb::class_<PyWatcher<T>, logger::Watcher> define_watched_logger(nb::module_ &m, const std::string& name)
+{
+    using namespace logger;
+    using Logger = PyWatcher<T>;
+    return nb::class_<Logger, Watcher>(m, name.c_str())
+        .def("watch", nb::overload_cast<Property &>(&Logger::watch))
+        .def("watch", nb::overload_cast<const nb::object &, const std::string &>(&Logger::watch))
+        .def("watch",
+             nb::overload_cast<const nb::object &, const std::vector<std::string> &>(&Logger::watch));  
+}
+
+
 void define_flatfile(nb::module_ &m)
 {
     using namespace logger;
     const std::vector<std::string> common_headers = {
         "suite_name", "problem_name", "problem_id", "problem_instance", "optimization_type", "dimension", "run"};
 
-    nb::class_<PyWatcher<FlatFile>, Watcher, std::shared_ptr<PyWatcher<FlatFile>>>(m, "FlatFile")
+    define_watched_logger<FlatFile>(m, "FlatFile")
         .def(nb::init<Triggers, Properties, std::string, fs::path, std::string, std::string, std::string, std::string,
                       bool, bool, std::vector<std::string>>(),
-             nb::arg("triggers"), nb::arg("properties"), nb::arg("filename") = "IOH.dat",
-             nb::arg("output_directory") = "./", nb::arg("separator") = "\t", nb::arg("comment") = "#",
-             nb::arg("no_value") = "None", nb::arg("end_of_line") = "\n", nb::arg("repeat_header") = false,
-             nb::arg("store_positions") = false, nb::arg("common_header_titles") = common_headers,
+             nb::arg("triggers"), 
+             nb::arg("properties"), 
+             nb::arg("filename") = "IOH.dat",
+             nb::arg("output_directory") = ".", 
+             nb::arg("separator") = "\t", 
+             nb::arg("comment") = "#",
+             nb::arg("no_value") = "None", 
+             nb::arg("end_of_line") = "\n", 
+             nb::arg("repeat_header") = false,
+             nb::arg("store_positions") = false, 
+             nb::arg("common_header_titles") = common_headers,
              R"pbdoc(
                 A logger which stores all tracked properties to a file.
 
@@ -167,33 +193,60 @@ void define_flatfile(nb::module_ &m)
                 store_positions: bool = false
                     Boolean value which indicates whether to store the x-positions in the file
             )pbdoc"
-
-             )
+        )
         .def_prop_ro("filename", &FlatFile::filename)
         .def_prop_ro(
             "output_directory",
             [](PyWatcher<FlatFile> &f) { return fs::absolute(f.output_directory()).generic_string(); })
-        .def("watch", nb::overload_cast<Property &>(&PyWatcher<FlatFile>::watch))
-        .def("watch", nb::overload_cast<const nb::object &, const std::string &>(&PyWatcher<FlatFile>::watch))
-        .def("watch",
-             nb::overload_cast<const nb::object &, const std::vector<std::string> &>(&PyWatcher<FlatFile>::watch))
         .def("__repr__", [](const PyWatcher<FlatFile> &f) {
             return fmt::format("<FlatFile {}>", (f.output_directory() / f.filename()).generic_string());
         });
 }
 
-template <typename A>
+void define_store(nb::module_ &m)
+{
+    using namespace logger;
+    using PyStore = PyWatcher<Store>;
+    define_watched_logger<Store>(m, "Store")
+        .def(nb::init<Triggers, Properties>(), nb::arg("triggers"), nb::arg("properties"),
+             R"pbdoc(
+                A logger which stores all tracked properties in memory.
+
+                Parameters
+                ----------
+                triggers: list[Trigger]
+                    List of triggers, i.e. when to trigger logging
+                properties: list[Property]
+                    The list of properties to keep track of
+            )pbdoc"
+        )
+        .def("data", nb::overload_cast<>(&PyStore::data), "Accessor to the internal data container")
+        .def(
+            "at",
+            [](PyStore &f, std::string suite_name, int pb, int dim, int inst, size_t run, size_t evaluation) {
+                const auto cursor = Store::Cursor(suite_name, pb, dim, inst, run, evaluation);
+                return f.data(cursor);
+            },
+            "Accessor for a specific stored record")
+        .def("__repr__", [](PyStore &f) {
+            return fmt::format("<Store (suites: ({}),)>", fmt::join(ioh::common::keys(f.data()), ","));
+        });
+}
+
+
 void define_analyzer(nb::module_ &m)
 {
     using namespace logger;
-    Triggers def_trigs{trigger::on_delta_improvement};
-    Properties def_props{};
-    using PyAnalyzer = PyAnalyzer<A>;
-    nb::class_<PyAnalyzer, Watcher, std::shared_ptr<PyAnalyzer>>(m, "Analyzer")
+    using PyAnalyzer = PyAnalyzer<analyzer::v2::Analyzer>;
+
+    nb::class_<PyAnalyzer, Watcher>(m, "Analyzer")
         .def(nb::init<Triggers, Properties, fs::path, std::string, std::string, std::string, bool>(),
-             nb::arg("triggers") = def_trigs, nb::arg("additional_properties") = def_props,
-             nb::arg("root") = fs::current_path(), nb::arg("folder_name") = "ioh_data",
-             nb::arg("algorithm_name") = "algorithm_name", nb::arg("algorithm_info") = "algorithm_info",
+             nb::arg("triggers") = nb::list(), 
+             nb::arg("additional_properties") = nb::list(),
+             nb::arg("root") = ".", 
+             nb::arg("folder_name") = "ioh_data",
+             nb::arg("algorithm_name") = "algorithm_name", 
+             nb::arg("algorithm_info") = "algorithm_info",
              nb::arg("store_positions") = false,
              R"pbdoc(
                 A logger which stores all tracked properties to a file.
@@ -214,7 +267,8 @@ void define_analyzer(nb::module_ &m)
                     Optional info parameter for the algorithm to be added to the info files
                 store_positions: bool = false
                     Boolean value which indicates whether to store the x-positions in the file
-            )pbdoc")
+            )pbdoc"
+        )
         .def("add_experiment_attribute", &PyAnalyzer::add_experiment_attribute)
         .def("set_experiment_attributes", &PyAnalyzer::set_experiment_attributes)
 
@@ -238,41 +292,6 @@ void define_analyzer(nb::module_ &m)
 }
 
 
-void define_store(nb::module_ &m)
-{
-    using namespace logger;
-
-    using PyStore = PyWatcher<Store>;
-    nb::class_<PyStore, Watcher, std::shared_ptr<PyStore>>(m, "Store")
-        .def(nb::init<Triggers, Properties>(), nb::arg("triggers"), nb::arg("properties"),
-             R"pbdoc(
-                A logger which stores all tracked properties in memory.
-
-                Parameters
-                ----------
-                triggers: list[Trigger]
-                    List of triggers, i.e. when to trigger logging
-                properties: list[Property]
-                    The list of properties to keep track of
-            )pbdoc"
-
-             )
-        .def("data", nb::overload_cast<>(&PyStore::data), "Accessor to the internal data container")
-        .def(
-            "at",
-            [](PyStore &f, std::string suite_name, int pb, int dim, int inst, size_t run, size_t evaluation) {
-                const auto cursor = Store::Cursor(suite_name, pb, dim, inst, run, evaluation);
-                return f.data(cursor);
-            },
-            "Accessor for a specific stored record")
-        .def("watch", nb::overload_cast<Property &>(&PyStore::watch), "Add a property")
-        .def("watch", nb::overload_cast<const nb::object &, const std::string &>(&PyStore::watch), "Add a property")
-        .def("watch", nb::overload_cast<const nb::object &, const std::vector<std::string> &>(&PyStore::watch),
-             "Add multliple properties")
-        .def("__repr__", [](PyStore &f) {
-            return fmt::format("<Store (suites: ({}),)>", fmt::join(ioh::common::keys(f.data()), ","));
-        });
-}
 
 
 void define_eah(nb::module_ &m);
@@ -283,17 +302,14 @@ void define_triggers(nb::module_ &m);
 void define_loggers(nb::module_ &m)
 {
     using namespace logger;
-    nb::class_<Combine, Logger, std::shared_ptr<Combine>>(m, "Combine", "Utility class to combine multiple loggers")
+    nb::class_<Combine, Logger>(m, "Combine", "Utility class to combine multiple loggers")
         .def(nb::init<std::vector<std::reference_wrapper<Logger>>>(), nb::arg("loggers"))
         .def(nb::init<std::reference_wrapper<Logger>>(), nb::arg("logger"))
         .def("append", &Combine::append);
 
     define_flatfile(m);
     define_store(m);
-    auto old = m.def_submodule("old");
-    define_analyzer<logger::analyzer::v1::Analyzer>(old);
-    define_analyzer<logger::analyzer::v2::Analyzer>(m);
-
+    define_analyzer(m);
     define_eah(m);
     define_eaf(m);
 }
@@ -301,9 +317,6 @@ void define_loggers(nb::module_ &m)
 
 void define_logger(nb::module_ &m)
 {
-    nb::class_<fs::path>(m, "Path").def(nb::init<std::string>());
-    nb::implicitly_convertible<std::string, fs::path>();
-
     define_triggers(m);
     define_properties(m);
     define_bases(m);

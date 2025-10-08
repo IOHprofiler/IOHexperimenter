@@ -20,23 +20,8 @@ execute_process(
 find_package(nanobind CONFIG REQUIRED)
 
 file(GLOB SOURCES src/*.cpp)
-nanobind_add_module(iohcpp 
-    src/empirical_attainment.cpp
-    # src/integer.cpp
-    # src/integer_suite.cpp
-    src/ioh.cpp
-    src/pch.cpp
-    # src/logger.cpp
-    src/problem.cpp
-    src/problem_helpers.cpp
-    # src/property.cpp
-    # src/real.cpp
-    # src/real_suite.cpp
-    # src/suite.cpp
-    # src/suite_helpers.cpp
-    src/trigger.cpp
-)
-
+nanobind_add_module(iohcpp ${SOURCES})
+    
 
 target_link_libraries(iohcpp PRIVATE ${PROJECT_NAME})  
 target_compile_definitions(iohcpp PRIVATE VERSION_INFO=${EXAMPLE_VERSION_INFO})
@@ -45,13 +30,14 @@ target_precompile_headers(iohcpp PRIVATE src/pch.hpp)
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
     find_program(MOLD_PROGRAM mold)
     find_program(LDD_PROGRAM ldd)
+    find_program(LD_PROGRAM ld)
     if (MOLD_PROGRAM)
         target_link_options(iohcpp PRIVATE -fuse-ld=mold)
         message(STATUS "mold found: ${MOLD_PROGRAM}")
     elseif (LDD_PROGRAM)
         target_link_options(iohcpp PRIVATE -fuse-ld=lld)
         message(STATUS "mold not found using ldd")
-    else()
+    elseif (LD_PROGRAM)
         message(STATUS "both mold and ldd not found using ld")
         target_link_options(iohcpp PRIVATE -Wl,--threads)
     endif ()

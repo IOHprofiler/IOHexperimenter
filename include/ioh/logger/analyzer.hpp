@@ -374,19 +374,26 @@ namespace ioh::logger
                  * @param use_old_data_format Whether to use the old data format
                  * @param attributes See: analyzer::Attributes.
                  */
-                Analyzer(const Triggers &triggers = {trigger::on_delta_improvement},
+                Analyzer(const Triggers &triggers = {},
                          const Properties &additional_properties = {}, const fs::path &root = fs::current_path(),
                          const std::string &folder_name = "ioh_data",
                          const std::string &algorithm_name = "algorithm_name",
                          const std::string &algorithm_info = "algorithm_info", const bool store_positions = false,
                          const bool use_old_data_format = true, const structures::Attributes &attributes = {}) :
-                    FlatFile(triggers,
+                    FlatFile(Analyzer::add_default_trigger(triggers),
                              common::concatenate(use_old_data_format ? default_properties_old_ : default_properties_,
                                                  additional_properties),
                              "", {}, " ", "", "None", "\n", true, store_positions, {}),
                     path_(root, folder_name), algorithm_(algorithm_name, algorithm_info), best_point_{},
                     attributes_(attributes), has_started_(false)
                 {
+                }
+
+                static const Triggers& add_default_trigger(const Triggers& triggers)
+                {
+                    if (triggers.empty())
+                        const_cast<Triggers&>(triggers).push_back(trigger::on_delta_improvement);
+                    return triggers;
                 }
 
                 //! close data file

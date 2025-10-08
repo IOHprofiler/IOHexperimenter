@@ -7,7 +7,12 @@
 #include <nanobind/ndarray.h>
 #include <nanobind/trampoline.h>
 #include <nanobind/make_iterator.h>
+#include <nanobind/stl/string.h>
 #include <nanobind/stl/vector.h>
+#include <nanobind/stl/array.h>
+#include <nanobind/stl/map.h>
+#include <nanobind/stl/filesystem.h>
+#include <nanobind/stl/shared_ptr.h> 
 
 #include "ioh.hpp"
 
@@ -22,6 +27,7 @@ class PyProperty : public ioh::logger::Property
     const std::string attribute_;
 
 public:
+    
     PyProperty(const nb::object &container, const std::string &attribute) :
         Property(attribute), container_(container), attribute_(attribute)
     {
@@ -43,19 +49,18 @@ public:
 };
 
 template<typename T>
-using Array1D = nb::ndarray<nb::numpy, T, nb::ndim<1>>;
+using Array1D = nb::ndarray<nb::numpy, T, nb::ndim<1>, nb::device::cpu, nb::c_contig>;
 
 template<typename T>
 Array1D<T> make_array(const std::vector<T>& x)
 {
-    // auto* vp = new std::vector<T>(std::move(x));
-    // nb::capsule owner(vp, [](void* p) noexcept {
-    //     delete static_cast<std::vector<T>*>(p);
-    // });
-    
-    // nb::gil_scoped_acquire();
-    // return Array1D<T> (x.data(), {x.size()}, owner);
-    return {};
+    auto* pv = new std::vector<T>(std::move(x));
+
+    nb::capsule owner(pv, [](void* p) noexcept {
+        delete static_cast<std::vector<T>*>(p);
+    });
+
+    return Array1D<T>(pv->data(), {pv->size()}, owner);
 }
 
 template<typename T>

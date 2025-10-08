@@ -3,7 +3,7 @@
 void define_helper_classes(nb::module_& m);
 void define_logger(nb::module_& m);
 void define_problem(nb::module_& m);
-// void define_suites(nb::module_& m);
+void define_suites(nb::module_& m);
 
 
 NB_MODULE(iohcpp, m) {
@@ -47,9 +47,9 @@ NB_MODULE(iohcpp, m) {
     auto m_logger = m.def_submodule("logger", "Module that includes all IOHExperimenter loggers");
     
     define_helper_classes(m);
-    // define_logger(m_logger);
-    // define_problem(m_problem);
-    // define_suites(m_suite);
+    define_logger(m_logger);
+    define_problem(m_problem);
+    define_suites(m_suite);
 
-    // m.attr("__version__") = "dev";
+    m.attr("__version__") = "dev";
 }

@@ -13,8 +13,8 @@ static std::string to_lower(const std::string &s)
 template <typename P>
 void define_bbob_problems(nb::module_ &mi, const std::string &name = "BBOB", const bool submodule = false)
 {
-    nb::class_<P, RealSingleObjective, std::shared_ptr<P>>(mi, name.c_str(),
-                                                           R"pbdoc(
+    nb::class_<P, RealSingleObjective>(mi, name.c_str(),
+                                       R"pbdoc(
             Black-Box Optimization Benchmarking (BBOB) problem set.
 
             Contains 24 noiselessreal-valued test functions supported on [-5, 5]^n, where n is the dimensionality.
@@ -84,70 +84,85 @@ void define_bbob_problems(nb::module_ &mi, const std::string &name = "BBOB", con
     if (submodule)
         m = mi.def_submodule(to_lower(name).c_str(), fmt::format("module containing {} problems", name).c_str());
 
-    nb::class_<bbob::Sphere<P>, P, std::shared_ptr<bbob::Sphere<P>>>(m, "Sphere", nb::is_final(), "Sphere function")
+    nb::class_<bbob::Sphere<P>, P>(m, "Sphere", nb::is_final(), "Sphere function")
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::Ellipsoid<P>, P, std::shared_ptr<bbob::Ellipsoid<P>>>(m, "Ellipsoid", nb::is_final())
+
+    nb::class_<bbob::Ellipsoid<P>, P>(m, "Ellipsoid", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::Rastrigin<P>, P, std::shared_ptr<bbob::Rastrigin<P>>>(m, "Rastrigin", nb::is_final())
+
+    nb::class_<bbob::Rastrigin<P>, P>(m, "Rastrigin", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::BuecheRastrigin<P>, P, std::shared_ptr<bbob::BuecheRastrigin<P>>>(m, "BuecheRastrigin",
-                                                                                       nb::is_final())
+
+    nb::class_<bbob::BuecheRastrigin<P>, P>(m, "BuecheRastrigin", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::LinearSlope<P>, P, std::shared_ptr<bbob::LinearSlope<P>>>(m, "LinearSlope", nb::is_final())
+
+    nb::class_<bbob::LinearSlope<P>, P>(m, "LinearSlope", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::AttractiveSector<P>, P, std::shared_ptr<bbob::AttractiveSector<P>>>(m, "AttractiveSector",
-                                                                                         nb::is_final())
+
+    nb::class_<bbob::AttractiveSector<P>, P>(m, "AttractiveSector", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::StepEllipsoid<P>, P, std::shared_ptr<bbob::StepEllipsoid<P>>>(m, "StepEllipsoid", nb::is_final())
+
+    nb::class_<bbob::StepEllipsoid<P>, P>(m, "StepEllipsoid", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::Rosenbrock<P>, P, std::shared_ptr<bbob::Rosenbrock<P>>>(m, "Rosenbrock", nb::is_final())
+
+    nb::class_<bbob::Rosenbrock<P>, P>(m, "Rosenbrock", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::RosenbrockRotated<P>, P, std::shared_ptr<bbob::RosenbrockRotated<P>>>(m, "RosenbrockRotated",
-                                                                                           nb::is_final())
+
+    nb::class_<bbob::RosenbrockRotated<P>, P>(m, "RosenbrockRotated", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::EllipsoidRotated<P>, P, std::shared_ptr<bbob::EllipsoidRotated<P>>>(m, "EllipsoidRotated",
-                                                                                         nb::is_final())
+
+    nb::class_<bbob::EllipsoidRotated<P>, P>(m, "EllipsoidRotated", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::Discus<P>, P, std::shared_ptr<bbob::Discus<P>>>(m, "Discus", nb::is_final())
+
+    nb::class_<bbob::Discus<P>, P>(m, "Discus", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::BentCigar<P>, P, std::shared_ptr<bbob::BentCigar<P>>>(m, "BentCigar", nb::is_final())
+
+    nb::class_<bbob::BentCigar<P>, P>(m, "BentCigar", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::SharpRidge<P>, P, std::shared_ptr<bbob::SharpRidge<P>>>(m, "SharpRidge", nb::is_final())
+
+    nb::class_<bbob::SharpRidge<P>, P>(m, "SharpRidge", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::DifferentPowers<P>, P, std::shared_ptr<bbob::DifferentPowers<P>>>(m, "DifferentPowers",
-                                                                                       nb::is_final())
+
+    nb::class_<bbob::DifferentPowers<P>, P>(m, "DifferentPowers", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::RastriginRotated<P>, P, std::shared_ptr<bbob::RastriginRotated<P>>>(m, "RastriginRotated",
-                                                                                         nb::is_final())
+
+    nb::class_<bbob::RastriginRotated<P>, P>(m, "RastriginRotated", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::Weierstrass<P>, P, std::shared_ptr<bbob::Weierstrass<P>>>(m, "Weierstrass", nb::is_final())
+
+    nb::class_<bbob::Weierstrass<P>, P>(m, "Weierstrass", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::Schaffers10<P>, P, std::shared_ptr<bbob::Schaffers10<P>>>(m, "Schaffers10", nb::is_final())
+
+    nb::class_<bbob::Schaffers10<P>, P>(m, "Schaffers10", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::Schaffers1000<P>, P, std::shared_ptr<bbob::Schaffers1000<P>>>(m, "Schaffers1000", nb::is_final())
+
+    nb::class_<bbob::Schaffers1000<P>, P>(m, "Schaffers1000", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::GriewankRosenbrock<P>, P, std::shared_ptr<bbob::GriewankRosenbrock<P>>>(m, "GriewankRosenbrock",
-                                                                                             nb::is_final())
+
+    nb::class_<bbob::GriewankRosenbrock<P>, P>(m, "GriewankRosenbrock", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::Schwefel<P>, P, std::shared_ptr<bbob::Schwefel<P>>>(m, "Schwefel", nb::is_final())
+
+    nb::class_<bbob::Schwefel<P>, P>(m, "Schwefel", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::Gallagher101<P>, P, std::shared_ptr<bbob::Gallagher101<P>>>(m, "Gallagher101", nb::is_final())
+
+    nb::class_<bbob::Gallagher101<P>, P>(m, "Gallagher101", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::Gallagher21<P>, P, std::shared_ptr<bbob::Gallagher21<P>>>(m, "Gallagher21", nb::is_final())
+
+    nb::class_<bbob::Gallagher21<P>, P>(m, "Gallagher21", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::Katsuura<P>, P, std::shared_ptr<bbob::Katsuura<P>>>(m, "Katsuura", nb::is_final())
+
+    nb::class_<bbob::Katsuura<P>, P>(m, "Katsuura", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<bbob::LunacekBiRastrigin<P>, P, std::shared_ptr<bbob::LunacekBiRastrigin<P>>>(m, "LunacekBiRastrigin",
-                                                                                             nb::is_final())
+
+    nb::class_<bbob::LunacekBiRastrigin<P>, P>(m, "LunacekBiRastrigin", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 }
 
 
 void define_cec2013_problems(nb::module_ &m)
 {
-    nb::class_<CEC2013, RealSingleObjective, std::shared_ptr<CEC2013>>(m, "CEC2013",
-                                                                       R"pbdoc(
-            Functions from the CEC2013 conference. 
+    nb::class_<CEC2013, RealSingleObjective>(m, "CEC2013",
+                                             R"pbdoc(
+            Functions from the CEC2013 conference.
         )pbdoc")
         .def_static(
             "create",
@@ -197,21 +212,20 @@ void define_cec2013_problems(nb::module_ &m)
 
     using namespace cec2013;
 
-    nb::class_<EqualMaxima, CEC2013, std::shared_ptr<EqualMaxima>>(m, "EqualMaxima", nb::is_final());
-    nb::class_<FivePeaks, CEC2013, std::shared_ptr<FivePeaks>>(m, "FivePeaks", nb::is_final());
-    nb::class_<ModifiedRastrigin, CEC2013, std::shared_ptr<ModifiedRastrigin>>(m, "ModifiedRastrigin", nb::is_final());
-    nb::class_<Shubert, CEC2013, std::shared_ptr<Shubert>>(m, "Shubert", nb::is_final());
-    nb::class_<SixHumpCamelback, CEC2013, std::shared_ptr<SixHumpCamelback>>(m, "SixHumpCamelback", nb::is_final());
-    nb::class_<UnevenEqualMaxima, CEC2013, std::shared_ptr<UnevenEqualMaxima>>(m, "UnevenEqualMaxima", nb::is_final());
-    nb::class_<Vincent, CEC2013, std::shared_ptr<Vincent>>(m, "Vincent", nb::is_final());
-    nb::class_<CompositionFunction, CEC2013, std::shared_ptr<CompositionFunction>>(m, "CEC2013CompositionFunction",
-                                                                                   nb::is_final());
+    nb::class_<EqualMaxima, CEC2013>(m, "EqualMaxima", nb::is_final());
+    nb::class_<FivePeaks, CEC2013>(m, "FivePeaks", nb::is_final());
+    nb::class_<ModifiedRastrigin, CEC2013>(m, "ModifiedRastrigin", nb::is_final());
+    nb::class_<Shubert, CEC2013>(m, "Shubert", nb::is_final());
+    nb::class_<SixHumpCamelback, CEC2013>(m, "SixHumpCamelback", nb::is_final());
+    nb::class_<UnevenEqualMaxima, CEC2013>(m, "UnevenEqualMaxima", nb::is_final());
+    nb::class_<Vincent, CEC2013>(m, "Vincent", nb::is_final());
+    nb::class_<CompositionFunction, CEC2013>(m, "CEC2013CompositionFunction", nb::is_final());
 }
 
 void define_cec2022_problems(nb::module_ &m)
 {
-    nb::class_<CEC2022, RealSingleObjective, std::shared_ptr<CEC2022>>(m, "CEC2022",
-                                                                       R"pbdoc(
+    nb::class_<CEC2022, RealSingleObjective>(m, "CEC2022",
+                                             R"pbdoc(
             Functions from the CEC2022 2022 conference.
         )pbdoc")
         .def_static(
@@ -254,49 +268,40 @@ void define_cec2022_problems(nb::module_ &m)
             "problems", [](nb::object) { return ioh::common::Factory<CEC2022, int, int>::instance().map(); },
             "All registered problems");
 
-    nb::class_<cec2022::Zakharov, CEC2022, std::shared_ptr<cec2022::Zakharov>>(m, "CEC2022Zakharov", nb::is_final())
+    nb::class_<cec2022::Zakharov, CEC2022>(m, "CEC2022Zakharov", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 
-    nb::class_<cec2022::Rosenbrock, CEC2022, std::shared_ptr<cec2022::Rosenbrock>>(m, "CEC2022Rosenbrock",
-                                                                                   nb::is_final())
+    nb::class_<cec2022::Rosenbrock, CEC2022>(m, "CEC2022Rosenbrock", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 
-    nb::class_<cec2022::SchafferF7, CEC2022, std::shared_ptr<cec2022::SchafferF7>>(m, "CEC2022SchafferF7",
-                                                                                   nb::is_final())
+    nb::class_<cec2022::SchafferF7, CEC2022>(m, "CEC2022SchafferF7", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 
-    nb::class_<cec2022::Rastrigin, CEC2022, std::shared_ptr<cec2022::Rastrigin>>(m, "CEC2022Rastrigin", nb::is_final())
+    nb::class_<cec2022::Rastrigin, CEC2022>(m, "CEC2022Rastrigin", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 
-    nb::class_<cec2022::Levy, CEC2022, std::shared_ptr<cec2022::Levy>>(m, "CEC2022Levy", nb::is_final())
+    nb::class_<cec2022::Levy, CEC2022>(m, "CEC2022Levy", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 
-    nb::class_<cec2022::HybridFunction1, CEC2022, std::shared_ptr<cec2022::HybridFunction1>>(
-        m, "CEC2022HybridFunction1", nb::is_final())
+    nb::class_<cec2022::HybridFunction1, CEC2022>(m, "CEC2022HybridFunction1", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 
-    nb::class_<cec2022::HybridFunction2, CEC2022, std::shared_ptr<cec2022::HybridFunction2>>(
-        m, "CEC2022HybridFunction2", nb::is_final())
+    nb::class_<cec2022::HybridFunction2, CEC2022>(m, "CEC2022HybridFunction2", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 
-    nb::class_<cec2022::HybridFunction3, CEC2022, std::shared_ptr<cec2022::HybridFunction3>>(
-        m, "CEC2022HybridFunction3", nb::is_final())
+    nb::class_<cec2022::HybridFunction3, CEC2022>(m, "CEC2022HybridFunction3", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 
-    nb::class_<cec2022::CompositionFunction1, CEC2022, std::shared_ptr<cec2022::CompositionFunction1>>(
-        m, "CEC2022CompositionFunction1", nb::is_final())
+    nb::class_<cec2022::CompositionFunction1, CEC2022>(m, "CEC2022CompositionFunction1", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 
-    nb::class_<cec2022::CompositionFunction2, CEC2022, std::shared_ptr<cec2022::CompositionFunction2>>(
-        m, "CEC2022CompositionFunction2", nb::is_final())
+    nb::class_<cec2022::CompositionFunction2, CEC2022>(m, "CEC2022CompositionFunction2", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 
-    nb::class_<cec2022::CompositionFunction3, CEC2022, std::shared_ptr<cec2022::CompositionFunction3>>(
-        m, "CEC2022CompositionFunction3", nb::is_final())
+    nb::class_<cec2022::CompositionFunction3, CEC2022>(m, "CEC2022CompositionFunction3", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 
-    nb::class_<cec2022::CompositionFunction4, CEC2022, std::shared_ptr<cec2022::CompositionFunction4>>(
-        m, "CEC2022CompositionFunction4", nb::is_final())
+    nb::class_<cec2022::CompositionFunction4, CEC2022>(m, "CEC2022CompositionFunction4", nb::is_final())
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
 }
 
@@ -309,7 +314,8 @@ enum class SamplerType
 };
 
 template <typename T>
-T star_discrepancy_init(const int instance, const int n_variables, const int n_samples, const SamplerType sampler_type)
+void star_discrepancy_init(T *t, const int instance, const int n_variables, const int n_samples,
+                           const SamplerType sampler_type)
 {
     using namespace ioh::common::random::sampler;
 
@@ -328,39 +334,40 @@ T star_discrepancy_init(const int instance, const int n_variables, const int n_s
     }
     const std::string py_name =
         std::is_base_of_v<ioh::problem::RealSingleObjective, T> ? "RealStarDiscrepancy" : "IntegerStarDiscrepancy";
-    return T(0, instance, n_variables, py_name, grid);
+    new (t) T(0, instance, n_variables, py_name, grid);
 }
 
 
 template <typename T, typename P>
 void define_star_discrepancy_problem(nb::module_ &m, const std::string &name)
 {
-    nb::class_<T, P, std::shared_ptr<T>>(m, name.c_str(), R"pbdoc(
+    nb::class_<T, P>(m, name.c_str(), R"pbdoc(
             Star-discrepancy problems
-             
+
             The 𝐿_infinity star discrepancy is a measure for the regularity of a finite set
             of points taken from [0, 1)^d. Calculating this measure is challenging, and exact algorithm
             fall short even for relatively small grids. This suite provides access to a set of these problems
             to tackle the problem from an optimization perspective.
 
-            There are two equivalent representations for these problems: Integer-based and Real-valued. 
+            There are two equivalent representations for these problems: Integer-based and Real-valued.
 
-            For the Real-valued, the goal is to find the a point in [0,1)^d which minimizes the resulting discepancy directly.
+            For the Real-valued, the goal is to find the a point in [0,1)^d which minimizes the resulting discepancy
+            directly.
 
-            The Integer-valued version takes advantage of the fact that for each dimension, the optimium 
-            has a value matching an existing point int the grid. As such, the search for a point in the grid can 
-            be reduced to finding in each dimension the index of the coordinate, resulting in a search domain 
-            [0,n]^d, where n is the number of gridpoints. 
+            The Integer-valued version takes advantage of the fact that for each dimension, the optimium
+            has a value matching an existing point int the grid. As such, the search for a point in the grid can
+            be reduced to finding in each dimension the index of the coordinate, resulting in a search domain
+            [0,n]^d, where n is the number of gridpoints.
 
 
             Reference
             ---------
-            [Clement23] Clement, Francois, Diederick Vermetten, Jacob de Nobel, Alexandre Jesus, 
-            Luís Paquete, and Carola Doerr. "Computing Star Discrepancies with 
+            [Clement23] Clement, Francois, Diederick Vermetten, Jacob de Nobel, Alexandre Jesus,
+            Luís Paquete, and Carola Doerr. "Computing Star Discrepancies with
             Numerical Black-Box Optimization Algorithms."
 
         )pbdoc")
-        .def(nb::init(&star_discrepancy_init<T>), nb::arg("instance") = 1, nb::arg("n_variables") = 5,
+        .def("__init__", &star_discrepancy_init<T>, nb::arg("instance") = 1, nb::arg("n_variables") = 5,
              nb::arg("n_samples") = 5, nb::arg("sampler_type") = SamplerType::UNIFORM,
              R"pbdoc(
                 Star Discrepancy Problems
@@ -376,21 +383,21 @@ void define_star_discrepancy_problem(nb::module_ &m, const std::string &name)
                 sampler_type: StarDiscrepancySampler
                     The type of sampler to use when sampling the points
              )pbdoc")
-        .def_prop_ro("grid",
-                               [](const T &self) {
-                                   const auto grid = self.get_grid();
-                                   const auto n = grid.size(), m = grid[0].size();
+        // .def_prop_ro("grid",
+        //                        [](const T &self) {
+        //                            const auto grid = self.get_grid();
+        //                            const auto n = grid.size(), m = grid[0].size();
 
-                                   nb::ndarray<double, nb::array::c_style> arr({n, m});
+        //                            nb::ndarray<double, nb::array::c_style> arr({n, m});
 
-                                   auto ra = arr.mutable_unchecked();
+        //                            auto ra = arr.mutable_unchecked();
 
-                                   for (size_t i = 0; i < n; i++)
-                                       for (size_t j = 0; j < m; j++)
-                                           ra(i, j) = grid[i][j];
+        //                            for (size_t i = 0; i < n; i++)
+        //                                for (size_t j = 0; j < m; j++)
+        //                                    ra(i, j) = grid[i][j];
 
-                                   return arr;
-                               })
+        //                            return arr;
+        //                        })
         .def_static(
             "create",
             [](const std::string &name, int iid, int dim) {
@@ -403,7 +410,7 @@ void define_star_discrepancy_problem(nb::module_ &m, const std::string &name)
                 Parameters
                 ----------
                     problem_name: str
-                        a string indicating the problem name. 
+                        a string indicating the problem name.
                     instance_id: int
                         an integer identifier of the problem instance
                     dimension: int
@@ -413,14 +420,13 @@ void define_star_discrepancy_problem(nb::module_ &m, const std::string &name)
         .def_static(
             "create",
             [](int id, int iid, int dim) { return ioh::common::Factory<T, int, int>::instance().create(id, iid, dim); },
-            nb::arg("problem_id"), nb::arg("instance_id"), nb::arg("dimension"),
-            R"pbdoc(
+            nb::arg("problem_id"), nb::arg("instance_id"), nb::arg("dimension"), R"pbdoc(
                 Create a problem instance
 
                 Parameters
                 ----------
                     problem_name: int
-                        a string indicating the problem name. 
+                        a string indicating the problem name.
                     instance_id: int
                         an integer identifier of the problem instance
                     dimension: int
@@ -451,8 +457,7 @@ void define_star_discrepancy_problems(nb::module_ &m)
 
 void define_many_affine(nb::module_ &m)
 {
-    nb::class_<ioh::problem::bbob::ManyAffine, ioh::problem::RealSingleObjective,
-               std::shared_ptr<ioh::problem::bbob::ManyAffine>>(m, "ManyAffine")
+    nb::class_<ioh::problem::bbob::ManyAffine, ioh::problem::RealSingleObjective>(m, "ManyAffine")
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"))
         .def(nb::init<std::vector<double>, std::array<double, 24>, std::array<int, 24>, int, std::array<double, 24>>(),
              nb::arg("xopt"), nb::arg("weights"), nb::arg("instances"), nb::arg("n_variables"),
@@ -468,19 +473,16 @@ void define_many_affine(nb::module_ &m)
 void define_funnel(nb::module_ &m)
 {
     using namespace ioh::problem;
-    nb::class_<funnel::DoubleFunnel, RealSingleObjective, std::shared_ptr<funnel::DoubleFunnel>>(m, "DoubleFunnel")
+    nb::class_<funnel::DoubleFunnel, RealSingleObjective>(m, "DoubleFunnel")
         .def_prop_ro("d", &funnel::DoubleFunnel::d)
         .def_prop_ro("s", &funnel::DoubleFunnel::s)
         .def_prop_ro("u1", &funnel::DoubleFunnel::u1)
         .def_prop_ro("u2", &funnel::DoubleFunnel::u2);
 
-
-    nb::class_<funnel::DoubleSphere, funnel::DoubleFunnel, std::shared_ptr<funnel::DoubleSphere>>(m, "DoubleSphere")
+    nb::class_<funnel::DoubleSphere, funnel::DoubleFunnel>(m, "DoubleSphere")
         .def(nb::init<int, double, double>(), nb::arg("n_variables"), nb::arg("d") = 0.0, nb::arg("s") = 1.0);
 
-
-    nb::class_<funnel::DoubleRastrigin, funnel::DoubleFunnel, std::shared_ptr<funnel::DoubleRastrigin>>(
-        m, "DoubleRastrigin")
+    nb::class_<funnel::DoubleRastrigin, funnel::DoubleFunnel>(m, "DoubleRastrigin")
         .def(nb::init<int, double, double>(), nb::arg("n_variables"), nb::arg("d") = 0.0, nb::arg("s") = 1.0);
 }
 
@@ -495,7 +497,7 @@ void define_dynamic_bin_val_problem(nb::module_ &m)
 {
     using namespace ioh::problem::dynamic_bin_val;
 
-    nb::class_<DynamicBinVal, IntegerSingleObjective, std::shared_ptr<DynamicBinVal>>(m, "DynamicBinVal")
+    nb::class_<DynamicBinVal, IntegerSingleObjective>(m, "DynamicBinVal")
         .def_static(
             "create",
             [](const std::string &name, int iid, int dim) {
@@ -544,21 +546,20 @@ void define_dynamic_bin_val_problem(nb::module_ &m)
                 The current timestep after the step.
         )pbdoc")
         .def_ro("time_step", &DynamicBinVal::time_step)
-        .def_ro("weights", &DynamicBinVal::weights)
-        ;
+        .def_ro("weights", &DynamicBinVal::weights);
 
     const auto doc =
         R"pbdoc(Dynamic BinVal. Details: https://link.springer.com/article/10.1007/s42979-022-01203-z )pbdoc";
-    
-    nb::class_<Uniform, DynamicBinVal, std::shared_ptr<Uniform>>(m, "DynamicBinValUniform", doc)
+
+    nb::class_<Uniform, DynamicBinVal>(m, "DynamicBinValUniform", doc)
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<PowersOfTwo, DynamicBinVal, std::shared_ptr<PowersOfTwo>>(m, "DynamicBinValPowersOfTwo", doc)
+    nb::class_<PowersOfTwo, DynamicBinVal>(m, "DynamicBinValPowersOfTwo", doc)
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"));
-    nb::class_<Pareto, DynamicBinVal, std::shared_ptr<Pareto>>(m, "DynamicBinValPareto", doc)
+    nb::class_<Pareto, DynamicBinVal>(m, "DynamicBinValPareto", doc)
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"))
         .def_prop_ro("pareto_shape", &Pareto::get_pareto_shape);
 
-    nb::class_<Ranking, DynamicBinVal, std::shared_ptr<Ranking>>(m, "DynamicBinValRanking", doc)
+    nb::class_<Ranking, DynamicBinVal>(m, "DynamicBinValRanking", doc)
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"))
         .def("rank", &Ranking::rank, R"pbdoc(
             Sort a list of bitstrings in lexicographical order in-place.

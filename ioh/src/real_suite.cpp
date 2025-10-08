@@ -6,7 +6,7 @@ template <typename SuiteType>
 static void define_base_class(nb::module_ &m, const std::string &name)
 {
     nb::class_<SuiteType>(m, name.c_str(),
-                                                      fmt::format("{} suite", name).c_str())
+            fmt::format("{} suite", name).c_str())
         .def("reset", &SuiteType::reset,
              R"pbdoc(
                 Reset the state variables of the current problem.
@@ -50,11 +50,11 @@ static void define_base_class(nb::module_ &m, const std::string &name)
                                R"pbdoc(
                 The name of the suite.
             )pbdoc")
-        .def("__len__", &SuiteType::size);
-        // .def(
-        //     "__iter__", [](SuiteType &s) { 
-        //         return nb::make_iterator(s.begin(), s.end()); 
-        //     }, nb::keep_alive<0, 1>());
+        .def("__len__", &SuiteType::size)
+        .def(
+            "__iter__", [](SuiteType &s) { 
+                return nb::make_iterator(nb::type<typename SuiteType::Problem>(), "problem_iterator", s.begin(), s.end()); 
+            }, nb::keep_alive<0, 1>());
 }
 
 
@@ -65,7 +65,6 @@ static void define_suite(nb::module_ &m, const std::string &name, const int defa
         .def(nb::init<std::vector<int>, std::vector<int>, std::vector<int>>(), nb::arg("problem_ids"),
              nb::arg("instances") = std::vector<int>{1}, nb::arg("dimensions") = std::vector<int>{default_dim});
 }
-
 
 void define_real_suite(nb::module_ &m)
 {
