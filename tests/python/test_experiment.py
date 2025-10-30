@@ -2,6 +2,7 @@ import os
 import random
 import unittest
 import shutil
+import zipfile
 
 import ioh
 
@@ -77,7 +78,79 @@ class TestExperiment(unittest.TestCase):
 
         self.assertSetEqual(info_files, set())
         self.assertSetEqual(data_files, set())
-        self.assertTrue(os.path.isfile("ioh_data.zip"))    
+        self.assertTrue(os.path.isfile("ioh_data.zip"))
+
+    def test_publish_generates_artifacts_and_uploads(self):
+        exp = ioh.Experiment(
+            Algorithm(),
+            [1],
+            [1],
+            [5],
+            njobs=1,
+            reps=1,
+            algorithm_name="RandomSearch",
+            old_logger=False,
+            logger_triggers=[ioh.logger.trigger.ALWAYS],
+        )
+
+        exp()
+
+        class DummyResponse:
+            def __init__(self, payload, status_code=200):
+                self._payload = payload
+                self.status_code = status_code
+
+            def raise_for_status(self):
+                if not (200 <= self.status_code < 300):
+                    raise RuntimeError("HTTP error")
+
+            def json(self):
+                return self._payload
+
+        class DummySession:
+            def __init__(self):
+                self.post_calls = []
+                self.put_calls = []
+
+            def post(self, url, params=None, json=None):
+                self.post_calls.append((url, params, json))
+                payload = {"id": 42, "links": {"bucket": "https://sandbox.zenodo.org/api/files/42"}}
+                return DummyResponse(payload)
+
+            def put(self, url, params=None, data=None):
+                self.put_calls.append((url, params, getattr(data, "name", "")))
+                return DummyResponse({})
+
+        session = DummySession()
+
+        deposition = exp.publish(
+            zenodo_token="secret",
+            title="Unit Test Experiment",
+            description="An automated test upload.",
+            creators=[{"name": "Doe, Jane"}],
+            budget=100,
+            sandbox=True,
+            session=session,
+        )
+
+        self.assertEqual(deposition["id"], 42)
+        readme_path = os.path.join("ioh_data", "README.md")
+        self.assertTrue(os.path.isfile(readme_path))
+        with open(readme_path, encoding="utf-8") as handle:
+            readme_contents = handle.read()
+        self.assertIn("Unit Test Experiment", readme_contents)
+        self.assertIn("Budget", readme_contents)
+
+        algorithm_dump = os.path.join("ioh_data", "RandomSearch.pkl")
+        self.assertTrue(os.path.isfile(algorithm_dump))
+
+        with zipfile.ZipFile("ioh_data.zip") as archive:
+            self.assertTrue(any(name.endswith("README.md") for name in archive.namelist()))
+
+        uploaded_files = {os.path.basename(call[0]) for call in session.put_calls}
+        self.assertIn("ioh_data.zip", uploaded_files)
+        self.assertIn("README.md", uploaded_files)
+        self.assertIn("RandomSearch.pkl", uploaded_files)
 
     def test_experimenter_v2(self):
         ioh.Experiment(

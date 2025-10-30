@@ -17,4 +17,5 @@ API documentation
    python/structures.rst
    python/ioh.rst
    python/logger.rst
-   python/suite.rst 
+   python/suite.rst
+   python/publish.rst

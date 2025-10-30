@@ -16,6 +16,7 @@ Experiment
       ~Experiment.evaluate
       ~Experiment.merge_output_to_single_folder
       ~Experiment.merge_tmp_folders
+      ~Experiment.publish
       ~Experiment.run
 
    .. rubric:: Methods Documentation
