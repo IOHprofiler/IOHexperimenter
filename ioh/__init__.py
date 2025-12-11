@@ -10,9 +10,12 @@ import typing
 import shutil
 import copy
 import json
+import datetime
+import textwrap
 
 import urllib.request
 import tarfile
+import requests
 
 # Set the path to the static/ directory.
 # NEEDED for C++ code to load transformation details for several functions.
@@ -622,6 +625,204 @@ class Experiment:
             shutil.rmtree(self.logger_root)
 
         return self
+
+    def _problem_summary(self) -> typing.Dict[int, str]:
+        summary = {}
+        if not self.fids:
+            return summary
+        sample_instance = self.iids[0] if self.iids else 1
+        sample_dimension = self.dims[0] if self.dims else 1
+
+        for fid in self.fids:
+            try:
+                p = get_problem(fid, sample_instance, sample_dimension, self.problem_class)
+                summary[fid] = p.meta_data.name
+            except Exception:
+                summary[fid] = f"Problem {fid}"
+        return summary
+
+    def _write_readme(
+        self,
+        title: str,
+        description: str,
+        budget: typing.Optional[int],
+        reproduction_hint: str,
+    ) -> str:
+        os.makedirs(self.logger_root, exist_ok=True)
+        problems = self._problem_summary()
+        problem_lines = [f"- **f{fid}**: {name}" for fid, name in problems.items()]
+        problem_section = "\n".join(problem_lines) if problem_lines else "- No problems recorded"
+
+        algorithm_name = self.logger_params.get("algorithm_name", str(self.algorithm))
+        budget_text = str(budget) if budget is not None else "Not specified"
+
+        content = textwrap.dedent(
+            f"""
+            # {title}
+            
+            {description}
+            
+            ## Experiment configuration
+            
+            - **Algorithm**: {algorithm_name}
+            - **Problem class**: {self.problem_class.name}
+            - **Function IDs**: {self.fids}
+            - **Instances**: {self.iids}
+            - **Dimensions**: {self.dims}
+            - **Repetitions**: {self.reps}
+            - **Budget**: {budget_text}
+            
+            ### Problem details
+            
+            {problem_section}
+            
+            ## Contents
+            
+            - Experimental logs located in `{os.path.basename(self.logger_root)}`.
+            - `README.md` (this file).
+            
+            ## Directions
+            
+            1. Unzip `ioh_data.zip` (or the generated archive) to access the raw logs.
+            2. Review the `.json`/`.info` files for scenario metadata and `.dat` files for evaluation traces.
+            3. Use the reproduction snippet below to re-run the experiment.
+            
+            ## Reproducing the results
+            
+            ```python
+            {reproduction_hint}
+            ```
+            """
+        ).strip() + "\n"
+
+        readme_path = os.path.join(self.logger_root, "README.md")
+        with open(readme_path, "w", encoding="utf-8") as handle:
+            handle.write(content)
+        return readme_path
+
+    def _serialize_algorithm(self) -> typing.Optional[str]:
+        try:
+            import cloudpickle
+        except ImportError:  # pragma: no cover - dependency missing
+            warnings.warn(
+                "cloudpickle is not available; algorithm serialization skipped.",
+                RuntimeWarning,
+            )
+            return None
+
+        algorithm_name = self.logger_params.get("algorithm_name") or self.algorithm.__class__.__name__
+        safe_name = "".join(c if c.isalnum() or c in {"-", "_"} else "_" for c in algorithm_name)
+        filename = f"{safe_name or 'algorithm'}.pkl"
+        path = os.path.join(self.logger_root, filename)
+        with open(path, "wb") as handle:
+            cloudpickle.dump(self.algorithm, handle)
+        return path
+
+    def publish(
+        self,
+        zenodo_token: str,
+        title: str,
+        description: str,
+        creators: typing.List[typing.Dict[str, typing.Any]],
+        *,
+        budget: typing.Optional[int] = None,
+        keywords: typing.Optional[typing.List[str]] = None,
+        related_identifiers: typing.Optional[typing.List[typing.Dict[str, typing.Any]]] = None,
+        upload_type: str = "dataset",
+        access_right: str = "open",
+        publish_date: typing.Optional[str] = None,
+        sandbox: bool = False,
+        include_algorithm: bool = True,
+        additional_metadata: typing.Optional[typing.Dict[str, typing.Any]] = None,
+        session: typing.Optional[typing.Any] = None,
+    ) -> typing.Dict[str, typing.Any]:
+        if not os.path.isdir(self.logger_root):
+            raise FileNotFoundError(
+                f"Logger output directory '{self.logger_root}' does not exist. Run the experiment before publishing."
+            )
+
+        algorithm_class = self.algorithm.__class__
+        algorithm_module = algorithm_class.__module__
+        algorithm_name = algorithm_class.__name__
+        if algorithm_module in {"__main__", "builtins"}:
+            import_line = "# Define or import your algorithm implementation"
+            algorithm_instantiation = f"algorithm = {repr(self.algorithm)}  # replace with your implementation"
+        else:
+            import_line = f"from {algorithm_module} import {algorithm_name}"
+            algorithm_instantiation = f"algorithm = {algorithm_name}()"
+
+        reproduction_hint = textwrap.dedent(
+            f"""
+            import ioh
+            {import_line}
+
+            {algorithm_instantiation}
+            experiment = ioh.Experiment(
+                algorithm,
+                fids={self.fids},
+                iids={self.iids},
+                dims={self.dims},
+                reps={self.reps},
+                problem_class=ioh.ProblemClass.{self.problem_class.name},
+            )
+            experiment()
+            """
+        ).strip()
+
+        readme_path = self._write_readme(title, description, budget, reproduction_hint)
+        archive_path = shutil.make_archive(self.logger_root, "zip", self.logger_root)
+
+        algorithm_path = self._serialize_algorithm() if include_algorithm else None
+
+        files_to_upload = [archive_path, readme_path]
+        if algorithm_path is not None:
+            files_to_upload.append(algorithm_path)
+
+        metadata: typing.Dict[str, typing.Any] = {
+            "title": title,
+            "upload_type": upload_type,
+            "description": description,
+            "creators": creators,
+            "access_right": access_right,
+        }
+
+        if keywords:
+            metadata["keywords"] = keywords
+        if related_identifiers:
+            metadata["related_identifiers"] = related_identifiers
+        if publish_date is None:
+            publish_date = datetime.date.today().isoformat()
+        metadata["publication_date"] = publish_date
+        if additional_metadata:
+            metadata.update(additional_metadata)
+        if budget is not None:
+            budget_note = f"Budget: {budget}"
+            if metadata.get("notes"):
+                metadata["notes"] = f"{metadata['notes']}\n{budget_note}"
+            else:
+                metadata["notes"] = budget_note
+
+        api_root = "https://sandbox.zenodo.org/api" if sandbox else "https://zenodo.org/api"
+        deposit_url = f"{api_root}/deposit/depositions"
+
+        session = session or requests.Session()
+        params = {"access_token": zenodo_token}
+
+        response = session.post(deposit_url, params=params, json={"metadata": metadata})
+        response.raise_for_status()
+        deposition = response.json()
+
+        bucket_url = deposition["links"]["bucket"]
+        for file_path in files_to_upload:
+            with open(file_path, "rb") as handle:
+                upload_response = session.put(
+                    f"{bucket_url}/{os.path.basename(file_path)}",
+                    params=params,
+                    data=handle,
+                )
+            upload_response.raise_for_status()
+
+        return deposition
 
 
 __all__ = (
