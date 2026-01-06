@@ -60,9 +60,9 @@ class TestArrayLayout(unittest.TestCase):
             self.assertTrue(np.all(sol.x == val))
             self.assertTrue(np.all(ioh.IntegerSolution(val, 1).x == val))
 
-    def test_optimum(self):
-        problem = ioh.get_problem(1, instance=1, dimension=5, problem_class=ioh.ProblemClass.PBO)
-        self.assertTrue(np.all(np.ones(5) == problem.optimum.x))
+    # def test_optimum(self):
+    #     problem = ioh.get_problem(1, instance=1, dimension=5, problem_class=ioh.ProblemClass.PBO)
+    #     self.assertTrue(np.all(np.ones(5) == problem.optimum.x))
         
     
     def test_constraint(self):

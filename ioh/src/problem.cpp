@@ -209,7 +209,6 @@ void define_wrapper_functions(nb::module_ &m, const std::string &class_name, con
             register_python_fn(f);
 
             auto of = [f](const std::vector<T> &x) {
-                nb::gil_scoped_acquire gil;
                 return nb::cast<double>(f(make_array(x)));
             };
 
@@ -217,9 +216,7 @@ void define_wrapper_functions(nb::module_ &m, const std::string &class_name, con
                 if (tx)
                 {
                     static bool r = register_python_fn(tx.value());
-
-                    nb::gil_scoped_acquire gil;
-                    nb::list px = nb::cast<nb::list>(tx.value()(make_mutable_array(x, nb::cast(&x)), iid));
+                    nb::list px = nb::cast<nb::list>(tx.value()(make_array(x), iid));
                     if (px.size() == x.size())
                         return nb::cast<std::vector<T>>(px);
                     else
@@ -263,13 +260,14 @@ void define_wrapper_functions(nb::module_ &m, const std::string &class_name, con
 
             wrap_function<T, double>(of, name, t, lb, ub, ptx, pty, pco, cs);
         },
-        nb::arg("f"), nb::arg("name"), 
+        nb::arg("f"), 
+        nb::arg("name"), 
         nb::arg("optimization_type") = ioh::common::OptimizationType::MIN,
-        nb::arg("lb") = nb::none(), 
-        nb::arg("ub") = nb::none(), 
-        nb::arg("transform_variables") = nb::none(),
-        nb::arg("transform_objectives") = nb::none(),
-        nb::arg("calculate_objective") = nb::none(),
+        nb::arg("lb") = std::nullopt, 
+        nb::arg("ub") = std::nullopt, 
+        nb::arg("transform_variables") = std::nullopt,
+        nb::arg("transform_objectives") = std::nullopt,
+        nb::arg("calculate_objective") = std::nullopt,
         nb::arg("constraints") = nb::list()
     );
 }

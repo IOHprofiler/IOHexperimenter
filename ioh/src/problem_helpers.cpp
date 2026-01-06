@@ -7,7 +7,7 @@ void define_solution(nb::module_ &m, const std::string &name)
 {
     using Class = Solution<T, R>;
 
-    nb::class_<Class>(m, name.c_str()) 
+    nb::class_<Class>(m, name.c_str())
         .def(nb::init<std::vector<T>, double>(), nb::arg("x"), nb::arg("y"),
              R"pbdoc(
             A Solution object, which is a container for a search point and its corresponding fitness value.
@@ -21,10 +21,7 @@ void define_solution(nb::module_ &m, const std::string &name)
 
         )pbdoc")
         .def_prop_rw(
-            "x",
-            [](Class &c) {
-                return make_mutable_array(c.x, nb::cast(&c));
-            },
+            "x", [](Class &c) { return make_array(c.x); },
             [](Class &self, const std::vector<T> &x) { self.x = x; },
             "The search point in a search space, e.g., R^d or {0,1}^d")
         .def_ro("y", &Class::y, "The corresponding objective value of `x`, i.e., y = f(x)")
@@ -48,24 +45,23 @@ void define_state(nb::module_ &m, const std::string &name)
             )pbdoc")
         .def_ro("evaluations", &Class::evaluations, "The number of times the problem has been evaluated so far.")
         .def_ro("optimum_found", &Class::optimum_found,
-                      "Boolean value indicating whether final_target_found optimum of a given problem has been found.")
+                "Boolean value indicating whether final_target_found optimum of a given problem has been found.")
         .def_ro("final_target_found", &Class::final_target_found,
-                      "Boolean value indicating whether the final target of a given problem has been found.")
+                "Boolean value indicating whether the final target of a given problem has been found.")
         .def_ro("current_best_internal", &Class::current_best_internal,
-                      "The internal representation of the best so far solution. "
-                      "See `current_internal` for a short explanation on the meaning of 'internal'")
+                "The internal representation of the best so far solution. "
+                "See `current_internal` for a short explanation on the meaning of 'internal'")
         .def_ro("current_best", &Class::current_best, "The current best-so-far solution.")
         .def_ro("current_internal", &Class::current_internal,
-                      "The internal representation of the last-evaluated solution. Note that, for a given "
-                      "problem instance, the input search point will be transformed with an automorphism "
-                      "and after evaluating the "
-                      "transformed point, the resulting objective value will also be transformed with another "
-                      "automorphism in the objective space. Such interal information are stored in this attribute.")
+                "The internal representation of the last-evaluated solution. Note that, for a given "
+                "problem instance, the input search point will be transformed with an automorphism "
+                "and after evaluating the "
+                "transformed point, the resulting objective value will also be transformed with another "
+                "automorphism in the objective space. Such interal information are stored in this attribute.")
         .def_ro("current", &Class::current, "The last-evaluated solution.")
         .def_ro("y_unconstrained", &Class::y_unconstrained, "The current unconstrained value.")
         .def_ro("y_unconstrained_best", &Class::y_unconstrained_best, "The current best unconstrained value.")
-        .def_ro("has_improved", &Class::has_improved,
-                      "Whether the last call to problem has caused global improvement.")
+        .def_ro("has_improved", &Class::has_improved, "Whether the last call to problem has caused global improvement.")
         .def("__repr__", &Class::repr);
 }
 
@@ -75,10 +71,7 @@ struct PyConstraint : Constraint<T>
 {
     NB_TRAMPOLINE(Constraint<T>, 1);
 
-    bool compute_violation(const std::vector<T> &x) override
-    {
-        NB_OVERRIDE_PURE(compute_violation, make_array(x));
-    }
+    bool compute_violation(const std::vector<T> &x) override { NB_OVERRIDE_PURE(compute_violation, make_array(x)); }
 
     [[nodiscard]] std::string repr() const override { return "<AbstractConstraint>"; }
 };
@@ -122,8 +115,7 @@ void define_constraintset(nb::module_ &m, const std::string &name)
         .def("violation", &Class::violation)
         .def("n", &Class::n)
         .def("__getitem__", &Class::operator[])
-        .def("__repr__", &Class::repr)
-        ;
+        .def("__repr__", &Class::repr);
 }
 
 
@@ -136,33 +128,32 @@ void define_functionalconstraint(nb::module_ &m, const std::string &name)
     using Class = FunctionalConstraint<T>;
 
     nb::class_<Class, Parent>(m, name.c_str())
-        .def("__init__", 
-                [](Class *t, nb::handle f, const double w, const double ex, const constraint::Enforced e, const std::string &n) {
-                    register_python_fn(f);
-                    auto fn = [f](const std::vector<T> &x) {
-                    return nb::cast<double>(f(make_array(x)));
-                    };
-                    new (t) Class(fn, w, ex, e, n);
+        .def(
+            "__init__",
+            [](Class *t, nb::handle f, const double w, const double ex, const constraint::Enforced e,
+               const std::string &n) {
+                register_python_fn(f);
+                auto fn = [f](const std::vector<T> &x) { return nb::cast<double>(f(make_array(x))); };
+                new (t) Class(fn, w, ex, e, n);
             },
-             nb::arg("fn"), nb::arg("weight") = 1.0, nb::arg("exponent") = 1.0,
-             nb::arg("enforced") = constraint::Enforced::SOFT, nb::arg("name") = "",
-             R"pbdoc(
-                General Constraint, defined by a function
+            nb::arg("fn"), nb::arg("weight") = 1.0, nb::arg("exponent") = 1.0,
+            nb::arg("enforced") = constraint::Enforced::SOFT, nb::arg("name") = "",
+            R"pbdoc(
+            General Constraint, defined by a function
 
-                Parameters
-                ----------
-                    f: list -> float
-                        A function that computes the violation of a point
-                    weight: float
-                        The weight given to the violation when penalizing the objective function
-                    exponent: float
-                        The exponent given to the violation when penalizing the objective function
-                    enforced: ConstraintEnforcement
-                        how the constraint should be enforced
-                    name: str
-                        name of the constraint                    
-            )pbdoc"
-        )
+            Parameters
+            ----------
+                f: list -> float
+                    A function that computes the violation of a point
+                weight: float
+                    The weight given to the violation when penalizing the objective function
+                exponent: float
+                    The exponent given to the violation when penalizing the objective function
+                enforced: ConstraintEnforcement
+                    how the constraint should be enforced
+                name: str
+                    name of the constraint                    
+        )pbdoc")
         .def("__repr__", &Class::repr);
 }
 
@@ -210,19 +201,11 @@ void define_bounds(nb::module_ &m, const std::string &name)
 
              )
         .def_prop_rw(
-            "ub",
-            [](const Class &c) {
-                return make_array(c.ub);
-            },
-            [](Class &c, const std::vector<T> &vec) { c.ub = vec; },
-            "The upper bound (box constraint)")
+            "ub", [](const Class &c) { return make_array(c.ub); },
+            [](Class &c, const std::vector<T> &vec) { c.ub = vec; }, "The upper bound (box constraint)")
         .def_prop_rw(
-            "lb",
-            [](const Class &c) {
-                return make_array(c.lb);
-            },
-            [](Class &c, const std::vector<T> &vec) { c.lb = vec; },
-            "The lower bound (box constraint)")
+            "lb", [](const Class &c) { return make_array(c.lb); },
+            [](Class &c, const std::vector<T> &vec) { c.lb = vec; }, "The lower bound (box constraint)")
         .def("__repr__", &Class::repr)
         .def("compute_violation", &Class::compute_violation,
              R"pbdoc(
@@ -310,8 +293,7 @@ void define_helper_classes(nb::module_ &m)
         .def_prop_ro(
             "optimization_type", [](const MetaData &meta) { return meta.optimization_type.type(); },
             "The type of problem (maximization or minimization)")
-        .def_ro("n_variables", &MetaData::n_variables,
-                      "The number of variables (dimension) of the current problem")
+        .def_ro("n_variables", &MetaData::n_variables, "The number of variables (dimension) of the current problem")
         .def_ro("final_target", &MetaData::final_target)
         .def("__repr__", &MetaData::repr)
         .def("__eq__", &MetaData::operator==);
@@ -354,7 +336,7 @@ void define_helper_classes(nb::module_ &m)
 
             )pbdoc")
         .def_ro("evaluations", &ioh::logger::Info::evaluations,
-                      "The number of function evaluations performed on the current problem so far")
+                "The number of function evaluations performed on the current problem so far")
 
         .def_ro("raw_y", &ioh::logger::Info::raw_y)
         .def_ro("raw_y_best", &ioh::logger::Info::raw_y_best)
@@ -370,5 +352,5 @@ void define_helper_classes(nb::module_ &m)
         .def_ro("penalties", &ioh::logger::Info::penalties)
         .def_ro("objective", &ioh::logger::Info::optimum, "The best possible fitness value")
         .def_ro("has_improved", &ioh::logger::Info::has_improved,
-                      "Whether the last call to problem has caused global improvement.");
+                "Whether the last call to problem has caused global improvement.");
 }
