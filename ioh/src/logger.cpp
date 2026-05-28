@@ -123,7 +123,9 @@ void define_bases(py::module &m)
         m, "AbstractLogger", "Base class for loggers which track properties")
         .def(py::init<Triggers, Properties>(), py::arg("triggers") = Triggers{}, py::arg("properties") = Properties{})
         .def("watch", &Watcher::watch)
-        .def("attach_problem", &Watcher::attach_problem, py::arg("problem"), "attach a problem (MetaData) to a logger");
+        .def("attach_problem", &Watcher::attach_problem, py::arg("problem"), "attach a problem (MetaData) to a logger")
+        .def("attach_suite", &Logger::attach_suite, py::arg("suite_name"),
+     "Set the current suite name (written to the 'suite' field in Analyzer JSON output)");
 }
 
 void define_flatfile(py::module &m)
