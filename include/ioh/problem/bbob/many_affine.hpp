@@ -95,6 +95,10 @@ namespace ioh::problem::bbob
             auto result = 0.0;
             for (int fi = 0; fi < 24; fi++)
             {
+                // A BBOB instance with zero weight contributes nothing to the weighted
+                // sum, so its evaluation can be skipped.
+                if (weights_[fi] == 0.0)
+                    continue;
                 // compute xopt shifted x
                 std::vector<double> x0 = x;
                 for (size_t i = 0; i < x.size(); i++)
