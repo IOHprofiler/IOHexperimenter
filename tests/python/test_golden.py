@@ -28,7 +28,7 @@ class TestGoldenBehaviour(unittest.TestCase):
         self.assertEqual(sorted(expected), sorted(actual), "set of records differs")
         for key in sorted(expected):
             with self.subTest(record=key):
-                golden.assert_close(self, expected[key], actual[key], key)
+                golden.assert_record(self, expected[key], actual[key], key)
 
     def test_union_classes_match_families(self):
         registry = golden.load(golden.REGISTRY_FILE)
@@ -48,8 +48,8 @@ class TestGoldenBehaviour(unittest.TestCase):
                     self.assertIn(pid, golden.live_registry(ioh, classes[family]))
                     reference = ioh.get_problem(pid, instances[0], dims[0], classes[family])
                 via_union = ioh.get_problem(pid, instances[0], dims[0], classes[union])
-                golden.assert_close(self, golden._describe(reference, ioh, key, 1),
-                                    golden._describe(via_union, ioh, key, 1), key)
+                golden.assert_record(self, golden._describe(reference, ioh, key, 1),
+                                     golden._describe(via_union, ioh, key, 1), key)
 
 
 if __name__ == "__main__":

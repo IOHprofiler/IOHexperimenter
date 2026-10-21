@@ -7,8 +7,8 @@ objective values at deterministic points), suite iteration, and directly constru
 Regenerating them requires explicit maintainer approval and a justification in the pull request.
 
 Usage (run against an installed / built ioh):
-    python tests/python/golden.py --dump-registry   # print the registry snapshot of a fresh interpreter
-    python tests/python/golden.py --write           # regenerate tests/data/golden (needs approval!)
+    python tests/python/golden.py --dump-registry [FILE]  # registry snapshot of a fresh interpreter
+    python tests/python/golden.py --write                 # regenerate tests/data/golden (needs approval!)
 """
 import json
 import math
@@ -42,6 +42,12 @@ WRAP_NAMES = ("golden_wrap_real", "golden_wrap_integer")
 # MaxInfluence evaluates Monte-Carlo cascades with the global, randomly seeded generator
 # (max_influence.hpp); only x = 0 (no seed nodes) has a reproducible objective value
 STOCHASTIC_PREFIXES = ("MaxInfluence",)
+
+# number of ones in the sparse bit strings evaluated for binary problems
+SPARSE_ONES = (1, 2, 5)
+
+# objective values: their absolute tolerance is scaled by |optimum_y| (see assert_record)
+OBJECTIVE_KEYS = ("y", "y_sparse", "y_at_optimum", "y_at_zero")
 
 # suite name -> (problem_ids, instances, dimensions); iteration order and contents are frozen
 SUITES = {
@@ -88,13 +94,20 @@ def _is_stochastic(name):
     return str(name).startswith(STOCHASTIC_PREFIXES)
 
 
-def _describe(problem, ioh, key, count, dynamic=False):
+def _sparse_points(key, n):
+    """Bit strings with a few ones: dense random bit strings violate the budget constraint of most
+    graph problems (their value is then only the penalty), these stay feasible."""
+    rng = random.Random(_seed(key + "/sparse"))
+    points = []
+    for k in SPARSE_ONES:
+        ones = set(rng.sample(range(n), min(k, n)))
+        points.append([1 if i in ones else 0 for i in range(n)])
+    return points
+
+
+def _base_record(problem):
     meta = problem.meta_data
-    if _is_stochastic(meta.name):
-        return _describe_stochastic(problem)
-    lb, ub = list(problem.bounds.lb), list(problem.bounds.ub)
-    integer = _is_integer_problem(problem, ioh)
-    record = {
+    return {
         "meta": {
             "problem_id": int(meta.problem_id),
             "name": str(meta.name),
@@ -102,11 +115,19 @@ def _describe(problem, ioh, key, count, dynamic=False):
             "n_variables": int(meta.n_variables),
             "optimization_type": str(meta.optimization_type.name),
         },
-        "lb": _vector(lb),
-        "ub": _vector(ub),
+        "lb": _vector(problem.bounds.lb),
+        "ub": _vector(problem.bounds.ub),
         "optimum_x": _vector(problem.optimum.x),
         "optimum_y": float(problem.optimum.y),
     }
+
+
+def _describe(problem, ioh, key, count, dynamic=False):
+    if _is_stochastic(problem.meta_data.name):
+        return _describe_stochastic(problem)
+    record = _base_record(problem)
+    lb, ub = list(problem.bounds.lb), list(problem.bounds.ub)
+    integer = _is_integer_problem(problem, ioh)
     points = _points(key, lb, ub, count, integer)
     record["x_sums"] = [math.fsum(map(float, x)) for x in points]
     y = []
@@ -116,29 +137,28 @@ def _describe(problem, ioh, key, count, dynamic=False):
             y.append(float(problem.step()))
             y.append(float(problem(x)))
     record["y"] = y
+    if dynamic:
+        return record
+    if integer and all(v == 0 for v in lb) and all(v == 1 for v in ub):
+        y_sparse, penalty = [], []
+        for x in _sparse_points(key, len(lb)):
+            y_sparse.append(float(problem(x)))
+            penalty.append(float(problem.constraints.penalty()))
+        record["y_sparse"] = y_sparse
+        record["penalty_sparse"] = penalty
+    x_opt = list(problem.optimum.x)
+    if len(x_opt) == len(lb) and all(math.isfinite(float(v)) for v in x_opt):
+        record["y_at_optimum"] = float(problem(x_opt))
     return record
 
 
 def _describe_stochastic(problem):
     """Like _describe, but only reproducible objective values (see STOCHASTIC_PREFIXES)."""
-    meta = problem.meta_data
-    n = int(meta.n_variables)
-    single = [1] + [0] * (n - 1)
-    return {
-        "meta": {
-            "problem_id": int(meta.problem_id),
-            "name": str(meta.name),
-            "instance": int(meta.instance),
-            "n_variables": n,
-            "optimization_type": str(meta.optimization_type.name),
-        },
-        "lb": _vector(problem.bounds.lb),
-        "ub": _vector(problem.bounds.ub),
-        "optimum_x": _vector(problem.optimum.x),
-        "optimum_y": float(problem.optimum.y),
-        "y_at_zero": float(problem([0] * n)),
-        "single_node_is_finite": math.isfinite(float(problem(single))),
-    }
+    record = _base_record(problem)
+    n = record["meta"]["n_variables"]
+    record["y_at_zero"] = float(problem([0] * n))
+    record["single_node_is_finite"] = math.isfinite(float(problem([1] + [0] * (n - 1))))
+    return record
 
 
 def _safe(fn):
@@ -268,18 +288,18 @@ def union_pairs(registry):
     return pairs
 
 
-def assert_close(test, expected, actual, path="root"):
-    """Recursive comparison: names/ints exact, floats with REL_TOL/ABS_TOL, containers by value."""
+def assert_close(test, expected, actual, path="root", abs_tol=ABS_TOL):
+    """Recursive comparison: names/ints exact, floats with REL_TOL/abs_tol, containers by value."""
     if isinstance(expected, dict):
         test.assertIsInstance(actual, dict, path)
         test.assertEqual(sorted(expected), sorted(actual), f"{path}: keys differ")
         for k in expected:
-            assert_close(test, expected[k], actual[k], f"{path}/{k}")
+            assert_close(test, expected[k], actual[k], f"{path}/{k}", abs_tol)
     elif isinstance(expected, list):
         actual = list(actual)
         test.assertEqual(len(expected), len(actual), f"{path}: length differs")
         for i, (e, a) in enumerate(zip(expected, actual)):
-            assert_close(test, e, a, f"{path}[{i}]")
+            assert_close(test, e, a, f"{path}[{i}]", abs_tol)
     elif isinstance(expected, float) or isinstance(actual, float):
         e, a = float(expected), float(actual)
         if math.isnan(e) or math.isnan(a):
@@ -287,17 +307,37 @@ def assert_close(test, expected, actual, path="root"):
         elif math.isinf(e) or math.isinf(a):
             test.assertEqual(e, a, path)
         else:
-            test.assertTrue(math.isclose(e, a, rel_tol=REL_TOL, abs_tol=ABS_TOL), f"{path}: {e!r} != {a!r}")
+            test.assertTrue(math.isclose(e, a, rel_tol=REL_TOL, abs_tol=abs_tol), f"{path}: {e!r} != {a!r}")
     else:
         test.assertEqual(expected, actual, path)
+
+
+def assert_record(test, expected, actual, path):
+    """assert_close for a behaviour record. Objective values are often computed as raw + f_opt and
+    can cancel to near zero, so their absolute tolerance is scaled by |optimum_y|."""
+    if not (isinstance(expected, dict) and isinstance(actual, dict) and "optimum_y" in expected):
+        return assert_close(test, expected, actual, path)
+    opt = expected["optimum_y"]
+    objective_tol = max(ABS_TOL, REL_TOL * abs(opt)) if math.isfinite(opt) else ABS_TOL
+    test.assertEqual(sorted(expected), sorted(actual), f"{path}: keys differ")
+    for k in expected:
+        tol = objective_tol if k in OBJECTIVE_KEYS else ABS_TOL
+        assert_close(test, expected[k], actual[k], f"{path}/{k}", tol)
 
 
 def fresh_registry_snapshot():
     """Run --dump-registry in a fresh interpreter (other tests register wrapped problems in-process)."""
     import subprocess
-    out = subprocess.run([sys.executable, os.path.abspath(__file__), "--dump-registry"],
-                         check=True, capture_output=True, text=True).stdout
-    return json.loads(out)
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmp:
+        out = os.path.join(tmp, "registry.json")
+        proc = subprocess.run([sys.executable, os.path.abspath(__file__), "--dump-registry", out],
+                              capture_output=True, text=True)
+        if proc.returncode != 0:
+            raise AssertionError(f"--dump-registry failed with exit code {proc.returncode}:\n"
+                                 f"{proc.stdout}\n{proc.stderr}")
+        return load(out)
 
 
 def load(path):
@@ -311,12 +351,19 @@ def main(argv):
     if "--dump-registry" in argv:
         snapshot = registry_snapshot(ioh)
         snapshot["wrap"] = wrap_scenario(ioh)
-        json.dump(snapshot, sys.stdout, sort_keys=True)
+        rest = argv[argv.index("--dump-registry") + 1:]
+        with (open(rest[0], "w") if rest else sys.stdout) as f:
+            json.dump(snapshot, f, sort_keys=True)
         return 0
     if "--write" in argv:
         os.makedirs(FIXTURE_DIR, exist_ok=True)
         registry = registry_snapshot(ioh)
         behaviour = behaviour_records(ioh, registry)
+        # every deterministic graph record must freeze at least one objective value, not only penalties
+        weak = [k for k, r in behaviour.items() if k.startswith("GRAPH/") and "penalty_sparse" in r
+                and all(p != 0 for p in r["penalty_sparse"])]
+        if weak:
+            sys.exit(f"no feasible sparse point for: {', '.join(weak)}")
         registry["wrap"] = wrap_scenario(ioh)  # after the snapshot: it adds entries to REAL/INTEGER
         with open(REGISTRY_FILE, "w") as f:
             json.dump(registry, f, indent=1, sort_keys=True)
