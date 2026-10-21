@@ -1,8 +1,10 @@
 """Golden fixtures that freeze the Python-visible behaviour of ioh (see TASKS.md, task T1.1).
 
 The fixtures in tests/data/golden were generated from an unchanged build of master and are the
-reference for every refactor of the registry, the data handling and the bindings. Regenerating them
-requires explicit maintainer approval and a justification in the pull request.
+reference for every refactor of the registry, the data handling and the bindings. They cover every
+registry (ids and names), the behaviour of every registered problem (metadata, bounds, optimum and
+objective values at deterministic points), suite iteration, and directly constructed problems.
+Regenerating them requires explicit maintainer approval and a justification in the pull request.
 
 Usage (run against an installed / built ioh):
     python tests/python/golden.py --dump-registry   # print the registry snapshot of a fresh interpreter
@@ -37,6 +39,22 @@ FAMILIES = {
 DYNAMIC_BIN_VAL = ([10], [1, 2], 3)
 WRAP_NAMES = ("golden_wrap_real", "golden_wrap_integer")
 
+# MaxInfluence evaluates Monte-Carlo cascades with the global, randomly seeded generator
+# (max_influence.hpp); only x = 0 (no seed nodes) has a reproducible objective value
+STOCHASTIC_PREFIXES = ("MaxInfluence",)
+
+# suite name -> (problem_ids, instances, dimensions); iteration order and contents are frozen
+SUITES = {
+    "Real": ([1, 24, 30, 1001, 1101], [1], [10]),
+    "BBOB": ([1, 12, 24], [1, 2], [2, 5]),
+    "SBOX": ([1, 12, 24], [1, 2], [2, 5]),
+    "RealStarDiscrepancy": ([30, 45, 59], [1, 2], [2]),
+    "Integer": ([1, 21, 30, 2000, 10001], [1], [16]),
+    "PBO": ([1, 20, 25], [1, 2], [16]),
+    "Submodular": ([2000, 2100, 2200, 2300], [1], [1]),
+    "IntegerStarDiscrepancy": ([30, 59], [1], [3]),
+}
+
 
 def _seed(key):
     return zlib.crc32(key.encode())
@@ -66,8 +84,14 @@ def _is_integer_problem(problem, ioh):
     return isinstance(problem, ioh.iohcpp.problem.IntegerSingleObjective)
 
 
+def _is_stochastic(name):
+    return str(name).startswith(STOCHASTIC_PREFIXES)
+
+
 def _describe(problem, ioh, key, count, dynamic=False):
     meta = problem.meta_data
+    if _is_stochastic(meta.name):
+        return _describe_stochastic(problem)
     lb, ub = list(problem.bounds.lb), list(problem.bounds.ub)
     integer = _is_integer_problem(problem, ioh)
     record = {
@@ -93,6 +117,28 @@ def _describe(problem, ioh, key, count, dynamic=False):
             y.append(float(problem(x)))
     record["y"] = y
     return record
+
+
+def _describe_stochastic(problem):
+    """Like _describe, but only reproducible objective values (see STOCHASTIC_PREFIXES)."""
+    meta = problem.meta_data
+    n = int(meta.n_variables)
+    single = [1] + [0] * (n - 1)
+    return {
+        "meta": {
+            "problem_id": int(meta.problem_id),
+            "name": str(meta.name),
+            "instance": int(meta.instance),
+            "n_variables": n,
+            "optimization_type": str(meta.optimization_type.name),
+        },
+        "lb": _vector(problem.bounds.lb),
+        "ub": _vector(problem.bounds.ub),
+        "optimum_x": _vector(problem.optimum.x),
+        "optimum_y": float(problem.optimum.y),
+        "y_at_zero": float(problem([0] * n)),
+        "single_node_is_finite": math.isfinite(float(problem(single))),
+    }
 
 
 def _safe(fn):
@@ -185,7 +231,26 @@ def behaviour_records(ioh, registry):
     }
     for key, make in direct.items():
         records[f"direct/{key}"] = _safe(lambda: _describe(make(), ioh, f"direct/{key}", 3))
+
+    for name, (pids, instances, dims) in SUITES.items():
+        records[f"suite/{name}"] = _safe(lambda: _describe_suite(
+            getattr(ioh.iohcpp.suite, name)(pids, instances, dims)))
     return records
+
+
+def _describe_suite(suite):
+    sequence = []
+    for problem in suite:
+        meta = problem.meta_data
+        sequence.append([int(meta.problem_id), str(meta.name), int(meta.instance), int(meta.n_variables)])
+    return {
+        "name": str(suite.name),
+        "len": len(suite),
+        "problem_ids": [int(v) for v in suite.problem_ids],
+        "instances": [int(v) for v in suite.instances],
+        "dimensions": [int(v) for v in suite.dimensions],
+        "sequence": sequence,
+    }
 
 
 def union_pairs(registry):
