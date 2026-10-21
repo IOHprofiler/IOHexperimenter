@@ -6,7 +6,6 @@ import shutil
 import unittest
 import io
 from contextlib import redirect_stdout
-from functools import partial
 
 BASE_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), "../../"))
 GB = globals()
@@ -37,6 +36,13 @@ def _run_notebook(self, notebook):
                 ), f"failed in {notebook} cell {i}.\n\nReason:\n{e}.\n\nBlock:\n{block}"
 
 
+def _notebook_test(notebook):
+    # a plain function (not functools.partial, which binds self as a method since Python 3.14)
+    def test(self):
+        _run_notebook(self, notebook)
+    return test
+
+
 class MetaTest(type):
     def __new__(cls, name, bases, dct):
         instance = super().__new__(cls, name, bases, dct)
@@ -44,11 +50,7 @@ class MetaTest(type):
         for f in filter(lambda x: x.endswith("ipynb"), os.listdir(dirname)):
             fname, *_ = os.path.basename(f).split(".")
             notebook = os.path.join(dirname, f)
-            setattr(
-                instance,
-                f"test_notebook_{fname}",
-                partial(_run_notebook, instance, notebook),
-            )
+            setattr(instance, f"test_notebook_{fname}", _notebook_test(notebook))
         return instance
 
 
