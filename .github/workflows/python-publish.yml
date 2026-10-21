@@ -3,86 +3,70 @@ name: Upload Python Package
 on:
   release:
     types: [created]
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "pyproject.toml"
+      - "setup.py"
+      - "MANIFEST.in"
+      - "CMakeLists.txt"
+      - "ioh/CMakeLists.txt"
+      - ".github/workflows/python-publish.yml"
+      - "tests/python/golden.py"
+      - "tests/python/test_golden.py"
+      - "tests/data/golden/**"
 
 jobs:
   build_wheels:
-    name: Build wheels on ${{ matrix.os }}
+    name: Build ${{ matrix.python }} wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        # macos-13 is an intel runner, macos-14 is apple silicon
-        os: [ubuntu-22.04, windows-2022, macos-13, macos-14]
+        # macos-15-intel builds x86_64, macos-15 builds arm64
+        os: [ubuntu-24.04, windows-2022, macos-15-intel, macos-15]
+        python: [cp310, cp311, cp312, cp313, cp314, cp315]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
-            submodules: true
+          submodules: true
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3
-        env: 
-          CIBW_SKIP: "cp38-* pp* *musllinux*"
-      - uses: actions/upload-artifact@v4
+        uses: pypa/cibuildwheel@v4.3.3
+        env:
+          # one Python version per job; the rest of the configuration is in pyproject.toml
+          CIBW_BUILD: "${{ matrix.python }}-*"
+      - uses: actions/upload-artifact@v7
         with:
-          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+          name: cibw-wheels-${{ matrix.os }}-${{ matrix.python }}
           path: ./wheelhouse/*.whl
+
   build_sdist:
     name: Build source distribution
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: true
       - name: Build sdist
         run: pipx run build --sdist
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: cibw-sdist
           path: dist/*.tar.gz
 
   upload_pypi:
     needs: [build_wheels, build_sdist]
+    if: github.event_name == 'release'
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
       id-token: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           # unpacks all CIBW artifacts into dist/
           pattern: cibw-*
           path: dist
           merge-multiple: true
       - uses: pypa/gh-action-pypi-publish@release/v1
-
-  cleanup:
-    runs-on: ubuntu-latest
-    if: failure()   # only run this job if another job failed
-    needs: [build_wheels]
-    steps:
-      - name: Delete release
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const release_id = context.payload.release.id;
-            await github.rest.repos.deleteRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: release_id,
-            });
-            console.log(`Deleted release ${release_id}`);
-
-      - name: Delete tag
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const tag = context.payload.release.tag_name;
-            await github.rest.git.deleteRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: `tags/${tag}`,
-            });
-            console.log(`Deleted tag ${tag}`);
-
-            

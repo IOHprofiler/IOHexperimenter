@@ -3,9 +3,14 @@ requires = [
     "setuptools",
     "wheel",
     "cmake",
-    "mypy",
-    "numpy>=2.0",
-    "pybind11",
     "ninja",
-    "xmltodict",
+    "xmltodict",  # setup.py imports doc/generate_docs.py, which imports xmltodict
 ]
+
+[tool.cibuildwheel]
+build = "cp310-* cp311-* cp312-* cp313-* cp314-* cp315-*"
+# free-threaded builds need binding support first; musllinux was never shipped
+skip = "cp3??t-* *-musllinux_*"
+# freezes the Python-visible registry and problem behaviour, see tests/python/golden.py
+test-command = "python {project}/tests/python/test_golden.py"
+build-verbosity = 1
