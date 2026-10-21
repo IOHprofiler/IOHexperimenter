@@ -190,34 +190,51 @@ The unfinished nanobind port lives on branch `origin/untemplating` (see WP6 for 
 What was done, for reference by later WPs:
 
 * **T1.1 golden tests** — `tests/python/golden.py` (generator + shared helpers),
-  `tests/python/test_golden.py`, fixtures in `tests/data/golden/` (generated from master 5338b27b):
-  registry snapshot of every `ProblemClass` and all 96 class views plus the ids `wrap_problem`
-  assigns (REAL 1121, INTEGER 10005); 722 behaviour records (every registered id × 2 instances ×
-  2 dimensions; DynamicBinVal step sequences; WModel/funnel/ManyAffine; iteration of all 8 suites).
-  Points come from `random.Random(seed)` (stable across Python versions); floats compare with
-  `rel_tol=1e-9`; containers by value. The registry snapshot runs in a fresh interpreter because other
-  tests register wrapped problems in-process; nothing touches `ProblemClass.problems`/`get_problem`
-  on an empty GRAPH registry (that downloads data into the working directory). MaxInfluence records
-  only x = 0 and a finiteness check. Run: `python tests/python/test_golden.py` (≈4 s).
+  `tests/python/test_golden.py`, fixtures in `tests/data/golden/` (generated from master 5338b27b).
+  * Registry snapshot of every `ProblemClass` and all 96 class views, plus the ids `wrap_problem`
+    assigns (REAL 1121, INTEGER 10005); it runs in a fresh interpreter because other tests register
+    wrapped problems in-process.
+  * 722 behaviour records: 2 instances × 2 dimensions for BBOB/SBOX/PBO/CEC2022/STAR_*, 2 instances
+    at the fixed dimension for CEC2013, one record per GRAPH id (instance and dimension are
+    ignored), DynamicBinVal step sequences, WModel/funnel/ManyAffine, and the iteration of all 8
+    suites. Each record holds metadata, bounds, optimum, objective values at deterministic dense
+    points (`random.Random(seed)`, stable across Python versions), at the optimum when it is finite,
+    and, for binary problems, at sparse bit strings with 1/2/5 ones plus their constraint penalties
+    (dense bit strings violate the budget of most graph problems, so their value is only the
+    penalty; `--write` refuses fixtures without a feasible sparse point). MaxInfluence records only
+    x = 0 and a finiteness check.
+  * Comparison: names/integers exactly, floats with `rel_tol=1e-9` (objective values also with an
+    absolute tolerance of `1e-9·|optimum_y|`, because raw + f_opt can cancel), containers by value.
+  * Nothing touches `ProblemClass.problems`/`get_problem` on an empty GRAPH registry (that downloads
+    data into the working directory). Run: `python tests/python/test_golden.py` (≈4 s).
 * **T1.2 wheels** — `pypa/cibuildwheel@v4.3.3`, `[tool.cibuildwheel]` in `pyproject.toml`
   (CPython 3.10–3.15, skip `cp3??t-*` and musllinux, golden tests as `test-command`,
   `MACOSX_DEPLOYMENT_TARGET=10.15` because `setup.py` builds with
-  `CMAKE_OSX_DEPLOYMENT_TARGET=10.15`), one job per OS × Python, PR builds for every path that
-  affects wheels, upload only on release, no tag-deleting cleanup job, Dependabot for actions.
-* **T1.3** — numpy, mypy, pybind11 removed from the build requirements; `python_requires>=3.10`.
+  `CMAKE_OSX_DEPLOYMENT_TARGET=10.15`, `CMAKE_BUILD_PARALLEL_LEVEL=3` on macOS), one job per
+  OS × Python, PR builds for every path that affects wheels, upload only on `release: published`,
+  no tag-deleting cleanup job, Dependabot for actions. Wheels contain only the `ioh` package (they
+  used to install stray top-level `tests` and `doc` packages).
+* **T1.3** — numpy, mypy, pybind11 removed from the build requirements; `python_requires>=3.10`;
+  `MAKE_STUBS=1` builds now fail early with instructions when mypy is missing
+  (`pip install mypy && MAKE_STUBS=1 pip install --no-build-isolation -e .`).
 * **T1.4 push CI** — `ubuntu-24.04` (g++-12/13/14, clang++-18), `macos-15`, `windows-2022`; oldest +
-  newest Python; `IOH_RESOURCES` for C++ test binaries; `--parallel 4` (unbounded `make -j` thrashes
-  the 3-vCPU/7 GB macOS runners).
+  newest Python; `IOH_RESOURCES` for C++ test binaries; bounded parallelism (`--parallel 4` for the
+  C++ jobs, `CMAKE_BUILD_PARALLEL_LEVEL=3` for macOS Python builds): unbounded jobs make the
+  3-vCPU/7 GB macOS runners swap for hours.
 * **T1.5** — googletest v1.10 → v1.18.0 (v1.10 does not configure with CMake ≥ 4).
-* Fixes needed to get green CI: five C++ tests compared floating-point results exactly and failed on
-  arm64 (now relative tolerances; logger output compared up to the last printed digit); the Windows
-  graph-id bug (§3); `test_notebook_tutorial` used `functools.partial` as a class attribute, which
-  binds `self` since Python 3.14.
-* **T1.6 (maintainer)** — after merge, cut a release. Release notes must mention: Python ≥ 3.10;
-  Linux wheels are `manylinux_2_28` (glibc ≥ 2.28) instead of `manylinux2014`; no more i686 Linux
-  wheels; new cp313–cp315 wheels; graph problem ids on Windows fixed.
-* If cp315 fails with the 2023 pybind11 pin: remove `cp315` from the workflow matrix (an empty
-  `CIBW_BUILD` selection makes cibuildwheel fail) until WP6.
+* Fixes needed to get green CI:
+  * five C++ tests compared floating-point results exactly or with a fixed absolute tolerance and
+    failed on arm64: optimum checks now use a relative tolerance (1e-12), the CEC2013 check 1e-10
+    relative (worst arm64 deviation 1.7e-11), and logger output is compared with integers, layout
+    and printed format exact and decimals within one unit of their last printed digit;
+  * the Windows graph-id bug (§3);
+  * `test_notebook_tutorial` used `functools.partial` as a class attribute, which binds `self`
+    since Python 3.14.
+* **T1.6 (maintainer)** — after merge, cut a release (`release: published` triggers the upload).
+  Release notes must mention: Python ≥ 3.10; Linux wheels built on manylinux_2_28 images (tagged
+  `manylinux_2_27/2_28`, glibc ≥ 2.27) instead of manylinux2014; no more i686 Linux wheels; new
+  cp313–cp315 wheels; wheels no longer install top-level `tests`/`doc` packages; graph problem ids on
+  Windows fixed.
 
 ---
 
@@ -410,8 +427,8 @@ Depends on: WP3 (compiled target) and WP4 (packaging contents).
 
 * Replace `setup.py` with scikit-build-core (`pyproject.toml` `[project]` + `[tool.scikit-build]`):
   persistent `build-dir` (e.g. `build/{wheel_tag}`) and editable rebuilds (no more
-  `shutil.rmtree(build)`), Ninja, clang++ (not `CXX=clang`), `wheel.packages = ["ioh"]` (stops
-  installing stray top-level `tests`/`doc` packages), static data installed into `ioh/static`,
+  `shutil.rmtree(build)`), Ninja, clang++ (not `CXX=clang`), `wheel.packages = ["ioh"]` (WP1
+  already stopped installing stray top-level `tests`/`doc` packages), static data installed into `ioh/static`,
   macOS deployment target ≥ 10.15 (set via `MACOSX_DEPLOYMENT_TARGET`, keep in sync with
   `[tool.cibuildwheel.macos.environment]`), ARCHFLAGS mapped to `CMAKE_OSX_ARCHITECTURES` (enables
   building x86_64 macOS wheels on arm64; do not overwrite ARCHFLAGS like `setup.py` does today).
