@@ -141,7 +141,7 @@ if MAKE_DOCS:
     except:
         pass
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 iohcpp = CMakeExtension("ioh.iohcpp")
@@ -154,7 +154,7 @@ setup(
     description="The experimenter for Iterative Optimization Heuristics",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=find_packages(exclude=['ioh.iohcpp', 'ioh.iohcpp.*']),
+    packages=find_packages(include=['ioh', 'ioh.*'], exclude=['ioh.iohcpp', 'ioh.iohcpp.*']),
     package_dir={"IOHexperimenter": "ioh"},
     include_package_data=True,
     exclude_package_data={"": ["src/*", "*CMakeLists.txt", "*README.md"]},

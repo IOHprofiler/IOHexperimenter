@@ -2,7 +2,8 @@ name: Upload Python Package
 
 on:
   release:
-    types: [created]
+    # 'created' does not fire for releases published from a draft
+    types: [published]
   workflow_dispatch:
   pull_request:
     # everything that ends up in, or is tested against, the wheels
@@ -16,7 +17,10 @@ on:
       - "ioh/**"
       - "static/**"
       - "external/**"
-      - "doc/generate_docs.py"
+      - "doc/**"
+      - "VERSION"
+      - "README.md"
+      - ".gitmodules"
       - ".github/workflows/python-publish.yml"
       - "tests/python/golden.py"
       - "tests/python/test_golden.py"

@@ -33,6 +33,9 @@ jobs:
 
   build-test-python:
     runs-on: macos-15
+    env:
+      # setup.py only bounds the build on Linux; unbounded jobs make the 7 GB runner swap
+      CMAKE_BUILD_PARALLEL_LEVEL: 3
     strategy:
       fail-fast: false
       matrix:
