@@ -310,7 +310,10 @@ namespace ioh::problem::submodular
             for (auto &graph : graphs)
             {
                 graph->meta.root = root_path;
-                constructors.push_back({[graph, i](int, int) { return ProblemType(i, 1, graph); }, i++, std::nullopt});
+                // compute the id first: with {[graph, i]..., i++} MSVC captured the incremented i,
+                // so every graph problem's meta_data id was its registry id + 1 on Windows
+                const int id = i++;
+                constructors.push_back({[graph, id](int, int) { return ProblemType(id, 1, graph); }, id, std::nullopt});
             }
             return constructors;
         }
