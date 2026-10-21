@@ -134,7 +134,8 @@ TEST_F(BaseTest, xopt_equals_yopt_bbob)
         for (auto instance = 1; instance < 5; instance++)
         {
             auto problem = problem_factory.create(name, instance, 16);
-            EXPECT_DOUBLE_EQ(problem->optimum().y, (*problem)(problem->optimum().x)) << *problem;
+            const auto y_opt = problem->optimum().y;
+            EXPECT_NEAR(y_opt, (*problem)(problem->optimum().x), relative_tolerance(y_opt)) << *problem;
         }
     }
 }

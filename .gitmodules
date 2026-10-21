@@ -5,7 +5,7 @@
 [submodule "external/googletest"]
 	path = external/googletest
 	url = https://github.com/google/googletest
-	branch = v1.10.x
+	branch = main
 [submodule "external/fmt"]
 	path = external/fmt
 	url = git@github.com:fmtlib/fmt

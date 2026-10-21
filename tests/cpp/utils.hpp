@@ -8,9 +8,19 @@
 #include "ioh/common/log.hpp"
 #include "ioh/common/file.hpp"
 
+#include <algorithm>
+#include <cmath>
+#include <regex>
 #include <sstream>
 #include <vector>
 #include <string>
+
+//! Relative tolerance for comparing computed values across platforms: the last digits differ
+//! between compilers/architectures (e.g. fused multiply-add contraction on arm64)
+inline double relative_tolerance(const double expected, const double rel = 1e-12)
+{
+    return rel * std::max(1.0, std::abs(expected));
+}
 
 // Template function to create a string representation of the contents of a vector
 template<typename T>
@@ -189,9 +199,45 @@ inline bool are_vectors_equal(const std::vector<int>& vec1, const std::vector<in
   return true;
 }
 
+//! A number found in text, with the value of one unit in its last printed digit
+struct PrintedNumber
+{
+    double value;
+    double last_digit;
+};
+
+//! Replace every unsigned number in text by '#', collecting the numbers (to compare them with a
+//! tolerance); signs stay in the text and are compared exactly
+inline std::string numbers_to_placeholders(const std::string& text, std::vector<PrintedNumber>& numbers){
+    static const std::regex number(R"((\d+)(\.(\d*))?([eE]([-+]?\d+))?)");
+    std::string skeleton;
+    size_t last = 0;
+    for (auto it = std::sregex_iterator(text.begin(), text.end(), number); it != std::sregex_iterator(); ++it)
+    {
+        const auto& m = *it;
+        const auto decimals = static_cast<int>(m[3].length());
+        const auto exponent = m[5].matched ? std::stoi(m[5].str()) : 0;
+        numbers.push_back({std::stod(m.str()), std::pow(10.0, exponent - decimals)});
+        skeleton += text.substr(last, static_cast<size_t>(m.position()) - last) + "#";
+        last = static_cast<size_t>(m.position() + m.length());
+    }
+    return skeleton + text.substr(last);
+}
+
+//! Compare a file with the expected text: layout exactly, numbers up to one unit in their last
+//! printed digit (computed values differ slightly between platforms, see relative_tolerance)
 inline void compare_file_with_string(const fs::path& path, const std::string& expected){
     const std::string got = ioh::common::file::as_string(path);
-    EXPECT_EQ(0, got.compare(expected)) << "EXPECTED:\n" << expected << "\nGOT:\n" << got;
+    std::vector<PrintedNumber> expected_numbers, got_numbers;
+    const auto expected_skeleton = numbers_to_placeholders(expected, expected_numbers);
+    const auto got_skeleton = numbers_to_placeholders(got, got_numbers);
+    ASSERT_EQ(expected_skeleton, got_skeleton) << "EXPECTED:\n" << expected << "\nGOT:\n" << got;
+    for (size_t i = 0; i < expected_numbers.size(); ++i)
+    {
+        const auto& e = expected_numbers[i];
+        const auto tolerance = std::max(relative_tolerance(e.value), 1.0001 * e.last_digit);
+        EXPECT_NEAR(e.value, got_numbers[i].value, tolerance) << "EXPECTED:\n" << expected << "\nGOT:\n" << got;
+    }
 }
 
 class BaseTest: public ::testing::Test

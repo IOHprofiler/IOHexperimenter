@@ -32,7 +32,7 @@ TEST_F(BaseTest, test_cec2013)
 
         auto instance = problem_factory.create(func_id, ins_id, static_cast<int>(x.size()));
         const auto y = (*instance)(x);
-        ASSERT_NEAR(f, y, 1e-8) << *instance;
+        ASSERT_NEAR(f, y, relative_tolerance(f, 1e-8)) << *instance;
     }
 }
 
