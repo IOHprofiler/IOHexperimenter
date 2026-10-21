@@ -70,9 +70,11 @@ Measured on Apple M5, clang 21 (full diagnosis in the WP1 PR discussion):
   instead of lists** (separate WP).
 * **Wheel matrix**: CPython 3.10–3.15 on Linux x86_64 and aarch64, Windows x64 and ARM64 (from
   3.11: numpy has no Windows ARM64 wheels for 3.10), macOS Intel (`macos-15-intel`) and arm64; no
-  win32, i686 or musllinux wheels. Free-threaded wheels (cp314t, cp315t) are built too; until WP6
-  declares the module thread-safe, importing `ioh` on a free-threaded interpreter re-enables the GIL
-  (with a `RuntimeWarning`), so they make `ioh` installable there but do not yet run without the GIL.
+  win32, i686 or musllinux wheels. Free-threaded wheels (cp314t, cp315t) are built for Linux and
+  macOS (on Windows the pinned pybind11 cannot find the free-threaded `python3XXt.lib`; WP6 adds
+  them); until WP6 declares the module thread-safe, importing `ioh` on a free-threaded interpreter
+  re-enables the GIL (with a `RuntimeWarning`), so they make `ioh` installable there but do not yet
+  run without the GIL.
 * **Problem metadata**: expose `fixed_dimension` and `fixed_instance` (uniform names) on Python
   problems and registry entries (WP3/WP4): `None` when the problem honours the requested
   dimension/instance, otherwise the value it always uses (graph and CEC2013 problems).
@@ -203,7 +205,8 @@ What was done, for reference by later WPs:
   * Nothing touches `ProblemClass.problems`/`get_problem` on an empty GRAPH registry (that downloads
     data into the working directory). Run: `python tests/python/test_golden.py` (≈4 s).
 * **T1.2 wheels** — `pypa/cibuildwheel@v4.3.3`, `[tool.cibuildwheel]` in `pyproject.toml`
-  (CPython 3.10–3.15 plus free-threaded 3.14t/3.15t, skip win32 and musllinux, golden tests as
+  (CPython 3.10–3.15 plus free-threaded 3.14t/3.15t on Linux/macOS, skip win32 and musllinux,
+  golden tests as
   `test-command`,
   `MACOSX_DEPLOYMENT_TARGET=10.15` because `setup.py` builds with
   `CMAKE_OSX_DEPLOYMENT_TARGET=10.15`, `CMAKE_BUILD_PARALLEL_LEVEL=3` on macOS), one job per
@@ -238,7 +241,8 @@ What was done, for reference by later WPs:
   Release notes must mention: Python ≥ 3.10; Linux wheels built on manylinux_2_28 images (tagged
   `manylinux_2_27/2_28`, glibc ≥ 2.27) instead of manylinux2014; no more i686 Linux and 32-bit
   Windows wheels; new cp313–cp315 wheels; new Linux aarch64 and Windows ARM64 (3.11+) wheels;
-  free-threaded 3.14t/3.15t wheels (the GIL is re-enabled on import for now); wheels no longer
+  free-threaded 3.14t/3.15t wheels for Linux and macOS (the GIL is re-enabled on import for now);
+  wheels no longer
   install top-level `tests`/`doc` packages; graph problem ids on Windows fixed.
 
 ---
@@ -516,6 +520,8 @@ Depends on: WP3, WP4, WP5.
   declare that it is thread-safe. After the thread-safety audit (factory mutex from T3.2, loggers
   and triggers, the global random generator used by MaxInfluence, the WP4 data cache) build with
   nanobind's `FREE_THREADED` so the GIL stays disabled, and add a multi-threaded evaluation test.
+  Also remove the `cp3??t-win*` skip in `pyproject.toml`: nanobind finds the free-threaded
+  `python3XXt.lib` on Windows, the pinned pybind11 2.11 does not.
 
 ### T6.7 Stable ABI
 
