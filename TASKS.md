@@ -8,7 +8,8 @@ listed. **Do not start a WP before its dependencies are merged.**
 Each task lists goal, context, steps, acceptance criteria and pitfalls. When a task changes behaviour
 or public API it must also update the docs (WP8 consolidates the upgrade guide).
 
-Status: WP1 is implemented on branch `wp1-ci-release` (see its PR). Everything else is open.
+Status: each WP heading below says whether the WP is open, implemented on a branch (see its PR) or
+merged.
 
 ---
 
@@ -73,19 +74,30 @@ Measured on Apple M5, clang 21 (full diagnosis in the WP1 PR discussion):
   win32, i686 or musllinux wheels. Free-threaded wheels (cp314t, cp315t) are built for Linux and
   macOS (on Windows the pinned pybind11 cannot find the free-threaded `python3XXt.lib`; WP6 adds
   them); until WP6 declares the module thread-safe, importing `ioh` on a free-threaded interpreter
-  re-enables the GIL (with a `RuntimeWarning`), so they make `ioh` installable there but do not yet
-  run without the GIL.
+  re-enables the GIL (with a `RuntimeWarning`), so until then these wheels only test the
+  free-threaded build in CI (the first released ones, in 0.4.0, come after WP6). Pull requests build
+  only the Linux and Windows wheels; the full matrix, including macOS, runs weekly, on manual
+  dispatch and for releases, because the organization runs at most 20 jobs at once, only 5 of them
+  on macOS, and the Intel ones are slow.
 * **Problem metadata**: expose `fixed_dimension` and `fixed_instance` (uniform names) on Python
   problems and registry entries (WP3/WP4): `None` when the problem honours the requested
   dimension/instance, otherwise the value it always uses (graph and CEC2013 problems).
 * **`static.tar.gz` stays** in the repository: released versions (≤ 0.3.22) download it from
   `master` in `download_static_folder()`. It must be kept identical to `static/` (WP4 adds a check).
+* **No intermediate releases**: nothing is released until all WPs are merged. The next release
+  (0.4.0, WP8) ships everything at once, so PyPI stays at 0.3.22 until then. To test wheels in
+  between, run the wheels workflow by manual dispatch; it only uploads on `release: published`.
 * Not doing: PCH, `-Os` for bindings, a separate data wheel, binary data formats, pybind11 3.x.
 
 ## 2. Invariants and conventions
 
 * One branch + PR per WP (or per task for big WPs). Keep PRs reviewable; no drive-by refactors.
 * Every PR: CI green on Linux, macOS, Windows; golden tests pass unchanged; docs updated.
+* Every PR with user-visible changes (Python API, supported platforms or versions, packaging, C++
+  API) adds them to the release-notes draft in WP8, because everything ships in one release (§1).
+* Pull requests do not build macOS wheels (§1). A PR that changes the build (CMake, `setup.py`,
+  `pyproject.toml`, bindings, the wheels workflow) also runs the full wheel matrix on its branch
+  before review: `gh workflow run python-publish.yml --ref <branch>`.
 * Never regenerate golden fixtures to make a test pass. Fixtures may only be regenerated with explicit
   maintainer approval and a written justification in the PR.
 * Keep `-O3` for everything that contains problem code.
@@ -182,7 +194,7 @@ The unfinished nanobind port lives on branch `origin/untemplating` (see WP6 for 
 
 ---
 
-## WP1 — Unblock CI and releases ✅ implemented (branch `wp1-ci-release`)
+## WP1 — Unblock CI and releases ✅ merged (#217)
 
 What was done, for reference by later WPs:
 
@@ -212,9 +224,10 @@ What was done, for reference by later WPs:
   `CMAKE_OSX_DEPLOYMENT_TARGET=10.15`, `CMAKE_BUILD_PARALLEL_LEVEL=3` on macOS), one job per
   OS × Python on native runners (`ubuntu-24.04`, `ubuntu-24.04-arm`, `windows-2022`,
   `windows-11-arm` from cp311, `macos-15-intel`, `macos-15`; the cp314/cp315 jobs also build the
-  free-threaded variant), PR builds for every path that affects wheels, superseded PR runs
-  cancelled, upload only on `release: published`, no tag-deleting cleanup job, Dependabot for
-  actions. Wheels contain only the `ioh` package (they
+  free-threaded variant), builds for every path that affects wheels (pull requests skip macOS; the
+  full matrix runs weekly, on manual dispatch and for releases), superseded PR runs cancelled, upload
+  only on `release: published`,
+  no tag-deleting cleanup job, Dependabot for actions. Wheels contain only the `ioh` package (they
   used to install stray top-level `tests` and `doc` packages).
 * **T1.3** — numpy, mypy, pybind11 removed from the build requirements; `python_requires>=3.10`;
   `MAKE_STUBS=1` builds now fail early with instructions when mypy is missing
@@ -237,13 +250,8 @@ What was done, for reference by later WPs:
   * the Windows graph-id bug (§3);
   * `test_notebook_tutorial` used `functools.partial` as a class attribute, which binds `self`
     since Python 3.14.
-* **T1.6 (maintainer)** — after merge, cut a release (`release: published` triggers the upload).
-  Release notes must mention: Python ≥ 3.10; Linux wheels built on manylinux_2_28 images (tagged
-  `manylinux_2_27/2_28`, glibc ≥ 2.27) instead of manylinux2014; no more i686 Linux and 32-bit
-  Windows wheels; new cp313–cp315 wheels; new Linux aarch64 and Windows ARM64 (3.11+) wheels;
-  free-threaded 3.14t/3.15t wheels for Linux and macOS (the GIL is re-enabled on import for now);
-  wheels no longer
-  install top-level `tests`/`doc` packages; graph problem ids on Windows fixed.
+* **T1.6** — no release after WP1 (decided, §1): the pipeline works again, but the next release is
+  the final one (WP8). WP1's user-visible changes are listed in the WP8 release-notes draft.
 
 ---
 
@@ -447,9 +455,11 @@ Depends on: WP3 (compiled target) and WP4 (packaging contents).
   `[tool.cibuildwheel.macos.environment]`), ARCHFLAGS mapped to `CMAKE_OSX_ARCHITECTURES` (enables
   building x86_64 macOS wheels on arm64; do not overwrite ARCHFLAGS like `setup.py` does today).
 * Do **not** set `wheel.py-api` (abi3) here: that is only correct once the module is built with
-  nanobind's `STABLE_ABI` (T6.6).
+  nanobind's `STABLE_ABI` (T6.7).
 * Move the docs/stubs hooks: `MAKE_DOCS` runs via `atexit` in `setup.py`, `MAKE_STUBS` runs in
   `CMakeBuild.run()` after the extension is built; turn both into explicit scripts or CI steps.
+* List the sdist contents explicitly (`sdist.include` / `sdist.exclude`): today the `*.md` in
+  `MANIFEST.in` also ships `TASKS.md`, which must not be in the 0.4.0 sdist.
 
 ### T5.2 CI build speed
 
@@ -463,6 +473,9 @@ Depends on: WP3 (compiled target) and WP4 (packaging contents).
   calls `gtest_discover_tests` twice per target: build one test executable by default (per-file
   executables behind an option), discover tests at test time (`DISCOVERY_MODE PRE_TEST`; the
   binaries still need the data root, which WP4 provides via the compiled default).
+* CMake minimum: `BUILD_TESTS` defaults to ON, and googletest 1.18 needs CMake ≥ 3.16, but
+  `CMakeLists.txt` and `include/README.md` say 3.15. Raise both to 3.16, or default `BUILD_TESTS` to
+  ON only when IOHexperimenter is the top-level project.
 
 ---
 
@@ -566,8 +579,35 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
 * Python upgrade guide: Python ≥ 3.10 (recommended ≥ 3.12), deprecated `download_static_folder` /
   `load_graph_problems`, `IOH_RESOURCES` semantics, numpy returns (WP7), new metadata attributes if
   added.
-* README/docs: installation, building from source (scikit-build-core), data location; changelog;
-  version bump to 0.4.0; release through the fixed pipeline and verify the wheels on PyPI.
+* README/docs: installation, building from source (scikit-build-core), data location; changelog
+  (from the release-notes draft below).
+* Release, the first since 0.3.22 (§1): version bump to 0.4.0; run the wheels workflow on master by
+  manual dispatch and check the artifacts (take the wheel tags in the release notes from this run;
+  no `TASKS.md` in the sdist); then publish the GitHub release (`release: published` triggers the
+  upload) and verify the wheels on PyPI.
+
+### Release-notes draft
+
+Each WP adds its user-visible changes here (§2).
+
+* Since 0.3.22, before WP1: ManyAffine (MA-BBOB) evaluates faster by skipping components with weight
+  0; their `sub_problems` are no longer evaluated, so their state no longer changes (#216).
+* WP1:
+  * Python ≥ 3.10 (3.9 dropped).
+  * Linux x86_64 wheels are tagged `manylinux_2_27/2_28` (glibc ≥ 2.27; 0.3.22: manylinux2014,
+    glibc ≥ 2.17), the new aarch64 wheels `manylinux_2_26/2_28` (glibc ≥ 2.26). No more i686 Linux
+    and 32-bit Windows wheels: there, and on x86_64 Linux with glibc < 2.27, pip builds 0.4.0 from
+    source (C++17 compiler and CMake needed); `pip install "ioh<0.4"` keeps the 0.3.22 wheels.
+    macOS tags are unchanged (Intel 10.15, arm64 11.0).
+  * New cp313–cp315 wheels; new Linux aarch64 and Windows ARM64 (3.11+) wheels.
+  * Free-threaded 3.14t/3.15t wheels for Linux and macOS (WP6 updates this entry: Windows wheels,
+    and the GIL stays disabled).
+  * Wheels no longer install top-level `tests`/`doc` packages; the sdist no longer contains the
+    Python tests.
+  * Graph problems on Windows: `meta_data().problem_id` and the problem name were one too high
+    (`get_problem(2308)` was named `PackWhileTravel2309`), also in logged data.
+  * C++: the default configure (`BUILD_TESTS=ON`) works with CMake 4 again (googletest 1.18) and
+    needs CMake ≥ 3.16 (T5.3 settles the documented minimum).
 
 ---
 
