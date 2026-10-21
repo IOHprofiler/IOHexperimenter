@@ -68,22 +68,17 @@ Measured on Apple M5, clang 21 (full diagnosis in the WP1 PR discussion):
   which gets the abi3 wheel after WP6).
 * **Bindings move to nanobind** (with `nb::ndarray` inputs), then **numpy arrays are returned
   instead of lists** (separate WP).
+* **Wheel matrix**: CPython 3.10–3.15 on Linux x86_64 and aarch64, Windows x64 and ARM64 (from
+  3.11: numpy has no Windows ARM64 wheels for 3.10), macOS Intel (`macos-15-intel`) and arm64; no
+  win32, i686 or musllinux wheels. Free-threaded wheels (cp314t, cp315t) are built too; until WP6
+  declares the module thread-safe, importing `ioh` on a free-threaded interpreter re-enables the GIL
+  (with a `RuntimeWarning`), so they make `ioh` installable there but do not yet run without the GIL.
+* **Problem metadata**: expose `fixed_dimension` and `fixed_instance` (uniform names) on Python
+  problems and registry entries (WP3/WP4): `None` when the problem honours the requested
+  dimension/instance, otherwise the value it always uses (graph and CEC2013 problems).
+* **`static.tar.gz` stays** in the repository: released versions (≤ 0.3.22) download it from
+  `master` in `download_static_folder()`. It must be kept identical to `static/` (WP4 adds a check).
 * Not doing: PCH, `-Os` for bindings, a separate data wheel, binary data formats, pybind11 3.x.
-
-### Open decisions (ask the maintainer before acting on them)
-
-Until decided, the release uses cibuildwheel's defaults: win32 wheels are built (Windows `auto` =
-AMD64 + x86); no i686, aarch64, Windows ARM64 or free-threaded wheels; Intel macOS builds on
-`macos-15-intel` (`macos-26-intel` also exists).
-
-* win32 (32-bit Windows) wheels: keep or drop?
-* Intel macOS wheels: `macos-15-intel`/`macos-26-intel`, cross-compile x86_64 on arm64 (needs
-  WP5), or drop?
-* Linux aarch64 / Windows ARM64 wheels?
-* Free-threaded wheels (`cp3??t`): skipped (the pinned pybind11 has no support; revisit after WP6).
-* Expose `fixed_dimension` / `instance_dependent` metadata on Python problem objects (additive)?
-* `static.tar.gz`: released versions (≤ 0.3.22) download it from `master` in
-  `download_static_folder()`; keep it in sync with `static/` or accept breaking those versions?
 
 ## 2. Invariants and conventions
 
@@ -208,20 +203,29 @@ What was done, for reference by later WPs:
   * Nothing touches `ProblemClass.problems`/`get_problem` on an empty GRAPH registry (that downloads
     data into the working directory). Run: `python tests/python/test_golden.py` (≈4 s).
 * **T1.2 wheels** — `pypa/cibuildwheel@v4.3.3`, `[tool.cibuildwheel]` in `pyproject.toml`
-  (CPython 3.10–3.15, skip `cp3??t-*` and musllinux, golden tests as `test-command`,
+  (CPython 3.10–3.15 plus free-threaded 3.14t/3.15t, skip win32 and musllinux, golden tests as
+  `test-command`,
   `MACOSX_DEPLOYMENT_TARGET=10.15` because `setup.py` builds with
   `CMAKE_OSX_DEPLOYMENT_TARGET=10.15`, `CMAKE_BUILD_PARALLEL_LEVEL=3` on macOS), one job per
-  OS × Python, PR builds for every path that affects wheels, upload only on `release: published`,
-  no tag-deleting cleanup job, Dependabot for actions. Wheels contain only the `ioh` package (they
+  OS × Python on native runners (`ubuntu-24.04`, `ubuntu-24.04-arm`, `windows-2022`,
+  `windows-11-arm` from cp311, `macos-15-intel`, `macos-15`; the cp314/cp315 jobs also build the
+  free-threaded variant), PR builds for every path that affects wheels, superseded PR runs
+  cancelled, upload only on `release: published`, no tag-deleting cleanup job, Dependabot for
+  actions. Wheels contain only the `ioh` package (they
   used to install stray top-level `tests` and `doc` packages).
 * **T1.3** — numpy, mypy, pybind11 removed from the build requirements; `python_requires>=3.10`;
   `MAKE_STUBS=1` builds now fail early with instructions when mypy is missing
   (`pip install mypy && MAKE_STUBS=1 pip install --no-build-isolation -e .`).
-* **T1.4 push CI** — `ubuntu-24.04` (g++-12/13/14, clang++-18), `macos-15`, `windows-2022`; oldest +
-  newest Python; `IOH_RESOURCES` for C++ test binaries; bounded parallelism (`--parallel 4` for the
-  C++ jobs, `CMAKE_BUILD_PARALLEL_LEVEL=3` for macOS Python builds): unbounded jobs make the
-  3-vCPU/7 GB macOS runners swap for hours.
-* **T1.5** — googletest v1.10 → v1.18.0 (v1.10 does not configure with CMake ≥ 4).
+* **T1.4 push CI** — one `ci.yml` (replaces `ubuntu.yml`, `macos.yml`, `windows.yml`): a C++ job
+  (Debug `test_ioh`; `ubuntu-24.04` with g++-12/13/14 and clang++-18, `macos-15`, `windows-2022`)
+  and a Python job (`pip install -e .` + unittest on the three OSes, oldest and newest Python),
+  each defined once with a matrix; runs on pushes to master, pull requests and manual dispatch;
+  superseded PR runs are cancelled; `IOH_RESOURCES` for C++ test binaries; bounded parallelism
+  (`--parallel 4` for C++, `CMAKE_BUILD_PARALLEL_LEVEL=3` for Python builds): unbounded jobs make
+  the 3-vCPU/7 GB macOS runners swap for hours. README badges point to `ci.yml` and the wheels
+  workflow.
+* **T1.5** — googletest v1.10 → v1.18.0 (v1.10 does not configure with CMake ≥ 4); the submodule
+  is pinned to the v1.18.0 commit and tracks the `v1.18.x` release branch, never `main`.
 * Fixes needed to get green CI:
   * five C++ tests compared floating-point results exactly or with a fixed absolute tolerance and
     failed on arm64: optimum checks now use a relative tolerance (1e-12), the CEC2013 check 1e-10
@@ -232,9 +236,10 @@ What was done, for reference by later WPs:
     since Python 3.14.
 * **T1.6 (maintainer)** — after merge, cut a release (`release: published` triggers the upload).
   Release notes must mention: Python ≥ 3.10; Linux wheels built on manylinux_2_28 images (tagged
-  `manylinux_2_27/2_28`, glibc ≥ 2.27) instead of manylinux2014; no more i686 Linux wheels; new
-  cp313–cp315 wheels; wheels no longer install top-level `tests`/`doc` packages; graph problem ids on
-  Windows fixed.
+  `manylinux_2_27/2_28`, glibc ≥ 2.27) instead of manylinux2014; no more i686 Linux and 32-bit
+  Windows wheels; new cp313–cp315 wheels; new Linux aarch64 and Windows ARM64 (3.11+) wheels;
+  free-threaded 3.14t/3.15t wheels (the GIL is re-enabled on import for now); wheels no longer
+  install top-level `tests`/`doc` packages; graph problem ids on Windows fixed.
 
 ---
 
@@ -354,7 +359,11 @@ Python-visible registry.
   constructs, its `meta_data().problem_id` equals the registry id, its meta name equals the registry
   name (except CEC2013, see §3 — compare with the golden meta names), and it evaluates.
 * Test that `create()` with an unknown id/name throws.
-* Optional (open decision): expose `fixed_dimension` / `instance_dependent` on Python problems.
+* Expose `fixed_dimension` and `fixed_instance` (decided, §1): registry entries carry them, and
+  Python problems get read-only properties with the same names (`None` for problems that honour the
+  requested dimension/instance). Values for the data-backed families come from the WP4 manifest;
+  until then they are filled in from the current loaders. Add them to the golden fixtures in the same
+  PR (new keys only; existing values must not change).
 
 ---
 
@@ -412,8 +421,9 @@ Depends on: WP3.
 
 * Move test fixtures (`*fitness*.in`, `cec_problem20xx.in`, `dynamic_bin_val.in`) to
   `tests/data/` and update C++/Python tests (C++ tests get the path via a CMake compile definition).
-* Delete `static/conf.ini` (unused). Keep `static.tar.gz` unless the maintainer decides otherwise
-  (open decision in §1); if kept, add a CI check or a release step that rebuilds it from `static/`.
+* Delete `static/conf.ini` (unused). Keep `static.tar.gz` (decided, §1: released versions download
+  it) and add a CI check that its contents equal `static/` (rebuild it in the same PR when data
+  changes).
 * `install(DIRECTORY static/ DESTINATION ${CMAKE_INSTALL_DATADIR}/ioh)`; make sure the sdist and
   wheels contain exactly the manifest's files. Coordinate with T5.1, which takes over packaging.
 
@@ -498,17 +508,25 @@ Depends on: WP3, WP4, WP5.
   properties, triggers, constraints, wrapped problems.
 * Stubs: replace mypy `stubgen` in `doc/generate_docs.py` with `python -m nanobind.stubgen`;
   regenerate `ioh/iohcpp/*.pyi` and `ioh/iohcpp/logger/*.pyi` (and add one for `logger.old`).
-* Debug builds compile; Windows x64 (and win32 if kept), Linux, macOS green.
+* Debug builds compile; Linux (x86_64, aarch64), Windows (x64, ARM64) and macOS (Intel, arm64) green.
 
-### T6.6 Stable ABI
+### T6.6 Free-threading
+
+* The free-threaded wheels built since WP1 re-enable the GIL on import, because the module does not
+  declare that it is thread-safe. After the thread-safety audit (factory mutex from T3.2, loggers
+  and triggers, the global random generator used by MaxInfluence, the WP4 data cache) build with
+  nanobind's `FREE_THREADED` so the GIL stays disabled, and add a multi-threaded evaluation test.
+
+### T6.7 Stable ABI
 
 * `STABLE_ABI` for CPython ≥ 3.12 + scikit-build-core `wheel.py-api = "cp312"` (only for those
   builds): per platform one cp310, one cp311 and one cp312-abi3 wheel. cibuildwheel only reuses an
   abi3 wheel within the same run, so restructure the WP1 sharding: one job per OS with
   `CIBW_BUILD="cp312-* cp313-* cp314-* cp315-*"` (builds once, tests on all four) plus the cp310 and
-  cp311 jobs. abi3audit runs by default in cibuildwheel 4. Free-threaded builds stay skipped.
+  cp311 jobs. abi3audit runs by default in cibuildwheel 4. Free-threaded wheels cannot be abi3 and
+  stay version-specific.
 
-### T6.7 Acceptance
+### T6.8 Acceptance
 
 * Golden tests green on all platforms; runtime at least at parity with pybind11 for numpy *and*
   list inputs (target: faster); import time not worse; build time reported.
@@ -552,6 +570,4 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
 * Turn the BBOB/SBOX template parameter into a runtime flag (halves the BBOB classes).
 * Use fmt as a compiled library instead of header-only.
 * Move more implementation out of headers into the compiled target.
-* Free-threaded wheels (nanobind `FREE_THREADED` + thread-safety audit of factories/loggers).
-* Linux aarch64 / Windows ARM64 wheels.
 * Make MaxInfluence reproducible (instance-seeded generator instead of the global one).
