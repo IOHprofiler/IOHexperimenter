@@ -206,8 +206,9 @@ struct PrintedNumber
     double last_digit;
 };
 
-//! Replace every unsigned number in text by '#', collecting the numbers (to compare them with a
-//! tolerance); signs stay in the text and are compared exactly
+//! Replace every unsigned decimal number in text by a placeholder that records its printed format,
+//! collecting the numbers (to compare them with a tolerance). Integers (ids, dimensions, counts)
+//! and signs stay in the text and are compared exactly.
 inline std::string numbers_to_placeholders(const std::string& text, std::vector<PrintedNumber>& numbers){
     static const std::regex number(R"((\d+)(\.(\d*))?([eE]([-+]?\d+))?)");
     std::string skeleton;
@@ -215,17 +216,24 @@ inline std::string numbers_to_placeholders(const std::string& text, std::vector<
     for (auto it = std::sregex_iterator(text.begin(), text.end(), number); it != std::sregex_iterator(); ++it)
     {
         const auto& m = *it;
+        skeleton += text.substr(last, static_cast<size_t>(m.position()) - last);
+        last = static_cast<size_t>(m.position() + m.length());
+        if (!m[2].matched && !m[4].matched)
+        {
+            skeleton += m.str();
+            continue;
+        }
         const auto decimals = static_cast<int>(m[3].length());
         const auto exponent = m[5].matched ? std::stoi(m[5].str()) : 0;
         numbers.push_back({std::stod(m.str()), std::pow(10.0, exponent - decimals)});
-        skeleton += text.substr(last, static_cast<size_t>(m.position()) - last) + "#";
-        last = static_cast<size_t>(m.position() + m.length());
+        skeleton += "#" + std::to_string(decimals) + (m[4].matched ? "e" : "");
     }
     return skeleton + text.substr(last);
 }
 
-//! Compare a file with the expected text: layout exactly, numbers up to one unit in their last
-//! printed digit (computed values differ slightly between platforms, see relative_tolerance)
+//! Compare a file with the expected text: layout, integers and the printed format exactly, decimal
+//! numbers up to one unit in their last printed digit (computed values differ slightly between
+//! platforms, see relative_tolerance)
 inline void compare_file_with_string(const fs::path& path, const std::string& expected){
     const std::string got = ioh::common::file::as_string(path);
     std::vector<PrintedNumber> expected_numbers, got_numbers;
