@@ -3,9 +3,22 @@ requires = [
     "setuptools",
     "wheel",
     "cmake",
-    "mypy",
-    "numpy>=2.0",
-    "pybind11",
     "ninja",
-    "xmltodict",
+    "xmltodict",  # setup.py imports doc/generate_docs.py, which imports xmltodict
 ]
+
+[tool.cibuildwheel]
+build = "cp310-* cp311-* cp312-* cp313-* cp314-* cp315-* cp314t-* cp315t-*"
+# no 32-bit Windows; musllinux was never shipped. Free-threaded Windows builds need a newer binding
+# library: the pinned pybind11 (2.11) cannot find python3XXt.lib (TASKS.md, WP6)
+skip = "*-win32 *-musllinux_* cp3??t-win*"
+# freezes the Python-visible registry and problem behaviour, see tests/python/golden.py
+test-command = "python {project}/tests/python/test_golden.py"
+build-verbosity = 1
+
+[tool.cibuildwheel.macos.environment]
+# setup.py builds with CMAKE_OSX_DEPLOYMENT_TARGET=10.15 (std::filesystem); with cibuildwheel's
+# Intel defaults (10.9/10.13) delocate rejects the x86_64 wheels. arm64 is raised to 11.0.
+MACOSX_DEPLOYMENT_TARGET = "10.15"
+# setup.py only bounds the build on Linux; unbounded Ninja jobs make the 7 GB arm64 runners swap
+CMAKE_BUILD_PARALLEL_LEVEL = "3"

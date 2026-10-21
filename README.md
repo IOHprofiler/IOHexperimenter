@@ -3,9 +3,8 @@
 </p>
 <hr>
 
-![Ubuntu g++-{10, 9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/Ubuntu/badge.svg)
-![MacOS clang++, g++-{9, 8}](https://github.com/IOHprofiler/IOHexperimenter/workflows/MacOS/badge.svg)
-![Windows MVSC-2019](https://github.com/IOHprofiler/IOHexperimenter/workflows/Windows/badge.svg)
+![CI](https://github.com/IOHprofiler/IOHexperimenter/actions/workflows/ci.yml/badge.svg)
+![Wheels](https://github.com/IOHprofiler/IOHexperimenter/actions/workflows/python-publish.yml/badge.svg)
 ![Codacy Badge](https://app.codacy.com/project/badge/Grade/3980446b590c457793e61e3258224354)
 ![PyPI - Version](https://img.shields.io/pypi/v/ioh)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/ioh)

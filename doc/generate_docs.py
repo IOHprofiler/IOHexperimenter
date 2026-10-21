@@ -1,4 +1,6 @@
 import os
+import sys
+import importlib.util
 import collections
 import subprocess
 import shutil
@@ -130,6 +132,13 @@ def generate_sphinx_templates_from_xml(xmldir = "doc/build/xml", outdir = "doc/p
 
 
 def generate_stubs(sourcedir):
+    # mypy is not a build requirement: check before removing the existing stubs
+    if importlib.util.find_spec("mypy") is None:
+        raise RuntimeError(
+            "MAKE_STUBS requires mypy in the build environment: "
+            "pip install mypy && MAKE_STUBS=1 pip install --no-build-isolation -e ."
+        )
+
     # remove any existing stubs
     for stubfile in os.listdir(os.path.join(sourcedir, "ioh")):
         stubfile = os.path.join(sourcedir, "ioh", stubfile)
@@ -140,9 +149,9 @@ def generate_stubs(sourcedir):
         if os.path.isdir(os.path.join(sourcedir, "ioh", subdir)):
             shutil.rmtree(os.path.join(sourcedir, "ioh", subdir))
 
-    # generate stub files
-    command = """stubgen -m ioh -p ioh.iohcpp -o ./"""
-    subprocess.check_call(command, cwd=sourcedir, shell=True)
+    # generate stub files with the build interpreter's mypy
+    command = [sys.executable, "-m", "mypy.stubgen", "-m", "ioh", "-p", "ioh.iohcpp", "-o", "./"]
+    subprocess.check_call(command, cwd=sourcedir)
 
 
 def run_doxygen():

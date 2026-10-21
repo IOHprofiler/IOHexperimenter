@@ -178,6 +178,7 @@ dmypy.json
 cython_debug/
 
 data/
+!tests/data/
 
 CMakeSettings.json
 .clangd
