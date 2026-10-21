@@ -26,6 +26,11 @@ on:
       - "tests/python/test_golden.py"
       - "tests/data/golden/**"
 
+concurrency:
+  # a new push to a pull request cancels its previous run; releases are never cancelled
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build_wheels:
     name: Build ${{ matrix.python }} wheels on ${{ matrix.os }}
@@ -33,9 +38,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # macos-15-intel builds x86_64, macos-15 builds arm64
-        os: [ubuntu-24.04, windows-2022, macos-15-intel, macos-15]
+        # native runners: x86_64 and aarch64 Linux, x64 and ARM64 Windows, Intel and arm64 macOS
+        os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2022, windows-11-arm, macos-15-intel, macos-15]
         python: [cp310, cp311, cp312, cp313, cp314, cp315]
+        exclude:
+          # numpy has no Windows ARM64 wheels for Python 3.10
+          - { os: windows-11-arm, python: cp310 }
     steps:
       - uses: actions/checkout@v7
         with:
@@ -43,8 +51,11 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.3.3
         env:
-          # one Python version per job; the rest of the configuration is in pyproject.toml
-          CIBW_BUILD: "${{ matrix.python }}-*"
+          # one Python version per job (3.14 and 3.15 also build their free-threaded variant);
+          # the rest of the configuration is in pyproject.toml
+          CIBW_BUILD: >-
+            ${{ contains(fromJSON('["cp314", "cp315"]'), matrix.python)
+            && format('{0}-* {0}t-*', matrix.python) || format('{0}-*', matrix.python) }}
       - uses: actions/upload-artifact@v7
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ matrix.python }}
