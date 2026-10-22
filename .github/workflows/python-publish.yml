@@ -5,6 +5,10 @@ on:
     # 'created' does not fire for releases published from a draft
     types: [published]
   workflow_dispatch:
+  # the full matrix once a week (pull requests skip macOS, see below); off the full hour, when
+  # GitHub delays scheduled runs
+  schedule:
+    - cron: "17 3 * * 1"
   pull_request:
     # everything that ends up in, or is tested against, the wheels
     paths:
@@ -27,7 +31,8 @@ on:
       - "tests/data/golden/**"
 
 concurrency:
-  # a new push to a pull request cancels its previous run; releases are never cancelled
+  # a new push to a pull request cancels its previous run. Other runs are never cancelled while
+  # they run, but a newer run in the same group replaces one that is still waiting.
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
@@ -38,8 +43,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # native runners: x86_64 and aarch64 Linux, x64 and ARM64 Windows, Intel and arm64 macOS
-        os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2022, windows-11-arm, macos-15-intel, macos-15]
+        # native runners: x86_64 and aarch64 Linux, x64 and ARM64 Windows, Intel and arm64 macOS.
+        # Pull requests skip macOS: the organization runs at most 20 jobs at once, only 5 of them on
+        # macOS, and the Intel ones are slow, so with macOS a pull request waited ~35 instead of
+        # ~10-15 minutes for its wheels. Weekly, manual and release runs build everything.
+        os: >-
+          ${{ github.event_name == 'pull_request'
+          && fromJSON('["ubuntu-24.04", "ubuntu-24.04-arm", "windows-2022", "windows-11-arm"]')
+          || fromJSON('["ubuntu-24.04", "ubuntu-24.04-arm", "windows-2022", "windows-11-arm", "macos-15-intel", "macos-15"]') }}
         python: [cp310, cp311, cp312, cp313, cp314, cp315]
         exclude:
           # numpy has no Windows ARM64 wheels for Python 3.10
