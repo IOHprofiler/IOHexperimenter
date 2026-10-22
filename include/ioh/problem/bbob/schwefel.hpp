@@ -66,5 +66,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class Schwefel<BBOB>;
+    extern template class Schwefel<BBOB>;
+    extern template class Schwefel<SBOX>;
 }

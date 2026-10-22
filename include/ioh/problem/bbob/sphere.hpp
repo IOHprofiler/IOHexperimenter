@@ -36,5 +36,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class Sphere<BBOB>;
+    extern template class Sphere<BBOB>;
+    extern template class Sphere<SBOX>;
 }

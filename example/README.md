@@ -17,7 +17,8 @@ Please use the following commands to download, compile, and install this package
 > cmake .. && make install
 ```
 
-which installs all header files to `/usr/local/include/ioh` by default.
+which installs the header files to `/usr/local/include/ioh` and the compiled `ioh` library to `/usr/local/lib` by
+default. Link your targets against `ioh::ioh` (see [include/README.md](../include/README.md)).
 If you want to change this directory, please use the following flag `cmake -DCMAKE_INSTALL_PREFIX=your/path ..`
 
 If you want to change build options, check the output of `cmake -L` or use `cmake-gui` or `ccmake`.

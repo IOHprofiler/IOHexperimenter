@@ -50,5 +50,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class SharpRidge<BBOB>;
+    extern template class SharpRidge<BBOB>;
+    extern template class SharpRidge<SBOX>;
 }

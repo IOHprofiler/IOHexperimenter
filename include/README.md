@@ -17,13 +17,21 @@ Please use the following commands to download, compile, and install this package
 > cmake .. && make install
 ```
 
-which installs all header files to `/usr/local/include/ioh` by default.
+which installs the header files to `/usr/local/include/ioh` and the compiled `ioh` library, which holds the
+registries of the built-in problems and suites, to `/usr/local/lib` by default.
 If you want to change this directory, please use the following flag `cmake -DCMAKE_INSTALL_PREFIX=your/path ..`
+
+Link your own targets against the library, which also adds the include directories:
+
+```cmake
+find_package(ioh REQUIRED)   # or add_subdirectory(IOHexperimenter)
+target_link_libraries(your_target PRIVATE ioh::ioh)
+```
 
 If you want to change build options, check the output of `cmake -L` or use `cmake-gui` or `ccmake`.
 
 ### Dependencies
-IOHexperimenter has a few dependencies, however, only the fmt/fmt library is required to compile the C++ backend. If you'd like to compile the source code without CMake, you need to provide the includes of fmt/fmt as an additional include directory, which can be found in the [external](https://github.com/IOHprofiler/IOHexperimenter/tree/master/external) folder of the repository.
+IOHexperimenter has a few dependencies, however, only the fmt/fmt library is required to compile the C++ backend. If you'd like to compile the source code without CMake, you need to provide the includes of fmt/fmt as an additional include directory, which can be found in the [external](https://github.com/IOHprofiler/IOHexperimenter/tree/master/external) folder of the repository, and compile the sources in `src/` along with your own: without them the problem and suite registries do not link.
 
 ### Usage
 
@@ -99,7 +107,7 @@ auto new_problem_f = factory.create(
 
 Alternatively, one might wish to create the new problem by subclassing the abstract problem class
 in IOHexperimenter, taking benefits of implementing more details, e.g., aforementioned transformations.
-This can be done by inheriting the corresponding problem registration class, which is
+This can be done by inheriting the corresponding problem class, which is
 
 * `ioh::problem::IntegerSingleObjective` for pseudo-Boolean problems, and
 * `ioh::problem::RealSingleObjective` for continuous problems.
@@ -107,7 +115,7 @@ This can be done by inheriting the corresponding problem registration class, whi
 In the below example, we show how to do this for pseudo-Boolean problems.
 
 ```C++
-class NewBooleanProblem final : public ioh::problem::RegisteredProblem<NewBooleanProblem, ioh::problem::IntegerSingleObjective>
+class NewBooleanProblem final : public ioh::problem::IntegerSingleObjective
 {
 protected:
     // [mandatory] The evaluate method is mandatory to implement
@@ -134,9 +142,9 @@ public:
     /// if it is ineffective by default. `instance` would be effective if and only if
     /// at least one of `transform_objectives` and `transform_objectives` is implemented
     NewBooleanProblem(const int instance, const int n_variables) :
-        RegisteredProblem(
+        ioh::problem::IntegerSingleObjective(
           ioh::problem::MetaData(
-            1,                     // problem id, which will be overwritten when registering this class in all pseudo-Boolean problems
+            1,                     // problem id, replaced by the next free id if it is taken when registering
             instance,              // the instance id
             "NewBooleanProblem",   // problem name
             n_variables           // search dimensionality
@@ -146,5 +154,15 @@ public:
     }
 };
 ```
+
+To create it by id or name from the factory of all pseudo-Boolean problems, like the built-in problems, register it
+once before use:
+
+```C++
+ioh::problem::register_problem<NewBooleanProblem, ioh::problem::IntegerSingleObjective>();
+```
+
+(Inheriting from `ioh::problem::RegisteredProblem<NewBooleanProblem, ioh::problem::IntegerSingleObjective>` instead
+still registers the class automatically when the program starts.)
 
 Please check [this example](./example/problem_example.hpp) for adding continuous problems in this manner.

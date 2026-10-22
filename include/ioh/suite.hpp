@@ -132,11 +132,12 @@ namespace ioh::suite
          * @param name The name of the suite
          * @param max_instance the maximum instance
          * @param max_dimension the maximum dimension
-         * @param factory factory instance
+         * @param factory the factory to take the problems from: this ProblemType's, or one of a derived type
          */
+        template <typename FactoryType = Factory>
         Suite(const std::vector<int> &problem_ids, const std::vector<int> &instances,
               const std::vector<int> &dimensions, const std::string &name, const int max_instance = 1000,
-              const int max_dimension = 1000, Factory &factory = Factory::instance()) :
+              const int max_dimension = 1000, FactoryType &factory = Factory::instance()) :
             name_(name),
             problems_(), problem_ids_(problem_ids), instances_(instances), dimensions_(dimensions)
         {
@@ -233,15 +234,14 @@ namespace ioh::suite
 
     //! Base class for Real suites
     template <class Derived>
-    struct RealSuite : Suite<problem::RealSingleObjective>, AutomaticSuiteRegistration<Derived, problem::RealSingleObjective>
+    struct RealSuite : Suite<problem::RealSingleObjective>
     {
         using Suite<problem::RealSingleObjective>::Suite;
     };
 
     //! Base class for Integer suites
     template <class Derived>
-    struct IntegerSuite : Suite<problem::IntegerSingleObjective>,
-                          AutomaticSuiteRegistration<Derived, problem::IntegerSingleObjective>
+    struct IntegerSuite : Suite<problem::IntegerSingleObjective>
     {
         using Suite<problem::IntegerSingleObjective>::Suite;
     };
@@ -294,7 +294,7 @@ namespace ioh::suite
         BBOB(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
              const std::vector<int> &dimensions = {5}) :
             RealSuite(problem_ids, instances, dimensions, "BBOB", 100, 100,
-                      reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::BBOB>::instance()))
+                      problem::ProblemFactoryType<problem::BBOB>::instance())
         {
         }
     };
@@ -311,7 +311,7 @@ namespace ioh::suite
         SBOX(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
              const std::vector<int> &dimensions = {5}) :
             RealSuite(problem_ids, instances, dimensions, "SBOX", 100, 100,
-                      reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::SBOX>::instance()))
+                      problem::ProblemFactoryType<problem::SBOX>::instance())
         {
         }
     };
@@ -328,7 +328,7 @@ namespace ioh::suite
         RealStarDiscrepancy(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
              const std::vector<int> &dimensions = {5}) :
             RealSuite(problem_ids, instances, dimensions, "RealStarDiscrepancy", 10000, 10000,
-                      reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::star_discrepancy::real::StarDiscrepancy>::instance()))
+                      problem::ProblemFactoryType<problem::star_discrepancy::real::StarDiscrepancy>::instance())
         {
         }
     };
@@ -346,7 +346,7 @@ namespace ioh::suite
         PBO(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
             const std::vector<int> &dimensions = {16}) :
             IntegerSuite(problem_ids, instances, dimensions, "PBO", 100, 20000,
-                         reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::PBO>::instance()))
+                         problem::ProblemFactoryType<problem::PBO>::instance())
         {
         }
     };
@@ -365,7 +365,7 @@ namespace ioh::suite
             [[maybe_unused]] const std::vector<int> &instances = {},
             [[maybe_unused]] const std::vector<int> &dimensions = {}) :
             IntegerSuite(problem_ids, {1}, {1}, "Submodular", 1, 2,
-                         reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::submodular::GraphProblem>::instance()))
+                         problem::ProblemFactoryType<problem::submodular::GraphProblem>::instance())
         {
         }
     };
@@ -382,7 +382,7 @@ namespace ioh::suite
         IntegerStarDiscrepancy(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
              const std::vector<int> &dimensions = {5}) :
             IntegerSuite(problem_ids, instances, dimensions, "IntegerStarDiscrepancy", 10000, 10000,
-                      reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::star_discrepancy::integer::StarDiscrepancy>::instance()))
+                      problem::ProblemFactoryType<problem::star_discrepancy::integer::StarDiscrepancy>::instance())
         {
         }
     };

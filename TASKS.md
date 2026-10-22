@@ -332,15 +332,60 @@ What was done, and where it differs from T2.1 below:
     22.1 min wall; pull-request wheels (39736254587) 23 wheel jobs and the sdist, 108 runner
     minutes, 17.5 min wall; full wheels by manual dispatch (39736253932) 227 runner minutes, 41 min
     wall. The first two are upper bounds, because the full run competed for the slots.
-  * WP2's pull-request runs are the first without a parallel full run: add them here once WP2 is
-    merged (the next WP's PR can do it).
+  * WP2 (#219), the first pull-request runs without a parallel full run: `ci.yml` (39766818613)
+    12 jobs of 2.9–5.7 min, 47 runner minutes, 5.7 min wall; pull-request wheels (39766818690) 23
+    wheel jobs and the sdist, 94 runner minutes, 10.0 min wall, jobs queued up to 4.6 min.
 
 ---
 
-## WP3 — Functional registry (must land as one unit)
+## WP3 — Functional registry (must land as one unit) ✅ implemented (branch `wp3-functional-registry`)
 
 Depends on: WP1, WP2. Goal: no TU except the registry TUs instantiates problem code; identical
 Python-visible registry.
+
+What was done, and where it differs from T3.1–T3.7 below:
+
+* **Compiled target**: `ioh` is a static library of `src/registry/*.cpp` (PIC, `PUBLIC` usage
+  requirements, install/export as before). The `/MT` `MSVC_RUNTIME_LIBRARY` property was dropped: on a
+  compiled library it would clash with the `/MD` Python extension and tests. `MANIFEST.in` grafts
+  `src/`.
+* **`IOH_LTO`** (T3.6) applies to the release configurations only and is **off by default for every
+  compiler** (planned: on for MSVC). With LTO on, clang uses ThinLTO and builds the extension slightly
+  faster (19.7 instead of 20.9 s at -j4), but evaluation speed is the same with full LTO (master), no
+  LTO and ThinLTO, and a static library of LTO objects only links with the toolchain that built it.
+  Defining `CMAKE_INTERPROCEDURAL_OPTIMIZATION` also turns off pybind11's own full LTO.
+* **Measured** (Apple M5, clang 21, §2): the Python extension build with `setup.py`'s flags takes 20.9 s
+  instead of 30.9 s at -j4 (62.4 instead of 81.3 s serial); `pip install` of the sdist 19 s; Debug
+  `test_ioh` 18.8 instead of 23.5 s at -j4. Runtime benchmark (BBOB d=10/200, PBO d=1024, CEC2022
+  d=10, import) unchanged.
+* **Factory**: `add_builtins` overloads for the 13 factories with built-ins (the 11 problem factories of
+  §3 plus the two suite factories) are declared, with forward declarations of their types, before
+  `Factory` in `factory.hpp`, and defined in `src/registry`; a no-op template covers every other
+  factory. Duplicate built-ins throw `std::logic_error`, unknown ids/names `std::out_of_range`
+  (Python: `IndexError`); runtime `include()` keeps its Release semantics in all builds (the
+  Debug-only assert on an existing name is gone); a recursive mutex guards the maps and creators run
+  outside it.
+* **Ids and names** come from the same sources as before: `T(1, 1).meta_data()` or `load_instances`,
+  via `RegisterWithFactory::include<T>(factory)`. So no `static constexpr` id/name members were needed
+  (T3.3), and the family lists in `src/registry/families.hpp` are plain type lists.
+* **CRTP**: the library's types no longer use the automatic registration. The former registering
+  bases (`BBOProblem`, `PBOProblem`, `CEC2013Problem`, `CEC2022Problem`, `DynamicBinValProblem`,
+  `GraphProblemType`, the star discrepancy classes, `RealSuite`/`IntegerSuite`) keep their real bases
+  and constructors but register nothing, so no problem header changed apart from the BBOB `extern
+  template` lines and no deprecated aliases were needed. The machinery itself stays for user types
+  (`RegisteredProblem`, `AutomaticProblemRegistration`); new `register_problem<T, Parent>()` and
+  `register_problem<T, Parent>(id, name)`.
+* **Suites**: `Suite`'s constructor takes any problem factory (a template), so the six
+  `reinterpret_cast`s are gone. Fixed ids: Real 1, BBOB 2, SBOX 3, RealStarDiscrepancy 4; Integer 1,
+  PBO 2, Submodular 3, IntegerStarDiscrepancy 4.
+* **`fixed_dimension` / `fixed_instance`** (T3.7): virtual accessors on `Problem` (overridden by
+  `CEC2013` and `GraphProblem`) and read-only Python properties on every problem class. The golden
+  behaviour records got the two keys (714 of 722 records; the existing values were reproduced
+  exactly). Registry entries do **not** carry them yet: a graph's dimension is only known after
+  loading its data (all 78 graphs take 0.8 s), so this moves to the WP4 manifest.
+* **Tests**: `tests/cpp/problem/test_registry.cpp` checks every factory against the golden registry
+  (ids, names, CEC2013 meta names from the golden records, fixed values, construction and evaluation),
+  the suite ids, unknown and duplicate entries, and `register_problem`.
 
 ### T3.1 Compiled `ioh` target
 
@@ -429,11 +474,12 @@ Python-visible registry.
   constructs, its `meta_data().problem_id` equals the registry id, its meta name equals the registry
   name (except CEC2013, see §3 — compare with the golden meta names), and it evaluates.
 * Test that `create()` with an unknown id/name throws.
-* Expose `fixed_dimension` and `fixed_instance` (decided, §1): registry entries carry them, and
-  Python problems get read-only properties with the same names (`None` for problems that honour the
-  requested dimension/instance). Values for the data-backed families come from the WP4 manifest;
-  until then they are filled in from the current loaders. Add them to the golden fixtures in the same
-  PR (new keys only; existing values must not change).
+* Expose `fixed_dimension` and `fixed_instance` (decided, §1; in the same PR as the registry,
+  decided): registry entries carry them, and Python problems get read-only properties with the same
+  names (`None` for problems that honour the requested dimension/instance). Values for the
+  data-backed families come from the WP4 manifest; until then they are filled in from the current
+  loaders. Add them to the golden fixtures in the same PR (new keys only; existing values must not
+  change).
 
 ---
 
@@ -456,6 +502,9 @@ Depends on: WP3.
   paths with spaces). It also lists the data-backed registry entries (graph, pack-while-travel,
   CEC2013): pinned id, registry name, meta name, files, fixed dimension — generated once from the
   golden registry and the definition files; ids are never again derived from file line order.
+* Registry entries get `fixed_dimension` / `fixed_instance` from the manifest (moved here from T3.7:
+  without it a graph's dimension is only known after loading the graph). Problems already report them
+  since WP3; the registry values must equal what the constructed problems report.
 * CI check: wheel contents (and the source tree) match the manifest (paths + sha256).
 
 ### T4.3 Lazy, cached datasets
@@ -671,6 +720,18 @@ Each WP adds its user-visible changes here (§2).
   `i8_sobol` and `sampler::Sobol`): after a call with a dimension outside 1–1111 raised an error
   (`ValueError` in Python), later points in the previous dimension were ≈ 0 until another dimension
   was used. Fixed.
+* WP3:
+  * New: `fixed_dimension` and `fixed_instance` on every problem (Python properties, C++ methods): the
+    dimension and instance a problem always uses whatever was requested (CEC2013 and graph problems),
+    `None` otherwise.
+  * `create()` with an unknown id or name raises `IndexError` in Python (`std::out_of_range` in C++)
+    instead of failing an assertion or, in release builds, undefined behaviour.
+  * C++: the library is no longer header-only. Link `ioh::ioh` with CMake (or compile `src/`): it holds
+    the registries of the built-in problems and suites, which are filled when a factory is first used
+    instead of at program start. Register your own problems with `ioh::problem::register_problem`
+    (`RegisteredProblem` still registers at program start). Suite factory ids are now fixed (Real 1,
+    BBOB 2, SBOX 3, RealStarDiscrepancy 4; Integer 1, PBO 2, Submodular 3, IntegerStarDiscrepancy 4).
+  * Problem ids, names and behaviour are unchanged (golden tests).
 
 ---
 

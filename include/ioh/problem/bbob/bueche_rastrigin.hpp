@@ -36,5 +36,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class BuecheRastrigin<BBOB>;
+    extern template class BuecheRastrigin<BBOB>;
+    extern template class BuecheRastrigin<SBOX>;
 }

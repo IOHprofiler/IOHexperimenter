@@ -71,5 +71,6 @@ namespace ioh::problem::bbob
         {
         }
     };
-    template class Rastrigin<BBOB>;   
+    extern template class Rastrigin<BBOB>;
+    extern template class Rastrigin<SBOX>;
 }

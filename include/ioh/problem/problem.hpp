@@ -205,6 +205,14 @@ namespace ioh
             //! Accessor for `meta_data_`
             [[nodiscard]] MetaData meta_data() const { return meta_data_; }
 
+            //! The dimension this problem has whatever dimension was requested, or std::nullopt when it uses the
+            //! requested one
+            [[nodiscard]] virtual std::optional<int> fixed_dimension() const { return std::nullopt; }
+
+            //! The instance this problem is whatever instance was requested, or std::nullopt when it uses the
+            //! requested one
+            [[nodiscard]] virtual std::optional<int> fixed_instance() const { return std::nullopt; }
+
             //! Accessor for `optimum_`
             [[nodiscard]] Solution<T, R> optimum() const { return optimum_; }
 
@@ -317,8 +325,9 @@ namespace ioh
 
 
         /**
-         * @brief CRTP class for automatically registering problems in the apropriate factory.
-         * you should inherit from this class when defining new real problems.
+         * @brief CRTP class for automatically registering problems in the apropriate factory: ProblemType is
+         * registered when the program starts. Kept for existing code; prefer register_problem, which registers
+         * when called. The built-in problems do not use it.
          * @tparam ProblemType The new problem type
          * @tparam ParentType The parent problem type
          */
@@ -327,6 +336,26 @@ namespace ioh
         {
             using ParentType::ParentType;
         };
+
+        /**
+         * @brief Registers the problem class T, constructed from (instance, n_variables), in the factory of Parent
+         * (e.g. RealSingleObjective), so that it can be created by id or name like the built-in problems. The id
+         * and name are those of T(1, 1).meta_data(); a taken id is replaced by the next free one.
+         */
+        template <typename T, typename Parent>
+        void register_problem()
+        {
+            ProblemRegistry<Parent>::template include<T>();
+        }
+
+        //! Registers the problem class T in the factory of Parent with the given id and name
+        template <typename T, typename Parent>
+        void register_problem(const int id, const std::string &name)
+        {
+            ProblemFactoryType<Parent>::instance().include(name, id, [](int &&instance, int &&n_variables) {
+                return std::make_shared<T>(instance, n_variables);
+            });
+        }
 
 
         /**

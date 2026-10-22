@@ -41,5 +41,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class Discus<BBOB>;
+    extern template class Discus<BBOB>;
+    extern template class Discus<SBOX>;
 }

@@ -64,5 +64,6 @@ namespace ioh::problem::bbob
         Ellipsoid(const int instance, const int n_variables) : EllipsoidBase<P>(2, instance, n_variables, "Ellipsoid") {}
     };
 
-    template class Ellipsoid<BBOB>;
+    extern template class Ellipsoid<BBOB>;
+    extern template class Ellipsoid<SBOX>;
 } // namespace ioh::problem::bbob

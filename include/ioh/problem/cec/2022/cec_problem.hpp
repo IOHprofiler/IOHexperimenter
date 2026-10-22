@@ -274,15 +274,13 @@ namespace ioh::problem
     };
 
     /**
-     * @brief A template class for creating new CEC problems.
-     * Inherit from this class when defining new CEC problems to enable automatic registration in hash maps.
+     * @brief A template class for creating new CEC problems. It no longer registers them: the built-in problems
+     * are registered in the compiled library (src/registry).
      *
      * @tparam ProblemType The class representing the new CEC problem.
      */
     template <typename ProblemType>
-    struct CEC2022Problem : CEC2022,
-                            AutomaticProblemRegistration<ProblemType, CEC2022>,
-                            AutomaticProblemRegistration<ProblemType, RealSingleObjective>
+    struct CEC2022Problem : CEC2022
     {
         using CEC2022::CEC2022; ///< Inherits the constructor of the CEC2022 class.
     };

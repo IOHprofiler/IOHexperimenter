@@ -280,14 +280,18 @@ namespace ioh::problem::submodular
             graph(graph)
         {
         }
+
+        //! The dimension is the size of the graph
+        [[nodiscard]] std::optional<int> fixed_dimension() const override { return meta_data_.n_variables; }
+
+        //! Graph problems have a single instance
+        [[nodiscard]] std::optional<int> fixed_instance() const override { return meta_data_.instance; }
     };
 
     //! Graph Problem Type
     template <typename ProblemType>
     struct GraphProblemType : GraphProblem,
-                              InstanceBasedProblem,
-                              AutomaticProblemRegistration<ProblemType, IntegerSingleObjective>,
-                              AutomaticProblemRegistration<ProblemType, GraphProblem>
+                              InstanceBasedProblem
     {
         using GraphProblem::GraphProblem;
 

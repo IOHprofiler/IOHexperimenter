@@ -46,5 +46,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class LinearSlope<BBOB>; 
+    extern template class LinearSlope<BBOB>;
+    extern template class LinearSlope<SBOX>;
 }

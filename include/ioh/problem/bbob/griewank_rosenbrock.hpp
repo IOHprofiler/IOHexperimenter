@@ -58,5 +58,6 @@ namespace ioh::problem::bbob
             }
         }
     };
-    template class GriewankRosenbrock<BBOB>;
+    extern template class GriewankRosenbrock<BBOB>;
+    extern template class GriewankRosenbrock<SBOX>;
 } // namespace ioh::problem::bbob

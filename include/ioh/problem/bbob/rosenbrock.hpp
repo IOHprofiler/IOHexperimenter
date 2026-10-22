@@ -72,5 +72,6 @@ namespace ioh::problem::bbob
                 e *= 0.75;
         }
     };
-    template class Rosenbrock<BBOB>;  
+    extern template class Rosenbrock<BBOB>;
+    extern template class Rosenbrock<SBOX>;
 }

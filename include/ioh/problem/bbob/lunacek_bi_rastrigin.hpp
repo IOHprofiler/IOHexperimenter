@@ -70,5 +70,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class LunacekBiRastrigin<BBOB>;
+    extern template class LunacekBiRastrigin<BBOB>;
+    extern template class LunacekBiRastrigin<SBOX>;
 }

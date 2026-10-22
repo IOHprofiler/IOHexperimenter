@@ -41,5 +41,6 @@ namespace ioh::problem::bbob
         
         }
     };  
-    template class AttractiveSector<BBOB>;
+    extern template class AttractiveSector<BBOB>;
+    extern template class AttractiveSector<SBOX>;
 }

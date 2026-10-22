@@ -59,5 +59,6 @@ namespace ioh::problem::bbob
                 this->transformation_state_.exponents[i] = pow(2., static_cast<double>(i));
         }
     };
-    template class Katsuura<BBOB>;
+    extern template class Katsuura<BBOB>;
+    extern template class Katsuura<SBOX>;
 }

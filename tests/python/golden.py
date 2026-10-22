@@ -119,6 +119,9 @@ def _base_record(problem):
         "ub": _vector(problem.bounds.ub),
         "optimum_x": _vector(problem.optimum.x),
         "optimum_y": float(problem.optimum.y),
+        # added in WP3 (the existing values were left unchanged)
+        "fixed_dimension": problem.fixed_dimension,
+        "fixed_instance": problem.fixed_instance,
     }
 
 

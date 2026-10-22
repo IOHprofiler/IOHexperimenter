@@ -58,5 +58,6 @@ namespace ioh::problem::bbob
             }
         }
     };
-    template class Weierstrass<BBOB>;
+    extern template class Weierstrass<BBOB>;
+    extern template class Weierstrass<SBOX>;
 }

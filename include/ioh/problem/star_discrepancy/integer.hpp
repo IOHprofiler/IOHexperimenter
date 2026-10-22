@@ -8,9 +8,7 @@ namespace ioh::problem
     namespace star_discrepancy::integer
     {
         class StarDiscrepancy : public IntegerSingleObjective,
-                                InstanceBasedProblem,
-                                AutomaticProblemRegistration<StarDiscrepancy, IntegerSingleObjective>,
-                                AutomaticProblemRegistration<StarDiscrepancy, StarDiscrepancy>
+                                InstanceBasedProblem
 
         {
             //! The sampled points

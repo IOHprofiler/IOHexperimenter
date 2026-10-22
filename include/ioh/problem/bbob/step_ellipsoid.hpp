@@ -72,5 +72,6 @@ namespace ioh::problem::bbob
                                                                this->transformation_state_.exponents[i]));
         }
     };
-    template class StepEllipsoid<BBOB>;
+    extern template class StepEllipsoid<BBOB>;
+    extern template class StepEllipsoid<SBOX>;
 }

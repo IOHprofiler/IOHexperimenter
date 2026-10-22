@@ -20,5 +20,6 @@ namespace ioh::problem::bbob
         {
         }
     };
-    template class Gallagher21<BBOB>;
+    extern template class Gallagher21<BBOB>;
+    extern template class Gallagher21<SBOX>;
 }

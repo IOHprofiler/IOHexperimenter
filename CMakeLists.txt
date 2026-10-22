@@ -21,6 +21,16 @@ option(BUILD_EXAMPLE "Whether to build examples" ON)
 option(BUILD_DOCS "Build docs" OFF)    
 option(BUILD_SERVER "Whether to build the objective function server" OFF) 
 option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF) # Turn this option ON if you plan to test MK-landscape problems.
+
+# Link-time optimization of the release configurations. Defining CMAKE_INTERPROCEDURAL_OPTIMIZATION also keeps
+# pybind11 from enabling its own (full) LTO for the Python extension. Off by default: with the compiled registry
+# it does not change the evaluation speed (measured with clang), and a static library of LTO objects only links
+# with the toolchain that built it.
+option(IOH_LTO "Build the release configurations with link-time optimization" OFF)
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION OFF)
+foreach(config RELEASE RELWITHDEBINFO MINSIZEREL)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_${config} ${IOH_LTO})
+endforeach()
   
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /bigobj")
@@ -46,16 +56,26 @@ endif()
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
    
  
-add_library(ioh INTERFACE)
+# The compiled part of the library: the registries of the built-in problems and suites (src/registry), so that
+# only these files instantiate every problem class
+add_library(ioh STATIC
+    src/registry/bbob.cpp
+    src/registry/cec.cpp
+    src/registry/dynamic_bin_val.cpp
+    src/registry/graph.cpp
+    src/registry/pbo.cpp
+    src/registry/single_objective.cpp
+    src/registry/star_discrepancy.cpp
+    src/registry/suites.cpp
+)
 add_library(ioh::ioh ALIAS ioh)
-if (MSVC)
-set_property(TARGET ioh PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()   
+# it is also linked into the Python extension
+set_target_properties(ioh PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 #Include external formatting lib
 include_directories(${EXTERNAL_DIR}/fmt/include/)
 add_subdirectory(${EXTERNAL_DIR}/fmt)
-target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
+target_link_libraries(ioh PUBLIC fmt::fmt-header-only)
 
 # Add Json lib 
 if(BUILD_SERVER AND EXISTS ${EXTERNAL_DIR}/json/CMakeLists.txt)
@@ -63,7 +83,7 @@ if(BUILD_SERVER AND EXISTS ${EXTERNAL_DIR}/json/CMakeLists.txt)
     add_compile_definitions(HAS_JSON)
     set(JSON_Install OFF CACHE INTERNAL "")
     add_subdirectory(${EXTERNAL_DIR}/json)
-    target_link_libraries(ioh INTERFACE nlohmann_json::nlohmann_json)
+    target_link_libraries(ioh PUBLIC nlohmann_json::nlohmann_json)
 endif()
 
 if(ENABLE_MKLANDSCAPE_PROBLEMS)
@@ -85,21 +105,21 @@ if(ENABLE_MKLANDSCAPE_PROBLEMS)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${EXTERNAL_DIR}/MkLandscape/release)
     
     add_subdirectory(${EXTERNAL_DIR}/MkLandscape ${PROJECT_SOURCE_DIR}/include/ioh/problem/mklandscape/)
-    target_link_libraries(ioh INTERFACE problem_generator_lib)
+    target_link_libraries(ioh PUBLIC problem_generator_lib)
     
     add_compile_definitions(MK_COMPILED)
 endif()
 
 
 target_include_directories(ioh
-INTERFACE
+PUBLIC
     # Interface paths are relative to the installation path, not the current directory.
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include> 
 )
 
 target_compile_features(ioh
-INTERFACE
+PUBLIC
     cxx_std_17
 )
 

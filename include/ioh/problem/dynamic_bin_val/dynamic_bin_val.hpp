@@ -71,9 +71,7 @@ namespace ioh::problem
     };
 
     template <typename ProblemType>
-    struct DynamicBinValProblem : DynamicBinVal,
-                                  AutomaticProblemRegistration<ProblemType, DynamicBinVal>,
-                                  AutomaticProblemRegistration<ProblemType, IntegerSingleObjective>
+    struct DynamicBinValProblem : DynamicBinVal
     {
         using DynamicBinVal::DynamicBinVal;
     };

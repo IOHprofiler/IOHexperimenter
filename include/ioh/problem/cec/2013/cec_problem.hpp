@@ -53,6 +53,12 @@ namespace ioh::problem
         virtual double inner_evaluate(const std::vector<double> &x) = 0;
 
     public:
+        //! CEC2013 problems exist in one dimension only
+        [[nodiscard]] std::optional<int> fixed_dimension() const override { return meta_data_.n_variables; }
+
+        //! CEC2013 problems have a single instance
+        [[nodiscard]] std::optional<int> fixed_instance() const override { return meta_data_.instance; }
+
         //! Number of global optima
         size_t n_optima;
 
@@ -116,16 +122,14 @@ namespace ioh::problem
     };
 
     /**
-     * @brief A template class for creating new CEC problems.
-     * Inherit from this class when defining new CEC problems to enable automatic registration in hash maps.
+     * @brief A template class for creating new CEC problems. It no longer registers them: the built-in problems
+     * are registered in the compiled library (src/registry).
      *
      * @tparam ProblemType The class representing the new CEC problem.
      */
     template <typename ProblemType>
     struct CEC2013Problem : CEC2013,
-                            InstanceBasedProblem,
-                            AutomaticProblemRegistration<ProblemType, CEC2013>,
-                            AutomaticProblemRegistration<ProblemType, RealSingleObjective>
+                            InstanceBasedProblem
     {
         using CEC2013::CEC2013; ///< Inherits the constructor of the CEC2013 class.
     };

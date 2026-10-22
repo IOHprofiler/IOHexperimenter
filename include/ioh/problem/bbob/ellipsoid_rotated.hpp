@@ -36,5 +36,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class EllipsoidRotated<BBOB>;
+    extern template class EllipsoidRotated<BBOB>;
+    extern template class EllipsoidRotated<SBOX>;
 }

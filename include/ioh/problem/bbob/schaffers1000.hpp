@@ -20,5 +20,6 @@ namespace ioh::problem::bbob
         {
         }
     };
-    template class Schaffers1000<BBOB>;
+    extern template class Schaffers1000<BBOB>;
+    extern template class Schaffers1000<SBOX>;
 }

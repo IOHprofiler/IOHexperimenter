@@ -45,5 +45,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class RosenbrockRotated<BBOB>;
+    extern template class RosenbrockRotated<BBOB>;
+    extern template class RosenbrockRotated<SBOX>;
 }

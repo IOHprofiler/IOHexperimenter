@@ -45,5 +45,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class BentCigar<BBOB>;
+    extern template class BentCigar<BBOB>;
+    extern template class BentCigar<SBOX>;
 }

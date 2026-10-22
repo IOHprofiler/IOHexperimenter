@@ -40,5 +40,6 @@ namespace ioh::problem::bbob
                 this->transformation_state_.exponents[i] = 2.0 + 4.0 * this->transformation_state_.exponents[i];
         }
     };
-    template class DifferentPowers<BBOB>;
+    extern template class DifferentPowers<BBOB>;
+    extern template class DifferentPowers<SBOX>;
 }

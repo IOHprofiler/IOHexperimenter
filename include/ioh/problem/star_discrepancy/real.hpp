@@ -8,9 +8,7 @@ namespace ioh::problem
     namespace star_discrepancy::real
     {
         class StarDiscrepancy : public RealSingleObjective,
-                                InstanceBasedProblem,
-                                AutomaticProblemRegistration<StarDiscrepancy, RealSingleObjective>,
-                                AutomaticProblemRegistration<StarDiscrepancy, StarDiscrepancy>
+                                InstanceBasedProblem
 
         {
             Grid grid;

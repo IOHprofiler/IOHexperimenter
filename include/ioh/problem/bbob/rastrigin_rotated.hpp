@@ -34,5 +34,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class RastriginRotated<BBOB>;
+    extern template class RastriginRotated<BBOB>;
+    extern template class RastriginRotated<SBOX>;
 }
