@@ -38,8 +38,8 @@ class TestGoldenBehaviour(unittest.TestCase):
                 self.assertIsNotNone(family, f"{union} id {pid} belongs to no family")
                 dims, instances, _ = golden.FAMILIES.get(family, golden.DYNAMIC_BIN_VAL)
                 key = f"union/{union}/{pid}"
-                # check registration first: get_problem() downloads data when GRAPH is empty, and
-                # Factory::create only asserts that the id exists (undefined behaviour in Release)
+                # check registration first: get_problem() downloads data when GRAPH is empty, and a
+                # missing id fails here with a clear message instead of as create()'s IndexError
                 self.assertIn(pid, golden.live_registry(ioh, classes[union]))
                 if family == "DynamicBinVal":
                     self.assertIn(pid, ioh.iohcpp.problem.DynamicBinVal.problems)

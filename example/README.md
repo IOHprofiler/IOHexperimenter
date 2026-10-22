@@ -135,56 +135,66 @@ auto new_problem_f = factory.create(
 
 Alternatively, one might wish to create the new problem by subclassing the abstract problem class
 in IOHexperimenter, taking benefits of implementing more details, e.g., aforementioned transformations.
-This can be done by inheriting the corresponding problem registration class, which is
+This can be done by inheriting the corresponding problem class, which is
 
-* `ioh::problem::IntegerProblem` for pseudo-Boolean problems, and
-* `ioh::problem::RealProblem` for continuous problems.
+* `ioh::problem::IntegerSingleObjective` for pseudo-Boolean problems, and
+* `ioh::problem::RealSingleObjective` for continuous problems.
 
 In the below example, we show how to do this for pseudo-Boolean problems.
 
 ```C++
-class NewBooleanProblem final : public ioh::problem::IntegerProblem<NewBooleanProblem>
+class NewBooleanProblem final : public ioh::problem::IntegerSingleObjective
 {
 protected:
     // [mandatory] The evaluate method is mandatory to implement
-    std::vector<int> evaluate(const std::vector<int> &x) override
+    double evaluate(const std::vector<int> &x) override
     {
         // the function body goes here
-    }
-
-    // [optional] If one wish to implement transformations on objective values
-    std::vector<double> transform_objectives(std::vector<double> y) override
-    {
-
+        return 0.0;
     }
 
     // [optional] If one wish to implement transformations on search variables
-    std::vector<double> transform_objectives(std::vector<double> y) override
+    std::vector<int> transform_variables(std::vector<int> x) override
     {
-
+        return x;
     }
+
+    // [optional] If one wish to implement transformations on objective values
+    double transform_objectives(const double y) override
+    { 
+        return y;
+    } 
 
 public:
     /// [mandatory] This constructor always take `instance` as input even
     /// if it is ineffective by default. `instance` would be effective if and only if
     /// at least one of `transform_objectives` and `transform_objectives` is implemented
     NewBooleanProblem(const int instance, const int n_variables) :
-        IntegerProblem(
+        ioh::problem::IntegerSingleObjective(
           ioh::problem::MetaData(
-            1,                     // problem id, which will be overwritten when registering this class in all pseudo-Boolean problems
+            1,                     // problem id; register_problem gives the problem the next free id if it is taken (1 is OneMax)
             instance,              // the instance id
             "NewBooleanProblem",   // problem name
-            n_variables,           // search dimensionality
-            1,                     // number of objectives, only support 1 for now
-            ioh::common::OptimizationType::Minimization
-            )
+            n_variables           // search dimensionality
+            ) 
           )
     {
     }
 };
 ```
 
-Please check [this example](https://github.com/IOHprofiler/IOHexperimenter/blob/8a49d76d591c52b4ae8ed0991d4b6ea8d5c3adaa/example/problem_example.h#L52) for adding continuous problems in this manner.
+To create it by id or name from the factory of all pseudo-Boolean problems, like the built-in problems, register it
+once before use:
+
+```C++
+ioh::problem::register_problem<NewBooleanProblem, ioh::problem::IntegerSingleObjective>();
+```
+
+(Inheriting from `ioh::problem::RegisteredProblem<NewBooleanProblem, ioh::problem::IntegerSingleObjective>` instead
+still registers the class automatically when the program starts; then a taken id only moves the factory entry, and
+the problems keep reporting their own id.)
+
+Please check [this example](./problem_example.hpp) for adding continuous problems in this manner.
 
 ### Use a logger
 

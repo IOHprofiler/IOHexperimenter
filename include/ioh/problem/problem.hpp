@@ -339,22 +339,37 @@ namespace ioh
 
         /**
          * @brief Registers the problem class T, constructed from (instance, n_variables), in the factory of Parent
-         * (e.g. RealSingleObjective), so that it can be created by id or name like the built-in problems. The id
-         * and name are those of T(1, 1).meta_data(); a taken id is replaced by the next free one.
+         * (e.g. RealSingleObjective), so that it can be created by id or name like the built-in problems.
+         *
+         * The problems the factory creates report the id and name they are registered under: a name that is
+         * already registered keeps its id (and gets T as its new class), an id that is taken is replaced by the
+         * next free one.
          */
-        template <typename T, typename Parent>
-        void register_problem()
-        {
-            ProblemRegistry<Parent>::template include<T>();
-        }
-
-        //! Registers the problem class T in the factory of Parent with the given id and name
         template <typename T, typename Parent>
         void register_problem(const int id, const std::string &name)
         {
-            ProblemFactoryType<Parent>::instance().include(name, id, [](int &&instance, int &&n_variables) {
-                return std::make_shared<T>(instance, n_variables);
+            auto &factory = ProblemFactoryType<Parent>::instance();
+            const int registered_id = factory.check_or_get_next_available(id, name);
+            factory.include(name, registered_id, [registered_id, name](int &&instance, int &&n_variables) {
+                auto problem = std::make_shared<T>(instance, n_variables);
+                problem->set_id(registered_id);
+                problem->set_name(name);
+                return problem;
             });
+        }
+
+        //! Registers T as above, under the id and name of T(1, 1).meta_data(); a problem defined by instances
+        //! (InstanceBasedProblem) is registered with the entries of its load_instances
+        template <typename T, typename Parent>
+        void register_problem()
+        {
+            if constexpr (std::is_base_of_v<InstanceBasedProblem, T>)
+                ProblemRegistry<Parent>::template include<T>();
+            else
+            {
+                const auto meta = T(1, 1).meta_data();
+                register_problem<T, Parent>(meta.problem_id, meta.name);
+            }
         }
 
 

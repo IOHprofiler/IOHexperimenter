@@ -55,7 +55,8 @@ WP2 section has the numbers after it):
   initialization, so an *existing but incomplete* data dir aborts `import ioh` with SIGABRT; CEC2022
   re-parses its text files on every construction.
 * Bugs found while doing WP1 (see §3): graph problem ids off by one on Windows (fixed in WP1),
-  MaxInfluence is stochastic, `Factory::create` has undefined behaviour for unknown keys.
+  MaxInfluence is stochastic, `Factory::create` had undefined behaviour for unknown keys (fixed in
+  WP3: it throws).
 
 ## 1. Decisions (binding for all tasks)
 
@@ -63,10 +64,11 @@ WP2 section has the numbers after it):
   problem classes, attributes, `wrap_problem`, loggers, suites). Exceptions: the deliberate
   list → numpy change in WP7, and the deprecations listed in WP4. Guarded by the golden tests (T1.1).
 * **Problem ids are frozen** to today's values; names are static. No id may change.
-* **Registry**: callable-based (`include(name, id, creator)`), populated lazily; CRTP registration
-  and `InstanceBasedProblem` are removed. C++ API changes are allowed (small C++ user base) but must
-  be documented in an upgrade guide. The public aliases `ProblemRegistry<T>`, `ProblemFactoryType<T>`
-  and `SuiteRegistry<T>` stay.
+* **Registry**: callable-based (`include(name, id, creator)`), populated lazily; the built-in problems
+  no longer use CRTP registration (done in WP3; the machinery stays for user types) and
+  `InstanceBasedProblem` goes in WP4 (T4.4). C++ API changes are allowed (small C++ user base) but
+  must be documented in an upgrade guide. The public aliases `ProblemRegistry<T>`,
+  `ProblemFactoryType<T>` and `SuiteRegistry<T>` stay.
 * **Ship a compiled `ioh` CMake target** (static library) holding the registry and data code.
 * **Data**: stays inside every wheel (~7 MB compressed), plain text formats, described by a
   generated **manifest**.
@@ -152,10 +154,12 @@ Python-visible views, 3,256 entries).
 * CEC2013 and graph entries ignore both `instance` (always 1) and the requested dimension.
 * `Factory::include(name, id, creator)`: a new name with a colliding id gets `max(ids) + 1`; an
   existing name keeps its id and **replaces the creator** (`wrap_problem` relies on this).
-  `Factory::create` only `assert`s that the key exists: an unknown id/name is undefined behaviour in
-  Release builds (Python's `get_problem` checks first; direct `.create()` calls do not).
+  Before WP3, `Factory::create` only `assert`ed that the key exists, so an unknown id/name was
+  undefined behaviour in Release builds; since WP3 it throws `std::out_of_range`.
 * Suites (8: Real, BBOB, SBOX, RealStarDiscrepancy, Integer, PBO, Submodular,
-  IntegerStarDiscrepancy) get ids from registration order (not deterministic, not Python-visible).
+  IntegerStarDiscrepancy) got ids from the static-initialization order (not deterministic, not
+  Python-visible); since WP3 they are fixed (Real 1, BBOB 2, SBOX 3, RealStarDiscrepancy 4; Integer 1,
+  PBO 2, Submodular 3, IntegerStarDiscrepancy 4).
   Iteration order is problem id → dimension → instance.
 * Not registered (constructed directly): WModel, funnel (`DoubleSphere`, ...), `ManyAffine`.
 * MaxInfluence (2200–2223) is **stochastic**: `evaluate()` runs Monte-Carlo cascades with the global
@@ -166,7 +170,8 @@ Python-visible views, 3,256 entries).
   `{[graph, i](...){...}, i++, ...}`; MSVC captured the incremented `i`, so on Windows every graph
   problem's `meta_data().problem_id` was its registry id + 1.
 
-**Registration sites** (paths under `include/ioh/`): `problem/problem.hpp` (`RegisteredProblem`,
+**Registration sites before WP3** (since WP3 the built-ins are registered in `src/registry`, and these
+bases register nothing; paths under `include/ioh/`): `problem/problem.hpp` (`RegisteredProblem`,
 `AutomaticProblemRegistration`, `ProblemRegistry`/`ProblemFactoryType` aliases),
 `problem/bbob/bbob_problem.hpp` (`BBOProblem`: registration only, 3 per BBOB function),
 `problem/pbo/pbo_problem.hpp` (`PBOProblem`: registration + inherited constructors),
@@ -260,7 +265,7 @@ What was done, for reference by later WPs:
 
 ---
 
-## WP2 — Sobol direction numbers as a table ✅ T2.1 implemented (branch `wp2-sobol-table`); T2.2, T2.3 open
+## WP2 — Sobol direction numbers as a table ✅ T2.1 merged (#219), T2.2 done in WP3; T2.3 open
 
 Depends on: WP1. Small and independent. T2.2 and T2.3 are later tasks recorded here; they do not
 block WP3.
@@ -309,14 +314,12 @@ What was done, and where it differs from T2.1 below:
 * **Acceptance**: outputs bit-identical; the TU containing `i8_sobol` compiles in < 0.2 s at -O3
   (was 5.6 s); golden tests pass. (Measured in the diagnosis: 324,864 values identical.)
 
-### T2.2 Rename the wheels workflow (open)
+### T2.2 Rename the wheels workflow ✅ done in WP3
 
-* The wheels workflow is still called "Upload Python Package", although it builds and tests wheels on
-  every run and uploads only for releases. Rename it to "Wheels": change only `name:`, because PyPI's
-  trusted publishing is tied to the file name `python-publish.yml`, which stays. Do it in a PR that
-  runs the full wheel matrix anyway (one that changes the build, §2, such as WP3, or WP8's release
-  run): §2 counts any change to the wheels workflow, so in another PR the rename would cost an extra
-  full run.
+* The wheels workflow was called "Upload Python Package", although it builds and tests wheels on
+  every run and uploads only for releases. WP3, which runs the full wheel matrix anyway (§2), renamed
+  it to "Wheels": only `name:` changed, because PyPI's trusted publishing is tied to the file name
+  `python-publish.yml`.
 
 ### T2.3 Final CI timing (open, after all WPs)
 
@@ -349,6 +352,11 @@ What was done, and where it differs from T3.1–T3.7 below:
   requirements, install/export as before). The `/MT` `MSVC_RUNTIME_LIBRARY` property was dropped: on a
   compiled library it would clash with the `/MD` Python extension and tests. `MANIFEST.in` grafts
   `src/`.
+* **Build details from review**: `CMAKE_BUILD_TYPE` defaults to Release for top-level single-config
+  builds (the installed library holds problem code; `cmake .. && make install` built it at -O0); the
+  Debug library is `iohd` (Debug and Release installs coexist; consumers on MSVC need the matching
+  one); `/MP` for `ioh` under the Visual Studio generator (which `setup.py` uses on Windows); `src/**`
+  in the wheels workflow's path filter, and the workflow renamed to "Wheels" (T2.2).
 * **`IOH_LTO`** (T3.6) applies to the release configurations only and is **off by default for every
   compiler** (planned: on for MSVC). With LTO on, clang uses ThinLTO and builds the extension slightly
   faster (19.7 instead of 20.9 s at -j4), but evaluation speed is the same with full LTO (master), no
@@ -374,7 +382,10 @@ What was done, and where it differs from T3.1–T3.7 below:
   and constructors but register nothing, so no problem header changed apart from the BBOB `extern
   template` lines and no deprecated aliases were needed. The machinery itself stays for user types
   (`RegisteredProblem`, `AutomaticProblemRegistration`); new `register_problem<T, Parent>()` and
-  `register_problem<T, Parent>(id, name)`.
+  `register_problem<T, Parent>(id, name)`, whose created problems report the id and name they are
+  registered under (a taken id becomes the next free one), unlike `RegisteredProblem`'s.
+  Classes derived from the former registering bases are therefore no longer registered (a silent
+  C++ change, in the release notes).
 * **Suites**: `Suite`'s constructor takes any problem factory (a template), so the six
   `reinterpret_cast`s are gone. Fixed ids: Real 1, BBOB 2, SBOX 3, RealStarDiscrepancy 4; Integer 1,
   PBO 2, Submodular 3, IntegerStarDiscrepancy 4.
@@ -384,8 +395,10 @@ What was done, and where it differs from T3.1–T3.7 below:
   exactly). Registry entries do **not** carry them yet: a graph's dimension is only known after
   loading its data (all 78 graphs take 0.8 s), so this moves to the WP4 manifest.
 * **Tests**: `tests/cpp/problem/test_registry.cpp` checks every factory against the golden registry
-  (ids, names, CEC2013 meta names from the golden records, fixed values, construction and evaluation),
-  the suite ids, unknown and duplicate entries, and `register_problem`.
+  (ids, names, CEC2013 meta names from the golden records, fixed values, construction and evaluation;
+  the nine family factories exactly, the REAL/INTEGER unions allowing runtime registrations after the
+  built-ins and constructing one graph entry per graph class), the suite ids, unknown and duplicate
+  entries, and `register_problem`.
 
 ### T3.1 Compiled `ioh` target
 
@@ -680,9 +693,14 @@ Depends on: WP6.
 
 Depends on: all previous WPs (each WP also documents its own changes as it lands).
 
-* C++ upgrade guide: link the compiled `ioh::ioh` target; registration via `register_problem` /
-  `include` (CRTP and `RegisteredProblem` removed/deprecated); `InstanceBasedProblem` removed;
-  data-root API; errors are exceptions instead of aborts; removed helpers/types list.
+* C++ upgrade guide: link the compiled `ioh::ioh` target (every program, also one that only
+  constructs problems: the BBOB classes are instantiated in the library); registration via
+  `register_problem` / `include`; classes derived from the former registering bases (`BBOProblem`,
+  `PBOProblem`, `CEC2013Problem`, `CEC2022Problem`, `DynamicBinValProblem`, `GraphProblemType`,
+  `RealSuite`, `IntegerSuite`) must register themselves, while `RegisteredProblem`,
+  `AutomaticProblemRegistration` and `AutomaticSuiteRegistration` still register at program start;
+  `InstanceBasedProblem` removed (WP4); data-root API; errors are exceptions instead of aborts;
+  removed helpers/types list.
 * Python upgrade guide: Python ≥ 3.10 (recommended ≥ 3.12), deprecated `download_static_folder` /
   `load_graph_problems`, `IOH_RESOURCES` semantics, numpy returns (WP7), new metadata attributes if
   added.
@@ -692,7 +710,7 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
   manual dispatch and check the artifacts (take the wheel tags in the release notes from this run;
   no `TASKS.md` in the sdist); then publish the GitHub release (`release: published` triggers the
   upload) and verify the wheels on PyPI.
-* Final CI timing (T2.3), and the workflow rename (T2.2) if no earlier PR did it.
+* Final CI timing (T2.3).
 
 ### Release-notes draft
 
@@ -726,11 +744,19 @@ Each WP adds its user-visible changes here (§2).
     `None` otherwise.
   * `create()` with an unknown id or name raises `IndexError` in Python (`std::out_of_range` in C++)
     instead of failing an assertion or, in release builds, undefined behaviour.
-  * C++: the library is no longer header-only. Link `ioh::ioh` with CMake (or compile `src/`): it holds
-    the registries of the built-in problems and suites, which are filled when a factory is first used
-    instead of at program start. Register your own problems with `ioh::problem::register_problem`
-    (`RegisteredProblem` still registers at program start). Suite factory ids are now fixed (Real 1,
-    BBOB 2, SBOX 3, RealStarDiscrepancy 4; Integer 1, PBO 2, Submodular 3, IntegerStarDiscrepancy 4).
+  * C++: the library is no longer header-only. Every program links `ioh::ioh` with CMake (or compiles
+    `src/`): it holds the registries of the built-in problems and suites, which are filled when a
+    factory is first used instead of at program start, and the BBOB/SBOX problem classes. The default
+    build type is Release; the Debug library is `iohd`. Register your own problems with
+    `ioh::problem::register_problem` (`RegisteredProblem` still registers at program start). Suite
+    factory ids are now fixed (Real 1, BBOB 2, SBOX 3, RealStarDiscrepancy 4; Integer 1, PBO 2,
+    Submodular 3, IntegerStarDiscrepancy 4).
+  * C++ (breaking, without a compile error): classes derived from the library's former registering
+    bases (`BBOProblem`, `PBOProblem`, `CEC2013Problem`, `CEC2022Problem`, `DynamicBinValProblem`,
+    `GraphProblemType`, `RealSuite`, `IntegerSuite`) are no longer added to any factory, so
+    `create(id|name)` throws. Register them with `register_problem<T, Parent>()` for each factory the
+    base used to fill (e.g. `PBO` and `IntegerSingleObjective`), or `SuiteRegistry<...>::include<T>()`
+    for suites.
   * Problem ids, names and behaviour are unchanged (golden tests).
 
 ---

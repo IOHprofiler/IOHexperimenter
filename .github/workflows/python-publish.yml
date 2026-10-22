@@ -1,4 +1,5 @@
-name: Upload Python Package
+# builds and tests the wheels; uploads them for releases
+name: Wheels
 
 on:
   release:
@@ -18,6 +19,7 @@ on:
       - "CMakeLists.txt"
       - "cmake/**"
       - "include/**"
+      - "src/**"
       - "ioh/**"
       - "static/**"
       - "external/**"

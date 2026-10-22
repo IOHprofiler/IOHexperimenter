@@ -65,35 +65,42 @@ namespace
     bool is_cec2022(const int id) { return id >= 1001 && id <= 1012; }
     bool is_graph(const int id) { return id >= 2000 && id <= 2308; }
 
+    //! The first entry of each of the four graph problem classes
+    bool is_first_of_graph_class(const int id) { return id == 2000 || id == 2100 || id == 2200 || id == 2300; }
+
     /**
-     * @brief Checks a problem factory against the golden registry: the same built-in {id: name} entries, and
-     * every one constructs as a problem with that id and name (CEC2013: its golden meta name), reports whether
-     * its dimension and instance are fixed, and evaluates.
+     * @brief Checks a problem factory against the golden registry: the same {id: name} entries, and every one
+     * constructs as a problem with that id and name (CEC2013: its golden meta name), reports whether its
+     * dimension and instance are fixed, and evaluates.
+     *
+     * The union factories (REAL, INTEGER) may also hold problems registered at runtime by other tests and the
+     * examples compiled into this binary, after the built-ins; of their graph entries, only the first of each
+     * class is constructed (the GRAPH factory constructs all of them, and each loads its graph data).
      */
     template <class P>
     void check_factory(const std::string &section, const std::string &key, const std::function<int(int)> &n_variables,
-                       const bool construct_graphs = true)
+                       const bool union_factory = false)
     {
         const auto &factory = ioh::problem::ProblemRegistry<P>::instance();
         const auto expected = golden_registry(section, key);
         ASSERT_FALSE(expected.empty()) << key;
 
-        // problems registered at runtime, like the examples compiled into this binary, come after the built-ins
         auto builtins = factory.map();
-        for (auto it = builtins.begin(); it != builtins.end();)
-            if (expected.count(it->first) == 0)
-            {
-                EXPECT_GT(it->first, expected.rbegin()->first) << key << " " << it->second;
-                it = builtins.erase(it);
-            }
-            else
-                ++it;
+        if (union_factory)
+            for (auto it = builtins.begin(); it != builtins.end();)
+                if (expected.count(it->first) == 0)
+                {
+                    EXPECT_GT(it->first, expected.rbegin()->first) << key << " " << it->second;
+                    it = builtins.erase(it);
+                }
+                else
+                    ++it;
         EXPECT_EQ(builtins, expected) << key;
 
         static const auto cec2013_meta_names = golden_cec2013_meta_names();
         for (const auto &[id, name] : builtins)
         {
-            if (is_graph(id) && !construct_graphs)
+            if (union_factory && is_graph(id) && !is_first_of_graph_class(id))
                 continue;
             const auto problem = factory.create(id, 1, n_variables(id));
             const auto meta = problem->meta_data();
@@ -135,9 +142,9 @@ TEST_F(BaseTest, test_registry_family_factories)
 TEST_F(BaseTest, test_registry_union_factories)
 {
     using namespace ioh::problem;
-    check_factory<RealSingleObjective>("problem_classes", "REAL", [](const int id) { return is_cec2022(id) ? 10 : 2; });
-    // the graph problems were constructed by the GRAPH factory test (constructing them loads all graph data)
-    check_factory<IntegerSingleObjective>("problem_classes", "INTEGER", [](int) { return 16; }, false);
+    check_factory<RealSingleObjective>(
+        "problem_classes", "REAL", [](const int id) { return is_cec2022(id) ? 10 : 2; }, true);
+    check_factory<IntegerSingleObjective>("problem_classes", "INTEGER", [](int) { return 16; }, true);
 }
 
 TEST_F(BaseTest, test_registry_suites)
@@ -213,16 +220,22 @@ TEST_F(BaseTest, test_registry_register_problem)
     using namespace ioh::problem;
     const auto &factory = ProblemRegistry<RealSingleObjective>::instance();
 
-    // id 1 (from the meta data) belongs to Sphere, so the problem gets the next free id
+    // id 1 (from the meta data) belongs to Sphere, so the problem gets the next free id, and reports it
     register_problem<registry_test::UserProblem, RealSingleObjective>();
     const auto map = factory.map();
     const auto entry = std::find_if(map.begin(), map.end(),
                                     [](const auto &kv) { return kv.second == "RegistryTestUserProblem"; });
     ASSERT_NE(entry, map.end());
     EXPECT_GT(entry->first, 1120);
-    EXPECT_EQ(factory.create("RegistryTestUserProblem", 1, 3)->meta_data().n_variables, 3);
+    const auto problem = factory.create("RegistryTestUserProblem", 1, 3);
+    EXPECT_EQ(problem->meta_data().problem_id, entry->first);
+    EXPECT_EQ(problem->meta_data().name, "RegistryTestUserProblem");
+    EXPECT_EQ(problem->meta_data().n_variables, 3);
 
     register_problem<registry_test::UserProblem, RealSingleObjective>(54321, "RegistryTestUserProblemById");
     EXPECT_EQ(factory.map().at(54321), "RegistryTestUserProblemById");
-    EXPECT_EQ(factory.create(54321, 2, 4)->meta_data().instance, 2);
+    const auto by_id = factory.create(54321, 2, 4);
+    EXPECT_EQ(by_id->meta_data().problem_id, 54321);
+    EXPECT_EQ(by_id->meta_data().name, "RegistryTestUserProblemById");
+    EXPECT_EQ(by_id->meta_data().instance, 2);
 }

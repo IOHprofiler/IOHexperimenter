@@ -18,10 +18,15 @@ Please use the following commands to download, compile, and install this package
 ```
 
 which installs the header files to `/usr/local/include/ioh` and the compiled `ioh` library, which holds the
-registries of the built-in problems and suites, to `/usr/local/lib` by default.
+registries of the built-in problems and suites and the BBOB problem classes, to `/usr/local/lib` by default.
 If you want to change this directory, please use the following flag `cmake -DCMAKE_INSTALL_PREFIX=your/path ..`
 
-Link your own targets against the library, which also adds the include directories:
+The library is built optimized (`Release`) unless you choose another `CMAKE_BUILD_TYPE`. With a
+multi-configuration generator such as Visual Studio, build and install a configuration explicitly, e.g.
+`cmake --build . --config Release --target install`; the Debug library is called `iohd`, and on MSVC your own
+build must use the matching one.
+
+Every program using IOHexperimenter links against the library, which also adds the include directories:
 
 ```cmake
 find_package(ioh REQUIRED)   # or add_subdirectory(IOHexperimenter)
@@ -31,7 +36,7 @@ target_link_libraries(your_target PRIVATE ioh::ioh)
 If you want to change build options, check the output of `cmake -L` or use `cmake-gui` or `ccmake`.
 
 ### Dependencies
-IOHexperimenter has a few dependencies, however, only the fmt/fmt library is required to compile the C++ backend. If you'd like to compile the source code without CMake, you need to provide the includes of fmt/fmt as an additional include directory, which can be found in the [external](https://github.com/IOHprofiler/IOHexperimenter/tree/master/external) folder of the repository, and compile the sources in `src/` along with your own: without them the problem and suite registries do not link.
+IOHexperimenter has a few dependencies, however, only the fmt/fmt library is required to compile the C++ backend. If you'd like to compile the source code without CMake, you need to provide the includes of fmt/fmt as an additional include directory, which can be found in the [external](https://github.com/IOHprofiler/IOHexperimenter/tree/master/external) folder of the repository, and compile the sources in `src/` along with your own: they hold the registries of the built-in problems and suites and the BBOB problem classes, so no program links without them.
 
 ### Usage
 
@@ -144,7 +149,7 @@ public:
     NewBooleanProblem(const int instance, const int n_variables) :
         ioh::problem::IntegerSingleObjective(
           ioh::problem::MetaData(
-            1,                     // problem id, replaced by the next free id if it is taken when registering
+            1,                     // problem id; register_problem gives the problem the next free id if it is taken (1 is OneMax)
             instance,              // the instance id
             "NewBooleanProblem",   // problem name
             n_variables           // search dimensionality
@@ -163,6 +168,7 @@ ioh::problem::register_problem<NewBooleanProblem, ioh::problem::IntegerSingleObj
 ```
 
 (Inheriting from `ioh::problem::RegisteredProblem<NewBooleanProblem, ioh::problem::IntegerSingleObjective>` instead
-still registers the class automatically when the program starts.)
+still registers the class automatically when the program starts; then a taken id only moves the factory entry, and
+the problems keep reporting their own id.)
 
 Please check [this example](./example/problem_example.hpp) for adding continuous problems in this manner.

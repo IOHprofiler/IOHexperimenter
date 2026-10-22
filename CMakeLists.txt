@@ -11,6 +11,12 @@ project(ioh
   
 add_compile_definitions(PROJECT_VER="${CMAKE_PROJECT_VERSION}")
 
+# The ioh library holds problem code, so build it optimized unless a build type is given (single-configuration
+# generators; project() already created the empty cache entry)
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR AND NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)  
 set(EXTERNAL_DIR "${PROJECT_SOURCE_DIR}/external")
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH}) 
@@ -69,8 +75,15 @@ add_library(ioh STATIC
     src/registry/suites.cpp
 )
 add_library(ioh::ioh ALIAS ioh)
-# it is also linked into the Python extension
-set_target_properties(ioh PROPERTIES POSITION_INDEPENDENT_CODE ON)
+# position-independent: it is also linked into the Python extension. The Debug build gets its own file name, so
+# that installed Debug and Release builds can coexist.
+set(IOH_DEBUG_POSTFIX d CACHE STRING "Postfix of the Debug build of the ioh library")
+set_target_properties(ioh PROPERTIES POSITION_INDEPENDENT_CODE ON DEBUG_POSTFIX "${IOH_DEBUG_POSTFIX}")
+# MSBuild (the Visual Studio generator, which setup.py uses on Windows) compiles a project's files one after
+# another unless /MP is given; pybind11 sets it on the extension module only
+if(CMAKE_GENERATOR MATCHES "Visual Studio" AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_compile_options(ioh PRIVATE /MP)
+endif()
 
 #Include external formatting lib
 include_directories(${EXTERNAL_DIR}/fmt/include/)
