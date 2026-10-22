@@ -29,10 +29,16 @@ option(BUILD_SERVER "Whether to build the objective function server" OFF)
 option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF) # Turn this option ON if you plan to test MK-landscape problems.
 
 # Link-time optimization of the release configurations. Defining CMAKE_INTERPROCEDURAL_OPTIMIZATION also keeps
-# pybind11 from enabling its own (full) LTO for the Python extension. Off by default: with the compiled registry
-# it does not change the evaluation speed (measured with clang), and a static library of LTO objects only links
-# with the toolchain that built it.
-option(IOH_LTO "Build the release configurations with link-time optimization" OFF)
+# pybind11 from enabling its own (full) LTO for the Python extension. On by default only for the Python extension
+# with MSVC, which compiles /GL objects without generating code (without it the Windows wheels built slower than
+# before the compiled registry). Elsewhere it does not change the evaluation speed (measured with clang), and a
+# static library of LTO objects only links with the toolchain that built it.
+if(MSVC AND BUILD_PYTHON_PACKAGE)
+    set(IOH_LTO_DEFAULT ON)
+else()
+    set(IOH_LTO_DEFAULT OFF)
+endif()
+option(IOH_LTO "Build the release configurations with link-time optimization" ${IOH_LTO_DEFAULT})
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION OFF)
 foreach(config RELEASE RELWITHDEBINFO MINSIZEREL)
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_${config} ${IOH_LTO})

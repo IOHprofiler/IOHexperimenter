@@ -357,10 +357,12 @@ What was done, and where it differs from T3.1–T3.7 below:
   Debug library is `iohd` (Debug and Release installs coexist; consumers on MSVC need the matching
   one); `/MP` for `ioh` under the Visual Studio generator (which `setup.py` uses on Windows); `src/**`
   in the wheels workflow's path filter, and the workflow renamed to "Wheels" (T2.2).
-* **`IOH_LTO`** (T3.6) applies to the release configurations only and is **off by default for every
-  compiler** (planned: on for MSVC). With LTO on, clang uses ThinLTO and builds the extension slightly
-  faster (19.7 instead of 20.9 s at -j4), but evaluation speed is the same with full LTO (master), no
-  LTO and ThinLTO, and a static library of LTO objects only links with the toolchain that built it.
+* **`IOH_LTO`** (T3.6) applies to the release configurations only. It is on by default only for the
+  Python extension with MSVC (`/GL`), as planned: MSVC then compiles without generating code, and without
+  it the Windows wheel jobs built slower than before WP3 (the build step of a Windows x64 wheel took
+  145 s instead of 92 s with pybind11's `/GL`). Elsewhere it is off: with clang, evaluation speed is the
+  same with full LTO (master), no LTO and ThinLTO, ThinLTO builds only slightly faster (19.7 instead of
+  20.9 s at -j4), and a static library of LTO objects only links with the toolchain that built it.
   Defining `CMAKE_INTERPROCEDURAL_OPTIMIZATION` also turns off pybind11's own full LTO.
 * **Measured** (Apple M5, clang 21, §2): the Python extension build with `setup.py`'s flags takes 20.9 s
   instead of 30.9 s at -j4 (62.4 instead of 81.3 s serial); `pip install` of the sdist 19 s; Debug
