@@ -166,15 +166,20 @@ protected:
     } 
 
 public:
+    /// [mandatory for registering] The id and name in the registry, also used by the constructor. If the id is
+    /// taken when registering, the problem gets the next free one.
+    static constexpr int registry_id = 9001;
+    static constexpr const char *registry_name = "NewBooleanProblem";
+
     /// [mandatory] This constructor always take `instance` as input even
     /// if it is ineffective by default. `instance` would be effective if and only if
     /// at least one of `transform_objectives` and `transform_objectives` is implemented
     NewBooleanProblem(const int instance, const int n_variables) :
         ioh::problem::IntegerSingleObjective(
           ioh::problem::MetaData(
-            1,                     // problem id; register_problem gives the problem the next free id if it is taken (1 is OneMax)
+            registry_id,           // the problem id
             instance,              // the instance id
-            "NewBooleanProblem",   // problem name
+            registry_name,         // the problem name
             n_variables           // search dimensionality
             ) 
           )
@@ -190,9 +195,10 @@ once before use:
 ioh::problem::register_problem<NewBooleanProblem, ioh::problem::IntegerSingleObjective>();
 ```
 
-(Inheriting from `ioh::problem::RegisteredProblem<NewBooleanProblem, ioh::problem::IntegerSingleObjective>` instead
-still registers the class automatically when the program starts; then a taken id only moves the factory entry, and
-the problems keep reporting their own id.)
+A class whose data defines several problems lists them instead, in a static `registry_entries()` that returns one
+`ioh::problem::RegistryEntry` (id, name, and a function creating the problem for an instance and a dimension) per
+problem, as the CEC2013 and graph problems do. `register_problem<T, Parent>(id, name)` registers a class under an id
+and name of your choice.
 
 Please check [this example](./problem_example.hpp) for adding continuous problems in this manner.
 

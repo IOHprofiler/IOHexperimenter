@@ -57,8 +57,14 @@ namespace ioh::problem::bbob
 
     //! Rastrigin problem id 3
     template<typename P = BBOB>
-    class Rastrigin final: public RastriginBase<P>, BBOProblem<Rastrigin>
+    class Rastrigin final : public RastriginBase<P>
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 3;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "Rastrigin";
+
     public:
         /**
          * @brief Construct a new Rastrigin object
@@ -67,7 +73,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem 
          */
         Rastrigin(const int instance, const int n_variables) :
-            RastriginBase<P>(3, instance, n_variables, "Rastrigin")
+            RastriginBase<P>(registry_id, instance, n_variables, registry_name)
         {
         }
     };

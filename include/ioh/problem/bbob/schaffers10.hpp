@@ -66,8 +66,14 @@ namespace ioh::problem::bbob
 
     //! Shaffers 10 problem id 17
     template<typename P = BBOB>
-    class Schaffers10 final : public Schaffers<P>, BBOProblem<Schaffers10>
+    class Schaffers10 final : public Schaffers<P>
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 17;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "Schaffers10";
+
     public:
         /**
          * @brief Construct a new Schaffers 1 0 object
@@ -76,7 +82,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem 
          */
         Schaffers10(const int instance, const int n_variables) :
-            Schaffers<P>(17, instance, n_variables, "Schaffers10", 10.0)
+            Schaffers<P>(registry_id, instance, n_variables, registry_name, 10.0)
         {
         }
     };

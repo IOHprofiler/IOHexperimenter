@@ -7,16 +7,34 @@
 
 namespace ioh::registry
 {
-    /**
-     * @brief Adds the problem classes Ts to a problem factory
-     *
-     * As before the registry was compiled: a class-backed problem gets the id and name of T(1, 1).meta_data(),
-     * an instance-based problem (CEC2013, graph, star discrepancy) the entries of its load_instances.
-     */
+    //! Adds registry entries to a problem factory
+    template <class Parent, class T>
+    void add_entries(common::Factory<Parent, int, int> &factory, const std::vector<problem::RegistryEntry<T>> &entries)
+    {
+        for (const auto &entry : entries)
+            factory.include(entry.name, entry.id,
+                            [create = entry.create](int &&instance, int &&n_variables) -> std::shared_ptr<Parent> {
+                                return create(instance, n_variables);
+                            });
+    }
+
+    //! Adds the registry entries of the problem classes Ts (see problem::registry_entries_of) to a problem factory
     template <class Parent, class... Ts>
     void add(common::Factory<Parent, int, int> &factory)
     {
-        (common::RegisterWithFactory<Parent, int, int>::template include<Ts>(factory), ...);
+        (add_entries(factory, problem::registry_entries_of<Ts>()), ...);
+    }
+
+    //! Adds the suite classes Ts, with their registry_id and registry_name, to a suite factory
+    template <class ProblemType, class... Ts>
+    void add_suites(suite::SuiteFactoryType<ProblemType> &factory)
+    {
+        (factory.include(Ts::registry_name, Ts::registry_id,
+                         [](std::vector<int> &&problem_ids, std::vector<int> &&instances,
+                            std::vector<int> &&dimensions) -> std::shared_ptr<suite::Suite<ProblemType>> {
+                             return std::make_shared<Ts>(problem_ids, instances, dimensions);
+                         }),
+         ...);
     }
 
     //! The 24 BBOB functions (ids 1-24) in the variant V, problem::BBOB or problem::SBOX

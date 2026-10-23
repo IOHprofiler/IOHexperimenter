@@ -52,8 +52,14 @@ namespace ioh::problem::bbob
 
     //! Ellipsiod problem id 2
     template<typename P = BBOB>
-    class Ellipsoid final : public EllipsoidBase<P>, BBOProblem<Ellipsoid>
+    class Ellipsoid final : public EllipsoidBase<P>
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 2;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "Ellipsoid";
+
     public:
         /**
          * @brief Construct a new Ellipsoid object
@@ -61,7 +67,7 @@ namespace ioh::problem::bbob
          * @param instance instance id
          * @param n_variables the dimension of the problem
          */
-        Ellipsoid(const int instance, const int n_variables) : EllipsoidBase<P>(2, instance, n_variables, "Ellipsoid") {}
+        Ellipsoid(const int instance, const int n_variables) : EllipsoidBase<P>(registry_id, instance, n_variables, registry_name) {}
     };
 
     extern template class Ellipsoid<BBOB>;

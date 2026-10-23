@@ -9,8 +9,14 @@ namespace ioh
         namespace pbo
         {
             //! OneMaxEpistasis problem id 7
-            class OneMaxEpistasis final: public PBOProblem<OneMaxEpistasis>
+            class OneMaxEpistasis final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 7;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "OneMaxEpistasis";
+
             protected:
                 //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
@@ -32,7 +38,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 OneMaxEpistasis(const int instance, const int n_variables) :
-                    PBOProblem(7, instance, n_variables, "OneMaxEpistasis")
+                    PBO(registry_id, instance, n_variables, registry_name)
                 {
                     optimum_.y = {static_cast<double>(n_variables)};
                     optimum_.y = transform_objectives(optimum_.y);

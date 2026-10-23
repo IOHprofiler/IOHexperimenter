@@ -6,8 +6,14 @@ namespace ioh::problem::bbob
 {
     //! Bent Cigar problem id = 12
     template <typename P=BBOB>
-    class BentCigar final : public P, BBOProblem<BentCigar>
+    class BentCigar final : public P
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 12;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "BentCigar";
+
     protected:
         //! Evaluation method
         double evaluate(const std::vector<double> &x) override
@@ -40,7 +46,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         BentCigar(const int instance, const int n_variables) :
-            P(12, instance, n_variables, "BentCigar")
+            P(registry_id, instance, n_variables, registry_name)
         {
         }
     };

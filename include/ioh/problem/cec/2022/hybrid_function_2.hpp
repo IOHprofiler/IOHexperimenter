@@ -5,8 +5,14 @@
 namespace ioh::problem::cec2022
 {
     /// \brief HybridFunction2 class that inherits from CECProblem.
-    class HybridFunction2 final : public CEC2022Problem<HybridFunction2>
+    class HybridFunction2 final : public CEC2022
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 1007;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "CEC2022HybridFunction2";
+
     protected:
         /**
          * @brief Computes the hf06 function value for the input vector.
@@ -61,7 +67,7 @@ namespace ioh::problem::cec2022
         /// \param instance The instance number of the problem.
         /// \param n_variables The number of variables.
         HybridFunction2(const int instance, const int n_variables) :
-            CEC2022Problem(1007, instance, n_variables, "CEC2022HybridFunction2")
+            CEC2022(registry_id, instance, n_variables, registry_name)
         {
         }
     };

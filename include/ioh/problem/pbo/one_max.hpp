@@ -9,8 +9,14 @@ namespace ioh
         namespace pbo
         {
             //! OneMax problem id 1
-            class OneMax final: public PBOProblem<OneMax>
+            class OneMax final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 1;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "OneMax";
+
             protected:
                 //! Evaluation method
                 double evaluate(const std::vector<int>& x) override
@@ -27,7 +33,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 OneMax(const int instance, const int n_variables) :
-                    PBOProblem(1, instance, n_variables, "OneMax")
+                    PBO(registry_id, instance, n_variables, registry_name)
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

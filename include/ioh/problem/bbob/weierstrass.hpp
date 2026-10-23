@@ -6,8 +6,15 @@ namespace ioh::problem::bbob
 {
     //! Weierstrass problem id 16
     template<typename P=BBOB>
-    class Weierstrass final : public P, BBOProblem<Weierstrass>
+    class Weierstrass final : public P
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 16;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "Weierstrass";
+
+    private:
         double f0_;
         std::vector<double> ak_;
         std::vector<double> bk_;
@@ -45,7 +52,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         Weierstrass(const int instance, const int n_variables) :
-            P(16, instance, n_variables, "Weierstrass", 1 / sqrt(100.0)),
+            P(registry_id, instance, n_variables, registry_name, 1 / sqrt(100.0)),
             f0_(0.0), ak_(12), bk_(12)
         {
             this->enforce_bounds(this->bounds_.weight * (10.0 / n_variables));

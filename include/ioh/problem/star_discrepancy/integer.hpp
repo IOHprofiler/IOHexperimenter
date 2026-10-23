@@ -7,10 +7,14 @@ namespace ioh::problem
 {
     namespace star_discrepancy::integer
     {
-        class StarDiscrepancy : public IntegerSingleObjective,
-                                InstanceBasedProblem
-
+        class StarDiscrepancy : public IntegerSingleObjective
         {
+        public:
+            //! The registry entries (see registry_entries_of): 30 problems with ids 30-59, which sample their
+            //! points with the Uniform, Sobol and Halton samplers
+            static std::vector<RegistryEntry<StarDiscrepancy>> registry_entries();
+
+        private:
             //! The sampled points
             Grid grid;
             //! Same a grid, but with last element a vector of all ones
@@ -52,17 +56,10 @@ namespace ioh::problem
         };
     } // namespace star_discrepancy::integer
 
-    /**
-     * @brief Template instantiation for integer::StarDiscrepancy problems.
-     *
-     * @return InstanceBasedProblem::Constructors<integer::StarDiscrepancy, int, int> a vector of contructor
-     * functions
-     */
-    template <>
-    inline InstanceBasedProblem::Constructors<star_discrepancy::integer::StarDiscrepancy, int, int>
-    InstanceBasedProblem::load_instances<star_discrepancy::integer::StarDiscrepancy>(const std::optional<fs::path> &)
+    inline std::vector<RegistryEntry<star_discrepancy::integer::StarDiscrepancy>>
+    star_discrepancy::integer::StarDiscrepancy::registry_entries()
     {
-        return star_discrepancy::load_default_instances<star_discrepancy::integer::StarDiscrepancy>();
+        return star_discrepancy::default_registry_entries<star_discrepancy::integer::StarDiscrepancy>();
     }
 
 } // namespace ioh::problem

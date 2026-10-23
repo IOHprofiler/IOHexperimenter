@@ -6,8 +6,14 @@ namespace ioh::problem::bbob
 {
     //! Linear Slope problem id 5
     template<typename P=BBOB>
-    class LinearSlope final : public P, BBOProblem<LinearSlope>
+    class LinearSlope final : public P
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 5;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "LinearSlope";
+
     protected:
         //! Evaluation method
         double evaluate(const std::vector<double> &x) override
@@ -29,7 +35,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         LinearSlope(const int instance, const int n_variables) :
-            P(5, instance, n_variables, "LinearSlope")
+            P(registry_id, instance, n_variables, registry_name)
         {
             static const auto base = sqrt(100.0);
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)

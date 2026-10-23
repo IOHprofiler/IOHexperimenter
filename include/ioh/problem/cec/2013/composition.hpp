@@ -9,8 +9,13 @@ namespace ioh::problem
     {
         const inline std::string DATA_FOLDER = "cec_transformations/2013/";
 
-        class CompositionFunction final : public CEC2013Problem<CompositionFunction>
+        class CompositionFunction final : public CEC2013
         {
+        public:
+            //! The registry entries (see registry_entries_of): the dimension and the instance are fixed
+            static std::vector<RegistryEntry<CompositionFunction>> registry_entries();
+
+        private:
             void calculate_weights(const std::vector<double> &x)
             {
                 double maxi = 0.0;
@@ -86,7 +91,7 @@ namespace ioh::problem
                                 const std::vector<std::vector<std::vector<double>>> &transformations,
                                 const std::vector<RealFunction> &functions, const std::vector<double> &sigmas,
                                 const std::vector<double> &lambdas) :
-                CEC2013Problem(problem_id, 1, n_variables, name, -5.0, 5.0, opts),
+                CEC2013(problem_id, 1, n_variables, name, -5.0, 5.0, opts),
                 transformations(transformations), functions(functions), sigmas(sigmas), lambdas(lambdas),
                 weight(opts.size(), 0.0), f_max(n_optima)
             {
@@ -152,7 +157,7 @@ namespace ioh::problem
         return transformations;
     }
 
-    inline InstanceBasedProblem::ConstructorTuple<cec2013::CompositionFunction, int, int>
+    inline RegistryEntry<cec2013::CompositionFunction>
     load_cf(const int problem_id, const int cf_id, const size_t dimension,
             const std::vector<std::vector<double>> &all_optima, const std::vector<double> &sigmas,
             const std::vector<double> &lambdas, const std::vector<RealFunction> &functions
@@ -160,21 +165,18 @@ namespace ioh::problem
     )
     {
         const size_t n_optima = sigmas.size();
-        return {[=](int, int) {
+        return {problem_id, fmt::format("CompositionFunction{}", problem_id), [=](int, int) {
                     const auto transformations = load_transformations(cf_id, dimension, n_optima);
                     const auto optima = select_optima(all_optima, n_optima, dimension);
 
-                    return cec2013::CompositionFunction(problem_id, fmt::format("CEC2013CF{}D{}", cf_id, dimension),
-                                                        static_cast<int>(dimension), optima, transformations, functions,
-                                                        sigmas, lambdas);
-                },
-                problem_id, std::nullopt};
+                    return std::make_shared<cec2013::CompositionFunction>(
+                        problem_id, fmt::format("CEC2013CF{}D{}", cf_id, dimension), static_cast<int>(dimension),
+                        optima, transformations, functions, sigmas, lambdas);
+                }};
     }
 
 
-    template <>
-    inline InstanceBasedProblem::Constructors<cec2013::CompositionFunction, int, int>
-    InstanceBasedProblem::load_instances<cec2013::CompositionFunction>(const std::optional<fs::path> &)
+    inline std::vector<RegistryEntry<cec2013::CompositionFunction>> cec2013::CompositionFunction::registry_entries()
     {
         const static auto optima_file =
             common::file::utils::find_static_file(fmt::format("{}optima.dat", cec2013::DATA_FOLDER));

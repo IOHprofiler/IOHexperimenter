@@ -23,8 +23,14 @@ namespace ioh::problem::dynamic_bin_val
      *        time_step and weights, which are crucial in depicting the dynamic aspects and unique features
      *        of these problem instances.
      */
-    class Uniform final : public DynamicBinValProblem<Uniform>
+    class Uniform final : public DynamicBinVal
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 10001;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "DynamicBinValUniform";
+
     protected:
         void update_weights() override
         {
@@ -40,7 +46,7 @@ namespace ioh::problem::dynamic_bin_val
          *                    indicating the number of variables in the problem.
          */
         Uniform(const int instance, const int n_variables) :
-            DynamicBinValProblem(10'001, instance, n_variables, "DynamicBinValUniform")
+            DynamicBinVal(registry_id, instance, n_variables, registry_name)
         {
             step();
         }

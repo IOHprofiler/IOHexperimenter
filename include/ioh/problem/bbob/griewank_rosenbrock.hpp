@@ -6,8 +6,15 @@ namespace ioh::problem::bbob
 {
     //! GriewankRosenbrock problem id 19
     template <typename P = BBOB>
-    class GriewankRosenbrock final : public P, BBOProblem<GriewankRosenbrock>
+    class GriewankRosenbrock final : public P
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 19;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "GriewankRosenbrock";
+
+    private:
         std::vector<double> x_shift_;
 
     protected:
@@ -42,7 +49,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         GriewankRosenbrock(const int instance, const int n_variables) :
-            P(19, instance, n_variables, "GriewankRosenbrock"), x_shift_(n_variables, -0.5)
+            P(registry_id, instance, n_variables, registry_name), x_shift_(n_variables, -0.5)
         {
             const auto factor = std::max(1., sqrt(n_variables) / 8.);
 

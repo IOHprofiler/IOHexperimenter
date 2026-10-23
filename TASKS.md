@@ -65,10 +65,10 @@ WP2 section has the numbers after it):
   list → numpy change in WP7, and the deprecations listed in WP4. Guarded by the golden tests (T1.1).
 * **Problem ids are frozen** to today's values; names are static. No id may change.
 * **Registry**: callable-based (`include(name, id, creator)`), populated lazily; the built-in problems
-  no longer use CRTP registration (done in WP3; the machinery stays for user types) and
-  `InstanceBasedProblem` goes in WP4 (T4.4). C++ API changes are allowed (small C++ user base) but
-  must be documented in an upgrade guide. The public aliases `ProblemRegistry<T>`,
-  `ProblemFactoryType<T>` and `SuiteRegistry<T>` stay.
+  no longer use CRTP registration, and `InstanceBasedProblem` is gone (both done in WP3): every
+  problem class declares a registry id/name or lists its registry entries. C++ API changes are allowed
+  (small C++ user base) but must be documented in an upgrade guide. The public aliases
+  `ProblemRegistry<T>`, `ProblemFactoryType<T>` and `SuiteRegistry<T>` stay.
 * **Ship a compiled `ioh` CMake target** (static library) holding the registry and data code.
 * **Data**: stays inside every wheel (~7 MB compressed), plain text formats, described by a
   generated **manifest**.
@@ -139,14 +139,15 @@ Python-visible factories on master (all frozen by T1.1):
 Every bound problem class also exposes a `problems` property returning one of these maps (96
 Python-visible views, 3,256 entries).
 
-**Where ids and names come from today**
-* Hard-coded constructor arguments (BBOB, PBO, CEC2022, DynamicBinVal); the registry name is
-  `T(1,1).meta_data().name` (`factory.hpp`, `IdGetter`).
-* CEC2013: ids hard-coded in the `InstanceBasedProblem::load_instances<T>` specializations
-  (1101–1110 in each class header, 1111–1120 via `load_cf(...)` in `cec/2013/composition.hpp`);
-  Shubert and Vincent have two entries each (fixed dims 2 and 3). Registry names are generated as
-  `class_name<T>() + id` (e.g. `FivePeaks1101`, `CompositionFunction1111`) and **differ** from
-  `meta_data().name` (`CEC2013FivePeaks`, `CEC2013CF1D2`); both are Python-visible and frozen.
+**Where ids and names come from** (since WP3; before, the registry read class-backed ids and names
+from `T(1,1).meta_data()` via `IdGetter`, and the data-backed ones from `load_instances`)
+* Static `registry_id`/`registry_name` members, also used by the constructors (BBOB, PBO, CEC2022,
+  DynamicBinVal).
+* CEC2013: ids hard-coded in the `registry_entries()` of each class (1101–1110 in each class header,
+  1111–1120 via `load_cf(...)` in `cec/2013/composition.hpp`); Shubert and Vincent have two entries
+  each (fixed dims 2 and 3). Registry names are the class name plus the id (e.g. `FivePeaks1101`,
+  `CompositionFunction1111`) and **differ** from `meta_data().name` (`CEC2013FivePeaks`,
+  `CEC2013CF1D2`); both are Python-visible and frozen.
 * Star discrepancy: a formula (30/40/50 + index into a sample-size list) with explicit names
   (`UniformStarDiscrepancy10`).
 * Graph: `default_id + index` over the non-blank lines of `static/example_list_*`; names
@@ -368,29 +369,39 @@ What was done, and where it differs from T3.1–T3.7 below:
   instead of 30.9 s at -j4 (62.4 instead of 81.3 s serial); `pip install` of the sdist 19 s; Debug
   `test_ioh` 18.8 instead of 23.5 s at -j4. Runtime benchmark (BBOB d=10/200, PBO d=1024, CEC2022
   d=10, import) unchanged.
-* **Factory**: `add_builtins` overloads for the 13 factories with built-ins (the 11 problem factories of
-  §3 plus the two suite factories) are declared, with forward declarations of their types, before
-  `Factory` in `factory.hpp`, and defined in `src/registry`; a no-op template covers every other
-  factory. Duplicate built-ins throw `std::logic_error`, unknown ids/names `std::out_of_range`
-  (Python: `IndexError`); runtime `include()` keeps its Release semantics in all builds (the
-  Debug-only assert on an existing name is gone); a recursive mutex guards the maps and creators run
-  outside it.
-* **Ids and names** come from the same sources as before: `T(1, 1).meta_data()` or `load_instances`,
-  via `RegisterWithFactory::include<T>(factory)`. So no `static constexpr` id/name members were needed
-  (T3.3), and the family lists in `src/registry/families.hpp` are plain type lists.
-* **CRTP**: the library's types no longer use the automatic registration. The former registering
-  bases (`BBOProblem`, `PBOProblem`, `CEC2013Problem`, `CEC2022Problem`, `DynamicBinValProblem`,
-  `GraphProblemType`, the star discrepancy classes, `RealSuite`/`IntegerSuite`) keep their real bases
-  and constructors but register nothing, so no problem header changed apart from the BBOB `extern
-  template` lines and no deprecated aliases were needed. The machinery itself stays for user types
-  (`RegisteredProblem`, `AutomaticProblemRegistration`); new `register_problem<T, Parent>()` and
-  `register_problem<T, Parent>(id, name)`, whose created problems report the id and name they are
-  registered under (a taken id becomes the next free one), unlike `RegisteredProblem`'s.
-  Classes derived from the former registering bases are therefore no longer registered (a silent
-  C++ change, in the release notes).
+* **Factory**: the 13 factories with built-ins (the 11 problem factories of §3 plus the two suite
+  factories) and their `add_builtins` declarations are listed in `include/ioh/common/builtins.hpp`,
+  which `factory.hpp` includes before the `Factory` definition; the definitions are in `src/registry`,
+  and a no-op template covers every other factory. The factory's private default constructor calls
+  `add_builtins`, so built-ins are added within the thread-safe initialization of `instance()`.
+  Duplicate built-ins throw `std::logic_error`, unknown ids/names `std::out_of_range` (Python:
+  `IndexError`); runtime `include()` keeps its Release semantics in all builds (the Debug-only assert on
+  an existing name is gone); a recursive mutex guards the maps and creators run outside it.
+* **One way to describe a problem class** (T3.3, and T4.4 at the maintainer's request): a class-backed
+  problem declares `static constexpr int registry_id` and `static constexpr const char *registry_name`,
+  which its constructor uses too (the 65 BBOB, PBO, CEC2022 and DynamicBinVal classes; converted by a
+  script that checked every id and name against the golden registry). A class whose data defines its
+  problems (CEC2013, graph, star discrepancy) lists them in a static `registry_entries()`: one
+  `RegistryEntry` (id, name, `create(instance, n_variables)`) per problem, with the same ids, names and
+  creators as before. `problem::registry_entries_of<T>()` turns both into entries, for the registry
+  (`src/registry/families.hpp`), `register_problem` and the graph loader of user files
+  (`GraphProblemType::load_graph_instances`, Python's `MaxCut.load_instances`). Removed:
+  `InstanceBasedProblem` and the `load_instances` specializations, `IdGetter` (which constructed
+  `T(1, 1)` to read ids and names), `type_name`/`class_name`. The data still come from the current
+  definition files; the WP4 manifest replaces them as the source of the data-backed entries (T4.2).
+* **Registration API**: the automatic registration at program start is removed
+  (`AutomaticTypeRegistration`, `RegistrationInvoker`, `InvokeApplyOnConstruction`,
+  `RegisteredProblem`, `AutomaticProblemRegistration`, `AutomaticSuiteRegistration`), and so are the
+  former registering bases (`BBOProblem`, `PBOProblem`, `CEC2013Problem`, `CEC2022Problem`,
+  `DynamicBinValProblem`, `RealSuite`, `IntegerSuite`): problems derive from `BBOB`/`SBOX`, `PBO`,
+  `CEC2013`, `CEC2022` and `DynamicBinVal` directly. `GraphProblemType` stays (shared graph loading).
+  User types register with `register_problem<T, Parent>()` (their registry id/name or entries) or
+  `register_problem<T, Parent>(id, name)`, whose created problems report the id they are registered
+  under (a taken id becomes the next free one), and `suite::register_suite<T>()`.
+  `ProblemRegistry<T>`/`SuiteRegistry<T>` keep `instance()`.
 * **Suites**: `Suite`'s constructor takes any problem factory (a template), so the six
-  `reinterpret_cast`s are gone. Fixed ids: Real 1, BBOB 2, SBOX 3, RealStarDiscrepancy 4; Integer 1,
-  PBO 2, Submodular 3, IntegerStarDiscrepancy 4.
+  `reinterpret_cast`s are gone. The suites declare their ids and names like the problems: Real 1,
+  BBOB 2, SBOX 3, RealStarDiscrepancy 4; Integer 1, PBO 2, Submodular 3, IntegerStarDiscrepancy 4.
 * **`fixed_dimension` / `fixed_instance`** (T3.7): virtual accessors on `Problem` (overridden by
   `CEC2013` and `GraphProblem`) and read-only Python properties on every problem class. The golden
   behaviour records got the two keys (714 of 722 records; the existing values were reproduced
@@ -400,7 +411,7 @@ What was done, and where it differs from T3.1–T3.7 below:
   (ids, names, CEC2013 meta names from the golden records, fixed values, construction and evaluation;
   the nine family factories exactly, the REAL/INTEGER unions allowing runtime registrations after the
   built-ins and constructing one graph entry per graph class), the suite ids, unknown and duplicate
-  entries, and `register_problem`.
+  entries, and `register_problem` for a class with registry id/name and one with `registry_entries()`.
 
 ### T3.1 Compiled `ioh` target
 
@@ -531,14 +542,15 @@ Depends on: WP3.
   loading. Remove the silent fallback in `load_shuffle_data` (`if (exists(...))`): whether a shuffle
   file exists is declared by the manifest; a declared-but-missing file is an error.
 
-### T4.4 One pattern for instance-based problems
+### T4.4 One pattern for instance-based problems ✅ API done in WP3
 
-* Remove `InstanceBasedProblem` and `load_instances`. CEC2013, star discrepancy, graph and
-  pack-while-travel become plain registry entries (id, name, `create(instance, dim)`), data loaded on
-  `create`. Keep today's tolerance: these problems ignore `instance`/`dim` where they do now.
-* Keep runtime loading of user graph definition files (`load_graph_instances(path)` and the Python
-  class methods `MaxCut.load_instances(...)` etc.) as callable registration with today's id
-  semantics.
+* Done in WP3: `InstanceBasedProblem` and `load_instances` are gone; CEC2013, star discrepancy, graph
+  and pack-while-travel list plain registry entries (`registry_entries()`: id, name,
+  `create(instance, dim)`), still ignoring `instance`/`dim` where they did, and the runtime loading of
+  user graph definition files (`load_graph_instances(path)`, Python's `MaxCut.load_instances(...)`)
+  goes through the same entries with today's id semantics.
+* Left for WP4: build these entries from the manifest (T4.2) instead of the definition files and
+  hard-coded lists, with the data loaded on `create` (T4.3).
 
 ### T4.5 Python side
 
@@ -696,13 +708,15 @@ Depends on: WP6.
 Depends on: all previous WPs (each WP also documents its own changes as it lands).
 
 * C++ upgrade guide: link the compiled `ioh::ioh` target (every program, also one that only
-  constructs problems: the BBOB classes are instantiated in the library); registration via
-  `register_problem` / `include`; classes derived from the former registering bases (`BBOProblem`,
-  `PBOProblem`, `CEC2013Problem`, `CEC2022Problem`, `DynamicBinValProblem`, `GraphProblemType`,
-  `RealSuite`, `IntegerSuite`) must register themselves, while `RegisteredProblem`,
-  `AutomaticProblemRegistration` and `AutomaticSuiteRegistration` still register at program start;
-  `InstanceBasedProblem` removed (WP4); data-root API; errors are exceptions instead of aborts;
-  removed helpers/types list.
+  constructs problems: the BBOB classes are instantiated in the library); a problem class declares
+  `registry_id`/`registry_name` (or lists `registry_entries()`) and registers with
+  `register_problem<T, Parent>()`, a suite with `register_suite<T>()`; removed (WP3):
+  `RegisteredProblem`, `AutomaticProblemRegistration`, `AutomaticSuiteRegistration`, the registering
+  bases `BBOProblem`, `PBOProblem`, `CEC2013Problem`, `CEC2022Problem`, `DynamicBinValProblem`,
+  `RealSuite`, `IntegerSuite` (derive from `BBOB`/`SBOX`, `PBO`, ..., `Suite<...>` directly),
+  `InstanceBasedProblem`/`load_instances`, `RegisterWithFactory::include`, `IdGetter`,
+  `type_name`/`class_name`; data-root API (WP4); errors are exceptions instead of aborts; removed
+  helpers/types list.
 * Python upgrade guide: Python ≥ 3.10 (recommended ≥ 3.12), deprecated `download_static_folder` /
   `load_graph_problems`, `IOH_RESOURCES` semantics, numpy returns (WP7), new metadata attributes if
   added.
@@ -749,16 +763,21 @@ Each WP adds its user-visible changes here (§2).
   * C++: the library is no longer header-only. Every program links `ioh::ioh` with CMake (or compiles
     `src/`): it holds the registries of the built-in problems and suites, which are filled when a
     factory is first used instead of at program start, and the BBOB/SBOX problem classes. The default
-    build type is Release; the Debug library is `iohd`. Register your own problems with
-    `ioh::problem::register_problem` (`RegisteredProblem` still registers at program start). Suite
-    factory ids are now fixed (Real 1, BBOB 2, SBOX 3, RealStarDiscrepancy 4; Integer 1, PBO 2,
-    Submodular 3, IntegerStarDiscrepancy 4).
-  * C++ (breaking, without a compile error): classes derived from the library's former registering
-    bases (`BBOProblem`, `PBOProblem`, `CEC2013Problem`, `CEC2022Problem`, `DynamicBinValProblem`,
-    `GraphProblemType`, `RealSuite`, `IntegerSuite`) are no longer added to any factory, so
-    `create(id|name)` throws. Register them with `register_problem<T, Parent>()` for each factory the
-    base used to fill (e.g. `PBO` and `IntegerSingleObjective`), or `SuiteRegistry<...>::include<T>()`
-    for suites.
+    build type is Release; the Debug library is `iohd`. Suite factory ids are now fixed (Real 1, BBOB 2,
+    SBOX 3, RealStarDiscrepancy 4; Integer 1, PBO 2, Submodular 3, IntegerStarDiscrepancy 4).
+  * C++: one way to describe a problem class. It declares `static constexpr int registry_id` and
+    `static constexpr const char *registry_name` (used by its constructor), or, when data define its
+    problems, lists them in a static `registry_entries()` (`RegistryEntry`: id, name, `create`).
+    Register your own classes with `register_problem<T, Parent>()` (or `(id, name)`), suites with
+    `register_suite<T>()`.
+  * C++ (breaking): removed the registration at program start (`RegisteredProblem`,
+    `AutomaticProblemRegistration`, `AutomaticSuiteRegistration`), `InstanceBasedProblem` and its
+    `load_instances`, the base classes `BBOProblem`, `PBOProblem`, `CEC2013Problem`, `CEC2022Problem`,
+    `DynamicBinValProblem`, `RealSuite` and `IntegerSuite` (derive from `BBOB`/`SBOX`, `PBO`,
+    `CEC2013`, `CEC2022`, `DynamicBinVal` or `Suite<...>` directly), `RegisterWithFactory::include`,
+    `type_name` and `class_name`. Classes derived from `GraphProblemType` still compile but are no
+    longer registered automatically: give them a `registry_entries()` (`graph_entries`) and register
+    them with `register_problem`.
   * Problem ids, names and behaviour are unchanged (golden tests).
 
 ---

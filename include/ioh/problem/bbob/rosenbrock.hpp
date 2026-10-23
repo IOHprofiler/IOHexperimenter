@@ -56,8 +56,14 @@ namespace ioh::problem::bbob
 
     //! Rosenbrock problem id 8
     template<typename P = BBOB>
-    class Rosenbrock final: public RosenbrockBase<P>, BBOProblem<Rosenbrock>
+    class Rosenbrock final : public RosenbrockBase<P>
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 8;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "Rosenbrock";
+
     public:
         /**
          * @brief Construct a new Rosenbrock object
@@ -66,7 +72,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         Rosenbrock(const int instance, const int n_variables) :
-            RosenbrockBase<P>(8, instance, n_variables, "Rosenbrock")
+            RosenbrockBase<P>(registry_id, instance, n_variables, registry_name)
         {
             for (auto& e : this->optimum_.x)
                 e *= 0.75;

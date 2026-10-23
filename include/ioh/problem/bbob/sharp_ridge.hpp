@@ -7,8 +7,15 @@ namespace ioh::problem::bbob
 {
     //! Sharp ridge function problem id 13
     template<typename P=BBOB>
-    class SharpRidge final : public P, BBOProblem<SharpRidge>
+    class SharpRidge final : public P
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 13;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "SharpRidge";
+
+    private:
         int n_linear_dimensions_;
     protected:
         //! Evaluation method
@@ -43,7 +50,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem 
          */
         SharpRidge(const int instance, const int n_variables) :
-            P(13, instance, n_variables, "SharpRidge"),
+            P(registry_id, instance, n_variables, registry_name),
         n_linear_dimensions_(static_cast<int>(
             ceil(this->meta_data_.n_variables <= 40 ? 1 : this->meta_data_.n_variables / 40.0)))
         {

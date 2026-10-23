@@ -183,15 +183,4 @@ namespace ioh::problem
         }
     };
 
-    /**
-     * @brief Former CRTP registration base of the BBOB problems, kept so existing code compiles. It no longer
-     * registers anything: the built-in problems are registered in the compiled library (src/registry); register
-     * your own problems with ioh::problem::register_problem.
-     *
-     * @tparam ProblemType The BBOB problem class template
-     */
-    template <template <typename> class ProblemType>
-    struct BBOProblem
-    {
-    };
 } // namespace ioh::problem

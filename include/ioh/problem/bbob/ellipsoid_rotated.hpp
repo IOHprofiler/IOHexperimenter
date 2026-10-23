@@ -6,8 +6,14 @@ namespace ioh::problem::bbob
 {
     //! Rotated ellipsoid problem id 10
     template<typename P = BBOB>
-    class EllipsoidRotated final : public EllipsoidBase<P>, BBOProblem<EllipsoidRotated>
+    class EllipsoidRotated final : public EllipsoidBase<P>
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 10;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "EllipsoidRotated";
+
     protected:
         //! Transoform variables method
         std::vector<double> transform_variables(std::vector<double> x) override
@@ -28,7 +34,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         EllipsoidRotated(const int instance, const int n_variables) :
-            EllipsoidBase<P>(10, instance, n_variables, "EllipsoidRotated")
+            EllipsoidBase<P>(registry_id, instance, n_variables, registry_name)
         {
             static const auto condition = 1.0e6;
             for (auto i = 1; i < this->meta_data_.n_variables; ++i)

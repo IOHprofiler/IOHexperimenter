@@ -6,8 +6,14 @@ namespace ioh::problem::bbob
 {
     //! Discuss function id 11
     template<typename P=BBOB>
-    class Discus final : public P, BBOProblem<Discus>
+    class Discus final : public P
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 11;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "Discus";
+
     protected:
         //! Evaluation method
         double evaluate(const std::vector<double> &x) override
@@ -36,7 +42,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         Discus(const int instance, const int n_variables) :
-            P(11, instance, n_variables, "Discus")
+            P(registry_id, instance, n_variables, registry_name)
         {
         }
     };

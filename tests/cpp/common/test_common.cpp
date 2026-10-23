@@ -44,12 +44,6 @@ TEST_F(BaseTest, common_log)
     EXPECT_EQ(output, "Hello\x1B[0m"); // Hello + color reset ANSI code
 }
 
-TEST_F(BaseTest, common_typenames)
-{
-    EXPECT_EQ(ioh::common::class_name<BaseTest>(), "BaseTest");
-}
-
-
 TEST_F(BaseTest, common_unique_folder) {
     using namespace ioh::common::file;
     const std::string f_name = "TEST_FOLDER";

@@ -6,8 +6,15 @@ namespace ioh::problem::bbob
 {
     //! Katsuura problem id 23
     template<typename P=BBOB>
-    class Katsuura final : public P, BBOProblem<Katsuura>
+    class Katsuura final : public P
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 23;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "Katsuura";
+
+    private:
         double exponent_;
         double factor_;
 
@@ -48,7 +55,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         Katsuura(const int instance, const int n_variables) :
-            P(23, instance, n_variables, "Katsuura", sqrt(100.0)),
+            P(registry_id, instance, n_variables, registry_name, sqrt(100.0)),
             exponent_(10. / pow(static_cast<double>(this->meta_data_.n_variables), 1.2)),
             factor_(10. / static_cast<double>(this->meta_data_.n_variables) / static_cast<double>(this->meta_data_.n_variables))
         {

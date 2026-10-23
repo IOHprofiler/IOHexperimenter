@@ -223,32 +223,34 @@ namespace ioh::suite
     using SuiteFactoryType = common::Factory<Suite<ProblemType>, std::vector<int>, std::vector<int>, std::vector<int>>;
 
 
-    //! Typedef for Suite Registration helper
-    template <class Derived, class ProblemType>
-    using AutomaticSuiteRegistration = common::AutomaticTypeRegistration<Derived, SuiteRegistryType<ProblemType>>;
-
     //! Typedef for Suite factory 
     template <class ProblemType>
     using SuiteRegistry = SuiteRegistryType<ProblemType>;
 
 
-    //! Base class for Real suites
-    template <class Derived>
-    struct RealSuite : Suite<problem::RealSingleObjective>
+    /**
+     * @brief Registers the suite class T, constructed from (problem ids, instances, dimensions), in the suite factory
+     * of its problem type, under its static registry_id and registry_name; a taken id is replaced by the next free one
+     */
+    template <typename T>
+    void register_suite()
     {
-        using Suite<problem::RealSingleObjective>::Suite;
-    };
-
-    //! Base class for Integer suites
-    template <class Derived>
-    struct IntegerSuite : Suite<problem::IntegerSingleObjective>
-    {
-        using Suite<problem::IntegerSingleObjective>::Suite;
-    };
+        using ProblemType = typename T::Problem::element_type;
+        SuiteFactoryType<ProblemType>::instance().include(
+            T::registry_name, T::registry_id,
+            [](std::vector<int> &&problem_ids, std::vector<int> &&instances, std::vector<int> &&dimensions) {
+                return std::make_shared<T>(problem_ids, instances, dimensions);
+            });
+    }
 
     //! Real suite
-    struct Real final : RealSuite<Real>
+    struct Real final : Suite<problem::RealSingleObjective>
     {
+        //! The id in the suite registry
+        static constexpr int registry_id = 1;
+        //! The name in the suite registry, and of the suite
+        static constexpr const char *registry_name = "Real";
+
         /**
          * @brief Construct a new RealSingleObjective object
          * 
@@ -258,15 +260,20 @@ namespace ioh::suite
          */
         Real(const std::vector<int> &problem_ids, const std::vector<int> &instances,
              const std::vector<int> &dimensions) :
-            RealSuite(problem_ids, instances, dimensions, "Real")
+            Suite(problem_ids, instances, dimensions, registry_name)
         {
         }
     };  
     
     
     //! Integer suite
-    struct Integer final : IntegerSuite<Integer>
+    struct Integer final : Suite<problem::IntegerSingleObjective>
     {
+        //! The id in the suite registry
+        static constexpr int registry_id = 1;
+        //! The name in the suite registry, and of the suite
+        static constexpr const char *registry_name = "Integer";
+
         /**
          * @brief Construct a new Integer object
          * 
@@ -276,14 +283,19 @@ namespace ioh::suite
          */
         Integer(const std::vector<int> &problem_ids, const std::vector<int> &instances,
                 const std::vector<int> &dimensions) :
-            IntegerSuite(problem_ids, instances, dimensions, "Integer")
+            Suite(problem_ids, instances, dimensions, registry_name)
         {
         }
     };
 
     //! BBOB suite
-    struct BBOB final : RealSuite<BBOB>
+    struct BBOB final : Suite<problem::RealSingleObjective>
     {
+        //! The id in the suite registry
+        static constexpr int registry_id = 2;
+        //! The name in the suite registry, and of the suite
+        static constexpr const char *registry_name = "BBOB";
+
         /**
          * @brief Construct a new BBOB object
          * 
@@ -293,14 +305,19 @@ namespace ioh::suite
          */
         BBOB(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
              const std::vector<int> &dimensions = {5}) :
-            RealSuite(problem_ids, instances, dimensions, "BBOB", 100, 100,
+            Suite(problem_ids, instances, dimensions, registry_name, 100, 100,
                       problem::ProblemFactoryType<problem::BBOB>::instance())
         {
         }
     };
 
-    struct SBOX final : RealSuite<SBOX>
+    struct SBOX final : Suite<problem::RealSingleObjective>
     {
+        //! The id in the suite registry
+        static constexpr int registry_id = 3;
+        //! The name in the suite registry, and of the suite
+        static constexpr const char *registry_name = "SBOX";
+
         /**
          * @brief Construct a new SBOX object
          * 
@@ -310,14 +327,19 @@ namespace ioh::suite
          */
         SBOX(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
              const std::vector<int> &dimensions = {5}) :
-            RealSuite(problem_ids, instances, dimensions, "SBOX", 100, 100,
+            Suite(problem_ids, instances, dimensions, registry_name, 100, 100,
                       problem::ProblemFactoryType<problem::SBOX>::instance())
         {
         }
     };
 
-    struct RealStarDiscrepancy final : RealSuite<RealStarDiscrepancy>
+    struct RealStarDiscrepancy final : Suite<problem::RealSingleObjective>
     {
+        //! The id in the suite registry
+        static constexpr int registry_id = 4;
+        //! The name in the suite registry, and of the suite
+        static constexpr const char *registry_name = "RealStarDiscrepancy";
+
         /**
          * @brief Construct a new StarDiscrepancy object
          * 
@@ -327,15 +349,20 @@ namespace ioh::suite
          */
         RealStarDiscrepancy(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
              const std::vector<int> &dimensions = {5}) :
-            RealSuite(problem_ids, instances, dimensions, "RealStarDiscrepancy", 10000, 10000,
+            Suite(problem_ids, instances, dimensions, registry_name, 10000, 10000,
                       problem::ProblemFactoryType<problem::star_discrepancy::real::StarDiscrepancy>::instance())
         {
         }
     };
 
     //! PBO suite
-    struct PBO final : IntegerSuite<PBO>
+    struct PBO final : Suite<problem::IntegerSingleObjective>
     {
+        //! The id in the suite registry
+        static constexpr int registry_id = 2;
+        //! The name in the suite registry, and of the suite
+        static constexpr const char *registry_name = "PBO";
+
         /**
          * @brief Construct a new PBO object
          * 
@@ -345,15 +372,20 @@ namespace ioh::suite
          */
         PBO(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
             const std::vector<int> &dimensions = {16}) :
-            IntegerSuite(problem_ids, instances, dimensions, "PBO", 100, 20000,
+            Suite(problem_ids, instances, dimensions, registry_name, 100, 20000,
                          problem::ProblemFactoryType<problem::PBO>::instance())
         {
         }
     };
 
     //! Submodular suite
-    struct Submodular final : IntegerSuite<Submodular>
+    struct Submodular final : Suite<problem::IntegerSingleObjective>
     {
+        //! The id in the suite registry
+        static constexpr int registry_id = 3;
+        //! The name in the suite registry, and of the suite
+        static constexpr const char *registry_name = "Submodular";
+
         /**
          * @brief Construct a new Submodular object
          * 
@@ -364,14 +396,19 @@ namespace ioh::suite
         Submodular(const std::vector<int> &problem_ids = {},
             [[maybe_unused]] const std::vector<int> &instances = {},
             [[maybe_unused]] const std::vector<int> &dimensions = {}) :
-            IntegerSuite(problem_ids, {1}, {1}, "Submodular", 1, 2,
+            Suite(problem_ids, {1}, {1}, registry_name, 1, 2,
                          problem::ProblemFactoryType<problem::submodular::GraphProblem>::instance())
         {
         }
     };
 
-    struct IntegerStarDiscrepancy final : IntegerSuite<IntegerStarDiscrepancy>
+    struct IntegerStarDiscrepancy final : Suite<problem::IntegerSingleObjective>
     {
+        //! The id in the suite registry
+        static constexpr int registry_id = 4;
+        //! The name in the suite registry, and of the suite
+        static constexpr const char *registry_name = "IntegerStarDiscrepancy";
+
         /**
          * @brief Construct a new StarDiscrepancy object
          * 
@@ -381,7 +418,7 @@ namespace ioh::suite
          */
         IntegerStarDiscrepancy(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
              const std::vector<int> &dimensions = {5}) :
-            IntegerSuite(problem_ids, instances, dimensions, "IntegerStarDiscrepancy", 10000, 10000,
+            Suite(problem_ids, instances, dimensions, registry_name, 10000, 10000,
                       problem::ProblemFactoryType<problem::star_discrepancy::integer::StarDiscrepancy>::instance())
         {
         }

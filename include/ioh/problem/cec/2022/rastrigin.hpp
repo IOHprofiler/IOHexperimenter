@@ -6,8 +6,14 @@
 namespace ioh::problem::cec2022
 {
     /// The Rastrigin class represents the Rastrigin optimization problem, inheriting necessary functionalities from the CECProblem template class.
-    class Rastrigin final : public CEC2022Problem<Rastrigin>
+    class Rastrigin final : public CEC2022
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 1004;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "CEC2022Rastrigin";
+
     protected:
         /// Computes the Rastrigin objective function value at the given point.
         /// @param z A vector representing a point in the search space.
@@ -34,7 +40,7 @@ namespace ioh::problem::cec2022
         /// Constructor initializing the Rastrigin problem with given instance number and variable count.
         /// @param instance Instance number for the problem.
         /// @param n_variables Number of variables for the problem.
-        Rastrigin(const int instance, const int n_variables) : CEC2022Problem(1004, instance, n_variables, "CEC2022Rastrigin")
+        Rastrigin(const int instance, const int n_variables) : CEC2022(registry_id, instance, n_variables, registry_name)
         {
         }
     };

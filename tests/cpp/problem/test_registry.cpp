@@ -207,10 +207,34 @@ namespace registry_test
         double evaluate(const std::vector<double> &x) override { return x.at(0); }
 
     public:
+        // id 1 belongs to Sphere
+        static constexpr int registry_id = 1;
+        static constexpr const char *registry_name = "RegistryTestUserProblem";
+
         UserProblem(const int instance, const int n_variables) :
-            ioh::problem::RealSingleObjective(ioh::problem::MetaData(
-                1, instance, "RegistryTestUserProblem", n_variables, ioh::common::OptimizationType::MIN))
+            ioh::problem::RealSingleObjective(ioh::problem::MetaData(registry_id, instance, registry_name,
+                                                                     n_variables, ioh::common::OptimizationType::MIN))
         {
+        }
+    };
+
+    //! A user problem defined by data, with two entries of fixed dimension
+    class UserDataProblem final : public ioh::problem::RealSingleObjective
+    {
+    protected:
+        double evaluate(const std::vector<double> &x) override { return x.at(0); }
+
+    public:
+        UserDataProblem(const int id, const int n_variables) :
+            ioh::problem::RealSingleObjective(ioh::problem::MetaData(id, 1, "RegistryTestUserDataProblem",
+                                                                     n_variables, ioh::common::OptimizationType::MIN))
+        {
+        }
+
+        static std::vector<ioh::problem::RegistryEntry<UserDataProblem>> registry_entries()
+        {
+            return {{65001, "RegistryTestUserData2D", [](int, int) { return std::make_shared<UserDataProblem>(65001, 2); }},
+                    {65002, "RegistryTestUserData3D", [](int, int) { return std::make_shared<UserDataProblem>(65002, 3); }}};
         }
     };
 } // namespace registry_test
@@ -238,4 +262,10 @@ TEST_F(BaseTest, test_registry_register_problem)
     EXPECT_EQ(by_id->meta_data().problem_id, 54321);
     EXPECT_EQ(by_id->meta_data().name, "RegistryTestUserProblemById");
     EXPECT_EQ(by_id->meta_data().instance, 2);
+
+    // a class that lists its entries (like the CEC2013 and graph problems)
+    register_problem<registry_test::UserDataProblem, RealSingleObjective>();
+    EXPECT_EQ(factory.map().at(65001), "RegistryTestUserData2D");
+    EXPECT_EQ(factory.create("RegistryTestUserData3D", 5, 7)->meta_data().n_variables, 3);
+    EXPECT_EQ(factory.create(65002, 5, 7)->meta_data().problem_id, 65002);
 }

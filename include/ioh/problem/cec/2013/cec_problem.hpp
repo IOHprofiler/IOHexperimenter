@@ -121,16 +121,4 @@ namespace ioh::problem
         }
     };
 
-    /**
-     * @brief A template class for creating new CEC problems. It no longer registers them: the built-in problems
-     * are registered in the compiled library (src/registry).
-     *
-     * @tparam ProblemType The class representing the new CEC problem.
-     */
-    template <typename ProblemType>
-    struct CEC2013Problem : CEC2013,
-                            InstanceBasedProblem
-    {
-        using CEC2013::CEC2013; ///< Inherits the constructor of the CEC2013 class.
-    };
 } // namespace ioh::problem

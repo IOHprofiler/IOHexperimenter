@@ -273,15 +273,4 @@ namespace ioh::problem
         std::vector<double> transform_variables(std::vector<double> x) override { return x; }
     };
 
-    /**
-     * @brief A template class for creating new CEC problems. It no longer registers them: the built-in problems
-     * are registered in the compiled library (src/registry).
-     *
-     * @tparam ProblemType The class representing the new CEC problem.
-     */
-    template <typename ProblemType>
-    struct CEC2022Problem : CEC2022
-    {
-        using CEC2022::CEC2022; ///< Inherits the constructor of the CEC2022 class.
-    };
 } // namespace ioh::problem

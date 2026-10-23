@@ -288,24 +288,23 @@ namespace ioh::problem::submodular
         [[nodiscard]] std::optional<int> fixed_instance() const override { return meta_data_.instance; }
     };
 
-    //! Graph Problem Type
+    //! Base of the graph problems, which are defined by the graphs in a definitions file
     template <typename ProblemType>
-    struct GraphProblemType : GraphProblem,
-                              InstanceBasedProblem
+    struct GraphProblemType : GraphProblem
     {
         using GraphProblem::GraphProblem;
 
         /**
-         * @brief Get the constructors used in explicit specialization of load_isntances method if
-         * InstanceBasedProblem
+         * @brief The registry entries of the graphs in a definitions file, one per graph: ids from
+         * ProblemType::default_id on, names like MaxCut2000; the dimension and the instance are fixed
          *
-         * @param path
-         * @return InstanceBasedProblem::Constructors<ProblemType, int, int>
+         * @param path the definitions file
+         * @param name the prefix of the names
          */
         template <typename G = graph::Graph>
-        static Constructors<ProblemType, int, int> get_constructors(const fs::path &path)
+        static std::vector<RegistryEntry<ProblemType>> graph_entries(const fs::path &path, const std::string &name)
         {
-            Constructors<ProblemType, int, int> constructors;
+            std::vector<RegistryEntry<ProblemType>> entries;
 
             const auto root_path = path.parent_path();
 
@@ -317,9 +316,10 @@ namespace ioh::problem::submodular
                 // compute the id first: with {[graph, i]..., i++} MSVC captured the incremented i,
                 // so every graph problem's meta_data id was its registry id + 1 on Windows
                 const int id = i++;
-                constructors.push_back({[graph, id](int, int) { return ProblemType(id, 1, graph); }, id, std::nullopt});
+                entries.push_back({id, fmt::format("{}{}", name, id),
+                                   [graph, id](int, int) { return std::make_shared<ProblemType>(id, 1, graph); }});
             }
-            return constructors;
+            return entries;
         }
 
         //! Helper to load problems from a file
@@ -327,15 +327,11 @@ namespace ioh::problem::submodular
         template <typename... Args>
         static void load_graph_instances(const std::optional<fs::path> &path = std::nullopt)
         {
-            for (auto &ci : InstanceBasedProblem::load_instances<ProblemType, int, int>(path))
+            for (const auto &entry : ProblemType::registry_entries(path))
             {
-                
-                const auto name = fmt::format("{}{}", ioh::common::class_name<ProblemType>(), std::get<1>(ci));
-                auto c = [c = std::get<0>(ci)](Args &&...params) {
-                    return std::make_unique<ProblemType>(c(std::forward<Args>(params)...));
-                };
-                ioh::common::Factory<IntegerSingleObjective, Args...>::instance().include(name, std::get<1>(ci), c);
-                ioh::common::Factory<submodular::GraphProblem, Args...>::instance().include(name, std::get<1>(ci), c);
+                auto c = [create = entry.create](Args &&...params) { return create(std::forward<Args>(params)...); };
+                ioh::common::Factory<IntegerSingleObjective, Args...>::instance().include(entry.name, entry.id, c);
+                ioh::common::Factory<submodular::GraphProblem, Args...>::instance().include(entry.name, entry.id, c);
             }
         }
     };

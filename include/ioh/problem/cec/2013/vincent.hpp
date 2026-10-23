@@ -37,8 +37,12 @@ namespace ioh::problem
             }
         }
         
-        class Vincent final : public CEC2013Problem<Vincent>
+        class Vincent final : public CEC2013
         {
+        public:
+            //! The registry entries (see registry_entries_of): the dimension and the instance are fixed
+            static std::vector<RegistryEntry<Vincent>> registry_entries();
+
         protected:
             double inner_evaluate(const std::vector<double> &x) override
             {
@@ -52,19 +56,17 @@ namespace ioh::problem
 
         public:
             Vincent(const int problem_id, const std::string &name, const int n_variables) :
-                CEC2013Problem(problem_id, 1, n_variables, name, 0.25, 10.0, vincent::get_optima(n_variables), 0.19)
+                CEC2013(problem_id, 1, n_variables, name, 0.25, 10.0, vincent::get_optima(n_variables), 0.19)
             {
             }
         };
     } // namespace cec2013
 
 
-    template <>
-    inline InstanceBasedProblem::Constructors<cec2013::Vincent, int, int>
-    InstanceBasedProblem::load_instances<cec2013::Vincent>(const std::optional<fs::path> &)
+    inline std::vector<RegistryEntry<cec2013::Vincent>> cec2013::Vincent::registry_entries()
     {
-        return {{[](int, int) { return cec2013::Vincent(1107, "CEC2013Vincent2D", 2); }, 1107, std::nullopt},
-                {[](int, int) { return cec2013::Vincent(1109, "CEC2013Vincent3D", 3); }, 1109, std::nullopt}
+        return {{1107, "Vincent1107", [](int, int) { return std::make_shared<cec2013::Vincent>(1107, "CEC2013Vincent2D", 2); }},
+                {1109, "Vincent1109", [](int, int) { return std::make_shared<cec2013::Vincent>(1109, "CEC2013Vincent3D", 3); }}
         };
     }
 

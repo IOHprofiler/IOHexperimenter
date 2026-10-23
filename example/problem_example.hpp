@@ -59,11 +59,15 @@ protected:
     }
 
 public:
+    /// The id and name in the registry, which register_problem uses (a taken id is replaced by the next free one)
+    static constexpr int registry_id = 9001;
+    static constexpr const char *registry_name = "AnotherRealProblem";
+
     /// This constructor is required(i.e. (int, int), even if the newly create problem does not have a way to handle different
     /// instances/dimensions.
     AnotherRealProblem(const int instance, const int n_variables) :
         ioh::problem::RealSingleObjective(
-            ioh::problem::MetaData(1, instance, "AnotherRealProblem", n_variables,
+            ioh::problem::MetaData(registry_id, instance, registry_name, n_variables,
                                            ioh::common::OptimizationType::MIN))
     {
     }
@@ -93,8 +97,7 @@ double transform_y(const double y, const int iid){
 
 inline void extending_problems_example()
 {
-    /// Register the new problem in the factory of all real problems. It gets the id and name of its meta data,
-    /// or the next free id when that id is taken.
+    /// Register the new problem in the factory of all real problems, under its registry_id and registry_name
     ioh::problem::register_problem<AnotherRealProblem, ioh::problem::RealSingleObjective>();
     auto &factory = ioh::problem::ProblemRegistry<ioh::problem::RealSingleObjective>::instance();
     

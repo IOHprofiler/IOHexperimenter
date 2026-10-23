@@ -70,9 +70,4 @@ namespace ioh::problem
         }
     };
 
-    template <typename ProblemType>
-    struct DynamicBinValProblem : DynamicBinVal
-    {
-        using DynamicBinVal::DynamicBinVal;
-    };
 } // namespace ioh::problem

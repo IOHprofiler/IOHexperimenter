@@ -9,6 +9,11 @@ namespace ioh::problem
         //! Max Coverage problem definition
         struct MaxCoverage final : GraphProblemType<MaxCoverage>
         {
+            //! The registry entries (see registry_entries_of): one per graph in the definitions file, by default
+            //! the example graphs; the dimension and the instance are fixed
+            static std::vector<RegistryEntry<MaxCoverage>>
+            registry_entries(const std::optional<fs::path> &definitions_file = std::nullopt);
+
             //! MaxCoverage problems start with problem ids starting from this id
             static inline int default_id = 2100;
 
@@ -57,21 +62,11 @@ namespace ioh::problem
         };
     } // namespace submodular
 
-    /**
-     * @brief Template instantiation for pwt problems.
-     * Ensures loading of PWT problems in the factory, using the correct files.
-     * 
-     * @param definitions_file optional file name
-     * @return InstanceBasedProblem::Constructors<submodular::PackWhileTravel, int, int> a vector of contructor functions
-     */
-    template <>
-    inline InstanceBasedProblem::Constructors<submodular::MaxCoverage, int, int>
-    InstanceBasedProblem::load_instances<submodular::MaxCoverage>(
-        const std::optional<fs::path> &definitions_file)
+    inline std::vector<RegistryEntry<submodular::MaxCoverage>>
+    submodular::MaxCoverage::registry_entries(const std::optional<fs::path> &definitions_file)
     {
-        using namespace submodular;
-        return GraphProblemType<MaxCoverage>::get_constructors(
-            definitions_file.value_or(common::file::utils::find_static_file("example_list_maxcoverage")));
+        return graph_entries(
+            definitions_file.value_or(common::file::utils::find_static_file("example_list_maxcoverage")), "MaxCoverage");
     }
 
 
