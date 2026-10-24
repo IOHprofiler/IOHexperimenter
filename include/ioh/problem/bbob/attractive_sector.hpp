@@ -6,8 +6,14 @@ namespace ioh::problem::bbob
 {
     //! Attractive Sector problem id = 6
     template<typename P=BBOB>
-    class AttractiveSector final: public P, BBOProblem<AttractiveSector>
+    class AttractiveSector final : public P
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 6;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "AttractiveSector";
+
     protected:
         //! Evaluation method
         double evaluate(const std::vector<double> &x) override
@@ -36,10 +42,11 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         AttractiveSector(const int instance, const int n_variables) :
-            P(6, instance, n_variables, "AttractiveSector")
+            P(registry_id, instance, n_variables, registry_name)
         {
         
         }
     };  
-    template class AttractiveSector<BBOB>;
+    extern template class AttractiveSector<BBOB>;
+    extern template class AttractiveSector<SBOX>;
 }

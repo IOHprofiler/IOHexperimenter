@@ -27,7 +27,7 @@ jobs:
           - { os: macos-15, compiler: clang++ }
           - { os: windows-2022, compiler: msvc }
     env:
-      # test binaries load problem data during static initialization
+      # the tests read problem data and reference files from static/
       IOH_RESOURCES: ${{ github.workspace }}/static
     defaults:
       run:

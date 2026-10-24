@@ -9,8 +9,14 @@ namespace ioh
         namespace pbo
         {
             //! LeadingOnesNeutrality problem id 13
-            class LeadingOnesNeutrality final: public PBOProblem<LeadingOnesNeutrality>
+            class LeadingOnesNeutrality final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 13;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "LeadingOnesNeutrality";
+
             protected:
                 //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
@@ -35,7 +41,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 LeadingOnesNeutrality(const int instance, const int n_variables) :
-                    PBOProblem(13, instance, n_variables, "LeadingOnesNeutrality")
+                    PBO(registry_id, instance, n_variables, registry_name)
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

@@ -140,8 +140,14 @@ namespace ioh::problem::bbob
 
     //! Gallaher 101 problem id 21
     template<typename P = BBOB>
-    class Gallagher101 final : public Gallagher<P>, BBOProblem<Gallagher101>
+    class Gallagher101 final : public Gallagher<P>
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 21;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "Gallagher101";
+
     public:
         /**
          * @brief Construct a new Gallagher 1 0 1 object
@@ -150,10 +156,11 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         Gallagher101(const int instance, const int n_variables):
-            Gallagher<P>(21, instance, n_variables, "Gallagher101", 101, 10., 5.0)
+            Gallagher<P>(registry_id, instance, n_variables, registry_name, 101, 10., 5.0)
         {
         }
     };
 
-    template class Gallagher101<BBOB>;
+    extern template class Gallagher101<BBOB>;
+    extern template class Gallagher101<SBOX>;
 }

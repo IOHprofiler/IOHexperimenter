@@ -5,9 +5,16 @@
 /// Namespace encapsulating the CEC benchmark problems, here particularly defining the Levy problem class.
 namespace ioh::problem::cec2022
 {
-    /// The Levy class represents the Levy optimization problem, inheriting necessary functionalities from the CECProblem template class.
-    class Levy final : public CEC2022Problem<Levy>
+    /// The Levy problem of the CEC2022 suite. Derives from CEC2022; its registry id and name are
+    /// registry_id and registry_name, and the compiled library registers it (src/registry).
+    class Levy final : public CEC2022
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 1005;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "CEC2022Levy";
+
     protected:
         /// Computes the Levy objective function value at the given point.
         /// @param z A vector representing a point in the search space.
@@ -34,7 +41,7 @@ namespace ioh::problem::cec2022
         /// Constructor initializing the Levy problem with given instance number and variable count.
         /// @param instance Instance number for the problem.
         /// @param n_variables Number of variables for the problem.
-        Levy(const int instance, const int n_variables) : CEC2022Problem(1005, instance, n_variables, "CEC2022Levy")
+        Levy(const int instance, const int n_variables) : CEC2022(registry_id, instance, n_variables, registry_name)
         {
         }
     };

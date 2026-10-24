@@ -8,8 +8,15 @@ namespace ioh
         namespace pbo
         {
             //! Linear problem id 3
-            class Linear final: public PBOProblem<Linear>
+            class Linear final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 3;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "Linear";
+
+            private:
                 std::vector<double> info_;
             protected:
             
@@ -31,7 +38,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 Linear(const int instance, const int n_variables) : 
-                PBOProblem(3, instance, n_variables, "Linear") 
+                PBO(registry_id, instance, n_variables, registry_name) 
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

@@ -63,44 +63,43 @@ namespace ioh::problem::star_discrepancy
      * @brief Loader for default instances
      * 
      * @tparam T the type of StarDiscrepancy method (TODO: check for proper interface)
-     * @return InstanceBasedProblem::Constructors<T, int, int> 
+     * @return the registry entries: ids 30-59, names like SobolStarDiscrepancy100
      */
     template <typename T>
-    inline InstanceBasedProblem::Constructors<T, int, int> load_default_instances()
+    inline std::vector<RegistryEntry<T>> default_registry_entries()
     {
         using namespace common::random::sampler;
 
-        InstanceBasedProblem::Constructors<T, int, int> constructors;
+        std::vector<RegistryEntry<T>> entries;
         int i = 0;
         std::vector<int> sample_sizes{10, 25, 50, 100, 150, 200, 250, 500, 750, 1000};
 
         for (const auto &sample_size : sample_sizes)
         {
             auto problem_name = fmt::format("UniformStarDiscrepancy{}", sample_size);
-            constructors.push_back(
-                {[sample_size, i, problem_name](int instance, int dim) {
-                     return T(30 + i, instance, dim, problem_name,
-                              star_discrepancy::generate_grid<Uniform<double>>(instance, dim, sample_size));
-                 },
-                 30 + i, problem_name});
+            entries.push_back({30 + i, problem_name, [sample_size, i, problem_name](int instance, int dim) {
+                                 return std::make_shared<T>(
+                                     30 + i, instance, dim, problem_name,
+                                     star_discrepancy::generate_grid<Uniform<double>>(instance, dim, sample_size));
+                             }});
 
             problem_name = fmt::format("SobolStarDiscrepancy{}", sample_size);
-            constructors.push_back({[sample_size, i, problem_name](int instance, int dim) {
-                                        return T(40 + i, instance, dim, problem_name,
-                                                 star_discrepancy::generate_grid<Sobol>(instance, dim, sample_size));
-                                    },
-                                    40 + i, problem_name}); 
+            entries.push_back({40 + i, problem_name, [sample_size, i, problem_name](int instance, int dim) {
+                                 return std::make_shared<T>(
+                                     40 + i, instance, dim, problem_name,
+                                     star_discrepancy::generate_grid<Sobol>(instance, dim, sample_size));
+                             }}); 
 
             problem_name = fmt::format("HaltonStarDiscrepancy{}", sample_size);
-            constructors.push_back({[sample_size, i, problem_name](int instance, int dim) {
-                                        return T(50 + i, instance, dim, problem_name,
-                                                 star_discrepancy::generate_grid<Halton>(instance, dim, sample_size));
-                                    },
-                                    50 + i, problem_name});
+            entries.push_back({50 + i, problem_name, [sample_size, i, problem_name](int instance, int dim) {
+                                 return std::make_shared<T>(
+                                     50 + i, instance, dim, problem_name,
+                                     star_discrepancy::generate_grid<Halton>(instance, dim, sample_size));
+                             }});
             i++;
         }
 
-        return constructors;
+        return entries;
     }
 
 

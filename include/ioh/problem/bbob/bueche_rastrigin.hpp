@@ -6,8 +6,14 @@ namespace ioh::problem::bbob
 {
     //! BuecheRastrigin problem id 4
     template<typename P = BBOB>
-    class BuecheRastrigin final : public RastriginBase<P>, BBOProblem<BuecheRastrigin>
+    class BuecheRastrigin final : public RastriginBase<P>
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 4;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "BuecheRastrigin";
+
     protected:
         //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
@@ -26,7 +32,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         BuecheRastrigin(const int instance, const int n_variables) :
-            RastriginBase<P>(4, instance, n_variables, "BuecheRastrigin")
+            RastriginBase<P>(registry_id, instance, n_variables, registry_name)
         {
             this->enforce_bounds(this->bounds_.weight * 100);
             for (size_t i = 0; i < this->optimum_.x.size(); i += 2)
@@ -36,5 +42,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class BuecheRastrigin<BBOB>;
+    extern template class BuecheRastrigin<BBOB>;
+    extern template class BuecheRastrigin<SBOX>;
 }

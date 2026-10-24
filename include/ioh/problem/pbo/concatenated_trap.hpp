@@ -9,8 +9,15 @@ namespace ioh
         namespace pbo
         {
             //! ConcatenatedTrap problem id 24
-            class ConcatenatedTrap final: public PBOProblem<ConcatenatedTrap>
+            class ConcatenatedTrap final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 24;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "ConcatenatedTrap";
+
+            private:
                 int k_ = 5;
             protected:
                 //! Evaluation method
@@ -67,7 +74,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 ConcatenatedTrap(const int instance, const int n_variables) :
-                    PBOProblem(24, instance, n_variables, "ConcatenatedTrap")
+                    PBO(registry_id, instance, n_variables, registry_name)
                 {
                     optimum_.x = std::vector<int> (n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

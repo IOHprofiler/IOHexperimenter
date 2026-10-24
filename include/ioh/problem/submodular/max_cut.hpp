@@ -10,6 +10,11 @@ namespace ioh::problem
         //! MaxCut Problem
         struct MaxCut final : GraphProblemType<MaxCut>
         {
+            //! The registry entries (see registry_entries_of): one per graph in the definitions file, by default
+            //! the example graphs; the dimension and the instance are fixed
+            static std::vector<RegistryEntry<MaxCut>>
+            registry_entries(const std::optional<fs::path> &definitions_file = std::nullopt);
+
             //! MaxCut problems start with problem ids starting from this id
             static inline int default_id = 2000;
 
@@ -47,20 +52,11 @@ namespace ioh::problem
         };
     } // namespace submodular
 
-    /**
-     * @brief Template instantiation for pwt problems.
-     * Ensures loading of PWT problems in the factory, using the correct files.
-     * 
-     * @param definitions_file optional file name
-     * @return InstanceBasedProblem::Constructors<submodular::PackWhileTravel, int, int> a vector of contructor functions
-     */
-    template <>
-    inline InstanceBasedProblem::Constructors<submodular::MaxCut, int, int>
-    InstanceBasedProblem::load_instances<submodular::MaxCut>(const std::optional<fs::path> &definitions_file)
+    inline std::vector<RegistryEntry<submodular::MaxCut>>
+    submodular::MaxCut::registry_entries(const std::optional<fs::path> &definitions_file)
     {
-        using namespace submodular;
-        return GraphProblemType<MaxCut>::get_constructors(
-            definitions_file.value_or(common::file::utils::find_static_file("example_list_maxcut")));
+        return graph_entries(
+            definitions_file.value_or(common::file::utils::find_static_file("example_list_maxcut")), "MaxCut");
     }
 
 } // namespace ioh::problem

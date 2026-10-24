@@ -9,8 +9,14 @@ namespace ioh
         namespace pbo
         {
             //! OneMaxRuggedness1 problem id 8
-            class OneMaxRuggedness1 final: public PBOProblem<OneMaxRuggedness1>
+            class OneMaxRuggedness1 final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 8;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "OneMaxRuggedness1";
+
             protected:
                 //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
@@ -31,7 +37,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 OneMaxRuggedness1(const int instance, const int n_variables) :
-                    PBOProblem(8, instance, n_variables, "OneMaxRuggedness1")
+                    PBO(registry_id, instance, n_variables, registry_name)
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

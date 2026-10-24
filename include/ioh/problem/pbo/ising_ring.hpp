@@ -8,8 +8,15 @@ namespace ioh
         namespace pbo
         {
             //! IsingRing problem id 19
-            class IsingRing final: public PBOProblem<IsingRing>
+            class IsingRing final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 19;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "IsingRing";
+
+            private:
                 static int modulo_ising_ring(const int x, const int n){ return (x % n + n) % n; }
             protected:
             
@@ -35,7 +42,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 IsingRing(const int instance, const int n_variables) :
-                    PBOProblem(19, instance, n_variables, "IsingRing")
+                    PBO(registry_id, instance, n_variables, registry_name)
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

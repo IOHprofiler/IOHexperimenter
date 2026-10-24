@@ -8,8 +8,15 @@ namespace ioh
         namespace pbo
         {
             //! MIS problem id 22
-            class MIS final : public PBOProblem<MIS>
+            class MIS final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 22;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "MIS";
+
+            private:
                 int number_of_variables_even_;
 
                 static int is_edge(const int i, const int j, const int problem_size)
@@ -59,7 +66,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 MIS(const int instance, const int n_variables) :
-                    PBOProblem(22, instance, n_variables, "MIS"),
+                    PBO(registry_id, instance, n_variables, registry_name),
                     number_of_variables_even_(n_variables % 2 != 0 ? n_variables - 1 : n_variables)
                 {
                     optimum_.y = number_of_variables_even_ % 4 == 0

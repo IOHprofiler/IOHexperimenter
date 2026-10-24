@@ -5,14 +5,21 @@
 //! Namespace encapsulating all elements of the IOHexperimenter project
 namespace ioh::problem::cec2022
 {
-    //! A class representing the HybridFunction1 problem, derived from the CECProblem class.
+    /// The HybridFunction1 problem of the CEC2022 suite. Derives from CEC2022; its registry id and name are
+    /// registry_id and registry_name, and the compiled library registers it (src/registry).
     /*!
      * This class represents a specific optimization problem which is a hybrid of several other functions.
      * It overrides the evaluate and transform_variables methods to provide the specific implementation for this
      * problem.
      */
-    class HybridFunction1 final : public CEC2022Problem<HybridFunction1>
+    class HybridFunction1 final : public CEC2022
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 1006;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "CEC2022HybridFunction1";
+
     protected:
         /**
          * @brief Computes the hf02 function value for the input vector.
@@ -63,7 +70,7 @@ namespace ioh::problem::cec2022
          * \param n_variables The number of variables for the problem.
          */
         HybridFunction1(const int instance, const int n_variables) :
-            CEC2022Problem(1006, instance, n_variables, "CEC2022HybridFunction1")
+            CEC2022(registry_id, instance, n_variables, registry_name)
         {
         }
     };

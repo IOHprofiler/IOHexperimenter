@@ -6,8 +6,15 @@ namespace ioh::problem::bbob
 {
     //! Schefel problem id 20
     template<typename P=BBOB>
-    class Schwefel final : public P, BBOProblem<Schwefel>
+    class Schwefel final : public P
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 20;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "Schwefel";
+
+    private:
         std::vector<double> negative_offset_;
         std::vector<double> positive_offset_;
     protected:
@@ -51,7 +58,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         Schwefel(const int instance, const int n_variables) :
-            P(20, instance, n_variables, "Schwefel"),
+            P(registry_id, instance, n_variables, registry_name),
             negative_offset_(common::random::bbob2009::uniform(n_variables, this->transformation_state_.seed)),
             positive_offset_(n_variables)
         {
@@ -66,5 +73,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class Schwefel<BBOB>;
+    extern template class Schwefel<BBOB>;
+    extern template class Schwefel<SBOX>;
 }

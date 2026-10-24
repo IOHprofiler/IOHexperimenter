@@ -121,9 +121,6 @@ def generate_sphinx_templates_from_xml(xmldir = "doc/build/xml", outdir = "doc/p
 
         ns[name] = nsdata
         
-        if name == "ioh::problem":
-            nsdata['func'] = [x for x in nsdata['func'] if not "InstanceBasedProblem" in x]
-        
         filename = f'{name.replace("::", "_")}.rst'
         if filename in ("fmt.rst"):
             continue

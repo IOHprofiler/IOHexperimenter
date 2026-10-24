@@ -17,13 +17,26 @@ Please use the following commands to download, compile, and install this package
 > cmake .. && make install
 ```
 
-which installs all header files to `/usr/local/include/ioh` by default.
+which installs the header files to `/usr/local/include/ioh` and the compiled `ioh` library, which holds the
+registries of the built-in problems and suites and the BBOB problem classes, to `/usr/local/lib` by default.
 If you want to change this directory, please use the following flag `cmake -DCMAKE_INSTALL_PREFIX=your/path ..`
+
+The library is built optimized (`Release`) unless you choose another `CMAKE_BUILD_TYPE`. With a
+multi-configuration generator such as Visual Studio, build and install a configuration explicitly, e.g.
+`cmake --build . --config Release --target install`; the Debug library is called `iohd`, and on MSVC your own
+build must use the matching one.
+
+Every program using IOHexperimenter links against the library, which also adds the include directories:
+
+```cmake
+find_package(ioh REQUIRED)   # or add_subdirectory(IOHexperimenter)
+target_link_libraries(your_target PRIVATE ioh::ioh)
+```
 
 If you want to change build options, check the output of `cmake -L` or use `cmake-gui` or `ccmake`.
 
 ### Dependencies
-IOHexperimenter has a few dependencies, however, only the fmt/fmt library is required to compile the C++ backend. If you'd like to compile the source code without CMake, you need to provide the includes of fmt/fmt as an additional include directory, which can be found in the [external](https://github.com/IOHprofiler/IOHexperimenter/tree/master/external) folder of the repository.
+IOHexperimenter has a few dependencies, however, only the fmt/fmt library is required to compile the C++ backend. If you'd like to compile the source code without CMake, you need to provide the includes of fmt/fmt as an additional include directory, which can be found in the [external](https://github.com/IOHprofiler/IOHexperimenter/tree/master/external) folder of the repository, and compile the sources in `src/` along with your own: they hold the registries of the built-in problems and suites and the BBOB problem classes, so no program links without them.
 
 ### Usage
 
@@ -99,7 +112,7 @@ auto new_problem_f = factory.create(
 
 Alternatively, one might wish to create the new problem by subclassing the abstract problem class
 in IOHexperimenter, taking benefits of implementing more details, e.g., aforementioned transformations.
-This can be done by inheriting the corresponding problem registration class, which is
+This can be done by inheriting the corresponding problem class, which is
 
 * `ioh::problem::IntegerSingleObjective` for pseudo-Boolean problems, and
 * `ioh::problem::RealSingleObjective` for continuous problems.
@@ -107,7 +120,7 @@ This can be done by inheriting the corresponding problem registration class, whi
 In the below example, we show how to do this for pseudo-Boolean problems.
 
 ```C++
-class NewBooleanProblem final : public ioh::problem::RegisteredProblem<NewBooleanProblem, ioh::problem::IntegerSingleObjective>
+class NewBooleanProblem final : public ioh::problem::IntegerSingleObjective
 {
 protected:
     // [mandatory] The evaluate method is mandatory to implement
@@ -130,15 +143,21 @@ protected:
     } 
 
 public:
+    /// [mandatory for registering] The id and name in the registry, also used by the constructor. If the id is
+    /// taken when registering, the problem gets the next free one; a name that is taken (also a built-in
+    /// problem's) would replace that entry, so choose a new one.
+    static constexpr int registry_id = 9001;
+    static constexpr const char *registry_name = "NewBooleanProblem";
+
     /// [mandatory] This constructor always take `instance` as input even
     /// if it is ineffective by default. `instance` would be effective if and only if
     /// at least one of `transform_objectives` and `transform_objectives` is implemented
     NewBooleanProblem(const int instance, const int n_variables) :
-        RegisteredProblem(
+        ioh::problem::IntegerSingleObjective(
           ioh::problem::MetaData(
-            1,                     // problem id, which will be overwritten when registering this class in all pseudo-Boolean problems
+            registry_id,           // the problem id
             instance,              // the instance id
-            "NewBooleanProblem",   // problem name
+            registry_name,         // the problem name
             n_variables           // search dimensionality
             ) 
           )
@@ -146,5 +165,17 @@ public:
     }
 };
 ```
+
+To create it by id or name from the factory of all pseudo-Boolean problems, like the built-in problems, register it
+once before use:
+
+```C++
+ioh::problem::register_problem<NewBooleanProblem, ioh::problem::IntegerSingleObjective>();
+```
+
+A class whose data defines several problems lists them instead, in a static `registry_entries()` that returns one
+`ioh::problem::RegistryEntry` (id, name, and a function creating the problem for an instance and a dimension) per
+problem, as the CEC2013 and graph problems do. `register_problem<T, Parent>(id, name)` registers a class under an id
+and name of your choice.
 
 Please check [this example](./example/problem_example.hpp) for adding continuous problems in this manner.

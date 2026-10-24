@@ -183,15 +183,4 @@ namespace ioh::problem
         }
     };
 
-    /**
-     * @brief CRTP class for BBOB problems. Inherit from this class when defining new BBOB problems
-     *
-     * @tparam ProblemType The New BBOB problem class
-     */
-    template <template <typename> class ProblemType>
-    struct BBOProblem : AutomaticProblemRegistration<ProblemType<SBOX>, SBOX>,
-                        AutomaticProblemRegistration<ProblemType<BBOB>, BBOB>,
-                        AutomaticProblemRegistration<ProblemType<BBOB>, RealSingleObjective>
-    {
-    };
 } // namespace ioh::problem

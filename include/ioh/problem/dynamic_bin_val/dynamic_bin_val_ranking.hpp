@@ -34,8 +34,14 @@ namespace ioh::problem::dynamic_bin_val
      * It inherits from IntegerSingleObjective and includes additional functionalities for dynamic problems.
      * This class encapsulates the unique dynamic features such as changing optimum and comparison order over time.
      */
-    class Ranking final : public DynamicBinValProblem<Ranking>
+    class Ranking final : public DynamicBinVal
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 10004;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "DynamicBinValRanking";
+
     public:
         /**
          * Defines the comparison order for lexicographical sorting of bitstrings.
@@ -58,7 +64,7 @@ namespace ioh::problem::dynamic_bin_val
          *                    indicating the number of variables in the problem.
          */
         Ranking(const int instance, const int n_variables) :
-            DynamicBinValProblem(10'004, instance, n_variables, "DynamicBinValRanking"),
+            DynamicBinVal(registry_id, instance, n_variables, registry_name),
             comparison_ordering(n_variables)
         {
             std::iota(comparison_ordering.begin(), comparison_ordering.end(), 0);

@@ -8,8 +8,15 @@ namespace ioh
         namespace pbo
         {
             //! NKLandscapes problem id 25
-            class NKLandscapes final: public PBOProblem<NKLandscapes>
+            class NKLandscapes final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 25;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "NKLandscapes";
+
+            private:
                 std::vector<std::vector<double>> f_;
                 std::vector<std::vector<int>> e_;
                 int k_ = 1;
@@ -88,7 +95,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 NKLandscapes(const int instance, const int n_variables) :
-                    PBOProblem(25, instance, n_variables, "NKLandscapes")
+                    PBO(registry_id, instance, n_variables, registry_name)
                 {
                     set_n_k(n_variables, k_);
                 }
