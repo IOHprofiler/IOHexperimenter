@@ -5,7 +5,8 @@
 /// Namespace encapsulating the CEC benchmark problems, here particularly defining the Rastrigin problem class.
 namespace ioh::problem::cec2022
 {
-    /// The Rastrigin class represents the Rastrigin optimization problem, inheriting necessary functionalities from the CECProblem template class.
+    /// The Rastrigin problem of the CEC2022 suite. Derives from CEC2022; its registry id and name are
+    /// registry_id and registry_name, and the compiled library registers it (src/registry).
     class Rastrigin final : public CEC2022
     {
     public:

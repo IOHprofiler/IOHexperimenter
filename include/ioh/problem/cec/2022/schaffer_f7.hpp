@@ -5,7 +5,8 @@
 /// Namespace encapsulating the CEC benchmark problems, here particularly defining the Expanded Schaffer F7 problem class.
 namespace ioh::problem::cec2022
 {
-    /// The SchafferF7 class represents the Expanded Schaffer F7 optimization problem, inheriting necessary functionalities from the CECProblem template class.
+    /// The Expanded Schaffer F7 problem of the CEC2022 suite. Derives from CEC2022; its registry id and name are
+    /// registry_id and registry_name, and the compiled library registers it (src/registry).
     class SchafferF7 final : public CEC2022
     {
     public:

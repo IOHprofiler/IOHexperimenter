@@ -5,7 +5,8 @@
 /// Namespace enclosing the Implementation of Zakharov problem which is a part of CEC benchmark problems.
 namespace ioh::problem::cec2022
 {
-    /// Zakharov class inherits from the template CECProblem with Zakharov as the template parameter.
+    /// The Zakharov problem of the CEC2022 suite. Derives from CEC2022; its registry id and name are
+    /// registry_id and registry_name, and the compiled library registers it (src/registry).
     /// This class encapsulates the Zakharov problem for the CEC benchmark suite.
     class Zakharov final : public CEC2022
     {

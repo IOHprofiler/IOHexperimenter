@@ -5,7 +5,8 @@
 /// Namespace enclosing the Implementation of Rosenbrock problem which is a part of CEC benchmark problems.
 namespace ioh::problem::cec2022
 {
-    /// The Rosenbrock class encapsulates the Rosenbrock optimization problem, inheriting functionalities from the template class CECProblem.
+    /// The Rosenbrock problem of the CEC2022 suite. Derives from CEC2022; its registry id and name are
+    /// registry_id and registry_name, and the compiled library registers it (src/registry).
     class Rosenbrock final : public CEC2022
     {
     public:

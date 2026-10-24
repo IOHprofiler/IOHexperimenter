@@ -144,7 +144,8 @@ protected:
 
 public:
     /// [mandatory for registering] The id and name in the registry, also used by the constructor. If the id is
-    /// taken when registering, the problem gets the next free one.
+    /// taken when registering, the problem gets the next free one; a name that is taken (also a built-in
+    /// problem's) would replace that entry, so choose a new one.
     static constexpr int registry_id = 9001;
     static constexpr const char *registry_name = "NewBooleanProblem";
 

@@ -4,7 +4,8 @@
 
 namespace ioh::problem::cec2022
 {
-    /// \brief HybridFunction2 class that inherits from CECProblem.
+    /// The HybridFunction2 problem of the CEC2022 suite. Derives from CEC2022; its registry id and name are
+    /// registry_id and registry_name, and the compiled library registers it (src/registry).
     class HybridFunction2 final : public CEC2022
     {
     public:

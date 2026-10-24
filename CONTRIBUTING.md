@@ -137,7 +137,7 @@ public:
 
 A class whose data defines several problems (like the CEC2013 and graph problems) lists them in a static `registry_entries()` instead, one `ioh::problem::RegistryEntry` (id, name, and a function creating the problem for an instance and a dimension) per problem.
 
-The built-in problems are registered by the compiled library, in [`src/registry`](src/registry): add the class to a family list in [`src/registry/families.hpp`](src/registry/families.hpp) (or start a new one), and call that list from the `add_builtins` functions of the factories that should contain the problem, e.g. the family's own factory and [`src/registry/single_objective.cpp`](src/registry/single_objective.cpp) for the factory of all integer problems. A new factory type needs its own `add_builtins` declaration in [`include/ioh/common/factory.hpp`](include/ioh/common/factory.hpp). Ids must be new and stay fixed: the registry test (`tests/cpp/problem/test_registry.cpp`) and the golden tests (`tests/python/test_golden.py`) compare the registries with `tests/data/golden`, so extend those fixtures in the same pull request (`python tests/python/golden.py --write`, reviewed by the maintainers).
+The built-in problems are registered by the compiled library, in [`src/registry`](src/registry): add the class to a family list in [`src/registry/families.hpp`](src/registry/families.hpp) (or start a new one), and call that list from the `add_builtins` functions of the factories that should contain the problem, e.g. the family's own factory and [`src/registry/single_objective.cpp`](src/registry/single_objective.cpp) for the factory of all integer problems. A new factory type needs a forward declaration of its type and its own `add_builtins` declaration in [`include/ioh/common/builtins.hpp`](include/ioh/common/builtins.hpp), defined in `src/registry`. Ids must be new and stay fixed: the registry test (`tests/cpp/problem/test_registry.cpp`) and the golden tests (`tests/python/test_golden.py`) compare the registries with `tests/data/golden`, so extend those fixtures in the same pull request (`python tests/python/golden.py --write`, reviewed by the maintainers).
 
 To try a problem without adding it to the library, register it from your own code instead: `ioh::problem::register_problem<NewBooleanProblem, ioh::problem::IntegerSingleObjective>();`. Please check [the example](example/problem_example.hpp) of adding continuous problems in this manner.
 
@@ -175,12 +175,12 @@ Inherit from the base class when defining the new problems.
 ```cpp
 namespace ioh::problem
 {
-     //! NewProblemere function problem id 42
+     //! NewProblemere function problem id 9002
     class NewProblem final: public NewBase
     {
     public:
         //! The id and name in the registry, also used by the constructor
-        static constexpr int registry_id = 42;
+        static constexpr int registry_id = 9002; // free in the factories of NewBase and of all real problems
         static constexpr const char *registry_name = "NewProblem";
 
     protected:
@@ -212,7 +212,7 @@ Register the new problems in the factory of `NewBase` (and of `RealSingleObjecti
 auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::NewBase>::instance();
 for (auto xi: problem_factory.names())
     std::cout << xi << "\n";
-auto problem = problem_factory.create(42, 1, 10);
+auto problem = problem_factory.create(9002, 1, 10);
 ```
 
 Or, we can create a suite class, which only contains the problems of the factory of the same parent type (`NewBase`):
@@ -254,7 +254,7 @@ for (auto xi: suitef.names())
 Which we can use to easily loop over the problems:
 
 ```cpp
-auto suite = suitef.create("NewProblems", {42}, {1}, {2});
+auto suite = suitef.create("NewProblems", {9002}, {1}, {2});
 for (auto problem: *suite)
     std::cout << *problem << "\n";
 ```

@@ -5,7 +5,8 @@
 /// Namespace encapsulating the CEC benchmark problems, here particularly defining the Levy problem class.
 namespace ioh::problem::cec2022
 {
-    /// The Levy class represents the Levy optimization problem, inheriting necessary functionalities from the CECProblem template class.
+    /// The Levy problem of the CEC2022 suite. Derives from CEC2022; its registry id and name are
+    /// registry_id and registry_name, and the compiled library registers it (src/registry).
     class Levy final : public CEC2022
     {
     public:

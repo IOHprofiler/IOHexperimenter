@@ -87,7 +87,9 @@ namespace
 
         auto builtins = factory.map();
         if (union_factory)
+        {
             for (auto it = builtins.begin(); it != builtins.end();)
+            {
                 if (expected.count(it->first) == 0)
                 {
                     EXPECT_GT(it->first, expected.rbegin()->first) << key << " " << it->second;
@@ -95,6 +97,8 @@ namespace
                 }
                 else
                     ++it;
+            }
+        }
         EXPECT_EQ(builtins, expected) << key;
 
         static const auto cec2013_meta_names = golden_cec2013_meta_names();
@@ -244,7 +248,7 @@ TEST_F(BaseTest, test_registry_register_problem)
     using namespace ioh::problem;
     const auto &factory = ProblemRegistry<RealSingleObjective>::instance();
 
-    // id 1 (from the meta data) belongs to Sphere, so the problem gets the next free id, and reports it
+    // id 1 (its registry_id) belongs to Sphere, so the problem gets the next free id, and reports it
     register_problem<registry_test::UserProblem, RealSingleObjective>();
     const auto map = factory.map();
     const auto entry = std::find_if(map.begin(), map.end(),
@@ -268,4 +272,49 @@ TEST_F(BaseTest, test_registry_register_problem)
     EXPECT_EQ(factory.map().at(65001), "RegistryTestUserData2D");
     EXPECT_EQ(factory.create("RegistryTestUserData3D", 5, 7)->meta_data().n_variables, 3);
     EXPECT_EQ(factory.create(65002, 5, 7)->meta_data().problem_id, 65002);
+}
+
+TEST_F(BaseTest, test_registry_graph_definitions_file)
+{
+    using namespace ioh::problem;
+    using submodular::MaxCut;
+
+    // a user definitions file with two graphs, a triangle and a path of four vertices, whose files are relative
+    // to the definitions file; the empty line between them is skipped
+    const auto dir = fs::temp_directory_path() / "ioh_test_registry_graph_definitions";
+    fs::create_directories(dir / "graphs");
+    std::ofstream((dir / "graphs" / "triangle").string()) << "0\n1 2\n2 3\n3 1\n";
+    std::ofstream((dir / "graphs" / "path").string()) << "0\n1 2\n2 3\n3 4\n";
+    std::ofstream((dir / "definitions").string()) << "graphs/triangle|NULL|NULL|NULL\n\ngraphs/path|NULL|NULL|NULL\n";
+
+    // ids from MaxCut::default_id on and names like MaxCut2000, one entry per graph
+    const auto entries = MaxCut::registry_entries(dir / "definitions");
+    ASSERT_EQ(entries.size(), 2u);
+    EXPECT_EQ(entries[0].id, 2000);
+    EXPECT_EQ(entries[0].name, "MaxCut2000");
+    EXPECT_EQ(entries[1].id, 2001);
+    EXPECT_EQ(entries[1].name, "MaxCut2001");
+    const auto triangle = entries[0].create(5, 10); // the instance and the dimension are fixed
+    EXPECT_EQ(triangle->meta_data().problem_id, 2000);
+    EXPECT_EQ(triangle->meta_data().instance, 1);
+    EXPECT_EQ(triangle->meta_data().n_variables, 3);
+    EXPECT_EQ(entries[1].create(1, 1)->meta_data().n_variables, 4);
+
+    // loading the file registers its graphs under the names of the built-in graphs, in both factories: their
+    // creators are replaced and their ids kept
+    const auto &graphs = ProblemRegistry<submodular::GraphProblem>::instance();
+    const auto &integer = ProblemRegistry<IntegerSingleObjective>::instance();
+    const auto graph_map = graphs.map();
+    const auto integer_map = integer.map();
+    submodular::GraphProblemType<MaxCut>::load_graph_instances<int, int>(dir / "definitions");
+    EXPECT_EQ(graphs.map(), graph_map);
+    EXPECT_EQ(integer.map(), integer_map);
+    EXPECT_EQ(graphs.create(2001, 1, 1)->meta_data().n_variables, 4);
+    EXPECT_EQ(integer.create("MaxCut2000", 1, 1)->meta_data().n_variables, 3);
+
+    // the default definitions file brings the built-in graphs back for the other tests
+    submodular::GraphProblemType<MaxCut>::load_graph_instances<int, int>();
+    EXPECT_EQ(graphs.create(2000, 1, 1)->meta_data().n_variables, 800);
+    EXPECT_EQ(integer.create(2001, 1, 1)->meta_data().n_variables, 800);
+    fs::remove_all(dir);
 }

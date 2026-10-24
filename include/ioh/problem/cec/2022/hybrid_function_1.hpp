@@ -5,7 +5,8 @@
 //! Namespace encapsulating all elements of the IOHexperimenter project
 namespace ioh::problem::cec2022
 {
-    //! A class representing the HybridFunction1 problem, derived from the CECProblem class.
+    /// The HybridFunction1 problem of the CEC2022 suite. Derives from CEC2022; its registry id and name are
+    /// registry_id and registry_name, and the compiled library registers it (src/registry).
     /*!
      * This class represents a specific optimization problem which is a hybrid of several other functions.
      * It overrides the evaluate and transform_variables methods to provide the specific implementation for this

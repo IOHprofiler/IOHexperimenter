@@ -230,7 +230,8 @@ namespace ioh::suite
 
     /**
      * @brief Registers the suite class T, constructed from (problem ids, instances, dimensions), in the suite factory
-     * of its problem type, under its static registry_id and registry_name; a taken id is replaced by the next free one
+     * of its problem type, under its static registry_id and registry_name. A taken id is replaced by the next free one;
+     * a name that is already registered keeps its id and its entry is replaced, also a built-in suite's.
      */
     template <typename T>
     void register_suite()

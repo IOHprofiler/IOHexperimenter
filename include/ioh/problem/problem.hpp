@@ -395,7 +395,8 @@ namespace ioh
         /**
          * @brief Registers the problem class T in the factory of Parent with its registry entries (see
          * registry_entries_of). An entry whose id is taken gets the next free id, which the problems it creates
-         * report.
+         * report. An entry whose name is already registered keeps that entry's id and replaces it, also a
+         * built-in problem's, so give your problems new names.
          */
         template <typename T, typename Parent>
         void register_problem()
