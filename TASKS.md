@@ -407,7 +407,8 @@ What was done, and where it differs from T3.1–T3.7 below:
   T3.4 planned deprecated aliases for the bases and a `RegisteredProblem` shim for one release; at the
   maintainer's request they are removed outright instead (upgrade guide, WP8). User types register with `register_problem<T, Parent>()` (their registry id/name or entries) or
   `register_problem<T, Parent>(id, name)`, one factory per call, whose created problems report the id
-  they are registered under (a taken id becomes the next free one), and `suite::register_suite<T>()`.
+  they are registered under (a taken id becomes the next free one; changed in WP4, T4.4), and
+  `suite::register_suite<T>()`.
   `ProblemRegistry<T>`/`SuiteRegistry<T>` keep `instance()`.
 * **Suites**: `Suite`'s constructor takes any problem factory (a template), so the six
   `reinterpret_cast`s are gone. The suites declare their ids and names like the problems: Real 1,
@@ -556,7 +557,7 @@ Depends on: WP3.
   loading. Remove the silent fallback in `load_shuffle_data` (`if (exists(...))`): whether a shuffle
   file exists is declared by the manifest; a declared-but-missing file is an error.
 
-### T4.4 One pattern for instance-based problems ✅ API done in WP3
+### T4.4 One pattern for instance-based problems; one source for ids and names ✅ API done in WP3
 
 * Done in WP3: `InstanceBasedProblem` and its C++ `load_instances` specializations are gone (the
   Python `load_instances` class methods stay); CEC2013, star discrepancy, graph and pack-while-travel
@@ -567,19 +568,40 @@ Depends on: WP3.
 * Left for WP4: build the built-in graph, pack-while-travel and CEC2013 entries from the manifest
   (T4.2) instead of the definition files and hard-coded lists, with the data loaded on `create`
   (T4.3). The star discrepancy entries stay generated (no data files; not in the manifest).
-  `registry_entries(path)`, `load_graph_instances(path)` and Python's
-  `MaxCut/MaxCoverage/MaxInfluence/PackWhileTravel.load_instances(path)` keep reading user definition
-  files with today's semantics: ids from the class's `default_id` on, one per non-empty line, names
-  class name + id; a graph named like a built-in replaces that entry's creator (keeping its id), and
-  the replaced entry must not keep the manifest's fixed dimension; a graph with a new name whose id is
-  taken (line 101 of a MaxCut file reaches MaxCoverage's 2100) is registered under the next free id of
-  each factory (different in `GraphProblem` and `IntegerSingleObjective`), while its problem keeps
-  reporting `default_id` + its index, so two problems then report 2100 (WP4 may reject such entries
-  instead, as a documented change); the same holds for an id taken by an earlier runtime registration.
-  `test_registry_graph_definitions_file` (C++) and `test_load_graph_instances_from_file` (Python,
-  `str` paths) cover the replacement by name; the taken-id case has no test, because such entries
-  cannot be removed from the shared factories again and break the exact `GRAPH` check of the other
-  tests (a WP4 test can run it in a separate process).
+* **Ids and names** (decided with the maintainer after WP3). Until now a problem's id and name were
+  kept twice, as its key in the registry and in its own meta data, and a factory could move the key
+  (the next free id) without the problem knowing: line 101 of a MaxCut definitions file reported 2100
+  like MaxCoverage2100, while registered as 2309 and 10005; Python subclasses were registered under 0
+  and then the next free id, but all reported 0. A problem's id belongs to its **family**, and ids
+  overlap across families by design (BBOB 1 is Sphere, PBO 1 is OneMax): it is what the constructor
+  gets, what the problem reports and logs, and the key in the family's factory (`BBOB`, `SBOX`, `PBO`,
+  `CEC2013`, `CEC2022`, `GraphProblem`, the star discrepancy and `DynamicBinVal` factories).
+  `RealSingleObjective` and `IntegerSingleObjective` (the **union** factories) are indexes across
+  families, so their keys may differ from the problems' ids. Rules:
+  * In a family factory a taken id throws (`std::invalid_argument`, `ValueError` in Python, naming the
+    entry that has it). A union factory registers the entry under its next free id, and the problems
+    keep their own id. `register_problem` no longer writes the factory's id into the problems (WP3
+    did); its `(id, name)` overload gives them the id and name passed.
+  * Registering at runtime under a built-in's name throws, checked in `Factory::include`, so it covers
+    `register_problem`, `wrap_function` (Python's `wrap_problem`), Python subclasses and the graph
+    loaders: `wrap_problem(f, "Sphere")` replaced Sphere for `get_problem(1)`. Registering one of your
+    own names again replaces it, as before.
+  * Python subclasses of the problem base classes (`class A(ioh.problem.RealSingleObjective)`) get the
+    id rule of `wrap_problem`: the id of their name if it is registered, otherwise the first free id
+    of their base class's factory, stored in their meta data.
+  * User graph files (`load_graph_instances(path)`, Python's
+    `MaxCut/MaxCoverage/MaxInfluence/PackWhileTravel.load_instances(path)`): the graphs are appended
+    after the highest id in `GraphProblem` (2309 on a fresh registry), in file order, named class name
+    + id, and their problems report that id. A file never replaces a built-in graph, it is read
+    completely before anything is registered, and the call returns the new ids and names; loading
+    the same file again registers nothing and returns the same ids. Without a path,
+    `load_graph_instances()` registers the class's own `registry_entries()` (nothing to do for the
+    built-in classes), and Python's `load_instances()` is a deprecated no-op. This replaces WP3's
+    semantics (ids from `default_id` on, built-ins replaced by name, a taken id moved per factory while
+    the problem kept reporting `default_id` + its index). With built-ins never replaced, a built-in
+    entry's fixed dimension from the manifest always holds.
+  * Tests in-process (a rejected registration leaves the factories unchanged), for each rule in C++
+    and the Python-facing ones in Python; the golden files do not change.
 
 ### T4.5 Python side
 
@@ -676,7 +698,7 @@ Depends on: WP3, WP4, WP5.
 ### T6.4 API gaps found in the branch (must be closed)
 
 * `MaxCut/MaxCoverage/MaxInfluence/PackWhileTravel.load_instances` (runtime registration of user
-  graph files, since WP3; T4.4), `FlatFile.watch`, `Store.watch`, star-discrepancy `grid` property, the `Path`
+  graph files, since WP3; appended and returning their ids since WP4, T4.4), `FlatFile.watch`, `Store.watch`, star-discrepancy `grid` property, the `Path`
   class and implicit str → path conversion (`nanobind/stl/filesystem.h`), pickling
   (`__getstate__/__setstate__`) of triggers/properties, copy-vs-view semantics of arrays.
   `tests/python/test_array_layout.py` only compares values: first add a test that pins whether
@@ -745,11 +767,11 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
     `SBOX` (`P<SBOX>`) and `RealSingleObjective` (`P<BBOB>`); `PBOProblem` → `PBO` and
     `IntegerSingleObjective`; `CEC2013Problem`/`CEC2022Problem` → `CEC2013`/`CEC2022` and
     `RealSingleObjective`; `DynamicBinValProblem` → `DynamicBinVal` and `IntegerSingleObjective`.
-    Choose ids that are free in every one of these factories: when an id is taken, the class is
-    registered under that factory's next free id, as before, but its problems now report that id,
-    which can differ per factory (the old registration kept the class's own id in the problem, so
-    the registry id and the id in the logged data differed). Code copied from the 0.3.22 README or
-    example, which used id 1, is affected: its problem now reports e.g. 1121 instead of 1.
+    The id belongs to the problem's family (T4.4): in a family factory (`BBOB`, `PBO`, ...) a taken
+    id throws, so choose one that is free there; in `RealSingleObjective` and
+    `IntegerSingleObjective` a taken id is replaced by the next free one as the registry key, while
+    the problems keep their own id, as with the old registration. Registering under a built-in's
+    name throws.
   * A `GraphProblemType` subclass's specialization of `InstanceBasedProblem::load_instances` no longer
     compiles: give the class
     `static std::vector<RegistryEntry<T>> registry_entries(const std::optional<fs::path> &path = std::nullopt)`
@@ -757,9 +779,9 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
     pass the class name as "Name" to keep the old registry names, class name + id), keep its
     `default_id`, and register it with `register_problem<T, GraphProblem>()` and
     `register_problem<T, IntegerSingleObjective>()`, or with
-    `GraphProblemType<T>::load_graph_instances<int, int>()`. The two ways differ only for a taken id:
-    with `register_problem` the problems report the id they got in each factory, with
-    `load_graph_instances` they keep the ids from `default_id` on, like the old registration.
+    `GraphProblemType<T>::load_graph_instances<int, int>()`. Both register the class's own graphs
+    with their ids from `default_id` on (a taken id throws). Graphs from another definitions file
+    are added with `load_graph_instances(path)`, after the existing ids, which it returns.
   * A suite declares `registry_id`/`registry_name` and registers with `register_suite<T>()` (a
     `RealSuite`/`IntegerSuite` was registered under its class name with the next free id).
   * Removed (WP3): `RegisteredProblem`, `AutomaticProblemRegistration`, `AutomaticSuiteRegistration`,
@@ -773,7 +795,9 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
   * Data-root API (WP4); errors are exceptions instead of aborts; removed helpers/types list.
 * Python upgrade guide: Python ≥ 3.10 (recommended ≥ 3.12), deprecated `download_static_folder` /
   `load_graph_problems`, `IOH_RESOURCES` semantics, numpy returns (WP7), new metadata attributes if
-  added.
+  added. Ids (WP4): problem classes defined by subclassing report the id they are registered under
+  instead of 0; a problem named like a built-in raises; `load_instances(path)` adds the file's
+  graphs after the existing problems and returns their ids, and `load_instances()` is deprecated.
 * README/docs: installation, building from source (scikit-build-core), data location; changelog
   (from the release-notes draft below).
 * Release, the first since 0.3.22 (§1): version bump to 0.4.0; run the wheels workflow on master by
@@ -833,18 +857,27 @@ Each WP adds its user-visible changes here (§2).
     `IdGetter`, `FactoryID`, `type_name` and `class_name`. Register a class derived from a removed
     base in each factory that base filled: `BBOProblem` in `BBOB`, `SBOX` and `RealSingleObjective`;
     `PBOProblem` and `DynamicBinValProblem` in their family's factory and `IntegerSingleObjective`;
-    `CEC2013Problem` and `CEC2022Problem` in theirs and `RealSingleObjective`. If a class's id is
-    taken in a factory, `register_problem` gives it the next free id there, as before, and its
-    problems now report that id (which can differ per factory) instead of the class's own: choose
-    ids that are free in each factory. A class derived from `GraphProblemType`
+    `CEC2013Problem` and `CEC2022Problem` in theirs and `RealSingleObjective` (for taken ids see
+    WP4). A class derived from `GraphProblemType`
     lists its graphs in a `registry_entries(path)` built with `graph_entries(path, name)` (formerly
     `get_constructors`; the class name as `name` keeps the old names) instead of specializing
     `load_instances`, and is registered in `GraphProblem` and `IntegerSingleObjective` (or with
-    `load_graph_instances`, which keeps a graph's own id in its problems when its registry id is
-    taken). Suites declare `registry_id`/`registry_name` instead of being registered under their class
-    name with the next free id. `star_discrepancy::load_default_instances` is now
+    `load_graph_instances`). Suites declare `registry_id`/`registry_name` instead of being registered
+    under their class name with the next free id. `star_discrepancy::load_default_instances` is now
     `default_registry_entries`.
   * Problem ids, names and behaviour are unchanged (golden tests).
+* WP4:
+  * A problem's id belongs to its family (BBOB, PBO, ...) and stays in its meta data. Registering a
+    problem whose id is taken in its family's factory raises (`ValueError`, `std::invalid_argument`
+    in C++); in `RealSingleObjective`/`IntegerSingleObjective` it is registered under the next free
+    id and keeps its own. Registering under a built-in's name raises: `wrap_problem(f, "Sphere")`
+    replaced Sphere for `get_problem(1)`.
+  * Problem classes defined in Python by subclassing report the id they are registered under (the
+    first free one of their base class) instead of 0, also in logged data.
+  * Graph definition files (`load_instances(path)`): the graphs are added after the existing problems
+    (ids from 2309 on a fresh registry) instead of from the class's first id, never replace built-in
+    graphs, and the call returns the new ids and names; loading the same file again changes nothing.
+    `load_instances()` without a path is deprecated and does nothing.
 
 ---
 
