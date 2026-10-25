@@ -68,9 +68,10 @@ endif()
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
    
  
-# The compiled part of the library: the registries of the built-in problems and suites (src/registry), so that
-# only these files instantiate every problem class
+# The compiled part of the library: where the data files are (src/data.cpp), and the registries of the built-in
+# problems and suites (src/registry), so that only these files instantiate every problem class
 add_library(ioh STATIC
+    src/data.cpp
     src/registry/bbob.cpp
     src/registry/cec.cpp
     src/registry/dynamic_bin_val.cpp
@@ -161,6 +162,15 @@ write_basic_package_version_file(
 
 # Define installation rules.
 include(GNUInstallDirs)
+
+# The data files, and where the library finds them by default (see include/ioh/common/data.hpp): the static folder
+# of this source tree while it exists, then the installed copy. The Python package sets its own.
+install(DIRECTORY static/ DESTINATION ${CMAKE_INSTALL_DATADIR}/ioh)
+if(NOT BUILD_PYTHON_PACKAGE)
+    target_compile_definitions(ioh PRIVATE
+        IOH_SOURCE_DATA_DIR="${PROJECT_SOURCE_DIR}/static"
+        IOH_INSTALL_DATA_DIR="${CMAKE_INSTALL_FULL_DATADIR}/ioh")
+endif()
 
 
 if (DEFINED INCLUDE_JSON)
