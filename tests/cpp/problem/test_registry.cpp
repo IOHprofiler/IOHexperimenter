@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <fstream>
+#include <random>
 
 #include "ioh.hpp"
 
@@ -154,12 +155,17 @@ TEST_F(BaseTest, test_registry_union_factories)
 TEST_F(BaseTest, test_registry_suites)
 {
     using namespace ioh;
+    // the built-in suites have ids 1-4; test_registry_register_suite adds a suite after them
+    const auto builtins = [](std::map<int, std::string> map) {
+        map.erase(map.upper_bound(4), map.end());
+        return map;
+    };
     const std::map<int, std::string> real = {{1, "Real"}, {2, "BBOB"}, {3, "SBOX"}, {4, "RealStarDiscrepancy"}};
-    EXPECT_EQ(suite::SuiteRegistry<problem::RealSingleObjective>::instance().map(), real);
+    EXPECT_EQ(builtins(suite::SuiteRegistry<problem::RealSingleObjective>::instance().map()), real);
 
     const std::map<int, std::string> integer = {
         {1, "Integer"}, {2, "PBO"}, {3, "Submodular"}, {4, "IntegerStarDiscrepancy"}};
-    EXPECT_EQ(suite::SuiteRegistry<problem::IntegerSingleObjective>::instance().map(), integer);
+    EXPECT_EQ(builtins(suite::SuiteRegistry<problem::IntegerSingleObjective>::instance().map()), integer);
 
     const auto bbob = suite::SuiteRegistry<problem::RealSingleObjective>::instance().create("BBOB", {1, 2}, {1}, {2});
     EXPECT_EQ(bbob->problem_ids(), std::vector<int>({1, 2}));
@@ -274,18 +280,121 @@ TEST_F(BaseTest, test_registry_register_problem)
     EXPECT_EQ(factory.create(65002, 5, 7)->meta_data().problem_id, 65002);
 }
 
+namespace registry_test
+{
+    //! Registered under the name of an earlier registration
+    class ReplacingProblem final : public ioh::problem::RealSingleObjective
+    {
+    protected:
+        double evaluate(const std::vector<double> &x) override { return -x.at(0); }
+
+    public:
+        static constexpr int registry_id = 54400;
+        static constexpr const char *registry_name = "RegistryTestReplaced";
+
+        ReplacingProblem(const int instance, const int n_variables) :
+            ioh::problem::RealSingleObjective(ioh::problem::MetaData(registry_id, instance, registry_name,
+                                                                     n_variables, ioh::common::OptimizationType::MIN))
+        {
+        }
+    };
+} // namespace registry_test
+
+TEST_F(BaseTest, test_registry_register_problem_existing_name)
+{
+    using namespace ioh::problem;
+    const auto &factory = ProblemRegistry<RealSingleObjective>::instance();
+    register_problem<registry_test::UserProblem, RealSingleObjective>(54300, "RegistryTestReplaced");
+
+    // a registered name keeps its id and gets the new class, with both overloads
+    register_problem<registry_test::ReplacingProblem, RealSingleObjective>();
+    EXPECT_EQ(factory.map().at(54300), "RegistryTestReplaced");
+    EXPECT_EQ(factory.map().count(54400), 0u);
+    const auto replaced = factory.create("RegistryTestReplaced", 1, 2);
+    EXPECT_NE(std::dynamic_pointer_cast<registry_test::ReplacingProblem>(replaced), nullptr);
+    EXPECT_EQ(replaced->meta_data().problem_id, 54300);
+
+    register_problem<registry_test::UserProblem, RealSingleObjective>(54500, "RegistryTestReplaced");
+    EXPECT_EQ(factory.map().count(54500), 0u);
+    const auto user = factory.create(54300, 1, 2);
+    EXPECT_NE(std::dynamic_pointer_cast<registry_test::UserProblem>(user), nullptr);
+    EXPECT_EQ(user->meta_data().problem_id, 54300);
+}
+
+namespace registry_test
+{
+    //! A user suite whose registry_id belongs to the BBOB suite
+    struct UserSuite final : ioh::suite::Suite<ioh::problem::RealSingleObjective>
+    {
+        static constexpr int registry_id = 2;
+        static constexpr const char *registry_name = "RegistryTestUserSuite";
+
+        UserSuite(const std::vector<int> &problem_ids, const std::vector<int> &instances,
+                  const std::vector<int> &dimensions) :
+            Suite(problem_ids, instances, dimensions, registry_name)
+        {
+        }
+    };
+} // namespace registry_test
+
+TEST_F(BaseTest, test_registry_register_suite)
+{
+    using namespace ioh;
+    const auto &factory = suite::SuiteRegistry<problem::RealSingleObjective>::instance();
+
+    // id 2 (its registry_id) belongs to the BBOB suite, so the suite gets the next free id
+    suite::register_suite<registry_test::UserSuite>();
+    const auto map = factory.map();
+    EXPECT_EQ(map.at(2), "BBOB");
+    const auto entry =
+        std::find_if(map.begin(), map.end(), [](const auto &kv) { return kv.second == "RegistryTestUserSuite"; });
+    ASSERT_NE(entry, map.end());
+    EXPECT_GT(entry->first, 4);
+    const auto suite = factory.create(entry->first, {1, 2}, {1}, {2});
+    EXPECT_EQ(suite->name(), "RegistryTestUserSuite");
+    EXPECT_EQ(suite->problem_ids(), std::vector<int>({1, 2}));
+}
+
 TEST_F(BaseTest, test_registry_graph_definitions_file)
 {
     using namespace ioh::problem;
     using submodular::MaxCut;
 
+    // a directory of its own: ctest runs this test in test_ioh and in test_registry, possibly at the same time
+    const auto dir = fs::temp_directory_path() /
+                     ("ioh_test_registry_graph_definitions_" + std::to_string(std::random_device{}()));
+    ASSERT_TRUE(fs::create_directories(dir / "graphs"));
+
+    // brings the built-in graphs back for the other tests and removes the files, also when the test fails
+    struct Cleanup
+    {
+        fs::path dir;
+        ~Cleanup()
+        {
+            try
+            {
+                submodular::GraphProblemType<MaxCut>::load_graph_instances<int, int>();
+            }
+            catch (...)
+            {
+            }
+            std::error_code ec;
+            fs::remove_all(dir, ec);
+        }
+    } cleanup{dir};
+
+    const auto write = [](const fs::path &path, const std::string &text) {
+        std::ofstream out(path.string());
+        out << text;
+        out.close();
+        return !out.fail();
+    };
+
     // a user definitions file with two graphs, a triangle and a path of four vertices, whose files are relative
     // to the definitions file; the empty line between them is skipped
-    const auto dir = fs::temp_directory_path() / "ioh_test_registry_graph_definitions";
-    fs::create_directories(dir / "graphs");
-    std::ofstream((dir / "graphs" / "triangle").string()) << "0\n1 2\n2 3\n3 1\n";
-    std::ofstream((dir / "graphs" / "path").string()) << "0\n1 2\n2 3\n3 4\n";
-    std::ofstream((dir / "definitions").string()) << "graphs/triangle|NULL|NULL|NULL\n\ngraphs/path|NULL|NULL|NULL\n";
+    ASSERT_TRUE(write(dir / "graphs" / "triangle", "0\n1 2\n2 3\n3 1\n"));
+    ASSERT_TRUE(write(dir / "graphs" / "path", "0\n1 2\n2 3\n3 4\n"));
+    ASSERT_TRUE(write(dir / "definitions", "graphs/triangle|NULL|NULL|NULL\n\ngraphs/path|NULL|NULL|NULL\n"));
 
     // ids from MaxCut::default_id on and names like MaxCut2000, one entry per graph
     const auto entries = MaxCut::registry_entries(dir / "definitions");
@@ -312,9 +421,8 @@ TEST_F(BaseTest, test_registry_graph_definitions_file)
     EXPECT_EQ(graphs.create(2001, 1, 1)->meta_data().n_variables, 4);
     EXPECT_EQ(integer.create("MaxCut2000", 1, 1)->meta_data().n_variables, 3);
 
-    // the default definitions file brings the built-in graphs back for the other tests
+    // the default definitions file brings the built-in graphs back
     submodular::GraphProblemType<MaxCut>::load_graph_instances<int, int>();
     EXPECT_EQ(graphs.create(2000, 1, 1)->meta_data().n_variables, 800);
     EXPECT_EQ(integer.create(2001, 1, 1)->meta_data().n_variables, 800);
-    fs::remove_all(dir);
 }

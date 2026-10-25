@@ -1,4 +1,5 @@
 import os
+import tempfile
 import unittest
 import math
 
@@ -159,6 +160,31 @@ class TestProblem(unittest.TestCase):
         self.assertNotEqual(0, len(problems))
         for name in ("MaxCut", "MaxInfluence", "MaxCoverage", "PackWhileTravel"):
             self.assertNotEqual(0, len([p for p in problems if name in p]))
+
+    def test_load_graph_instances_from_file(self):
+        def problems():
+            return dict(ioh.problem.GraphProblem.problems), dict(ioh.problem.IntegerSingleObjective.problems)
+
+        with tempfile.TemporaryDirectory() as d:
+            os.mkdir(os.path.join(d, "graphs"))
+            with open(os.path.join(d, "graphs", "triangle"), "w") as f:
+                f.write("0\n1 2\n2 3\n3 1\n")
+            with open(os.path.join(d, "definitions"), "w") as f:
+                f.write("graphs/triangle|NULL|NULL|NULL\n")
+            before = problems()
+            try:
+                # the graph is named MaxCut2000, so it replaces that built-in in both factories and keeps its id
+                ioh.problem.MaxCut.load_instances(os.path.join(d, "definitions"))
+                self.assertEqual(problems(), before)
+                p = ioh.get_problem(2000, 1, 1, ioh.ProblemClass.GRAPH)
+                self.assertEqual(
+                    (p.meta_data.problem_id, p.meta_data.name, p.meta_data.n_variables), (2000, "MaxCut2000", 3)
+                )
+                p = ioh.get_problem("MaxCut2000", 1, 1, ioh.ProblemClass.INTEGER)
+                self.assertEqual(p.meta_data.n_variables, 3)
+            finally:
+                ioh.problem.MaxCut.load_instances()  # the built-in graphs again
+        self.assertEqual(ioh.get_problem(2000, 1, 1, ioh.ProblemClass.GRAPH).meta_data.n_variables, 800)
 
     def test_bbob_problems_first_instance(self):
         expected = [

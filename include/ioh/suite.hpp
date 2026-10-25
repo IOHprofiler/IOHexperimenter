@@ -229,19 +229,26 @@ namespace ioh::suite
 
 
     /**
-     * @brief Registers the suite class T, constructed from (problem ids, instances, dimensions), in the suite factory
-     * of its problem type, under its static registry_id and registry_name. A taken id is replaced by the next free one;
+     * @brief Registers the suite class T, constructed from (problem ids, instances, dimensions), in a suite factory of
+     * its problem type, under its static registry_id and registry_name. A taken id is replaced by the next free one;
      * a name that is already registered keeps its id and its entry is replaced, also a built-in suite's.
+     *
+     * The library adds the built-in suites with this overload while their factory is being built.
      */
+    template <typename T>
+    void register_suite(SuiteFactoryType<typename T::Problem::element_type> &factory)
+    {
+        factory.include(T::registry_name, T::registry_id,
+                        [](std::vector<int> &&problem_ids, std::vector<int> &&instances, std::vector<int> &&dimensions) {
+                            return std::make_shared<T>(problem_ids, instances, dimensions);
+                        });
+    }
+
+    //! Registers the suite class T in the suite factory of its problem type (see above)
     template <typename T>
     void register_suite()
     {
-        using ProblemType = typename T::Problem::element_type;
-        SuiteFactoryType<ProblemType>::instance().include(
-            T::registry_name, T::registry_id,
-            [](std::vector<int> &&problem_ids, std::vector<int> &&instances, std::vector<int> &&dimensions) {
-                return std::make_shared<T>(problem_ids, instances, dimensions);
-            });
+        register_suite<T>(SuiteFactoryType<typename T::Problem::element_type>::instance());
     }
 
     //! Real suite

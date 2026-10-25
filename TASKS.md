@@ -369,7 +369,9 @@ What was done, and where it differs from T3.1–T3.7 below:
 * **Measured** (Apple M5, clang 21, §2): the Python extension build with `setup.py`'s flags takes 20.9 s
   instead of 30.9 s at -j4 (62.4 instead of 81.3 s serial); `pip install` of the sdist 19 s; Debug
   `test_ioh` 18.8 instead of 23.5 s at -j4. Runtime benchmark (BBOB d=10/200, PBO d=1024, CEC2022
-  d=10, import) unchanged.
+  d=10, import) unchanged. Measured on the first WP3 commit (8b73cbf6); an interleaved rerun of the
+  final tree against it and master, on a busier machine, gave the same times as that commit
+  (extension 21.9 s for both, master 31.9 s; Debug `test_ioh` 19.8 and 20.0 s, master 25.0 s).
 * **Factory**: the 13 factories with built-ins (the 11 problem factories of §3 plus the two suite
   factories) and their `add_builtins` declarations are listed in `include/ioh/common/builtins.hpp`,
   which `factory.hpp` includes before the `Factory` definition; the definitions are in `src/registry`,
@@ -379,14 +381,17 @@ What was done, and where it differs from T3.1–T3.7 below:
   `IndexError`); runtime `include()` keeps its Release semantics in all builds (the Debug-only assert on
   an existing name is gone); a recursive mutex guards the maps and creators run outside it.
 * **One way to describe a problem class** (T3.3, and T4.4 at the maintainer's request): a class-backed
-  problem declares `static constexpr int registry_id` and `static constexpr const char *registry_name`,
-  which its constructor uses too (the 65 BBOB, PBO, CEC2022 and DynamicBinVal classes; converted by a
-  script that checked every id and name against the golden registry). A class whose data defines its
-  problems (CEC2013, graph, star discrepancy) lists them in a static `registry_entries()`: one
-  `RegistryEntry` (id, name, `create(instance, n_variables)`) per problem, with the same ids, names and
-  creators as before. `problem::registry_entries_of<T>()` turns both into entries, for the registry
-  (`src/registry/families.hpp`) and `register_problem`. A graph class's `registry_entries(path)` also
-  reads a user definitions file (built by `GraphProblemType::graph_entries(path, name)`, formerly
+  problem declares `static constexpr int registry_id` and
+  `static constexpr const char *registry_name`, which its constructor uses too (the 65 BBOB, PBO,
+  CEC2022 and DynamicBinVal classes; converted by a script that checked every id and name against the
+  golden registry). A class whose data defines its problems (CEC2013, graph, star discrepancy) lists
+  them in a static `registry_entries()`: one `RegistryEntry` (id, name,
+  `create(instance, n_variables)`) per problem, with the same ids, names and creators as before.
+  `problem::registry_entries_of<T>()` turns both into entries, for `register_problem`;
+  `src/registry/families.hpp` reads the same two forms, but gives a class-backed problem's creator to
+  the factory directly (going through `registry_entries_of` wraps it in two `std::function`s and made
+  the registry files 30–45 % slower to compile). A graph class's `registry_entries(path)` also reads a
+  user definitions file (built by `GraphProblemType::graph_entries(path, name)`, formerly
   `get_constructors(path)`); `GraphProblemType::load_graph_instances(path)` and Python's
   `MaxCut.load_instances` call it directly. Removed: `InstanceBasedProblem` and the `load_instances`
   specializations, `IdGetter` (which constructed `T(1, 1)` to read ids and names), `FactoryID`,
@@ -416,7 +421,10 @@ What was done, and where it differs from T3.1–T3.7 below:
   (ids, names, CEC2013 meta names from the golden records, fixed values, construction and evaluation;
   the nine family factories exactly, the REAL/INTEGER unions allowing runtime registrations after the
   built-ins and constructing one graph entry per graph class), the suite ids, unknown and duplicate
-  entries, and `register_problem` for a class with registry id/name and one with `registry_entries()`.
+  entries, `register_problem` for a class with registry id/name, one with `registry_entries()` and
+  under a name that is already registered, `register_suite` (which the library also uses for the
+  built-in suites), and loading a user graph definitions file (also in Python,
+  `test_load_graph_instances_from_file`).
 
 ### T3.1 Compiled `ioh` target
 
@@ -563,7 +571,15 @@ Depends on: WP3.
   `MaxCut/MaxCoverage/MaxInfluence/PackWhileTravel.load_instances(path)` keep reading user definition
   files with today's semantics: ids from the class's `default_id` on, one per non-empty line, names
   class name + id; a graph named like a built-in replaces that entry's creator (keeping its id), and
-  the replaced entry must not keep the manifest's fixed dimension.
+  the replaced entry must not keep the manifest's fixed dimension; a graph with a new name whose id is
+  taken (line 101 of a MaxCut file reaches MaxCoverage's 2100) is registered under the next free id of
+  each factory (different in `GraphProblem` and `IntegerSingleObjective`), while its problem keeps
+  reporting `default_id` + its index, so two problems then report 2100 (WP4 may reject such entries
+  instead, as a documented change); the same holds for an id taken by an earlier runtime registration.
+  `test_registry_graph_definitions_file` (C++) and `test_load_graph_instances_from_file` (Python,
+  `str` paths) cover the replacement by name; the taken-id case has no test, because such entries
+  cannot be removed from the shared factories again and break the exact `GRAPH` check of the other
+  tests (a WP4 test can run it in a separate process).
 
 ### T4.5 Python side
 
@@ -729,13 +745,21 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
     `SBOX` (`P<SBOX>`) and `RealSingleObjective` (`P<BBOB>`); `PBOProblem` → `PBO` and
     `IntegerSingleObjective`; `CEC2013Problem`/`CEC2022Problem` → `CEC2013`/`CEC2022` and
     `RealSingleObjective`; `DynamicBinValProblem` → `DynamicBinVal` and `IntegerSingleObjective`.
+    Choose ids that are free in every one of these factories: when an id is taken, the class is
+    registered under that factory's next free id, as before, but its problems now report that id,
+    which can differ per factory (the old registration kept the class's own id in the problem, so
+    the registry id and the id in the logged data differed). Code copied from the 0.3.22 README or
+    example, which used id 1, is affected: its problem now reports e.g. 1121 instead of 1.
   * A `GraphProblemType` subclass's specialization of `InstanceBasedProblem::load_instances` no longer
     compiles: give the class
     `static std::vector<RegistryEntry<T>> registry_entries(const std::optional<fs::path> &path = std::nullopt)`
-    returning `graph_entries(path or its default file, "Name")` (formerly `get_constructors(path)`), keep
-    its `default_id`, and register it with `register_problem<T, GraphProblem>()` and
+    returning `graph_entries(path or its default file, "Name")` (formerly `get_constructors(path)`;
+    pass the class name as "Name" to keep the old registry names, class name + id), keep its
+    `default_id`, and register it with `register_problem<T, GraphProblem>()` and
     `register_problem<T, IntegerSingleObjective>()`, or with
-    `GraphProblemType<T>::load_graph_instances<int, int>()`.
+    `GraphProblemType<T>::load_graph_instances<int, int>()`. The two ways differ only for a taken id:
+    with `register_problem` the problems report the id they got in each factory, with
+    `load_graph_instances` they keep the ids from `default_id` on, like the old registration.
   * A suite declares `registry_id`/`registry_name` and registers with `register_suite<T>()` (a
     `RealSuite`/`IntegerSuite` was registered under its class name with the next free id).
   * Removed (WP3): `RegisteredProblem`, `AutomaticProblemRegistration`, `AutomaticSuiteRegistration`,
@@ -806,15 +830,19 @@ Each WP adds its user-visible changes here (§2).
     `load_instances`, the base classes `BBOProblem`, `PBOProblem`, `CEC2013Problem`, `CEC2022Problem`,
     `DynamicBinValProblem`, `RealSuite` and `IntegerSuite` (derive from `BBOB`/`SBOX`, `PBO`,
     `CEC2013`, `CEC2022`, `DynamicBinVal` or `Suite<...>` directly), `RegisterWithFactory::include`,
-    `IdGetter`, `FactoryID`, `type_name` and `class_name`. Register a class derived from a removed base
-    in each factory that base filled: `BBOProblem` in `BBOB`, `SBOX` and `RealSingleObjective`;
+    `IdGetter`, `FactoryID`, `type_name` and `class_name`. Register a class derived from a removed
+    base in each factory that base filled: `BBOProblem` in `BBOB`, `SBOX` and `RealSingleObjective`;
     `PBOProblem` and `DynamicBinValProblem` in their family's factory and `IntegerSingleObjective`;
-    `CEC2013Problem` and `CEC2022Problem` in theirs and `RealSingleObjective`. A class derived from
-    `GraphProblemType` lists its graphs in a `registry_entries(path)` built with
-    `graph_entries(path, name)` (formerly `get_constructors`) instead of specializing `load_instances`,
-    and is registered in `GraphProblem` and `IntegerSingleObjective` (or with `load_graph_instances`).
-    Suites declare `registry_id`/`registry_name` instead of being registered under their class name
-    with the next free id. `star_discrepancy::load_default_instances` is now
+    `CEC2013Problem` and `CEC2022Problem` in theirs and `RealSingleObjective`. If a class's id is
+    taken in a factory, `register_problem` gives it the next free id there, as before, and its
+    problems now report that id (which can differ per factory) instead of the class's own: choose
+    ids that are free in each factory. A class derived from `GraphProblemType`
+    lists its graphs in a `registry_entries(path)` built with `graph_entries(path, name)` (formerly
+    `get_constructors`; the class name as `name` keeps the old names) instead of specializing
+    `load_instances`, and is registered in `GraphProblem` and `IntegerSingleObjective` (or with
+    `load_graph_instances`, which keeps a graph's own id in its problems when its registry id is
+    taken). Suites declare `registry_id`/`registry_name` instead of being registered under their class
+    name with the next free id. `star_discrepancy::load_default_instances` is now
     `default_registry_entries`.
   * Problem ids, names and behaviour are unchanged (golden tests).
 

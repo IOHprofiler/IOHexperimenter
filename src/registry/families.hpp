@@ -18,23 +18,34 @@ namespace ioh::registry
                             });
     }
 
-    //! Adds the registry entries of the problem classes Ts (see problem::registry_entries_of) to a problem factory
+    //! Adds the problem class T to a problem factory: its registry entries, or its registry_id and registry_name. The
+    //! same as add_entries(factory, problem::registry_entries_of<T>()), but a class-backed creator is wrapped in one
+    //! std::function instead of two (which made this library 30-45 % slower to compile)
+    template <class Parent, class T>
+    void add_class(common::Factory<Parent, int, int> &factory)
+    {
+        if constexpr (problem::detail::has_registry_entries<T>::value)
+            add_entries(factory, T::registry_entries());
+        else
+            factory.include(T::registry_name, T::registry_id,
+                            [](int &&instance, int &&n_variables) -> std::shared_ptr<Parent> {
+                                return std::make_shared<T>(instance, n_variables);
+                            });
+    }
+
+    //! Adds the problem classes Ts to a problem factory
     template <class Parent, class... Ts>
     void add(common::Factory<Parent, int, int> &factory)
     {
-        (add_entries(factory, problem::registry_entries_of<Ts>()), ...);
+        (add_class<Parent, Ts>(factory), ...);
     }
 
-    //! Adds the suite classes Ts, with their registry_id and registry_name, to a suite factory
+    //! Adds the suite classes Ts, with their registry_id and registry_name, to a suite factory (as users register
+    //! theirs, see suite::register_suite)
     template <class ProblemType, class... Ts>
     void add_suites(suite::SuiteFactoryType<ProblemType> &factory)
     {
-        (factory.include(Ts::registry_name, Ts::registry_id,
-                         [](std::vector<int> &&problem_ids, std::vector<int> &&instances,
-                            std::vector<int> &&dimensions) -> std::shared_ptr<suite::Suite<ProblemType>> {
-                             return std::make_shared<Ts>(problem_ids, instances, dimensions);
-                         }),
-         ...);
+        (suite::register_suite<Ts>(factory), ...);
     }
 
     //! The 24 BBOB functions (ids 1-24) in the variant V, problem::BBOB or problem::SBOX
