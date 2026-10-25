@@ -9,8 +9,15 @@ namespace ioh
         namespace pbo
         {
             //! OneMaxDummy2 problem id 5
-            class OneMaxDummy2 final: public PBOProblem<OneMaxDummy2>
+            class OneMaxDummy2 final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 5;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "OneMaxDummy2";
+
+            private:
                 std::vector<int> info_;
             protected:
                 //! Evaluation method
@@ -33,7 +40,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 OneMaxDummy2(const int instance, const int n_variables) :
-                    PBOProblem(5, instance, n_variables, "OneMaxDummy2"),
+                    PBO(registry_id, instance, n_variables, registry_name),
                     info_(utils::dummy(n_variables, 0.9, 10000))
                 {
                     optimum_.x = std::vector<int>(n_variables,1);

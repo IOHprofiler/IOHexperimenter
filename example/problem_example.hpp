@@ -47,9 +47,9 @@ inline void simple_problem_example()
 
 ////////////////// Extending Problems //////////////////
 
-/// A new problem need to inherit from the problem class of the correct type: e.g. RealProblem for
-/// double type problems. Note that this class uses a CRTP pattern. 
-class AnotherRealProblem final : public ioh::problem::RegisteredProblem<AnotherRealProblem, ioh::problem::RealSingleObjective>
+/// A new problem needs to inherit from the problem class of the correct type: e.g. RealSingleObjective for
+/// double type problems. Register it with ioh::problem::register_problem to create it from a factory.
+class AnotherRealProblem final : public ioh::problem::RealSingleObjective
 {
 protected:
     // The evaluate method is required, in this case the value of x0 is return as objective value
@@ -59,11 +59,15 @@ protected:
     }
 
 public:
+    /// The id and name in the registry, which register_problem uses (a taken id is replaced by the next free one)
+    static constexpr int registry_id = 9001;
+    static constexpr const char *registry_name = "AnotherRealProblem";
+
     /// This constructor is required(i.e. (int, int), even if the newly create problem does not have a way to handle different
     /// instances/dimensions.
     AnotherRealProblem(const int instance, const int n_variables) :
-        RegisteredProblem(
-            ioh::problem::MetaData(1, instance, "AnotherRealProblem", n_variables,
+        ioh::problem::RealSingleObjective(
+            ioh::problem::MetaData(registry_id, instance, registry_name, n_variables,
                                            ioh::common::OptimizationType::MIN))
     {
     }
@@ -93,7 +97,8 @@ double transform_y(const double y, const int iid){
 
 inline void extending_problems_example()
 {
-    /// Note that problems which extend RealProblem are automatically avaible in the corresponsing Factory:
+    /// Register the new problem in the factory of all real problems, under its registry_id and registry_name
+    ioh::problem::register_problem<AnotherRealProblem, ioh::problem::RealSingleObjective>();
     auto &factory = ioh::problem::ProblemRegistry<ioh::problem::RealSingleObjective>::instance();
     
     const int instance = 10;

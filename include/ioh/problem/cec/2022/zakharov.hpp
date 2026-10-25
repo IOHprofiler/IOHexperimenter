@@ -5,10 +5,17 @@
 /// Namespace enclosing the Implementation of Zakharov problem which is a part of CEC benchmark problems.
 namespace ioh::problem::cec2022
 {
-    /// Zakharov class inherits from the template CECProblem with Zakharov as the template parameter.
+    /// The Zakharov problem of the CEC2022 suite. Derives from CEC2022; its registry id and name are
+    /// registry_id and registry_name, and the compiled library registers it (src/registry).
     /// This class encapsulates the Zakharov problem for the CEC benchmark suite.
-    class Zakharov final : public CEC2022Problem<Zakharov>
+    class Zakharov final : public CEC2022
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 1001;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "CEC2022Zakharov";
+
     protected:
         /// Evaluates the objective function for the Zakharov problem.
         /// @param x A vector representing a point in the search space.
@@ -36,7 +43,7 @@ namespace ioh::problem::cec2022
         /// Constructs a Zakharov problem instance.
         /// @param instance An integer representing the problem instance number.
         /// @param n_variables An integer representing the number of variables for the problem.
-        Zakharov(const int instance, const int n_variables) : CEC2022Problem(1001, instance, n_variables, "CEC2022Zakharov")
+        Zakharov(const int instance, const int n_variables) : CEC2022(registry_id, instance, n_variables, registry_name)
         {
         }
     };

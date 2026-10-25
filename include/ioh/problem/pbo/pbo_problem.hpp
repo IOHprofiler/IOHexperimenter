@@ -58,17 +58,4 @@ namespace ioh::problem
         }
     };
 
-    /**
-     * @brief CRTP class for PBO problems. Inherit from this class when defining new PBO problems
-     * 
-     * @tparam ProblemType The New PBO problem class
-     */
-    template <typename ProblemType>
-    class PBOProblem : public PBO,
-                       AutomaticProblemRegistration<ProblemType, PBO>,
-                       AutomaticProblemRegistration<ProblemType, IntegerSingleObjective>
-    {
-    public:
-        using PBO::PBO;
-    };
 }

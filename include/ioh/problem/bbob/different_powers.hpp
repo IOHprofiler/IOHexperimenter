@@ -6,8 +6,14 @@ namespace ioh::problem::bbob
 {
     //! Different powers problem id 14
     template<typename P=BBOB>
-    class DifferentPowers final : public P, BBOProblem<DifferentPowers>
+    class DifferentPowers final : public P
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 14;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "DifferentPowers";
+
     protected:
         //! Evaluation method
         double evaluate(const std::vector<double> &x) override
@@ -34,11 +40,12 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         DifferentPowers(const int instance, const int n_variables) :
-            P(14, instance, n_variables, "DifferentPowers")
+            P(registry_id, instance, n_variables, registry_name)
         {
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
                 this->transformation_state_.exponents[i] = 2.0 + 4.0 * this->transformation_state_.exponents[i];
         }
     };
-    template class DifferentPowers<BBOB>;
+    extern template class DifferentPowers<BBOB>;
+    extern template class DifferentPowers<SBOX>;
 }

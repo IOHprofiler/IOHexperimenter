@@ -8,8 +8,12 @@ namespace ioh::problem
     namespace cec2013
     {
 
-        class SixHumpCamelback final : public CEC2013Problem<SixHumpCamelback>
+        class SixHumpCamelback final : public CEC2013
         {
+        public:
+            //! The registry entries (see registry_entries_of): the dimension and the instance are fixed
+            static std::vector<RegistryEntry<SixHumpCamelback>> registry_entries();
+
         protected:
             double inner_evaluate(const std::vector<double> &x) override
             {
@@ -24,7 +28,7 @@ namespace ioh::problem
 
         public:
             SixHumpCamelback(const int instance, const int n_variables) :
-                CEC2013Problem(1105, instance, n_variables, "CEC2013SixHumpCamelback", -1.9, 1.9, {
+                CEC2013(1105, instance, n_variables, "CEC2013SixHumpCamelback", -1.9, 1.9, {
                     {{0.0898, -0.7126}, 1.03162842},
                     {{-0.0898, 0.7126}, 1.03162842},
                 }, .5)
@@ -34,11 +38,9 @@ namespace ioh::problem
     } // namespace cec2013
 
 
-    template <>
-    inline InstanceBasedProblem::Constructors<cec2013::SixHumpCamelback, int, int>
-    InstanceBasedProblem::load_instances<cec2013::SixHumpCamelback>(const std::optional<fs::path> &)
+    inline std::vector<RegistryEntry<cec2013::SixHumpCamelback>> cec2013::SixHumpCamelback::registry_entries()
     {
-        return {{[](int, int) { return cec2013::SixHumpCamelback(1, 2); }, 1105, std::nullopt}};
+        return {{1105, "SixHumpCamelback1105", [](int, int) { return std::make_shared<cec2013::SixHumpCamelback>(1, 2); }}};
     }
 
 } // namespace ioh::problem

@@ -6,8 +6,14 @@ namespace ioh::problem::bbob
 {
     //! LunacekBiRastrigin problem id 24
     template<typename P=BBOB>
-    class LunacekBiRastrigin final : public P, BBOProblem<LunacekBiRastrigin>
+    class LunacekBiRastrigin final : public P
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 24;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "LunacekBiRastrigin";
+
     protected:
         //! Evaluation method
         double evaluate(const std::vector<double> &x) override
@@ -59,7 +65,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         LunacekBiRastrigin(const int instance, const int n_variables) :
-            P(24, instance, n_variables, "LunacekBiRastrigin")
+            P(registry_id, instance, n_variables, registry_name)
         {
             const auto random_normal = common::random::bbob2009::normal(n_variables, this->transformation_state_.seed);
             for (auto i = 0; i < n_variables; ++i)
@@ -70,5 +76,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class LunacekBiRastrigin<BBOB>;
+    extern template class LunacekBiRastrigin<BBOB>;
+    extern template class LunacekBiRastrigin<SBOX>;
 }

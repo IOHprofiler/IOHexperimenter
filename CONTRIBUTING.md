@@ -82,7 +82,7 @@ Follow the steps of contributing new problems:
 The header files shall locate at the [problem folder](https://github.com/IOHprofiler/IOHexperimenter/tree/master/include/ioh/problem).
 
 We require to create the new problem by subclassing the abstract problem class in IOHexperimenter, taking benefits of implementing more details, e.g., aforementioned transformations.
-This can be done by inheriting the corresponding problem registration class, which is
+This can be done by inheriting the corresponding problem class, which is
 
 * `ioh::problem::IntegerSingleObjective` for pseudo-Boolean problems, and
 * `ioh::problem::RealSingleObjective` for continuous problems.
@@ -90,7 +90,7 @@ This can be done by inheriting the corresponding problem registration class, whi
 In the following example, we show how to do this for pseudo-Boolean problems.
 
 ```C++
-class NewBooleanProblem final : public ioh::problem::RegisteredProblem<NewBooleanProblem, ioh::problem::IntegerSingleObjective>
+class NewBooleanProblem final : public ioh::problem::IntegerSingleObjective
 {
 protected:
     // [mandatory] The evaluate method is mandatory to implement
@@ -113,15 +113,20 @@ protected:
     } 
 
 public:
+    /// [mandatory] The id and name in the registry, also used by the constructor: a free id of the factories the
+    /// problem goes into
+    static constexpr int registry_id = 26;
+    static constexpr const char *registry_name = "NewBooleanProblem";
+
     /// [mandatory] This constructor always take `instance` as input even
     /// if it is ineffective by default. `instance` would be effective if and only if
     /// at least one of `transform_objectives` and `transform_objectives` is implemented
     NewBooleanProblem(const int instance, const int n_variables) :
-        RegisteredProblem(
+        ioh::problem::IntegerSingleObjective(
           ioh::problem::MetaData(
-            1,                     // problem id, which will be overwritten when registering this class in all pseudo-Boolean problems
+            registry_id,           // the problem id
             instance,              // the instance id
-            "NewBooleanProblem",   // problem name
+            registry_name,         // the problem name
             n_variables           // search dimensionality
             ) 
           )
@@ -130,13 +135,17 @@ public:
 };
 ```
 
-Please check [the example](https://github.com/IOHprofiler/IOHexperimenter/blob/759750759331fff1243ef9e121209cde450b9726/example/problem_example.h#L51) of adding continuous problems in this manner.
+A class whose data defines several problems (like the CEC2013 and graph problems) lists them in a static `registry_entries()` instead, one `ioh::problem::RegistryEntry` (id, name, and a function creating the problem for an instance and a dimension) per problem.
+
+The built-in problems are registered by the compiled library, in [`src/registry`](src/registry): add the class to a family list in [`src/registry/families.hpp`](src/registry/families.hpp) (or start a new one), and call that list from the `add_builtins` functions of the factories that should contain the problem, e.g. the family's own factory and [`src/registry/single_objective.cpp`](src/registry/single_objective.cpp) for the factory of all integer problems. A new factory type needs a forward declaration of its type and its own `add_builtins` declaration in [`include/ioh/common/builtins.hpp`](include/ioh/common/builtins.hpp), defined in `src/registry`. Ids must be new and stay fixed: the registry test (`tests/cpp/problem/test_registry.cpp`) and the golden tests (`tests/python/test_golden.py`) compare the registries with `tests/data/golden`, so extend those fixtures in the same pull request (`python tests/python/golden.py --write`, reviewed by the maintainers).
+
+To try a problem without adding it to the library, register it from your own code instead: `ioh::problem::register_problem<NewBooleanProblem, ioh::problem::IntegerSingleObjective>();`. Please check [the example](example/problem_example.hpp) of adding continuous problems in this manner.
 
 #### Using the suite class (optional)
 
 <a id="using-the-suite-class"></a>
 
-A suite contains a set of problems that share common properties. Therefore, we suggest creating a base class and a CRTP class for the new problems (see [the example of bbob problems](https://github.com/IOHprofiler/IOHexperimenter/blob/master/include/ioh/problem/bbob/bbob_problem.hpp)), following the template as below:
+A suite contains a set of problems that share common properties. Therefore, we suggest creating a base class for the new problems, following the template as below:
 
 ```cpp
 namespace ioh::problem
@@ -158,42 +167,22 @@ namespace ioh::problem
         {
         }
     };
-    
-    /**
-     * @brief CRTP class for NewBase problems. Inherit from this class when defining new NewBase problems
-     * 
-     * @tparam ProblemType The New NewBase problem class
-     */
-    template <typename ProblemType>
-    class NewBaseProblem : public NewBase,
-                       AutomaticProblemRegistration<ProblemType, NewBase>,
-                       AutomaticProblemRegistration<ProblemType, RealSingleObjective>
-    {
-    public:
-        /**
-         * @brief Construct a new NewBaseProblem object
-         * 
-         * @param problem_id The id of the problem
-         * @param instance The instance of the problem
-         * @param n_variables the dimension of the problem
-         * @param name the name of the problem
-         */
-        NewBaseProblem(const int problem_id, const int instance, const int n_variables, const std::string &name) :
-            NewBase(problem_id, instance, n_variables, name)
-        {
-        }
-    };
 }
 ```
 
-Inherit from the CRTP class when defining the new problems.
+Inherit from the base class when defining the new problems.
 
 ```cpp
 namespace ioh::problem
 {
-     //! NewProblemere function problem id 42
-    class NewProblem final: public NewBaseProblem<NewProblem>
+     //! NewProblemere function problem id 9002
+    class NewProblem final: public NewBase
     {
+    public:
+        //! The id and name in the registry, also used by the constructor
+        static constexpr int registry_id = 9002; // free in the factories of NewBase and of all real problems
+        static constexpr const char *registry_name = "NewProblem";
+
     protected:
         //! Evaluation method
         double evaluate(const std::vector<double>&) override
@@ -210,31 +199,35 @@ namespace ioh::problem
          * @param n_variables the dimension of the problem
          */
         NewProblem(const int instance, const int n_variables) :
-            NewBaseProblem(42, instance, n_variables, "NewProblem")
+            NewBase(registry_id, instance, n_variables, registry_name)
         {
         }
     };
 }
 ```
 
-After implementing the new problem classes, they can be created using either factory construction:
+Register the new problems in the factory of `NewBase` (and of `RealSingleObjective`) as described above. They can then be created using factory construction:
 
 ```cpp
 auto &problem_factory = ioh::problem::ProblemRegistry<ioh::problem::NewBase>::instance();
 for (auto xi: problem_factory.names())
     std::cout << xi << "\n";
-auto problem = problem_factory.create(42, 1, 10);
+auto problem = problem_factory.create(9002, 1, 10);
 ```
 
-Or, we can immediately create a suite class, which only contains the problems that are defined using the same parent type (`NewBase`):
+Or, we can create a suite class, which only contains the problems of the factory of the same parent type (`NewBase`):
 
 ```cpp
 namespace ioh::suite {
 
-    struct NewProblems final : RealSuite<NewProblems>
+    struct NewProblems final : Suite<problem::RealSingleObjective>
     {
+        //! The id and name in the suite registry
+        static constexpr int registry_id = 5;
+        static constexpr const char *registry_name = "NewProblems";
+
         /**
-         * @brief Construct a new BBOB object
+         * @brief Construct a new NewProblems object
          * 
          * @param problem_ids List of problem ids
          * @param instances List of problem instances (defaults to first instance)
@@ -242,15 +235,15 @@ namespace ioh::suite {
          */
         NewProblems(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
                 const std::vector<int> &dimensions = {5}) :
-            RealSuite(problem_ids, instances, dimensions, "NewProblems", 100, 100,
-                        reinterpret_cast<Factory &>(problem::ProblemFactoryType<problem::NewBase>::instance()))
+            Suite(problem_ids, instances, dimensions, registry_name, 100, 100,
+                  problem::ProblemFactoryType<problem::NewBase>::instance())
         {
         }
     };
 }
 ```
 
-We can then see that the new suite (`NewProblems`) gets imeddiately added to the list of available real-valued suites:
+Built-in suites are registered in [`src/registry/suites.cpp`](src/registry/suites.cpp) (add the class to the list of `registry::add_suites`); from your own code, `ioh::suite::register_suite<ioh::suite::NewProblems>();` does the same. The new suite (`NewProblems`) is then in the list of available real-valued suites:
 
 ```cpp
 auto& suitef = ioh::suite::SuiteRegistry<ioh::problem::RealSingleObjective>::instance();
@@ -261,7 +254,7 @@ for (auto xi: suitef.names())
 Which we can use to easily loop over the problems:
 
 ```cpp
-auto suite = suitef.create("NewProblems", {42}, {1}, {2});
+auto suite = suitef.create("NewProblems", {9002}, {1}, {2});
 for (auto problem: *suite)
     std::cout << *problem << "\n";
 ```

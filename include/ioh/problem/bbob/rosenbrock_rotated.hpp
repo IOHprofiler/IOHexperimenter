@@ -7,8 +7,14 @@ namespace ioh::problem::bbob
 {
     //! Rotated Rosenbrock function 9
     template<typename P = BBOB>
-    class RosenbrockRotated final :  public RosenbrockBase<P>, BBOProblem<RosenbrockRotated>
+    class RosenbrockRotated final :  public RosenbrockBase<P>
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 9;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "RosenbrockRotated";
+
     protected:
         //! Variables transformation method
         std::vector<double> transform_variables(std::vector<double> x) override
@@ -27,7 +33,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         RosenbrockRotated(const int instance, const int n_variables) :
-            RosenbrockBase<P>(9, instance, n_variables, "RosenbrockRotated")
+            RosenbrockBase<P>(registry_id, instance, n_variables, registry_name)
         {
             const auto factor = std::max(1.0, std::sqrt(n_variables) / 8.0);
             for (auto i = 0; i < n_variables; ++i)
@@ -45,5 +51,6 @@ namespace ioh::problem::bbob
         }
     };
 
-    template class RosenbrockRotated<BBOB>;
+    extern template class RosenbrockRotated<BBOB>;
+    extern template class RosenbrockRotated<SBOX>;
 }

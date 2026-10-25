@@ -7,8 +7,12 @@ namespace ioh::problem
 {
     namespace cec2013
     {
-        class EqualMaxima final : public CEC2013Problem<EqualMaxima>
+        class EqualMaxima final : public CEC2013
         {
+        public:
+            //! The registry entries (see registry_entries_of): the dimension and the instance are fixed
+            static std::vector<RegistryEntry<EqualMaxima>> registry_entries();
+
         protected:
             double inner_evaluate(const std::vector<double> &z) override
             {
@@ -17,7 +21,7 @@ namespace ioh::problem
 
         public:
             EqualMaxima(const int instance, const int n_variables) :
-                CEC2013Problem(1102, instance, n_variables, "CEC2013EqualMaxima", 0, 1, {
+                CEC2013(1102, instance, n_variables, "CEC2013EqualMaxima", 0, 1, {
                     {{0.1}, 1.0},
                     {{0.3}, 1.0},
                     {{0.5}, 1.0},
@@ -30,11 +34,9 @@ namespace ioh::problem
     } // namespace cec2013
 
 
-    template <>
-    inline InstanceBasedProblem::Constructors<cec2013::EqualMaxima, int, int>
-    InstanceBasedProblem::load_instances<cec2013::EqualMaxima>(const std::optional<fs::path> &)
+    inline std::vector<RegistryEntry<cec2013::EqualMaxima>> cec2013::EqualMaxima::registry_entries()
     {
-        return {{[](int, int) { return cec2013::EqualMaxima(1, 1); }, 1102, std::nullopt}};
+        return {{1102, "EqualMaxima1102", [](int, int) { return std::make_shared<cec2013::EqualMaxima>(1, 1); }}};
     }
 
 } // namespace ioh::problem

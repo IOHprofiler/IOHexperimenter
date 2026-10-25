@@ -9,8 +9,14 @@ namespace ioh
         namespace pbo
         {
             //! NQueens problem id 23
-            class NQueens final: public PBOProblem<NQueens>
+            class NQueens final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 23;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "NQueens";
+
             protected:
                 //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
@@ -103,7 +109,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 NQueens(const int instance, const int n_variables) : 
-                PBOProblem(23, instance, n_variables, "NQueens") 
+                PBO(registry_id, instance, n_variables, registry_name) 
                 {
                     assert(sqrt(n_variables) - floor(sqrt(n_variables)) == 0);
                     optimum_.y = {sqrt(n_variables)};

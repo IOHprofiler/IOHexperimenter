@@ -9,8 +9,14 @@ namespace ioh
         namespace pbo
         {
             //! LeadingOnesEpistasis problem id 14
-            class LeadingOnesEpistasis final: public PBOProblem<LeadingOnesEpistasis>
+            class LeadingOnesEpistasis final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 14;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "LeadingOnesEpistasis";
+
             protected:
                 //! Evaluation method
                 double evaluate(const std::vector<int> &x) override
@@ -35,7 +41,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 LeadingOnesEpistasis(const int instance, const int n_variables) :
-                    PBOProblem(14, instance, n_variables, "LeadingOnesEpistasis")
+                    PBO(registry_id, instance, n_variables, registry_name)
                 {
                     optimum_.y = {static_cast<double>(n_variables)};
                     optimum_.y = transform_objectives(optimum_.y);

@@ -16,15 +16,21 @@ namespace ioh::problem::dynamic_bin_val
      *
      *        Uniform: takes a value between 0 and 1 for each component at each time_step
      *
-     *        Inheriting functionalities from the IntegerSingleObjective, it also integrates functionalities
-     *        for automatic registration of the problem type into various data structures. This facilitates
-     *        easier management and retrieval of problem instances, while encapsulating characteristics and
-     *        behaviours specific to dynamic binary value problems. It holds vital data members such as
+     *        Derives from DynamicBinVal (an IntegerSingleObjective); its registry id and name are
+     *        registry_id and registry_name, and the compiled library registers it (src/registry). It
+     *        encapsulates characteristics and behaviours specific to dynamic binary value problems and
+     *        holds vital data members such as
      *        time_step and weights, which are crucial in depicting the dynamic aspects and unique features
      *        of these problem instances.
      */
-    class Uniform final : public DynamicBinValProblem<Uniform>
+    class Uniform final : public DynamicBinVal
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 10001;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "DynamicBinValUniform";
+
     protected:
         void update_weights() override
         {
@@ -40,7 +46,7 @@ namespace ioh::problem::dynamic_bin_val
          *                    indicating the number of variables in the problem.
          */
         Uniform(const int instance, const int n_variables) :
-            DynamicBinValProblem(10'001, instance, n_variables, "DynamicBinValUniform")
+            DynamicBinVal(registry_id, instance, n_variables, registry_name)
         {
             step();
         }

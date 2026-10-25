@@ -5,8 +5,14 @@
 namespace ioh::problem::cec2022
 {
     /// \brief Class representing the fourth composition function in the CEC benchmark suite.
-    class CompositionFunction4 final : public CEC2022Problem<CompositionFunction4>
+    class CompositionFunction4 final : public CEC2022
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 1012;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "CEC2022CompositionFunction4";
+
     protected:
         /**
          * @brief Evaluates the objective function for the given input vector.
@@ -36,7 +42,7 @@ namespace ioh::problem::cec2022
          * @param n_variables The number of variables in the problem.
          */
         CompositionFunction4(const int instance, const int n_variables) :
-            CEC2022Problem(1012, instance, n_variables, "CEC2022CompositionFunction4")
+            CEC2022(registry_id, instance, n_variables, registry_name)
         {
         }
     };

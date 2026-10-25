@@ -8,8 +8,15 @@ namespace ioh
         namespace pbo
         {
             //! LABS
-            class LABS final : public PBOProblem<LABS>
+            class LABS final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 18;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "LABS";
+
+            private:
                 static double correlation(const std::vector<int>& x, const int n, int k)
                 {
                     auto result = 0;
@@ -42,7 +49,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 LABS(const int instance, const int n_variables) : 
-                PBOProblem(18, instance, n_variables, "LABS") {
+                PBO(registry_id, instance, n_variables, registry_name) {
 
                 }
             };

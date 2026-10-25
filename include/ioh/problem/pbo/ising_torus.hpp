@@ -8,8 +8,15 @@ namespace ioh
         namespace pbo
         {
             //! IsingTorus problem id 20
-            class IsingTorus final : public PBOProblem<IsingTorus>
+            class IsingTorus final : public PBO
             {
+            public:
+                //! The id in the registry, also used by the constructor
+                static constexpr int registry_id = 20;
+                //! The name in the registry, also used by the constructor
+                static constexpr const char *registry_name = "IsingTorus";
+
+            private:
                 static size_t modulo_ising_torus(const size_t x, const size_t n)
                 {
                     return (x % n + n) % n;
@@ -54,7 +61,7 @@ namespace ioh
                  * \param n_variables The dimensionality of the problem to created, 4 by default.
                  **/
                 IsingTorus(const int instance, const int n_variables) :
-                    PBOProblem(20, instance, n_variables, "IsingTorus")
+                    PBO(registry_id, instance, n_variables, registry_name)
                 {
                     optimum_.x = std::vector<int>(n_variables,1);
                     optimum_.y = evaluate(optimum_.x);

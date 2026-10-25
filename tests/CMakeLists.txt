@@ -10,6 +10,8 @@ include(GoogleTest)
 function(register_test test_name test_sources)
     add_executable(${test_name} ${test_sources} cpp/utils.hpp cpp/entrypoint.cpp)
     target_include_directories(${test_name} PRIVATE cpp)  
+    # the registry test compares the factories with the golden fixtures
+    target_compile_definitions(${test_name} PRIVATE IOH_GOLDEN_DIR="${PROJECT_SOURCE_DIR}/tests/data/golden")
     if((${test_name} MATCHES test_mklandscape_problem) OR (${test_name}  MATCHES test_ioh) )
         if(ENABLE_MKLANDSCAPE_PROBLEMS)
         # link_directories(${EXTERNAL_DIR}/mklandscape/target/debug)

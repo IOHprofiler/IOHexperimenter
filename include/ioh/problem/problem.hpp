@@ -1,5 +1,11 @@
 #pragma once
 
+#include <functional>
+#include <memory>
+#include <string>
+#include <type_traits>
+#include <vector>
+
 #include "ioh/common/container_utils.hpp"
 #include "ioh/common/factory.hpp"
 #include "ioh/logger/loggers.hpp"
@@ -205,6 +211,14 @@ namespace ioh
             //! Accessor for `meta_data_`
             [[nodiscard]] MetaData meta_data() const { return meta_data_; }
 
+            //! The dimension this problem has whatever dimension was requested, or std::nullopt when it uses the
+            //! requested one
+            [[nodiscard]] virtual std::optional<int> fixed_dimension() const { return std::nullopt; }
+
+            //! The instance this problem is whatever instance was requested, or std::nullopt when it uses the
+            //! requested one
+            [[nodiscard]] virtual std::optional<int> fixed_instance() const { return std::nullopt; }
+
             //! Accessor for `optimum_`
             [[nodiscard]] Solution<T, R> optimum() const { return optimum_; }
 
@@ -299,15 +313,6 @@ namespace ioh
 
 
         /**
-         * @brief Automatic Factory registration type def.
-         *
-         * @tparam Derived type of the problem
-         * @tparam Parent type of the problem
-         */
-        template <class Derived, class Parent>
-        using AutomaticProblemRegistration = common::AutomaticTypeRegistration<Derived, ProblemRegistryType<Parent>>;
-
-        /**
          * @brief Registry type def.
          *
          * @tparam Parent type of the problem
@@ -315,18 +320,100 @@ namespace ioh
         template <class Parent>
         using ProblemRegistry = ProblemRegistryType<Parent>;
 
+        /**
+         * @brief A problem in a registry: its id, its name, and how to create it for an instance and a dimension
+         *
+         * @tparam P the problem class
+         */
+        template <typename P>
+        struct RegistryEntry
+        {
+            //! The id in the registry
+            int id;
+
+            //! The name in the registry
+            std::string name;
+
+            //! Creates the problem for an instance and a number of variables
+            std::function<std::shared_ptr<P>(int instance, int n_variables)> create;
+        };
+
+        namespace detail
+        {
+            //! Whether P lists its registry entries itself (a static registry_entries())
+            template <typename P, typename = void>
+            struct has_registry_entries : std::false_type
+            {
+            };
+
+            //! Whether P lists its registry entries itself (a static registry_entries())
+            template <typename P>
+            struct has_registry_entries<P, std::void_t<decltype(P::registry_entries())>> : std::true_type
+            {
+            };
+        } // namespace detail
 
         /**
-         * @brief CRTP class for automatically registering problems in the apropriate factory.
-         * you should inherit from this class when defining new real problems.
-         * @tparam ProblemType The new problem type
-         * @tparam ParentType The parent problem type
+         * @brief The registry entries of the problem class P
+         *
+         * A class whose data defines its problems (the CEC2013, graph and star discrepancy problems) lists them in a
+         * static registry_entries(). Every other class is one entry: its static registry_id and registry_name, which
+         * its constructor uses too, created as P(instance, n_variables).
          */
-        template <typename ProblemType, typename ParentType>
-        struct RegisteredProblem : ParentType, AutomaticProblemRegistration<ProblemType, ParentType>
+        template <typename P>
+        std::vector<RegistryEntry<P>> registry_entries_of()
         {
-            using ParentType::ParentType;
-        };
+            if constexpr (detail::has_registry_entries<P>::value)
+                return P::registry_entries();
+            else
+                return {{P::registry_id, P::registry_name, [](const int instance, const int n_variables) {
+                             return std::make_shared<P>(instance, n_variables);
+                         }}};
+        }
+
+        /**
+         * @brief Registers the problem class T, constructed from (instance, n_variables), in the factory of Parent
+         * (e.g. RealSingleObjective), so that it can be created by id or name like the built-in problems.
+         *
+         * The problems the factory creates report the id and name they are registered under: a name that is
+         * already registered keeps its id (and gets T as its new class), an id that is taken is replaced by the
+         * next free one.
+         */
+        template <typename T, typename Parent>
+        void register_problem(const int id, const std::string &name)
+        {
+            auto &factory = ProblemFactoryType<Parent>::instance();
+            const int registered_id = factory.check_or_get_next_available(id, name);
+            factory.include(name, registered_id, [registered_id, name](int &&instance, int &&n_variables) {
+                auto problem = std::make_shared<T>(instance, n_variables);
+                problem->set_id(registered_id);
+                problem->set_name(name);
+                return problem;
+            });
+        }
+
+        /**
+         * @brief Registers the problem class T in the factory of Parent with its registry entries (see
+         * registry_entries_of). An entry whose id is taken gets the next free id, which the problems it creates
+         * report. An entry whose name is already registered keeps that entry's id and replaces it, also a
+         * built-in problem's, so give your problems new names.
+         */
+        template <typename T, typename Parent>
+        void register_problem()
+        {
+            auto &factory = ProblemFactoryType<Parent>::instance();
+            for (const auto &entry : registry_entries_of<T>())
+            {
+                const int registered_id = factory.check_or_get_next_available(entry.id, entry.name);
+                factory.include(entry.name, registered_id,
+                                [registered_id, create = entry.create](int &&instance, int &&n_variables) {
+                                    auto problem = create(instance, n_variables);
+                                    if (problem->meta_data().problem_id != registered_id)
+                                        problem->set_id(registered_id);
+                                    return problem;
+                                });
+            }
+        }
 
 
         /**

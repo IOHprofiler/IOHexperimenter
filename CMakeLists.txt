@@ -11,6 +11,12 @@ project(ioh
   
 add_compile_definitions(PROJECT_VER="${CMAKE_PROJECT_VERSION}")
 
+# The ioh library holds problem code, so build it optimized unless a build type is given (single-configuration
+# generators; project() already created the empty cache entry)
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR AND NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)  
 set(EXTERNAL_DIR "${PROJECT_SOURCE_DIR}/external")
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH}) 
@@ -21,6 +27,22 @@ option(BUILD_EXAMPLE "Whether to build examples" ON)
 option(BUILD_DOCS "Build docs" OFF)    
 option(BUILD_SERVER "Whether to build the objective function server" OFF) 
 option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF) # Turn this option ON if you plan to test MK-landscape problems.
+
+# Link-time optimization of the release configurations. Defining CMAKE_INTERPROCEDURAL_OPTIMIZATION also keeps
+# pybind11 from enabling its own (full) LTO for the Python extension. On by default only for the Python extension
+# with MSVC, which compiles /GL objects without generating code (without it the Windows wheels built slower than
+# before the compiled registry). Elsewhere it does not change the evaluation speed (measured with clang), and a
+# static library of LTO objects only links with the toolchain that built it.
+if(MSVC AND BUILD_PYTHON_PACKAGE)
+    set(IOH_LTO_DEFAULT ON)
+else()
+    set(IOH_LTO_DEFAULT OFF)
+endif()
+option(IOH_LTO "Build the release configurations with link-time optimization" ${IOH_LTO_DEFAULT})
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION OFF)
+foreach(config RELEASE RELWITHDEBINFO MINSIZEREL)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_${config} ${IOH_LTO})
+endforeach()
   
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /bigobj")
@@ -46,16 +68,33 @@ endif()
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
    
  
-add_library(ioh INTERFACE)
+# The compiled part of the library: the registries of the built-in problems and suites (src/registry), so that
+# only these files instantiate every problem class
+add_library(ioh STATIC
+    src/registry/bbob.cpp
+    src/registry/cec.cpp
+    src/registry/dynamic_bin_val.cpp
+    src/registry/graph.cpp
+    src/registry/pbo.cpp
+    src/registry/single_objective.cpp
+    src/registry/star_discrepancy.cpp
+    src/registry/suites.cpp
+)
 add_library(ioh::ioh ALIAS ioh)
-if (MSVC)
-set_property(TARGET ioh PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()   
+# position-independent: it is also linked into the Python extension. The Debug build gets its own file name, so
+# that installed Debug and Release builds can coexist.
+set(IOH_DEBUG_POSTFIX d CACHE STRING "Postfix of the Debug build of the ioh library")
+set_target_properties(ioh PROPERTIES POSITION_INDEPENDENT_CODE ON DEBUG_POSTFIX "${IOH_DEBUG_POSTFIX}")
+# MSBuild (the Visual Studio generator, which setup.py uses on Windows) compiles a project's files one after
+# another unless /MP is given; pybind11 sets it on the extension module only
+if(CMAKE_GENERATOR MATCHES "Visual Studio" AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_compile_options(ioh PRIVATE /MP)
+endif()
 
 #Include external formatting lib
 include_directories(${EXTERNAL_DIR}/fmt/include/)
 add_subdirectory(${EXTERNAL_DIR}/fmt)
-target_link_libraries(ioh INTERFACE fmt::fmt-header-only)
+target_link_libraries(ioh PUBLIC fmt::fmt-header-only)
 
 # Add Json lib 
 if(BUILD_SERVER AND EXISTS ${EXTERNAL_DIR}/json/CMakeLists.txt)
@@ -63,7 +102,7 @@ if(BUILD_SERVER AND EXISTS ${EXTERNAL_DIR}/json/CMakeLists.txt)
     add_compile_definitions(HAS_JSON)
     set(JSON_Install OFF CACHE INTERNAL "")
     add_subdirectory(${EXTERNAL_DIR}/json)
-    target_link_libraries(ioh INTERFACE nlohmann_json::nlohmann_json)
+    target_link_libraries(ioh PUBLIC nlohmann_json::nlohmann_json)
 endif()
 
 if(ENABLE_MKLANDSCAPE_PROBLEMS)
@@ -85,21 +124,21 @@ if(ENABLE_MKLANDSCAPE_PROBLEMS)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${EXTERNAL_DIR}/MkLandscape/release)
     
     add_subdirectory(${EXTERNAL_DIR}/MkLandscape ${PROJECT_SOURCE_DIR}/include/ioh/problem/mklandscape/)
-    target_link_libraries(ioh INTERFACE problem_generator_lib)
+    target_link_libraries(ioh PUBLIC problem_generator_lib)
     
     add_compile_definitions(MK_COMPILED)
 endif()
 
 
 target_include_directories(ioh
-INTERFACE
+PUBLIC
     # Interface paths are relative to the installation path, not the current directory.
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include> 
 )
 
 target_compile_features(ioh
-INTERFACE
+PUBLIC
     cxx_std_17
 )
 

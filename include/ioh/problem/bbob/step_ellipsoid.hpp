@@ -6,8 +6,14 @@ namespace ioh::problem::bbob
 {   
     //! Step ellipsiod problem id 7
     template<typename P=BBOB>
-    class StepEllipsoid final : public P, BBOProblem<StepEllipsoid>
+    class StepEllipsoid final : public P
     {
+    public:
+        //! The id in the registry, also used by the constructor
+        static constexpr int registry_id = 7;
+        //! The name in the registry, also used by the constructor
+        static constexpr const char *registry_name = "StepEllipsoid";
+
     protected:
         //! compute project of x
         double compute_projection(const std::vector<double>& x)
@@ -64,7 +70,7 @@ namespace ioh::problem::bbob
          * @param n_variables the dimension of the problem
          */
         StepEllipsoid(const int instance, const int n_variables) :
-            P(7, instance, n_variables, "StepEllipsoid")
+            P(registry_id, instance, n_variables, registry_name)
         {
             static const auto condition = 100.;
             for (auto i = 0; i < this->meta_data_.n_variables; ++i)
@@ -72,5 +78,6 @@ namespace ioh::problem::bbob
                                                                this->transformation_state_.exponents[i]));
         }
     };
-    template class StepEllipsoid<BBOB>;
+    extern template class StepEllipsoid<BBOB>;
+    extern template class StepEllipsoid<SBOX>;
 }
