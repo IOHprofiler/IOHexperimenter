@@ -13,6 +13,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  data:
+    name: Data files
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: static/ matches static/manifest.json, and static.tar.gz matches static/
+        run: |
+          python3 tools/gen_manifest.py --check
+          python3 tools/static_tarball.py --check
+
   cpp:
     name: C++ tests (${{ matrix.os }}, ${{ matrix.compiler }})
     runs-on: ${{ matrix.os }}
@@ -26,9 +36,7 @@ jobs:
           - { os: ubuntu-24.04, compiler: clang++-18 }
           - { os: macos-15, compiler: clang++ }
           - { os: windows-2022, compiler: msvc }
-    env:
-      # the tests read problem data and reference files from static/
-      IOH_RESOURCES: ${{ github.workspace }}/static
+    # no IOH_RESOURCES: the tests find the data in the source tree, the default of the build
     defaults:
       run:
         shell: bash

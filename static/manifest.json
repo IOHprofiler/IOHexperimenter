@@ -1,0 +1,1858 @@
+{
+ "format": 1,
+ "data_version": "e7c83044fb1018af",
+ "files": [
+  {
+   "path": "cec_transformations/2013/CF3_M_D10.dat",
+   "size": 26100,
+   "sha256": "836dac5499f21e1e090a81bfdaa6306062ccd3ee4d622b005cb4c7180d100e52"
+  },
+  {
+   "path": "cec_transformations/2013/CF3_M_D2.dat",
+   "size": 1060,
+   "sha256": "2ce4dae47dd135c8206aa472f01c4dbc1fc95db4d8b34d03f99ab846ab7e77d0"
+  },
+  {
+   "path": "cec_transformations/2013/CF3_M_D20.dat",
+   "size": 104200,
+   "sha256": "63f89d7888b2f47746b58c39c98e8aa59190c247fbd008a8b5907060cbde37c8"
+  },
+  {
+   "path": "cec_transformations/2013/CF3_M_D3.dat",
+   "size": 2370,
+   "sha256": "61231ed4499172afd7c6d2678cd0d18fbd4a8d50520670a381d54838c715f40f"
+  },
+  {
+   "path": "cec_transformations/2013/CF3_M_D5.dat",
+   "size": 6550,
+   "sha256": "d64f87b7fa3e3f42b626bba349fea533e88480a6041a2075ec292c09fe443f05"
+  },
+  {
+   "path": "cec_transformations/2013/CF4_M_D10.dat",
+   "size": 26100,
+   "sha256": "5fc249e37e252d12fb72c354a973eecd8bb132485047417f6a3845a8be45b58c"
+  },
+  {
+   "path": "cec_transformations/2013/CF4_M_D2.dat",
+   "size": 1060,
+   "sha256": "a80c10b0b7bf7fa1fa8dcad3e3bad6ea1e37088cd235f411709c48fff927b96f"
+  },
+  {
+   "path": "cec_transformations/2013/CF4_M_D20.dat",
+   "size": 104200,
+   "sha256": "86d0171dd8986a63b5e18a1b781982e66664f4166f9c8ff1a5a574530fcc086c"
+  },
+  {
+   "path": "cec_transformations/2013/CF4_M_D3.dat",
+   "size": 2370,
+   "sha256": "21a3a1139e49b6e4676a8623499b6a876a66722cddbf7493641b87fe58365922"
+  },
+  {
+   "path": "cec_transformations/2013/CF4_M_D5.dat",
+   "size": 6550,
+   "sha256": "e9c38f3a1ada81d2bcf16c31e5084953fba15ac1c28fb80c168f7fb4789981b7"
+  },
+  {
+   "path": "cec_transformations/2013/optima.dat",
+   "size": 26010,
+   "sha256": "5071bdf70669787203b07120bfebaebab0ae11c5a6d5289f9cc93b06fc815a8e"
+  },
+  {
+   "path": "cec_transformations/2022/F_i_star.txt",
+   "size": 55,
+   "sha256": "eb5f73cef279ac3c3280dfcbaedd87f0ede2ec7db832569d282051aec51071d1"
+  },
+  {
+   "path": "cec_transformations/2022/M_10_D10.txt",
+   "size": 25100,
+   "sha256": "9777049e8780aa4f9985a8f145f6e3eb71d9c8d79351214ba68de259ce4a5ad4"
+  },
+  {
+   "path": "cec_transformations/2022/M_10_D2.txt",
+   "size": 816,
+   "sha256": "e4bf2bbeffe8e3f8a53b682bbdf31a3ac93a508fe66b373c0b2a2221e04b4233"
+  },
+  {
+   "path": "cec_transformations/2022/M_10_D20.txt",
+   "size": 100200,
+   "sha256": "992ca08ee1d00370720fd5d4405ef2939774d622661bd38178986009cf9ac3a8"
+  },
+  {
+   "path": "cec_transformations/2022/M_11_D10.txt",
+   "size": 25100,
+   "sha256": "145c99d9c295c39c44c336d217ed52885f642eb1e60bfedb28f09ea133898800"
+  },
+  {
+   "path": "cec_transformations/2022/M_11_D2.txt",
+   "size": 816,
+   "sha256": "2b8cfd07bafe882b0efd9885acce57e4cd7d891676bfa65c524e57b8a8cbfcd8"
+  },
+  {
+   "path": "cec_transformations/2022/M_11_D20.txt",
+   "size": 100200,
+   "sha256": "433568d6fc531b8efca54ac9e91332b19286dae0dddfaad91ca8e504e67edb2e"
+  },
+  {
+   "path": "cec_transformations/2022/M_12_D10.txt",
+   "size": 25100,
+   "sha256": "bfcbc78c9bdabfff6ee4e3ae7a19db3f345fd266b8429604d8996a0abe1c750d"
+  },
+  {
+   "path": "cec_transformations/2022/M_12_D2.txt",
+   "size": 816,
+   "sha256": "a18ce088beef401a64728fa6e65df2a1ab4e588d8715996428f9f4276d7b2948"
+  },
+  {
+   "path": "cec_transformations/2022/M_12_D20.txt",
+   "size": 100200,
+   "sha256": "ff874dfbc253df21028a7ca0393cf6a6ef83aba449b60541ce1da5329acf4a63"
+  },
+  {
+   "path": "cec_transformations/2022/M_1_D10.txt",
+   "size": 2510,
+   "sha256": "165302d05684df7f48331e735c5f1364521f1ca3bbd0b6fbe755e246951c9665"
+  },
+  {
+   "path": "cec_transformations/2022/M_1_D2.txt",
+   "size": 102,
+   "sha256": "7d9fa477f7718d15b92cf4a06f322b4a21f0e5e045115df02bf9293e1d17d8c6"
+  },
+  {
+   "path": "cec_transformations/2022/M_1_D20.txt",
+   "size": 10020,
+   "sha256": "90baa58e08d255c6ba9a363fc15dd81a0a6743f43325db52fa29bd925079c46c"
+  },
+  {
+   "path": "cec_transformations/2022/M_2_D10.txt",
+   "size": 2510,
+   "sha256": "333b30b06e7a0832fb925406395d3a72495c80427677f93c93a6022002ef0699"
+  },
+  {
+   "path": "cec_transformations/2022/M_2_D2.txt",
+   "size": 102,
+   "sha256": "013ef909bb0276c7e6805a6b868eadc1fcf52023015be912e96a129f31dd56e5"
+  },
+  {
+   "path": "cec_transformations/2022/M_2_D20.txt",
+   "size": 10020,
+   "sha256": "213a962448c68166a17731184ed3d73faf06d64713f584ac3de5815f294d45eb"
+  },
+  {
+   "path": "cec_transformations/2022/M_3_D10.txt",
+   "size": 2510,
+   "sha256": "e397b4af9f945ec7e73079ef1cb3b48baeb63ec43440cfee841cc71fc2e07c34"
+  },
+  {
+   "path": "cec_transformations/2022/M_3_D2.txt",
+   "size": 102,
+   "sha256": "a27783a5812a7002ea2a2c4d18c396750adc305648e25efc73991bc4aa6c5fa3"
+  },
+  {
+   "path": "cec_transformations/2022/M_3_D20.txt",
+   "size": 10020,
+   "sha256": "b35aa72d68b467c1093a0790b5b0495f47dc3692a92348e0de845ba5e47441e5"
+  },
+  {
+   "path": "cec_transformations/2022/M_4_D10.txt",
+   "size": 2510,
+   "sha256": "4a30a71d1a3128d527b0279ebd8194fb93b1ea25cf568c150821fc8864097544"
+  },
+  {
+   "path": "cec_transformations/2022/M_4_D2.txt",
+   "size": 102,
+   "sha256": "45341805148f7c1f666ed5ac72f03d9e632c3094f0d2665d1d28a78908fc23c7"
+  },
+  {
+   "path": "cec_transformations/2022/M_4_D20.txt",
+   "size": 10020,
+   "sha256": "afa374e26876c4e1ad9446adbb92e2f8d1a2f5dabc605bc0a863ca5c7b61cb27"
+  },
+  {
+   "path": "cec_transformations/2022/M_5_D10.txt",
+   "size": 2510,
+   "sha256": "111c0a5f3bb5411164b31b3d878f16cbc2953c3a291a1600d4e2a3588f5e7cf0"
+  },
+  {
+   "path": "cec_transformations/2022/M_5_D2.txt",
+   "size": 102,
+   "sha256": "cef9e8a623fd62ef348e4b00867067300ad2153a82d05d99de848dc69ae75987"
+  },
+  {
+   "path": "cec_transformations/2022/M_5_D20.txt",
+   "size": 10020,
+   "sha256": "4169beab9293453e108b1b31adc8f90279f902d17d0256a7dd99a503d073d919"
+  },
+  {
+   "path": "cec_transformations/2022/M_6_D10.txt",
+   "size": 2510,
+   "sha256": "5f166dc38d462caa9213749b85b1127877b2805dfb1a08590b39061ac4936f1f"
+  },
+  {
+   "path": "cec_transformations/2022/M_6_D2.txt",
+   "size": 102,
+   "sha256": "fb2a6f7e86be6d8d22d325fcb0893ffcdefbdd2591d9bcfa988142b112e99057"
+  },
+  {
+   "path": "cec_transformations/2022/M_6_D20.txt",
+   "size": 10020,
+   "sha256": "9e740c644cf3690a6b4e3ff975e237cbcdece794c914c9a8ab7c20b7003254a2"
+  },
+  {
+   "path": "cec_transformations/2022/M_7_D10.txt",
+   "size": 2510,
+   "sha256": "e4848ae610bd32ab5542be2f6551961ad8a7c68256cd6407e3deb7fca9124da5"
+  },
+  {
+   "path": "cec_transformations/2022/M_7_D20.txt",
+   "size": 10020,
+   "sha256": "8429b5e04891c57e3cef3d004bc9340a37c49625b3775ff6b29ab2763497cf6a"
+  },
+  {
+   "path": "cec_transformations/2022/M_8_D10.txt",
+   "size": 2510,
+   "sha256": "4aea25f01994f37463e97158a804fa7158dc568f6fdb72f3f14668c441d04b76"
+  },
+  {
+   "path": "cec_transformations/2022/M_8_D2.txt",
+   "size": 102,
+   "sha256": "beaf86870e737234f4b4eda67e4e6e9854294cc2dc780ede7e7139312533a25f"
+  },
+  {
+   "path": "cec_transformations/2022/M_8_D20.txt",
+   "size": 10020,
+   "sha256": "b8c3d0fb1e62d05a0de2b6d4ca0176eaf7b8fdc636cbdf95f5981205ea8d088a"
+  },
+  {
+   "path": "cec_transformations/2022/M_9_D10.txt",
+   "size": 25100,
+   "sha256": "d2f044e5a61eac1adc5682c3b933f1a04079634f7bd33fb15980bbdc1a06daaa"
+  },
+  {
+   "path": "cec_transformations/2022/M_9_D2.txt",
+   "size": 816,
+   "sha256": "66c8e81539276eddb57ea452dba90b45a778738f5e9f13f3f10722f0b86d15a0"
+  },
+  {
+   "path": "cec_transformations/2022/M_9_D20.txt",
+   "size": 100200,
+   "sha256": "3096750d5f1a6eb2e87d9f171a97c616b90f1f7d3fef2889d4929cd49e065428"
+  },
+  {
+   "path": "cec_transformations/2022/shift_data_1.txt",
+   "size": 2501,
+   "sha256": "ad2d0237d226daaadefef885e996a0a9c5faa80c3559ac3b31f0a911caeecbba"
+  },
+  {
+   "path": "cec_transformations/2022/shift_data_10.txt",
+   "size": 25010,
+   "sha256": "401d366604f760319e418addb8a46e016c38245458315786d2fe0b0c0a20af41"
+  },
+  {
+   "path": "cec_transformations/2022/shift_data_11.txt",
+   "size": 25010,
+   "sha256": "0e73b8d1dc96890b9a7c018bddb6f19d05b7b498a31dbc572898bd02dbddce1a"
+  },
+  {
+   "path": "cec_transformations/2022/shift_data_12.txt",
+   "size": 25010,
+   "sha256": "55acb70d52ccfae0a355af12d566fb78ce51419bcd86a3758337e97629b566e4"
+  },
+  {
+   "path": "cec_transformations/2022/shift_data_2.txt",
+   "size": 2501,
+   "sha256": "918a5332ca6eb104d752c3889ff6d2e5a22943ef05eb30590938a96330a14fbb"
+  },
+  {
+   "path": "cec_transformations/2022/shift_data_3.txt",
+   "size": 2501,
+   "sha256": "4b7b7e7ef6142aad5bfdcd594775665e6705544d8ea8c33e61b08770aa6bc69a"
+  },
+  {
+   "path": "cec_transformations/2022/shift_data_4.txt",
+   "size": 2501,
+   "sha256": "8ed3b046ec47f6bae3178c31ce79006245c752760cf9d1fb40f31db734a158da"
+  },
+  {
+   "path": "cec_transformations/2022/shift_data_5.txt",
+   "size": 2501,
+   "sha256": "4fff3304cd72ba17c808a6742bbafb4b57a5903dc03421471758336046c90429"
+  },
+  {
+   "path": "cec_transformations/2022/shift_data_6.txt",
+   "size": 2501,
+   "sha256": "52844423cd44c7d61e2d8c894ed1c4d69524454c9a2f5af1c0f3bc60e1e6660c"
+  },
+  {
+   "path": "cec_transformations/2022/shift_data_7.txt",
+   "size": 2501,
+   "sha256": "904a1a72570561b87e8af4e1104369a019f7506e04ef69bc569c2c4a488c222a"
+  },
+  {
+   "path": "cec_transformations/2022/shift_data_8.txt",
+   "size": 25010,
+   "sha256": "fcb12ef2da290824f763c5a4f1f71ddeb4b4a81799c66e5e73359c9a64370b5e"
+  },
+  {
+   "path": "cec_transformations/2022/shift_data_9.txt",
+   "size": 25010,
+   "sha256": "74f10364f06b8da368530d1238b36fcdb1986b62d672ee39849bf60b70b14f1a"
+  },
+  {
+   "path": "cec_transformations/2022/shuffle_data_6_D10.txt",
+   "size": 21,
+   "sha256": "888fa8cf118c2696bf4d9bfbcdcf68f3d854d131d91265a4b0a77cae4cdd0ac5"
+  },
+  {
+   "path": "cec_transformations/2022/shuffle_data_6_D20.txt",
+   "size": 51,
+   "sha256": "d7fa228ffd04d77bbd5dc967f4752548151c4575e3244ca2f4cf3d2c4ea7bc78"
+  },
+  {
+   "path": "cec_transformations/2022/shuffle_data_7_D10.txt",
+   "size": 21,
+   "sha256": "a20ef62e91439eed87d9686a8b07d72ddd82c0fb74cf9f62aa224ea37e75aaf0"
+  },
+  {
+   "path": "cec_transformations/2022/shuffle_data_7_D20.txt",
+   "size": 51,
+   "sha256": "2d18d70d10cefe1f8165809947b887b6e8c27c54d2306427a81e933e649de6d2"
+  },
+  {
+   "path": "cec_transformations/2022/shuffle_data_8_D10.txt",
+   "size": 21,
+   "sha256": "206fe2b8225fc45ce0a2bd75ae641635d26404a78ac4b9ec33e4a142408bae4d"
+  },
+  {
+   "path": "cec_transformations/2022/shuffle_data_8_D20.txt",
+   "size": 51,
+   "sha256": "8bfa0f356ff61c4009894cc6dc44cf58b53733acb7cb7abf7b81bc677034a3ed"
+  },
+  {
+   "path": "example_graphs/G1",
+   "size": 148261,
+   "sha256": "4dfd126528dc571edaf9c564dcd8f510c0392e2168457a691173ea868740cf90"
+  },
+  {
+   "path": "example_graphs/G2",
+   "size": 148177,
+   "sha256": "eaa4723532ff411738041f60fd69692e03ad05b2e0b161b518fc5f4a17e8a0a4"
+  },
+  {
+   "path": "example_graphs/G3",
+   "size": 148203,
+   "sha256": "5bc14bd8ab9214ee55476076bf25279a8eed99f39f2457b386f87834563b2f47"
+  },
+  {
+   "path": "example_graphs/G4",
+   "size": 148276,
+   "sha256": "8ef6747112a7e4483cdb6745afe2e5548a9074a0c444a1dd25ab45d3effb3827"
+  },
+  {
+   "path": "example_graphs/G5",
+   "size": 148286,
+   "sha256": "de858eebf73dd2671297d598aca174e2c95483cbdc3b45af66480d9217532ca8"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2100-ea-fga/bestvariances.txt",
+   "size": 3198,
+   "sha256": "7b1fdcf1af36c9e56db9c1ab420fc403a66e533ddbd22b9dbf82d51649c2056c"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2100-ea-fga/bestweights.txt",
+   "size": 3110,
+   "sha256": "762aba3e99e080b3b9006132270f3ced3103b5dfebcf0f6bb6a2302a3a4c4984"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2100-ea-ghc/bestvariances.txt",
+   "size": 3193,
+   "sha256": "e7eed40b4809dc1a06fcf7fae03ff8b89c3e2e299154d28504f744e140590f6b"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2100-ea-ghc/bestweights.txt",
+   "size": 2995,
+   "sha256": "d75d12077a465552693944f9b99d34e2ef354d4b47a4e1f49df6dcc8e497cec7"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2101-ea-fga/bestvariances.txt",
+   "size": 1532,
+   "sha256": "084742301ece28d1891fd403addfb76714fc0309b1b520197dcf4278a1a3372a"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2101-ea-fga/bestweights.txt",
+   "size": 1607,
+   "sha256": "24e17483ca7e928443560a0048590940082fabae00bd66a01fce498d3f6a77e7"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2101-ea-ghc/bestvariances.txt",
+   "size": 1540,
+   "sha256": "eb6d1b88418c3ab64650279d8edd12becd89d9fbae7e0a65ff2b21fc0da1dc24"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2101-ea-ghc/bestweights.txt",
+   "size": 1567,
+   "sha256": "ef97002425b33815953975ca9ab33dfee5db6dba89e70a202652ec0bcf24ac09"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2102-ea-fga/bestvariances.txt",
+   "size": 2866,
+   "sha256": "4b9b84caf765bbdb02be7659a0e7cd4f107beec25fceb5dc6f0317012ee02808"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2102-ea-fga/bestweights.txt",
+   "size": 2978,
+   "sha256": "17f97003a49e274901b2248e7ff9c7af1f12efd190e401e7bfdd756a6a491802"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2102-ea-ghc/bestvariances.txt",
+   "size": 2559,
+   "sha256": "5fecefd5c3f13092b9f68d1271cd6ebfebcb3f0bc55daae026f315986342c672"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2102-ea-ghc/bestweights.txt",
+   "size": 2964,
+   "sha256": "285ff7f14706ab6eb7a50e306b1faadac1a9a05c42f06d18a24ae4704f8d5a02"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2103-ea-fga/bestvariances.txt",
+   "size": 4149,
+   "sha256": "37cd54d4f2e9af42174d8bd641c1370d07bfd20eea38a93a442c01c2825d776d"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2103-ea-fga/bestweights.txt",
+   "size": 4855,
+   "sha256": "2d8172c7942ef187ec52902b3a3ef669039abf957234e74c83995a21fc5a1cfa"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2103-ea-ghc/bestvariances.txt",
+   "size": 4623,
+   "sha256": "1a92d404b6a33f67d518fd8acd9331b6102279bd671294b52015693ad7286aa0"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2103-ea-ghc/bestweights.txt",
+   "size": 4681,
+   "sha256": "de5394bca5c665e80233aa13c35a97d9b298980a2fd92e449bd447456cb440ec"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2104-ea-fga/bestvariances.txt",
+   "size": 4662,
+   "sha256": "0df97f4104221bde292577dd897bed7dff82f322119be0a387e747598055d350"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2104-ea-fga/bestweights.txt",
+   "size": 5636,
+   "sha256": "2f4f368503123cf9159fdbc798a3e812d7997a65dc3cee00df135538c474affb"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2104-ea-ghc/bestvariances.txt",
+   "size": 5405,
+   "sha256": "2d6c278c6d841390d8093235922050144e06d9f3123aefd3ea872720b74d10a6"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2104-ea-ghc/bestweights.txt",
+   "size": 5274,
+   "sha256": "16c68333d1cffcf1a3b2a80e411596fb7b49ba8834b1e6103d559390a942e154"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2105-ea-fga/bestvariances.txt",
+   "size": 3720,
+   "sha256": "4c2c35e87657a65d4179de15947ab2ce8d8f28bc0d3542513dcd36e20cdd3fe1"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2105-ea-fga/bestweights.txt",
+   "size": 3941,
+   "sha256": "3aa4159172ed33895a3d0900f1851ae69d1815ea67211c7ee9303ca610fa3d4c"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2105-ea-ghc/bestvariances.txt",
+   "size": 3681,
+   "sha256": "94daecc7c58be378707a288cc8b17d5eb4b804a1d1aecafbd388c75d49267b06"
+  },
+  {
+   "path": "example_graphs/GECCO2025/2105-ea-ghc/bestweights.txt",
+   "size": 3920,
+   "sha256": "96d4afe8592cfac0a4bfe1288b2b5c1e1d74c8ad7179631a5772abb8a8c4140d"
+  },
+  {
+   "path": "example_graphs/GECCO2025/graphs/2100-impcol-d-n=435",
+   "size": 10022,
+   "sha256": "6ba267c395f17b8ec662a62ff37fcf25d0af64422c65c559a6c4a932c550a33c"
+  },
+  {
+   "path": "example_graphs/GECCO2025/graphs/2101-lp-recipe-n=205",
+   "size": 5060,
+   "sha256": "46508bb46ebb7d7de14df65ea649522d7008755f7fbd7820427f676544d71f98"
+  },
+  {
+   "path": "example_graphs/GECCO2025/graphs/2102-ca-netscience-n=379",
+   "size": 6504,
+   "sha256": "84807cb2bb90e28c00eaa6813d090bc5f8a776b8543afff296ccf4f6ec5abb82"
+  },
+  {
+   "path": "example_graphs/GECCO2025/graphs/2103-lp-agg-n=615",
+   "size": 25177,
+   "sha256": "49fe7d5e3348e7c0326abfc0d086e590369192bb8d3a914fd5de2a59a394ed73"
+  },
+  {
+   "path": "example_graphs/GECCO2025/graphs/2104-can-715-n=715",
+   "size": 31834,
+   "sha256": "6771752bfaf1a7a96a1fe2ae0f0b5065b7335035f9f05eacf7135ee7b5ee921f"
+  },
+  {
+   "path": "example_graphs/GECCO2025/graphs/2105-random graph-n=500",
+   "size": 21340,
+   "sha256": "c37b7edfe83aa1ee04c7cb037932da7dddf1f649dc0e3dc2c2a694b6a48d29ce"
+  },
+  {
+   "path": "example_graphs/email-Eu-core",
+   "size": 192804,
+   "sha256": "5481876f6323853162c9d26ab44cf6de4690f548d66410a5e5b598d94032b79e"
+  },
+  {
+   "path": "example_graphs/example_graph0",
+   "size": 133211,
+   "sha256": "b7408bdc31f947c347d3ca7696dd47c87c0dd065e4ae134891a6be64d1696702"
+  },
+  {
+   "path": "example_graphs/example_graph0_c_linear",
+   "size": 1385,
+   "sha256": "893bbfc583522c9e590f346222c2511f2ae0b067af391df4faa57f5767dc9f2e"
+  },
+  {
+   "path": "example_graphs/example_graph0_c_quadratic",
+   "size": 2282,
+   "sha256": "2acf9ca9a424a5f722cc695faa8cee3e6331b90e47ee5ad459d7ee6992565050"
+  },
+  {
+   "path": "example_graphs/example_graph0_c_unweighted",
+   "size": 903,
+   "sha256": "2cd5be615d48ae0802f11515d94424f5ac2e1053af8d963480466c7d29a267e4"
+  },
+  {
+   "path": "example_graphs/example_graph1",
+   "size": 134697,
+   "sha256": "72fefe8f0106fc47b4f421c139b6ea568ddb437e37979de3bf8de59955f78624"
+  },
+  {
+   "path": "example_graphs/example_graph1_c_linear",
+   "size": 1386,
+   "sha256": "b7ca8e0edd7edf51473d561b649fe7f82bfaaa90ab4fdd0d706838655c7eb4c4"
+  },
+  {
+   "path": "example_graphs/example_graph1_c_quadratic",
+   "size": 2287,
+   "sha256": "9a8ddea92da239a9c858dfdfe5577fb471915c18c34f19d04f2f911315cc696b"
+  },
+  {
+   "path": "example_graphs/example_graph1_c_unweighted",
+   "size": 903,
+   "sha256": "2cd5be615d48ae0802f11515d94424f5ac2e1053af8d963480466c7d29a267e4"
+  },
+  {
+   "path": "example_graphs/example_graph2",
+   "size": 214086,
+   "sha256": "d55c53dbd5005b5fc47683b6a1a27e25460599abb595b310ac481b1dc2d4449d"
+  },
+  {
+   "path": "example_graphs/example_graph2_c_linear",
+   "size": 2048,
+   "sha256": "e5e88d2107ad238b5b738bd066420f7c5f014c2da3e3a208de12dc2f02f2a226"
+  },
+  {
+   "path": "example_graphs/example_graph2_c_quadratic",
+   "size": 3231,
+   "sha256": "5d76f816030d11afc6169627f5b60c4ffb0ab27ac6cd4600c6069f4773bebb98"
+  },
+  {
+   "path": "example_graphs/example_graph2_c_unweighted",
+   "size": 1193,
+   "sha256": "a6cd2815a3da7994352cf7bd3755337d10de64916a2c6831dd11e845c99a08dc"
+  },
+  {
+   "path": "example_graphs/example_graph3",
+   "size": 320449,
+   "sha256": "6df0c9e872aa91be7b72bb1a1f18df982e34fa2fa78cf04c798e93e5aaae5510"
+  },
+  {
+   "path": "example_graphs/example_graph3_c_linear",
+   "size": 2766,
+   "sha256": "bca88a1d11df59ac83f593aff48025d451cd51fd7638951834430ea68f5d5784"
+  },
+  {
+   "path": "example_graphs/example_graph3_c_quadratic",
+   "size": 4278,
+   "sha256": "88fbaa5141ead5483f9eafd557e6380bf1da8dff2998df2042eb569a1d4d1806"
+  },
+  {
+   "path": "example_graphs/example_graph3_c_unweighted",
+   "size": 1523,
+   "sha256": "9030d360269c7a5f325ea20d227057539adc8652f524991a1e8ce715c7c99c8b"
+  },
+  {
+   "path": "example_graphs/facebook_combined",
+   "size": 1709020,
+   "sha256": "2a24826220c504b43f5cce19f17bb17f694a12f6db0f4a3f0c2fe053705e4858"
+  },
+  {
+   "path": "example_graphs/facebook_combined_c_linear_1",
+   "size": 11859,
+   "sha256": "d9dd24ce22b46e7dbdf4abf79ab591d964b89aa1df34fc977b23e81e7313fb81"
+  },
+  {
+   "path": "example_graphs/facebook_combined_c_linear_2",
+   "size": 11859,
+   "sha256": "70b5c2a66df75e593f97829470505f3052ed6cf3719290bbe32a94b60347b310"
+  },
+  {
+   "path": "example_graphs/facebook_combined_c_linear_3",
+   "size": 11860,
+   "sha256": "e679928b7df1c1469704f639fba6c83e1b3172fd1c91b2401d9b885491f43c3f"
+  },
+  {
+   "path": "example_graphs/facebook_combined_c_linear_4",
+   "size": 11860,
+   "sha256": "9b3b22aec15e087829356371ea9eabd4404081b23672e7837341d922db9e717f"
+  },
+  {
+   "path": "example_graphs/facebook_combined_c_unweighted_1",
+   "size": 8081,
+   "sha256": "b8e54f569eb3ea10bf96b6992920e43e82af6946a902505d916b7889869e7d97"
+  },
+  {
+   "path": "example_graphs/facebook_combined_c_unweighted_2",
+   "size": 8081,
+   "sha256": "5235473184b9e71c39f5b3c65b65f3120ec4171019a4f0157b5448242a58e27d"
+  },
+  {
+   "path": "example_graphs/facebook_combined_c_unweighted_3",
+   "size": 8081,
+   "sha256": "3d2744ec5a34408eab747f6d003d852bdeda3de114bb34034d7be54441dd53be"
+  },
+  {
+   "path": "example_graphs/facebook_combined_c_unweighted_4",
+   "size": 8082,
+   "sha256": "d652a204600624128810feef72795bc854df126bada5123fed370ba921a41f3c"
+  },
+  {
+   "path": "example_graphs/facebook_combined_e",
+   "size": 3421380,
+   "sha256": "d36afa608f3d550d758978b21f7a596c02d3c60f59c8971e73a31ddfd2e7ffd6"
+  },
+  {
+   "path": "example_list_maxcoverage",
+   "size": 4449,
+   "sha256": "78862129d5e1619e70af20f7cfc96c998b8bf4a6d9d8b8e6e93f806e114b17cc"
+  },
+  {
+   "path": "example_list_maxcut",
+   "size": 165,
+   "sha256": "e3ec39bbff637da23f4a2c20a13a393b46b4c467004f4a8d32e7434e5f4fca6e"
+  },
+  {
+   "path": "example_list_maxinfluence",
+   "size": 2978,
+   "sha256": "89676f10a4a4263c82b838c884e296b14cc7bbdb7fc1c6dbfdc90c876764fb1b"
+  },
+  {
+   "path": "example_list_pwt",
+   "size": 453,
+   "sha256": "3c07083724f9ac07bc75538bd35629a4ad60bcb1c94bd319573d8230f3febf9d"
+  },
+  {
+   "path": "example_pwt/a280_n1395_uncorr-similar-weights_05.ttp",
+   "size": 26614,
+   "sha256": "87bdad7b973064905d51797039b2fd5e356204ccd935b73537a77cdfc6f49228"
+  },
+  {
+   "path": "example_pwt/a280_n2790_uncorr_10.ttp",
+   "size": 47941,
+   "sha256": "59c72e26a5f6977a9f86ab90838c8ab762cf1b6e428a0e9df19208b8c46a6c3a"
+  },
+  {
+   "path": "example_pwt/a280_n279_bounded-strongly-corr_01.ttp",
+   "size": 7733,
+   "sha256": "1369efb26eaf2562e94aba3c91f378f30b07c7817565ebea93cf91a0f2388fc2"
+  },
+  {
+   "path": "example_pwt/fnl4461_n22300_uncorr-similar-weights_05.ttp",
+   "size": 493299,
+   "sha256": "2b0376fc3b1d1372c3a83bb9ab7220acad7ebaaa0ac125badcd9868ee9ad581e"
+  },
+  {
+   "path": "example_pwt/fnl4461_n44600_uncorr_10.ttp",
+   "size": 882013,
+   "sha256": "57d31c05c42cfe40cf2441d8bc99aa592f7dbad04f277ab1f62c136e9171aad1"
+  },
+  {
+   "path": "example_pwt/fnl4461_n4460_bounded-strongly-corr_01.ttp",
+   "size": 147399,
+   "sha256": "b544036f0fd59baee95e0e1b48c6e34380acbb5faf521065eec9c9dabc278d6d"
+  },
+  {
+   "path": "example_pwt/pla33810_n169045_uncorr-similar-weights_05.ttp",
+   "size": 4194928,
+   "sha256": "fa3463eec57d3706cf3dc2ae4b8cc9d5769747f1bbe57163635b11eaa30c8785"
+  },
+  {
+   "path": "example_pwt/pla33810_n338090_uncorr_10.ttp",
+   "size": 7466076,
+   "sha256": "cdce46543d2dd725a113c732053f4788123c696d2d9c1b23f8560a545a286240"
+  },
+  {
+   "path": "example_pwt/pla33810_n33809_bounded-strongly-corr_01.ttp",
+   "size": 1337105,
+   "sha256": "2f319ccd36613b748a8978d0907d8750176febf257bd722e2349449f30e69a86"
+  }
+ ],
+ "entries": {
+  "GraphProblem": [
+   {
+    "id": 2000,
+    "name": "MaxCut2000",
+    "class": "MaxCut",
+    "definition": "example_graphs/G1|NULL|NULL|NULL",
+    "files": [
+     "example_graphs/G1"
+    ],
+    "fixed_dimension": 800,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2001,
+    "name": "MaxCut2001",
+    "class": "MaxCut",
+    "definition": "example_graphs/G2|NULL|NULL|NULL",
+    "files": [
+     "example_graphs/G2"
+    ],
+    "fixed_dimension": 800,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2002,
+    "name": "MaxCut2002",
+    "class": "MaxCut",
+    "definition": "example_graphs/G3|NULL|NULL|NULL",
+    "files": [
+     "example_graphs/G3"
+    ],
+    "fixed_dimension": 800,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2003,
+    "name": "MaxCut2003",
+    "class": "MaxCut",
+    "definition": "example_graphs/G4|NULL|NULL|NULL",
+    "files": [
+     "example_graphs/G4"
+    ],
+    "fixed_dimension": 800,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2004,
+    "name": "MaxCut2004",
+    "class": "MaxCut",
+    "definition": "example_graphs/G5|NULL|NULL|NULL",
+    "files": [
+     "example_graphs/G5"
+    ],
+    "fixed_dimension": 800,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2100,
+    "name": "MaxCoverage2100",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph0|NULL|NULL|example_graphs/example_graph0_c_unweighted",
+    "files": [
+     "example_graphs/example_graph0",
+     "example_graphs/example_graph0_c_unweighted"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2101,
+    "name": "MaxCoverage2101",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph1|NULL|NULL|example_graphs/example_graph1_c_unweighted",
+    "files": [
+     "example_graphs/example_graph1",
+     "example_graphs/example_graph1_c_unweighted"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2102,
+    "name": "MaxCoverage2102",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph2|NULL|NULL|example_graphs/example_graph2_c_unweighted",
+    "files": [
+     "example_graphs/example_graph2",
+     "example_graphs/example_graph2_c_unweighted"
+    ],
+    "fixed_dimension": 595,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2103,
+    "name": "MaxCoverage2103",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph3|NULL|NULL|example_graphs/example_graph3_c_unweighted",
+    "files": [
+     "example_graphs/example_graph3",
+     "example_graphs/example_graph3_c_unweighted"
+    ],
+    "fixed_dimension": 760,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2104,
+    "name": "MaxCoverage2104",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph0|NULL|NULL|example_graphs/example_graph0_c_linear",
+    "files": [
+     "example_graphs/example_graph0",
+     "example_graphs/example_graph0_c_linear"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2105,
+    "name": "MaxCoverage2105",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph1|NULL|NULL|example_graphs/example_graph1_c_linear",
+    "files": [
+     "example_graphs/example_graph1",
+     "example_graphs/example_graph1_c_linear"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2106,
+    "name": "MaxCoverage2106",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph2|NULL|NULL|example_graphs/example_graph2_c_linear",
+    "files": [
+     "example_graphs/example_graph2",
+     "example_graphs/example_graph2_c_linear"
+    ],
+    "fixed_dimension": 595,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2107,
+    "name": "MaxCoverage2107",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph3|NULL|NULL|example_graphs/example_graph3_c_linear",
+    "files": [
+     "example_graphs/example_graph3",
+     "example_graphs/example_graph3_c_linear"
+    ],
+    "fixed_dimension": 760,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2108,
+    "name": "MaxCoverage2108",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph0|NULL|NULL|example_graphs/example_graph0_c_quadratic",
+    "files": [
+     "example_graphs/example_graph0",
+     "example_graphs/example_graph0_c_quadratic"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2109,
+    "name": "MaxCoverage2109",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph1|NULL|NULL|example_graphs/example_graph1_c_quadratic",
+    "files": [
+     "example_graphs/example_graph1",
+     "example_graphs/example_graph1_c_quadratic"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2110,
+    "name": "MaxCoverage2110",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph2|NULL|NULL|example_graphs/example_graph2_c_quadratic",
+    "files": [
+     "example_graphs/example_graph2",
+     "example_graphs/example_graph2_c_quadratic"
+    ],
+    "fixed_dimension": 595,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2111,
+    "name": "MaxCoverage2111",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph3|NULL|NULL|example_graphs/example_graph3_c_quadratic",
+    "files": [
+     "example_graphs/example_graph3",
+     "example_graphs/example_graph3_c_quadratic"
+    ],
+    "fixed_dimension": 760,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2112,
+    "name": "MaxCoverage2112",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph0|NULL|NULL|example_graphs/example_graph0_c_unweighted|0.8660",
+    "files": [
+     "example_graphs/example_graph0",
+     "example_graphs/example_graph0_c_unweighted"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2113,
+    "name": "MaxCoverage2113",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph1|NULL|NULL|example_graphs/example_graph1_c_unweighted|0.8660",
+    "files": [
+     "example_graphs/example_graph1",
+     "example_graphs/example_graph1_c_unweighted"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2114,
+    "name": "MaxCoverage2114",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph2|NULL|NULL|example_graphs/example_graph2_c_unweighted|0.8660",
+    "files": [
+     "example_graphs/example_graph2",
+     "example_graphs/example_graph2_c_unweighted"
+    ],
+    "fixed_dimension": 595,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2115,
+    "name": "MaxCoverage2115",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph3|NULL|NULL|example_graphs/example_graph3_c_unweighted|0.8660",
+    "files": [
+     "example_graphs/example_graph3",
+     "example_graphs/example_graph3_c_unweighted"
+    ],
+    "fixed_dimension": 760,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2116,
+    "name": "MaxCoverage2116",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph0|NULL|NULL|example_graphs/example_graph0_c_linear|34.6410",
+    "files": [
+     "example_graphs/example_graph0",
+     "example_graphs/example_graph0_c_linear"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2117,
+    "name": "MaxCoverage2117",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph1|NULL|NULL|example_graphs/example_graph1_c_linear|34.6410",
+    "files": [
+     "example_graphs/example_graph1",
+     "example_graphs/example_graph1_c_linear"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2118,
+    "name": "MaxCoverage2118",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph2|NULL|NULL|example_graphs/example_graph2_c_linear|34.6410",
+    "files": [
+     "example_graphs/example_graph2",
+     "example_graphs/example_graph2_c_linear"
+    ],
+    "fixed_dimension": 595,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2119,
+    "name": "MaxCoverage2119",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph3|NULL|NULL|example_graphs/example_graph3_c_linear|34.6410",
+    "files": [
+     "example_graphs/example_graph3",
+     "example_graphs/example_graph3_c_linear"
+    ],
+    "fixed_dimension": 760,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2120,
+    "name": "MaxCoverage2120",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph0|NULL|NULL|example_graphs/example_graph0_c_unweighted|1.0730",
+    "files": [
+     "example_graphs/example_graph0",
+     "example_graphs/example_graph0_c_unweighted"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2121,
+    "name": "MaxCoverage2121",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph1|NULL|NULL|example_graphs/example_graph1_c_unweighted|1.0730",
+    "files": [
+     "example_graphs/example_graph1",
+     "example_graphs/example_graph1_c_unweighted"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2122,
+    "name": "MaxCoverage2122",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph2|NULL|NULL|example_graphs/example_graph2_c_unweighted|1.0730",
+    "files": [
+     "example_graphs/example_graph2",
+     "example_graphs/example_graph2_c_unweighted"
+    ],
+    "fixed_dimension": 595,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2123,
+    "name": "MaxCoverage2123",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph3|NULL|NULL|example_graphs/example_graph3_c_unweighted|1.0730",
+    "files": [
+     "example_graphs/example_graph3",
+     "example_graphs/example_graph3_c_unweighted"
+    ],
+    "fixed_dimension": 760,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2124,
+    "name": "MaxCoverage2124",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph0|NULL|NULL|example_graphs/example_graph0_c_linear|42.9193",
+    "files": [
+     "example_graphs/example_graph0",
+     "example_graphs/example_graph0_c_linear"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2125,
+    "name": "MaxCoverage2125",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph1|NULL|NULL|example_graphs/example_graph1_c_linear|42.9193",
+    "files": [
+     "example_graphs/example_graph1",
+     "example_graphs/example_graph1_c_linear"
+    ],
+    "fixed_dimension": 450,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2126,
+    "name": "MaxCoverage2126",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph2|NULL|NULL|example_graphs/example_graph2_c_linear|42.9193",
+    "files": [
+     "example_graphs/example_graph2",
+     "example_graphs/example_graph2_c_linear"
+    ],
+    "fixed_dimension": 595,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2127,
+    "name": "MaxCoverage2127",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/example_graph3|NULL|NULL|example_graphs/example_graph3_c_linear|42.9193",
+    "files": [
+     "example_graphs/example_graph3",
+     "example_graphs/example_graph3_c_linear"
+    ],
+    "fixed_dimension": 760,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2128,
+    "name": "MaxCoverage2128",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/GECCO2025/graphs/2100-impcol-d-n=435|NULL|NULL|example_graphs/GECCO2025/2100-ea-fga/bestweights.txt|example_graphs/GECCO2025/2100-ea-fga/bestvariances.txt",
+    "files": [
+     "example_graphs/GECCO2025/graphs/2100-impcol-d-n=435",
+     "example_graphs/GECCO2025/2100-ea-fga/bestweights.txt",
+     "example_graphs/GECCO2025/2100-ea-fga/bestvariances.txt"
+    ],
+    "fixed_dimension": 425,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2129,
+    "name": "MaxCoverage2129",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/GECCO2025/graphs/2100-impcol-d-n=435|NULL|NULL|example_graphs/GECCO2025/2100-ea-ghc/bestweights.txt|example_graphs/GECCO2025/2100-ea-ghc/bestvariances.txt",
+    "files": [
+     "example_graphs/GECCO2025/graphs/2100-impcol-d-n=435",
+     "example_graphs/GECCO2025/2100-ea-ghc/bestweights.txt",
+     "example_graphs/GECCO2025/2100-ea-ghc/bestvariances.txt"
+    ],
+    "fixed_dimension": 425,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2130,
+    "name": "MaxCoverage2130",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/GECCO2025/graphs/2101-lp-recipe-n=205|NULL|NULL|example_graphs/GECCO2025/2101-ea-fga/bestweights.txt|example_graphs/GECCO2025/2101-ea-fga/bestvariances.txt",
+    "files": [
+     "example_graphs/GECCO2025/graphs/2101-lp-recipe-n=205",
+     "example_graphs/GECCO2025/2101-ea-fga/bestweights.txt",
+     "example_graphs/GECCO2025/2101-ea-fga/bestvariances.txt"
+    ],
+    "fixed_dimension": 204,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2131,
+    "name": "MaxCoverage2131",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/GECCO2025/graphs/2101-lp-recipe-n=205|NULL|NULL|example_graphs/GECCO2025/2101-ea-ghc/bestweights.txt|example_graphs/GECCO2025/2101-ea-ghc/bestvariances.txt",
+    "files": [
+     "example_graphs/GECCO2025/graphs/2101-lp-recipe-n=205",
+     "example_graphs/GECCO2025/2101-ea-ghc/bestweights.txt",
+     "example_graphs/GECCO2025/2101-ea-ghc/bestvariances.txt"
+    ],
+    "fixed_dimension": 204,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2132,
+    "name": "MaxCoverage2132",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/GECCO2025/graphs/2102-ca-netscience-n=379|NULL|NULL|example_graphs/GECCO2025/2102-ea-fga/bestweights.txt|example_graphs/GECCO2025/2102-ea-fga/bestvariances.txt",
+    "files": [
+     "example_graphs/GECCO2025/graphs/2102-ca-netscience-n=379",
+     "example_graphs/GECCO2025/2102-ea-fga/bestweights.txt",
+     "example_graphs/GECCO2025/2102-ea-fga/bestvariances.txt"
+    ],
+    "fixed_dimension": 379,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2133,
+    "name": "MaxCoverage2133",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/GECCO2025/graphs/2102-ca-netscience-n=379|NULL|NULL|example_graphs/GECCO2025/2102-ea-ghc/bestweights.txt|example_graphs/GECCO2025/2102-ea-ghc/bestvariances.txt",
+    "files": [
+     "example_graphs/GECCO2025/graphs/2102-ca-netscience-n=379",
+     "example_graphs/GECCO2025/2102-ea-ghc/bestweights.txt",
+     "example_graphs/GECCO2025/2102-ea-ghc/bestvariances.txt"
+    ],
+    "fixed_dimension": 379,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2134,
+    "name": "MaxCoverage2134",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/GECCO2025/graphs/2103-lp-agg-n=615|NULL|NULL|example_graphs/GECCO2025/2103-ea-fga/bestweights.txt|example_graphs/GECCO2025/2103-ea-fga/bestvariances.txt",
+    "files": [
+     "example_graphs/GECCO2025/graphs/2103-lp-agg-n=615",
+     "example_graphs/GECCO2025/2103-ea-fga/bestweights.txt",
+     "example_graphs/GECCO2025/2103-ea-fga/bestvariances.txt"
+    ],
+    "fixed_dimension": 615,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2135,
+    "name": "MaxCoverage2135",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/GECCO2025/graphs/2103-lp-agg-n=615|NULL|NULL|example_graphs/GECCO2025/2103-ea-ghc/bestweights.txt|example_graphs/GECCO2025/2103-ea-ghc/bestvariances.txt",
+    "files": [
+     "example_graphs/GECCO2025/graphs/2103-lp-agg-n=615",
+     "example_graphs/GECCO2025/2103-ea-ghc/bestweights.txt",
+     "example_graphs/GECCO2025/2103-ea-ghc/bestvariances.txt"
+    ],
+    "fixed_dimension": 615,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2136,
+    "name": "MaxCoverage2136",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/GECCO2025/graphs/2104-can-715-n=715|NULL|NULL|example_graphs/GECCO2025/2104-ea-fga/bestweights.txt|example_graphs/GECCO2025/2104-ea-fga/bestvariances.txt",
+    "files": [
+     "example_graphs/GECCO2025/graphs/2104-can-715-n=715",
+     "example_graphs/GECCO2025/2104-ea-fga/bestweights.txt",
+     "example_graphs/GECCO2025/2104-ea-fga/bestvariances.txt"
+    ],
+    "fixed_dimension": 715,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2137,
+    "name": "MaxCoverage2137",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/GECCO2025/graphs/2104-can-715-n=715|NULL|NULL|example_graphs/GECCO2025/2104-ea-ghc/bestweights.txt|example_graphs/GECCO2025/2104-ea-ghc/bestvariances.txt",
+    "files": [
+     "example_graphs/GECCO2025/graphs/2104-can-715-n=715",
+     "example_graphs/GECCO2025/2104-ea-ghc/bestweights.txt",
+     "example_graphs/GECCO2025/2104-ea-ghc/bestvariances.txt"
+    ],
+    "fixed_dimension": 715,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2138,
+    "name": "MaxCoverage2138",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/GECCO2025/graphs/2105-random graph-n=500|NULL|NULL|example_graphs/GECCO2025/2105-ea-fga/bestweights.txt|example_graphs/GECCO2025/2105-ea-fga/bestvariances.txt",
+    "files": [
+     "example_graphs/GECCO2025/graphs/2105-random graph-n=500",
+     "example_graphs/GECCO2025/2105-ea-fga/bestweights.txt",
+     "example_graphs/GECCO2025/2105-ea-fga/bestvariances.txt"
+    ],
+    "fixed_dimension": 500,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2139,
+    "name": "MaxCoverage2139",
+    "class": "MaxCoverage",
+    "definition": "example_graphs/GECCO2025/graphs/2105-random graph-n=500|NULL|NULL|example_graphs/GECCO2025/2105-ea-ghc/bestweights.txt|example_graphs/GECCO2025/2105-ea-ghc/bestvariances.txt",
+    "files": [
+     "example_graphs/GECCO2025/graphs/2105-random graph-n=500",
+     "example_graphs/GECCO2025/2105-ea-ghc/bestweights.txt",
+     "example_graphs/GECCO2025/2105-ea-ghc/bestvariances.txt"
+    ],
+    "fixed_dimension": 500,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2200,
+    "name": "MaxInfluence2200",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_unweighted_1",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_unweighted_1"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2201,
+    "name": "MaxInfluence2201",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_unweighted_2",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_unweighted_2"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2202,
+    "name": "MaxInfluence2202",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_unweighted_3",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_unweighted_3"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2203,
+    "name": "MaxInfluence2203",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_unweighted_4",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_unweighted_4"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2204,
+    "name": "MaxInfluence2204",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_linear_1",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_linear_1"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2205,
+    "name": "MaxInfluence2205",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_linear_2",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_linear_2"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2206,
+    "name": "MaxInfluence2206",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_linear_3",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_linear_3"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2207,
+    "name": "MaxInfluence2207",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_linear_4",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_linear_4"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2208,
+    "name": "MaxInfluence2208",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_unweighted_1|0.8660",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_unweighted_1"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2209,
+    "name": "MaxInfluence2209",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_unweighted_2|0.8660",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_unweighted_2"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2210,
+    "name": "MaxInfluence2210",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_unweighted_3|0.8660",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_unweighted_3"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2211,
+    "name": "MaxInfluence2211",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_unweighted_4|0.8660",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_unweighted_4"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2212,
+    "name": "MaxInfluence2212",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_linear_1|34.6410",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_linear_1"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2213,
+    "name": "MaxInfluence2213",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_linear_2|34.6410",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_linear_2"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2214,
+    "name": "MaxInfluence2214",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_linear_3|34.6410",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_linear_3"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2215,
+    "name": "MaxInfluence2215",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_linear_4|34.6410",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_linear_4"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2216,
+    "name": "MaxInfluence2216",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_unweighted_1|1.0730",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_unweighted_1"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2217,
+    "name": "MaxInfluence2217",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_unweighted_2|1.0730",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_unweighted_2"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2218,
+    "name": "MaxInfluence2218",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_unweighted_3|1.0730",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_unweighted_3"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2219,
+    "name": "MaxInfluence2219",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_unweighted_4|1.0730",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_unweighted_4"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2220,
+    "name": "MaxInfluence2220",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_linear_1|42.9193",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_linear_1"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2221,
+    "name": "MaxInfluence2221",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_linear_2|42.9193",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_linear_2"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2222,
+    "name": "MaxInfluence2222",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_linear_3|42.9193",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_linear_3"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2223,
+    "name": "MaxInfluence2223",
+    "class": "MaxInfluence",
+    "definition": "example_graphs/facebook_combined|example_graphs/facebook_combined_e|NULL|example_graphs/facebook_combined_c_linear_4|42.9193",
+    "files": [
+     "example_graphs/facebook_combined",
+     "example_graphs/facebook_combined_e",
+     "example_graphs/facebook_combined_c_linear_4"
+    ],
+    "fixed_dimension": 4039,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2300,
+    "name": "PackWhileTravel2300",
+    "class": "PackWhileTravel",
+    "definition": "example_pwt/a280_n279_bounded-strongly-corr_01.ttp",
+    "files": [
+     "example_pwt/a280_n279_bounded-strongly-corr_01.ttp"
+    ],
+    "fixed_dimension": 279,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2301,
+    "name": "PackWhileTravel2301",
+    "class": "PackWhileTravel",
+    "definition": "example_pwt/a280_n1395_uncorr-similar-weights_05.ttp",
+    "files": [
+     "example_pwt/a280_n1395_uncorr-similar-weights_05.ttp"
+    ],
+    "fixed_dimension": 1395,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2302,
+    "name": "PackWhileTravel2302",
+    "class": "PackWhileTravel",
+    "definition": "example_pwt/a280_n2790_uncorr_10.ttp",
+    "files": [
+     "example_pwt/a280_n2790_uncorr_10.ttp"
+    ],
+    "fixed_dimension": 2790,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2303,
+    "name": "PackWhileTravel2303",
+    "class": "PackWhileTravel",
+    "definition": "example_pwt/fnl4461_n4460_bounded-strongly-corr_01.ttp",
+    "files": [
+     "example_pwt/fnl4461_n4460_bounded-strongly-corr_01.ttp"
+    ],
+    "fixed_dimension": 4460,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2304,
+    "name": "PackWhileTravel2304",
+    "class": "PackWhileTravel",
+    "definition": "example_pwt/fnl4461_n22300_uncorr-similar-weights_05.ttp",
+    "files": [
+     "example_pwt/fnl4461_n22300_uncorr-similar-weights_05.ttp"
+    ],
+    "fixed_dimension": 22300,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2305,
+    "name": "PackWhileTravel2305",
+    "class": "PackWhileTravel",
+    "definition": "example_pwt/fnl4461_n44600_uncorr_10.ttp",
+    "files": [
+     "example_pwt/fnl4461_n44600_uncorr_10.ttp"
+    ],
+    "fixed_dimension": 44600,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2306,
+    "name": "PackWhileTravel2306",
+    "class": "PackWhileTravel",
+    "definition": "example_pwt/pla33810_n33809_bounded-strongly-corr_01.ttp",
+    "files": [
+     "example_pwt/pla33810_n33809_bounded-strongly-corr_01.ttp"
+    ],
+    "fixed_dimension": 33809,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2307,
+    "name": "PackWhileTravel2307",
+    "class": "PackWhileTravel",
+    "definition": "example_pwt/pla33810_n169045_uncorr-similar-weights_05.ttp",
+    "files": [
+     "example_pwt/pla33810_n169045_uncorr-similar-weights_05.ttp"
+    ],
+    "fixed_dimension": 169045,
+    "fixed_instance": 1
+   },
+   {
+    "id": 2308,
+    "name": "PackWhileTravel2308",
+    "class": "PackWhileTravel",
+    "definition": "example_pwt/pla33810_n338090_uncorr_10.ttp",
+    "files": [
+     "example_pwt/pla33810_n338090_uncorr_10.ttp"
+    ],
+    "fixed_dimension": 338090,
+    "fixed_instance": 1
+   }
+  ],
+  "CEC2013": [
+   {
+    "id": 1101,
+    "name": "FivePeaks1101",
+    "meta_name": "CEC2013FivePeaks",
+    "files": [],
+    "fixed_dimension": 1,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1102,
+    "name": "EqualMaxima1102",
+    "meta_name": "CEC2013EqualMaxima",
+    "files": [],
+    "fixed_dimension": 1,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1103,
+    "name": "UnevenEqualMaxima1103",
+    "meta_name": "CEC2013UnevenEqualMaxima",
+    "files": [],
+    "fixed_dimension": 1,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1104,
+    "name": "Himmelblau1104",
+    "meta_name": "CEC2013Himmelblau",
+    "files": [],
+    "fixed_dimension": 2,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1105,
+    "name": "SixHumpCamelback1105",
+    "meta_name": "CEC2013SixHumpCamelback",
+    "files": [],
+    "fixed_dimension": 2,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1106,
+    "name": "Shubert1106",
+    "meta_name": "CEC2013Shubert2D",
+    "files": [],
+    "fixed_dimension": 2,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1107,
+    "name": "Vincent1107",
+    "meta_name": "CEC2013Vincent2D",
+    "files": [],
+    "fixed_dimension": 2,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1108,
+    "name": "Shubert1108",
+    "meta_name": "CEC2013Shubert3D",
+    "files": [],
+    "fixed_dimension": 3,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1109,
+    "name": "Vincent1109",
+    "meta_name": "CEC2013Vincent3D",
+    "files": [],
+    "fixed_dimension": 3,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1110,
+    "name": "ModifiedRastrigin1110",
+    "meta_name": "CEC2013ModifiedRastrigin",
+    "files": [],
+    "fixed_dimension": 2,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1111,
+    "name": "CompositionFunction1111",
+    "meta_name": "CEC2013CF1D2",
+    "files": [
+     "cec_transformations/2013/optima.dat"
+    ],
+    "fixed_dimension": 2,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1112,
+    "name": "CompositionFunction1112",
+    "meta_name": "CEC2013CF2D2",
+    "files": [
+     "cec_transformations/2013/optima.dat"
+    ],
+    "fixed_dimension": 2,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1113,
+    "name": "CompositionFunction1113",
+    "meta_name": "CEC2013CF3D2",
+    "files": [
+     "cec_transformations/2013/optima.dat",
+     "cec_transformations/2013/CF3_M_D2.dat"
+    ],
+    "fixed_dimension": 2,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1114,
+    "name": "CompositionFunction1114",
+    "meta_name": "CEC2013CF3D3",
+    "files": [
+     "cec_transformations/2013/optima.dat",
+     "cec_transformations/2013/CF3_M_D3.dat"
+    ],
+    "fixed_dimension": 3,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1115,
+    "name": "CompositionFunction1115",
+    "meta_name": "CEC2013CF4D3",
+    "files": [
+     "cec_transformations/2013/optima.dat",
+     "cec_transformations/2013/CF4_M_D3.dat"
+    ],
+    "fixed_dimension": 3,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1116,
+    "name": "CompositionFunction1116",
+    "meta_name": "CEC2013CF3D5",
+    "files": [
+     "cec_transformations/2013/optima.dat",
+     "cec_transformations/2013/CF3_M_D5.dat"
+    ],
+    "fixed_dimension": 5,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1117,
+    "name": "CompositionFunction1117",
+    "meta_name": "CEC2013CF4D5",
+    "files": [
+     "cec_transformations/2013/optima.dat",
+     "cec_transformations/2013/CF4_M_D5.dat"
+    ],
+    "fixed_dimension": 5,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1118,
+    "name": "CompositionFunction1118",
+    "meta_name": "CEC2013CF3D10",
+    "files": [
+     "cec_transformations/2013/optima.dat",
+     "cec_transformations/2013/CF3_M_D10.dat"
+    ],
+    "fixed_dimension": 10,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1119,
+    "name": "CompositionFunction1119",
+    "meta_name": "CEC2013CF4D10",
+    "files": [
+     "cec_transformations/2013/optima.dat",
+     "cec_transformations/2013/CF4_M_D10.dat"
+    ],
+    "fixed_dimension": 10,
+    "fixed_instance": 1
+   },
+   {
+    "id": 1120,
+    "name": "CompositionFunction1120",
+    "meta_name": "CEC2013CF4D20",
+    "files": [
+     "cec_transformations/2013/optima.dat",
+     "cec_transformations/2013/CF4_M_D20.dat"
+    ],
+    "fixed_dimension": 20,
+    "fixed_instance": 1
+   }
+  ]
+ }
+}
