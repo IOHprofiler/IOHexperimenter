@@ -122,7 +122,7 @@ namespace ioh::problem
                 //! Load the graph from the static files
                 void load() override
                 {
-                    const auto contents = common::file::as_text_vector(meta.root / meta.edge_file);
+                    const auto contents = common::file::as_text_vector(path(meta.edge_file));
 
                     ttp_data = {after_colon(contents[0]),
                                 after_colon(contents[1]),
@@ -274,7 +274,7 @@ namespace ioh::problem
     inline std::vector<RegistryEntry<submodular::PackWhileTravel>>
     submodular::PackWhileTravel::registry_entries(const std::optional<fs::path> &definitions_file)
     {
-        return graph_entries<pwt::TTPGraph>(
-            definitions_file.value_or(common::file::utils::find_static_file("example_list_pwt")), "PackWhileTravel");
+        return definitions_file ? graph_entries<pwt::TTPGraph>(*definitions_file, "PackWhileTravel")
+                                : builtin_entries<pwt::TTPGraph>("PackWhileTravel");
     }
 } // namespace ioh::problem

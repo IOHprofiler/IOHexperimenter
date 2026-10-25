@@ -140,34 +140,44 @@ namespace ioh::problem
         if (cf_id < 3)
             return get_identity_matrices(n_optima, dimension);
 
-        const auto file_name = common::file::utils::find_static_file(
-            fmt::format("{}CF{}_M_D{}.dat", cec2013::DATA_FOLDER, cf_id, dimension));
+        const auto file_name =
+            ioh::data::file(fmt::format("{}CF{}_M_D{}.dat", cec2013::DATA_FOLDER, cf_id, dimension));
+        return *ioh::data::cached<std::vector<std::vector<std::vector<double>>>>(file_name.string(), [&] {
+            const auto data = common::file::as_numeric_vector<double>(file_name);
+            const size_t matrix_size = dimension * dimension;
 
-        const auto data = common::file::as_numeric_vector<double>(file_name);
+            std::vector<std::vector<std::vector<double>>> transformations;
+            for (size_t i = 0; i < data.size() / matrix_size; i++)
+            {
+                const size_t start = i * matrix_size;
+                const size_t end = start + matrix_size;
+                transformations.push_back(
+                    common::to_matrix(std::vector<double>(data.begin() + start, data.begin() + end)));
+            }
+            return transformations;
+        });
+    }
 
-        const size_t matrix_size = dimension * dimension;
-
-        std::vector<std::vector<std::vector<double>>> transformations;
-        for (size_t i = 0; i < data.size() / matrix_size; i++)
-        {
-            const size_t start = i * matrix_size;
-            const size_t end = start + matrix_size;
-            transformations.push_back(common::to_matrix(std::vector<double>(data.begin() + start, data.begin() + end)));
-        }
-        return transformations;
+    //! The optima of the composition functions (optima.dat), loaded once
+    inline std::vector<std::vector<double>> load_optima()
+    {
+        const auto file_name = ioh::data::file(fmt::format("{}optima.dat", cec2013::DATA_FOLDER));
+        return *ioh::data::cached<std::vector<std::vector<double>>>(file_name.string(), [&] {
+            return common::to_matrix(common::file::as_numeric_vector<double>(file_name), 10, 100);
+        });
     }
 
     inline RegistryEntry<cec2013::CompositionFunction>
-    load_cf(const int problem_id, const int cf_id, const size_t dimension,
-            const std::vector<std::vector<double>> &all_optima, const std::vector<double> &sigmas,
+    load_cf(const int problem_id, const int cf_id, const size_t dimension, const std::vector<double> &sigmas,
             const std::vector<double> &lambdas, const std::vector<RealFunction> &functions
 
     )
     {
         const size_t n_optima = sigmas.size();
         return {problem_id, fmt::format("CompositionFunction{}", problem_id), [=](int, int) {
+                    // the data are loaded when a problem is created, not when it is registered
                     const auto transformations = load_transformations(cf_id, dimension, n_optima);
-                    const auto optima = select_optima(all_optima, n_optima, dimension);
+                    const auto optima = select_optima(load_optima(), n_optima, dimension);
 
                     return std::make_shared<cec2013::CompositionFunction>(
                         problem_id, fmt::format("CEC2013CF{}D{}", cf_id, dimension), static_cast<int>(dimension),
@@ -178,14 +188,6 @@ namespace ioh::problem
 
     inline std::vector<RegistryEntry<cec2013::CompositionFunction>> cec2013::CompositionFunction::registry_entries()
     {
-        const static auto optima_file =
-            common::file::utils::find_static_file(fmt::format("{}optima.dat", cec2013::DATA_FOLDER));
-
-        // if (!fs::is_regular_file(optima_file))
-            // return {};
-
-        const auto optima = common::to_matrix(common::file::as_numeric_vector<double>(optima_file), 10, 100);
-
         const std::vector<double> cf1_lambdas = {1.0, 1.0, 8.0, 8.0, 1.0 / 5.0, 1.0 / 5.0};
         const std::vector<RealFunction> cf1_functions{griewank, griewank, weierstrass, weierstrass, sphere, sphere};
 
@@ -205,16 +207,16 @@ namespace ioh::problem
 
 
         return {
-            load_cf(1111, 1, 2, optima, std::vector<double>(6, 1.0), cf1_lambdas, cf1_functions),
-            load_cf(1112, 2, 2, optima, std::vector<double>(8, 1.0), cf2_lambdas, cf2_functions),
-            load_cf(1113, 3, 2, optima, cf3_sigmas, cf3_lambdas, cf3_functions),
-            load_cf(1114, 3, 3, optima, cf3_sigmas, cf3_lambdas, cf3_functions),
-            load_cf(1115, 4, 3, optima, cf4_sigmas, cf4_lambdas, cf4_functions),
-            load_cf(1116, 3, 5, optima, cf3_sigmas, cf3_lambdas, cf3_functions),
-            load_cf(1117, 4, 5, optima, cf4_sigmas, cf4_lambdas, cf4_functions),
-            load_cf(1118, 3, 10, optima, cf3_sigmas, cf3_lambdas, cf3_functions),
-            load_cf(1119, 4, 10, optima, cf4_sigmas, cf4_lambdas, cf4_functions),
-            load_cf(1120, 4, 20, optima, cf4_sigmas, cf4_lambdas, cf4_functions),
+            load_cf(1111, 1, 2, std::vector<double>(6, 1.0), cf1_lambdas, cf1_functions),
+            load_cf(1112, 2, 2, std::vector<double>(8, 1.0), cf2_lambdas, cf2_functions),
+            load_cf(1113, 3, 2, cf3_sigmas, cf3_lambdas, cf3_functions),
+            load_cf(1114, 3, 3, cf3_sigmas, cf3_lambdas, cf3_functions),
+            load_cf(1115, 4, 3, cf4_sigmas, cf4_lambdas, cf4_functions),
+            load_cf(1116, 3, 5, cf3_sigmas, cf3_lambdas, cf3_functions),
+            load_cf(1117, 4, 5, cf4_sigmas, cf4_lambdas, cf4_functions),
+            load_cf(1118, 3, 10, cf3_sigmas, cf3_lambdas, cf3_functions),
+            load_cf(1119, 4, 10, cf4_sigmas, cf4_lambdas, cf4_functions),
+            load_cf(1120, 4, 20, cf4_sigmas, cf4_lambdas, cf4_functions),
         };
     }
 } // namespace ioh::problem

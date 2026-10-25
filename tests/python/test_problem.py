@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+import tempfile
 import textwrap
 import unittest
 import math
@@ -202,6 +203,27 @@ class TestProblem(unittest.TestCase):
             """)
         env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
         result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=env)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_missing_data(self):
+        # with an empty data directory: registering needs no data, and creating a problem that needs data raises
+        code = textwrap.dedent("""
+            import ioh
+
+            assert len(ioh.problem.GraphProblem.problems) == 78
+            assert ioh.get_problem(1, 1, 2).meta_data.name == "Sphere"
+            assert ioh.get_problem(1101, 1, 1, ioh.ProblemClass.CEC2013).meta_data.n_variables == 1
+            for pid, problem_class in ((2000, ioh.ProblemClass.GRAPH), (1001, ioh.ProblemClass.CEC2022),
+                                       (1111, ioh.ProblemClass.CEC2013)):
+                try:
+                    ioh.get_problem(pid, 1, 10, problem_class)
+                    raise AssertionError(f"no error for {pid}")
+                except RuntimeError as error:
+                    assert "data version" in str(error), error
+            """)
+        with tempfile.TemporaryDirectory() as empty:
+            env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path), IOH_RESOURCES=empty)
+            result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=env)
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_subclass_ids(self):

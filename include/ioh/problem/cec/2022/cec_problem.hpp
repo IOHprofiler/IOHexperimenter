@@ -140,13 +140,13 @@ namespace ioh::problem
          */
         void load_objective_shift(const int cec_function_identifier)
         {
-            const static auto shifts_file = common::file::utils::find_static_file(CEC_FOLDER + "F_i_star.txt");
+            const auto shifts_file = ioh::data::file(CEC_FOLDER + "F_i_star.txt");
+            const auto shifts = ioh::data::cached<std::vector<double>>(
+                shifts_file.string(), [&] { return common::file::as_numeric_vector<double>(shifts_file); });
 
-            const static auto shifts = common::file::as_numeric_vector<double>(shifts_file);
-
-            if (cec_function_identifier > 0 && cec_function_identifier <= static_cast<int>(shifts.size()))
+            if (cec_function_identifier > 0 && cec_function_identifier <= static_cast<int>(shifts->size()))
             {
-                optimum_.y = shifts[cec_function_identifier - 1];
+                optimum_.y = (*shifts)[cec_function_identifier - 1];
                 return;
             }
 
@@ -160,18 +160,24 @@ namespace ioh::problem
          */
         void load_linear_transformation(const int cec_function_identifier)
         {
-            const auto linear_transformation_file = common::file::utils::find_static_file(
+            const auto linear_transformation_file = ioh::data::file(
                 fmt::format("{}M_{:d}_D{:d}.txt", CEC_FOLDER, cec_function_identifier, meta_data_.n_variables));
-
-            const auto transformation_vector = common::file::as_numeric_vector<double>(linear_transformation_file);
             const int matrix_size = meta_data_.n_variables * meta_data_.n_variables;
 
-            for (int i = 0; i < static_cast<int>(transformation_vector.size() / matrix_size); i++)
-            {
-                const int start = i * matrix_size;
-                linear_transformations_.push_back(common::to_matrix(std::vector<double>(
-                    transformation_vector.begin() + start, transformation_vector.begin() + start + matrix_size)));
-            }
+            linear_transformations_ = *ioh::data::cached<std::vector<std::vector<std::vector<double>>>>(
+                linear_transformation_file.string(), [&] {
+                    const auto transformation_vector =
+                        common::file::as_numeric_vector<double>(linear_transformation_file);
+                    std::vector<std::vector<std::vector<double>>> transformations;
+                    for (int i = 0; i < static_cast<int>(transformation_vector.size() / matrix_size); i++)
+                    {
+                        const int start = i * matrix_size;
+                        transformations.push_back(common::to_matrix(
+                            std::vector<double>(transformation_vector.begin() + start,
+                                                transformation_vector.begin() + start + matrix_size)));
+                    }
+                    return transformations;
+                });
         }
 
 
@@ -181,12 +187,14 @@ namespace ioh::problem
          */
         void load_variables_shift(const int cec_function_identifier)
         {
-            const auto shift_data_filepath = common::file::utils::find_static_file(
-                fmt::format("{}shift_data_{}.txt", CEC_FOLDER, cec_function_identifier));
+            const auto shift_data_filepath =
+                ioh::data::file(fmt::format("{}shift_data_{}.txt", CEC_FOLDER, cec_function_identifier));
 
-            const auto shift_data = common::file::as_numeric_vector<double>(shift_data_filepath);
-
-            variables_shifts_ = common::to_matrix(shift_data, shift_data.size() / 100, 100);
+            variables_shifts_ =
+                *ioh::data::cached<std::vector<std::vector<double>>>(shift_data_filepath.string(), [&] {
+                    const auto shift_data = common::file::as_numeric_vector<double>(shift_data_filepath);
+                    return common::to_matrix(shift_data, shift_data.size() / 100, 100);
+                });
 
             // This is not needed, if we take care in the transformation function
             for (auto &v : variables_shifts_)
@@ -199,13 +207,16 @@ namespace ioh::problem
          */
         void load_shuffle_data(const int cec_function_identifier)
         {
-            const auto shuffle_data_filepath = common::file::utils::get_static_root() /
+            // whether the problem shuffles its input is declared by the manifest
+            const auto shuffle_data =
                 fmt::format("{}shuffle_data_{}_D{}.txt", CEC_FOLDER, cec_function_identifier, meta_data_.n_variables);
+            if (!ioh::data::in_manifest(shuffle_data))
+                return;
 
-            if (exists(shuffle_data_filepath))
-            {
-                input_permutation_ = common::file::as_numeric_vector<int>(shuffle_data_filepath);
-            }
+            const auto shuffle_data_filepath = ioh::data::file(shuffle_data);
+            input_permutation_ = *ioh::data::cached<std::vector<int>>(
+                shuffle_data_filepath.string(),
+                [&] { return common::file::as_numeric_vector<int>(shuffle_data_filepath); });
         }
 
     protected:
