@@ -9,7 +9,9 @@ on the order of the lines in a definitions file; without --entries only the file
 The library is compiled with the same entries, files and data version (src/data_manifest.inc), so that registering
 the built-in problems needs no data, and it checks the data version of the data directory it reads.
 
-usage: python tools/gen_manifest.py [--entries | --check]
+usage: python tools/gen_manifest.py [--entries | --check | --check-package FILE...]
+
+--check-package checks that wheels or sdists hold exactly the data files of the manifest (and the manifest).
 """
 import argparse
 import hashlib
@@ -17,6 +19,8 @@ import json
 import pathlib
 import re
 import sys
+import tarfile
+import zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 STATIC = ROOT / "static"
@@ -166,12 +170,48 @@ def check():
     return 0
 
 
+def check_package(archive):
+    """Checks that a wheel or an sdist holds exactly the manifest's files, in a static folder"""
+    archive = pathlib.Path(archive)
+    if archive.suffix == ".whl":
+        with zipfile.ZipFile(archive) as z:
+            contents = {name: z.read(name) for name in z.namelist()
+                        if not name.endswith("/") and "/static/" in f"/{name}"}
+    else:
+        with tarfile.open(archive) as t:
+            contents = {m.name: t.extractfile(m).read() for m in t.getmembers()
+                        if m.isfile() and "/static/" in f"/{m.name}"}
+    prefixes = {name[: name.index("static/") + len("static/")] for name in contents}
+    if len(prefixes) != 1:
+        print(f"{archive.name}: expected one static folder, found {sorted(prefixes) or 'none'}")
+        return 1
+    prefix = prefixes.pop()
+    packed = {name[len(prefix):]: data for name, data in contents.items()}
+    manifest = json.loads(packed.pop(MANIFEST.name, b"{}") or b"{}")
+    if manifest != json.loads(MANIFEST.read_text()):
+        print(f"{archive.name}: {prefix}{MANIFEST.name} is missing or differs from {MANIFEST.relative_to(ROOT)}")
+        return 1
+    listed = {f["path"]: f for f in manifest["files"]}
+    problems = [f"missing: {p}" for p in sorted(listed.keys() - packed.keys())]
+    problems += [f"not in the manifest: {p}" for p in sorted(packed.keys() - listed.keys())]
+    problems += [f"differs: {p}" for p in sorted(listed.keys() & packed.keys())
+                 if hashlib.sha256(packed[p]).hexdigest() != listed[p]["sha256"]]
+    for problem in problems:
+        print(f"{archive.name}: {problem}")
+    if not problems:
+        print(f"{archive.name}: {prefix} holds exactly the manifest's {len(listed)} files")
+    return 1 if problems else 0
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--entries", action="store_true", help="also generate the entries (done once)")
     group.add_argument("--check", action="store_true", help="check static/ against the manifest")
+    group.add_argument("--check-package", nargs="+", metavar="FILE", help="check wheels or sdists")
     args = parser.parse_args()
     if args.check:
         sys.exit(check())
+    if args.check_package:
+        sys.exit(max(check_package(archive) for archive in args.check_package))
     write(generate_entries() if args.entries or not MANIFEST.exists() else json.loads(MANIFEST.read_text())["entries"])
