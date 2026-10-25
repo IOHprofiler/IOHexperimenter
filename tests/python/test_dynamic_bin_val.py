@@ -4,9 +4,8 @@ import ioh
 import unittest
 
 
-DATA_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "static"
-)
+# the data files of the tests, in tests/data
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 
 class TestDynamicBinVal(unittest.TestCase):
 

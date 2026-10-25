@@ -112,7 +112,7 @@ WP2 section has the numbers after it):
   URL; use `git -c url."https://github.com/".insteadOf="git@github.com:" submodule update --init`.
   Python: `pip install -e . -v` (Python ≥ 3.10), then `python -m unittest -v`. C++ tests:
   `cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build --target test_ioh --parallel 4`
-  and run `build/tests/test_ioh` with `IOH_RESOURCES=$PWD/static` (until WP4).
+  and run `build/tests/test_ioh` (since WP4 it finds the data in the source tree).
 * Measuring build time (include before/after numbers in PRs that claim build-time changes):
   clean build directory, Release, Ninja, `-j4`, run twice and report the minimum; use
   `-ftime-trace` only for attribution, never for timing (it adds 9–20 %).

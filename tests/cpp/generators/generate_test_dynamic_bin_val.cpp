@@ -20,8 +20,7 @@ int main(int, char **)
     const int generator_seed = 42;
     std::default_random_engine generator(generator_seed);
 
-    const auto static_root = ioh::common::file::utils::get_static_root();
-    const auto file_path = static_root / "generated_dynamic_bin_val.in";
+    const auto file_path = fs::path(IOH_TEST_DATA_DIR) / "generated_dynamic_bin_val.in";
 
     // Open the file for writing
     std::ofstream outfile(file_path);

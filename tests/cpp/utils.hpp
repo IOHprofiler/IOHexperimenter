@@ -8,6 +8,9 @@
 #include "ioh/common/log.hpp"
 #include "ioh/common/file.hpp"
 
+//! A data file of the tests, in tests/data
+inline fs::path test_data_file(const std::string &name) { return fs::path(IOH_TEST_DATA_DIR) / name; }
+
 #include <algorithm>
 #include <cmath>
 #include <regex>
