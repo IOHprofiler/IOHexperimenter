@@ -166,9 +166,10 @@ protected:
     } 
 
 public:
-    /// [mandatory for registering] The id and name in the registry, also used by the constructor. If the id is
-    /// taken when registering, the problem gets the next free one; a name that is taken (also a built-in
-    /// problem's) would replace that entry, so choose a new one.
+    /// [mandatory for registering] The id and name in the registry, also used by the constructor. Choose a new
+    /// name: a registered one would replace that entry, and a built-in problem's throws. In the factory of all
+    /// integer problems a taken id is replaced by the next free one as the registry key, while the problem keeps
+    /// reporting its own; in the factory of a family (e.g. PBO) a taken id throws.
     static constexpr int registry_id = 9001;
     static constexpr const char *registry_name = "NewBooleanProblem";
 

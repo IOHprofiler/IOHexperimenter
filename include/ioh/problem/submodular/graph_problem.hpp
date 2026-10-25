@@ -322,17 +322,90 @@ namespace ioh::problem::submodular
             return entries;
         }
 
-        //! Helper to load problems from a file
-        //! Use if you want to manually load more graph based files
+        /**
+         * @brief Registers graphs in the factories of GraphProblem and IntegerSingleObjective, and returns their ids
+         * and names
+         *
+         * With a path, the graphs of that definitions file are added after the existing ones: their ids continue
+         * after the highest id in the GraphProblem factory, in file order, their names are the class name and the
+         * id (e.g. MaxCut2309), and their problems report both. The file is read before anything is registered,
+         * and loading the same file again registers nothing and returns the same ids. Without a path, the class's
+         * own registry_entries() are registered under their ids (nothing to do for the built-in classes). An id
+         * that is taken throws std::invalid_argument (see register_problem).
+         *
+         * @param path a definitions file
+         */
         template <typename... Args>
-        static void load_graph_instances(const std::optional<fs::path> &path = std::nullopt)
+        static std::map<int, std::string> load_graph_instances(const std::optional<fs::path> &path = std::nullopt)
         {
-            for (const auto &entry : ProblemType::registry_entries(path))
+            auto &graphs = common::Factory<GraphProblem, Args...>::instance();
+            auto &integers = common::Factory<IntegerSingleObjective, Args...>::instance();
+            const auto include = [&](const RegistryEntry<ProblemType> &entry, const int id, const std::string &name) {
+                auto create = [create = entry.create, id, name](Args &&...params) {
+                    auto problem = create(std::forward<Args>(params)...);
+                    if (problem->meta_data().problem_id != id)
+                    {
+                        problem->set_id(id);
+                        problem->set_name(name);
+                    }
+                    return problem;
+                };
+                integers.include(name, problem::detail::registered_id<IntegerSingleObjective>(integers, id, name),
+                                 create);
+                graphs.include(name, problem::detail::registered_id<GraphProblem>(graphs, id, name), create);
+            };
+
+            // the files loaded before, with the ids and names of their graphs
+            static std::mutex mutex;
+            static std::map<std::string, std::map<int, std::string>> loaded;
+            const std::lock_guard<std::mutex> lock(mutex);
+
+            std::map<int, std::string> result;
+            if (!path)
             {
-                auto c = [create = entry.create](Args &&...params) { return create(std::forward<Args>(params)...); };
-                ioh::common::Factory<IntegerSingleObjective, Args...>::instance().include(entry.name, entry.id, c);
-                ioh::common::Factory<submodular::GraphProblem, Args...>::instance().include(entry.name, entry.id, c);
+                std::vector<RegistryEntry<ProblemType>> missing;
+                for (const auto &entry : ProblemType::registry_entries())
+                {
+                    result[entry.id] = entry.name;
+                    const auto map = graphs.map();
+                    if (const auto it = map.find(entry.id); it != map.end() && it->second == entry.name)
+                        continue;
+                    (void)problem::detail::registered_id<GraphProblem>(graphs, entry.id, entry.name);
+                    (void)problem::detail::registered_id<IntegerSingleObjective>(integers, entry.id, entry.name);
+                    missing.push_back(entry);
+                }
+                for (const auto &entry : missing)
+                    include(entry, entry.id, entry.name);
+                return result;
             }
+
+            if (!fs::is_regular_file(*path))
+                throw std::invalid_argument(fmt::format("Cannot read the graph definitions file {}", path->string()));
+            const auto key = fs::weakly_canonical(*path).string();
+            if (const auto it = loaded.find(key); it != loaded.end())
+                return it->second;
+
+            const auto entries = ProblemType::registry_entries(path);
+            const int first_id = graphs.ids().back() + 1;
+            std::vector<std::string> names;
+            for (const auto &entry : entries)
+            {
+                const int id = first_id + static_cast<int>(names.size());
+                // the names of graph_entries end with the id from the file, which is replaced
+                const auto old_id = std::to_string(entry.id);
+                const auto ends_with_id = entry.name.size() > old_id.size() &&
+                    entry.name.compare(entry.name.size() - old_id.size(), old_id.size(), old_id) == 0;
+                names.push_back(ends_with_id
+                                    ? entry.name.substr(0, entry.name.size() - old_id.size()) + std::to_string(id)
+                                    : entry.name);
+                (void)problem::detail::registered_id<GraphProblem>(graphs, id, names.back());
+                (void)problem::detail::registered_id<IntegerSingleObjective>(integers, id, names.back());
+                result[id] = names.back();
+            }
+            for (size_t i = 0; i < entries.size(); ++i)
+                include(entries[i], first_id + static_cast<int>(i), names[i]);
+            loaded[key] = result;
+            return result;
         }
     };
 } // namespace ioh::problem::submodular

@@ -30,12 +30,14 @@ class PyProblem : public P
 {
     [[nodiscard]] bool perform_registration()
     {
+        // like wrap_function: the id of the name if it is registered, otherwise the first free id
+        auto &factory = ioh::common::Factory<P, int, int>::instance();
+        this->set_id(factory.check_or_get_next_available(1, this->meta_data().name));
+
         auto meta_data = this->meta_data();
         auto bounds = this->bounds();
         auto constraints = this->constraints();
         auto optimum = this->optimum();
-
-        auto &factory = ioh::common::Factory<P, int, int>::instance();
         factory.include(meta_data.name, meta_data.problem_id, [=](const int instance, const int n_variables) {
             return std::make_shared<PyProblem<P, T>>(MetaData(meta_data.problem_id, instance, meta_data.name,
                                                               n_variables, meta_data.optimization_type.type()),

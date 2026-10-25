@@ -88,14 +88,7 @@ def load_graph_problems():
 
     download_static_folder(False)
 
-    for problem_class in (
-        problem.MaxCut,
-        problem.MaxCoverage,
-        problem.MaxInfluence,
-        problem.PackWhileTravel
-    ):
-        problem_class.load_instances()
-
+    # the factories register the built-in graphs themselves
     assert any(problem.GraphProblem.problems), "loading the graph files failed"
 
 
@@ -217,7 +210,8 @@ def wrap_problem(
         The callable to wrap
     name: str = None
         The name of the function. This can be used to create new instances of this function.
-        Note, when not using unique names, this will override the previously wrapped functions.
+        Note, when not using unique names, this will override the previously wrapped functions. The name of a
+        built-in problem raises a ValueError. The problem gets the first free id of its problem class.
     problem_class: ProblemClass = ProblemClass.REAL
         The type of the problem.
     dimension: int = 5

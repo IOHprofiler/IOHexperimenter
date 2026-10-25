@@ -164,6 +164,21 @@ namespace ioh::problem
     //! Type def for Integer problems
     using IntegerSingleObjective = SingleObjectiveProblem<int>;
 
+    namespace detail
+    {
+        //! The factory of all real problems is a union of problem families (see register_problem)
+        template <>
+        struct is_union_factory<RealSingleObjective> : std::true_type
+        {
+        };
+
+        //! The factory of all integer problems is a union of problem families (see register_problem)
+        template <>
+        struct is_union_factory<IntegerSingleObjective> : std::true_type
+        {
+        };
+    } // namespace detail
+
     /**
      * @brief Wrapper class for new single objective problems
      *

@@ -75,25 +75,28 @@ namespace
      * dimension and instance are fixed, and evaluates.
      *
      * The union factories (REAL, INTEGER) may also hold problems registered at runtime by other tests and the
-     * examples compiled into this binary, after the built-ins; of their graph entries, only the first of each
-     * class is constructed (the GRAPH factory constructs all of them, and each loads its graph data).
+     * examples compiled into this binary, and GRAPH graphs loaded from definitions files, after the built-in
+     * graphs (in INTEGER too, so there they can come before other built-ins); of the union factories' graph
+     * entries, only the first of each class is constructed (the GRAPH factory constructs all of them, and each
+     * loads its graph data).
      */
     template <class P>
     void check_factory(const std::string &section, const std::string &key, const std::function<int(int)> &n_variables,
-                       const bool union_factory = false)
+                       const bool union_factory = false, const bool runtime_entries = false)
     {
         const auto &factory = ioh::problem::ProblemRegistry<P>::instance();
         const auto expected = golden_registry(section, key);
         ASSERT_FALSE(expected.empty()) << key;
 
         auto builtins = factory.map();
-        if (union_factory)
+        if (union_factory || runtime_entries)
         {
             for (auto it = builtins.begin(); it != builtins.end();)
             {
                 if (expected.count(it->first) == 0)
                 {
-                    EXPECT_GT(it->first, expected.rbegin()->first) << key << " " << it->second;
+                    if (!union_factory)
+                        EXPECT_GT(it->first, expected.rbegin()->first) << key << " " << it->second;
                     it = builtins.erase(it);
                 }
                 else
@@ -138,7 +141,7 @@ TEST_F(BaseTest, test_registry_family_factories)
     check_factory<PBO>("problem_classes", "PBO", integer);
     check_factory<CEC2013>("problem_classes", "CEC2013", real);
     check_factory<CEC2022>("problem_classes", "CEC2022", real);
-    check_factory<submodular::GraphProblem>("problem_classes", "GRAPH", integer);
+    check_factory<submodular::GraphProblem>("problem_classes", "GRAPH", integer, false, true);
     check_factory<star_discrepancy::real::StarDiscrepancy>("problem_classes", "STAR_REAL", real);
     check_factory<star_discrepancy::integer::StarDiscrepancy>("problem_classes", "STAR_INTEGER", integer);
     check_factory<DynamicBinVal>("views", "DynamicBinVal", integer);
@@ -254,7 +257,8 @@ TEST_F(BaseTest, test_registry_register_problem)
     using namespace ioh::problem;
     const auto &factory = ProblemRegistry<RealSingleObjective>::instance();
 
-    // id 1 (its registry_id) belongs to Sphere, so the problem gets the next free id, and reports it
+    // id 1 (its registry_id) belongs to Sphere: in this union factory the problem gets the next free id as its key,
+    // and keeps reporting its own id
     register_problem<registry_test::UserProblem, RealSingleObjective>();
     const auto map = factory.map();
     const auto entry = std::find_if(map.begin(), map.end(),
@@ -262,7 +266,7 @@ TEST_F(BaseTest, test_registry_register_problem)
     ASSERT_NE(entry, map.end());
     EXPECT_GT(entry->first, 1120);
     const auto problem = factory.create("RegistryTestUserProblem", 1, 3);
-    EXPECT_EQ(problem->meta_data().problem_id, entry->first);
+    EXPECT_EQ(problem->meta_data().problem_id, 1);
     EXPECT_EQ(problem->meta_data().name, "RegistryTestUserProblem");
     EXPECT_EQ(problem->meta_data().n_variables, 3);
 
@@ -278,6 +282,64 @@ TEST_F(BaseTest, test_registry_register_problem)
     EXPECT_EQ(factory.map().at(65001), "RegistryTestUserData2D");
     EXPECT_EQ(factory.create("RegistryTestUserData3D", 5, 7)->meta_data().n_variables, 3);
     EXPECT_EQ(factory.create(65002, 5, 7)->meta_data().problem_id, 65002);
+
+    // a built-in problem's name cannot be registered again, with any registration
+    EXPECT_THROW((register_problem<registry_test::UserProblem, RealSingleObjective>(54322, "Sphere")),
+                 std::invalid_argument);
+    EXPECT_THROW((ioh::problem::wrap_function<double, SingleObjective>(
+                     [](const std::vector<double> &) { return 0.0; }, "Sphere")),
+                 std::invalid_argument);
+    EXPECT_EQ(factory.map().count(54322), 0u);
+    EXPECT_EQ(factory.map().at(1), "Sphere");
+    EXPECT_EQ(std::dynamic_pointer_cast<registry_test::UserProblem>(factory.create("Sphere", 1, 2)), nullptr);
+}
+
+namespace registry_test
+{
+    //! A problem family of its own (its factory has no built-ins), with two members
+    class Family : public ioh::problem::RealSingleObjective
+    {
+    protected:
+        double evaluate(const std::vector<double> &x) override { return x.at(0); }
+
+    public:
+        Family(const int id, const int instance, const int n_variables, const std::string &name) :
+            ioh::problem::RealSingleObjective(
+                ioh::problem::MetaData(id, instance, name, n_variables, ioh::common::OptimizationType::MIN))
+        {
+        }
+    };
+
+    template <int Id>
+    class Member final : public Family
+    {
+    public:
+        static constexpr int registry_id = Id;
+        static constexpr const char *registry_name = "RegistryTestMember";
+
+        Member(const int instance, const int n_variables) : Family(Id, instance, n_variables, registry_name) {}
+    };
+} // namespace registry_test
+
+TEST_F(BaseTest, test_registry_family_factory_ids)
+{
+    using namespace ioh::problem;
+    using registry_test::Member;
+    const auto &family = ProblemRegistry<registry_test::Family>::instance();
+
+    // in the factory of a family the id is the key: a taken id, or a name registered with another id, throws,
+    // and registers nothing
+    register_problem<Member<1>, registry_test::Family>();
+    EXPECT_EQ(family.map(), (std::map<int, std::string>{{1, "RegistryTestMember"}}));
+    EXPECT_THROW((register_problem<Member<1>, registry_test::Family>(1, "RegistryTestOther")), std::invalid_argument);
+    EXPECT_THROW((register_problem<Member<2>, registry_test::Family>()), std::invalid_argument);
+    EXPECT_EQ(family.map(), (std::map<int, std::string>{{1, "RegistryTestMember"}}));
+
+    // registering the same id and name again replaces the class, and a free id is fine
+    register_problem<Member<1>, registry_test::Family>(1, "RegistryTestMember");
+    register_problem<Member<1>, registry_test::Family>(3, "RegistryTestThree");
+    EXPECT_EQ(family.create(3, 1, 2)->meta_data().problem_id, 3);
+    EXPECT_EQ(family.create(3, 1, 2)->meta_data().name, "RegistryTestThree");
 }
 
 namespace registry_test
@@ -306,19 +368,20 @@ TEST_F(BaseTest, test_registry_register_problem_existing_name)
     const auto &factory = ProblemRegistry<RealSingleObjective>::instance();
     register_problem<registry_test::UserProblem, RealSingleObjective>(54300, "RegistryTestReplaced");
 
-    // a registered name keeps its id and gets the new class, with both overloads
+    // in this union factory a registered name keeps its key and gets the new class, with both overloads, and the
+    // problems report their own id
     register_problem<registry_test::ReplacingProblem, RealSingleObjective>();
     EXPECT_EQ(factory.map().at(54300), "RegistryTestReplaced");
     EXPECT_EQ(factory.map().count(54400), 0u);
     const auto replaced = factory.create("RegistryTestReplaced", 1, 2);
     EXPECT_NE(std::dynamic_pointer_cast<registry_test::ReplacingProblem>(replaced), nullptr);
-    EXPECT_EQ(replaced->meta_data().problem_id, 54300);
+    EXPECT_EQ(replaced->meta_data().problem_id, 54400);
 
     register_problem<registry_test::UserProblem, RealSingleObjective>(54500, "RegistryTestReplaced");
     EXPECT_EQ(factory.map().count(54500), 0u);
     const auto user = factory.create(54300, 1, 2);
     EXPECT_NE(std::dynamic_pointer_cast<registry_test::UserProblem>(user), nullptr);
-    EXPECT_EQ(user->meta_data().problem_id, 54300);
+    EXPECT_EQ(user->meta_data().problem_id, 54500);
 }
 
 namespace registry_test
@@ -359,25 +422,19 @@ TEST_F(BaseTest, test_registry_graph_definitions_file)
 {
     using namespace ioh::problem;
     using submodular::MaxCut;
+    using Loader = submodular::GraphProblemType<MaxCut>;
 
     // a directory of its own: ctest runs this test in test_ioh and in test_registry, possibly at the same time
     const auto dir = fs::temp_directory_path() /
                      ("ioh_test_registry_graph_definitions_" + std::to_string(std::random_device{}()));
     ASSERT_TRUE(fs::create_directories(dir / "graphs"));
 
-    // brings the built-in graphs back for the other tests and removes the files, also when the test fails
+    // removes the files, also when the test fails
     struct Cleanup
     {
         fs::path dir;
         ~Cleanup()
         {
-            try
-            {
-                submodular::GraphProblemType<MaxCut>::load_graph_instances<int, int>();
-            }
-            catch (...)
-            {
-            }
             std::error_code ec;
             fs::remove_all(dir, ec);
         }
@@ -396,7 +453,7 @@ TEST_F(BaseTest, test_registry_graph_definitions_file)
     ASSERT_TRUE(write(dir / "graphs" / "path", "0\n1 2\n2 3\n3 4\n"));
     ASSERT_TRUE(write(dir / "definitions", "graphs/triangle|NULL|NULL|NULL\n\ngraphs/path|NULL|NULL|NULL\n"));
 
-    // ids from MaxCut::default_id on and names like MaxCut2000, one entry per graph
+    // the entries of a file: ids from MaxCut::default_id on and names like MaxCut2000, one entry per graph
     const auto entries = MaxCut::registry_entries(dir / "definitions");
     ASSERT_EQ(entries.size(), 2u);
     EXPECT_EQ(entries[0].id, 2000);
@@ -409,20 +466,39 @@ TEST_F(BaseTest, test_registry_graph_definitions_file)
     EXPECT_EQ(triangle->meta_data().n_variables, 3);
     EXPECT_EQ(entries[1].create(1, 1)->meta_data().n_variables, 4);
 
-    // loading the file registers its graphs under the names of the built-in graphs, in both factories: their
-    // creators are replaced and their ids kept
+    // loading the file adds its graphs after the existing ones, in both factories (other tests may have loaded
+    // graphs before), and leaves the built-in graphs alone
     const auto &graphs = ProblemRegistry<submodular::GraphProblem>::instance();
     const auto &integer = ProblemRegistry<IntegerSingleObjective>::instance();
-    const auto graph_map = graphs.map();
-    const auto integer_map = integer.map();
-    submodular::GraphProblemType<MaxCut>::load_graph_instances<int, int>(dir / "definitions");
-    EXPECT_EQ(graphs.map(), graph_map);
-    EXPECT_EQ(integer.map(), integer_map);
-    EXPECT_EQ(graphs.create(2001, 1, 1)->meta_data().n_variables, 4);
-    EXPECT_EQ(integer.create("MaxCut2000", 1, 1)->meta_data().n_variables, 3);
-
-    // the default definitions file brings the built-in graphs back
-    submodular::GraphProblemType<MaxCut>::load_graph_instances<int, int>();
+    const auto first = graphs.ids().back() + 1;
+    const auto graph_count = graphs.map().size(), integer_count = integer.map().size();
+    const std::map<int, std::string> expected = {{first, "MaxCut" + std::to_string(first)},
+                                                 {first + 1, "MaxCut" + std::to_string(first + 1)}};
+    EXPECT_EQ((Loader::load_graph_instances<int, int>(dir / "definitions")), expected);
+    EXPECT_EQ(graphs.map().size(), graph_count + 2);
+    EXPECT_EQ(integer.map().size(), integer_count + 2);
+    for (const auto &[id, name] : expected)
+        EXPECT_EQ(graphs.map().at(id), name);
+    const auto added = graphs.create(first, 1, 1);
+    EXPECT_EQ(added->meta_data().problem_id, first);
+    EXPECT_EQ(added->meta_data().name, expected.at(first));
+    EXPECT_EQ(added->meta_data().n_variables, 3);
+    const auto via_integer = integer.create(expected.at(first + 1), 1, 1);
+    EXPECT_EQ(via_integer->meta_data().problem_id, first + 1);
+    EXPECT_EQ(via_integer->meta_data().n_variables, 4);
     EXPECT_EQ(graphs.create(2000, 1, 1)->meta_data().n_variables, 800);
-    EXPECT_EQ(integer.create(2001, 1, 1)->meta_data().n_variables, 800);
+
+    // loading the same file again (here through another path to it) registers nothing and returns the same ids
+    EXPECT_EQ((Loader::load_graph_instances<int, int>(dir / "graphs" / ".." / "definitions")), expected);
+    EXPECT_EQ(graphs.map().size(), graph_count + 2);
+
+    // without a path: the built-in graphs, which are registered already
+    const auto builtins = Loader::load_graph_instances<int, int>();
+    EXPECT_EQ(builtins.size(), 5u);
+    EXPECT_EQ(builtins.at(2000), "MaxCut2000");
+    EXPECT_EQ(graphs.map().size(), graph_count + 2);
+
+    // a file that does not exist registers nothing
+    EXPECT_THROW((void)(Loader::load_graph_instances<int, int>(dir / "missing")), std::invalid_argument);
+    EXPECT_EQ(graphs.map().size(), graph_count + 2);
 }

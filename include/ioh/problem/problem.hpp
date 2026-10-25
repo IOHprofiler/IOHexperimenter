@@ -351,6 +351,41 @@ namespace ioh
             struct has_registry_entries<P, std::void_t<decltype(P::registry_entries())>> : std::true_type
             {
             };
+
+            /**
+             * @brief Whether the factory of Parent is a union of problem families: the factories of all real and of
+             * all integer problems (see single.hpp). Ids overlap across families, so in a union they are only keys.
+             */
+            template <typename Parent>
+            struct is_union_factory : std::false_type
+            {
+            };
+
+            /**
+             * @brief The id under which a problem with this id and name is registered in the factory of Parent.
+             *
+             * A problem's id belongs to its family. In the factory of a family it is the key, so an id that belongs
+             * to another name, or a name registered with another id, throws std::invalid_argument. In a union factory
+             * a registered name keeps its id and a taken id is replaced by the next free one, while the problems keep
+             * their own id. The name of a built-in problem throws std::invalid_argument in every factory.
+             */
+            template <typename Parent, typename Factory>
+            int registered_id(const Factory &factory, const int id, const std::string &name)
+            {
+                if (factory.is_builtin(name))
+                    throw std::invalid_argument(name + " is a built-in problem and cannot be replaced: register under "
+                                                       "another name");
+                const int registered = factory.check_or_get_next_available(id, name);
+                if (registered == id || is_union_factory<Parent>::value)
+                    return registered;
+                const auto map = factory.map();
+                if (const auto holder = map.find(id); holder != map.end() && holder->second != name)
+                    throw std::invalid_argument(fmt::format("Cannot register {} with id {}: the id belongs to {} (the "
+                                                            "next free id is {})",
+                                                            name, id, holder->second, map.rbegin()->first + 1));
+                throw std::invalid_argument(
+                    fmt::format("Cannot register {} with id {}: it is registered with id {}", name, id, registered));
+            }
         } // namespace detail
 
         /**
@@ -373,46 +408,45 @@ namespace ioh
 
         /**
          * @brief Registers the problem class T, constructed from (instance, n_variables), in the factory of Parent
-         * (e.g. RealSingleObjective), so that it can be created by id or name like the built-in problems.
+         * (e.g. RealSingleObjective), so that it can be created by id or name like the built-in problems. Its
+         * problems report the id and name given.
          *
-         * The problems the factory creates report the id and name they are registered under: a name that is
-         * already registered keeps its id (and gets T as its new class), an id that is taken is replaced by the
-         * next free one.
+         * A problem's id belongs to its family: in the factory of a family (e.g. BBOB) the id must be free or
+         * registered with this name, otherwise std::invalid_argument is thrown. In the factories of all real and of
+         * all integer problems a taken id is replaced by the next free one as the key, and a name that is already
+         * registered keeps its id (and gets T as its new class). The name of a built-in problem throws
+         * std::invalid_argument.
          */
         template <typename T, typename Parent>
         void register_problem(const int id, const std::string &name)
         {
             auto &factory = ProblemFactoryType<Parent>::instance();
-            const int registered_id = factory.check_or_get_next_available(id, name);
-            factory.include(name, registered_id, [registered_id, name](int &&instance, int &&n_variables) {
-                auto problem = std::make_shared<T>(instance, n_variables);
-                problem->set_id(registered_id);
-                problem->set_name(name);
-                return problem;
-            });
+            factory.include(name, detail::registered_id<Parent>(factory, id, name),
+                            [id, name](int &&instance, int &&n_variables) {
+                                auto problem = std::make_shared<T>(instance, n_variables);
+                                problem->set_id(id);
+                                problem->set_name(name);
+                                return problem;
+                            });
         }
 
         /**
          * @brief Registers the problem class T in the factory of Parent with its registry entries (see
-         * registry_entries_of). An entry whose id is taken gets the next free id, which the problems it creates
-         * report. An entry whose name is already registered keeps that entry's id and replaces it, also a
-         * built-in problem's, so give your problems new names.
+         * registry_entries_of), with the rules of the overload above. Its problems report their own ids and names.
+         * All entries are checked first, so a class that cannot be registered registers nothing.
          */
         template <typename T, typename Parent>
         void register_problem()
         {
             auto &factory = ProblemFactoryType<Parent>::instance();
-            for (const auto &entry : registry_entries_of<T>())
-            {
-                const int registered_id = factory.check_or_get_next_available(entry.id, entry.name);
-                factory.include(entry.name, registered_id,
-                                [registered_id, create = entry.create](int &&instance, int &&n_variables) {
-                                    auto problem = create(instance, n_variables);
-                                    if (problem->meta_data().problem_id != registered_id)
-                                        problem->set_id(registered_id);
-                                    return problem;
+            const auto entries = registry_entries_of<T>();
+            for (const auto &entry : entries)
+                (void)detail::registered_id<Parent>(factory, entry.id, entry.name);
+            for (const auto &entry : entries)
+                factory.include(entry.name, detail::registered_id<Parent>(factory, entry.id, entry.name),
+                                [create = entry.create](int &&instance, int &&n_variables) -> std::shared_ptr<Parent> {
+                                    return create(instance, n_variables);
                                 });
-            }
         }
 
 
