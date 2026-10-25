@@ -42,6 +42,14 @@ namespace ioh
             //! Final target
             double final_target;
 
+            //! Whether the problem has one dimension, n_variables, whatever dimension was requested (the CEC2013 and
+            //! graph problems)
+            bool fixed_dimension = false;
+
+            //! Whether the problem has one instance, instance, whatever instance was requested (the CEC2013 and graph
+            //! problems)
+            bool fixed_instance = false;
+
             /**
              * @brief Construct a new Meta Data object
              *
@@ -81,7 +89,8 @@ namespace ioh
             bool operator==(const MetaData &other) const
             {
                 return instance == other.instance and problem_id == other.problem_id and name == other.name and
-                    optimization_type == other.optimization_type and n_variables == other.n_variables;
+                    optimization_type == other.optimization_type and n_variables == other.n_variables and
+                    fixed_dimension == other.fixed_dimension and fixed_instance == other.fixed_instance;
             }
 
             //! comparison operator

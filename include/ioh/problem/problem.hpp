@@ -211,14 +211,6 @@ namespace ioh
             //! Accessor for `meta_data_`
             [[nodiscard]] MetaData meta_data() const { return meta_data_; }
 
-            //! The dimension this problem has whatever dimension was requested, or std::nullopt when it uses the
-            //! requested one
-            [[nodiscard]] virtual std::optional<int> fixed_dimension() const { return std::nullopt; }
-
-            //! The instance this problem is whatever instance was requested, or std::nullopt when it uses the
-            //! requested one
-            [[nodiscard]] virtual std::optional<int> fixed_instance() const { return std::nullopt; }
-
             //! Accessor for `optimum_`
             [[nodiscard]] Solution<T, R> optimum() const { return optimum_; }
 

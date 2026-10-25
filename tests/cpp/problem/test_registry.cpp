@@ -115,17 +115,12 @@ namespace
             EXPECT_EQ(meta.problem_id, id) << key << " " << name;
             EXPECT_EQ(meta.name, is_cec2013(id) ? cec2013_meta_names.at(id) : name) << key << " " << id;
 
-            if (is_cec2013(id) || is_graph(id))
-            {
-                EXPECT_EQ(problem->fixed_dimension(), std::optional<int>(meta.n_variables)) << key << " " << id;
-                EXPECT_EQ(problem->fixed_instance(), std::optional<int>(1)) << key << " " << id;
-            }
-            else
-            {
+            // the CEC2013 and graph problems have one dimension and one instance, whatever was requested
+            const bool fixed = is_cec2013(id) || is_graph(id);
+            EXPECT_EQ(meta.fixed_dimension, fixed) << key << " " << id;
+            EXPECT_EQ(meta.fixed_instance, fixed) << key << " " << id;
+            if (!fixed)
                 EXPECT_EQ(meta.n_variables, n_variables(id)) << key << " " << id;
-                EXPECT_EQ(problem->fixed_dimension(), std::nullopt) << key << " " << id;
-                EXPECT_EQ(problem->fixed_instance(), std::nullopt) << key << " " << id;
-            }
             EXPECT_FALSE(std::isnan((*problem)(problem->bounds().lb))) << key << " " << id;
         }
     }

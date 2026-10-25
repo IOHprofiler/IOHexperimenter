@@ -116,7 +116,6 @@ TEST_F(BaseTest, test_data_manifest)
     EXPECT_EQ(graphs.front().id, 2000);
     EXPECT_EQ(graphs.front().name, "MaxCut2000");
     EXPECT_EQ(graphs.front().problem_class, "MaxCut");
-    EXPECT_EQ(graphs.front().fixed_dimension, 800);
     const auto cec2013 = ioh::data::manifest_entries("CEC2013");
     ASSERT_EQ(cec2013.size(), 20u);
     EXPECT_EQ(cec2013.back().meta_name, "CEC2013CF4D20");

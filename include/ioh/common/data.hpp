@@ -70,12 +70,6 @@ namespace ioh::data
 
         //! The definition of a graph problem's graph (its files)
         std::string definition;
-
-        //! The dimension the problem always uses
-        int fixed_dimension;
-
-        //! The instance the problem always uses
-        int fixed_instance;
     };
 
     //! The entries of a problem family in the manifest: GraphProblem or CEC2013

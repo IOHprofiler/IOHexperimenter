@@ -2,8 +2,7 @@
 
 The manifest lists every data file in static/ (path, size, sha256) and a data version (a hash of that list), and
 the registry entries defined by data: the graph problems (MaxCut, MaxCoverage, MaxInfluence, PackWhileTravel) and the
-CEC2013 problems, each with its id, registry name, meta name, files, definition (graphs) and fixed dimension and
-instance. The entries were generated once, with --entries, from the golden fixtures (tests/data/golden) and the
+CEC2013 problems, each with its id, registry name, meta name, files and definition (graphs). The entries were generated once, with --entries, from the golden fixtures (tests/data/golden) and the
 definition files. Since then they are kept as they are, so that the ids of the built-in problems never again depend
 on the order of the lines in a definitions file; without --entries only the files and the data version are updated.
 The library is compiled with the same entries, files and data version (src/data_manifest.inc), so that registering
@@ -75,10 +74,11 @@ def golden_records():
     return registry, records
 
 
-def fixed(records, family, pid):
+def golden_meta(records, family, pid):
+    """The meta name and dimension of a problem with a fixed dimension and instance"""
     record = records[(family, pid)]
-    assert record["fixed_dimension"] == record["meta"]["n_variables"] and record["fixed_instance"] == 1, (family, pid)
-    return record["meta"]["name"], record["fixed_dimension"]
+    assert record["fixed_dimension"] is True and record["fixed_instance"] is True, (family, pid)
+    return record["meta"]["name"], record["meta"]["n_variables"]
 
 
 def generate_entries():
@@ -89,18 +89,17 @@ def generate_entries():
         for index, definition in enumerate(lines):
             pid = first_id + index
             name = registry["GRAPH"][str(pid)]
-            meta_name, dimension = fixed(records, "GRAPH", pid)
+            meta_name, _ = golden_meta(records, "GRAPH", pid)
             assert name == meta_name == f"{cls}{pid}", (pid, name, meta_name)
             # edge file|edge weights|vertex weights|constraint weights|constraint variances, the last a file or a
             # number (a pack-while-travel definition is one file)
             files = [f for i, f in enumerate(definition.split("|")) if f and f != "NULL" and not (i == 4 and is_number(f))]
-            graphs.append({"id": pid, "name": name, "class": cls, "definition": definition, "files": files,
-                           "fixed_dimension": dimension, "fixed_instance": 1})
+            graphs.append({"id": pid, "name": name, "class": cls, "definition": definition, "files": files})
     assert len(graphs) == len(registry["GRAPH"])
 
     cec2013 = []
     for pid, name in sorted((int(k), v) for k, v in registry["CEC2013"].items()):
-        meta_name, dimension = fixed(records, "CEC2013", pid)
+        meta_name, dimension = golden_meta(records, "CEC2013", pid)
         files = []
         composition = re.fullmatch(r"CEC2013CF(\d+)D(\d+)", meta_name)
         if composition:
@@ -109,8 +108,7 @@ def generate_entries():
             if cf >= 3:  # CF1 and CF2 have identity transformations
                 files.append(f"{CEC2013_DATA}CF{cf}_M_D{d}.dat")
             assert d == dimension, (pid, meta_name, dimension)
-        cec2013.append({"id": pid, "name": name, "meta_name": meta_name, "files": files,
-                        "fixed_dimension": dimension, "fixed_instance": 1})
+        cec2013.append({"id": pid, "name": name, "meta_name": meta_name, "files": files})
     return {"GraphProblem": graphs, "CEC2013": cec2013}
 
 
@@ -123,13 +121,12 @@ def compiled(manifest):
              f"const char *const generated_data_version = {literal(manifest['data_version'])};", "",
              "const char *const generated_files[] = {"]
     lines += [f"    {literal(f['path'])}," for f in manifest["files"]]
-    lines += ["};", "", "// family, id, name, meta name, class, definition, fixed dimension, fixed instance",
+    lines += ["};", "", "// family, id, name, meta name, class, definition",
               "const GeneratedEntry generated_entries[] = {"]
     for family, entries in manifest["entries"].items():
         for e in entries:
             fields = [literal(family), str(e["id"]), literal(e["name"]), literal(e.get("meta_name", e["name"])),
-                      literal(e.get("class", "")), literal(e.get("definition", "")), str(e["fixed_dimension"]),
-                      str(e["fixed_instance"])]
+                      literal(e.get("class", "")), literal(e.get("definition", ""))]
             lines.append(f"    {{{', '.join(fields)}}},")
     lines.append("};")
     return "\n".join(lines) + "\n"

@@ -298,13 +298,9 @@ namespace ioh::problem::submodular
                 Bounds<int>(graph->dimension(),0,1), ConstraintSet<int>(std::make_shared<GraphConstraint>(graph))),
             graph(graph)
         {
+            // the dimension is the size of the graph, and graph problems have a single instance
+            meta_data_.fixed_dimension = meta_data_.fixed_instance = true;
         }
-
-        //! The dimension is the size of the graph
-        [[nodiscard]] std::optional<int> fixed_dimension() const override { return meta_data_.n_variables; }
-
-        //! Graph problems have a single instance
-        [[nodiscard]] std::optional<int> fixed_instance() const override { return meta_data_.instance; }
     };
 
     //! Base of the graph problems, which are defined by the graphs in a definitions file

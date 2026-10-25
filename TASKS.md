@@ -86,9 +86,10 @@ WP2 section has the numbers after it):
   only the Linux and Windows wheels; the full matrix, including macOS, runs weekly, on manual
   dispatch and for releases, because the organization runs at most 20 jobs at once, only 5 of them
   on macOS, and the Intel ones are slow.
-* **Problem metadata**: expose `fixed_dimension` and `fixed_instance` (uniform names) on Python
-  problems and registry entries (WP3/WP4): `None` when the problem honours the requested
-  dimension/instance, otherwise the value it always uses (graph and CEC2013 problems).
+* **Problem metadata**: `MetaData.fixed_dimension` and `fixed_instance` (WP3, booleans in `MetaData`
+  since WP4 at the maintainer's request): whether the problem has one dimension and one instance whatever
+  was requested (graph and CEC2013 problems); the values it uses are `n_variables` and `instance`.
+  Registry entries carry nothing (the dimension of a graph is only known once its data are loaded).
 * **`static.tar.gz` stays** in the repository: released versions (≤ 0.3.22) download it from
   `master` in `download_static_folder()`. It must be kept identical to `static/` (WP4 adds a check).
 * **No intermediate releases**: nothing is released until all WPs are merged. The next release
@@ -417,7 +418,8 @@ What was done, and where it differs from T3.1–T3.7 below:
   `CEC2013` and `GraphProblem`) and read-only Python properties on every problem class. The golden
   behaviour records got the two keys (714 of 722 records; the existing values were reproduced
   exactly). Registry entries do **not** carry them yet: a graph's dimension is only known after
-  loading its data (all 78 graphs take 0.8 s), so this moves to the WP4 manifest.
+  loading its data (all 78 graphs take 0.8 s), so this moves to the WP4 manifest. (WP4 replaced them by
+  booleans in `MetaData`, T4.2.)
 * **Tests**: `tests/cpp/problem/test_registry.cpp` checks every factory against the golden registry
   (ids, names, CEC2013 meta names from the golden records, fixed values, construction and evaluation;
   the nine family factories exactly, the REAL/INTEGER unions allowing runtime registrations after the
@@ -514,8 +516,8 @@ What was done, and where it differs from T3.1–T3.7 below:
   constructs, its `meta_data().problem_id` equals the registry id, its meta name equals the registry
   name (except CEC2013, see §3 — compare with the golden meta names), and it evaluates.
 * Test that `create()` with an unknown id/name throws.
-* Expose `fixed_dimension` and `fixed_instance` (decided, §1; in the same PR as the registry,
-  decided): registry entries carry them, and Python problems get read-only properties with the same
+* (Changed in WP4: booleans in `MetaData`, T4.2.) Expose `fixed_dimension` and `fixed_instance` (decided, §1;
+  in the same PR as the registry, decided): registry entries carry them, and Python problems get read-only properties with the same
   names (`None` for problems that honour the requested dimension/instance). Values for the
   data-backed families come from the WP4 manifest; until then they are filled in from the current
   loaders. Add them to the golden fixtures in the same PR (new keys only; existing values must not
@@ -539,8 +541,7 @@ Record:
   to `share/ioh`. The C++ tests and CI no longer set `IOH_RESOURCES`.
 * **Manifest** (T4.2): `tools/gen_manifest.py` writes `static/manifest.json` (140 files with size and
   sha256, a data version that hashes this list, and the 98 data-backed entries: 78 graphs with their
-  class and definition line, 20 CEC2013 problems with their meta names, files, fixed dimension and
-  instance). The entries were generated once from the golden fixtures and the definition files and are
+  class and definition line, 20 CEC2013 problems with their meta names and files). The entries were generated once from the golden fixtures and the definition files and are
   kept since (`--entries` regenerates them); `--check` compares `static/` and the entries with the
   manifest and the golden fixtures, `--check-package` the data files of wheels and sdists.
   *Changed from the plan*: the library does not read the JSON at runtime. The script also writes
@@ -568,10 +569,15 @@ Record:
 * **Repository and packaging** (T4.6): the test fixtures are in `tests/data/` (C++: `IOH_TEST_DATA_DIR`);
   `static/conf.ini` is deleted. The wheels workflow checks that every wheel and the sdist hold exactly the
   manifest's files before uploading.
-* **Left open**: `fixed_dimension`/`fixed_instance` on registry entries (T4.2). The factories store no
-  per-entry data, and how Python should expose them is the maintainer's choice (see the WP4 pull request).
-  The CEC2013 entries stay in code; `gen_manifest.py --check` keeps the manifest's CEC2013 entries equal
-  to the golden registry and behaviour.
+* **Fixed dimension and instance** (T4.2, decided with the maintainer): `fixed_dimension` and
+  `fixed_instance` are booleans in `MetaData`, set by the `CEC2013` and `GraphProblem` constructors,
+  instead of WP3's virtual accessors returning the value or `None`; the values a problem uses are its
+  `n_variables` and `instance`. In Python they are `meta_data.fixed_dimension`/`fixed_instance` (the
+  WP3 properties on the problems are gone). Registry entries and the manifest carry nothing: a graph's
+  dimension is known once its data are loaded. The golden behaviour records' two keys changed from the
+  value or `null` to `true`/`false` (714 records, mechanically, nothing else changed). The CEC2013
+  entries stay in code; `gen_manifest.py --check` keeps the manifest's CEC2013 entries equal to the
+  golden registry.
 * **Tests**: C++ `test_data_root` (lookup order, errors, data version), `test_data_manifest`,
   `test_data_cached`, the registry tests for the id rules (in-process, a rejected registration leaves the
   factories unchanged) and the appended graph files; Python: the graph file test, subclass ids, built-in
@@ -586,17 +592,16 @@ Record:
   builds). Remove the current-directory ancestor scan from `get_static_root()`. Missing root or file
   → exception (`ioh::data::data_error`) listing where it looked and how to fix it.
 
-### T4.2 Manifest ✅ (fixed values on registry entries open)
+### T4.2 Manifest ✅
 
 * Script (e.g. `tools/gen_manifest.py`) generating a checked-in `static/manifest.json`: every data
   file with relative path, size, sha256, plus `DATA_VERSION` (handle the `ioh/static` symlink and
   paths with spaces). It also lists the data-backed registry entries (graph, pack-while-travel,
-  CEC2013): pinned id, registry name, meta name, files, fixed dimension — generated once from the
+  CEC2013): pinned id, registry name, meta name, files — generated once from the
   golden registry and the definition files; the ids of the built-in entries are never again derived
   from file line order (user files loaded at runtime keep today's semantics, T4.4).
-* Registry entries get `fixed_dimension` / `fixed_instance` from the manifest (moved here from T3.7:
-  without it a graph's dimension is only known after loading the graph). Problems already report them
-  since WP3; the registry values must equal what the constructed problems report.
+* ~~Registry entries get `fixed_dimension` / `fixed_instance` from the manifest~~ Decided instead:
+  booleans in `MetaData` (see the record above); nothing on registry entries or in the manifest.
 * CI check: wheel contents (and the source tree) match the manifest (paths + sha256).
 
 ### T4.3 Lazy, cached datasets ✅
@@ -649,8 +654,7 @@ Record:
     `load_graph_instances()` registers the class's own `registry_entries()` (nothing to do for the
     built-in classes), and Python's `load_instances()` is a deprecated no-op. This replaces WP3's
     semantics (ids from `default_id` on, built-ins replaced by name, a taken id moved per factory while
-    the problem kept reporting `default_id` + its index). With built-ins never replaced, a built-in
-    entry's fixed dimension from the manifest always holds.
+    the problem kept reporting `default_id` + its index).
   * Tests in-process (a rejected registration leaves the factories unchanged), for each rule in C++
     and the Python-facing ones in Python; the golden files do not change.
 
@@ -892,9 +896,9 @@ Each WP adds its user-visible changes here (§2).
   (`ValueError` in Python), later points in the previous dimension were ≈ 0 until another dimension
   was used. Fixed.
 * WP3:
-  * New: `fixed_dimension` and `fixed_instance` on every problem (Python properties, C++ methods): the
-    dimension and instance a problem always uses whatever was requested (CEC2013 and graph problems),
-    `None` otherwise.
+  * New: `fixed_dimension` and `fixed_instance` in `MetaData` (`problem.meta_data` in Python): whether a
+    problem has one dimension and one instance whatever was requested (CEC2013 and graph problems); the
+    values it uses are `n_variables` and `instance`.
   * `create()` with an unknown id or name raises `IndexError` in Python (`std::out_of_range` in C++)
     instead of failing an assertion or, in release builds, undefined behaviour.
   * C++: the library is no longer header-only. Every program links `ioh::ioh` with CMake (or compiles

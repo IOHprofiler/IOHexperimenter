@@ -325,6 +325,12 @@ void define_helper_classes(py::module &m)
         .def_readonly("n_variables", &MetaData::n_variables,
                       "The number of variables (dimension) of the current problem")
         .def_readonly("final_target", &MetaData::final_target)
+        .def_readonly("fixed_dimension", &MetaData::fixed_dimension,
+                      "Whether the problem has one dimension, n_variables, whatever dimension was requested (the "
+                      "CEC2013 and graph problems)")
+        .def_readonly("fixed_instance", &MetaData::fixed_instance,
+                      "Whether the problem has one instance, instance, whatever instance was requested (the CEC2013 "
+                      "and graph problems)")
         .def("__repr__", &MetaData::repr)
         .def("__eq__", &MetaData::operator==);
 

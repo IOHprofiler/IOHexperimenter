@@ -183,12 +183,6 @@ void define_base_class(py::module &m, const std::string &name)
         .def_property_readonly("meta_data", &ProblemType::meta_data,
                                "The static meta-data of the problem containing, e.g., problem id, instance id, and "
                                "problem's dimensionality")
-        .def_property_readonly("fixed_dimension", &ProblemType::fixed_dimension,
-                               "The dimension this problem has whatever dimension was requested (the CEC2013 and "
-                               "graph problems), or None when it uses the requested one")
-        .def_property_readonly("fixed_instance", &ProblemType::fixed_instance,
-                               "The instance this problem is whatever instance was requested (the CEC2013 and "
-                               "graph problems), or None when it uses the requested one")
         .def_property_readonly("optimum", &ProblemType::optimum,
                                "The optimum and its objective value for a problem instance")
         .def_property_readonly("bounds", &ProblemType::bounds, "The bounds of the problem.")

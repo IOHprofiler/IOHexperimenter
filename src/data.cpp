@@ -24,8 +24,6 @@ namespace ioh::data
             const char *meta_name;
             const char *problem_class;
             const char *definition;
-            int fixed_dimension;
-            int fixed_instance;
         };
 
 #include "data_manifest.inc"
@@ -138,8 +136,7 @@ namespace ioh::data
         std::vector<ManifestEntry> entries;
         for (const auto &e : generated_entries)
             if (family == e.family)
-                entries.push_back(
-                    {e.id, e.name, e.meta_name, e.problem_class, e.definition, e.fixed_dimension, e.fixed_instance});
+                entries.push_back({e.id, e.name, e.meta_name, e.problem_class, e.definition});
         return entries;
     }
 

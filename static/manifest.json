@@ -712,9 +712,7 @@
     "definition": "example_graphs/G1|NULL|NULL|NULL",
     "files": [
      "example_graphs/G1"
-    ],
-    "fixed_dimension": 800,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2001,
@@ -723,9 +721,7 @@
     "definition": "example_graphs/G2|NULL|NULL|NULL",
     "files": [
      "example_graphs/G2"
-    ],
-    "fixed_dimension": 800,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2002,
@@ -734,9 +730,7 @@
     "definition": "example_graphs/G3|NULL|NULL|NULL",
     "files": [
      "example_graphs/G3"
-    ],
-    "fixed_dimension": 800,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2003,
@@ -745,9 +739,7 @@
     "definition": "example_graphs/G4|NULL|NULL|NULL",
     "files": [
      "example_graphs/G4"
-    ],
-    "fixed_dimension": 800,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2004,
@@ -756,9 +748,7 @@
     "definition": "example_graphs/G5|NULL|NULL|NULL",
     "files": [
      "example_graphs/G5"
-    ],
-    "fixed_dimension": 800,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2100,
@@ -768,9 +758,7 @@
     "files": [
      "example_graphs/example_graph0",
      "example_graphs/example_graph0_c_unweighted"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2101,
@@ -780,9 +768,7 @@
     "files": [
      "example_graphs/example_graph1",
      "example_graphs/example_graph1_c_unweighted"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2102,
@@ -792,9 +778,7 @@
     "files": [
      "example_graphs/example_graph2",
      "example_graphs/example_graph2_c_unweighted"
-    ],
-    "fixed_dimension": 595,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2103,
@@ -804,9 +788,7 @@
     "files": [
      "example_graphs/example_graph3",
      "example_graphs/example_graph3_c_unweighted"
-    ],
-    "fixed_dimension": 760,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2104,
@@ -816,9 +798,7 @@
     "files": [
      "example_graphs/example_graph0",
      "example_graphs/example_graph0_c_linear"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2105,
@@ -828,9 +808,7 @@
     "files": [
      "example_graphs/example_graph1",
      "example_graphs/example_graph1_c_linear"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2106,
@@ -840,9 +818,7 @@
     "files": [
      "example_graphs/example_graph2",
      "example_graphs/example_graph2_c_linear"
-    ],
-    "fixed_dimension": 595,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2107,
@@ -852,9 +828,7 @@
     "files": [
      "example_graphs/example_graph3",
      "example_graphs/example_graph3_c_linear"
-    ],
-    "fixed_dimension": 760,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2108,
@@ -864,9 +838,7 @@
     "files": [
      "example_graphs/example_graph0",
      "example_graphs/example_graph0_c_quadratic"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2109,
@@ -876,9 +848,7 @@
     "files": [
      "example_graphs/example_graph1",
      "example_graphs/example_graph1_c_quadratic"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2110,
@@ -888,9 +858,7 @@
     "files": [
      "example_graphs/example_graph2",
      "example_graphs/example_graph2_c_quadratic"
-    ],
-    "fixed_dimension": 595,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2111,
@@ -900,9 +868,7 @@
     "files": [
      "example_graphs/example_graph3",
      "example_graphs/example_graph3_c_quadratic"
-    ],
-    "fixed_dimension": 760,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2112,
@@ -912,9 +878,7 @@
     "files": [
      "example_graphs/example_graph0",
      "example_graphs/example_graph0_c_unweighted"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2113,
@@ -924,9 +888,7 @@
     "files": [
      "example_graphs/example_graph1",
      "example_graphs/example_graph1_c_unweighted"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2114,
@@ -936,9 +898,7 @@
     "files": [
      "example_graphs/example_graph2",
      "example_graphs/example_graph2_c_unweighted"
-    ],
-    "fixed_dimension": 595,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2115,
@@ -948,9 +908,7 @@
     "files": [
      "example_graphs/example_graph3",
      "example_graphs/example_graph3_c_unweighted"
-    ],
-    "fixed_dimension": 760,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2116,
@@ -960,9 +918,7 @@
     "files": [
      "example_graphs/example_graph0",
      "example_graphs/example_graph0_c_linear"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2117,
@@ -972,9 +928,7 @@
     "files": [
      "example_graphs/example_graph1",
      "example_graphs/example_graph1_c_linear"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2118,
@@ -984,9 +938,7 @@
     "files": [
      "example_graphs/example_graph2",
      "example_graphs/example_graph2_c_linear"
-    ],
-    "fixed_dimension": 595,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2119,
@@ -996,9 +948,7 @@
     "files": [
      "example_graphs/example_graph3",
      "example_graphs/example_graph3_c_linear"
-    ],
-    "fixed_dimension": 760,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2120,
@@ -1008,9 +958,7 @@
     "files": [
      "example_graphs/example_graph0",
      "example_graphs/example_graph0_c_unweighted"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2121,
@@ -1020,9 +968,7 @@
     "files": [
      "example_graphs/example_graph1",
      "example_graphs/example_graph1_c_unweighted"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2122,
@@ -1032,9 +978,7 @@
     "files": [
      "example_graphs/example_graph2",
      "example_graphs/example_graph2_c_unweighted"
-    ],
-    "fixed_dimension": 595,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2123,
@@ -1044,9 +988,7 @@
     "files": [
      "example_graphs/example_graph3",
      "example_graphs/example_graph3_c_unweighted"
-    ],
-    "fixed_dimension": 760,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2124,
@@ -1056,9 +998,7 @@
     "files": [
      "example_graphs/example_graph0",
      "example_graphs/example_graph0_c_linear"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2125,
@@ -1068,9 +1008,7 @@
     "files": [
      "example_graphs/example_graph1",
      "example_graphs/example_graph1_c_linear"
-    ],
-    "fixed_dimension": 450,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2126,
@@ -1080,9 +1018,7 @@
     "files": [
      "example_graphs/example_graph2",
      "example_graphs/example_graph2_c_linear"
-    ],
-    "fixed_dimension": 595,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2127,
@@ -1092,9 +1028,7 @@
     "files": [
      "example_graphs/example_graph3",
      "example_graphs/example_graph3_c_linear"
-    ],
-    "fixed_dimension": 760,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2128,
@@ -1105,9 +1039,7 @@
      "example_graphs/GECCO2025/graphs/2100-impcol-d-n=435",
      "example_graphs/GECCO2025/2100-ea-fga/bestweights.txt",
      "example_graphs/GECCO2025/2100-ea-fga/bestvariances.txt"
-    ],
-    "fixed_dimension": 425,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2129,
@@ -1118,9 +1050,7 @@
      "example_graphs/GECCO2025/graphs/2100-impcol-d-n=435",
      "example_graphs/GECCO2025/2100-ea-ghc/bestweights.txt",
      "example_graphs/GECCO2025/2100-ea-ghc/bestvariances.txt"
-    ],
-    "fixed_dimension": 425,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2130,
@@ -1131,9 +1061,7 @@
      "example_graphs/GECCO2025/graphs/2101-lp-recipe-n=205",
      "example_graphs/GECCO2025/2101-ea-fga/bestweights.txt",
      "example_graphs/GECCO2025/2101-ea-fga/bestvariances.txt"
-    ],
-    "fixed_dimension": 204,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2131,
@@ -1144,9 +1072,7 @@
      "example_graphs/GECCO2025/graphs/2101-lp-recipe-n=205",
      "example_graphs/GECCO2025/2101-ea-ghc/bestweights.txt",
      "example_graphs/GECCO2025/2101-ea-ghc/bestvariances.txt"
-    ],
-    "fixed_dimension": 204,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2132,
@@ -1157,9 +1083,7 @@
      "example_graphs/GECCO2025/graphs/2102-ca-netscience-n=379",
      "example_graphs/GECCO2025/2102-ea-fga/bestweights.txt",
      "example_graphs/GECCO2025/2102-ea-fga/bestvariances.txt"
-    ],
-    "fixed_dimension": 379,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2133,
@@ -1170,9 +1094,7 @@
      "example_graphs/GECCO2025/graphs/2102-ca-netscience-n=379",
      "example_graphs/GECCO2025/2102-ea-ghc/bestweights.txt",
      "example_graphs/GECCO2025/2102-ea-ghc/bestvariances.txt"
-    ],
-    "fixed_dimension": 379,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2134,
@@ -1183,9 +1105,7 @@
      "example_graphs/GECCO2025/graphs/2103-lp-agg-n=615",
      "example_graphs/GECCO2025/2103-ea-fga/bestweights.txt",
      "example_graphs/GECCO2025/2103-ea-fga/bestvariances.txt"
-    ],
-    "fixed_dimension": 615,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2135,
@@ -1196,9 +1116,7 @@
      "example_graphs/GECCO2025/graphs/2103-lp-agg-n=615",
      "example_graphs/GECCO2025/2103-ea-ghc/bestweights.txt",
      "example_graphs/GECCO2025/2103-ea-ghc/bestvariances.txt"
-    ],
-    "fixed_dimension": 615,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2136,
@@ -1209,9 +1127,7 @@
      "example_graphs/GECCO2025/graphs/2104-can-715-n=715",
      "example_graphs/GECCO2025/2104-ea-fga/bestweights.txt",
      "example_graphs/GECCO2025/2104-ea-fga/bestvariances.txt"
-    ],
-    "fixed_dimension": 715,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2137,
@@ -1222,9 +1138,7 @@
      "example_graphs/GECCO2025/graphs/2104-can-715-n=715",
      "example_graphs/GECCO2025/2104-ea-ghc/bestweights.txt",
      "example_graphs/GECCO2025/2104-ea-ghc/bestvariances.txt"
-    ],
-    "fixed_dimension": 715,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2138,
@@ -1235,9 +1149,7 @@
      "example_graphs/GECCO2025/graphs/2105-random graph-n=500",
      "example_graphs/GECCO2025/2105-ea-fga/bestweights.txt",
      "example_graphs/GECCO2025/2105-ea-fga/bestvariances.txt"
-    ],
-    "fixed_dimension": 500,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2139,
@@ -1248,9 +1160,7 @@
      "example_graphs/GECCO2025/graphs/2105-random graph-n=500",
      "example_graphs/GECCO2025/2105-ea-ghc/bestweights.txt",
      "example_graphs/GECCO2025/2105-ea-ghc/bestvariances.txt"
-    ],
-    "fixed_dimension": 500,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2200,
@@ -1261,9 +1171,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_unweighted_1"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2201,
@@ -1274,9 +1182,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_unweighted_2"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2202,
@@ -1287,9 +1193,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_unweighted_3"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2203,
@@ -1300,9 +1204,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_unweighted_4"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2204,
@@ -1313,9 +1215,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_linear_1"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2205,
@@ -1326,9 +1226,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_linear_2"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2206,
@@ -1339,9 +1237,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_linear_3"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2207,
@@ -1352,9 +1248,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_linear_4"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2208,
@@ -1365,9 +1259,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_unweighted_1"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2209,
@@ -1378,9 +1270,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_unweighted_2"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2210,
@@ -1391,9 +1281,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_unweighted_3"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2211,
@@ -1404,9 +1292,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_unweighted_4"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2212,
@@ -1417,9 +1303,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_linear_1"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2213,
@@ -1430,9 +1314,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_linear_2"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2214,
@@ -1443,9 +1325,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_linear_3"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2215,
@@ -1456,9 +1336,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_linear_4"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2216,
@@ -1469,9 +1347,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_unweighted_1"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2217,
@@ -1482,9 +1358,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_unweighted_2"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2218,
@@ -1495,9 +1369,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_unweighted_3"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2219,
@@ -1508,9 +1380,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_unweighted_4"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2220,
@@ -1521,9 +1391,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_linear_1"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2221,
@@ -1534,9 +1402,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_linear_2"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2222,
@@ -1547,9 +1413,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_linear_3"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2223,
@@ -1560,9 +1424,7 @@
      "example_graphs/facebook_combined",
      "example_graphs/facebook_combined_e",
      "example_graphs/facebook_combined_c_linear_4"
-    ],
-    "fixed_dimension": 4039,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2300,
@@ -1571,9 +1433,7 @@
     "definition": "example_pwt/a280_n279_bounded-strongly-corr_01.ttp",
     "files": [
      "example_pwt/a280_n279_bounded-strongly-corr_01.ttp"
-    ],
-    "fixed_dimension": 279,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2301,
@@ -1582,9 +1442,7 @@
     "definition": "example_pwt/a280_n1395_uncorr-similar-weights_05.ttp",
     "files": [
      "example_pwt/a280_n1395_uncorr-similar-weights_05.ttp"
-    ],
-    "fixed_dimension": 1395,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2302,
@@ -1593,9 +1451,7 @@
     "definition": "example_pwt/a280_n2790_uncorr_10.ttp",
     "files": [
      "example_pwt/a280_n2790_uncorr_10.ttp"
-    ],
-    "fixed_dimension": 2790,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2303,
@@ -1604,9 +1460,7 @@
     "definition": "example_pwt/fnl4461_n4460_bounded-strongly-corr_01.ttp",
     "files": [
      "example_pwt/fnl4461_n4460_bounded-strongly-corr_01.ttp"
-    ],
-    "fixed_dimension": 4460,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2304,
@@ -1615,9 +1469,7 @@
     "definition": "example_pwt/fnl4461_n22300_uncorr-similar-weights_05.ttp",
     "files": [
      "example_pwt/fnl4461_n22300_uncorr-similar-weights_05.ttp"
-    ],
-    "fixed_dimension": 22300,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2305,
@@ -1626,9 +1478,7 @@
     "definition": "example_pwt/fnl4461_n44600_uncorr_10.ttp",
     "files": [
      "example_pwt/fnl4461_n44600_uncorr_10.ttp"
-    ],
-    "fixed_dimension": 44600,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2306,
@@ -1637,9 +1487,7 @@
     "definition": "example_pwt/pla33810_n33809_bounded-strongly-corr_01.ttp",
     "files": [
      "example_pwt/pla33810_n33809_bounded-strongly-corr_01.ttp"
-    ],
-    "fixed_dimension": 33809,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2307,
@@ -1648,9 +1496,7 @@
     "definition": "example_pwt/pla33810_n169045_uncorr-similar-weights_05.ttp",
     "files": [
      "example_pwt/pla33810_n169045_uncorr-similar-weights_05.ttp"
-    ],
-    "fixed_dimension": 169045,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 2308,
@@ -1659,9 +1505,7 @@
     "definition": "example_pwt/pla33810_n338090_uncorr_10.ttp",
     "files": [
      "example_pwt/pla33810_n338090_uncorr_10.ttp"
-    ],
-    "fixed_dimension": 338090,
-    "fixed_instance": 1
+    ]
    }
   ],
   "CEC2013": [
@@ -1669,81 +1513,61 @@
     "id": 1101,
     "name": "FivePeaks1101",
     "meta_name": "CEC2013FivePeaks",
-    "files": [],
-    "fixed_dimension": 1,
-    "fixed_instance": 1
+    "files": []
    },
    {
     "id": 1102,
     "name": "EqualMaxima1102",
     "meta_name": "CEC2013EqualMaxima",
-    "files": [],
-    "fixed_dimension": 1,
-    "fixed_instance": 1
+    "files": []
    },
    {
     "id": 1103,
     "name": "UnevenEqualMaxima1103",
     "meta_name": "CEC2013UnevenEqualMaxima",
-    "files": [],
-    "fixed_dimension": 1,
-    "fixed_instance": 1
+    "files": []
    },
    {
     "id": 1104,
     "name": "Himmelblau1104",
     "meta_name": "CEC2013Himmelblau",
-    "files": [],
-    "fixed_dimension": 2,
-    "fixed_instance": 1
+    "files": []
    },
    {
     "id": 1105,
     "name": "SixHumpCamelback1105",
     "meta_name": "CEC2013SixHumpCamelback",
-    "files": [],
-    "fixed_dimension": 2,
-    "fixed_instance": 1
+    "files": []
    },
    {
     "id": 1106,
     "name": "Shubert1106",
     "meta_name": "CEC2013Shubert2D",
-    "files": [],
-    "fixed_dimension": 2,
-    "fixed_instance": 1
+    "files": []
    },
    {
     "id": 1107,
     "name": "Vincent1107",
     "meta_name": "CEC2013Vincent2D",
-    "files": [],
-    "fixed_dimension": 2,
-    "fixed_instance": 1
+    "files": []
    },
    {
     "id": 1108,
     "name": "Shubert1108",
     "meta_name": "CEC2013Shubert3D",
-    "files": [],
-    "fixed_dimension": 3,
-    "fixed_instance": 1
+    "files": []
    },
    {
     "id": 1109,
     "name": "Vincent1109",
     "meta_name": "CEC2013Vincent3D",
-    "files": [],
-    "fixed_dimension": 3,
-    "fixed_instance": 1
+    "files": []
    },
    {
     "id": 1110,
     "name": "ModifiedRastrigin1110",
     "meta_name": "CEC2013ModifiedRastrigin",
-    "files": [],
-    "fixed_dimension": 2,
-    "fixed_instance": 1
+    "files": []
    },
    {
     "id": 1111,
@@ -1751,9 +1575,7 @@
     "meta_name": "CEC2013CF1D2",
     "files": [
      "cec_transformations/2013/optima.dat"
-    ],
-    "fixed_dimension": 2,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 1112,
@@ -1761,9 +1583,7 @@
     "meta_name": "CEC2013CF2D2",
     "files": [
      "cec_transformations/2013/optima.dat"
-    ],
-    "fixed_dimension": 2,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 1113,
@@ -1772,9 +1592,7 @@
     "files": [
      "cec_transformations/2013/optima.dat",
      "cec_transformations/2013/CF3_M_D2.dat"
-    ],
-    "fixed_dimension": 2,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 1114,
@@ -1783,9 +1601,7 @@
     "files": [
      "cec_transformations/2013/optima.dat",
      "cec_transformations/2013/CF3_M_D3.dat"
-    ],
-    "fixed_dimension": 3,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 1115,
@@ -1794,9 +1610,7 @@
     "files": [
      "cec_transformations/2013/optima.dat",
      "cec_transformations/2013/CF4_M_D3.dat"
-    ],
-    "fixed_dimension": 3,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 1116,
@@ -1805,9 +1619,7 @@
     "files": [
      "cec_transformations/2013/optima.dat",
      "cec_transformations/2013/CF3_M_D5.dat"
-    ],
-    "fixed_dimension": 5,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 1117,
@@ -1816,9 +1628,7 @@
     "files": [
      "cec_transformations/2013/optima.dat",
      "cec_transformations/2013/CF4_M_D5.dat"
-    ],
-    "fixed_dimension": 5,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 1118,
@@ -1827,9 +1637,7 @@
     "files": [
      "cec_transformations/2013/optima.dat",
      "cec_transformations/2013/CF3_M_D10.dat"
-    ],
-    "fixed_dimension": 10,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 1119,
@@ -1838,9 +1646,7 @@
     "files": [
      "cec_transformations/2013/optima.dat",
      "cec_transformations/2013/CF4_M_D10.dat"
-    ],
-    "fixed_dimension": 10,
-    "fixed_instance": 1
+    ]
    },
    {
     "id": 1120,
@@ -1849,9 +1655,7 @@
     "files": [
      "cec_transformations/2013/optima.dat",
      "cec_transformations/2013/CF4_M_D20.dat"
-    ],
-    "fixed_dimension": 20,
-    "fixed_instance": 1
+    ]
    }
   ]
  }
