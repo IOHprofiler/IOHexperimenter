@@ -537,7 +537,7 @@ Record:
   `share/ioh` of the installation (`IOH_INSTALL_DATA_DIR`); the Python build has no default. A missing
   directory or file throws `ioh::data::data_error` (Python: `ioh.DataError`, a `RuntimeError`) saying
   where it looked. The search for `IOHexperimenter/static` in the parent directories of the working
-  directory is gone; `get_static_root`/`find_static_file` call the new functions. `static/` is installed
+  directory is gone; `get_static_root`/`find_static_file` are removed (use `ioh::data::root`/`file`). `static/` is installed
   to `share/ioh`. The C++ tests and CI no longer set `IOH_RESOURCES`.
 * **Manifest** (T4.2): `tools/gen_manifest.py` writes `static/manifest.json` (140 files with size and
   sha256, a data version that hashes this list, and the 98 data-backed entries: 78 graphs with their
@@ -873,7 +873,7 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
     by `cmake --install`). It no longer searches the working directory's parents for
     `IOHexperimenter/static`. Missing data throw `ioh::data::data_error` instead of returning an empty path
     or aborting; the data directory must match the library's data version (its `manifest.json`).
-    `get_static_root`/`find_static_file` remain as wrappers. A graph class's files are resolved when it
+    `get_static_root`/`find_static_file` are removed: use `ioh::data::root()`/`ioh::data::file()`. A graph class's files are resolved when it
     is loaded; `graph::Meta::root` is empty for the built-in graphs.
 * Python upgrade guide: Python ≥ 3.10 (recommended ≥ 3.12), deprecated `download_static_folder` /
   `load_graph_problems` (no-ops), numpy returns (WP7), new metadata attributes if added. Data (WP4): the
@@ -968,7 +968,8 @@ Each WP adds its user-visible changes here (§2).
     `RuntimeError`) when a problem that needs them is created, instead of aborting `import ioh`; registering
     the problems needs no data. `download_static_folder()` and `load_graph_problems()` are deprecated and do
     nothing. CEC2022 problems are created about 5 times faster (their data are read once).
-  * C++: the data API `ioh::data` (`set_root`, `root`, `file`, `data_error`); the library is installed with
+  * C++: the data API `ioh::data` (`set_root`, `root`, `file`, `data_error`), which replaces
+    `get_static_root` and `find_static_file`; the library is installed with
     its data (`share/ioh`) and finds it there, or in the source tree it was built from, without
     `IOH_RESOURCES`. The test reference files moved from `static/` to `tests/data/`, and `static.tar.gz`
     (which older versions download) no longer contains them.

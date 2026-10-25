@@ -92,6 +92,9 @@ class MetaData:
         name: str,
         n_variables: int,
         optimization_type: OptimizationType,
+        final_target: float = ...,
+        fixed_dimension: bool = ...,
+        fixed_instance: bool = ...,
     ) -> None: ...
     @property
     def instance(self) -> int: ...

@@ -294,9 +294,10 @@ void define_helper_classes(py::module &m)
 
 
     py::class_<MetaData>(m, "MetaData")
-        .def(py::init<int, int, std::string, int, ioh::common::OptimizationType, double>(), py::arg("problem_id"),
-             py::arg("instance"), py::arg("name"), py::arg("n_variables"), py::arg("optimization_type"),
-             py::arg("final_target") = 1e-8,
+        .def(py::init<int, int, std::string, int, ioh::common::OptimizationType, double, bool, bool>(),
+             py::arg("problem_id"), py::arg("instance"), py::arg("name"), py::arg("n_variables"),
+             py::arg("optimization_type"), py::arg("final_target") = 1e-8, py::arg("fixed_dimension") = false,
+             py::arg("fixed_instance") = false,
              R"pbdoc(
                 Problem meta data. Contains static information about problems, such as their name and id. 
 
@@ -313,7 +314,11 @@ void define_helper_classes(py::module &m)
                 optimization_type: OptimizationType
                     Enum value, denoting if this is a maximization or minimization problem
                 final_target: float
-                    The final target of the function    
+                    The final target of the function
+                fixed_dimension: bool
+                    Whether the problem has this dimension whatever dimension was requested
+                fixed_instance: bool
+                    Whether the problem has this instance whatever instance was requested
                
             )pbdoc")
         .def_readonly("instance", &MetaData::instance, "The instance number of the current problem")

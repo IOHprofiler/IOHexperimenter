@@ -82,7 +82,9 @@ namespace ioh::problem
          * @param name A unique name for the problem.
          */
         CEC2013(const int problem_id, const int instance, const int n_variables, const std::string &name, const double lb, const double ub, const std::vector<Solution<double, SingleObjective>>& opts, const double rho = 0.01) :
-            RealSingleObjective(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::MAX),
+            // CEC2013 problems exist in one dimension only, and have a single instance
+            RealSingleObjective(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::MAX,
+                                         /*final_target*/ 1e-8, /*fixed_dimension*/ true, /*fixed_instance*/ true),
                                 Bounds<double>(n_variables, lb, ub)),
             n_optima(opts.size()),
             rho(rho),
@@ -90,8 +92,6 @@ namespace ioh::problem
             single_global_optimum(false)
         {
             optimum_ = optima[0];
-            // CEC2013 problems exist in one dimension only, and have a single instance
-            meta_data_.fixed_dimension = meta_data_.fixed_instance = true;
         }  
 
         void set_optimum(const size_t i, const bool single_global = true) 

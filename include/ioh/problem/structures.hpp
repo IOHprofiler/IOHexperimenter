@@ -44,11 +44,11 @@ namespace ioh
 
             //! Whether the problem has one dimension, n_variables, whatever dimension was requested (the CEC2013 and
             //! graph problems)
-            bool fixed_dimension = false;
+            bool fixed_dimension;
 
             //! Whether the problem has one instance, instance, whatever instance was requested (the CEC2013 and graph
             //! problems)
-            bool fixed_instance = false;
+            bool fixed_instance;
 
             /**
              * @brief Construct a new Meta Data object
@@ -59,13 +59,17 @@ namespace ioh
              * @param n_variables the dimension of the problem
              * @param optimization_type optimization type
              * @param final_target the final target to be reached for the function
+             * @param fixed_dimension whether the problem has this dimension whatever dimension was requested
+             * @param fixed_instance whether the problem has this instance whatever instance was requested
              */
             MetaData(const int problem_id, const int instance, std::string name, const int n_variables,
                      const common::OptimizationType optimization_type = common::OptimizationType::MIN,
-                     const double final_target = 1e-8) :
+                     const double final_target = 1e-8, const bool fixed_dimension = false,
+                     const bool fixed_instance = false) :
                 instance(instance),
                 problem_id(problem_id), name(std::move(name)), optimization_type{optimization_type},
-                n_variables(n_variables), final_target(final_target)
+                n_variables(n_variables), final_target(final_target), fixed_dimension(fixed_dimension),
+                fixed_instance(fixed_instance)
             {
             }
 

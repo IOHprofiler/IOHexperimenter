@@ -298,13 +298,13 @@ namespace ioh::problem::submodular
          */
         GraphProblem(const int problem_id, const int instance, const std::string &name,
                      const std::shared_ptr<graph::Graph> &graph) :
+            // the dimension is the size of the graph, and graph problems have a single instance
             IntegerSingleObjective(
-                MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::MAX),
+                MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::MAX,
+                         /*final_target*/ 1e-8, /*fixed_dimension*/ true, /*fixed_instance*/ true),
                 Bounds<int>(graph->dimension(),0,1), ConstraintSet<int>(std::make_shared<GraphConstraint>(graph))),
             graph(graph)
         {
-            // the dimension is the size of the graph, and graph problems have a single instance
-            meta_data_.fixed_dimension = meta_data_.fixed_instance = true;
         }
     };
 

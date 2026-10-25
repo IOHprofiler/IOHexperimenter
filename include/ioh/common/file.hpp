@@ -66,18 +66,6 @@ namespace ioh::common::file
             operator std::string() const { return data; }
         };
 
-        //! The data directory, IOHexperimenter/static (see ioh::data::root)
-        inline fs::path get_static_root() { return ::ioh::data::root(); }
-
-        /**
-         * @brief The path of a file in the data directory (see ioh::data::file)
-         *
-         * @param filename the name of the file
-         * @return fs::path the absolute path of the file
-         */
-        inline fs::path find_static_file(const std::string &filename) { return ::ioh::data::file(filename); }
-
-
         //! Helper type for detecting shared ptr of which the element type can be constructed from a string
         template <typename T>
         struct is_shared_ptr_string_constructible : std::false_type
