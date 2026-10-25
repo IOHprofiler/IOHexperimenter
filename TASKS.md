@@ -523,11 +523,62 @@ What was done, and where it differs from T3.1–T3.7 below:
 
 ---
 
-## WP4 — Data layer and manifest
+## WP4 — Data layer and manifest ✅ implemented (branch `wp4-data-layer`)
 
 Depends on: WP3.
 
-### T4.1 Data root API
+Record:
+
+* **Data root** (T4.1): `ioh::data::set_root`, `root` and `file` (`include/ioh/common/data.hpp`,
+  `src/data.cpp`). The root is the one set with `set_root`, otherwise `IOH_RESOURCES`, otherwise the first
+  existing default of the build: the source tree's `static/` (`IOH_SOURCE_DATA_DIR`), then
+  `share/ioh` of the installation (`IOH_INSTALL_DATA_DIR`); the Python build has no default. A missing
+  directory or file throws `ioh::data::data_error` (Python: `ioh.DataError`, a `RuntimeError`) saying
+  where it looked. The search for `IOHexperimenter/static` in the parent directories of the working
+  directory is gone; `get_static_root`/`find_static_file` call the new functions. `static/` is installed
+  to `share/ioh`. The C++ tests and CI no longer set `IOH_RESOURCES`.
+* **Manifest** (T4.2): `tools/gen_manifest.py` writes `static/manifest.json` (140 files with size and
+  sha256, a data version that hashes this list, and the 98 data-backed entries: 78 graphs with their
+  class and definition line, 20 CEC2013 problems with their meta names, files, fixed dimension and
+  instance). The entries were generated once from the golden fixtures and the definition files and are
+  kept since (`--entries` regenerates them); `--check` compares `static/` and the entries with the
+  manifest and the golden fixtures, `--check-package` the data files of wheels and sdists.
+  *Changed from the plan*: the library does not read the JSON at runtime. The script also writes
+  `src/data_manifest.inc`, the same entries, files and data version compiled into the library
+  (`ioh::data::manifest_entries`, `in_manifest`, `data_version`), so registering the built-in problems
+  needs no data and no JSON parser. *Added*: `ioh::data::file` checks once per directory that its
+  `manifest.json` has the library's data version, so a stale data directory is an error instead of
+  wrong data. `tools/static_tarball.py` rebuilds `static.tar.gz` reproducibly and checks it.
+* **Lazy, cached data** (T4.3): `ioh::data::cached<T>(key, loader)` loads a value once per key, shared
+  and thread-safe (a lock per key; a loader that throws is called again). CEC2022 reads its matrices,
+  shifts and shuffles through it (120 constructions: 0.03 s before, 0.006 s after); whether a CEC2022
+  problem shuffles its input is declared by the manifest (no silent fallback). CEC2013 reads
+  `optima.dat` when a composition problem is created instead of when the problems are registered. The
+  built-in graph and pack-while-travel entries come from the compiled manifest
+  (`GraphProblemType::builtin_entries`); a built-in graph finds its files in the data directory when it
+  is loaded, a graph from a definitions file in that file's directory, a missing file is a
+  `data_error`, and `Graph::dimension` loads under a mutex (the graphs were already shared by the
+  problems of an entry, so they do not go through `cached`). With an empty data directory, everything
+  is registered, problems that need no data work, and the others raise.
+* **Ids and names** (T4.4, decided after WP3): see T4.4.
+* **Python** (T4.5): `import ioh` no longer sets `IOH_RESOURCES`; unless it is set (an existing
+  directory, as before), the package points the library at its own `static/` with the new
+  `ioh.set_data_root` (`ioh.data_root()` gives the directory in use). `download_static_folder()` and
+  `load_graph_problems()` are deprecated no-ops.
+* **Repository and packaging** (T4.6): the test fixtures are in `tests/data/` (C++: `IOH_TEST_DATA_DIR`);
+  `static/conf.ini` is deleted. The wheels workflow checks that every wheel and the sdist hold exactly the
+  manifest's files before uploading.
+* **Left open**: `fixed_dimension`/`fixed_instance` on registry entries (T4.2). The factories store no
+  per-entry data, and how Python should expose them is the maintainer's choice (see the WP4 pull request).
+  The CEC2013 entries stay in code; `gen_manifest.py --check` keeps the manifest's CEC2013 entries equal
+  to the golden registry and behaviour.
+* **Tests**: C++ `test_data_root` (lookup order, errors, data version), `test_data_manifest`,
+  `test_data_cached`, the registry tests for the id rules (in-process, a rejected registration leaves the
+  factories unchanged) and the appended graph files; Python: the graph file test, subclass ids, built-in
+  names, missing data (an empty data directory), package data, `IOH_RESOURCES`, `set_data_root` and the
+  deprecations, each in a fresh interpreter where it changes the registry or the data root.
+
+### T4.1 Data root API ✅
 
 * New `include/ioh/common/data.hpp` + `src/data.cpp`: `ioh::data::set_root(path)`, `root()`,
   `file(relative)`. Resolution order: `set_root` > `IOH_RESOURCES` > compile-time default from CMake
@@ -535,7 +586,7 @@ Depends on: WP3.
   builds). Remove the current-directory ancestor scan from `get_static_root()`. Missing root or file
   → exception (`ioh::data::data_error`) listing where it looked and how to fix it.
 
-### T4.2 Manifest
+### T4.2 Manifest ✅ (fixed values on registry entries open)
 
 * Script (e.g. `tools/gen_manifest.py`) generating a checked-in `static/manifest.json`: every data
   file with relative path, size, sha256, plus `DATA_VERSION` (handle the `ioh/static` symlink and
@@ -548,7 +599,7 @@ Depends on: WP3.
   since WP3; the registry values must equal what the constructed problems report.
 * CI check: wheel contents (and the source tree) match the manifest (paths + sha256).
 
-### T4.3 Lazy, cached datasets
+### T4.3 Lazy, cached datasets ✅
 
 * `ioh::data::cached<Key, T>(key, loader)`: loads once (`std::call_once` or equivalent), shared
   across problem instances, thread-safe.
@@ -557,7 +608,7 @@ Depends on: WP3.
   loading. Remove the silent fallback in `load_shuffle_data` (`if (exists(...))`): whether a shuffle
   file exists is declared by the manifest; a declared-but-missing file is an error.
 
-### T4.4 One pattern for instance-based problems; one source for ids and names ✅ API done in WP3
+### T4.4 One pattern for instance-based problems; one source for ids and names ✅
 
 * Done in WP3: `InstanceBasedProblem` and its C++ `load_instances` specializations are gone (the
   Python `load_instances` class methods stay); CEC2013, star discrepancy, graph and pack-while-travel
@@ -603,7 +654,7 @@ Depends on: WP3.
   * Tests in-process (a rejected registration leaves the factories unchanged), for each rule in C++
     and the Python-facing ones in Python; the golden files do not change.
 
-### T4.5 Python side
+### T4.5 Python side ✅
 
 * At import: `iohcpp.set_data_root(importlib.resources.files("ioh") / "static")` unless
   `IOH_RESOURCES` is set (keep honouring it, and keep the `ImportError` when it points to a
@@ -614,7 +665,7 @@ Depends on: WP3.
 * A missing or incomplete data file must raise a Python exception at `get_problem` time (test it),
   never abort the interpreter.
 
-### T4.6 Repository and packaging
+### T4.6 Repository and packaging ✅
 
 * Move test fixtures (`*fitness*.in`, `cec_problem20xx.in`, `dynamic_bin_val.in`) to
   `tests/data/` and update C++/Python tests (C++ tests get the path via a CMake compile definition).
@@ -792,10 +843,18 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
     `type_name`/`class_name`. Renamed: `GraphProblemType::get_constructors(path)` →
     `graph_entries(path, name)`, `star_discrepancy::load_default_instances` →
     `default_registry_entries`.
-  * Data-root API (WP4); errors are exceptions instead of aborts; removed helpers/types list.
+  * Data (WP4): the library finds its data with `ioh::data::root()`: `ioh::data::set_root(path)`, else
+    `IOH_RESOURCES`, else the source tree it was built from, else `share/ioh` of the installation (installed
+    by `cmake --install`). It no longer searches the working directory's parents for
+    `IOHexperimenter/static`. Missing data throw `ioh::data::data_error` instead of returning an empty path
+    or aborting; the data directory must match the library's data version (its `manifest.json`).
+    `get_static_root`/`find_static_file` remain as wrappers. A graph class's files are resolved when it
+    is loaded; `graph::Meta::root` is empty for the built-in graphs.
 * Python upgrade guide: Python ≥ 3.10 (recommended ≥ 3.12), deprecated `download_static_folder` /
-  `load_graph_problems`, `IOH_RESOURCES` semantics, numpy returns (WP7), new metadata attributes if
-  added. Ids (WP4): problem classes defined by subclassing report the id they are registered under
+  `load_graph_problems` (no-ops), numpy returns (WP7), new metadata attributes if added. Data (WP4): the
+  package uses its own data files; `IOH_RESOURCES` still names another directory, but `import ioh` no
+  longer sets it (for subprocesses), and `ioh.set_data_root(path)`/`ioh.data_root()` change and show the
+  directory; missing data raise `ioh.DataError` (a `RuntimeError`) when a problem is created. Ids (WP4): problem classes defined by subclassing report the id they are registered under
   instead of 0; a problem named like a built-in raises; `load_instances(path)` adds the file's
   graphs after the existing problems and returns their ids, and `load_instances()` is deprecated.
 * README/docs: installation, building from source (scikit-build-core), data location; changelog
@@ -878,6 +937,16 @@ Each WP adds its user-visible changes here (§2).
     (ids from 2309 on a fresh registry) instead of from the class's first id, never replace built-in
     graphs, and the call returns the new ids and names; loading the same file again changes nothing.
     `load_instances()` without a path is deprecated and does nothing.
+  * Data: the package uses the data files installed with it, from any working directory, and no longer
+    sets `IOH_RESOURCES` (it still names another data directory); `ioh.set_data_root(path)` and
+    `ioh.data_root()` set and show the directory. Missing or stale data raise `ioh.DataError` (a
+    `RuntimeError`) when a problem that needs them is created, instead of aborting `import ioh`; registering
+    the problems needs no data. `download_static_folder()` and `load_graph_problems()` are deprecated and do
+    nothing. CEC2022 problems are created about 5 times faster (their data are read once).
+  * C++: the data API `ioh::data` (`set_root`, `root`, `file`, `data_error`); the library is installed with
+    its data (`share/ioh`) and finds it there, or in the source tree it was built from, without
+    `IOH_RESOURCES`. The test reference files moved from `static/` to `tests/data/`, and `static.tar.gz`
+    (which older versions download) no longer contains them.
 
 ---
 
