@@ -45,9 +45,13 @@ from . import iohcpp as _iohcpp
 
 
 def set_data_root(path):
-    '''Sets the directory of the data files (the static folder of IOHexperimenter); an empty path unsets it, so
-    that IOH_RESOURCES or the package's own data are used. Problems that need data and are not created yet use it.'''
-    _iohcpp.set_data_root(os.fspath(path))
+    '''Sets the directory of the data files (the static folder of IOHexperimenter) for this process; an empty path
+    goes back to IOH_RESOURCES, or the package's own data when it is not set. Problems that need data and are not
+    created yet use it. Other processes (e.g. multiprocessing workers) do not see it: set IOH_RESOURCES for them.'''
+    path = os.fspath(path)
+    if not path and os.environ.get('IOH_RESOURCES') is None:
+        path = static_directory
+    _iohcpp.set_data_root(path)
 
 
 if os.environ.get('IOH_RESOURCES') is None:

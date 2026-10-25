@@ -49,15 +49,26 @@ namespace ioh::common
         /**
          * @brief Include a new element to the factory
          *
-         * A new name gets `id`, or the next free id when `id` is taken. An existing name keeps its id and
-         * gets the new creator, except the name of a built-in entry, which throws std::invalid_argument.
-         * Built-in entries must be unique: a duplicate name or id among them throws std::logic_error.
-         * (register_problem adds the rules for the ids of problems.)
+         * A new name gets `id`, or the next free id when `id` is taken; with keep_id, an id that belongs to
+         * another name, or a registered name with another id, throws std::invalid_argument instead (checked under
+         * the same lock as the insertion). An existing name keeps its id and gets the new creator, except the name
+         * of a built-in entry, which throws std::invalid_argument. Built-in entries must be unique: a duplicate name
+         * or id among them throws std::logic_error. (register_problem adds the rules for the ids of problems.)
          */
-        void include(const std::string &name, const int id, Creator creator)
+        void include(const std::string &name, const int id, Creator creator, const bool keep_id = false)
         {
             const std::lock_guard<std::recursive_mutex> lock(mutex_);
             const auto already_defined = name_map.find(name) != std::end(name_map);
+            if (keep_id && !adding_builtins_)
+            {
+                const auto holder = id_map.find(id);
+                if (holder != std::end(id_map) && holder->second != name)
+                    throw std::invalid_argument("Cannot register " + name + " with id " + std::to_string(id) +
+                                                ": the id belongs to " + holder->second);
+                if (holder == std::end(id_map) && already_defined)
+                    throw std::invalid_argument("Cannot register " + name + " with id " + std::to_string(id) +
+                                                ": it is registered with another id");
+            }
             if (adding_builtins_)
             {
                 if (already_defined || id_map.find(id) != std::end(id_map))

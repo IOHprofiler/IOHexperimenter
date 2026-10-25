@@ -578,6 +578,25 @@ Record:
   value or `null` to `true`/`false` (714 records, mechanically, nothing else changed). The CEC2013
   entries stay in code; `gen_manifest.py --check` keeps the manifest's CEC2013 entries equal to the
   golden registry.
+* **Review fixes** (a review of the branch):
+  * `.gitattributes`: `static/` and `tests/data/` are never converted to CRLF (GitHub's Windows checkout did,
+    so the Windows wheels held CRLF data files, which the new package check would have rejected).
+  * Paths cross as UTF-8: `ioh.set_data_root`/`data_root` use `fs::u8path`/`u8string` (a narrow `fs::path`
+    uses the ANSI code page on Windows, so a non-ASCII path such as `C:\Users\Jürgen\...` broke every
+    data-backed problem), `IOH_RESOURCES` is read as wide characters on Windows, and the cache keys and error
+    messages use `u8string`.
+  * `Graph::load` starts from scratch, so a load that stopped at a missing file can be repeated (it added
+    the edges a second time).
+  * `ioh.set_data_root("")` goes back to the package's data when `IOH_RESOURCES` is not set (the Python
+    build has no default); it does not reach other processes (documented).
+  * The defaults of the build are taken only with the library's data version (a source tree with newer
+    data no longer hides the installed copy); the error lists each default and why it did not fit.
+  * `Factory::include(..., keep_id)` checks a family factory's id under the same lock as the insertion, and
+    all graph loaders share one lock and fill the family factory first, so concurrent registrations cannot
+    move an id or leave an entry in one factory only. Entries that repeat an id or a name throw first.
+  * `cached` keeps its values in function-local statics (static members of a class template may be
+    initialized after a static problem that needs them); so does `set_root`'s directory.
+  * GCC 7/8: `FSEXPERIMENTAL` and `stdc++fs` are public usage requirements of `ioh::ioh`.
 * **Tests**: C++ `test_data_root` (lookup order, errors, data version), `test_data_manifest`,
   `test_data_cached`, the registry tests for the id rules (in-process, a rejected registration leaves the
   factories unchanged) and the appended graph files; Python: the graph file test, subclass ids, built-in
@@ -754,7 +773,8 @@ Depends on: WP3, WP4, WP5.
 
 * `MaxCut/MaxCoverage/MaxInfluence/PackWhileTravel.load_instances` (runtime registration of user
   graph files, since WP3; appended and returning their ids since WP4, T4.4), `FlatFile.watch`, `Store.watch`, star-discrepancy `grid` property, the `Path`
-  class and implicit str → path conversion (`nanobind/stl/filesystem.h`), pickling
+  class and implicit str → path conversion (`nanobind/stl/filesystem.h`; on Windows the `Path` class decodes
+  a str with the ANSI code page, so `load_instances` fails for other characters), pickling
   (`__getstate__/__setstate__`) of triggers/properties, copy-vs-view semantics of arrays.
   `tests/python/test_array_layout.py` only compares values: first add a test that pins whether
   `Solution.x` is a writable view that aliases C++ memory (it is on master).
@@ -771,7 +791,8 @@ Depends on: WP3, WP4, WP5.
 
 * The free-threaded wheels built since WP1 re-enable the GIL on import, because the module does not
   declare that it is thread-safe. After the thread-safety audit (factory mutex from T3.2, loggers
-  and triggers, the global random generator used by MaxInfluence, the WP4 data cache) build with
+  and triggers, the global random generator used by MaxInfluence, the WP4 data cache, PackWhileTravel's
+  evaluation, which inserts into the shared graph's `city_map`) build with
   nanobind's `FREE_THREADED` so the GIL stays disabled, and add a multi-threaded evaluation test.
   Also remove the `cp3??t-win*` skip in `pyproject.toml`: nanobind finds the free-threaded
   `python3XXt.lib` on Windows, the pinned pybind11 2.11 does not.

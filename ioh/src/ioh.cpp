@@ -50,11 +50,12 @@ PYBIND11_MODULE(iohcpp, m) {
     
     // the data files (ioh::data): a missing directory or file raises DataError, a RuntimeError
     py::register_exception<ioh::data::data_error>(m, "DataError", PyExc_RuntimeError);
+    // paths cross as UTF-8 (std::string from str), also on Windows, where a narrow fs::path uses the code page
     m.def(
-        "set_data_root", [](const std::string &path) { ioh::data::set_root(path); }, py::arg("path"),
+        "set_data_root", [](const std::string &path) { ioh::data::set_root(fs::u8path(path)); }, py::arg("path"),
         "Sets the directory of the data files (the static folder of IOHexperimenter); an empty path unsets it.");
     m.def(
-        "data_root", [] { return ioh::data::root().string(); },
+        "data_root", [] { return ioh::data::root().u8string(); },
         "The directory of the data files: the one set with set_data_root, otherwise IOH_RESOURCES.");
 
     define_helper_classes(m);

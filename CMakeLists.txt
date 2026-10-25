@@ -82,6 +82,13 @@ add_library(ioh STATIC
     src/registry/suites.cpp
 )
 add_library(ioh::ioh ALIAS ioh)
+# GCC 7 and 8 only have <experimental/filesystem> (include/ioh/common/data.hpp): programs that use the library
+# (also installed) need the same definition and library
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0
+   AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
+    target_compile_definitions(ioh PUBLIC FSEXPERIMENTAL)
+    target_link_libraries(ioh PUBLIC stdc++fs)
+endif()
 # position-independent: it is also linked into the Python extension. The Debug build gets its own file name, so
 # that installed Debug and Release builds can coexist.
 set(IOH_DEBUG_POSTFIX d CACHE STRING "Postfix of the Debug build of the ioh library")

@@ -314,6 +314,19 @@ namespace registry_test
 
         Member(const int instance, const int n_variables) : Family(Id, instance, n_variables, registry_name) {}
     };
+
+    //! A family member whose entries repeat an id
+    class Repeated final : public Family
+    {
+    public:
+        Repeated(const int id, const int n_variables) : Family(id, 1, n_variables, "RegistryTestRepeated") {}
+
+        static std::vector<ioh::problem::RegistryEntry<Repeated>> registry_entries()
+        {
+            return {{7, "RegistryTestRepeatedA", [](int, int) { return std::make_shared<Repeated>(7, 2); }},
+                    {7, "RegistryTestRepeatedB", [](int, int) { return std::make_shared<Repeated>(7, 2); }}};
+        }
+    };
 } // namespace registry_test
 
 TEST_F(BaseTest, test_registry_family_factory_ids)
@@ -322,13 +335,15 @@ TEST_F(BaseTest, test_registry_family_factory_ids)
     using registry_test::Member;
     const auto &family = ProblemRegistry<registry_test::Family>::instance();
 
-    // in the factory of a family the id is the key: a taken id, or a name registered with another id, throws,
-    // and registers nothing
+    // in the factory of a family the id is the key: a taken id, a name registered with another id, or entries that
+    // repeat an id throw, and register nothing (the factory keeps its entries over --gtest_repeat)
     register_problem<Member<1>, registry_test::Family>();
-    EXPECT_EQ(family.map(), (std::map<int, std::string>{{1, "RegistryTestMember"}}));
+    const auto entries = family.map();
+    EXPECT_EQ(entries.at(1), "RegistryTestMember");
     EXPECT_THROW((register_problem<Member<1>, registry_test::Family>(1, "RegistryTestOther")), std::invalid_argument);
     EXPECT_THROW((register_problem<Member<2>, registry_test::Family>()), std::invalid_argument);
-    EXPECT_EQ(family.map(), (std::map<int, std::string>{{1, "RegistryTestMember"}}));
+    EXPECT_THROW((register_problem<registry_test::Repeated, registry_test::Family>()), std::invalid_argument);
+    EXPECT_EQ(family.map(), entries);
 
     // registering the same id and name again replaces the class, and a free id is fine
     register_problem<Member<1>, registry_test::Family>(1, "RegistryTestMember");
@@ -496,4 +511,16 @@ TEST_F(BaseTest, test_registry_graph_definitions_file)
     // a file that does not exist registers nothing
     EXPECT_THROW((void)(Loader::load_graph_instances<int, int>(dir / "missing")), std::invalid_argument);
     EXPECT_EQ(graphs.map().size(), graph_count + 2);
+
+    // a graph file that is missing when the problem is created is an error; once it is there, the graph loads
+    // completely, not on top of what the failed attempt read
+    ASSERT_TRUE(write(dir / "later", "graphs/triangle|NULL|graphs/weights|NULL\n"));
+    const auto later = Loader::load_graph_instances<int, int>(dir / "later");
+    ASSERT_EQ(later.size(), 1u);
+    EXPECT_THROW((void)graphs.create(later.begin()->first, 1, 1), ioh::data::data_error);
+    ASSERT_TRUE(write(dir / "graphs" / "weights", "1 1 1\n"));
+    const auto loaded = std::dynamic_pointer_cast<submodular::GraphProblem>(graphs.create(later.begin()->first, 1, 1));
+    ASSERT_NE(loaded, nullptr);
+    EXPECT_EQ(loaded->meta_data().n_variables, 3);
+    EXPECT_EQ(loaded->graph->edges.size(), 3u);
 }

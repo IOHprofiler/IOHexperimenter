@@ -29,59 +29,101 @@ namespace ioh::data
 #include "data_manifest.inc"
 
         std::mutex root_mutex;
-        fs::path explicit_root;
+
+        //! The directory given to set_root (a function-local static: set_root may be called while other static
+        //! variables are initialized)
+        fs::path &explicit_root()
+        {
+            static fs::path root;
+            return root;
+        }
+
+        //! The data version in the manifest.json of a directory, or "" when it has none
+        std::string read_version(const fs::path &dir)
+        {
+            std::ifstream in(dir / "manifest.json");
+            if (!in)
+                return {};
+            const std::string text((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+            const std::string key = "\"data_version\": \"";
+            const auto start = text.find(key);
+            if (start == std::string::npos)
+                return {};
+            const auto begin = start + key.size();
+            return text.substr(begin, text.find('"', begin) - begin);
+        }
+
+        //! The environment variable IOH_RESOURCES, empty when it is not set (on Windows read as wide characters,
+        //! so that any path works)
+        fs::path resources_variable()
+        {
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996) // getenv
+#endif
+#ifdef _WIN32
+            const wchar_t *value = _wgetenv(L"IOH_RESOURCES");
+#else
+            const char *value = std::getenv("IOH_RESOURCES");
+#endif
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+            return value == nullptr ? fs::path() : fs::path(value);
+        }
 
         //! The data directory and where it came from
         std::pair<fs::path, std::string> find_root()
         {
             {
                 const std::lock_guard<std::mutex> lock(root_mutex);
-                if (!explicit_root.empty())
+                const auto &root = explicit_root();
+                if (!root.empty())
                 {
-                    if (fs::is_directory(explicit_root))
-                        return {explicit_root, "set with ioh::data::set_root"};
+                    if (fs::is_directory(root))
+                        return {root, "set with ioh::data::set_root"};
                     throw data_error(fmt::format("The IOH data directory {} set with ioh::data::set_root does not exist",
-                                                 explicit_root.string()));
+                                                 root.u8string()));
                 }
             }
 
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable : 4996) // getenv
-#endif
-            const char *resources = std::getenv("IOH_RESOURCES");
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
-            if (resources != nullptr && *resources != '\0')
+            if (const auto resources = resources_variable(); !resources.empty())
             {
                 if (fs::is_directory(resources))
-                    return {fs::path(resources), "from the IOH_RESOURCES environment variable"};
-                throw data_error(fmt::format(
-                    "The IOH data directory {} from the IOH_RESOURCES environment variable does not exist", resources));
+                    return {resources, "from the IOH_RESOURCES environment variable"};
+                throw data_error(
+                    fmt::format("The IOH data directory {} from the IOH_RESOURCES environment variable does not exist",
+                                resources.u8string()));
             }
 
-            std::vector<std::string> defaults;
+            // the defaults of the build: the first with the library's data version, so that e.g. a source tree with
+            // newer data does not hide the installed copy
+            std::vector<fs::path> defaults;
 #ifdef IOH_SOURCE_DATA_DIR
-            defaults.emplace_back(IOH_SOURCE_DATA_DIR);
+            defaults.push_back(fs::u8path(IOH_SOURCE_DATA_DIR));
 #endif
 #ifdef IOH_INSTALL_DATA_DIR
-            defaults.emplace_back(IOH_INSTALL_DATA_DIR);
+            defaults.push_back(fs::u8path(IOH_INSTALL_DATA_DIR));
 #endif
             std::string looked;
             for (const auto &dir : defaults)
             {
-                if (fs::is_directory(dir))
-                    return {fs::path(dir), "the default of the build"};
-                looked += (looked.empty() ? "" : ", ") + dir;
+                std::string state;
+                if (!fs::is_directory(dir))
+                    state = "does not exist";
+                else if (const auto version = read_version(dir); version != generated_data_version)
+                    state = version.empty() ? "has no data version" : "has data version " + version;
+                else
+                    return {dir, "the default of the build"};
+                looked += fmt::format("{}{} ({})", looked.empty() ? "" : ", ", dir.u8string(), state);
             }
 
             throw data_error(fmt::format(
-                "IOH could not find its data directory (the static folder of IOHexperimenter): neither "
-                "ioh::data::set_root nor the IOH_RESOURCES environment variable is set{}. Set one of them to the data "
-                "directory.",
-                looked.empty() ? ", and this build has no default"
-                               : ", and the defaults of the build (" + looked + ") do not exist"));
+                "IOH could not find its data directory (the static folder of IOHexperimenter, data version {}): "
+                "neither ioh::data::set_root nor the IOH_RESOURCES environment variable is set{}. Set one of them to "
+                "the data directory.",
+                generated_data_version,
+                looked.empty() ? ", and this build has no default" : ", and no default of the build fits: " + looked));
         }
 
         //! Checks, once per data directory, that its manifest.json has the data version of the library
@@ -90,32 +132,24 @@ namespace ioh::data
             static std::mutex mutex;
             static std::set<std::string> checked;
             const std::lock_guard<std::mutex> lock(mutex);
-            if (checked.count(dir.string()) != 0)
+            if (checked.count(dir.u8string()) != 0)
                 return;
 
-            std::string version;
-            if (std::ifstream in(dir / "manifest.json"); in)
-            {
-                const std::string text((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-                const std::string key = "\"data_version\": \"";
-                if (const auto start = text.find(key); start != std::string::npos)
-                    version = text.substr(start + key.size(), text.find('"', start + key.size()) - start - key.size());
-            }
-            if (version != generated_data_version)
+            if (const auto version = read_version(dir); version != generated_data_version)
                 throw data_error(fmt::format(
                     "The IOH data directory {} ({}) {}, but this build of IOH needs data version {}: use the data "
                     "directory of this version (the static folder of IOHexperimenter)",
-                    dir.string(), origin,
+                    dir.u8string(), origin,
                     version.empty() ? "has no manifest.json with a data version" : "has data version " + version,
                     generated_data_version));
-            checked.insert(dir.string());
+            checked.insert(dir.u8string());
         }
     } // namespace
 
     void set_root(const fs::path &path)
     {
         const std::lock_guard<std::mutex> lock(root_mutex);
-        explicit_root = path;
+        explicit_root() = path;
     }
 
     fs::path root() { return find_root().first; }
@@ -127,7 +161,7 @@ namespace ioh::data
         auto path = dir / relative;
         if (!fs::exists(path))
             throw data_error(fmt::format("IOH data file {} is missing from the data directory {} ({})",
-                                         relative.string(), dir.string(), origin));
+                                         relative.u8string(), dir.u8string(), origin));
         return path;
     }
 

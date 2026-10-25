@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <memory>
+#include <set>
 #include <string>
 #include <type_traits>
 #include <vector>
@@ -378,6 +379,18 @@ namespace ioh
                 throw std::invalid_argument(
                     fmt::format("Cannot register {} with id {}: it is registered with id {}", name, id, registered));
             }
+
+            //! Throws std::invalid_argument when entries repeat an id or a name
+            template <typename Entries>
+            void check_unique(const Entries &entries)
+            {
+                std::set<int> ids;
+                std::set<std::string> names;
+                for (const auto &entry : entries)
+                    if (!ids.insert(entry.id).second || !names.insert(entry.name).second)
+                        throw std::invalid_argument(
+                            fmt::format("Registry entries repeat an id or a name: {} ({})", entry.name, entry.id));
+            }
         } // namespace detail
 
         /**
@@ -413,32 +426,38 @@ namespace ioh
         void register_problem(const int id, const std::string &name)
         {
             auto &factory = ProblemFactoryType<Parent>::instance();
-            factory.include(name, detail::registered_id<Parent>(factory, id, name),
-                            [id, name](int &&instance, int &&n_variables) {
-                                auto problem = std::make_shared<T>(instance, n_variables);
-                                problem->set_id(id);
-                                problem->set_name(name);
-                                return problem;
-                            });
+            factory.include(
+                name, detail::registered_id<Parent>(factory, id, name),
+                [id, name](int &&instance, int &&n_variables) {
+                    auto problem = std::make_shared<T>(instance, n_variables);
+                    problem->set_id(id);
+                    problem->set_name(name);
+                    return problem;
+                },
+                !detail::is_union_factory<Parent>::value);
         }
 
         /**
          * @brief Registers the problem class T in the factory of Parent with its registry entries (see
          * registry_entries_of), with the rules of the overload above. Its problems report their own ids and names.
-         * All entries are checked first, so a class that cannot be registered registers nothing.
+         * All entries are checked first (also that they do not repeat an id or a name), so a class that cannot be
+         * registered registers nothing.
          */
         template <typename T, typename Parent>
         void register_problem()
         {
             auto &factory = ProblemFactoryType<Parent>::instance();
             const auto entries = registry_entries_of<T>();
+            detail::check_unique(entries);
             for (const auto &entry : entries)
                 (void)detail::registered_id<Parent>(factory, entry.id, entry.name);
             for (const auto &entry : entries)
-                factory.include(entry.name, detail::registered_id<Parent>(factory, entry.id, entry.name),
-                                [create = entry.create](int &&instance, int &&n_variables) -> std::shared_ptr<Parent> {
-                                    return create(instance, n_variables);
-                                });
+                factory.include(
+                    entry.name, detail::registered_id<Parent>(factory, entry.id, entry.name),
+                    [create = entry.create](int &&instance, int &&n_variables) -> std::shared_ptr<Parent> {
+                        return create(instance, n_variables);
+                    },
+                    !detail::is_union_factory<Parent>::value);
         }
 
 

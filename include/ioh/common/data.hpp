@@ -94,8 +94,22 @@ namespace ioh::data
                 std::shared_ptr<const T> value;
             };
 
-            static inline std::mutex mutex;
-            static inline std::map<std::string, std::shared_ptr<Slot>> slots;
+            // function-local statics, which exist on first use: cached may be called while other static variables
+            // are initialized, before static members of a class template would be
+
+            //! The lock of slots
+            static std::mutex &mutex()
+            {
+                static std::mutex m;
+                return m;
+            }
+
+            //! The values by key
+            static std::map<std::string, std::shared_ptr<Slot>> &slots()
+            {
+                static std::map<std::string, std::shared_ptr<Slot>> s;
+                return s;
+            }
         };
     } // namespace detail
 
@@ -113,8 +127,8 @@ namespace ioh::data
         using Cache = detail::Cache<T>;
         std::shared_ptr<typename Cache::Slot> slot;
         {
-            const std::lock_guard<std::mutex> lock(Cache::mutex);
-            auto &s = Cache::slots[key];
+            const std::lock_guard<std::mutex> lock(Cache::mutex());
+            auto &s = Cache::slots()[key];
             if (!s)
                 s = std::make_shared<typename Cache::Slot>();
             slot = s;

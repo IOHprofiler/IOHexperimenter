@@ -37,15 +37,7 @@ namespace
 
 TEST_F(BaseTest, test_data_root)
 {
-    // without set_root or IOH_RESOURCES, the tests find the data in the source tree, the default of the build
-    const auto resources = get_env("IOH_RESOURCES");
-    set_env("IOH_RESOURCES", "");
-    const auto default_root = ioh::data::root();
-    EXPECT_TRUE(fs::is_regular_file(default_root / "example_list_maxcut"));
-    EXPECT_EQ(ioh::data::file("example_list_maxcut"), default_root / "example_list_maxcut");
-
     const auto dir = fs::temp_directory_path() / ("ioh_test_data_root_" + std::to_string(std::random_device{}()));
-    ASSERT_TRUE(fs::create_directories(dir));
     // restores the data directory and IOH_RESOURCES, and removes the files, also when the test fails
     struct Cleanup
     {
@@ -58,7 +50,15 @@ TEST_F(BaseTest, test_data_root)
             std::error_code ec;
             fs::remove_all(dir, ec);
         }
-    } cleanup{dir, resources};
+    } cleanup{dir, get_env("IOH_RESOURCES")};
+    ASSERT_TRUE(fs::create_directories(dir));
+
+    // without set_root or IOH_RESOURCES, the tests find the data in the source tree, the default of the build
+    set_env("IOH_RESOURCES", "");
+    const auto default_root = ioh::data::root();
+    EXPECT_TRUE(fs::is_regular_file(default_root / "example_list_maxcut"));
+    EXPECT_EQ(ioh::data::file("example_list_maxcut"), default_root / "example_list_maxcut");
+
     std::ofstream(dir / "present") << "1";
     std::ofstream(dir / "manifest.json") << "{\"format\": 1, \"data_version\": \"" << ioh::data::data_version() << "\"}";
 
@@ -75,13 +75,13 @@ TEST_F(BaseTest, test_data_root)
     // a missing file, or a directory that does not exist, is an error that says where it looked
     try
     {
-        (void)ioh::data::file("missing");
+        (void)ioh::data::file("no_such_data_file");
         ADD_FAILURE() << "no error for a missing file";
     }
     catch (const ioh::data::data_error &e)
     {
         const std::string message = e.what();
-        EXPECT_NE(message.find("missing"), std::string::npos) << message;
+        EXPECT_NE(message.find("no_such_data_file"), std::string::npos) << message;
         EXPECT_NE(message.find("ioh::data::set_root"), std::string::npos) << message;
     }
     ioh::data::set_root(dir / "missing");
@@ -128,21 +128,24 @@ TEST_F(BaseTest, test_data_manifest)
 
 TEST_F(BaseTest, test_data_cached)
 {
+    // keys of their own in each run (the cache lives as long as the program, also with --gtest_repeat)
+    static int run = 0;
+    const auto key = "test_data_cached_" + std::to_string(++run);
     int calls = 0;
     const auto load = [&calls] {
         ++calls;
         return std::vector<int>{1, 2, 3};
     };
-    const auto first = ioh::data::cached<std::vector<int>>("test_data_cached", load);
-    const auto second = ioh::data::cached<std::vector<int>>("test_data_cached", load);
+    const auto first = ioh::data::cached<std::vector<int>>(key, load);
+    const auto second = ioh::data::cached<std::vector<int>>(key, load);
     EXPECT_EQ(calls, 1);
     EXPECT_EQ(first.get(), second.get());
     EXPECT_EQ(*first, (std::vector<int>{1, 2, 3}));
 
     // a loader that throws is called again next time
-    EXPECT_THROW((void)ioh::data::cached<std::vector<int>>("test_data_cached_throws",
+    EXPECT_THROW((void)ioh::data::cached<std::vector<int>>(key + "_throws",
                                                            []() -> std::vector<int> { throw std::runtime_error("no"); }),
                  std::runtime_error);
-    EXPECT_EQ(ioh::data::cached<std::vector<int>>("test_data_cached_throws", load)->size(), 3u);
+    EXPECT_EQ(ioh::data::cached<std::vector<int>>(key + "_throws", load)->size(), 3u);
     EXPECT_EQ(calls, 2);
 }

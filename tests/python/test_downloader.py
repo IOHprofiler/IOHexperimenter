@@ -48,7 +48,8 @@ class TestData(unittest.TestCase):
                     raise AssertionError("no error without data")
                 except ioh.DataError:
                     pass
-            ioh.set_data_root(package)
+            ioh.set_data_root("")  # back to the package's data, as IOH_RESOURCES is not set
+            assert os.path.samefile(ioh.data_root(), package)
             assert ioh.get_problem(1001, 1, 10, ioh.ProblemClass.CEC2022).meta_data.n_variables == 10
             """)
         self.assertEqual(result.returncode, 0, result.stderr)

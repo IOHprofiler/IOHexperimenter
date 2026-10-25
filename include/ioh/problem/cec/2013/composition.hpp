@@ -142,7 +142,7 @@ namespace ioh::problem
 
         const auto file_name =
             ioh::data::file(fmt::format("{}CF{}_M_D{}.dat", cec2013::DATA_FOLDER, cf_id, dimension));
-        return *ioh::data::cached<std::vector<std::vector<std::vector<double>>>>(file_name.string(), [&] {
+        return *ioh::data::cached<std::vector<std::vector<std::vector<double>>>>(file_name.u8string(), [&] {
             const auto data = common::file::as_numeric_vector<double>(file_name);
             const size_t matrix_size = dimension * dimension;
 
@@ -162,7 +162,7 @@ namespace ioh::problem
     inline std::vector<std::vector<double>> load_optima()
     {
         const auto file_name = ioh::data::file(fmt::format("{}optima.dat", cec2013::DATA_FOLDER));
-        return *ioh::data::cached<std::vector<std::vector<double>>>(file_name.string(), [&] {
+        return *ioh::data::cached<std::vector<std::vector<double>>>(file_name.u8string(), [&] {
             return common::to_matrix(common::file::as_numeric_vector<double>(file_name), 10, 100);
         });
     }

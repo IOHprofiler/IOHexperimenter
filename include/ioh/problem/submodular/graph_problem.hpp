@@ -136,12 +136,17 @@ namespace ioh::problem::submodular
                     return ioh::data::file(file);
                 auto path = meta.root / file;
                 if (!fs::exists(path))
-                    throw ioh::data::data_error(fmt::format("The graph file {} does not exist", path.string()));
+                    throw ioh::data::data_error(fmt::format("The graph file {} does not exist", path.u8string()));
                 return path;
             }
 
             virtual void load()
-            {   
+            {
+                // from scratch: a load that stopped (e.g. at a missing file) can be repeated
+                edges.clear();
+                adjacency_list.clear();
+                meta.n_vertices = 0;
+
                 const auto contents = common::file::as_text_vector(path(meta.edge_file));
                 meta.digraph = static_cast<bool>(std::stoi(contents[0]));
 
@@ -303,6 +308,13 @@ namespace ioh::problem::submodular
         }
     };
 
+    //! Held while graphs are registered, by every graph class: they share the factories and the next free id
+    inline std::mutex &graph_registration_mutex()
+    {
+        static std::mutex mutex;
+        return mutex;
+    }
+
     //! Base of the graph problems, which are defined by the graphs in a definitions file
     template <typename ProblemType>
     struct GraphProblemType : GraphProblem
@@ -386,21 +398,23 @@ namespace ioh::problem::submodular
                     }
                     return problem;
                 };
+                // the family's factory first: it throws for a taken id, before anything is registered elsewhere
+                graphs.include(name, problem::detail::registered_id<GraphProblem>(graphs, id, name), create, true);
                 integers.include(name, problem::detail::registered_id<IntegerSingleObjective>(integers, id, name),
                                  create);
-                graphs.include(name, problem::detail::registered_id<GraphProblem>(graphs, id, name), create);
             };
 
             // the files loaded before, with the ids and names of their graphs
-            static std::mutex mutex;
             static std::map<std::string, std::map<int, std::string>> loaded;
-            const std::lock_guard<std::mutex> lock(mutex);
+            const std::lock_guard<std::mutex> lock(graph_registration_mutex());
 
             std::map<int, std::string> result;
             if (!path)
             {
                 std::vector<RegistryEntry<ProblemType>> missing;
-                for (const auto &entry : ProblemType::registry_entries())
+                const auto entries = ProblemType::registry_entries();
+                problem::detail::check_unique(entries);
+                for (const auto &entry : entries)
                 {
                     result[entry.id] = entry.name;
                     const auto map = graphs.map();
@@ -416,8 +430,8 @@ namespace ioh::problem::submodular
             }
 
             if (!fs::is_regular_file(*path))
-                throw std::invalid_argument(fmt::format("Cannot read the graph definitions file {}", path->string()));
-            const auto key = fs::weakly_canonical(*path).string();
+                throw std::invalid_argument(fmt::format("Cannot read the graph definitions file {}", path->u8string()));
+            const auto key = fs::weakly_canonical(*path).u8string();
             if (const auto it = loaded.find(key); it != loaded.end())
                 return it->second;
 
@@ -438,6 +452,9 @@ namespace ioh::problem::submodular
                 (void)problem::detail::registered_id<IntegerSingleObjective>(integers, id, names.back());
                 result[id] = names.back();
             }
+            if (result.size() != std::set<std::string>(names.begin(), names.end()).size())
+                throw std::invalid_argument(fmt::format("The graph definitions file {} gives two graphs the same name",
+                                                        path->u8string()));
             for (size_t i = 0; i < entries.size(); ++i)
                 include(entries[i], first_id + static_cast<int>(i), names[i]);
             loaded[key] = result;

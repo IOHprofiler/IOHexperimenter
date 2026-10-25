@@ -142,7 +142,7 @@ namespace ioh::problem
         {
             const auto shifts_file = ioh::data::file(CEC_FOLDER + "F_i_star.txt");
             const auto shifts = ioh::data::cached<std::vector<double>>(
-                shifts_file.string(), [&] { return common::file::as_numeric_vector<double>(shifts_file); });
+                shifts_file.u8string(), [&] { return common::file::as_numeric_vector<double>(shifts_file); });
 
             if (cec_function_identifier > 0 && cec_function_identifier <= static_cast<int>(shifts->size()))
             {
@@ -165,7 +165,7 @@ namespace ioh::problem
             const int matrix_size = meta_data_.n_variables * meta_data_.n_variables;
 
             linear_transformations_ = *ioh::data::cached<std::vector<std::vector<std::vector<double>>>>(
-                linear_transformation_file.string(), [&] {
+                linear_transformation_file.u8string(), [&] {
                     const auto transformation_vector =
                         common::file::as_numeric_vector<double>(linear_transformation_file);
                     std::vector<std::vector<std::vector<double>>> transformations;
@@ -191,7 +191,7 @@ namespace ioh::problem
                 ioh::data::file(fmt::format("{}shift_data_{}.txt", CEC_FOLDER, cec_function_identifier));
 
             variables_shifts_ =
-                *ioh::data::cached<std::vector<std::vector<double>>>(shift_data_filepath.string(), [&] {
+                *ioh::data::cached<std::vector<std::vector<double>>>(shift_data_filepath.u8string(), [&] {
                     const auto shift_data = common::file::as_numeric_vector<double>(shift_data_filepath);
                     return common::to_matrix(shift_data, shift_data.size() / 100, 100);
                 });
@@ -215,7 +215,7 @@ namespace ioh::problem
 
             const auto shuffle_data_filepath = ioh::data::file(shuffle_data);
             input_permutation_ = *ioh::data::cached<std::vector<int>>(
-                shuffle_data_filepath.string(),
+                shuffle_data_filepath.u8string(),
                 [&] { return common::file::as_numeric_vector<int>(shuffle_data_filepath); });
         }
 
