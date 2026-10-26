@@ -107,7 +107,7 @@ WP2 section has the numbers after it):
 * Every PR: CI green on Linux, macOS, Windows; golden tests pass unchanged; docs updated.
 * Every PR with user-visible changes (Python API, supported platforms or versions, packaging, C++
   API) adds them to the release-notes draft in WP8, because everything ships in one release (§1).
-* Pull requests do not build macOS wheels (§1). A PR that changes the build (CMake, `setup.py`,
+* Pull requests do not build macOS wheels (§1). A PR that changes the build (CMake,
   `pyproject.toml`, bindings, the wheels workflow) also runs the full wheel matrix on its branch
   before review: `gh workflow run python-publish.yml --ref <branch>`.
 * Never regenerate golden fixtures to make a test pass. Fixtures may only be regenerated with explicit
@@ -115,9 +115,12 @@ WP2 section has the numbers after it):
 * Keep `-O3` for everything that contains problem code.
 * Building locally: submodules are not initialized in a fresh clone and `external/fmt` uses an SSH
   URL; use `git -c url."https://github.com/".insteadOf="git@github.com:" submodule update --init`.
-  Python: `pip install -e . -v` (Python ≥ 3.10), then `python -m unittest -v`. C++ tests:
+  Python: `pip install -e . -v` (Python ≥ 3.10), then `python -m unittest -v`; since WP5,
+  `pip install --no-build-isolation -e .` (after `pip install scikit-build-core cmake ninja`) rebuilds
+  only what changed, in `build/<wheel tag>`. C++ tests:
   `cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build --target test_ioh --parallel 4`
-  and run `build/tests/test_ioh` (since WP4 it finds the data in the source tree).
+  and run `build/tests/test_ioh` (since WP4 it finds the data in the source tree) or
+  `ctest --test-dir build`.
 * Measuring build time (include before/after numbers in PRs that claim build-time changes):
   clean build directory, Release, Ninja, `-j4`, run twice and report the minimum; use
   `-ftime-trace` only for attribution, never for timing (it adds 9–20 %).
@@ -345,10 +348,14 @@ What was done, and where it differs from T2.1 below:
   * WP2 (#219), the first pull-request runs without a parallel full run: `ci.yml` (39766818613)
     12 jobs of 2.9–5.7 min, 47 runner minutes, 5.7 min wall; pull-request wheels (39766818690) 23
     wheel jobs and the sdist, 94 runner minutes, 10.0 min wall, jobs queued up to 4.6 min.
+  * WP5 (#222), pull-request runs: `ci.yml` without a compiler cache (40319793362) 13 jobs, 37 runner
+    minutes; with a warm cache (40321260347, second attempt) 19 runner minutes, 4.8 min wall (the
+    Windows C++ job); pull-request wheels (40319793264) 23 wheel jobs, the sdist and the package check,
+    94 runner minutes.
 
 ---
 
-## WP3 — Functional registry (must land as one unit) ✅ implemented (branch `wp3-functional-registry`)
+## WP3 — Functional registry (must land as one unit) ✅ merged (#220)
 
 Depends on: WP1, WP2. Goal: no TU except the registry TUs instantiates problem code; identical
 Python-visible registry.
@@ -529,7 +536,7 @@ What was done, and where it differs from T3.1–T3.7 below:
 
 ---
 
-## WP4 — Data layer and manifest ✅ implemented (branch `wp4-data-layer`)
+## WP4 — Data layer and manifest ✅ merged (#221)
 
 Depends on: WP3.
 
@@ -705,11 +712,65 @@ Record:
 
 ---
 
-## WP5 — Build system
+## WP5 — Build system ✅ implemented (branch `wp5-build-system`, #222)
 
 Depends on: WP3 (compiled target) and WP4 (packaging contents).
 
-### T5.1 scikit-build-core
+Record:
+
+* **scikit-build-core** (T5.1): `setup.py` and `MANIFEST.in` are gone; `pyproject.toml` has `[project]`
+  (the version from `VERSION` through `[[tool.dynamic-metadata]]`) and `[tool.scikit-build]`.
+  * The build directory `build/{wheel_tag}` is kept between builds. Without build isolation
+    (`pip install --no-build-isolation -e .`) a rebuild compiles only what changed; each isolated build
+    starts a new CMake configuration (scikit-build-core clears the cache for a new environment), which
+    compiles the C++ library again but not the bindings.
+  * Ninja on Linux and macOS, Visual Studio on Windows (scikit-build-core's default there). On macOS
+    `CC`/`CXX` are no longer forced to `clang` and `ARCHFLAGS` is mapped to `CMAKE_OSX_ARCHITECTURES`;
+    the deployment target comes from `MACOSX_DEPLOYMENT_TARGET` (10.15 in cibuildwheel, as before;
+    local builds target the running macOS). Linux wheels build with 4 jobs, as `setup.py` did.
+  * CMake installs the extension and `static/` into `ioh/` as the install component `python`
+    (`ioh/CMakeLists.txt`), the only one installed into the wheel, so the C++ install rules stay out.
+    The wheel holds the same files as before, apart from setuptools' `top_level.txt`; pybind11 finds
+    the Python through the classic `PYTHON_EXECUTABLE` that scikit-build-core passes, as `setup.py` did.
+  * The sdist uses `sdist.inclusion-mode = "explicit"`: an include list (which also selects the
+    wheel's Python files) instead of the git ignore files. It drops `TASKS.md`, `doc/`, `external/json`
+    and the setuptools files, holds the data in `static/` (`ioh/static`, the link used by editable
+    installs, is excluded), and adds the licenses of fmt and pybind11: 410 instead of 473 files. The
+    sdist job builds and tests a wheel from it; the disabled `tests/python/test_package.py` is gone.
+  * `MAKE_STUBS` → `tools/gen_stubs.py` (stubgen as a function: mypy 2 is compiled, so
+    `python -m mypy.stubgen` fails; the stubs are replaced only once the new ones exist).
+    `MAKE_DOCS` → `python doc/generate_docs.py`, which configures `build/docs` instead of a hard-coded
+    path and fails instead of warning. The build no longer needs `xmltodict`.
+  * Metadata: `license = "BSD-3-Clause"` (was `BSD`), the authors one by one with the team's address,
+    the home page as a project URL.
+* **CI build speed** (T5.2): the C++ and Python jobs of `ci.yml` on Linux and macOS use ccache
+  (`hendrikmuhs/ccache-action`, one cache per job, at most 500 MB; pull requests also find master's
+  caches). Without a source change their build steps take 3–33 s instead of 91–157 s (C++) and 11–13 s
+  instead of 96–164 s (Python), and a CI run takes 19 instead of 37 runner minutes. The wall time stays
+  about 5 minutes, set by the Windows C++ job: the Visual Studio generator cannot use a compiler
+  launcher. The wheels get no cache (each job builds for another Python, the Linux ones in containers).
+  Windows wheels with Ninja (in the MSVC environment of `ilammy/msvc-dev-cmd`) were measured on a
+  throwaway branch (run 40321264037) against Visual Studio (runs 40319793264 and 40321260192): the
+  build step's median was 2.99 instead of 3.05/3.08 min on x64 and 3.02 instead of 3.42/3.50 min on
+  ARM64, but setting up the MSVC environment takes 6–11 s per job, the action runs on the deprecated
+  Node.js 20, and the Windows jobs are not the longest wheel jobs. Visual Studio stays (with `/MP` on
+  both targets since WP3).
+* **C++ tests** (T5.3): `test_ioh` is the only test executable by default; `IOH_TEST_PER_FILE` also
+  builds the per-file executables and the fixture generator, whose tests ctest does not register again.
+  ctest ran each of the 113 tests 4 times (two executables per test file, each discovered twice); now
+  once, listed when ctest runs (`DISCOVERY_MODE PRE_TEST` from CMake 3.18), from the top of the build
+  directory (`enable_testing()` moved there). CMake ≥ 3.16 (`CMakeLists.txt`, `include/README.md`,
+  `example/README.md`); the `g++-12` CI job configures with CMake 3.16.8, because no CMake 3.16 could run
+  locally (no Rosetta; building one from source was not allowed). `BUILD_TESTS`/`BUILD_EXAMPLE` default
+  to ON only for the top-level project.
+* **Measured** (Apple M5, AppleClang 21, `pip wheel --no-build-isolation`, `CMAKE_BUILD_PARALLEL_LEVEL=4`,
+  min of 2): a clean build takes 23.0 s (master's `setup.py`: 22.6 s); without a change 1.5 s, after
+  changing one binding file 3.4 s, one library file 4.3 s (`setup.py` always built everything). CI, as
+  pull-request runs: without the cache (`ec5ca65c`) `ci.yml` took 37 runner minutes and the wheels 94
+  (25 jobs; WP4: 33 and 96), the sdist job 2.8 instead of 0.4 min since it builds and tests a wheel;
+  with the cache (`790ade40`) `ci.yml` took 38 runner minutes cold and 19 warm (T2.3).
+
+### T5.1 scikit-build-core ✅
 
 * Replace `setup.py` with scikit-build-core (`pyproject.toml` `[project]` + `[tool.scikit-build]`):
   persistent `build-dir` (e.g. `build/{wheel_tag}`) and editable rebuilds (no more
@@ -725,13 +786,13 @@ Depends on: WP3 (compiled target) and WP4 (packaging contents).
 * List the sdist contents explicitly (`sdist.include` / `sdist.exclude`): today the `*.md` in
   `MANIFEST.in` also ships `TASKS.md`, which must not be in the 0.4.0 sdist.
 
-### T5.2 CI build speed
+### T5.2 CI build speed ✅
 
 * Windows: use Ninja or add `/MP` (the Visual Studio generator compiles the module's TUs serially).
 * ccache/sccache for push CI only (binding TUs include `Python.h`, so caches don't help across
   Python versions in release builds).
 
-### T5.3 C++ tests
+### T5.3 C++ tests ✅
 
 * `tests/CMakeLists.txt` builds every test source twice (`test_ioh` + one executable per file) and
   calls `gtest_discover_tests` twice per target: build one test executable by default (per-file
@@ -788,7 +849,7 @@ Depends on: WP3, WP4, WP5.
 
 * Trampolines (`NB_TRAMPOLINE`/`NB_OVERRIDE`) for Python-subclassable classes: watchers/loggers,
   properties, triggers, constraints, wrapped problems.
-* Stubs: replace mypy `stubgen` in `doc/generate_docs.py` with `python -m nanobind.stubgen`;
+* Stubs: replace mypy `stubgen` in `tools/gen_stubs.py` (WP5) with `python -m nanobind.stubgen`;
   regenerate `ioh/iohcpp/*.pyi` and `ioh/iohcpp/logger/*.pyi` (and add one for `logger.old`).
 * Debug builds compile; Linux (x86_64, aarch64), Windows (x64, ARM64) and macOS (Intel, arm64) green.
 
@@ -880,6 +941,10 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
     or aborting; the data directory must match the library's data version (its `manifest.json`).
     `get_static_root`/`find_static_file` are removed: use `ioh::data::root()`/`ioh::data::file()`. A graph class's files are resolved when it
     is loaded; `graph::Meta::root` is empty for the built-in graphs.
+  * Build (WP5): CMake ≥ 3.16. A project that adds IOHexperimenter with `add_subdirectory` no longer
+    builds its tests and example unless it sets `BUILD_TESTS`/`BUILD_EXAMPLE`. The tests build one
+    executable, `test_ioh`, and `ctest` runs from the top of the build directory;
+    `-DIOH_TEST_PER_FILE=ON` also builds one executable per test file.
 * Python upgrade guide: Python ≥ 3.10 (recommended ≥ 3.12), deprecated `download_static_folder` /
   `load_graph_problems` (no-ops), numpy returns (WP7), new metadata attributes if added. Data (WP4): the
   package uses its own data files; `IOH_RESOURCES` still names another directory, but `import ioh` no
@@ -887,6 +952,9 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
   directory; missing data raise `ioh.DataError` (a `RuntimeError`) when a problem is created. Ids (WP4): problem classes defined by subclassing report the id they are registered under
   instead of 0; a problem named like a built-in raises; `load_instances(path)` adds the file's
   graphs after the existing problems and returns their ids, and `load_instances()` is deprecated.
+  Building from source (WP5): the package builds with scikit-build-core (`pip install .`), and
+  `setup.py` is gone; `MAKE_STUBS` and `MAKE_DOCS` are replaced by `python tools/gen_stubs.py` and
+  `python doc/generate_docs.py`.
 * README/docs: installation, building from source (scikit-build-core), data location; changelog
   (from the release-notes draft below).
 * Release, the first since 0.3.22 (§1): version bump to 0.4.0; run the wheels workflow on master by
@@ -979,6 +1047,17 @@ Each WP adds its user-visible changes here (§2).
     its data (`share/ioh`) and finds it there, or in the source tree it was built from, without
     `IOH_RESOURCES`. The test reference files moved from `static/` to `tests/data/`, and `static.tar.gz`
     (which older versions download) no longer contains them.
+* WP5:
+  * The package is built with scikit-build-core instead of `setup.py`. Wheels hold the same files as
+    before. The sdist holds only what building the package needs (no `TASKS.md`, `doc/` or
+    `external/json`), with the data in `static/`, and now with the licenses of fmt and pybind11.
+    Package metadata: the license is given as `BSD-3-Clause`, the home page as a project URL.
+  * Building from source: a rebuild compiles only what changed (`setup.py` deleted the build directory
+    every time), `ARCHFLAGS` is respected on macOS, and the stubs and docs are made by
+    `tools/gen_stubs.py` and `doc/generate_docs.py` instead of `MAKE_STUBS`/`MAKE_DOCS`.
+  * C++: CMake ≥ 3.16 (the README said 3.15). The tests and example are built by default only when
+    IOHexperimenter is the top-level project; `ctest` runs each test once (it ran them 4 times), from
+    the top of the build directory.
 
 ---
 
