@@ -318,15 +318,16 @@ namespace ioh::common::file
             if (!exists(root_))
                 create_directories(root_);
 
+            // create_directory returns false for a folder that exists, also one that another logger (in another
+            // thread or process) created a moment ago: each gets a folder of its own
             path_ = root_ / name;
             auto index = 0;
-            while (exists(path_))
+            while (exists(path_) || !create_directory(path_))
             {
                 ++index;
                 name_ = fmt::format("{}-{}", name, index);
                 path_ = root_ / name_;
             }
-            create_directories(path_);
         }
         //! Construct a new Unique Folder object.
         explicit UniqueFolder(const std::string &name) : UniqueFolder(fs::current_path(), name) {}

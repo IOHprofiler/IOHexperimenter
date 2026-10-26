@@ -93,6 +93,15 @@ namespace ioh::problem
 
                 //! Map of index to Item for fast access
                 std::map<size_t, std::vector<Item>> city_map{};
+
+                //! The items of a city, without changing city_map (the problems of a graph share it, and may be
+                //! evaluated from different threads)
+                [[nodiscard]] const std::vector<Item> &items_of(const size_t city) const
+                {
+                    static const std::vector<Item> none{};
+                    const auto it = city_map.find(city);
+                    return it == city_map.end() ? none : it->second;
+                }
             };
             
             //! Graph data container for pwt
@@ -204,7 +213,7 @@ namespace ioh::problem
                     violation_ = 0; 
                     
                     for (size_t i = 0; i < graph->ttp_data.distances.size(); i++)
-                        for (auto &item : graph->ttp_data.city_map[i])
+                        for (const auto &item : graph->ttp_data.items_of(i))
                             violation_ += item.weight * static_cast<bool>(x[item.index]);
                     
                     return violation_ > graph->ttp_data.capacity;
@@ -256,7 +265,7 @@ namespace ioh::problem
 
                 for (size_t i = 0; i < data.distances.size(); i++)
                 {
-                    for (auto &item : data.city_map[i])
+                    for (const auto &item : data.items_of(i))
                     {
                         if (x[item.index] >= 1)
                         {

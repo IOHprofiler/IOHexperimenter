@@ -1,6 +1,7 @@
 #pragma once 
 
 #include <cstdint>
+#include <mutex>
 #include <stdexcept>
 
 namespace ioh::common::random::sampler
@@ -1287,6 +1288,11 @@ namespace ioh::common::random::sampler
      */
     inline void i8_sobol(int dim_num, long long int *seed, double quasi[], double lb = 0, double ub = 1)
     {
+        // the generator keeps its state in the static variables below, which every caller shares (e.g. Sobol
+        // samplers of problems created in different threads): one call at a time
+        static std::mutex mutex;
+        const std::lock_guard<std::mutex> lock(mutex);
+
 #define DIM_MAX 40
 #define DIM_MAX2 1111
 #define LOG_MAX 62
@@ -1400,6 +1406,12 @@ namespace ioh::common::random::sampler
                 throw std::invalid_argument("I8_SOBOL - Fatal error! The spatial dimension DIM_NUM is incorrect.");
 
             initialized = true;
+            //  The state of the last sequence (seed_save, lastq) belongs to another dimension: start from scratch,
+            //  so that the next call recomputes it for its seed (sequences of different dimensions, e.g. of samplers
+            //  used one after the other or in different threads, otherwise continued from another one's state)
+            seed_save = -1;
+            for (i = 0; i < DIM_MAX2; i++)
+                lastq[i] = 0;
             //  Initialize (part of) V: the direction numbers of the table, zero elsewhere.
             for (i = 0; i < DIM_MAX2; i++)
             {

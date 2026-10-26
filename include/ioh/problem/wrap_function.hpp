@@ -36,23 +36,23 @@ namespace ioh::problem
         {
             auto &factory = ProblemFactoryType<SingleObjectiveProblem<T>>::instance();
 
-            int id = factory.check_or_get_next_available(1, name);
-
             auto bounds = BoxConstraint<T>(1, lb.value_or(std::numeric_limits<T>::lowest()),
                                            ub.value_or(std::numeric_limits<T>::max()));
 
             auto tx = transform_variables_function.value_or(utils::identity<std::vector<T>, int>);
             auto ty = transform_objectives_function.value_or(utils::identity<double, int>);
 
-            factory.include(name, id,
-                            [f, name, id, optimization_type, bounds, tx, ty, calculate_optimum,
-                             constraints](const int iid, const int dim) {
-                                auto optimum = calculate_optimum ? calculate_optimum.value()(iid, dim)
-                                                                 : Solution<T, double>(dim, optimization_type);
+            // the id of the name if it is registered, otherwise the first free one, chosen under the factory's lock
+            factory.include_with_id(name, 1, [&](const int id) {
+                return [f, name, id, optimization_type, bounds, tx, ty, calculate_optimum,
+                        constraints](const int iid, const int dim) {
+                    auto optimum = calculate_optimum ? calculate_optimum.value()(iid, dim)
+                                                     : Solution<T, double>(dim, optimization_type);
 
-                                return std::make_unique<SingleObjectiveWrappedProblem<T>>(
-                                    f, name, dim, id, iid, optimization_type, bounds, tx, ty, optimum, constraints);
-                            });
+                    return std::make_unique<SingleObjectiveWrappedProblem<T>>(
+                        f, name, dim, id, iid, optimization_type, bounds, tx, ty, optimum, constraints);
+                };
+            });
         }
         else
         {
