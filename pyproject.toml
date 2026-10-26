@@ -1,11 +1,78 @@
 [build-system]
-requires = [
-    "setuptools",
-    "wheel",
-    "cmake",
-    "ninja",
-    "xmltodict",  # setup.py imports doc/generate_docs.py, which imports xmltodict
+requires = ["scikit-build-core>=1.1"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "ioh"
+dynamic = ["version"]
+description = "The experimenter for Iterative Optimization Heuristics"
+readme = "README.md"
+license = "BSD-3-Clause"
+license-files = ["LICENSE.md"]
+authors = [
+    { name = "Jacob de Nobel" },
+    { name = "Furong Ye" },
+    { name = "Diederick Vermetten" },
+    { name = "Hao Wang" },
+    { name = "Carola Doerr" },
+    { name = "Thomas Bäck" },
+    { name = "IOHprofiler", email = "iohprofiler@liacs.leidenuniv.nl" },
 ]
+requires-python = ">=3.10"
+dependencies = ["numpy>=2.0"]
+
+[project.urls]
+Homepage = "https://iohprofiler.github.io/IOHexperimenter"
+
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+# kept between builds, so that a rebuild (pip install --no-build-isolation -e .) only compiles what changed
+build-dir = "build/{wheel_tag}"
+# the extension and the data files (ioh/CMakeLists.txt), not the C++ library's headers and CMake package
+install.components = ["python"]
+wheel.packages = ["ioh"]
+# the sources of the extension are only in the sdist
+wheel.exclude = ["ioh/src/", "ioh/CMakeLists.txt", "ioh/README.md"]
+# The sdist holds what building the package needs, and only that. The Python files of the wheel are
+# taken from the same list.
+sdist.inclusion-mode = "explicit"
+sdist.include = [
+    "/pyproject.toml",
+    "/VERSION",
+    "/README.md",
+    "/LICENSE.md",
+    "/CONTRIBUTING.md",
+    "/CMakeLists.txt",
+    "/cmake/",
+    "/include/",
+    "/src/",
+    "/ioh/",
+    "/static/",
+    "/external/fmt/CMakeLists.txt",
+    "/external/fmt/LICENSE",
+    "/external/fmt/*.md",
+    "/external/fmt/include/",
+    "/external/fmt/src/",
+    "/external/fmt/support/cmake/",
+    "/external/pybind11/CMakeLists.txt",
+    "/external/pybind11/LICENSE",
+    "/external/pybind11/include/",
+    "/external/pybind11/tools/",
+]
+# ioh/static links to static/ for editable installs; the wheel gets static/ from the CMake install
+sdist.exclude = ["/ioh/static", "__pycache__/", "*.pyc", "*.so", "*.pyd", ".DS_Store"]
+
+[tool.scikit-build.cmake.define]
+BUILD_PYTHON_PACKAGE = "ON"
+BUILD_TESTS = "OFF"
+BUILD_EXAMPLE = "OFF"
+BUILD_DOCS = "OFF"
+ENABLE_MKLANDSCAPE_PROBLEMS = "OFF"
+
+[tool.scikit-build.metadata.version]
+provider = "scikit_build_core.metadata.regex"
+input = "VERSION"
+regex = '(?P<value>\d+\.\d+\.\d+\S*)'
 
 [tool.cibuildwheel]
 build = "cp310-* cp311-* cp312-* cp313-* cp314-* cp315-* cp314t-* cp315t-*"
@@ -16,9 +83,13 @@ skip = "*-win32 *-musllinux_* cp3??t-win*"
 test-command = "python {project}/tests/python/test_golden.py"
 build-verbosity = 1
 
+[tool.cibuildwheel.linux.environment]
+# Ninja runs two jobs more than there are cores; the builds use 4, as before, to stay within memory
+CMAKE_BUILD_PARALLEL_LEVEL = "4"
+
 [tool.cibuildwheel.macos.environment]
-# setup.py builds with CMAKE_OSX_DEPLOYMENT_TARGET=10.15 (std::filesystem); with cibuildwheel's
-# Intel defaults (10.9/10.13) delocate rejects the x86_64 wheels. arm64 is raised to 11.0.
+# std::filesystem needs macOS 10.15 (scikit-build-core passes it on to CMake and the wheel tag); with
+# cibuildwheel's Intel defaults (10.9/10.13) delocate rejects the x86_64 wheels. arm64 is raised to 11.0.
 MACOSX_DEPLOYMENT_TARGET = "10.15"
-# setup.py only bounds the build on Linux; unbounded Ninja jobs make the 7 GB arm64 runners swap
+# unbounded Ninja jobs make the 7 GB arm64 runners swap
 CMAKE_BUILD_PARALLEL_LEVEL = "3"

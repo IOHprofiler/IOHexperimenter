@@ -68,7 +68,7 @@ jobs:
         # oldest supported and newest available
         python: ["3.10", "3.x"]
     env:
-      # setup.py only bounds the build on Linux; unbounded jobs make the 7 GB macOS runner swap
+      # unbounded Ninja jobs make the 7 GB macOS runner swap
       CMAKE_BUILD_PARALLEL_LEVEL: 3
     steps:
       - uses: actions/checkout@v7

@@ -93,8 +93,8 @@ endif()
 # that installed Debug and Release builds can coexist.
 set(IOH_DEBUG_POSTFIX d CACHE STRING "Postfix of the Debug build of the ioh library")
 set_target_properties(ioh PROPERTIES POSITION_INDEPENDENT_CODE ON DEBUG_POSTFIX "${IOH_DEBUG_POSTFIX}")
-# MSBuild (the Visual Studio generator, which setup.py uses on Windows) compiles a project's files one after
-# another unless /MP is given; pybind11 sets it on the extension module only
+# MSBuild (the Visual Studio generator, which scikit-build-core uses on Windows) compiles a project's files one
+# after another unless /MP is given; pybind11 sets it on the extension module only
 if(CMAKE_GENERATOR MATCHES "Visual Studio" AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(ioh PRIVATE /MP)
 endif()

@@ -14,8 +14,6 @@ on:
     # everything that ends up in, or is tested against, the wheels
     paths:
       - "pyproject.toml"
-      - "setup.py"
-      - "MANIFEST.in"
       - "CMakeLists.txt"
       - "cmake/**"
       - "include/**"
@@ -24,9 +22,9 @@ on:
       - "static/**"
       - "tools/**"
       - "external/**"
-      - "doc/**"
       - "VERSION"
       - "README.md"
+      - "LICENSE.md"
       - ".gitmodules"
       - ".github/workflows/python-publish.yml"
       - "tests/python/golden.py"
@@ -85,6 +83,17 @@ jobs:
           submodules: true
       - name: Build sdist
         run: pipx run build --sdist
+
+      # the sdist lists its files explicitly (pyproject.toml): building from it shows that none is missing
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.x"
+      - name: Install from the sdist and test
+        env:
+          CMAKE_BUILD_PARALLEL_LEVEL: 4
+        run: |
+          python -m pip install dist/*.tar.gz
+          python tests/python/test_golden.py
 
       - uses: actions/upload-artifact@v7
         with:
