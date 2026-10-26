@@ -1,6 +1,8 @@
+"""Builds the documentation into docs/: python doc/generate_docs.py
+
+Needs CMake, doxygen, sphinx (see doc/python) and xmltodict. The type stubs are made by tools/gen_stubs.py.
+"""
 import os
-import sys
-import importlib.util
 import collections
 import subprocess
 import shutil
@@ -128,57 +130,34 @@ def generate_sphinx_templates_from_xml(xmldir = "doc/build/xml", outdir = "doc/p
             f.write(make_template(nsdata))
 
 
-def generate_stubs(sourcedir):
-    # mypy is not a build requirement: check before removing the existing stubs
-    if importlib.util.find_spec("mypy") is None:
-        raise RuntimeError(
-            "MAKE_STUBS requires mypy in the build environment: "
-            "pip install mypy && MAKE_STUBS=1 pip install --no-build-isolation -e ."
-        )
-
-    # remove any existing stubs
-    for stubfile in os.listdir(os.path.join(sourcedir, "ioh")):
-        stubfile = os.path.join(sourcedir, "ioh", stubfile)
-        if stubfile.endswith(".pyi"):
-            os.remove(stubfile)
-
-    for subdir in ("iohcpp", "logger"):
-        if os.path.isdir(os.path.join(sourcedir, "ioh", subdir)):
-            shutil.rmtree(os.path.join(sourcedir, "ioh", subdir))
-
-    # generate stub files with the build interpreter's mypy
-    command = [sys.executable, "-m", "mypy.stubgen", "-m", "ioh", "-p", "ioh.iohcpp", "-o", "./"]
-    subprocess.check_call(command, cwd=sourcedir)
-
-
 def run_doxygen():
-    out = subprocess.run(
-        "cmake -DBUILD_DOCS=ON --build /home/jacob/code/IOHexperimenter/build --config Release --target doc --",
-        shell=True, cwd=BASE_DIR, capture_output=True
-    )
+    # the doxygen XML of the C++ headers, in doc/build (doc/CMakeLists.txt)
+    build_dir = os.path.join(BASE_DIR, "build", "docs")
+    subprocess.check_call(["cmake", "-S", BASE_DIR, "-B", build_dir, "-DBUILD_DOCS=ON", "-DBUILD_TESTS=OFF",
+                           "-DBUILD_EXAMPLE=OFF"], cwd=BASE_DIR)
+    out = subprocess.run(["cmake", "--build", build_dir, "--target", "doc"], cwd=BASE_DIR, capture_output=True,
+                         check=True)
     for line in out.stdout.decode("utf-8").splitlines():
         if "warning" in line and not "clutchlog" in line:
             warnings.warn(line.replace("/home", " /home"))
 
 
 def main():
+    run_doxygen()
+    generate_sphinx_templates_from_xml(os.path.join(BASE_DIR, "doc", "build", "xml"),
+                                       os.path.join(BASE_DIR, "doc", "python", "source", "cpp"))
+    directory = os.path.join(BASE_DIR, "doc", "python")
     try:
-        run_doxygen()
-        generate_sphinx_templates_from_xml()
-        directory = os.path.join(BASE_DIR, "doc", "python")
-        try:
-            shutil.rmtree(os.path.join(directory, "source", "api"))
-        except FileNotFoundError:
-            pass
-        subprocess.check_call(f"make html", shell=True, cwd=directory)
+        shutil.rmtree(os.path.join(directory, "source", "api"))
+    except FileNotFoundError:
+        pass
+    subprocess.check_call(f"make html", shell=True, cwd=directory)
 
-        shutil.copytree(
-            os.path.join(BASE_DIR, "doc", "build", "html"),
-            os.path.join(BASE_DIR, "docs"),
-            dirs_exist_ok=True
-        )
-    except Exception as reason:
-        warnings.warn(f"Cannot compile docs reason: {reason}", RuntimeWarning)
+    shutil.copytree(
+        os.path.join(BASE_DIR, "doc", "build", "html"),
+        os.path.join(BASE_DIR, "docs"),
+        dirs_exist_ok=True
+    )
 
 if __name__ == '__main__':
     main()

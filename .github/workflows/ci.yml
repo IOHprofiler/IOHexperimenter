@@ -30,7 +30,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-24.04, compiler: g++-12 }
+          # with the oldest CMake the project supports (CMakeLists.txt)
+          - { os: ubuntu-24.04, compiler: g++-12, cmake: "3.16.8" }
           - { os: ubuntu-24.04, compiler: g++-13 }
           - { os: ubuntu-24.04, compiler: g++-14 }
           - { os: ubuntu-24.04, compiler: clang++-18 }
@@ -45,10 +46,26 @@ jobs:
         with:
           submodules: true
 
+      - name: Install CMake ${{ matrix.cmake }}
+        if: matrix.cmake
+        run: |
+          pipx install cmake==${{ matrix.cmake }}
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      # a compiler cache, also of the master branch for pull requests (not on Windows: the Visual Studio
+      # generator cannot use a compiler launcher)
+      - uses: hendrikmuhs/ccache-action@v1.2.24
+        if: runner.os != 'Windows'
+        with:
+          key: cpp-${{ matrix.os }}-${{ matrix.compiler }}
+          max-size: 500M
+
       - name: Configure CMake
         run: >
+          cmake --version &&
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-          ${{ matrix.compiler != 'msvc' && format('-DCMAKE_CXX_COMPILER={0}', matrix.compiler) || '' }}
+          ${{ matrix.compiler != 'msvc'
+          && format('-DCMAKE_CXX_COMPILER={0} -DCMAKE_CXX_COMPILER_LAUNCHER=ccache', matrix.compiler) || '' }}
 
       - name: Build
         run: cmake --build build --config Debug --target test_ioh --parallel 4
@@ -68,7 +85,7 @@ jobs:
         # oldest supported and newest available
         python: ["3.10", "3.x"]
     env:
-      # setup.py only bounds the build on Linux; unbounded jobs make the 7 GB macOS runner swap
+      # unbounded Ninja jobs make the 7 GB macOS runner swap
       CMAKE_BUILD_PARALLEL_LEVEL: 3
     steps:
       - uses: actions/checkout@v7
@@ -79,7 +96,17 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
+      # a compiler cache, as for the C++ tests
+      - uses: hendrikmuhs/ccache-action@v1.2.24
+        if: runner.os != 'Windows'
+        with:
+          key: python-${{ matrix.os }}-${{ matrix.python }}
+          max-size: 500M
+
       - name: Install library
+        env:
+          # CMake reads it from the environment (CMake 3.17 and later; scikit-build-core uses a newer one)
+          CMAKE_CXX_COMPILER_LAUNCHER: ${{ runner.os != 'Windows' && 'ccache' || '' }}
         run: |
           python -m pip install --upgrade pip
           pip install -e . -v
