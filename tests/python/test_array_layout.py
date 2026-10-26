@@ -1,3 +1,4 @@
+import gc
 import ioh
 import unittest
 
@@ -59,6 +60,17 @@ class TestArrayLayout(unittest.TestCase):
             sol = ioh.IntegerSolution(val, 1)
             self.assertTrue(np.all(sol.x == val))
             self.assertTrue(np.all(ioh.IntegerSolution(val, 1).x == val))
+
+    def test_solution_x_is_a_view(self):
+        # Solution.x is a writable view of the solution's own values, and keeps the solution alive
+        for solution, value in ((ioh.RealSolution([1.0, 2.0], 3.0), 5.5), (ioh.IntegerSolution([1, 2], 3.0), 7)):
+            x = solution.x
+            x[0] = value
+            self.assertEqual(solution.x[0], value)
+            self.assertTrue(np.shares_memory(x, solution.x))
+            del solution
+            gc.collect()
+            self.assertEqual(list(x), [value, 2])
 
     def test_optimum(self):
         problem = ioh.get_problem(1, instance=1, dimension=5, problem_class=ioh.ProblemClass.PBO)

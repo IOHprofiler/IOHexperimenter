@@ -166,10 +166,13 @@ class TestProblem(unittest.TestCase):
     def test_load_graph_instances_from_file(self):
         # in a fresh interpreter, because the loaded graphs stay registered
         code = textwrap.dedent("""
-            import os, tempfile, warnings
+            import os, pathlib, tempfile, warnings
             import ioh
 
-            with tempfile.TemporaryDirectory() as d:
+            with tempfile.TemporaryDirectory() as tmp:
+                # a directory that is not ASCII: on Windows, a narrow path used the ANSI code page
+                d = os.path.join(tmp, "J\u00fcrgen")
+                os.mkdir(d)
                 os.mkdir(os.path.join(d, "graphs"))
                 with open(os.path.join(d, "graphs", "triangle"), "w") as f:
                     f.write("0\\n1 2\\n2 3\\n3 1\\n")
@@ -188,8 +191,9 @@ class TestProblem(unittest.TestCase):
                 assert (p.meta_data.problem_id, p.meta_data.n_variables) == (2309, 3)
                 assert ioh.get_problem(2000, 1, 1, ioh.ProblemClass.GRAPH).meta_data.n_variables == 800
 
-                # loading it again changes nothing; without a path it is deprecated and does nothing
-                assert ioh.problem.MaxCut.load_instances(definitions) == added
+                # loading it again (also as a pathlib.Path) changes nothing; without a path it is deprecated and
+                # does nothing
+                assert ioh.problem.MaxCut.load_instances(pathlib.Path(definitions)) == added
                 with warnings.catch_warnings(record=True) as caught:
                     warnings.simplefilter("always")
                     ioh.problem.MaxCut.load_instances()
