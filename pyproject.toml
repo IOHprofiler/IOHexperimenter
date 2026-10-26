@@ -1,5 +1,6 @@
 [build-system]
-requires = ["scikit-build-core>=1.1"]
+# nanobind is pinned: its version shapes the extension and the generated stubs
+requires = ["scikit-build-core>=1.1", "nanobind==3.1.0"]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -26,6 +27,8 @@ Homepage = "https://iohprofiler.github.io/IOHexperimenter"
 
 [tool.scikit-build]
 minimum-version = "build-system.requires"
+# FindPython with Development.Module (ioh/CMakeLists.txt)
+cmake.version = ">=3.18"
 # kept between builds, so that a rebuild (pip install --no-build-isolation -e .) only compiles what changed
 build-dir = "build/{wheel_tag}"
 # the extension and the data files (ioh/CMakeLists.txt), not the C++ library's headers and CMake package
@@ -54,10 +57,6 @@ sdist.include = [
     "/external/fmt/include/",
     "/external/fmt/src/",
     "/external/fmt/support/cmake/",
-    "/external/pybind11/CMakeLists.txt",
-    "/external/pybind11/LICENSE",
-    "/external/pybind11/include/",
-    "/external/pybind11/tools/",
 ]
 # ioh/static links to static/ for editable installs; the wheel gets static/ from the CMake install
 sdist.exclude = ["/ioh/static", "__pycache__/", "*.pyc", "*.so", "*.pyd", ".DS_Store"]
