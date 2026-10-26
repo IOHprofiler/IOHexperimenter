@@ -105,6 +105,15 @@ class TestBindings(unittest.TestCase):
             gc.collect()
             self.assertIn("1", rows)
 
+    def test_analyzer_folders(self):
+        # an Analyzer makes a folder of its own, with the folders above a name with separators (e.g. Experiment's)
+        with tempfile.TemporaryDirectory() as root:
+            loggers = [ioh.logger.Analyzer(root=root, folder_name=name) for name in ("a/b", "a/b", "c/")]
+            folders = [os.path.relpath(logger.output_directory, root) for logger in loggers]
+            self.assertEqual(folders, [os.path.normpath(f) for f in ("a/b", "a/b-1", "c")])
+            for logger in loggers:
+                logger.close()
+
     def test_integer_arrays(self):
         # integer problems take arrays of any integer or bool type (e.g. a bitstring as rng.random(n) < 0.5), but not
         # of floats, and not values out of the range of int

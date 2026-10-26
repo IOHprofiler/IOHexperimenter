@@ -940,7 +940,8 @@ Record:
     discrepancy grids depend on the order of creation, single-threaded too when the seeds followed on
     (`test_sobol_interleaved_dimensions`); the golden values are unchanged.
   * `UniqueFolder` chose a free folder with `exists` and then created it, so Analyzers created at the same time
-    (or in different processes) shared a folder; it now loops on `create_directory`.
+    (or in different processes) shared a folder; it now loops on `create_directory` (after creating the folders
+    above a name with separators, as before).
   * Analyzers made with the default triggers shared the global `trigger::on_delta_improvement`, which keeps the best
     value of a run (also wrong single-threaded with two Analyzers): each Analyzer has its own
     (`detail::OwnDeltaImprovement`, a base constructed before `FlatFile`).
@@ -952,7 +953,9 @@ Record:
   `problem.remove_constraint(c)` and changing a constraint during a run); `ioh.set_data_root` is meant for the
   start, before threads create problems; the predefined properties are not to be renamed. Left as found (low):
   registering several entries checks and includes them under separate locks, debug builds' logging reads the
-  environment, and temporaries passed as triggers, properties or loggers dangle (as before).
+  environment, temporaries passed as triggers, properties or loggers dangle (as before), and Sobol grids made
+  at the same time in different dimensions restart the shared sequence for every point (correct, but slow for
+  large instance numbers; state per sampler would avoid it).
 * Tested (`tests/python/test_threads.py`, 8 threads that start together): evaluation of problems of every family
   (graphs sharing a file, CEC data, star discrepancy) against a single thread, MaxInfluence, loggers sharing the
   predefined triggers and properties, registration and wrapping under one name, Sobol grids, Analyzer folders, and
@@ -1053,8 +1056,8 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
     `-DIOH_TEST_PER_FILE=ON` also builds one executable per test file.
   * Threads (WP6): `ioh::common::random::GENERATOR` is one generator per thread, so `seed` seeds the calling
     thread's. `Factory::include_with_id(name, first, make)` chooses an id and registers under one lock. An
-    Analyzer has its own `OnDeltaImprovement` when it is given `trigger::on_delta_improvement` (the
-    default); it keeps it when the Analyzer is moved.
+    Analyzer has its own `OnDeltaImprovement` (with the same delta) when it is given
+    `trigger::on_delta_improvement`, the default.
 * Python upgrade guide: Python ≥ 3.10 (recommended ≥ 3.12), deprecated `download_static_folder` /
   `load_graph_problems` (no-ops), numpy returns (WP7), new metadata attributes if added. Data (WP4): the
   package uses its own data files; `IOH_RESOURCES` still names another directory, but `import ioh` no

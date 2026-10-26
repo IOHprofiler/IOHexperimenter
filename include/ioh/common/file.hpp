@@ -319,10 +319,17 @@ namespace ioh::common::file
                 create_directories(root_);
 
             // create_directory returns false for a folder that exists, also one that another logger (in another
-            // thread or process) created a moment ago: each gets a folder of its own
+            // thread or process) created a moment ago: each gets a folder of its own. A name with separators gets
+            // the folders above it first, as create_directories did.
+            const auto create = [](fs::path folder) {
+                if (!folder.has_filename()) // a name that ends in a separator
+                    folder = folder.parent_path();
+                create_directories(folder.parent_path());
+                return !exists(folder) && create_directory(folder);
+            };
             path_ = root_ / name;
             auto index = 0;
-            while (exists(path_) || !create_directory(path_))
+            while (!create(path_))
             {
                 ++index;
                 name_ = fmt::format("{}-{}", name, index);

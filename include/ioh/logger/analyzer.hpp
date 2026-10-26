@@ -251,16 +251,19 @@ namespace ioh::logger
              */
             struct OwnDeltaImprovement
             {
-                //! on the heap, so that it keeps its address when the Analyzer is moved
+                //! the trigger that the Analyzer's list of triggers refers to (an Analyzer is neither copied nor moved)
                 std::unique_ptr<trigger::OnDeltaImprovement> own_delta_improvement =
                     std::make_unique<trigger::OnDeltaImprovement>();
 
-                //! The triggers, with trigger::on_delta_improvement replaced by own_delta_improvement
+                //! The triggers, with trigger::on_delta_improvement replaced by own_delta_improvement, which gets its delta
                 [[nodiscard]] Triggers own(Triggers triggers) const
                 {
                     for (auto &t : triggers)
                         if (&t.get() == &trigger::on_delta_improvement)
+                        {
+                            own_delta_improvement->delta = trigger::on_delta_improvement.delta;
                             t = std::ref(static_cast<logger::Trigger &>(*own_delta_improvement));
+                        }
                     return triggers;
                 }
             };

@@ -163,8 +163,9 @@ def get_problem(
     raise ValueError(f"Problem type {problem_class} is not supported")
 
 
-# held by wrap_problem and Experiment.add_custom_problem while they register a function and look it up by name
-_wrap_lock = threading.Lock()
+# held by wrap_problem and Experiment.add_custom_problem while they register a function and look it up by name;
+# reentrant, as creating the problem calls the user's functions (e.g. calculate_objective), which may wrap others
+_wrap_lock = threading.RLock()
 
 
 def wrap_problem(
