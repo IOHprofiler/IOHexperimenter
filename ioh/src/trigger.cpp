@@ -34,7 +34,8 @@ void define_triggers(nb::module_ &m)
     nb::class_<trigger::OnDeltaImprovement, logger::Trigger>(
         t, "OnDeltaImprovement",
         "Trigger that evaluates to true when improvement of the objective function is observed of at least greater "
-        "than delta")
+        "than delta. It keeps the best value of a run, so loggers used at the same time (e.g. in different threads) "
+        "each need their own, rather than sharing ON_DELTA_IMPROVEMENT.")
         .def(nb::init<double>(), nb::arg("delta") = 1e-10)
         .def_rw("delta", &trigger::OnDeltaImprovement::delta)
         .def_ro("best_so_far", &trigger::OnDeltaImprovement::best_so_far)
@@ -47,7 +48,9 @@ void define_triggers(nb::module_ &m)
     t.attr("ON_DELTA_IMPROVEMENT") = nb::cast(trigger::on_delta_improvement);
 
     nb::class_<trigger::OnViolation, logger::Trigger>(
-        t, "OnViolation", "Trigger that evaluates to true when there is a contraint violation")
+        t, "OnViolation",
+        "Trigger that evaluates to true when there is a contraint violation. It counts the violations, so loggers "
+        "used at the same time (e.g. in different threads) each need their own, rather than sharing ON_VIOLATION.")
         .def(nb::init<>())
         .def_ro("violations", &trigger::OnViolation::violations)
         .def("__getstate__", [](const trigger::OnViolation &) { return nb::make_tuple(); })

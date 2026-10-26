@@ -84,6 +84,22 @@ namespace ioh::common
                 id_map[check_or_get_next_available(id)] = name;
         }
 
+        /**
+         * @brief Include a new element under the id of its name if the name is registered, otherwise under the first
+         * free id from `first`, and return that id
+         *
+         * Choosing the id and including the element happen under one lock, so that concurrent registrations get
+         * different ids. make(id) returns the creator, which may need the id. The rules of include apply.
+         */
+        template <typename MakeCreator>
+        int include_with_id(const std::string &name, const int first, MakeCreator make)
+        {
+            const std::lock_guard<std::recursive_mutex> lock(mutex_);
+            const int id = check_or_get_next_available(first, name);
+            include(name, id, make(id));
+            return id;
+        }
+
         //! Get the next available id
         [[nodiscard]] int check_or_get_next_available(const int id) const
         {

@@ -157,6 +157,30 @@ TEST_F(BaseTest, test_sobol_invalid_dimension)
 }
 
 
+TEST_F(BaseTest, test_sobol_interleaved_dimensions)
+{
+    // Sobol samplers of different dimensions, used in turns (as from different threads), give the points they give
+    // alone. i8_sobol keeps the state of one sequence; it restarts it when the dimension changes, where it used to
+    // continue from the state that another dimension left (here: a's third coordinate from c, after b).
+    using ioh::common::random::sampler::Sobol;
+    const auto points = [](Sobol &s, const int n) {
+        std::vector<std::vector<double>> p;
+        for (int i = 0; i < n; i++)
+            p.push_back(s.next());
+        return p;
+    };
+    Sobol a0(3), b0(2), c0(4, 5000);
+    const auto a_alone = points(a0, 2);
+    const auto b_alone = points(b0, 1);
+    const auto c_alone = points(c0, 1);
+
+    Sobol a(3), b(2), c(4, 5000);
+    EXPECT_EQ(a.next(), a_alone[0]);
+    EXPECT_EQ(c.next(), c_alone[0]);
+    EXPECT_EQ(b.next(), b_alone[0]);
+    EXPECT_EQ(a.next(), a_alone[1]);
+}
+
 TEST_F(BaseTest, test_halton) { 
     ioh::common::random::sampler::Halton sampler(5, 10);
     expect_vector_eq(sampler.next(), {0.3125, 0.37037, 0.08, 0.44898, 0.909091});

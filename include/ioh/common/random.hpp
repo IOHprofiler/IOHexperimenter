@@ -20,12 +20,13 @@ namespace ioh::common::random
     
     //! Global random device
     inline std::random_device RD;
-    
-    //! Global random generator
-    inline std::mt19937 GENERATOR(RD());
+
+    //! The random generator, one per thread (problems evaluated from different threads, e.g. MaxInfluence, do not
+    //! share one), seeded from a random device
+    inline thread_local std::mt19937 GENERATOR(std::random_device{}());
 
     /**
-     * @brief Seed the random number generator device. This is a std::mt19937 rng
+     * @brief Seed the random number generator of the calling thread. This is a std::mt19937 rng
      */
     inline void seed(const unsigned int seed){
         GENERATOR.seed(seed);
@@ -136,6 +137,10 @@ namespace ioh::common::random
     {
         T mu;
         T sigma;
+
+        //! the second number of the last pair, which the next call returns (per object, not shared)
+        T r1{}, r2{};
+        bool generate = true;
         
         normal(const T mu, const T sigma): mu(mu), sigma(sigma) {}
         normal(): normal(0.0, 1.0) {}
@@ -150,12 +155,9 @@ namespace ioh::common::random
         template <typename G>
         T operator()(G &gen)
         {
-            static uniform<double> rng;
-            static T r1, r2;
-            static bool generate = true;
-
             if (generate)
             {
+                uniform<double> rng;
                 T u1 = std::abs(rng(gen));
                 T u2 = std::abs(rng(gen));
                 const T root_log_u1 = std::sqrt(-2.0 * std::log(u1));

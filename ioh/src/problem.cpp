@@ -1,5 +1,6 @@
 #include "common.hpp"
 
+#include <mutex>
 #include <type_traits>
 
 namespace ioh_python::problem
@@ -8,12 +9,16 @@ namespace ioh_python::problem
     //! of RealConstraint/IntegerConstraint). The registries live until the end of the process, so they keep plain
     //! handles, and the references are released at exit, while the interpreter is still alive.
     std::vector<nb::handle> wrapped_functions;
+
+    //! Guards wrapped_functions: Python functions may be registered from different threads at once
+    std::mutex wrapped_functions_mutex;
 } // namespace ioh_python::problem
 
 //! Keeps f alive until the end of the process (also used by problem_helpers.cpp)
 bool register_python_fn(nb::handle f)
 {
     f.inc_ref();
+    const std::lock_guard<std::mutex> lock(ioh_python::problem::wrapped_functions_mutex);
     ioh_python::problem::wrapped_functions.push_back(f);
     return true;
 }
@@ -38,20 +43,21 @@ namespace ioh_python::problem
     {
         [[nodiscard]] bool perform_registration()
         {
-            // like wrap_function: the id of the name if it is registered, otherwise the first free id
+            // like wrap_function: the id of the name if it is registered, otherwise the first free id, chosen under
+            // the factory's lock
             auto &factory = ioh::common::Factory<P, int, int>::instance();
-            this->set_id(factory.check_or_get_next_available(1, this->meta_data().name));
-
             auto meta_data = this->meta_data();
             auto bounds = this->bounds();
             auto constraints = this->constraints();
             auto optimum = this->optimum();
-            factory.include(meta_data.name, meta_data.problem_id, [=](const int instance, const int n_variables) {
-                return std::make_shared<PyProblem<P, T>>(
-                    ioh::problem::MetaData(meta_data.problem_id, instance, meta_data.name, n_variables,
-                                           meta_data.optimization_type.type()),
-                    bounds.resize(n_variables), constraints, optimum);
-            });
+            this->set_id(factory.include_with_id(meta_data.name, 1, [&](const int id) {
+                return [=](const int instance, const int n_variables) {
+                    return std::make_shared<PyProblem<P, T>>(
+                        ioh::problem::MetaData(id, instance, meta_data.name, n_variables,
+                                               meta_data.optimization_type.type()),
+                        bounds.resize(n_variables), constraints, optimum);
+                };
+            }));
             return true;
         }
 
@@ -384,10 +390,14 @@ void define_problem(nb::module_ &m)
     define_funnel(m);
 
     nb::module_::import_("atexit").attr("register")(nb::cpp_function([]() {
-        auto &functions = ioh_python::problem::wrapped_functions;
+        // take the functions out under the lock, and release them outside it (a release can run Python code)
+        std::vector<nb::handle> functions;
+        {
+            const std::lock_guard<std::mutex> lock(ioh_python::problem::wrapped_functions_mutex);
+            functions.swap(ioh_python::problem::wrapped_functions);
+        }
         for (const auto fn : functions)
             if (fn)
                 fn.dec_ref();
-        functions.clear();
     }));
 }

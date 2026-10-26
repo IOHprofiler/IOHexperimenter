@@ -807,7 +807,7 @@ Record:
 
 ---
 
-## WP6 — Move bindings to nanobind 🚧 PR 1 (the port, T6.1–T6.5, T6.8) implemented (branch `wp6-nanobind`)
+## WP6 — Move bindings to nanobind 🚧 PR 1 (the port, T6.1–T6.5, T6.8) merged (#223); PR 2 (free-threading, T6.6) implemented (branch `wp6-free-threading`)
 
 Depends on: WP3, WP4, WP5.
 
@@ -916,7 +916,53 @@ Record (PR 1):
   regenerate `ioh/iohcpp/*.pyi` and `ioh/iohcpp/logger/*.pyi` (and add one for `logger.old`).
 * Debug builds compile; Linux (x86_64, aarch64), Windows (x64, ARM64) and macOS (Intel, arm64) green.
 
-### T6.6 Free-threading
+### T6.6 Free-threading ✅ (PR 2)
+
+Record:
+
+* The module is built with nanobind's `FREE_THREADED`: on a free-threaded Python (3.14t, 3.15t) importing it keeps
+  the GIL disabled. The free-threaded Windows wheels are built too (the `cp3??t-win*` skip is gone), and every
+  wheel's test runs `tests/python/test_threads.py` after the golden tests.
+* The guarantee (decided with the maintainer; no locks on objects): different objects can be used from different
+  threads at the same time; one problem, logger, suite, trigger, property or constraint is used by one thread at a
+  time. Shared state is made safe.
+* An audit of the shared state (two auditors: the library; the bindings and the package) found, and this PR fixes:
+  * Registering: `wrap_problem` and Python problem subclasses chose their id and registered it in two steps, so
+    concurrent registrations got the same id; `Factory::include_with_id` does both under the factory's lock. The
+    package's `wrap_problem` registers and creates by name under a lock (two threads wrapping the same name could
+    get each other's function), and the bindings' registry of Python functions has a mutex.
+  * MaxInfluence drew from one global `std::mt19937`; the generator is now one per thread
+    (`ioh::common::random::GENERATOR` is `thread_local`, and `seed` seeds the calling thread's).
+  * PackWhileTravel's evaluation inserted into the graph that the problems of one file share
+    (`std::map::operator[]`); it reads through `TTPData::items_of`.
+  * The Sobol generator keeps its state in statics: one call at a time (a mutex in `i8_sobol`), and its state is
+    restarted when the dimension changes. It used to continue another dimension's sequence, which made Sobol star
+    discrepancy grids depend on the order of creation, single-threaded too when the seeds followed on
+    (`test_sobol_interleaved_dimensions`); the golden values are unchanged.
+  * `UniqueFolder` chose a free folder with `exists` and then created it, so Analyzers created at the same time
+    (or in different processes) shared a folder; it now loops on `create_directory` (after creating the folders
+    above a name with separators, as before).
+  * Analyzers made with the default triggers shared the global `trigger::on_delta_improvement`, which keeps the best
+    value of a run (also wrong single-threaded with two Analyzers): each Analyzer has its own
+    (`detail::OwnDeltaImprovement`, a base constructed before `FlatFile`).
+  * `random::normal` kept its pair cache in statics; it is per object.
+* Documented instead of changed: the module-level `ON_DELTA_IMPROVEMENT` and `ON_VIOLATION` keep state, so loggers
+  used at the same time need one each (their docstrings say so); constraints given to `wrap_problem` (or to a
+  Python problem subclass) are shared by all problems made from it and keep the violation of the last evaluation, so
+  evaluate those problems from one thread at a time (copying them per problem would break
+  `problem.remove_constraint(c)` and changing a constraint during a run); `ioh.set_data_root` is meant for the
+  start, before threads create problems; the predefined properties are not to be renamed. Left as found (low):
+  registering several entries checks and includes them under separate locks, debug builds' logging reads the
+  environment, temporaries passed as triggers, properties or loggers dangle (as before), and Sobol grids made
+  at the same time in different dimensions restart the shared sequence for every point (correct, but slow for
+  large instance numbers; state per sampler would avoid it).
+* Tested (`tests/python/test_threads.py`, 8 threads that start together): evaluation of problems of every family
+  (graphs sharing a file, CEC data, star discrepancy) against a single thread, MaxInfluence, loggers sharing the
+  predefined triggers and properties, registration and wrapping under one name, Sobol grids, Analyzer folders, and
+  the first loads of the data in a fresh interpreter. On 3.14t (macOS) the suite passes with the GIL disabled.
+
+Task:
+
 
 * The free-threaded wheels built since WP1 re-enable the GIL on import, because the module does not
   declare that it is thread-safe. After the thread-safety audit (factory mutex from T3.2, loggers
@@ -1008,6 +1054,10 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
     builds its tests and example unless it sets `BUILD_TESTS`/`BUILD_EXAMPLE`. The tests build one
     executable, `test_ioh`, and `ctest` runs from the top of the build directory;
     `-DIOH_TEST_PER_FILE=ON` also builds one executable per test file.
+  * Threads (WP6): `ioh::common::random::GENERATOR` is one generator per thread, so `seed` seeds the calling
+    thread's. `Factory::include_with_id(name, first, make)` chooses an id and registers under one lock. An
+    Analyzer has its own `OnDeltaImprovement` (with the same delta) when it is given
+    `trigger::on_delta_improvement`, the default.
 * Python upgrade guide: Python ≥ 3.10 (recommended ≥ 3.12), deprecated `download_static_folder` /
   `load_graph_problems` (no-ops), numpy returns (WP7), new metadata attributes if added. Data (WP4): the
   package uses its own data files; `IOH_RESOURCES` still names another directory, but `import ioh` no
@@ -1022,6 +1072,9 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
   and stays False); `logger.Path` is `pathlib.Path`, and str or os.PathLike paths are accepted everywhere;
   bool arguments take True/False only and int arguments objects with `__index__` (pass `bool(x)`/`int(x)`);
   overrides in subclasses of `Store`/`FlatFile`/`Analyzer` are now called by the problems they log.
+  Threads (WP6): one object from one thread at a time; give loggers that run at the same time their own
+  `OnDeltaImprovement`/`OnViolation`, and evaluate the problems made from one `wrap_problem` with constraints
+  from one thread at a time (they share the constraint objects).
 * README/docs: installation, building from source (scikit-build-core), data location; changelog
   (from the release-notes draft below).
 * Release, the first since 0.3.22 (§1): version bump to 0.4.0; run the wheels workflow on master by
@@ -1143,6 +1196,14 @@ Each WP adds its user-visible changes here (§2).
     None), an int argument only objects with `__index__` (not `np.bool_`, `Fraction` or `Decimal`); an enum
     argument also takes its int value, and `trigger.At`/`During` take any iterable. A subclass of a bound
     class that does not call `super().__init__()` now fails when it is first used.
+  * Free-threading: on a free-threaded Python (3.14t, 3.15t; wheels now also for Windows) the GIL stays
+    disabled. Different problems, loggers and suites can be used from different threads at the same time;
+    one object is used by one thread at a time. Loggers used at the same time need their own
+    `OnDeltaImprovement`/`OnViolation` triggers rather than the shared `ON_DELTA_IMPROVEMENT`/`ON_VIOLATION`.
+  * Fixed: Analyzers made with the default triggers each track their own best value (they shared one, so one
+    Analyzer could skip lines because of another's run); Analyzers created at the same time (also in
+    different processes) get different folders; Sobol star discrepancy problems get the same grid whatever
+    problems were created before them.
 
 ---
 
@@ -1159,7 +1220,7 @@ Python package and the tests need neither, and the sdist has not contained them 
 
 ### T9.1 New repository
 
-* A repository in the IOHprofiler organization (name to be decided with the maintainer, e.g. `ioh-server`) with
+* A repository `IOHprofiler/ioh-server` (name agreed with the maintainer) with
   `server/`: the server, its query/reply schemas, the examples, the Python client (`iohservice.py`,
   `example_client.py`) and the Singularity definition, plus its documentation (`doc/python/source/server.rst`).
   The history of `server/` can be carried over with `git filter-repo --path server/`.

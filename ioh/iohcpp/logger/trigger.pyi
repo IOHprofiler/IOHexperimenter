@@ -36,7 +36,7 @@ ON_IMPROVEMENT: OnImprovement = ...
 
 class OnDeltaImprovement(Trigger):
     """
-    Trigger that evaluates to true when improvement of the objective function is observed of at least greater than delta
+    Trigger that evaluates to true when improvement of the objective function is observed of at least greater than delta. It keeps the best value of a run, so loggers used at the same time (e.g. in different threads) each need their own, rather than sharing ON_DELTA_IMPROVEMENT.
     """
 
     def __init__(self, delta: float = 1e-10) -> None: ...
@@ -57,7 +57,9 @@ class OnDeltaImprovement(Trigger):
 ON_DELTA_IMPROVEMENT: OnDeltaImprovement = ...
 
 class OnViolation(Trigger):
-    """Trigger that evaluates to true when there is a contraint violation"""
+    """
+    Trigger that evaluates to true when there is a contraint violation. It counts the violations, so loggers used at the same time (e.g. in different threads) each need their own, rather than sharing ON_VIOLATION.
+    """
 
     def __init__(self) -> None: ...
 

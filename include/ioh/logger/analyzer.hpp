@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "ioh/common/file.hpp"
 #include "ioh/logger/flatfile.hpp"
 
@@ -240,6 +242,33 @@ namespace ioh::logger
 
         } // namespace structures
 
+        namespace detail
+        {
+            /** An Analyzer's own trigger::OnDeltaImprovement, constructed before its base FlatFile (base from member).
+             *
+             * The default trigger::on_delta_improvement keeps the best value of a run, so the Analyzers that use it
+             * (also from different threads) must not share it: each gets this one instead.
+             */
+            struct OwnDeltaImprovement
+            {
+                //! the trigger that the Analyzer's list of triggers refers to (an Analyzer is neither copied nor moved)
+                std::unique_ptr<trigger::OnDeltaImprovement> own_delta_improvement =
+                    std::make_unique<trigger::OnDeltaImprovement>();
+
+                //! The triggers, with trigger::on_delta_improvement replaced by own_delta_improvement, which gets its delta
+                [[nodiscard]] Triggers own(Triggers triggers) const
+                {
+                    for (auto &t : triggers)
+                        if (&t.get() == &trigger::on_delta_improvement)
+                        {
+                            own_delta_improvement->delta = trigger::on_delta_improvement.delta;
+                            t = std::ref(static_cast<logger::Trigger &>(*own_delta_improvement));
+                        }
+                    return triggers;
+                }
+            };
+        } // namespace detail
+
         /* Version 1 */
         namespace v1
         {
@@ -258,7 +287,7 @@ namespace ioh::logger
             *
             * @ingroup Loggers
             */
-            class Analyzer : public FlatFile
+            class Analyzer : private detail::OwnDeltaImprovement, public FlatFile
             {
             protected:
                 //! output path
@@ -380,7 +409,7 @@ namespace ioh::logger
                          const std::string &algorithm_name = "algorithm_name",
                          const std::string &algorithm_info = "algorithm_info", const bool store_positions = false,
                          const bool use_old_data_format = true, const structures::Attributes &attributes = {}) :
-                    FlatFile(triggers,
+                    FlatFile(own(triggers),
                              common::concatenate(use_old_data_format ? default_properties_old_ : default_properties_,
                                                  additional_properties),
                              "", {}, " ", "", "None", "\n", true, store_positions, {}),

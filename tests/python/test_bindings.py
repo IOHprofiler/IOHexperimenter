@@ -1,6 +1,7 @@
 """Test behaviour of the bindings that the port to nanobind (WP6) had to keep, or that its review found untested."""
 
 import gc
+import os
 import tempfile
 import unittest
 
@@ -82,6 +83,36 @@ class TestBindings(unittest.TestCase):
         self.assertEqual(recorder.events[0], ("suite", "BBOB"))
         self.assertIn(("problem", 1), recorder.events)
         self.assertIn(("call",), recorder.events)
+
+    def test_default_analyzer_triggers(self):
+        # Analyzers made with the default triggers each keep the best value of their own run (they shared one trigger)
+        with tempfile.TemporaryDirectory() as root:
+            loggers = [ioh.logger.Analyzer(root=root, folder_name=name) for name in ("a", "b")]
+            problems = [ioh.get_problem(1, 1, 2) for _ in loggers]
+            for problem, logger in zip(problems, loggers):
+                problem.attach_logger(logger)
+            problems[0]([0.0, 0.0])
+            problems[1]([4.0, 4.0])  # worse than the other run's best, but the first evaluation of its own run
+            for logger in loggers:
+                logger.close()
+            rows = []
+            for path, _, files in os.walk(os.path.join(root, "b")):
+                for name in files:
+                    if name.endswith(".dat"):
+                        with open(os.path.join(path, name)) as f:
+                            rows += [line.split()[0] for line in f if line.strip()]
+            del loggers, problems
+            gc.collect()
+            self.assertIn("1", rows)
+
+    def test_analyzer_folders(self):
+        # an Analyzer makes a folder of its own, with the folders above a name with separators (e.g. Experiment's)
+        with tempfile.TemporaryDirectory() as root:
+            loggers = [ioh.logger.Analyzer(root=root, folder_name=name) for name in ("a/b", "a/b", "c/")]
+            folders = [os.path.relpath(logger.output_directory, root) for logger in loggers]
+            self.assertEqual(folders, [os.path.normpath(f) for f in ("a/b", "a/b-1", "c")])
+            for logger in loggers:
+                logger.close()
 
     def test_integer_arrays(self):
         # integer problems take arrays of any integer or bool type (e.g. a bitstring as rng.random(n) < 0.5), but not

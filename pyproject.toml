@@ -76,11 +76,11 @@ regex = '(?P<value>\d+\.\d+\.\d+\S*)'
 
 [tool.cibuildwheel]
 build = "cp310-* cp311-* cp312-* cp313-* cp314-* cp315-* cp314t-* cp315t-*"
-# no 32-bit Windows; musllinux was never shipped. Free-threaded Windows wheels come with the
-# free-threading PR (TASKS.md, T6.6)
-skip = "*-win32 *-musllinux_* cp3??t-win*"
-# freezes the Python-visible registry and problem behaviour, see tests/python/golden.py
-test-command = "python {project}/tests/python/test_golden.py"
+# no 32-bit Windows; musllinux was never shipped
+skip = "*-win32 *-musllinux_*"
+# freezes the Python-visible registry and problem behaviour (tests/python/golden.py), and evaluates from several
+# threads (on the free-threaded wheels without the GIL)
+test-command = "python {project}/tests/python/test_golden.py && python {project}/tests/python/test_threads.py"
 build-verbosity = 1
 
 [tool.cibuildwheel.linux.environment]

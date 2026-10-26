@@ -10,6 +10,7 @@ import typing
 import shutil
 import copy
 import json
+import threading
 
 # The data files (problem definitions and transformations) are installed with the package, in its static/
 # folder; the environment variable IOH_RESOURCES names another directory.
@@ -162,6 +163,11 @@ def get_problem(
     raise ValueError(f"Problem type {problem_class} is not supported")
 
 
+# held by wrap_problem and Experiment.add_custom_problem while they register a function and look it up by name;
+# reentrant, as creating the problem calls the user's functions (e.g. calculate_objective), which may wrap others
+_wrap_lock = threading.RLock()
+
+
 def wrap_problem(
     function: typing.Callable[[ObjectiveType], float],
     name: str = None,
@@ -226,18 +232,21 @@ def wrap_problem(
     wrapper = problem.wrap_real_problem if problem_class.is_real() \
         else problem.wrap_integer_problem 
 
-    wrapper(
-        function,
-        name,
-        optimization_type,
-        lb,
-        ub,
-        transform_variables,
-        transform_objectives,
-        calculate_objective,
-        [] if constraints is None else constraints
-    )
-    return get_problem(name, instance, dimension, problem_class)
+    # registering and creating by name in one go: a wrap_problem with the same name in another thread could come in
+    # between (e.g. two lambdas, both named '<lambda>')
+    with _wrap_lock:
+        wrapper(
+            function,
+            name,
+            optimization_type,
+            lb,
+            ub,
+            transform_variables,
+            transform_objectives,
+            calculate_objective,
+            [] if constraints is None else constraints
+        )
+        return get_problem(name, instance, dimension, problem_class)
 
 
 def get_problem_id(problem_name: str, problem_class: ProblemClass) -> int: 
@@ -459,12 +468,13 @@ class Experiment:
 
         name = name or "CustomProblem"
 
-        if not self.problem_class.is_real():
-            problem.wrap_integer_problem(p, name, **kwargs)
-        else:
-            problem.wrap_real_problem(p, name, **kwargs)
+        with _wrap_lock:
+            if not self.problem_class.is_real():
+                problem.wrap_integer_problem(p, name, **kwargs)
+            else:
+                problem.wrap_real_problem(p, name, **kwargs)
 
-        self.fids.append(get_problem_id(name, self.problem_class))
+            self.fids.append(get_problem_id(name, self.problem_class))
 
     def merge_output_to_single_folder(self, prefix: str, target_folder: str):
         '''Merges all ioh data folders into a single folder, having the same folder name prefix
