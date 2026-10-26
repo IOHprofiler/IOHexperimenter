@@ -1,6 +1,6 @@
 ## Build the ioh library.
 ##
-cmake_minimum_required(VERSION 3.15) 
+cmake_minimum_required(VERSION 3.16)
 file(READ VERSION VERSION_STRING)
 string(STRIP ${VERSION_STRING} ${VERSION_STRING})
 string(REGEX REPLACE "\n$" "" VERSION_STRING "${VERSION_STRING}")
@@ -22,8 +22,15 @@ set(EXTERNAL_DIR "${PROJECT_SOURCE_DIR}/external")
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH}) 
   
 option(BUILD_PYTHON_PACKAGE "Whether to build Python package" OFF)
-option(BUILD_TESTS "Whether to build test cases with gtest" ON)
-option(BUILD_EXAMPLE "Whether to build examples" ON)  
+# The tests and the example are built by default only when this is the top-level project, not when another
+# project adds it with add_subdirectory
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    set(IOH_TOP_LEVEL ON)
+else()
+    set(IOH_TOP_LEVEL OFF)
+endif()
+option(BUILD_TESTS "Whether to build test cases with gtest" ${IOH_TOP_LEVEL})
+option(BUILD_EXAMPLE "Whether to build examples" ${IOH_TOP_LEVEL})
 option(BUILD_DOCS "Build docs" OFF)    
 option(BUILD_SERVER "Whether to build the objective function server" OFF) 
 option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF) # Turn this option ON if you plan to test MK-landscape problems.
@@ -226,7 +233,9 @@ export(PACKAGE ioh)
  
 
 # Add subdirectories to build.
-if(BUILD_TESTS) 
+if(BUILD_TESTS)
+    # here, so that ctest runs the tests from the top of the build directory
+    enable_testing()
     add_subdirectory(tests)
 endif()
 
