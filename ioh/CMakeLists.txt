@@ -7,8 +7,9 @@ execute_process(
 find_package(nanobind CONFIG REQUIRED)
 
 file(GLOB SOURCES src/*.cpp)
-# NOMINSIZE: -O3 like the library (nanobind's default -Os makes the evaluation slower)
-nanobind_add_module(iohcpp NOMINSIZE ${SOURCES})
+# NOMINSIZE: -O3 like the library (nanobind's default -Os makes the evaluation slower). FREE_THREADED: on a
+# free-threaded Python the module keeps the GIL disabled (its shared state is thread-safe; see TASKS.md T6.6).
+nanobind_add_module(iohcpp NOMINSIZE FREE_THREADED ${SOURCES})
 target_link_libraries(iohcpp PRIVATE ${PROJECT_NAME})
 # the problem families of the registry (src/registry/families.hpp)
 target_include_directories(iohcpp PRIVATE ${PROJECT_SOURCE_DIR}/src)
