@@ -100,6 +100,9 @@ WP2 section has the numbers after it):
   (0.4.0, WP8) ships everything at once, so PyPI stays at 0.3.22 until then. To test wheels in
   between, run the wheels workflow by manual dispatch; it only uploads on `release: published`.
 * Not doing: PCH, `-Os` for bindings, a separate data wheel, binary data formats, pybind11 3.x.
+* **The objective-function server leaves this repository** (decided with the maintainer during WP6): it moves
+  to a repository of its own in the IOHprofiler organization that depends on this one, and this repository
+  drops it together with the dependencies only it needs (`external/json`, `external/cxxopts`). See WP9.
 
 ## 2. Invariants and conventions
 
@@ -1058,6 +1061,37 @@ Each WP adds its user-visible changes here (§2).
   * C++: CMake ≥ 3.16 (the README said 3.15). The tests and example are built by default only when
     IOHexperimenter is the top-level project; `ctest` runs each test once (it ran them 4 times), from
     the top of the build directory.
+
+---
+
+## WP9 — Server to its own repository
+
+Decided with the maintainer during WP6 (§1): fewer dependencies here. Independent of WP6/WP7; to be done before
+the release (WP8), which announces it.
+
+Audit (WP6): `external/json` (nlohmann/json, 17 MB) and `external/cxxopts` are used only by the
+objective-function server (`server/ioh-server.cpp`, built with `-DBUILD_SERVER=ON`, not built in CI, last changed
+in 2023), and json also by `merge_output_to_single_folder` in `include/ioh/common/file.hpp`, under `HAS_JSON`,
+which only the server build defines; nothing calls it (the Python `Experiment` has its own). The library, the
+Python package and the tests need neither, and the sdist has not contained them since WP5.
+
+### T9.1 New repository
+
+* A repository in the IOHprofiler organization (name to be decided with the maintainer, e.g. `ioh-server`) with
+  `server/`: the server, its query/reply schemas, the examples, the Python client (`iohservice.py`,
+  `example_client.py`) and the Singularity definition, plus its documentation (`doc/python/source/server.rst`).
+  The history of `server/` can be carried over with `git filter-repo --path server/`.
+* It depends on this repository: CMake `FetchContent` of IOHexperimenter at a release tag (or `find_package(ioh)`
+  of an installed library), and of nlohmann/json and cxxopts at pinned versions instead of submodules. Its own
+  CI builds the server and runs an example query.
+
+### T9.2 Remove the server here
+
+* Delete `server/`, the `external/json` and `external/cxxopts` submodules (`.gitmodules`), `BUILD_SERVER`,
+  `HAS_JSON`/`INCLUDE_JSON` and the `nlohmann_json` install rule in `CMakeLists.txt`, the unused
+  `merge_output_to_single_folder` in `include/ioh/common/file.hpp`, and the server page of the docs (which links
+  to the new repository instead).
+* Release notes and C++ upgrade guide (WP8): the server moved to the new repository; `-DBUILD_SERVER` is gone.
 
 ---
 
