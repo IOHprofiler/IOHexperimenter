@@ -6,6 +6,8 @@
 // can also be compiled as one unity build.
 
 #include <algorithm>
+#include <limits>
+#include <type_traits>
 #include <string>
 #include <vector>
 
@@ -40,11 +42,33 @@ namespace ioh_python
     template <typename T>
     using Array2D = nb::ndarray<const T, nb::ndim<2>, nb::c_contig, nb::device::cpu>;
 
+    //! The argument of an input array. Integer arrays are taken only as they are (no conversion pass), so that an
+    //! array of another type, e.g. floats, falls through to the std::vector overload, which rejects it as before.
+    template <typename A>
+    constexpr auto array_arg(const char *name = nullptr)
+    {
+        if constexpr (std::is_integral_v<A>)
+            return nb::arg(name).noconvert();
+        else
+            return nb::arg(name);
+    }
+
+    //! Raises TypeError, as pybind11 did, if the values of an integer array do not fit into T
+    template <typename T, typename V>
+    void check_range(const V *data, const size_t size)
+    {
+        if constexpr (std::is_integral_v<T> && std::is_integral_v<V> && sizeof(V) > sizeof(T))
+            for (size_t i = 0; i < size; i++)
+                if (data[i] < std::numeric_limits<T>::min() || data[i] > std::numeric_limits<T>::max())
+                    throw nb::type_error("an integer in the array is out of range");
+    }
+
     //! The values of a one-dimensional input array as a vector of T
     template <typename T, typename A>
     std::vector<T> to_vector(const A &array)
     {
         const auto *data = array.data();
+        check_range<T>(data, array.shape(0));
         return std::vector<T>(data, data + array.shape(0));
     }
 
@@ -55,6 +79,7 @@ namespace ioh_python
         std::vector<std::vector<T>> rows(array.shape(0));
         const auto *data = array.data();
         const size_t n = array.shape(1);
+        check_range<T>(data, rows.size() * n);
         for (size_t i = 0; i < rows.size(); i++)
             rows[i].assign(data + i * n, data + (i + 1) * n);
         return rows;
@@ -78,6 +103,9 @@ namespace ioh_python
         return nb::ndarray<nb::numpy, T, nb::ndim<1>>(data, {v.size()}, owner);
     }
 } // namespace ioh_python
+
+// problem.cpp: keeps a Python function alive for the life of the process (wrapped functions, constraints)
+bool register_python_fn(nb::handle f);
 
 // The parts of the module, defined by the binding sources (ioh.cpp calls the first four, in this order)
 

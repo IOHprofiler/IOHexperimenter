@@ -1,14 +1,6 @@
-#include <pybind11/functional.h>
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+#include "common.hpp"
 
-#include "ioh.hpp"
-
-namespace py = pybind11;
-using namespace ioh::suite;
-
-std::string make_docstring(const std::string &name)
+std::string suite_docstring(const std::string &name)
 {
     return fmt::format(R"pbdoc(
         Suite with {} functions included in IOH. 
