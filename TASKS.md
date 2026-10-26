@@ -1159,7 +1159,7 @@ Python package and the tests need neither, and the sdist has not contained them 
 
 ### T9.1 New repository
 
-* A repository in the IOHprofiler organization (name to be decided with the maintainer, e.g. `ioh-server`) with
+* A repository `IOHprofiler/ioh-server` (name agreed with the maintainer) with
   `server/`: the server, its query/reply schemas, the examples, the Python client (`iohservice.py`,
   `example_client.py`) and the Singularity definition, plus its documentation (`doc/python/source/server.rst`).
   The history of `server/` can be carried over with `git filter-repo --path server/`.
