@@ -248,6 +248,35 @@ class TestProblem(unittest.TestCase):
         created = ioh.get_problem("TestSubclassIdsB", 1, 3, ioh.ProblemClass.INTEGER)
         self.assertEqual(created.meta_data.problem_id, second.meta_data.problem_id)
 
+    def test_setters(self):
+        # after construction only the setters change a problem's meta data; an attached logger gets the new
+        # meta data, and the registry is unchanged
+        p = ioh.get_problem(1, 1, 5)
+        logger = ioh.logger.Store([ioh.logger.trigger.ALWAYS], [])
+        p.attach_logger(logger)
+        p.set_id(100)
+        p.set_instance(7)
+        p.set_name("RenamedSphere")
+        p.set_final_target(1e-3)
+        for meta in (p.meta_data, logger.problem):
+            self.assertEqual(
+                (meta.problem_id, meta.instance, meta.name, meta.final_target), (100, 7, "RenamedSphere", 1e-3)
+            )
+        with self.assertRaises(AttributeError):
+            p.meta_data.problem_id = 1
+        self.assertEqual(ioh.get_problem(1, 1, 5).meta_data.problem_id, 1)
+
+        # a subclass can give its problems a fixed id; registering the class does not override it
+        class FixedId(ioh.problem.RealSingleObjective):
+            def __init__(self, instance=1, n_variables=2):
+                super().__init__("TestSettersFixedId", n_variables, instance, True, ioh.RealBounds(n_variables, -1, 1))
+                self.set_id(4242)
+
+            def evaluate(self, x):
+                return 0.0
+
+        self.assertEqual(FixedId().meta_data.problem_id, 4242)
+
     def test_builtin_names_cannot_be_registered(self):
         with self.assertRaises(ValueError):
             ioh.wrap_problem(lambda x: 0.0, "Sphere")

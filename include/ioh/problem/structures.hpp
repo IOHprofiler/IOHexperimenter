@@ -18,7 +18,8 @@ namespace ioh
         //! Typedef for mutliobjective problems
         using MultiObjective = std::vector<double>;
 
-        //! struct of problem meta data
+        //! struct of problem meta data. Its values are set by its constructor; after that, a problem's meta data
+        //! changes only through the problem's setters (set_id, set_instance, set_name, set_final_target) and invert()
         struct MetaData : common::HasRepr
         {
             // Most of fields here are `int` and not `unsigned long` (or `size_t`) because of interoperability with some

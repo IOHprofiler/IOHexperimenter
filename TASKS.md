@@ -90,6 +90,10 @@ WP2 section has the numbers after it):
   since WP4 at the maintainer's request): whether the problem has one dimension and one instance whatever
   was requested (graph and CEC2013 problems); the values it uses are `n_variables` and `instance`.
   Registry entries carry nothing (the dimension of a graph is only known once its data are loaded).
+  `MetaData` gets all its values from its constructor; after that only the problem's public setters
+  (`set_id`, `set_instance`, `set_name`, `set_final_target`) and `invert()` change a problem's meta data.
+  The setters stay public API, also in Python: users give their problems fixed ids with them (decided
+  with the maintainer in WP4).
 * **`static.tar.gz` stays** in the repository: released versions (≤ 0.3.22) download it from
   `master` in `download_static_folder()`. It must be kept identical to `static/` (WP4 adds a check).
 * **No intermediate releases**: nothing is released until all WPs are merged. The next release
@@ -570,7 +574,8 @@ Record:
   `static/conf.ini` is deleted. The wheels workflow checks that every wheel and the sdist hold exactly the
   manifest's files before uploading.
 * **Fixed dimension and instance** (T4.2, decided with the maintainer): `fixed_dimension` and
-  `fixed_instance` are booleans in `MetaData`, set by the `CEC2013` and `GraphProblem` constructors,
+  `fixed_instance` are booleans in `MetaData`, arguments of its constructor (Python too, default false)
+  that the `CEC2013` and `GraphProblem` constructors pass,
   instead of WP3's virtual accessors returning the value or `None`; the values a problem uses are its
   `n_variables` and `instance`. In Python they are `meta_data.fixed_dimension`/`fixed_instance` (the
   WP3 properties on the problems are gone). Registry entries and the manifest carry nothing: a graph's
@@ -958,6 +963,7 @@ Each WP adds its user-visible changes here (§2).
     replaced Sphere for `get_problem(1)`.
   * Problem classes defined in Python by subclassing report the id they are registered under (the
     first free one of their base class) instead of 0, also in logged data.
+  * `MetaData(...)` also takes `fixed_dimension` and `fixed_instance` (default false).
   * Graph definition files (`load_instances(path)`): the graphs are added after the existing problems
     (ids from 2309 on a fresh registry) instead of from the class's first id, never replace built-in
     graphs, and the call returns the new ids and names; loading the same file again changes nothing.

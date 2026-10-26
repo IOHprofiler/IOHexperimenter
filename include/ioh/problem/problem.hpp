@@ -238,7 +238,8 @@ namespace ioh
                 log_info_.allocate(optimum_, constraintset_);
             }
 
-            //! Call this method after updating any fields on meta_data_
+            //! Called by the setters: with a logger attached, resets the problem, which gives the logger the new
+            //! meta data
             void updated_metadata()
             {
                 if (logger_ != nullptr)
