@@ -316,7 +316,7 @@ Clone the repository with its submodules: `git clone --recursive https://github.
 
 * Python package: `pip install -e .` builds the extension with [scikit-build-core](https://scikit-build-core.readthedocs.io) and CMake in `build/<wheel tag>`. That directory is kept, but each isolated build starts a new CMake configuration and compiles the C++ library again; after `pip install scikit-build-core cmake ninja`, `pip install --no-build-isolation -e .` compiles only what changed. Run the tests with `python -m unittest -v`.
 * C++ library: `cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build --target test_ioh --parallel 4`, then run `build/tests/test_ioh` or `ctest --test-dir build`. With `-DIOH_TEST_PER_FILE=ON` every test file also gets an executable of its own.
-* After changing the bindings, regenerate the type stubs: `pip install mypy` and `python tools/gen_stubs.py`, with the package installed with `pip install -e .`. `python doc/generate_docs.py` builds the documentation (it needs doxygen and sphinx).
+* After changing the bindings, regenerate the type stubs: `pip install mypy nanobind==3.1.0` (the version the package builds with) and `python tools/gen_stubs.py`, with the package installed with `pip install -e .`. `python doc/generate_docs.py` builds the documentation (it needs doxygen and sphinx).
 
 ### Pull request
 
