@@ -11,33 +11,16 @@ import shutil
 import copy
 import json
 
-import urllib.request
-import tarfile
-
-# Set the path to the static/ directory.
-# NEEDED for C++ code to load transformation details for several functions.
-# The static/ directory is installed together with the "pip install" command.
-# WARNING: The os.environ should be manipulated before any package from .iohcpp is imported!
-# =================================================================================================
-# Get the directory containing the __init__.py file
+# The data files (problem definitions and transformations) are installed with the package, in its static/
+# folder; the environment variable IOH_RESOURCES names another directory.
 package_directory = os.path.realpath(os.path.dirname(__file__))
-
-# Construct the path to the static/ directory
 static_directory = os.path.join(package_directory, 'static')
 
-# Set the IOH_RESOURCES environment variable to the path to the static/ directory
-if os.environ.get('IOH_RESOURCES') is None:
-    os.environ['IOH_RESOURCES'] = static_directory
-    
-# Raise informative error
-if not os.path.isdir(os.environ['IOH_RESOURCES']):
+if os.environ.get('IOH_RESOURCES') is not None and not os.path.isdir(os.environ['IOH_RESOURCES']):
     raise ImportError(
-        f"static directory not found. Please manually set the environment variable IOH_RESOURCES "
-        f"to the path of the unpacked static.tar.gz (see: "
-        f"https://github.com/IOHprofiler/IOHexperimenter/blob/master/static.tar.gz)"
-    )        
-    
-# =================================================================================================
+        f"The directory {os.environ['IOH_RESOURCES']} in the environment variable IOH_RESOURCES does not exist. "
+        f"Unset it to use the data files of the package, or set it to the static folder of IOHexperimenter."
+    )
 
 from .iohcpp import (
     problem,
@@ -55,7 +38,24 @@ from .iohcpp import (
     IntegerState,
     MetaData,
     LogInfo,
+    DataError,
+    data_root,
 )
+from . import iohcpp as _iohcpp
+
+
+def set_data_root(path):
+    '''Sets the directory of the data files (the static folder of IOHexperimenter) for this process; an empty path
+    goes back to IOH_RESOURCES, or the package's own data when it is not set. Problems that need data and are not
+    created yet use it. Other processes (e.g. multiprocessing workers) do not see it: set IOH_RESOURCES for them.'''
+    path = os.fspath(path)
+    if not path and os.environ.get('IOH_RESOURCES') is None:
+        path = static_directory
+    _iohcpp.set_data_root(path)
+
+
+if os.environ.get('IOH_RESOURCES') is None:
+    set_data_root(static_directory)
 
 ProblemType = typing.Union[problem.RealSingleObjective, problem.IntegerSingleObjective]
 VariableType = typing.Union[int, float]
@@ -63,40 +63,15 @@ ObjectiveType = typing.List[VariableType]
 
 
 def download_static_folder(warn = True):
-    '''Download static files from github. 
-
-    Required for Graph problems to be instantiated properly
-    '''
-
-    target = os.path.realpath("IOHexperimenter")
-    branch = "master"
-
-    if os.path.isdir(target) and warn:
-        warnings.warn(f"Attempting to download static folder but path {target} already exists. Skipping...")
-        return 
-    
-    os.makedirs(target)
-    github_static_folder = f"https://github.com/IOHprofiler/IOHexperimenter/blob/{branch}/static.tar.gz?raw=true" 
-
-    with urllib.request.urlopen(github_static_folder) as f:
-        thetarfile = tarfile.open(fileobj=f, mode="r|gz")
-        thetarfile.extractall(target)
+    '''Deprecated: does nothing. The data files are installed with the package (see set_data_root).'''
+    warnings.warn("download_static_folder() is deprecated and does nothing: the data files are installed "
+                  "with the package", DeprecationWarning, stacklevel=2)
 
 
 def load_graph_problems():
-    '''Helper to load Graph problems. '''
-
-    download_static_folder(False)
-
-    for problem_class in (
-        problem.MaxCut,
-        problem.MaxCoverage,
-        problem.MaxInfluence,
-        problem.PackWhileTravel
-    ):
-        problem_class.load_instances()
-
-    assert any(problem.GraphProblem.problems), "loading the graph files failed"
+    '''Deprecated: does nothing. The graph problems are always registered.'''
+    warnings.warn("load_graph_problems() is deprecated and does nothing: the graph problems are always "
+                  "registered", DeprecationWarning, stacklevel=2)
 
 
 class ProblemClass(enum.Enum):
@@ -134,8 +109,6 @@ class ProblemClass(enum.Enum):
     def problems(self):
         base_problem = getattr(problem, self.value)
         if base_problem:
-            if self is ProblemClass.GRAPH and not any(base_problem.problems):
-                load_graph_problems()
             return base_problem.problems
 
 
@@ -179,9 +152,6 @@ def get_problem(
 
     base_problem = getattr(problem, problem_class.value)
     if base_problem:
-        if problem_class is ProblemClass.GRAPH and not any(base_problem.problems):
-            load_graph_problems()
-
         if fid not in (base_problem.problems.values() | base_problem.problems.keys()):
             raise ValueError(
                 f"{fid} is not registered for problem type: {problem_class}"
@@ -217,7 +187,8 @@ def wrap_problem(
         The callable to wrap
     name: str = None
         The name of the function. This can be used to create new instances of this function.
-        Note, when not using unique names, this will override the previously wrapped functions.
+        Note, when not using unique names, this will override the previously wrapped functions. The name of a
+        built-in problem raises a ValueError. The problem gets the first free id of its problem class.
     problem_class: ProblemClass = ProblemClass.REAL
         The type of the problem.
     dimension: int = 5
@@ -628,6 +599,9 @@ __all__ = (
     "get_problem",
     "wrap_problem",
     "get_problem_id",
-    "Experiment"
+    "Experiment",
+    "set_data_root",
+    "data_root",
+    "DataError",
 )
 

@@ -1,0 +1,4 @@
+# The data files are compared byte for byte with static/manifest.json, and the tests' reference files with their
+# expected values: never convert their line endings (Windows checkouts would otherwise give them CRLF)
+static/** -text
+tests/data/** -text

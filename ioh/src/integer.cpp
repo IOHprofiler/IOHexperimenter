@@ -9,6 +9,24 @@ namespace py = pybind11;
 using namespace ioh::problem;
 
 
+template <typename ProblemType>
+std::map<int, std::string> load_graph_instances(const std::optional<fs::path> &path)
+{
+    if (!path &&
+        PyErr_WarnEx(PyExc_DeprecationWarning,
+                     "load_instances() without a path does nothing: the built-in graphs are always registered", 1) < 0)
+        throw py::error_already_set();
+    return submodular::GraphProblemType<ProblemType>::template load_graph_instances<int, int>(path);
+}
+
+constexpr auto load_instances_doc = R"pbdoc(
+    Adds the graphs of a definitions file after the existing graph problems, in GraphProblem and
+    IntegerSingleObjective, and returns their {id: name}. Their ids continue after the highest graph problem id, and
+    their names are the class name and the id. Loading the same file again returns the same ids. Calling it without
+    a path is deprecated and does nothing.
+)pbdoc";
+
+
 void define_pbo_problems(py::module &m)
 {
     py::class_<PBO, IntegerSingleObjective, std::shared_ptr<PBO>>(m, "PBO",
@@ -459,8 +477,8 @@ void define_submodular_problems(py::module &m)
             arXiv preprint arXiv:2302.01464 (2023).
 
         )pbdoc")
-        .def_static("load_instances", &GraphProblemType<MaxCut>::load_graph_instances<int, int>,
-                    py::arg("path") = std::nullopt);
+        .def_static("load_instances", &load_graph_instances<MaxCut>, py::arg("path") = std::nullopt,
+                    load_instances_doc);
 
     // Don't allow these object to be created in from constructors in python
     py::class_<MaxCoverage, GraphProblem, std::shared_ptr<MaxCoverage>>(m, "MaxCoverage", py::is_final(),
@@ -484,8 +502,8 @@ void define_submodular_problems(py::module &m)
             arXiv preprint arXiv:2302.01464 (2023).
 
         )pbdoc")
-        .def_static("load_instances", &GraphProblemType<MaxCoverage>::load_graph_instances<int, int>,
-                    py::arg("path") = std::nullopt);
+        .def_static("load_instances", &load_graph_instances<MaxCoverage>, py::arg("path") = std::nullopt,
+                    load_instances_doc);
 
 
     py::class_<MaxInfluence, GraphProblem, std::shared_ptr<MaxInfluence>>(m, "MaxInfluence", py::is_final(),
@@ -515,8 +533,8 @@ void define_submodular_problems(py::module &m)
             "Benchmarking Algorithms for Submodular Optimization Problems Using IOHProfiler." 
             arXiv preprint arXiv:2302.01464 (2023).
         )pbdoc")
-        .def_static("load_instances", &GraphProblemType<MaxInfluence>::load_graph_instances<int, int>,
-                    py::arg("path") = std::nullopt);
+        .def_static("load_instances", &load_graph_instances<MaxInfluence>, py::arg("path") = std::nullopt,
+                    load_instances_doc);
 
     py::class_<PackWhileTravel, GraphProblem, std::shared_ptr<PackWhileTravel>>(m, "PackWhileTravel", py::is_final(),
                                                                                 R"pbdoc(
@@ -550,6 +568,6 @@ void define_submodular_problems(py::module &m)
             "Benchmarking Algorithms for Submodular Optimization Problems Using IOHProfiler." 
             arXiv preprint arXiv:2302.01464 (2023).
         )pbdoc")
-        .def_static("load_instances", &GraphProblemType<PackWhileTravel>::load_graph_instances<int, int>,
-                    py::arg("path") = std::nullopt);
+        .def_static("load_instances", &load_graph_instances<PackWhileTravel>, py::arg("path") = std::nullopt,
+                    load_instances_doc);
 }

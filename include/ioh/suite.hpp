@@ -231,7 +231,8 @@ namespace ioh::suite
     /**
      * @brief Registers the suite class T, constructed from (problem ids, instances, dimensions), in a suite factory of
      * its problem type, under its static registry_id and registry_name. A taken id is replaced by the next free one;
-     * a name that is already registered keeps its id and its entry is replaced, also a built-in suite's.
+     * a name that is already registered keeps its id and its entry is replaced, except a built-in suite's name, which
+     * throws std::invalid_argument.
      *
      * The library adds the built-in suites with this overload while their factory is being built.
      */

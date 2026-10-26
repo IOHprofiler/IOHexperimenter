@@ -68,9 +68,10 @@ endif()
 file(GLOB_RECURSE HEADERS include/ioh *.hpp) 
    
  
-# The compiled part of the library: the registries of the built-in problems and suites (src/registry), so that
-# only these files instantiate every problem class
+# The compiled part of the library: where the data files are (src/data.cpp), and the registries of the built-in
+# problems and suites (src/registry), so that only these files instantiate every problem class
 add_library(ioh STATIC
+    src/data.cpp
     src/registry/bbob.cpp
     src/registry/cec.cpp
     src/registry/dynamic_bin_val.cpp
@@ -81,6 +82,13 @@ add_library(ioh STATIC
     src/registry/suites.cpp
 )
 add_library(ioh::ioh ALIAS ioh)
+# GCC 7 and 8 only have <experimental/filesystem> (include/ioh/common/data.hpp): programs that use the library
+# (also installed) need the same definition and library
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0
+   AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
+    target_compile_definitions(ioh PUBLIC FSEXPERIMENTAL)
+    target_link_libraries(ioh PUBLIC stdc++fs)
+endif()
 # position-independent: it is also linked into the Python extension. The Debug build gets its own file name, so
 # that installed Debug and Release builds can coexist.
 set(IOH_DEBUG_POSTFIX d CACHE STRING "Postfix of the Debug build of the ioh library")
@@ -161,6 +169,15 @@ write_basic_package_version_file(
 
 # Define installation rules.
 include(GNUInstallDirs)
+
+# The data files, and where the library finds them by default (see include/ioh/common/data.hpp): the static folder
+# of this source tree while it exists, then the installed copy. The Python package sets its own.
+install(DIRECTORY static/ DESTINATION ${CMAKE_INSTALL_DATADIR}/ioh)
+if(NOT BUILD_PYTHON_PACKAGE)
+    target_compile_definitions(ioh PRIVATE
+        IOH_SOURCE_DATA_DIR="${PROJECT_SOURCE_DIR}/static"
+        IOH_INSTALL_DATA_DIR="${CMAKE_INSTALL_FULL_DATADIR}/ioh")
+endif()
 
 
 if (DEFINED INCLUDE_JSON)

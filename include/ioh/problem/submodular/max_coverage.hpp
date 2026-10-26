@@ -65,8 +65,7 @@ namespace ioh::problem
     inline std::vector<RegistryEntry<submodular::MaxCoverage>>
     submodular::MaxCoverage::registry_entries(const std::optional<fs::path> &definitions_file)
     {
-        return graph_entries(
-            definitions_file.value_or(common::file::utils::find_static_file("example_list_maxcoverage")), "MaxCoverage");
+        return definitions_file ? graph_entries(*definitions_file, "MaxCoverage") : builtin_entries("MaxCoverage");
     }
 
 

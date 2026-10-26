@@ -94,7 +94,6 @@ namespace ioh::problem
     inline std::vector<RegistryEntry<submodular::MaxInfluence>>
     submodular::MaxInfluence::registry_entries(const std::optional<fs::path> &definitions_file)
     {
-        return graph_entries(
-            definitions_file.value_or(common::file::utils::find_static_file("example_list_maxinfluence")), "MaxInfluence");
+        return definitions_file ? graph_entries(*definitions_file, "MaxInfluence") : builtin_entries("MaxInfluence");
     }
 } // namespace ioh::problem

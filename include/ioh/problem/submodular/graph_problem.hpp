@@ -28,7 +28,8 @@ namespace ioh::problem::submodular
             std::string constraint_variances;
         
 
-            //! The root path of the files
+            //! The directory of the files: that of the definitions file for a graph loaded from one, empty for
+            //! the built-in graphs, whose files are in the data directory (see ioh::data::root)
             fs::path root;
 
             //! Edge type
@@ -68,8 +69,6 @@ namespace ioh::problem::submodular
 
 
 
-                // default path for all files, change this in the if you want to use another
-                meta.root = common::file::utils::get_static_root();
                 return meta;
             }
 
@@ -107,6 +106,9 @@ namespace ioh::problem::submodular
             //! Flag to denoted wheter the graph has been loaded in memory
             bool loaded = false;
 
+            //! Held while the graph is loaded, so that it is loaded once, also when problems are created in parallel
+            std::mutex load_mutex;
+
             //! Constructor from meta data
             Graph(const Meta &meta) : meta(meta), chance_cons(0.0) {}
 
@@ -124,13 +126,32 @@ namespace ioh::problem::submodular
 
 
             //! Load method
+            /**
+             * @brief The path of one of the graph's files: in the data directory for a built-in graph, otherwise in
+             * the directory of its definitions file. Throws ioh::data::data_error when it does not exist.
+             */
+            [[nodiscard]] fs::path path(const std::string &file) const
+            {
+                if (meta.root.empty())
+                    return ioh::data::file(file);
+                auto path = meta.root / file;
+                if (!fs::exists(path))
+                    throw ioh::data::data_error(fmt::format("The graph file {} does not exist", path.u8string()));
+                return path;
+            }
+
             virtual void load()
-            {   
-                const auto contents = common::file::as_text_vector(meta.root / meta.edge_file);
+            {
+                // from scratch: a load that stopped (e.g. at a missing file) can be repeated
+                edges.clear();
+                adjacency_list.clear();
+                meta.n_vertices = 0;
+
+                const auto contents = common::file::as_text_vector(path(meta.edge_file));
                 meta.digraph = static_cast<bool>(std::stoi(contents[0]));
 
                 if (!meta.edge_weights.empty() && meta.edge_weights != "NULL")
-                    edge_weights = common::file::as_numeric_vector<double>(meta.root / meta.edge_weights);
+                    edge_weights = common::file::as_numeric_vector<double>(path(meta.edge_weights));
                 else
                     edge_weights = std::vector<double>(contents.size() - 1, 1.0);
 
@@ -154,14 +175,14 @@ namespace ioh::problem::submodular
                 }
 
                 if (!meta.vertex_weights.empty() && meta.vertex_weights != "NULL")
-                    vertex_weights = common::file::as_numeric_vector<double>(meta.root / meta.vertex_weights);
+                    vertex_weights = common::file::as_numeric_vector<double>(path(meta.vertex_weights));
                 else
                     vertex_weights = std::vector<double>(meta.n_vertices, 1.);
 
                 if (!meta.constraint_weights.empty() && meta.constraint_weights != "NULL")
                 {
                     constraint_weights =
-                        ioh::common::file::as_numeric_vector<double>(meta.root / meta.constraint_weights);
+                        ioh::common::file::as_numeric_vector<double>(path(meta.constraint_weights));
                     meta.constraint_limit = constraint_weights.back();
                     constraint_weights.pop_back();
                 }
@@ -182,7 +203,7 @@ namespace ioh::problem::submodular
                     {
                         chance_cons = 1.0;
                         constraint_variances =
-                            ioh::common::file::as_numeric_vector<double>(meta.root / meta.constraint_variances);
+                            ioh::common::file::as_numeric_vector<double>(path(meta.constraint_variances));
                     }
                 }
                 else
@@ -205,8 +226,11 @@ namespace ioh::problem::submodular
             //! Accessor for dimension, loads the graph if it is not loaded
             int dimension()
             {
-                if (!loaded)
-                    load();
+                {
+                    const std::lock_guard<std::mutex> lock(load_mutex);
+                    if (!loaded)
+                        load();
+                }
                 return meta.is_edge ? static_cast<int>(edges.size()) : meta.n_vertices;
             }
         };
@@ -274,19 +298,22 @@ namespace ioh::problem::submodular
          */
         GraphProblem(const int problem_id, const int instance, const std::string &name,
                      const std::shared_ptr<graph::Graph> &graph) :
+            // the dimension is the size of the graph, and graph problems have a single instance
             IntegerSingleObjective(
-                MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::MAX),
+                MetaData(problem_id, instance, name, graph->dimension(), common::OptimizationType::MAX,
+                         /*final_target*/ 1e-8, /*fixed_dimension*/ true, /*fixed_instance*/ true),
                 Bounds<int>(graph->dimension(),0,1), ConstraintSet<int>(std::make_shared<GraphConstraint>(graph))),
             graph(graph)
         {
         }
-
-        //! The dimension is the size of the graph
-        [[nodiscard]] std::optional<int> fixed_dimension() const override { return meta_data_.n_variables; }
-
-        //! Graph problems have a single instance
-        [[nodiscard]] std::optional<int> fixed_instance() const override { return meta_data_.instance; }
     };
+
+    //! Held while graphs are registered, by every graph class: they share the factories and the next free id
+    inline std::mutex &graph_registration_mutex()
+    {
+        static std::mutex mutex;
+        return mutex;
+    }
 
     //! Base of the graph problems, which are defined by the graphs in a definitions file
     template <typename ProblemType>
@@ -306,7 +333,7 @@ namespace ioh::problem::submodular
         {
             std::vector<RegistryEntry<ProblemType>> entries;
 
-            const auto root_path = path.parent_path();
+            const auto root_path = fs::absolute(path).parent_path(); // never empty, which marks the built-in graphs
 
             auto graphs = common::file::as_text_vector<std::shared_ptr<G>>(path);
             int i = ProblemType::default_id;
@@ -322,17 +349,116 @@ namespace ioh::problem::submodular
             return entries;
         }
 
-        //! Helper to load problems from a file
-        //! Use if you want to manually load more graph based files
-        template <typename... Args>
-        static void load_graph_instances(const std::optional<fs::path> &path = std::nullopt)
+        /**
+         * @brief The registry entries of the built-in graphs of a class, from the manifest compiled into the library
+         * (ioh::data::manifest_entries): a graph's data are loaded when its first problem is created
+         *
+         * @param problem_class the name of the class (e.g. MaxCut)
+         */
+        template <typename G = graph::Graph>
+        static std::vector<RegistryEntry<ProblemType>> builtin_entries(const std::string &problem_class)
         {
-            for (const auto &entry : ProblemType::registry_entries(path))
+            std::vector<RegistryEntry<ProblemType>> entries;
+            for (const auto &entry : ioh::data::manifest_entries("GraphProblem"))
+                if (entry.problem_class == problem_class)
+                {
+                    const auto graph = std::make_shared<G>(entry.definition);
+                    const int id = entry.id;
+                    entries.push_back(
+                        {id, entry.name, [graph, id](int, int) { return std::make_shared<ProblemType>(id, 1, graph); }});
+                }
+            return entries;
+        }
+
+        /**
+         * @brief Registers graphs in the factories of GraphProblem and IntegerSingleObjective, and returns their ids
+         * and names
+         *
+         * With a path, the graphs of that definitions file are added after the existing ones: their ids continue
+         * after the highest id in the GraphProblem factory, in file order, their names are the class name and the
+         * id (e.g. MaxCut2309), and their problems report both. The file is read before anything is registered,
+         * and loading the same file again registers nothing and returns the same ids. Without a path, the class's
+         * own registry_entries() are registered under their ids (nothing to do for the built-in classes). An id
+         * that is taken throws std::invalid_argument (see register_problem).
+         *
+         * @param path a definitions file
+         */
+        template <typename... Args>
+        static std::map<int, std::string> load_graph_instances(const std::optional<fs::path> &path = std::nullopt)
+        {
+            auto &graphs = common::Factory<GraphProblem, Args...>::instance();
+            auto &integers = common::Factory<IntegerSingleObjective, Args...>::instance();
+            const auto include = [&](const RegistryEntry<ProblemType> &entry, const int id, const std::string &name) {
+                auto create = [create = entry.create, id, name](Args &&...params) {
+                    auto problem = create(std::forward<Args>(params)...);
+                    if (problem->meta_data().problem_id != id)
+                    {
+                        problem->set_id(id);
+                        problem->set_name(name);
+                    }
+                    return problem;
+                };
+                // the family's factory first: it throws for a taken id, before anything is registered elsewhere
+                graphs.include(name, problem::detail::registered_id<GraphProblem>(graphs, id, name), create, true);
+                integers.include(name, problem::detail::registered_id<IntegerSingleObjective>(integers, id, name),
+                                 create);
+            };
+
+            // the files loaded before, with the ids and names of their graphs
+            static std::map<std::string, std::map<int, std::string>> loaded;
+            const std::lock_guard<std::mutex> lock(graph_registration_mutex());
+
+            std::map<int, std::string> result;
+            if (!path)
             {
-                auto c = [create = entry.create](Args &&...params) { return create(std::forward<Args>(params)...); };
-                ioh::common::Factory<IntegerSingleObjective, Args...>::instance().include(entry.name, entry.id, c);
-                ioh::common::Factory<submodular::GraphProblem, Args...>::instance().include(entry.name, entry.id, c);
+                std::vector<RegistryEntry<ProblemType>> missing;
+                const auto entries = ProblemType::registry_entries();
+                problem::detail::check_unique(entries);
+                for (const auto &entry : entries)
+                {
+                    result[entry.id] = entry.name;
+                    const auto map = graphs.map();
+                    if (const auto it = map.find(entry.id); it != map.end() && it->second == entry.name)
+                        continue;
+                    (void)problem::detail::registered_id<GraphProblem>(graphs, entry.id, entry.name);
+                    (void)problem::detail::registered_id<IntegerSingleObjective>(integers, entry.id, entry.name);
+                    missing.push_back(entry);
+                }
+                for (const auto &entry : missing)
+                    include(entry, entry.id, entry.name);
+                return result;
             }
+
+            if (!fs::is_regular_file(*path))
+                throw std::invalid_argument(fmt::format("Cannot read the graph definitions file {}", path->u8string()));
+            const auto key = fs::weakly_canonical(*path).u8string();
+            if (const auto it = loaded.find(key); it != loaded.end())
+                return it->second;
+
+            const auto entries = ProblemType::registry_entries(path);
+            const int first_id = graphs.ids().back() + 1;
+            std::vector<std::string> names;
+            for (const auto &entry : entries)
+            {
+                const int id = first_id + static_cast<int>(names.size());
+                // the names of graph_entries end with the id from the file, which is replaced
+                const auto old_id = std::to_string(entry.id);
+                const auto ends_with_id = entry.name.size() > old_id.size() &&
+                    entry.name.compare(entry.name.size() - old_id.size(), old_id.size(), old_id) == 0;
+                names.push_back(ends_with_id
+                                    ? entry.name.substr(0, entry.name.size() - old_id.size()) + std::to_string(id)
+                                    : entry.name);
+                (void)problem::detail::registered_id<GraphProblem>(graphs, id, names.back());
+                (void)problem::detail::registered_id<IntegerSingleObjective>(integers, id, names.back());
+                result[id] = names.back();
+            }
+            if (result.size() != std::set<std::string>(names.begin(), names.end()).size())
+                throw std::invalid_argument(fmt::format("The graph definitions file {} gives two graphs the same name",
+                                                        path->u8string()));
+            for (size_t i = 0; i < entries.size(); ++i)
+                include(entries[i], first_id + static_cast<int>(i), names[i]);
+            loaded[key] = result;
+            return result;
         }
     };
 } // namespace ioh::problem::submodular

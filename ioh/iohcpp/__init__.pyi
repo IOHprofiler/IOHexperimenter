@@ -92,6 +92,9 @@ class MetaData:
         name: str,
         n_variables: int,
         optimization_type: OptimizationType,
+        final_target: float = ...,
+        fixed_dimension: bool = ...,
+        fixed_instance: bool = ...,
     ) -> None: ...
     @property
     def instance(self) -> int: ...
@@ -103,6 +106,10 @@ class MetaData:
     def optimization_type(self) -> Any: ...
     @property
     def problem_id(self) -> int: ...
+    @property
+    def fixed_dimension(self) -> bool: ...
+    @property
+    def fixed_instance(self) -> bool: ...
 
 class OptimizationType:
     __doc__: ClassVar[str] = ...  # read-only

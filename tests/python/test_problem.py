@@ -1,5 +1,8 @@
 import os
+import subprocess
+import sys
 import tempfile
+import textwrap
 import unittest
 import math
 
@@ -7,9 +10,8 @@ import ioh
 import numpy as np
 
 
-DATA_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "static"
-)
+# the data files of the tests, in tests/data
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 
 
 class wmodel(ioh.problem.AbstractWModel):
@@ -162,29 +164,133 @@ class TestProblem(unittest.TestCase):
             self.assertNotEqual(0, len([p for p in problems if name in p]))
 
     def test_load_graph_instances_from_file(self):
-        def problems():
-            return dict(ioh.problem.GraphProblem.problems), dict(ioh.problem.IntegerSingleObjective.problems)
+        # in a fresh interpreter, because the loaded graphs stay registered
+        code = textwrap.dedent("""
+            import os, tempfile, warnings
+            import ioh
 
-        with tempfile.TemporaryDirectory() as d:
-            os.mkdir(os.path.join(d, "graphs"))
-            with open(os.path.join(d, "graphs", "triangle"), "w") as f:
-                f.write("0\n1 2\n2 3\n3 1\n")
-            with open(os.path.join(d, "definitions"), "w") as f:
-                f.write("graphs/triangle|NULL|NULL|NULL\n")
-            before = problems()
-            try:
-                # the graph is named MaxCut2000, so it replaces that built-in in both factories and keeps its id
-                ioh.problem.MaxCut.load_instances(os.path.join(d, "definitions"))
-                self.assertEqual(problems(), before)
-                p = ioh.get_problem(2000, 1, 1, ioh.ProblemClass.GRAPH)
-                self.assertEqual(
-                    (p.meta_data.problem_id, p.meta_data.name, p.meta_data.n_variables), (2000, "MaxCut2000", 3)
-                )
-                p = ioh.get_problem("MaxCut2000", 1, 1, ioh.ProblemClass.INTEGER)
-                self.assertEqual(p.meta_data.n_variables, 3)
-            finally:
-                ioh.problem.MaxCut.load_instances()  # the built-in graphs again
-        self.assertEqual(ioh.get_problem(2000, 1, 1, ioh.ProblemClass.GRAPH).meta_data.n_variables, 800)
+            with tempfile.TemporaryDirectory() as d:
+                os.mkdir(os.path.join(d, "graphs"))
+                with open(os.path.join(d, "graphs", "triangle"), "w") as f:
+                    f.write("0\\n1 2\\n2 3\\n3 1\\n")
+                definitions = os.path.join(d, "definitions")
+                with open(definitions, "w") as f:
+                    f.write("graphs/triangle|NULL|NULL|NULL\\n")
+
+                # the graph is added after the built-in graphs (the last is 2308), which stay as they are
+                builtins = dict(ioh.problem.GraphProblem.problems)
+                added = ioh.problem.MaxCut.load_instances(definitions)
+                assert added == {2309: "MaxCut2309"}, added
+                assert dict(ioh.problem.GraphProblem.problems) == {**builtins, **added}
+                p = ioh.get_problem(2309, 1, 1, ioh.ProblemClass.GRAPH)
+                assert (p.meta_data.problem_id, p.meta_data.name, p.meta_data.n_variables) == (2309, "MaxCut2309", 3)
+                p = ioh.get_problem("MaxCut2309", 1, 1, ioh.ProblemClass.INTEGER)
+                assert (p.meta_data.problem_id, p.meta_data.n_variables) == (2309, 3)
+                assert ioh.get_problem(2000, 1, 1, ioh.ProblemClass.GRAPH).meta_data.n_variables == 800
+
+                # loading it again changes nothing; without a path it is deprecated and does nothing
+                assert ioh.problem.MaxCut.load_instances(definitions) == added
+                with warnings.catch_warnings(record=True) as caught:
+                    warnings.simplefilter("always")
+                    ioh.problem.MaxCut.load_instances()
+                assert [w.category for w in caught] == [DeprecationWarning], caught
+                assert dict(ioh.problem.GraphProblem.problems) == {**builtins, **added}
+                try:
+                    ioh.problem.MaxCut.load_instances(os.path.join(d, "missing"))
+                    raise AssertionError("no error for a missing file")
+                except ValueError:
+                    pass
+            """)
+        env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
+        result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=env)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_missing_data(self):
+        # with an empty data directory: registering needs no data, and creating a problem that needs data raises
+        code = textwrap.dedent("""
+            import ioh
+
+            assert len(ioh.problem.GraphProblem.problems) == 78
+            assert ioh.get_problem(1, 1, 2).meta_data.name == "Sphere"
+            assert ioh.get_problem(1101, 1, 1, ioh.ProblemClass.CEC2013).meta_data.n_variables == 1
+            for pid, problem_class in ((2000, ioh.ProblemClass.GRAPH), (1001, ioh.ProblemClass.CEC2022),
+                                       (1111, ioh.ProblemClass.CEC2013)):
+                try:
+                    ioh.get_problem(pid, 1, 10, problem_class)
+                    raise AssertionError(f"no error for {pid}")
+                except RuntimeError as error:
+                    assert "data version" in str(error), error
+            """)
+        with tempfile.TemporaryDirectory() as empty:
+            env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path), IOH_RESOURCES=empty)
+            result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=env)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_subclass_ids(self):
+        # a problem defined by subclassing gets the first free id of its base class's factory, like wrap_problem
+        def subclass(name):
+            class Subclass(ioh.problem.IntegerSingleObjective):
+                def __init__(self, instance=1, n_variables=2):
+                    super().__init__(name, n_variables, instance, True, ioh.IntegerBounds(n_variables, 0, 1))
+
+                def evaluate(self, x):
+                    return 0.0
+
+            return Subclass
+
+        first, second = subclass("TestSubclassIdsA")(), subclass("TestSubclassIdsB")()
+        ids = {name: pid for pid, name in ioh.problem.IntegerSingleObjective.problems.items()}
+        self.assertEqual(first.meta_data.problem_id, ids["TestSubclassIdsA"])
+        self.assertEqual(second.meta_data.problem_id, ids["TestSubclassIdsB"])
+        self.assertGreater(first.meta_data.problem_id, 10004)
+        self.assertNotEqual(first.meta_data.problem_id, second.meta_data.problem_id)
+        self.assertEqual(subclass("TestSubclassIdsA")().meta_data.problem_id, first.meta_data.problem_id)
+        created = ioh.get_problem("TestSubclassIdsB", 1, 3, ioh.ProblemClass.INTEGER)
+        self.assertEqual(created.meta_data.problem_id, second.meta_data.problem_id)
+
+    def test_setters(self):
+        # after construction only the setters change a problem's meta data; an attached logger gets the new
+        # meta data, and the registry is unchanged
+        p = ioh.get_problem(1, 1, 5)
+        logger = ioh.logger.Store([ioh.logger.trigger.ALWAYS], [])
+        p.attach_logger(logger)
+        p.set_id(100)
+        p.set_instance(7)
+        p.set_name("RenamedSphere")
+        p.set_final_target(1e-3)
+        for meta in (p.meta_data, logger.problem):
+            self.assertEqual(
+                (meta.problem_id, meta.instance, meta.name, meta.final_target), (100, 7, "RenamedSphere", 1e-3)
+            )
+        with self.assertRaises(AttributeError):
+            p.meta_data.problem_id = 1
+        self.assertEqual(ioh.get_problem(1, 1, 5).meta_data.problem_id, 1)
+
+        # a subclass can give its problems a fixed id; registering the class does not override it
+        class FixedId(ioh.problem.RealSingleObjective):
+            def __init__(self, instance=1, n_variables=2):
+                super().__init__("TestSettersFixedId", n_variables, instance, True, ioh.RealBounds(n_variables, -1, 1))
+                self.set_id(4242)
+
+            def evaluate(self, x):
+                return 0.0
+
+        self.assertEqual(FixedId().meta_data.problem_id, 4242)
+
+    def test_builtin_names_cannot_be_registered(self):
+        with self.assertRaises(ValueError):
+            ioh.wrap_problem(lambda x: 0.0, "Sphere")
+
+        class Sphere(ioh.problem.RealSingleObjective):
+            def __init__(self):
+                super().__init__("Sphere", 2, 1, True, ioh.RealBounds(2, -1, 1))
+
+            def evaluate(self, x):
+                return 0.0
+
+        with self.assertRaises(ValueError):
+            Sphere()
+        self.assertIsInstance(ioh.get_problem(1, 1, 2), ioh.problem.Sphere)
 
     def test_bbob_problems_first_instance(self):
         expected = [

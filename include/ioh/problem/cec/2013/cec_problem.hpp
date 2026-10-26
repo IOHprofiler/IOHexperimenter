@@ -53,12 +53,6 @@ namespace ioh::problem
         virtual double inner_evaluate(const std::vector<double> &x) = 0;
 
     public:
-        //! CEC2013 problems exist in one dimension only
-        [[nodiscard]] std::optional<int> fixed_dimension() const override { return meta_data_.n_variables; }
-
-        //! CEC2013 problems have a single instance
-        [[nodiscard]] std::optional<int> fixed_instance() const override { return meta_data_.instance; }
-
         //! Number of global optima
         size_t n_optima;
 
@@ -88,7 +82,9 @@ namespace ioh::problem
          * @param name A unique name for the problem.
          */
         CEC2013(const int problem_id, const int instance, const int n_variables, const std::string &name, const double lb, const double ub, const std::vector<Solution<double, SingleObjective>>& opts, const double rho = 0.01) :
-            RealSingleObjective(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::MAX),
+            // CEC2013 problems exist in one dimension only, and have a single instance
+            RealSingleObjective(MetaData(problem_id, instance, name, n_variables, common::OptimizationType::MAX,
+                                         /*final_target*/ 1e-8, /*fixed_dimension*/ true, /*fixed_instance*/ true),
                                 Bounds<double>(n_variables, lb, ub)),
             n_optima(opts.size()),
             rho(rho),

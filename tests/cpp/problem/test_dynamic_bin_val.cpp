@@ -32,7 +32,7 @@ TEST_F(BaseTest, test_dynamic_bin_val_xopt_equals_yopt)
 TEST_F(BaseTest, test_dynamic_bin_val_operator_call)
 {
     std::ifstream infile;
-    const auto file_path = ioh::common::file::utils::find_static_file(TEST_FILE);
+    const auto file_path = test_data_file(TEST_FILE);
     infile.open(file_path.c_str());
 
     std::string s;
@@ -85,7 +85,7 @@ TEST_F(BaseTest, test_dynamic_bin_val_operator_call)
 TEST_F(BaseTest, test_dynamic_bin_val_rank)
 {
     std::ifstream infile;
-    const auto file_path = ioh::common::file::utils::find_static_file(TEST_FILE);
+    const auto file_path = test_data_file(TEST_FILE);
     infile.open(file_path.c_str());
 
     std::string s;
@@ -136,7 +136,7 @@ TEST_F(BaseTest, test_dynamic_bin_val_rank)
 TEST_F(BaseTest, test_dynamic_bin_val_rank_indices)
 {
     std::ifstream infile;
-    const auto file_path = ioh::common::file::utils::find_static_file("dynamic_bin_val.in");
+    const auto file_path = test_data_file("dynamic_bin_val.in");
     infile.open(file_path.c_str());
 
     std::string s;

@@ -59,7 +59,8 @@ protected:
     }
 
 public:
-    /// The id and name in the registry, which register_problem uses (a taken id is replaced by the next free one)
+    /// The id and name in the registry, which register_problem uses (in RealSingleObjective a taken id is replaced
+    /// by the next free one as the registry key, while the problem keeps reporting its own)
     static constexpr int registry_id = 9001;
     static constexpr const char *registry_name = "AnotherRealProblem";
 

@@ -10,8 +10,9 @@ include(GoogleTest)
 function(register_test test_name test_sources)
     add_executable(${test_name} ${test_sources} cpp/utils.hpp cpp/entrypoint.cpp)
     target_include_directories(${test_name} PRIVATE cpp)  
-    # the registry test compares the factories with the golden fixtures
-    target_compile_definitions(${test_name} PRIVATE IOH_GOLDEN_DIR="${PROJECT_SOURCE_DIR}/tests/data/golden")
+    # the golden fixtures (the registry test) and the data files of the tests
+    target_compile_definitions(${test_name} PRIVATE IOH_GOLDEN_DIR="${PROJECT_SOURCE_DIR}/tests/data/golden"
+        IOH_TEST_DATA_DIR="${PROJECT_SOURCE_DIR}/tests/data")
     if((${test_name} MATCHES test_mklandscape_problem) OR (${test_name}  MATCHES test_ioh) )
         if(ENABLE_MKLANDSCAPE_PROBLEMS)
         # link_directories(${EXTERNAL_DIR}/mklandscape/target/debug)
@@ -51,6 +52,7 @@ foreach(GENERATOR_SOURCE ${GENERATOR_SOURCES})
     # Define the executable for each source file
     add_executable(${GENERATOR_TARGET_NAME} ${GENERATOR_SOURCE})
     target_include_directories(${GENERATOR_TARGET_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/cpp)
+    target_compile_definitions(${GENERATOR_TARGET_NAME} PRIVATE IOH_TEST_DATA_DIR="${PROJECT_SOURCE_DIR}/tests/data")
     target_link_libraries(${GENERATOR_TARGET_NAME} PRIVATE ${PROJECT_NAME} gtest)
 endforeach()
 

@@ -5,6 +5,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -48,16 +49,36 @@ namespace ioh::common
         /**
          * @brief Include a new element to the factory
          *
-         * A new name gets `id`, or the next free id when `id` is taken. An existing name keeps its id and
-         * gets the new creator. Built-in entries must be unique: a duplicate name or id among them throws.
+         * A new name gets `id`, or the next free id when `id` is taken; with keep_id, an id that belongs to
+         * another name, or a registered name with another id, throws std::invalid_argument instead (checked under
+         * the same lock as the insertion). An existing name keeps its id and gets the new creator, except the name
+         * of a built-in entry, which throws std::invalid_argument. Built-in entries must be unique: a duplicate name
+         * or id among them throws std::logic_error. (register_problem adds the rules for the ids of problems.)
          */
-        void include(const std::string &name, const int id, Creator creator)
+        void include(const std::string &name, const int id, Creator creator, const bool keep_id = false)
         {
             const std::lock_guard<std::recursive_mutex> lock(mutex_);
             const auto already_defined = name_map.find(name) != std::end(name_map);
-            if (adding_builtins_ && (already_defined || id_map.find(id) != std::end(id_map)))
-                throw std::logic_error("Duplicate built-in factory entry: " + name + " (id " + std::to_string(id) +
-                                       ")");
+            if (keep_id && !adding_builtins_)
+            {
+                const auto holder = id_map.find(id);
+                if (holder != std::end(id_map) && holder->second != name)
+                    throw std::invalid_argument("Cannot register " + name + " with id " + std::to_string(id) +
+                                                ": the id belongs to " + holder->second);
+                if (holder == std::end(id_map) && already_defined)
+                    throw std::invalid_argument("Cannot register " + name + " with id " + std::to_string(id) +
+                                                ": it is registered with another id");
+            }
+            if (adding_builtins_)
+            {
+                if (already_defined || id_map.find(id) != std::end(id_map))
+                    throw std::logic_error("Duplicate built-in factory entry: " + name + " (id " +
+                                           std::to_string(id) + ")");
+                builtin_names_.insert(name);
+            }
+            else if (is_builtin(name))
+                throw std::invalid_argument(name + " is a built-in factory entry and cannot be replaced: " +
+                                            "register under another name");
             name_map[name] = std::move(creator);
             if (!already_defined)
                 id_map[check_or_get_next_available(id)] = name;
@@ -81,6 +102,13 @@ namespace ioh::common
                     if (kv.second == name)
                         return kv.first;
             return check_or_get_next_available(id);
+        }
+
+        //! Whether name is the name of a built-in entry
+        [[nodiscard]] bool is_builtin(const std::string &name) const
+        {
+            const std::lock_guard<std::recursive_mutex> lock(mutex_);
+            return builtin_names_.count(name) != 0;
         }
 
         //! Accessor for the list of registered names
@@ -147,6 +175,7 @@ namespace ioh::common
 
         std::map<std::string, Creator> name_map;
         std::map<int, std::string> id_map;
+        std::set<std::string> builtin_names_;
         bool adding_builtins_ = false;
         mutable std::recursive_mutex mutex_;
     };

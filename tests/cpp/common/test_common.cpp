@@ -76,18 +76,18 @@ TEST_F(BaseTest, common_file_parsing) {
         }
     };
 
-    auto file = file::utils::find_static_file("example_list_maxinfluence");
+    auto file = ioh::data::file("example_list_maxinfluence");
     EXPECT_TRUE(fs::is_regular_file(file));
 
     auto rows = file::as_text_vector<Row>(file);
     EXPECT_EQ(rows.size(), 24);
     EXPECT_EQ(rows.at(0).elements.at(0), "example_graphs/facebook_combined");
     
-    auto integers = file::as_numeric_vector<int>(file::utils::find_static_file(rows.at(0).elements.at(3)));
+    auto integers = file::as_numeric_vector<int>(ioh::data::file(rows.at(0).elements.at(3)));
     EXPECT_EQ(integers.size(), size_t{4040});
     EXPECT_EQ(integers.at(0), size_t{1});
 
-    auto floats = file::as_numeric_vector<float>(file::utils::find_static_file(rows.at(0).elements.at(1)));
+    auto floats = file::as_numeric_vector<float>(ioh::data::file(rows.at(0).elements.at(1)));
     EXPECT_EQ(floats.size(), size_t{176468});
     EXPECT_FLOAT_EQ(floats.at(0), 0.05882353f);
 }   

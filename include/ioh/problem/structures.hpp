@@ -18,7 +18,8 @@ namespace ioh
         //! Typedef for mutliobjective problems
         using MultiObjective = std::vector<double>;
 
-        //! struct of problem meta data
+        //! struct of problem meta data. Its values are set by its constructor; after that, a problem's meta data
+        //! changes only through the problem's setters (set_id, set_instance, set_name, set_final_target) and invert()
         struct MetaData : common::HasRepr
         {
             // Most of fields here are `int` and not `unsigned long` (or `size_t`) because of interoperability with some
@@ -42,6 +43,14 @@ namespace ioh
             //! Final target
             double final_target;
 
+            //! Whether the problem has one dimension, n_variables, whatever dimension was requested (the CEC2013 and
+            //! graph problems)
+            bool fixed_dimension;
+
+            //! Whether the problem has one instance, instance, whatever instance was requested (the CEC2013 and graph
+            //! problems)
+            bool fixed_instance;
+
             /**
              * @brief Construct a new Meta Data object
              *
@@ -51,13 +60,17 @@ namespace ioh
              * @param n_variables the dimension of the problem
              * @param optimization_type optimization type
              * @param final_target the final target to be reached for the function
+             * @param fixed_dimension whether the problem has this dimension whatever dimension was requested
+             * @param fixed_instance whether the problem has this instance whatever instance was requested
              */
             MetaData(const int problem_id, const int instance, std::string name, const int n_variables,
                      const common::OptimizationType optimization_type = common::OptimizationType::MIN,
-                     const double final_target = 1e-8) :
+                     const double final_target = 1e-8, const bool fixed_dimension = false,
+                     const bool fixed_instance = false) :
                 instance(instance),
                 problem_id(problem_id), name(std::move(name)), optimization_type{optimization_type},
-                n_variables(n_variables), final_target(final_target)
+                n_variables(n_variables), final_target(final_target), fixed_dimension(fixed_dimension),
+                fixed_instance(fixed_instance)
             {
             }
 
@@ -81,7 +94,8 @@ namespace ioh
             bool operator==(const MetaData &other) const
             {
                 return instance == other.instance and problem_id == other.problem_id and name == other.name and
-                    optimization_type == other.optimization_type and n_variables == other.n_variables;
+                    optimization_type == other.optimization_type and n_variables == other.n_variables and
+                    fixed_dimension == other.fixed_dimension and fixed_instance == other.fixed_instance;
             }
 
             //! comparison operator

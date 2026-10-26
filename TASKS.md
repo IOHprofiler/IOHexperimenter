@@ -86,9 +86,14 @@ WP2 section has the numbers after it):
   only the Linux and Windows wheels; the full matrix, including macOS, runs weekly, on manual
   dispatch and for releases, because the organization runs at most 20 jobs at once, only 5 of them
   on macOS, and the Intel ones are slow.
-* **Problem metadata**: expose `fixed_dimension` and `fixed_instance` (uniform names) on Python
-  problems and registry entries (WP3/WP4): `None` when the problem honours the requested
-  dimension/instance, otherwise the value it always uses (graph and CEC2013 problems).
+* **Problem metadata**: `MetaData.fixed_dimension` and `fixed_instance` (WP3, booleans in `MetaData`
+  since WP4 at the maintainer's request): whether the problem has one dimension and one instance whatever
+  was requested (graph and CEC2013 problems); the values it uses are `n_variables` and `instance`.
+  Registry entries carry nothing (the dimension of a graph is only known once its data are loaded).
+  `MetaData` gets all its values from its constructor; after that only the problem's public setters
+  (`set_id`, `set_instance`, `set_name`, `set_final_target`) and `invert()` change a problem's meta data.
+  The setters stay public API, also in Python: users give their problems fixed ids with them (decided
+  with the maintainer in WP4).
 * **`static.tar.gz` stays** in the repository: released versions (≤ 0.3.22) download it from
   `master` in `download_static_folder()`. It must be kept identical to `static/` (WP4 adds a check).
 * **No intermediate releases**: nothing is released until all WPs are merged. The next release
@@ -112,7 +117,7 @@ WP2 section has the numbers after it):
   URL; use `git -c url."https://github.com/".insteadOf="git@github.com:" submodule update --init`.
   Python: `pip install -e . -v` (Python ≥ 3.10), then `python -m unittest -v`. C++ tests:
   `cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build --target test_ioh --parallel 4`
-  and run `build/tests/test_ioh` with `IOH_RESOURCES=$PWD/static` (until WP4).
+  and run `build/tests/test_ioh` (since WP4 it finds the data in the source tree).
 * Measuring build time (include before/after numbers in PRs that claim build-time changes):
   clean build directory, Release, Ninja, `-j4`, run twice and report the minimum; use
   `-ftime-trace` only for attribution, never for timing (it adds 9–20 %).
@@ -407,7 +412,8 @@ What was done, and where it differs from T3.1–T3.7 below:
   T3.4 planned deprecated aliases for the bases and a `RegisteredProblem` shim for one release; at the
   maintainer's request they are removed outright instead (upgrade guide, WP8). User types register with `register_problem<T, Parent>()` (their registry id/name or entries) or
   `register_problem<T, Parent>(id, name)`, one factory per call, whose created problems report the id
-  they are registered under (a taken id becomes the next free one), and `suite::register_suite<T>()`.
+  they are registered under (a taken id becomes the next free one; changed in WP4, T4.4), and
+  `suite::register_suite<T>()`.
   `ProblemRegistry<T>`/`SuiteRegistry<T>` keep `instance()`.
 * **Suites**: `Suite`'s constructor takes any problem factory (a template), so the six
   `reinterpret_cast`s are gone. The suites declare their ids and names like the problems: Real 1,
@@ -416,7 +422,8 @@ What was done, and where it differs from T3.1–T3.7 below:
   `CEC2013` and `GraphProblem`) and read-only Python properties on every problem class. The golden
   behaviour records got the two keys (714 of 722 records; the existing values were reproduced
   exactly). Registry entries do **not** carry them yet: a graph's dimension is only known after
-  loading its data (all 78 graphs take 0.8 s), so this moves to the WP4 manifest.
+  loading its data (all 78 graphs take 0.8 s), so this moves to the WP4 manifest. (WP4 replaced them by
+  booleans in `MetaData`, T4.2.)
 * **Tests**: `tests/cpp/problem/test_registry.cpp` checks every factory against the golden registry
   (ids, names, CEC2013 meta names from the golden records, fixed values, construction and evaluation;
   the nine family factories exactly, the REAL/INTEGER unions allowing runtime registrations after the
@@ -513,8 +520,8 @@ What was done, and where it differs from T3.1–T3.7 below:
   constructs, its `meta_data().problem_id` equals the registry id, its meta name equals the registry
   name (except CEC2013, see §3 — compare with the golden meta names), and it evaluates.
 * Test that `create()` with an unknown id/name throws.
-* Expose `fixed_dimension` and `fixed_instance` (decided, §1; in the same PR as the registry,
-  decided): registry entries carry them, and Python problems get read-only properties with the same
+* (Changed in WP4: booleans in `MetaData`, T4.2.) Expose `fixed_dimension` and `fixed_instance` (decided, §1;
+  in the same PR as the registry, decided): registry entries carry them, and Python problems get read-only properties with the same
   names (`None` for problems that honour the requested dimension/instance). Values for the
   data-backed families come from the WP4 manifest; until then they are filled in from the current
   loaders. Add them to the golden fixtures in the same PR (new keys only; existing values must not
@@ -522,11 +529,86 @@ What was done, and where it differs from T3.1–T3.7 below:
 
 ---
 
-## WP4 — Data layer and manifest
+## WP4 — Data layer and manifest ✅ implemented (branch `wp4-data-layer`)
 
 Depends on: WP3.
 
-### T4.1 Data root API
+Record:
+
+* **Data root** (T4.1): `ioh::data::set_root`, `root` and `file` (`include/ioh/common/data.hpp`,
+  `src/data.cpp`). The root is the one set with `set_root`, otherwise `IOH_RESOURCES`, otherwise the first
+  existing default of the build: the source tree's `static/` (`IOH_SOURCE_DATA_DIR`), then
+  `share/ioh` of the installation (`IOH_INSTALL_DATA_DIR`); the Python build has no default. A missing
+  directory or file throws `ioh::data::data_error` (Python: `ioh.DataError`, a `RuntimeError`) saying
+  where it looked. The search for `IOHexperimenter/static` in the parent directories of the working
+  directory is gone; `get_static_root`/`find_static_file` are removed (use `ioh::data::root`/`file`). `static/` is installed
+  to `share/ioh`. The C++ tests and CI no longer set `IOH_RESOURCES`.
+* **Manifest** (T4.2): `tools/gen_manifest.py` writes `static/manifest.json` (140 files with size and
+  sha256, a data version that hashes this list, and the 98 data-backed entries: 78 graphs with their
+  class and definition line, 20 CEC2013 problems with their meta names and files). The entries were generated once from the golden fixtures and the definition files and are
+  kept since (`--entries` regenerates them); `--check` compares `static/` and the entries with the
+  manifest and the golden fixtures, `--check-package` the data files of wheels and sdists.
+  *Changed from the plan*: the library does not read the JSON at runtime. The script also writes
+  `src/data_manifest.inc`, the same entries, files and data version compiled into the library
+  (`ioh::data::manifest_entries`, `in_manifest`, `data_version`), so registering the built-in problems
+  needs no data and no JSON parser. *Added*: `ioh::data::file` checks once per directory that its
+  `manifest.json` has the library's data version, so a stale data directory is an error instead of
+  wrong data. `tools/static_tarball.py` rebuilds `static.tar.gz` reproducibly and checks it.
+* **Lazy, cached data** (T4.3): `ioh::data::cached<T>(key, loader)` loads a value once per key, shared
+  and thread-safe (a lock per key; a loader that throws is called again). CEC2022 reads its matrices,
+  shifts and shuffles through it (120 constructions: 0.03 s before, 0.006 s after); whether a CEC2022
+  problem shuffles its input is declared by the manifest (no silent fallback). CEC2013 reads
+  `optima.dat` when a composition problem is created instead of when the problems are registered. The
+  built-in graph and pack-while-travel entries come from the compiled manifest
+  (`GraphProblemType::builtin_entries`); a built-in graph finds its files in the data directory when it
+  is loaded, a graph from a definitions file in that file's directory, a missing file is a
+  `data_error`, and `Graph::dimension` loads under a mutex (the graphs were already shared by the
+  problems of an entry, so they do not go through `cached`). With an empty data directory, everything
+  is registered, problems that need no data work, and the others raise.
+* **Ids and names** (T4.4, decided after WP3): see T4.4.
+* **Python** (T4.5): `import ioh` no longer sets `IOH_RESOURCES`; unless it is set (an existing
+  directory, as before), the package points the library at its own `static/` with the new
+  `ioh.set_data_root` (`ioh.data_root()` gives the directory in use). `download_static_folder()` and
+  `load_graph_problems()` are deprecated no-ops.
+* **Repository and packaging** (T4.6): the test fixtures are in `tests/data/` (C++: `IOH_TEST_DATA_DIR`);
+  `static/conf.ini` is deleted. The wheels workflow checks that every wheel and the sdist hold exactly the
+  manifest's files before uploading.
+* **Fixed dimension and instance** (T4.2, decided with the maintainer): `fixed_dimension` and
+  `fixed_instance` are booleans in `MetaData`, arguments of its constructor (Python too, default false)
+  that the `CEC2013` and `GraphProblem` constructors pass,
+  instead of WP3's virtual accessors returning the value or `None`; the values a problem uses are its
+  `n_variables` and `instance`. In Python they are `meta_data.fixed_dimension`/`fixed_instance` (the
+  WP3 properties on the problems are gone). Registry entries and the manifest carry nothing: a graph's
+  dimension is known once its data are loaded. The golden behaviour records' two keys changed from the
+  value or `null` to `true`/`false` (714 records, mechanically, nothing else changed). The CEC2013
+  entries stay in code; `gen_manifest.py --check` keeps the manifest's CEC2013 entries equal to the
+  golden registry.
+* **Review fixes** (a review of the branch):
+  * `.gitattributes`: `static/` and `tests/data/` are never converted to CRLF (GitHub's Windows checkout did,
+    so the Windows wheels held CRLF data files, which the new package check would have rejected).
+  * Paths cross as UTF-8: `ioh.set_data_root`/`data_root` use `fs::u8path`/`u8string` (a narrow `fs::path`
+    uses the ANSI code page on Windows, so a non-ASCII path such as `C:\Users\Jürgen\...` broke every
+    data-backed problem), `IOH_RESOURCES` is read as wide characters on Windows, and the cache keys and error
+    messages use `u8string`.
+  * `Graph::load` starts from scratch, so a load that stopped at a missing file can be repeated (it added
+    the edges a second time).
+  * `ioh.set_data_root("")` goes back to the package's data when `IOH_RESOURCES` is not set (the Python
+    build has no default); it does not reach other processes (documented).
+  * The defaults of the build are taken only with the library's data version (a source tree with newer
+    data no longer hides the installed copy); the error lists each default and why it did not fit.
+  * `Factory::include(..., keep_id)` checks a family factory's id under the same lock as the insertion, and
+    all graph loaders share one lock and fill the family factory first, so concurrent registrations cannot
+    move an id or leave an entry in one factory only. Entries that repeat an id or a name throw first.
+  * `cached` keeps its values in function-local statics (static members of a class template may be
+    initialized after a static problem that needs them); so does `set_root`'s directory.
+  * GCC 7/8: `FSEXPERIMENTAL` and `stdc++fs` are public usage requirements of `ioh::ioh`.
+* **Tests**: C++ `test_data_root` (lookup order, errors, data version), `test_data_manifest`,
+  `test_data_cached`, the registry tests for the id rules (in-process, a rejected registration leaves the
+  factories unchanged) and the appended graph files; Python: the graph file test, subclass ids, built-in
+  names, missing data (an empty data directory), package data, `IOH_RESOURCES`, `set_data_root` and the
+  deprecations, each in a fresh interpreter where it changes the registry or the data root.
+
+### T4.1 Data root API ✅
 
 * New `include/ioh/common/data.hpp` + `src/data.cpp`: `ioh::data::set_root(path)`, `root()`,
   `file(relative)`. Resolution order: `set_root` > `IOH_RESOURCES` > compile-time default from CMake
@@ -534,20 +616,19 @@ Depends on: WP3.
   builds). Remove the current-directory ancestor scan from `get_static_root()`. Missing root or file
   → exception (`ioh::data::data_error`) listing where it looked and how to fix it.
 
-### T4.2 Manifest
+### T4.2 Manifest ✅
 
 * Script (e.g. `tools/gen_manifest.py`) generating a checked-in `static/manifest.json`: every data
   file with relative path, size, sha256, plus `DATA_VERSION` (handle the `ioh/static` symlink and
   paths with spaces). It also lists the data-backed registry entries (graph, pack-while-travel,
-  CEC2013): pinned id, registry name, meta name, files, fixed dimension — generated once from the
+  CEC2013): pinned id, registry name, meta name, files — generated once from the
   golden registry and the definition files; the ids of the built-in entries are never again derived
   from file line order (user files loaded at runtime keep today's semantics, T4.4).
-* Registry entries get `fixed_dimension` / `fixed_instance` from the manifest (moved here from T3.7:
-  without it a graph's dimension is only known after loading the graph). Problems already report them
-  since WP3; the registry values must equal what the constructed problems report.
+* ~~Registry entries get `fixed_dimension` / `fixed_instance` from the manifest~~ Decided instead:
+  booleans in `MetaData` (see the record above); nothing on registry entries or in the manifest.
 * CI check: wheel contents (and the source tree) match the manifest (paths + sha256).
 
-### T4.3 Lazy, cached datasets
+### T4.3 Lazy, cached datasets ✅
 
 * `ioh::data::cached<Key, T>(key, loader)`: loads once (`std::call_once` or equivalent), shared
   across problem instances, thread-safe.
@@ -556,7 +637,7 @@ Depends on: WP3.
   loading. Remove the silent fallback in `load_shuffle_data` (`if (exists(...))`): whether a shuffle
   file exists is declared by the manifest; a declared-but-missing file is an error.
 
-### T4.4 One pattern for instance-based problems ✅ API done in WP3
+### T4.4 One pattern for instance-based problems; one source for ids and names ✅
 
 * Done in WP3: `InstanceBasedProblem` and its C++ `load_instances` specializations are gone (the
   Python `load_instances` class methods stay); CEC2013, star discrepancy, graph and pack-while-travel
@@ -567,21 +648,41 @@ Depends on: WP3.
 * Left for WP4: build the built-in graph, pack-while-travel and CEC2013 entries from the manifest
   (T4.2) instead of the definition files and hard-coded lists, with the data loaded on `create`
   (T4.3). The star discrepancy entries stay generated (no data files; not in the manifest).
-  `registry_entries(path)`, `load_graph_instances(path)` and Python's
-  `MaxCut/MaxCoverage/MaxInfluence/PackWhileTravel.load_instances(path)` keep reading user definition
-  files with today's semantics: ids from the class's `default_id` on, one per non-empty line, names
-  class name + id; a graph named like a built-in replaces that entry's creator (keeping its id), and
-  the replaced entry must not keep the manifest's fixed dimension; a graph with a new name whose id is
-  taken (line 101 of a MaxCut file reaches MaxCoverage's 2100) is registered under the next free id of
-  each factory (different in `GraphProblem` and `IntegerSingleObjective`), while its problem keeps
-  reporting `default_id` + its index, so two problems then report 2100 (WP4 may reject such entries
-  instead, as a documented change); the same holds for an id taken by an earlier runtime registration.
-  `test_registry_graph_definitions_file` (C++) and `test_load_graph_instances_from_file` (Python,
-  `str` paths) cover the replacement by name; the taken-id case has no test, because such entries
-  cannot be removed from the shared factories again and break the exact `GRAPH` check of the other
-  tests (a WP4 test can run it in a separate process).
+* **Ids and names** (decided with the maintainer after WP3). Until now a problem's id and name were
+  kept twice, as its key in the registry and in its own meta data, and a factory could move the key
+  (the next free id) without the problem knowing: line 101 of a MaxCut definitions file reported 2100
+  like MaxCoverage2100, while registered as 2309 and 10005; Python subclasses were registered under 0
+  and then the next free id, but all reported 0. A problem's id belongs to its **family**, and ids
+  overlap across families by design (BBOB 1 is Sphere, PBO 1 is OneMax): it is what the constructor
+  gets, what the problem reports and logs, and the key in the family's factory (`BBOB`, `SBOX`, `PBO`,
+  `CEC2013`, `CEC2022`, `GraphProblem`, the star discrepancy and `DynamicBinVal` factories).
+  `RealSingleObjective` and `IntegerSingleObjective` (the **union** factories) are indexes across
+  families, so their keys may differ from the problems' ids. Rules:
+  * In a family factory a taken id throws (`std::invalid_argument`, `ValueError` in Python, naming the
+    entry that has it). A union factory registers the entry under its next free id, and the problems
+    keep their own id. `register_problem` no longer writes the factory's id into the problems (WP3
+    did); its `(id, name)` overload gives them the id and name passed.
+  * Registering at runtime under a built-in's name throws, checked in `Factory::include`, so it covers
+    `register_problem`, `wrap_function` (Python's `wrap_problem`), Python subclasses and the graph
+    loaders: `wrap_problem(f, "Sphere")` replaced Sphere for `get_problem(1)`. Registering one of your
+    own names again replaces it, as before.
+  * Python subclasses of the problem base classes (`class A(ioh.problem.RealSingleObjective)`) get the
+    id rule of `wrap_problem`: the id of their name if it is registered, otherwise the first free id
+    of their base class's factory, stored in their meta data.
+  * User graph files (`load_graph_instances(path)`, Python's
+    `MaxCut/MaxCoverage/MaxInfluence/PackWhileTravel.load_instances(path)`): the graphs are appended
+    after the highest id in `GraphProblem` (2309 on a fresh registry), in file order, named class name
+    + id, and their problems report that id. A file never replaces a built-in graph, it is read
+    completely before anything is registered, and the call returns the new ids and names; loading
+    the same file again registers nothing and returns the same ids. Without a path,
+    `load_graph_instances()` registers the class's own `registry_entries()` (nothing to do for the
+    built-in classes), and Python's `load_instances()` is a deprecated no-op. This replaces WP3's
+    semantics (ids from `default_id` on, built-ins replaced by name, a taken id moved per factory while
+    the problem kept reporting `default_id` + its index).
+  * Tests in-process (a rejected registration leaves the factories unchanged), for each rule in C++
+    and the Python-facing ones in Python; the golden files do not change.
 
-### T4.5 Python side
+### T4.5 Python side ✅
 
 * At import: `iohcpp.set_data_root(importlib.resources.files("ioh") / "static")` unless
   `IOH_RESOURCES` is set (keep honouring it, and keep the `ImportError` when it points to a
@@ -592,7 +693,7 @@ Depends on: WP3.
 * A missing or incomplete data file must raise a Python exception at `get_problem` time (test it),
   never abort the interpreter.
 
-### T4.6 Repository and packaging
+### T4.6 Repository and packaging ✅
 
 * Move test fixtures (`*fitness*.in`, `cec_problem20xx.in`, `dynamic_bin_val.in`) to
   `tests/data/` and update C++/Python tests (C++ tests get the path via a CMake compile definition).
@@ -676,8 +777,9 @@ Depends on: WP3, WP4, WP5.
 ### T6.4 API gaps found in the branch (must be closed)
 
 * `MaxCut/MaxCoverage/MaxInfluence/PackWhileTravel.load_instances` (runtime registration of user
-  graph files, since WP3; T4.4), `FlatFile.watch`, `Store.watch`, star-discrepancy `grid` property, the `Path`
-  class and implicit str → path conversion (`nanobind/stl/filesystem.h`), pickling
+  graph files, since WP3; appended and returning their ids since WP4, T4.4), `FlatFile.watch`, `Store.watch`, star-discrepancy `grid` property, the `Path`
+  class and implicit str → path conversion (`nanobind/stl/filesystem.h`; on Windows the `Path` class decodes
+  a str with the ANSI code page, so `load_instances` fails for other characters), pickling
   (`__getstate__/__setstate__`) of triggers/properties, copy-vs-view semantics of arrays.
   `tests/python/test_array_layout.py` only compares values: first add a test that pins whether
   `Solution.x` is a writable view that aliases C++ memory (it is on master).
@@ -694,7 +796,8 @@ Depends on: WP3, WP4, WP5.
 
 * The free-threaded wheels built since WP1 re-enable the GIL on import, because the module does not
   declare that it is thread-safe. After the thread-safety audit (factory mutex from T3.2, loggers
-  and triggers, the global random generator used by MaxInfluence, the WP4 data cache) build with
+  and triggers, the global random generator used by MaxInfluence, the WP4 data cache, PackWhileTravel's
+  evaluation, which inserts into the shared graph's `city_map`) build with
   nanobind's `FREE_THREADED` so the GIL stays disabled, and add a multi-threaded evaluation test.
   Also remove the `cp3??t-win*` skip in `pyproject.toml`: nanobind finds the free-threaded
   `python3XXt.lib` on Windows, the pinned pybind11 2.11 does not.
@@ -745,11 +848,11 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
     `SBOX` (`P<SBOX>`) and `RealSingleObjective` (`P<BBOB>`); `PBOProblem` → `PBO` and
     `IntegerSingleObjective`; `CEC2013Problem`/`CEC2022Problem` → `CEC2013`/`CEC2022` and
     `RealSingleObjective`; `DynamicBinValProblem` → `DynamicBinVal` and `IntegerSingleObjective`.
-    Choose ids that are free in every one of these factories: when an id is taken, the class is
-    registered under that factory's next free id, as before, but its problems now report that id,
-    which can differ per factory (the old registration kept the class's own id in the problem, so
-    the registry id and the id in the logged data differed). Code copied from the 0.3.22 README or
-    example, which used id 1, is affected: its problem now reports e.g. 1121 instead of 1.
+    The id belongs to the problem's family (T4.4): in a family factory (`BBOB`, `PBO`, ...) a taken
+    id throws, so choose one that is free there; in `RealSingleObjective` and
+    `IntegerSingleObjective` a taken id is replaced by the next free one as the registry key, while
+    the problems keep their own id, as with the old registration. Registering under a built-in's
+    name throws.
   * A `GraphProblemType` subclass's specialization of `InstanceBasedProblem::load_instances` no longer
     compiles: give the class
     `static std::vector<RegistryEntry<T>> registry_entries(const std::optional<fs::path> &path = std::nullopt)`
@@ -757,9 +860,9 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
     pass the class name as "Name" to keep the old registry names, class name + id), keep its
     `default_id`, and register it with `register_problem<T, GraphProblem>()` and
     `register_problem<T, IntegerSingleObjective>()`, or with
-    `GraphProblemType<T>::load_graph_instances<int, int>()`. The two ways differ only for a taken id:
-    with `register_problem` the problems report the id they got in each factory, with
-    `load_graph_instances` they keep the ids from `default_id` on, like the old registration.
+    `GraphProblemType<T>::load_graph_instances<int, int>()`. Both register the class's own graphs
+    with their ids from `default_id` on (a taken id throws). Graphs from another definitions file
+    are added with `load_graph_instances(path)`, after the existing ids, which it returns.
   * A suite declares `registry_id`/`registry_name` and registers with `register_suite<T>()` (a
     `RealSuite`/`IntegerSuite` was registered under its class name with the next free id).
   * Removed (WP3): `RegisteredProblem`, `AutomaticProblemRegistration`, `AutomaticSuiteRegistration`,
@@ -770,10 +873,20 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
     `type_name`/`class_name`. Renamed: `GraphProblemType::get_constructors(path)` →
     `graph_entries(path, name)`, `star_discrepancy::load_default_instances` →
     `default_registry_entries`.
-  * Data-root API (WP4); errors are exceptions instead of aborts; removed helpers/types list.
+  * Data (WP4): the library finds its data with `ioh::data::root()`: `ioh::data::set_root(path)`, else
+    `IOH_RESOURCES`, else the source tree it was built from, else `share/ioh` of the installation (installed
+    by `cmake --install`). It no longer searches the working directory's parents for
+    `IOHexperimenter/static`. Missing data throw `ioh::data::data_error` instead of returning an empty path
+    or aborting; the data directory must match the library's data version (its `manifest.json`).
+    `get_static_root`/`find_static_file` are removed: use `ioh::data::root()`/`ioh::data::file()`. A graph class's files are resolved when it
+    is loaded; `graph::Meta::root` is empty for the built-in graphs.
 * Python upgrade guide: Python ≥ 3.10 (recommended ≥ 3.12), deprecated `download_static_folder` /
-  `load_graph_problems`, `IOH_RESOURCES` semantics, numpy returns (WP7), new metadata attributes if
-  added.
+  `load_graph_problems` (no-ops), numpy returns (WP7), new metadata attributes if added. Data (WP4): the
+  package uses its own data files; `IOH_RESOURCES` still names another directory, but `import ioh` no
+  longer sets it (for subprocesses), and `ioh.set_data_root(path)`/`ioh.data_root()` change and show the
+  directory; missing data raise `ioh.DataError` (a `RuntimeError`) when a problem is created. Ids (WP4): problem classes defined by subclassing report the id they are registered under
+  instead of 0; a problem named like a built-in raises; `load_instances(path)` adds the file's
+  graphs after the existing problems and returns their ids, and `load_instances()` is deprecated.
 * README/docs: installation, building from source (scikit-build-core), data location; changelog
   (from the release-notes draft below).
 * Release, the first since 0.3.22 (§1): version bump to 0.4.0; run the wheels workflow on master by
@@ -809,9 +922,9 @@ Each WP adds its user-visible changes here (§2).
   (`ValueError` in Python), later points in the previous dimension were ≈ 0 until another dimension
   was used. Fixed.
 * WP3:
-  * New: `fixed_dimension` and `fixed_instance` on every problem (Python properties, C++ methods): the
-    dimension and instance a problem always uses whatever was requested (CEC2013 and graph problems),
-    `None` otherwise.
+  * New: `fixed_dimension` and `fixed_instance` in `MetaData` (`problem.meta_data` in Python): whether a
+    problem has one dimension and one instance whatever was requested (CEC2013 and graph problems); the
+    values it uses are `n_variables` and `instance`.
   * `create()` with an unknown id or name raises `IndexError` in Python (`std::out_of_range` in C++)
     instead of failing an assertion or, in release builds, undefined behaviour.
   * C++: the library is no longer header-only. Every program links `ioh::ioh` with CMake (or compiles
@@ -833,18 +946,39 @@ Each WP adds its user-visible changes here (§2).
     `IdGetter`, `FactoryID`, `type_name` and `class_name`. Register a class derived from a removed
     base in each factory that base filled: `BBOProblem` in `BBOB`, `SBOX` and `RealSingleObjective`;
     `PBOProblem` and `DynamicBinValProblem` in their family's factory and `IntegerSingleObjective`;
-    `CEC2013Problem` and `CEC2022Problem` in theirs and `RealSingleObjective`. If a class's id is
-    taken in a factory, `register_problem` gives it the next free id there, as before, and its
-    problems now report that id (which can differ per factory) instead of the class's own: choose
-    ids that are free in each factory. A class derived from `GraphProblemType`
+    `CEC2013Problem` and `CEC2022Problem` in theirs and `RealSingleObjective` (for taken ids see
+    WP4). A class derived from `GraphProblemType`
     lists its graphs in a `registry_entries(path)` built with `graph_entries(path, name)` (formerly
     `get_constructors`; the class name as `name` keeps the old names) instead of specializing
     `load_instances`, and is registered in `GraphProblem` and `IntegerSingleObjective` (or with
-    `load_graph_instances`, which keeps a graph's own id in its problems when its registry id is
-    taken). Suites declare `registry_id`/`registry_name` instead of being registered under their class
-    name with the next free id. `star_discrepancy::load_default_instances` is now
+    `load_graph_instances`). Suites declare `registry_id`/`registry_name` instead of being registered
+    under their class name with the next free id. `star_discrepancy::load_default_instances` is now
     `default_registry_entries`.
   * Problem ids, names and behaviour are unchanged (golden tests).
+* WP4:
+  * A problem's id belongs to its family (BBOB, PBO, ...) and stays in its meta data. Registering a
+    problem whose id is taken in its family's factory raises (`ValueError`, `std::invalid_argument`
+    in C++); in `RealSingleObjective`/`IntegerSingleObjective` it is registered under the next free
+    id and keeps its own. Registering under a built-in's name raises: `wrap_problem(f, "Sphere")`
+    replaced Sphere for `get_problem(1)`.
+  * Problem classes defined in Python by subclassing report the id they are registered under (the
+    first free one of their base class) instead of 0, also in logged data.
+  * `MetaData(...)` also takes `fixed_dimension` and `fixed_instance` (default false).
+  * Graph definition files (`load_instances(path)`): the graphs are added after the existing problems
+    (ids from 2309 on a fresh registry) instead of from the class's first id, never replace built-in
+    graphs, and the call returns the new ids and names; loading the same file again changes nothing.
+    `load_instances()` without a path is deprecated and does nothing.
+  * Data: the package uses the data files installed with it, from any working directory, and no longer
+    sets `IOH_RESOURCES` (it still names another data directory); `ioh.set_data_root(path)` and
+    `ioh.data_root()` set and show the directory. Missing or stale data raise `ioh.DataError` (a
+    `RuntimeError`) when a problem that needs them is created, instead of aborting `import ioh`; registering
+    the problems needs no data. `download_static_folder()` and `load_graph_problems()` are deprecated and do
+    nothing. CEC2022 problems are created about 5 times faster (their data are read once).
+  * C++: the data API `ioh::data` (`set_root`, `root`, `file`, `data_error`), which replaces
+    `get_static_root` and `find_static_file`; the library is installed with
+    its data (`share/ioh`) and finds it there, or in the source tree it was built from, without
+    `IOH_RESOURCES`. The test reference files moved from `static/` to `tests/data/`, and `static.tar.gz`
+    (which older versions download) no longer contains them.
 
 ---
 

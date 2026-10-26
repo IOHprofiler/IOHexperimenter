@@ -6,17 +6,7 @@
 #include <string>
 #include <utility>
 
-#ifdef FSEXPERIMENTAL
-#define JSON_HAS_EXPERIMENTAL_FILESYSTEM 1
-#undef JSON_HAS_FILESYSTEM
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
-#else
-#undef JSON_HAS_EXPERIMENTAL_FILESYSTEM 
-#define JSON_HAS_FILESYSTEM 1
-#include <filesystem>
-namespace fs = std::filesystem;
-#endif
+#include "ioh/common/data.hpp" // also the fs namespace alias
 
 #ifdef HAS_JSON
 #include <nlohmann/json.hpp>
@@ -75,58 +65,6 @@ namespace ioh::common::file
             //! String convertor
             operator std::string() const { return data; }
         };
-
-        /**
-         * @brief Get the absolute path of IOHexperimenter/static
-         * This function attempts to find the absolute path based on environment variables.
-         * It first checks if 'IOH_RESOURCES' is set and uses it if available. Otherwise, it
-         * defaults to the location of static as found in the repository.
-         *
-         * @return fs::path the absolute path of IOHexperimenter/static
-         */
-        inline fs::path get_static_root()
-        {
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable : 4996)
-#endif
-            if (const char *ioh_resources = std::getenv("IOH_RESOURCES"))
-            {
-                return fs::canonical(fs::path(ioh_resources));
-            }
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
-            const auto static_root = fs::path("IOHexperimenter") / fs::path("static");
-            fs::path root;
-            for (const auto &e : fs::current_path())
-            {
-                root /= e;
-                if (exists(root / static_root))
-                {
-                    root = root / static_root;
-                    return root;
-                }
-            }
-            IOH_DBG(warning, "couldn't set static root");
-            return {};
-        }
-
-        /**
-         * @brief Finds a file located in the static folder of this repository
-         *
-         * @param filename the name of the file
-         * @return fs::path the absolute path of the file
-         */
-        inline fs::path find_static_file(const std::string &filename)
-        {
-            auto file = get_static_root() / filename;
-
-            if (!exists(file))
-                throw std::runtime_error(fmt::format("Could not find static file: {}", filename));
-            return file;
-        }
-
 
         //! Helper type for detecting shared ptr of which the element type can be constructed from a string
         template <typename T>

@@ -30,12 +30,14 @@ class PyProblem : public P
 {
     [[nodiscard]] bool perform_registration()
     {
+        // like wrap_function: the id of the name if it is registered, otherwise the first free id
+        auto &factory = ioh::common::Factory<P, int, int>::instance();
+        this->set_id(factory.check_or_get_next_available(1, this->meta_data().name));
+
         auto meta_data = this->meta_data();
         auto bounds = this->bounds();
         auto constraints = this->constraints();
         auto optimum = this->optimum();
-
-        auto &factory = ioh::common::Factory<P, int, int>::instance();
         factory.include(meta_data.name, meta_data.problem_id, [=](const int instance, const int n_variables) {
             return std::make_shared<PyProblem<P, T>>(MetaData(meta_data.problem_id, instance, meta_data.name,
                                                               n_variables, meta_data.optimization_type.type()),
@@ -181,12 +183,6 @@ void define_base_class(py::module &m, const std::string &name)
         .def_property_readonly("meta_data", &ProblemType::meta_data,
                                "The static meta-data of the problem containing, e.g., problem id, instance id, and "
                                "problem's dimensionality")
-        .def_property_readonly("fixed_dimension", &ProblemType::fixed_dimension,
-                               "The dimension this problem has whatever dimension was requested (the CEC2013 and "
-                               "graph problems), or None when it uses the requested one")
-        .def_property_readonly("fixed_instance", &ProblemType::fixed_instance,
-                               "The instance this problem is whatever instance was requested (the CEC2013 and "
-                               "graph problems), or None when it uses the requested one")
         .def_property_readonly("optimum", &ProblemType::optimum,
                                "The optimum and its objective value for a problem instance")
         .def_property_readonly("bounds", &ProblemType::bounds, "The bounds of the problem.")

@@ -10,7 +10,7 @@ TEST_F(BaseTest, test_cec2013)
 
     EXPECT_EQ(problem_factory.names().size(), 20);
     std::ifstream infile;
-    const auto file_path = ioh::common::file::utils::find_static_file("cec_problem2013.in");
+    const auto file_path = test_data_file("cec_problem2013.in");
     infile.open(file_path.c_str());
 
     std::string s;
