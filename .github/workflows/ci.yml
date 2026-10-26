@@ -52,11 +52,20 @@ jobs:
           pipx install cmake==${{ matrix.cmake }}
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
+      # a compiler cache, also of the master branch for pull requests (not on Windows: the Visual Studio
+      # generator cannot use a compiler launcher)
+      - uses: hendrikmuhs/ccache-action@v1.2.24
+        if: runner.os != 'Windows'
+        with:
+          key: cpp-${{ matrix.os }}-${{ matrix.compiler }}
+          max-size: 500M
+
       - name: Configure CMake
         run: >
           cmake --version &&
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-          ${{ matrix.compiler != 'msvc' && format('-DCMAKE_CXX_COMPILER={0}', matrix.compiler) || '' }}
+          ${{ matrix.compiler != 'msvc'
+          && format('-DCMAKE_CXX_COMPILER={0} -DCMAKE_CXX_COMPILER_LAUNCHER=ccache', matrix.compiler) || '' }}
 
       - name: Build
         run: cmake --build build --config Debug --target test_ioh --parallel 4
@@ -87,7 +96,17 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
+      # a compiler cache, as for the C++ tests
+      - uses: hendrikmuhs/ccache-action@v1.2.24
+        if: runner.os != 'Windows'
+        with:
+          key: python-${{ matrix.os }}-${{ matrix.python }}
+          max-size: 500M
+
       - name: Install library
+        env:
+          # CMake reads it from the environment (CMake 3.17 and later; scikit-build-core uses a newer one)
+          CMAKE_CXX_COMPILER_LAUNCHER: ${{ runner.os != 'Windows' && 'ccache' || '' }}
         run: |
           python -m pip install --upgrade pip
           pip install -e . -v
