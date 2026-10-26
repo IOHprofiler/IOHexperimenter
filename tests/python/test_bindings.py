@@ -1,4 +1,4 @@
-"""Behaviour of the bindings that the port to nanobind (WP6) had to keep, or that its review found untested"""
+"""Test behaviour of the bindings that the port to nanobind (WP6) had to keep, or that its review found untested."""
 
 import gc
 import tempfile
@@ -44,7 +44,7 @@ class TestBindings(unittest.TestCase):
                 calls.append("attach_problem")
                 super().attach_problem(meta_data)
 
-            def call(self, info):
+            def call(self, info):  # pylint: disable=arguments-differ  (a compiled method, see Store.call)
                 calls.append("call")
                 super().call(info)
 

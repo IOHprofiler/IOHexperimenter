@@ -27,7 +27,7 @@ EXTENSION_STUBS = [
 
 
 def nanobind_version():
-    """The nanobind version that the package builds with: the stubs depend on it"""
+    """Return the nanobind version that the package builds with, on which the stubs depend."""
     with open(os.path.join(ROOT, "pyproject.toml"), encoding="utf-8") as f:
         match = re.search(r"""["']nanobind==([^"';\s]+)["']""", f.read())
     if match is None:
@@ -55,14 +55,14 @@ def main():
 
         # the pure-Python package; mypy is compiled, so stubgen cannot run with -m
         command = [sys.executable, "-c", "from mypy.stubgen import main; main()", "-m", "ioh", "-o", mypy_out]
-        subprocess.check_call(command, cwd=ROOT)
+        subprocess.check_call(command, cwd=ROOT)  # nosec B603: a fixed command with this interpreter
 
         # the extension module and, recursively (-r), its submodules. It runs in the temporary directory, which has
         # no ioh directory, so that ioh is imported from the install (the stubgen puts the current directory first
         # on sys.path).
         command = [sys.executable, "-m", "nanobind.stubgen", "-q", "-r", "-m", "ioh.iohcpp",
                    "-O", os.path.join(nanobind_out, "ioh")]
-        subprocess.check_call(command, cwd=out)
+        subprocess.check_call(command, cwd=out)  # nosec B603: a fixed command with this interpreter
 
         stubs = [os.path.join(mypy_out, "ioh", "__init__.pyi")]
         stubs += [os.path.join(nanobind_out, "ioh", stub) for stub in EXTENSION_STUBS]
