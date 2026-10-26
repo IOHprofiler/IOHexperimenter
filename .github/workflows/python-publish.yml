@@ -52,7 +52,10 @@ jobs:
           ${{ github.event_name == 'pull_request'
           && fromJSON('["ubuntu-24.04", "ubuntu-24.04-arm", "windows-2022", "windows-11-arm"]')
           || fromJSON('["ubuntu-24.04", "ubuntu-24.04-arm", "windows-2022", "windows-11-arm", "macos-15-intel", "macos-15"]') }}
-        python: [cp310, cp311, cp312, cp313, cp314, cp315]
+        # one wheel per job: cp310, cp311, the abi3 wheel for CPython 3.12 and later (built with 3.12 and
+        # tested with 3.12-3.15 in one job: cibuildwheel reuses an abi3 wheel only within one run), and
+        # the free-threaded wheels, which cannot be abi3
+        python: [cp310, cp311, cp312-abi3, cp314t, cp315t]
         exclude:
           # numpy has no Windows ARM64 wheels for Python 3.10
           - { os: windows-11-arm, python: cp310 }
@@ -63,11 +66,10 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.3.3
         env:
-          # one Python version per job (3.14 and 3.15 also build their free-threaded variant);
           # the rest of the configuration is in pyproject.toml
           CIBW_BUILD: >-
-            ${{ contains(fromJSON('["cp314", "cp315"]'), matrix.python)
-            && format('{0}-* {0}t-*', matrix.python) || format('{0}-*', matrix.python) }}
+            ${{ matrix.python == 'cp312-abi3' && 'cp312-* cp313-* cp314-* cp315-*'
+            || format('{0}-*', matrix.python) }}
       - uses: actions/upload-artifact@v7
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ matrix.python }}
