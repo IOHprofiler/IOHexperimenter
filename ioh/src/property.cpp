@@ -1,53 +1,63 @@
 #include "pyproperty.hpp"
 
-// Trampoline
-struct AbstractProperty : logger::Property
-{
-    AbstractProperty(const std::string &name) : logger::Property(name) {}
+#include <algorithm>
+#include <cctype>
 
-    std::string call_to_string(const logger::Info &log_info, const std::string &nan = "") const override
+namespace ioh_python::property_cpp
+{
+    // Trampoline: lets Python subclass AbstractProperty
+    struct AbstractProperty : ioh::logger::Property
     {
-        PYBIND11_OVERRIDE(std::string, logger::Property, call_to_string, log_info, nan);
-    }
+        NB_TRAMPOLINE(ioh::logger::Property);
 
-    std::optional<double> operator()(const logger::Info &info) const override
+        std::string call_to_string(const ioh::logger::Info &log_info, const std::string &nan = "") const override
+        {
+            NB_OVERRIDE(call_to_string, log_info, nan);
+        }
+
+        std::optional<double> operator()(const ioh::logger::Info &info) const override
+        {
+            NB_OVERRIDE_PURE_NAME("__call__", operator(), info);
+        }
+    };
+
+    template <typename P>
+    void define_property(nb::module_ &m, std::string name, P predef)
     {
-        PYBIND11_OVERRIDE_PURE_NAME(std::optional<double>, logger::Property, "__call__", operator(), info);
+        nb::class_<P, ioh::logger::Property>(m, name.c_str())
+            .def(nb::init<std::string, std::string>(), nb::arg("name"), nb::arg("format"),
+                 ("Property which tracks the " + name).c_str())
+            .def("__getstate__", [](const P &t) { return nb::make_tuple(t.name(), t.format()); })
+            .def("__setstate__", [](P &self, const nb::tuple &t) {
+                new (&self) P{nb::cast<std::string>(t[0]), nb::cast<std::string>(t[1])};
+            });
+
+        std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+        m.attr(name.c_str()) = nb::cast(predef);
     }
-};
+} // namespace ioh_python::property_cpp
 
-
-
-template <typename P>
-void define_property(py::module &m, std::string name, P predef)
+void define_properties(nb::module_ &m)
 {
+    using ioh_python::PyProperty;
+    using ioh_python::property_cpp::AbstractProperty;
+    using ioh_python::property_cpp::define_property;
+    namespace watch = ioh::watch;
 
-    py::class_<P, logger::Property, std::shared_ptr<P>>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<std::string, std::string>(), py::arg("name"), py::arg("format"),
-             ("Property which tracks the " + name).c_str())
-        .def(py::pickle([](const P &t) { return py::make_tuple(t.name(), t.format()); },
-                        [](py::tuple t) {
-                            return P{t[0].cast<std::string>(), t[1].cast<std::string>()};
-                        }));
+    nb::module_ t = m.def_submodule("property");
 
-    std::transform(name.begin(), name.end(), name.begin(), ::toupper);
-    m.attr(name.c_str()) = py::cast(predef);
-}
-
-void define_properties(py::module &m)
-{
-    py::module t = m.def_submodule("property");
-
-    py::class_<logger::Property, AbstractProperty, std::shared_ptr<logger::Property>>(t, "AbstractProperty",
-                                                                                      "Base class for all Properties")
-        .def(py::init<std::string>())
-        .def("__call__", &logger::Property::operator())
-        .def_property("name", &logger::Property::name, &logger::Property::set_name)
-        .def("call_to_string", &logger::Property::call_to_string);
+    nb::class_<ioh::logger::Property, AbstractProperty>(t, "AbstractProperty", "Base class for all Properties")
+        .def(nb::init<std::string>())
+        .def("__call__", &ioh::logger::Property::operator())
+        .def_prop_rw("name", &ioh::logger::Property::name, &ioh::logger::Property::set_name)
+        // Property's own call_to_string, so that super() in a Python override runs it once (a virtual call would
+        // come back to the override)
+        .def("call_to_string", [](const ioh::logger::Property &p, const ioh::logger::Info &info,
+                                  const std::string &nan) { return p.ioh::logger::Property::call_to_string(info, nan); });
 
 
-    py::class_<PyProperty, logger::Property, std::shared_ptr<PyProperty>>(t, "Property")
-        .def(py::init<py::object, std::string>(), py::arg("container"), py::arg("attribute"),
+    nb::class_<PyProperty, ioh::logger::Property>(t, "Property")
+        .def(nb::init<nb::object, std::string>(), nb::arg("container"), nb::arg("attribute"),
              R"pbdoc(
                 Wrapper for properties with a Python container
 
@@ -56,15 +66,15 @@ void define_properties(py::module &m)
                 container: object
                     The object which contains the property to be logged
                 attribute: str
-                    The name of the property to be logger, must be an attribute on container          
+                    The name of the property to be logger, must be an attribute on container
             )pbdoc"
 
              )
         .def("call_to_string", &PyProperty::call_to_string)
-        .def(py::pickle([](const PyProperty &t) { return py::make_tuple(t.container(), t.name()); },
-                        [](py::tuple t) {
-                            return PyProperty{t[0].cast<py::object>(), t[1].cast<std::string>()};
-                        }));
+        .def("__getstate__", [](const PyProperty &t) { return nb::make_tuple(t.container(), t.name()); })
+        .def("__setstate__", [](PyProperty &self, const nb::tuple &t) {
+            new (&self) PyProperty{nb::cast<nb::object>(t[0]), nb::cast<std::string>(t[1])};
+        });
 
     define_property<watch::Evaluations>(t, "Evaluations", watch::evaluations);
 

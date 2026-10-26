@@ -1,14 +1,9 @@
-#include <pybind11/pybind11.h>
-#include "ioh.hpp"
+#include "common.hpp"
 
-namespace py = pybind11;
+NB_MODULE(iohcpp, m) {
+    // the registries hold Python objects (e.g. the functions of wrap_problem) for the life of the process
+    nb::set_leak_warnings(false);
 
-void define_helper_classes(py::module& m);
-void define_problem(py::module& m);
-void define_suites(py::module& m);
-void define_logger(py::module& m);
-
-PYBIND11_MODULE(iohcpp, m) {
     m.doc() = R"pbdoc(
         Python Interface to IOHexperimenter, which provides
 
@@ -49,10 +44,10 @@ PYBIND11_MODULE(iohcpp, m) {
     auto m_logger = m.def_submodule("logger", "Module that includes all IOHExperimenter loggers");
     
     // the data files (ioh::data): a missing directory or file raises DataError, a RuntimeError
-    py::register_exception<ioh::data::data_error>(m, "DataError", PyExc_RuntimeError);
+    nb::exception<ioh::data::data_error>(m, "DataError", PyExc_RuntimeError);
     // paths cross as UTF-8 (std::string from str), also on Windows, where a narrow fs::path uses the code page
     m.def(
-        "set_data_root", [](const std::string &path) { ioh::data::set_root(fs::u8path(path)); }, py::arg("path"),
+        "set_data_root", [](const std::string &path) { ioh::data::set_root(fs::u8path(path)); }, nb::arg("path"),
         "Sets the directory of the data files (the static folder of IOHexperimenter); an empty path unsets it.");
     m.def(
         "data_root", [] { return ioh::data::root().u8string(); },

@@ -100,6 +100,9 @@ WP2 section has the numbers after it):
   (0.4.0, WP8) ships everything at once, so PyPI stays at 0.3.22 until then. To test wheels in
   between, run the wheels workflow by manual dispatch; it only uploads on `release: published`.
 * Not doing: PCH, `-Os` for bindings, a separate data wheel, binary data formats, pybind11 3.x.
+* **The objective-function server leaves this repository** (decided with the maintainer during WP6): it moves
+  to a repository of its own in the IOHprofiler organization that depends on this one, and this repository
+  drops it together with the dependencies only it needs (`external/json`, `external/cxxopts`). See WP9.
 
 ## 2. Invariants and conventions
 
@@ -804,16 +807,76 @@ Record:
 
 ---
 
-## WP6 — Move bindings to nanobind
+## WP6 — Move bindings to nanobind 🚧 PR 1 (the port, T6.1–T6.5, T6.8) implemented (branch `wp6-nanobind`)
 
 Depends on: WP3, WP4, WP5.
 
-### T6.1 Build integration
+Three PRs, decided with the maintainer: the port (T6.1–T6.5, T6.8), then free-threading (T6.6), then the stable
+ABI (T6.7). Free-threading adds no locks: the intended use is single-threaded, and a problem or logger object is not
+used from two threads at once (documented); shared state (registries, data, random generator, shared graph data) must
+be safe. Threaded evaluation of a batch (`problem(X)`) is not planned: no benefit expected, and it would complicate
+Python callbacks.
+
+Record (PR 1):
+
+* **Build** (T6.1): nanobind 3.1.0 is a pinned build requirement (from PyPI; the pybind11 submodule is gone, also
+  from the sdist); `nanobind_add_module(iohcpp NOMINSIZE ...)` keeps `-O3`. The Python build needs CMake 3.18
+  (FindPython's `Development.Module`, `cmake.version` in `pyproject.toml`); the C++ library stays at 3.16.
+* **Port** (T6.2): five agents ported groups of the binding sources against one spec, then they were integrated.
+  The sources share `ioh/src/common.hpp` (casters, array helpers, the declarations they define for each other), have
+  no file-scope `using namespace` and keep their helpers in `ioh_python::<file>` (unity-safe; a unity build was not
+  tried). BBOB, SBOX, CEC2022 and PBO classes are defined from the family type lists of
+  `src/registry/families.hpp`, which the registry uses too, with their docstrings in tables; NKLandscapes and
+  Himmelblau still have no class of their own, as on master (a new class would add a golden registry view). An API
+  dump of every module, class and member (names, argument names, defaults) compared with master's: all present,
+  every master signature still accepted.
+* **Arrays** (T6.3): every method that takes a vector has an array overload first; `__call__` has one- and
+  two-dimensional ones. Integer methods take an array of any integer or bool type (one overload that dispatches on
+  the dtype, without a conversion pass: e.g. a bitstring as `rng.random(n) < 0.5`); arrays of floats and values out
+  of the int range raise TypeError, as on master. Real arrays may be converted (float32, integers).
+* **API** (T6.4): paths go through nanobind's filesystem caster (str or os.PathLike in, `pathlib.Path` out), which
+  also fixes the Windows ANSI-code-page decoding of WP4 (tested with a non-ASCII directory);
+  `ioh.iohcpp.logger.Path` is an alias of `pathlib.Path`. Pickling keeps master's state tuples. `Solution.x` stays a
+  writable view kept alive by its Solution (`test_solution_x_is_a_view`, which master passes too). Enums are Python `enum.Enum` classes with `__int__`/`__index__` (`.name`, `.value`, `int()` and
+  construction from an int work as before).
+* **Trampolines and stubs** (T6.5): loggers, properties, triggers and the W-model use `NB_TRAMPOLINE`; problems and
+  constraints look up a Python override like pybind11 did (also on the instance, which a test sets; and a problem
+  that the registry creates in C++ has no Python object, where nanobind's trampoline aborts).
+  `tools/gen_stubs.py` uses `nanobind.stubgen` for `ioh/iohcpp/` (now with `problem/sbox.pyi` and
+  `logger/old.pyi`) and mypy for `ioh/__init__.pyi`. `nb::set_leak_warnings(false)`: the registries keep Python
+  objects for the life of the process.
+* **Review** (three reviewers, each confirming findings by running both builds): fixed, with tests in
+  `tests/python/test_bindings.py`:
+  * `suite.attach_logger` failed for every built-in logger: nanobind's trampoline raises for a method that the
+    Python type does not have, and `attach_suite` has no binding. It is now looked up by hand, as pybind11 did.
+  * A Python override of a logger or property method that calls `super()` ran twice when called from Python
+    (the bound base method dispatched virtually back to the override): the bases are now bound as
+    non-virtual calls of each class's own implementation.
+  * Integer methods rejected bool arrays (see Arrays).
+  * A Python function returning something unusable raised `RuntimeError: std::bad_cast`; the message names the
+    returned type again.
+  Accepted, in the release notes: overrides of Python subclasses of `Store`/`FlatFile`/`Analyzer` are now called
+  from C++ (pybind11 looked them up on the wrong type and never called them); nanobind's scalar casters are
+  stricter (`np.bool_`, 0/1 or None for a bool argument, `np.bool_`/`Fraction`/`Decimal` for an int argument, and
+  `np.bool_` inside lists for integer problems raise TypeError) and some are looser (an int for an enum argument, any
+  iterable for `trigger.At`/`During`); a masked array is evaluated on its data; a subclass that skips
+  `super().__init__()` fails at its first use instead of at construction. Not fixed (as on master): a view of
+  `Solution.x` dangles after `x` is assigned a new vector; `EAH` built from scale objects crashes on `repr`.
+* **Measured** (T6.8; Apple M5, AppleClang 21, Python 3.13, wheels of master and of the port after the review fixes,
+  min of 7, µs per call): Sphere d=5 list 0.26 → 0.11, numpy 0.27 → 0.13; d=100 list 0.78 → 0.40, numpy 2.03 → 0.26;
+  OneMax n=100 list 0.72 → 0.42, numpy 2.10 → 0.23; batch 1000×10 per row numpy 0.25 → 0.08, list 0.10 → 0.06; a
+  wrapped Python objective 1.11 → 1.04; `state.current_best.y` 0.50 → 0.14; `meta_data.n_variables` 0.23 → 0.05;
+  suite iteration (24 problems) 178 → 147; `get_problem` 12.8 → 12.6; loggers writing every evaluation (trigger
+  ALWAYS): Analyzer 2.03 → 1.90, FlatFile 1.62 → 1.48, Store 0.35 → 0.20. `import ioh` 20.8 ms both. A clean build
+  of the package (`pip wheel --no-build-isolation`, -j4) takes 17.9 s instead of 22.5 s; the macOS wheel is 7.9
+  instead of 8.1 MB.
+
+### T6.1 Build integration ✅
 
 * Find nanobind via pip build requirement; `nanobind_add_module(iohcpp NOMINSIZE ...)`, link the
   `ioh` static library. Remove the `external/pybind11` submodule and all pybind11 references.
 
-### T6.2 Port the binding TUs
+### T6.2 Port the binding TUs ✅
 
 * Start from `origin/untemplating` `ioh/src/*.cpp` as reference for nanobind idioms, but **do not**
   take its header changes (commented-out registration, commented-out `IOH_DBG`, redesigned
@@ -826,7 +889,7 @@ Depends on: WP3, WP4, WP5.
 * Write binding sources unity-safe (no file-scope `using namespace`, unique helper names); enable a
   unity build only if it measurably helps.
 
-### T6.3 Array inputs
+### T6.3 Array inputs ✅
 
 * For `__call__` (1-D and batched 2-D) and every method that takes vectors: add
   `nb::ndarray<const double, nb::ndim<1>, nb::c_contig, nb::device::cpu>` (and integer
@@ -835,7 +898,7 @@ Depends on: WP3, WP4, WP5.
   pass fails and each attempt converts the array through `PySequence_Tuple` (3 conversions per call
   vs 1 in pybind11). Lists must keep working.
 
-### T6.4 API gaps found in the branch (must be closed)
+### T6.4 API gaps found in the branch (must be closed) ✅
 
 * `MaxCut/MaxCoverage/MaxInfluence/PackWhileTravel.load_instances` (runtime registration of user
   graph files, since WP3; appended and returning their ids since WP4, T4.4), `FlatFile.watch`, `Store.watch`, star-discrepancy `grid` property, the `Path`
@@ -845,7 +908,7 @@ Depends on: WP3, WP4, WP5.
   `tests/python/test_array_layout.py` only compares values: first add a test that pins whether
   `Solution.x` is a writable view that aliases C++ memory (it is on master).
 
-### T6.5 Trampolines, stubs, platforms
+### T6.5 Trampolines, stubs, platforms ✅
 
 * Trampolines (`NB_TRAMPOLINE`/`NB_OVERRIDE`) for Python-subclassable classes: watchers/loggers,
   properties, triggers, constraints, wrapped problems.
@@ -872,7 +935,7 @@ Depends on: WP3, WP4, WP5.
   cp311 jobs. abi3audit runs by default in cibuildwheel 4. Free-threaded wheels cannot be abi3 and
   stay version-specific.
 
-### T6.8 Acceptance
+### T6.8 Acceptance ✅ (PR 1)
 
 * Golden tests green on all platforms; runtime at least at parity with pybind11 for numpy *and*
   list inputs (target: faster); import time not worse; build time reported.
@@ -955,6 +1018,10 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
   Building from source (WP5): the package builds with scikit-build-core (`pip install .`), and
   `setup.py` is gone; `MAKE_STUBS` and `MAKE_DOCS` are replaced by `python tools/gen_stubs.py` and
   `python doc/generate_docs.py`.
+  Bindings (WP6): enums are `enum.Enum` classes (compare members, not ints: `OptimizationType.MIN == 0` was
+  and stays False); `logger.Path` is `pathlib.Path`, and str or os.PathLike paths are accepted everywhere;
+  bool arguments take True/False only and int arguments objects with `__index__` (pass `bool(x)`/`int(x)`);
+  overrides in subclasses of `Store`/`FlatFile`/`Analyzer` are now called by the problems they log.
 * README/docs: installation, building from source (scikit-build-core), data location; changelog
   (from the release-notes draft below).
 * Release, the first since 0.3.22 (§1): version bump to 0.4.0; run the wheels workflow on master by
@@ -1058,6 +1125,55 @@ Each WP adds its user-visible changes here (§2).
   * C++: CMake ≥ 3.16 (the README said 3.15). The tests and example are built by default only when
     IOHexperimenter is the top-level project; `ctest` runs each test once (it ran them 4 times), from
     the top of the build directory.
+* WP6 (the bindings on nanobind):
+  * Faster: numpy arrays are taken at once instead of element by element (a 100-dimensional problem
+    evaluates about 8 times faster from a numpy array, 2 times from a list), and attribute access, state,
+    meta data and suite iteration are faster too; logging to files costs about the same.
+  * Paths: arguments accept str and os.PathLike (e.g. `pathlib.Path`), and paths are returned as
+    `pathlib.Path`; `ioh.iohcpp.logger.Path` is now `pathlib.Path`. On Windows, paths with characters
+    outside the ANSI code page work.
+  * Enums (`OptimizationType`, `ConstraintEnforcement`, `StarDiscrepancySampler`) are Python `enum.Enum`
+    classes: `.name`, `.value`, `int(...)` and construction from an int work as before.
+  * Signatures and docstrings use nanobind's notation (e.g. `collections.abc.Sequence[float]`,
+    positional-only arguments shown as `/`); the stubs include `logger.old` and `problem.sbox`.
+  * Integer problems, solutions and bounds take numpy arrays of any integer or bool type at once.
+  * Python subclasses of `Store`, `FlatFile` and `Analyzer`: their overrides (e.g. of `call` or
+    `attach_problem`) are now called by the problems and suites they log; before, they were ignored.
+  * Argument conversion follows nanobind: a bool argument takes only True/False (not `np.bool_`, 0/1 or
+    None), an int argument only objects with `__index__` (not `np.bool_`, `Fraction` or `Decimal`); an enum
+    argument also takes its int value, and `trigger.At`/`During` take any iterable. A subclass of a bound
+    class that does not call `super().__init__()` now fails when it is first used.
+
+---
+
+## WP9 — Server to its own repository
+
+Decided with the maintainer during WP6 (§1): fewer dependencies here. Independent of WP6/WP7; to be done before
+the release (WP8), which announces it.
+
+Audit (WP6): `external/json` (nlohmann/json, 17 MB) and `external/cxxopts` are used only by the
+objective-function server (`server/ioh-server.cpp`, built with `-DBUILD_SERVER=ON`, not built in CI, last changed
+in 2023), and json also by `merge_output_to_single_folder` in `include/ioh/common/file.hpp`, under `HAS_JSON`,
+which only the server build defines; nothing calls it (the Python `Experiment` has its own). The library, the
+Python package and the tests need neither, and the sdist has not contained them since WP5.
+
+### T9.1 New repository
+
+* A repository in the IOHprofiler organization (name to be decided with the maintainer, e.g. `ioh-server`) with
+  `server/`: the server, its query/reply schemas, the examples, the Python client (`iohservice.py`,
+  `example_client.py`) and the Singularity definition, plus its documentation (`doc/python/source/server.rst`).
+  The history of `server/` can be carried over with `git filter-repo --path server/`.
+* It depends on this repository: CMake `FetchContent` of IOHexperimenter at a release tag (or `find_package(ioh)`
+  of an installed library), and of nlohmann/json and cxxopts at pinned versions instead of submodules. Its own
+  CI builds the server and runs an example query.
+
+### T9.2 Remove the server here
+
+* Delete `server/`, the `external/json` and `external/cxxopts` submodules (`.gitmodules`), `BUILD_SERVER`,
+  `HAS_JSON`/`INCLUDE_JSON` and the `nlohmann_json` install rule in `CMakeLists.txt`, the unused
+  `merge_output_to_single_folder` in `include/ioh/common/file.hpp`, and the server page of the docs (which links
+  to the new repository instead).
+* Release notes and C++ upgrade guide (WP8): the server moved to the new repository; `-DBUILD_SERVER` is gone.
 
 ---
 

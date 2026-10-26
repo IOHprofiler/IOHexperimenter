@@ -1,5 +1,6 @@
 [build-system]
-requires = ["scikit-build-core>=1.1"]
+# nanobind is pinned: its version shapes the extension and the generated stubs
+requires = ["scikit-build-core>=1.1", "nanobind==3.1.0"]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -26,6 +27,8 @@ Homepage = "https://iohprofiler.github.io/IOHexperimenter"
 
 [tool.scikit-build]
 minimum-version = "build-system.requires"
+# FindPython with Development.Module (ioh/CMakeLists.txt)
+cmake.version = ">=3.18"
 # kept between builds, so that a rebuild (pip install --no-build-isolation -e .) only compiles what changed
 build-dir = "build/{wheel_tag}"
 # the extension and the data files (ioh/CMakeLists.txt), not the C++ library's headers and CMake package
@@ -54,10 +57,6 @@ sdist.include = [
     "/external/fmt/include/",
     "/external/fmt/src/",
     "/external/fmt/support/cmake/",
-    "/external/pybind11/CMakeLists.txt",
-    "/external/pybind11/LICENSE",
-    "/external/pybind11/include/",
-    "/external/pybind11/tools/",
 ]
 # ioh/static links to static/ for editable installs; the wheel gets static/ from the CMake install
 sdist.exclude = ["/ioh/static", "__pycache__/", "*.pyc", "*.so", "*.pyd", ".DS_Store"]
@@ -77,8 +76,8 @@ regex = '(?P<value>\d+\.\d+\.\d+\S*)'
 
 [tool.cibuildwheel]
 build = "cp310-* cp311-* cp312-* cp313-* cp314-* cp315-* cp314t-* cp315t-*"
-# no 32-bit Windows; musllinux was never shipped. Free-threaded Windows builds need a newer binding
-# library: the pinned pybind11 (2.11) cannot find python3XXt.lib (TASKS.md, WP6)
+# no 32-bit Windows; musllinux was never shipped. Free-threaded Windows wheels come with the
+# free-threading PR (TASKS.md, T6.6)
 skip = "*-win32 *-musllinux_* cp3??t-win*"
 # freezes the Python-visible registry and problem behaviour, see tests/python/golden.py
 test-command = "python {project}/tests/python/test_golden.py"
