@@ -1,6 +1,6 @@
 """Behaviour of the bindings that the port to nanobind (WP6) had to keep, or that its review found untested"""
 
-import os
+import gc
 import tempfile
 import unittest
 
@@ -29,7 +29,11 @@ class TestBindings(unittest.TestCase):
                     problem([0.0, 0.0])
             self.assertEqual(list(store.data().keys()), ["BBOB"])
             self.assertEqual(list(combined.data().keys()), ["BBOB"])
+            # release the files before the directory is removed (Windows does not remove an open file): the
+            # Analyzer closes them with close(), the FlatFile when it is destroyed
             loggers[2].close()
+            del loggers, suite, problem
+            gc.collect()
 
     def test_logger_overrides(self):
         # an override of a Python subclass runs once: when C++ calls it, and when it calls the base with super()
