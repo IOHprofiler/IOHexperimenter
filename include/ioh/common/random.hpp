@@ -155,10 +155,9 @@ namespace ioh::common::random
         template <typename G>
         T operator()(G &gen)
         {
-            uniform<double> rng;
-
             if (generate)
             {
+                uniform<double> rng;
                 T u1 = std::abs(rng(gen));
                 T u2 = std::abs(rng(gen));
                 const T root_log_u1 = std::sqrt(-2.0 * std::log(u1));

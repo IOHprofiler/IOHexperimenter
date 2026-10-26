@@ -1,11 +1,10 @@
-"""Test the package from several threads at once; on a free-threaded Python (3.14t and later), without the GIL.
+"""Test the package from several threads at once; on a free-threaded Python (3.14t and later), without the GIL."""
 
-Different objects may be used from different threads at the same time (T6.6); one problem, logger or suite is used by
-one thread at a time.
-"""
+# Different objects may be used from different threads at the same time (T6.6); one problem, logger or suite is used
+# by one thread at a time.
 
 import os
-import subprocess
+import subprocess  # nosec B404: only to run this interpreter on the fixed code below
 import sys
 import sysconfig
 import tempfile
@@ -171,7 +170,9 @@ class TestThreads(unittest.TestCase):
             assert all(r == results[0] for r in results), results
             """)
         env = dict(os.environ, PYTHONPATH=os.pathsep.join(sys.path))
-        result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=env)
+        result = subprocess.run(  # nosec B603: this interpreter, on the fixed code above
+            [sys.executable, "-c", code], capture_output=True, text=True, env=env
+        )
         self.assertEqual(result.returncode, 0, result.stderr)
 
 
