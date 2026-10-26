@@ -982,20 +982,28 @@ Record:
   `cp312-abi3`. On 3.10, 3.11 and free-threaded Pythons scikit-build-core (1.1.1) and nanobind (3.1.0)
   ignore both, so those wheels stay version-specific. For the abi3 build scikit-build-core sets
   `SKBUILD_SABI_COMPONENT` to `Development.SABIModule`, which `ioh/CMakeLists.txt` asks FindPython for
-  (it links `python3.lib` on Windows) and which needs CMake 3.26: `cmake.version` is now `>=3.26`
-  (scikit-build-core gets CMake from PyPI when the system's is older). A plain CMake build of the
+  (it links `python3.lib` on Windows). CMake's FindPython has it since 3.26, and for an older CMake
+  scikit-build-core brings its own, so `cmake.version` stays `>=3.18`. A plain CMake build of the
   module, without scikit-build-core, stays version-specific.
 * Wheels workflow: one wheel per job: cp310, cp311, cp312-abi3 (`CIBW_BUILD="cp312-* cp313-* cp314-*
   cp315-*"`: built with 3.12, tested with 3.12–3.15), cp314t and cp315t. Per platform 5 wheels instead of
   8 (a release: 29 instead of 47), and later CPython versions (3.16) install the abi3 wheel; pull
-  requests run 19 wheel jobs instead of 23, the full matrix 29 instead of 35. cibuildwheel runs
-  `abi3audit --strict` on the abi3 wheel.
+  requests run 19 wheel jobs instead of 23 (75 runner minutes instead of 96), the full matrix 29 instead
+  of 35 (118 instead of 170). cibuildwheel runs `abi3audit --strict` on the abi3 wheel.
 * Runtime (Python 3.13, macOS arm64, `bench.py`; the abi3 wheel against a version-specific wheel of the same
-  tree): numpy inputs, attributes, loggers, suites and import take the same time (0.98–1.08); list inputs
-  take about twice as long (BBOB d5 0.10 → 0.23 µs, d100 0.40 → 0.82 µs, OneMax n100 0.40 → 0.70 µs, a
-  batch of lists 0.06 → 0.11 µs per row), because under the limited API nanobind copies a list item by
-  item (`seq_get`). That is about master's speed (pybind11): 0.89–1.09 of it for lists, while numpy
-  inputs stay up to 9 times faster than master.
+  tree): numpy inputs, attributes, loggers, suites and import take the same time (0.95–1.03). Lists took
+  about twice as long: under the limited API nanobind's ndarray caster, which the array overloads try
+  first, looks up `__dlpack__` through an AttributeError (most of the cost for a short list), and
+  nanobind copies a list item by item (`seq_get`). The input arrays (`InputArray` in `ioh/src/common.hpp`,
+  found by the review) now turn lists and tuples down before the ndarray caster, which never accepts
+  them; signatures and stubs are unchanged. What is left is the copy, abi3 against version-specific: BBOB
+  d5 0.11 µs against 0.08 (before the change 0.23 against 0.10), d100 0.64 against 0.38, OneMax n100 0.57
+  against 0.38, a batch of lists 0.11 against 0.06 per row. Against master (pybind11) lists take
+  0.44–0.82 of the time and a batch of lists 1.11; numpy inputs stay up to 9 times faster.
+* The abi3 wheel reads a sequence that is not a list or tuple by index (`PySequence_GetItem`), the
+  version-specific ones iterate it (`PySequence_Tuple`): a sequence indexed by labels (a pandas Series with
+  another index, such as a row in `df.apply(problem, axis=1)`) or one without `__len__` is rejected only
+  by the abi3 wheel, as by 0.3.22 (pybind11 indexed too); pass `row.to_numpy()`.
 * Not used: nanobind 3.1's split mode (`BACKEND_MODULE`) builds abi3 modules from 3.10 and, on
   free-threaded 3.15 and later, `abi3t` ones (PEP 803), which would cover 3.10, 3.11 and the future
   free-threaded versions too, but the module then loads libnanobind from another package
@@ -1216,8 +1224,8 @@ Each WP adds its user-visible changes here (§2).
   * Faster: numpy arrays are taken at once instead of element by element (a 100-dimensional problem
     evaluates about 8 times faster from a numpy array), and attribute access, state, meta data and suite
     iteration are faster too; logging to files costs about the same. From a list it evaluates about 2 times
-    faster with the version-specific wheels (3.10, 3.11), and about as fast as before with the abi3 wheel
-    (3.12 and later, T6.7).
+    faster with the version-specific wheels (3.10, 3.11) and 1.2 times faster with the abi3 wheel (3.12 and
+    later, T6.7); a batch of lists takes about 10% longer with the abi3 wheel.
   * Paths: arguments accept str and os.PathLike (e.g. `pathlib.Path`), and paths are returned as
     `pathlib.Path`; `ioh.iohcpp.logger.Path` is now `pathlib.Path`. On Windows, paths with characters
     outside the ANSI code page work.
@@ -1242,7 +1250,6 @@ Each WP adds its user-visible changes here (§2).
     problems were created before them.
   * Wheels: CPython 3.12 and later share one wheel per platform (`cp312-abi3`, on the stable ABI), which
     also installs on later versions; 3.10, 3.11 and the free-threaded 3.14t/3.15t keep a wheel each.
-    Building the package from source needs CMake ≥ 3.26 (pip installs it when the system's is older).
 
 ---
 

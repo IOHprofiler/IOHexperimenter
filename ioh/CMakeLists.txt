@@ -1,6 +1,7 @@
 # nanobind comes from the build environment (pyproject.toml). FindPython finds the Python that scikit-build-core
 # builds for (Development.Module needs CMake 3.18). For an abi3 wheel (wheel.py-api in pyproject.toml, Python 3.12
-# and later) scikit-build-core sets SKBUILD_SABI_COMPONENT to Development.SABIModule (CMake 3.26).
+# and later) scikit-build-core sets SKBUILD_SABI_COMPONENT to Development.SABIModule (in CMake's FindPython since
+# 3.26; scikit-build-core brings its own FindPython for an older CMake).
 find_package(Python 3.10 REQUIRED COMPONENTS Interpreter Development.Module ${SKBUILD_SABI_COMPONENT})
 execute_process(
     COMMAND "${Python_EXECUTABLE}" -m nanobind --cmake_dir

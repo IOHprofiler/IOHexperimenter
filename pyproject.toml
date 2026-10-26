@@ -27,15 +27,17 @@ Homepage = "https://iohprofiler.github.io/IOHexperimenter"
 
 [tool.scikit-build]
 minimum-version = "build-system.requires"
-# FindPython with Development.Module and, for the abi3 wheel, Development.SABIModule (ioh/CMakeLists.txt)
-cmake.version = ">=3.26"
+# FindPython with Development.Module (ioh/CMakeLists.txt); for an older CMake than 3.26 scikit-build-core brings the
+# FindPython that has Development.SABIModule (the abi3 wheel)
+cmake.version = ">=3.18"
 # kept between builds, so that a rebuild (pip install --no-build-isolation -e .) only compiles what changed
 build-dir = "build/{wheel_tag}"
 # the extension and the data files (ioh/CMakeLists.txt), not the C++ library's headers and CMake package
 install.components = ["python"]
 wheel.packages = ["ioh"]
 # one wheel for CPython 3.12 and later, built on the stable ABI (ioh/CMakeLists.txt); 3.10, 3.11 and the
-# free-threaded builds, which have no stable ABI that nanobind can use, get a wheel of their own
+# free-threaded builds get a wheel of their own (nanobind builds them on the stable ABI only in its split mode,
+# which needs the nanobind-backend package; TASKS.md T6.7)
 wheel.py-api = "cp312"
 # the sources of the extension are only in the sdist
 wheel.exclude = ["ioh/src/", "ioh/CMakeLists.txt", "ioh/README.md"]

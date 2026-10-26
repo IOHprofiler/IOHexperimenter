@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <limits>
 #include <type_traits>
+#include <utility>
 #include <string>
 #include <vector>
 
@@ -34,21 +35,66 @@ namespace nb = nanobind;
 
 namespace ioh_python
 {
+    //! An input array argument (Array1D and the others below): a nanobind ndarray whose caster turns lists and
+    //! tuples down at once. nanobind's own caster never accepts them either, but under the limited API (the abi3
+    //! wheel, TASKS.md T6.7) it first looks up __dlpack__ through an AttributeError, which made every call with a
+    //! list about twice as slow; the overload with std::vector then takes the list.
+    template <typename A>
+    struct InputArray : A
+    {
+        InputArray() = default;
+        explicit InputArray(A &&array) : A(std::move(array)) {}
+    };
+} // namespace ioh_python
+
+NAMESPACE_BEGIN(NB_NAMESPACE)
+NAMESPACE_BEGIN(detail)
+
+//! The caster of an InputArray: the ndarray caster (with its name in signatures and stubs), once the argument is not a
+//! list or tuple
+template <typename A>
+struct type_caster<ioh_python::InputArray<A>>
+{
+    using Caster = make_caster<A>;
+    NB_TYPE_CASTER(ioh_python::InputArray<A>, Caster::Name)
+
+    bool from_python(handle src, uint32_t flags, cleanup_list *cleanup) noexcept
+    {
+        if (PyList_CheckExact(src.ptr()) || PyTuple_CheckExact(src.ptr()))
+            return false;
+        Caster caster;
+        if (!caster.from_python(src, flags, cleanup))
+            return false;
+        value = ioh_python::InputArray<A>(std::move(caster.value));
+        return true;
+    }
+
+    static handle from_cpp(const ioh_python::InputArray<A> &array, rv_policy policy, cleanup_list *cleanup) noexcept
+    {
+        return Caster::from_cpp(array, policy, cleanup);
+    }
+};
+
+NAMESPACE_END(detail)
+NAMESPACE_END(NB_NAMESPACE)
+
+namespace ioh_python
+{
     //! A one-dimensional input array (numpy or anything else with the buffer or DLPack protocol). Methods that take a
     //! vector define an overload with this type before the one with std::vector, so that a numpy array is copied at
     //! once instead of element by element, and lists keep working.
     template <typename T>
-    using Array1D = nb::ndarray<const T, nb::ndim<1>, nb::c_contig, nb::device::cpu>;
+    using Array1D = InputArray<nb::ndarray<const T, nb::ndim<1>, nb::c_contig, nb::device::cpu>>;
 
     //! A two-dimensional input array, one solution per row
     template <typename T>
-    using Array2D = nb::ndarray<const T, nb::ndim<2>, nb::c_contig, nb::device::cpu>;
+    using Array2D = InputArray<nb::ndarray<const T, nb::ndim<2>, nb::c_contig, nb::device::cpu>>;
 
     //! An integer input array: one or two-dimensional, of any integer or bool type (e.g. a bitstring as
     //! `rng.random(n) < 0.5`). Methods that take integers take it with array_arg<int>, so that it is never converted:
     //! an array of floats raises TypeError (to_vector), as pybind11 did.
-    using IntArray1D = nb::ndarray<nb::ndim<1>, nb::c_contig, nb::device::cpu>;
-    using IntArray2D = nb::ndarray<nb::ndim<2>, nb::c_contig, nb::device::cpu>;
+    using IntArray1D = InputArray<nb::ndarray<nb::ndim<1>, nb::c_contig, nb::device::cpu>>;
+    using IntArray2D = InputArray<nb::ndarray<nb::ndim<2>, nb::c_contig, nb::device::cpu>>;
 
     //! The input array of a method over T: Array1D<T> for reals, IntArray1D for integers
     template <typename T>
