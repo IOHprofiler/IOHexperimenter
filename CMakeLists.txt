@@ -35,11 +35,11 @@ option(BUILD_DOCS "Build docs" OFF)
 option(BUILD_SERVER "Whether to build the objective function server" OFF) 
 option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF) # Turn this option ON if you plan to test MK-landscape problems.
 
-# Link-time optimization of the release configurations. Defining CMAKE_INTERPROCEDURAL_OPTIMIZATION also keeps
-# pybind11 from enabling its own (full) LTO for the Python extension. On by default only for the Python extension
-# with MSVC, which compiles /GL objects without generating code (without it the Windows wheels built slower than
-# before the compiled registry). Elsewhere it does not change the evaluation speed (measured with clang), and a
-# static library of LTO objects only links with the toolchain that built it.
+# Link-time optimization of the release configurations, of the library and the Python extension (nanobind adds
+# none of its own unless asked to). On by default only for the Python extension with MSVC, which compiles /GL
+# objects without generating code (without it the Windows wheels built slower than before the compiled registry).
+# Elsewhere it does not change the evaluation speed (measured with clang), and a static library of LTO objects only
+# links with the toolchain that built it.
 if(MSVC AND BUILD_PYTHON_PACKAGE)
     set(IOH_LTO_DEFAULT ON)
 else()
@@ -101,7 +101,7 @@ endif()
 set(IOH_DEBUG_POSTFIX d CACHE STRING "Postfix of the Debug build of the ioh library")
 set_target_properties(ioh PROPERTIES POSITION_INDEPENDENT_CODE ON DEBUG_POSTFIX "${IOH_DEBUG_POSTFIX}")
 # MSBuild (the Visual Studio generator, which scikit-build-core uses on Windows) compiles a project's files one
-# after another unless /MP is given; pybind11 sets it on the extension module only
+# after another unless /MP is given; nanobind sets it on the extension module only
 if(CMAKE_GENERATOR MATCHES "Visual Studio" AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(ioh PRIVATE /MP)
 endif()

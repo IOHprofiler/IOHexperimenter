@@ -6,13 +6,32 @@
 
 namespace ioh_python::logger_cpp
 {
+    //! The method `name` of the Python object of ptr, if it has one: for attach_suite, which has no binding, so that
+    //! nanobind's trampoline cannot look it up (it fails for a name that the Python type does not have)
+    template <typename T>
+    nb::object python_method(const T *ptr, const char *name)
+    {
+        nb::object self = nb::find(ptr);
+        if (!self.is_valid())
+            return {};
+        return nb::getattr(self, name, nb::handle());
+    }
+
     // Trampoline: lets Python subclass AbstractLogger
     struct AbstractWatcher : ioh::logger::Watcher
     {
         NB_TRAMPOLINE(ioh::logger::Watcher);
 
         void attach_problem(const ioh::problem::MetaData &problem) override { NB_OVERRIDE(attach_problem, problem); }
-        void attach_suite(const std::string &suite_name) override { NB_OVERRIDE_PURE(attach_suite, suite_name); }
+        void attach_suite(const std::string &suite_name) override
+        {
+            nb::gil_scoped_acquire gil;
+            if (nb::object f = python_method(static_cast<const ioh::logger::Watcher *>(this), "attach_suite");
+                f.is_valid())
+                f(suite_name);
+            else
+                throw std::runtime_error("Tried to call pure virtual function \"AbstractLogger::attach_suite\"");
+        }
         void call(const ioh::logger::Info &log_info) override { NB_OVERRIDE_PURE_NAME("__call__", call, log_info); }
     };
 
@@ -49,7 +68,18 @@ namespace ioh_python::logger_cpp
 
         void attach_problem(const ioh::problem::MetaData &problem) override { NB_OVERRIDE(attach_problem, problem); }
 
-        void attach_suite(const std::string &suite_name) override { NB_OVERRIDE(attach_suite, suite_name); }
+        void attach_suite(const std::string &suite_name) override
+        {
+            {
+                nb::gil_scoped_acquire gil;
+                if (nb::object f = python_method(static_cast<const PyWatcher *>(this), "attach_suite"); f.is_valid())
+                {
+                    f(suite_name);
+                    return;
+                }
+            }
+            WatcherType::attach_suite(suite_name);
+        }
 
         void call(const ioh::logger::Info &log_info) override { NB_OVERRIDE(call, log_info); }
     };
@@ -122,9 +152,10 @@ namespace ioh_python::logger_cpp
         nb::class_<Watcher, AbstractWatcher, Logger>(m, "AbstractLogger", "Base class for loggers which track properties")
             .def(nb::init<Triggers, Properties>(), nb::arg("triggers") = Triggers{},
                  nb::arg("properties") = Properties{})
-            .def("watch", &Watcher::watch)
-            .def("attach_problem", &Watcher::attach_problem, nb::arg("problem"),
-                 "attach a problem (MetaData) to a logger");
+            .def("watch", [](Watcher &w, ioh::logger::Property &p) { w.Watcher::watch(p); })
+            .def(
+                "attach_problem", [](Watcher &w, const ioh::problem::MetaData &m) { w.Watcher::attach_problem(m); },
+                nb::arg("problem"), "attach a problem (MetaData) to a logger");
     }
 
     void define_flatfile(nb::module_ &m)
@@ -177,7 +208,15 @@ namespace ioh_python::logger_cpp
             .def_prop_ro("filename", &FlatFile::filename)
             .def_prop_ro("output_directory",
                          [](PyFlatFile &f) { return fs::absolute(f.output_directory()).generic_string(); })
-            .def("watch", nb::overload_cast<Property &>(&PyFlatFile::watch))
+            // bound to FlatFile's own methods, so that super() in a Python override runs them once (a virtual call
+            // would come back to the override)
+            .def("call", [](PyFlatFile &f, const ioh::logger::Info &info) { f.FlatFile::call(info); },
+                 "Performs logging behaviour")
+            .def(
+                "attach_problem",
+                [](PyFlatFile &f, const ioh::problem::MetaData &m) { f.FlatFile::attach_problem(m); },
+                nb::arg("problem"), "attach a problem (MetaData) to a logger")
+            .def("watch", [](PyFlatFile &f, Property &p) { f.FlatFile::watch(p); })
             .def("watch", nb::overload_cast<const nb::object &, const std::string &>(&PyFlatFile::watch))
             .def("watch", nb::overload_cast<const nb::object &, const std::vector<std::string> &>(&PyFlatFile::watch))
             .def("__repr__", [](const PyFlatFile &f) {
@@ -239,7 +278,15 @@ namespace ioh_python::logger_cpp
             .def_prop_ro("output_directory",
                          [](const PyAnalyzerType &self) { return self.output_directory().generic_string(); })
             .def("close", &PyAnalyzerType::close)
-            .def("watch", nb::overload_cast<Property &>(&PyAnalyzerType::watch))
+            // bound to A's own methods, so that super() in a Python override runs them once (a virtual call
+            // would come back to the override)
+            .def("call", [](PyAnalyzerType &a, const ioh::logger::Info &info) { a.A::call(info); },
+                 "Performs logging behaviour")
+            .def(
+                "attach_problem",
+                [](PyAnalyzerType &a, const ioh::problem::MetaData &m) { a.A::attach_problem(m); },
+                nb::arg("problem"), "attach a problem (MetaData) to a logger")
+            .def("watch", [](PyAnalyzerType &a, Property &p) { a.A::watch(p); })
             .def("watch", nb::overload_cast<const nb::object &, const std::string &>(&PyAnalyzerType::watch))
             .def("watch",
                  nb::overload_cast<const nb::object &, const std::vector<std::string> &>(&PyAnalyzerType::watch))
@@ -280,7 +327,15 @@ namespace ioh_python::logger_cpp
                     return f.data(cursor);
                 },
                 "Accessor for a specific stored record")
-            .def("watch", nb::overload_cast<Property &>(&PyStore::watch), "Add a property")
+            // bound to Store's own methods, so that super() in a Python override runs them once (a virtual call
+            // would come back to the override)
+            .def("call", [](PyStore &s, const ioh::logger::Info &info) { s.Store::call(info); },
+                 "Performs logging behaviour")
+            .def(
+                "attach_problem",
+                [](PyStore &s, const ioh::problem::MetaData &m) { s.Store::attach_problem(m); },
+                nb::arg("problem"), "attach a problem (MetaData) to a logger")
+            .def("watch", [](PyStore &s, Property &p) { s.Store::watch(p); }, "Add a property")
             .def("watch", nb::overload_cast<const nb::object &, const std::string &>(&PyStore::watch),
                  "Add a property")
             .def("watch", nb::overload_cast<const nb::object &, const std::vector<std::string> &>(&PyStore::watch),

@@ -184,10 +184,7 @@ class IntegerSingleObjective:
         """Remove the specified logger from the problem."""
 
     @overload
-    def __call__(self, arg: Annotated[NDArray[numpy.int64], dict(shape=(None,), order='C', device='cpu', writable=False)], /) -> float: ...
-
-    @overload
-    def __call__(self, arg: Annotated[NDArray[numpy.int32], dict(shape=(None,), order='C', device='cpu', writable=False)], /) -> float: ...
+    def __call__(self, arg: Annotated[NDArray, dict(shape=(None,), order='C', device='cpu')], /) -> float: ...
 
     @overload
     def __call__(self, arg: Sequence[int], /) -> float:
@@ -205,10 +202,7 @@ class IntegerSingleObjective:
         """
 
     @overload
-    def __call__(self, arg: Annotated[NDArray[numpy.int64], dict(shape=(None, None), order='C', device='cpu', writable=False)], /) -> list[float]: ...
-
-    @overload
-    def __call__(self, arg: Annotated[NDArray[numpy.int32], dict(shape=(None, None), order='C', device='cpu', writable=False)], /) -> list[float]: ...
+    def __call__(self, arg: Annotated[NDArray, dict(shape=(None, None), order='C', device='cpu')], /) -> list[float]: ...
 
     @overload
     def __call__(self, arg: Sequence[Sequence[int]], /) -> list[float]:
@@ -1000,7 +994,7 @@ class DynamicBinValRanking(DynamicBinVal):
     def __init__(self, instance: int, n_variables: int) -> None: ...
 
     @overload
-    def rank(self, arg: Annotated[NDArray[numpy.int64], dict(shape=(None, None), order='C', device='cpu', writable=False)], /) -> list[list[int]]: ...
+    def rank(self, arg: Annotated[NDArray, dict(shape=(None, None), order='C', device='cpu')], /) -> list[list[int]]: ...
 
     @overload
     def rank(self, arg: Sequence[Sequence[int]], /) -> list[list[int]]:
@@ -1014,7 +1008,7 @@ class DynamicBinValRanking(DynamicBinVal):
         """
 
     @overload
-    def rank_indices(self, arg: Annotated[NDArray[numpy.int64], dict(shape=(None, None), order='C', device='cpu', writable=False)], /) -> list[int]: ...
+    def rank_indices(self, arg: Annotated[NDArray, dict(shape=(None, None), order='C', device='cpu')], /) -> list[int]: ...
 
     @overload
     def rank_indices(self, arg: Sequence[Sequence[int]], /) -> list[int]:
@@ -1066,7 +1060,7 @@ class AbstractWModel(IntegerSingleObjective):
     def __init__(self, problem_id: int, instance: int, n_variables: int, name: str, dummy_select_rate: float = 0.0, epistasis_block_size: int = 0, neutrality_mu: int = 0, ruggedness_gamma: int = 0) -> None: ...
 
     @overload
-    def wmodel_evaluate(self, arg: Annotated[NDArray[numpy.int64], dict(shape=(None,), order='C', device='cpu', writable=False)], /) -> int: ...
+    def wmodel_evaluate(self, arg: Annotated[NDArray, dict(shape=(None,), order='C', device='cpu')], /) -> int: ...
 
     @overload
     def wmodel_evaluate(self, arg: Sequence[int], /) -> int: ...

@@ -20,24 +20,6 @@ bool register_python_fn(nb::handle f)
 
 namespace ioh_python::problem
 {
-    //! The element types of the input arrays that a problem over T takes without a conversion: for integer problems
-    //! numpy's default integer type (int64) as well as int32
-    template <typename T>
-    struct ArrayTypes
-    {
-        using First = T;
-        using Second = T;
-        static constexpr bool two = false;
-    };
-
-    template <>
-    struct ArrayTypes<int>
-    {
-        using First = int64_t;
-        using Second = int32_t;
-        static constexpr bool two = true;
-    };
-
     //! The method of a Python subclass that overrides a virtual method: the attribute name of the Python object of
     //! ptr, if there is one. Like pybind11 (and unlike nanobind's trampolines) this finds attributes of the instance
     //! too, and a problem that C++ created (e.g. the registry, for a registered subclass) has no override.
@@ -111,7 +93,7 @@ namespace ioh_python::problem
         {
             nb::gil_scoped_acquire gil;
             if (auto f = override_of("evaluate"); f.is_valid())
-                return nb::cast<double>(f(x));
+                return cast_result<double>(f(x), "evaluate");
             throw std::runtime_error("Tried to call pure virtual function \"evaluate\"");
         }
 
@@ -120,7 +102,7 @@ namespace ioh_python::problem
             {
                 nb::gil_scoped_acquire gil;
                 if (auto f = override_of("transform_variables"); f.is_valid())
-                    return nb::cast<std::vector<T>>(f(x));
+                    return cast_result<std::vector<T>>(f(x), "transform_variables");
             }
             return P::transform_variables(std::move(x));
         }
@@ -130,30 +112,32 @@ namespace ioh_python::problem
             {
                 nb::gil_scoped_acquire gil;
                 if (auto f = override_of("transform_objectives"); f.is_valid())
-                    return nb::cast<double>(f(y));
+                    return cast_result<double>(f(y), "transform_objectives");
             }
             return P::transform_objectives(y);
         }
     };
 
-    //! __call__ for an input array of A (one solution) and a two-dimensional array of A (one solution per row)
-    template <typename ProblemType, typename T, typename A, typename Class>
+    //! __call__ for an input array (one solution): of floats for real problems, of any integer or bool type for
+    //! integer problems
+    template <typename ProblemType, typename T, typename Class>
     void define_array_calls(Class &c)
     {
-        c.def("__call__", [](ProblemType &p, const Array1D<A> &x) { return p(to_vector<T>(x)); }, array_arg<A>());
+        c.def("__call__", [](ProblemType &p, const InputArray1D<T> &x) { return p(to_vector<T>(x)); }, array_arg<T>());
     }
 
-    template <typename ProblemType, typename T, typename A, typename Class>
+    //! __call__ for a two-dimensional input array, one solution per row
+    template <typename ProblemType, typename T, typename Class>
     void define_batch_array_calls(Class &c)
     {
-        c.def("__call__", [](ProblemType &p, const Array2D<A> &x) { return p(to_vectors<T>(x)); }, array_arg<A>());
+        c.def("__call__", [](ProblemType &p, const InputArray2D<T> &x) { return p(to_vectors<T>(x)); },
+              array_arg<T>());
     }
 
     template <typename ProblemType, typename T>
     void define_base_class(nb::module_ &m, const std::string &name)
     {
         using Factory = ioh::common::Factory<ProblemType, int, int>;
-        using Types = ArrayTypes<T>;
         using ioh::problem::Bounds;
         using ioh::problem::Constraints;
         using ioh::problem::SingleObjective;
@@ -184,9 +168,7 @@ namespace ioh_python::problem
             )pbdoc");
 
         // the arrays first, so that a numpy array is copied at once; lists take the std::vector overloads
-        define_array_calls<ProblemType, T, typename Types::First>(c);
-        if constexpr (Types::two)
-            define_array_calls<ProblemType, T, typename Types::Second>(c);
+        define_array_calls<ProblemType, T>(c);
         c.def("__call__", nb::overload_cast<const std::vector<T> &>(&ProblemType::operator()),
               R"pbdoc(
                 Evaluate the problem.
@@ -200,9 +182,7 @@ namespace ioh_python::problem
                 float
                     The evaluated search point
             )pbdoc");
-        define_batch_array_calls<ProblemType, T, typename Types::First>(c);
-        if constexpr (Types::two)
-            define_batch_array_calls<ProblemType, T, typename Types::Second>(c);
+        define_batch_array_calls<ProblemType, T>(c);
         c.def("__call__", nb::overload_cast<const std::vector<std::vector<T>> &>(&ProblemType::operator()),
               R"pbdoc(
                 Evaluate the problem.
@@ -314,7 +294,7 @@ namespace ioh_python::problem
 
                 auto of = [f](const std::vector<T> &x) {
                     nb::gil_scoped_acquire gil;
-                    return nb::cast<double>(f(make_array(x)));
+                    return cast_result<double>(f(make_array(x)), "the objective function");
                 };
 
                 auto ptx = [tx](std::vector<T> x, const int iid) {
@@ -324,7 +304,7 @@ namespace ioh_python::problem
                         // a writable view of x, for the time of the call
                         nb::list px = as_list(tx.value()(make_mutable_array(x, nb::none()), iid));
                         if (px.size() == x.size())
-                            return nb::cast<std::vector<T>>(px);
+                            return cast_result<std::vector<T>>(px, "transform_variables");
                         else
                             nb::module_::import_("warnings")
                                 .attr("warn")(fmt::format("Objective transformation function returned an iterable of "
@@ -363,11 +343,11 @@ namespace ioh_python::problem
                                 PyObject *y = PyNumber_Float(args[1].ptr());
                                 if (!y)
                                     throw nb::python_error();
-                                return Solution<T, double>(nb::cast<std::vector<T>>(as_list(args[0])),
+                                return Solution<T, double>(cast_result<std::vector<T>>(as_list(args[0]), "calculate_objective"),
                                                            nb::cast<double>(nb::steal(y)));
                             }
                         }
-                        return nb::cast<Solution<T, double>>(xt);
+                        return cast_result<Solution<T, double>>(xt, "calculate_objective");
                     }
                     return Solution<T, double>(dim, t);
                 };

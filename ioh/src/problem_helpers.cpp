@@ -6,13 +6,9 @@
 
 namespace ioh_python::problem_helpers
 {
-    //! The element type of the input arrays that a class over T takes without a conversion (numpy's default integer
-    //! type for integers)
+    //! The input array of a class over T: floats for reals, any integer or bool type for integers
     template <typename T>
-    using ArrayType = std::conditional_t<std::is_same_v<T, int>, int64_t, T>;
-
-    template <typename T>
-    using InputArray = Array1D<ArrayType<T>>;
+    using InputArray = InputArray1D<T>;
 
     template <typename T, typename R>
     void define_solution(nb::module_ &m, const std::string &name)
@@ -23,7 +19,7 @@ namespace ioh_python::problem_helpers
             .def(
                 "__init__",
                 [](Class *self, const InputArray<T> &x, double y) { new (self) Class(to_vector<T>(x), y); },
-                array_arg<ArrayType<T>>("x"), nb::arg("y"))
+                array_arg<T>("x"), nb::arg("y"))
             .def(nb::init<std::vector<T>, double>(), nb::arg("x"), nb::arg("y"),
                  R"pbdoc(
             A Solution object, which is a container for a search point and its corresponding fitness value.
@@ -117,7 +113,7 @@ namespace ioh_python::problem_helpers
             nb::object f = find_override(static_cast<const ioh::problem::Constraint<T> *>(this), "compute_violation");
             if (!f.is_valid())
                 throw std::runtime_error("Tried to call pure virtual function \"compute_violation\"");
-            return nb::cast<bool>(f(make_array(x)));
+            return cast_result<bool>(f(make_array(x)), "compute_violation");
         }
 
         [[nodiscard]] std::string repr() const override { return "<AbstractConstraint>"; }
@@ -134,15 +130,15 @@ namespace ioh_python::problem_helpers
             .def_rw("exponent", &Class::exponent, "The exponent for this constraint")
             .def(
                 "__call__", [](Class &c, const InputArray<T> &x, const double y) { return c(to_vector<T>(x), y); },
-                array_arg<ArrayType<T>>(), nb::arg())
+                array_arg<T>(), nb::arg())
             .def("__call__", &Class::operator())
             .def(
                 "is_feasible", [](Class &c, const InputArray<T> &x) { return c.is_feasible(to_vector<T>(x)); },
-                array_arg<ArrayType<T>>())
+                array_arg<T>())
             .def("is_feasible", &Class::is_feasible)
             .def("compute_violation",
                  [](Class &c, const InputArray<T> &x) { return c.compute_violation(to_vector<T>(x)); },
-                 array_arg<ArrayType<T>>())
+                 array_arg<T>())
             .def("compute_violation", &Class::compute_violation)
             .def("penalize", &Class::penalize)
             .def("penalty", &Class::penalty)
@@ -190,7 +186,7 @@ namespace ioh_python::problem_helpers
                     register_python_fn(f);
                     auto fn = [f](const std::vector<T> &x) {
                         nb::gil_scoped_acquire gil;
-                        return nb::cast<double>(f(make_array(x)));
+                        return cast_result<double>(f(make_array(x)), "the constraint function");
                     };
                     new (self) Class(fn, w, ex, e, n);
                 },
@@ -228,7 +224,7 @@ namespace ioh_python::problem_helpers
                 [](Class *self, const InputArray<T> &lb, const InputArray<T> &ub, const Enforced enforced) {
                     new (self) Class(to_vector<T>(lb), to_vector<T>(ub), enforced);
                 },
-                array_arg<ArrayType<T>>("lb"), array_arg<ArrayType<T>>("ub"), nb::arg("enforced") = Enforced::NOT)
+                array_arg<T>("lb"), array_arg<T>("ub"), nb::arg("enforced") = Enforced::NOT)
             .def(nb::init<std::vector<T>, std::vector<T>, Enforced>(), nb::arg("lb"), nb::arg("ub"),
                  nb::arg("enforced") = Enforced::NOT,
                  R"pbdoc(
@@ -272,7 +268,7 @@ namespace ioh_python::problem_helpers
             .def("__repr__", &Class::repr)
             .def("compute_violation",
                  [](Class &c, const InputArray<T> &x) { return c.compute_violation(to_vector<T>(x)); },
-                 array_arg<ArrayType<T>>())
+                 array_arg<T>())
             .def("compute_violation", &Class::compute_violation,
                  R"pbdoc(
                 Check if a point is within the bounds or not.

@@ -86,6 +86,12 @@ class FlatFile(AbstractLogger):
     @property
     def output_directory(self) -> str: ...
 
+    def call(self, arg: ioh.iohcpp.LogInfo, /) -> None:
+        """Performs logging behaviour"""
+
+    def attach_problem(self, problem: ioh.iohcpp.MetaData) -> None:
+        """attach a problem (MetaData) to a logger"""
+
     @overload
     def watch(self, arg: property.AbstractProperty, /) -> None: ...
 
@@ -115,6 +121,12 @@ class Store(AbstractLogger):
 
     def at(self, arg0: str, arg1: int, arg2: int, arg3: int, arg4: int, arg5: int, /) -> dict[str, float | None]:
         """Accessor for a specific stored record"""
+
+    def call(self, arg: ioh.iohcpp.LogInfo, /) -> None:
+        """Performs logging behaviour"""
+
+    def attach_problem(self, problem: ioh.iohcpp.MetaData) -> None:
+        """attach a problem (MetaData) to a logger"""
 
     @overload
     def watch(self, arg: property.AbstractProperty, /) -> None: ...
@@ -172,6 +184,12 @@ class Analyzer(AbstractLogger):
     def output_directory(self) -> str: ...
 
     def close(self) -> None: ...
+
+    def call(self, arg: ioh.iohcpp.LogInfo, /) -> None:
+        """Performs logging behaviour"""
+
+    def attach_problem(self, problem: ioh.iohcpp.MetaData) -> None:
+        """attach a problem (MetaData) to a logger"""
 
     @overload
     def watch(self, arg: property.AbstractProperty, /) -> None: ...

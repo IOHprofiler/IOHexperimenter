@@ -297,10 +297,10 @@ void define_wmodels(nb::module_ &m)
              nb::arg("n_variables"), nb::arg("name"), nb::arg("dummy_select_rate") = 0.0,
              nb::arg("epistasis_block_size") = 0, nb::arg("neutrality_mu") = 0, nb::arg("ruggedness_gamma") = 0)
         .def("wmodel_evaluate",
-             [](WModel &self, const ioh_python::Array1D<int64_t> &x) {
+             [](WModel &self, const ioh_python::IntArray1D &x) {
                  return (self.*(&WModelPublisher::wmodel_evaluate))(ioh_python::to_vector<int>(x));
              },
-             ioh_python::array_arg<int64_t>())
+             ioh_python::array_arg<int>())
         .def("wmodel_evaluate", &WModelPublisher::wmodel_evaluate);
 
     nb::class_<WModelLeadingOnes, WModel>(m, "WModelLeadingOnes",

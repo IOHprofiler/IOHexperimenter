@@ -2,6 +2,7 @@ from collections.abc import Mapping, Sequence
 import os
 from typing import overload
 
+import ioh.iohcpp
 import ioh.iohcpp.logger
 import ioh.iohcpp.logger.property
 import ioh.iohcpp.logger.trigger
@@ -50,6 +51,12 @@ class Analyzer(ioh.iohcpp.logger.AbstractLogger):
     def output_directory(self) -> str: ...
 
     def close(self) -> None: ...
+
+    def call(self, arg: ioh.iohcpp.LogInfo, /) -> None:
+        """Performs logging behaviour"""
+
+    def attach_problem(self, problem: ioh.iohcpp.MetaData) -> None:
+        """attach a problem (MetaData) to a logger"""
 
     @overload
     def watch(self, arg: ioh.iohcpp.logger.property.AbstractProperty, /) -> None: ...

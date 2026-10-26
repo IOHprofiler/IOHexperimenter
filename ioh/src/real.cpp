@@ -447,17 +447,17 @@ void define_dynamic_bin_val_problem(nb::module_ &m)
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"))
         .def(
             "rank",
-            [](dbv::Ranking &self, const ioh_python::Array2D<int64_t> &bitstrings) {
+            [](dbv::Ranking &self, const ioh_python::IntArray2D &bitstrings) {
                 return self.rank(ioh_python::to_vectors<int>(bitstrings));
             },
-            ioh_python::array_arg<int64_t>(), rank_doc)
+            ioh_python::array_arg<int>(), rank_doc)
         .def("rank", &dbv::Ranking::rank, rank_doc)
         .def(
             "rank_indices",
-            [](dbv::Ranking &self, const ioh_python::Array2D<int64_t> &bitstrings) {
+            [](dbv::Ranking &self, const ioh_python::IntArray2D &bitstrings) {
                 return self.rank_indices(ioh_python::to_vectors<int>(bitstrings));
             },
-            ioh_python::array_arg<int64_t>(), rank_doc)
+            ioh_python::array_arg<int>(), rank_doc)
         .def("rank_indices", &dbv::Ranking::rank_indices, rank_doc)
         .def("get_comparison_ordering", &dbv::Ranking::get_comparison_ordering, R"pbdoc(
             Get the current comparison ordering vector.
