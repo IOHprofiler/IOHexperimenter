@@ -831,9 +831,9 @@ Record (PR 1):
   dump of every module, class and member (names, argument names, defaults) compared with master's: all present,
   every master signature still accepted.
 * **Arrays** (T6.3): every method that takes a vector has an array overload first; `__call__` has one- and
-  two-dimensional ones. Integer arrays are taken as int64 (and int32 for `__call__`) without a conversion pass, so
-  float arrays fall through to the list overload and raise TypeError as on master, and values out of the int range
-  raise TypeError; real arrays may be converted (float32, integers).
+  two-dimensional ones. Integer methods take an array of any integer or bool type (one overload that dispatches on
+  the dtype, without a conversion pass: e.g. a bitstring as `rng.random(n) < 0.5`); arrays of floats and values out
+  of the int range raise TypeError, as on master. Real arrays may be converted (float32, integers).
 * **API** (T6.4): paths go through nanobind's filesystem caster (str or os.PathLike in, `pathlib.Path` out), which
   also fixes the Windows ANSI-code-page decoding of WP4 (tested with a non-ASCII directory);
   `ioh.iohcpp.logger.Path` is an alias of `pathlib.Path`. Pickling keeps master's state tuples. `Solution.x` stays a
@@ -845,13 +845,31 @@ Record (PR 1):
   `tools/gen_stubs.py` uses `nanobind.stubgen` for `ioh/iohcpp/` (now with `problem/sbox.pyi` and
   `logger/old.pyi`) and mypy for `ioh/__init__.pyi`. `nb::set_leak_warnings(false)`: the registries keep Python
   objects for the life of the process.
-* **Measured** (T6.8; Apple M5, AppleClang 21, Python 3.13, wheels of master and of the port, min of 7, µs per
-  call): Sphere d=5 list 0.26 → 0.18, numpy 0.27 → 0.15; d=100 list 0.78 → 0.40, numpy 2.03 → 0.25; OneMax n=100
-  list 0.72 → 0.44, numpy 2.10 → 0.23; batch 1000×10 per row numpy 0.25 → 0.08, list 0.10 → 0.06; a wrapped Python
-  objective 1.11 → 1.00; `state.current_best.y` 0.50 → 0.13; `meta_data.n_variables` 0.23 → 0.05; suite iteration
-  (24 problems) 178 → 147; `get_problem` 12.8 → 12.7; loggers writing every evaluation (trigger ALWAYS): Analyzer
-  2.03 → 1.90, FlatFile 1.62 → 1.48, Store 0.35 → 0.20. `import ioh` 20.8 ms both. A clean build of the package
-  (`pip wheel --no-build-isolation`, -j4) takes 17.9 s instead of 22.5 s; the macOS wheel is 7.9 instead of 8.1 MB.
+* **Review** (three reviewers, each confirming findings by running both builds): fixed, with tests in
+  `tests/python/test_bindings.py`:
+  * `suite.attach_logger` failed for every built-in logger: nanobind's trampoline raises for a method that the
+    Python type does not have, and `attach_suite` has no binding. It is now looked up by hand, as pybind11 did.
+  * A Python override of a logger or property method that calls `super()` ran twice when called from Python
+    (the bound base method dispatched virtually back to the override): the bases are now bound as
+    non-virtual calls of each class's own implementation.
+  * Integer methods rejected bool arrays (see Arrays).
+  * A Python function returning something unusable raised `RuntimeError: std::bad_cast`; the message names the
+    returned type again.
+  Accepted, in the release notes: overrides of Python subclasses of `Store`/`FlatFile`/`Analyzer` are now called
+  from C++ (pybind11 looked them up on the wrong type and never called them); nanobind's scalar casters are
+  stricter (`np.bool_`, 0/1 or None for a bool argument, `np.bool_`/`Fraction`/`Decimal` for an int argument, and
+  `np.bool_` inside lists for integer problems raise TypeError) and some are looser (an int for an enum argument, any
+  iterable for `trigger.At`/`During`); a masked array is evaluated on its data; a subclass that skips
+  `super().__init__()` fails at its first use instead of at construction. Not fixed (as on master): a view of
+  `Solution.x` dangles after `x` is assigned a new vector; `EAH` built from scale objects crashes on `repr`.
+* **Measured** (T6.8; Apple M5, AppleClang 21, Python 3.13, wheels of master and of the port after the review fixes,
+  min of 7, µs per call): Sphere d=5 list 0.26 → 0.11, numpy 0.27 → 0.13; d=100 list 0.78 → 0.40, numpy 2.03 → 0.26;
+  OneMax n=100 list 0.72 → 0.42, numpy 2.10 → 0.23; batch 1000×10 per row numpy 0.25 → 0.08, list 0.10 → 0.06; a
+  wrapped Python objective 1.11 → 1.04; `state.current_best.y` 0.50 → 0.14; `meta_data.n_variables` 0.23 → 0.05;
+  suite iteration (24 problems) 178 → 147; `get_problem` 12.8 → 12.6; loggers writing every evaluation (trigger
+  ALWAYS): Analyzer 2.03 → 1.90, FlatFile 1.62 → 1.48, Store 0.35 → 0.20. `import ioh` 20.8 ms both. A clean build
+  of the package (`pip wheel --no-build-isolation`, -j4) takes 17.9 s instead of 22.5 s; the macOS wheel is 7.9
+  instead of 8.1 MB.
 
 ### T6.1 Build integration ✅
 
@@ -1001,7 +1019,9 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
   `setup.py` is gone; `MAKE_STUBS` and `MAKE_DOCS` are replaced by `python tools/gen_stubs.py` and
   `python doc/generate_docs.py`.
   Bindings (WP6): enums are `enum.Enum` classes (compare members, not ints: `OptimizationType.MIN == 0` was
-  and stays False); `logger.Path` is `pathlib.Path`, and str or os.PathLike paths are accepted everywhere.
+  and stays False); `logger.Path` is `pathlib.Path`, and str or os.PathLike paths are accepted everywhere;
+  bool arguments take True/False only and int arguments objects with `__index__` (pass `bool(x)`/`int(x)`);
+  overrides in subclasses of `Store`/`FlatFile`/`Analyzer` are now called by the problems they log.
 * README/docs: installation, building from source (scikit-build-core), data location; changelog
   (from the release-notes draft below).
 * Release, the first since 0.3.22 (§1): version bump to 0.4.0; run the wheels workflow on master by
@@ -1116,6 +1136,13 @@ Each WP adds its user-visible changes here (§2).
     classes: `.name`, `.value`, `int(...)` and construction from an int work as before.
   * Signatures and docstrings use nanobind's notation (e.g. `collections.abc.Sequence[float]`,
     positional-only arguments shown as `/`); the stubs include `logger.old` and `problem.sbox`.
+  * Integer problems, solutions and bounds take numpy arrays of any integer or bool type at once.
+  * Python subclasses of `Store`, `FlatFile` and `Analyzer`: their overrides (e.g. of `call` or
+    `attach_problem`) are now called by the problems and suites they log; before, they were ignored.
+  * Argument conversion follows nanobind: a bool argument takes only True/False (not `np.bool_`, 0/1 or
+    None), an int argument only objects with `__index__` (not `np.bool_`, `Fraction` or `Decimal`); an enum
+    argument also takes its int value, and `trigger.At`/`During` take any iterable. A subclass of a bound
+    class that does not call `super().__init__()` now fails when it is first used.
 
 ---
 
