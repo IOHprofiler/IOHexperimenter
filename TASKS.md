@@ -1052,6 +1052,16 @@ Depends on: WP6.
   JSON serialization (`.tolist()`), `isinstance(x, list)` checks.
 * **Acceptance**: golden values unchanged (they compare by value); type expectations in tests
   updated.
+* **Unity build** (added to WP7 by the maintainer): the Python build compiles the C++ sources in batches of 8
+  (`CMAKE_UNITY_BUILD` in `pyproject.toml`, also for editable installs; `-Ccmake.define.CMAKE_UNITY_BUILD=OFF`
+  turns it off). The plain CMake build is unchanged. Measured at ca564b09 (§2, min of 2): a clean build takes
+  10.5 s instead of 19.0 s, 25.2 s CPU instead of 65.0 s; a rebuild after changing one binding file takes 6.1 s
+  instead of 3.2 s, after one library file 7.4 s instead of 4.3 s, because the file's batch is compiled again.
+  Half of the compile CPU was work that each of the 22 files repeated (clang `-ftime-trace`): parsing `ioh.hpp`
+  and nanobind, instantiating the same templates, generating the same inline functions (e.g. fmt's). Not used,
+  also measured: precompiled headers (17.8 s, 61.7 s CPU), fmt as a compiled library instead of header-only
+  (19.2 s, 67.4 s CPU); with the unity build they gain nothing. The unity-built wheel passes all tests and
+  evaluates as fast (0.98–1.05 on `bench.py`).
 
 ---
 
@@ -1259,6 +1269,9 @@ Each WP adds its user-visible changes here (§2).
     problems were created before them.
   * Wheels: CPython 3.12 and later share one wheel per platform (`cp312-abi3`, on the stable ABI), which
     also installs on later versions; 3.10, 3.11 and the free-threaded 3.14t/3.15t keep a wheel each.
+* WP7:
+  * Building from source (sdist, editable installs) takes about half as long: the C++ sources are compiled in
+    batches (a unity build).
 
 ---
 
