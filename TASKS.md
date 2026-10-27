@@ -716,7 +716,7 @@ Record:
 
 ---
 
-## WP5 — Build system ✅ implemented (branch `wp5-build-system`, #222)
+## WP5 — Build system ✅ merged (#222)
 
 Depends on: WP3 (compiled target) and WP4 (packaging contents).
 
@@ -808,7 +808,7 @@ Record:
 
 ---
 
-## WP6 — Move bindings to nanobind 🚧 PR 1 (the port, T6.1–T6.5, T6.8) merged (#223); PR 2 (free-threading, T6.6) merged (#224); PR 3 (stable ABI, T6.7) implemented (branch `wp6-stable-abi`)
+## WP6 — Move bindings to nanobind ✅ merged (#223: the port, T6.1–T6.5, T6.8; #224: free-threading, T6.6; #225: stable ABI, T6.7)
 
 Depends on: WP3, WP4, WP5.
 
@@ -871,6 +871,15 @@ Record (PR 1):
   ALWAYS): Analyzer 2.03 → 1.90, FlatFile 1.62 → 1.48, Store 0.35 → 0.20. `import ioh` 20.8 ms both. A clean build
   of the package (`pip wheel --no-build-isolation`, -j4) takes 17.9 s instead of 22.5 s; the macOS wheel is 7.9
   instead of 8.1 MB.
+* **Build time after WP6** (ca564b09 against master before the port, 3b1056ca; measured as in §2, three alternating
+  rounds, min): a clean build takes 19.1 s instead of 22.3 s, 66.0 s CPU instead of 74.5 s. The 13 binding files take
+  35.1 s instead of 47.7 s (ninja's steps summed at -j4) and nanobind's own library 3.8 s; the C++ library (24.3 s) is
+  unchanged. Rebuilds take as long as before: 1.5 s without a change, 3.1 s after changing one binding file, 4.3 s
+  after one library file. The abi3 and the version-specific build take the same time. On CI, cibuildwheel's
+  "Building wheel..." step of the full wheel runs (40322943789 with pybind11, 40354162613 with nanobind), median per
+  wheel: Linux aarch64 105 → 84 s, Linux x86_64 131 → 115 s, Windows x64 116 → 108 s, Windows ARM64 128 → 124 s,
+  macOS arm64 89 → 86 s; macOS x86_64 varies too much to compare (127–388 s per wheel). With the abi3 wheel (T6.7) a
+  full run builds 29 wheels instead of 47, and these steps add up to 56 instead of 101 minutes.
 
 ### T6.1 Build integration ✅
 
