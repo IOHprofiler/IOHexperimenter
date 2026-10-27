@@ -13,7 +13,7 @@ std::string suite_docstring(const std::string &name)
             A list of problems ids to include in this instantiation of the suite
         instances: list[int]
             A list of problem instances to include in this instantiation of the suite
-        problem_ids: list[int]
+        dimensions: list[int]
             A list of problem dimensions to include in this instantiation of the suite          
     )pbdoc",
                        name);

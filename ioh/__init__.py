@@ -44,6 +44,11 @@ from .iohcpp import (
 )
 from . import iohcpp as _iohcpp
 
+if typing.TYPE_CHECKING:
+    # for the annotations only: numpy is imported when the package first makes an array, so that importing ioh stays
+    # fast
+    import numpy.typing
+
 
 def set_data_root(path):
     '''Sets the directory of the data files (the static folder of IOHexperimenter) for this process; an empty path
@@ -60,6 +65,8 @@ if os.environ.get('IOH_RESOURCES') is None:
 
 ProblemType = typing.Union[problem.RealSingleObjective, problem.IntegerSingleObjective]
 VariableType = typing.Union[int, float]
+# a search point as a list (problems also take numpy arrays and other sequences); the functions given to
+# wrap_problem get x as a numpy array
 ObjectiveType = typing.List[VariableType]
 
 
@@ -169,7 +176,7 @@ _wrap_lock = threading.RLock()
 
 
 def wrap_problem(
-    function: typing.Callable[[ObjectiveType], float],
+    function: typing.Callable[["numpy.typing.NDArray"], float],
     name: str = None,
     problem_class: ProblemClass = ProblemClass.REAL,
     dimension: int = 5,
@@ -177,7 +184,9 @@ def wrap_problem(
     optimization_type: OptimizationType = OptimizationType.MIN,
     lb: VariableType = 0,
     ub: VariableType = 1,
-    transform_variables: typing.Callable[[ObjectiveType, int], ObjectiveType] = None,
+    transform_variables: typing.Callable[
+        ["numpy.typing.NDArray", int], typing.Union["numpy.typing.NDArray", typing.Sequence[VariableType]]
+    ] = None,
     transform_objectives: typing.Callable[[float, int], float] = None,
     calculate_objective: typing.Callable[
         [int, int], typing.Union[IntegerSolution, RealSolution]
@@ -189,8 +198,8 @@ def wrap_problem(
 
     Parameters
     ----------
-    function: fn(x: list) -> float
-        The callable to wrap
+    function: fn(x: numpy.ndarray) -> float
+        The callable to wrap. It gets x as a new numpy array (float64 for real, int32 for integer problems).
     name: str = None
         The name of the function. This can be used to create new instances of this function.
         Note, when not using unique names, this will override the previously wrapped functions. The name of a
@@ -207,8 +216,9 @@ def wrap_problem(
         The lower bound of the constraint, should be the same type as problem_class. Defaults to 0
     ub: [int, float] = 1
         The upper bound of the constraint, should be the same type as problem_class. Defaults to 1
-    transform_variables: fn(x: list) -> list = None
-        A function to transform the elements of x, prior to calling the function.
+    transform_variables: fn(x: numpy.ndarray, instance: int) -> numpy.ndarray | list = None
+        A function to transform the elements of x, prior to calling the function. It gets x as a new numpy array, and
+        returns the transformed x (an array, a list or another sequence of the same length).
     transform_objectives: fn(y: float) -> float = None
         A function to tranform the float value of y, after callling the function.
     calculate_objective: fn(instance, dimension) -> Solution | (x, y) = None
@@ -384,7 +394,9 @@ class Experiment:
             algorithm_info=algorithm_info,
             store_positions=store_positions,
         )
-        self.fids = fids
+        # a list of its own, to which add_custom_problem appends (fids may be a numpy array, e.g. a suite's
+        # problem_ids)
+        self.fids = list(fids)
         self.iids = iids
         self.dims = dims
         self.reps = reps
@@ -459,8 +471,8 @@ class Experiment:
         Parameters
         ---------
         p: callable
-            A function which takes an list of numeric values and return as list
-            of numeric values
+            A function which takes a search point, a numpy array of numeric values, and
+            returns its objective value, a float
 
         name: str
             An optional name of the the newly added function.

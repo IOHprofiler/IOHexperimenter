@@ -17,9 +17,11 @@ DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__
 class wmodel(ioh.problem.AbstractWModel):
     def __init__(self, instance, dim):
         super().__init__(100, instance, dim, "wmodel")
+        self.last_x = None
 
     def wmodel_evaluate(self, x) -> int:
-        return x.count(1)
+        self.last_x = x
+        return int(np.count_nonzero(np.asarray(x) == 1))
 
 
 class TestProblem(unittest.TestCase):
@@ -45,10 +47,18 @@ class TestProblem(unittest.TestCase):
         problem = ioh.get_problem(1, 1, dim)
         X = np.zeros((n_samples, dim))
         y = problem(X)
-        self.assertIsInstance(y, list)
+        self.assertIsInstance(y, np.ndarray)
+        self.assertEqual(y.dtype, np.float64)
+        self.assertEqual(y.shape, (n_samples,))
+        self.assertTrue(y.flags.writeable)
         self.assertEqual(len(y), n_samples)
         self.assertEqual(problem.state.evaluations, n_samples)
         self.assertSetEqual(set(y), {80.88209408})
+        # a list of lists gives an array too
+        y = problem(X.tolist())
+        self.assertIsInstance(y, np.ndarray)
+        self.assertEqual(y.shape, (n_samples,))
+        self.assertEqual(y.tolist(), [80.88209408] * n_samples)
 
     def test_wmodel(self):
         for p in map(
@@ -56,6 +66,44 @@ class TestProblem(unittest.TestCase):
             (wmodel, ioh.problem.WModelLeadingOnes, ioh.problem.WModelOneMax),
         ):
             self.assertEqual(p([1] * 10), 10)
+
+    def test_callback_arguments(self):
+        # the overrides of Python subclasses get x as a new numpy array, as the functions given to wrap_problem do;
+        # transform_variables may return an array (for integer problems, of any integer or bool type)
+        received = []
+
+        class Real(ioh.problem.RealSingleObjective):
+            def __init__(self):
+                super().__init__("TestCallbackArgumentsReal", 3, 1, True, ioh.RealBounds(3, -5, 5))
+
+            def evaluate(self, x):
+                received.append(x)
+                return float(np.sum(x))
+
+            def transform_variables(self, x):
+                received.append(x)
+                return x * 2
+
+        class Integer(ioh.problem.IntegerSingleObjective):
+            def __init__(self):
+                super().__init__("TestCallbackArgumentsInteger", 3, 1, True, ioh.IntegerBounds(3, 0, 1))
+
+            def evaluate(self, x):
+                received.append(x)
+                return float(np.sum(x))
+
+            def transform_variables(self, x):
+                return x == 0
+
+        self.assertEqual(Real()([1.0, 2.0, 3.0]), 12.0)
+        self.assertEqual(Integer()([1, 0, 1]), 1.0)
+        model = wmodel(1, 4)
+        self.assertEqual(model(np.array([1, 0, 1, 1])), 3)
+        received.append(model.last_x)
+        for x, dtype in zip(received, (np.float64, np.float64, np.int32, np.int32)):
+            self.assertIsInstance(x, np.ndarray)
+            self.assertEqual(x.dtype, dtype)
+        self.assertEqual([x.tolist() for x in received], [[1, 2, 3], [2, 4, 6], [0, 1, 0], [1, 0, 1, 1]])
 
     def test_can_access_optimization_type(self):
         p = ioh.get_problem(1, 1, 2)

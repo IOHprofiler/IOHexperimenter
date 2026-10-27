@@ -95,11 +95,12 @@ namespace ioh_python::problem
             [[maybe_unused]] auto registered = perform_registration();
         }
 
+        // the overrides get x as a new numpy array, as the functions given to wrap_problem do
         double evaluate(const std::vector<T> &x) override
         {
             nb::gil_scoped_acquire gil;
             if (auto f = override_of("evaluate"); f.is_valid())
-                return cast_result<double>(f(x), "evaluate");
+                return cast_result<double>(f(make_array(x)), "evaluate");
             throw std::runtime_error("Tried to call pure virtual function \"evaluate\"");
         }
 
@@ -108,7 +109,7 @@ namespace ioh_python::problem
             {
                 nb::gil_scoped_acquire gil;
                 if (auto f = override_of("transform_variables"); f.is_valid())
-                    return cast_result<std::vector<T>>(f(x), "transform_variables");
+                    return cast_result<InputVector<T>>(f(make_array(x)), "transform_variables");
             }
             return P::transform_variables(std::move(x));
         }
@@ -132,12 +133,13 @@ namespace ioh_python::problem
         c.def("__call__", [](ProblemType &p, const InputArray1D<T> &x) { return p(to_vector<T>(x)); }, array_arg<T>());
     }
 
-    //! __call__ for a two-dimensional input array, one solution per row
+    //! __call__ for a two-dimensional input array, one solution per row; returns a new array of their values
     template <typename ProblemType, typename T, typename Class>
     void define_batch_array_calls(Class &c)
     {
-        c.def("__call__", [](ProblemType &p, const InputArray2D<T> &x) { return p(to_vectors<T>(x)); },
-              array_arg<T>());
+        c.def(
+            "__call__", [](ProblemType &p, const InputArray2D<T> &x) { return make_array(p(to_vectors<T>(x))); },
+            array_arg<T>());
     }
 
     template <typename ProblemType, typename T>
@@ -189,18 +191,20 @@ namespace ioh_python::problem
                     The evaluated search point
             )pbdoc");
         define_batch_array_calls<ProblemType, T>(c);
-        c.def("__call__", nb::overload_cast<const std::vector<std::vector<T>> &>(&ProblemType::operator()),
-              R"pbdoc(
-                Evaluate the problem.
+        c.def(
+             "__call__", [](ProblemType &p, const std::vector<std::vector<T>> &x) { return make_array(p(x)); },
+             R"pbdoc(
+                Evaluate the problem at several search points.
 
                 Parameters
                 ----------
                     x: list[list]
-                        the search points to evaluate. It must be a 2-dimensional array/list whose length matches search space's dimensionality
+                        the search points to evaluate, one per row. It must be a 2-dimensional array/list whose rows'
+                        length matches search space's dimensionality
                 Returns
                 -------
-                list[float]
-                    The evaluated search points
+                numpy.ndarray
+                    The objective values of the search points: a new float64 array with one value per row
             )pbdoc")
             .def_static(
                 "create",
@@ -278,6 +282,16 @@ namespace ioh_python::problem
         return nb::steal<nb::list>(l);
     }
 
+    //! A search point that a Python function returned (transform_variables, calculate_objective), as a vector of T:
+    //! an array is read at once (InputVector), any other iterable as a list
+    template <typename T>
+    std::vector<T> cast_point(nb::handle value, const char *function)
+    {
+        if (InputVector<T> x; nb::try_cast(value, x))
+            return std::vector<T>(std::move(x));
+        return cast_result<std::vector<T>>(as_list(value), function);
+    }
+
     template <typename T>
     void define_wrapper_functions(nb::module_ &m, const std::string &class_name, const std::string &function_name)
     {
@@ -307,15 +321,14 @@ namespace ioh_python::problem
                     if (tx)
                     {
                         nb::gil_scoped_acquire gil;
-                        // a writable view of x, for the time of the call
-                        nb::list px = as_list(tx.value()(make_mutable_array(x, nb::none()), iid));
+                        // a copy of x, which the function may keep; the transformed point is what it returns
+                        std::vector<T> px = cast_point<T>(tx.value()(make_array(x), iid), "transform_variables");
                         if (px.size() == x.size())
-                            return cast_result<std::vector<T>>(px, "transform_variables");
-                        else
-                            nb::module_::import_("warnings")
-                                .attr("warn")(fmt::format("Objective transformation function returned an iterable of "
-                                                          "invalid length ({} != {}). Transformation is disabled.",
-                                                          px.size(), x.size()));
+                            return px;
+                        nb::module_::import_("warnings")
+                            .attr("warn")(fmt::format("Objective transformation function returned an iterable of "
+                                                      "invalid length ({} != {}). Transformation is disabled.",
+                                                      px.size(), x.size()));
                     }
                     return x;
                 };
@@ -349,7 +362,7 @@ namespace ioh_python::problem
                                 PyObject *y = PyNumber_Float(args[1].ptr());
                                 if (!y)
                                     throw nb::python_error();
-                                return Solution<T, double>(cast_result<std::vector<T>>(as_list(args[0]), "calculate_objective"),
+                                return Solution<T, double>(cast_point<T>(args[0], "calculate_objective"),
                                                            nb::cast<double>(nb::steal(y)));
                             }
                         }

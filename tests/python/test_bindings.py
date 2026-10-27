@@ -116,19 +116,30 @@ class TestBindings(unittest.TestCase):
 
     def test_integer_arrays(self):
         # integer problems take arrays of any integer or bool type (e.g. a bitstring as rng.random(n) < 0.5), but not
-        # of floats, and not values out of the range of int
+        # of floats, and not values out of the range of int; so do the setters of solutions and bounds (WP7)
         problem = ioh.get_problem(1, 1, 6, ioh.ProblemClass.PBO)
         bits = np.array([1, 0, 1, 1, 0, 1])
         expected = problem(bits.tolist())
         for dtype in (bool, np.int8, np.uint8, np.int16, np.int32, np.int64, np.uint64):
             self.assertEqual(problem(bits.astype(dtype)), expected, dtype)
-        self.assertEqual(problem(np.vstack([bits, bits]).astype(bool)), [expected, expected])
-        self.assertEqual(list(ioh.IntegerSolution(bits.astype(bool), 1.0).x), bits.tolist())
+        y = problem(np.vstack([bits, bits]).astype(bool))
+        self.assertEqual(y.dtype, np.float64)
+        self.assertEqual(y.tolist(), [expected, expected])
+        solution = ioh.IntegerSolution(bits.astype(bool), 1.0)
+        self.assertEqual(list(solution.x), bits.tolist())
         bounds = ioh.IntegerBounds(np.zeros(6, dtype=bool), np.ones(6, dtype=bool))
         self.assertEqual(list(bounds.ub), [1] * 6)
+        for dtype in (bool, np.uint8, np.int64):
+            solution.x = (1 - bits).astype(dtype)
+            bounds.lb = (1 - bits).astype(dtype)
+            self.assertEqual((solution.x.tolist(), bounds.lb.tolist()), ((1 - bits).tolist(),) * 2, dtype)
         for bad in (bits.astype(float), np.array([2**40, 0, 0, 0, 0, 0])):
             with self.assertRaises(TypeError):
                 problem(bad)
+            with self.assertRaises(TypeError):
+                solution.x = bad
+            with self.assertRaises(TypeError):
+                bounds.ub = bad
 
     def test_callback_results(self):
         # a Python function that returns something unusable raises RuntimeError naming what it returned
@@ -136,6 +147,12 @@ class TestBindings(unittest.TestCase):
         problem = ioh.get_problem("TestBindingsReturnsNone", 1, 2)
         with self.assertRaisesRegex(RuntimeError, "NoneType"):
             problem([0.0, 0.0])
+
+    def test_suite_docstrings(self):
+        # a suite's docstring lists its arguments problem_ids, instances and dimensions (it listed problem_ids twice)
+        for suite in (ioh.suite.BBOB, ioh.suite.PBO):
+            for argument in ("problem_ids", "instances", "dimensions"):
+                self.assertEqual(suite.__doc__.count(f"{argument}: list[int]"), 1, argument)
 
 
 if __name__ == "__main__":

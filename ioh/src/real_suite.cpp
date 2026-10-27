@@ -18,35 +18,22 @@ namespace ioh_python::real_suite
                  R"pbdoc(
                 Remove the specified logger from the problem
             )pbdoc")
+            // new arrays, which take over the vectors that the accessors return (automatic: the default,
+            // reference_internal, fails for an array with an owner, and move would copy it again)
             .def_prop_ro(
-                "problem_ids",
-                [](const SuiteType &c) {
-                    const auto problem_ids = c.problem_ids();
-                    return make_array(problem_ids);
-                },
-                nb::rv_policy::move, // a new array (the default, reference_internal, fails for an array with an owner)
+                "problem_ids", [](const SuiteType &c) { return make_array(c.problem_ids()); }, nb::rv_policy::automatic,
                 R"pbdoc(
-                The list of all problems ids contained in the current suite.
+                The ids of all problems contained in the current suite, as a new numpy array (int32).
             )pbdoc")
             .def_prop_ro(
-                "dimensions",
-                [](const SuiteType &c) {
-                    const auto dimensions = c.dimensions();
-                    return make_array(dimensions);
-                },
-                nb::rv_policy::move, // a new array (the default, reference_internal, fails for an array with an owner)
+                "dimensions", [](const SuiteType &c) { return make_array(c.dimensions()); }, nb::rv_policy::automatic,
                 R"pbdoc(
-                The list of all problems ids contained in the current suite.
+                The dimensions of all problems contained in the current suite, as a new numpy array (int32).
             )pbdoc")
             .def_prop_ro(
-                "instances",
-                [](const SuiteType &c) {
-                    const auto instances = c.instances();
-                    return make_array(instances);
-                },
-                nb::rv_policy::move, // a new array (the default, reference_internal, fails for an array with an owner)
+                "instances", [](const SuiteType &c) { return make_array(c.instances()); }, nb::rv_policy::automatic,
                 R"pbdoc(
-                The list of all instance ids contained in the current suite.
+                The instance ids of all problems contained in the current suite, as a new numpy array (int32).
             )pbdoc")
             .def_prop_ro("name", &SuiteType::name,
                          R"pbdoc(

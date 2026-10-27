@@ -210,9 +210,13 @@ CEC2022, star discrepancy, many-affine, funnel, DynamicBinVal), `integer.cpp` (P
 submodular), `problem_helpers.cpp` (Solution, State, constraints, bounds, MetaData, log info),
 `logger.cpp` (incl. `logger.old` with the v1 Analyzer), `trigger.cpp`, `property.cpp`,
 `empirical_attainment.cpp`, `real_suite.cpp`, `integer_suite.cpp`, `suite_helpers.cpp`, `suite.cpp`.
-Numpy today: `Solution.x` is a writable view, bounds `lb`/`ub` and suite id/instance/dimension arrays
-are copies, user callbacks (`wrap_problem` objectives, constraint functions) receive numpy arrays;
-other vectors (e.g. logger `Info.x`) are lists.
+Numpy (since WP7): numeric vectors are numpy arrays (float64 for doubles, int32 for C++ `int`, bool for the EAH
+matrices). `Solution.x` is a writable view of the solution's own values, the `Graph` weights are read-only views kept
+alive by the `Graph` object, and everything else is a new array per read (bounds, suite arrays, `LogInfo.x`/
+`violations`/`penalties`, the batch `__call__`, ManyAffine, DynamicBinVal, star discrepancy grids, `EAH.at`/`data`).
+Python callbacks (`wrap_problem` functions, constraint functions, overrides of `evaluate`, `transform_variables` and
+`wmodel_evaluate`) receive new arrays. Lists remain for objects and for ragged or record data (`CEC2013.optima`,
+`Graph.edges`/`adjacency_list`, `EAF`, `Store`); sets and tuples remain (triggers, `EAH.size`, pickling state).
 
 The unfinished nanobind port lives on branch `origin/untemplating` (see WP6 for what to reuse).
 
@@ -1038,7 +1042,7 @@ Task:
 
 ---
 
-## WP7 — Return numpy arrays instead of lists
+## WP7 — Return numpy arrays instead of lists 🚧 implemented (branch `wp7-numpy-returns`)
 
 Depends on: WP6.
 
@@ -1062,6 +1066,67 @@ Depends on: WP6.
   also measured: precompiled headers (17.8 s, 61.7 s CPU), fmt as a compiled library instead of header-only
   (19.2 s, 67.4 s CPU); with the unity build they gain nothing. The unity-built wheel passes all tests and
   evaluates as fast (0.98–1.05 on `bench.py`).
+* **Record** (an audit of the 44 Python-visible sequences, then the maintainer's decisions):
+  * **Returns.** New arrays on every read: `LogInfo.x`, `violations`, `penalties` (float64, also for integer
+    problems: `Info` holds doubles), the batch `__call__` of both problem bases (float64, from a 2-D array and from a
+    list of lists), `ManyAffine.weights`/`scale_factors`/`function_values` (float64) and `instances` (int32),
+    `DynamicBinVal.weights` (float64), `DynamicBinValRanking.get_comparison_ordering()`/`rank_indices()` (int32) and
+    `rank()` (2-D int32, the sorted rows), `EAH.at()` and the matrices in `EAH.data` (2-D bool, error targets ×
+    evaluation targets; the binding builds the nested dicts). Read-only views (`writeable` False):
+    `Graph.edge_weights`, `vertex_weights`, `constraint_weights`, `constraint_variances`. Unchanged: `Solution.x`
+    (writable view), the copies of bounds, suite arrays (nanobind no longer copies them a second time) and star
+    discrepancy grids. Lists, sets, tuples and dicts of objects, ragged or record data stay as they were
+    (`CEC2013.optima` a list of `RealSolution`, `ManyAffine.sub_problems`, `Graph.edges`/`adjacency_list`, `EAF`,
+    `Store`, triggers, `EAH.size`, registries, `__getstate__`).
+  * **Lifetimes.** A view only where the data never move: a graph is loaded once, before any of its problems exists,
+    and its problems and constraints share it. Everything else is copied: `problem.log_info` is the problem's own
+    `Info`, whose `x` is replaced at every evaluation and whose `violations`/`penalties` are reallocated by
+    `add_constraint`, `remove_constraint` and `enforce_bounds`; `step()` permutes the DynamicBinVal weights (Uniform
+    replaces them) and the comparison ordering; batch and rank results are temporaries. Solutions that referred to
+    another object are returned by value: `LogInfo.objective` (its `x` was a view into the problem's `Info` and
+    dangled after `add_constraint`, `remove_constraint` or `enforce_bounds`) and the elements of `CEC2013.optima`
+    (writes to them changed the problem). Helpers in `ioh/src/common.hpp`: `make_readonly_array` (a `const T` view;
+    without an owner a property's object becomes the owner), `make_array` of a temporary vector (takes it over without
+    copying its values; not for `std::vector<bool>`) and of a `std::array`, and `make_array_2d` (rows of any type,
+    `bool` included; ragged rows raise ValueError), which replaces the star discrepancy grid's own copy. Arrays that
+    own their data are returned with `rv_policy::automatic` (`move` made nanobind copy the suite arrays again).
+  * **Callbacks** get new arrays, as `wrap_problem`'s objective has since WP6: the overrides of `evaluate` and
+    `transform_variables` in Python subclasses (they got lists), `AbstractWModel.wmodel_evaluate` (`NB_OVERRIDE_PURE`
+    written out with nanobind's `ticket`, because the macro passes its arguments on as given; the lookup stays
+    nanobind's cached one) and `wrap_problem`'s `transform_variables` (a copy instead of a writable view without an
+    owner, which dangled when the function kept it; with a result of the wrong length the untransformed `x` is used,
+    without the function's in-place changes).
+  * **Inputs.** `Solution.x`, `RealBounds`/`IntegerBounds` `lb`/`ub`, the results of `transform_variables`
+    (`wrap_problem` and subclasses) and the `x` of `calculate_objective` read an array at once, like the methods
+    (`InputVector` in `common.hpp`: the input array caster, integer arrays without a conversion pass, then nanobind's
+    list caster): `sol.x = sol.x + 1` no longer goes element by element, integer setters take bool arrays like the
+    constructors, and lists, tuples and other sequences work as before. A view of `Solution.x` taken before `x` is
+    assigned a vector of another length can dangle, as before (an assignment of the same length keeps the buffer);
+    the docstring and the upgrade guide say to read `x` again.
+  * **Fixed on the way**, with tests: `property.Evaluations.call_to_string` (also `EVALUATIONS`) raised "invalid
+    format specifier" (a WP6 regression: the binding ran `Property::call_to_string` for every property; now only for
+    Python subclasses, whose `super()` must not come back to the override, and the built-ins run their own);
+    `EAH.size` and `repr(EAH)` crashed on an `EAH` without data (`EAH::size()` read the first element of empty maps;
+    a level without data now counts 0); `Experiment.add_custom_problem` failed when `fids` was an array (the
+    experiment keeps `list(fids)`); the suites' docstrings listed `problem_ids` twice; `doc/python/source/python.rst`
+    said pybind11. Docstrings that said list describe the arrays (batch `__call__`, `rank`/`rank_indices`, which no
+    longer share one that said "in place", `get_comparison_ordering`, `LogInfo`, `FunctionalConstraint`, the suite
+    arrays, `ioh.wrap_problem`/`Experiment.add_custom_problem`), and the stubs are regenerated.
+  * **Tests**: the four sites that expected lists compare `.tolist()` or arrays; new tests pin the type, dtype, shape
+    and `writeable` flag of every changed return, the snapshots (`LogInfo.x` after a later evaluation, the
+    DynamicBinVal weights and ordering after `step()`), `LogInfo.objective` after `add_constraint`, the copies in
+    `CEC2013.optima`, the graph views after the problem is deleted, the array setters (bool arrays for integers), the
+    callback arguments and the fixes above (Python 73 → 88 tests, C++ 114 → 115). Pickling is unchanged (the
+    properties and triggers pickle, the changed classes did not and do not).
+  * **Measured** (Apple M5, Python 3.13, the abi3 wheels of master and of the branch built the same way; three
+    alternating rounds, min of 7; µs per call or read): a new array costs about 0.24 µs, more than a short list and
+    less than a long one: `log_info.x` d=5 0.09 → 0.24, d=100 0.45 → 0.26; a Python logger that reads `info.x` at
+    every evaluation (d=5) 0.26 → 0.39; `DynamicBinVal.weights` (n=100) 0.40 → 0.21; suite `problem_ids` (24) 0.33 →
+    0.21; `log_info.objective.y` 0.10 both. `Graph.edge_weights` of MaxCut 2000 (19,176 edges) 129 → 0.16. Python
+    subclass whose `evaluate` ignores `x`: d=5 0.33 → 0.47, d=100 0.76 → 0.59; one that computes `np.dot(x, x)`: d=5
+    0.88 → 0.71, d=100 4.23 → 0.82; a W-model subclass (n=100) 0.46 → 0.44. Batch 1000×10 per row: numpy 0.075 →
+    0.070, lists 0.109 → 0.104. `solution.x = array` (d=100) 1.42 → 0.11, from a list 0.47 → 0.50. `bench.py`:
+    0.91–1.02 of master.
 
 ---
 
@@ -1119,7 +1184,7 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
     Analyzer has its own `OnDeltaImprovement` (with the same delta) when it is given
     `trigger::on_delta_improvement`, the default.
 * Python upgrade guide: Python ≥ 3.10 (recommended ≥ 3.12), deprecated `download_static_folder` /
-  `load_graph_problems` (no-ops), numpy returns (WP7), new metadata attributes if added. Data (WP4): the
+  `load_graph_problems` (no-ops), new metadata attributes if added. Data (WP4): the
   package uses its own data files; `IOH_RESOURCES` still names another directory, but `import ioh` no
   longer sets it (for subprocesses), and `ioh.set_data_root(path)`/`ioh.data_root()` change and show the
   directory; missing data raise `ioh.DataError` (a `RuntimeError`) when a problem is created. Ids (WP4): problem classes defined by subclassing report the id they are registered under
@@ -1135,6 +1200,18 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
   Threads (WP6): one object from one thread at a time; give loggers that run at the same time their own
   `OnDeltaImprovement`/`OnViolation`, and evaluate the problems made from one `wrap_problem` with constraints
   from one thread at a time (they share the constraint objects).
+  Numpy returns (WP7): numeric vectors are numpy arrays instead of lists (`LogInfo.x`/`violations`/`penalties`, the
+  batch `problem(X)`, the ManyAffine and DynamicBinVal values, `rank`/`rank_indices`/`get_comparison_ordering`, the
+  graph weights, `EAH.at`/`data`), and Python callbacks receive `x` as an array (overrides of `evaluate`,
+  `transform_variables` and `wmodel_evaluate`, `wrap_problem`'s `transform_variables`). Code written for lists: `+`
+  adds instead of concatenating (`info.x + [y]` broadcasts without an error); `==` is elementwise, so `if a == b:`
+  and `assertEqual` on results raise (compare `.tolist()` or use `np.array_equal`); `json` needs `.tolist()`;
+  `isinstance(x, list)` is False; `ys.index(min(ys))` becomes `np.argmin(ys)`; `str()` of an array has no commas
+  (custom file writers); list methods (`append`, `count`, `index`) are gone, and `x * n` multiplies; a returned
+  array is a copy, not a view, so writes into it (`problem.bounds.lb[0] = 1`, `info.x[0] = 0`) do not reach the
+  problem (assign the attribute instead); the graph weights are read-only. `Solution.x` stays a writable view: after
+  assigning `x` a vector of another length, read `x` again (an array read before may refer to freed memory).
+  `LogInfo.objective` and the elements of `CEC2013.optima` are copies (writes no longer reach the problem).
 * README/docs: installation, building from source (scikit-build-core), data location; changelog
   (from the release-notes draft below).
 * Release, the first since 0.3.22 (§1): version bump to 0.4.0; run the wheels workflow on master by
@@ -1270,6 +1347,25 @@ Each WP adds its user-visible changes here (§2).
   * Wheels: CPython 3.12 and later share one wheel per platform (`cp312-abi3`, on the stable ABI), which
     also installs on later versions; 3.10, 3.11 and the free-threaded 3.14t/3.15t keep a wheel each.
 * WP7:
+  * Numeric vectors are returned as numpy arrays instead of lists: `LogInfo.x`/`violations`/`penalties` (float64),
+    the batch call `problem(X)` (float64, also for a list of lists), ManyAffine `weights`/`instances`/
+    `scale_factors`/`function_values`, DynamicBinVal `weights`, `DynamicBinValRanking.rank` (a 2-D array)/
+    `rank_indices`/`get_comparison_ordering`, `EAH.at` and the matrices in `EAH.data` (2-D bool), and the graph
+    weights (`Graph.edge_weights`, `vertex_weights`, `constraint_weights`, `constraint_variances`: read-only views
+    without a copy; reading the edge weights of a 19,176-edge graph takes 0.16 µs instead of 129 µs). Each read gives
+    a new array, except the graph views and `Solution.x`. See the upgrade guide for code written for lists.
+  * Python callbacks receive `x` as a numpy array everywhere: overrides of `evaluate` and `transform_variables` in
+    problem subclasses and of `AbstractWModel.wmodel_evaluate`, like the functions given to `wrap_problem`. A
+    `transform_variables` function given to `wrap_problem` may keep its `x` (it referred to memory freed after the
+    call).
+  * `Solution.x`, the bounds' `lb`/`ub` and the results of `transform_variables`/`calculate_objective` take a numpy
+    array at once (integer ones also bool arrays), e.g. `sol.x = sol.x + 1`.
+  * `LogInfo.objective` and the elements of `CEC2013.optima` are copies: `problem.log_info.objective.x` could refer to
+    freed memory after `add_constraint`, `remove_constraint` or `enforce_bounds`, and writing to `optima[i].x`
+    changed the problem.
+  * Fixed: `EAH.size` and `repr` of an `EAH` without data crashed (C++: `EAH::size()` was undefined; it returns
+    zeros for levels without data); `Experiment.add_custom_problem` failed when the problem ids were a numpy array
+    (e.g. a suite's `problem_ids`).
   * Building from source (sdist, editable installs) takes about half as long: the C++ sources are compiled in
     batches (a unity build).
 
@@ -1312,3 +1408,13 @@ Python package and the tests need neither, and the sdist has not contained them 
 * Use fmt as a compiled library instead of header-only.
 * Move more implementation out of headers into the compiled target.
 * Make MaxInfluence reproducible (instance-seeded generator instead of the global one).
+* `ManyAffine.function_values` is never filled (`evaluate` does not write it): always 24 zeros. Fill it (with which
+  value per function: the shifted, clamped one, the scaled one or the weighted one?) or remove it (found in WP7).
+* `Problem`'s constructor fits the bounds to the dimension with `BoxConstraint::fit`, which keeps only `lb[0]`/
+  `ub[0]`: a Python subclass given `RealBounds([-1, 0], [1, 2])` reports `lb` [-1, -1] and `ub` [1, 1] (checked in
+  WP7); `fit` could keep bounds that already have the right size.
+* `AbstractRealConstraint`/`AbstractIntegerConstraint` bind no constructor, so Python cannot subclass them
+  (`TypeError: no constructor defined`), although they have a trampoline (found in WP7).
+* A problem that the factory creates for a registered Python subclass (e.g. `ioh.get_problem("MySubclass", 1, 2)`)
+  raises `RuntimeError: Tried to call pure virtual function "evaluate"` when evaluated: the C++ object has no Python
+  object with the override (checked in WP7).

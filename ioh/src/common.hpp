@@ -6,6 +6,7 @@
 // can also be compiled as one unity build.
 
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <stdexcept>
 #include <limits>
@@ -237,6 +238,11 @@ namespace ioh_python
         return result;
     }
 
+    // The arrays returned to Python. A copy owns its data (through a capsule), so it is returned with the policy
+    // automatic (or reference): with move or copy, nanobind would copy it once more, and the default policy of a
+    // property, reference_internal, fails for an array that has an owner. A view has no data of its own; it is valid
+    // while its owner keeps the vector alive and the vector is not reallocated.
+
     //! A numpy array that is a writable view of v, which owner keeps alive (the Python object that holds v, e.g. a
     //! Solution)
     template <typename T>
@@ -245,7 +251,15 @@ namespace ioh_python
         return nb::ndarray<nb::numpy, T, nb::ndim<1>>(v.data(), {v.size()}, owner);
     }
 
-    //! A numpy array with a copy of v
+    //! A numpy array that is a read-only view of v (writeable is False), which owner keeps alive. Without an owner,
+    //! the getter of a property (whose policy is reference_internal) makes the property's object the owner.
+    template <typename T>
+    nb::ndarray<nb::numpy, const T, nb::ndim<1>> make_readonly_array(const std::vector<T> &v, nb::handle owner = {})
+    {
+        return nb::ndarray<nb::numpy, const T, nb::ndim<1>>(v.data(), {v.size()}, owner);
+    }
+
+    //! A numpy array with a copy of v (also of a std::vector<bool>)
     template <typename T>
     nb::ndarray<nb::numpy, T, nb::ndim<1>> make_array(const std::vector<T> &v)
     {
@@ -254,7 +268,100 @@ namespace ioh_python
         nb::capsule owner(data, [](void *p) noexcept { delete[] static_cast<T *>(p); });
         return nb::ndarray<nb::numpy, T, nb::ndim<1>>(data, {v.size()}, owner);
     }
+
+    //! A numpy array that takes over v, a temporary (e.g. the result of a method), without copying its values. A
+    //! std::vector<bool> has no data() to take over: it takes the overload above.
+    template <typename T, typename = std::enable_if_t<!std::is_same_v<T, bool>>>
+    nb::ndarray<nb::numpy, T, nb::ndim<1>> make_array(std::vector<T> &&v)
+    {
+        auto *values = new std::vector<T>(std::move(v));
+        nb::capsule owner(values, [](void *p) noexcept { delete static_cast<std::vector<T> *>(p); });
+        return nb::ndarray<nb::numpy, T, nb::ndim<1>>(values->data(), {values->size()}, owner);
+    }
+
+    //! A numpy array with a copy of a
+    template <typename T, size_t N>
+    nb::ndarray<nb::numpy, T, nb::ndim<1>> make_array(const std::array<T, N> &a)
+    {
+        auto *data = new T[N];
+        std::copy(a.begin(), a.end(), data);
+        nb::capsule owner(data, [](void *p) noexcept { delete[] static_cast<T *>(p); });
+        return nb::ndarray<nb::numpy, T, nb::ndim<1>>(data, {N}, owner);
+    }
+
+    //! A two-dimensional numpy array with a copy of rows, one row per vector (also of std::vector<bool> rows). Rows
+    //! of different lengths raise ValueError.
+    template <typename T>
+    nb::ndarray<nb::numpy, T, nb::ndim<2>> make_array_2d(const std::vector<std::vector<T>> &rows)
+    {
+        const size_t n = rows.size(), m = n ? rows[0].size() : 0;
+        if (std::any_of(rows.begin(), rows.end(), [m](const std::vector<T> &row) { return row.size() != m; }))
+            throw nb::value_error("the rows have different lengths");
+
+        auto *data = new T[n * m];
+        for (size_t i = 0; i < n; i++)
+            std::copy(rows[i].begin(), rows[i].end(), data + i * m);
+        nb::capsule owner(data, [](void *p) noexcept { delete[] static_cast<T *>(p); });
+        return nb::ndarray<nb::numpy, T, nb::ndim<2>>(data, {n, m}, owner);
+    }
+
+    //! A vector argument that takes an input array first (a property's setter, or what a Python function returned):
+    //! an array is read at once, as the methods' array overloads read it (for integers, an array of any integer or
+    //! bool type, without a conversion pass), and anything else goes through nanobind's list caster (lists, tuples
+    //! and other sequences).
+    template <typename T>
+    struct InputVector : std::vector<T>
+    {
+        InputVector() = default;
+        explicit InputVector(std::vector<T> &&values) : std::vector<T>(std::move(values)) {}
+    };
 } // namespace ioh_python
+
+NAMESPACE_BEGIN(NB_NAMESPACE)
+NAMESPACE_BEGIN(detail)
+
+//! The caster of an InputVector: the caster of the input array, then the list caster. Its name in signatures and
+//! stubs is the union of their names.
+template <typename T>
+struct type_caster<ioh_python::InputVector<T>>
+{
+    using ArrayCaster = make_caster<ioh_python::InputArray1D<T>>;
+    using ListCaster = make_caster<std::vector<T>>;
+    NB_TYPE_CASTER(ioh_python::InputVector<T>, union_name(ArrayCaster::Name, ListCaster::Name))
+
+    bool from_python(handle src, uint32_t flags, cleanup_list *cleanup) noexcept
+    {
+        // integer arrays are taken only as they are (array_arg), so that an array of floats is not converted
+        ArrayCaster array;
+        const uint32_t array_flags = std::is_integral_v<T> ? (flags & ~(uint32_t)cast_flags::convert) : flags;
+        if (array.from_python(src, array_flags, cleanup))
+        {
+            try
+            {
+                value = ioh_python::InputVector<T>(ioh_python::to_vector<T>(array.value));
+                return true;
+            }
+            catch (const std::exception &)
+            {
+                // an array of floats, or values out of the range of T: no vector of T
+                return false;
+            }
+        }
+        ListCaster list;
+        if (!list.from_python(src, flags, cleanup))
+            return false;
+        value = ioh_python::InputVector<T>(std::move(list.value));
+        return true;
+    }
+
+    static handle from_cpp(const ioh_python::InputVector<T> &v, rv_policy policy, cleanup_list *cleanup) noexcept
+    {
+        return ListCaster::from_cpp(v, policy, cleanup);
+    }
+};
+
+NAMESPACE_END(detail)
+NAMESPACE_END(NB_NAMESPACE)
 
 // problem.cpp: keeps a Python function alive for the life of the process (wrapped functions, constraints)
 bool register_python_fn(nb::handle f);

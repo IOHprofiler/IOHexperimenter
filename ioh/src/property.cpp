@@ -50,10 +50,15 @@ void define_properties(nb::module_ &m)
         .def(nb::init<std::string>())
         .def("__call__", &ioh::logger::Property::operator())
         .def_prop_rw("name", &ioh::logger::Property::name, &ioh::logger::Property::set_name)
-        // Property's own call_to_string, so that super() in a Python override runs it once (a virtual call would
-        // come back to the override)
-        .def("call_to_string", [](const ioh::logger::Property &p, const ioh::logger::Info &info,
-                                  const std::string &nan) { return p.ioh::logger::Property::call_to_string(info, nan); });
+        // for a Python subclass, Property's own call_to_string, so that super() in its override runs it once (a
+        // virtual call would come back to the override); the built-in properties run their own (Evaluations formats
+        // an int)
+        .def("call_to_string",
+             [](const ioh::logger::Property &p, const ioh::logger::Info &info, const std::string &nan) {
+                 if (dynamic_cast<const AbstractProperty *>(&p) != nullptr)
+                     return p.ioh::logger::Property::call_to_string(info, nan);
+                 return p.call_to_string(info, nan);
+             });
 
 
     nb::class_<PyProperty, ioh::logger::Property>(t, "Property")

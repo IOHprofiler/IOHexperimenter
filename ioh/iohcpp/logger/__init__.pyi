@@ -2,7 +2,10 @@
 
 from collections.abc import Mapping, Sequence
 import os
-from typing import overload
+from typing import Annotated, overload
+
+import numpy
+from numpy.typing import NDArray
 
 import ioh.iohcpp
 from ioh.iohcpp.logger import (
@@ -217,10 +220,17 @@ class EAH(Logger):
     @overload
     def __init__(self, error_scale: eah.Log10RealScale, eval_scale: eah.Log10IntegerScale) -> None: ...
 
-    def at(self, arg0: int, arg1: int, arg2: int, arg3: int, /) -> list[list[bool]]: ...
+    def at(self, arg0: int, arg1: int, arg2: int, arg3: int, /) -> Annotated[NDArray[numpy.bool_], dict(shape=(None, None))]:
+        """
+        The attainment matrix of a run, by problem id, instance, dimension and run: a new two-dimensional
+        bool array, error targets (rows) by evaluation targets (columns).
+        """
 
     @property
-    def data(self) -> dict[int, dict[int, dict[int, dict[int, list[list[bool]]]]]]: ...
+    def data(self) -> dict[int, dict[int, dict[int, dict[int, Annotated[NDArray[numpy.bool_], dict(shape=(None, None))]]]]]:
+        """
+        The attainment matrices, in dicts by problem id, dimension, instance and run (new arrays, as at returns them)
+        """
 
     @property
     def size(self) -> tuple[int, int, int, int]: ...

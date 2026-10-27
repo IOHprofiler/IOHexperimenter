@@ -23,8 +23,10 @@ class Algorithm:
 class TestExperiment(unittest.TestCase):
 
     def tearDown(self) -> None:
-        shutil.rmtree("ioh_data")
-        os.remove("ioh_data.zip")
+        if os.path.isdir("ioh_data"):
+            shutil.rmtree("ioh_data")
+        if os.path.isfile("ioh_data.zip"):
+            os.remove("ioh_data.zip")
 
 
     def test_experimenter(self):
@@ -78,6 +80,13 @@ class TestExperiment(unittest.TestCase):
         self.assertSetEqual(info_files, set())
         self.assertSetEqual(data_files, set())
         self.assertTrue(os.path.isfile("ioh_data.zip"))    
+
+    def test_custom_problem_with_array_ids(self):
+        # the problem ids may be a numpy array (e.g. a suite's problem_ids), to which add_custom_problem adds one
+        exp = ioh.Experiment(Algorithm(), ioh.suite.BBOB([1, 2], [1], [5]).problem_ids, [1], [5])
+        exp.add_custom_problem(lambda x: 0.0, "TestExperimentArrayIds")
+        pid = ioh.get_problem_id("TestExperimentArrayIds", ioh.ProblemClass.REAL)
+        self.assertEqual(exp.fids, [1, 2, pid])
 
     def test_experimenter_v2(self):
         ioh.Experiment(

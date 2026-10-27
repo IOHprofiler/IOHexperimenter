@@ -221,21 +221,6 @@ namespace ioh_python::real
         new (t) T(0, instance, n_variables, py_name, grid);
     }
 
-    //! The grid of a star discrepancy problem, as a new (n_points, n_variables) numpy array
-    template <typename T>
-    nb::ndarray<nb::numpy, double, nb::ndim<2>> star_discrepancy_grid(const T &self)
-    {
-        const auto grid = self.get_grid();
-        const size_t n = grid.size(), m = n ? grid[0].size() : 0;
-
-        auto *data = new double[n * m];
-        for (size_t i = 0; i < n; i++)
-            std::copy(grid[i].begin(), grid[i].end(), data + i * m);
-
-        nb::capsule owner(data, [](void *p) noexcept { delete[] static_cast<double *>(p); });
-        return nb::ndarray<nb::numpy, double, nb::ndim<2>>(data, {n, m}, owner);
-    }
-
     template <typename T, typename P>
     void define_star_discrepancy_problem(nb::module_ &m, const std::string &name)
     {
@@ -282,7 +267,9 @@ namespace ioh_python::real
                     The type of sampler to use when sampling the points
              )pbdoc")
             // automatic: the array owns its data (def_prop_ro's reference_internal would fail on it)
-            .def_prop_ro("grid", &star_discrepancy_grid<T>, nb::rv_policy::automatic);
+            .def_prop_ro(
+                "grid", [](const T &self) { return make_array_2d(self.get_grid()); }, nb::rv_policy::automatic,
+                "The grid of the problem, as a new (n_samples, n_variables) numpy array (float64)");
         define_factory(c, bbob_create_name_doc, bbob_create_id_doc);
     }
 } // namespace ioh_python::real
@@ -299,7 +286,10 @@ void define_cec2013_problems(nb::module_ &m)
                                                              "        ");
     ioh_python::real::define_factory(c, ioh_python::real::cec_create_name_doc, ioh_python::real::cec_create_id_doc);
     c.def_ro("n_optima", &CEC2013::n_optima)
-        .def_ro("optima", &CEC2013::optima)
+        // copies, as problem.optimum: the elements of def_ro's list would be views into the problem's optima
+        .def_prop_ro(
+            "optima", [](const CEC2013 &p) { return p.optima; },
+            "The optima of the problem, as a list of new RealSolution objects (copies)")
         .def_ro("single_global_optimum", &CEC2013::single_global_optimum)
         .def_ro("sphere_limit", &CEC2013::sphere_limit)
         .def_ro("rho", &CEC2013::rho)
@@ -371,11 +361,22 @@ void define_many_affine(nb::module_ &m)
         .def(nb::init<std::vector<double>, std::array<double, 24>, std::array<int, 24>, int, std::array<double, 24>>(),
              nb::arg("xopt"), nb::arg("weights"), nb::arg("instances"), nb::arg("n_variables"),
              nb::arg("scale_factors") = ManyAffine::default_scales)
-        .def_prop_ro("weights", &ManyAffine::get_weights)
-        .def_prop_ro("instances", &ManyAffine::get_instances)
-        .def_prop_ro("scale_factors", &ManyAffine::get_scale_factors)
+        // new arrays (automatic: they own their data)
+        .def_prop_ro(
+            "weights", [](const ManyAffine &p) { return ioh_python::make_array(p.get_weights()); },
+            nb::rv_policy::automatic, "The weights of the 24 BBOB functions, as a new numpy array (float64)")
+        .def_prop_ro(
+            "instances", [](const ManyAffine &p) { return ioh_python::make_array(p.get_instances()); },
+            nb::rv_policy::automatic, "The instances of the 24 BBOB functions, as a new numpy array (int32)")
+        .def_prop_ro(
+            "scale_factors", [](const ManyAffine &p) { return ioh_python::make_array(p.get_scale_factors()); },
+            nb::rv_policy::automatic, "The scale factors of the 24 BBOB functions, as a new numpy array (float64)")
         .def_prop_ro("sub_problems", &ManyAffine::get_problems)
-        .def_prop_ro("function_values", &ManyAffine::get_function_values);
+        .def_prop_ro(
+            "function_values", [](const ManyAffine &p) { return ioh_python::make_array(p.get_function_values()); },
+            nb::rv_policy::automatic,
+            "The values of the 24 BBOB functions, as a new numpy array (float64); evaluations do not set them, so "
+            "they are zeros");
 }
 
 
@@ -420,7 +421,10 @@ void define_dynamic_bin_val_problem(nb::module_ &m)
                 The current timestep after the step.
         )pbdoc")
         .def_ro("time_step", &DynamicBinVal::time_step)
-        .def_ro("weights", &DynamicBinVal::weights);
+        // a copy: step() changes the weights, and DynamicBinValUniform's step() reallocates them
+        .def_prop_ro(
+            "weights", [](const DynamicBinVal &p) { return ioh_python::make_array(p.weights); },
+            nb::rv_policy::automatic, "The current weights, as a new numpy array (float64)");
 
     const auto doc =
         R"pbdoc(Dynamic BinVal. Details: https://link.springer.com/article/10.1007/s42979-022-01203-z )pbdoc";
@@ -434,37 +438,73 @@ void define_dynamic_bin_val_problem(nb::module_ &m)
         .def_prop_ro("pareto_shape", &dbv::Pareto::get_pareto_shape);
 
     const auto rank_doc = R"pbdoc(
-            Sort a list of bitstrings in lexicographical order in-place.
+            Sort bitstrings in lexicographical order, by the comparison ordering. Each bitstring is evaluated once.
 
             Parameters
             ----------
             bitstrings : list
-                A list of bitstrings to sort.
+                The bitstrings to sort, one per row (a list of lists or a two-dimensional array).
+
+            Returns
+            -------
+            numpy.ndarray
+                The bitstrings in sorted order, one per row: a new two-dimensional int32 array (the argument is not
+                changed).
         )pbdoc";
 
-    // rank and rank_indices take a list of bitstrings or a two-dimensional array (one bitstring per row)
+    const auto rank_indices_doc = R"pbdoc(
+            The order of bitstrings sorted in lexicographical order, by the comparison ordering. Each bitstring is
+            evaluated once.
+
+            Parameters
+            ----------
+            bitstrings : list
+                The bitstrings to sort, one per row (a list of lists or a two-dimensional array).
+
+            Returns
+            -------
+            numpy.ndarray
+                The indices of the bitstrings (rows) in sorted order: a new int32 array.
+        )pbdoc";
+
+    // rank and rank_indices take a list of bitstrings or a two-dimensional array (one bitstring per row), and return
+    // new arrays
     nb::class_<dbv::Ranking, DynamicBinVal>(m, "DynamicBinValRanking", doc)
         .def(nb::init<int, int>(), nb::arg("instance"), nb::arg("n_variables"))
         .def(
             "rank",
             [](dbv::Ranking &self, const ioh_python::IntArray2D &bitstrings) {
-                return self.rank(ioh_python::to_vectors<int>(bitstrings));
+                return ioh_python::make_array_2d(self.rank(ioh_python::to_vectors<int>(bitstrings)));
             },
             ioh_python::array_arg<int>(), rank_doc)
-        .def("rank", &dbv::Ranking::rank, rank_doc)
+        .def(
+            "rank",
+            [](dbv::Ranking &self, const std::vector<std::vector<int>> &bitstrings) {
+                return ioh_python::make_array_2d(self.rank(bitstrings));
+            },
+            rank_doc)
         .def(
             "rank_indices",
             [](dbv::Ranking &self, const ioh_python::IntArray2D &bitstrings) {
-                return self.rank_indices(ioh_python::to_vectors<int>(bitstrings));
+                return ioh_python::make_array(self.rank_indices(ioh_python::to_vectors<int>(bitstrings)));
             },
-            ioh_python::array_arg<int>(), rank_doc)
-        .def("rank_indices", &dbv::Ranking::rank_indices, rank_doc)
-        .def("get_comparison_ordering", &dbv::Ranking::get_comparison_ordering, R"pbdoc(
+            ioh_python::array_arg<int>(), rank_indices_doc)
+        .def(
+            "rank_indices",
+            [](dbv::Ranking &self, const std::vector<std::vector<int>> &bitstrings) {
+                return ioh_python::make_array(self.rank_indices(bitstrings));
+            },
+            rank_indices_doc)
+        .def(
+            "get_comparison_ordering",
+            [](const dbv::Ranking &self) { return ioh_python::make_array(self.get_comparison_ordering()); },
+            R"pbdoc(
             Get the current comparison ordering vector.
 
             Returns
             -------
-            list of int
-                The current state of the comparison ordering vector.
+            numpy.ndarray
+                The current state of the comparison ordering vector: a new int32 array (step() changes the
+                ordering, not this array).
         )pbdoc");
 }
