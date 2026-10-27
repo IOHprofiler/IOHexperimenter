@@ -78,7 +78,8 @@ WP2 section has the numbers after it):
   instead of lists** (separate WP).
 * **Wheel matrix**: CPython 3.10–3.15 on Linux x86_64 and aarch64, Windows x64 and ARM64 (from
   3.11: numpy has no Windows ARM64 wheels for 3.10), macOS Intel (`macos-15-intel`) and arm64; no
-  win32, i686 or musllinux wheels. Free-threaded wheels (cp314t, cp315t) are built for Linux and
+  win32, i686 or musllinux wheels. Since WP6 (T6.7) CPython 3.12 and later share one abi3 wheel per
+  platform (`cp312-abi3`). Free-threaded wheels (cp314t, cp315t) are built for Linux and
   macOS (on Windows the pinned pybind11 cannot find the free-threaded `python3XXt.lib`; WP6 adds
   them); until WP6 declares the module thread-safe, importing `ioh` on a free-threaded interpreter
   re-enables the GIL (with a `RuntimeWarning`), so until then these wheels only test the
@@ -807,7 +808,7 @@ Record:
 
 ---
 
-## WP6 — Move bindings to nanobind 🚧 PR 1 (the port, T6.1–T6.5, T6.8) merged (#223); PR 2 (free-threading, T6.6) implemented (branch `wp6-free-threading`)
+## WP6 — Move bindings to nanobind 🚧 PR 1 (the port, T6.1–T6.5, T6.8) merged (#223); PR 2 (free-threading, T6.6) merged (#224); PR 3 (stable ABI, T6.7) implemented (branch `wp6-stable-abi`)
 
 Depends on: WP3, WP4, WP5.
 
@@ -972,7 +973,47 @@ Task:
   Also remove the `cp3??t-win*` skip in `pyproject.toml`: nanobind finds the free-threaded
   `python3XXt.lib` on Windows, the pinned pybind11 2.11 does not.
 
-### T6.7 Stable ABI
+### T6.7 Stable ABI ✅ (PR 3)
+
+Record:
+
+* `nanobind_add_module(... STABLE_ABI ...)` and `wheel.py-api = "cp312"`: on CPython 3.12 and later the
+  module uses only the stable ABI of 3.12 (`Py_LIMITED_API`, `iohcpp.abi3.so`) and the wheel is tagged
+  `cp312-abi3`. On 3.10, 3.11 and free-threaded Pythons scikit-build-core (1.1.1) and nanobind (3.1.0)
+  ignore both, so those wheels stay version-specific. For the abi3 build scikit-build-core sets
+  `SKBUILD_SABI_COMPONENT` to `Development.SABIModule`, which `ioh/CMakeLists.txt` asks FindPython for
+  (it links `python3.lib` on Windows). CMake's FindPython has it since 3.26, and for an older CMake
+  scikit-build-core brings its own, so `cmake.version` stays `>=3.18`. A plain CMake build of the
+  module, without scikit-build-core, stays version-specific.
+* Wheels workflow: one wheel per job: cp310, cp311, cp312-abi3 (`CIBW_BUILD="cp312-* cp313-* cp314-*
+  cp315-*"`: built with 3.12, tested with 3.12–3.15), cp314t and cp315t. Per platform 5 wheels instead of
+  8 (a release: 29 instead of 47), and later CPython versions (3.16) install the abi3 wheel; pull
+  requests run 19 wheel jobs instead of 23 (75 runner minutes instead of 96), the full matrix 29 instead
+  of 35 (118 instead of 170). cibuildwheel runs `abi3audit --strict` on the abi3 wheel.
+* Runtime (Python 3.13, macOS arm64, `bench.py`; the abi3 wheel against a version-specific wheel of the same
+  tree): numpy inputs, attributes, loggers, suites and import take the same time (0.95–1.03). Lists took
+  about twice as long: under the limited API nanobind's ndarray caster, which the array overloads try
+  first, looks up `__dlpack__` through an AttributeError (most of the cost for a short list), and
+  nanobind copies a list item by item (`seq_get`). The input arrays (`InputArray` in `ioh/src/common.hpp`,
+  found by the review) now turn lists and tuples down before the ndarray caster, which never accepts
+  them; signatures and stubs are unchanged. What is left is the copy, abi3 against version-specific: BBOB
+  d5 0.11 µs against 0.08 (before the change 0.23 against 0.10), d100 0.64 against 0.38, OneMax n100 0.57
+  against 0.38, a batch of lists 0.11 against 0.06 per row. Against master (pybind11) lists take
+  0.44–0.82 of the time and a batch of lists 1.11; numpy inputs stay up to 9 times faster.
+* The abi3 wheel reads a sequence that is not a list or tuple by index (`PySequence_GetItem`), the
+  version-specific ones iterate it (`PySequence_Tuple`): a sequence indexed by labels (a pandas Series with
+  another index, such as a row in `df.apply(problem, axis=1)`) or one without `__len__` is rejected only
+  by the abi3 wheel, as by 0.3.22 (pybind11 indexed too); pass `row.to_numpy()`.
+* Not used: nanobind 3.1's split mode (`BACKEND_MODULE`) builds abi3 modules from 3.10 and, on
+  free-threaded 3.15 and later, `abi3t` ones (PEP 803), which would cover 3.10, 3.11 and the future
+  free-threaded versions too, but the module then loads libnanobind from another package
+  (`nanobind-backend`), a new runtime dependency.
+* Tested locally (macOS arm64): the abi3 wheel built with 3.12 passes `abi3audit --strict` (baseline 3.12,
+  no symbols outside the stable ABI) and all Python tests on 3.12, 3.13 and 3.14; the 3.14t wheel stays
+  `cp314-cp314t` with the GIL disabled. An editable build switched between 3.12 and 3.13 in the shared
+  `build/cp312-abi3-...` directory reconfigures for the new Python and rebuilds.
+
+Task:
 
 * `STABLE_ABI` for CPython ≥ 3.12 + scikit-build-core `wheel.py-api = "cp312"` (only for those
   builds): per platform one cp310, one cp311 and one cp312-abi3 wheel. cibuildwheel only reuses an
@@ -1096,7 +1137,8 @@ Each WP adds its user-visible changes here (§2).
     and 32-bit Windows wheels: there, and on x86_64 Linux with glibc < 2.27, pip builds 0.4.0 from
     source (C++17 compiler and CMake needed); `pip install "ioh<0.4"` keeps the 0.3.22 wheels.
     macOS tags are unchanged (Intel 10.15, arm64 11.0).
-  * New cp313–cp315 wheels; new Linux aarch64 and Windows ARM64 (3.11+) wheels.
+  * New cp313–cp315 wheels (since WP6 one abi3 wheel for 3.12 and later); new Linux aarch64 and Windows
+    ARM64 (3.11+) wheels.
   * Free-threaded 3.14t/3.15t wheels for Linux and macOS (WP6 updates this entry: Windows wheels,
     and the GIL stays disabled).
   * Wheels no longer install top-level `tests`/`doc` packages; the sdist no longer contains the
@@ -1180,8 +1222,10 @@ Each WP adds its user-visible changes here (§2).
     the top of the build directory.
 * WP6 (the bindings on nanobind):
   * Faster: numpy arrays are taken at once instead of element by element (a 100-dimensional problem
-    evaluates about 8 times faster from a numpy array, 2 times from a list), and attribute access, state,
-    meta data and suite iteration are faster too; logging to files costs about the same.
+    evaluates about 8 times faster from a numpy array), and attribute access, state, meta data and suite
+    iteration are faster too; logging to files costs about the same. From a list it evaluates about 2 times
+    faster with the version-specific wheels (3.10, 3.11) and 1.2 times faster with the abi3 wheel (3.12 and
+    later, T6.7); a batch of lists takes about 10% longer with the abi3 wheel.
   * Paths: arguments accept str and os.PathLike (e.g. `pathlib.Path`), and paths are returned as
     `pathlib.Path`; `ioh.iohcpp.logger.Path` is now `pathlib.Path`. On Windows, paths with characters
     outside the ANSI code page work.
@@ -1204,6 +1248,8 @@ Each WP adds its user-visible changes here (§2).
     Analyzer could skip lines because of another's run); Analyzers created at the same time (also in
     different processes) get different folders; Sobol star discrepancy problems get the same grid whatever
     problems were created before them.
+  * Wheels: CPython 3.12 and later share one wheel per platform (`cp312-abi3`, on the stable ABI), which
+    also installs on later versions; 3.10, 3.11 and the free-threaded 3.14t/3.15t keep a wheel each.
 
 ---
 
