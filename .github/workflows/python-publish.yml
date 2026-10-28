@@ -64,7 +64,7 @@ jobs:
         with:
           submodules: true
       - name: Build wheels
-        uses: pypa/cibuildwheel@v4.3.3
+        uses: pypa/cibuildwheel@v4.3.4
         env:
           # the rest of the configuration is in pyproject.toml
           CIBW_BUILD: >-
