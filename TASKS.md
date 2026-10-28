@@ -1068,7 +1068,11 @@ Depends on: WP6.
   3.2 s, after one library file 7.9 s instead of 4.4 s, because the file's batch is compiled again. Not used, also
   measured (at ca564b09, unity build of all targets: 10.5 s instead of 19.0 s): precompiled headers (17.8 s, 61.7 s
   CPU) and fmt as a compiled library instead of header-only (19.2 s, 67.4 s CPU); with the unity build they gain
-  nothing. The unity-built wheel passes all tests and evaluates as fast (0.98–1.05 on `bench.py`).
+  nothing. The unity-built wheel passes all tests and evaluates as fast (0.98–1.05 on `bench.py`). On CI,
+  cibuildwheel's "Building wheel..." step per wheel (full wheel runs 40663730993 and, for master, 40416432347),
+  median: Linux x86_64 122 → 65 s, aarch64 85 → 58 s, macOS arm64 83 → 48 s, x86_64 195 → 145 s, Windows x64
+  111 → 81 s, ARM64 126 → 110 s; a full run spends 40 instead of 56 minutes in these steps. GCC and MSVC report the
+  same warnings as on master.
 * **Record** (an audit of the 44 Python-visible sequences, then the maintainer's decisions):
   * **Returns.** New arrays on every read: `LogInfo.x`, `violations`, `penalties` (float64, also for integer
     problems: `Info` holds doubles), the batch `__call__` of both problem bases (float64, from a 2-D array and from a
