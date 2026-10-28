@@ -1056,16 +1056,19 @@ Depends on: WP6.
   JSON serialization (`.tolist()`), `isinstance(x, list)` checks.
 * **Acceptance**: golden values unchanged (they compare by value); type expectations in tests
   updated.
-* **Unity build** (added to WP7 by the maintainer): the Python build compiles the C++ sources in batches of 8
-  (`CMAKE_UNITY_BUILD` in `pyproject.toml`, also for editable installs; `-Ccmake.define.CMAKE_UNITY_BUILD=OFF`
-  turns it off). The plain CMake build is unchanged. Measured at ca564b09 (§2, min of 2): a clean build takes
-  10.5 s instead of 19.0 s, 25.2 s CPU instead of 65.0 s; a rebuild after changing one binding file takes 6.1 s
-  instead of 3.2 s, after one library file 7.4 s instead of 4.3 s, because the file's batch is compiled again.
-  Half of the compile CPU was work that each of the 22 files repeated (clang `-ftime-trace`): parsing `ioh.hpp`
-  and nanobind, instantiating the same templates, generating the same inline functions (e.g. fmt's). Not used,
-  also measured: precompiled headers (17.8 s, 61.7 s CPU), fmt as a compiled library instead of header-only
-  (19.2 s, 67.4 s CPU); with the unity build they gain nothing. The unity-built wheel passes all tests and
-  evaluates as fast (0.98–1.05 on `bench.py`).
+* **Unity build** (added to WP7 by the maintainer): the Python build compiles the sources of the library and of the
+  extension in batches of 8 (`IOH_UNITY_BUILD` in `CMakeLists.txt`, which `pyproject.toml` turns on, also for
+  editable installs; `-Ccmake.define.IOH_UNITY_BUILD=OFF` turns it off). The plain CMake build is unchanged. Only
+  these two targets: nanobind's and fmt's sources are not written for it. With CMake's `CMAKE_UNITY_BUILD` for all
+  targets, the free-threaded wheels for Windows did not build: there nanobind's `nb_internals.cpp` includes
+  `windows.h`, whose `min`/`max` macros break the next file of its batch. Half of the compile CPU was work that each
+  of the 22 files repeated (clang `-ftime-trace`): parsing `ioh.hpp` and nanobind, instantiating the same templates,
+  generating the same inline functions (e.g. fmt's). Measured with WP7 (§2, min of 2): a clean build takes 12.4 s
+  instead of 20.4 s, 30.0 s CPU instead of 70.4 s; a rebuild after changing one binding file takes 6.2 s instead of
+  3.2 s, after one library file 7.9 s instead of 4.4 s, because the file's batch is compiled again. Not used, also
+  measured (at ca564b09, unity build of all targets: 10.5 s instead of 19.0 s): precompiled headers (17.8 s, 61.7 s
+  CPU) and fmt as a compiled library instead of header-only (19.2 s, 67.4 s CPU); with the unity build they gain
+  nothing. The unity-built wheel passes all tests and evaluates as fast (0.98–1.05 on `bench.py`).
 * **Record** (an audit of the 44 Python-visible sequences, then the maintainer's decisions):
   * **Returns.** New arrays on every read: `LogInfo.x`, `violations`, `penalties` (float64, also for integer
     problems: `Info` holds doubles), the batch `__call__` of both problem bases (float64, from a 2-D array and from a
@@ -1109,14 +1112,16 @@ Depends on: WP6.
     `EAH.size` and `repr(EAH)` crashed on an `EAH` without data (`EAH::size()` read the first element of empty maps;
     a level without data now counts 0); `Experiment.add_custom_problem` failed when `fids` was an array (the
     experiment keeps `list(fids)`); the suites' docstrings listed `problem_ids` twice; `doc/python/source/python.rst`
-    said pybind11. Docstrings that said list describe the arrays (batch `__call__`, `rank`/`rank_indices`, which no
-    longer share one that said "in place", `get_comparison_ordering`, `LogInfo`, `FunctionalConstraint`, the suite
-    arrays, `ioh.wrap_problem`/`Experiment.add_custom_problem`), and the stubs are regenerated.
+    said pybind11; `logger.property.Property(container, attribute)` raised SystemError when the attribute is not a
+    number (unchecked `PyFloat_AsDouble`, since before WP6; now its TypeError). Docstrings that said list describe
+    the arrays (batch `__call__`, `rank`/`rank_indices`, which no longer share one that said "in place",
+    `get_comparison_ordering`, `LogInfo`, `FunctionalConstraint`, the suite arrays,
+    `ioh.wrap_problem`/`Experiment.add_custom_problem`), and the stubs are regenerated.
   * **Tests**: the four sites that expected lists compare `.tolist()` or arrays; new tests pin the type, dtype, shape
     and `writeable` flag of every changed return, the snapshots (`LogInfo.x` after a later evaluation, the
     DynamicBinVal weights and ordering after `step()`), `LogInfo.objective` after `add_constraint`, the copies in
     `CEC2013.optima`, the graph views after the problem is deleted, the array setters (bool arrays for integers), the
-    callback arguments and the fixes above (Python 73 → 88 tests, C++ 114 → 115). Pickling is unchanged (the
+    callback arguments and the fixes above (Python 73 → 89 tests, C++ 114 → 115). Pickling is unchanged (the
     properties and triggers pickle, the changed classes did not and do not).
   * **Measured** (Apple M5, Python 3.13, the abi3 wheels of master and of the branch built the same way; three
     alternating rounds, min of 7; µs per call or read): a new array costs about 0.24 µs, more than a short list and
@@ -1365,7 +1370,8 @@ Each WP adds its user-visible changes here (§2).
     changed the problem.
   * Fixed: `EAH.size` and `repr` of an `EAH` without data crashed (C++: `EAH::size()` was undefined; it returns
     zeros for levels without data); `Experiment.add_custom_problem` failed when the problem ids were a numpy array
-    (e.g. a suite's `problem_ids`).
+    (e.g. a suite's `problem_ids`); `logger.property.Property(container, attribute)` raised SystemError for an
+    attribute that is not a number (now TypeError).
   * Building from source (sdist, editable installs) takes about half as long: the C++ sources are compiled in
     batches (a unity build).
 
@@ -1415,6 +1421,9 @@ Python package and the tests need neither, and the sdist has not contained them 
   WP7); `fit` could keep bounds that already have the right size.
 * `AbstractRealConstraint`/`AbstractIntegerConstraint` bind no constructor, so Python cannot subclass them
   (`TypeError: no constructor defined`), although they have a trampoline (found in WP7).
+* Compiler warnings: GCC (`-Wconversion -Wall -Wextra`, `CMakeLists.txt`) and MSVC (`/W3`) warn about narrowing
+  conversions in `eah.hpp`, `eaf.hpp`, `ising_triangular.hpp` and `dynamic_bin_val_ranking.hpp` (the same set on
+  master before WP7; AppleClang reports none).
 * A problem that the factory creates for a registered Python subclass (e.g. `ioh.get_problem("MySubclass", 1, 2)`)
   raises `RuntimeError: Tried to call pure virtual function "evaluate"` when evaluated: the C++ object has no Python
   object with the override (checked in WP7).

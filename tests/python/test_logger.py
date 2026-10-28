@@ -180,6 +180,20 @@ class TestLogger(unittest.TestCase):
             self.assertEqual(prop.call_to_string(info, "nan"), "22")
         self.assertEqual(ioh.logger.property.RAWY.call_to_string(info, "nan"), "1.5000000000")
 
+    def test_property_of_a_container(self):
+        # a property that tracks an attribute: a number, nan for a missing or None one, and a TypeError for one that
+        # is not a number
+        class Container:
+            value, text, nothing = 2, "text", None
+
+        info = ioh.LogInfo(22, 1.5, 1, 1, 1, 1, 1, [0, 1], [0, 1], [0, 1], ioh.RealSolution([0, 1], 0), True)
+        container = Container()
+        self.assertEqual(ioh.logger.property.Property(container, "value").call_to_string(info, "nan"), "2.0000000000")
+        for attribute in ("missing", "nothing"):
+            self.assertEqual(ioh.logger.property.Property(container, attribute).call_to_string(info, "nan"), "nan")
+        with self.assertRaises(TypeError):
+            ioh.logger.property.Property(container, "text").call_to_string(info, "nan")
+
     def test_logger_info_arrays(self):
         # a Python logger gets x, violations and penalties as new float64 arrays (also for integer problems), which
         # it may keep

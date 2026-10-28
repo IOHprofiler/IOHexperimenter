@@ -72,9 +72,10 @@ BUILD_TESTS = "OFF"
 BUILD_EXAMPLE = "OFF"
 BUILD_DOCS = "OFF"
 ENABLE_MKLANDSCAPE_PROBLEMS = "OFF"
-# compile the C++ sources in batches (a unity build): they share most of their headers and templates, so a clean
-# build takes about half as long; a rebuild after changing one file compiles its batch again (TASKS.md WP7)
-CMAKE_UNITY_BUILD = "ON"
+# compile the sources of the library and the extension in batches (a unity build, CMakeLists.txt): they share most
+# of their headers and templates, so a clean build takes about half as long; a rebuild after changing one file
+# compiles its batch again (TASKS.md WP7)
+IOH_UNITY_BUILD = "ON"
 
 [[tool.dynamic-metadata]]
 provider = "scikit_build_core.metadata.regex"
