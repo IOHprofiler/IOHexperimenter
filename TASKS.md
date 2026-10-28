@@ -1188,6 +1188,9 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
     builds its tests and example unless it sets `BUILD_TESTS`/`BUILD_EXAMPLE`. The tests build one
     executable, `test_ioh`, and `ctest` runs from the top of the build directory;
     `-DIOH_TEST_PER_FILE=ON` also builds one executable per test file.
+  * Server (WP9): the objective-function server moved to `IOHprofiler/ioh-objective-server`, which builds against
+    the library; `-DBUILD_SERVER`, `HAS_JSON` and the `external/json`/`external/cxxopts` submodules are gone, and
+    so is `ioh::common::file::merge_output_to_single_folder` (it needed json; nothing called it).
   * Threads (WP6): `ioh::common::random::GENERATOR` is one generator per thread, so `seed` seeds the calling
     thread's. `Factory::include_with_id(name, first, make)` chooses an id and registers under one lock. An
     Analyzer has its own `OnDeltaImprovement` (with the same delta) when it is given
@@ -1378,10 +1381,13 @@ Each WP adds its user-visible changes here (§2).
     attribute that is not a number (now TypeError).
   * Building from source (sdist, editable installs) takes about half as long: the C++ sources are compiled in
     batches (a unity build).
+* WP9: the objective-function server (`ioh-server`, serving the problems over named pipes with JSON messages)
+  moved to its own repository, https://github.com/IOHprofiler/ioh-objective-server, and builds there against
+  IOHexperimenter; the CMake option `BUILD_SERVER` and the json and cxxopts submodules are gone.
 
 ---
 
-## WP9 — Server to its own repository
+## WP9 — Server to its own repository 🚧 T9.1 done (`IOHprofiler/ioh-objective-server`); T9.2 implemented (branch `wp9-server-moved`)
 
 Decided with the maintainer during WP6 (§1): fewer dependencies here. Independent of WP6/WP7; to be done before
 the release (WP8), which announces it.
@@ -1394,13 +1400,29 @@ Python package and the tests need neither, and the sdist has not contained them 
 
 ### T9.1 New repository
 
-* A repository `IOHprofiler/ioh-server` (name agreed with the maintainer) with
+* A repository `IOHprofiler/ioh-server` (name agreed with the maintainer; taken, see the record) with
   `server/`: the server, its query/reply schemas, the examples, the Python client (`iohservice.py`,
   `example_client.py`) and the Singularity definition, plus its documentation (`doc/python/source/server.rst`).
   The history of `server/` can be carried over with `git filter-repo --path server/`.
 * It depends on this repository: CMake `FetchContent` of IOHexperimenter at a release tag (or `find_package(ioh)`
   of an installed library), and of nlohmann/json and cxxopts at pinned versions instead of submodules. Its own
   CI builds the server and runs an example query.
+* **Record** (done 2026-10-28): `IOHprofiler/ioh-server` already existed (the maintainer's private deployment with
+  shiny, nginx and Django), so the maintainer chose `IOHprofiler/ioh-objective-server` (public). It has the 6 commits
+  of `server/` (2021–2023, by Johann Dreo and Jacob de Nobel; `git filter-repo --path server/ --path-rename
+  server/:`) and one commit on top:
+  * `CMakeLists.txt` fetches IOHexperimenter at a pinned commit (8d6746c1, master after WP7; v0.4.0 once released;
+    only its fmt submodule) and nlohmann/json 3.11.3 and cxxopts 3.2.1 as release archives with their SHA-256, and
+    links `ioh::ioh`. IOHexperimenter finds its data in the fetched source tree.
+  * The server had not compiled for years: it used `ioh::problem::Integer`/`Real`, removed long before this plan
+    (79d77463), and linked only fmt, not the compiled library (WP3). With those fixed it crashed at startup
+    (SIGTRAP) in the configuration of IOHexperimenter's internal clutchlog logger; it now writes its own
+    debugging messages to `std::clog` (`--dbg-level` keeps its levels; `--dbg-depth`/`--dbg-file`/`--dbg-func`
+    are gone).
+  * CI (Linux and macOS) builds it, serves OneMax and checks the values of four calls, `new_run` and `stop`. The
+    examples take the named pipes as arguments; `LICENSE.md` is this repository's (BSD-3-Clause).
+  * Built here only offline, from the json/cxxopts submodules (the classifier does not allow building downloaded
+    code); the pinned downloads are tested by the new repository's CI, which passed (run 40739226985).
 
 ### T9.2 Remove the server here
 
@@ -1409,6 +1431,9 @@ Python package and the tests need neither, and the sdist has not contained them 
   `merge_output_to_single_folder` in `include/ioh/common/file.hpp`, and the server page of the docs (which links
   to the new repository instead).
 * Release notes and C++ upgrade guide (WP8): the server moved to the new repository; `-DBUILD_SERVER` is gone.
+* **Record**: done as listed; also `external/fmt` is fetched over https instead of SSH (`.gitmodules`), so that a
+  fresh clone, and the new repository's `FetchContent`, need no GitHub SSH key. The Python
+  `Experiment.merge_output_to_single_folder` stays (it is Python). C++ tests 115 and Python tests 89 pass.
 
 ---
 
