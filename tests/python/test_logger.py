@@ -1,9 +1,12 @@
-import unittest
-import ioh
-import os
-import shutil
-import pickle
 import json
+import os
+import pickle
+import shutil
+import unittest
+
+import numpy as np
+
+import ioh
 
 
 class Container:
@@ -144,7 +147,75 @@ class TestLogger(unittest.TestCase):
             p([i] * 5)
 
         self.assertEqual(list(l.data.keys()), [1])
-                    
+
+    def test_eah_arrays(self):
+        # at and the leaves of data are new two-dimensional bool arrays, error targets by evaluation targets
+        p = ioh.get_problem(1, 1, 5)
+        l = ioh.logger.EAH(0, 20, 10, 0, 100, 8)
+        p.attach_logger(l)
+        for i in range(10):
+            p([i] * 5)
+        matrix = l.at(1, 1, 5, 1)
+        self.assertIsInstance(matrix, np.ndarray)
+        self.assertEqual((matrix.dtype, matrix.shape, matrix.flags.writeable), (np.bool_, (10, 8), True))
+        self.assertTrue(matrix.any())
+        self.assertEqual(l.data[1][5][1][1].tolist(), matrix.tolist())
+        self.assertEqual(l.size, (1, 1, 1, 1))
+
+    def test_eah_without_data(self):
+        # an EAH that has not logged anything has size 0 (size and repr crashed)
+        error_scale = ioh.logger.eah.LinearRealScale(0, 20, 4)
+        eval_scale = ioh.logger.eah.LinearIntegerScale(0, 100, 3)
+        for l in (ioh.logger.EAH(0, 20, 10, 0, 100, 10), ioh.logger.EAH(error_scale, eval_scale)):
+            self.assertEqual(l.size, (0, 0, 0, 0))
+            self.assertEqual(repr(l), "<EAH (0, 0, 0, 0)>")
+            self.assertEqual(l.data, {})
+
+    def test_property_call_to_string(self):
+        # the built-in properties format their own values (Evaluations an int), also after pickling
+        info = ioh.LogInfo(22, 1.5, 1, 1, 1, 1, 1, [0, 1], [0, 1], [0, 1], ioh.RealSolution([0, 1], 0), True)
+        evaluations = ioh.logger.property.Evaluations("evals", "{:d}")
+        restored = pickle.loads(pickle.dumps(evaluations))  # nosec B301: an object this test pickled itself
+        for prop in (ioh.logger.property.EVALUATIONS, evaluations, restored):
+            self.assertEqual(prop.call_to_string(info, "nan"), "22")
+        self.assertEqual(ioh.logger.property.RAWY.call_to_string(info, "nan"), "1.5000000000")
+
+    def test_property_of_a_container(self):
+        # a property that tracks an attribute: a number, nan for a missing or None one, and a TypeError for one that
+        # is not a number
+        class Container:
+            value, text, nothing = 2, "text", None
+
+        info = ioh.LogInfo(22, 1.5, 1, 1, 1, 1, 1, [0, 1], [0, 1], [0, 1], ioh.RealSolution([0, 1], 0), True)
+        container = Container()
+        self.assertEqual(ioh.logger.property.Property(container, "value").call_to_string(info, "nan"), "2.0000000000")
+        for attribute in ("missing", "nothing"):
+            self.assertEqual(ioh.logger.property.Property(container, attribute).call_to_string(info, "nan"), "nan")
+        with self.assertRaises(TypeError):
+            ioh.logger.property.Property(container, "text").call_to_string(info, "nan")
+
+    def test_logger_info_arrays(self):
+        # a Python logger gets x, violations and penalties as new float64 arrays (also for integer problems), which
+        # it may keep
+        class History(ioh.logger.AbstractLogger):
+            def __init__(self):
+                super().__init__([ioh.logger.trigger.ALWAYS])
+                self.arrays = []
+
+            def __call__(self, info):
+                self.arrays.append((info.x, info.violations, info.penalties))
+
+        history = History()
+        p = ioh.get_problem(1, 1, 16, ioh.ProblemClass.PBO)
+        p.attach_logger(history)
+        for i in range(3):
+            p([i % 2] * 16)
+        for arrays in history.arrays:
+            for values in arrays:
+                self.assertIsInstance(values, np.ndarray)
+                self.assertEqual(values.dtype, np.float64)
+        self.assertEqual([x.tolist() for x, _, _ in history.arrays], [[0.0] * 16, [1.0] * 16, [0.0] * 16])
+
     def test_can_inherit_property(self):
         class P(ioh.logger.property.AbstractProperty):
             def __call__(self, _):

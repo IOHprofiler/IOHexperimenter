@@ -50,6 +50,12 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION OFF)
 foreach(config RELEASE RELWITHDEBINFO MINSIZEREL)
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_${config} ${IOH_LTO})
 endforeach()
+
+# A unity build compiles the sources of the library and of the Python extension in batches, which takes about half
+# the CPU time, since they share most of their headers and templates (pyproject.toml turns it on). Only these two
+# targets: nanobind's and fmt's sources are not written for it (in a free-threaded build on Windows, nanobind's
+# windows.h defines min and max for the next file of a batch).
+option(IOH_UNITY_BUILD "Compile the library and the Python extension in batches (a unity build)" OFF)
   
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /bigobj")
@@ -100,6 +106,7 @@ endif()
 # that installed Debug and Release builds can coexist.
 set(IOH_DEBUG_POSTFIX d CACHE STRING "Postfix of the Debug build of the ioh library")
 set_target_properties(ioh PROPERTIES POSITION_INDEPENDENT_CODE ON DEBUG_POSTFIX "${IOH_DEBUG_POSTFIX}")
+set_target_properties(ioh PROPERTIES UNITY_BUILD ${IOH_UNITY_BUILD})
 # MSBuild (the Visual Studio generator, which scikit-build-core uses on Windows) compiles a project's files one
 # after another unless /MP is given; nanobind sets it on the extension module only
 if(CMAKE_GENERATOR MATCHES "Visual Studio" AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")

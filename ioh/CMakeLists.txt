@@ -15,6 +15,8 @@ file(GLOB SOURCES src/*.cpp)
 # serves 3.12 and later (TASKS.md T6.7); nanobind ignores it before 3.12 and on a free-threaded Python.
 nanobind_add_module(iohcpp NOMINSIZE FREE_THREADED STABLE_ABI ${SOURCES})
 target_link_libraries(iohcpp PRIVATE ${PROJECT_NAME})
+# IOH_UNITY_BUILD (CMakeLists.txt): the extension's own sources, not nanobind's
+set_target_properties(iohcpp PROPERTIES UNITY_BUILD ${IOH_UNITY_BUILD})
 # the problem families of the registry (src/registry/families.hpp)
 target_include_directories(iohcpp PRIVATE ${PROJECT_SOURCE_DIR}/src)
 

@@ -34,7 +34,13 @@ namespace ioh_python
                 auto pyobj = container_.attr(attribute_.c_str());
 
                 if (!pyobj.is_none())
-                    return std::make_optional<double>(PyFloat_AsDouble(pyobj.ptr()));
+                {
+                    const double value = PyFloat_AsDouble(pyobj.ptr());
+                    // an attribute that is not a number raises its TypeError (unchecked, it was a SystemError)
+                    if (value == -1.0 && PyErr_Occurred())
+                        throw nb::python_error();
+                    return value;
+                }
             }
             return {};
         }

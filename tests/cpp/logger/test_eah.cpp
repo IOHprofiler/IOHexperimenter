@@ -1,6 +1,7 @@
 #include "../utils.hpp"
 
 #include "ioh/logger/eah.hpp"
+#include "ioh/problem/bbob.hpp"
 #include "ioh/suite.hpp"
 
 TEST_F(BaseTest, eah_bbob)
@@ -37,3 +38,16 @@ TEST_F(BaseTest, eah_bbob)
     EXPECT_EQ(r, 2);
 }
 
+TEST_F(BaseTest, eah_size_without_data)
+{
+    // an EAH without data has size 0 (size() read the first problem of an empty map)
+    ioh::logger::EAH logger(0, 6e7, 20, 0, 100, 20);
+    EXPECT_EQ(logger.size(), std::make_tuple(size_t{0}, size_t{0}, size_t{0}, size_t{0}));
+
+    // attaching a problem adds its problem, dimension and instance; its first evaluation adds the run
+    auto problem = ioh::problem::bbob::Sphere(1, 2);
+    problem.attach_logger(logger);
+    EXPECT_EQ(logger.size(), std::make_tuple(size_t{1}, size_t{1}, size_t{1}, size_t{0}));
+    problem(std::vector<double>{0.0, 0.0});
+    EXPECT_EQ(logger.size(), std::make_tuple(size_t{1}, size_t{1}, size_t{1}, size_t{1}));
+}

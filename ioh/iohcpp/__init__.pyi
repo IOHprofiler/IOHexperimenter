@@ -134,10 +134,12 @@ class RealSolution:
 
     @property
     def x(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
-        """The search point in a search space, e.g., R^d or {0,1}^d"""
+        """
+        The search point in a search space, e.g., R^d or {0,1}^d: a numpy array that is a view of the solution's values (writing to it changes the solution). Assigning x replaces the values; read x again after assigning one of another length, as an array read before may no longer be valid.
+        """
 
     @x.setter
-    def x(self, arg: Sequence[float], /) -> None: ...
+    def x(self, arg: Annotated[NDArray[numpy.float64], dict(shape=(None,), order='C', device='cpu', writable=False)] | Sequence[float], /) -> None: ...
 
     @property
     def y(self) -> float:
@@ -164,10 +166,12 @@ class IntegerSolution:
 
     @property
     def x(self) -> Annotated[NDArray[numpy.int32], dict(shape=(None,))]:
-        """The search point in a search space, e.g., R^d or {0,1}^d"""
+        """
+        The search point in a search space, e.g., R^d or {0,1}^d: a numpy array that is a view of the solution's values (writing to it changes the solution). Assigning x replaces the values; read x again after assigning one of another length, as an array read before may no longer be valid.
+        """
 
     @x.setter
-    def x(self, arg: Sequence[int], /) -> None: ...
+    def x(self, arg: Annotated[NDArray, dict(shape=(None,), order='C', device='cpu')] | Sequence[int], /) -> None: ...
 
     @property
     def y(self) -> float:
@@ -255,8 +259,9 @@ class IntegerConstraint(AbstractIntegerConstraint):
 
         Parameters
         ----------
-            f: list -> float
-                A function that computes the violation of a point
+            f: numpy.ndarray -> float
+                A function that computes the violation of a point (a new numpy array, float64 for real and
+                int32 for integer problems)
             weight: float
                 The weight given to the violation when penalizing the objective function
             exponent: float
@@ -307,17 +312,21 @@ class IntegerBounds(AbstractIntegerConstraint):
 
     @property
     def ub(self) -> Annotated[NDArray[numpy.int32], dict(shape=(None,))]:
-        """The upper bound (box constraint)"""
+        """
+        The upper bound (box constraint): a new numpy array on every read (assign ub to change it)
+        """
 
     @ub.setter
-    def ub(self, arg: Sequence[int], /) -> None: ...
+    def ub(self, arg: Annotated[NDArray, dict(shape=(None,), order='C', device='cpu')] | Sequence[int], /) -> None: ...
 
     @property
     def lb(self) -> Annotated[NDArray[numpy.int32], dict(shape=(None,))]:
-        """The lower bound (box constraint)"""
+        """
+        The lower bound (box constraint): a new numpy array on every read (assign lb to change it)
+        """
 
     @lb.setter
-    def lb(self, arg: Sequence[int], /) -> None: ...
+    def lb(self, arg: Annotated[NDArray, dict(shape=(None,), order='C', device='cpu')] | Sequence[int], /) -> None: ...
 
     def __repr__(self) -> str: ...
 
@@ -421,8 +430,9 @@ class RealConstraint(AbstractRealConstraint):
 
         Parameters
         ----------
-            f: list -> float
-                A function that computes the violation of a point
+            f: numpy.ndarray -> float
+                A function that computes the violation of a point (a new numpy array, float64 for real and
+                int32 for integer problems)
             weight: float
                 The weight given to the violation when penalizing the objective function
             exponent: float
@@ -473,17 +483,21 @@ class RealBounds(AbstractRealConstraint):
 
     @property
     def ub(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
-        """The upper bound (box constraint)"""
+        """
+        The upper bound (box constraint): a new numpy array on every read (assign ub to change it)
+        """
 
     @ub.setter
-    def ub(self, arg: Sequence[float], /) -> None: ...
+    def ub(self, arg: Annotated[NDArray[numpy.float64], dict(shape=(None,), order='C', device='cpu', writable=False)] | Sequence[float], /) -> None: ...
 
     @property
     def lb(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
-        """The lower bound (box constraint)"""
+        """
+        The lower bound (box constraint): a new numpy array on every read (assign lb to change it)
+        """
 
     @lb.setter
-    def lb(self, arg: Sequence[float], /) -> None: ...
+    def lb(self, arg: Annotated[NDArray[numpy.float64], dict(shape=(None,), order='C', device='cpu', writable=False)] | Sequence[float], /) -> None: ...
 
     def __repr__(self) -> str: ...
 
@@ -704,7 +718,7 @@ class LogInfo:
         ----------
         evaluations: int
             The current number of evaluations
-        y_best: float
+        raw_y: float
             The raw current fitness value
         raw_y_best: float
             The raw current best fitness value
@@ -716,15 +730,15 @@ class LogInfo:
             The transformed current fitness value with constraints applied
         y_best: float
             The transformed current best fitness value with constraints applied
-        x: np.npdarray | list
+        x: numpy.ndarray | list
             The current solution passed to problem
-        violation: np.npdarray | list
+        violations: numpy.ndarray | list
             The current solution constraint violations
-        penalties: np.npdarray | list
+        penalties: numpy.ndarray | list
             The current solution constraint penalties
         optimum: Solution
             The optimum solution for the problem
-        has_improved: bool = True
+        has_improved: bool = False
             Whether the evaluation has caused an improvement in the objective value
         """
 
@@ -753,17 +767,28 @@ class LogInfo:
     def y_best(self) -> float: ...
 
     @property
-    def x(self) -> list[float]: ...
+    def x(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
+        """
+        The current solution passed to problem, as a new numpy array (float64, also for integer problems)
+        """
 
     @property
-    def violations(self) -> list[float]: ...
+    def violations(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
+        """
+        The constraint violations of the current solution, as a new numpy array (float64): first the total, then one per constraint
+        """
 
     @property
-    def penalties(self) -> list[float]: ...
+    def penalties(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
+        """
+        The constraint penalties of the current solution, as a new numpy array (float64): first the total, then one per constraint
+        """
 
     @property
     def objective(self) -> RealSolution:
-        """The best possible fitness value"""
+        """
+        The optimum of the problem and its objective value, as a new RealSolution (a copy)
+        """
 
     @property
     def has_improved(self) -> bool:

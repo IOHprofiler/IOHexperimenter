@@ -162,7 +162,14 @@ namespace ioh_python::integer
         NB_TRAMPOLINE(ioh::problem::WModel);
 
     protected:
-        int wmodel_evaluate(const std::vector<int> &x) override { NB_OVERRIDE_PURE(wmodel_evaluate, x); }
+        // NB_OVERRIDE_PURE(wmodel_evaluate, x) written out, so that the override gets x as a new numpy array, as the
+        // other callbacks do (the macro passes x on as it is, which Python gets as a list)
+        int wmodel_evaluate(const std::vector<int> &x) override
+        {
+            constexpr uint64_t nb_hash = nb::detail::str_hash("wmodel_evaluate");
+            nb::detail::ticket nb_ticket(nb_trampoline, "wmodel_evaluate", nb_hash, true);
+            return cast_result<int>(nb_trampoline.base().attr(nb_ticket.key)(make_array(x)), "wmodel_evaluate");
+        }
     };
 
     //! Makes the protected wmodel_evaluate accessible for the binding
@@ -393,10 +400,22 @@ void define_submodular_problems(nb::module_ &m)
         .def_ro("loaded", &graph::Graph::loaded, "Whether the graph is loaded in memory")
         .def_ro("adjacency_list", &graph::Graph::adjacency_list, "Adjacency list representation of the graph")
         .def_ro("edges", &graph::Graph::edges, "Edge list representation of the graph")
-        .def_ro("constraint_weights", &graph::Graph::constraint_weights, "Constraint weights")
-        .def_ro("constraint_variances", &graph::Graph::constraint_variances, "Constraint variances")
-        .def_ro("edge_weights", &graph::Graph::edge_weights, "Edge weights")
-        .def_ro("vertex_weights", &graph::Graph::vertex_weights, "Vertex weights");
+        // read-only views, which the Graph object keeps alive: the graph is loaded once, before any problem of it
+        // exists, and all of them share it
+        .def_prop_ro(
+            "constraint_weights",
+            [](const graph::Graph &g) { return ioh_python::make_readonly_array(g.constraint_weights); },
+            "Constraint weights (a read-only numpy array)")
+        .def_prop_ro(
+            "constraint_variances",
+            [](const graph::Graph &g) { return ioh_python::make_readonly_array(g.constraint_variances); },
+            "Constraint variances (a read-only numpy array)")
+        .def_prop_ro(
+            "edge_weights", [](const graph::Graph &g) { return ioh_python::make_readonly_array(g.edge_weights); },
+            "Edge weights (a read-only numpy array)")
+        .def_prop_ro(
+            "vertex_weights", [](const graph::Graph &g) { return ioh_python::make_readonly_array(g.vertex_weights); },
+            "Vertex weights (a read-only numpy array)");
 
     nb::class_<GraphProblem, IntegerSingleObjective>(m, "GraphProblem",
                                                      R"pbdoc(

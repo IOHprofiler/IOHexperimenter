@@ -52,21 +52,22 @@ class RealSingleObjective:
         """
 
     @overload
-    def __call__(self, arg: Annotated[NDArray[numpy.float64], dict(shape=(None, None), order='C', device='cpu', writable=False)], /) -> list[float]: ...
+    def __call__(self, arg: Annotated[NDArray[numpy.float64], dict(shape=(None, None), order='C', device='cpu', writable=False)], /) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]: ...
 
     @overload
-    def __call__(self, arg: Sequence[Sequence[float]], /) -> list[float]:
+    def __call__(self, arg: Sequence[Sequence[float]], /) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
         """
-        Evaluate the problem.
+        Evaluate the problem at several search points.
 
         Parameters
         ----------
             x: list[list]
-                the search points to evaluate. It must be a 2-dimensional array/list whose length matches search space's dimensionality
+                the search points to evaluate, one per row. It must be a 2-dimensional array/list whose rows'
+                length matches search space's dimensionality
         Returns
         -------
-        list[float]
-            The evaluated search points
+        numpy.ndarray
+            The objective values of the search points: a new float64 array with one value per row
         """
 
     @overload
@@ -202,21 +203,22 @@ class IntegerSingleObjective:
         """
 
     @overload
-    def __call__(self, arg: Annotated[NDArray, dict(shape=(None, None), order='C', device='cpu')], /) -> list[float]: ...
+    def __call__(self, arg: Annotated[NDArray, dict(shape=(None, None), order='C', device='cpu')], /) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]: ...
 
     @overload
-    def __call__(self, arg: Sequence[Sequence[int]], /) -> list[float]:
+    def __call__(self, arg: Sequence[Sequence[int]], /) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
         """
-        Evaluate the problem.
+        Evaluate the problem at several search points.
 
         Parameters
         ----------
             x: list[list]
-                the search points to evaluate. It must be a 2-dimensional array/list whose length matches search space's dimensionality
+                the search points to evaluate, one per row. It must be a 2-dimensional array/list whose rows'
+                length matches search space's dimensionality
         Returns
         -------
-        list[float]
-            The evaluated search points
+        numpy.ndarray
+            The objective values of the search points: a new float64 array with one value per row
         """
 
     @overload
@@ -805,7 +807,10 @@ class CEC2013(RealSingleObjective):
     def n_optima(self) -> int: ...
 
     @property
-    def optima(self) -> list[ioh.iohcpp.RealSolution]: ...
+    def optima(self) -> list[ioh.iohcpp.RealSolution]:
+        """
+        The optima of the problem, as a list of new RealSolution objects (copies)
+        """
 
     @property
     def single_global_optimum(self) -> bool: ...
@@ -960,7 +965,8 @@ class DynamicBinVal(IntegerSingleObjective):
     def time_step(self) -> int: ...
 
     @property
-    def weights(self) -> list[float]: ...
+    def weights(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
+        """The current weights, as a new numpy array (float64)"""
 
 class DynamicBinValUniform(DynamicBinVal):
     """
@@ -994,41 +1000,54 @@ class DynamicBinValRanking(DynamicBinVal):
     def __init__(self, instance: int, n_variables: int) -> None: ...
 
     @overload
-    def rank(self, arg: Annotated[NDArray, dict(shape=(None, None), order='C', device='cpu')], /) -> list[list[int]]: ...
+    def rank(self, arg: Annotated[NDArray, dict(shape=(None, None), order='C', device='cpu')], /) -> Annotated[NDArray[numpy.int32], dict(shape=(None, None))]: ...
 
     @overload
-    def rank(self, arg: Sequence[Sequence[int]], /) -> list[list[int]]:
+    def rank(self, arg: Sequence[Sequence[int]], /) -> Annotated[NDArray[numpy.int32], dict(shape=(None, None))]:
         """
-        Sort a list of bitstrings in lexicographical order in-place.
+        Sort bitstrings in lexicographical order, by the comparison ordering. Each bitstring is evaluated once.
 
         Parameters
         ----------
         bitstrings : list
-            A list of bitstrings to sort.
+            The bitstrings to sort, one per row (a list of lists or a two-dimensional array).
+
+        Returns
+        -------
+        numpy.ndarray
+            The bitstrings in sorted order, one per row: a new two-dimensional int32 array (the argument is not
+            changed).
         """
 
     @overload
-    def rank_indices(self, arg: Annotated[NDArray, dict(shape=(None, None), order='C', device='cpu')], /) -> list[int]: ...
+    def rank_indices(self, arg: Annotated[NDArray, dict(shape=(None, None), order='C', device='cpu')], /) -> Annotated[NDArray[numpy.int32], dict(shape=(None,))]: ...
 
     @overload
-    def rank_indices(self, arg: Sequence[Sequence[int]], /) -> list[int]:
+    def rank_indices(self, arg: Sequence[Sequence[int]], /) -> Annotated[NDArray[numpy.int32], dict(shape=(None,))]:
         """
-        Sort a list of bitstrings in lexicographical order in-place.
+        The order of bitstrings sorted in lexicographical order, by the comparison ordering. Each bitstring is
+        evaluated once.
 
         Parameters
         ----------
         bitstrings : list
-            A list of bitstrings to sort.
+            The bitstrings to sort, one per row (a list of lists or a two-dimensional array).
+
+        Returns
+        -------
+        numpy.ndarray
+            The indices of the bitstrings (rows) in sorted order: a new int32 array.
         """
 
-    def get_comparison_ordering(self) -> list[int]:
+    def get_comparison_ordering(self) -> Annotated[NDArray[numpy.int32], dict(shape=(None,))]:
         """
         Get the current comparison ordering vector.
 
         Returns
         -------
-        list of int
-            The current state of the comparison ordering vector.
+        numpy.ndarray
+            The current state of the comparison ordering vector: a new int32 array (step() changes the
+            ordering, not this array).
         """
 
 class AbstractWModel(IntegerSingleObjective):
@@ -1191,20 +1210,20 @@ class Graph:
         """Edge list representation of the graph"""
 
     @property
-    def constraint_weights(self) -> list[float]:
-        """Constraint weights"""
+    def constraint_weights(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,), writable=False)]:
+        """Constraint weights (a read-only numpy array)"""
 
     @property
-    def constraint_variances(self) -> list[float]:
-        """Constraint variances"""
+    def constraint_variances(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,), writable=False)]:
+        """Constraint variances (a read-only numpy array)"""
 
     @property
-    def edge_weights(self) -> list[float]:
-        """Edge weights"""
+    def edge_weights(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,), writable=False)]:
+        """Edge weights (a read-only numpy array)"""
 
     @property
-    def vertex_weights(self) -> list[float]:
-        """Vertex weights"""
+    def vertex_weights(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,), writable=False)]:
+        """Vertex weights (a read-only numpy array)"""
 
 class GraphProblem(IntegerSingleObjective):
     """
@@ -1458,7 +1477,10 @@ class RealStarDiscrepancy(RealSingleObjective):
         """
 
     @property
-    def grid(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None, None))]: ...
+    def grid(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None, None))]:
+        """
+        The grid of the problem, as a new (n_samples, n_variables) numpy array (float64)
+        """
 
     @overload
     @staticmethod
@@ -1535,7 +1557,10 @@ class IntegerStarDiscrepancy(IntegerSingleObjective):
         """
 
     @property
-    def grid(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None, None))]: ...
+    def grid(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None, None))]:
+        """
+        The grid of the problem, as a new (n_samples, n_variables) numpy array (float64)
+        """
 
     @overload
     @staticmethod
@@ -1580,19 +1605,27 @@ class ManyAffine(RealSingleObjective):
     def __init__(self, xopt: Sequence[float], weights: Sequence[float], instances: Sequence[int], n_variables: int, scale_factors: Sequence[float] = ...) -> None: ...
 
     @property
-    def weights(self) -> list[float]: ...
+    def weights(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
+        """The weights of the 24 BBOB functions, as a new numpy array (float64)"""
 
     @property
-    def instances(self) -> list[int]: ...
+    def instances(self) -> Annotated[NDArray[numpy.int32], dict(shape=(None,))]:
+        """The instances of the 24 BBOB functions, as a new numpy array (int32)"""
 
     @property
-    def scale_factors(self) -> list[float]: ...
+    def scale_factors(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
+        """
+        The scale factors of the 24 BBOB functions, as a new numpy array (float64)
+        """
 
     @property
     def sub_problems(self) -> list[BBOB]: ...
 
     @property
-    def function_values(self) -> list[float]: ...
+    def function_values(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
+        """
+        The values of the 24 BBOB functions, as a new numpy array (float64); evaluations do not set them, so they are zeros
+        """
 
 class DoubleFunnel(RealSingleObjective):
     @property

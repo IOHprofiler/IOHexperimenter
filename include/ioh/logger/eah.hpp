@@ -618,16 +618,26 @@ namespace ioh
              * second index: number of dimensions,
              * third index: number of instances.
              * last index: number of runs.
+             *
+             * The dimensions are those of the first problem, the instances those of its first dimension and the runs
+             * those of its first instance; a level without data counts 0 (all are 0 before any problem is logged).
              */
             std::tuple<size_t, size_t, size_t, size_t> size() const
             {
-                return std::make_tuple(
-                    _eah_suite.size(), // problems
-                    _eah_suite.begin()->second.size(), // dimensions
-                    _eah_suite.begin()->second.begin()->second.size(),
-                    // instances
-                    _eah_suite.begin()->second.begin()->second.begin()->second.size() // runs
-                    );
+                size_t dimensions = 0, instances = 0, runs = 0;
+                if (!_eah_suite.empty())
+                {
+                    const auto &first_problem = _eah_suite.begin()->second;
+                    dimensions = first_problem.size();
+                    if (!first_problem.empty())
+                    {
+                        const auto &first_dimension = first_problem.begin()->second;
+                        instances = first_dimension.size();
+                        if (!first_dimension.empty())
+                            runs = first_dimension.begin()->second.size();
+                    }
+                }
+                return std::make_tuple(_eah_suite.size(), dimensions, instances, runs);
             }
 
             /** Accessor to the range used for error targets in this logger instance. */

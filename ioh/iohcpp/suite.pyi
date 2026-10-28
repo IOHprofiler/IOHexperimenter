@@ -26,15 +26,21 @@ class RealBase:
 
     @property
     def problem_ids(self) -> Annotated[NDArray[numpy.int32], dict(shape=(None,))]:
-        """The list of all problems ids contained in the current suite."""
+        """
+        The ids of all problems contained in the current suite, as a new numpy array (int32).
+        """
 
     @property
     def dimensions(self) -> Annotated[NDArray[numpy.int32], dict(shape=(None,))]:
-        """The list of all problems ids contained in the current suite."""
+        """
+        The dimensions of all problems contained in the current suite, as a new numpy array (int32).
+        """
 
     @property
     def instances(self) -> Annotated[NDArray[numpy.int32], dict(shape=(None,))]:
-        """The list of all instance ids contained in the current suite."""
+        """
+        The instance ids of all problems contained in the current suite, as a new numpy array (int32).
+        """
 
     @property
     def name(self) -> str:
@@ -56,7 +62,7 @@ class Real(RealBase):
         A list of problems ids to include in this instantiation of the suite
     instances: list[int]
         A list of problem instances to include in this instantiation of the suite
-    problem_ids: list[int]
+    dimensions: list[int]
         A list of problem dimensions to include in this instantiation of the suite
     """
 
@@ -74,7 +80,7 @@ class BBOB(RealBase):
         A list of problems ids to include in this instantiation of the suite
     instances: list[int]
         A list of problem instances to include in this instantiation of the suite
-    problem_ids: list[int]
+    dimensions: list[int]
         A list of problem dimensions to include in this instantiation of the suite
     """
 
@@ -92,7 +98,7 @@ class SBOX(RealBase):
         A list of problems ids to include in this instantiation of the suite
     instances: list[int]
         A list of problem instances to include in this instantiation of the suite
-    problem_ids: list[int]
+    dimensions: list[int]
         A list of problem dimensions to include in this instantiation of the suite
     """
 
@@ -110,7 +116,7 @@ class RealStarDiscrepancy(RealBase):
         A list of problems ids to include in this instantiation of the suite
     instances: list[int]
         A list of problem instances to include in this instantiation of the suite
-    problem_ids: list[int]
+    dimensions: list[int]
         A list of problem dimensions to include in this instantiation of the suite
     """
 
@@ -132,15 +138,21 @@ class IntegerBase:
 
     @property
     def problem_ids(self) -> Annotated[NDArray[numpy.int32], dict(shape=(None,))]:
-        """The list of all problems ids contained in the current suite."""
+        """
+        The ids of all problems contained in the current suite, as a new numpy array (int32).
+        """
 
     @property
     def dimensions(self) -> Annotated[NDArray[numpy.int32], dict(shape=(None,))]:
-        """The list of all problems ids contained in the current suite."""
+        """
+        The dimensions of all problems contained in the current suite, as a new numpy array (int32).
+        """
 
     @property
     def instances(self) -> Annotated[NDArray[numpy.int32], dict(shape=(None,))]:
-        """The list of all instance ids contained in the current suite."""
+        """
+        The instance ids of all problems contained in the current suite, as a new numpy array (int32).
+        """
 
     @property
     def name(self) -> str:
@@ -162,7 +174,7 @@ class Integer(IntegerBase):
         A list of problems ids to include in this instantiation of the suite
     instances: list[int]
         A list of problem instances to include in this instantiation of the suite
-    problem_ids: list[int]
+    dimensions: list[int]
         A list of problem dimensions to include in this instantiation of the suite
     """
 
@@ -180,7 +192,7 @@ class PBO(IntegerBase):
         A list of problems ids to include in this instantiation of the suite
     instances: list[int]
         A list of problem instances to include in this instantiation of the suite
-    problem_ids: list[int]
+    dimensions: list[int]
         A list of problem dimensions to include in this instantiation of the suite
     """
 
@@ -198,7 +210,7 @@ class Submodular(IntegerBase):
         A list of problems ids to include in this instantiation of the suite
     instances: list[int]
         A list of problem instances to include in this instantiation of the suite
-    problem_ids: list[int]
+    dimensions: list[int]
         A list of problem dimensions to include in this instantiation of the suite
     """
 
@@ -216,7 +228,7 @@ class IntegerStarDiscrepancy(IntegerBase):
         A list of problems ids to include in this instantiation of the suite
     instances: list[int]
         A list of problem instances to include in this instantiation of the suite
-    problem_ids: list[int]
+    dimensions: list[int]
         A list of problem dimensions to include in this instantiation of the suite
     """
 

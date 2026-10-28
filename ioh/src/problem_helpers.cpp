@@ -36,8 +36,11 @@ namespace ioh_python::problem_helpers
                 "x",
                 // a writable view of x, which keeps the Solution alive
                 [](Class &c) { return make_mutable_array(c.x, nb::find(&c)); },
-                [](Class &self, const std::vector<T> &x) { self.x = x; },
-                "The search point in a search space, e.g., R^d or {0,1}^d")
+                // a copy assignment, which keeps the buffer (and the arrays read before) for as many values or fewer
+                [](Class &self, const InputVector<T> &x) { self.x = x; },
+                "The search point in a search space, e.g., R^d or {0,1}^d: a numpy array that is a view of the "
+                "solution's values (writing to it changes the solution). Assigning x replaces the values; read x "
+                "again after assigning one of another length, as an array read before may no longer be valid.")
             .def_ro("y", &Class::y, "The corresponding objective value of `x`, i.e., y = f(x)")
             .def("__repr__", &Class::repr);
     }
@@ -197,8 +200,9 @@ namespace ioh_python::problem_helpers
 
                 Parameters
                 ----------
-                    f: list -> float
-                        A function that computes the violation of a point
+                    f: numpy.ndarray -> float
+                        A function that computes the violation of a point (a new numpy array, float64 for real and
+                        int32 for integer problems)
                     weight: float
                         The weight given to the violation when penalizing the objective function
                     exponent: float
@@ -259,12 +263,12 @@ namespace ioh_python::problem_helpers
             // copies on read; the arrays own their data, so the getters do not tie them to the bounds
             .def_prop_rw(
                 "ub", [](const Class &c) { return make_array(c.ub); },
-                [](Class &c, const std::vector<T> &vec) { c.ub = vec; }, nb::for_getter(nb::rv_policy::reference),
-                "The upper bound (box constraint)")
+                [](Class &c, const InputVector<T> &vec) { c.ub = vec; }, nb::for_getter(nb::rv_policy::reference),
+                "The upper bound (box constraint): a new numpy array on every read (assign ub to change it)")
             .def_prop_rw(
                 "lb", [](const Class &c) { return make_array(c.lb); },
-                [](Class &c, const std::vector<T> &vec) { c.lb = vec; }, nb::for_getter(nb::rv_policy::reference),
-                "The lower bound (box constraint)")
+                [](Class &c, const InputVector<T> &vec) { c.lb = vec; }, nb::for_getter(nb::rv_policy::reference),
+                "The lower bound (box constraint): a new numpy array on every read (assign lb to change it)")
             .def("__repr__", &Class::repr)
             .def("compute_violation",
                  [](Class &c, const InputArray<T> &x) { return c.compute_violation(to_vector<T>(x)); },
@@ -400,7 +404,7 @@ void define_helper_classes(nb::module_ &m)
                 ----------
                 evaluations: int
                     The current number of evaluations
-                y_best: float
+                raw_y: float
                     The raw current fitness value
                 raw_y_best: float
                     The raw current best fitness value
@@ -412,15 +416,15 @@ void define_helper_classes(nb::module_ &m)
                     The transformed current fitness value with constraints applied
                 y_best: float
                     The transformed current best fitness value with constraints applied
-                x: np.npdarray | list
+                x: numpy.ndarray | list
                     The current solution passed to problem
-                violation: np.npdarray | list
+                violations: numpy.ndarray | list
                     The current solution constraint violations
-                penalties: np.npdarray | list
+                penalties: numpy.ndarray | list
                     The current solution constraint penalties
                 optimum: Solution
                     The optimum solution for the problem
-                has_improved: bool = True
+                has_improved: bool = False
                     Whether the evaluation has caused an improvement in the objective value
 
             )pbdoc")
@@ -436,9 +440,23 @@ void define_helper_classes(nb::module_ &m)
         .def_ro("y", &Info::y)
         .def_ro("y_best", &Info::y_best)
 
-        .def_ro("x", &Info::x)
-        .def_ro("violations", &Info::violations)
-        .def_ro("penalties", &Info::penalties)
-        .def_ro("objective", &Info::optimum, "The best possible fitness value")
+        // copies: problem.log_info is the problem's own, whose vectors change (and x is reallocated) at every
+        // evaluation, and whose violations and penalties are reallocated when a constraint is added or removed
+        .def_prop_ro(
+            "x", [](const Info &info) { return ioh_python::make_array(info.x); }, nb::rv_policy::automatic,
+            "The current solution passed to problem, as a new numpy array (float64, also for integer problems)")
+        .def_prop_ro(
+            "violations", [](const Info &info) { return ioh_python::make_array(info.violations); },
+            nb::rv_policy::automatic,
+            "The constraint violations of the current solution, as a new numpy array (float64): first the total, "
+            "then one per constraint")
+        .def_prop_ro(
+            "penalties", [](const Info &info) { return ioh_python::make_array(info.penalties); },
+            nb::rv_policy::automatic,
+            "The constraint penalties of the current solution, as a new numpy array (float64): first the total, "
+            "then one per constraint")
+        .def_prop_ro(
+            "objective", [](const Info &info) { return info.optimum; },
+            "The optimum of the problem and its objective value, as a new RealSolution (a copy)")
         .def_ro("has_improved", &Info::has_improved, "Whether the last call to problem has caused global improvement.");
 }

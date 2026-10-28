@@ -28,6 +28,40 @@ namespace ioh_python::empirical_attainment
 
         nb::class_<Log10Scale<T>, Scale<T>>(m, ("Log10" + name).c_str()).def(nb::init<T, T, size_t>());
     }
+
+    //! An attainment matrix in Python: a two-dimensional bool array, error targets (rows) by evaluation targets
+    using AttainmentArray = nb::ndarray<nb::numpy, bool, nb::ndim<2>>;
+
+    //! EAH.data in Python: dicts by problem id, dimension, instance and run, of attainment matrices
+    using RunsDict = nb::typed<nb::dict, size_t, AttainmentArray>;
+    using InstancesDict = nb::typed<nb::dict, size_t, RunsDict>;
+    using DimensionsDict = nb::typed<nb::dict, size_t, InstancesDict>;
+    using AttainmentDict = nb::typed<nb::dict, size_t, DimensionsDict>;
+
+    //! The attainment matrices of an EAH as nested dicts of new arrays (nanobind's casters would make lists of the
+    //! std::vector<bool> rows)
+    AttainmentDict attainment_dict(const ioh::logger::eah::AttainmentSuite &suite)
+    {
+        AttainmentDict problems;
+        for (const auto &[problem_id, dimensions] : suite)
+        {
+            DimensionsDict by_dimension;
+            for (const auto &[dimension, instances] : dimensions)
+            {
+                InstancesDict by_instance;
+                for (const auto &[instance, runs] : instances)
+                {
+                    RunsDict by_run;
+                    for (const auto &[run, matrix] : runs)
+                        by_run[nb::cast(run)] = nb::cast(make_array_2d(matrix));
+                    by_instance[nb::cast(instance)] = by_run;
+                }
+                by_dimension[nb::cast(dimension)] = by_instance;
+            }
+            problems[nb::cast(problem_id)] = by_dimension;
+        }
+        return problems;
+    }
 } // namespace ioh_python::empirical_attainment
 
 void define_eah(nb::module_ &m)
@@ -35,6 +69,7 @@ void define_eah(nb::module_ &m)
     namespace logger = ioh::logger;
     namespace eah = ioh::logger::eah;
     using logger::EAH;
+    using ioh_python::empirical_attainment::attainment_dict;
     using ioh_python::empirical_attainment::define_eah_scale;
 
     auto eah_module = m.def_submodule("eah");
@@ -50,8 +85,19 @@ void define_eah(nb::module_ &m)
              nb::arg("eval_scale"))
         .def(nb::init<eah::Log10Scale<double> &, eah::Log10Scale<size_t> &>(), nb::arg("error_scale"),
              nb::arg("eval_scale"))
-        .def("at", &EAH::at)
-        .def_prop_ro("data", &EAH::data)
+        .def(
+            "at",
+            [](const EAH &l, size_t problem_id, size_t instance_id, size_t dim_id, size_t run) {
+                return ioh_python::make_array_2d(l.at(problem_id, instance_id, dim_id, run));
+            },
+            R"pbdoc(
+                The attainment matrix of a run, by problem id, instance, dimension and run: a new two-dimensional
+                bool array, error targets (rows) by evaluation targets (columns).
+            )pbdoc")
+        .def_prop_ro(
+            "data", [](const EAH &l) { return attainment_dict(l.data()); },
+            "The attainment matrices, in dicts by problem id, dimension, instance and run (new arrays, as at "
+            "returns them)")
         .def_prop_ro("size", &EAH::size)
         .def_prop_ro("error_range", &EAH::error_range, nb::rv_policy::reference)
         .def_prop_ro("eval_range", &EAH::eval_range, nb::rv_policy::reference)
