@@ -32,7 +32,6 @@ endif()
 option(BUILD_TESTS "Whether to build test cases with gtest" ${IOH_TOP_LEVEL})
 option(BUILD_EXAMPLE "Whether to build examples" ${IOH_TOP_LEVEL})
 option(BUILD_DOCS "Build docs" OFF)    
-option(BUILD_SERVER "Whether to build the objective function server" OFF) 
 option(ENABLE_MKLANDSCAPE_PROBLEMS "Enbale to build mk-landscape problems" OFF) # Turn this option ON if you plan to test MK-landscape problems.
 
 # Link-time optimization of the release configurations, of the library and the Python extension (nanobind adds
@@ -118,15 +117,6 @@ include_directories(${EXTERNAL_DIR}/fmt/include/)
 add_subdirectory(${EXTERNAL_DIR}/fmt)
 target_link_libraries(ioh PUBLIC fmt::fmt-header-only)
 
-# Add Json lib 
-if(BUILD_SERVER AND EXISTS ${EXTERNAL_DIR}/json/CMakeLists.txt)
-    set(INCLUDE_JSON true)
-    add_compile_definitions(HAS_JSON)
-    set(JSON_Install OFF CACHE INTERNAL "")
-    add_subdirectory(${EXTERNAL_DIR}/json)
-    target_link_libraries(ioh PUBLIC nlohmann_json::nlohmann_json)
-endif()
-
 if(ENABLE_MKLANDSCAPE_PROBLEMS)
 
     # Adding Macro for C++ Headers
@@ -194,21 +184,12 @@ if(NOT BUILD_PYTHON_PACKAGE)
 endif()
 
 
-if (DEFINED INCLUDE_JSON)
-install(TARGETS ioh fmt-header-only nlohmann_json
+install(TARGETS ioh fmt-header-only
     EXPORT ioh-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-) 
-else()
-install(TARGETS ioh fmt-header-only 
-    EXPORT ioh-targets
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-) 
-endif()
+)
 
 install(DIRECTORY include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
@@ -256,10 +237,5 @@ endif()
 
 if(BUILD_PYTHON_PACKAGE)
     add_subdirectory(ioh)
-endif()
-
-if(BUILD_SERVER)
-    include_directories(${EXTERNAL_DIR}/cxxopts/include/)
-    add_subdirectory(server)
 endif()
 
