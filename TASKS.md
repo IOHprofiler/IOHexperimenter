@@ -1042,7 +1042,7 @@ Task:
 
 ---
 
-## WP7 — Return numpy arrays instead of lists 🚧 implemented (branch `wp7-numpy-returns`)
+## WP7 — Return numpy arrays instead of lists ✅ merged (#226)
 
 Depends on: WP6.
 
@@ -1387,7 +1387,7 @@ Each WP adds its user-visible changes here (§2).
 
 ---
 
-## WP9 — Server to its own repository 🚧 T9.1 done (`IOHprofiler/ioh-objective-server`); T9.2 implemented (branch `wp9-server-moved`)
+## WP9 — Server to its own repository ✅ merged (#228; the server is in `IOHprofiler/ioh-objective-server`)
 
 Decided with the maintainer during WP6 (§1): fewer dependencies here. Independent of WP6/WP7; to be done before
 the release (WP8), which announces it.
