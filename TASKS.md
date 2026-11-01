@@ -283,7 +283,7 @@ What was done, for reference by later WPs:
 
 ---
 
-## WP2 — Sobol direction numbers as a table ✅ T2.1 merged (#219), T2.2 done in WP3; T2.3 open
+## WP2 — Sobol direction numbers as a table ✅ T2.1 merged (#219), T2.2 done in WP3, T2.3 done in WP8
 
 Depends on: WP1. Small and independent. T2.2 and T2.3 are later tasks recorded here; they do not
 block WP3.
@@ -339,7 +339,7 @@ What was done, and where it differs from T2.1 below:
   it to "Wheels": only `name:` changed, because PyPI's trusted publishing is tied to the file name
   `python-publish.yml`.
 
-### T2.3 Final CI timing (open, after all WPs)
+### T2.3 Final CI timing ✅ measured in WP8
 
 * Once all WPs are merged, measure how long CI takes and compare with the baseline below: wall time
   and runner minutes of `ci.yml` and of the wheels workflow (a pull-request run and a full run), and
@@ -360,6 +360,20 @@ What was done, and where it differs from T2.1 below:
     minutes; with a warm cache (40321260347, second attempt) 19 runner minutes, 4.8 min wall (the
     Windows C++ job); pull-request wheels (40319793264) 23 wheel jobs, the sdist and the package check,
     94 runner minutes.
+* **Measured** in WP8 (124d08c6, after all other WPs; the pull-request runs together, as for WP2, and the full
+  run afterwards, alone):
+  * `ci.yml` (41330761377): 13 jobs of up to 4.5 min, 20 runner minutes, 4.6 min wall, with a warm compiler cache
+    (WP1: 12 jobs, 50 runner minutes, 7.4 min wall).
+  * Pull-request wheels (41330761336): 19 wheel jobs (one abi3 wheel replaces cp312–cp315 since WP6), the sdist and
+    the package check, 59 runner minutes, 6.8 min wall, jobs queued up to 2.2 min (WP2: 23 wheel jobs, 94 runner
+    minutes, 10.0 min wall).
+  * Full wheels by manual dispatch (41331445772): 29 wheel jobs, the sdist and the package check, 105 runner
+    minutes, 18.1 min wall, jobs queued up to 5.3 min (#218: 227 runner minutes, 41 min wall, jobs queued up to
+    27 min).
+  * Docs (41330761586, new in WP8): one job, 2.9 min.
+  * Local build of the Python extension (§2: clean build directory, Release, Ninja, -j4, min of 2; Apple M5,
+    clang 21): `uv build --wheel --no-build-isolation`, which includes making the wheel, takes 11.3 s wall and
+    26.4 s CPU (§0, before WP2: 40.6 s wall and ≈103–111 s CPU for the extension alone).
 
 ---
 
@@ -1235,7 +1249,7 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
   * Docs in CI: `.github/workflows/docs.yml` builds the documentation as `doc/generate_docs.py` does (doxygen, then
     sphinx; the package installed from the checkout, Python 3.13 for sphinx 9.2, graphviz for the inheritance
     diagrams) for every pull request and push, and deploys master's to GitHub Pages (`actions/upload-pages-artifact`,
-    `actions/deploy-pages`; the `github-pages` environment accepts only the default branch). The maintainer switches
+    `actions/deploy-pages`; only pushes to master and manual runs on master deploy). The maintainer switches
     the Pages source from "Deploy from a branch" (master, `/docs`) to "GitHub Actions". `generate_docs.py` builds
     into `doc/build/html` and no longer copies the site into `docs/`.
   * Removed: `docs/` (1,262 generated files, 33 MB; the live site said 0.3.14, and it still held doxygen HTML pages of
@@ -1259,6 +1273,13 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
   * Checked locally: the sphinx half, with the doxygen XML missing (doxygen is not installed here); the pull request
     runs the whole build. The new pages build without warnings. The other warnings were there before and come from
     docstrings (see Later).
+  * Found by the first build in CI: `generate_docs.py` read only the `memberdef` elements of a namespace's sections,
+    but doxygen 1.9.8 (Ubuntu 24.04's) refers to the members documented in a group with `member` elements, so the
+    script raised `KeyError: 'memberdef'`; it reads both now. The pages of `ioh::data` (new in 0.4.0) and `ioh::eaf`
+    were in no table of contents (now on the C++ page), and the page of `std` is skipped like fmt's (the test was a
+    substring test). The build in CI succeeds with 545 warnings: the docstrings' (see Later) and a dozen of breathe's
+    (declarations it cannot parse, e.g. `thread_local`, and overloads it cannot resolve). The site has 214 pages
+    (21 MB, no broken local links).
   * After the merge: the wheels workflow on master by manual dispatch, the release with the maintainer's go-ahead,
     the wheels on PyPI checked, then the pin of `IOHprofiler/ioh-objective-server` moved to v0.4.0 and its CI's
     SSH-to-https rewrite dropped.
