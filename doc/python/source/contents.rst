@@ -7,4 +7,6 @@ Contents
    index.rst
    cpp.rst
    python.rst
+   upgrading.md
+   changelog.md
    server.rst

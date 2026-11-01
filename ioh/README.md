@@ -1,13 +1,13 @@
 ## Quickstart
 
-Note that these instructions are for versions >= 0.3.10. The minimum required Python version is 3.6.
+These instructions are for version 0.4 and later, which needs Python 3.10 or later (3.12 or later is recommended).
 
 ### Installation
 
 You can install the experimenter directly from pip:
 
 ```bash
-pip install ioh>=0.3.10
+pip install ioh
 ```
 
 To verify the installation, you can use:
@@ -15,6 +15,8 @@ To verify the installation, you can use:
 ```bash
 pip show ioh
 ```
+
+The data files of the problems (e.g. the graphs and the CEC transformations) are installed with the package: `ioh.data_root()` shows the directory in use, and `ioh.set_data_root(path)` or the environment variable `IOH_RESOURCES` choose another one.
 
 ### Create a function object
 

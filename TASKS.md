@@ -1139,7 +1139,7 @@ Depends on: WP6.
 
 ---
 
-## WP8 — Documentation and release
+## WP8 — Documentation and release 🚧 docs and version implemented (branch `wp8-docs-release`); the release follows the merge
 
 Depends on: all previous WPs (each WP also documents its own changes as it lands).
 
@@ -1231,10 +1231,42 @@ Depends on: all previous WPs (each WP also documents its own changes as it lands
   no `TASKS.md` in the sdist); then publish the GitHub release (`release: published` triggers the
   upload) and verify the wheels on PyPI.
 * Final CI timing (T2.3).
+* **Record** (branch `wp8-docs-release`):
+  * Docs in CI: `.github/workflows/docs.yml` builds the documentation as `doc/generate_docs.py` does (doxygen, then
+    sphinx; the package installed from the checkout, Python 3.13 for sphinx 9.2, graphviz for the inheritance
+    diagrams) for every pull request and push, and deploys master's to GitHub Pages (`actions/upload-pages-artifact`,
+    `actions/deploy-pages`; the `github-pages` environment accepts only the default branch). The maintainer switches
+    the Pages source from "Deploy from a branch" (master, `/docs`) to "GitHub Actions". `generate_docs.py` builds
+    into `doc/build/html` and no longer copies the site into `docs/`.
+  * Removed: `docs/` (1,262 generated files, 33 MB; the live site said 0.3.14, and it still held doxygen HTML pages of
+    older versions, because the copy never deleted anything), and the sources that `generate_docs.py` generates,
+    `doc/python/source/api/*.rst` (148, sphinx-automodapi) and `doc/python/source/cpp/*.rst` (43, from the doxygen
+    XML), now ignored.
+  * Tools: the versions are pinned in `doc/requirements.txt` (sphinx 9.2.0, furo, breathe 5.1.0,
+    sphinx-automodapi 0.22.1, myst-parser 5.1.0, xmltodict). The unmaintained m2r2 is replaced by MyST: the READMEs
+    are included with `.. include:: ... :parser: myst_parser.sphinx_`, and the changelog and the upgrade guide are
+    Markdown pages. `conf.py` noted a local patch of sphinx-automodapi for comma-separated `:skip:` lists; the one such
+    list (`suite.rst`) became one `:skip:` per name. `sphinx.ext.imgmath` (needs LaTeX; the docs have no math) is
+    removed, so sphinx's default MathJax renders any.
+  * Content: `CHANGELOG.md` (from the release-notes draft below, ordered by topic for users) and the upgrade guide
+    (`doc/python/source/upgrading.md`, from the two lists above), both pages of the docs; the README (installation,
+    wheels, building from source, data files, links to the changelog and the upgrade guide; the banner from an
+    absolute URL, so that PyPI shows it, with the alt text "IOHexperimenter banner"); `ioh/README.md` (Python 3.10,
+    data files); `include/README.md` (the compilers CI tests, data files, example links that pointed to
+    `include/example/`); CONTRIBUTING (building the docs, the changelog, releasing); the project URLs Repository and
+    Changelog for PyPI.
+  * Version 0.4.0. `format.hpp` no longer includes `<fmt/compile.h>` (nothing uses `FMT_COMPILE`).
+  * Checked locally: the sphinx half, with the doxygen XML missing (doxygen is not installed here); the pull request
+    runs the whole build. The new pages build without warnings. The other warnings were there before and come from
+    docstrings (see Later).
+  * After the merge: the wheels workflow on master by manual dispatch, the release with the maintainer's go-ahead,
+    the wheels on PyPI checked, then the pin of `IOHprofiler/ioh-objective-server` moved to v0.4.0 and its CI's
+    SSH-to-https rewrite dropped.
 
 ### Release-notes draft
 
-Each WP adds its user-visible changes here (§2).
+Each WP adds its user-visible changes here (§2). Since WP8 they are in `CHANGELOG.md`, which holds the 0.4.0 notes made
+from this draft.
 
 * Since 0.3.22, before WP1: ManyAffine (MA-BBOB) evaluates faster by skipping components with weight
   0; their `sub_problems` are no longer evaluated, so their state no longer changes (#216).
@@ -1456,3 +1488,33 @@ Python package and the tests need neither, and the sdist has not contained them 
 * A problem that the factory creates for a registered Python subclass (e.g. `ioh.get_problem("MySubclass", 1, 2)`)
   raises `RuntimeError: Tried to call pure virtual function "evaluate"` when evaluated: the C++ object has no Python
   object with the override (checked in WP7).
+* Docstrings (found in WP8, when the docs were first built in CI): the docstrings of overloaded methods, e.g.
+  `__call__` and `compute_violation`, are indented, so their Parameters and Returns sections become block quotes in
+  nanobind's "Overloaded function" list. Sphinx reports "Unexpected section title" (340 errors, once per problem
+  class page that inherits `__call__`) and shows them without the headings. The graph problems' docstrings write
+  `|V|` and the like, which reStructuredText reads as substitutions (5 errors).
+* Constraints in the standard form (discussed with the maintainer on 2026-11-01, who keeps it for later):
+  * Now: a constraint carries its own handling (`enforced`: NOT, HIDDEN, SOFT, HARD, OVERRIDE; `weight`, `exponent`),
+    and `problem(x)` returns the value with it applied: SOFT adds weight·violation^exponent, HARD and OVERRIDE skip the
+    objective and return the penalty, which `raw_y` holds too. "Violation" means squared distances (bounds), any
+    nonzero value (`RealConstraint`) or the cost c(x) (graph problems, also when feasible). Best-so-far and targets
+    compare the penalized value. Bounds are a constraint (`enforce_bounds`), and constraint objects keep the last
+    evaluation's state (hence the thread note for `wrap_problem`).
+  * Why: the graph problems' HARD constraint returns B − c(x) for an infeasible point (PackWhileTravel: capacity −
+    W(x) plus a negative constant), the published fitness, which keeps the Analyzer's one `raw_y` column meaningful.
+  * Found with a probe: MaxCut 2100 reports violations [1, 1] and a penalty of 9 that is not applied for a feasible
+    point, and `OnViolation` fires; penalties ignore the optimization direction (`enforce_bounds()` on OneMax gives
+    the out-of-bounds [5,1,1,1] 24 and the optimum 4); HARD with weight 1 on Sphere gives a point just outside the
+    bounds 0.01 and the optimum 79.48; a HIDDEN constraint that is violated everywhere still sets `optimum_found`; a
+    constraint returning −1 counts as violated, and with exponent 0.5 the problem returns NaN.
+  * The standard form (COCO's bbob-constrained, the CEC constrained competitions, pymoo): f(x) subject to
+    g_i(x) ≤ 0, violation max(0, g_i(x)), the algorithm handles infeasible points, and results count feasible points
+    (feasibility rules: feasible beats infeasible, feasible by f, infeasible by total violation).
+  * Proposed decisions: `problem(x)` returns f(x), and the state and `LogInfo` hold the constraint values, the total
+    violation and a feasible flag (constraints without `enforced`, `weight`, `exponent` and state; an opt-in penalty
+    helper that respects the optimization direction); inequalities only (an equality as |h(x)| − ε ≤ 0); best-so-far,
+    `has_improved`, ON_IMPROVEMENT and targets by the feasibility rules; bounds are the domain, not a constraint
+    (`enforce_bounds` goes; star discrepancy keeps −∞ outside the unit cube in its definition); graph problems: f is
+    the submodular objective and the budget g(x) = c(x) − B (the published fitness orders points as the feasibility
+    rules do; MaxInfluence is then also evaluated for infeasible points, which is slow); the Analyzer writes only
+    feasible improvements to `raw_y`. NQueens and MIS keep the penalty terms of their published definitions.

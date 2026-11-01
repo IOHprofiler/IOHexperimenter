@@ -2,5 +2,6 @@ Suite
 ================
 .. automodapi:: ioh.iohcpp.suite
     :no-heading:
-    :skip: RealBase, IntegerBase
+    :skip: RealBase
+    :skip: IntegerBase
     :inherited-members:

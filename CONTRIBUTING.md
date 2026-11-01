@@ -12,6 +12,7 @@ Note that this page is __under construction__. More detailed guidelines are bein
 * [Adding new problems and suites](#adding-new-problems-and-suites)  <!-- * [Creating new logger](#creating-new-loggers) -->
 * [Suggesting enhancements](#suggesting-enhancements)
 * [Building and testing](#building-and-testing)
+* [Releasing](#releasing)
 * [Pull request](#pull-request)
 
 [Styleguides](#styleguides)
@@ -316,7 +317,15 @@ Clone the repository with its submodules: `git clone --recursive https://github.
 
 * Python package: `pip install -e .` builds the extension with [scikit-build-core](https://scikit-build-core.readthedocs.io) and CMake in `build/<wheel tag>`. That directory is kept, but each isolated build starts a new CMake configuration and compiles the C++ library again; after `pip install scikit-build-core cmake ninja`, `pip install --no-build-isolation -e .` compiles only what changed. Run the tests with `python -m unittest -v`.
 * C++ library: `cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug && cmake --build build --target test_ioh --parallel 4`, then run `build/tests/test_ioh` or `ctest --test-dir build`. With `-DIOH_TEST_PER_FILE=ON` every test file also gets an executable of its own.
-* After changing the bindings, regenerate the type stubs: `pip install mypy nanobind==3.1.0` (the version the package builds with) and `python tools/gen_stubs.py`, with the package installed with `pip install -e .`. `python doc/generate_docs.py` builds the documentation (it needs doxygen and sphinx).
+* After changing the bindings, regenerate the type stubs: `pip install mypy nanobind==3.1.0` (the version the package builds with) and `python tools/gen_stubs.py`, with the package installed with `pip install -e .`. `python doc/generate_docs.py` builds the documentation into `doc/build/html`; it needs doxygen, the package installed and `pip install -r doc/requirements.txt`. The Docs workflow builds it for every pull request and publishes the master branch's at https://iohprofiler.github.io/IOHexperimenter.
+
+### Releasing
+
+<a id="releasing"></a>
+
+* Set the version in `VERSION` (the package and the documentation read it) and give the changes in `CHANGELOG.md` the version's heading.
+* Run the Wheels workflow on master by manual dispatch (`gh workflow run python-publish.yml --ref master`) and check its wheels and sdist.
+* Publish a GitHub release with the tag `v<version>`: publishing it runs the Wheels workflow again, which uploads the wheels and the sdist to PyPI.
 
 ### Pull request
 
@@ -326,6 +335,7 @@ To make sure that your contributions are considered and understood, please follo
 
 * Follow the [styleguides](#styleguides)
 * Follow the [templates](#pr-templates)
+* Add user-visible changes to [CHANGELOG.md](CHANGELOG.md), under a heading for the next version
 * Verify that all [status checks](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/about-status-checks) are passing after submitting the pull request.
 
 #### Pull request templates

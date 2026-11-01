@@ -24,6 +24,8 @@ dependencies = ["numpy>=2.0"]
 
 [project.urls]
 Homepage = "https://iohprofiler.github.io/IOHexperimenter"
+Repository = "https://github.com/IOHprofiler/IOHexperimenter"
+Changelog = "https://github.com/IOHprofiler/IOHexperimenter/blob/master/CHANGELOG.md"
 
 [tool.scikit-build]
 minimum-version = "build-system.requires"

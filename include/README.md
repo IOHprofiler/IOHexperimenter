@@ -4,7 +4,7 @@
 
 The following toolkits are needed for compiling IOHexperimenter:
 
-* A `C++` compiler. The minimum compiler version is g++7 or equivalent, but we recommend g++9 or equivalent.
+* A `C++17` compiler (CI tests GCC 12 to 14, Clang 18, AppleClang and Visual Studio 2022).
 * [CMake](https://cmake.org), version 3.16 or higher
 
 Please use the following commands to download, compile, and install this package:
@@ -37,6 +37,10 @@ If you want to change build options, check the output of `cmake -L` or use `cmak
 
 ### Dependencies
 IOHexperimenter has a few dependencies, however, only the fmt/fmt library is required to compile the C++ backend. If you'd like to compile the source code without CMake, you need to provide the includes of fmt/fmt as an additional include directory, which can be found in the [external](https://github.com/IOHprofiler/IOHexperimenter/tree/master/external) folder of the repository, and compile the sources in `src/` along with your own: they hold the registries of the built-in problems and suites and the BBOB problem classes, so no program links without them.
+
+### Data files
+
+Some problems read data files: the CEC transformations and the graphs of the submodular problems. The library finds them with `ioh::data::root()`: the directory given to `ioh::data::set_root(path)`, else the one in the environment variable `IOH_RESOURCES`, else the `static` folder of the source tree it was built from, else `share/ioh` of the installation (where `make install` puts them). Missing data throw `ioh::data::data_error` when such a problem is created.
 
 ### Usage
 
@@ -72,9 +76,9 @@ double y0 = sp(x0);
 
 For more advanced usage examples, please take a look at the example folder in the github repository. Some examples include:
 
-* Using a [problem](./example/problem_example.hpp)
-* Using a pre-defined [problem suite](./example/suite_example.hpp)
-* Using the [logger](./example/logger_example.hpp) for storing benchmark data
+* Using a [problem](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/problem_example.hpp)
+* Using a pre-defined [problem suite](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/suite_example.hpp)
+* Using the [logger](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/logger_example.hpp) for storing benchmark data
 
 ### Adding new problems
 
@@ -179,4 +183,4 @@ A class whose data defines several problems lists them instead, in a static `reg
 problem, as the CEC2013 and graph problems do. `register_problem<T, Parent>(id, name)` registers a class under an id
 and name of your choice.
 
-Please check [this example](./example/problem_example.hpp) for adding continuous problems in this manner.
+Please check [this example](https://github.com/IOHprofiler/IOHexperimenter/blob/master/example/problem_example.hpp) for adding continuous problems in this manner.

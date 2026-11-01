@@ -1,25 +1,27 @@
 <p align="center">
-  <img src="banner.png" alt="IOHinspector banner" />
+  <img src="https://raw.githubusercontent.com/IOHprofiler/IOHexperimenter/master/banner.png" alt="IOHexperimenter banner" />
 </p>
 <hr>
 
 ![CI](https://github.com/IOHprofiler/IOHexperimenter/actions/workflows/ci.yml/badge.svg)
 ![Wheels](https://github.com/IOHprofiler/IOHexperimenter/actions/workflows/python-publish.yml/badge.svg)
+![Docs](https://github.com/IOHprofiler/IOHexperimenter/actions/workflows/docs.yml/badge.svg)
 ![Codacy Badge](https://app.codacy.com/project/badge/Grade/3980446b590c457793e61e3258224354)
 ![PyPI - Version](https://img.shields.io/pypi/v/ioh)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/ioh)
 
-**Experimenter** for **I**terative **O**ptimization **H**euristics (IOHs), built in* `C++`.
+**Experimenter** for **I**terative **O**ptimization **H**euristics (IOHs), built in `C++`.
 
 * **Documentation**: [https://iohprofiler.github.io/IOHexperimenter](https://iohprofiler.github.io/IOHexperimenter).
 * **Publication**: [https://arxiv.org/abs/1810.05281](https://arxiv.org/abs/1810.05281).
 * **Wiki page**: [https://iohprofiler.github.io](https://iohprofiler.github.io/).
+* **Changelog**: [CHANGELOG.md](https://github.com/IOHprofiler/IOHexperimenter/blob/master/CHANGELOG.md). Version 0.4.0 changes parts of the Python and C++ APIs: see the [upgrade guide](https://iohprofiler.github.io/IOHexperimenter/upgrading.html).
 
 **IOHexperimenter** *provides*:
 
 * A framework to ease the benchmarking of any iterative optimization heuristic.
 * [Pseudo-Boolean Optimization (PBO)](https://iohprofiler.github.io/IOHproblem/) problem set (25 pseudo-Boolean problems).
-* Integration of the well-known [Black-black Optimization Benchmarking (BBOB)](https://github.com/numbbo/coco) problem set (24 continuous problems).
+* Integration of the well-known [Black-box Optimization Benchmarking (BBOB)](https://github.com/numbbo/coco) problem set (24 continuous problems).
 * [W-model](https://dl.acm.org/doi/abs/10.1145/3205651.3208240?casa_token=S4U_Pi9f6MwAAAAA:U9ztNTPwmupT8K3GamWZfBL7-8fqjxPtr_kprv51vdwA-REsp0EyOFGa99BtbANb0XbqyrVg795hIw) problem sets constructed on OneMax and LeadingOnes.
 * Integration of the [Tree Decomposition (TD) Mk Landscapes](https://github.com/tobiasvandriessel/problem-generator) problems.
 * Submodular optimization problems, as seen in the [GECCO '22 workshop](https://cs.adelaide.edu.au/~optlog/CompetitionESO2022.php).
@@ -43,11 +45,15 @@
 
 ## C++
 
-The complete API documentation, can be found [here](https://iohprofiler.github.io/IOHexperimenter/cpp), as well as a Getting-Started guide. In addition to the documentation, some example projects can be found in the [example](https://github.com/IOHprofiler/IOHexperimenter/tree/master/example/) folder of this repository.
+IOHexperimenter is a C++17 library, built with CMake (3.16 or later); programs link its `ioh::ioh` target. The installation, a Getting-Started guide and the complete API documentation can be found [here](https://iohprofiler.github.io/IOHexperimenter/cpp). In addition to the documentation, some example projects can be found in the [example](https://github.com/IOHprofiler/IOHexperimenter/tree/master/example/) folder of this repository.
 
 ## Python
 
-The pip-version of IOHexperimenters python interface is available via [pip](https://pypi.org/project/ioh). A tutorial with python in the form of a jupyter notebook can be found in the example folder of [this repository](https://github.com/IOHprofiler/IOHexperimenter/tree/master/example/tutorial.ipynb).
+The Python interface is available on [PyPI](https://pypi.org/project/ioh): `pip install ioh`. It needs Python 3.10 or later; 3.12 or later is recommended. There are wheels for Linux (x86_64, aarch64), Windows (x64, ARM64) and macOS (Intel, arm64), also for the free-threaded Python 3.14t and 3.15t; elsewhere pip builds the package from source, which needs a C++17 compiler. To build it from a clone of this repository (with its submodules), run `pip install .` (see [building and testing](https://github.com/IOHprofiler/IOHexperimenter/blob/master/CONTRIBUTING.md#building-and-testing)).
+
+The data files of the problems are installed with the package: `ioh.data_root()` shows where they are, and `ioh.set_data_root(path)` or the environment variable `IOH_RESOURCES` choose another directory.
+
+A tutorial with python in the form of a jupyter notebook can be found in the example folder of [this repository](https://github.com/IOHprofiler/IOHexperimenter/tree/master/example/tutorial.ipynb).
 A Getting-Started guide and the full API documentation can be found [here](https://iohprofiler.github.io/IOHexperimenter/python).
 
 ## Contact

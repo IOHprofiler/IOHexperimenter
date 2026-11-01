@@ -3,7 +3,8 @@ C++
 
 This page contains the full documentation for the C++ engine of the IOHexperimenter.
 
-.. mdinclude:: ../../../include/README.md
+.. include:: ../../../include/README.md
+   :parser: myst_parser.sphinx_
 
 Logger Architecture
 -------------------

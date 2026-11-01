@@ -1,11 +1,14 @@
-"""Builds the documentation into docs/: python doc/generate_docs.py
+"""Builds the documentation into doc/build/html: python doc/generate_docs.py
 
-Needs CMake, doxygen, sphinx (see doc/python) and xmltodict. The type stubs are made by tools/gen_stubs.py.
+Needs CMake, doxygen, the ioh package (pip install .) and the Python packages of doc/requirements.txt. The docs
+workflow (.github/workflows/docs.yml) builds it the same way and deploys it to GitHub Pages. The type stubs are made
+by tools/gen_stubs.py.
 """
 import os
 import collections
 import subprocess
 import shutil
+import sys
 import warnings
 import xmltodict
 
@@ -151,13 +154,9 @@ def main():
         shutil.rmtree(os.path.join(directory, "source", "api"))
     except FileNotFoundError:
         pass
-    subprocess.check_call(f"make html", shell=True, cwd=directory)
-
-    shutil.copytree(
-        os.path.join(BASE_DIR, "doc", "build", "html"),
-        os.path.join(BASE_DIR, "docs"),
-        dirs_exist_ok=True
-    )
+    # sphinx of this interpreter, into doc/build/html
+    command = [sys.executable, "-m", "sphinx", "-M", "html", "source", os.path.join("..", "build")]
+    subprocess.check_call(command, cwd=directory)  # nosec B603: a fixed command with this interpreter
 
 if __name__ == '__main__':
     main()
