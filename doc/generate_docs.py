@@ -120,7 +120,12 @@ def generate_sphinx_templates_from_xml(xmldir = "doc/build/xml", outdir = "doc/p
             if isinstance(sections, (dict, collections.OrderedDict)):
                 sections = [sections]
             for sec in sections:
-                nsdata[sec['@kind']] = [f"{name}::{x}" for x in get_values(sec['memberdef'], "name")]
+                # a section holds its members (memberdef) or, for members documented in a group, refers to them
+                # (member, as doxygen 1.9.8 writes them)
+                members = [f"{name}::{x}" for tag in ('memberdef', 'member')
+                           for x in get_values(sec.get(tag), "name") or []]
+                members += nsdata.get(sec['@kind']) or []
+                nsdata[sec['@kind']] = sorted(set(members)) or None
                 if name == "ioh::logger" and sec['@kind'] == 'var':
                     nsdata[sec['@kind']] = [x for x in nsdata[sec['@kind']] if not "::_" in x]
 
