@@ -18,6 +18,8 @@ API documentation
     :maxdepth: 1
 
     cpp/ioh_common.rst
+    cpp/ioh_data.rst
+    cpp/ioh_eaf.rst
     cpp/ioh_logger.rst
     cpp/ioh_problem.rst
     cpp/ioh_suite.rst

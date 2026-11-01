@@ -132,7 +132,8 @@ def generate_sphinx_templates_from_xml(xmldir = "doc/build/xml", outdir = "doc/p
         ns[name] = nsdata
         
         filename = f'{name.replace("::", "_")}.rst'
-        if filename in ("fmt.rst"):
+        # the namespaces of the libraries used
+        if filename in ("fmt.rst", "std.rst"):
             continue
         with open(os.path.join(outdir, filename), "w+") as f:
             f.write(make_template(nsdata))
