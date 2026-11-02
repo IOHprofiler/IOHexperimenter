@@ -1,0 +1,67 @@
+# builds the documentation (doxygen and sphinx, doc/generate_docs.py) and deploys the master branch's to GitHub Pages
+name: Docs
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  # a new push to a pull request cancels its previous run. Other runs are never cancelled while they run, but a
+  # newer run in the same group replaces one that is still waiting.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build the documentation
+    runs-on: ubuntu-24.04
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: 4
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      # sphinx 9.2 needs Python 3.13 or later
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      # graphviz draws the inheritance diagrams
+      - name: Install doxygen and graphviz
+        run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
+
+      # the Python API pages are made from the installed package
+      - name: Install the package and the documentation tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install . -r doc/requirements.txt
+
+      - name: Build the documentation
+        run: python doc/generate_docs.py
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: doc/build/html
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    # only the master branch's documentation, never a pull request's
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

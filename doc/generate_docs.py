@@ -1,11 +1,14 @@
-"""Builds the documentation into docs/: python doc/generate_docs.py
+"""Builds the documentation into doc/build/html: python doc/generate_docs.py
 
-Needs CMake, doxygen, sphinx (see doc/python) and xmltodict. The type stubs are made by tools/gen_stubs.py.
+Needs CMake, doxygen, the ioh package (pip install .) and the Python packages of doc/requirements.txt. The docs
+workflow (.github/workflows/docs.yml) builds it the same way and deploys it to GitHub Pages. The type stubs are made
+by tools/gen_stubs.py.
 """
 import os
 import collections
 import subprocess
 import shutil
+import sys
 import warnings
 import xmltodict
 
@@ -117,14 +120,20 @@ def generate_sphinx_templates_from_xml(xmldir = "doc/build/xml", outdir = "doc/p
             if isinstance(sections, (dict, collections.OrderedDict)):
                 sections = [sections]
             for sec in sections:
-                nsdata[sec['@kind']] = [f"{name}::{x}" for x in get_values(sec['memberdef'], "name")]
+                # a section holds its members (memberdef) or, for members documented in a group, refers to them
+                # (member, as doxygen 1.9.8 writes them)
+                members = [f"{name}::{x}" for tag in ('memberdef', 'member')
+                           for x in get_values(sec.get(tag), "name") or []]
+                members += nsdata.get(sec['@kind']) or []
+                nsdata[sec['@kind']] = sorted(set(members)) or None
                 if name == "ioh::logger" and sec['@kind'] == 'var':
                     nsdata[sec['@kind']] = [x for x in nsdata[sec['@kind']] if not "::_" in x]
 
         ns[name] = nsdata
         
         filename = f'{name.replace("::", "_")}.rst'
-        if filename in ("fmt.rst"):
+        # the namespaces of the libraries used
+        if filename in ("fmt.rst", "std.rst"):
             continue
         with open(os.path.join(outdir, filename), "w+") as f:
             f.write(make_template(nsdata))
@@ -151,13 +160,9 @@ def main():
         shutil.rmtree(os.path.join(directory, "source", "api"))
     except FileNotFoundError:
         pass
-    subprocess.check_call(f"make html", shell=True, cwd=directory)
-
-    shutil.copytree(
-        os.path.join(BASE_DIR, "doc", "build", "html"),
-        os.path.join(BASE_DIR, "docs"),
-        dirs_exist_ok=True
-    )
+    # sphinx of this interpreter, into doc/build/html
+    command = [sys.executable, "-m", "sphinx", "-M", "html", "source", os.path.join("..", "build")]
+    subprocess.check_call(command, cwd=directory)  # nosec B603: a fixed command with this interpreter
 
 if __name__ == '__main__':
     main()

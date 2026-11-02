@@ -6,10 +6,6 @@
 
 # -- Path setup --------------------------------------------------------------
 
-## Monkey patched modules
-## line 254 for automodapi.py: list(map(str.strip, args.strip().split(", ")))
-## setup for breathe, removed graph_viz setup
-
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -44,10 +40,9 @@ extensions = [
     'sphinx.ext.graphviz',
     'sphinx_automodapi.smart_resolver',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.imgmath',
     'sphinx.ext.todo', 
     'breathe',
-    'm2r2'
+    'myst_parser'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -87,7 +82,10 @@ breathe_projects = {
 
 breathe_default_project = "iohcpp"
 
-source_suffix = ['.rst', '.md']
+# Markdown (the READMEs, the changelog, the upgrade guide) is read by MyST, which also registers .md; headings up to
+# ### get anchors, so that links can point to sections. The READMEs start at ## (they are written for GitHub).
+myst_heading_anchors = 3
+suppress_warnings = ['myst.header']
 
 breathe_default_members = (
     'members', 'undoc-members', 'private-members', 'protected-members', 'allow-dot-graphs'

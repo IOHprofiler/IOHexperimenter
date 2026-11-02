@@ -110,6 +110,9 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+# made by doc/generate_docs.py (the doxygen XML and the site are in doc/build)
+doc/python/source/api/
+doc/python/source/cpp/*.rst
 
 # PyBuilder
 .pybuilder/

@@ -38,7 +38,7 @@ namespace ioh_python
 {
     //! An input array argument (Array1D and the others below): a nanobind ndarray whose caster turns lists and
     //! tuples down at once. nanobind's own caster never accepts them either, but under the limited API (the abi3
-    //! wheel, TASKS.md T6.7) it first looks up __dlpack__ through an AttributeError, which made every call with a
+    //! wheel, PR #225) it first looks up __dlpack__ through an AttributeError, which made every call with a
     //! list about twice as slow; the overload with std::vector then takes the list.
     template <typename A>
     struct InputArray : A

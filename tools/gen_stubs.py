@@ -3,7 +3,7 @@
 The stubs of the extension module ioh.iohcpp come from nanobind's stubgen, one .pyi per (sub)module, and the stub of
 the pure-Python package (ioh/__init__.pyi) from mypy's stubgen. Needs an editable install of the package
 (pip install -e .), mypy, and the nanobind version that the package builds with (pyproject.toml), in the interpreter
-that runs it: pip install mypy nanobind==<that version>. Until WP5 the build did this when MAKE_STUBS was set.
+that runs it: pip install mypy nanobind==<that version>. Before 0.4.0 the build did this when MAKE_STUBS was set.
 """
 import importlib.metadata
 import importlib.util

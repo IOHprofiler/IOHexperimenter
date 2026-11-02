@@ -1,0 +1,7 @@
+# The Python packages that build the documentation (doc/generate_docs.py), besides the ioh package itself
+sphinx==9.2.0
+furo==2025.12.19
+breathe==5.1.0
+sphinx-automodapi==0.22.1
+myst-parser==5.1.0
+xmltodict==1.0.4

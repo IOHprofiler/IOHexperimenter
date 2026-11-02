@@ -1,4 +1,4 @@
-"""Golden fixtures that freeze the Python-visible behaviour of ioh (see TASKS.md, task T1.1).
+"""Golden fixtures that freeze the Python-visible behaviour of ioh (PR #217).
 
 The fixtures in tests/data/golden were generated from an unchanged build of master and are the
 reference for every refactor of the registry, the data handling and the bindings. They cover every
@@ -119,7 +119,7 @@ def _base_record(problem):
         "ub": _vector(problem.bounds.ub),
         "optimum_x": _vector(problem.optimum.x),
         "optimum_y": float(problem.optimum.y),
-        # added in WP3 (the existing values were left unchanged)
+        # added in 0.4.0 (the existing values were left unchanged)
         "fixed_dimension": problem.meta_data.fixed_dimension,
         "fixed_instance": problem.meta_data.fixed_instance,
     }
