@@ -4,7 +4,7 @@
 
 The first release since 0.3.22. Parts of the Python and C++ APIs changed: the
 [upgrade guide](https://iohprofiler.github.io/IOHexperimenter/upgrading.html) says what code written for 0.3 has to
-change. Problem ids, names and values are unchanged.
+change. The ids, names and values of the built-in problems are unchanged, apart from the fixes below.
 
 ### Installation
 
@@ -114,9 +114,10 @@ change. Problem ids, names and values are unchanged.
 ### Building from source
 
 * The package builds with scikit-build-core instead of `setup.py` (`pip install .`). A rebuild
-  (`pip install --no-build-isolation -e .`) compiles only what changed, and a clean build takes about half as long as
-  before: the sources are compiled in batches. `ARCHFLAGS` is respected on macOS. `MAKE_STUBS` and `MAKE_DOCS` are
-  replaced by `python tools/gen_stubs.py` and `python doc/generate_docs.py`.
+  (`pip install --no-build-isolation -e .`) compiles only what changed, and a clean build takes about a quarter of the
+  time it took for 0.3.22: the problem library is compiled once instead of in every source file of the bindings, and
+  the sources are compiled in batches. `ARCHFLAGS` is respected on macOS. `MAKE_STUBS` and `MAKE_DOCS` are replaced by
+  `python tools/gen_stubs.py` and `python doc/generate_docs.py`.
 * The sdist holds only what building the package needs, with the license of the bundled fmt. The package metadata
   give the license as `BSD-3-Clause`.
 
