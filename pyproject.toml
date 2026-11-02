@@ -39,7 +39,7 @@ install.components = ["python"]
 wheel.packages = ["ioh"]
 # one wheel for CPython 3.12 and later, built on the stable ABI (ioh/CMakeLists.txt); 3.10, 3.11 and the
 # free-threaded builds get a wheel of their own (nanobind builds them on the stable ABI only in its split mode,
-# which needs the nanobind-backend package; TASKS.md T6.7)
+# which needs the nanobind-backend package at run time; PR #225)
 wheel.py-api = "cp312"
 # the sources of the extension are only in the sdist
 wheel.exclude = ["ioh/src/", "ioh/CMakeLists.txt", "ioh/README.md"]
@@ -76,7 +76,7 @@ BUILD_DOCS = "OFF"
 ENABLE_MKLANDSCAPE_PROBLEMS = "OFF"
 # compile the sources of the library and the extension in batches (a unity build, CMakeLists.txt): they share most
 # of their headers and templates, so a clean build takes about half as long; a rebuild after changing one file
-# compiles its batch again (TASKS.md WP7)
+# compiles its batch again (PR #226)
 IOH_UNITY_BUILD = "ON"
 
 [[tool.dynamic-metadata]]

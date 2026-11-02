@@ -1,4 +1,4 @@
-"""Test behaviour of the bindings that the port to nanobind (WP6) had to keep, or that its review found untested."""
+"""Test behaviour of the bindings that the port to nanobind (PR #223) had to keep, or that its review found untested."""
 
 import gc
 import os
@@ -116,7 +116,7 @@ class TestBindings(unittest.TestCase):
 
     def test_integer_arrays(self):
         # integer problems take arrays of any integer or bool type (e.g. a bitstring as rng.random(n) < 0.5), but not
-        # of floats, and not values out of the range of int; so do the setters of solutions and bounds (WP7)
+        # of floats, and not values out of the range of int; so do the setters of solutions and bounds (PR #226)
         problem = ioh.get_problem(1, 1, 6, ioh.ProblemClass.PBO)
         bits = np.array([1, 0, 1, 1, 0, 1])
         expected = problem(bits.tolist())

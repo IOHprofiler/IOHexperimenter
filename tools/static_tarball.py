@@ -1,6 +1,6 @@
 """Builds static.tar.gz from static/, or with --check, checks that static.tar.gz holds exactly the files of static/.
 
-Released versions (0.3.22 and older) download static.tar.gz from master (TASKS.md, section 1), so it is rebuilt
+Released versions (0.3.22 and older) download static.tar.gz from master (download_static_folder()), so it is rebuilt
 whenever static/ changes. The archive is reproducible: sorted entries, fixed times and owners.
 
 usage: python tools/static_tarball.py [--check]

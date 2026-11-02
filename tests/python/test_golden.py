@@ -1,6 +1,6 @@
 """Golden tests: the Python-visible registry and problem behaviour must stay identical to master.
 
-See tests/python/golden.py and TASKS.md (T1.1). Never regenerate the fixtures to make these pass.
+See tests/python/golden.py. Never regenerate the fixtures to make these pass.
 """
 import unittest
 
