@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+* `ioh.registry()` returns a machine-readable registry of the suites (BBOB, SBOX, PBO, Submodular and the two star
+  discrepancy suites): the problems with their ids and names, whether each is maximised, its bounds and known optimum
+  (and whether the optimum depends on the instance or the dimension), the instance and dimension ranges, and the
+  conventions a leaderboard needs: standard budget, standard instances and dimensions, target bounds and the scoring
+  method (AOCC for every suite; `ioh.suite_registry.SCORING_OVERRIDES` sets another per problem). `python -m
+  ioh.suite_registry -o registry.json` writes it as JSON; the release workflow attaches that file to each release.
+  The budget and target conventions are provisional. A test keeps the registry consistent with the problem classes and
+  `include/ioh/suite.hpp`.
+
 ## 0.4.0
 
 The first release since 0.3.22. Parts of the Python and C++ APIs changed: the
