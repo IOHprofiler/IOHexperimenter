@@ -12,6 +12,9 @@ namespace ioh
 
         //! Default format for storing doubles
         inline std::string DEFAULT_DOUBLE_FORMAT = "{:.10f}";
+
+        //! Format for storing doubles with round-trip precision (used by FlatFile::set_full_precision)
+        inline const std::string FULL_PRECISION_DOUBLE_FORMAT = "{:.17g}";
         
         /** @defgroup Properties Properties
          * Accessors to values that are to be logged.
