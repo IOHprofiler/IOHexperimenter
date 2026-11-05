@@ -205,7 +205,7 @@ namespace ioh::logger
     private:
         /**
          * \brief Caches the meta data logged at every row. If log_meta_data is false,
-         * it will store an empty string.
+         * it will store an empty string. Otherwise, the string ends with a separator.
          */
         void cache_meta_data()
         {
@@ -220,6 +220,8 @@ namespace ioh::logger
                 ss << sep_ << (problem_.value().optimization_type == common::OptimizationType::MIN ? "min" : "max");
                 ss << sep_ << problem_.value().n_variables;
                 ss << sep_ << current_run_;
+                // The header (common_header_) ends with a separator too: the first property follows directly.
+                ss << sep_;
                 current_meta_data_ = ss.str();
             }
         }

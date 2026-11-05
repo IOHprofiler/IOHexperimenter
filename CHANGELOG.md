@@ -82,6 +82,14 @@ change. The ids, names and values of the built-in problems are unchanged, apart 
 * `Experiment.add_custom_problem` failed when the problem ids were a numpy array (e.g. a suite's `problem_ids`).
 * `logger.property.Property(container, attribute)` raised `SystemError` for an attribute that is not a number; it
   raises `TypeError`.
+* `FlatFile` data rows had no separator between the last meta data column (`run`) and the first logged property, so
+  the two were glued together: run 1 and evaluations 123 were written as `1123`. The header row was correct, so an
+  affected file has data rows with one field fewer than its header (for example 8 instead of 9 with the default
+  header and two properties), and the `run` column holds the run number followed by the first property's value. Files
+  written with no meta data (empty `common_header_titles`) were not affected. Files written by earlier versions stay
+  wrong: the run number and the first value cannot be told apart reliably when the value starts with a digit. Log them
+  again with this version, or recover the run number from the order of the rows. iohinspector's reader flags these
+  files.
 
 ### C++
 

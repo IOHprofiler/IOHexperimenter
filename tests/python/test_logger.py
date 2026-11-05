@@ -24,7 +24,14 @@ class TestLogger(unittest.TestCase):
         pr.attach_logger(l)
         self.assertEqual(os.path.realpath("./"), os.path.realpath(l.output_directory))
         pr([0] * 5)
+        l.close()
         self.assertTrue(os.path.isfile("IOH.dat"))
+        header, *rows = open("IOH.dat").read().splitlines()
+        self.assertTrue(rows)
+        # every data row has as many fields as the header (the run and the first property are separated)
+        for row in rows:
+            self.assertEqual(len(row.split(" ")), len(header[2:].split(" ")))
+        os.remove("IOH.dat")
 
     def test_analyzer(self):
         pr = ioh.get_problem("Sphere", 1, 5) 
