@@ -57,6 +57,50 @@ class TestLogger(unittest.TestCase):
             for i in range(5):
                 self.assertEqual(i*10, float(next(f).split()[-1]))
 
+    def test_full_precision(self):
+        import tempfile
+
+        class Tiny:
+            value = 3e-11
+
+        rows = {}
+        for full in (False, True):
+            with tempfile.TemporaryDirectory() as tmp:
+                pr = ioh.get_problem("Sphere", 1, 2)
+                l = ioh.logger.Analyzer([ioh.logger.trigger.ALWAYS], root=tmp, folder_name="d")
+                self.assertFalse(l.full_precision)
+                l.full_precision = full
+                l.watch(Tiny(), ["value"])
+                pr.attach_logger(l)
+                pr([0.1, 0.2])
+                l.close()
+                with open(os.path.join(tmp, "d", "data_f1_Sphere", "IOHprofiler_f1_DIM2.dat")) as f:
+                    header, row = f.read().splitlines()[:2]
+                with open(os.path.join(tmp, "d", "IOHprofiler_f1_Sphere.json")) as f:
+                    meta = json.load(f)
+                self.assertEqual(len(header.split()), len(row.split()))
+                rows[full] = (header, float(row.split()[-1]), meta)
+        self.assertEqual(rows[False][0], rows[True][0])
+        self.assertEqual(rows[False][1], 0.0)
+        self.assertEqual(rows[True][1], 3e-11)
+        self.assertNotIn("precision", rows[False][2])
+        self.assertEqual(rows[True][2]["precision"], "%.17g")
+
+    def test_flatfile_full_precision(self):
+        pr = ioh.get_problem("Sphere", 1, 2)
+        class Tiny:
+            value = 3e-11
+        l = ioh.logger.FlatFile([ioh.logger.trigger.ALWAYS], [], filename="IOH_fp.dat", separator=" ")
+        l.full_precision = True
+        self.assertTrue(l.full_precision)
+        l.watch(Tiny(), ["value"])
+        pr.attach_logger(l)
+        pr([0.1, 0.2])
+        with open("IOH_fp.dat") as f:
+            lines = f.read().splitlines()
+        os.remove("IOH_fp.dat")
+        self.assertEqual(float(lines[-1].split()[-1]), 3e-11)
+
     def test_triggers(self):
         always = ioh.logger.trigger.Always()
         on_improvement = ioh.logger.trigger.OnImprovement()

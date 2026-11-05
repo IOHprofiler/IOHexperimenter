@@ -4,9 +4,10 @@ Status: in progress
 
 ## Done
 - step 1/3: C++ option `FlatFile::set_full_precision(bool)` (also on Analyzer), writing `{:.17g}` for properties with the default double format and for x positions; JSON metadata key `"precision": "%.17g"`; tests `flatfile_full_precision`, `analyzer_full_precision` in tests/cpp/logger/test_flatfile.cpp
+- step 2/3: Python property `full_precision` (read/write) on FlatFile and Analyzer, stubs, tests `test_full_precision` and `test_flatfile_full_precision` in tests/python/test_logger.py (15 passed, run from a temp dir against `.venv` build)
 
 ## Next step
-Step 2/3: Python binding (`full_precision` on FlatFile and Analyzer) with a Python test, then step 3/3: CHANGELOG entry under `## Unreleased`.
+Step 3/3: CHANGELOG entry under `## Unreleased`, then set Status to ready for review.
 
 ## Decisions
 - The default stays `{:.10f}` in this package. The option is off by default.
