@@ -1,14 +1,14 @@
 # WP E03: Suite registry export
 Branch: wp/E03-suite-registry
-Status: in progress
+Status: ready for review
 
 ## Done
 - step 1/3: `ioh/suite_registry.py` with `registry()` (also `ioh.registry()`), `scoring()`, `python -m ioh.suite_registry -o FILE` JSON export; the release workflow (build_sdist job) writes registry.json, uploads it as an artifact and attaches it to the release.
 - step 2/3: leaderboard fields per suite: standard budget, standard instances and dimensions, target bounds, scoring (AOCC; per-problem overrides via `SCORING_OVERRIDES`, `problems[].scoring`).
-- step 3/3: pending (tests, see below)
+- step 3/3: tests/python/test_registry.py (11 tests: consistency with problem classes, suite.hpp limits, usable conventions, scoring overrides, JSON and CLI), CHANGELOG entry under Unreleased. Steps 2 and 3 landed in the same commit as step 1 (414df5f5).
 
 ## Next step
-Step 3: tests/python/test_registry.py.
+Nothing: review. Run: cd /tmp && python /path/to/tests/python/test_registry.py with the package installed.
 
 ## Decisions
 - Structure of the problems (ids, names, direction, bounds, optima) is read live from the installed package, so it cannot drift. The conventions are a table in `SUITE_CONVENTIONS`.
