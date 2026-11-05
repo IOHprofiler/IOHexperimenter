@@ -1,13 +1,14 @@
 # WP E05: Full-precision output
 Branch: wp/E05-full-precision
-Status: in progress
+Status: ready for review
 
 ## Done
 - step 1/3: C++ option `FlatFile::set_full_precision(bool)` (also on Analyzer), writing `{:.17g}` for properties with the default double format and for x positions; JSON metadata key `"precision": "%.17g"`; tests `flatfile_full_precision`, `analyzer_full_precision` in tests/cpp/logger/test_flatfile.cpp
 - step 2/3: Python property `full_precision` (read/write) on FlatFile and Analyzer, stubs, tests `test_full_precision` and `test_flatfile_full_precision` in tests/python/test_logger.py (15 passed, run from a temp dir against `.venv` build)
+- step 3/3: CHANGELOG entry under `## Unreleased`
 
 ## Next step
-Step 3/3: CHANGELOG entry under `## Unreleased`, then set Status to ready for review.
+Nothing; review and merge (E02 and E03 also add `## Unreleased` to CHANGELOG.md: expected conflict).
 
 ## Decisions
 - The default stays `{:.10f}` in this package. The option is off by default.

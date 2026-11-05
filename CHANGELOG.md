@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+* `FlatFile` and `Analyzer` (C++ `set_full_precision(true)`, Python `full_precision = True`) can write values with
+  round-trip precision (`%.17g`) instead of `%.10f`. With `%.10f`, values below 5e-11 are written as 0, which hides
+  targets such as 1e-8 to 1e-10 relative to the optimum. The option also applies to the x columns, and it is off by
+  default: existing output does not change. Set it before attaching the first problem. The Analyzer records it in the
+  JSON metadata as `"precision": "%.17g"`; the key is absent for the default precision, and readers that do not know
+  it can ignore it. The header and the number of columns are the same.
+
 ## 0.4.0
 
 The first release since 0.3.22. Parts of the Python and C++ APIs changed: the
