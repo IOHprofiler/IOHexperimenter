@@ -99,7 +99,10 @@ jobs:
           python -m pip install dist/*.tar.gz
           python tests/python/test_golden.py
       - name: Write the suite registry
-        run: python -m ioh.suite_registry -o registry.json
+        # from another directory: in the repository root Python would import the unbuilt ioh/ folder
+        run: |
+          cd "$RUNNER_TEMP"
+          python -m ioh.suite_registry -o "$GITHUB_WORKSPACE/registry.json"
       - name: Attach the suite registry to the release
         if: github.event_name == 'release'
         env:
