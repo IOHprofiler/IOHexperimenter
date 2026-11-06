@@ -72,4 +72,5 @@ void define_real_suite(nb::module_ &m)
     define_suite<BBOB, RealBase>(m, "BBOB");
     define_suite<SBOX, RealBase>(m, "SBOX");
     define_suite<RealStarDiscrepancy, RealBase>(m, "RealStarDiscrepancy");
+    define_suite<AdversarialAttack, RealBase>(m, "AdversarialAttack", 1);
 }

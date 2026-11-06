@@ -133,7 +133,7 @@ existing ids and returns them.
 
 A suite declares `registry_id` and `registry_name` and is registered with `register_suite<T>()`; derive from
 `Suite<...>` instead of `RealSuite` or `IntegerSuite` (which registered a suite under its class name with the next free
-id). The built-in suites have fixed ids: Real 1, BBOB 2, SBOX 3, RealStarDiscrepancy 4; Integer 1, PBO 2, Submodular 3,
+id). The built-in suites have fixed ids: Real 1, BBOB 2, SBOX 3, RealStarDiscrepancy 4, AdversarialAttack 5; Integer 1, PBO 2, Submodular 3,
 IntegerStarDiscrepancy 4.
 
 ### Removed and renamed

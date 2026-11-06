@@ -1,7 +1,32 @@
 {
  "format": 1,
- "data_version": "e7c83044fb1018af",
+ "data_version": "1786becf6d8a4d73",
  "files": [
+  {
+   "path": "adversarial/PROVENANCE.txt",
+   "size": 609,
+   "sha256": "20052f3df07a713fc4fb10a91f7fe0967b90200d7ba68df2a4e81ce2a5bec42b"
+  },
+  {
+   "path": "adversarial/cifar_cnn.ioh",
+   "size": 4720660,
+   "sha256": "c3c067240d042c0fed88b8a1a7f3de01698af416465613bc864a02b3a8b42a22"
+  },
+  {
+   "path": "adversarial/cifar_images.ioh",
+   "size": 307368,
+   "sha256": "ceaad0063366683e10c41d40a685a35bd8b7c1de46c49ed1db0c587124b326cb"
+  },
+  {
+   "path": "adversarial/mnist_cnn.ioh",
+   "size": 6549520,
+   "sha256": "64259ac5b5ba19e3b7f750ed8cb2f6d7ca57f7192ca05336a69259fe296972fa"
+  },
+  {
+   "path": "adversarial/mnist_images.ioh",
+   "size": 78568,
+   "sha256": "3e2fbe8cbcf991ea8f38d928b11987f556df5fd822d9774ddb397b842243c0d9"
+  },
   {
    "path": "cec_transformations/2013/CF3_M_D10.dat",
    "size": 26100,

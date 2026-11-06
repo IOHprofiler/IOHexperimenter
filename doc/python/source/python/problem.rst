@@ -20,6 +20,7 @@ Problem Types
     pbo.rst
     submodular.rst
     star_discrepancy.rst
+    adversarial.rst
     wmodel.rst
     cec2013.rst
     cec2022.rst

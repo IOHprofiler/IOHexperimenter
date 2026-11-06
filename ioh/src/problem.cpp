@@ -399,6 +399,7 @@ void define_problem(nb::module_ &m)
     define_wmodels(m);
     define_submodular_problems(m);
     define_star_discrepancy_problems(m);
+    define_adversarial_problems(m);
     define_many_affine(m);
     define_funnel(m);
 

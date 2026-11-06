@@ -364,6 +364,30 @@ namespace ioh::suite
         }
     };
 
+    //! Black-box adversarial-attack suite: fixed (dataset, eps, alpha) presets as problem ids, the base image as
+    //! instance, and a dimension that is fixed per dataset
+    struct AdversarialAttack final : Suite<problem::RealSingleObjective>
+    {
+        //! The id in the suite registry
+        static constexpr int registry_id = 5;
+        //! The name in the suite registry, and of the suite
+        static constexpr const char *registry_name = "AdversarialAttack";
+
+        /**
+         * @brief Construct a new AdversarialAttack suite object
+         *
+         * @param problem_ids List of problem ids
+         * @param instances List of problem instances, i.e. base-image indices (defaults to the first)
+         * @param dimensions ignored: the dimension is fixed per problem id's dataset (784 or 3072)
+         */
+        AdversarialAttack(const std::vector<int> &problem_ids = {}, const std::vector<int> &instances = {1},
+                          const std::vector<int> &dimensions = {1}) :
+            Suite(problem_ids, instances, dimensions, registry_name, 100, 1,
+                  problem::ProblemFactoryType<problem::adversarial::AdversarialAttack>::instance())
+        {
+        }
+    };
+
     //! PBO suite
     struct PBO final : Suite<problem::IntegerSingleObjective>
     {

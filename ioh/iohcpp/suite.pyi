@@ -122,6 +122,24 @@ class RealStarDiscrepancy(RealBase):
 
     def __init__(self, problem_ids: Sequence[int], instances: Sequence[int] = [1], dimensions: Sequence[int] = [5]) -> None: ...
 
+class AdversarialAttack(RealBase):
+    """
+    Suite with AdversarialAttack functions included in IOH. 
+
+    This class is an iterator for problems, you can define a set of problems to iterate over.
+
+    Parameters
+    ----------
+    problem_ids: list[int]
+        A list of problems ids to include in this instantiation of the suite
+    instances: list[int]
+        A list of problem instances to include in this instantiation of the suite
+    dimensions: list[int]
+        A list of problem dimensions to include in this instantiation of the suite
+    """
+
+    def __init__(self, problem_ids: Sequence[int], instances: Sequence[int] = [1], dimensions: Sequence[int] = [1]) -> None: ...
+
 class IntegerBase:
     """IntegerBase suite"""
 

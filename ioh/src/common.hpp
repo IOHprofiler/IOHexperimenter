@@ -384,6 +384,7 @@ void define_cec2013_problems(nb::module_ &m);
 void define_cec2022_problems(nb::module_ &m);
 void define_dynamic_bin_val_problem(nb::module_ &m);
 void define_star_discrepancy_problems(nb::module_ &m);
+void define_adversarial_problems(nb::module_ &m);
 void define_many_affine(nb::module_ &m);
 void define_funnel(nb::module_ &m);
 void define_pbo_problems(nb::module_ &m);

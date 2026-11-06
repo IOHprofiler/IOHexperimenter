@@ -149,6 +149,13 @@ namespace ioh::registry
         add(factory, type_list<problem::star_discrepancy::real::StarDiscrepancy>{});
     }
 
+    //! The 12 adversarial attack problems (ids 5001-5006 and 5011-5016)
+    template <class Parent>
+    void add_adversarial(common::Factory<Parent, int, int> &factory)
+    {
+        add(factory, type_list<problem::adversarial::AdversarialAttack>{});
+    }
+
     //! The 30 integer star discrepancy problems (ids 30-59)
     template <class Parent>
     void add_star_discrepancy_integer(common::Factory<Parent, int, int> &factory)
