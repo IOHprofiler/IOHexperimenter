@@ -368,8 +368,9 @@ namespace ioh::logger
                 dims.emplace_back(static_cast<size_t>(problem.n_variables), dat_path);
             }
 
+        protected:
             //! Gets called after the last evaluation of a run
-            void handle_last_eval()
+            virtual void handle_last_eval()
             {
                 if (best_point_.evals != 0)
                 {
@@ -386,6 +387,7 @@ namespace ioh::logger
                 }
             }
 
+        private:
             void update_meta_data(const problem::MetaData &problem, const std::string &dat_path)
             {
                 if (problem_.has_value())

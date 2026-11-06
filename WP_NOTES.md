@@ -1,14 +1,17 @@
 # WP E07: Remove the v1 Analyzer logger
 Branch: wp/E07-remove-analyzer-v1
-Status: in progress
+Status: ready for review
 
 ## Done
-- step 1/3: folded analyzer::v1 and v2 into one analyzer::Analyzer (analyzer.hpp), removed .info writer, C++ tests
-  for v1; all 118 C++ tests pass (Debug).
+- step 1/3: folded analyzer::v1 and v2 into one analyzer::Analyzer, removed the .info writer and its C++ tests; 118 C++ tests pass (Debug).
+
+- step 2/3: removed ioh.logger.old, Experiment(old_logger=), stubs, tests, tutorial, example README.
+- step 3/3: CHANGELOG ### Removed and upgrade guide sections. Python module built in .venv; all Python tests pass in a
+  copy outside the tree (test_golden.py and test_logger.py included). The one error `test_array_layout.py::
+  tester_inc_one_transform` is pytest collecting a helper function, unrelated.
 
 ## Next step
-Python side (steps 2-3): bindings, Experiment, stubs, docs, CHANGELOG are edited; build the module and run all
-Python tests incl. test_golden.py; then set Status to ready for review.
+None. Controller: push once E05 is merged and open the draft PR.
 
 ## Decisions
 - No `analyzer::v2::Analyzer` alias: the class is `ioh::logger::analyzer::Analyzer`, `ioh::logger::Analyzer` is an alias to it.
