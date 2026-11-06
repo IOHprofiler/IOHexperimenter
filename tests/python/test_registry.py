@@ -1,7 +1,7 @@
 import json
 import os
 import re
-import subprocess
+import subprocess  # nosec B404: only to run this interpreter on its own module
 import sys
 import unittest
 
@@ -13,7 +13,7 @@ SUITE_HPP = os.path.join(ROOT, "include", "ioh", "suite.hpp")
 
 
 def suite_headers():
-    '''name -> (max_instance, max_dimension) of the suite classes in include/ioh/suite.hpp'''
+    """name -> (max_instance, max_dimension) of the suite classes in include/ioh/suite.hpp."""
     with open(SUITE_HPP, encoding="utf-8") as f:
         text = f.read()
     result = {}
@@ -52,7 +52,7 @@ class TestRegistry(unittest.TestCase):
             self.assertEqual(entry["variable_type"], "real" if problem_class.is_real() else "integer")
 
     def test_problem_fields_match_the_problems(self):
-        for name, entry in self.suites.items():
+        for entry in self.suites.values():
             problem_class = ioh.ProblemClass[entry["problem_class"]]
             for p in entry["problems"]:
                 dimension = p["optimum"]["dimension"]
@@ -154,7 +154,8 @@ class TestRegistry(unittest.TestCase):
 
     def test_json(self):
         self.assertEqual(json.loads(suite_registry.to_json()), self.registry)
-        process = subprocess.run([sys.executable, "-m", "ioh.suite_registry"], capture_output=True, text=True)
+        process = subprocess.run(  # nosec B603: this interpreter, with fixed arguments
+            [sys.executable, "-m", "ioh.suite_registry"], capture_output=True, text=True)
         self.assertEqual(process.returncode, 0, process.stderr)
         self.assertEqual(json.loads(process.stdout), self.registry)
 

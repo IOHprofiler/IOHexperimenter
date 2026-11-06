@@ -1,4 +1,4 @@
-'''Machine-readable registry of the suites of IOHexperimenter.
+"""Machine-readable registry of the suites of IOHexperimenter.
 
 ``ioh.registry()`` returns a dict (JSON compatible) with every suite, its problems and the conventions a
 leaderboard needs. The structure of the problems (ids, names, direction, bounds, optima) is read from the problem
@@ -9,7 +9,7 @@ release).
 
 Scoring is configuration, not code: every suite has a scoring method (AOCC to start with), and a problem can override
 it in ``SCORING_OVERRIDES``. ``scoring(suite, problem_id)`` gives the method that applies.
-'''
+"""
 
 import argparse
 import copy
@@ -100,7 +100,7 @@ _SQUARE_DIMENSION = {"PBO": {21, 23}}
 
 
 def _number(value: float) -> typing.Optional[float]:
-    '''A finite number, or None for NaN and infinity (an optimum that is not known)'''
+    """A finite number, or None for NaN and infinity (an optimum that is not known)."""
     value = float(value)
     return value if math.isfinite(value) else None
 
@@ -186,7 +186,7 @@ _cache: typing.Optional[typing.Dict[str, typing.Any]] = None
 
 
 def registry() -> typing.Dict[str, typing.Any]:
-    '''The registry of all suites, a JSON compatible dict (a copy: change it freely).
+    """The registry of all suites, a JSON compatible dict (a copy: change it freely).
 
     ``registry()["suites"][name]`` holds, per suite: the ``problem_class``, the ``instances`` and ``dimensions``
     ranges that the suite accepts, ``standard_instances`` and ``standard_dimensions``, the standard ``budget``
@@ -195,7 +195,7 @@ def registry() -> typing.Dict[str, typing.Any]:
     ``maximization``, ``bounds``, ``fixed_dimension`` (for problems that ignore the requested dimension),
     ``known_optimum``, ``optimum`` (the value of the optimum of instance 1 in the reference dimension, and whether it
     depends on the instance or the dimension) and a scoring override (``scoring``, None for the suite's).
-    '''
+    """
     global _cache
     if _cache is None:
         _cache = _build()
@@ -203,8 +203,10 @@ def registry() -> typing.Dict[str, typing.Any]:
 
 
 def scoring(suite_name: str, problem_id: typing.Optional[int] = None) -> typing.Dict[str, typing.Any]:
-    '''The scoring method for a suite, or for one of its problems: its own override when it has one, else the
-    suite's.'''
+    """The scoring method for a suite, or for one of its problems.
+
+    A problem's own override applies when it has one, else the suite's.
+    """
     entry = registry()["suites"][suite_name]
     if problem_id is not None:
         for problem in entry["problems"]:
@@ -215,7 +217,7 @@ def scoring(suite_name: str, problem_id: typing.Optional[int] = None) -> typing.
 
 
 def to_json(indent: typing.Optional[int] = 2) -> str:
-    '''The registry as JSON text'''
+    """The registry as JSON text."""
     return json.dumps(registry(), indent=indent, allow_nan=False) + "\n"
 
 
