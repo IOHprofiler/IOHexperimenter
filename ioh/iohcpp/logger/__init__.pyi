@@ -12,9 +12,12 @@ from ioh.iohcpp.logger import (
     eaf as eaf,
     eah as eah,
     old as old,
-    property as property,
-    trigger as trigger
+    trigger as trigger,
 )
+
+# Imported by its full path under a local alias: binding the submodule as
+# `property` shadows the builtin decorator the class definitions below need.
+import ioh.iohcpp.logger.property as logger_property
 
 
 class Logger:
@@ -36,9 +39,9 @@ class Logger:
 class AbstractLogger(Logger):
     """Base class for loggers which track properties"""
 
-    def __init__(self, triggers: Sequence[trigger.Trigger] = [], properties: Sequence[property.AbstractProperty] = []) -> None: ...
+    def __init__(self, triggers: Sequence[trigger.Trigger] = [], properties: Sequence[logger_property.AbstractProperty] = []) -> None: ...
 
-    def watch(self, arg: property.AbstractProperty, /) -> None: ...
+    def watch(self, arg: logger_property.AbstractProperty, /) -> None: ...
 
     def attach_problem(self, problem: ioh.iohcpp.MetaData) -> None:
         """attach a problem (MetaData) to a logger"""
@@ -55,7 +58,7 @@ class Combine(Logger):
     def append(self, arg: Logger, /) -> None: ...
 
 class FlatFile(AbstractLogger):
-    def __init__(self, triggers: Sequence[trigger.Trigger], properties: Sequence[property.AbstractProperty], filename: str = 'IOH.dat', output_directory: str | os.PathLike = './', separator: str = '\t', comment: str = '#', no_value: str = 'None', end_of_line: str = '\n', repeat_header: bool = False, store_positions: bool = False, common_header_titles: Sequence[str] = ...) -> None:
+    def __init__(self, triggers: Sequence[trigger.Trigger], properties: Sequence[logger_property.AbstractProperty], filename: str = 'IOH.dat', output_directory: str | os.PathLike = './', separator: str = '\t', comment: str = '#', no_value: str = 'None', end_of_line: str = '\n', repeat_header: bool = False, store_positions: bool = False, common_header_titles: Sequence[str] = ...) -> None:
         """
         A logger which stores all tracked properties to a file.
 
@@ -103,7 +106,7 @@ class FlatFile(AbstractLogger):
         """attach a problem (MetaData) to a logger"""
 
     @overload
-    def watch(self, arg: property.AbstractProperty, /) -> None: ...
+    def watch(self, arg: logger_property.AbstractProperty, /) -> None: ...
 
     @overload
     def watch(self, arg0: object, arg1: str, /) -> None: ...
@@ -114,7 +117,7 @@ class FlatFile(AbstractLogger):
     def __repr__(self) -> str: ...
 
 class Store(AbstractLogger):
-    def __init__(self, triggers: Sequence[trigger.Trigger], properties: Sequence[property.AbstractProperty]) -> None:
+    def __init__(self, triggers: Sequence[trigger.Trigger], properties: Sequence[logger_property.AbstractProperty]) -> None:
         """
         A logger which stores all tracked properties in memory.
 
@@ -139,7 +142,7 @@ class Store(AbstractLogger):
         """attach a problem (MetaData) to a logger"""
 
     @overload
-    def watch(self, arg: property.AbstractProperty, /) -> None: ...
+    def watch(self, arg: logger_property.AbstractProperty, /) -> None: ...
 
     @overload
     def watch(self, arg0: object, arg1: str, /) -> None:
@@ -152,7 +155,7 @@ class Store(AbstractLogger):
     def __repr__(self) -> str: ...
 
 class Analyzer(AbstractLogger):
-    def __init__(self, triggers: Sequence[trigger.Trigger] = ..., additional_properties: Sequence[property.AbstractProperty] = [], root: str | os.PathLike = ..., folder_name: str = 'ioh_data', algorithm_name: str = 'algorithm_name', algorithm_info: str = 'algorithm_info', store_positions: bool = False) -> None:
+    def __init__(self, triggers: Sequence[trigger.Trigger] = ..., additional_properties: Sequence[logger_property.AbstractProperty] = [], root: str | os.PathLike = ..., folder_name: str = 'ioh_data', algorithm_name: str = 'algorithm_name', algorithm_info: str = 'algorithm_info', store_positions: bool = False) -> None:
         """
         A logger which stores all tracked properties to a file.
 
@@ -209,7 +212,7 @@ class Analyzer(AbstractLogger):
         """attach a problem (MetaData) to a logger"""
 
     @overload
-    def watch(self, arg: property.AbstractProperty, /) -> None: ...
+    def watch(self, arg: logger_property.AbstractProperty, /) -> None: ...
 
     @overload
     def watch(self, arg0: object, arg1: str, /) -> None: ...

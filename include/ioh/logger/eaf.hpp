@@ -867,8 +867,8 @@ namespace logger {
                         }
                         
                         for(const auto& p : front) {
-                            surface +=   std::fabs(n_qual - p.qual) 
-                                       * std::labs(static_cast<long>(_nadir.time) - static_cast<long>(p.time)); // cast because time are unsigned
+                            surface += std::fabs(n_qual - p.qual) * static_cast<double>(
+                                std::labs(static_cast<long>(_nadir.time) - static_cast<long>(p.time)));
                             n_qual = p.qual;
                             assert(surface > 0);
                         }
