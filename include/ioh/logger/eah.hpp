@@ -138,7 +138,7 @@ namespace ioh
                         return this->size() - 1;
                     }
                     return static_cast<size_t>(std::floor(
-                        (x - this->min()) / this->length() * this->size()));
+                        (x - this->min()) / this->length() * static_cast<double>(this->size())));
                 }
 
                 //! The type in which bounds are stored by the `bounds` method.
@@ -153,7 +153,8 @@ namespace ioh
                 {
                     assert(i < this->size());
                     const double w = static_cast<double>(this->step());
-                    const double m = static_cast<double>(i) / this->size() * this->length() + this->min();
+                    const double m = static_cast<double>(i) / static_cast<double>(this->size()) * this->length() +
+                        this->min();
                     assert(m < m+w);
                     return std::make_pair(m, m + w);
                 }
@@ -1111,7 +1112,8 @@ namespace ioh
                         {
                             for (size_t j = 0; j < mat[0].size(); ++j)
                             {
-                                const double w_proba = static_cast<double>(mat[i][j]) / histo.nb_attainments();
+                                const double w_proba = static_cast<double>(mat[i][j]) /
+                                    static_cast<double>(histo.nb_attainments());
                                 assert(0 <= w_proba and w_proba <= 1);
                                 // Within the loop because widths of buckets vary for log ranges.
                                 const double w_error = (range_error.bounds(i).second - range_error.bounds(i).first) /
@@ -1211,7 +1213,8 @@ namespace ioh
                     {
                         // RGB ANSI codes for greys.
                         size_t color = static_cast<size_t>(std::floor(
-                            static_cast<double>(i) / static_cast<double>(2 * height) * nb_colors - 1));
+                            static_cast<double>(i) / static_cast<double>(2 * height) *
+                            static_cast<double>(nb_colors) - 1.0));
                         legend << "\033[48;2;" << color << ";" << color << ";" << color << "m" << " ";
                     }
                     legend << "\033[0m"; // Reset.
@@ -1233,8 +1236,8 @@ namespace ioh
                         }
                         else
                         {
-                            auto color = static_cast<size_t>(
-                                std::floor((val - vmin) / (vmax - vmin) * (nb_colors - 1)));
+                            auto color = static_cast<size_t>(std::floor(
+                                (val - vmin) / (vmax - vmin) * static_cast<double>(nb_colors - 1)));
 
                             if (color >= nb_colors)
                                 color = static_cast<size_t>(nb_colors - 1);
