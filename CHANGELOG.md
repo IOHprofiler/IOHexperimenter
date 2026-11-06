@@ -11,6 +11,16 @@
   JSON metadata as `"precision": "%.17g"`; the key is absent for the default precision, and readers that do not know
   it can ignore it. The header and the number of columns are the same.
 
+### Fixed
+
+* `FlatFile` data rows had no separator between the last meta data column (`run`) and the first logged property, so
+  the two were glued together: run 1 and evaluations 123 were written as `1123`. The header row was correct, so an
+  affected file has data rows with one field fewer than its header (for example 8 instead of 9 with the default
+  header and two properties), and the `run` column holds the run number followed by the first property's value. Files
+  written with no meta data (empty `common_header_titles`) were not affected. Files written by earlier versions stay
+  wrong: the run number and the first value cannot be told apart reliably when the value starts with a digit. Log them
+  again with this version, or recover the run number from the order of the rows.
+
 ## 0.4.0
 
 The first release since 0.3.22. Parts of the Python and C++ APIs changed: the
