@@ -705,9 +705,11 @@ class MetaData:
 
     def __repr__(self) -> str: ...
 
-    def __eq__(self, arg: MetaData, /) -> bool: ...
+    def __eq__(self, arg: object, /) -> bool: ...
 
-    __hash__: None = None
+    # nanobind stubgen emits the unhashable marker this way; mypy 2.x needs
+    # the ignore because object.__hash__ is typed as a callable.
+    __hash__ = None  # type: ignore[assignment]
 
 class LogInfo:
     def __init__(self, evaluations: int, raw_y: float, raw_y_best: float, transformed_y: float, transformed_y_best: float, y: float, y_best: float, x: Sequence[float], violations: Sequence[float], penalties: Sequence[float], optimum: RealSolution, has_improved: bool = False) -> None:

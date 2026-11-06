@@ -34,7 +34,7 @@ class RealSingleObjective:
         """Remove the specified logger from the problem."""
 
     @overload
-    def __call__(self, arg: Annotated[NDArray[numpy.float64], dict(shape=(None,), order='C', device='cpu', writable=False)], /) -> float: ...
+    def __call__(self, arg: Annotated[numpy.ndarray[tuple[int], numpy.dtype[numpy.float64]], dict(order='C', device='cpu', writable=False)], /) -> float: ...
 
     @overload
     def __call__(self, arg: Sequence[float], /) -> float:
@@ -52,7 +52,7 @@ class RealSingleObjective:
         """
 
     @overload
-    def __call__(self, arg: Annotated[NDArray[numpy.float64], dict(shape=(None, None), order='C', device='cpu', writable=False)], /) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]: ...
+    def __call__(self, arg: Annotated[numpy.ndarray[tuple[int, int], numpy.dtype[numpy.float64]], dict(order='C', device='cpu', writable=False)], /) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]: ...
 
     @overload
     def __call__(self, arg: Sequence[Sequence[float]], /) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
@@ -185,7 +185,7 @@ class IntegerSingleObjective:
         """Remove the specified logger from the problem."""
 
     @overload
-    def __call__(self, arg: Annotated[NDArray, dict(shape=(None,), order='C', device='cpu')], /) -> float: ...
+    def __call__(self, arg: Annotated[numpy.ndarray[tuple[int], numpy.dtype[numpy.integer]], dict(order='C', device='cpu')], /) -> float: ...
 
     @overload
     def __call__(self, arg: Sequence[int], /) -> float:
@@ -203,7 +203,7 @@ class IntegerSingleObjective:
         """
 
     @overload
-    def __call__(self, arg: Annotated[NDArray, dict(shape=(None, None), order='C', device='cpu')], /) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]: ...
+    def __call__(self, arg: Annotated[numpy.ndarray[tuple[int, int], numpy.dtype[numpy.integer]], dict(order='C', device='cpu')], /) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]: ...
 
     @overload
     def __call__(self, arg: Sequence[Sequence[int]], /) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
