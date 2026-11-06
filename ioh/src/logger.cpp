@@ -206,6 +206,10 @@ namespace ioh_python::logger_cpp
 
                  )
             .def_prop_ro("filename", &FlatFile::filename)
+            .def_prop_rw(
+                "full_precision", [](const PyFlatFile &f) { return f.full_precision(); },
+                [](PyFlatFile &f, const bool v) { f.set_full_precision(v); },
+                "Write values with round-trip precision (%.17g) instead of %.10f. Set it before the first problem is attached.")
             .def_prop_ro("output_directory",
                          [](PyFlatFile &f) { return fs::absolute(f.output_directory()).generic_string(); })
             // bound to FlatFile's own methods, so that super() in a Python override runs them once (a virtual call
@@ -262,6 +266,10 @@ namespace ioh_python::logger_cpp
                 store_positions: bool = false
                     Boolean value which indicates whether to store the x-positions in the file
             )pbdoc")
+            .def_prop_rw(
+                "full_precision", [](const PyAnalyzerType &a) { return a.full_precision(); },
+                [](PyAnalyzerType &a, const bool v) { a.set_full_precision(v); },
+                "Write values with round-trip precision (%.17g) instead of %.10f. Set it before the first problem is attached.")
             .def("add_experiment_attribute", &PyAnalyzerType::add_experiment_attribute)
             .def("set_experiment_attributes", &PyAnalyzerType::set_experiment_attributes)
 

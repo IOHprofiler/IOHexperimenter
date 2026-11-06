@@ -90,6 +90,13 @@ class FlatFile(AbstractLogger):
     def filename(self) -> str: ...
 
     @property
+    def full_precision(self) -> bool:
+        """Write values with round-trip precision (%.17g) instead of %.10f. Set it before the first problem is attached."""
+
+    @full_precision.setter
+    def full_precision(self, arg: bool, /) -> None: ...
+
+    @property
     def output_directory(self) -> str: ...
 
     def call(self, arg: ioh.iohcpp.LogInfo, /) -> None:
@@ -169,6 +176,13 @@ class Analyzer(AbstractLogger):
         store_positions: bool = false
             Boolean value which indicates whether to store the x-positions in the file
         """
+
+    @property
+    def full_precision(self) -> bool:
+        """Write values with round-trip precision (%.17g) instead of %.10f. Set it before the first problem is attached."""
+
+    @full_precision.setter
+    def full_precision(self, arg: bool, /) -> None: ...
 
     def add_experiment_attribute(self, arg0: str, arg1: str, /) -> None: ...
 
