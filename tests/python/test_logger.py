@@ -1,3 +1,4 @@
+import gc
 import json
 import os
 import pickle
@@ -98,6 +99,10 @@ class TestLogger(unittest.TestCase):
         pr([0.1, 0.2])
         with open("IOH_fp.dat") as f:
             lines = f.read().splitlines()
+        # FlatFile has no close(): release the file (the problem holds the logger) before removing it, for Windows
+        pr.detach_logger()
+        del l, pr
+        gc.collect()
         os.remove("IOH_fp.dat")
         self.assertEqual(float(lines[-1].split()[-1]), 3e-11)
 
