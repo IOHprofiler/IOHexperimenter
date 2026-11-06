@@ -19,3 +19,5 @@
 #include "problem/star_discrepancy/real.hpp"
 #include "problem/star_discrepancy/integer.hpp"
 
+#include "problem/adversarial/adversarial_attack.hpp"
+

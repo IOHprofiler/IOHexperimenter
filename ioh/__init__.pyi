@@ -22,6 +22,7 @@ class ProblemClass(enum.Enum):
     STAR_INTEGER = 'IntegerStarDiscrepancy'
     CEC2013 = 'CEC2013'
     CEC2022 = 'CEC2022'
+    ADVERSARIAL = 'AdversarialAttack'
     def is_real(self): ...
     def is_single_objective(self): ...
     @property

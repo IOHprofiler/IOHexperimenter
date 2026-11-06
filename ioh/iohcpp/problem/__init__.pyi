@@ -1594,6 +1594,106 @@ class IntegerStarDiscrepancy(IntegerSingleObjective):
                 the dimensionality of the search space
         """
 
+class AdversarialAttack(RealSingleObjective):
+    """
+    Black-box adversarial-attack problems, a many-dimensional benchmark: search for a bounded perturbation
+    of a fixed, correctly classified image that minimizes the confidence of a classifier in the true label,
+    penalized by the L2 norm of the perturbation.
+
+    f(delta) = -log softmax(model(x + delta))[y] - alpha * ||delta||_2, maximized.
+
+    The problems have ids 5001-5006 (MNIST, 784 variables) and 5011-5016 (CIFAR-10, 3072 variables).
+    `instance` selects which of 100 bundled base images is attacked: unlike most problems, it changes the
+    entire landscape, not an affine transformation of one function. `x + delta` is not clamped to [0, 1] by
+    default. The dimension is fixed by the dataset: `n_variables` is ignored.
+
+    Reference
+    ---------
+    https://github.com/wz7475/amhe-attack
+    """
+
+    def __init__(self, dataset: str = 'mnist', instance: int = 1, eps: float = 0.3, alpha: float = 0.0, clamp_input: bool = False) -> None:
+        """
+        Parameters
+        ----------
+        dataset: str
+            "mnist" (784 variables) or "cifar10" (3072 variables)
+        instance: int = 1
+            Selects the base image: `(instance - 1) mod 100` in the bundled image bank
+        eps: float = 0.3
+            The perturbation bound: the search space is [-eps, eps]^d
+        alpha: float = 0.0
+            The weight of the L2 penalty on the size of the perturbation
+        clamp_input: bool = False
+            Whether to clamp x + delta to [0, 1] before classification
+        """
+
+    @overload
+    @staticmethod
+    def create(problem_name: str, instance_id: int, dimension: int) -> AdversarialAttack:
+        """
+        Create a problem instance
+
+        Parameters
+        ----------
+            problem_name: str
+                a string indicating the problem name.
+            instance_id: int
+                an integer identifier of the problem instance
+            dimension: int
+                the dimensionality of the search space
+        """
+
+    @overload
+    @staticmethod
+    def create(problem_id: int, instance_id: int, dimension: int) -> AdversarialAttack:
+        """
+        Create a problem instance
+
+        Parameters
+        ----------
+            problem_id: int
+                a number indicating the problem numeric identifier.
+            instance_id: int
+                an integer identifier of the problem instance
+            dimension: int
+                the dimensionality of the search space
+        """
+
+    @property
+    def dataset(self) -> str:
+        """The dataset: "mnist" or "cifar10\""""
+
+    @property
+    def eps(self) -> float:
+        """The perturbation bound"""
+
+    @property
+    def alpha(self) -> float:
+        """The weight of the L2 penalty"""
+
+    @property
+    def image_index(self) -> int:
+        """The index of the base image in the image bank"""
+
+    @property
+    def true_label(self) -> int:
+        """The true label of the base image"""
+
+    @property
+    def clamp_input(self) -> bool:
+        """Whether x + delta is clamped to [0, 1]"""
+
+    def predicted_label(self) -> int:
+        """
+        The class with the highest logit in the most recent evaluation: not true_label when the attack succeeded
+        """
+
+    def probabilities(self) -> Annotated[NDArray[numpy.float64], dict(shape=(None,))]:
+        """
+        The softmax probabilities of the most recent evaluation, as a new numpy array
+        """
+
 class ManyAffine(RealSingleObjective):
     @overload
     def __init__(self, instance: int, n_variables: int) -> None: ...

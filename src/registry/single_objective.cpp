@@ -9,6 +9,7 @@ namespace ioh::common
         registry::add_cec2013(factory);
         registry::add_cec2022(factory);
         registry::add_star_discrepancy_real(factory);
+        registry::add_adversarial(factory);
     }
 
     void add_builtins(Factory<problem::IntegerSingleObjective, int, int> &factory)

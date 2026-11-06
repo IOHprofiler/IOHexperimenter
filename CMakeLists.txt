@@ -84,6 +84,7 @@ file(GLOB_RECURSE HEADERS include/ioh *.hpp)
 # problems and suites (src/registry), so that only these files instantiate every problem class
 add_library(ioh STATIC
     src/data.cpp
+    src/registry/adversarial.cpp
     src/registry/bbob.cpp
     src/registry/cec.cpp
     src/registry/dynamic_bin_val.cpp
