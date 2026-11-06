@@ -260,9 +260,9 @@ namespace ioh_python::logger_cpp
                 folder_name: str = "./"
                     The name of the folder to which to write the files
                 algorithm_name: str = "algorithm_name"
-                    Optional name parameter for the algorithm to be added to the info files
+                    Optional name parameter for the algorithm to be added to the json files
                 algorithm_info: str = "algorithm_info"
-                    Optional info parameter for the algorithm to be added to the info files
+                    Optional info parameter for the algorithm to be added to the json files
                 store_positions: bool = false
                     Boolean value which indicates whether to store the x-positions in the file
             )pbdoc")
@@ -365,9 +365,7 @@ namespace ioh_python::logger_cpp
 
         define_flatfile(m);
         define_store(m);
-        auto old = m.def_submodule("old");
-        define_analyzer<ioh::logger::analyzer::v1::Analyzer>(old);
-        define_analyzer<ioh::logger::analyzer::v2::Analyzer>(m);
+        define_analyzer<ioh::logger::Analyzer>(m);
 
         define_eah(m);
         define_eaf(m);

@@ -48,7 +48,6 @@ class TestExperiment(unittest.TestCase):
             ],
             enforce_bounds=True,
             store_positions=True,
-            old_logger=True
         )
 
         def a_problem(x):
@@ -58,7 +57,7 @@ class TestExperiment(unittest.TestCase):
         pid = ioh.get_problem_id("Name", ioh.ProblemClass.REAL)
         exp()
 
-        info_files = {f'IOHprofiler_f{pid}_Name.info', 'IOHprofiler_f1_Sphere.info'}
+        info_files = {f'IOHprofiler_f{pid}_Name.json', 'IOHprofiler_f1_Sphere.json'}
         data_files = {f'IOHprofiler_f{pid}_DIM5.dat', 'IOHprofiler_f1_DIM5.dat'}
 
         for item in os.listdir('ioh_data'):
@@ -72,7 +71,7 @@ class TestExperiment(unittest.TestCase):
                         path = os.path.join(path, f)
                         self.assertNotEqual(os.path.getsize(path), 0)
                         with open(path) as h:
-                            data = list(filter(lambda x:x.startswith('"'), h))       
+                            data = list(filter(lambda x:x.startswith('evaluations'), h))       
 
                         self.assertEqual(len(data), 4)
                         data_files.remove(f)
@@ -88,14 +87,13 @@ class TestExperiment(unittest.TestCase):
         pid = ioh.get_problem_id("TestExperimentArrayIds", ioh.ProblemClass.REAL)
         self.assertEqual(exp.fids, [1, 2, pid])
 
-    def test_experimenter_v2(self):
+    def test_experimenter_without_attributes(self):
         ioh.Experiment(
             Algorithm(),
             [1], [1, 2], [5],
             njobs = 1,
             reps = 2,
             algorithm_name = "RandomSearch", 
-            old_logger=False,
             logger_triggers = [
                 ioh.logger.trigger.ALWAYS
             ],

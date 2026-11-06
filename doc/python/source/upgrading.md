@@ -75,6 +75,13 @@ The package uses the data files installed with it, from any working directory. `
   `OnViolation` triggers instead of the shared `ON_DELTA_IMPROVEMENT` and `ON_VIOLATION`, and the problems made by one
   `wrap_problem` call with constraints are evaluated from one thread at a time (they share the constraint objects).
 
+### The old Analyzer
+
+The Analyzer that wrote `.info` files is gone. `ioh.logger.old` (and `ioh.logger.old.Analyzer`) and the
+`old_logger` argument of `ioh.Experiment` were removed: `ioh.logger.Analyzer` and `ioh.Experiment` write the JSON
+metadata plus `.dat` files, as before. IOHanalyzer reads this format, and iohinspector still reads existing `.info`
+data, but nothing writes it any more. Drop `old_logger=True` and `ioh.logger.old`.
+
 ### Building from source
 
 The package builds with scikit-build-core: `pip install .` (or `pip install -e .`); `setup.py` is gone. `MAKE_STUBS`
@@ -135,6 +142,12 @@ A suite declares `registry_id` and `registry_name` and is registered with `regis
 `Suite<...>` instead of `RealSuite` or `IntegerSuite` (which registered a suite under its class name with the next free
 id). The built-in suites have fixed ids: Real 1, BBOB 2, SBOX 3, RealStarDiscrepancy 4; Integer 1, PBO 2, Submodular 3,
 IntegerStarDiscrepancy 4.
+
+### The old Analyzer
+
+`ioh::logger::analyzer::v1::Analyzer` (the `.info` writer) is gone, and `ioh::logger::analyzer::v2::Analyzer` is now
+`ioh::logger::analyzer::Analyzer`. `ioh::logger::Analyzer` is unchanged and writes the same files. Use it instead of
+the `v1` and `v2` names. The old constructor's `use_old_data_format` argument is gone with it.
 
 ### Removed and renamed
 

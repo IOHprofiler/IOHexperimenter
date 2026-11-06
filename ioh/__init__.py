@@ -312,7 +312,6 @@ class Experiment:
         zip_output: bool = True,
         remove_data: bool = False,
         enforce_bounds: bool = False,
-        old_logger: bool = False
     ):
         '''
         Parameters
@@ -355,10 +354,10 @@ class Experiment:
                 Whether to store the x-positions in the data-files
             experiment_attributes: typing.Dict[str, str] = []
                 Attributes additionally stored per experiment. These are static
-                throughout the experiment and stored in the .info files.
+                throughout the experiment and stored in the json files.
             run_attributes: typing.List[str] = []
                 Names of attributes which are updated at every run, i.e. run index.
-                These are stored in the .info files.
+                These are stored in the json files.
                 Note that each of these attributes is required to be an attribute
                 on algorithm.
             logged_attributes: typing.List[str] = []
@@ -410,7 +409,6 @@ class Experiment:
         self.zip_output = zip_output
         self.remove_data = remove_data
         self.enforce_bounds = enforce_bounds
-        self.old_logger = old_logger
 
         if os.path.isdir(self.logger_root) and self.merge_output:
             warnings.warn(
@@ -446,8 +444,7 @@ class Experiment:
             logger_params = copy.deepcopy(self.logger_params)
             logger_params["folder_name"] += f"-tmp-{ii}"
             
-            logger_cls = logger.old.Analyzer if self.old_logger else logger.Analyzer
-            l = logger_cls(**logger_params) 
+            l = logger.Analyzer(**logger_params)
             l.set_experiment_attributes(self.experiment_attributes)
             l.add_run_attributes(algorithm, self.run_attributes)
             l.watch(algorithm, self.logged_attributes)
@@ -501,7 +498,7 @@ class Experiment:
 
 
         def merge_info_file(target, source):                        
-            ext = ".info" if self.old_logger else ".json"
+            ext = ".json"
 
             if not (target.endswith(ext) and source.endswith(ext)):
                 raise RuntimeError("Merging output with incompatible folders")
@@ -510,24 +507,18 @@ class Experiment:
             if not has_file:
                 return os.rename(source, target)
             with open(source) as info_in:
-                if self.old_logger:
-                    with open(target, "a+") as info_out:        
-                        info_out.write("\n")
-                        for line in info_in:
-                            info_out.write(line)
-                else:
-                    with open(target, "r+") as info_out:
-                        data_out = json.loads(info_out.read())
-                        data_in = json.loads(info_in.read())
-                        for scen in data_in['scenarios']:
-                            try:
-                                scen_out, *_ = [s for s in data_out['scenarios'] if s['dimension'] == scen['dimension']]
-                                scen_out['runs'].extend(scen['runs'])
-                            except:
-                                data_out['scenarios'].append(scen)
-                        info_out.seek(0)
-                        info_out.write(json.dumps(data_out, indent=4))
-                        info_out.truncate()
+                with open(target, "r+") as info_out:
+                    data_out = json.loads(info_out.read())
+                    data_in = json.loads(info_in.read())
+                    for scen in data_in['scenarios']:
+                        try:
+                            scen_out, *_ = [s for s in data_out['scenarios'] if s['dimension'] == scen['dimension']]
+                            scen_out['runs'].extend(scen['runs'])
+                        except:
+                            data_out['scenarios'].append(scen)
+                    info_out.seek(0)
+                    info_out.write(json.dumps(data_out, indent=4))
+                    info_out.truncate()
             os.remove(source)
                     
 
