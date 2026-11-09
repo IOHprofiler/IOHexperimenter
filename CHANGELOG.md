@@ -12,6 +12,12 @@
   ioh.suite_registry -o registry.json` writes it as JSON; the release workflow attaches that file to each release.
   The budget and target conventions are provisional. A test keeps the registry consistent with the problem classes and
   `include/ioh/suite.hpp`.
+* `FlatFile` and `Analyzer` (C++ `set_full_precision(true)`, Python `full_precision = True`) can write values with
+  round-trip precision (`%.17g`) instead of `%.10f`. With `%.10f`, values below 5e-11 are written as 0, which hides
+  targets such as 1e-8 to 1e-10 relative to the optimum. The option also applies to the x columns, and it is off by
+  default: existing output does not change. Set it before attaching the first problem. The Analyzer records it in the
+  JSON metadata as `"precision": "%.17g"`; the key is absent for the default precision, and readers that do not know
+  it can ignore it. The header and the number of columns are the same.
 
 ### Fixed
 
