@@ -259,6 +259,15 @@ def wrap_problem(
         return get_problem(name, instance, dimension, problem_class)
 
 
+def registry() -> dict:
+    '''The registry of all suites: their problems (ids, names, direction, bounds, optima) and the conventions of a
+    leaderboard (limits, standard budget, standard instances, target bounds and scoring method). A JSON compatible
+    dict, see ioh.suite_registry.registry for its structure; `python -m ioh.suite_registry` writes it as JSON.
+    '''
+    from .suite_registry import registry as _registry
+    return _registry()
+
+
 def get_problem_id(problem_name: str, problem_class: ProblemClass) -> int: 
     '''Get the problem id corresponding to a problem name of a given type
     
