@@ -234,11 +234,11 @@ By attaching the logger to a problem, information (best-found fitness so far, et
 In addition, the default logger supports recording the algorithms' parameters.
 
 ```cpp
-// Add parameters fixed throughout the experiment, which are stored in *.info files.
+// Add parameters fixed throughout the experiment, which are stored in the json files.
 logger.add_experiment_attribute("meta_data_x", "69");
 logger.add_experiment_attribute("meta_data_y", "69");
 
-// Declare parameters unique for each run, which are stored in *.info files.
+// Declare parameters unique for each run, which are stored in the json files.
 logger.add_run_attribute("run_id", &run_id);
     
 // Add dynamic parameters, which are stored as columns in *.dat files. 

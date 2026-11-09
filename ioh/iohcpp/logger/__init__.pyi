@@ -11,7 +11,6 @@ import ioh.iohcpp
 from ioh.iohcpp.logger import (
     eaf as eaf,
     eah as eah,
-    old as old,
     trigger as trigger,
 )
 
@@ -170,9 +169,9 @@ class Analyzer(AbstractLogger):
         folder_name: str = "./"
             The name of the folder to which to write the files
         algorithm_name: str = "algorithm_name"
-            Optional name parameter for the algorithm to be added to the info files
+            Optional name parameter for the algorithm to be added to the json files
         algorithm_info: str = "algorithm_info"
-            Optional info parameter for the algorithm to be added to the info files
+            Optional info parameter for the algorithm to be added to the json files
         store_positions: bool = false
             Boolean value which indicates whether to store the x-positions in the file
         """

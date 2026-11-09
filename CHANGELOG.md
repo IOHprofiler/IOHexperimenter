@@ -29,6 +29,16 @@
   wrong: the run number and the first value cannot be told apart reliably when the value starts with a digit. Log them
   again with this version, or recover the run number from the order of the rows.
 
+### Removed
+
+* The Analyzer that wrote `.info` files (the "v1" logger). The JSON metadata plus `.dat` Analyzer is now the only
+  one, and its output is unchanged. Python: `ioh.logger.old` (and `ioh.logger.old.Analyzer`) and the `old_logger`
+  argument of `ioh.Experiment` are removed; use `ioh.logger.Analyzer` and `ioh.Experiment` without `old_logger`.
+  C++: `ioh::logger::analyzer::v1::Analyzer` is removed, and `ioh::logger::analyzer::v2::Analyzer` is now
+  `ioh::logger::analyzer::Analyzer`, which `ioh::logger::Analyzer` still names; use `ioh::logger::Analyzer`. The
+  legacy `use_old_data_format` constructor argument is gone. Reading existing `.info` data stays supported in
+  iohinspector.
+
 ## 0.4.0
 
 The first release since 0.3.22. Parts of the Python and C++ APIs changed: the
