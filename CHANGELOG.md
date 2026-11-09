@@ -4,6 +4,14 @@
 
 ### Added
 
+* `ioh.registry()` returns a machine-readable registry of the suites (BBOB, SBOX, PBO, Submodular and the two star
+  discrepancy suites): the problems with their ids and names, whether each is maximised, its bounds and known optimum
+  (and whether the optimum depends on the instance or the dimension), the instance and dimension ranges, and the
+  conventions a leaderboard needs: standard budget, standard instances and dimensions, target bounds and the scoring
+  method (AOCC for every suite; `ioh.suite_registry.SCORING_OVERRIDES` sets another per problem). `python -m
+  ioh.suite_registry -o registry.json` writes it as JSON; the release workflow attaches that file to each release.
+  The budget and target conventions are provisional. A test keeps the registry consistent with the problem classes and
+  `include/ioh/suite.hpp`.
 * `FlatFile` and `Analyzer` (C++ `set_full_precision(true)`, Python `full_precision = True`) can write values with
   round-trip precision (`%.17g`) instead of `%.10f`. With `%.10f`, values below 5e-11 are written as 0, which hides
   targets such as 1e-8 to 1e-10 relative to the optimum. The option also applies to the x columns, and it is off by
