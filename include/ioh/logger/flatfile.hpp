@@ -60,6 +60,9 @@ namespace ioh::logger
         //! Output stream
         std::ofstream out_;
 
+        //! Write doubles with round-trip precision ("{:.17g}") instead of "{:.10f}"?
+        bool full_precision_ = false;
+
        
         
         //! Current run
@@ -173,15 +176,36 @@ namespace ioh::logger
             IOH_DBG(xdebug, "print watched properties")
             
             for (auto p = properties_vector_.begin(); p != properties_vector_.end();){
-                out_ << p->get().call_to_string(log_info, nan_) << (++p != properties_vector_.end() ? sep_ : "");
+                const Property &prop = p->get();
+                if (full_precision_ && prop.format() == DEFAULT_DOUBLE_FORMAT)
+                {
+                    const auto value = prop(log_info);
+                    out_ << (value ? fmt::format(FULL_PRECISION_DOUBLE_FORMAT, *value) : nan_);
+                }
+                else
+                    out_ << prop.call_to_string(log_info, nan_);
+                out_ << (++p != properties_vector_.end() ? sep_ : "");
             }
 
             if (store_positions_)
-                out_ << sep_ << format("{:f}", fmt::join(log_info.x, sep_));
+                out_ << sep_ << (full_precision_ ? format("{:.17g}", fmt::join(log_info.x, sep_))
+                                                      : format("{:f}", fmt::join(log_info.x, sep_)));
 
             out_ << eol_;
             out_.flush();
         }
+
+        /** Write values with round-trip precision (`{:.17g}`) instead of `{:.10f}`.
+         *
+         * Applies to the properties that use the default double format (DEFAULT_DOUBLE_FORMAT) and to the x
+         * positions. Properties with an explicit format, such as evaluations, keep it. Default: false, which keeps
+         * the output of earlier versions, where values below 5e-11 are written as 0. Set it before the first
+         * problem is attached.
+         */
+        void set_full_precision(const bool full_precision) { full_precision_ = full_precision; }
+
+        //! Whether values are written with round-trip precision.
+        bool full_precision() const { return full_precision_; }
 
         //! Accessor for output directory
         virtual fs::path output_directory() const { return output_directory_; }

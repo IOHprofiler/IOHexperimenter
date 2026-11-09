@@ -188,6 +188,8 @@ namespace ioh::logger
                 const std::vector<std::string> attribute_names;
                 //! Scenarios
                 std::vector<ScenarioInfo> dims;
+                //! Printf-style precision of the values in the data files ("" for the legacy "%.10f", not written)
+                const std::string precision;
 
                 /**
                  * @brief Construct a new Experiment Info object
@@ -199,16 +201,18 @@ namespace ioh::logger
                  * @param run_attribute_names Run attributes
                  * @param attribute_names attributes names
                  * @param dims Scenarios
+                 * @param precision Precision of the values in the data files, written as "precision" when not empty
                  */
                 ExperimentInfo(const std::string &suite, const problem::MetaData &problem,
                                const AlgorithmInfo &algorithm,
                                const std::vector<Attribute<std::string>> &attributes = {},
                                const std::vector<std::string> &run_attribute_names = {},
                                const std::vector<std::string> &attribute_names = {},
-                               const std::vector<ScenarioInfo> &dims = {}) :
+                               const std::vector<ScenarioInfo> &dims = {}, const std::string &precision = "") :
                     suite(suite),
                     problem(problem), algorithm(algorithm), attributes(attributes),
-                    run_attribute_names(run_attribute_names), attribute_names(attribute_names), dims(dims)
+                    run_attribute_names(run_attribute_names), attribute_names(attribute_names), dims(dims),
+                    precision(precision)
                 {
                 }
 
@@ -217,10 +221,11 @@ namespace ioh::logger
                     return fmt::format(
                         "{{\n\t\"version\": \"{}\", \n\t\"suite\": \"{}\", \n\t\"function_id\": {}, "
                         "\n\t\"function_name\": \"{}\", "
-                        "\n\t\"maximization\": {}, "
+                        "\n\t\"maximization\": {}, {}"
                         "\n\t\"algorithm\": {{{}}},{}{}{}\n\t\"scenarios\": [\n\t\t{{{}}}\n\t]\n}}\n",
                         PROJECT_VER, suite, problem.problem_id, problem.name,
-                        (problem.optimization_type == common::OptimizationType::MAX), algorithm,
+                        (problem.optimization_type == common::OptimizationType::MAX),
+                        precision.empty() ? "" : fmt::format("\n\t\"precision\": \"{}\", ", precision), algorithm,
                         !attributes.empty()
                             ? fmt::format("\n\t\"experiment_attributes\": [{{{}}}],", fmt::join(attributes, "}, {"))
                             : "",
@@ -570,7 +575,8 @@ namespace ioh::logger
                         experiments_.insert({current_filename_,
                                              {suite_, problem, algorithm_,
                                               common::as_vector<str, str, sAttr>(attributes_.experiment),
-                                              common::keys(attributes_.run), attribute_names()}});
+                                              common::keys(attributes_.run), attribute_names(), {},
+                                              full_precision_ ? "%.17g" : ""}});
                 }
 
                 //! Gets called after the last evaluation of a run
