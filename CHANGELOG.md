@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+* The suite registry gives BBOB, SBOX and PBO 15 standard instances, 1 to 15, instead of 1 to 5. COCO runs 15
+  instances per function.
+
 ## 0.4.1
 
 A small release: the suite registry, full-precision output, a FlatFile fix, and the removal of the Analyzer that
