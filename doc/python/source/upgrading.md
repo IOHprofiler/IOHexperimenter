@@ -79,8 +79,8 @@ The package uses the data files installed with it, from any working directory. `
 
 The Analyzer that wrote `.info` files is gone. `ioh.logger.old` (and `ioh.logger.old.Analyzer`) and the
 `old_logger` argument of `ioh.Experiment` were removed: `ioh.logger.Analyzer` and `ioh.Experiment` write the JSON
-metadata plus `.dat` files, as before. IOHanalyzer reads this format, and iohinspector still reads existing `.info`
-data, but nothing writes it any more. Drop `old_logger=True` and `ioh.logger.old`.
+metadata plus `.dat` files, as before. IOHanalyzer and iohinspector read this format. IOHanalyzer still reads existing
+`.info` data, but nothing writes it any more. Drop `old_logger=True` and `ioh.logger.old`.
 
 ### Building from source
 

@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.4.1
+
+A small release: the suite registry, full-precision output, a FlatFile fix, and the removal of the Analyzer that
+wrote `.info` files.
 
 ### Added
 
@@ -36,8 +39,8 @@
   argument of `ioh.Experiment` are removed; use `ioh.logger.Analyzer` and `ioh.Experiment` without `old_logger`.
   C++: `ioh::logger::analyzer::v1::Analyzer` is removed, and `ioh::logger::analyzer::v2::Analyzer` is now
   `ioh::logger::analyzer::Analyzer`, which `ioh::logger::Analyzer` still names; use `ioh::logger::Analyzer`. The
-  legacy `use_old_data_format` constructor argument is gone. Reading existing `.info` data stays supported in
-  iohinspector.
+  legacy `use_old_data_format` constructor argument is gone. IOHanalyzer still reads existing `.info` data;
+  iohinspector does not.
 
 ## 0.4.0
 
