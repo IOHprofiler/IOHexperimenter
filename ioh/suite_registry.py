@@ -31,6 +31,9 @@ DEFAULT_SCORING: typing.Dict[str, typing.Any] = {"method": "AOCC", "parameters":
 SCORING_OVERRIDES: typing.Dict[str, typing.Dict[int, typing.Dict[str, typing.Any]]] = {}
 
 _LOG_PRECISION = {"scale": "log", "relative_to_optimum": True, "lower": 1e-8, "upper": 1e2}
+# 15 standard instances, 1 to 15, as COCO runs 15 instances per function (COCO's own runs since 2012 use
+# 1 to 5 plus 10 instances that change by year; 1 to 15 is the fixed set).
+_STANDARD_INSTANCES = list(range(1, 16))
 _UNKNOWN_TARGETS = {"scale": "linear", "relative_to_optimum": False, "lower": None, "upper": None}
 
 #: Per suite: the class of its problems, the largest instance and dimension its C++ class accepts (these are checked
@@ -43,7 +46,7 @@ SUITE_CONVENTIONS: typing.Dict[str, typing.Dict[str, typing.Any]] = {
         "problem_class": ProblemClass.BBOB,
         "instances": {"min": 1, "max": 100},
         "dimensions": {"min": 2, "max": 100},
-        "standard_instances": [1, 2, 3, 4, 5],
+        "standard_instances": _STANDARD_INSTANCES,
         "standard_dimensions": [2, 3, 5, 10, 20, 40],
         "budget": {"base": 0, "per_dimension": 10000},
         "target_bounds": _LOG_PRECISION,
@@ -52,7 +55,7 @@ SUITE_CONVENTIONS: typing.Dict[str, typing.Dict[str, typing.Any]] = {
         "problem_class": ProblemClass.SBOX,
         "instances": {"min": 1, "max": 100},
         "dimensions": {"min": 2, "max": 100},
-        "standard_instances": [1, 2, 3, 4, 5],
+        "standard_instances": _STANDARD_INSTANCES,
         "standard_dimensions": [2, 3, 5, 10, 20, 40],
         "budget": {"base": 0, "per_dimension": 10000},
         "target_bounds": _LOG_PRECISION,
@@ -61,7 +64,7 @@ SUITE_CONVENTIONS: typing.Dict[str, typing.Dict[str, typing.Any]] = {
         "problem_class": ProblemClass.PBO,
         "instances": {"min": 1, "max": 100},
         "dimensions": {"min": 1, "max": 20000},
-        "standard_instances": [1, 2, 3, 4, 5],
+        "standard_instances": _STANDARD_INSTANCES,
         "standard_dimensions": [16, 64, 100],
         "budget": {"base": 0, "per_dimension": 100},
         "target_bounds": {"scale": "linear", "relative_to_optimum": True, "lower": 0.0, "upper": None},
