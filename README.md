@@ -38,6 +38,7 @@
 * BBOB (Single Objective Noiseless) (COCO)
 * SBOX-COST (COCO)
 * StarDiscrepancy
+* AdversarialAttack (black-box adversarial attacks on MNIST and CIFAR-10 classifiers)
 * PBO
 * Submodular Graph Problems
 * CEC 2013 Special Session and Competition on Niching Methods for Multimodal Function Optimization

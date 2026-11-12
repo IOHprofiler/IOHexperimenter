@@ -27,6 +27,11 @@ namespace ioh::problem
         struct GraphProblem;
     }
 
+    namespace adversarial
+    {
+        class AdversarialAttack;
+    }
+
     namespace star_discrepancy::real
     {
         class StarDiscrepancy;
@@ -58,7 +63,7 @@ namespace ioh::common
     //! @name The factories with built-in entries
     ///@{
 
-    //! All real single-objective problems: BBOB, CEC2013, CEC2022, real star discrepancy
+    //! All real single-objective problems: BBOB, CEC2013, CEC2022, real star discrepancy, adversarial attack
     void add_builtins(Factory<problem::SingleObjectiveProblem<double>, int, int> &);
 
     //! All integer single-objective problems: PBO, graph, integer star discrepancy, DynamicBinVal
@@ -71,10 +76,11 @@ namespace ioh::common
     void add_builtins(Factory<problem::CEC2022, int, int> &);
     void add_builtins(Factory<problem::DynamicBinVal, int, int> &);
     void add_builtins(Factory<problem::submodular::GraphProblem, int, int> &);
+    void add_builtins(Factory<problem::adversarial::AdversarialAttack, int, int> &);
     void add_builtins(Factory<problem::star_discrepancy::real::StarDiscrepancy, int, int> &);
     void add_builtins(Factory<problem::star_discrepancy::integer::StarDiscrepancy, int, int> &);
 
-    //! The real suites: Real, BBOB, SBOX, RealStarDiscrepancy
+    //! The real suites: Real, BBOB, SBOX, RealStarDiscrepancy, AdversarialAttack
     void add_builtins(Factory<suite::Suite<problem::SingleObjectiveProblem<double>>, std::vector<int>, std::vector<int>,
                               std::vector<int>> &);
 

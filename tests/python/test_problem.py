@@ -180,6 +180,33 @@ class TestProblem(unittest.TestCase):
         self.assertEqual(random([10, 10]), 0)
         self.assertEqual(random([11, 11]), -float("inf"))
 
+    def test_adversarial_attack(self):
+        mnist = ioh.get_problem(5001, 1, 1, problem_class=ioh.ProblemClass.ADVERSARIAL)
+        self.assertEqual(mnist.meta_data.n_variables, 784)  # n_variables is ignored
+        self.assertEqual(mnist.meta_data.name, "AdversarialMNIST5001")
+        self.assertEqual(mnist.meta_data.optimization_type, ioh.OptimizationType.MAX)
+        self.assertEqual(mnist.bounds.ub[0], 0.1)
+        self.assertEqual(ioh.get_problem(5011, 1, 1, ioh.ProblemClass.ADVERSARIAL).meta_data.n_variables, 3072)
+
+        # the unperturbed image is correctly classified, with a small loss (the objective is -log p(true label))
+        y = mnist(np.zeros(784))
+        self.assertGreaterEqual(y, 0.0)
+        self.assertLess(y, 1.0)
+        probabilities = mnist.probabilities()
+        self.assertAlmostEqual(probabilities.sum(), 1.0)
+        self.assertEqual(mnist.predicted_label(), mnist.true_label)
+
+        # the instance selects the base image, a different landscape
+        other = ioh.get_problem(5001, 2, 1, ioh.ProblemClass.ADVERSARIAL)
+        self.assertNotEqual(other.image_index, mnist.image_index)
+
+        direct = ioh.problem.AdversarialAttack("cifar10", instance=1, eps=0.3, alpha=0.05)
+        self.assertEqual((direct.dataset, direct.eps, direct.alpha), ("cifar10", 0.3, 0.05))
+        self.assertEqual(direct.meta_data.n_variables, 3072)
+
+        suite = ioh.suite.AdversarialAttack([5001, 5004], [1, 2])
+        self.assertEqual(len(suite), 4)
+
     def test_enforced_bounds(self):
         p = ioh.get_problem(1, 1, 2)
         x0 = [10, 1]

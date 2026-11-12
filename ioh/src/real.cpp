@@ -342,6 +342,65 @@ void define_star_discrepancy_problems(nb::module_ &m)
                                                                                             "IntegerStarDiscrepancy");
 }
 
+void define_adversarial_problems(nb::module_ &m)
+{
+    using ioh::problem::adversarial::AdversarialAttack;
+
+    nb::class_<AdversarialAttack, ioh::problem::RealSingleObjective> c(m, "AdversarialAttack", R"pbdoc(
+            Black-box adversarial-attack problems, a many-dimensional benchmark: search for a bounded perturbation
+            of a fixed, correctly classified image that minimizes the confidence of a classifier in the true label,
+            penalized by the L2 norm of the perturbation.
+
+            f(delta) = -log softmax(model(x + delta))[y] - alpha * ||delta||_2, maximized.
+
+            The problems have ids 5001-5006 (MNIST, 784 variables) and 5011-5016 (CIFAR-10, 3072 variables).
+            `instance` selects which of 100 bundled base images is attacked: unlike most problems, it changes the
+            entire landscape, not an affine transformation of one function. `x + delta` is not clamped to [0, 1] by
+            default. The dimension is fixed by the dataset: `n_variables` is ignored.
+
+            Reference
+            ---------
+            https://github.com/wz7475/amhe-attack
+        )pbdoc");
+    ioh_python::real::define_factory(c, ioh_python::real::cec_create_name_doc, ioh_python::real::cec_create_id_doc);
+
+    c.def(
+         "__init__",
+         [](AdversarialAttack *self, const std::string &dataset, const int instance, const double eps,
+            const double alpha, const bool clamp_input) {
+             const std::string name = fmt::format("AdversarialAttack{}", dataset == "mnist" ? "MNIST" : "CIFAR10");
+             new (self) AdversarialAttack(0, instance, 0, name, dataset, eps, alpha, clamp_input);
+         },
+         nb::arg("dataset") = "mnist", nb::arg("instance") = 1, nb::arg("eps") = 0.3, nb::arg("alpha") = 0.0,
+         nb::arg("clamp_input") = false,
+         R"pbdoc(
+                Parameters
+                ----------
+                dataset: str
+                    "mnist" (784 variables) or "cifar10" (3072 variables)
+                instance: int = 1
+                    Selects the base image: `(instance - 1) mod 100` in the bundled image bank
+                eps: float = 0.3
+                    The perturbation bound: the search space is [-eps, eps]^d
+                alpha: float = 0.0
+                    The weight of the L2 penalty on the size of the perturbation
+                clamp_input: bool = False
+                    Whether to clamp x + delta to [0, 1] before classification
+             )pbdoc")
+        .def_prop_ro("dataset", &AdversarialAttack::dataset, "The dataset: \"mnist\" or \"cifar10\"")
+        .def_prop_ro("eps", &AdversarialAttack::eps, "The perturbation bound")
+        .def_prop_ro("alpha", &AdversarialAttack::alpha, "The weight of the L2 penalty")
+        .def_prop_ro("image_index", &AdversarialAttack::image_index, "The index of the base image in the image bank")
+        .def_prop_ro("true_label", &AdversarialAttack::true_label, "The true label of the base image")
+        .def_prop_ro("clamp_input", &AdversarialAttack::clamp_input, "Whether x + delta is clamped to [0, 1]")
+        .def("predicted_label", &AdversarialAttack::predicted_label,
+             "The class with the highest logit in the most recent evaluation: not true_label when the attack "
+             "succeeded")
+        .def(
+            "probabilities", [](const AdversarialAttack &self) { return ioh_python::make_array(self.probabilities()); },
+            "The softmax probabilities of the most recent evaluation, as a new numpy array");
+}
+
 void define_many_affine(nb::module_ &m)
 {
     using ioh::problem::bbob::ManyAffine;

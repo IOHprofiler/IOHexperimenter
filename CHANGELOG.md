@@ -29,6 +29,20 @@ wrote `.info` files.
   JSON metadata as `"precision": "%.17g"`; the key is absent for the default precision, and readers that do not know
   it can ignore it. The header and the number of columns are the same.
 
+### Added
+
+* The `AdversarialAttack` problems: black-box adversarial attacks on a bundled MNIST (784 variables) and CIFAR-10
+  (3072 variables) classifier, as a many-dimensional benchmark. The objective, maximized, is
+  `-log softmax(model(x + delta))[y] - alpha * ||delta||_2` for a fixed, correctly classified image `x` with label `y`
+  and a perturbation `delta` in `[-eps, eps]^d`. The 12 problems have ids 5001-5006 (MNIST) and 5011-5016 (CIFAR-10),
+  and are created by name (`AdversarialMNIST5001`, ...) or id, in `ioh.ProblemClass.ADVERSARIAL`, in the
+  `AdversarialAttack` suite (suite id 5) and in the factory of all real problems. The `instance` selects the base image
+  (`(instance - 1) mod 100`) and so changes the whole landscape; `n_variables` is ignored. The network is a dependency
+  free C++ implementation, whose weights (float16) and 100 images per dataset are new data files: `static/` grows by
+  about 11 MB. Reference: <https://github.com/wz7475/amhe-attack>.
+* Because the ids 5001-5016 are taken, a real problem that is registered at run time (`wrap_problem`, `register_problem`)
+  gets the next free id after them, 5017, instead of 1121.
+
 ### Fixed
 
 * `FlatFile` data rows had no separator between the last meta data column (`run`) and the first logged property, so

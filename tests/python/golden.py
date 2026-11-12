@@ -34,6 +34,7 @@ FAMILIES = {
     "CEC2022": ([10, 20], [1, 2], 3),  # transformation data exists for 10 and 20 for every function
     "STAR_REAL": ([2, 5], [1, 2], 3),
     "STAR_INTEGER": ([2, 5], [1, 2], 3),
+    "ADVERSARIAL": ([1], [1, 2], 3),  # the dimension is fixed per dataset; the requested one is ignored
     "GRAPH": ([2], [1], 2),  # dimension and instance are ignored (fixed graph instances)
 }
 DYNAMIC_BIN_VAL = ([10], [1, 2], 3)
@@ -59,6 +60,7 @@ SUITES = {
     "PBO": ([1, 20, 25], [1, 2], [16]),
     "Submodular": ([2000, 2100, 2200, 2300], [1], [1]),
     "IntegerStarDiscrepancy": ([30, 59], [1], [3]),
+    "AdversarialAttack": ([5001, 5011], [1, 2, 3], [1]),
 }
 
 
@@ -281,7 +283,7 @@ def union_pairs(registry):
     pairs = []
     families = registry["problem_classes"]
     dbv = registry["views"].get("DynamicBinVal", {})
-    for union, members in (("REAL", ("BBOB", "CEC2013", "CEC2022", "STAR_REAL")),
+    for union, members in (("REAL", ("BBOB", "CEC2013", "CEC2022", "STAR_REAL", "ADVERSARIAL")),
                            ("INTEGER", ("PBO", "GRAPH", "STAR_INTEGER"))):
         for pid, name in families[union].items():
             family = next((f for f in members if families[f].get(pid) == name), None)
